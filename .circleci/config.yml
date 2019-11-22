@@ -30,6 +30,22 @@ jobs:
           when: always
           paths:
             - ~/workspace/node_modules
+  lint:
+    executor: default
+    steps:
+      - checkout
+      - restore_npm_cache
+      - run:
+          name: lint
+          command: npm run lint
+  test:
+    executor: default
+    steps:
+      - checkout
+      - restore_npm_cache
+      - run:
+          name: lint
+          command: npm run test:unit
   build:
     executor: default
     steps:
@@ -45,5 +61,11 @@ workflows:
     jobs:
       - module-install
       - build:
+          requires:
+            - module-install
+      - lint:
+          requires:
+            - module-install
+      - test:
           requires:
             - module-install
