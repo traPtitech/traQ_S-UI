@@ -1,0 +1,49 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:13.1.0
+    working_directory: ~/workspace
+
+commands:
+  install_module:
+    steps:
+      - run:
+          name: module install
+          when: always
+          command: npm ci
+  restore_npm_cache:
+    steps:
+      - restore_cache:
+          keys:
+            - npm-{{ checksum "package-lock.json" }}
+
+jobs:
+  module-install:
+    executor: default
+    steps:
+      - checkout
+      - install_module
+      - save_cache:
+          key: npm-{{ checksum "package-lock.json" }}
+          when: always
+          paths:
+            - ~/workspace/node_modules
+  build:
+    executor: default
+    steps:
+      - checkout
+      - restore_npm_cache
+      - run:
+          name: build
+          command: NODE_ENV=production npm run build
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - module-install
+      - build:
+          requires:
+            - module-install
