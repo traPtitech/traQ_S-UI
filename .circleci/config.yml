@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:13.1.0
+      - image: circleci/node:13.2.0
     working_directory: ~/workspace
 
 commands:
@@ -24,7 +24,6 @@ jobs:
     executor: default
     steps:
       - checkout
-      - restore_npm_cache
       - install_module
       - save_cache:
           key: npm-{{ checksum "package-lock.json" }}
