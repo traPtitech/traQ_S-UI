@@ -54,6 +54,11 @@ jobs:
       - run:
           name: build
           command: NODE_ENV=production npm run build
+      - run:
+          name: archive dist/
+          command: tar -zcvf ~/dist.tar.gz ~/workspace/dist/
+      - store_artifacts:
+          path: ~/dist.tar.gz
 
 workflows:
   version: 2
