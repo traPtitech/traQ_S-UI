@@ -69,6 +69,9 @@ jobs:
       - add_ssh_keys:
           fingerprints: 
             - "d8:ab:06:2f:70:e0:46:df:8d:fd:6d:50:cd:d9:4b:90"
+      - run:
+          name: ssh-keyscan
+          command: ssh-keyscan ${STAGING_DEPLOY_HOST} >> ~/.ssh/known_hosts 2>/dev/null
       - attach_workspace:
           at: .
       - run:
@@ -94,3 +97,7 @@ workflows:
             - build
             - lint
             - test
+          filters:
+            branches:
+              only:
+                - master
