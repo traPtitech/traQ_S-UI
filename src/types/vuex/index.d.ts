@@ -1,2 +1,0 @@
-import './type'
-import './impl'

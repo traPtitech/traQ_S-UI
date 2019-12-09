@@ -3,5 +3,5 @@ export interface S {
 }
 
 export const state: S = {
-  count: 12
+  count: 30
 }
