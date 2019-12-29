@@ -1,3 +1,6 @@
+const https = require('https')
+const keepAliveAgent = new https.Agent({ keepAlive: true })
+
 module.exports = {
   css: {
     loaderOptions: {
@@ -23,12 +26,18 @@ module.exports = {
   },
 
   devServer: {
-    // proxy: {
-    //   '/api/*': {
-    //     target: '',
-    //     changeOrigin: true
-    //   }
-    // }
+    proxy: {
+      '/api/1.0/*': {
+        target: 'https://traq-dev.tokyotech.org/',
+        changeOrigin: true,
+        agent: keepAliveAgent
+      },
+      '/api/v3/*': {
+        target: 'https://traq-s-dev.tokyotech.org/',
+        changeOrigin: true,
+        agent: keepAliveAgent
+      }
+    }
   },
 
   productionSourceMap: false
