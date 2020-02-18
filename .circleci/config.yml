@@ -30,6 +30,8 @@ jobs:
           when: always
           paths:
             - ~/workspace/node_modules
+            - ~/workspace/packages/traq-api-v2/node_modules
+            - ~/workspace/packages/traq-api-v3/node_modules
   lint:
     executor: default
     steps:

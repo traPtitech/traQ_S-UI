@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "preinstall": "cd packages/traq-api-v2 && npm install && cd ../traq-api-v3 && npm install"
   },
   "engines": {
     "node": "^13.1.0",
@@ -17,6 +18,8 @@
     "core-js": "^3.4.8",
     "direct-vuex": "^0.8.4",
     "register-service-worker": "^1.6.2",
+    "traq-api-v2": "file:packages/traq-api-v2",
+    "traq-api-v3": "file:packages/traq-api-v3",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",
     "vue-styled-components": "^1.4.14",
