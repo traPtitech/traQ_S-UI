@@ -4,6 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { messages } from './messages'
+import { rtc } from '../app/rtc'
 
 export const app = createModule({
   namespaced: true,
@@ -12,6 +13,7 @@ export const app = createModule({
   mutations,
   actions,
   modules: {
-    messages
+    messages,
+    rtc
   }
 })
