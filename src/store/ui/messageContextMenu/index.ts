@@ -4,7 +4,13 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export const module1 = createModule({
+export interface MessageFormState {
+  filesToUpload: File[]
+  message: string
+  selection: Selection
+}
+
+export const messageContextMenu = createModule({
   namespaced: true,
   state,
   getters,

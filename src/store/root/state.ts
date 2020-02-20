@@ -1,7 +1,7 @@
 export interface S {
-  count: number
+  // count: number
 }
 
 export const state: S = {
-  count: 12
+  // count: 12
 }
