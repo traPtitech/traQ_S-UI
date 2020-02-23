@@ -18,64 +18,44 @@ import {
   WebhookId
 } from '@/types/entity-ids'
 
+const setMutation = <I extends string, T>(key: keyof S) => (
+  state: S,
+  entities: Record<I, T>
+) => {
+  state[key] = entities
+}
+const extendMutation = <I extends string, T>(key: keyof S) => (
+  state: S,
+  entities: Record<I, T>
+) => {
+  state[key] = { ...state[key], ...entities }
+}
+const addMutation = <I extends string, T>(key: keyof S) => (
+  state: S,
+  payload: { id: I; entity: T }
+) => {
+  Vue.set(state.users, payload.id, payload.entity)
+}
+
 export const mutations = createMutations<S>()({
-  setUsers(state, entities: Record<UserId, User>) {
-    state.users = entities
-  },
-  setChannels(state, entities: Record<ChannelId, Channel>) {
-    state.channels = entities
-  },
-  setUserGroups(state, entities: Record<UserGroupId, UserGroup>) {
-    state.userGroups = entities
-  },
-  setStamps(state, entities: Record<StampId, Stamp>) {
-    state.stamps = entities
-  },
-  setStampPalettes(state, entities: Record<StampPaletteId, StampPalette>) {
-    state.stampPalettes = entities
-  },
-  setWebhooks(state, entities: Record<WebhookId, Webhook>) {
-    state.webhooks = entities
-  },
+  setUsers: setMutation<UserId, User>('users'),
+  setChannels: setMutation<ChannelId, Channel>('channels'),
+  setUserGroups: setMutation<UserGroupId, UserGroup>('userGroups'),
+  setStamps: setMutation<StampId, Stamp>('stamps'),
+  setStampPalettes: setMutation<StampPaletteId, Stamp>('stampPalettes'),
+  setWebhooks: setMutation<WebhookId, Webhook>('webhooks'),
 
-  updateUsers(state, entities: Record<UserId, User>) {
-    state.users = { ...state.users, ...entities }
-  },
-  updateChannels(state, entities: Record<ChannelId, Channel>) {
-    state.channels = { ...state.channels, ...entities }
-  },
-  updateUserGroups(state, entities: Record<UserGroupId, UserGroup>) {
-    state.userGroups = { ...state.userGroups, ...entities }
-  },
-  updateStamps(state, entities: Record<StampId, Stamp>) {
-    state.stamps = { ...state.stamps, ...entities }
-  },
-  updateStampPalettes(state, entities: Record<StampPaletteId, StampPalette>) {
-    state.stampPalettes = { ...state.stampPalettes, ...entities }
-  },
-  updateWebhooks(state, entities: Record<WebhookId, Webhook>) {
-    state.webhooks = { ...state.webhooks, ...entities }
-  },
+  extendUsers: extendMutation<UserId, User>('users'),
+  extendChannels: extendMutation<ChannelId, Channel>('channels'),
+  extendUserGroups: extendMutation<UserGroupId, UserGroup>('userGroups'),
+  extendStamps: extendMutation<StampId, Stamp>('stamps'),
+  extendStampPalettes: extendMutation<StampPaletteId, Stamp>('stampPalettes'),
+  extendWebhooks: extendMutation<WebhookId, Webhook>('webhooks'),
 
-  insertUsers(state, payload: { id: UserId; entity: User }) {
-    Vue.set(state.users, payload.id, payload.entity)
-  },
-  insertChannel(state, payload: { id: ChannelId; entity: Channel }) {
-    Vue.set(state.channels, payload.id, payload.entity)
-  },
-  insertUserGroup(state, payload: { id: UserGroupId; entity: UserGroup }) {
-    Vue.set(state.userGroups, payload.id, payload.entity)
-  },
-  insertStamp(state, payload: { id: StampId; entity: Stamp }) {
-    Vue.set(state.stamps, payload.id, payload.entity)
-  },
-  insertStampPalette(
-    state,
-    payload: { id: StampPaletteId; entity: StampPalette }
-  ) {
-    Vue.set(state.stampPalettes, payload.id, payload.entity)
-  },
-  insertWebhook(state, payload: { id: WebhookId; entity: Webhook }) {
-    Vue.set(state.webhooks, payload.id, payload.entity)
-  }
+  addUser: addMutation<UserId, User>('users'),
+  addChannel: addMutation<ChannelId, Channel>('channels'),
+  addUserGroup: addMutation<UserGroupId, UserGroup>('userGroups'),
+  addStamp: addMutation<StampId, Stamp>('stamps'),
+  addStampPalette: addMutation<StampPaletteId, Stamp>('stampPalettes'),
+  addWebhook: addMutation<WebhookId, Webhook>('webhooks')
 })
