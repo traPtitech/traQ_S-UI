@@ -1,4 +1,11 @@
-import { User, UserGroup, Channel, Stamp, StampPalette } from 'traq-api-v3'
+import {
+  User,
+  UserGroup,
+  Channel,
+  Stamp,
+  StampPalette,
+  Webhook
+} from 'traq-api-v3'
 import {
   UserId,
   ChannelId,
@@ -14,7 +21,7 @@ export interface S {
   userGroups: Record<UserGroupId, UserGroup>
   stamps: Record<StampId, Stamp>
   stampPalettes: Record<StampPaletteId, StampPalette>
-  webhooks: Record<WebhookId, Stamp>
+  webhooks: Record<WebhookId, Webhook>
 }
 
 export const state: S = {

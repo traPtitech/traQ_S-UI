@@ -1,5 +1,3 @@
-export interface S {
-}
+export interface S {}
 
-export const state: S = {
-}
+export const state: S = {}
