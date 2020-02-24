@@ -5,10 +5,14 @@ export interface S {
   channelActivity: ChannelId[]
   messageActivity: MessageId[]
   channelStateMap: Record<ChannelId, ChannelState>
+
+  /** キャッシュ削除用 */
+  channelStateUpdateHistory: ChannelId[]
 }
 
 export const state: S = {
   channelActivity: [],
   messageActivity: [],
-  channelStateMap: {}
+  channelStateMap: {},
+  channelStateUpdateHistory: []
 }

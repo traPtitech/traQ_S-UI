@@ -1,9 +1,9 @@
-import { UserId, MessageId } from '@/types/entity-ids'
+import { ChannelId } from '@/types/entity-ids'
 
 export interface S {
   loaded: boolean
   componentLoaded: boolean
-  currentChannelId: UserId
+  currentChannelId: ChannelId
 }
 
 export const state: S = {
