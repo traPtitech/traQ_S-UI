@@ -34,7 +34,7 @@ const addMutation = <I extends string, T>(key: keyof S) => (
   state: S,
   payload: { id: I; entity: T }
 ) => {
-  Vue.set(state.users, payload.id, payload.entity)
+  Vue.set(state[key], payload.id, payload.entity)
 }
 
 export const mutations = createMutations<S>()({
