@@ -15,14 +15,33 @@ export default createComponent({
   name: 'About',
   setup() {
     const data = reactive({
-      count: computed(() => store.getters.module1.count)
+      count: computed(() => store.state.entities)
     })
     return () => (
       <div class="about">
-        <div onClick={() => store.dispatch.module1.testAction({ num: 10 })}>
-          {data.count}
-        </div>
         <h1>This is an about page</h1>
+        <button
+          onClick={() =>
+            store.commit.entities.setUsers({
+              aaa: {
+                id: 'poyo'
+              }
+            })
+          }
+        >
+          setUsers
+        </button>
+        <button
+          onClick={() =>
+            store.commit.entities.setChannels({
+              aaa: {
+                id: 'poyo'
+              }
+            })
+          }
+        >
+          setChannels
+        </button>
       </div>
     )
   }
