@@ -1,7 +1,7 @@
 import { createComponent, SetupContext, reactive } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import styled, { PropsWithDefaultTheme } from 'vue-styled-components'
+import styled from 'vue-styled-components'
 
 type Props = {
   channelId: ChannelId
