@@ -1,7 +1,7 @@
 import { createComponent, SetupContext, reactive } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import styled from 'vue-styled-components'
+import styled, { PropsWithDefaultTheme } from 'vue-styled-components'
 
 type Props = {
   channelId: ChannelId
@@ -41,7 +41,7 @@ const Header = styled.h1`
     size: 30px;
     weight: bold;
   }
-  color: blue;
+  color: ${props => props.theme.primary};
 `
 
 const Block = styled.div`
