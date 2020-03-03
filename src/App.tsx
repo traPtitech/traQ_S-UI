@@ -1,4 +1,4 @@
-import { createComponent, reactive } from '@vue/composition-api'
+import { createComponent } from '@vue/composition-api'
 import { ThemeProvider } from 'vue-styled-components'
 import HelloWorld from '@/components/HelloWorld'
 import store from './store'
@@ -6,9 +6,6 @@ import store from './store'
 export default createComponent({
   name: 'App',
   setup() {
-    const state = reactive({
-      color: store.state.app.theme.accent.primary
-    })
     return () => (
       <div id="app">
         <ThemeProvider theme={store.state.app.theme}>
