@@ -1,6 +1,7 @@
 declare module 'vue-styled-components' {
   import * as CSS from 'csstype'
   import * as Vue from 'vue'
+  import { ComponentRenderProxy } from '@vue/composition-api'
 
   export type CSSProperties = CSS.Properties<string | number>
 
@@ -22,11 +23,15 @@ declare module 'vue-styled-components' {
     }
 
   export type StyledComponentElements<T = HTMLElements> = {
-    [k in keyof T]: (str: TemplateStringsArray) => StyledComponent
+    [k in keyof T]: (
+      str: TemplateStringsArray,
+      ...args: ((props: PropsWithDefaultTheme) => string)[]
+    ) => StyledComponent
   }
   export type Styled<T = HTMLElements> = StyledComponentElements & {
     <T>(Component: T, props?: Record<string, Vue.PropOptions['type']>): (
-      str: TemplateStringsArray
+      str: TemplateStringsArray,
+      ...args: ((props: PropsWithDefaultTheme) => string)[]
     ) => StyledComponent
   }
 
@@ -149,4 +154,15 @@ declare module 'vue-styled-components' {
   export let styled: Styled
 
   export default styled
+
+  interface DefaultTheme {
+    primary: string
+  }
+  export type PropsWithDefaultTheme = {
+    theme: DefaultTheme
+  }
+  export type ThemeProviderComponent = {
+    new (): ComponentRenderProxy<PropsWithDefaultTheme>
+  }
+  export const ThemeProvider: ThemeProviderComponent
 }

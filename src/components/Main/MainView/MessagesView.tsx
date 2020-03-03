@@ -41,7 +41,7 @@ const Header = styled.h1`
     size: 30px;
     weight: bold;
   }
-  color: blue;
+  color: ${props => props.theme.primary};
 `
 
 const Block = styled.div`
