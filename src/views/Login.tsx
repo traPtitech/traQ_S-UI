@@ -1,4 +1,4 @@
-import { createComponent, reactive, toRefs } from '@vue/composition-api'
+import { createComponent, reactive } from '@vue/composition-api'
 import store from '@/store'
 import api from '@/lib/api'
 
@@ -46,8 +46,13 @@ export default createComponent({
         <button onClick={() => store.dispatch.entities.fetchUsers()}>
           fetchUsers
         </button>
+        <button onClick={() => store.dispatch.entities.fetchChannels()}>
+          fetchChannels
+        </button>
         <div>store.state.entities.users:</div>
         <pre>{JSON.stringify(store.state.entities.users, null, 4)}</pre>
+        <div>store.state.entities.channels:</div>
+        <pre>{JSON.stringify(store.state.entities.channels, null, 4)}</pre>
       </div>
     )
   }
