@@ -9,7 +9,25 @@ export default createComponent({
       <div id="app">
         <ThemeProvider
           theme={{
-            primary: '#005BAC'
+            accent: {
+              primary: '#005BAC',
+              notification: '#F2994A',
+              online: '#28F0E4'
+            },
+            background: {
+              primary: '#FFFFFF',
+              secondary: '#F6F7F9',
+              tertiary: '#ECEFF3'
+            },
+            ui: {
+              primary: '#525E67',
+              secondary: '#828E96',
+              tertiary: '#ECEFF3'
+            },
+            text: {
+              primary: '#333333',
+              secondary: '#79797A'
+            }
           }}
         >
           <HelloWorld msg="traQ" />
