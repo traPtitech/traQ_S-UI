@@ -29,8 +29,7 @@ export default createComponent({
             value={loginState.name}
             onChange={event =>
               (loginState.name = event.target.value?.toString() ?? '')
-            }
-          ></input>
+            }></input>
         </div>
         <div>
           <span>pass</span>
