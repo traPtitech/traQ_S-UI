@@ -12,4 +12,5 @@ export const mutations = createMutations<S>()({
   setCurrentChannelId(state: S, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
   }
+  // TODO: テーマの変更
 })

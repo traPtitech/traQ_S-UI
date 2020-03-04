@@ -152,12 +152,9 @@ declare module 'vue-styled-components' {
   }
 
   export let styled: Styled
-
   export default styled
 
-  interface DefaultTheme {
-    primary: string
-  }
+  export interface DefaultTheme extends Theme {}
   export type PropsWithDefaultTheme = {
     theme: DefaultTheme
   }
@@ -165,4 +162,27 @@ declare module 'vue-styled-components' {
     new (): ComponentRenderProxy<PropsWithDefaultTheme>
   }
   export const ThemeProvider: ThemeProviderComponent
+}
+
+// traQ固有のテーマ定義
+interface Theme {
+  accent: {
+    primary: string
+    notification: string
+    online: string
+  }
+  background: {
+    primary: string
+    secondary: string
+    tertiary: string
+  }
+  ui: {
+    primary: string
+    secondary: string
+    tertiary: string
+  }
+  text: {
+    primary: string
+    secondary: string
+  }
 }
