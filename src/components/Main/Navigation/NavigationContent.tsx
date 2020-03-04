@@ -15,8 +15,7 @@ export default createComponent({
                 store.dispatch.entities.fetchMessagesByChannelId(
                   channel.channelId ?? ''
                 )
-              }}
-            >
+              }}>
               {' '}
               #{channel.name}
             </li>
