@@ -3,19 +3,17 @@ declare module 'vue-styled-components' {
   import * as Vue from 'vue'
   import { ComponentRenderProxy } from '@vue/composition-api'
 
-  export type CSSProperties = CSS.Properties<string | number>
+  type CSSProperties = CSS.Properties<string | number>
 
-  export type CSSPseudos = { [K in CSS.Pseudos]?: CSSObject }
+  type CSSPseudos = { [K in CSS.Pseudos]?: CSSObject }
 
-  export interface CSSObject extends CSSProperties, CSSPseudos {
+  interface CSSObject extends CSSProperties, CSSPseudos {
     [key: string]: CSSObject | string | number | undefined
   }
 
-  export type CSS = CSSProperties
+  type CSS = CSSProperties
 
-  export type Interpolation<P> = ((props: ThemedProps<P>) => string) | string
-
-  export type StyledComponent<P> = Vue.Component<{}, {}, {}, P> &
+  type StyledComponent<P> = Vue.Component<{}, {}, {}, P> &
     Vue.VueConstructor & {
       extend(
         cssRules: TemplateStringsArray,
@@ -24,40 +22,23 @@ declare module 'vue-styled-components' {
       withComponent(target: Vue.VueConstructor): StyledComponent<P>
     }
 
-  export type StyledComponentElements<T = HTMLElements> = {
+  type StyledComponentElements<T = HTMLElements> = {
     [k in keyof T]: <P>(
       str: TemplateStringsArray,
       ...args: Interpolation<P>[]
     ) => StyledComponent<P>
   }
-  export type Styled<T = HTMLElements> = StyledComponentElements & {
-    <P>(Component: keyof HTMLElements, props?: P): (
+  type Styled<T = HTMLElements> = StyledComponentElements & {
+    <Props, PrimitifiedProp = PrimitifyObject<Props>>(
+      Component: keyof HTMLElements,
+      props?: Props
+    ): (
       str: TemplateStringsArray,
-      ...args: ((
-        props: ThemedProps<
-          {
-            [key in keyof P]: Primitify<P[key]>
-          }
-        >
-      ) => string)[]
-    ) => StyledComponent<P>
+      ...args: ((props: ThemedProps<PrimitifiedProp>) => string)[]
+    ) => StyledComponent<Props>
   }
 
-  type Primitify<T> = T extends String
-    ? string
-    : T extends NumberConstructor
-    ? number
-    : T extends BooleanConstructor
-    ? boolean
-    : T extends BigIntConstructor
-    ? bigint
-    : T extends SymbolConstructor
-    ? symbol
-    : T extends ObjectConstructor
-    ? {}
-    : never
-
-  export interface HTMLElements {
+  interface HTMLElements {
     a: HTMLAnchorElement
     abbr: HTMLElement
     address: HTMLElement
@@ -173,8 +154,7 @@ declare module 'vue-styled-components' {
     wbr: HTMLElement
   }
 
-  export let styled: Styled
-  export default styled
+  export type Interpolation<P> = ((props: ThemedProps<P>) => string) | string
 
   export interface DefaultTheme {}
   export type ThemeProp = {
@@ -191,4 +171,25 @@ declare module 'vue-styled-components' {
     str: TemplateStringsArray,
     ...args: Interpolation<P>[]
   ) => string
+
+  export let styled: Styled
+  export default styled
 }
+
+type PrimitifyObject<P> = {
+  [key in keyof P]: Primitify<P[key]>
+}
+
+type Primitify<T> = T extends String
+  ? string
+  : T extends NumberConstructor
+  ? number
+  : T extends BooleanConstructor
+  ? boolean
+  : T extends BigIntConstructor
+  ? bigint
+  : T extends SymbolConstructor
+  ? symbol
+  : T extends ObjectConstructor
+  ? {}
+  : never
