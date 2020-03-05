@@ -4,6 +4,7 @@ import store from '@/store'
 import styled, { ThemedProps } from 'vue-styled-components'
 import theme from '@/lib/theme'
 import media from '@/lib/media'
+import { Constructorize } from '@/types/utils'
 
 type Props = {
   channelId: ChannelId
@@ -15,7 +16,10 @@ export default createComponent({
   setup(props: Props, _: SetupContext) {
     return () => (
       <Block>
-        <Header poyo>
+        <Header
+          poyo={{
+            a: false
+          }}>
           {props.channelId in store.state.entities.channels
             ? '#' + store.state.entities.channels[props.channelId].name
             : 'メッセージビュー'}
@@ -38,13 +42,15 @@ export default createComponent({
   }
 })
 
-const Header = styled('h1', { poyo: Boolean })`
+const HeaderProps = { poyo: Object as Constructorize<{ a: boolean }> }
+
+const Header = styled('h1', HeaderProps)`
   font: {
     size: 30px;
     weight: bold;
   }
   color: ${theme.accent.primary};
-  background-color: ${props => (props.poyo ? 'red' : 'blue')};
+  background-color: ${props => (props.poyo.a ? 'red' : 'blue')};
 `
 
 const Block = styled.div`

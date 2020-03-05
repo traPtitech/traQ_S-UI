@@ -186,9 +186,7 @@ type Primitify<T> = T extends String
   ? bigint
   : T extends Symbol
   ? symbol
-  : T extends Object
-  ? Record<string, any>
-  : never
+  : T
 
 type TypeOfProp<P> = {
   [K in keyof P]: P[K] extends new (...args: any) => any
