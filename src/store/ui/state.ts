@@ -1,3 +1,7 @@
-export interface S {}
+export interface S {
+  viewportWidth: number
+}
 
-export const state: S = {}
+export const state: S = {
+  viewportWidth: 0
+}
