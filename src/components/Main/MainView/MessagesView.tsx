@@ -38,13 +38,13 @@ export default createComponent({
   }
 })
 
-const Header = styled('h1', { poyo: Boolean })`
+const Header = styled('h1', { poyo: Object })`
   font: {
     size: 30px;
     weight: bold;
   }
   color: ${theme.accent.primary};
-  background-color: ${props => (props.poyo ? 'red' : 'blue')};
+  background-color: ${props => (props.poyo.a ? 'red' : 'blue')};
 `
 
 const Block = styled.div`

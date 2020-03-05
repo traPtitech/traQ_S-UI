@@ -29,12 +29,12 @@ declare module 'vue-styled-components' {
     ) => StyledComponent<P>
   }
   type Styled<T = HTMLElements> = StyledComponentElements & {
-    <Props, PrimitifiedProp = PrimitifyObject<Props>>(
+    <Props extends Record<string, any>>(
       Component: keyof HTMLElements,
       props?: Props
     ): (
       str: TemplateStringsArray,
-      ...args: ((props: ThemedProps<PrimitifiedProp>) => string)[]
+      ...args: ((props: ThemedProps<TypeOfProp<Props>>) => string)[]
     ) => StyledComponent<Props>
   }
 
@@ -176,20 +176,22 @@ declare module 'vue-styled-components' {
   export default styled
 }
 
-type PrimitifyObject<P> = {
-  [key in keyof P]: Primitify<P[key]>
-}
-
 type Primitify<T> = T extends String
   ? string
-  : T extends NumberConstructor
+  : T extends Number
   ? number
-  : T extends BooleanConstructor
+  : T extends Boolean
   ? boolean
-  : T extends BigIntConstructor
+  : T extends BigInt
   ? bigint
-  : T extends SymbolConstructor
+  : T extends Symbol
   ? symbol
-  : T extends ObjectConstructor
-  ? {}
+  : T extends Object
+  ? Record<string, any>
   : never
+
+type TypeOfProp<P> = {
+  [K in keyof P]: P[K] extends new (...args: any) => any
+    ? Primitify<InstanceType<P[K]>>
+    : P[K]
+}
