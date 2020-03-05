@@ -1,6 +1,6 @@
-import { PropsWithDefaultTheme, DefaultTheme } from 'vue-styled-components'
+import { ThemedProps, DefaultTheme } from 'vue-styled-components'
 
-type ThemeFunction = (props: PropsWithDefaultTheme) => string
+export type ThemeFunction = (props: ThemedProps<{}>) => string
 type ThemeFunctions = {
   [K1 in keyof DefaultTheme]: {
     [K2 in keyof DefaultTheme[K1]]: ThemeFunction

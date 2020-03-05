@@ -13,27 +13,49 @@ declare module 'vue-styled-components' {
 
   export type CSS = CSSProperties
 
-  export type StyledComponent = Vue.Component &
+  export type Interpolation<P> = ((props: ThemedProps<P>) => string) | string
+
+  export type StyledComponent<P> = Vue.Component<{}, {}, {}, P> &
     Vue.VueConstructor & {
       extend(
         cssRules: TemplateStringsArray,
-        ...interpolate: TemplateStringsArray[]
-      ): StyledComponent
-      withComponent(target: Vue.VueConstructor): StyledComponent
+        ...interpolate: Interpolation<P>[]
+      ): StyledComponent<P>
+      withComponent(target: Vue.VueConstructor): StyledComponent<P>
     }
 
   export type StyledComponentElements<T = HTMLElements> = {
-    [k in keyof T]: (
+    [k in keyof T]: <P>(
       str: TemplateStringsArray,
-      ...args: ((props: PropsWithDefaultTheme) => string)[]
-    ) => StyledComponent
+      ...args: Interpolation<P>[]
+    ) => StyledComponent<P>
   }
   export type Styled<T = HTMLElements> = StyledComponentElements & {
-    <T>(Component: T, props?: Record<string, Vue.PropOptions['type']>): (
+    <P>(Component: keyof HTMLElements, props?: P): (
       str: TemplateStringsArray,
-      ...args: ((props: PropsWithDefaultTheme) => string)[]
-    ) => StyledComponent
+      ...args: ((
+        props: ThemedProps<
+          {
+            [key in keyof P]: Primitify<P[key]>
+          }
+        >
+      ) => string)[]
+    ) => StyledComponent<P>
   }
+
+  type Primitify<T> = T extends String
+    ? string
+    : T extends NumberConstructor
+    ? number
+    : T extends BooleanConstructor
+    ? boolean
+    : T extends BigIntConstructor
+    ? bigint
+    : T extends SymbolConstructor
+    ? symbol
+    : T extends ObjectConstructor
+    ? {}
+    : never
 
   export interface HTMLElements {
     a: HTMLAnchorElement
@@ -154,35 +176,19 @@ declare module 'vue-styled-components' {
   export let styled: Styled
   export default styled
 
-  export interface DefaultTheme extends Theme {}
-  export type PropsWithDefaultTheme = {
+  export interface DefaultTheme {}
+  export type ThemeProp = {
     theme: DefaultTheme
   }
+  export type ThemedProps<P> = ThemeProp & P
+
   export type ThemeProviderComponent = {
-    new (): ComponentRenderProxy<PropsWithDefaultTheme>
+    new (): ComponentRenderProxy<ThemeProp>
   }
   export const ThemeProvider: ThemeProviderComponent
-}
 
-// traQ固有のテーマ定義
-interface Theme {
-  accent: {
-    primary: string
-    notification: string
-    online: string
-  }
-  background: {
-    primary: string
-    secondary: string
-    tertiary: string
-  }
-  ui: {
-    primary: string
-    secondary: string
-    tertiary: string
-  }
-  text: {
-    primary: string
-    secondary: string
-  }
+  export const css: <P>(
+    str: TemplateStringsArray,
+    ...args: Interpolation<P>[]
+  ) => string
 }
