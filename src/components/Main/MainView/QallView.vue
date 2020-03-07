@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import { createComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'QallView',
   props: {},
   setup() {

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { createComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { LayoutType, ViewInformation } from '@/store/ui/mainView/state'
 import { VNode } from 'vue'
@@ -11,7 +11,7 @@ import { VNode } from 'vue'
 import MessagesView from '@/components/Main/MainView/MessagesView.vue'
 import QallView from '@/components/Main/MainView/QallView.vue'
 
-export default createComponent({
+export default defineComponent({
   name: 'MainViewController',
   components: { MessagesView, QallView },
   setup() {

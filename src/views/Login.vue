@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { createComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import api from '@/lib/api'
 
@@ -43,7 +43,7 @@ const useLogin = () => {
   }
 }
 
-export default createComponent({
+export default defineComponent({
   name: 'Login',
   setup() {
     const { loginState, login, logout } = useLogin()

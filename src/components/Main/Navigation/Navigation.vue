@@ -6,11 +6,11 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import NavigationSelector from '@/components/Main/Navigation/NavigationSelector.vue'
 
-export default createComponent({
+export default defineComponent({
   name: 'Navigation',
   components: { NavigationContent, NavigationSelector },
   setup() {
