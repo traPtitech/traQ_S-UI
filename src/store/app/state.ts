@@ -1,11 +1,11 @@
 import { ChannelId } from '@/types/entity-ids'
-import { DefaultTheme } from 'vue-styled-components'
+import { Theme } from '@/types/theme'
 
 export interface S {
   loaded: boolean
   componentLoaded: boolean
   currentChannelId: ChannelId
-  theme: DefaultTheme
+  theme: Theme
 }
 
 export const state: S = {
