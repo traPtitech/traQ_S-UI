@@ -1,15 +1,15 @@
 <template>
   <div
-    class="touch-detector"
+    :class="$style.homeWrapper"
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
   >
-    <div :class="$style['home-container']">
-      <div :class="$style['navigation-wrapper']">
+    <div :class="$style.homeContainer">
+      <div :class="$style.navigationWrapper">
         <Navigation />
       </div>
-      <div :class="$style['main-view-wrapper']" :style="mainViewWrapperStyle">
+      <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
         <MainViewController :isActive="isNavAppeared" />
       </div>
     </div>
@@ -17,15 +17,14 @@
 </template>
 
 <script lang="ts">
-import { createComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import MainViewController from '@/components/Main/MainView/MainViewController'
 import Navigation from '@/components/Main/Navigation/Navigation'
-import styled from 'vue-styled-components'
 import store from '@/store'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
 
-export default createComponent({
+export default defineComponent({
   name: 'Home',
   components: {
     Navigation,
@@ -67,7 +66,18 @@ export default createComponent({
 </script>
 
 <style lang="scss" module>
-.navigation-wrapper {
+.homeWrapper {
+  height: 100%;
+}
+.homeContainer {
+  height: 100%;
+  display: flex;
+  [data-is-mobile] & {
+    position: relative;
+  }
+}
+.navigationWrapper {
+  height: 100%;
   flex-grow: 0;
   flex-shrink: 0;
   [data-is-mobile] & {
@@ -76,13 +86,8 @@ export default createComponent({
     left: 0;
   }
 }
-.home-container {
-  display: flex;
-  [data-is-mobile] & {
-    position: relative;
-  }
-}
-.main-view-wrapper {
+.mainViewWrapper {
   width: 100%;
+  height: 100%;
 }
 </style>

@@ -1,9 +1,5 @@
 <template>
-  <div class="navigation-selector">
-    <ul>
-      <li>ちゃんねる</li>
-    </ul>
-  </div>
+  <div class="navigation-selector"></div>
 </template>
 
 <script lang="ts">

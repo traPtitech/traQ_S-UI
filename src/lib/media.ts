@@ -1,5 +1,3 @@
-import { css, ThemedProps, Interpolation } from 'vue-styled-components'
-
 /*
  * Bootstrap Media Queries
  *
@@ -24,18 +22,3 @@ export const maxBreakpoints = {
 }
 
 export const mobileMaxBreakpoint = maxBreakpoints.small
-
-const mobile = (query: TemplateStringsArray, ctx: Interpolation<{}>) => (
-  _: ThemedProps<{}>
-) =>
-  css`
-    [data-is-mobile='true'] & {
-      ${css(query, ctx)}
-    }
-  `
-
-const media = {
-  mobile
-}
-
-export default media
