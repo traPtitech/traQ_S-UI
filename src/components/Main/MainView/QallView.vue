@@ -8,7 +8,6 @@
 
 <script lang="ts">
 import { createComponent, SetupContext } from '@vue/composition-api'
-import styled from 'vue-styled-components'
 
 export default createComponent({
   name: 'QallView',

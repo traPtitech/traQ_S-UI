@@ -1,5 +1,5 @@
 // traQ固有のテーマ定義
-interface Theme {
+export interface Theme {
   accent: {
     primary: string
     notification: string
