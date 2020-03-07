@@ -23,7 +23,7 @@ export interface SwipeDetectorState {
 /**
  * x方向のスワイプを検出する
  */
-export const useSwipeDetector = () => {
+const useSwipeDetector = () => {
   const state: SwipeDetectorState = reactive({
     lastTouchPosX: -1,
     lastTouchPosY: -1,
@@ -94,3 +94,5 @@ export const useSwipeDetector = () => {
     touchmoveHandler
   }
 }
+
+export default useSwipeDetector

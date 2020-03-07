@@ -22,8 +22,8 @@ import MainViewController from '@/components/Main/MainView/MainViewController'
 import Navigation from '@/components/Main/Navigation/Navigation'
 import styled from 'vue-styled-components'
 import store from '@/store'
-import { useSwipeDetector } from '@/compositions/swipeDetector'
-import { useSwipeDrawer } from '@/compositions/swipeDrawer'
+import useSwipeDetector from '@/use/swipeDetector'
+import useSwipeDrawer from '@/use/swipeDrawer'
 
 export default createComponent({
   name: 'Home',

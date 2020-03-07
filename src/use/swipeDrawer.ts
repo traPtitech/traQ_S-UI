@@ -1,5 +1,5 @@
 import { computed, reactive, watch } from '@vue/composition-api'
-import { SwipeDetectorState } from '@/compositions/swipeDetector'
+import { SwipeDetectorState } from '@/use/swipeDetector'
 
 /**
  * スワイプで引き出す系コンポーネントの表示/非表示を決定する
@@ -10,7 +10,7 @@ import { SwipeDetectorState } from '@/compositions/swipeDetector'
  * @param showThreshould 表示状態に移行するx変位の閾値
  * @param hideThreshould 非表示状態に移行するx変位の閾値
  */
-export const useSwipeDrawer = (
+const useSwipeDrawer = (
   swipeDetectorState: SwipeDetectorState,
   direction: 'left' | 'right',
   destination: number,
@@ -32,6 +32,7 @@ export const useSwipeDrawer = (
   /** ナビゲーションは表示状態になっているか */
   const isAppeared = computed(() => state.currentPosition > showThreshould)
 
+  /** 指定した位置まで`state.currentPosition`をアニメーションさせる */
   const animatePosition = (to: number) => {
     const startTime = Date.now()
     const diffPerMs = (to - state.currentPosition) / animationDurationMs
@@ -94,3 +95,5 @@ export const useSwipeDrawer = (
     isAppeared
   }
 }
+
+export default useSwipeDrawer
