@@ -48,7 +48,7 @@
     "prettier": "^1.18.2",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
-    "typescript": "^3.7.3",
+    "typescript": "^3.8.3",
     "vue-template-compiler": "^2.6.11"
   }
 }
