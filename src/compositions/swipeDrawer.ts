@@ -30,7 +30,7 @@ export const useSwipeDrawer = (
   })
 
   /** ナビゲーションは表示状態になっているか */
-  const isNavAppeared = computed(() => state.currentPosition > showThreshould)
+  const isAppeared = computed(() => state.currentPosition > showThreshould)
 
   const animatePosition = (to: number) => {
     const startTime = Date.now()
@@ -41,10 +41,8 @@ export const useSwipeDrawer = (
       state.currentPosition += diffPerMs * (currentTime - startTime)
       state.startPosition = state.currentPosition
       if (animationDirectonSign * (to - state.currentPosition) > 0) {
-        console.log('re-request')
         state.requestId = requestAnimationFrame(animate)
       } else {
-        console.log('end')
         state.currentPosition = to
         state.startPosition = to
         cancelAnimationFrame(state.requestId)
@@ -80,14 +78,12 @@ export const useSwipeDrawer = (
         state.currentPosition < hideThreshould
       ) {
         // スワイプ終了、速度がマイナスなので戻す
-        console.log('to hide')
         animatePosition(0)
       } else if (
         normalize(swipeDetectorState.swipeSpeedX) > 0 ||
         state.currentPosition > showThreshould
       ) {
         // スワイプ終了、速度がプラスなので出す
-        console.log('to show')
         animatePosition(destination)
       }
     }
@@ -95,6 +91,6 @@ export const useSwipeDrawer = (
 
   return {
     swipeDrawerState: state,
-    isNavAppeared
+    isAppeared
   }
 }
