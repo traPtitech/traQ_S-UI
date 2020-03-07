@@ -1,7 +1,8 @@
 import { createComponent } from '@vue/composition-api'
 import { ThemeProvider } from 'vue-styled-components'
-import HelloWorld from '@/components/HelloWorld'
 import store from './store'
+import styled from 'vue-styled-components'
+import '@/styles/reset.css'
 
 const useWindowResizeObserver = () => {
   let lastCalled = 0
@@ -22,16 +23,19 @@ export default createComponent({
   setup() {
     useWindowResizeObserver()
     return () => (
-      <div id="app" data-is-mobile={store.getters.ui.isMobile}>
+      <AppWrapper id="app" data-is-mobile={store.getters.ui.isMobile}>
         <ThemeProvider theme={store.state.app.theme}>
-          <HelloWorld msg="traQ" />
-          <div id="nav">
-            <router-link to="/">Home</router-link> |
-            <router-link to="/login">Login</router-link>
-          </div>
           <router-view />
         </ThemeProvider>
-      </div>
+      </AppWrapper>
     )
   }
 })
+
+const AppWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+`

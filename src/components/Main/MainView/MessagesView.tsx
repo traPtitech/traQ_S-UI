@@ -30,7 +30,7 @@ export default createComponent({
         <button onClick={() => store.commit.ui.mainView.setLayout('split')}>
           split layout
         </button>
-        <pre>Channel Id: {props.channelId}</pre>
+        <pre>Channel id: {props.channelId}</pre>
         {Object.values(store.state.entities.messages)
           .filter(m => m.parentChannelId === props.channelId)
           .sort(m => m.createdAt?.valueOf() ?? 0)
@@ -54,6 +54,8 @@ const Header = styled('h1', HeaderProps)`
 `
 
 const Block = styled.div`
+  height: 100vh;
+  overflow: scroll;
   background-color: ${theme.accent.online};
   ${media.mobile`
     background-color: ${theme.accent.notification}
