@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
-import MainViewController from '@/components/Main/MainView/MainViewController'
-import Navigation from '@/components/Main/Navigation/Navigation'
+import MainViewController from '@/components/Main/MainView/MainViewController.vue'
+import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import store from '@/store'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
