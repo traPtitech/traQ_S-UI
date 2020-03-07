@@ -1,4 +1,4 @@
-import { createModule } from 'direct-vuex'
+import { defineModule } from 'direct-vuex'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
@@ -13,7 +13,7 @@ export interface ChannelState {
   notifiedUser: UserId[]
 }
 
-export const domain = createModule({
+export const domain = defineModule({
   namespaced: true,
   state,
   getters,

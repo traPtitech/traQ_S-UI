@@ -1,7 +1,7 @@
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S, LayoutType, ViewInformation } from './state'
 
-export const mutations = createMutations<S>()({
+export const mutations = defineMutations<S>()({
   setLayout(state: S, layout: LayoutType) {
     state.layout = layout
   },

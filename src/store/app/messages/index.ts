@@ -1,4 +1,4 @@
-import { createModule } from 'direct-vuex'
+import { defineModule } from 'direct-vuex'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
@@ -10,7 +10,7 @@ export interface MessageFormState {
   selection: Selection
 }
 
-export const messages = createModule({
+export const messages = defineModule({
   namespaced: true,
   state,
   getters,

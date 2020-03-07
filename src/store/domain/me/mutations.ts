@@ -1,8 +1,8 @@
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { MessageId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
 
-export const mutations = createMutations<S>()({
+export const mutations = defineMutations<S>()({
   setId(state: S, id: MessageId) {
     state.id = id
   },

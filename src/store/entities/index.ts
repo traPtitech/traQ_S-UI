@@ -1,4 +1,4 @@
-import { createModule } from 'direct-vuex'
+import { defineModule } from 'direct-vuex'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
@@ -9,7 +9,7 @@ import { actions } from './actions'
  *
  * このモジュールのstateは id => body の形をしたRecordのみ許す
  */
-export const entities = createModule({
+export const entities = defineModule({
   namespaced: true,
   state,
   getters,

@@ -1,4 +1,4 @@
-import { createActions } from 'direct-vuex'
+import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
@@ -19,7 +19,7 @@ const reduceToRecord = <T>(array: T[], key: keyof T) =>
 export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
-export const actions = createActions({
+export const actions = defineActions({
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getUsers()

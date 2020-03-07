@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { ChannelState } from '.'
 
-export const mutations = createMutations<S>()({
+export const mutations = defineMutations<S>()({
   setChannelActivity(state: S, activity: ChannelId[]) {
     state.channelActivity = activity
   },
