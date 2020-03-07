@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import {
-  createComponent,
+  defineComponent,
   SetupContext,
   reactive,
   computed
@@ -34,7 +34,7 @@ type Props = {
   channelId: ChannelId
 }
 
-export default createComponent({
+export default defineComponent({
   name: 'MessagesView',
   props: { channelId: String },
   setup(props: Props, _: SetupContext) {

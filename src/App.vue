@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import store from './store'
 
-export default createComponent({
+export default defineComponent({
   name: 'App',
   components: {},
   setup() {

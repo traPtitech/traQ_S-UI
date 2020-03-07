@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts">
-import { createComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '../../../types/entity-ids'
 
-export default createComponent({
+export default defineComponent({
   name: 'NavigationContent',
   setup() {
     const state = reactive({
