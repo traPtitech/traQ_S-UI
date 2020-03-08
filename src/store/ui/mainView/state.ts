@@ -1,12 +1,10 @@
-import { ChannelId } from '@/types/entity-ids'
-
 export type ViewType = 'messages' | 'qall'
 export interface ViewInformationBase {
   type: ViewType
 }
 export type ViewInformation = MessagesView | QallView
 
-export type LayoutType = 'single' | 'split'
+export type LayoutType = 'single' | 'split' | 'split-reverse'
 
 export interface MessagesView extends ViewInformationBase {
   type: 'messages'

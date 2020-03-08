@@ -1,18 +1,5 @@
 <template>
-  <div :class="$style.container">
-    <h2 :class="$style.header">
-      {{
-        props.channelId in state.channels
-          ? '#' + state.channels[props.channelId].name
-          : 'メッセージビュー'
-      }}
-    </h2>
-    <button @click="setSingleLayout">
-      single layout
-    </button>
-    <button @click="setSplitLayout">
-      split layout
-    </button>
+  <div :class="$style.container" :style="containerStyle">
     <pre>Channel Id: {{ props.channelId }}</pre>
     <div v-for="message in channelMessages" :key="message.messageId">
       {{ message.content }}
@@ -38,9 +25,6 @@ export default defineComponent({
   name: 'MessagesView',
   props: { channelId: String },
   setup(props: Props, _: SetupContext) {
-    const setSingleLayout = () => store.commit.ui.mainView.setLayout('single')
-    const setSplitLayout = () => store.commit.ui.mainView.setLayout('split')
-
     const state = reactive({
       messages: computed(() => store.state.entities.messages),
       channels: computed(() => store.state.entities.channels)
@@ -52,12 +36,16 @@ export default defineComponent({
         .sort(m => m.createdAt?.valueOf() ?? 0)
     )
 
+    const containerStyle = computed(() => ({
+      background: store.state.app.theme.background.primary,
+      color: store.state.app.theme.ui.primary
+    }))
+
     return {
       props,
       state,
-      setSingleLayout,
-      setSplitLayout,
-      channelMessages
+      channelMessages,
+      containerStyle
     }
   }
 })
@@ -65,8 +53,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  color: blue;
-  background: palevioletred;
   height: 100%;
   overflow: scroll;
 }
