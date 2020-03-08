@@ -1,12 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div
-      v-for="channel in state.channels"
-      :key="channel.channelId"
-      @click="onClickChannel(channel.channelId)"
-    >
-      #{{ channel.name }}
-    </div>
+    <channel-list />
   </div>
 </template>
 
@@ -14,9 +8,13 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '../../../types/entity-ids'
+import ChannelList from './ChannelList.vue'
 
 export default defineComponent({
   name: 'NavigationContent',
+  components: {
+    ChannelList
+  },
   setup() {
     store.dispatch.entities.fetchChannels()
     const state = reactive({

@@ -1,8 +1,6 @@
-import { computed, reactive, ref } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
-import { defineGetters } from 'direct-vuex'
-import { S } from './state'
 import store from '@/store'
+import { computed, ref } from '@vue/composition-api'
+import { ChannelId } from '@/types/entity-ids'
 
 const rootChannelId = ''
 const dmChannelId = 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa'
@@ -10,7 +8,7 @@ const dmChannelId = 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa'
 type RootChannelId = typeof rootChannelId
 type DmChannelId = typeof dmChannelId
 
-type ChannelTreeNode = {
+export type ChannelTreeNode = {
   channelId: ChannelId
   name: string
   children?: ChannelTreeNode[]
@@ -26,11 +24,11 @@ const constructTree = (channel: {
   children?: readonly ChannelId[]
   name?: string
 }): ChannelTreeNode => {
-  const childrenCopied = [...(channel.children ?? [])]
+  const childrenCopied = [...(channel?.children ?? [])]
   console.log(childrenCopied)
   return {
-    channelId: channel.channelId ?? '',
-    name: channel.name ?? '',
+    channelId: channel?.channelId ?? '',
+    name: channel?.name ?? '',
     children: childrenCopied
       ?.sort((id1, id2) => {
         // sort by channel name
@@ -44,4 +42,14 @@ const constructTree = (channel: {
   }
 }
 
-export const getters = defineGetters<S>()({})
+const useChannelTree = () => {
+  const channelTree = computed<ChannelTree<RootChannelId>>(() => ({
+    channelId: rootChannelId,
+    name: '',
+    children:
+      constructTree(store.state.entities.channels[rootChannelId]).children ?? []
+  }))
+  return { channelTree }
+}
+
+export default useChannelTree
