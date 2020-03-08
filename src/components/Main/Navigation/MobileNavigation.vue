@@ -1,26 +1,26 @@
 <template>
   <div :class="$style.container" :style="navigationStyle">
-    <mobile-navigation v-if="isMobile" />
-    <desktop-navigation v-else />
+    MOBILE
+    <NavigationSelector />
+    <NavigationContent />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
-import DesktopNavigation from '@/components/Main/Navigation/DesktopNavigation.vue'
-import MobileNavigation from '@/components/Main/Navigation/MobileNavigation.vue'
+import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
+import NavigationSelector from '@/components/Main/Navigation/NavigationSelector.vue'
 import store from '@/store'
 
 export default defineComponent({
   name: 'Navigation',
-  components: { DesktopNavigation, MobileNavigation },
+  components: { NavigationContent, NavigationSelector },
   setup() {
     const navigationStyle = computed(() => ({
       background: store.state.app.theme.background.secondary,
       color: store.state.app.theme.ui.primary
     }))
-    const isMobile = computed(() => store.getters.ui.isMobile)
-    return { navigationStyle, isMobile }
+    return { navigationStyle }
   }
 })
 </script>
