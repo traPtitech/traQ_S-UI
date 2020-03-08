@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.Block">
-    <Header>
+  <div :class="$style.container">
+    <h2 :class="$style.header">
       {{
         props.channelId in state.channels
           ? '#' + state.channels[props.channelId].name
           : 'メッセージビュー'
       }}
-    </Header>
+    </h2>
     <button @click="setSingleLayout">
       single layout
     </button>
@@ -64,11 +64,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.Block {
+.container {
   color: blue;
+  background: palevioletred;
+  height: 100%;
+  overflow: scroll;
 }
 
-.Header {
+.header {
   font: {
     size: 30px;
     weight: bold;

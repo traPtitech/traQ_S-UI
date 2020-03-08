@@ -1,4 +1,4 @@
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 
-export const mutations = createMutations<S>()({})
+export const mutations = defineMutations<S>()({})

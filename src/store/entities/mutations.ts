@@ -8,7 +8,7 @@ import {
   // StampPalette,
   Webhook
 } from '@/lib/api'
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import {
   UserId,
@@ -39,7 +39,7 @@ const addMutation = <I extends string, T>(key: keyof S) => (
   Vue.set(state[key], payload.id, payload.entity)
 }
 
-export const mutations = createMutations<S>()({
+export const mutations = defineMutations<S>()({
   setUsers: setMutation<UserId, User>('users'),
   setMessages: setMutation<MessageId, Message>('messages'),
   setChannels: setMutation<ChannelId, Channel>('channels'),

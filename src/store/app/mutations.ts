@@ -1,8 +1,8 @@
-import { createMutations } from 'direct-vuex'
+import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId } from '@/types/entity-ids'
 
-export const mutations = createMutations<S>()({
+export const mutations = defineMutations<S>()({
   setLoaded(state: S, loaded: boolean) {
     state.loaded = loaded
   },

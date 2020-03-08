@@ -1,8 +1,4 @@
-import { createGetters } from 'direct-vuex'
+import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 
-export const getters = createGetters<S>()({
-  // count(state) {
-  //   return state.count
-  // }
-})
+export const getters = defineGetters<S>()({})

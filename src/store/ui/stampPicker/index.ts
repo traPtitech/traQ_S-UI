@@ -1,10 +1,10 @@
-import { createModule } from 'direct-vuex'
+import { defineModule } from 'direct-vuex'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export const stampPicker = createModule({
+export const stampPicker = defineModule({
   namespaced: true,
   state,
   getters,

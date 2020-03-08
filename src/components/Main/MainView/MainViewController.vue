@@ -1,5 +1,7 @@
 <template>
-  <MessagesView :channelId="state.channelId" />
+  <div :class="$style.container">
+    <MessagesView :channelId="state.channelId" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -25,3 +27,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.container {
+  height: 100%;
+}
+</style>
