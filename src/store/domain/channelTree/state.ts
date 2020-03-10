@@ -11,6 +11,7 @@ export interface ChannelTreeNode {
   name: string
   children: ChannelTreeNode[]
   active: boolean
+  skippedAncestorNames?: string[]
 }
 export interface ChannelTree<Root> {
   channelId: Root

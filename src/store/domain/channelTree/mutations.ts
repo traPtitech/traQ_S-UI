@@ -21,7 +21,7 @@ export const constructTree = (
 ): ChannelTreeNode | undefined => {
   const channel = channelEntities[channelId]
   if (!channel) {
-    throw 'Channel Not found'
+    return undefined
   }
   if (channel.channelId === undefined) {
     throw 'Channel has no channel id'
@@ -59,7 +59,12 @@ export const constructTree = (
   }
   if (children.length === 1 && !isSubscribed) {
     // 子が1つの非購読チャンネル
-    return children[0]
+    const ancestorNames = children[0].skippedAncestorNames ?? []
+    ancestorNames.push(channel.name)
+    return {
+      ...children[0],
+      skippedAncestorNames: ancestorNames
+    }
   }
   // 子が2つ以上か、購読チャンネル
   return {
@@ -93,7 +98,7 @@ export const mutations = defineMutations<S>()({
       active: true,
       children:
         constructTree(
-          dmChannelId,
+          rootChannelId,
           store.state.entities.channels,
           new Set(store.state.domain.me.subscribedChannels)
         )?.children ?? []
