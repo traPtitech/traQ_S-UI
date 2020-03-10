@@ -27,7 +27,6 @@ const constructTree = (channel: {
   name?: string
 }): ChannelTreeNode => {
   const childrenCopied = [...(channel.children ?? [])]
-  console.log(childrenCopied)
   return {
     channelId: channel.channelId ?? '',
     name: channel.name ?? '',
