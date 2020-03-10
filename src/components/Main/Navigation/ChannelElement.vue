@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
-import useChannelTree, { ChannelTreeNode } from '@/use/channelTree'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 
 type Props = {
   channel: ChannelTreeNode

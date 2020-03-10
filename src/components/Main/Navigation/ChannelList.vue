@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
-import useChannelTree from '@/use/channelTree'
 import ChannelElement from '@/components/Main/Navigation/ChannelElement.vue'
 import store from '@/store'
 
@@ -20,7 +19,9 @@ export default defineComponent({
     ChannelElement
   },
   setup() {
-    const { channelTree } = useChannelTree()
+    const channelTree = computed(
+      () => store.state.domain.channelTree.channelTree
+    )
     const children = computed(() => channelTree.value.children ?? [])
     return {
       children
