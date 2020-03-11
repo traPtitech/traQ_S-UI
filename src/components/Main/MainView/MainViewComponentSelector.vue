@@ -1,9 +1,9 @@
 <template>
   <messages-view
-    v-if="viewInfo && viewInfo.type === 'messages'"
+    v-if="props.viewInfo && props.viewInfo.type === 'messages'"
     :channelId="channelId"
   />
-  <qall-view v-else-if="viewInfo && viewInfo.type === 'qall'" />
+  <qall-view v-else-if="props.viewInfo && props.viewInfo.type === 'qall'" />
   <div :class="$style.none" v-else></div>
 </template>
 
@@ -17,7 +17,7 @@ import MessagesView from '@/components/Main/MainView/MessagesView.vue'
 import QallView from '@/components/Main/MainView/QallView.vue'
 
 type Props = {
-  viewType?: ViewInformation
+  viewInfo?: ViewInformation
 }
 
 export default defineComponent({
@@ -30,6 +30,7 @@ export default defineComponent({
     const channelId = computed(() => store.state.app.currentChannelId)
 
     return {
+      props,
       channelId
     }
   }
