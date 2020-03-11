@@ -147,13 +147,25 @@ const homeChannelTree: ChannelTree<''> = {
   name: '',
   active: true,
   children: [
-    { channelId: '3', name: '3', active: true, children: [] },
+    {
+      channelId: '3',
+      name: '3',
+      active: true,
+      children: [],
+      skippedAncestorNames: ['8']
+    },
     {
       channelId: '4',
       name: '4',
       active: true,
       children: [
-        { channelId: '5', name: '5', active: true, children: [] },
+        {
+          channelId: '5',
+          name: '5',
+          active: true,
+          children: [],
+          skippedAncestorNames: ['10']
+        },
         {
           channelId: 'b',
           name: 'b',
