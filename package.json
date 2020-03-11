@@ -15,7 +15,7 @@
     "@vue/composition-api": "^0.4.0",
     "core-js": "^3.6.4",
     "direct-vuex": "^0.10.4",
-    "register-service-worker": "^1.6.2",
+    "register-service-worker": "^1.7.0",
     "traq-api-v2": "file:packages/traq-api-v2",
     "traq-api-v3": "file:packages/traq-api-v3",
     "vue": "^2.6.11",
