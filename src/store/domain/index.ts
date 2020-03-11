@@ -4,6 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { me } from './me'
+import { channelTree } from './channelTree'
 import { MessageId, UserId } from '@/types/entity-ids'
 
 export interface ChannelState {
@@ -20,6 +21,7 @@ export const domain = defineModule({
   mutations,
   actions,
   modules: {
-    me
+    me,
+    channelTree
   }
 })

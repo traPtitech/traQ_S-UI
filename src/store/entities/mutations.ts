@@ -19,6 +19,7 @@ import {
   WebhookId,
   MessageId
 } from '@/types/entity-ids'
+import store from '..'
 
 const setMutation = <I extends string, T>(key: keyof S) => (
   state: S,
@@ -42,7 +43,10 @@ const addMutation = <I extends string, T>(key: keyof S) => (
 export const mutations = defineMutations<S>()({
   setUsers: setMutation<UserId, User>('users'),
   setMessages: setMutation<MessageId, Message>('messages'),
-  setChannels: setMutation<ChannelId, Channel>('channels'),
+  setChannels(state, payload: Record<ChannelId, Channel>) {
+    state.channels = payload
+    store.commit.domain.channelTree.constructAllTrees()
+  },
   setUserGroups: setMutation<UserGroupId, UserGroup>('userGroups'),
   setStamps: setMutation<StampId, Stamp>('stamps'),
   // setStampPalettes: setMutation<StampPaletteId, Stamp>('stampPalettes'),
