@@ -15,7 +15,6 @@ export interface StampModifiedEvent {
   }
 }
 export const onStampModified = (data: StampModifiedEvent['body']) => {}
-// "id": ev.Fields["stamp_id"].(uuid.UUID),
 
 export interface StampDeletedEvent {
   type: 'STAMP_DELETED'
