@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from './store'
+import { setupWebSocket } from '@/lib/websocket'
 import '@/styles/reset.css'
 
 const useWindowResizeObserver = () => {
@@ -29,6 +30,7 @@ export default defineComponent({
   setup() {
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
+    setupWebSocket()
     return {
       isMobile
     }

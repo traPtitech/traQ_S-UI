@@ -28,11 +28,13 @@ module.exports = {
     proxy: {
       '/api/1.0/*': {
         target: 'https://traq-dev.tokyotech.org/',
+        ws: true,
         changeOrigin: true,
         agent: keepAliveAgent
       },
       '/api/v3/*': {
         target: 'https://traq-s-dev.tokyotech.org/',
+        ws: true,
         changeOrigin: true,
         agent: keepAliveAgent
       }
