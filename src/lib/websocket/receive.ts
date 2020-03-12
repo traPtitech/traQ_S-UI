@@ -102,8 +102,6 @@ export const onReceive = (data: string) => {
     return
   }
 
-  console.log('[WebSocket]', event.type, event.body)
-
   switch (event.type) {
     case 'USER_JOINED':
       onUserJoined(event.body)
