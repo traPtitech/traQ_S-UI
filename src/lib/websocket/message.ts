@@ -3,11 +3,13 @@ import { MessageId, UserId, StampId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'
 
+interface MessageIdBody {
+  id: MessageId
+}
+
 export interface MessageCreatedEvent {
   type: 'MESSAGE_CREATED'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   //const res = await apis.getMessage(id)
@@ -17,9 +19,7 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
 
 export interface MessageUpdatedEvent {
   type: 'MESSAGE_UPDATED'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessageUpdated = (data: MessageUpdatedEvent['body']) => {
   console.error('onMessageUpdated: Not implemented')
@@ -27,9 +27,7 @@ export const onMessageUpdated = (data: MessageUpdatedEvent['body']) => {
 
 export interface MessageDeletedEvent {
   type: 'MESSAGE_DELETED'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessageDeleted = (data: MessageDeletedEvent['body']) => {
   console.error('onMessageDeleted: Not implemented')
@@ -37,9 +35,7 @@ export const onMessageDeleted = (data: MessageDeletedEvent['body']) => {
 
 export interface MessageReadEvent {
   type: 'MESSAGE_READ'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessageRead = (data: MessageReadEvent['body']) => {
   console.error('onMessageRead: Not implemented')
@@ -73,9 +69,7 @@ export const onMessageUnstamped = (data: MessageUnstampedEvent['body']) => {
 
 export interface MessagePinnedEvent {
   type: 'MESSAGE_PINNED'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessagePinned = (data: MessagePinnedEvent['body']) => {
   console.error('onMessagePinned: Not implemented')
@@ -83,9 +77,7 @@ export const onMessagePinned = (data: MessagePinnedEvent['body']) => {
 
 export interface MessageUnpinnedEvent {
   type: 'MESSAGE_UNPINNED'
-  body: {
-    id: MessageId
-  }
+  body: MessageIdBody
 }
 export const onMessageUnpinned = (data: MessageUnpinnedEvent['body']) => {
   console.error('onMessageUnpinned: Not implemented')

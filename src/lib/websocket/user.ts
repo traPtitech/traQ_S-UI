@@ -3,11 +3,13 @@ import { UserId, ChannelId, UserGroupId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'
 
+interface UserIdBody {
+  id: UserId
+}
+
 export interface UserJoinedEvent {
   type: 'USER_JOINED'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
   const res = await apis.getUser(id)
@@ -16,9 +18,7 @@ export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
 
 export interface UserLeftEvent {
   type: 'USER_LEFT'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
   store.commit.entities.deleteUser(id)
@@ -26,9 +26,7 @@ export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
 
 export interface UserTagsUpdatedEvent {
   type: 'USER_TAGS_UPDATED'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {
   console.error('onUserTagsUpdated: Not implemented')
@@ -36,9 +34,7 @@ export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {
 
 export interface UserIconUpdatedEvent {
   type: 'USER_ICON_UPDATED'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
   console.error('onUserIconUpdated: Not implemented')
@@ -46,9 +42,7 @@ export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
 
 export interface UserOnlineEvent {
   type: 'USER_ONLINE'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserOnline = (data: UserOnlineEvent['body']) => {
   console.error('onUserOnline: Not implemented')
@@ -56,9 +50,7 @@ export const onUserOnline = (data: UserOnlineEvent['body']) => {
 
 export interface UserOfflineEvent {
   type: 'USER_OFFLINE'
-  body: {
-    id: UserId
-  }
+  body: UserIdBody
 }
 export const onUserOffline = (data: UserOfflineEvent['body']) => {
   console.error('onUserOffline: Not implemented')

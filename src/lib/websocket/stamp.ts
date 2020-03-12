@@ -2,11 +2,13 @@ import { StampId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'
 
+interface StampIdBody {
+  id: StampId
+}
+
 export interface StampCreatedEvent {
   type: 'STAMP_CREATED'
-  body: {
-    id: StampId
-  }
+  body: StampIdBody
 }
 export const onStampCreated = async ({ id }: StampCreatedEvent['body']) => {
   const res = await apis.getStamp(id)
@@ -15,9 +17,7 @@ export const onStampCreated = async ({ id }: StampCreatedEvent['body']) => {
 
 export interface StampModifiedEvent {
   type: 'STAMP_MODIFIED'
-  body: {
-    id: StampId
-  }
+  body: StampIdBody
 }
 export const onStampModified = async ({ id }: StampModifiedEvent['body']) => {
   const res = await apis.getStamp(id)
@@ -26,9 +26,7 @@ export const onStampModified = async ({ id }: StampModifiedEvent['body']) => {
 
 export interface StampDeletedEvent {
   type: 'STAMP_DELETED'
-  body: {
-    id: StampId
-  }
+  body: StampIdBody
 }
 export const onStampDeleted = ({ id }: StampDeletedEvent['body']) => {
   store.commit.entities.deleteStamp(id)

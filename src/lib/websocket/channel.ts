@@ -3,11 +3,13 @@ import { ChannelId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'
 
+interface ChannelIdBody {
+  id: ChannelId
+}
+
 export interface ChannelCreatedEvent {
   type: 'CHANNEL_CREATED'
-  body: {
-    id: ChannelId
-  }
+  body: ChannelIdBody
 }
 export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
   const res = await apis.getChannel(id)
@@ -16,9 +18,7 @@ export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
 
 export interface ChannelDeletedEvent {
   type: 'CHANNEL_DELETED'
-  body: {
-    id: ChannelId
-  }
+  body: ChannelIdBody
 }
 export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
   store.commit.entities.deleteChannel(id)
@@ -26,9 +26,7 @@ export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
 
 export interface ChannelUpdatedEvent {
   type: 'CHANNEL_UPDATED'
-  body: {
-    id: ChannelId
-  }
+  body: ChannelIdBody
 }
 export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   const res = await apis.getChannel(id)
@@ -37,9 +35,7 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
 
 export interface ChannelStaredEvent {
   type: 'CHANNEL_STARED'
-  body: {
-    id: ChannelId
-  }
+  body: ChannelIdBody
 }
 export const onChannelStared = (data: ChannelStaredEvent['body']) => {
   console.error('onChannelStared: Not implemented')
@@ -47,9 +43,7 @@ export const onChannelStared = (data: ChannelStaredEvent['body']) => {
 
 export interface ChannelUnstaredEvent {
   type: 'CHANNEL_UNSTARED'
-  body: {
-    id: ChannelId
-  }
+  body: ChannelIdBody
 }
 export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {
   console.error('onChannelUnstared: Not implemented')
