@@ -1,4 +1,6 @@
 import { UserId, ChannelId, UserGroupId } from '@/types/entity-ids'
+import apis from '@/lib/api'
+import store from '@/store'
 
 export interface UserJoinedEvent {
   type: 'USER_JOINED'
@@ -6,7 +8,10 @@ export interface UserJoinedEvent {
     id: UserId
   }
 }
-export const onUserJoined = (data: UserJoinedEvent['body']) => {}
+export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
+  const res = await apis.getUser(id)
+  store.commit.entities.addUser({ id, entity: res.data })
+}
 
 export interface UserLeftEvent {
   type: 'USER_LEFT'
@@ -14,7 +19,9 @@ export interface UserLeftEvent {
     id: UserId
   }
 }
-export const onUserLeft = (data: UserLeftEvent['body']) => {}
+export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
+  store.commit.entities.deleteUser(id)
+}
 
 export interface UserTagsUpdatedEvent {
   type: 'USER_TAGS_UPDATED'
@@ -22,7 +29,9 @@ export interface UserTagsUpdatedEvent {
     id: UserId
   }
 }
-export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {}
+export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {
+  console.error('onUserTagsUpdated: Not implemented')
+}
 
 export interface UserIconUpdatedEvent {
   type: 'USER_ICON_UPDATED'
@@ -30,7 +39,9 @@ export interface UserIconUpdatedEvent {
     id: UserId
   }
 }
-export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {}
+export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
+  console.error('onUserIconUpdated: Not implemented')
+}
 
 export interface UserOnlineEvent {
   type: 'USER_ONLINE'
@@ -38,7 +49,9 @@ export interface UserOnlineEvent {
     id: UserId
   }
 }
-export const onUserOnline = (data: UserOnlineEvent['body']) => {}
+export const onUserOnline = (data: UserOnlineEvent['body']) => {
+  console.error('onUserOnline: Not implemented')
+}
 
 export interface UserOfflineEvent {
   type: 'USER_OFFLINE'
@@ -46,7 +59,9 @@ export interface UserOfflineEvent {
     id: UserId
   }
 }
-export const onUserOffline = (data: UserOfflineEvent['body']) => {}
+export const onUserOffline = (data: UserOfflineEvent['body']) => {
+  console.error('onUserOffline: Not implemented')
+}
 
 export interface UserWebRTCStateChangedEvent {
   type: 'USER_WEBRTC_STATE_CHANGED'
@@ -58,13 +73,22 @@ export interface UserWebRTCStateChangedEvent {
 }
 export const onUserWebRTCStateChanged = (
   data: UserWebRTCStateChangedEvent['body']
-) => {}
+) => {
+  console.error('onUserWebRTCStateChanged: Not implemented')
+}
 
 export interface UserGroupCreatedEvent {
   type: 'USER_GROUP_CREATED'
-  body: null
+  body: {
+    id: UserGroupId
+  }
 }
-export const onUserGroupCreated = (data: UserGroupCreatedEvent['body']) => {}
+export const onUserGroupCreated = async ({
+  id
+}: UserGroupCreatedEvent['body']) => {
+  const res = await apis.getGroup(id)
+  store.commit.entities.addUserGroup({ id, entity: res.data })
+}
 
 export interface UserGroupDeletedEvent {
   type: 'USER_GROUP_DELETED'
@@ -72,7 +96,9 @@ export interface UserGroupDeletedEvent {
     id: UserGroupId
   }
 }
-export const onUserGroupDeleted = (data: UserGroupDeletedEvent['body']) => {}
+export const onUserGroupDeleted = ({ id }: UserGroupDeletedEvent['body']) => {
+  store.commit.entities.deleteUserGroup(id)
+}
 
 export interface UserGroupMemberAddedEvent {
   type: 'USER_GROUP_MEMBER_ADDED'
@@ -81,9 +107,13 @@ export interface UserGroupMemberAddedEvent {
     user_id: UserId
   }
 }
-export const onUserGroupMemberAdded = (
-  data: UserGroupMemberAddedEvent['body']
-) => {}
+export const onUserGroupMemberAdded = async ({
+  id
+}: UserGroupMemberAddedEvent['body']) => {
+  const res = await apis.getGroup(id)
+  store.commit.entities.extendUserGroups({ [id]: res.data })
+  // TODO: ユーザー追加するmutationを追加する
+}
 
 export interface UserGroupMemberRemovedEvent {
   type: 'USER_GROUP_MEMBER_REMOVED'
@@ -92,6 +122,10 @@ export interface UserGroupMemberRemovedEvent {
     user_id: UserId
   }
 }
-export const onUserGroupMemberRemoved = (
-  data: UserGroupMemberRemovedEvent['body']
-) => {}
+export const onUserGroupMemberRemoved = async ({
+  id
+}: UserGroupMemberRemovedEvent['body']) => {
+  const res = await apis.getGroup(id)
+  store.commit.entities.extendUserGroups({ [id]: res.data })
+  // TODO: ユーザー削除するmutationを追加する
+}

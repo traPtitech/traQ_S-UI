@@ -97,6 +97,7 @@ export const onReceive = (data: string) => {
   const event = JSON.parse(data) as WebSocketEvent
 
   if (event.type === undefined) {
+    // eslint-disable-next-line no-console
     console.warn(`[WebSocket] Invalid Event Received: ${data}`)
     return
   }

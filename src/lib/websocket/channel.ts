@@ -1,4 +1,6 @@
 import { ChannelId, UserId } from '@/types/entity-ids'
+import apis from '@/lib/api'
+import store from '@/store'
 
 export interface ChannelCreatedEvent {
   type: 'CHANNEL_CREATED'
@@ -6,7 +8,10 @@ export interface ChannelCreatedEvent {
     id: ChannelId
   }
 }
-export const onChannelCreated = (data: ChannelCreatedEvent['body']) => {}
+export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
+  const res = await apis.getChannel(id)
+  store.commit.entities.addChannel({ id, entity: res.data })
+}
 
 export interface ChannelDeletedEvent {
   type: 'CHANNEL_DELETED'
@@ -14,7 +19,9 @@ export interface ChannelDeletedEvent {
     id: ChannelId
   }
 }
-export const onChannelDeleted = (data: ChannelDeletedEvent['body']) => {}
+export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
+  store.commit.entities.deleteChannel(id)
+}
 
 export interface ChannelUpdatedEvent {
   type: 'CHANNEL_UPDATED'
@@ -22,7 +29,10 @@ export interface ChannelUpdatedEvent {
     id: ChannelId
   }
 }
-export const onChannelUpdated = (data: ChannelUpdatedEvent['body']) => {}
+export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
+  const res = await apis.getChannel(id)
+  store.commit.entities.extendChannels({ [id]: res.data })
+}
 
 export interface ChannelStaredEvent {
   type: 'CHANNEL_STARED'
@@ -30,7 +40,9 @@ export interface ChannelStaredEvent {
     id: ChannelId
   }
 }
-export const onChannelStared = (data: ChannelStaredEvent['body']) => {}
+export const onChannelStared = (data: ChannelStaredEvent['body']) => {
+  console.error('onChannelStared: Not implemented')
+}
 
 export interface ChannelUnstaredEvent {
   type: 'CHANNEL_UNSTARED'
@@ -38,7 +50,9 @@ export interface ChannelUnstaredEvent {
     id: ChannelId
   }
 }
-export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {}
+export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {
+  console.error('onChannelUnstared: Not implemented')
+}
 
 export interface ChannelViewersChangedEvent {
   type: 'CHANNEL_VIEWERS_CHANGED'
@@ -49,4 +63,6 @@ export interface ChannelViewersChangedEvent {
 }
 export const onChannelViewersChanged = (
   data: ChannelViewersChangedEvent['body']
-) => {}
+) => {
+  console.error('onChannelViewersChanged: Not implemented')
+}
