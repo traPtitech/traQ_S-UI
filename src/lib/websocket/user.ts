@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { UserId, ChannelId, UserGroupId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'

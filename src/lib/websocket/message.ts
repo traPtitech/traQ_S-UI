@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { MessageId, UserId, StampId } from '@/types/entity-ids'
 import apis from '@/lib/api'
 import store from '@/store'
