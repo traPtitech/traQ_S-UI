@@ -70,9 +70,8 @@ type WebSocketEvent =
   | UserOfflineEvent
   | UserWebRTCStateChangedEvent
   | UserGroupCreatedEvent
+  | UserGroupUpdatedEvent
   | UserGroupDeletedEvent
-  | UserGroupMemberAddedEvent
-  | UserGroupMemberRemovedEvent
   | ChannelCreatedEvent
   | ChannelDeletedEvent
   | ChannelUpdatedEvent
