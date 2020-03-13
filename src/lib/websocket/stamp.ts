@@ -15,11 +15,11 @@ export const onStampCreated = async ({ id }: StampCreatedEvent['body']) => {
   store.commit.entities.addStamp({ id, entity: res.data })
 }
 
-export interface StampModifiedEvent {
-  type: 'STAMP_MODIFIED'
+export interface StampUpdatedEvent {
+  type: 'STAMP_UPDATED'
   body: StampIdBody
 }
-export const onStampModified = async ({ id }: StampModifiedEvent['body']) => {
+export const onStampUpdated = async ({ id }: StampUpdatedEvent['body']) => {
   const res = await apis.getStamp(id)
   store.commit.entities.extendStamps({ [id]: res.data })
 }
@@ -31,10 +31,3 @@ export interface StampDeletedEvent {
 export const onStampDeleted = ({ id }: StampDeletedEvent['body']) => {
   store.commit.entities.deleteStamp(id)
 }
-
-/*
-      FAVORITE_STAMP_ADDED
-        "id": ev.Fields["stamp_id"].(uuid.UUID),
-      FAVORITE_STAMP_REMOVED
-        "id": ev.Fields["stamp_id"].(uuid.UUID),
-*/

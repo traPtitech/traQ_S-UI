@@ -83,6 +83,19 @@ export const onUserGroupCreated = async ({
   store.commit.entities.addUserGroup({ id, entity: res.data })
 }
 
+export interface UserGroupUpdatedEvent {
+  type: 'USER_GROUP_UPDATED'
+  body: {
+    id: UserGroupId
+  }
+}
+export const onUserGroupUpdated = async ({
+  id
+}: UserGroupUpdatedEvent['body']) => {
+  const res = await apis.getGroup(id)
+  store.commit.entities.extendUserGroups({ [id]: res.data })
+}
+
 export interface UserGroupDeletedEvent {
   type: 'USER_GROUP_DELETED'
   body: {
@@ -91,34 +104,4 @@ export interface UserGroupDeletedEvent {
 }
 export const onUserGroupDeleted = ({ id }: UserGroupDeletedEvent['body']) => {
   store.commit.entities.deleteUserGroup(id)
-}
-
-export interface UserGroupMemberAddedEvent {
-  type: 'USER_GROUP_MEMBER_ADDED'
-  body: {
-    id: UserGroupId
-    user_id: UserId
-  }
-}
-export const onUserGroupMemberAdded = async ({
-  id
-}: UserGroupMemberAddedEvent['body']) => {
-  const res = await apis.getGroup(id)
-  store.commit.entities.extendUserGroups({ [id]: res.data })
-  // TODO: ユーザー追加するmutationを追加する
-}
-
-export interface UserGroupMemberRemovedEvent {
-  type: 'USER_GROUP_MEMBER_REMOVED'
-  body: {
-    id: UserGroupId
-    user_id: UserId
-  }
-}
-export const onUserGroupMemberRemoved = async ({
-  id
-}: UserGroupMemberRemovedEvent['body']) => {
-  const res = await apis.getGroup(id)
-  store.commit.entities.extendUserGroups({ [id]: res.data })
-  // TODO: ユーザー削除するmutationを追加する
 }

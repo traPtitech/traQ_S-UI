@@ -15,12 +15,10 @@ import {
   onUserWebRTCStateChanged,
   UserGroupCreatedEvent,
   onUserGroupCreated,
+  UserGroupUpdatedEvent,
+  onUserGroupUpdated,
   UserGroupDeletedEvent,
-  onUserGroupDeleted,
-  UserGroupMemberAddedEvent,
-  onUserGroupMemberAdded,
-  UserGroupMemberRemovedEvent,
-  onUserGroupMemberRemoved
+  onUserGroupDeleted
 } from './user'
 import {
   ChannelCreatedEvent,
@@ -57,8 +55,8 @@ import {
 import {
   StampCreatedEvent,
   onStampCreated,
-  StampModifiedEvent,
-  onStampModified,
+  StampUpdatedEvent,
+  onStampUpdated,
   StampDeletedEvent,
   onStampDeleted
 } from './stamp'
@@ -90,7 +88,7 @@ type WebSocketEvent =
   | MessagePinnedEvent
   | MessageUnpinnedEvent
   | StampCreatedEvent
-  | StampModifiedEvent
+  | StampUpdatedEvent
   | StampDeletedEvent
 
 export const onReceive = (data: string) => {
@@ -127,14 +125,11 @@ export const onReceive = (data: string) => {
     case 'USER_GROUP_CREATED':
       onUserGroupCreated(event.body)
       break
+    case 'USER_GROUP_UPDATED':
+      onUserGroupUpdated(event.body)
+      break
     case 'USER_GROUP_DELETED':
       onUserGroupDeleted(event.body)
-      break
-    case 'USER_GROUP_MEMBER_ADDED':
-      onUserGroupMemberAdded(event.body)
-      break
-    case 'USER_GROUP_MEMBER_REMOVED':
-      onUserGroupMemberRemoved(event.body)
       break
     case 'CHANNEL_CREATED':
       onChannelCreated(event.body)
@@ -181,8 +176,8 @@ export const onReceive = (data: string) => {
     case 'STAMP_CREATED':
       onStampCreated(event.body)
       break
-    case 'STAMP_MODIFIED':
-      onStampModified(event.body)
+    case 'STAMP_UPDATED':
+      onStampUpdated(event.body)
       break
     case 'STAMP_DELETED':
       onStampDeleted(event.body)
