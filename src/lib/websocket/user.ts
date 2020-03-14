@@ -48,14 +48,14 @@ export const onUserWebRTCStateChanged = (
 export const onUserGroupCreated = async ({
   id
 }: UserGroupCreatedEvent['body']) => {
-  const res = await apis.getGroup(id)
+  const res = await apis.getUserGroup(id)
   store.commit.entities.addUserGroup({ id, entity: res.data })
 }
 
 export const onUserGroupUpdated = async ({
   id
 }: UserGroupUpdatedEvent['body']) => {
-  const res = await apis.getGroup(id)
+  const res = await apis.getUserGroup(id)
   store.commit.entities.extendUserGroups({ [id]: res.data })
 }
 

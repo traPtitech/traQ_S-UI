@@ -23,7 +23,7 @@ export const constructTree = (
   if (!channel) {
     return undefined
   }
-  if (channel.channelId === undefined) {
+  if (channel.id === undefined) {
     throw 'Channel has no channel id'
   }
   if (channel.name === undefined) {

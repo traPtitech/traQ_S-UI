@@ -23,14 +23,14 @@ export const actions = defineActions({
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getUsers()
-    // commit.setUsers(reduceToRecord(res.data, 'id'))
-    commit.setUsers(reduceToRecord(res.data, 'userId'))
+    commit.setUsers(reduceToRecord(res.data, 'id'))
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getChannels()
-    // commit.setChannels(reduceToRecord(res.data, 'id'))
-    commit.setChannels(reduceToRecord(res.data, 'channelId'))
+    if (res.data.public) {
+      commit.setChannels(reduceToRecord(res.data.public, 'id'))
+    }
   },
   async fetchUserGroups(context) {
     throw 'Not Implemented'
@@ -53,6 +53,6 @@ export const actions = defineActions({
   async fetchMessagesByChannelId(context, channelId: ChannelId) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getMessages(channelId)
-    commit.setMessages(reduceToRecord(res.data, 'messageId'))
+    commit.setMessages(reduceToRecord(res.data, 'id'))
   }
 })
