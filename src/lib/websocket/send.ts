@@ -2,7 +2,7 @@ import { ws } from './index'
 import { ChannelViewerStateEnum } from '@/lib/api'
 import { ChannelId } from '@/types/entity-ids'
 
-type WebSocketCommand = typeof VIEWSTATE_COMMAND
+type WebSocketCommand = 'viewstate'
 
 const sendWebSocket = (
   ...command: readonly [WebSocketCommand, ...string[]]
