@@ -1,94 +1,35 @@
 import {
-  UserJoinedEvent,
   onUserJoined,
-  UserLeftEvent,
   onUserLeft,
-  UserTagsUpdatedEvent,
   onUserTagsUpdated,
-  UserIconUpdatedEvent,
   onUserIconUpdated,
-  UserOnlineEvent,
   onUserOnline,
-  UserOfflineEvent,
   onUserOffline,
-  UserWebRTCStateChangedEvent,
   onUserWebRTCStateChanged,
-  UserGroupCreatedEvent,
   onUserGroupCreated,
-  UserGroupUpdatedEvent,
   onUserGroupUpdated,
-  UserGroupDeletedEvent,
   onUserGroupDeleted
 } from './user'
 import {
-  ChannelCreatedEvent,
   onChannelCreated,
-  ChannelDeletedEvent,
   onChannelDeleted,
-  ChannelUpdatedEvent,
   onChannelUpdated,
-  ChannelStaredEvent,
   onChannelStared,
-  ChannelUnstaredEvent,
   onChannelUnstared,
-  ChannelViewersChangedEvent,
   onChannelViewersChanged
 } from './channel'
 import {
-  MessageCreatedEvent,
   onMessageCreated,
-  MessageUpdatedEvent,
   onMessageUpdated,
-  MessageDeletedEvent,
   onMessageDeleted,
-  MessageReadEvent,
   onMessageRead,
-  MessageStampedEvent,
   onMessageStamped,
-  MessageUnstampedEvent,
   onMessageUnstamped,
-  MessagePinnedEvent,
   onMessagePinned,
-  MessageUnpinnedEvent,
   onMessageUnpinned
 } from './message'
-import {
-  StampCreatedEvent,
-  onStampCreated,
-  StampUpdatedEvent,
-  onStampUpdated,
-  StampDeletedEvent,
-  onStampDeleted
-} from './stamp'
-
-type WebSocketEvent =
-  | UserJoinedEvent
-  | UserLeftEvent
-  | UserTagsUpdatedEvent
-  | UserIconUpdatedEvent
-  | UserOnlineEvent
-  | UserOfflineEvent
-  | UserWebRTCStateChangedEvent
-  | UserGroupCreatedEvent
-  | UserGroupUpdatedEvent
-  | UserGroupDeletedEvent
-  | ChannelCreatedEvent
-  | ChannelDeletedEvent
-  | ChannelUpdatedEvent
-  | ChannelStaredEvent
-  | ChannelUnstaredEvent
-  | ChannelViewersChangedEvent
-  | MessageCreatedEvent
-  | MessageUpdatedEvent
-  | MessageDeletedEvent
-  | MessageReadEvent
-  | MessageStampedEvent
-  | MessageUnstampedEvent
-  | MessagePinnedEvent
-  | MessageUnpinnedEvent
-  | StampCreatedEvent
-  | StampUpdatedEvent
-  | StampDeletedEvent
+import { onStampCreated, onStampUpdated, onStampDeleted } from './stamp'
+import { WebSocketEvent } from './events'
 
 export const onReceive = (data: string) => {
   const event = JSON.parse(data) as WebSocketEvent
