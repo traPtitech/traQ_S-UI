@@ -1,6 +1,6 @@
 {
   "name": "traq-api-v3",
-  "version": "3.0.0-0",
+  "version": "3.0.0-6",
   "description": "v2",
   "main": "index.js",
   "module": "index.mjs",
@@ -11,6 +11,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "traq-api": "github:traPtitech/node-traq#3.0.0-0"
+    "traq-api": "github:traPtitech/node-traq#3.0.0-6"
   }
 }
