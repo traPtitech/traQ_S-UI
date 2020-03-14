@@ -8,7 +8,6 @@
 import { defineComponent, computed } from '@vue/composition-api'
 import store from './store'
 import { setupWebSocket } from '@/lib/websocket'
-import '@/styles/reset.css'
 
 const useWindowResizeObserver = () => {
   let lastCalled = 0
