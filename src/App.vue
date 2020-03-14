@@ -39,6 +39,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+@import 'src/styles/global.scss';
+
 .app {
   position: fixed;
   top: 0;

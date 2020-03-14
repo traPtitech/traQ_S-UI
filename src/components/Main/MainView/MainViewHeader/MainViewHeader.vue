@@ -1,5 +1,15 @@
 <template>
-  <header :class="$style.container" :style="containerStyle">
+  <header
+    :class="$style.container"
+    :style="containerStyle"
+    v-theme="
+      theme => ({
+        color: theme.ui.primary,
+        background: theme.background.primary,
+        borderBottom: `2px solid ${theme.background.secondary}`
+      })
+    "
+  >
     <h2>
       {{
         props.channelId in state.channels
