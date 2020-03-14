@@ -39,6 +39,12 @@ const addMutation = <I extends string, T>(key: keyof S) => (
 ) => {
   Vue.set(state[key], payload.id, payload.entity)
 }
+const deleteMutation = <I extends string>(key: keyof S) => (
+  state: S,
+  entityId: I
+) => {
+  Vue.delete(state[key], entityId)
+}
 
 export const mutations = defineMutations<S>()({
   setUsers: setMutation<UserId, User>('users'),
@@ -64,5 +70,12 @@ export const mutations = defineMutations<S>()({
   addUserGroup: addMutation<UserGroupId, UserGroup>('userGroups'),
   addStamp: addMutation<StampId, Stamp>('stamps'),
   // addStampPalette: addMutation<StampPaletteId, Stamp>('stampPalettes'),
-  addWebhook: addMutation<WebhookId, Webhook>('webhooks')
+  addWebhook: addMutation<WebhookId, Webhook>('webhooks'),
+
+  deleteUser: deleteMutation<UserId>('users'),
+  deleteChannel: deleteMutation<ChannelId>('channels'),
+  deleteUserGroup: deleteMutation<UserGroupId>('userGroups'),
+  deleteStamp: deleteMutation<StampId>('stamps'),
+  // deleteStampPalette: deleteMutation<StampPaletteId>('stampPalettes'),
+  deleteWebhook: deleteMutation<WebhookId>('webhooks')
 })

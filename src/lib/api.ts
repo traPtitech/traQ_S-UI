@@ -6,3 +6,5 @@ const apis = new V3Apis({
 
 export * from 'traq-api-v2'
 export default apis
+
+export const WEBSOCKET_ENDPOINT = '/api/1.0/ws'
