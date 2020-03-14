@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="navigationStyle">
+  <div :class="$style.container">
     <mobile-navigation v-if="isMobile" />
     <desktop-navigation v-else />
   </div>
@@ -15,12 +15,8 @@ export default defineComponent({
   name: 'Navigation',
   components: { DesktopNavigation, MobileNavigation },
   setup() {
-    const navigationStyle = computed(() => ({
-      background: store.state.app.theme.background.secondary,
-      color: store.state.app.theme.ui.primary
-    }))
     const isMobile = computed(() => store.getters.ui.isMobile)
-    return { navigationStyle, isMobile }
+    return { isMobile }
   }
 })
 </script>

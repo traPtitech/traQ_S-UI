@@ -4,10 +4,8 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-import VueTheme from './directives/theme'
 
 Vue.use(VueCompositionApi)
-Vue.use(VueTheme)
 
 Vue.config.productionTip = false
 

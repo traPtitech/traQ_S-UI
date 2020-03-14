@@ -11,14 +11,15 @@ import { defineComponent, computed } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import NavigationSelector from '@/components/Main/Navigation/NavigationSelector.vue'
 import store from '@/store'
+import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'Navigation',
   components: { NavigationContent, NavigationSelector },
   setup() {
-    const navigationStyle = computed(() => ({
-      background: store.state.app.theme.background.secondary,
-      color: store.state.app.theme.ui.primary
+    const navigationStyle = makeStyles(theme => ({
+      background: theme.background.secondary,
+      color: theme.ui.primary
     }))
     return { navigationStyle }
   }
