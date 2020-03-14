@@ -2,14 +2,19 @@ import { ws } from './index'
 import { ChannelViewerStateEnum } from '@/lib/api'
 import { ChannelId } from '@/types/entity-ids'
 
-const sendWebSocket = (command: readonly string[]): void => {
+type WebSocketCommand = typeof VIEWSTATE_COMMAND
+
+const sendWebSocket = (
+  command: WebSocketCommand,
+  ...args: readonly string[]
+): void => {
   if (ws === undefined) {
     throw new Error('WebSocket is not connected')
   }
-  ws.send(command.join(':'))
+  ws.send([command, ...args].join(':'))
 }
 
-const VIEWSTATE_EVENT = 'viewstate'
+const VIEWSTATE_COMMAND = 'viewstate'
 
 type ChangeViewStateFunction = {
   (channelId: ChannelId, viewState: ChannelViewerStateEnum): void
@@ -21,8 +26,8 @@ export const changeViewState: ChangeViewStateFunction = (
   viewState?: ChannelViewerStateEnum
 ): void => {
   if (channelId === null) {
-    sendWebSocket([VIEWSTATE_EVENT, 'null'])
+    sendWebSocket(VIEWSTATE_COMMAND, 'null')
   } else {
-    sendWebSocket([VIEWSTATE_EVENT, channelId, viewState!])
+    sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
 }
