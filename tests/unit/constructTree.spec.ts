@@ -1,189 +1,193 @@
 import { ChannelTree } from '@/store/domain/channelTree/state'
-import { constructTree } from '@/store/domain/channelTree/mutations'
+import { constructTree } from '@/store/domain/channelTree/actions'
 import { ChannelId } from '@/types/entity-ids'
-import { Channel } from 'traq-api-v2'
+import { Channel } from '@/lib/api'
 
 describe('constructTree', () => {
   it('can construct tree from entities', () => {
-    const constructed = constructTree('', channelEntities)
-    expect(constructed).toEqual(channelTree)
+    const constructed = constructTree(channelEntities[''], channelEntities)
+    const tree: ChannelTree = {
+      children: constructed?.children ?? []
+    }
+    expect(tree).toEqual(channelTree)
   })
   it('can construct home tree from entities', () => {
-    const constructed = constructTree('', channelEntities, subscribedChannels)
-    expect(constructed).toEqual(homeChannelTree)
+    const constructed = constructTree(
+      channelEntities[''],
+      channelEntities,
+      subscribedChannels
+    )
+    const tree: ChannelTree = {
+      children: constructed?.children ?? []
+    }
+    expect(tree).toEqual(homeChannelTree)
   })
 })
 
 const channelEntities: Record<ChannelId, Channel> = {
   '': {
-    channelId: '',
+    id: '',
     name: '',
-    parent: undefined,
+    parentId: null,
     children: ['a', '8', '4']
   },
   a: {
-    channelId: '',
+    id: 'a',
     name: 'a',
-    parent: '',
+    parentId: null,
     children: ['1', '2']
   },
   '8': {
-    channelId: '8',
+    id: '8',
     name: '8',
-    parent: '',
+    parentId: null,
     children: ['3', '9']
   },
   '4': {
-    channelId: '4',
+    id: '4',
     name: '4',
-    parent: '',
+    parentId: null,
     children: ['10', 'b']
   },
   '1': {
-    channelId: '1',
+    id: '1',
     name: '1',
-    parent: 'a'
+    parentId: 'a'
   },
   '2': {
-    channelId: '2',
+    id: '2',
     name: '2',
-    parent: 'a'
+    parentId: 'a'
   },
   '3': {
-    channelId: '3',
+    id: '3',
     name: '3',
-    parent: '8'
+    parentId: '8'
   },
   '9': {
-    channelId: '9',
+    id: '9',
     name: '9',
-    parent: '8'
+    parentId: '8'
   },
   '10': {
-    channelId: '10',
+    id: '10',
     name: '10',
-    parent: '4',
+    parentId: '4',
     children: ['5']
   },
   b: {
-    channelId: 'b',
+    id: 'b',
     name: 'b',
-    parent: '4',
+    parentId: '4',
     children: ['6', '7', '11']
   },
   '5': {
-    channelId: '5',
+    id: '5',
     name: '5',
-    parent: '10'
+    parentId: '10'
   },
   '6': {
-    channelId: '6',
+    id: '6',
     name: '6',
-    parent: 'b'
+    parentId: 'b'
   },
   '7': {
-    channelId: '7',
+    id: '7',
     name: '7',
-    parent: '7'
+    parentId: '7'
   },
   '11': {
-    channelId: '11',
+    id: '11',
     name: '11',
-    parent: 'b'
+    parentId: 'b'
   }
 }
 
-const channelTree: ChannelTree<''> = {
-  channelId: '',
-  name: '',
-  active: true,
+const channelTree: ChannelTree = {
   children: [
     {
-      channelId: '4',
+      id: '4',
       name: '4',
       active: true,
       children: [
         {
-          channelId: '10',
+          id: '10',
           name: '10',
           active: true,
-          children: [{ channelId: '5', name: '5', active: true, children: [] }]
+          children: [{ id: '5', name: '5', active: true, children: [] }]
         },
         {
-          channelId: 'b',
+          id: 'b',
           name: 'b',
           active: true,
           children: [
-            { channelId: '11', name: '11', active: true, children: [] },
-            { channelId: '6', name: '6', active: true, children: [] },
-            { channelId: '7', name: '7', active: true, children: [] }
+            { id: '11', name: '11', active: true, children: [] },
+            { id: '6', name: '6', active: true, children: [] },
+            { id: '7', name: '7', active: true, children: [] }
           ]
         }
       ]
     },
     {
-      channelId: '8',
+      id: '8',
       name: '8',
       active: true,
       children: [
-        { channelId: '3', name: '3', active: true, children: [] },
-        { channelId: '9', name: '9', active: true, children: [] }
+        { id: '3', name: '3', active: true, children: [] },
+        { id: '9', name: '9', active: true, children: [] }
       ]
     },
     {
-      channelId: 'a',
+      id: 'a',
       name: 'a',
       active: true,
       children: [
-        { channelId: '1', name: '1', active: true, children: [] },
-        { channelId: '2', name: '2', active: true, children: [] }
+        { id: '1', name: '1', active: true, children: [] },
+        { id: '2', name: '2', active: true, children: [] }
       ]
     }
   ]
 }
 
-const homeChannelTree: ChannelTree<''> = {
-  channelId: '',
-  name: '',
-  active: true,
+const homeChannelTree: ChannelTree = {
   children: [
     {
-      channelId: '3',
+      id: '3',
       name: '3',
       active: true,
       children: [],
       skippedAncestorNames: ['8']
     },
     {
-      channelId: '4',
+      id: '4',
       name: '4',
       active: true,
       children: [
         {
-          channelId: '5',
+          id: '5',
           name: '5',
           active: true,
           children: [],
           skippedAncestorNames: ['10']
         },
         {
-          channelId: 'b',
+          id: 'b',
           name: 'b',
           active: false,
           children: [
-            { channelId: '6', name: '6', active: true, children: [] },
-            { channelId: '7', name: '7', active: true, children: [] }
+            { id: '6', name: '6', active: true, children: [] },
+            { id: '7', name: '7', active: true, children: [] }
           ]
         }
       ]
     },
     {
-      channelId: 'a',
+      id: 'a',
       name: 'a',
       active: false,
       children: [
-        { channelId: '1', name: '1', active: true, children: [] },
-        { channelId: '2', name: '2', active: true, children: [] }
+        { id: '1', name: '1', active: true, children: [] },
+        { id: '2', name: '2', active: true, children: [] }
       ]
     }
   ]

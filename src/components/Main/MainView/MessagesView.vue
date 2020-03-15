@@ -32,7 +32,7 @@ export default defineComponent({
 
     const channelMessages = computed(() =>
       Object.values(state.messages)
-        .filter(m => m.parentChannelId === props.channelId)
+        .filter(m => m.channelId === props.channelId)
         .sort(m => m.createdAt?.valueOf() ?? 0)
     )
 

@@ -34,7 +34,7 @@ const useLogin = () => {
     pass: ''
   })
   const login = () =>
-    api.login({ name: loginState.name, pass: loginState.pass })
+    api.login(undefined, { name: loginState.name, password: loginState.pass })
   const logout = () => api.logout()
   return {
     loginState,

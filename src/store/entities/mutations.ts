@@ -51,7 +51,7 @@ export const mutations = defineMutations<S>()({
   setMessages: setMutation<MessageId, Message>('messages'),
   setChannels(state, payload: Record<ChannelId, Channel>) {
     state.channels = payload
-    store.commit.domain.channelTree.constructAllTrees()
+    store.dispatch.domain.channelTree.constructAllTrees()
   },
   setUserGroups: setMutation<UserGroupId, UserGroup>('userGroups'),
   setStamps: setMutation<StampId, Stamp>('stamps'),

@@ -1,5 +1,5 @@
 import { ws } from './index'
-import { ChannelViewerStateEnum } from '@/lib/api'
+import { ChannelViewState } from '@/lib/api'
 import { ChannelId } from '@/types/entity-ids'
 
 type WebSocketCommand = 'viewstate'
@@ -16,13 +16,13 @@ const sendWebSocket = (
 const VIEWSTATE_COMMAND = 'viewstate'
 
 type ChangeViewStateFunction = {
-  (channelId: ChannelId, viewState: ChannelViewerStateEnum): void
+  (channelId: ChannelId, viewState: ChannelViewState): void
   (channelId: null): void
 }
 
 export const changeViewState: ChangeViewStateFunction = (
   channelId: ChannelId | null,
-  viewState?: ChannelViewerStateEnum
+  viewState?: ChannelViewState
 ): void => {
   if (channelId === null) {
     sendWebSocket(VIEWSTATE_COMMAND, 'null')
