@@ -6,18 +6,16 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "preinstall": "cd packages/traq-api-v2 && npm install && cd ../traq-api-v3 && npm install"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@traptitech/traq": "3.0.0-7",
     "@vue/composition-api": "^0.4.0",
     "core-js": "^3.6.4",
     "direct-vuex": "^0.10.4",
     "register-service-worker": "^1.7.0",
-    "traq-api-v2": "file:packages/traq-api-v2",
-    "traq-api-v3": "file:packages/traq-api-v3",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3"
