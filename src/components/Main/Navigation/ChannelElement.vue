@@ -8,11 +8,7 @@
       #{{ path }}/{{ name }}
     </span>
     <span v-else> #{{ name }} </span>
-    <div
-      v-for="child in children"
-      :key="child.channelId"
-      :class="$style.children"
-    >
+    <div v-for="child in children" :key="child.id" :class="$style.children">
       <channel-element :channel="child" />
     </div>
   </div>
@@ -38,7 +34,7 @@ export default defineComponent({
   setup(props: Props) {
     const children = computed(() => props.channel.children ?? [])
     const name = computed(() => props.channel.name)
-    const id = computed(() => props.channel.channelId)
+    const id = computed(() => props.channel.id)
     const containerStyle = computed(() => ({
       color: props.channel.active
         ? store.state.app.theme.ui.primary
