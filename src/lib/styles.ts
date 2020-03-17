@@ -1,13 +1,10 @@
 import store from '@/store'
 import { Theme } from '@/types/theme'
 import { computed } from '@vue/composition-api'
+import * as CSS from 'csstype'
 
-interface Styles {
-  [property: string]: string
-}
+type ThemeClaim = (theme: Theme) => CSS.Properties
 
-type themeClaim = (theme: Theme) => Styles
-
-export const makeStyles = (claim: themeClaim) => {
+export const makeStyles = (claim: ThemeClaim) => {
   return computed(() => claim(store.state.app.theme))
 }
