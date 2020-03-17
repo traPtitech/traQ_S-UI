@@ -4,9 +4,8 @@ const keepAliveAgent = new https.Agent({ keepAlive: true })
 module.exports = {
   css: {
     loaderOptions: {
-      // pass options to sass-loader
       scss: {
-        // import `src/styles/_main.scss` to all components
+        prependData: '@import "src/styles/common.scss";'
       }
     }
   },

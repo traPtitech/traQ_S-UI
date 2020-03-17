@@ -16,6 +16,7 @@ import {
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
+import { makeStyles } from '@/lib/styles'
 
 type Props = {
   channelId: ChannelId
@@ -36,9 +37,9 @@ export default defineComponent({
         .sort(m => m.createdAt?.valueOf() ?? 0)
     )
 
-    const containerStyle = computed(() => ({
-      background: store.state.app.theme.background.primary,
-      color: store.state.app.theme.ui.primary
+    const containerStyle = makeStyles(theme => ({
+      background: theme.background.primary,
+      color: theme.ui.primary
     }))
 
     return {
