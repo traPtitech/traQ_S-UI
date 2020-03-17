@@ -2,7 +2,19 @@
 *,
 *::before,
 *::after {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
+
+  &:active {
+    outline: none;
+    border: none;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 0;
+  }
 }
 
 ul[class],
@@ -37,6 +49,11 @@ ol[class] {
   list-style: none;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
@@ -54,12 +71,22 @@ input,
 button,
 textarea,
 select {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background: none;
   font: inherit;
 }
 
-img:not([alt]) {
-  filter: blur(10px);
+// fix placeholder position for iOS safari
+input::-webkit-input-placeholder {
+  line-height: normal !important;
 }
+
+// img:not([alt]) {
+//   filter: blur(10px);
+// }
 
 @media (prefers-reduced-motion: reduce) {
   * {

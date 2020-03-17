@@ -1,1 +1,13 @@
 @import './reset';
+@import url('https://fonts.googleapis.com/css?family=Inter:400,700|M+PLUS+1p:400,700&display=swap&subset=japanese');
+
+body {
+  font-family: 'Inter', 'M PLUS 1p', 'Avenir', 'Helvetica Neue', 'Helvetica',
+    'Arial', 'Hiragino Sans', 'ヒラギノ角ゴシック', YuGothic, 'Yu Gothic',
+    'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
+}
