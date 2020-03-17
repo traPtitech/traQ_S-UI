@@ -26,7 +26,7 @@ export const state: S = {
     ui: {
       primary: '#525E67',
       secondary: '#828E96',
-      tertiary: '#ECEFF3'
+      tertiary: '#CED6DB'
     },
     text: {
       primary: '#333333',
