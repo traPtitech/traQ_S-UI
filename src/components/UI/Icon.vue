@@ -1,5 +1,6 @@
 <template>
   <svg
+    v-if="mdi"
     :width="props.size"
     :height="props.size"
     viewBox="0 0 24 24"
@@ -9,22 +10,32 @@
     v-on="context.listeners"
     role="img"
   >
-    <title>{{ props.title || props.name }}</title>
-    <desc v-if="props.desc">{{ props.desc }}</desc>
-    <path :d="getPath(props.name)" />
+    <title>{{ props.name }}</title>
+    <path :d="getMdiPath(props.name)" />
   </svg>
+  <component
+    v-else
+    :is="svgComponent"
+    :width="props.size"
+    :height="props.size"
+    :style="{ color: props.color }"
+    viewBox="0 0 24 24"
+    class="icon"
+    v-bind="context.attrs"
+    v-on="context.listeners"
+    role="img"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
-import icons from '@/assets/icons'
+import { defineComponent, SetupContext, computed } from '@vue/composition-api'
+import mdi from '@/assets/mdi'
 
 interface Props {
   name: string
-  title?: string
-  desc?: string
   size?: number
   color?: string
+  mdi?: boolean
 }
 
 export default defineComponent({
@@ -42,18 +53,27 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: 'black'
+      default: 'currentColor'
+    },
+    mdi: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props, context: SetupContext) {
-    const getPath = (name: string) => {
-      return icons[name]
+    const svgComponent = computed(() => () =>
+      import(`@/assets/icons/${[props.name]}.svg`)
+    )
+
+    const getMdiPath = (name: string) => {
+      return mdi[name]
     }
 
     return {
       props,
       context,
-      getPath
+      svgComponent,
+      getMdiPath
     }
   }
 })
