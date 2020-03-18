@@ -58,7 +58,7 @@ type Props = {
 export default defineComponent({
   name: 'ChannelList',
   components: {
-    // 型エラーの回避
+    // 型エラー・コンポーネント循環参照の回避
     ChannelElement: () => import('./ChannelElement.vue') as any
   },
   props: {

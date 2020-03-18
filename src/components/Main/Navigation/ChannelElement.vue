@@ -77,10 +77,25 @@ const useChannelClick = (
   }
 }
 
+const useStyles = (state: { isSelected: boolean }) => {
+  const styles = reactive({
+    container: makeStyles(theme => ({
+      color: state.isSelected ? theme.accent.primary : theme.ui.primary
+    })),
+    selectedBg: makeStyles(theme => ({
+      backgroundColor: theme.accent.primary
+    })),
+    channelName: makeStyles(theme => ({
+      fontWeight: state.isSelected ? 'bold' : 'normal'
+    }))
+  })
+  return styles
+}
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
-    // 型エラーの回避
+    // 型エラー・コンポーネント循環参照の回避
     ChannelList: () => import('./ChannelList.vue') as any,
     ChannelElementHash
   },
@@ -107,18 +122,7 @@ export default defineComponent({
       )
     })
 
-    const styles = reactive({
-      container: makeStyles(theme => ({
-        color: state.isSelected ? theme.accent.primary : theme.ui.primary
-      })),
-      selectedBg: makeStyles(theme => ({
-        backgroundColor: theme.accent.primary
-      })),
-      channelName: makeStyles(theme => ({
-        fontWeight: state.isSelected ? 'bold' : 'normal'
-      }))
-    })
-
+    const styles = useStyles(state)
     const { path } = useAncestorPath(props.channel.skippedAncestorNames)
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
