@@ -42,3 +42,9 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string }
   export default classes
 }
+
+declare module '*.svg' {
+  import Vue, { VueConstructor } from 'vue'
+  const content: VueConstructor<Vue>
+  export default content
+}
