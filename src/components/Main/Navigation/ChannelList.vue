@@ -3,8 +3,8 @@
     <channel-element
       v-for="channel in props.channels"
       :key="channel.id"
+      :class="$style.element"
       :channel="channel"
-      :is-selected="false"
       :is-opened="channelFoldingState[channel.id]"
       @channel-select="onChannelSelect"
       @channel-folding-toggle="onChannelFoldingToggle"
@@ -79,3 +79,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.element {
+  margin: 4px 0;
+}
+</style>
