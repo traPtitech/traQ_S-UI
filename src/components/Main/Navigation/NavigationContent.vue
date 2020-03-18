@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <channel-list />
+    <channel-list :channels="topLevelChannels" />
   </div>
 </template>
 
@@ -24,8 +24,11 @@ export default defineComponent({
       store.commit.app.setCurrentChannelId(channelId ?? '')
       store.dispatch.entities.fetchMessagesByChannelId(channelId ?? '')
     }
+    const topLevelChannels = computed(
+      () => store.state.domain.channelTree.channelTree.children ?? []
+    )
 
-    return { state, onClickChannel }
+    return { state, onClickChannel, topLevelChannels }
   }
 })
 </script>

@@ -1,30 +1,80 @@
 <template>
   <div class="channel-list">
     <channel-element
-      v-for="child in children"
-      :key="child.channelId"
-      :channel="child"
+      v-for="channel in props.channels"
+      :key="channel.id"
+      :channel="channel"
+      :is-selected="false"
+      :is-opened="channelFoldingState[channel.id]"
+      @channel-select="onChannelSelect"
+      @channel-folding-toggle="onChannelFoldingToggle"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-import ChannelElement from '@/components/Main/Navigation/ChannelElement.vue'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  set,
+  toRefs
+} from '@vue/composition-api'
 import store from '@/store'
+import { ChannelId } from '@/types/entity-ids'
+import { ChannelTreeNode } from '../../../store/domain/channelTree/state'
+import ChannelElement from '@/components/Main/Navigation/ChannelElement.vue'
+
+const useChannelSelect = () => {
+  const onChannelSelect = (id: ChannelId) => {
+    store.commit.app.setCurrentChannelId(id)
+  }
+  return {
+    onChannelSelect
+  }
+}
+
+const useChannelFolding = () => {
+  const state = reactive({
+    channelFoldingState: {} as Record<ChannelId, boolean>
+  })
+  const onChannelFoldingToggle = (id: ChannelId) => {
+    if (state.channelFoldingState[id]) {
+      state.channelFoldingState[id] = false
+    } else {
+      set(state.channelFoldingState, id, true)
+    }
+  }
+  return {
+    ...toRefs(state),
+    onChannelFoldingToggle
+  }
+}
+
+type Props = {
+  channels: ChannelTreeNode[]
+}
 
 export default defineComponent({
   name: 'ChannelList',
   components: {
-    ChannelElement
+    // 型エラーの回避
+    ChannelElement: () => import('./ChannelElement.vue') as any
   },
-  setup() {
-    const channelTree = computed(
-      () => store.state.domain.channelTree.channelTree
-    )
-    const children = computed(() => channelTree.value.children ?? [])
+  props: {
+    channels: {
+      type: Array,
+      required: true
+    }
+  },
+  setup(props: Props) {
+    const { onChannelSelect } = useChannelSelect()
+    const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
     return {
-      children
+      props,
+      channelFoldingState,
+      onChannelSelect,
+      onChannelFoldingToggle
     }
   }
 })

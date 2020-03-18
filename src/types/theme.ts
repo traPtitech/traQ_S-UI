@@ -1,4 +1,4 @@
-// traQ固有のテーマ定義
+/** traQ固有のテーマ定義 */
 export interface Theme {
   accent: {
     primary: string
