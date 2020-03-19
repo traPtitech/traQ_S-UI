@@ -2,7 +2,7 @@
   <div :class="$style.container" :style="styles.container">
     <!-- チャンネル表示本体 -->
     <div :class="$style.channel">
-      <div :class="$style['channel-hash']" @click="onChannelHashClick">
+      <div :class="$style.channelHash" @click="onChannelHashClick">
         <!-- TODO: 通知関連対応 -->
         <channel-element-hash
           :has-child="state.hasChild"
@@ -13,7 +13,7 @@
         />
       </div>
       <div
-        :class="$style['channel-name']"
+        :class="$style.channelName"
         :style="styles.channelName"
         @click="onChannelNameClick"
       >
@@ -28,7 +28,7 @@
 
     <!-- 選択中チャンネルの背景 -->
     <div
-      :class="$style['selected-bg']"
+      :class="$style.selectedBg"
       :style="styles.selectedBg"
       v-if="state.isSelected"
     ></div>
@@ -160,11 +160,11 @@ $bgLeftShift: 4px;
   height: $elementHeight;
   z-index: 0;
 }
-.channel-hash {
+.channelHash {
   flex-shrink: 0;
   cursor: pointer;
 }
-.channel-name {
+.channelName {
   display: flex;
   align-items: center;
   width: 100%;
@@ -179,7 +179,7 @@ $bgLeftShift: 4px;
   z-index: 0;
   margin-left: 24px;
 }
-.selected-bg {
+.selectedBg {
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
