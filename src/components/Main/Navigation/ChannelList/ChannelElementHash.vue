@@ -16,8 +16,8 @@ import {
   reactive,
   computed
 } from '@vue/composition-api'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import store from '@/store'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'

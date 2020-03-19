@@ -22,8 +22,8 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import { ChannelTreeNode } from '../../../store/domain/channelTree/state'
-import ChannelElement from '@/components/Main/Navigation/ChannelElement.vue'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import ChannelElement from './ChannelElement.vue'
 
 const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId) => {

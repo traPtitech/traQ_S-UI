@@ -43,12 +43,12 @@ import {
   ref,
   reactive
 } from '@vue/composition-api'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import store from '@/store'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
-import ChannelElementHash from '@/components/Main/Navigation/ChannelElementHash.vue'
-import ChannelList from '@/components/Main/Navigation/ChannelList.vue'
-import { ChannelId } from '../../../types/entity-ids'
+import { ChannelId } from '@/types/entity-ids'
+import ChannelList from './ChannelList.vue'
+import ChannelElementHash from './ChannelElementHash.vue'
 
 type Props = {
   /** 対象チャンネル */
