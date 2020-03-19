@@ -17,8 +17,8 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext, toRefs } from '@vue/composition-api'
-import { NavigationItemType } from '@/use/navigationSelector'
-import useNavigationSelectorItem from '@/use/navigationSelectorItem'
+import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
+import useNavigationSelectorItem from '@/components/Main/Navigation/use/navigationSelector'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 
 type Props = {

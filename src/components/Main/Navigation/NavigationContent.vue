@@ -25,7 +25,7 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import { NavigationItemType } from '@/use/navigationSelector'
+import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
 import Channels from './NavigationContent/Channels.vue'
 import Home from './NavigationContent/Home.vue'
 import NotImplemented from './NavigationContent/NotImplemented.vue'

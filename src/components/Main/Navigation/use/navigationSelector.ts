@@ -1,4 +1,4 @@
-import { NavigationItemType } from '@/use/navigationSelector'
+import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
 import { SetupContext } from '@vue/composition-api'
 
 export const navigationChangeEvent = 'navigation-change'

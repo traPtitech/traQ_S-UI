@@ -14,7 +14,7 @@
 import { defineComponent, computed, toRefs } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
-import useNavigationSelector from '@/use/navigationSelector'
+import useNavigation from '@/components/Main/Navigation/use/navigation'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 
@@ -22,10 +22,7 @@ export default defineComponent({
   name: 'DesktopNavigation',
   components: { NavigationContent, DesktopNavigationSelector },
   setup() {
-    const {
-      navigationSelectorState,
-      onNavigationChange
-    } = useNavigationSelector()
+    const { navigationSelectorState, onNavigationChange } = useNavigation()
     const navigationStyle = makeStyles(theme => ({
       background: theme.background.secondary,
       color: theme.ui.primary

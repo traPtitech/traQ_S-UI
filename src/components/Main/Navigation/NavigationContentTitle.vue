@@ -9,8 +9,8 @@ import { defineComponent, computed } from '@vue/composition-api'
 import {
   NavigationItemType,
   navigationTypeNameMap
-} from '@/use/navigationSelector'
-import { makeStyles } from '../../../lib/styles'
+} from '@/components/Main/Navigation/use/navigation'
+import { makeStyles } from '@/lib/styles'
 
 type Props = {
   currentNavigation: NavigationItemType
