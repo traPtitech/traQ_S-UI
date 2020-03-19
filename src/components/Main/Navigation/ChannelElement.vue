@@ -3,6 +3,7 @@
     <!-- チャンネル表示本体 -->
     <div :class="$style.channel">
       <div :class="$style['channel-hash']" @click="onChannelHashClick">
+        <!-- TODO: 通知関連対応 -->
         <channel-element-hash
           :has-child="state.hasChild"
           :is-selected="state.isSelected"

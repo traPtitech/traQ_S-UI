@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import EmptyState from '@/components/Util/EmptyState.vue'
+import EmptyState from '@/components/UI/EmptyState.vue'
 
 type Props = {}
 

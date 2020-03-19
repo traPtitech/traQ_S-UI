@@ -16,7 +16,7 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import EmptyState from '@/components/Util/EmptyState.vue'
+import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList.vue'
 
 type Props = {}

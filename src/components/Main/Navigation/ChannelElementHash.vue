@@ -3,7 +3,9 @@
     <div :class="$style.hash" :style="styles.hash">
       <icon name="hash" />
     </div>
-    <div class="indicator"></div>
+    <div v-if="props.hasNotification" :class="$style.indicator">
+      <notification-indicator has-border />
+    </div>
   </div>
 </template>
 
@@ -15,9 +17,10 @@ import {
   computed
 } from '@vue/composition-api'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
-import store from '../../../store'
+import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
 
 type Props = {
   /** 子チャンネルを持っているか */
@@ -71,7 +74,8 @@ const useOpenedParentContainerStyle = (selected: boolean) =>
 export default defineComponent({
   name: 'ChannelElementHash',
   components: {
-    Icon
+    Icon,
+    NotificationIndicator
   },
   props: {
     hasChild: {
@@ -110,7 +114,10 @@ export default defineComponent({
               props.isSelected,
               props.hasNotificationOnChild
             ).value
-      )
+      ),
+      indicator: makeStyles(theme => ({
+        backgroundColor: theme.accent.notification
+      }))
     })
     return { props, styles }
   }
@@ -119,11 +126,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  width: 32px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  width: 32px;
+  height: 32px;
 }
 .hash {
   border-radius: 4px;
@@ -134,5 +142,10 @@ export default defineComponent({
 }
 .inactive {
   opacity: 0.5;
+}
+.indicator {
+  position: absolute;
+  top: 1px;
+  right: 1px;
 }
 </style>
