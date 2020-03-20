@@ -106,6 +106,12 @@ export const actions = defineActions({
   constructHomeChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id ?? '')
+    // TODO: 効率が悪いので改善
+    const subscribedOrForceChannels = rootState.domain.me.subscribedChannels.concat(
+      Object.values(rootState.entities.channels)
+        .filter(c => c.id && c.force)
+        .map(c => c.id as string)
+    )
     const tree = {
       children:
         constructTree(
@@ -115,7 +121,7 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channels,
-          new Set(rootState.domain.me.subscribedChannels)
+          new Set(subscribedOrForceChannels)
         )?.children ?? []
     }
     commit.setHomeChannelTree(tree)

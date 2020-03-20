@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.container" :style="navigationStyle">
-    MOBILE
     <NavigationSelector />
     <NavigationContent />
   </div>
@@ -9,11 +8,12 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
-import NavigationSelector from '@/components/Main/Navigation/NavigationSelector.vue'
+// FIXME: モバイル用のレイアウト
+import NavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
-  name: 'Navigation',
+  name: 'MobileNavigation',
   components: { NavigationContent, NavigationSelector },
   setup() {
     const navigationStyle = makeStyles(theme => ({
