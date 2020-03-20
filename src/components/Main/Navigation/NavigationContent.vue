@@ -6,11 +6,11 @@
       v-show="props.currentNavigation === 'channels'"
       :class="$style.content"
     />
-    <not-implemented
+    <activity
       v-show="props.currentNavigation === 'activity'"
       :class="$style.content"
     />
-    <not-implemented
+    <users
       v-show="props.currentNavigation === 'users'"
       :class="$style.content"
     />
@@ -26,8 +26,10 @@ import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
-import Channels from './NavigationContent/Channels.vue'
 import Home from './NavigationContent/Home.vue'
+import Channels from './NavigationContent/Channels.vue'
+import Activity from './NavigationContent/Activity.vue'
+import Users from './NavigationContent/Users.vue'
 import NotImplemented from './NavigationContent/NotImplemented.vue'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 
@@ -40,6 +42,8 @@ export default defineComponent({
   components: {
     Home,
     Channels,
+    Activity,
+    Users,
     NotImplemented,
     NavigationContentTitle
   },
@@ -51,6 +55,7 @@ export default defineComponent({
   },
   setup(props: Props) {
     store.dispatch.entities.fetchChannels()
+    store.dispatch.domain.fetchChannelActivity()
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })

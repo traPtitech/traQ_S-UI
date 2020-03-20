@@ -22,7 +22,7 @@ import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vu
 type Props = {}
 
 export default defineComponent({
-  name: 'Channels',
+  name: 'Home',
   components: {
     ChannelList,
     EmptyState
