@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api from '@/lib/api'
+import api, { Apis } from '@/lib/api'
 import { ChannelId } from '@/types/entity-ids'
 
 /**
@@ -15,6 +15,18 @@ const reduceToRecord = <T>(array: T[], key: keyof T) =>
     if (typeof ck !== 'string') return acc
     return { ...acc, [ck]: cur }
   }, {} as Record<string, T>)
+
+// TODO: リクエストパラメータの型置き場
+interface GetMessagesParams {
+  channelId: string
+  limit?: number
+  offset?: number
+  since?: Date
+  until?: Date
+  inclusive?: boolean
+  order?: 'asc' | 'desc'
+  options?: any
+}
 
 export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
@@ -50,9 +62,16 @@ export const actions = defineActions({
     // const res = await api.getStampPalettes()
     // commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
-  async fetchMessagesByChannelId(context, channelId: ChannelId) {
+  async fetchMessagesByChannelId(
+    context,
+    { channelId, limit, offset }: GetMessagesParams
+  ) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessages(channelId)
+    const res = await api.getMessages(channelId, limit, offset)
     commit.setMessages(reduceToRecord(res.data, 'id'))
+    return {
+      messages: res.data,
+      hasMore: res.headers['x-traq-more'] === 'true'
+    }
   }
 })

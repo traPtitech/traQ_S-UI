@@ -1,9 +1,6 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    <pre>Channel Id: {{ props.channelId }}</pre>
-    <div v-for="message in channelMessages" :key="message.messageId">
-      {{ message.content }}
-    </div>
+    <messages-scroller :messageIds="state.channelMessageIds" />
   </div>
 </template>
 
@@ -17,6 +14,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import MessagesScroller from './MessagesScroller.vue'
 
 type Props = {
   channelId: ChannelId
@@ -25,17 +23,13 @@ type Props = {
 export default defineComponent({
   name: 'MessagesView',
   props: { channelId: String },
+  components: { MessagesScroller },
   setup(props: Props, _: SetupContext) {
     const state = reactive({
-      messages: computed(() => store.state.entities.messages),
-      channels: computed(() => store.state.entities.channels)
+      channelMessageIds: computed(
+        () => store.state.domain.messagesView.messageIds
+      )
     })
-
-    const channelMessages = computed(() =>
-      Object.values(state.messages)
-        .filter(m => m.channelId === props.channelId)
-        .sort(m => m.createdAt?.valueOf() ?? 0)
-    )
 
     const containerStyle = makeStyles(theme => ({
       background: theme.background.primary,
@@ -45,7 +39,6 @@ export default defineComponent({
     return {
       props,
       state,
-      channelMessages,
       containerStyle
     }
   }
@@ -55,7 +48,6 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   height: 100%;
-  overflow: scroll;
 }
 
 .header {

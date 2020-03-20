@@ -7,10 +7,10 @@
   >
     <div :class="$style.homeContainer">
       <div :class="$style.navigationWrapper">
-        <Navigation />
+        <navigation />
       </div>
       <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
-        <MainViewController :isActive="isNavAppeared" />
+        <main-view-controller :isActive="isNavAppeared" />
       </div>
     </div>
   </div>

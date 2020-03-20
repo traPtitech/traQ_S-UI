@@ -32,7 +32,9 @@ export default defineComponent({
       primary: computed(() => store.state.ui.mainView.primaryView),
       secondary: computed(() => store.state.ui.mainView.secondaryView)
     })
-    const channelId = computed(() => store.state.app.currentChannelId)
+    const channelId = computed(
+      () => store.state.domain.messagesView.currentChannelId
+    )
 
     return {
       state,
@@ -57,12 +59,13 @@ $headerHeight: 80px;
 .headerContainer {
   height: $headerHeight;
   width: 100%;
-  flex: $headerHeight 0 0;
+  flex: 0 0 $headerHeight;
 }
 
 // レイアウト系
 .layoutContainer {
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 

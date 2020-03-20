@@ -4,7 +4,7 @@ import { ChannelId } from '@/types/entity-ids'
 
 const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId) => {
-    store.commit.app.setCurrentChannelId(id)
+    store.dispatch.domain.messagesView.changeCurrentChannel(id)
 
     // 未読を除去する
     // TODO: 新着メッセージ基準設定などの処理

@@ -57,15 +57,11 @@ export default defineComponent({
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })
-    const onClickChannel = (channelId?: ChannelId) => {
-      store.commit.app.setCurrentChannelId(channelId ?? '')
-      store.dispatch.entities.fetchMessagesByChannelId(channelId ?? '')
-    }
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.channelTree.children ?? []
     )
 
-    return { state, props, onClickChannel, topLevelChannels }
+    return { state, props, topLevelChannels }
   }
 })
 </script>
