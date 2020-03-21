@@ -48,7 +48,4 @@ export default defineComponent({
 .displayName {
   font-weight: bold;
 }
-
-.userName {
-}
 </style>
