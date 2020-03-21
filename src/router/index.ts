@@ -6,8 +6,20 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkname: "Home" */ '@/views/Home.vue')
+    name: 'index',
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/channels/:channel(.*)',
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/users/:user',
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/messages/:message',
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
     path: '/login',

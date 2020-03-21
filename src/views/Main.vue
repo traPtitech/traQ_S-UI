@@ -17,12 +17,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  computed,
+  watchEffect,
+  onMounted
+} from '@vue/composition-api'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import store from '@/store'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
+
+const useRouteChangeWacher = (context: SetupContext) => {
+  const channelParam = computed(() => context.root.$route.params['channel'])
+  const messageParam = computed(() => context.root.$route.params['message'])
+  const userParam = computed(() => context.root.$route.params['user'])
+  return watchEffect(() => {
+    console.log(channelParam.value)
+    console.log(messageParam.value)
+    console.log(userParam.value)
+  })
+}
 
 export default defineComponent({
   name: 'Home',
@@ -30,7 +47,7 @@ export default defineComponent({
     Navigation,
     MainViewController
   },
-  setup() {
+  setup(_, context: SetupContext) {
     const {
       swipeDetectorState,
       touchmoveHandler,
@@ -58,6 +75,7 @@ export default defineComponent({
       store.dispatch.entities.fetchStamps()
       store.dispatch.entities.fetchUserGroups()
     })
+    const watcher = useRouteChangeWacher(context)
 
     return {
       touchstartHandler,
