@@ -36,6 +36,7 @@ export default defineComponent({
     store.dispatch.entities.fetchUserGroups()
     store.dispatch.entities.fetchChannels()
     store.dispatch.domain.fetchChannelActivity()
+    store.dispatch.domain.me.fetchUnreadChannels()
 
     return {
       isMobile
