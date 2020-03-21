@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.body">
-    <user-icon :class="$style.userIcon" :userId="state.message.userId" />
+    <user-icon
+      :class="$style.userIcon"
+      :userId="state.message.userId"
+      :size="42"
+    />
     <message-header
       :class="$style.messageHeader"
       :userId="state.message.userId"
@@ -70,6 +74,7 @@ export default defineComponent({
 
 .messageContents {
   grid-area: message-contents;
+  padding: 8px 0 0 8px;
 }
 
 .content {

@@ -34,7 +34,7 @@ export default defineComponent({
       })
     })
 
-    return { state }
+    return { state, styles }
   }
 })
 </script>
@@ -42,6 +42,7 @@ export default defineComponent({
 <style lang="scss" module>
 .header {
   display: inline-flex;
+  margin-left: 8px;
 }
 
 .displayName {

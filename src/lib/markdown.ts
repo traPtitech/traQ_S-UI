@@ -1,15 +1,6 @@
 import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 
-// TODO:
-interface Group {
-  members: string[]
-}
-interface Stamp {
-  name: string
-  fileId: string
-}
-
 const storeProvider: Store = {
   getUser(id) {
     return store.state.entities.users[id]
@@ -18,15 +9,19 @@ const storeProvider: Store = {
     return store.state.entities.channels[id]
   },
   getChannelPath(id) {
-    // let current = this.getChannel(id)
-    // let path = current?.name
-    // let next = this.getChannel(current.parent)
-    // while (next.name) {
-    //   path = next.name + '/' + path
-    //   current = next
-    //   next = this.getChannel(current.parent)
-    // }
-    return ''
+    let current = this.getChannel(id)
+    if (!current) return ''
+
+    let path = current?.name
+    let next = this.getChannel(current?.parentId ?? '')
+    if (!next) return path ?? ''
+
+    while (next) {
+      path = next.name + '/' + path
+      current = next
+      next = this.getChannel(current.parentId ?? '')
+    }
+    return path ?? ''
   },
   getUserGroup(id) {
     return store.state.entities.userGroups[id]
