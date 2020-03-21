@@ -23,16 +23,8 @@ import {
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import useChannelSelect from '@/use/channelSelect'
 import ChannelElement from './ChannelElement.vue'
-
-const useChannelSelect = () => {
-  const onChannelSelect = (id: ChannelId) => {
-    store.commit.app.setCurrentChannelId(id)
-  }
-  return {
-    onChannelSelect
-  }
-}
 
 const useChannelFolding = () => {
   const state = reactive({

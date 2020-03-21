@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    @click="onChannelSelect(state.channelId)"
+  >
     <div :class="$style.name" :style="styles.name">
       {{ state.channelName }}
     </div>
@@ -19,6 +23,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import { Message } from '@/lib/api'
 import store from '@/store'
+import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
 
@@ -58,15 +63,18 @@ export default defineComponent({
           store.state.entities.channels[props.message.channelId ?? '']?.name ??
           ''
       ),
+      channelId: computed(() => props.message.channelId ?? ''),
       user: computed(
         () => store.state.entities.users[props.message.userId ?? '']
       )
     })
     const styles = useStyles()
+    const { onChannelSelect } = useChannelSelect()
     return {
       props,
       state,
-      styles
+      styles,
+      onChannelSelect
     }
   }
 })
