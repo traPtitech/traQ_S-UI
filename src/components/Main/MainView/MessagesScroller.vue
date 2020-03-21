@@ -23,7 +23,7 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 import MessageElement from './MessageElement/MessageElement.vue'
-const throttle = require('lodash.throttle')
+import { throttle } from 'lodash-es'
 
 interface Props {
   messageIds: MessageId[]
