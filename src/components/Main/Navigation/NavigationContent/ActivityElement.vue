@@ -1,8 +1,10 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <activity-element-channel-name :name="state.channelName" />
+    <div :class="$style.name" :style="styles.name">
+      {{ state.channelName }}
+    </div>
     <div :class="$style.separator" :style="styles.separator"></div>
-    <activity-element-user-name :name="'username'" />
+    <activity-element-user-name :user="state.user" :class="$style.user" />
     <activity-element-content :content="props.message.content" />
   </div>
 </template>
@@ -17,7 +19,6 @@ import {
 import { makeStyles } from '@/lib/styles'
 import { Message } from '@/lib/api'
 import store from '@/store'
-import ActivityElementChannelName from './ActivityElementChannelName.vue'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
 
@@ -30,17 +31,17 @@ const useStyles = () =>
     container: makeStyles(theme => ({
       background: theme.background.primary
     })),
+    name: makeStyles(theme => ({
+      color: theme.ui.secondary
+    })),
     separator: makeStyles(theme => ({
-      background: theme.background.tertiary,
-      width: '100%',
-      height: '2px'
+      background: theme.background.tertiary
     }))
   })
 
 export default defineComponent({
   name: 'ActivityElement',
   components: {
-    ActivityElementChannelName,
     ActivityElementUserName,
     ActivityElementContent
   },
@@ -51,14 +52,14 @@ export default defineComponent({
     }
   },
   setup(props: Props, context: SetupContext) {
-    const containerStyle = makeStyles(theme => ({
-      color: theme.ui.tertiary
-    }))
     const state = reactive({
       channelName: computed(
         () =>
           store.state.entities.channels[props.message.channelId ?? '']?.name ??
           ''
+      ),
+      user: computed(
+        () => store.state.entities.users[props.message.userId ?? '']
       )
     })
     const styles = useStyles()
@@ -75,5 +76,20 @@ export default defineComponent({
 .container {
   border-radius: 4px;
   padding: 8px 20px;
+}
+.name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  &::before {
+    content: '# ';
+  }
+}
+.separator {
+  width: 100%;
+  height: 2px;
+  margin: 4px 0;
+}
+.user {
+  margin-bottom: 1px;
 }
 </style>

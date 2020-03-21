@@ -22,7 +22,7 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const styles = reactive({
       container: makeStyles(theme => ({
-        color: theme.text.secondary
+        color: theme.ui.primary
       }))
     })
     return {

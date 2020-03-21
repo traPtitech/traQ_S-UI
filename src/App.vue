@@ -30,6 +30,12 @@ export default defineComponent({
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
     setupWebSocket()
+
+    // 初回fetch
+    store.dispatch.entities.fetchUsers()
+    store.dispatch.entities.fetchChannels()
+    store.dispatch.domain.fetchChannelActivity()
+
     return {
       isMobile
     }

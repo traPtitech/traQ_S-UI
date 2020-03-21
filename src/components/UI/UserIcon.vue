@@ -1,35 +1,37 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <user-icon :class="$style.icon" :user="props.user" :size="20" />
-    <span>
-      {{ props.user.displayName }}
-    </span>
+    <!-- TODO: Badge -->
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { User } from '@/lib/api'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import api, { BASE_PATH, User } from '@/lib/api'
 
-type Props = { user: User }
+type IconSize = 36 | 28 | 20
+
+type Props = { user: User; size: IconSize }
 
 export default defineComponent({
-  name: 'ActivityElementUserName',
-  components: {
-    UserIcon
-  },
+  name: 'UserIcon',
   props: {
     user: {
       type: Object,
       required: true
+    },
+    size: {
+      type: Number,
+      default: 36 as IconSize
     }
   },
   setup(props: Props, context: SetupContext) {
     const styles = reactive({
       container: makeStyles(theme => ({
-        color: theme.ui.secondary
+        color: theme.ui.secondary,
+        width: `${props.size}px`,
+        height: `${props.size}px`,
+        backgroundImage: `url(${BASE_PATH}/users/${props.user.id}/icon)`
       }))
     })
     return {
@@ -42,12 +44,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  display: flex;
-  align-items: center;
-  font-size: 0.875rem;
-  height: 1.5rem;
-}
-.icon {
-  margin-right: 8px;
+  border-radius: 100vw;
+  background: {
+    position: center;
+    repeat: no-repeat;
+    size: cover;
+  }
 }
 </style>

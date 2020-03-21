@@ -54,8 +54,6 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    store.dispatch.entities.fetchChannels()
-    store.dispatch.domain.fetchChannelActivity()
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })

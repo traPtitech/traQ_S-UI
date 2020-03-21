@@ -9,7 +9,7 @@ export const domainActionContext = (context: any) =>
 export const actions = defineActions({
   async fetchChannelActivity(context) {
     const { commit } = domainActionContext(context)
-    const result = await api.getActivityTimeline(50, false)
+    const result = await api.getActivityTimeline(50, true)
     commit.setChannelActivity(result.data)
   }
 })
