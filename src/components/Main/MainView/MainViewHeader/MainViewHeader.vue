@@ -30,7 +30,7 @@ export default defineComponent({
     const containerStyle = makeStyles(theme => ({
       background: theme.background.primary,
       color: theme.ui.primary,
-      borderBottom: `2px solid ${theme.background.secondary}`
+      borderBottom: `2px solid ${theme.ui.tertiary}`
     }))
     return { props, state, containerStyle }
   }

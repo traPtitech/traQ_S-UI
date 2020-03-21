@@ -143,7 +143,8 @@ export default defineComponent({
       children: computed(() => props.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
       isSelected: computed(
-        () => store.state.app.currentChannelId === props.channel.id
+        () =>
+          store.state.domain.messagesView.currentChannelId === props.channel.id
       )
     })
 

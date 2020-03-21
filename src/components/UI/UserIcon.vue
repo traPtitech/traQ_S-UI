@@ -8,16 +8,17 @@
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import api, { BASE_PATH, User } from '@/lib/api'
+import { UserId } from '@/types/entity-ids'
 
-type IconSize = 36 | 28 | 20
+type IconSize = 42 | 36 | 28 | 20
 
-type Props = { user: User; size: IconSize }
+type Props = { userId: UserId; size: IconSize }
 
 export default defineComponent({
   name: 'UserIcon',
   props: {
-    user: {
-      type: Object,
+    userId: {
+      type: String,
       required: true
     },
     size: {
@@ -31,7 +32,7 @@ export default defineComponent({
         color: theme.ui.secondary,
         width: `${props.size}px`,
         height: `${props.size}px`,
-        backgroundImage: `url(${BASE_PATH}/users/${props.user.id}/icon)`
+        backgroundImage: `url(${BASE_PATH}/users/${props.userId}/icon)`
       }))
     })
     return {

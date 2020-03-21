@@ -7,17 +7,17 @@
   >
     <div :class="$style.homeContainer">
       <div :class="$style.navigationWrapper">
-        <Navigation />
+        <navigation />
       </div>
       <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
-        <MainViewController :isActive="isNavAppeared" />
+        <main-view-controller :isActive="isNavAppeared" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, onMounted } from '@vue/composition-api'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import store from '@/store'
@@ -51,6 +51,13 @@ export default defineComponent({
     const mainViewWrapperStyle = computed(() => ({
       transform: `translateX(${swipeDrawerState.currentPosition}px)`
     }))
+
+    onMounted(() => {
+      // 暫定
+      store.dispatch.entities.fetchUsers()
+      store.dispatch.entities.fetchStamps()
+      store.dispatch.entities.fetchUserGroups()
+    })
 
     return {
       touchstartHandler,

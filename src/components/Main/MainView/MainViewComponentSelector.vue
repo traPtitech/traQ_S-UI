@@ -27,7 +27,9 @@ export default defineComponent({
     viewInfo: Object
   },
   setup(props: Props) {
-    const channelId = computed(() => store.state.app.currentChannelId)
+    const channelId = computed(
+      () => store.state.domain.messagesView.currentChannelId
+    )
 
     return {
       props,

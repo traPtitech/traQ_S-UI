@@ -1,4 +1,4 @@
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, MessageId } from '@/types/entity-ids'
 import { MessageFormState } from './index'
 
 export interface S {

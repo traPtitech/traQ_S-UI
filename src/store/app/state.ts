@@ -4,14 +4,12 @@ import { Theme } from '@/types/theme'
 export interface S {
   loaded: boolean
   componentLoaded: boolean
-  currentChannelId: ChannelId
   theme: Theme
 }
 
 export const state: S = {
   loaded: false,
   componentLoaded: false,
-  currentChannelId: '',
   theme: {
     accent: {
       primary: '#005BAC',
