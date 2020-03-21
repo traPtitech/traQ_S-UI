@@ -3,13 +3,12 @@
     <!-- チャンネル表示本体 -->
     <div :class="$style.channel">
       <div :class="$style.channelHash" @click="onChannelHashClick">
-        <!-- TODO: 通知関連対応 -->
         <channel-element-hash
-          :has-child="state.hasChild"
+          :has-child="!props.ignoreChildren && state.hasChild"
           :is-selected="state.isSelected"
           :is-opened="props.isOpened"
-          :has-notification="false"
-          :has-notification-on-child="false"
+          :has-notification="notificationState.hasNotification"
+          :has-notification-on-child="notificationState.hasNotificationOnChild"
         />
       </div>
       <div
@@ -22,7 +21,11 @@
     </div>
 
     <!-- 子チャンネル表示 -->
-    <div :class="$style.children" v-show="props.isOpened">
+    <div
+      :class="$style.children"
+      v-show="props.isOpened"
+      v-if="!props.ignoreChildren"
+    >
       <channel-list :channels="state.children" />
     </div>
 
@@ -56,6 +59,9 @@ type Props = {
 
   /** 子チャンネルを展開表示しているか */
   isOpened?: boolean
+
+  /** 子チャンネルを無視する */
+  ignoreChildren: boolean
 }
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
@@ -93,6 +99,20 @@ const useStyles = (state: { isSelected: boolean }) => {
   return styles
 }
 
+const useNotification = (props: Props) => {
+  const notificationState = reactive({
+    hasNotification: computed(
+      () => props.channel.id in store.state.domain.me.unreadChannelsSet
+    ),
+    hasNotificationOnChild: computed(() =>
+      props.channel.children.some(
+        treeNode => treeNode.id in store.state.domain.me.unreadChannelsSet
+      )
+    )
+  })
+  return notificationState
+}
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
@@ -110,6 +130,10 @@ export default defineComponent({
       default: false
     },
     isOpened: {
+      type: Boolean,
+      default: false
+    },
+    ignoreChildren: {
       type: Boolean,
       default: false
     }
@@ -130,12 +154,14 @@ export default defineComponent({
       props.channel.id,
       state.hasChild
     )
+    const notificationState = useNotification(props)
 
     return {
       state,
       props,
       styles,
       path,
+      notificationState,
       onChannelHashClick,
       onChannelNameClick
     }

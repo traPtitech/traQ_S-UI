@@ -1,12 +1,12 @@
 import { UserId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
+import { UnreadChannel } from '@/lib/api'
 
 export interface S {
   id: UserId
   webhooks: WebhookId[]
   stampHistory: StampId[]
 
-  // ここら辺はハッシュマップで持ちたい
-  unreadChannels: ChannelId[]
+  unreadChannelsSet: Record<ChannelId, UnreadChannel>
   subscribedChannels: ChannelId[]
   notifiedChannels: ChannelId[]
 }
@@ -15,7 +15,7 @@ export const state: S = {
   id: '',
   webhooks: [],
   stampHistory: [],
-  unreadChannels: [],
+  unreadChannelsSet: {},
   subscribedChannels: [],
   notifiedChannels: []
 }

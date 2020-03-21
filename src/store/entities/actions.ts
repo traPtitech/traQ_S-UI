@@ -27,17 +27,16 @@ export const actions = defineActions({
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getChannels()
+    const res = await api.getChannels(true)
     // TODO: DM対応
     if (res.data.public) {
       commit.setChannels(reduceToRecord(res.data.public, 'id'))
     }
   },
   async fetchUserGroups(context) {
-    throw 'Not Implemented'
-    // const { commit } = entitiesActionContext(context)
-    // const res = await api.getUserGroups()
-    // commit.setUserGroups(reduceToRecord(res.data, 'id'))
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getUserGroups()
+    commit.setUserGroups(reduceToRecord(res.data, 'id'))
   },
   async fetchStamps(context) {
     throw 'Not Implemented'

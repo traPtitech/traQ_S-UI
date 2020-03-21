@@ -1,10 +1,10 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { channelTree } from './index'
-import { rootChannelId } from './state'
-import { ChannelId } from '@/types/entity-ids'
 import { Channel } from '@/lib/api'
-import { ChannelTreeNode } from './state'
+import { compareString } from '@/lib/util/string'
+import { ChannelId } from '@/types/entity-ids'
+import { channelTree } from './index'
+import { ChannelTreeNode, rootChannelId } from './state'
 
 export const channelTreeActionContext = (context: any) =>
   moduleActionContext(context, channelTree)
@@ -15,7 +15,7 @@ const channelNameSortFunction = (
   // sort by channel name
   const name1 = channelEntities[node1.id].name?.toUpperCase() ?? ''
   const name2 = channelEntities[node2.id].name?.toUpperCase() ?? ''
-  return name1 < name2 ? -1 : name1 > name2 ? 1 : 0
+  return compareString(name1, name2)
 }
 
 type ChannelLike = Pick<Channel, 'id' | 'name' | 'parentId' | 'children'>

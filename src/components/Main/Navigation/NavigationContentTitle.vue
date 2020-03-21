@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <h2 :class="$style.container" :style="containerStyle">
     {{ title }}
-  </div>
+  </h2>
 </template>
 
 <script lang="ts">

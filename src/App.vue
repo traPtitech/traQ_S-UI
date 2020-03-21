@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, onMounted } from '@vue/composition-api'
 import store from './store'
 import { setupWebSocket } from '@/lib/websocket'
 
@@ -30,6 +30,16 @@ export default defineComponent({
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
     setupWebSocket()
+
+    onMounted(() => {
+      // 初回fetch
+      store.dispatch.entities.fetchUsers()
+      store.dispatch.entities.fetchUserGroups()
+      store.dispatch.entities.fetchChannels()
+      store.dispatch.domain.fetchChannelActivity()
+      store.dispatch.domain.me.fetchUnreadChannels()
+    })
+
     return {
       isMobile
     }

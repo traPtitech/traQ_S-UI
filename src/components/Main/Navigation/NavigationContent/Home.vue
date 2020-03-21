@@ -1,14 +1,19 @@
 <template>
-  <!-- TODO: 折り畳みとコンポーネントへの分離 -->
   <div :class="$style.container">
-    <div :class="$style.subtitle" :style="subtitleStyle">未読</div>
-    <empty-state>Not Implemented</empty-state>
-    <div :class="$style.subtitle" :style="subtitleStyle">チャンネル</div>
-    <channel-list
-      v-if="topLevelChannels.length !== 0"
-      :channels="topLevelChannels"
-    />
-    <empty-state v-else>購読していません</empty-state>
+    <navigation-content-container
+      v-if="channelsWithNotification.length !== 0"
+      subtitle="未読"
+    >
+      <!-- TODO: フルパス表示 -->
+      <channel-list :channels="channelsWithNotification" ignore-children />
+    </navigation-content-container>
+    <navigation-content-container subtitle="チャンネル">
+      <channel-list
+        v-if="topLevelChannels.length !== 0"
+        :channels="topLevelChannels"
+      />
+      <empty-state v-else>購読していません</empty-state>
+    </navigation-content-container>
   </div>
 </template>
 
@@ -18,24 +23,32 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
+import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 
 type Props = {}
 
 export default defineComponent({
-  name: 'Channels',
+  name: 'Home',
   components: {
     ChannelList,
-    EmptyState
+    EmptyState,
+    NavigationContentContainer
   },
   setup(props: Props) {
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.homeChannelTree.children ?? []
+    )
+    const channelsWithNotification = computed(() =>
+      Object.values(store.state.domain.me.unreadChannelsSet)
+        .map(unread => store.state.entities.channels[unread.channelId ?? ''])
+        .filter(c => !!c)
     )
     const subtitleStyle = makeStyles(theme => ({
       color: theme.ui.secondary
     }))
     return {
       topLevelChannels,
+      channelsWithNotification,
       subtitleStyle
     }
   }

@@ -6,6 +6,7 @@
       :class="$style.element"
       :channel="channel"
       :is-opened="channelFoldingState[channel.id]"
+      :ignore-children="props.ignoreChildren"
       @channel-select="onChannelSelect"
       @channel-folding-toggle="onChannelFoldingToggle"
     />
@@ -23,16 +24,8 @@ import {
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import useChannelSelect from '@/use/channelSelect'
 import ChannelElement from './ChannelElement.vue'
-
-const useChannelSelect = () => {
-  const onChannelSelect = (id: ChannelId) => {
-    store.commit.app.setCurrentChannelId(id)
-  }
-  return {
-    onChannelSelect
-  }
-}
 
 const useChannelFolding = () => {
   const state = reactive({
@@ -53,6 +46,7 @@ const useChannelFolding = () => {
 
 type Props = {
   channels: ChannelTreeNode[]
+  ignoreChildren: boolean
 }
 
 export default defineComponent({
@@ -65,6 +59,10 @@ export default defineComponent({
     channels: {
       type: Array,
       required: true
+    },
+    ignoreChildren: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props) {
