@@ -59,6 +59,7 @@ export const mutations = defineMutations<S>()({
   setWebhooks: setMutation<WebhookId, Webhook>('webhooks'),
 
   extendUsers: extendMutation<UserId, User>('users'),
+  extendMessages: extendMutation<MessageId, Message>('messages'),
   extendChannels: extendMutation<ChannelId, Channel>('channels'),
   extendUserGroups: extendMutation<UserGroupId, UserGroup>('userGroups'),
   extendStamps: extendMutation<StampId, Stamp>('stamps'),

@@ -51,10 +51,9 @@ export const actions = defineActions({
     commit.setUserGroups(reduceToRecord(res.data, 'id'))
   },
   async fetchStamps(context) {
-    throw 'Not Implemented'
-    // const { commit } = entitiesActionContext(context)
-    // const res = await api.getStamps()
-    // commit.setStamps(reduceToRecord(res.data, 'id'))
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getStamps()
+    commit.setStamps(reduceToRecord(res.data, 'id'))
   },
   async fetchStampPalettes(context) {
     throw 'Not Implemented'
@@ -68,7 +67,7 @@ export const actions = defineActions({
   ) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getMessages(channelId, limit, offset)
-    commit.setMessages(reduceToRecord(res.data, 'id'))
+    commit.extendMessages(reduceToRecord(res.data, 'id'))
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'

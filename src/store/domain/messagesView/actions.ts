@@ -44,7 +44,7 @@ export const actions = defineActions({
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )
-    commit.setMessageIds([...messageIds, ...state.messageIds])
+    commit.setMessageIds([...messageIds.reverse(), ...state.messageIds])
   },
   async renderMessageContent(context, messageId: string) {
     const { commit, rootState } = messagesViewActionContext(context)

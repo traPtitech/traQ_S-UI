@@ -1,7 +1,11 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div v-for="messageId in props.messageIds" :key="messageId">
-      <message-element :messageId="messageId" />
+    <div :class="$style.viewport">
+      <message-element
+        v-for="messageId in props.messageIds"
+        :key="messageId"
+        :messageId="messageId"
+      />
     </div>
   </div>
 </template>
@@ -67,14 +71,14 @@ export default defineComponent({
       }
     )
 
-    const handleScroll = throttle(() => {
+    const handleScroll = throttle(async () => {
       if (!rootRef.value) return
       state.scrollTop = rootRef.value.scrollTop
 
       if (state.isFirstView || state.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD) {
         state.isLoading = true
-        store.dispatch.domain.messagesView.fetchChannelMessages()
+        await store.dispatch.domain.messagesView.fetchChannelMessages()
       }
     }, 17)
 
@@ -93,5 +97,13 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   overflow-anchor: none;
+  padding: 12px 32px;
+}
+
+.viewport {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+  min-height: 100%;
 }
 </style>
