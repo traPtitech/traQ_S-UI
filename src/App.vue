@@ -33,6 +33,7 @@ export default defineComponent({
 
     // 初回fetch
     store.dispatch.entities.fetchUsers()
+    store.dispatch.entities.fetchUserGroups()
     store.dispatch.entities.fetchChannels()
     store.dispatch.domain.fetchChannelActivity()
 

@@ -76,6 +76,7 @@ export default defineComponent({
 .container {
   border-radius: 4px;
   padding: 8px 20px;
+  cursor: pointer;
 }
 .name {
   font-size: 1.125rem;

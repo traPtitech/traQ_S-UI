@@ -34,10 +34,9 @@ export const actions = defineActions({
     }
   },
   async fetchUserGroups(context) {
-    throw 'Not Implemented'
-    // const { commit } = entitiesActionContext(context)
-    // const res = await api.getUserGroups()
-    // commit.setUserGroups(reduceToRecord(res.data, 'id'))
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getUserGroups()
+    commit.setUserGroups(reduceToRecord(res.data, 'id'))
   },
   async fetchStamps(context) {
     throw 'Not Implemented'

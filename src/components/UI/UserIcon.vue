@@ -45,6 +45,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   border-radius: 100vw;
+  flex: {
+    shrink: 0;
+    grow: 0;
+  }
   background: {
     position: center;
     repeat: no-repeat;
