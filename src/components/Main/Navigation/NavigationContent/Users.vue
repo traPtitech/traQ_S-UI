@@ -72,8 +72,7 @@ export default defineComponent({
   setup() {
     const userLists = useListByGradeName()
     return {
-      userLists,
-      JSON
+      userLists
     }
   }
 })
