@@ -1,5 +1,11 @@
 <template>
+  <not-found
+    v-if="routeWatcherState.view === 'not-found'"
+    :route-param="routeWatcherState.currentRouteParam"
+    :route-name="routeWatcherState.currentRouteName"
+  />
   <div
+    v-else-if="routeWatcherState.view === 'main'"
     :class="$style.homeWrapper"
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
@@ -14,6 +20,7 @@
       </div>
     </div>
   </div>
+  <div v-else></div>
 </template>
 
 <script lang="ts">
@@ -21,31 +28,83 @@ import {
   defineComponent,
   SetupContext,
   computed,
+  reactive,
   watchEffect,
   onMounted
 } from '@vue/composition-api'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import store from '@/store'
+import { RouteName, constructChannelPath } from '@/router'
+import useChannelPath from '@/use/channelPath'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
+import useViewTitle from '@/views/use/viewTitle'
 
-const useRouteChangeWacher = (context: SetupContext) => {
-  const channelParam = computed(() => context.root.$route.params['channel'])
-  const messageParam = computed(() => context.root.$route.params['message'])
-  const userParam = computed(() => context.root.$route.params['user'])
-  return watchEffect(() => {
-    console.log(channelParam.value)
-    console.log(messageParam.value)
-    console.log(userParam.value)
+// TODO: 起動時チャンネル
+const defaultChannelName = 'random'
+
+type Views = 'none' | 'main' | 'not-found'
+
+const useRouteWacher = (context: SetupContext) => {
+  const { channelPathToId } = useChannelPath()
+  const { changeViewTitle } = useViewTitle()
+
+  const state = reactive({
+    currentRouteName: computed(() => context.root.$route.name),
+    currentRouteParam: computed(
+      (): string =>
+        state.channelParam ?? state.messageParam ?? state.userParam ?? ''
+    ),
+    channelParam: computed(() => context.root.$route.params['channel']),
+    messageParam: computed(() => context.root.$route.params['message']),
+    userParam: computed(() => context.root.$route.params['user']),
+    view: 'none' as Views
   })
+
+  const watcher = watchEffect(() => {
+    if (state.currentRouteName === RouteName.Index) {
+      // 何も指定されていない
+      context.root.$router.replace({
+        name: RouteName.Channel,
+        params: { channel: defaultChannelName }
+      })
+      return
+    }
+
+    if (state.currentRouteName === RouteName.Channel) {
+      if (store.state.domain.channelTree.channelTree.children.length === 0) {
+        // まだチャンネルツリーが構築されていない
+        return
+      }
+      try {
+        const id = channelPathToId(
+          state.channelParam.split('/'),
+          store.state.domain.channelTree.channelTree
+        )
+        store.dispatch.domain.messagesView.changeCurrentChannel(id)
+
+        state.view = 'main'
+
+        changeViewTitle(`#${state.channelParam}`)
+      } catch {
+        state.view = 'not-found'
+      }
+    }
+  })
+  return {
+    routeWatcherState: state,
+    routeWatcher: watcher
+  }
 }
 
 export default defineComponent({
   name: 'Home',
   components: {
     Navigation,
-    MainViewController
+    MainViewController,
+    NotFound: () =>
+      import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
   setup(_, context: SetupContext) {
     const {
@@ -75,12 +134,15 @@ export default defineComponent({
       store.dispatch.entities.fetchStamps()
       store.dispatch.entities.fetchUserGroups()
     })
-    const watcher = useRouteChangeWacher(context)
+
+    const { routeWatcherState, routeWatcher } = useRouteWacher(context)
 
     return {
       touchstartHandler,
       touchmoveHandler,
       touchendHandler,
+
+      routeWatcherState,
 
       isNavAppeared: isAppeared,
 

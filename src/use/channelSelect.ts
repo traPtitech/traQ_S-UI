@@ -1,15 +1,28 @@
-import api from '@/lib/api'
+import { SetupContext } from '@vue/composition-api'
 import store from '@/store'
+import useChannelPath from '@/use/channelPath'
 import { ChannelId } from '@/types/entity-ids'
+import { constructChannelPath } from '@/router'
 
-const useChannelSelect = () => {
+const useChannelSelect = (context: SetupContext) => {
+  const { channelIdToPath } = useChannelPath()
+
   const onChannelSelect = (id: ChannelId) => {
-    store.dispatch.domain.messagesView.changeCurrentChannel(id)
-
     // 未読を除去する
     // TODO: 新着メッセージ基準設定などの処理
     if (id in store.state.domain.me.unreadChannelsSet) {
       store.dispatch.domain.me.readChannel({ channelId: id })
+    }
+
+    // チャンネル遷移
+    if (id === store.state.domain.messagesView.currentChannelId) {
+      return
+    }
+    try {
+      const channelPath = channelIdToPath(id, store.state.entities.channels)
+      context.root.$router.push(constructChannelPath(channelPath.join('/')))
+    } catch {
+      console.error('Invalid Channel')
     }
   }
   return {

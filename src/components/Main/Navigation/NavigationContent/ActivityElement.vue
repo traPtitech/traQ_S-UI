@@ -69,7 +69,7 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
-    const { onChannelSelect } = useChannelSelect()
+    const { onChannelSelect } = useChannelSelect(context)
     return {
       props,
       state,
