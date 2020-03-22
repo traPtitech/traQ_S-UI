@@ -3,16 +3,48 @@ import VueRouter, { RouteConfig } from 'vue-router'
 
 Vue.use(VueRouter)
 
+export enum RouteName {
+  Index = 'index',
+  Channel = 'channel',
+  User = 'user',
+  Message = 'message',
+  Login = 'login',
+  NotFound = 'not-found'
+}
+
+export const constructChannelPath = (channel: string) => `/channels/${channel}`
+
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkname: "Home" */ '@/views/Home.vue')
+    name: RouteName.Index,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: constructChannelPath(':channel(.*)'),
+    name: RouteName.Channel,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/users/:user',
+    name: RouteName.User,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/messages/:message',
+    name: RouteName.Message,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
     path: '/login',
-    name: 'login',
+    name: RouteName.Login,
     component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+  },
+  {
+    path: '*',
+    name: RouteName.NotFound,
+    component: () =>
+      import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   }
 ]
 

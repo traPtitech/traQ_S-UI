@@ -19,7 +19,8 @@ import {
   computed,
   reactive,
   set,
-  toRefs
+  toRefs,
+  SetupContext
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
@@ -65,8 +66,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props) {
-    const { onChannelSelect } = useChannelSelect()
+  setup(props: Props, context: SetupContext) {
+    const { onChannelSelect } = useChannelSelect(context)
     const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
     return {
       props,

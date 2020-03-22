@@ -6,6 +6,7 @@ import { actions } from './actions'
 import { mainView } from './mainView'
 import { messageContextMenu } from './messageContextMenu'
 import { stampPicker } from './stampPicker'
+import { modal } from './modal'
 
 export const ui = defineModule({
   namespaced: true,
@@ -16,6 +17,7 @@ export const ui = defineModule({
   modules: {
     mainView,
     stampPicker,
-    messageContextMenu
+    messageContextMenu,
+    modal
   }
 })
