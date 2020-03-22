@@ -22,7 +22,7 @@ const useChannelSelect = (context: SetupContext) => {
       const channelPath = channelIdToPath(id, store.state.entities.channels)
       context.root.$router.push(constructChannelPath(channelPath.join('/')))
     } catch {
-      console.error('Invalid Channel')
+      throw 'Invalid Channel'
     }
   }
   return {
