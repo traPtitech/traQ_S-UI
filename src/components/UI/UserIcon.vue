@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div @click="onClick" :class="$style.container" :style="styles.container">
     <!-- TODO: Badge -->
   </div>
 </template>
@@ -9,10 +9,11 @@ import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import api, { BASE_PATH, User } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
+import store from '@/store'
 
 type IconSize = 42 | 36 | 28 | 20
 
-type Props = { userId: UserId; size: IconSize }
+type Props = { userId: UserId; size: IconSize; preventModal: boolean }
 
 export default defineComponent({
   name: 'UserIcon',
@@ -24,6 +25,10 @@ export default defineComponent({
     size: {
       type: Number,
       default: 36 as IconSize
+    },
+    preventModal: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props, context: SetupContext) {
@@ -35,9 +40,18 @@ export default defineComponent({
         backgroundImage: `url(${BASE_PATH}/users/${props.userId}/icon)`
       }))
     })
+    const onClick = () => {
+      if (!props.preventModal) {
+        store.dispatch.ui.modal.pushModal({
+          type: 'user',
+          id: props.userId
+        })
+      }
+    }
     return {
       props,
-      styles
+      styles,
+      onClick
     }
   }
 })

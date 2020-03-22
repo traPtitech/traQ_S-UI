@@ -19,6 +19,7 @@
         <main-view-controller :isActive="isNavAppeared" />
       </div>
     </div>
+    <modal-container />
   </div>
   <div v-else></div>
 </template>
@@ -30,10 +31,12 @@ import {
   computed,
   reactive,
   watchEffect,
+  watch,
   onMounted
 } from '@vue/composition-api'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
+import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
 import store from '@/store'
 import { RouteName, constructChannelPath } from '@/router'
 import useChannelPath from '@/use/channelPath'
@@ -103,6 +106,7 @@ export default defineComponent({
   components: {
     Navigation,
     MainViewController,
+    ModalContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
@@ -136,7 +140,6 @@ export default defineComponent({
     })
 
     const { routeWatcherState, routeWatcher } = useRouteWacher(context)
-
     return {
       touchstartHandler,
       touchmoveHandler,
