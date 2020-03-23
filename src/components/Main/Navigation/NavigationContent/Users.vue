@@ -43,7 +43,12 @@ const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
   const users = computed(() => store.state.entities.users)
   const listByGradeName = computed(() => {
-    if (userGroups.value.length === 0 || users.value.length === 0) return []
+    if (
+      userGroups.value.length === 0 ||
+      Object.keys(users.value).length === 0
+    ) {
+      return []
+    }
     const userGradeEntries: Record<string, User[]> = {}
     for (const group of userGroups.value) {
       userGradeEntries[group?.name ?? ''] = (

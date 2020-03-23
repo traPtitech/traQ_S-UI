@@ -10,33 +10,26 @@ export const channelTreeActionContext = (context: any) =>
   moduleActionContext(context, channelTree)
 
 const channelNameSortFunction = (
-  channelEntities: Record<ChannelId, Channel>
+  channelEntities: Record<ChannelId, ChannelLike>
 ) => (node1: ChannelTreeNode, node2: ChannelTreeNode) => {
   // sort by channel name
-  const name1 = channelEntities[node1.id].name?.toUpperCase() ?? ''
-  const name2 = channelEntities[node2.id].name?.toUpperCase() ?? ''
+  const name1 = channelEntities[node1.id].name.toUpperCase()
+  const name2 = channelEntities[node2.id].name.toUpperCase()
   return compareString(name1, name2)
 }
 
-type ChannelLike = Pick<Channel, 'id' | 'name' | 'parentId' | 'children'>
+export type ChannelLike = Pick<Channel, 'id' | 'name' | 'parentId' | 'children'>
 
 export const constructTree = (
   channel: ChannelLike,
-  channelEntities: Record<ChannelId, Channel>,
+  channelEntities: Record<ChannelId, ChannelLike>,
   subscribedChannels?: Set<ChannelId>
 ): ChannelTreeNode | undefined => {
-  if (channel.id === undefined) {
-    throw 'Channel has no channel id'
-  }
-  if (channel.name === undefined) {
-    throw 'Channel has no name'
-  }
-
   const isRootChannel = channel.id === rootChannelId
   const isSubscribed =
     isRootChannel || (subscribedChannels?.has(channel.id) ?? true)
 
-  if (channel.children === undefined || channel.children.length === 0) {
+  if (channel.children.length === 0) {
     // 葉チャンネル
     return isSubscribed
       ? {
@@ -89,13 +82,14 @@ export const actions = defineActions({
   },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id ?? '')
+    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     const tree = {
       children:
         constructTree(
           {
             id: rootChannelId,
             name: '',
+            parentId: null,
             children: topLevelChannelIds
           },
           rootState.entities.channels
@@ -105,12 +99,12 @@ export const actions = defineActions({
   },
   constructHomeChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id ?? '')
+    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootState.domain.me.subscribedChannels.concat(
       Object.values(rootState.entities.channels)
-        .filter(c => c.id && c.force)
-        .map(c => c.id as string)
+        .filter(c => c.force)
+        .map(c => c.id)
     )
     const tree = {
       children:
@@ -118,6 +112,7 @@ export const actions = defineActions({
           {
             id: rootChannelId,
             name: '',
+            parentId: null,
             children: topLevelChannelIds
           },
           rootState.entities.channels,
