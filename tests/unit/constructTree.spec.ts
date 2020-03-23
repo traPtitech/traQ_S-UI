@@ -1,7 +1,6 @@
 import { ChannelTree } from '@/store/domain/channelTree/state'
-import { constructTree } from '@/store/domain/channelTree/actions'
+import { constructTree, ChannelLike } from '@/store/domain/channelTree/actions'
 import { ChannelId } from '@/types/entity-ids'
-import { Channel } from '@/lib/api'
 
 describe('constructTree', () => {
   it('can construct tree from entities', () => {
@@ -24,7 +23,7 @@ describe('constructTree', () => {
   })
 })
 
-const channelEntities: Record<ChannelId, Channel> = {
+const channelEntities: Record<ChannelId, ChannelLike> = {
   '': {
     id: '',
     name: '',
@@ -52,22 +51,26 @@ const channelEntities: Record<ChannelId, Channel> = {
   '1': {
     id: '1',
     name: '1',
-    parentId: 'a'
+    parentId: 'a',
+    children: []
   },
   '2': {
     id: '2',
     name: '2',
-    parentId: 'a'
+    parentId: 'a',
+    children: []
   },
   '3': {
     id: '3',
     name: '3',
-    parentId: '8'
+    parentId: '8',
+    children: []
   },
   '9': {
     id: '9',
     name: '9',
-    parentId: '8'
+    parentId: '8',
+    children: []
   },
   '10': {
     id: '10',
@@ -84,22 +87,26 @@ const channelEntities: Record<ChannelId, Channel> = {
   '5': {
     id: '5',
     name: '5',
-    parentId: '10'
+    parentId: '10',
+    children: []
   },
   '6': {
     id: '6',
     name: '6',
-    parentId: 'b'
+    parentId: 'b',
+    children: []
   },
   '7': {
     id: '7',
     name: '7',
-    parentId: '7'
+    parentId: '7',
+    children: []
   },
   '11': {
     id: '11',
     name: '11',
-    parentId: 'b'
+    parentId: 'b',
+    children: []
   }
 }
 
