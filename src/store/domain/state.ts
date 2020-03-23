@@ -1,9 +1,9 @@
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { Message } from '@/lib/api'
+import { ActivityTimelineMessage } from '@/lib/api'
 import { ChannelState } from './index'
 
 export interface S {
-  channelActivity: Message[]
+  channelActivity: ActivityTimelineMessage[]
   messageActivity: MessageId[]
   channelStateMap: Record<ChannelId, ChannelState>
 

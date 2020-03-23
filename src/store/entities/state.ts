@@ -17,7 +17,7 @@ import {
   MessageId
 } from '@/types/entity-ids'
 
-export interface S {
+export type S = {
   users: Record<UserId, User>
   messages: Record<MessageId, Message>
   channels: Record<ChannelId, Channel>
@@ -25,7 +25,7 @@ export interface S {
   stamps: Record<StampId, Stamp>
   // stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Record<WebhookId, Webhook>
-}
+} & Record<string, Record<string, any>>
 
 export const state: S = {
   users: {},

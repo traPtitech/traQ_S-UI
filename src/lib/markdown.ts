@@ -12,30 +12,28 @@ const storeProvider: Store = {
     let current = this.getChannel(id)
     if (!current) return ''
 
-    let path = current?.name
-    let next = this.getChannel(current?.parentId ?? '')
-    if (!next) return path ?? ''
+    let path = current.name
+    let next = this.getChannel(current.parentId ?? '')
+    if (!next) return path
 
     while (next) {
       path = next.name + '/' + path
       current = next
       next = this.getChannel(current.parentId ?? '')
     }
-    return path ?? ''
+    return path
   },
   getUserGroup(id) {
     return store.state.entities.userGroups[id]
   },
   getMe() {
-    return store.state.domain.me
+    return store.state.entities.users[store.state.domain.me.id]
   },
   getStampByName(name) {
     return store.getters.entities.getStampByName(name)
   },
   getUserByName(name) {
-    return {
-      iconFileId: store.getters.entities.getUserByName(name)?.iconFileId ?? ''
-    }
+    return store.getters.entities.getUserByName(name)
   }
 }
 
