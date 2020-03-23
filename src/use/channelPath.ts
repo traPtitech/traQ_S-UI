@@ -32,13 +32,10 @@ const useChannelPath = () => {
       throw `channelIdToPath: No channel: ${id}`
     }
     const channel = channelEntities[id]
-    if (channel.parentId === '' || !channel.parentId) {
-      return [channel.name ?? '']
+    if (!channel.parentId) {
+      return [channel.name]
     }
-    return [
-      ...channelIdToPath(channel.parentId, channelEntities),
-      channel.name ?? ''
-    ]
+    return [...channelIdToPath(channel.parentId, channelEntities), channel.name]
   }
   return { channelPathToId, channelIdToPath }
 }
