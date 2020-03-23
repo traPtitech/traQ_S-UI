@@ -30,10 +30,10 @@ const storeProvider: Store = {
     return store.state.entities.users[store.state.domain.me.id]
   },
   getStampByName(name) {
-    return store.getters.entities.getStampByName(name)
+    return store.getters.entities.stampByName(name)
   },
   getUserByName(name) {
-    return store.getters.entities.getUserByName(name)
+    return store.getters.entities.userByName(name)
   }
 }
 

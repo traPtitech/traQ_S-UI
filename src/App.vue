@@ -47,9 +47,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 @import 'src/styles/global.scss';
+</style>
 
+<style lang="scss" module>
 .app {
   position: fixed;
   top: 0;

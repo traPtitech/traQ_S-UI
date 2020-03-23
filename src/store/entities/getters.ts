@@ -3,7 +3,8 @@ import { S } from './state'
 import { compareString } from '@/lib/util/string'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
-import { User, Stamp } from '@traptitech/traq'
+import { User, Stamp, UserGroup } from '@traptitech/traq'
+import { UserId } from '@/types/entity-ids'
 
 const entitiesGetterContext = (args: [any, any, any, any]) =>
   moduleGetterContext(args, entities)
@@ -14,14 +15,20 @@ export const getters = defineGetters<S>()({
       group => group.type === 'grade'
     )
   },
-  getStampByName(...args): (name: string) => Stamp | undefined {
-    const { state } = entitiesGetterContext(args)
+  gradeNameByUserId(...args): (userId: UserId) => string | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return (userId: UserId) => {
+      return getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
+        userGroup.members?.some(member => member.id === userId)
+      )?.name
+    }
+  },
+  stampByName(state): (name: string) => Stamp | undefined {
     return (name: string) => {
       return Object.values(state.stamps).find(stamp => stamp.name === name)
     }
   },
-  getUserByName(...args): (name: string) => User | undefined {
-    const { state } = entitiesGetterContext(args)
+  userByName(state): (name: string) => User | undefined {
     return (name: string) => {
       return Object.values(state.users).find(user => user.name === name)
     }

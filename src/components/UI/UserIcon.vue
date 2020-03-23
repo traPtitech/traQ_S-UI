@@ -11,7 +11,7 @@ import api, { BASE_PATH, User } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 
-type IconSize = 42 | 36 | 28 | 20
+type IconSize = 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
 type Props = { userId: UserId; size: IconSize; preventModal: boolean }
 

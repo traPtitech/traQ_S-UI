@@ -2,6 +2,7 @@
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div :class="$style.viewport">
       <message-element
+        :class="$style.element"
         v-for="messageId in props.messageIds"
         :key="messageId"
         :messageId="messageId"
@@ -105,5 +106,9 @@ export default defineComponent({
   flex-flow: column;
   justify-content: flex-end;
   min-height: 100%;
+}
+
+.element {
+  margin: 4px 0;
 }
 </style>
