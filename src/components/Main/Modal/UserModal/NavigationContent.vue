@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <section :class="$style.container">
     <profile-tab
       v-if="props.currentNavigation === 'profile'"
       :user="props.user"
@@ -16,7 +16,7 @@
       :detail="detail"
       :class="$style.content"
     />
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

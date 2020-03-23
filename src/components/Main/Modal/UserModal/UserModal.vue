@@ -66,5 +66,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .modal {
+  position: relative;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  padding: 32px;
+  padding-top: 0;
+  border-radius: 4px;
 }
 </style>

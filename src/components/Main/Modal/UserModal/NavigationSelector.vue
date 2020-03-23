@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.container">
-    <div
+  <section :class="$style.container">
+    <button
       v-for="item in items"
       :key="item.type"
       :class="$style.item"
@@ -12,8 +12,8 @@
         :width="24"
         :height="24"
       />
-    </div>
-  </div>
+    </button>
+  </section>
 </template>
 
 <script lang="ts">

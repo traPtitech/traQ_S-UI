@@ -2,7 +2,6 @@
   <div v-if="modalState.shouldShowModal" :class="$style.container">
     <user-modal
       v-if="modalState.current.type === 'user'"
-      :class="$style.modal"
       :style="styles.modal"
       :id="modalState.current.id"
     />
