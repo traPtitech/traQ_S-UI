@@ -18,7 +18,7 @@
 import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { UserId } from '@/types/entity-ids'
-import { User, UserDetail } from '@/lib/api'
+import { User, UserDetail } from '@traptitech/traq'
 import ProfileTabBio from '@/components/Main/Modal/UserModal/ProfileTabBio.vue'
 import ProfileTabHomeChannel from '@/components/Main/Modal/UserModal/ProfileTabHomeChannel.vue'
 import ProfileTabAccounts from '@/components/Main/Modal/UserModal/ProfileTabAccounts.vue'

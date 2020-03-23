@@ -21,7 +21,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
-import apis, { User, UserDetail } from '@/lib/api'
+import apis from '@/lib/api'
+import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab.vue'

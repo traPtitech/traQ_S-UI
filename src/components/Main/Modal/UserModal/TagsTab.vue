@@ -12,7 +12,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { UserDetail } from '@/lib/api'
+import { UserDetail } from '@traptitech/traq'
 
 interface Props {
   detail?: UserDetail
