@@ -11,5 +11,10 @@ export const actions = defineActions({
     const { commit } = domainActionContext(context)
     const result = await api.getActivityTimeline(50, true)
     commit.setChannelActivity(result.data)
+  },
+  async fetchOnlineUsers(context) {
+    const { commit } = domainActionContext(context)
+    const result = await api.getOnlineUsers()
+    commit.setOnlineUsers(result.data)
   }
 })

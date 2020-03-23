@@ -31,12 +31,12 @@ export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
   console.error('onUserIconUpdated: Not implemented')
 }
 
-export const onUserOnline = (data: UserOnlineEvent['body']) => {
-  console.error('onUserOnline: Not implemented')
+export const onUserOnline = ({ id }: UserOnlineEvent['body']) => {
+  store.commit.domain.addOnlineUser(id)
 }
 
-export const onUserOffline = (data: UserOfflineEvent['body']) => {
-  console.error('onUserOffline: Not implemented')
+export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
+  store.commit.domain.deleteOnlineUser(id)
 }
 
 export const onUserWebRTCStateChanged = (

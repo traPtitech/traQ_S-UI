@@ -1,6 +1,12 @@
 <template>
   <div v-if="modalState.shouldShowModal" :class="$style.container">
-    <div :class="$style.modal" :style="styles.modal">
+    <user-modal
+      v-if="modalState.current.type === 'user'"
+      :class="$style.modal"
+      :style="styles.modal"
+      :id="modalState.current.id"
+    />
+    <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ modalState.current }}
       </pre>
@@ -23,13 +29,12 @@
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
 
 const useModal = () => {
   const state = reactive({
     shouldShowModal: computed(() => store.getters.ui.modal.shouldShowModal),
-    current: computed(() =>
-      JSON.stringify(store.state.ui.modal.modalState, null, 4)
-    )
+    current: computed(() => store.state.ui.modal.modalState[0])
   })
   window.addEventListener('popstate', event => {
     // history.stateとstoreの同期をとる
@@ -72,6 +77,9 @@ export default defineComponent({
       onClickPop,
       onClickClear
     }
+  },
+  components: {
+    UserModal
   }
 })
 </script>
