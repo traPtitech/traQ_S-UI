@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.groups">
+  <div :class="$style.tags">
     <template v-if="isLoading">Now loading...</template>
     <template v-else>
       <ul>
-        <li v-for="group in groups" :key="group.id">{{ group.name }}</li>
+        <li v-for="tag in tags" :key="tag.tagId">{{ tag.tag }}</li>
       </ul>
     </template>
   </div>
@@ -19,25 +19,21 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'GroupsTab',
+  name: 'TagsTab',
   props: {
     detail: Object
   },
   setup(props: Props) {
     const isLoading = computed(() => props.detail === undefined)
-    const groups = computed(() =>
-      props.detail === undefined
-        ? []
-        : props.detail.groups.map(
-            groupId => store.state.entities.userGroups[groupId]
-          )
+    const tags = computed(() =>
+      props.detail === undefined ? [] : props.detail.tags
     )
-    return { isLoading, groups }
+    return { isLoading, tags }
   }
 })
 </script>
 
 <style lang="scss" module>
-.groups {
+.tags {
 }
 </style>

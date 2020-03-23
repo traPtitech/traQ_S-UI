@@ -3,21 +3,38 @@
     <profile-tab
       v-if="props.currentNavigation === 'profile'"
       :user="props.user"
+      :detail="detail"
       :class="$style.content"
     />
     <groups-tab
       v-if="props.currentNavigation === 'groups'"
+      :detail="detail"
+      :class="$style.content"
+    />
+    <tags-tab
+      v-if="props.currentNavigation === 'tags'"
+      :detail="detail"
       :class="$style.content"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
+import apis, { User, UserDetail } from '@/lib/api'
+import { UserId } from '@/types/entity-ids'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'
-import { User } from '@/lib/api'
+import TagsTab from './TagsTab.vue'
+
+const useUserDetail = (id: UserId) => {
+  const detail = ref<UserDetail>()
+  apis.getUser(id).then(res => {
+    detail.value = res.data
+  })
+  return detail
+}
 
 type Props = {
   currentNavigation: NavigationItemType
@@ -28,12 +45,13 @@ export default defineComponent({
   name: 'NavigationContent',
   components: {
     ProfileTab,
-    GroupsTab
+    GroupsTab,
+    TagsTab
   },
   props: {
     currentNavigation: {
       type: String,
-      default: 'home' as NavigationItemType
+      default: 'profile' as NavigationItemType
     },
     user: {
       type: Object,
@@ -41,7 +59,8 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    return { props }
+    const detail = useUserDetail(props.user.id)
+    return { props, detail }
   }
 })
 </script>
