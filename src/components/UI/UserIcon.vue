@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import api, { BASE_PATH, User } from '@/lib/api'
+import api, { BASE_PATH } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 

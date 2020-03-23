@@ -31,7 +31,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { User } from '@/lib/api'
+import { User } from '@traptitech/traq'
 import { compareString } from '@/lib/util/string'
 import { UserId, UserGroupId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'

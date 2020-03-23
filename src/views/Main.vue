@@ -132,13 +132,6 @@ export default defineComponent({
       transform: `translateX(${swipeDrawerState.currentPosition}px)`
     }))
 
-    onMounted(() => {
-      // 暫定
-      store.dispatch.entities.fetchUsers()
-      store.dispatch.entities.fetchStamps()
-      store.dispatch.entities.fetchUserGroups()
-    })
-
     const { routeWatcherState, routeWatcher } = useRouteWacher(context)
     return {
       touchstartHandler,

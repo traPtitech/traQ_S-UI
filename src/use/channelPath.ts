@@ -1,6 +1,6 @@
 import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
-import { Channel } from '@/lib/api'
+import { Channel } from '@traptitech/traq'
 
 const useChannelPath = () => {
   const channelPathToId = (

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Channel } from '@/lib/api'
+import { Channel } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId } from '@/types/entity-ids'

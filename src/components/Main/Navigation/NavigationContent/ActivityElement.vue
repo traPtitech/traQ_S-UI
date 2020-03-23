@@ -21,7 +21,7 @@ import {
   reactive
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { Message } from '@/lib/api'
+import { Message } from '@traptitech/traq'
 import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
