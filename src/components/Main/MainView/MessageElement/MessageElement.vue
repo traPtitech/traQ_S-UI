@@ -3,14 +3,16 @@
     <user-icon
       :class="$style.userIcon"
       :userId="state.message.userId"
-      :size="42"
+      :size="40"
     />
     <message-header
       :class="$style.messageHeader"
       :userId="state.message.userId"
+      :createdAt="state.message.createdAt"
+      :updatedAt="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <div :class="$style.content" v-html="state.content" />
+      <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
   </div>
 </template>
@@ -66,15 +68,19 @@ export default defineComponent({
 
 .userIcon {
   grid-area: user-icon;
+  margin-top: 2px;
 }
 
-.messageDetails {
+.messageHeader {
   grid-area: message-header;
+  padding-left: 8px;
 }
 
 .messageContents {
   grid-area: message-contents;
-  padding: 8px 0 0 8px;
+  padding-top: 4px;
+  padding-left: 8px;
+  min-width: 0;
 }
 
 .content {
