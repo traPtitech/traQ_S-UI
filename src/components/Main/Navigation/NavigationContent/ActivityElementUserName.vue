@@ -10,7 +10,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { User } from '@/lib/api'
+import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 
 type Props = { user: User }

@@ -6,7 +6,7 @@ import {
   // StampPalette,
   Webhook,
   Message
-} from '@/lib/api'
+} from '@traptitech/traq'
 import {
   UserId,
   ChannelId,

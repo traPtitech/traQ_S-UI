@@ -1,5 +1,5 @@
 import { UserId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel } from '@/lib/api'
+import { UnreadChannel } from '@traptitech/traq'
 
 export interface S {
   id: UserId

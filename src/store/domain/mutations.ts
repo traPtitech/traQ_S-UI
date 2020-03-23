@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { ActivityTimelineMessage } from '@/lib/api'
+import { ActivityTimelineMessage } from '@traptitech/traq'
 import { S } from './state'
 import { ChannelState } from '.'
 

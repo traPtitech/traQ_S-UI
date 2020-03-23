@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { MessageId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel } from '@/lib/api'
+import { UnreadChannel } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
   setId(state: S, id: MessageId) {

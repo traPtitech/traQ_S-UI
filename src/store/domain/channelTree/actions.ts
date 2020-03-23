@@ -1,6 +1,6 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { Channel } from '@/lib/api'
+import { Channel } from '@traptitech/traq'
 import { compareString } from '@/lib/util/string'
 import { ChannelId } from '@/types/entity-ids'
 import { channelTree } from './index'
