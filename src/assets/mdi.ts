@@ -7,7 +7,9 @@ import {
   mdiFileVideo,
   mdiFileImage,
   mdiClose,
-  mdiPlusCircleOutline
+  mdiPlusCircleOutline,
+  mdiBook,
+  mdiTwitter
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -23,7 +25,9 @@ const mdi: MdiIconsMapping = {
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
   'file-image': mdiFileImage,
-  'plus-circle-outline': mdiPlusCircleOutline
+  'plus-circle-outline': mdiPlusCircleOutline,
+  book: mdiBook,
+  twitter: mdiTwitter
 }
 
 export default mdi

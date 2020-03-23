@@ -1,11 +1,12 @@
 <template>
   <div :class="$style.profile">
-    <template v-if="detail === undefined">Now Loading...</template>
-    <template v-else>
-      <p>ひとこと: {{ detail.bio }}</p>
-      <p>ほーむちゃんねる: #gps/times/{{ detail.name }}</p>
-      <p>あかうんと @{{ detail.twitterId }}</p>
-    </template>
+    <profile-tab-bio :bio="detail === undefined ? undefined : detail.bio" />
+    <profile-tab-home-channel :name="props.user.name" />
+    <profile-tab-accounts
+      :bot="props.user.bot"
+      :name="props.user.name"
+      :twitterId="detail === undefined ? undefined : detail.twitterId"
+    />
   </div>
 </template>
 
@@ -15,7 +16,10 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { UserId } from '@/types/entity-ids'
 import { User, UserDetail } from '@traptitech/traq'
-import apis from '../../../../lib/api'
+import ProfileTabBio from '@/components/Main/Modal/UserModal/ProfileTabBio.vue'
+import ProfileTabHomeChannel from '@/components/Main/Modal/UserModal/ProfileTabHomeChannel.vue'
+import ProfileTabAccounts from '@/components/Main/Modal/UserModal/ProfileTabAccounts.vue'
+import apis from '@/lib/api'
 
 const useStyles = () =>
   reactive({
@@ -38,7 +42,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'Profile',
+  name: 'ProfileTab',
   props: {
     user: {
       type: Object,
@@ -50,8 +54,14 @@ export default defineComponent({
     const detail = useUserDetail(props.user.id)
     return {
       styles,
+      props,
       detail
     }
+  },
+  components: {
+    ProfileTabBio,
+    ProfileTabHomeChannel,
+    ProfileTabAccounts
   }
 })
 </script>
