@@ -12,14 +12,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { UserId } from '@/types/entity-ids'
-import { User, UserDetail } from '@traptitech/traq'
 import ProfileTabBio from '@/components/Main/Modal/UserModal/ProfileTabBio.vue'
 import ProfileTabHomeChannel from '@/components/Main/Modal/UserModal/ProfileTabHomeChannel.vue'
 import ProfileTabAccounts from '@/components/Main/Modal/UserModal/ProfileTabAccounts.vue'
-import apis from '@/lib/api'
+import apis, { User, UserDetail } from '@/lib/api'
 
 const useStyles = () =>
   reactive({

@@ -6,22 +6,20 @@
       :class="$style.item"
       @click="onNavigationItemClick(item.type)"
     >
-      <navigation-selector-item
-        :is-selected="props.currentNavigation === item.type"
-        :icon-mdi="item.iconMdi"
-        :icon-name="item.iconName"
+      <icon
+        :name="item.iconName"
+        :mdi="item.iconMdi"
+        :width="24"
+        :height="24"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, toRefs } from '@vue/composition-api'
-import {
-  NavigationItemType,
-  useNavigationSelectorItem
-} from '@/components/Main/Navigation/use/navigation'
-import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
+import { defineComponent, SetupContext } from '@vue/composition-api'
+import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
+import Icon from '@/components/UI/Icon.vue'
 
 type Props = {
   currentNavigation: NavigationItemType
@@ -29,11 +27,11 @@ type Props = {
 
 export default defineComponent({
   name: 'NavigationSelector',
-  components: { NavigationSelectorItem },
+  components: { Icon },
   props: {
     currentNavigation: {
       type: String,
-      default: 'home' as NavigationItemType
+      default: 'profile' as NavigationItemType
     }
   },
   setup(props: Props, context: SetupContext) {
@@ -43,25 +41,17 @@ export default defineComponent({
       iconMdi?: true
     }[] = [
       {
-        type: 'home',
-        iconName: 'home',
-        iconMdi: true
-      },
-      {
-        type: 'channels',
-        iconName: 'hash'
-      },
-      {
-        type: 'activity',
-        iconName: 'activity'
-      },
-      {
-        type: 'users',
+        type: 'profile',
         iconName: 'user'
       },
       {
-        type: 'services',
-        iconName: 'services'
+        type: 'groups',
+        iconName: 'user'
+      },
+      {
+        type: 'tags',
+        iconName: 'tags',
+        iconMdi: true
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
@@ -76,9 +66,5 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  display: block;
-}
-.item {
-  margin: 16px 0;
 }
 </style>
