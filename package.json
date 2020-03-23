@@ -11,7 +11,7 @@
   "dependencies": {
     "@mdi/js": "^5.0.45",
     "@traptitech/markdown-it-katex": "^3.2.1",
-    "@traptitech/traq": "3.0.0-9",
+    "@traptitech/traq": "3.0.0-10",
     "@traptitech/traq-markdown-it": "^1.2.2",
     "@vue/composition-api": "^0.5.0",
     "core-js": "^3.6.4",
