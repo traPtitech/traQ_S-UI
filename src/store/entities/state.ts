@@ -25,7 +25,7 @@ export type S = {
   stamps: Record<StampId, Stamp>
   // stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Record<WebhookId, Webhook>
-} & Record<string, Record<string, any>>
+}
 
 export const state: S = {
   users: {},
