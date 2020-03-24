@@ -1,0 +1,102 @@
+<template>
+  <div :class="$style.container" :style="styles.container">
+    <message-input-text-area :text="textState.text" @input-text="onInputText" />
+    <div :class="$style.controls">
+      <div @click="postMessage" :class="$style.send">
+        おくる
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, computed, reactive } from '@vue/composition-api'
+import store from '@/store'
+import api from '@/lib/api'
+import { makeStyles } from '@/lib/styles'
+import { ChannelId } from '@/types/entity-ids'
+import MessageInputTextArea from './MessageInputTextArea.vue'
+
+const useStyles = () =>
+  reactive({
+    container: makeStyles(theme => ({
+      background: theme.background.secondary
+    }))
+  })
+
+type TextState = {
+  text: string
+}
+type Props = {
+  channelId: ChannelId
+}
+
+const useText = () => {
+  const state: TextState = reactive({
+    text: ''
+  })
+  const onInputText = (text: string) => {
+    state.text = text
+  }
+  return {
+    textState: state,
+    onInputText
+  }
+}
+
+const usePostMessage = (textState: TextState, props: Props) => {
+  const postMessage = async () => {
+    if (textState.text.length === 0) return
+    try {
+      await api.postMessage(props.channelId, {
+        content: textState.text
+      })
+      textState.text = ''
+    } catch {
+      // TODO: エラー処理
+    }
+  }
+  return postMessage
+}
+
+export default defineComponent({
+  name: 'MessageInput',
+  components: {
+    MessageInputTextArea
+  },
+  props: {
+    channelId: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props: Props) {
+    const styles = useStyles()
+    const { textState, onInputText } = useText()
+    const postMessage = usePostMessage(textState, props)
+    return {
+      styles,
+      textState,
+      onInputText,
+      postMessage
+    }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+.controls {
+  flex: {
+    grow: 0;
+    shrink: 0;
+  }
+}
+</style>

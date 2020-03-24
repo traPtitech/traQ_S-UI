@@ -98,7 +98,7 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   overflow-anchor: none;
-  padding: 12px 32px;
+  padding: 12px 0;
 }
 
 .viewport {
