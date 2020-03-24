@@ -5,6 +5,7 @@
     :style="styles.container"
     :value="props.text"
     @input="onInput"
+    @keydown="onKeyDown"
   ></textarea>
 </template>
 
@@ -15,7 +16,8 @@ import {
   reactive,
   ref,
   onMounted,
-  SetupContext
+  SetupContext,
+  watchEffect
 } from '@vue/composition-api'
 import autosize from 'autosize'
 import store from '@/store'
@@ -37,6 +39,15 @@ const useText = (context: SetupContext) => {
   }
 }
 
+const useEnterWatcher = (context: SetupContext) => {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.metaKey && event.key === 'Enter') {
+      context.emit('post-message')
+    }
+  }
+  return { onKeyDown }
+}
+
 type Props = {
   text: string
 }
@@ -44,7 +55,7 @@ type Props = {
 export default defineComponent({
   name: 'MessageInputTextArea',
   props: {
-    value: {
+    text: {
       type: String,
       default: ''
     }
@@ -52,16 +63,23 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const styles = useStyles()
     const { onInput } = useText(context)
+    const { onKeyDown } = useEnterWatcher(context)
     const textareaRef = ref<HTMLTextAreaElement>(null)
     onMounted(() => {
       if (textareaRef.value) {
         autosize(textareaRef.value)
       }
     })
+    watchEffect(() => {
+      if (props.text.length === 0 && textareaRef.value) {
+        autosize.update(textareaRef.value)
+      }
+    })
     return {
       props,
       styles,
       onInput,
+      onKeyDown,
       textareaRef
     }
   }

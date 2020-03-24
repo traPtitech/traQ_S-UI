@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <message-input-text-area :text="textState.text" @input-text="onInputText" />
+    <message-input-text-area
+      :text="textState.text"
+      @input-text="onInputText"
+      @post-message="postMessage"
+    />
     <div :class="$style.controls">
       <div @click="postMessage" :class="$style.send">
         おくる
@@ -52,6 +56,7 @@ const usePostMessage = (textState: TextState, props: Props) => {
         content: textState.text
       })
       textState.text = ''
+      store.dispatch.domain.messagesView.fetchChannelLatestMessage()
     } catch {
       // TODO: エラー処理
     }
@@ -89,6 +94,7 @@ export default defineComponent({
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   padding: 0.5rem 1rem;
   margin-bottom: 24px;
   border-radius: 4px;
