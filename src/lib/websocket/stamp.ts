@@ -3,7 +3,10 @@ import store from '@/store'
 import {
   StampCreatedEvent,
   StampUpdatedEvent,
-  StampDeletedEvent
+  StampDeletedEvent,
+  StampPaletteCreatedEvent,
+  StampPaletteUpdatedEvent,
+  StampPaletteDeletedEvent
 } from './events'
 
 export const onStampCreated = async ({ id }: StampCreatedEvent['body']) => {
@@ -18,4 +21,25 @@ export const onStampUpdated = async ({ id }: StampUpdatedEvent['body']) => {
 
 export const onStampDeleted = ({ id }: StampDeletedEvent['body']) => {
   store.commit.entities.deleteStamp(id)
+}
+
+export const onStampPaletteCreated = async (
+  data: StampPaletteCreatedEvent['body']
+) => {
+  // eslint-disable-next-line no-console
+  console.error('onStampPaletteCreated: Not implemented')
+}
+
+export const onStampPaletteUpdated = async (
+  data: StampPaletteUpdatedEvent['body']
+) => {
+  // eslint-disable-next-line no-console
+  console.error('onStampPaletteUpdated: Not implemented')
+}
+
+export const onStampPaletteDeleted = (
+  data: StampPaletteDeletedEvent['body']
+) => {
+  // eslint-disable-next-line no-console
+  console.error('onStampPaletteDeleted: Not implemented')
 }

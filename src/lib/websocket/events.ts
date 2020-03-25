@@ -4,7 +4,8 @@ import {
   UserGroupId,
   MessageId,
   StampId,
-  ClipFolderId
+  ClipFolderId,
+  StampPaletteId
 } from '@/types/entity-ids'
 
 export type WebSocketEvent =
@@ -209,10 +210,20 @@ export interface MessageUnpinnedEvent {
 /*
  * Stamp
  */
-type StampEvent = StampCreatedEvent | StampUpdatedEvent | StampDeletedEvent
+type StampEvent =
+  | StampCreatedEvent
+  | StampUpdatedEvent
+  | StampDeletedEvent
+  | StampPaletteCreatedEvent
+  | StampPaletteUpdatedEvent
+  | StampPaletteDeletedEvent
 
 interface StampIdBody {
   id: StampId
+}
+
+interface StampPaletteIdBody {
+  id: StampPaletteId
 }
 
 export interface StampCreatedEvent {
@@ -228,6 +239,21 @@ export interface StampUpdatedEvent {
 export interface StampDeletedEvent {
   type: 'STAMP_DELETED'
   body: StampIdBody
+}
+
+export interface StampPaletteCreatedEvent {
+  type: 'STAMP_PALETTE_CREATED'
+  body: StampPaletteIdBody
+}
+
+export interface StampPaletteUpdatedEvent {
+  type: 'STAMP_PALETTE_UPDATED'
+  body: StampPaletteIdBody
+}
+
+export interface StampPaletteDeletedEvent {
+  type: 'STAMP_PALETTE_DELETED'
+  body: StampPaletteIdBody
 }
 
 /*

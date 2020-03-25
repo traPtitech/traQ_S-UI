@@ -35,7 +35,14 @@ import {
   onClipFolderMessageAdded,
   onClipFolderMessageDeleted
 } from './clipFolder'
-import { onStampCreated, onStampUpdated, onStampDeleted } from './stamp'
+import {
+  onStampCreated,
+  onStampUpdated,
+  onStampDeleted,
+  onStampPaletteCreated,
+  onStampPaletteUpdated,
+  onStampPaletteDeleted
+} from './stamp'
 import { WebSocketEvent } from './events'
 
 export const onReceive = (data: string) => {
@@ -128,6 +135,15 @@ export const onReceive = (data: string) => {
       break
     case 'STAMP_DELETED':
       onStampDeleted(event.body)
+      break
+    case 'STAMP_PALETTE_CREATED':
+      onStampPaletteCreated(event.body)
+      break
+    case 'STAMP_PALETTE_UPDATED':
+      onStampPaletteUpdated(event.body)
+      break
+    case 'STAMP_PALETTE_DELETED':
+      onStampPaletteDeleted(event.body)
       break
     case 'CLIP_FOLDER_CREATED':
       onClipFolderCreated(event.body)
