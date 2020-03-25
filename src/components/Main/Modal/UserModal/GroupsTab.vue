@@ -25,12 +25,11 @@ export default defineComponent({
   },
   setup(props: Props) {
     const isLoading = computed(() => props.detail === undefined)
-    const groups = computed(() =>
-      props.detail === undefined
-        ? []
-        : props.detail.groups.map(
-            groupId => store.state.entities.userGroups[groupId]
-          )
+    const groups = computed(
+      () =>
+        props.detail?.groups.map(
+          groupId => store.state.entities.userGroups[groupId]
+        ) ?? []
     )
     return { isLoading, groups }
   }

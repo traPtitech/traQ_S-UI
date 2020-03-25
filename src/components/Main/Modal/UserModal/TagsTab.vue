@@ -25,9 +25,7 @@ export default defineComponent({
   },
   setup(props: Props) {
     const isLoading = computed(() => props.detail === undefined)
-    const tags = computed(() =>
-      props.detail === undefined ? [] : props.detail.tags
-    )
+    const tags = computed(() => props.detail?.tags ?? [])
     return { isLoading, tags }
   }
 })

@@ -69,8 +69,6 @@ export default defineComponent({
   position: relative;
   display: grid;
   grid-template-columns: min-content 1fr;
-  padding: 32px;
-  padding-top: 0;
-  border-radius: 4px;
+  border-radius: 16px;
 }
 </style>

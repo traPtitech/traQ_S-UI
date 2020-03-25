@@ -38,7 +38,7 @@ export default defineComponent({
     const items: {
       type: NavigationItemType
       iconName: string
-      iconMdi?: true
+      iconMdi?: boolean
     }[] = [
       {
         type: 'profile',

@@ -10,7 +10,8 @@ import {
   mdiPlusCircleOutline,
   mdiBook,
   mdiTwitter,
-  mdiTagMultiple
+  mdiTagMultiple,
+  mdiEmail
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -29,7 +30,8 @@ const mdi: MdiIconsMapping = {
   'plus-circle-outline': mdiPlusCircleOutline,
   book: mdiBook,
   twitter: mdiTwitter,
-  tags: mdiTagMultiple
+  tags: mdiTagMultiple,
+  email: mdiEmail
 }
 
 export default mdi
