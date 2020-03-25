@@ -56,6 +56,7 @@ export const actions = defineActions({
       offset: 0
     })
     if (messages.length !== 1) return
+    commit.setCurrentOffset(state.currentOffset + 1)
     const messageId = messages[0].id
     await dispatch.renderMessageContent(messageId)
     commit.setMessageIds([...state.messageIds, messageId])

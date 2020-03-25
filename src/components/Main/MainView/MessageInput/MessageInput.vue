@@ -5,11 +5,11 @@
       @input-text="onInputText"
       @post-message="postMessage"
     />
-    <div :class="$style.controls">
-      <div @click="postMessage" :class="$style.send">
-        おくる
-      </div>
-    </div>
+    <message-controls
+      :class="$style.controls"
+      :can-post-message="!textState.isEmpty"
+      @click-send="postMessage"
+    />
   </div>
 </template>
 
@@ -20,6 +20,7 @@ import api from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import MessageInputTextArea from './MessageInputTextArea.vue'
+import MessageControls from './MessageInputControls.vue'
 
 const useStyles = () =>
   reactive({
@@ -30,6 +31,7 @@ const useStyles = () =>
 
 type TextState = {
   text: string
+  isEmpty: boolean
 }
 type Props = {
   channelId: ChannelId
@@ -37,7 +39,8 @@ type Props = {
 
 const useText = () => {
   const state: TextState = reactive({
-    text: ''
+    text: '',
+    isEmpty: computed(() => state.text.length === 0)
   })
   const onInputText = (text: string) => {
     state.text = text
@@ -67,7 +70,8 @@ const usePostMessage = (textState: TextState, props: Props) => {
 export default defineComponent({
   name: 'MessageInput',
   components: {
-    MessageInputTextArea
+    MessageInputTextArea,
+    MessageControls
   },
   props: {
     channelId: {
