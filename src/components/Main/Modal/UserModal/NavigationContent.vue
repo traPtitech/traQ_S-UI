@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section :class="$style.container" :style="styles.container">
     <profile-tab
       v-if="props.currentNavigation === 'profile'"
       :user="props.user"
@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, reactive } from '@vue/composition-api'
+import { makeStyles } from '@/lib/styles'
 import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
@@ -28,6 +29,14 @@ import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'
 import TagsTab from './TagsTab.vue'
+
+const useStyles = () =>
+  reactive({
+    container: makeStyles(theme => ({
+      color: theme.ui.primary,
+      background: theme.background.primary
+    }))
+  })
 
 const useUserDetail = (id: UserId) => {
   const detail = ref<UserDetail>()
@@ -60,15 +69,21 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
+    const styles = useStyles()
     const detail = useUserDetail(props.user.id)
-    return { props, detail }
+    return {
+      styles,
+      props,
+      detail
+    }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-}
-.content {
+  padding: 8px 16px;
+  min-width: 360px;
+  min-height: 240px;
 }
 </style>

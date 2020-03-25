@@ -1,23 +1,25 @@
 <template>
   <section>
-    <h2>アカウント</h2>
-    <p>
+    <profile-tab-header text="アカウント" />
+    <p :class="$style.p">
       <circle-icon
         name="book"
         mdi
         :color="iconColor"
         :background="iconBackgroundColor"
+        :class="$style.icon"
       />
       <a :href="wikiPageLink" target="_blank" @click.stop="">
         {{ wikiPageName }}
       </a>
     </p>
-    <p v-if="props.twitterId !== ''">
+    <p v-if="props.twitterId !== ''" :class="$style.p">
       <circle-icon
         name="twitter"
         mdi
         :color="iconColor"
         :background="iconBackgroundColor"
+        :class="$style.icon"
       />
       <template v-if="props.twitterId === undefined">Now Loading...</template>
       <template v-else>
@@ -32,6 +34,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
+import ProfileTabHeader from './ProfileTabHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
 
 interface Props {
@@ -79,12 +82,20 @@ export default defineComponent({
     }
   },
   components: {
+    ProfileTabHeader,
     CircleIcon
   }
 })
 </script>
 
 <style lang="scss" module>
-.homeChannel {
+.p {
+  margin: 4px 0;
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: bottom;
 }
 </style>

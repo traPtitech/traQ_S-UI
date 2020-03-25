@@ -1,13 +1,6 @@
 <template>
-  <section :class="$style.feature" :style="styles.feature">
+  <section :class="$style.feature">
     <button :class="$style.close" @click="onClickClear">X</button>
-    <user-icon
-      :userId="props.user.id"
-      :preventModal="true"
-      :size="iconSize"
-      :class="$style.icon"
-      :style="styles.icon"
-    />
     <h1>{{ props.user.displayName }}</h1>
     <p>
       <span :class="$style.onlineIndicator" :data-is-online="isOnline" />
@@ -15,26 +8,28 @@
     </p>
     <div>
       <feature-link-button title="DM" iconName="email" iconMdi />
-      <feature-link-button title="ホーム" iconName="email" iconMdi />
+      <div
+        v-if="homeChannelId !== undefined"
+        @click="onHomeChannelClick"
+        :style="{ display: 'inline-block' }"
+      >
+        <feature-link-button title="ホーム" iconName="home" iconMdi />
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
 import store from '@/store'
+import useHomeChannelPath from '@/use/homeChannelPath'
 import { makeStyles } from '@/lib/styles'
-import { UserId } from '@/types/entity-ids'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import { UserId, ChannelId } from '@/types/entity-ids'
 import FeatureLinkButton from '@/components/Main/Modal/UserModal/FeatureLinkButton.vue'
 import { User } from '@traptitech/traq'
 
 const useStyles = (iconSize: number) =>
   reactive({
-    feature: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary
-    })),
     icon: makeStyles(theme => ({
       marginTop: `${-iconSize / 2}px`,
       borderColor: theme.background.secondary
@@ -62,16 +57,33 @@ export default defineComponent({
     )
     const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
+    const { homeChannelFromUsername } = useHomeChannelPath()
+
+    let homeChannelId = ref<ChannelId>()
+    try {
+      homeChannelId.value = homeChannelFromUsername(
+        props.user.name,
+        store.state.domain.channelTree.channelTree
+      )
+    } catch (e) {}
+    const onHomeChannelClick = () => {
+      if (homeChannelId.value === undefined) return
+      store.dispatch.domain.messagesView.changeCurrentChannel(
+        homeChannelId.value
+      )
+    }
+
     return {
       styles,
       iconSize,
       props,
       isOnline,
-      onClickClear
+      onClickClear,
+      homeChannelId,
+      onHomeChannelClick
     }
   },
   components: {
-    UserIcon,
     FeatureLinkButton
   }
 })
@@ -81,19 +93,12 @@ export default defineComponent({
 .feature {
   grid-column: 1/3;
   text-align: center;
-  border-top-left-radius: 16px; // overflow:hiddenを根本につけるとアイコンが表示されなくなる
-  border-top-right-radius: 16px; // .modalのboder-radiusと同じ変数を参照させたい
 }
 
 .close {
   position: absolute;
   top: 0;
   right: 0;
-}
-
-.icon {
-  margin: auto;
-  border: 4px solid;
 }
 
 .onlineIndicator {
