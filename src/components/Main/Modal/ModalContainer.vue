@@ -7,7 +7,7 @@
     />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
-        {{ modalState.current }}
+        {{ JSON.stringify(modalState.current) }}
       </pre>
       <div :style="{ display: 'flex' }">
         <button :style="{ padding: '16px' }" @click="onClick">
@@ -33,7 +33,7 @@ import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
 const useModal = () => {
   const state = reactive({
     shouldShowModal: computed(() => store.getters.ui.modal.shouldShowModal),
-    current: computed(() => store.state.ui.modal.modalState[0])
+    current: computed(() => store.getters.ui.modal.currentState)
   })
   window.addEventListener('popstate', event => {
     // history.stateとstoreの同期をとる
