@@ -2,7 +2,7 @@
   <section :class="$style.homeChannel">
     <h2>ホームチャンネル</h2>
     <p>
-      <icon name="home" :mdi="true" />
+      <icon name="home" mdi />
       <span>#gps/times/{{ props.name }}</span>
     </p>
   </section>

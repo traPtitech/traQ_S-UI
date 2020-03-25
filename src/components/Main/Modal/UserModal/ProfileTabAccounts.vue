@@ -4,7 +4,7 @@
     <p>
       <circle-icon
         name="book"
-        :mdi="true"
+        mdi
         :color="iconColor"
         :background="iconBackgroundColor"
       />
@@ -15,7 +15,7 @@
     <p v-if="props.twitterId !== ''">
       <circle-icon
         name="twitter"
-        :mdi="true"
+        mdi
         :color="iconColor"
         :background="iconBackgroundColor"
       />
