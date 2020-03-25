@@ -43,7 +43,7 @@ export default defineComponent({
   components: { GradeBadge },
   setup(props: Props) {
     const state = reactive({
-      user: computed(() => store.state.entities.users[props.userId]), //凍結済みとかのときにundefinedになる
+      user: computed(() => store.state.entities.users[props.userId]),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
     const styles = reactive({
