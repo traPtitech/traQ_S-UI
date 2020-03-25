@@ -28,6 +28,13 @@ import {
   onMessagePinned,
   onMessageUnpinned
 } from './message'
+import {
+  onClipFolderCreated,
+  onClipFolderDeleted,
+  onClipFolderUpdated,
+  onClipFolderMessageAdded,
+  onClipFolderMessageDeleted
+} from './clipFolder'
 import { onStampCreated, onStampUpdated, onStampDeleted } from './stamp'
 import { WebSocketEvent } from './events'
 
@@ -122,5 +129,24 @@ export const onReceive = (data: string) => {
     case 'STAMP_DELETED':
       onStampDeleted(event.body)
       break
+    case 'CLIP_FOLDER_CREATED':
+      onClipFolderCreated(event.body)
+      break
+    case 'CLIP_FOLDER_UPDATED':
+      onClipFolderUpdated(event.body)
+      break
+    case 'CLIP_FOLDER_DELETED':
+      onClipFolderDeleted(event.body)
+      break
+    case 'CLIP_FOLDER_MESSAGE_ADDED':
+      onClipFolderMessageAdded(event.body)
+      break
+    case 'CLIP_FOLDER_MESSAGE_DELETED':
+      onClipFolderMessageDeleted(event.body)
+      break
+    default:
+      const strangeValue: never = event
+      // eslint-disable-next-line no-console
+      console.warn(`[WebSocket] Unknown event: `, strangeValue)
   }
 }

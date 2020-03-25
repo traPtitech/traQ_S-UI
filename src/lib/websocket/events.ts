@@ -3,7 +3,8 @@ import {
   ChannelId,
   UserGroupId,
   MessageId,
-  StampId
+  StampId,
+  ClipFolderId
 } from '@/types/entity-ids'
 
 export type WebSocketEvent =
@@ -11,6 +12,7 @@ export type WebSocketEvent =
   | ChannelEvent
   | MessageEvent
   | StampEvent
+  | ClipFolderEvent
 
 /*
  * User
@@ -226,4 +228,47 @@ export interface StampUpdatedEvent {
 export interface StampDeletedEvent {
   type: 'STAMP_DELETED'
   body: StampIdBody
+}
+
+/*
+ * Clip Folder
+ */
+type ClipFolderEvent =
+  | ClipFolderCreatedEvent
+  | ClipFolderUpdatedEvent
+  | ClipFolderDeletedEvent
+  | ClipFolderMessageAddedEvent
+  | ClipFolderMessageDeletedEvent
+
+interface ClipFolderIdBody {
+  id: ClipFolderId
+}
+
+interface ClipFolderIdAndMessageIdBody {
+  folder_id: ClipFolderId
+  message_id: MessageId
+}
+
+export interface ClipFolderCreatedEvent {
+  type: 'CLIP_FOLDER_CREATED'
+  body: ClipFolderIdBody
+}
+
+export interface ClipFolderUpdatedEvent {
+  type: 'CLIP_FOLDER_UPDATED'
+  body: ClipFolderIdBody
+}
+export interface ClipFolderDeletedEvent {
+  type: 'CLIP_FOLDER_DELETED'
+  body: ClipFolderIdBody
+}
+
+export interface ClipFolderMessageAddedEvent {
+  type: 'CLIP_FOLDER_MESSAGE_ADDED'
+  body: ClipFolderIdAndMessageIdBody
+}
+
+export interface ClipFolderMessageDeletedEvent {
+  type: 'CLIP_FOLDER_MESSAGE_DELETED'
+  body: ClipFolderIdAndMessageIdBody
 }
