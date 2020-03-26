@@ -59,7 +59,6 @@ const usePostMessage = (textState: TextState, props: Props) => {
         content: textState.text
       })
       textState.text = ''
-      store.dispatch.domain.messagesView.fetchChannelLatestMessage()
     } catch {
       // TODO: エラー処理
     }
