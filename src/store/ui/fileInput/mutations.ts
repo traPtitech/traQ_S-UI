@@ -1,16 +1,26 @@
+import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { S } from './state'
+import { S, Attachment } from './state'
 
 export const mutations = defineMutations<S>()({
-  addFile(state, file: File) {
-    state.fileList.push(file)
+  addAttachment(state, attachment: Attachment) {
+    state.attachments.push(attachment)
   },
-  removeFileAt(state, index: number) {
-    if (0 <= index && index < state.fileList.length) {
-      state.fileList.splice(index, 1)
+  removeAttachmentAt(state, index: number) {
+    if (0 <= index && index < state.attachments.length) {
+      state.attachments.splice(index, 1)
     }
   },
-  clearFiles(state) {
-    state.fileList = []
+  clearAttachments(state) {
+    state.attachments = []
+  },
+  addThumbnailTo(state, payload: { index: number; thumbnailDataUrl: string }) {
+    if (0 <= payload.index && payload.index < state.attachments.length) {
+      Vue.set(
+        state.attachments[payload.index],
+        'thumbnailDataUrl',
+        payload.thumbnailDataUrl
+      )
+    }
   }
 })

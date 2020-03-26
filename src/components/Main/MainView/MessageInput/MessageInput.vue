@@ -1,16 +1,19 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <message-input-text-area
-      :text="textState.text"
-      @input-text="onInputText"
-      @post-message="postMessage"
-    />
-    <message-input-controls
-      :class="$style.controls"
-      :can-post-message="!textState.isEmpty"
-      @click-send="postMessage"
-    />
-    <message-input-file-list />
+    <message-input-file-list :class="$style.inputFileList" />
+    <div :class="$style.inputContainer">
+      <message-input-text-area
+        :text="textState.text"
+        :class="$style.inputTextArea"
+        @input-text="onInputText"
+        @post-message="postMessage"
+      />
+      <message-input-controls
+        :class="$style.controls"
+        :can-post-message="!textState.isEmpty"
+        @click-send="postMessage"
+      />
+    </div>
   </div>
 </template>
 
@@ -100,11 +103,17 @@ export default defineComponent({
 .container {
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0.5rem 1rem;
+  flex-direction: column;
   margin-bottom: 24px;
   border-radius: 4px;
+}
+.inputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 8px 16px;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 .controls {
   flex: {

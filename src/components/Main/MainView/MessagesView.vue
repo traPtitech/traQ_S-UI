@@ -42,7 +42,7 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   const onDrop = (event: DragEvent) => {
     const files = event.dataTransfer?.files ?? ([] as File[])
     Array.from(files).forEach(file => {
-      store.commit.ui.fileInput.addFile(file)
+      store.dispatch.ui.fileInput.addAttachment(file)
     })
     state.isDragging = false
   }

@@ -1,4 +1,13 @@
-import { mdiHome, mdiSend, mdiFileUpload } from '@mdi/js'
+import {
+  mdiHome,
+  mdiSend,
+  mdiFileUpload,
+  mdiFile,
+  mdiFileMusic,
+  mdiFileVideo,
+  mdiFileImage,
+  mdiClose
+} from '@mdi/js'
 
 interface MdiIconsMapping {
   [name: string]: string
@@ -7,7 +16,12 @@ interface MdiIconsMapping {
 const mdi: MdiIconsMapping = {
   home: mdiHome,
   send: mdiSend,
-  fileUpload: mdiFileUpload
+  file: mdiFile,
+  close: mdiClose,
+  'file-upload': mdiFileUpload,
+  'file-music': mdiFileMusic,
+  'file-video': mdiFileVideo,
+  'file-image': mdiFileImage
 }
 
 export default mdi

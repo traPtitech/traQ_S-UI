@@ -1,17 +1,34 @@
 <template>
-  <div></div>
+  <div v-if="state.attachments.length > 0" :class="$style.container">
+    <message-input-file-list-item
+      v-for="(attachment, i) in state.attachments"
+      :key="i"
+      :attachment="attachment"
+      :class="$style.element"
+    />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  computed,
+  reactive
+} from '@vue/composition-api'
 import store from '@/store'
-
-type Props = {}
+import MessageInputFileListItem from './MessageInputFileListItem.vue'
 
 export default defineComponent({
-  name: 'MessageInputFileInput',
-  setup(props: Props, context: SetupContext) {
-    return {}
+  name: 'MessageInputFileList',
+  components: {
+    MessageInputFileListItem
+  },
+  setup() {
+    const state = reactive({
+      attachments: computed(() => store.state.ui.fileInput.attachments)
+    })
+    return { state }
   }
 })
 </script>
@@ -19,13 +36,16 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
-  max-height: 10rem;
-  resize: none;
-  height: 1rem;
+  display: flex;
+  padding: 16px;
 }
-.fileDragDropContainer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+.element {
+  margin: 0 8px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 </style>
