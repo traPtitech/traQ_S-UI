@@ -5,11 +5,12 @@
       @input-text="onInputText"
       @post-message="postMessage"
     />
-    <message-controls
+    <message-input-controls
       :class="$style.controls"
       :can-post-message="!textState.isEmpty"
       @click-send="postMessage"
     />
+    <message-input-file-list />
   </div>
 </template>
 
@@ -20,7 +21,8 @@ import api from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import MessageInputTextArea from './MessageInputTextArea.vue'
-import MessageControls from './MessageInputControls.vue'
+import MessageInputControls from './MessageInputControls.vue'
+import MessageInputFileList from './MessageInputFileList.vue'
 
 const useStyles = () =>
   reactive({
@@ -71,7 +73,8 @@ export default defineComponent({
   name: 'MessageInput',
   components: {
     MessageInputTextArea,
-    MessageControls
+    MessageInputControls,
+    MessageInputFileList
   },
   props: {
     channelId: {

@@ -13,13 +13,16 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles, fade } from '../../../lib/styles'
+import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { isSelected: boolean }) => {
   return reactive({
     container: makeStyles(theme => ({
-      background: props.isSelected ? fade(theme.accent.primary, 0.1) : 'none'
+      background: props.isSelected
+        ? transparentize(theme.accent.primary, 0.1)
+        : 'none'
     })),
     icon: makeStyles(theme => ({
       color: theme.accent.primary,
