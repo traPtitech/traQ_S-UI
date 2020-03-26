@@ -47,7 +47,7 @@ export default defineComponent({
     const state = reactive({
       height: 0,
       scrollTop: 0,
-      isViewingLatest: computed(
+      isFirstView: computed(
         () => store.state.domain.messagesView.currentOffset === 0
       ),
       isLoading: false
@@ -70,7 +70,7 @@ export default defineComponent({
             // TODO: 次のようにする
             // - 中途半端な位置にスクロールしてるときに1件追加 → 見た目上スクロールしない
             // - 一番下までスクロールしてる時に1件追加 → 一番下までスクロール
-            state.isViewingLatest || ids.length - prevIds.length === 1
+            state.isFirstView || ids.length - prevIds.length === 1
               ? newHeight
               : newHeight - state.height
         })
@@ -83,7 +83,7 @@ export default defineComponent({
       if (!rootRef.value) return
       state.scrollTop = rootRef.value.scrollTop
 
-      if (state.isViewingLatest || state.isLoading) return
+      if (state.isFirstView || state.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD) {
         state.isLoading = true
         await store.dispatch.domain.messagesView.fetchChannelMessages()
