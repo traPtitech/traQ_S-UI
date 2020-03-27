@@ -60,12 +60,19 @@ export default defineComponent({
 
     watch(
       () => props.messageIds,
-      async () => {
+      async (ids, prevIds) => {
         if (!rootRef.value) return
         await context.root.$nextTick()
         const newHeight = rootRef.value.scrollHeight
         rootRef.value.scrollTo({
-          top: state.isFirstView ? newHeight : newHeight - state.height
+          top:
+            // 新規に一つ追加された場合は一番下までスクロール
+            // TODO: 次のようにする
+            // - 中途半端な位置にスクロールしてるときに1件追加 → 見た目上スクロールしない
+            // - 一番下までスクロールしてる時に1件追加 → 一番下までスクロール
+            state.isFirstView || ids.length - prevIds.length === 1
+              ? newHeight
+              : newHeight - state.height
         })
         state.height = newHeight
         state.isLoading = false
@@ -98,7 +105,7 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   overflow-anchor: none;
-  padding: 12px 32px;
+  padding: 12px 0;
 }
 
 .viewport {

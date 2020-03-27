@@ -46,6 +46,21 @@ export const actions = defineActions({
     )
     commit.setMessageIds([...messageIds.reverse(), ...state.messageIds])
   },
+  async fetchChannelLatestMessage(context) {
+    const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(
+      context
+    )
+    const { messages } = await rootDispatch.entities.fetchMessagesByChannelId({
+      channelId: state.currentChannelId,
+      limit: 1,
+      offset: 0
+    })
+    if (messages.length !== 1) return
+    commit.setCurrentOffset(state.currentOffset + 1)
+    const messageId = messages[0].id
+    await dispatch.renderMessageContent(messageId)
+    commit.setMessageIds([...state.messageIds, messageId])
+  },
   async renderMessageContent(context, messageId: string) {
     const { commit, rootState } = messagesViewActionContext(context)
     const content = rootState.entities.messages[messageId].content ?? ''
