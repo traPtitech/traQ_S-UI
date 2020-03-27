@@ -10,7 +10,7 @@
       />
       <message-input-controls
         :class="$style.controls"
-        :can-post-message="!textState.isEmpty"
+        :can-post-message="!(textState.isEmpty && attachmentsState.isEmpty)"
         @click-send="postMessage"
       />
     </div>
@@ -20,12 +20,13 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
-import api from '@/lib/api'
+import api, { buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
+import { Attachment } from '@/store/ui/fileInput/state'
 
 const useStyles = () =>
   reactive({
@@ -34,12 +35,12 @@ const useStyles = () =>
     }))
   })
 
+type Props = {
+  channelId: ChannelId
+}
 type TextState = {
   text: string
   isEmpty: boolean
-}
-type Props = {
-  channelId: ChannelId
 }
 
 const useText = () => {
@@ -56,14 +57,34 @@ const useText = () => {
   }
 }
 
+const useAttachments = () => {
+  const state = reactive({
+    attachments: computed(() => store.state.ui.fileInput.attachments),
+    isEmpty: computed(() => store.getters.ui.fileInput.isEmpty)
+  })
+  return {
+    attachmentsState: state
+  }
+}
+
 const usePostMessage = (textState: TextState, props: Props) => {
   const postMessage = async () => {
     if (textState.text.length === 0) return
+    const attachments = store.state.ui.fileInput.attachments
     try {
+      const responses = await Promise.all(
+        attachments.map(attachment =>
+          api.postFile(attachment.file, props.channelId)
+        )
+      )
+      const fileUrls = responses.map(res => buildFilePath(res.data.id))
+      const embededdUrls = fileUrls.join('\n')
       await api.postMessage(props.channelId, {
-        content: textState.text
+        content: textState.text + '\n' + embededdUrls
       })
       textState.text = ''
+      store.commit.ui.fileInput.clearAttachments()
+      store.dispatch.domain.messagesView.fetchChannelLatestMessage()
     } catch {
       // TODO: エラー処理
     }
@@ -87,10 +108,12 @@ export default defineComponent({
   setup(props: Props) {
     const styles = useStyles()
     const { textState, onInputText } = useText()
+    const { attachmentsState } = useAttachments()
     const postMessage = usePostMessage(textState, props)
     return {
       styles,
       textState,
+      attachmentsState,
       onInputText,
       postMessage
     }

@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    @click="context.emit('click')"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <icon mdi name="close" :size="12" />
   </div>
 </template>
@@ -30,9 +34,9 @@ export default defineComponent({
   components: {
     Icon
   },
-  setup() {
+  setup(_, context: SetupContext) {
     const styles = useStyles()
-    return { styles }
+    return { styles, context }
   }
 })
 </script>

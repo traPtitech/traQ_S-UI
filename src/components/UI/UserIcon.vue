@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import api, { BASE_PATH } from '@/lib/api'
+import api, { buildUserIconPath } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 
@@ -37,7 +37,7 @@ export default defineComponent({
         color: theme.ui.secondary,
         width: `${props.size}px`,
         height: `${props.size}px`,
-        backgroundImage: `url(${BASE_PATH}/users/${props.userId}/icon)`
+        backgroundImage: `url(${buildUserIconPath(props.userId)})`
       }))
     })
     const onClick = () => {

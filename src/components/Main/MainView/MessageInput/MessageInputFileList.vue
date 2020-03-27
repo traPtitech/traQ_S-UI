@@ -5,6 +5,7 @@
       :key="i"
       :attachment="attachment"
       :class="$style.element"
+      @item-remove="removeItem(i)"
     />
   </div>
 </template>
@@ -28,7 +29,11 @@ export default defineComponent({
     const state = reactive({
       attachments: computed(() => store.state.ui.fileInput.attachments)
     })
-    return { state }
+    const removeItem = (indexStr: string) => {
+      const index = parseInt(indexStr)
+      store.commit.ui.fileInput.removeAttachmentAt(index)
+    }
+    return { state, removeItem }
   }
 })
 </script>

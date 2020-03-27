@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.container">
-    <message-input-file-list-item-close-button :class="$style.closeButton" />
+    <message-input-file-list-item-close-button
+      :class="$style.closeButton"
+      @click="onClickClose"
+    />
     <message-input-file-list-item-image
       v-if="state.showThumbnail"
       :attachment="props.attachment"
@@ -70,7 +73,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const state = reactive({
       showThumbnail: computed((): boolean =>
         props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
@@ -80,7 +83,14 @@ export default defineComponent({
     })
     const { iconName } = useFileTypeIcon(props)
     const styles = useStyles()
-    return { state, props, styles, iconName }
+    const onClickClose = () => context.emit('item-remove')
+    return {
+      state,
+      props,
+      styles,
+      iconName,
+      onClickClose
+    }
   }
 })
 </script>
