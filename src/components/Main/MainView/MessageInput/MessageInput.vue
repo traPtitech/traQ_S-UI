@@ -98,7 +98,6 @@ const usePostMessage = (textState: TextState, props: Props) => {
       })
       textState.text = ''
       store.commit.ui.fileInput.clearAttachments()
-      store.dispatch.domain.messagesView.fetchChannelLatestMessage()
     } catch {
       // TODO: エラー処理
     }
