@@ -7,7 +7,9 @@
       @{{ props.user.name }}
     </p>
     <div>
-      <feature-link-button title="DM" iconName="email" iconMdi />
+      <div @click="onDMClick" :style="{ display: 'inline-block' }">
+        <feature-link-button title="DM" iconName="email" iconMdi />
+      </div>
       <div
         v-if="homeChannelId !== undefined"
         @click="onHomeChannelClick"
@@ -57,6 +59,11 @@ export default defineComponent({
     )
     const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
+    const onDMClick = () => {
+      // TODO: DM対応
+      //store.dispatch.domain.messagesView.changeCurrentChannel(/* DM Channel */)
+    }
+
     const { homeChannelFromUsername } = useHomeChannelPath()
 
     let homeChannelId = ref<ChannelId>()
@@ -80,6 +87,7 @@ export default defineComponent({
       isOnline,
       onClickClear,
       homeChannelId,
+      onDMClick,
       onHomeChannelClick
     }
   },

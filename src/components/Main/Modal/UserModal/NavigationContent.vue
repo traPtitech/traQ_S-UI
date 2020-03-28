@@ -83,7 +83,5 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 8px 16px;
-  min-width: 360px;
-  min-height: 240px;
 }
 </style>

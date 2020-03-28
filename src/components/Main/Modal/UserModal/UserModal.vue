@@ -90,12 +90,18 @@ export default defineComponent({
 <style lang="scss" module>
 .wrapper {
   position: relative;
+  width: 80%;
+  height: 60%;
+  max-width: 640px;
+  max-height: 480px;
 }
 
 .content {
   position: relative;
   display: grid;
   grid-template-columns: min-content 1fr;
+  grid-template-rows: min-content 1fr;
+  height: 100%;
   border: 4px solid;
   border-radius: 16px;
   overflow: hidden;
