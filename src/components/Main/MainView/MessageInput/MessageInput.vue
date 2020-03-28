@@ -72,8 +72,20 @@ export default defineComponent({
     const postMessage = usePostMessage(textState, props)
 
     const targetPortalName = 'message-input-stamp-picker'
-    const { invokeStampPicker } = useStampPickerInvoker(targetPortalName, s =>
-      console.log(s)
+    const { invokeStampPicker } = useStampPickerInvoker(
+      targetPortalName,
+      stampData => {
+        // TODO: 編集でも使うのでロジックを分離
+        const stampName = store.state.entities.stamps[stampData.id]?.name
+        if (!stampName) return
+        const size = stampData.size ? `.${stampData.size}` : ''
+        const effects =
+          stampData.effects && stampData.effects.length > 0
+            ? `.${stampData.effects.join('.')}`
+            : ''
+        const stampText = textState.text + `:${stampName}${size}${effects}:`
+        textState.text = stampText
+      }
     )
 
     return {

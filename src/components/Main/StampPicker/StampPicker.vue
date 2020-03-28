@@ -1,9 +1,16 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <filter-input
-      :text="regexpFilterState.query"
-      @input="setQuery"
-      placeholder="スタンプを検索"
+    <div :class="$style.inputContainer">
+      <filter-input
+        :text="regexpFilterState.query"
+        @input="setQuery"
+        placeholder="スタンプを検索"
+      />
+    </div>
+    <stamp-picker-stamp-list
+      :class="$style.stampList"
+      :stamps="regexpFilterState.filteredItems"
+      @input-stamp="onInputStamp"
     />
   </div>
 </template>
@@ -14,6 +21,8 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useRegexpFilter from '@/use/regexpFilter'
 import FilterInput from '@/components/UI/FilterInput.vue'
+import StampPickerStampList from './StampPickerStampList.vue'
+import { StampId } from '@/types/entity-ids'
 
 const useStampPicker = () => {
   const state = reactive({
@@ -24,7 +33,13 @@ const useStampPicker = () => {
       () => store.getters.ui.stampPicker.shouldShowStampPicker
     )
   })
-  return { state }
+  const onInputStamp = (id: StampId) => {
+    store.state.ui.stampPicker.selectHandler({
+      id
+    })
+    store.dispatch.ui.stampPicker.closeStampPicker()
+  }
+  return { state, onInputStamp }
 }
 
 const useStyles = () =>
@@ -37,19 +52,15 @@ const useStyles = () =>
 export default defineComponent({
   name: 'StampPicker',
   components: {
-    FilterInput
+    FilterInput,
+    StampPickerStampList
   },
   setup() {
     const styles = useStyles()
-    const { state } = useStampPicker()
-    const { regexpFilterState, setQuery } = useRegexpFilter(
-      ref([
-        { id: 'a', name: 'name a' },
-        { id: 'b', name: 'name b' }
-      ]),
-      'name'
-    )
-    return { state, regexpFilterState, setQuery, styles }
+    const { state, onInputStamp } = useStampPicker()
+    const stamps = computed(() => store.getters.ui.stampPicker.stamps)
+    const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
+    return { state, stamps, regexpFilterState, setQuery, styles, onInputStamp }
   }
 })
 </script>
@@ -57,14 +68,22 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
-  height: 224px;
-  max-width: 336px;
+  height: 320px;
+  max-width: 340px;
   border-radius: 4px;
   overflow: hidden;
   padding: 8px;
+  display: flex;
+  flex-direction: column;
   border: {
     style: solid;
     width: 2px;
   }
+}
+.inputContainer {
+  flex-shrink: 0;
+}
+.stampList {
+  padding: 12px 0;
 }
 </style>

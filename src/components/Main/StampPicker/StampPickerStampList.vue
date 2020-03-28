@@ -1,0 +1,56 @@
+<template>
+  <div :class="$style.container">
+    <stamp-picker-stamp-list-item
+      v-for="stamp in props.stamps"
+      :key="stamp.id"
+      :stamp-id="stamp.id"
+      @click="onClickStamp(stamp.id)"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  defineComponent,
+  reactive,
+  computed,
+  SetupContext
+} from '@vue/composition-api'
+import store from '@/store'
+import StampPickerStampListItem from './StampPickerStampListItem.vue'
+import { StampId } from '@/types/entity-ids'
+import { Stamp } from '@traptitech/traq'
+
+type Props = {
+  stamps: Stamp[]
+}
+
+export default defineComponent({
+  name: 'StampPickerStampList',
+  components: {
+    StampPickerStampListItem
+  },
+  props: {
+    stamps: {
+      type: Array,
+      required: true
+    }
+  },
+  setup(props: Props, context: SetupContext) {
+    const onClickStamp = (id: StampId) => {
+      context.emit('input-stamp', id)
+    }
+    return { props, onClickStamp }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.container {
+  display: flex;
+  flex-flow: row wrap;
+  height: 100%;
+  overflow-y: scroll;
+  align-items: space-between;
+}
+</style>

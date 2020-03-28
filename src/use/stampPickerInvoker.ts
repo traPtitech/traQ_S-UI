@@ -6,7 +6,7 @@ const useStampPickerInvoker = (
   selectHandler: StampSelectHandler
 ) => {
   const invokeStampPicker = () => {
-    store.dispatch.ui.stampPicker.showStampPicker({
+    store.dispatch.ui.stampPicker.openStampPicker({
       targetPortalName,
       selectHandler
     })

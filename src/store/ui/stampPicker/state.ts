@@ -17,12 +17,16 @@ export type SelectedStampData = {
 }
 export type StampSelectHandler = (stamp: SelectedStampData) => void
 
+export const defaultSelectHandler = (_: SelectedStampData) => {}
+
 export interface S {
   targetPortalName: string
   selectHandler: StampSelectHandler
+  currentStampPaletteId?: string
 }
 
 export const state: S = {
   targetPortalName: '',
-  selectHandler(_: SelectedStampData) {}
+  selectHandler: defaultSelectHandler,
+  currentStampPaletteId: undefined
 }

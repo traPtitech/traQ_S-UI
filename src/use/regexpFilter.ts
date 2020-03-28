@@ -1,25 +1,26 @@
 import { reactive, computed, Ref } from '@vue/composition-api'
 
-type Matchable = {
-  id: string
-  [x: string]: string
-}
-
-const useRegexpFilter = <T extends Matchable, K extends keyof T>(
-  items: Ref<T[]>,
-  searchTargetKey: K
+const useRegexpFilter = <T, K extends keyof T>(
+  items: Ref<readonly T[]>,
+  searchTargetKey: T[K] extends string ? K : never
 ) => {
   const state = reactive({
     query: '',
-    filteredItems: computed((): T[] =>
-      items.value.filter(
-        item => item[searchTargetKey].match(state.query) !== null
-      )
-    )
+    filteredItems: computed((): readonly T[] => {
+      // TODO: 1文字完全一致のみの対応
+      if (state.query.length === 0) {
+        return items.value
+      } else {
+        return items.value.filter(
+          // NOTE: stringでなければ通らないのでキャストしてしまう
+          item =>
+            !!((item[searchTargetKey] as unknown) as string)?.match(state.query)
+        )
+      }
+    })
   })
   const setQuery = (query: string) => {
     state.query = query
-    console.log(state.filteredItems)
   }
   return {
     regexpFilterState: state,
