@@ -67,6 +67,7 @@ export default defineComponent({
   padding: 4px 8px;
   margin: 8px 4px;
   border-radius: 1em;
+  cursor: pointer;
 }
 
 .icon {
