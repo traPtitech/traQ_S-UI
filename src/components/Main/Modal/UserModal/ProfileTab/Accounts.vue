@@ -1,6 +1,6 @@
 <template>
   <section>
-    <profile-tab-header text="アカウント" />
+    <profile-header text="アカウント" />
     <p :class="$style.p">
       <circle-icon
         name="book"
@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import ProfileTabHeader from './ProfileTabHeader.vue'
+import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
 
 interface Props {
@@ -44,7 +44,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'ProfileTabAccounts',
+  name: 'Accounts',
   props: {
     bot: {
       type: Boolean,
@@ -82,7 +82,7 @@ export default defineComponent({
     }
   },
   components: {
-    ProfileTabHeader,
+    ProfileHeader,
     CircleIcon
   }
 })

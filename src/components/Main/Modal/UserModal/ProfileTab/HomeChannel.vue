@@ -1,34 +1,43 @@
 <template>
   <section>
-    <profile-tab-header text="ホームチャンネル" />
-    <p>
+    <profile-header text="ホームチャンネル" />
+    <p :style="styles.text">
       <icon name="home" mdi :class="$style.icon" />
-      <template v-if="channelId !== undefined">
-        <span :class="$style.channel" @click="onClick"
-          >#gps/times/{{ props.name }}</span
-        >
-      </template>
-      <template v-else>
-        <span>存在しません</span>
-      </template>
+      <span
+        v-if="channelId !== undefined"
+        :class="$style.channel"
+        @click="onClick"
+      >
+        #gps/times/{{ props.name }}
+      </span>
+      <span v-else>存在しません</span>
     </p>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, ref, Ref, reactive } from '@vue/composition-api'
+import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import useHomeChannelPath from '@/use/homeChannelPath'
-import ProfileTabHeader from './ProfileTabHeader.vue'
+import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelId } from '@/types/entity-ids'
+
+const useStyles = (channelId: Ref<ChannelId | undefined>) =>
+  reactive({
+    text: makeStyles(theme => ({
+      color:
+        channelId.value !== undefined ? theme.ui.primary : theme.ui.tertiary
+    }))
+  })
 
 interface Props {
   name: string
 }
 
 export default defineComponent({
-  name: 'ProfileTabHomeChannel',
+  name: 'HomeChannel',
   props: {
     name: {
       type: String,
@@ -50,14 +59,17 @@ export default defineComponent({
       store.dispatch.domain.messagesView.changeCurrentChannel(channelId.value)
     }
 
+    const styles = useStyles(channelId)
+
     return {
+      styles,
       props,
       channelId,
       onClick
     }
   },
   components: {
-    ProfileTabHeader,
+    ProfileHeader,
     Icon
   }
 })

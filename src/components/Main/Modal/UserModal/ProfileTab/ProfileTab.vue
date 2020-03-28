@@ -1,10 +1,8 @@
 <template>
-  <div :class="$style.profile">
-    <profile-tab-bio
-      :bio="props.detail === undefined ? undefined : props.detail.bio"
-    />
-    <profile-tab-home-channel :name="props.user.name" />
-    <profile-tab-accounts
+  <div>
+    <bio :bio="props.detail === undefined ? undefined : props.detail.bio" />
+    <home-channel :name="props.user.name" />
+    <accounts
       :bot="props.user.bot"
       :name="props.user.name"
       :twitterId="
@@ -15,13 +13,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { UserId } from '@/types/entity-ids'
 import { User, UserDetail } from '@traptitech/traq'
-import ProfileTabBio from '@/components/Main/Modal/UserModal/ProfileTabBio.vue'
-import ProfileTabHomeChannel from '@/components/Main/Modal/UserModal/ProfileTabHomeChannel.vue'
-import ProfileTabAccounts from '@/components/Main/Modal/UserModal/ProfileTabAccounts.vue'
+import Bio from './Bio.vue'
+import HomeChannel from './HomeChannel.vue'
+import Accounts from './Accounts.vue'
 
 const useStyles = () =>
   reactive({
@@ -47,20 +44,12 @@ export default defineComponent({
   },
   setup(props: Props) {
     const styles = useStyles()
-    return {
-      styles,
-      props
-    }
+    return { styles, props }
   },
   components: {
-    ProfileTabBio,
-    ProfileTabHomeChannel,
-    ProfileTabAccounts
+    Bio,
+    HomeChannel,
+    Accounts
   }
 })
 </script>
-
-<style lang="scss" module>
-.profile {
-}
-</style>

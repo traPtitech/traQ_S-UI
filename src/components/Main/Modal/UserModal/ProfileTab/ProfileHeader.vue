@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'ProfileTabHeader',
+  name: 'ProfileHeader',
   props: {
     text: {
       type: String,

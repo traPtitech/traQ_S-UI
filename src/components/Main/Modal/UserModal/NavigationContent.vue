@@ -26,7 +26,7 @@ import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 import { NavigationItemType } from './use/navigation'
-import ProfileTab from './ProfileTab.vue'
+import ProfileTab from './ProfileTab/ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'
 import TagsTab from './TagsTab.vue'
 

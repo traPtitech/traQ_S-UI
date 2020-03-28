@@ -1,6 +1,6 @@
 <template>
   <section>
-    <profile-tab-header text="ひとこと" :style="{ marginTop: 0 }" />
+    <profile-header text="ひとこと" :style="{ marginTop: 0 }" />
     <p :style="styles.bio">
       <template v-if="isLoading">[Now loading...]</template>
       <template v-else-if="isEmpty">[No bio]</template>
@@ -12,7 +12,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import ProfileTabHeader from './ProfileTabHeader.vue'
+import ProfileHeader from './ProfileHeader.vue'
 
 const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'ProfileTabBio',
+  name: 'Bio',
   props: {
     bio: String
   },
@@ -35,7 +35,7 @@ export default defineComponent({
     const isEmpty = computed(() =>
       props.bio === undefined ? false : props.bio === ''
     )
-    const lowPriority = computed(() => isLoading.value && isEmpty.value)
+    const lowPriority = computed(() => isLoading.value || isEmpty.value)
     const styles = useStyles(lowPriority)
 
     return {
@@ -46,9 +46,7 @@ export default defineComponent({
     }
   },
   components: {
-    ProfileTabHeader
+    ProfileHeader
   }
 })
 </script>
-
-<style lang="scss" module></style>
