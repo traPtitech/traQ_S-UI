@@ -64,7 +64,7 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    const iconSize = 72
+    const iconSize = 160
     const styles = useStyles(iconSize)
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
@@ -114,6 +114,6 @@ export default defineComponent({
   right: 0;
   z-index: 1;
   margin: auto;
-  border: 4px solid;
+  border: 6px solid;
 }
 </style>

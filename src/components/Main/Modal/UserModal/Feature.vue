@@ -25,18 +25,9 @@
 import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
 import store from '@/store'
 import useHomeChannelPath from '@/use/homeChannelPath'
-import { makeStyles } from '@/lib/styles'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import FeatureLinkButton from '@/components/Main/Modal/UserModal/FeatureLinkButton.vue'
 import { User } from '@traptitech/traq'
-
-const useStyles = (iconSize: number) =>
-  reactive({
-    icon: makeStyles(theme => ({
-      marginTop: `${-iconSize / 2}px`,
-      borderColor: theme.background.secondary
-    }))
-  })
 
 interface Props {
   user: User
@@ -51,9 +42,6 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    const iconSize = 72
-    const styles = useStyles(iconSize)
-
     const isOnline = computed(() =>
       store.getters.domain.isUserOnline(props.user.id)
     )
@@ -81,8 +69,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
-      iconSize,
       props,
       isOnline,
       onClickClear,
