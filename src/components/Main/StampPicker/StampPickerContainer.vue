@@ -1,5 +1,5 @@
 <template>
-  <portal v-if="state.shouldShowStampPicker" :to="state.targetPortalName">
+  <portal v-show="state.shouldShowStampPicker" :to="state.targetPortalName">
     <stamp-picker />
   </portal>
 </template>

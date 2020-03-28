@@ -77,5 +77,6 @@ export default defineComponent({
 }
 .input {
   margin: 0 8px;
+  width: 100%;
 }
 </style>

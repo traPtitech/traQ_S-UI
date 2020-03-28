@@ -1,7 +1,5 @@
 <template>
-  <div @click="context.emit('click')" :class="$style.container">
-    <img loading="lazy" :class="$style.image" :src="imageUrl" />
-  </div>
+  <div :class="$style.container"></div>
 </template>
 
 <script lang="ts">
@@ -21,7 +19,7 @@ type Props = {
 }
 
 export default defineComponent({
-  name: 'StampPickerStampListItem',
+  name: 'StampPickerEffectSelector',
   props: {
     stampId: {
       type: String,
@@ -31,21 +29,13 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildStampImagePath(fileId)}` : ''
-    return { props, context, imageUrl }
+    return { imageUrl }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  cursor: pointer;
-  user-select: none;
-}
-.image {
-  width: 24px;
-  height: 24px;
+  padding: 8px;
 }
 </style>
