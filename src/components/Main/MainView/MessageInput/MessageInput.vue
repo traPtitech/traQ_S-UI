@@ -1,5 +1,8 @@
 <template>
   <div :class="$style.container" :style="styles.container">
+    <div :class="$style.stampPickerLocator">
+      <portal-target :name="targetPortalName" />
+    </div>
     <message-input-file-list :class="$style.inputFileList" />
     <div :class="$style.inputContainer">
       <message-input-upload-button
@@ -22,87 +25,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import store from '@/store'
-import api, { buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
+import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import useAttachments from './use/attachments'
+import useTextInput, { TextState } from './use/textInput'
+import usePostMessage from './use/postMessage'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
-import { Attachment } from '@/store/ui/fileInput/state'
 
-type Props = {
+export type Props = {
   channelId: ChannelId
-}
-
-type TextState = {
-  text: string
-  isEmpty: boolean
-}
-
-const useText = () => {
-  const state: TextState = reactive({
-    text: '',
-    isEmpty: computed(() => state.text.length === 0)
-  })
-  const onInputText = (text: string) => {
-    state.text = text
-  }
-  return {
-    textState: state,
-    onInputText
-  }
-}
-
-const useAttachments = () => {
-  const state = reactive({
-    attachments: computed(() => store.state.ui.fileInput.attachments),
-    isEmpty: computed(() => store.getters.ui.fileInput.isEmpty)
-  })
-
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.multiple = true
-  input.addEventListener('change', () => {
-    for (const file of input.files ?? []) {
-      store.dispatch.ui.fileInput.addAttachment(file)
-    }
-    input.files = null
-  })
-
-  const addAttachment = () => {
-    input.click()
-  }
-  return {
-    attachmentsState: state,
-    addAttachment
-  }
-}
-
-const usePostMessage = (textState: TextState, props: Props) => {
-  const postMessage = async () => {
-    if (textState.text.length === 0) return
-    const attachments = store.state.ui.fileInput.attachments
-    try {
-      const responses = await Promise.all(
-        attachments.map(attachment =>
-          api.postFile(attachment.file, props.channelId)
-        )
-      )
-      const fileUrls = responses.map(res => buildFilePath(res.data.id))
-      const embededdUrls = fileUrls.join('\n')
-      await api.postMessage(props.channelId, {
-        content: textState.text + '\n' + embededdUrls
-      })
-      textState.text = ''
-      store.commit.ui.fileInput.clearAttachments()
-    } catch {
-      // TODO: エラー処理
-    }
-  }
-  return postMessage
 }
 
 const useStyles = () =>
@@ -128,10 +65,15 @@ export default defineComponent({
   },
   setup(props: Props) {
     const styles = useStyles()
-    const { textState, onInputText } = useText()
+    const { textState, onInputText } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
     const postMessage = usePostMessage(textState, props)
+
+    const targetPortalName = 'message-input-stamp-picker'
+    const { invokeStampPicker } = useStampPickerInvoker(targetPortalName)
+
     return {
+      targetPortalName,
       styles,
       textState,
       attachmentsState,
@@ -146,10 +88,17 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
   border-radius: 4px;
+}
+.stampPickerLocator {
+  position: absolute;
+  right: 0;
+  top: -8px;
+  transform: translateY(-100%);
 }
 .inputContainer {
   width: 100%;

@@ -1,9 +1,9 @@
 import { MessageId } from '@/types/entity-ids'
 
 export interface S {
-  target?: MessageId | 'input'
+  targetPortalName: string
 }
 
 export const state: S = {
-  target: undefined
+  targetPortalName: ''
 }
