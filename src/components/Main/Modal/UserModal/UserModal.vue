@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.wrapper">
+    <button :class="$style.close" @click="onClickClear">X</button>
     <user-icon
+      v-if="!isMobile"
       :userId="user.id"
       :preventModal="true"
       :size="iconSize"
@@ -26,6 +28,7 @@ import {
   defineComponent,
   computed,
   reactive,
+  Ref,
   toRefs
 } from '@vue/composition-api'
 import store from '@/store'
@@ -37,13 +40,13 @@ import Feature from './Feature.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 
-const useStyles = (iconSize: number) =>
+const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
     content: makeStyles(theme => ({
       color: theme.ui.secondary,
       background: theme.background.secondary,
       borderColor: theme.background.secondary,
-      paddingTop: `${iconSize / 2}px`
+      paddingTop: isMobile.value ? 0 : `${iconSize / 2}px`
     })),
     icon: makeStyles(theme => ({
       marginTop: `${-iconSize / 2}px`,
@@ -64,14 +67,20 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
+    const isMobile = computed(() => store.getters.ui.isMobile)
+
     const iconSize = 160
-    const styles = useStyles(iconSize)
+    const styles = computed(() => useStyles(iconSize, isMobile))
+
+    const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const user = computed(() => store.state.entities.users[props.id])
 
     return {
+      isMobile,
       styles,
+      onClickClear,
       iconSize,
       user,
       ...toRefs(navigationSelectorState),
@@ -105,6 +114,13 @@ export default defineComponent({
   border: 4px solid;
   border-radius: 16px;
   overflow: hidden;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 }
 
 .icon {

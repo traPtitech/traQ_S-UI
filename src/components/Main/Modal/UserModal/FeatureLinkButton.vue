@@ -27,17 +27,17 @@ const useStyles = () =>
   })
 
 interface Props {
-  title: string
+  title?: string
   iconName: string
   iconMdi: boolean
 }
 
 export default defineComponent({
-  name: 'FeatureLinkButton',
+  name: 'DesktopFeatureLinkButton',
   props: {
     title: {
       type: String,
-      required: true
+      default: ''
     },
     iconName: {
       type: String,
@@ -64,7 +64,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .button {
-  padding: 4px 8px;
+  padding: 4px 12px;
   margin: 8px 4px;
   border-radius: 1em;
   cursor: pointer;

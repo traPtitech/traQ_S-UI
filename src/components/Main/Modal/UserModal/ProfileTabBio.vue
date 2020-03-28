@@ -17,7 +17,7 @@ import ProfileTabHeader from './ProfileTabHeader.vue'
 const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({
     bio: makeStyles(theme => ({
-      color: lowPriority ? theme.ui.tertiary : theme.ui.primary
+      color: lowPriority.value ? theme.ui.tertiary : theme.ui.primary
     }))
   })
 
