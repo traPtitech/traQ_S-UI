@@ -4,9 +4,9 @@
     <p :style="styles.text">
       <icon name="home" mdi :class="$style.icon" />
       <span
-        v-if="channelId !== undefined"
+        v-if="homeChannelExists"
         :class="$style.channel"
-        @click="onClick"
+        @click="onHomeChannelClick"
       >
         #gps/times/{{ props.name }}
       </span>
@@ -16,19 +16,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, reactive } from '@vue/composition-api'
+import { defineComponent, Ref, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import useHomeChannelPath from '@/use/homeChannelPath'
+import useHomeChannel from '../use/homeChannel'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelId } from '@/types/entity-ids'
 
-const useStyles = (channelId: Ref<ChannelId | undefined>) =>
+const useStyles = (channelId: Ref<boolean>) =>
   reactive({
     text: makeStyles(theme => ({
-      color:
-        channelId.value !== undefined ? theme.ui.primary : theme.ui.tertiary
+      color: channelId.value ? theme.ui.primary : theme.ui.tertiary
     }))
   })
 
@@ -45,27 +44,15 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    const { homeChannelFromUsername } = useHomeChannelPath()
-
-    let channelId = ref<ChannelId>()
-    try {
-      channelId.value = homeChannelFromUsername(
-        props.name,
-        store.state.domain.channelTree.channelTree
-      )
-    } catch (e) {}
-    const onClick = () => {
-      if (channelId.value === undefined) return
-      store.dispatch.domain.messagesView.changeCurrentChannel(channelId.value)
-    }
-
-    const styles = useStyles(channelId)
+    const username = computed(() => props.name)
+    const { homeChannelExists, onHomeChannelClick } = useHomeChannel(username)
+    const styles = useStyles(homeChannelExists)
 
     return {
       styles,
       props,
-      channelId,
-      onClick
+      homeChannelExists,
+      onHomeChannelClick
     }
   },
   components: {

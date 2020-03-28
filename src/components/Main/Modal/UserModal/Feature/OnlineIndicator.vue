@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'FeatureOnlineIndicator',
+  name: 'OnlineIndicator',
   props: {
     userId: {
       type: String,

@@ -33,7 +33,7 @@ interface Props {
 }
 
 export default defineComponent({
-  name: 'DesktopFeatureLinkButton',
+  name: 'LinkButton',
   props: {
     title: {
       type: String,
