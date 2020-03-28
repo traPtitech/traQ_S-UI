@@ -8,7 +8,8 @@ import {
   mdiFileImage,
   mdiClose,
   mdiPlusCircleOutline,
-  mdiEmoticonOutline
+  mdiEmoticonOutline,
+  mdiMagnify
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -20,6 +21,7 @@ const mdi: MdiIconsMapping = {
   send: mdiSend,
   file: mdiFile,
   close: mdiClose,
+  search: mdiMagnify,
   'file-upload': mdiFileUpload,
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,

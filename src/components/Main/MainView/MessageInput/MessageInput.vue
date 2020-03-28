@@ -1,8 +1,9 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.stampPickerLocator">
-      <portal-target :name="targetPortalName" />
-    </div>
+    <portal-target
+      :class="$style.stampPickerLocator"
+      :name="targetPortalName"
+    />
     <message-input-file-list :class="$style.inputFileList" />
     <div :class="$style.inputContainer">
       <message-input-upload-button
@@ -12,13 +13,14 @@
       <message-input-text-area
         :text="textState.text"
         :class="$style.inputTextArea"
-        @input-text="onInputText"
+        @input="onInputText"
         @post-message="postMessage"
       />
       <message-input-controls
         :class="$style.controls"
         :can-post-message="!(textState.isEmpty && attachmentsState.isEmpty)"
         @click-send="postMessage"
+        @click-stamp="invokeStampPicker"
       />
     </div>
   </div>
@@ -70,7 +72,9 @@ export default defineComponent({
     const postMessage = usePostMessage(textState, props)
 
     const targetPortalName = 'message-input-stamp-picker'
-    const { invokeStampPicker } = useStampPickerInvoker(targetPortalName)
+    const { invokeStampPicker } = useStampPickerInvoker(targetPortalName, s =>
+      console.log(s)
+    )
 
     return {
       targetPortalName,
@@ -78,6 +82,7 @@ export default defineComponent({
       textState,
       attachmentsState,
       onInputText,
+      invokeStampPicker,
       postMessage,
       addAttachment
     }
@@ -95,7 +100,11 @@ export default defineComponent({
   border-radius: 4px;
 }
 .stampPickerLocator {
+  width: 100%;
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   right: 0;
   top: -8px;
   transform: translateY(-100%);
