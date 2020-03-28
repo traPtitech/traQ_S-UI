@@ -1,4 +1,22 @@
 import stampCategorized from '@/assets/unicode_emojis.json'
+import { StampId } from '@/types/entity-ids'
+
+type StampCategory = {
+  category: string
+  stamps: Record<string, StampId>
+}
+
+const categorizeStamps = () => {
+  const numategories = stampCategorized.length + 1
+  const stampCategories = new Array(numategories) as StampCategory[]
+
+  stampCategories[0] = {
+    category: 'traq',
+    stamps: {}
+  }
+}
+
+const defaultCategories = categorizeStamps()
 
 const stampCategorizer = (stampData: any) => {
   const categorized = new Array(stampCategorized.length + 1)
