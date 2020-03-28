@@ -25,6 +25,7 @@
 import { defineComponent, reactive, ref } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import apis from '@/lib/api'
+import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -41,7 +42,7 @@ const useStyles = () =>
   })
 
 interface Props {
-  userId: string
+  userId: UserId
 }
 
 export default defineComponent({
@@ -82,14 +83,14 @@ export default defineComponent({
   flex: 1 1;
   padding: 4px;
   padding-left: 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   // placeholderの色変えるのどうしましょう…(::placeholder{ color: ？ })
 }
 
 .button {
   padding: 0 12px;
   margin-left: 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
