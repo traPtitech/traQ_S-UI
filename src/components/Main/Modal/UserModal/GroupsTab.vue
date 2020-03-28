@@ -1,18 +1,35 @@
 <template>
-  <div :class="$style.groups">
+  <div :class="$style.groups" :style="styles.groups">
     <template v-if="isLoading">Now loading...</template>
     <template v-else>
-      <ul>
-        <li v-for="group in groups" :key="group.id">{{ group.name }}</li>
+      <ul :class="$style.list">
+        <li
+          v-for="group in groups"
+          :key="group.id"
+          :class="$style.group"
+          @click="onGroupClick"
+        >
+          <icon name="group" :class="$style.icon" />
+          {{ group.name }}
+        </li>
       </ul>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
+import Icon from '@/components/UI/Icon.vue'
+
+const useStyles = () =>
+  reactive({
+    groups: makeStyles(theme => ({
+      color: theme.ui.secondary
+    }))
+  })
 
 interface Props {
   detail?: UserDetail
@@ -24,6 +41,7 @@ export default defineComponent({
     detail: Object
   },
   setup(props: Props) {
+    const styles = useStyles()
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
@@ -31,12 +49,34 @@ export default defineComponent({
           groupId => store.state.entities.userGroups[groupId]
         ) ?? []
     )
-    return { isLoading, groups }
+
+    const onGroupClick = () => {
+      // TODO: Open tag modal
+    }
+
+    return { styles, isLoading, groups, onGroupClick }
+  },
+  components: {
+    Icon
   }
 })
 </script>
 
 <style lang="scss" module>
 .groups {
+  height: 100%;
+}
+
+.list {
+  overflow-y: scroll;
+  min-height: 100%;
+}
+
+.group {
+  margin: 16px 8px;
+}
+
+.icon {
+  vertical-align: bottom;
 }
 </style>

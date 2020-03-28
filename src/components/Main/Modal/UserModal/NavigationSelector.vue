@@ -54,7 +54,7 @@ export default defineComponent({
       },
       {
         type: 'groups',
-        iconName: 'user'
+        iconName: 'group'
       },
       {
         type: 'tags',

@@ -1,18 +1,37 @@
 <template>
-  <div :class="$style.tags">
-    <template v-if="isLoading">Now loading...</template>
+  <div :class="$style.tags" :style="styles.tags">
+    <template v-if="props.detail === undefined">Now loading...</template>
     <template v-else>
-      <ul>
-        <li v-for="tag in tags" :key="tag.tagId">{{ tag.tag }}</li>
+      <ul :class="$style.list">
+        <li
+          v-for="tag in tags"
+          :key="tag.tagId"
+          :class="$style.tag"
+          @click="onTagClick"
+        >
+          <icon name="tag" mdi :class="$style.icon" />
+          {{ tag.tag }}
+        </li>
       </ul>
+      <tags-tab-add :userId="props.detail.id" />
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
+import Icon from '@/components/UI/Icon.vue'
+import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
+
+const useStyles = () =>
+  reactive({
+    tags: makeStyles(theme => ({
+      color: theme.ui.secondary
+    }))
+  })
 
 interface Props {
   detail?: UserDetail
@@ -24,14 +43,39 @@ export default defineComponent({
     detail: Object
   },
   setup(props: Props) {
-    const isLoading = computed(() => props.detail === undefined)
+    const styles = useStyles()
     const tags = computed(() => props.detail?.tags ?? [])
-    return { isLoading, tags }
+
+    const onTagClick = () => {
+      // TODO: Open tag modal
+    }
+
+    return { styles, props, tags, onTagClick }
+  },
+  components: {
+    Icon,
+    TagsTabAdd
   }
 })
 </script>
 
 <style lang="scss" module>
 .tags {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.list {
+  overflow-y: scroll;
+  flex: 1 1;
+}
+
+.tag {
+  margin: 16px 8px;
+}
+
+.icon {
+  vertical-align: bottom;
 }
 </style>
