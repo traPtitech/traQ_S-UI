@@ -13,7 +13,7 @@ const reduceToRecord = <T>(array: T[], key: keyof T) =>
   array.reduce((acc, cur) => {
     const ck = cur[key]
     if (typeof ck !== 'string') return acc
-    return { ...acc, [ck]: cur }
+    return Object.assign(acc, { [ck]: cur })
   }, {} as Record<string, T>)
 
 // TODO: リクエストパラメータの型置き場
