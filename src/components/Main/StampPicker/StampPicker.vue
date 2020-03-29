@@ -38,7 +38,7 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerPaletteSelector from './StampPickerPaletteSelector.vue'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
-import { transparentize } from '../../../lib/util/color'
+import { transparentize } from '@/lib/util/color'
 
 const useStampPicker = () => {
   const state = reactive({
@@ -75,6 +75,7 @@ const useEffectSelector = () => {
 const useStyles = (effectSelectorState: EffectSelectorState) =>
   reactive({
     container: makeStyles(theme => ({
+      background: theme.background.primary,
       borderColor: theme.background.secondary
     })),
     effectButton: makeStyles(theme => ({
@@ -100,10 +101,16 @@ export default defineComponent({
   setup() {
     const { stampPickerState, onInputStamp } = useStampPicker()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
-    const stamps = computed(() => store.getters.ui.stampPicker.stamps)
+    const stamps = computed(() =>
+      store.getters.ui.stampPicker.stampIds.map(
+        id => store.state.entities.stamps[id]
+      )
+    )
     const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
 
     const styles = useStyles(effectSelectorState)
+
+    store.commit.ui.stampPicker.setCurrentStampCategoryName('traq')
 
     return {
       stampPickerState,

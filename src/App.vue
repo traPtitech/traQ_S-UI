@@ -38,7 +38,9 @@ export default defineComponent({
         store.dispatch.entities.fetchUserGroups(),
         store.dispatch.entities.fetchChannels()
       ])
-      store.dispatch.entities.fetchStamps()
+      store.dispatch.entities.fetchStamps().then(() => {
+        store.dispatch.domain.stampCategory.constructStampCategories()
+      })
       store.dispatch.entities.fetchStampPalettes()
       store.dispatch.domain.fetchChannelActivity()
       store.dispatch.domain.me.fetchUnreadChannels()

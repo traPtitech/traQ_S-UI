@@ -1,58 +1,101 @@
-import stampCategorized from '@/assets/unicode_emojis.json'
 import { StampId } from '@/types/entity-ids'
+import { Stamp } from '@traptitech/traq'
+import { compareString } from './util/string'
 
-type StampCategory = {
-  category: string
-  stamps: Record<string, StampId>
+// FIXME: dev環境での`isUnicode`対応終了後に削除
+import tempUnicodeEmojis from '@/assets/unicode_emojis.json'
+
+type StampName = string
+
+/**
+ * traQの全スタンプを分割するカテゴリ
+ *
+ * 表示上の分類であり、サーバー側に属性があるわけではない点に注意
+ */
+export type StampCategory = {
+  /** カテゴリ名 */
+  name: string
+
+  /** スタンプIDのリスト(表示順) */
+  stampIds: StampId[]
 }
 
-const categorizeStamps = () => {
-  const numategories = stampCategorized.length + 1
-  const stampCategories = new Array(numategories) as StampCategory[]
+/**
+ * スタンプを名前→IDのマップに変換する
+ * @param stampEntities スタンプのエンティティ
+ */
+export const constructStampNameIdMap = (
+  stampEntities: Record<StampId, Stamp>
+) => {
+  /** Unicodeスタンプの名前→IDマップ */
+  const unicodeStampMap: Record<StampName, StampId> = {}
 
-  stampCategories[0] = {
-    category: 'traq',
-    stamps: {}
-  }
-}
-
-const defaultCategories = categorizeStamps()
-
-const stampCategorizer = (stampData: any) => {
-  const categorized = new Array(stampCategorized.length + 1)
-  categorized[0] = {
-    category: 'traq',
-    stamps: {}
-  }
-  stampData.forEach((stamp: any) => {
-    categorized[0].stamps[stamp.name] = stamp
-  })
-  stampCategorized.forEach((category: any) => {
-    categorized[category.order] = {
-      category: category.category,
-      stamps: {}
-    }
-    category.emojis.forEach((stamp: any) => {
-      const temp = categorized[0].stamps[stamp.name]
-      if (temp) {
-        categorized[category.order].stamps[stamp.name] = temp
-        delete categorized[0].stamps[stamp.name]
-      }
-    })
-  })
-  categorized.forEach(category => {
-    category.stamps = Object.values(category.stamps)
-  })
-  categorized[0].stamps.sort((lhs: any, rhs: any) => {
-    if (lhs.name < rhs.name) {
-      return -1
-    } else if (lhs.name > rhs.name) {
-      return 1
+  /** traQスタンプのIDリスト */
+  const traQStampMap: Record<StampName, StampId> = {}
+  for (const id in stampEntities) {
+    const stamp = stampEntities[id]
+    // FIXME: dev環境での`isUnicode`対応終了後に削除
+    const unicodeStampNameSet = tempUnicodeEmojis.reduce(
+      (acc, cur) => ({
+        ...acc,
+        ...Object.fromEntries(cur.emojis.map(emoji => [emoji.name, true]))
+      }),
+      {}
+    )
+    if (stamp.name in unicodeStampNameSet) {
+      unicodeStampMap[stamp.name] = stamp.id
     } else {
-      return 0
+      traQStampMap[stamp.name] = stamp.id
     }
-  })
-  return categorized
+    // if (stamp.isUnicode) {
+    //   unicodeStampMap[stamp.name] = stamp.id
+    // } else {
+    //   traQStampMap[stamp.name] = stamp.id
+    // }
+  }
+  return { unicodeStampMap, traQStampMap }
 }
 
-export default stampCategorizer
+/**
+ * Unicodeスタンプをunicode_emojisに従い分類する
+ * @param unicodeStampMap Unicodeスタンプ名→IDのマップ
+ */
+export const categorizeUnicodeStamps = async (
+  unicodeStampNameIdMap: Record<StampName, StampId>
+) => {
+  const unicodeEmojis = await import('@/assets/unicode_emojis.json')
+
+  const numategories = unicodeEmojis.length
+  const unicodeStampCategories = new Array(numategories) as StampCategory[]
+
+  unicodeEmojis.default.forEach((emojiCategory, i) => {
+    const name = emojiCategory.category
+    const stampIds = emojiCategory.emojis
+      .map(emoji => unicodeStampNameIdMap[emoji.name])
+      .filter(id => !!id)
+    unicodeStampCategories[i] = { name, stampIds }
+  })
+  return unicodeStampCategories
+}
+
+/**
+ * traQスタンプをunicodeと同等のカテゴリに変換する
+ * @param traQStampMap traQスタンプ名→IDのマップ
+ */
+export const traQStampsToStampCategory = (
+  traQStampNameIdMap: Record<StampName, StampId>
+) => {
+  const traQStampCategory: StampCategory = {
+    name: 'traq',
+    stampIds: []
+  }
+  traQStampCategory.stampIds = Object.entries(traQStampNameIdMap)
+    .sort((entry1, entry2) => {
+      const name1 = entry1[0]
+      const name2 = entry2[0]
+      return compareString(name1, name2)
+    })
+    .map(entry => entry[1])
+
+  return traQStampCategory
+}
