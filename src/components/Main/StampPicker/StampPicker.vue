@@ -4,7 +4,7 @@
       <filter-input
         :text="regexpFilterState.query"
         @input="setQuery"
-        placeholder="スタンプを検索"
+        :placeholder="placeholder"
       />
       <div
         :class="$style.effectButton"
@@ -18,6 +18,7 @@
       :class="$style.stampList"
       :stamps="regexpFilterState.filteredItems"
       @input-stamp="onInputStamp"
+      @hover-stamp="onHoverStamp"
     />
     <stamp-picker-effect-selector
       :class="$style.effectSelector"
@@ -39,6 +40,8 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerPaletteSelector from './StampPickerPaletteSelector.vue'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 import { transparentize } from '@/lib/util/color'
+
+import api from '@/lib/api'
 
 const useStampPicker = () => {
   const state = reactive({
@@ -70,6 +73,17 @@ const useEffectSelector = () => {
     state.shouldShowEffectSelector = !state.shouldShowEffectSelector
   }
   return { effectSelectorState: state, toggleShowEffect }
+}
+
+const useStampFilterPlaceholder = () => {
+  const placeholder = ref('スタンプを検索')
+  const onHoverStamp = (name: string) => {
+    placeholder.value = name
+  }
+  return {
+    placeholder,
+    onHoverStamp
+  }
 }
 
 const useStyles = (effectSelectorState: EffectSelectorState) =>
@@ -108,6 +122,8 @@ export default defineComponent({
     )
     const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
 
+    const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
+
     const styles = useStyles(effectSelectorState)
 
     store.commit.ui.stampPicker.setCurrentStampCategoryName('traq')
@@ -118,7 +134,9 @@ export default defineComponent({
       regexpFilterState,
       stamps,
       setQuery,
+      placeholder,
       onInputStamp,
+      onHoverStamp,
       toggleShowEffect,
       styles
     }

@@ -1,5 +1,11 @@
 <template>
-  <div @click="context.emit('click')" :class="$style.container">
+  <div
+    @click="context.emit('click')"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <img loading="lazy" :class="$style.image" :src="imageUrl" />
   </div>
 </template>
@@ -14,11 +20,19 @@ import {
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
+import useHover, { HoverState } from '@/use/hover'
 import { buildStampImagePath } from '@/lib/api'
 
 type Props = {
   stampId: StampId
 }
+
+const useStyles = (hoverState: HoverState) =>
+  reactive({
+    container: makeStyles(theme => ({
+      background: hoverState.hover ? theme.background.secondary : ''
+    }))
+  })
 
 export default defineComponent({
   name: 'StampPickerStampListItem',
@@ -31,7 +45,9 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildStampImagePath(fileId)}` : ''
-    return { props, context, imageUrl }
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
+    const styles = useStyles(hoverState)
+    return { props, context, imageUrl, onMouseEnter, onMouseLeave, styles }
   }
 })
 </script>

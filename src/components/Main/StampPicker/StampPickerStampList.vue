@@ -5,6 +5,7 @@
       :key="stamp.id"
       :stamp-id="stamp.id"
       @click="onClickStamp(stamp.id)"
+      @hover="onStampHover(stamp.name)"
     />
   </div>
 </template>
@@ -40,7 +41,10 @@ export default defineComponent({
     const onClickStamp = (id: StampId) => {
       context.emit('input-stamp', id)
     }
-    return { props, onClickStamp }
+    const onStampHover = (name: string) => {
+      context.emit('hover-stamp', name)
+    }
+    return { props, onClickStamp, onStampHover }
   }
 })
 </script>

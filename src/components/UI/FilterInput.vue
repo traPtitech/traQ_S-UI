@@ -5,6 +5,7 @@
       :class="$style.input"
       :style="$style.input"
       :value="props.text"
+      :placeholder="props.placeholder"
       @input="onInput"
       type="text"
     />
