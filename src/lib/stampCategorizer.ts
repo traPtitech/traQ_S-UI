@@ -2,9 +2,6 @@ import { StampId } from '@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
 import { compareString } from './util/string'
 
-// FIXME: dev環境での`isUnicode`対応終了後に削除
-import tempUnicodeEmojis from '@/assets/unicode_emojis.json'
-
 type StampName = string
 
 /**
@@ -34,24 +31,11 @@ export const constructStampNameIdMap = (
   const traQStampMap: Record<StampName, StampId> = {}
   for (const id in stampEntities) {
     const stamp = stampEntities[id]
-    // FIXME: dev環境での`isUnicode`対応終了後に削除
-    const unicodeStampNameSet = tempUnicodeEmojis.reduce(
-      (acc, cur) => ({
-        ...acc,
-        ...Object.fromEntries(cur.emojis.map(emoji => [emoji.name, true]))
-      }),
-      {}
-    )
-    if (stamp.name in unicodeStampNameSet) {
+    if (stamp.isUnicode) {
       unicodeStampMap[stamp.name] = stamp.id
     } else {
       traQStampMap[stamp.name] = stamp.id
     }
-    // if (stamp.isUnicode) {
-    //   unicodeStampMap[stamp.name] = stamp.id
-    // } else {
-    //   traQStampMap[stamp.name] = stamp.id
-    // }
   }
   return { unicodeStampMap, traQStampMap }
 }
