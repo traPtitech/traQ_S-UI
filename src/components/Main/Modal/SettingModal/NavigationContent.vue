@@ -1,10 +1,11 @@
 <template>
   <section :class="$style.container" :style="styles.container">
     <navigation-content-title :current-navigation="props.currentNavigation" />
-    <profile-tab
-      v-if="props.currentNavigation === 'profile'"
-      :class="$style.content"
-    />
+    <profile-tab v-if="props.currentNavigation === 'profile'" />
+    <browser-tab v-else-if="props.currentNavigation === 'browser'" />
+    <qall-tab v-else-if="props.currentNavigation === 'qall'" />
+    <stamp-tab v-else-if="props.currentNavigation === 'stamp'" />
+    <theme-tab v-else-if="props.currentNavigation === 'theme'" />
   </section>
 </template>
 
@@ -17,7 +18,11 @@ import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 import { NavigationItemType } from './use/navigation'
 import NavigationContentTitle from './NavigationContentTitle.vue'
-import ProfileTab from './ProfileTab.vue'
+import ProfileTab from './ProfileTab/ProfileTab.vue'
+import BrowserTab from './BrowserTab/BrowserTab.vue'
+import QallTab from './QallTab/QallTab.vue'
+import StampTab from './StampTab/StampTab.vue'
+import ThemeTab from './ThemeTab/ThemeTab.vue'
 
 const useStyles = () =>
   reactive({
@@ -35,7 +40,11 @@ export default defineComponent({
   name: 'NavigationContent',
   components: {
     NavigationContentTitle,
-    ProfileTab
+    ProfileTab,
+    BrowserTab,
+    QallTab,
+    StampTab,
+    ThemeTab
   },
   props: {
     currentNavigation: {

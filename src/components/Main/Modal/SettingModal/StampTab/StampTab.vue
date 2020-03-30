@@ -1,6 +1,8 @@
 <template>
   <section :class="$style.container">
-    tab
+    <p>スタンプ登録</p>
+    <p>スタンプ編集</p>
+    <p>スタンプパレット</p>
   </section>
 </template>
 
@@ -8,7 +10,7 @@
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'ProfileTab',
+  name: 'StampTab',
   setup() {
     return {}
   }
