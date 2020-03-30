@@ -20,7 +20,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, watch } from '@vue/composition-api'
+import {
+  defineComponent,
+  ref,
+  reactive,
+  computed,
+  watch
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import apis from '@/lib/api'
