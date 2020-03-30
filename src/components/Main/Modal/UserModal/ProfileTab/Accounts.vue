@@ -90,11 +90,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .p {
-  margin: 4px 0;
+  margin: 8px 0;
 }
 
 .icon {
-  display: inline-block;
   margin-right: 4px;
   vertical-align: bottom;
 }

@@ -4,7 +4,7 @@
       v-for="item in items"
       :key="item.type"
       @click="onNavigationItemClick(item.type)"
-      :style="{ display: 'content' }"
+      :class="$style.itemWrap"
     >
       <navigation-selector-item
         :iconName="item.iconName"
@@ -77,6 +77,10 @@ export default defineComponent({
 .container {
   margin-right: 4px;
   padding-top: 8px;
+}
+
+.itemWrap {
+  margin: 4px 0;
 }
 
 .item {
