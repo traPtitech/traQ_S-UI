@@ -1,5 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { S, StampSelectHandler, SelectedStampData } from './state'
+import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 
 export const mutations = defineMutations<S>()({
   setTargetPortalName(state, name: string) {
@@ -8,11 +9,8 @@ export const mutations = defineMutations<S>()({
   setSelectHandler(state, handler: StampSelectHandler) {
     state.selectHandler = handler
   },
-  setCurrentStampPaletteId(state, id: string) {
-    state.currentStampPaletteId = id
-  },
-  setCurrentStampCategoryName(state, name: string) {
-    state.currentStampCategoryName = name
+  setCurrentStampSet(state, set: StampSet) {
+    state.currentStampSet = set
   },
   clearSelectHandler(state) {
     state.selectHandler = (_: SelectedStampData) => {}
@@ -21,9 +19,9 @@ export const mutations = defineMutations<S>()({
     state.targetPortalName = ''
   },
   clearCurrentStampPaletteId(state) {
-    state.currentStampPaletteId = undefined
-  },
-  clearCurrentStampCategoryName(state) {
-    state.currentStampCategoryName = undefined
+    state.currentStampSet = {
+      type: 'history',
+      id: ''
+    }
   }
 })

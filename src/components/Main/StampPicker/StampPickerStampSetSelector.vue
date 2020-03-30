@@ -11,19 +11,13 @@
       :style="styles.dimmer"
     ></div>
     <div :class="$style.innerContainer">
-      <stamp-picker-palette-selector-item
-        v-for="category in stampSetState.stampPalettes"
-        :key="category"
-        stamp-set-type="palette"
-        :stamp-set="category"
+      <stamp-picker-stamp-set-selector-item
+        v-for="set in props.stampSets"
+        :key="set.id"
         :class="$style.item"
-      />
-      <stamp-picker-palette-selector-item
-        v-for="category in stampSetState.stampCategories"
-        :key="category"
-        stamp-set-type="category"
-        :stamp-set="category"
-        :class="$style.item"
+        :stamp-set="set"
+        :is-active="props.currentStampSet.id === set.id"
+        @click="onStampSetSelect(set)"
       />
     </div>
   </div>
@@ -40,34 +34,14 @@ import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import { buildStampImagePath } from '@/lib/api'
-import StampPickerPaletteSelectorItem from './StampPickerPaletteSelectorItem.vue'
-import content from '*.svg'
+import { StampSet } from './use/stampSetSelector'
+import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import { StampCategory } from '@/lib/stampCategorizer'
 
 type Props = {
-  stampPaletteId: StampPaletteId
-}
-
-const useStampSet = (contrext: SetupContext) => {
-  const state = reactive({
-    stampCategories: computed(() => [
-      store.state.domain.stampCategory.traQStampCategory.name,
-      ...store.state.domain.stampCategory.unicodeStampCategories.map(
-        c => 'unicode-' + c.name
-      )
-    ]),
-    foldedStampCategories: computed(
-      () => store.state.domain.stampCategory.unicodeStampCategories
-    ),
-    stampPalettes: computed(() =>
-      Object.values(store.state.entities.stampPalettes)
-    ),
-    hasStampPalette: computed((): boolean => state.stampPalettes.length > 0)
-  })
-  const onStampSetSelect = (stampSet: string, stampSetType: string) => {
-    contrext.emit('stamp-set-select', { stampSet, stampSetType })
-  }
-  return { stampSetState: state }
+  currentStampSet: StampSet
+  stampSets: StampSet[]
+  foldedStampSets: StampSet[]
 }
 
 const useStyles = () =>
@@ -81,20 +55,30 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'StampPickerPaletteSelector',
+  name: 'StampPickerStampSetSelector',
   components: {
-    StampPickerPaletteSelectorItem
+    StampPickerStampSetSelectorItem
   },
   props: {
-    stampPaletteId: {
-      type: String,
+    currentStampSet: {
+      type: Object,
       required: true
+    },
+    stampSets: {
+      type: Array,
+      required: true
+    },
+    foldedStampSets: {
+      type: Array,
+      default: () => []
     }
   },
   setup(props: Props, context: SetupContext) {
-    const { stampSetState } = useStampSet(context)
+    const onStampSetSelect = (stampSet: StampSet) => {
+      context.emit('stamp-set-select', stampSet)
+    }
     const styles = useStyles()
-    return { stampSetState, styles }
+    return { props, styles, onStampSetSelect }
   }
 })
 </script>

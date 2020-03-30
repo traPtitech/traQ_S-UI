@@ -1,4 +1,5 @@
 import { StampId } from '@/types/entity-ids'
+import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 
 enum StampEffect {
   wiggle = 'wiggle',
@@ -23,13 +24,14 @@ export interface S {
   targetPortalName: string
 
   selectHandler: StampSelectHandler
-  currentStampPaletteId?: string
-  currentStampCategoryName?: string
+  currentStampSet: StampSet
 }
 
 export const state: S = {
   targetPortalName: '',
   selectHandler: defaultSelectHandler,
-  currentStampPaletteId: undefined,
-  currentStampCategoryName: undefined
+  currentStampSet: {
+    type: 'history',
+    id: ''
+  }
 }

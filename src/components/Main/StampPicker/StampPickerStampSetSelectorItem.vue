@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <icon v-if="props.stampSetType === 'palette'" mdi name="home" />
+    <icon v-if="props.stampSet.type === 'palette'" mdi name="home" />
     <icon
-      v-else-if="props.stampSetType === 'category'"
-      :name="`stampCategory/${props.stampSet}`"
+      v-else-if="props.stampSet.type === 'category'"
+      :name="`stampCategory/${props.stampSet.id}`"
     />
-    <icon v-else-if="props.stampSetType === 'history'" mdi name="history" />
+    <icon v-else-if="props.stampSet.type === 'history'" mdi name="history" />
   </div>
 </template>
 
@@ -21,10 +21,11 @@ import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import { buildStampImagePath } from '@/lib/api'
 import Icon from '@/components/UI/Icon.vue'
+import { StampSet } from './use/stampSetSelector'
 
 type Props = {
-  stampSet: StampPaletteId | string | ''
-  stampSetType: 'palette' | 'category' | 'history'
+  stampSet: StampSet
+  isActive: boolean
 }
 
 const useStyles = () =>
@@ -35,18 +36,18 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'StampPickerPaletteSelectorItem',
+  name: 'StampPickerStampSetSelectorItem',
   components: {
     Icon
   },
   props: {
     stampSet: {
-      type: String,
-      default: ''
-    },
-    stampSetType: {
-      type: String,
+      type: Object,
       required: true
+    },
+    isActive: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props, context: SetupContext) {

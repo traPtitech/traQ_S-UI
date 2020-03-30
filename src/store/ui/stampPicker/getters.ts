@@ -13,17 +13,19 @@ export const getters = defineGetters<S>()({
   },
   stampIds(...args): StampId[] {
     const { state, rootState } = getterContext(args)
-    if (!state.currentStampPaletteId && !state.currentStampCategoryName) {
+    if (state.currentStampSet.type === 'history') {
       return []
     }
-    if (state.currentStampPaletteId) {
-      return []
+    if (state.currentStampSet.type === 'palette') {
+      const id = state.currentStampSet.id
+      const stampPalette = rootState.entities.stampPalettes[id]
+      return stampPalette?.stamps ?? []
     }
-    if (state.currentStampCategoryName) {
+    if (state.currentStampSet.type === 'category') {
       const traQStampCategory = rootState.domain.stampCategory.traQStampCategory
       const unicodeStampCategories =
         rootState.domain.stampCategory.unicodeStampCategories
-      const name = state.currentStampCategoryName
+      const name = state.currentStampSet.id
       if (name === traQStampCategory.name) {
         return traQStampCategory.stampIds
       }

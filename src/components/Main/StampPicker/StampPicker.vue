@@ -24,7 +24,11 @@
       :class="$style.effectSelector"
       v-if="effectSelectorState.shouldShowEffectSelector"
     />
-    <stamp-picker-palette-selector :class="$style.paletteSelector" />
+    <stamp-picker-stamp-set-selector
+      :class="$style.paletteSelector"
+      :stamp-sets="stampSetState.stampSets"
+      :current-stamp-set="stampSetState.currentStampSet"
+    />
   </div>
 </template>
 
@@ -32,14 +36,17 @@
 import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 import { StampId } from '@/types/entity-ids'
 import useRegexpFilter from '@/use/regexpFilter'
 import Icon from '@/components/UI/Icon.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
+import useStampSetSelector from './use/stampSetSelector'
+import useEffectSelector, { EffectSelectorState } from './use/effectSelector'
+import useStampFilterPlaceholder from './use/stampFilterPlaceholder'
 import StampPickerStampList from './StampPickerStampList.vue'
-import StampPickerPaletteSelector from './StampPickerPaletteSelector.vue'
+import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
-import { transparentize } from '@/lib/util/color'
 
 import api from '@/lib/api'
 
@@ -59,31 +66,6 @@ const useStampPicker = () => {
     store.dispatch.ui.stampPicker.closeStampPicker()
   }
   return { stampPickerState: state, onInputStamp }
-}
-
-type EffectSelectorState = {
-  shouldShowEffectSelector: boolean
-}
-
-const useEffectSelector = () => {
-  const state: EffectSelectorState = reactive({
-    shouldShowEffectSelector: false
-  })
-  const toggleShowEffect = () => {
-    state.shouldShowEffectSelector = !state.shouldShowEffectSelector
-  }
-  return { effectSelectorState: state, toggleShowEffect }
-}
-
-const useStampFilterPlaceholder = () => {
-  const placeholder = ref('スタンプを検索')
-  const onHoverStamp = (name: string) => {
-    placeholder.value = name
-  }
-  return {
-    placeholder,
-    onHoverStamp
-  }
 }
 
 const useStyles = (effectSelectorState: EffectSelectorState) =>
@@ -109,26 +91,30 @@ export default defineComponent({
     Icon,
     FilterInput,
     StampPickerStampList,
-    StampPickerPaletteSelector,
+    StampPickerStampSetSelector,
     StampPickerEffectSelector
   },
   setup() {
-    const { stampPickerState, onInputStamp } = useStampPicker()
-    const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const stamps = computed(() =>
       store.getters.ui.stampPicker.stampIds.map(
         id => store.state.entities.stamps[id]
       )
     )
+    const { stampPickerState, onInputStamp } = useStampPicker()
+    const { stampSetState } = useStampSetSelector()
+    const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
-
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const styles = useStyles(effectSelectorState)
 
-    store.commit.ui.stampPicker.setCurrentStampCategoryName('traq')
+    store.commit.ui.stampPicker.setCurrentStampSet({
+      type: 'category',
+      id: 'traq'
+    })
 
     return {
+      stampSetState,
       stampPickerState,
       effectSelectorState,
       regexpFilterState,
