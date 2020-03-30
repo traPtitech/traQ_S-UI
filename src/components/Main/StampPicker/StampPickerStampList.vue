@@ -11,12 +11,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  SetupContext
-} from '@vue/composition-api'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import { StampId } from '@/types/entity-ids'

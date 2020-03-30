@@ -7,6 +7,7 @@
     <icon name="effect" />
   </button>
 </template>
+
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'

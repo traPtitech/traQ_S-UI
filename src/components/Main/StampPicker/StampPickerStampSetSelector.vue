@@ -14,12 +14,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  SetupContext
-} from '@vue/composition-api'
+import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
