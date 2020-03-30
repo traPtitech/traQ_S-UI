@@ -1,0 +1,66 @@
+export const transparentize = (color: string, opacity: number) => {
+  const _opacity = Math.max(0, Math.min(1, opacity))
+  const c = Color.fromText(color)
+  return new Color(c.r, c.g, c.b, c.a * _opacity).toString()
+}
+
+class Color {
+  constructor(
+    readonly r: number,
+    readonly g: number,
+    readonly b: number,
+    readonly a: number
+  ) {
+    if (
+      (r < 0 && 255 < r) ||
+      (g < 0 && 255 < g) ||
+      (b < 0 && 255 < b) ||
+      (a < 0 && 1 < a)
+    ) {
+      throw 'Invalid color'
+    }
+  }
+  toString() {
+    return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`
+  }
+  static fromText(color: string, fallbackOpacity = 1) {
+    if (color.startsWith('#')) {
+      return Color.fromHex(color, fallbackOpacity)
+    }
+    if (color.startsWith('rgba')) {
+      return Color.fromRgba(color)
+    }
+    if (color.startsWith('rgb')) {
+      return Color.fromRgb(color, fallbackOpacity)
+    }
+    throw `Invalid color: ${color}`
+  }
+  static fromHex(hex: string, opacity = 1) {
+    const match = hex.match(/#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/)
+    // 3桁はダメ
+    if (!match) throw `Invalid color: ${hex}`
+    const r = parseInt(match[1], 16)
+    const g = parseInt(match[2], 16)
+    const b = parseInt(match[3], 16)
+    return new Color(r, g, b, opacity)
+  }
+  static fromRgba(rgba: string) {
+    const match = rgba.match(
+      /rgba\(\s*([\d.]),\s*([\d.]),\s*([\d.]),\s*([\d.])\s*\)/
+    )
+    if (!match) throw `Invalid color: ${rgba}`
+    const r = parseInt(match[1], 16)
+    const g = parseInt(match[2], 16)
+    const b = parseInt(match[3], 16)
+    const a = parseInt(match[4])
+    return new Color(r, g, b, a)
+  }
+  static fromRgb(rgb: string, opacity = 1) {
+    const match = rgb.match(/rgb\(\s*([\d.]),\s*([\d.]),\s*([\d.])\s*\)/)
+    if (!match) throw `Invalid color: ${rgb}`
+    const r = parseInt(match[1], 16)
+    const g = parseInt(match[2], 16)
+    const b = parseInt(match[3], 16)
+    return new Color(r, g, b, opacity)
+  }
+}

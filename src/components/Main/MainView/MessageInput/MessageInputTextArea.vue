@@ -4,6 +4,7 @@
     :class="$style.container"
     :style="styles.container"
     :value="props.text"
+    placeholder="メッセージを送信"
     @input="onInput"
     @keydown="onKeyDown"
   ></textarea>
