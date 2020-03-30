@@ -28,6 +28,18 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.unreadChannelsSet, channelId)
   },
 
+  setStaredChannels(state: S, channelIds: ChannelId[]) {
+    state.staredChannelSet = Object.fromEntries(
+      channelIds.map(id => [id, true])
+    )
+  },
+  addStaredChannel(state: S, channelId: ChannelId) {
+    Vue.set(state.staredChannelSet, channelId, true)
+  },
+  deleteStaredChannel(state: S, channelId: ChannelId) {
+    Vue.delete(state.staredChannelSet, channelId)
+  },
+
   setSubscribedChannels(state: S, subscribedChannels: ChannelId[]) {
     state.subscribedChannels = subscribedChannels
   },

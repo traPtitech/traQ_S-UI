@@ -7,7 +7,11 @@ import {
   mdiFileVideo,
   mdiFileImage,
   mdiClose,
-  mdiPlusCircleOutline
+  mdiPlusCircleOutline,
+  mdiPhone,
+  mdiPin,
+  mdiBell,
+  mdiDotsHorizontal
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -19,11 +23,15 @@ const mdi: MdiIconsMapping = {
   send: mdiSend,
   file: mdiFile,
   close: mdiClose,
+  phone: mdiPhone,
+  pin: mdiPin,
+  bell: mdiBell,
   'file-upload': mdiFileUpload,
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
   'file-image': mdiFileImage,
-  'plus-circle-outline': mdiPlusCircleOutline
+  'plus-circle-outline': mdiPlusCircleOutline,
+  'dots-horizontal': mdiDotsHorizontal
 }
 
 export default mdi

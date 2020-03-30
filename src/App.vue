@@ -38,6 +38,7 @@ export default defineComponent({
       store.dispatch.entities.fetchChannels()
       store.dispatch.domain.fetchChannelActivity()
       store.dispatch.domain.me.fetchUnreadChannels()
+      store.dispatch.domain.me.fetchStaredChannels()
     })
 
     return {

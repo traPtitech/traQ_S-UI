@@ -113,21 +113,22 @@ $currentChannelSize: 1.5rem;
 .ancestorSeparator {
   font-size: $ancestorSize;
   opacity: 0.5;
-  margin: 0 0.25rem;
+  margin: 0 0.125rem;
   user-select: none;
 }
 .current {
   font-size: $currentChannelSize;
-  margin: 0 0.25rem;
+  margin: 0 0.125rem;
 }
 .currentHash {
   font-size: $currentChannelSize;
   user-select: none;
+  margin-right: 0.125rem;
 }
 .ancestorHash {
   font-size: $currentChannelSize;
   opacity: 0.5;
-  margin: 0 0.25rem;
+  margin-right: 0.125rem;
   user-select: none;
 }
 </style>

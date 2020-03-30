@@ -7,6 +7,7 @@ export interface S {
   stampHistory: StampId[]
 
   unreadChannelsSet: Record<ChannelId, UnreadChannel>
+  staredChannelSet: Record<ChannelId, true>
   subscribedChannels: ChannelId[]
   notifiedChannels: ChannelId[]
 }
@@ -16,6 +17,7 @@ export const state: S = {
   webhooks: [],
   stampHistory: [],
   unreadChannelsSet: {},
+  staredChannelSet: {},
   subscribedChannels: [],
   notifiedChannels: []
 }

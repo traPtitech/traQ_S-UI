@@ -19,5 +19,19 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(payload.channelId)
     api.readChannel(payload.channelId)
+  },
+
+  async fetchStaredChannels(context) {
+    const { commit } = meActionContext(context)
+    const result = await api.getMyStars()
+    commit.setStaredChannels(result.data)
+  },
+  async starChannel(context, id: ChannelId) {
+    await api.addMyStar({
+      channelId: id
+    })
+  },
+  async unstarChannel(context, id: ChannelId) {
+    await api.removeMyStar(id)
   }
 })
