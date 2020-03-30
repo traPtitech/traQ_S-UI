@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api from '@/lib/api'
+import api, { StampPalette, Stamp } from '@/lib/api'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
@@ -57,7 +57,19 @@ export const actions = defineActions({
   async fetchStampPalettes(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getStampPalettes()
-    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+    const tmpData = res.data.map(
+      (palette: any): StampPalette => ({
+        id: palette.ID as string,
+        name: palette.name as string,
+        stamps: palette.Stamps as string[],
+        creatorId: palette.CreatorID as string,
+        updatedAt: palette.UpdatedAt as Date,
+        createdAt: palette.CreatedAt as Date,
+        description: palette.Description as string
+      })
+    )
+    // commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+    commit.setStampPalettes(reduceToRecord(tmpData, 'id'))
   },
   async fetchMessagesByChannelId(
     context,
