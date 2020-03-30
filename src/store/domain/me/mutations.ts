@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { MessageId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel } from '@traptitech/traq'
+import { MessageId, WebhookId, ChannelId, StampId } from '@/types/entity-ids'
+import { UnreadChannel, StampHistoryEntry } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
   setId(state: S, id: MessageId) {
@@ -11,7 +11,7 @@ export const mutations = defineMutations<S>()({
   setWebhooks(state: S, webhooks: WebhookId[]) {
     state.webhooks = webhooks
   },
-  setStampHistory(state: S, stampHistory: StampId[]) {
+  setStampHistory(state: S, stampHistory: Record<StampId, Date>) {
     state.stampHistory = stampHistory
   },
 
@@ -33,5 +33,9 @@ export const mutations = defineMutations<S>()({
   },
   setNotifiedChannels(state: S, notifiedChannels: ChannelId[]) {
     state.notifiedChannels = notifiedChannels
+  },
+
+  pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
+    Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
   }
 })

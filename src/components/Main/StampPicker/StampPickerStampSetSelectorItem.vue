@@ -54,7 +54,6 @@ type Props = {
 const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.background.secondary,
       color: props.isActive ? theme.accent.primary : theme.ui.secondary
     })),
     indicator: makeStyles(theme => ({

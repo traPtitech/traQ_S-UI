@@ -1,5 +1,5 @@
 <template>
-  <portal v-show="state.shouldShowStampPicker" :to="state.targetPortalName">
+  <portal v-show="state.isStampPickerShown" :to="state.targetPortalName">
     <stamp-picker />
   </portal>
 </template>
@@ -14,8 +14,8 @@ const useStampPicker = () => {
     targetPortalName: computed(
       () => store.state.ui.stampPicker.targetPortalName
     ),
-    shouldShowStampPicker: computed(
-      () => store.getters.ui.stampPicker.shouldShowStampPicker
+    isStampPickerShown: computed(
+      () => store.getters.ui.stampPicker.isStampPickerShown
     )
   })
   return { state }

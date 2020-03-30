@@ -114,7 +114,7 @@ export default defineComponent({
 .item {
   margin: 0 4px;
   &:first-child {
-    padding-left: 8px;
+    margin-left: 12px;
   }
   &:last-child {
     padding-right: 8px;

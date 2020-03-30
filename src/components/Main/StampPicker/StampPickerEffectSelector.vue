@@ -18,6 +18,13 @@ type Props = {
   stampId: StampId
 }
 
+const useStyles = () =>
+  reactive({
+    container: makeStyles(theme => ({
+      background: theme.background.secondarySub
+    }))
+  })
+
 export default defineComponent({
   name: 'StampPickerEffectSelector',
   props: {

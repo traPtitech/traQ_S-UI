@@ -1,6 +1,6 @@
 import { reactive, computed, Ref } from '@vue/composition-api'
 
-const useRegexpFilter = <T, K extends keyof T>(
+const useTextFilter = <T, K extends keyof T>(
   items: Ref<readonly T[]>,
   searchTargetKey: T[K] extends string ? K : never
 ) => {
@@ -14,7 +14,9 @@ const useRegexpFilter = <T, K extends keyof T>(
         return items.value.filter(
           // NOTE: stringでなければ通らないのでキャストしてしまう
           item =>
-            !!((item[searchTargetKey] as unknown) as string)?.match(state.query)
+            ((item[searchTargetKey] as unknown) as string)?.indexOf(
+              state.query
+            ) >= 0
         )
       }
     })
@@ -23,9 +25,9 @@ const useRegexpFilter = <T, K extends keyof T>(
     state.query = query
   }
   return {
-    regexpFilterState: state,
+    textFilterState: state,
     setQuery
   }
 }
 
-export default useRegexpFilter
+export default useTextFilter

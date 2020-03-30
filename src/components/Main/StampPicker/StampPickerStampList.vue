@@ -55,6 +55,6 @@ export default defineComponent({
   flex-flow: row wrap;
   height: 100%;
   overflow-y: scroll;
-  align-items: space-between;
+  align-content: flex-start;
 }
 </style>

@@ -2,28 +2,29 @@
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.inputContainer">
       <filter-input
-        :text="regexpFilterState.query"
+        :text="textFilterState.query"
         @input="setQuery"
         :placeholder="placeholder"
       />
-      <div
-        :class="$style.effectButton"
-        :style="styles.effectButton"
+      <!--
+      <stamp-picker-effect-toggle-button
+        :isActive="effectSelectorState.shouldShowEffectSelector"
         @click="toggleShowEffect"
-      >
-        <icon name="effect" />
-      </div>
+      />
+      -->
     </div>
     <stamp-picker-stamp-list
       :class="$style.stampList"
-      :stamps="regexpFilterState.filteredItems"
+      :stamps="textFilterState.filteredItems"
       @input-stamp="onInputStamp"
       @hover-stamp="onHoverStamp"
     />
+    <!--
     <stamp-picker-effect-selector
       :class="$style.effectSelector"
       v-if="effectSelectorState.shouldShowEffectSelector"
     />
+    -->
     <stamp-picker-stamp-set-selector
       :class="$style.paletteSelector"
       :stamp-sets="stampSetState.stampSets"
@@ -39,15 +40,17 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import { StampId } from '@/types/entity-ids'
-import useRegexpFilter from '@/use/regexpFilter'
+import useTextFilter from '@/use/textFilter'
 import Icon from '@/components/UI/Icon.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
+import useStampList from './use/stampList'
 import useStampSetSelector from './use/stampSetSelector'
 import useEffectSelector, { EffectSelectorState } from './use/effectSelector'
 import useStampFilterPlaceholder from './use/stampFilterPlaceholder'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
+import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 
 import api from '@/lib/api'
 
@@ -57,12 +60,16 @@ const useStampPicker = () => {
       () => store.state.ui.stampPicker.targetPortalName
     ),
     shouldShowStampPicker: computed(
-      () => store.getters.ui.stampPicker.shouldShowStampPicker
+      () => store.getters.ui.stampPicker.isStampPickerShown
     )
   })
   const onInputStamp = (id: StampId) => {
     store.state.ui.stampPicker.selectHandler({
       id
+    })
+    store.commit.domain.me.pushLocalStampHistory({
+      stampId: id,
+      datetime: new Date()
     })
     store.dispatch.ui.stampPicker.closeStampPicker()
   }
@@ -74,15 +81,6 @@ const useStyles = (effectSelectorState: EffectSelectorState) =>
     container: makeStyles(theme => ({
       background: theme.background.primary,
       borderColor: theme.background.secondary
-    })),
-    effectButton: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: effectSelectorState.shouldShowEffectSelector
-        ? theme.accent.primary
-        : transparentize(theme.ui.secondary, 0.5),
-      borderColor: effectSelectorState.shouldShowEffectSelector
-        ? theme.accent.primary
-        : 'transparent'
     }))
   })
 
@@ -93,18 +91,18 @@ export default defineComponent({
     FilterInput,
     StampPickerStampList,
     StampPickerStampSetSelector,
-    StampPickerEffectSelector
+    StampPickerEffectSelector,
+    StampPickerEffectToggleButton
   },
   setup() {
-    const stamps = computed(() =>
-      store.getters.ui.stampPicker.stampIds.map(
-        id => store.state.entities.stamps[id]
-      )
+    const currentStampSet = computed(
+      () => store.state.ui.stampPicker.currentStampSet
     )
+    const { stamps } = useStampList(currentStampSet)
     const { stampPickerState, onInputStamp } = useStampPicker()
     const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
-    const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
+    const { textFilterState, setQuery } = useTextFilter(stamps, 'name')
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const styles = useStyles(effectSelectorState)
@@ -113,8 +111,7 @@ export default defineComponent({
       stampSetState,
       stampPickerState,
       effectSelectorState,
-      regexpFilterState,
-      stamps,
+      textFilterState,
       setQuery,
       placeholder,
       onInputStamp,
@@ -145,7 +142,7 @@ export default defineComponent({
   margin: 8px;
   flex-shrink: 0;
   display: grid;
-  grid-template-columns: 1fr 40px;
+  grid-template-columns: 1fr /* 40px */;
   gap: 8px;
 }
 .paletteSelector,

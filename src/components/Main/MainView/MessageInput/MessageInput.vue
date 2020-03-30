@@ -20,7 +20,7 @@
         :class="$style.controls"
         :can-post-message="!(textState.isEmpty && attachmentsState.isEmpty)"
         @click-send="postMessage"
-        @click-stamp="invokeStampPicker"
+        @click-stamp="onStampClick"
       />
     </div>
   </div>
@@ -88,13 +88,21 @@ export default defineComponent({
       }
     )
 
+    const onStampClick = () => {
+      if (store.getters.ui.stampPicker.isStampPickerShown) {
+        store.dispatch.ui.stampPicker.closeStampPicker()
+      } else {
+        invokeStampPicker()
+      }
+    }
+
     return {
       targetPortalName,
       styles,
       textState,
       attachmentsState,
       onInputText,
-      invokeStampPicker,
+      onStampClick,
       postMessage,
       addAttachment
     }
