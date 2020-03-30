@@ -1,15 +1,5 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div
-      :class="$style.dimmer"
-      data-position="left"
-      :style="styles.dimmer"
-    ></div>
-    <div
-      :class="$style.dimmer"
-      data-position="right"
-      :style="styles.dimmer"
-    ></div>
     <div :class="$style.innerContainer">
       <stamp-picker-stamp-set-selector-item
         v-for="set in props.stampSets"
@@ -48,9 +38,6 @@ const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
       background: theme.background.secondary
-    })),
-    dimmer: makeStyles(theme => ({
-      background: `linear-gradient(to left, ${theme.background.secondary}, transparent)`
     }))
   })
 
@@ -96,19 +83,6 @@ export default defineComponent({
   overflow-x: scroll;
   &::-webkit-scrollbar {
     display: none;
-  }
-}
-.dimmer {
-  position: absolute;
-  width: 8px;
-  height: 100%;
-  top: 0;
-  &[data-position='left'] {
-    transform: rotate(180deg);
-    left: 0;
-  }
-  &[data-position='right'] {
-    right: 0;
   }
 }
 .item {

@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    v-click-outside="onClickOutside"
+  >
     <div :class="$style.inputContainer">
       <filter-input
         :text="textFilterState.query"
@@ -64,14 +68,13 @@ const useStampPicker = () => {
     )
   })
   const onInputStamp = (id: StampId) => {
-    store.state.ui.stampPicker.selectHandler({
-      id
-    })
     store.commit.domain.me.pushLocalStampHistory({
       stampId: id,
       datetime: new Date()
     })
-    store.dispatch.ui.stampPicker.closeStampPicker()
+    store.state.ui.stampPicker.selectHandler({
+      id
+    })
   }
   return { stampPickerState: state, onInputStamp }
 }
@@ -107,6 +110,9 @@ export default defineComponent({
 
     const styles = useStyles(effectSelectorState)
 
+    const onClickOutside = () =>
+      store.dispatch.ui.stampPicker.closeStampPicker()
+
     return {
       stampSetState,
       stampPickerState,
@@ -116,6 +122,7 @@ export default defineComponent({
       placeholder,
       onInputStamp,
       onHoverStamp,
+      onClickOutside,
       toggleShowEffect,
       changeStampSet,
       styles
