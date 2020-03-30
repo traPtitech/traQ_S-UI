@@ -9,7 +9,7 @@
           :class="$style.tag"
           @click="onTagClick"
         >
-          <icon name="tag" mdi :class="$style.icon" />
+          <icon name="tag" mdi :class="$style.icon" :size="20" />
           {{ tag.tag }}
         </li>
       </ul>
@@ -77,5 +77,6 @@ export default defineComponent({
 
 .icon {
   vertical-align: bottom;
+  margin-right: 4px;
 }
 </style>
