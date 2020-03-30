@@ -30,8 +30,9 @@ export const getters = defineGetters<S>()({
         return traQStampCategory.stampIds
       }
       return (
-        unicodeStampCategories.find(category => category.name === name)
-          ?.stampIds ?? []
+        unicodeStampCategories.find(
+          category => name === `unicode-${category.name}`
+        )?.stampIds ?? []
       )
     }
     // TODO: historyを返す

@@ -28,6 +28,7 @@
       :class="$style.paletteSelector"
       :stamp-sets="stampSetState.stampSets"
       :current-stamp-set="stampSetState.currentStampSet"
+      @stamp-set-select="changeStampSet"
     />
   </div>
 </template>
@@ -101,17 +102,12 @@ export default defineComponent({
       )
     )
     const { stampPickerState, onInputStamp } = useStampPicker()
-    const { stampSetState } = useStampSetSelector()
+    const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const { regexpFilterState, setQuery } = useRegexpFilter(stamps, 'name')
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const styles = useStyles(effectSelectorState)
-
-    store.commit.ui.stampPicker.setCurrentStampSet({
-      type: 'category',
-      id: 'traq'
-    })
 
     return {
       stampSetState,
@@ -124,6 +120,7 @@ export default defineComponent({
       onInputStamp,
       onHoverStamp,
       toggleShowEffect,
+      changeStampSet,
       styles
     }
   }

@@ -1,11 +1,31 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <icon v-if="props.stampSet.type === 'palette'" mdi name="home" />
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    @click="context.emit('click')"
+  >
+    <div
+      :class="$style.indicator"
+      :style="styles.indicator"
+      v-if="props.isActive"
+    ></div>
+    <icon
+      :style="styles.paletteStamp"
+      v-if="props.stampSet.type === 'palette'"
+      mdi
+      name="home"
+    />
     <icon
       v-else-if="props.stampSet.type === 'category'"
+      :style="styles.icon"
       :name="`stampCategory/${props.stampSet.id}`"
     />
-    <icon v-else-if="props.stampSet.type === 'history'" mdi name="history" />
+    <icon
+      :style="styles.icon"
+      v-else-if="props.stampSet.type === 'history'"
+      mdi
+      name="history"
+    />
   </div>
 </template>
 
@@ -28,10 +48,20 @@ type Props = {
   isActive: boolean
 }
 
-const useStyles = () =>
+const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.background.secondary
+      background: theme.background.secondary,
+      color: props.isActive ? theme.accent.primary : theme.ui.secondary
+    })),
+    indicator: makeStyles(theme => ({
+      background: theme.accent.primary
+    })),
+    icon: makeStyles(theme => ({
+      opacity: props.isActive ? '1' : '0.5'
+    })),
+    paletteStamp: makeStyles(theme => ({
+      filter: props.isActive ? '' : 'grayscale()'
     }))
   })
 
@@ -51,8 +81,8 @@ export default defineComponent({
     }
   },
   setup(props: Props, context: SetupContext) {
-    const styles = useStyles()
-    return { props, styles }
+    const styles = useStyles(props)
+    return { props, context, styles }
   }
 })
 </script>
@@ -61,8 +91,16 @@ export default defineComponent({
 .container {
   display: flex;
   align-items: center;
+  position: relative;
   width: 100%;
   height: 36px;
   cursor: pointer;
+}
+.indicator {
+  position: absolute;
+  width: 32px;
+  height: 2px;
+  bottom: 0;
+  left: -4px;
 }
 </style>
