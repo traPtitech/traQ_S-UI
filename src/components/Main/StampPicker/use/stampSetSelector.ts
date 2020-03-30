@@ -18,8 +18,8 @@ const useStampSetSelector = () => {
         type: 'history',
         id: ''
       },
-      ...state.stampCategories,
-      ...state.stampPalettes
+      ...state.stampPalettes,
+      ...state.stampCategories
     ]),
     stampCategories: computed((): StampSet[] => [
       {

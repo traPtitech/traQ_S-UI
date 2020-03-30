@@ -6,7 +6,7 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <img loading="lazy" :class="$style.image" :src="imageUrl" />
+    <stamp :stamp-id="props.stampId" :size="24" />
   </div>
 </template>
 
@@ -22,6 +22,7 @@ import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import useHover, { HoverState } from '@/use/hover'
 import { buildStampImagePath } from '@/lib/api'
+import Stamp from '@/components/UI/Stamp.vue'
 
 type Props = {
   stampId: StampId
@@ -36,6 +37,9 @@ const useStyles = (hoverState: HoverState) =>
 
 export default defineComponent({
   name: 'StampPickerStampListItem',
+  components: {
+    Stamp
+  },
   props: {
     stampId: {
       type: String,
@@ -59,9 +63,5 @@ export default defineComponent({
   padding: 4px;
   cursor: pointer;
   user-select: none;
-}
-.image {
-  width: 24px;
-  height: 24px;
 }
 </style>

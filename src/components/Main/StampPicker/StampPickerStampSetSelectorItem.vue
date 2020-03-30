@@ -5,26 +5,29 @@
     @click="context.emit('click')"
   >
     <div
+      v-if="props.isActive"
       :class="$style.indicator"
       :style="styles.indicator"
-      v-if="props.isActive"
     ></div>
     <icon
-      :style="styles.paletteStamp"
       v-if="props.stampSet.type === 'palette'"
       mdi
       name="home"
+      :size="24"
+      :style="styles.paletteStamp"
     />
     <icon
       v-else-if="props.stampSet.type === 'category'"
-      :style="styles.icon"
       :name="`stampCategory/${props.stampSet.id}`"
+      :size="24"
+      :style="styles.icon"
     />
     <icon
-      :style="styles.icon"
       v-else-if="props.stampSet.type === 'history'"
       mdi
       name="history"
+      :size="24"
+      :style="styles.icon"
     />
   </div>
 </template>
