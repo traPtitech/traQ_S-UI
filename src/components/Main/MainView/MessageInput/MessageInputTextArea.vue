@@ -44,6 +44,7 @@ const useEnterWatcher = (context: SetupContext) => {
 
 type Props = {
   text: string
+  shouldUpdateTextAreaSize: boolean
 }
 
 export default defineComponent({
@@ -52,6 +53,10 @@ export default defineComponent({
     text: {
       type: String,
       default: ''
+    },
+    shouldUpdateTextAreaSize: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props, context: SetupContext) {
@@ -65,7 +70,10 @@ export default defineComponent({
       }
     })
     watchEffect(() => {
-      if (props.text.length === 0 && textareaRef.value) {
+      if (
+        (props.shouldUpdateTextAreaSize || props.text.length === 0) &&
+        textareaRef.value
+      ) {
         autosize.update(textareaRef.value)
       }
     })

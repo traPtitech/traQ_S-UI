@@ -11,10 +11,12 @@
         @click="addAttachment"
       />
       <message-input-text-area
-        :text="textState.text"
         :class="$style.inputTextArea"
+        :text="textState.text"
+        :should-update-size="shouldUpdateSize"
         @input="onInputText"
         @post-message="postMessage"
+        @update-size="onUpdateSize"
       />
       <message-input-controls
         :class="$style.controls"
@@ -35,6 +37,7 @@ import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useAttachments from './use/attachments'
 import useTextInput, { TextState } from './use/textInput'
 import usePostMessage from './use/postMessage'
+import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
@@ -69,6 +72,11 @@ export default defineComponent({
     const styles = useStyles()
     const { textState, onInputText } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
+    const {
+      shouldUpdateSize,
+      onUpdateSize,
+      onStampInput
+    } = useTextAreaSizeUpdater()
     const postMessage = usePostMessage(textState, props)
 
     const targetPortalName = 'message-input-stamp-picker'
@@ -85,6 +93,7 @@ export default defineComponent({
             : ''
         const stampText = textState.text + `:${stampName}${size}${effects}:`
         textState.text = stampText
+        onStampInput()
       }
     )
 
@@ -101,8 +110,10 @@ export default defineComponent({
       styles,
       textState,
       attachmentsState,
+      shouldUpdateSize,
       onInputText,
       onStampClick,
+      onUpdateSize,
       postMessage,
       addAttachment
     }
