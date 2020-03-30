@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles, fade } from '@/lib/styles'
+import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: {
