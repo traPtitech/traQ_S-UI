@@ -27,8 +27,8 @@ interface Props {
 export default defineComponent({
   name: 'Buttons',
   props: {
-    user: {
-      type: Object,
+    username: {
+      type: String,
       required: true
     }
   },

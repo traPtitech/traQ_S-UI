@@ -1,4 +1,5 @@
 import { UserId } from '@/types/entity-ids'
+import { UserDetail } from '@traptitech/traq'
 
 type ModalStateType = 'user' | 'group'
 
@@ -15,8 +16,10 @@ interface UserModalState extends BaseModalState {
 
 export interface S {
   modalState: ModalState[]
+  userDetails: Record<UserId, UserDetail>
 }
 
 export const state: S = {
-  modalState: []
+  modalState: [],
+  userDetails: {}
 }

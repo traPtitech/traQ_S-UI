@@ -13,9 +13,8 @@
       :class="$style.button"
       :style="styles.button"
       @click="addTag"
-      :disabled="newTagName.length === 0"
+      :disabled="newTagName.length === 0 || adding"
     >
-      <!-- +の線が細い -->
       <icon name="plus" mdi :class="$style.icon" />
     </button>
   </div>
@@ -33,7 +32,8 @@ const useStyles = () =>
   reactive({
     input: makeStyles(theme => ({
       color: theme.ui.secondary,
-      background: theme.background.secondary
+      background: theme.background.secondary,
+      '--placeholder-color': theme.ui.secondary
     })),
     button: makeStyles(theme => ({
       color: theme.ui.secondary,
@@ -57,14 +57,18 @@ export default defineComponent({
     const styles = useStyles()
 
     const newTagName = ref('')
+    const adding = ref(false)
 
-    const addTag = () => {
-      apis.addUserTag(props.userId, {
+    const addTag = async () => {
+      adding.value = true
+      await apis.addUserTag(props.userId, {
         tag: newTagName.value
       })
+      adding.value = false
+      newTagName.value = ''
     }
 
-    return { styles, newTagName, addTag }
+    return { styles, newTagName, addTag, adding }
   },
   components: {
     Icon
@@ -84,7 +88,9 @@ export default defineComponent({
   padding: 4px;
   padding-left: 16px;
   border-radius: 6px;
-  // placeholderの色変えるのどうしましょう…(::placeholder{ color: ？ })
+  &::placeholder {
+    color: var(--placeholder-color);
+  }
 }
 
 .button {

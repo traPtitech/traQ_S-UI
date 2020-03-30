@@ -20,8 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from '@vue/composition-api'
+import { defineComponent, ref, reactive, computed, watch } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
+import store from '@/store'
 import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
@@ -37,14 +38,6 @@ const useStyles = () =>
       background: theme.background.primary
     }))
   })
-
-const useUserDetail = (id: UserId) => {
-  const detail = ref<UserDetail>()
-  apis.getUser(id).then(res => {
-    detail.value = res.data
-  })
-  return detail
-}
 
 type Props = {
   currentNavigation: NavigationItemType
@@ -70,7 +63,12 @@ export default defineComponent({
   },
   setup(props: Props) {
     const styles = useStyles()
-    const detail = useUserDetail(props.user.id)
+
+    const detail = computed(
+      () => store.state.ui.modal.userDetails[props.user.id]
+    )
+    store.dispatch.ui.modal.fetchUserDetail(props.user.id)
+
     return {
       styles,
       props,

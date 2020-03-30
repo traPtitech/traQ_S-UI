@@ -23,12 +23,18 @@ export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
   store.commit.entities.deleteUser(id)
 }
 
-export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {
-  console.error('onUserTagsUpdated: Not implemented')
+export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent['body']) => {
+  if (store.state.ui.modal.userDetails[id]) {
+    store.dispatch.ui.modal.fetchUserDetail(id)
+  }
 }
 
-export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
-  console.error('onUserIconUpdated: Not implemented')
+export const onUserIconUpdated = async ({
+  id
+}: UserIconUpdatedEvent['body']) => {
+  const res = await apis.getUser(id)
+  store.commit.entities.extendUsers({ [id]: res.data })
+  // TODO: アイコンキャッシュの削除(?)
 }
 
 export const onUserOnline = ({ id }: UserOnlineEvent['body']) => {
