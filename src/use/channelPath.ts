@@ -1,6 +1,12 @@
 import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
+import store from '@/store'
+
+type SimpleChannel = {
+  id: ChannelId
+  name: string
+}
 
 const useChannelPath = () => {
   const channelPathToId = (
@@ -24,20 +30,24 @@ const useChannelPath = () => {
     return channelPathToId(separatedPath.slice(1), nextTree)
   }
 
-  const channelIdToPath = (
-    id: ChannelId,
-    channelEntities: Record<ChannelId, Channel>
-  ): string[] => {
-    if (!(id in channelEntities)) {
+  const channelIdToSimpleChannelPath = (id: ChannelId): SimpleChannel[] => {
+    if (!(id in store.state.entities.channels)) {
       throw `channelIdToPath: No channel: ${id}`
     }
-    const channel = channelEntities[id]
+    const channel = store.state.entities.channels[id]
     if (!channel.parentId) {
-      return [channel.name]
+      return [{ id, name: channel.name }]
     }
-    return [...channelIdToPath(channel.parentId, channelEntities), channel.name]
+    return [
+      ...channelIdToSimpleChannelPath(channel.parentId),
+      { id, name: channel.name }
+    ]
   }
-  return { channelPathToId, channelIdToPath }
+
+  const channelIdToPath = (id: ChannelId): string[] =>
+    channelIdToSimpleChannelPath(id).map(c => c.name)
+
+  return { channelPathToId, channelIdToPath, channelIdToSimpleChannelPath }
 }
 
 export default useChannelPath
