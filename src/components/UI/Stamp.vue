@@ -1,5 +1,13 @@
 <template>
-  <img loading="lazy" :class="$style.container" :src="imageUrl" :alt="name" />
+  <img
+    v-if="imageUrl.length > 0"
+    loading="lazy"
+    :class="$style.container"
+    :style="styles.container"
+    :src="imageUrl"
+    :alt="name"
+  />
+  <div v-else :class="$style.container" :style="styles.noImageContainer" />
 </template>
 
 <script lang="ts">
@@ -22,6 +30,10 @@ type Props = {
 const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
+      maxWidth: `${props.size}px`,
+      maxHeight: `${props.size}px`
+    })),
+    noImageContainer: makeStyles(theme => ({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
@@ -40,10 +52,13 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    const stamp = store.state.entities.stamps[props.stampId]
-    const fileId = stamp?.fileId ?? ''
-    const name = stamp?.name ?? ''
-    const imageUrl = fileId ? `${buildStampImagePath(fileId)}` : ''
+    const name = computed(
+      () => store.state.entities.stamps[props.stampId]?.name ?? ''
+    )
+    const imageUrl = computed(() => {
+      const fileId = store.state.entities.stamps[props.stampId]?.fileId
+      return fileId ? `${buildStampImagePath(fileId)}` : ''
+    })
     const styles = useStyles(props)
     return { props, imageUrl, name, styles }
   }

@@ -35,7 +35,7 @@ const useStampSetSelector = () => {
       }))
     ),
     stampPalettes: computed((): StampSet[] =>
-      Object.keys(store.state.entities.stampPalettes).map(id => ({
+      store.getters.entities.nonEmptyStampPaletteIds.map(id => ({
         type: 'palette',
         id
       }))

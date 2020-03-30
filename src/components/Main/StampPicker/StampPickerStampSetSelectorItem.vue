@@ -9,10 +9,9 @@
       :class="$style.indicator"
       :style="styles.indicator"
     ></div>
-    <icon
+    <stamp
       v-if="props.stampSet.type === 'palette'"
-      mdi
-      name="home"
+      :stamp-id="pickThumbnail(props.stampSet.id)"
       :size="24"
       :style="styles.paletteStamp"
     />
@@ -44,6 +43,7 @@ import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import { buildStampImagePath } from '@/lib/api'
 import Icon from '@/components/UI/Icon.vue'
+import Stamp from '@/components/UI/Stamp.vue'
 import { StampSet } from './use/stampSetSelector'
 
 type Props = {
@@ -68,10 +68,22 @@ const useStyles = (props: Props) =>
     }))
   })
 
+const useStampPaletteThumbnail = () => {
+  const pickThumbnail = (paletteId: StampPaletteId) => {
+    const palette = store.state.entities.stampPalettes[paletteId]
+    if ((palette?.stamps?.length ?? 0) > 0) {
+      return palette.stamps[0]
+    }
+    return ''
+  }
+  return { pickThumbnail }
+}
+
 export default defineComponent({
   name: 'StampPickerStampSetSelectorItem',
   components: {
-    Icon
+    Icon,
+    Stamp
   },
   props: {
     stampSet: {
@@ -85,7 +97,8 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles(props)
-    return { props, context, styles }
+    const { pickThumbnail } = useStampPaletteThumbnail()
+    return { props, context, styles, pickThumbnail }
   }
 })
 </script>
