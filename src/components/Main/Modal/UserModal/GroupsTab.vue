@@ -9,7 +9,7 @@
           :class="$style.group"
           @click="onGroupClick"
         >
-          <icon name="group" :class="$style.icon" />
+          <icon name="group" :class="$style.icon" :size="20" />
           {{ group.name }}
         </li>
       </ul>
