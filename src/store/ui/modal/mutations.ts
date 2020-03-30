@@ -16,6 +16,6 @@ export const mutations = defineMutations<S>()({
     Vue.set(state.userDetails, userDetail.id, userDetail)
   },
   deleteUserDetail: (state, userId: UserId) => {
-    delete state.userDetails[userId]
+    Vue.delete(state.userDetails, userId)
   }
 })
