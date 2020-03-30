@@ -47,9 +47,11 @@ export const actions = defineActions({
         break
       case 'notification':
         break
+      case 'setting':
+        break
       default:
-        const invalid = (modalState as any).type
-        throw new Error(`Invalid Modal State type: ${invalid}`)
+        const invalid: never = modalState
+        throw new Error(`Invalid Modal State type: ${(invalid as any).type}`)
     }
   }
 })

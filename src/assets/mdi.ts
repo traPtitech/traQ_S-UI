@@ -22,7 +22,11 @@ import {
   mdiPlus,
   mdiMagnify,
   mdiHistory,
-  mdiEmoticonOutline
+  mdiEmoticonOutline,
+  mdiCog,
+  mdiAccount,
+  mdiCogs,
+  mdiBrightness6
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -53,7 +57,11 @@ const mdi: MdiIconsMapping = {
   tags: mdiTagMultiple,
   email: mdiEmail,
   plus: mdiPlus,
-  'emoticon-outline': mdiEmoticonOutline
+  'emoticon-outline': mdiEmoticonOutline,
+  cog: mdiCog,
+  account: mdiAccount,
+  cogs: mdiCogs,
+  'brightness-6': mdiBrightness6
 }
 
 export default mdi
