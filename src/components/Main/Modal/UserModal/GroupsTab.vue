@@ -78,5 +78,6 @@ export default defineComponent({
 
 .icon {
   vertical-align: bottom;
+  margin-right: 4px;
 }
 </style>
