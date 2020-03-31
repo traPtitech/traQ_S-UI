@@ -45,7 +45,7 @@ export default defineComponent({
   props: {
     text: {
       type: String,
-      defualt: ''
+      default: ''
     },
     onSecondary: {
       type: Boolean,
