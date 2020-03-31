@@ -1,17 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <router-link
-      :to="
-        ancestorsPath.length > 0
-          ? buildChannelLink(ancestorsPath[0].path)
-          : pathInfo.name
-      "
-      :class="
-        ancestorsPath.length === 0 ? $style.currentHash : $style.ancestorHash
-      "
+      v-if="ancestorsPath.length > 0"
+      :to="buildChannelLink(ancestorsPath[0].path)"
+      :class="$style.ancestorHash"
       :style="styles.ancestorSeparator"
       >#</router-link
     >
+    <span v-else :class="$style.currentHash">#</span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
       <router-link
         :to="buildChannelLink(ancestor.path)"
