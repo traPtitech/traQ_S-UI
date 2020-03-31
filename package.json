@@ -32,7 +32,7 @@
     "@types/lodash-es": "^4.17.3",
     "@types/autosize": "^3.0.7",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
+    "@typescript-eslint/parser": "^2.26.0",
     "@vue/cli-plugin-babel": "^4.2.3",
     "@vue/cli-plugin-eslint": "^4.2.3",
     "@vue/cli-plugin-pwa": "^4.2.3",
