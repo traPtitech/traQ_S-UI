@@ -75,7 +75,7 @@ const useStyles = (pathInfoList: Ref<readonly ChannelPathInfo[]>) =>
   })
 
 export default defineComponent({
-  name: 'MainViewHeader',
+  name: 'MainViewHeaderChannelName',
   props: { channelId: String },
   setup(props: Props) {
     const state = reactive({
