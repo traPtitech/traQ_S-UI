@@ -49,8 +49,8 @@ export const categorizeUnicodeStamps = async (
 ) => {
   const unicodeEmojis = await import('@/assets/unicode_emojis.json')
 
-  const numategories = unicodeEmojis.length
-  const unicodeStampCategories = new Array(numategories) as StampCategory[]
+  const numCategories = unicodeEmojis.length
+  const unicodeStampCategories = new Array(numCategories) as StampCategory[]
 
   unicodeEmojis.default.forEach((emojiCategory, i) => {
     const name = emojiCategory.category
