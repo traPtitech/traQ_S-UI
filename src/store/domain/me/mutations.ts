@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { MessageId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel } from '@traptitech/traq'
+import { WebhookId, StampId, ChannelId } from '@/types/entity-ids'
+import { UnreadChannel, MyUserDetail } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
-  setId(state: S, id: MessageId) {
-    state.id = id
+  setDetail(state: S, detail: MyUserDetail) {
+    state.detail = detail
   },
   setWebhooks(state: S, webhooks: WebhookId[]) {
     state.webhooks = webhooks

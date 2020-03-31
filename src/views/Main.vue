@@ -34,6 +34,7 @@ import {
   watch,
   onMounted
 } from '@vue/composition-api'
+import { setupWebSocket } from '@/lib/websocket'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
@@ -133,6 +134,24 @@ export default defineComponent({
     }))
 
     const { routeWatcherState, routeWatcher } = useRouteWacher(context)
+
+    setupWebSocket()
+
+    onMounted(async () => {
+      try {
+        await store.dispatch.domain.me.fetchMe()
+      } catch {
+        location.href = '/login'
+      }
+
+      // 初回fetch
+      store.dispatch.entities.fetchUsers()
+      store.dispatch.entities.fetchUserGroups()
+      store.dispatch.entities.fetchChannels()
+      store.dispatch.domain.fetchChannelActivity()
+      store.dispatch.domain.me.fetchUnreadChannels()
+    })
+
     return {
       touchstartHandler,
       touchmoveHandler,

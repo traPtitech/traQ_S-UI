@@ -19,5 +19,11 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(payload.channelId)
     api.readChannel(payload.channelId)
+  },
+
+  async fetchMe(context) {
+    const { commit } = meActionContext(context)
+    const res = await api.getMe()
+    commit.setDetail(res.data)
   }
 })

@@ -4,6 +4,7 @@ export interface Theme {
     primary: string
     notification: string
     online: string
+    error: string
   }
   background: {
     primary: string
