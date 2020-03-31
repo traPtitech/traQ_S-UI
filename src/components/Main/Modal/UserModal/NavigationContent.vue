@@ -70,10 +70,8 @@ export default defineComponent({
   setup(props: Props) {
     const styles = useStyles()
 
-    const detail = computed(
-      () => store.state.ui.modal.userDetails[props.user.id]
-    )
-    store.dispatch.ui.modal.fetchUserDetail(props.user.id)
+    const detail = computed(() => store.state.domain.userDetails[props.user.id])
+    store.dispatch.domain.fetchUserDetail(props.user.id)
 
     return {
       styles,

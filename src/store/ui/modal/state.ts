@@ -16,10 +16,8 @@ interface UserModalState extends BaseModalState {
 
 export interface S {
   modalState: ModalState[]
-  userDetails: Record<UserId, UserDetail>
 }
 
 export const state: S = {
-  modalState: [],
-  userDetails: {}
+  modalState: []
 }

@@ -2,8 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { ModalState } from './state'
 import { modal } from './index'
-import { UserId } from '@/types/entity-ids'
-import apis from '@/lib/api'
+import { domain } from '@/store/domain'
 
 const deepEquals = (a: Object, b: Object) =>
   JSON.stringify(a) === JSON.stringify(b)
@@ -36,23 +35,19 @@ export const actions = defineActions({
     }
   },
   collectGarbage(context, modalState: ModalState) {
-    const { state, commit } = modalActionContext(context)
+    const { state } = modalActionContext(context)
+    const { commit: domainCommit } = moduleActionContext(context, domain)
     if (state.modalState.findIndex(ms => deepEquals(ms, modalState)) !== -1) {
       return
     }
 
     switch (modalState.type) {
       case 'user':
-        commit.deleteUserDetail(modalState.id)
+        domainCommit.deleteUserDetail(modalState.id)
         break
       default:
         const invalid: never = modalState.type
         throw new Error(`Invalid Modal State type: ${invalid}`)
     }
-  },
-  async fetchUserDetail(context, userId: UserId) {
-    const { commit } = modalActionContext(context)
-    const res = await apis.getUser(userId)
-    commit.setUserDetail(res.data)
   }
 })

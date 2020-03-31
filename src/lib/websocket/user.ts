@@ -24,8 +24,8 @@ export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
 }
 
 export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent['body']) => {
-  if (store.state.ui.modal.userDetails[id]) {
-    store.dispatch.ui.modal.fetchUserDetail(id)
+  if (store.state.domain.userDetails[id]) {
+    store.dispatch.domain.fetchUserDetail(id)
   }
 }
 

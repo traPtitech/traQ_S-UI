@@ -1,5 +1,5 @@
 import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
-import { ActivityTimelineMessage } from '@traptitech/traq'
+import { ActivityTimelineMessage, UserDetail } from '@traptitech/traq'
 import { ChannelState } from './index'
 
 export interface S {
@@ -7,6 +7,7 @@ export interface S {
   messageActivity: MessageId[]
   channelStateMap: Record<ChannelId, ChannelState>
   onlineUsers: UserId[]
+  userDetails: Record<ChannelId, UserDetail>
 
   /** キャッシュ削除用 */
   channelStateUpdateHistory: ChannelId[]
@@ -17,5 +18,6 @@ export const state: S = {
   messageActivity: [],
   channelStateMap: {},
   onlineUsers: [],
+  userDetails: {},
   channelStateUpdateHistory: []
 }
