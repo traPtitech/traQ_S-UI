@@ -13,7 +13,10 @@ import {
   mdiTagMultiple,
   mdiEmail,
   mdiTag,
-  mdiPlus
+  mdiPlus,
+  mdiMagnify,
+  mdiHistory,
+  mdiEmoticonOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
