@@ -34,7 +34,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'AuthenticateButtonPrimary',
+  name: 'AuthenticateButtonSecondary',
   components: {
     Icon
   },
