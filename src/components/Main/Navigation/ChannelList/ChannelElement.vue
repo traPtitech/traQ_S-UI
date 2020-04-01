@@ -125,10 +125,6 @@ export default defineComponent({
       type: Object,
       required: true
     },
-    isSelected: {
-      type: Boolean,
-      default: false
-    },
     isOpened: {
       type: Boolean,
       default: false
