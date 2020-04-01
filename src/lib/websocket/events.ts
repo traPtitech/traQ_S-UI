@@ -20,6 +20,7 @@ export type WebSocketEvent =
  */
 type UserEvent =
   | UserJoinedEvent
+  | UserUpdatedEvent
   | UserLeftEvent
   | UserTagsUpdatedEvent
   | UserIconUpdatedEvent
@@ -40,6 +41,11 @@ interface UserGroupIdBody {
 
 export interface UserJoinedEvent {
   type: 'USER_JOINED'
+  body: UserIdBody
+}
+
+export interface UserUpdatedEvent {
+  type: 'USER_UPDATED'
   body: UserIdBody
 }
 
