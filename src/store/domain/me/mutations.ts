@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel, MyUserDetail } from '@traptitech/traq'
+import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
+import {
+  UnreadChannel,
+  StampHistoryEntry,
+  MyUserDetail
+} from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -11,7 +15,7 @@ export const mutations = defineMutations<S>()({
   setWebhooks(state: S, webhooks: WebhookId[]) {
     state.webhooks = webhooks
   },
-  setStampHistory(state: S, stampHistory: StampId[]) {
+  setStampHistory(state: S, stampHistory: Record<StampId, Date>) {
     state.stampHistory = stampHistory
   },
 
@@ -28,10 +32,26 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.unreadChannelsSet, channelId)
   },
 
+  setStaredChannels(state: S, channelIds: ChannelId[]) {
+    state.staredChannelSet = Object.fromEntries(
+      channelIds.map(id => [id, true])
+    )
+  },
+  addStaredChannel(state: S, channelId: ChannelId) {
+    Vue.set(state.staredChannelSet, channelId, true)
+  },
+  deleteStaredChannel(state: S, channelId: ChannelId) {
+    Vue.delete(state.staredChannelSet, channelId)
+  },
+
   setSubscribedChannels(state: S, subscribedChannels: ChannelId[]) {
     state.subscribedChannels = subscribedChannels
   },
   setNotifiedChannels(state: S, notifiedChannels: ChannelId[]) {
     state.notifiedChannels = notifiedChannels
+  },
+
+  pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
+    Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
   }
 })

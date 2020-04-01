@@ -5,9 +5,11 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import PortalVue from 'portal-vue'
+import vClickOutside from 'v-click-outside'
 
 Vue.use(VueCompositionApi)
 Vue.use(PortalVue)
+Vue.use(vClickOutside)
 
 Vue.config.productionTip = false
 

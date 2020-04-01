@@ -14,7 +14,7 @@
 import { defineComponent, computed, toRefs } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
-import useNavigation from '@/components/Main/Navigation/use/navigation'
+import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 

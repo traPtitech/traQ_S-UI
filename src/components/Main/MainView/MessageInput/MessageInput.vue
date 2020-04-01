@@ -1,5 +1,9 @@
 <template>
   <div :class="$style.container" :style="styles.container">
+    <portal-target
+      :class="$style.stampPickerLocator"
+      :name="targetPortalName"
+    />
     <message-input-file-list :class="$style.inputFileList" />
     <div :class="$style.inputContainer">
       <message-input-upload-button
@@ -7,102 +11,40 @@
         @click="addAttachment"
       />
       <message-input-text-area
-        :text="textState.text"
         :class="$style.inputTextArea"
-        @input-text="onInputText"
+        :text="textState.text"
+        :should-update-size="shouldUpdateSize"
+        @input="onInputText"
         @post-message="postMessage"
+        @update-size="onUpdateSize"
       />
       <message-input-controls
         :class="$style.controls"
         :can-post-message="!(textState.isEmpty && attachmentsState.isEmpty)"
         @click-send="postMessage"
+        @click-stamp="onStampClick"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import store from '@/store'
-import api, { buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
+import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import useAttachments from './use/attachments'
+import useTextInput, { TextState } from './use/textInput'
+import usePostMessage from './use/postMessage'
+import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
-import { Attachment } from '@/store/ui/fileInput/state'
 
-type Props = {
+export type Props = {
   channelId: ChannelId
-}
-
-type TextState = {
-  text: string
-  isEmpty: boolean
-}
-
-const useText = () => {
-  const state: TextState = reactive({
-    text: '',
-    isEmpty: computed(() => state.text.length === 0)
-  })
-  const onInputText = (text: string) => {
-    state.text = text
-  }
-  return {
-    textState: state,
-    onInputText
-  }
-}
-
-const useAttachments = () => {
-  const state = reactive({
-    attachments: computed(() => store.state.ui.fileInput.attachments),
-    isEmpty: computed(() => store.getters.ui.fileInput.isEmpty)
-  })
-
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.multiple = true
-  input.addEventListener('change', () => {
-    for (const file of input.files ?? []) {
-      store.dispatch.ui.fileInput.addAttachment(file)
-    }
-    input.files = null
-  })
-
-  const addAttachment = () => {
-    input.click()
-  }
-  return {
-    attachmentsState: state,
-    addAttachment
-  }
-}
-
-const usePostMessage = (textState: TextState, props: Props) => {
-  const postMessage = async () => {
-    if (textState.text.length === 0) return
-    const attachments = store.state.ui.fileInput.attachments
-    try {
-      const responses = await Promise.all(
-        attachments.map(attachment =>
-          api.postFile(attachment.file, props.channelId)
-        )
-      )
-      const fileUrls = responses.map(res => buildFilePath(res.data.id))
-      const embededdUrls = fileUrls.join('\n')
-      await api.postMessage(props.channelId, {
-        content: textState.text + '\n' + embededdUrls
-      })
-      textState.text = ''
-      store.commit.ui.fileInput.clearAttachments()
-    } catch {
-      // TODO: エラー処理
-    }
-  }
-  return postMessage
 }
 
 const useStyles = () =>
@@ -128,14 +70,50 @@ export default defineComponent({
   },
   setup(props: Props) {
     const styles = useStyles()
-    const { textState, onInputText } = useText()
+    const { textState, onInputText } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
+    const {
+      shouldUpdateSize,
+      onUpdateSize,
+      onStampInput
+    } = useTextAreaSizeUpdater()
     const postMessage = usePostMessage(textState, props)
+
+    const targetPortalName = 'message-input-stamp-picker'
+    const { invokeStampPicker } = useStampPickerInvoker(
+      targetPortalName,
+      stampData => {
+        // TODO: 編集でも使うのでロジックを分離
+        const stampName = store.state.entities.stamps[stampData.id]?.name
+        if (!stampName) return
+        const size = stampData.size ? `.${stampData.size}` : ''
+        const effects =
+          stampData.effects && stampData.effects.length > 0
+            ? `.${stampData.effects.join('.')}`
+            : ''
+        const stampText = textState.text + `:${stampName}${size}${effects}:`
+        textState.text = stampText
+        onStampInput()
+      }
+    )
+
+    const onStampClick = () => {
+      if (store.getters.ui.stampPicker.isStampPickerShown) {
+        store.dispatch.ui.stampPicker.closeStampPicker()
+      } else {
+        invokeStampPicker()
+      }
+    }
+
     return {
+      targetPortalName,
       styles,
       textState,
       attachmentsState,
+      shouldUpdateSize,
       onInputText,
+      onStampClick,
+      onUpdateSize,
       postMessage,
       addAttachment
     }
@@ -146,10 +124,21 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
   border-radius: 4px;
+}
+.stampPickerLocator {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  right: 0;
+  top: -8px;
+  transform: translateY(-100%);
 }
 .inputContainer {
   width: 100%;

@@ -10,6 +10,7 @@ export interface Theme {
     primary: string
     secondary: string
     tertiary: string
+    secondarySub: string
   }
   ui: {
     primary: string
