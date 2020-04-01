@@ -70,11 +70,18 @@ const useRouteWacher = (context: SetupContext) => {
 
   const watcher = watchEffect(() => {
     if (state.currentRouteName === RouteName.Index) {
-      // 何も指定されていない
-      context.root.$router.replace({
-        name: RouteName.Channel,
-        params: { channel: defaultChannelName }
-      })
+      // 何も指定されていなければ、ログインチェックをして初期チャンネルに飛ばす
+      store.dispatch.domain.me
+        .fetchMe()
+        .then(() => {
+          context.root.$router.replace({
+            name: RouteName.Channel,
+            params: { channel: defaultChannelName }
+          })
+        })
+        .catch(() => {
+          location.href = '/login'
+        })
       return
     }
 

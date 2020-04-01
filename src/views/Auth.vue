@@ -1,9 +1,10 @@
 <template>
-  <authenticate-main-view :type="props.type" />
+  <authenticate-main-view v-if="state.show" :type="props.type" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, onMounted, reactive } from '@vue/composition-api'
+import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
 
 type Props = {
@@ -22,7 +23,18 @@ export default defineComponent({
     AuthenticateMainView
   },
   setup(props: Props) {
-    return { props }
+    const state = reactive({
+      show: false
+    })
+    onMounted(async () => {
+      try {
+        await store.dispatch.domain.me.fetchMe()
+        location.href = '/'
+      } catch {
+        state.show = true
+      }
+    })
+    return { props, state }
   }
 })
 </script>
