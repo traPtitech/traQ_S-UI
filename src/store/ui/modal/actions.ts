@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import store, { moduleActionContext } from '@/store'
 import { ModalState } from './state'
 import { modal } from './index'
 import { domain } from '@/store/domain'
@@ -36,14 +36,18 @@ export const actions = defineActions({
   },
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
-    const { commit: domainCommit } = moduleActionContext(context, domain)
-    if (state.modalState.findIndex(ms => deepEquals(ms, modalState)) !== -1) {
+
+    // popstateが非同期で呼び出されるので現在のものと一致するのでそれは無視
+    const isUsedIndex = state.modalState
+      .slice(1)
+      .findIndex(ms => deepEquals(ms, modalState))
+    if (isUsedIndex !== -1) {
       return
     }
 
     switch (modalState.type) {
       case 'user':
-        domainCommit.deleteUserDetail(modalState.id)
+        store.commit.domain.deleteUserDetail(modalState.id)
         break
       case 'notification':
         break
