@@ -1,55 +1,30 @@
 <template>
   <div>
-    <authenticate-header :class="$style.header" />
+    <authenticate-header :class="$style.header" title="新規登録" />
     <authenticate-input
       title="traQ ID"
       :text="loginState.name"
-      @input="setName"
       :class="$style.item"
+      @input="setName"
     />
-    <span :class="$style.item">
-      <authenticate-input
-        title="パスワード"
-        type="password"
-        :text="loginState.pass"
-        @input="setPass"
-      />
-      <a
-        href="https://portal.trap.jp/reset-password"
-        :class="$style.forgotPassword"
-        :style="styles.forgotPassword"
-      >
-        パスワードを忘れた
-      </a>
-    </span>
+    <authenticate-input
+      title="表示名"
+      :text="loginState.name"
+      :class="$style.item"
+      @input="setName"
+    />
+    <authenticate-input
+      title="パスワード"
+      type="password"
+      :text="loginState.name"
+      :class="$style.item"
+      @input="setName"
+    />
     <div :style="styles.error" :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button-primary label="ログイン" @click="login" />
-    </div>
-    <authenticate-separator label="または" :class="$style.separator" />
-    <div :class="$style.exLoginButtons">
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="traP"
-        icon-name="traQ"
-        @click="loginExternal('traq')"
-      />
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="Google"
-        icon-mdi
-        icon-name="google"
-        @click="loginExternal('google')"
-      />
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="GitHub"
-        icon-mdi
-        icon-name="github"
-        @click="loginExternal('github')"
-      />
+      <authenticate-button-primary label="アカウント作成" @click="login" />
     </div>
   </div>
 </template>
@@ -61,8 +36,6 @@ import { makeStyles } from '@/lib/styles'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
-import AuthenticateButtonSecondary from './AuthenticateButtonSecondary.vue'
-import AuthenticateSeparator from './AuthenticateSeparator.vue'
 
 const useStyles = () =>
   reactive({
@@ -75,13 +48,11 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'LoginForm',
+  name: 'RegistrationForm',
   components: {
     AuthenticateInput,
     AuthenticateHeader,
-    AuthenticateButtonPrimary,
-    AuthenticateButtonSecondary,
-    AuthenticateSeparator
+    AuthenticateButtonPrimary
   },
   setup() {
     const { loginState, login, loginExternal, setName, setPass } = useLogin()

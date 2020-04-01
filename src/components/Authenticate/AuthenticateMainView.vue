@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <authenticate-modal>
-      <login-form v-if="props.type === 'login'"></login-form>
+      <login-form v-if="props.type === 'login'" />
+      <registration-form v-if="props.type === 'registration'" />
     </authenticate-modal>
   </div>
 </template>
@@ -11,6 +12,7 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
+import RegistrationForm from './RegistrationForm.vue'
 
 const useStyles = () =>
   reactive({
@@ -20,14 +22,15 @@ const useStyles = () =>
   })
 
 type Props = {
-  type: 'login' | 'forgot-password' | 'create-account'
+  type: 'login' | 'password-reset' | 'registration'
 }
 
 export default defineComponent({
   name: 'AuthenticateMainView',
   components: {
     AuthenticateModal,
-    LoginForm
+    LoginForm,
+    RegistrationForm
   },
   props: {
     type: {
