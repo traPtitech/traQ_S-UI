@@ -1,5 +1,5 @@
 import { ws } from './index'
-import { ChannelViewState } from '@/lib/api'
+import { ChannelViewState } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
 type WebSocketCommand = 'viewstate'

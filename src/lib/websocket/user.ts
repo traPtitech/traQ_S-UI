@@ -23,20 +23,26 @@ export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
   store.commit.entities.deleteUser(id)
 }
 
-export const onUserTagsUpdated = (data: UserTagsUpdatedEvent['body']) => {
-  console.error('onUserTagsUpdated: Not implemented')
+export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent['body']) => {
+  if (store.state.domain.userDetails[id]) {
+    store.dispatch.domain.fetchUserDetail(id)
+  }
 }
 
-export const onUserIconUpdated = (data: UserIconUpdatedEvent['body']) => {
-  console.error('onUserIconUpdated: Not implemented')
+export const onUserIconUpdated = async ({
+  id
+}: UserIconUpdatedEvent['body']) => {
+  const res = await apis.getUser(id)
+  store.commit.entities.extendUsers({ [id]: res.data })
+  // TODO: アイコンキャッシュの削除(?)
 }
 
-export const onUserOnline = (data: UserOnlineEvent['body']) => {
-  console.error('onUserOnline: Not implemented')
+export const onUserOnline = ({ id }: UserOnlineEvent['body']) => {
+  store.commit.domain.addOnlineUser(id)
 }
 
-export const onUserOffline = (data: UserOfflineEvent['body']) => {
-  console.error('onUserOffline: Not implemented')
+export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
+  store.commit.domain.deleteOnlineUser(id)
 }
 
 export const onUserWebRTCStateChanged = (
