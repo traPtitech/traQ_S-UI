@@ -19,5 +19,14 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(payload.channelId)
     api.readChannel(payload.channelId)
+  },
+
+  async fetchStampHistory(context) {
+    const { commit } = meActionContext(context)
+    const res = await api.getMyStampHistory()
+    const history = Object.fromEntries(
+      res.data.map(h => [h.stampId, new Date(h.datetime)])
+    )
+    commit.setStampHistory(history)
   }
 })

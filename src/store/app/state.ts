@@ -19,7 +19,8 @@ export const state: S = {
     background: {
       primary: '#FFFFFF',
       secondary: '#F6F7F9',
-      tertiary: '#ECEFF3'
+      tertiary: '#ECEFF3',
+      secondarySub: '#FBFCFE'
     },
     ui: {
       primary: '#525E67',

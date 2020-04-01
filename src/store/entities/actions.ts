@@ -55,10 +55,9 @@ export const actions = defineActions({
     commit.setStamps(reduceToRecord(res.data, 'id'))
   },
   async fetchStampPalettes(context) {
-    throw 'Not Implemented'
-    // const { commit } = entitiesActionContext(context)
-    // const res = await api.getStampPalettes()
-    // commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getStampPalettes()
+    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
   async fetchMessagesByChannelId(
     context,

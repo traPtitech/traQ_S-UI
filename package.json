@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "gen-unicode_emojis": "node build/gen-unicode_emojis"
   },
   "dependencies": {
     "@mdi/js": "^5.0.45",
@@ -20,6 +21,7 @@
     "lodash-es": "^4.17.15",
     "portal-vue": "^2.1.7",
     "register-service-worker": "^1.7.1",
+    "v-click-outside": "^3.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3"

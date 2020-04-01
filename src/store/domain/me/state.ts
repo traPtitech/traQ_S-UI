@@ -1,10 +1,10 @@
 import { UserId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel } from '@traptitech/traq'
+import { UnreadChannel, StampHistoryEntry } from '@traptitech/traq'
 
 export interface S {
   id: UserId
   webhooks: WebhookId[]
-  stampHistory: StampId[]
+  stampHistory: Record<StampId, Date>
 
   unreadChannelsSet: Record<ChannelId, UnreadChannel>
   subscribedChannels: ChannelId[]
@@ -14,7 +14,7 @@ export interface S {
 export const state: S = {
   id: '',
   webhooks: [],
-  stampHistory: [],
+  stampHistory: {},
   unreadChannelsSet: {},
   subscribedChannels: [],
   notifiedChannels: []

@@ -1,9 +1,37 @@
-import { MessageId } from '@/types/entity-ids'
+import { StampId } from '@/types/entity-ids'
+import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
+
+enum StampEffect {
+  wiggle = 'wiggle',
+  rotate = 'rotate'
+}
+enum StampSize {
+  small = 'small',
+  large = 'large',
+  exLarge = 'ex-large'
+}
+
+export type SelectedStampData = {
+  id: StampId
+  effects?: StampEffect[]
+  size?: StampSize
+}
+export type StampSelectHandler = (stamp: SelectedStampData) => void
+
+export const defaultSelectHandler = (_: SelectedStampData) => {}
 
 export interface S {
-  target?: MessageId | 'input'
+  targetPortalName: string
+
+  selectHandler: StampSelectHandler
+  currentStampSet: StampSet
 }
 
 export const state: S = {
-  target: undefined
+  targetPortalName: '',
+  selectHandler: defaultSelectHandler,
+  currentStampSet: {
+    type: 'history',
+    id: ''
+  }
 }

@@ -8,6 +8,9 @@ const apis = new Apis({
   basePath: BASE_PATH
 })
 
+export const buildStampImagePath = (stampFileId: UserId) =>
+  `${BASE_PATH}/files/${stampFileId}`
+
 export const buildUserIconPath = (userId: UserId) =>
   `${BASE_PATH}/users/${userId}/icon`
 

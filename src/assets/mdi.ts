@@ -13,7 +13,10 @@ import {
   mdiTagMultiple,
   mdiEmail,
   mdiTag,
-  mdiPlus
+  mdiPlus,
+  mdiMagnify,
+  mdiHistory,
+  mdiEmoticonOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -25,6 +28,8 @@ const mdi: MdiIconsMapping = {
   send: mdiSend,
   file: mdiFile,
   close: mdiClose,
+  search: mdiMagnify,
+  history: mdiHistory,
   'file-upload': mdiFileUpload,
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
@@ -35,7 +40,8 @@ const mdi: MdiIconsMapping = {
   tag: mdiTag,
   tags: mdiTagMultiple,
   email: mdiEmail,
-  plus: mdiPlus
+  plus: mdiPlus,
+  'emoticon-outline': mdiEmoticonOutline
 }
 
 export default mdi
