@@ -2,19 +2,19 @@
   <div>
     <authenticate-header :class="$style.header" title="新規登録" />
     <authenticate-input
-      title="traQ ID"
+      label="traQ ID"
       :text="loginState.name"
       :class="$style.item"
       @input="setName"
     />
     <authenticate-input
-      title="表示名"
+      label="表示名"
       :text="loginState.name"
       :class="$style.item"
       @input="setName"
     />
     <authenticate-input
-      title="パスワード"
+      label="パスワード"
       type="password"
       :text="loginState.name"
       :class="$style.item"

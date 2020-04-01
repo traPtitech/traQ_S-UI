@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <form @submit.prevent="login">
     <authenticate-header :class="$style.header" />
     <authenticate-input
-      title="traQ ID"
+      label="traQ ID"
       :text="loginState.name"
       @input="setName"
       :class="$style.item"
     />
     <span :class="$style.item">
       <authenticate-input
-        title="パスワード"
+        label="パスワード"
         type="password"
         :text="loginState.pass"
         @input="setPass"
@@ -52,7 +52,7 @@
         @click="loginExternal('github')"
       />
     </div>
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
@@ -124,5 +124,8 @@ export default defineComponent({
 }
 .exLoginButton {
   margin: 0 8px;
+}
+.error {
+  font-weight: bold;
 }
 </style>
