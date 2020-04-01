@@ -33,10 +33,7 @@ const useStyles = () =>
 export default defineComponent({
   name: 'AuthenticateHeader',
   props: {
-    title: {
-      type: String,
-      required: false
-    }
+    title: String
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles()
