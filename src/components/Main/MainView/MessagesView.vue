@@ -87,7 +87,6 @@ export default defineComponent({
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
       containerRef
     )
-
     return {
       props,
       state,

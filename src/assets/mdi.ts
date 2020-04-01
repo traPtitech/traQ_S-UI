@@ -11,7 +11,16 @@ import {
   mdiPhone,
   mdiPin,
   mdiBell,
-  mdiDotsHorizontal
+  mdiDotsHorizontal,
+  mdiBook,
+  mdiTwitter,
+  mdiTagMultiple,
+  mdiEmail,
+  mdiTag,
+  mdiPlus,
+  mdiMagnify,
+  mdiHistory,
+  mdiEmoticonOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -26,12 +35,21 @@ const mdi: MdiIconsMapping = {
   phone: mdiPhone,
   pin: mdiPin,
   bell: mdiBell,
+  search: mdiMagnify,
+  history: mdiHistory,
   'file-upload': mdiFileUpload,
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
   'file-image': mdiFileImage,
   'plus-circle-outline': mdiPlusCircleOutline,
-  'dots-horizontal': mdiDotsHorizontal
+  'dots-horizontal': mdiDotsHorizontal,
+  book: mdiBook,
+  twitter: mdiTwitter,
+  tag: mdiTag,
+  tags: mdiTagMultiple,
+  email: mdiEmail,
+  plus: mdiPlus,
+  'emoticon-outline': mdiEmoticonOutline
 }
 
 export default mdi

@@ -32,5 +32,10 @@ export const getters = defineGetters<S>()({
     return (name: string) => {
       return Object.values(state.users).find(user => user.name === name)
     }
+  },
+  nonEmptyStampPaletteIds(state) {
+    return Object.values(state.stampPalettes)
+      .filter(palette => palette.stamps?.length > 0)
+      .map(palette => palette.id)
   }
 })

@@ -24,6 +24,7 @@ import autosize from 'autosize'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
+import useInput from '@/use/input'
 
 const useStyles = () =>
   reactive({
@@ -31,14 +32,6 @@ const useStyles = () =>
       color: theme.text.primary
     }))
   })
-
-const useText = (context: SetupContext) => {
-  const onInput = (event: InputEvent) =>
-    context.emit('input-text', (event.target as HTMLTextAreaElement).value)
-  return {
-    onInput
-  }
-}
 
 const useEnterWatcher = (context: SetupContext) => {
   const onKeyDown = (event: KeyboardEvent) => {
@@ -51,6 +44,7 @@ const useEnterWatcher = (context: SetupContext) => {
 
 type Props = {
   text: string
+  shouldUpdateTextAreaSize: boolean
 }
 
 export default defineComponent({
@@ -59,11 +53,15 @@ export default defineComponent({
     text: {
       type: String,
       default: ''
+    },
+    shouldUpdateTextAreaSize: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles()
-    const { onInput } = useText(context)
+    const { onInput } = useInput(context)
     const { onKeyDown } = useEnterWatcher(context)
     const textareaRef = ref<HTMLTextAreaElement>(null)
     onMounted(() => {
@@ -72,7 +70,10 @@ export default defineComponent({
       }
     })
     watchEffect(() => {
-      if (props.text.length === 0 && textareaRef.value) {
+      if (
+        (props.shouldUpdateTextAreaSize || props.text.length === 0) &&
+        textareaRef.value
+      ) {
         autosize.update(textareaRef.value)
       }
     })

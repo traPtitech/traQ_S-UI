@@ -3,7 +3,7 @@ import {
   UserGroup,
   Channel,
   Stamp,
-  // StampPalette,
+  StampPalette,
   Webhook,
   Message
 } from '@traptitech/traq'
@@ -23,7 +23,7 @@ export type S = {
   channels: Record<ChannelId, Channel>
   userGroups: Record<UserGroupId, UserGroup>
   stamps: Record<StampId, Stamp>
-  // stampPalettes: Record<StampPaletteId, StampPalette>
+  stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Record<WebhookId, Webhook>
 }
 
@@ -33,6 +33,6 @@ export const state: S = {
   channels: {},
   userGroups: {},
   stamps: {},
-  // stampPalettes: {},
+  stampPalettes: {},
   webhooks: {}
 }

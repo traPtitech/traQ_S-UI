@@ -33,5 +33,13 @@ export const actions = defineActions({
   },
   async unstarChannel(context, id: ChannelId) {
     await api.removeMyStar(id)
+  },
+  async fetchStampHistory(context) {
+    const { commit } = meActionContext(context)
+    const res = await api.getMyStampHistory()
+    const history = Object.fromEntries(
+      res.data.map(h => [h.stampId, new Date(h.datetime)])
+    )
+    commit.setStampHistory(history)
   }
 })

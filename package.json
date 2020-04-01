@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "gen-unicode_emojis": "node build/gen-unicode_emojis"
   },
   "dependencies": {
     "@mdi/js": "^5.0.45",
@@ -20,6 +21,7 @@
     "lodash-es": "^4.17.15",
     "portal-vue": "^2.1.7",
     "register-service-worker": "^1.7.1",
+    "v-click-outside": "^3.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3"
@@ -31,8 +33,8 @@
     "@types/jest": "^25.1.4",
     "@types/lodash-es": "^4.17.3",
     "@types/autosize": "^3.0.7",
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
     "@vue/cli-plugin-babel": "^4.2.3",
     "@vue/cli-plugin-eslint": "^4.2.3",
     "@vue/cli-plugin-pwa": "^4.2.3",
@@ -44,7 +46,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "1.0.0-beta.32",
-    "csstype": "^2.6.9",
+    "csstype": "^2.6.10",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.2.2",

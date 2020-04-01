@@ -20,6 +20,7 @@
       </div>
     </div>
     <modal-container />
+    <stamp-picker-container />
   </div>
   <div v-else></div>
 </template>
@@ -37,6 +38,7 @@ import {
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
+import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
 import store from '@/store'
 import { RouteName, constructChannelPath } from '@/router'
 import useChannelPath from '@/use/channelPath'
@@ -107,6 +109,7 @@ export default defineComponent({
     Navigation,
     MainViewController,
     ModalContainer,
+    StampPickerContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },

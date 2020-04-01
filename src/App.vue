@@ -31,14 +31,21 @@ export default defineComponent({
     const isMobile = computed(() => store.getters.ui.isMobile)
     setupWebSocket()
 
-    onMounted(() => {
+    onMounted(async () => {
       // 初回fetch
-      store.dispatch.entities.fetchUsers()
-      store.dispatch.entities.fetchUserGroups()
-      store.dispatch.entities.fetchChannels()
+      await Promise.all([
+        store.dispatch.entities.fetchUsers(),
+        store.dispatch.entities.fetchUserGroups(),
+        store.dispatch.entities.fetchChannels(),
+        store.dispatch.entities.fetchStamps()
+      ])
+      store.dispatch.domain.stampCategory.constructStampCategories()
+      store.dispatch.entities.fetchStampPalettes()
       store.dispatch.domain.fetchChannelActivity()
+      store.dispatch.domain.fetchOnlineUsers()
       store.dispatch.domain.me.fetchUnreadChannels()
       store.dispatch.domain.me.fetchStaredChannels()
+      store.dispatch.domain.me.fetchStampHistory()
     })
 
     return {

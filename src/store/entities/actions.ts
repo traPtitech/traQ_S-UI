@@ -1,8 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api, { Apis } from '@/lib/api'
-import { ChannelId } from '@/types/entity-ids'
+import api from '@/lib/api'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
@@ -56,10 +55,9 @@ export const actions = defineActions({
     commit.setStamps(reduceToRecord(res.data, 'id'))
   },
   async fetchStampPalettes(context) {
-    throw 'Not Implemented'
-    // const { commit } = entitiesActionContext(context)
-    // const res = await api.getStampPalettes()
-    // commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getStampPalettes()
+    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
   async fetchMessagesByChannelId(
     context,

@@ -1,5 +1,8 @@
 <template>
   <div :class="$style.container" :style="styles.container">
+    <div @click="onClickStampButton" :class="$style.button">
+      <icon mdi name="emoticon-outline" />
+    </div>
     <div
       @click="onClickSendButton"
       :class="$style.button"
@@ -35,7 +38,10 @@ const useClickHandlers = (props: Props, context: SetupContext) => {
       context.emit('click-send')
     }
   }
-  return { onClickSendButton }
+  const onClickStampButton = () => {
+    context.emit('click-stamp')
+  }
+  return { onClickSendButton, onClickStampButton }
 }
 
 const useStyles = (props: Props) =>
@@ -63,11 +69,15 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles(props)
-    const { onClickSendButton } = useClickHandlers(props, context)
+    const { onClickSendButton, onClickStampButton } = useClickHandlers(
+      props,
+      context
+    )
     return {
       props,
       styles,
-      onClickSendButton
+      onClickSendButton,
+      onClickStampButton
     }
   }
 })
@@ -81,5 +91,13 @@ export default defineComponent({
   height: 24px;
   width: 24px;
   cursor: pointer;
+
+  margin: 0 8px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 </style>
