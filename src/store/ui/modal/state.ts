@@ -1,4 +1,5 @@
 import { UserId } from '@/types/entity-ids'
+import { UserDetail } from '@traptitech/traq'
 
 type ModalStateType = 'user' | 'group'
 

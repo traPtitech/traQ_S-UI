@@ -37,6 +37,7 @@ export default defineComponent({
       store.dispatch.entities.fetchUserGroups()
       store.dispatch.entities.fetchChannels()
       store.dispatch.domain.fetchChannelActivity()
+      store.dispatch.domain.fetchOnlineUsers()
       store.dispatch.domain.me.fetchUnreadChannels()
     })
 

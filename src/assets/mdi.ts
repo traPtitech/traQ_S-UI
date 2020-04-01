@@ -7,7 +7,13 @@ import {
   mdiFileVideo,
   mdiFileImage,
   mdiClose,
-  mdiPlusCircleOutline
+  mdiPlusCircleOutline,
+  mdiBook,
+  mdiTwitter,
+  mdiTagMultiple,
+  mdiEmail,
+  mdiTag,
+  mdiPlus
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -23,7 +29,13 @@ const mdi: MdiIconsMapping = {
   'file-music': mdiFileMusic,
   'file-video': mdiFileVideo,
   'file-image': mdiFileImage,
-  'plus-circle-outline': mdiPlusCircleOutline
+  'plus-circle-outline': mdiPlusCircleOutline,
+  book: mdiBook,
+  twitter: mdiTwitter,
+  tag: mdiTag,
+  tags: mdiTagMultiple,
+  email: mdiEmail,
+  plus: mdiPlus
 }
 
 export default mdi

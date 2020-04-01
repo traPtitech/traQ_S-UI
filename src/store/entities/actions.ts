@@ -1,8 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api, { Apis } from '@/lib/api'
-import { ChannelId } from '@/types/entity-ids'
+import api from '@/lib/api'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
