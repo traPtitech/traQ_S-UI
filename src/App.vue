@@ -44,6 +44,7 @@ export default defineComponent({
       store.dispatch.domain.fetchChannelActivity()
       store.dispatch.domain.fetchOnlineUsers()
       store.dispatch.domain.me.fetchUnreadChannels()
+      store.dispatch.domain.me.fetchStaredChannels()
       store.dispatch.domain.me.fetchStampHistory()
     })
 

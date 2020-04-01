@@ -45,8 +45,10 @@ export const actions = defineActions({
       case 'user':
         domainCommit.deleteUserDetail(modalState.id)
         break
+      case 'notification':
+        break
       default:
-        const invalid: never = modalState.type
+        const invalid = (modalState as any).type
         throw new Error(`Invalid Modal State type: ${invalid}`)
     }
   }

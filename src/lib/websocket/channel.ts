@@ -25,11 +25,11 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
 }
 
 export const onChannelStared = (data: ChannelStaredEvent['body']) => {
-  console.error('onChannelStared: Not implemented')
+  store.commit.domain.me.addStaredChannel(data.id)
 }
 
 export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {
-  console.error('onChannelUnstared: Not implemented')
+  store.commit.domain.me.deleteStaredChannel(data.id)
 }
 
 export const onChannelViewersChanged = (
