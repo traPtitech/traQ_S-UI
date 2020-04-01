@@ -22,7 +22,6 @@ import { randomString } from '@/lib/util/randomString'
 
 type Props = {
   text: string
-  id: string
   label: string
   type: 'text' | 'password'
 }
