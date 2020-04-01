@@ -40,7 +40,7 @@ export default defineComponent({
   },
   props: {
     label: { type: String, default: '' },
-    iconName: { type: String, required: false },
+    iconName: String,
     iconMdi: { type: Boolean, default: false }
   },
   setup(props: Props, context: SetupContext) {
