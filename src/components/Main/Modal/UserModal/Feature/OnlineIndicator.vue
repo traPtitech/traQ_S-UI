@@ -16,7 +16,7 @@ const useStyles = (isOnline: Ref<boolean>) =>
     }))
   })
 
-interface Props {
+type Props = {
   userId: UserId
 }
 

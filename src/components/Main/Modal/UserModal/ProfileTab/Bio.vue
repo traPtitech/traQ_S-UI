@@ -21,7 +21,7 @@ const useStyles = (lowPriority: Ref<boolean>) =>
     }))
   })
 
-interface Props {
+type Props = {
   bio?: string
 }
 

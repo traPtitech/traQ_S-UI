@@ -54,7 +54,7 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
     }))
   })
 
-interface Props {
+type Props = {
   id: UserId
 }
 

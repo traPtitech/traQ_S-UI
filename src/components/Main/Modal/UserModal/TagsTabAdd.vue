@@ -41,7 +41,7 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
+type Props = {
   userId: UserId
 }
 

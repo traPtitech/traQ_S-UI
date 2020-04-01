@@ -18,7 +18,7 @@ import { User } from '@traptitech/traq'
 import OnlineIndicator from './OnlineIndicator.vue'
 import Buttons from './Buttons.vue'
 
-interface Props {
+type Props = {
   user: User
 }
 

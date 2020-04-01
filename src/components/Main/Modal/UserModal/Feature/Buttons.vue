@@ -20,7 +20,7 @@ import store from '@/store'
 import useHomeChannel from '../use/homeChannel'
 import LinkButton from './LinkButton.vue'
 
-interface Props {
+type Props = {
   username: string
 }
 

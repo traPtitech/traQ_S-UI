@@ -5,9 +5,10 @@
         :class="$style.element"
         v-for="messageId in props.messageIds"
         :key="messageId"
-        :messageId="messageId"
+        :message-id="messageId"
       />
     </div>
+    <div :class="$style.bottomSpacer"></div>
   </div>
 </template>
 
@@ -26,7 +27,7 @@ import store from '@/store'
 import MessageElement from './MessageElement/MessageElement.vue'
 import { throttle } from 'lodash-es'
 
-interface Props {
+type Props = {
   messageIds: MessageId[]
 }
 
@@ -117,5 +118,10 @@ export default defineComponent({
 
 .element {
   margin: 4px 0;
+}
+
+.bottomSpacer {
+  width: 100%;
+  height: 12px;
 }
 </style>

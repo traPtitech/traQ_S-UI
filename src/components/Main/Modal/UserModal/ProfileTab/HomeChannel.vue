@@ -31,7 +31,7 @@ const useStyles = (channelId: Ref<boolean>) =>
     }))
   })
 
-interface Props {
+type Props = {
   name: string
 }
 

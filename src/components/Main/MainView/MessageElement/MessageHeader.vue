@@ -18,7 +18,7 @@ import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
 
-interface Props {
+type Props = {
   userId: UserId
   createdAt: string
   updatedAt: string

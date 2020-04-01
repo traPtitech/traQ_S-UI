@@ -31,7 +31,7 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
+type Props = {
   detail?: UserDetail
 }
 

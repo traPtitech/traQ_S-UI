@@ -37,7 +37,7 @@ import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
 
-interface Props {
+type Props = {
   bot: boolean
   name: string
   twitterId?: string

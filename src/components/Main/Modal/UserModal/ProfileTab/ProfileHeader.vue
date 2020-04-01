@@ -13,7 +13,7 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
+type Props = {
   text: string
 }
 

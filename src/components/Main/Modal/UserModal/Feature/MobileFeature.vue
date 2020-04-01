@@ -34,7 +34,7 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
+type Props = {
   user: User
 }
 

@@ -31,7 +31,7 @@
 import { defineComponent, SetupContext, computed } from '@vue/composition-api'
 import mdi from '@/assets/mdi'
 
-interface Props {
+type Props = {
   name: string
   size?: number
   color?: string

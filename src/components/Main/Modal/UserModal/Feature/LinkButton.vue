@@ -26,7 +26,7 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
+type Props = {
   title?: string
   iconName: string
   iconMdi: boolean

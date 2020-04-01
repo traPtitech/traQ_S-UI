@@ -10,7 +10,7 @@ import { User } from '@traptitech/traq'
 import DesktopFeature from './DesktopFeature.vue'
 import MobileFeature from './MobileFeature.vue'
 
-interface Props {
+type Props = {
   user: User
 }
 

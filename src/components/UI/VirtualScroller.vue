@@ -32,7 +32,7 @@ import { SetupContext } from '@vue/composition-api/dist/component/component'
 
 const throttle = require('lodash.throttle')
 
-interface Props {
+type Props = {
   items: any[]
   key: string
 }

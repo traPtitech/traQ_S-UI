@@ -10,7 +10,7 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <messages-scroller :messageIds="state.channelMessageIds" />
+    <messages-scroller :message-ids="state.channelMessageIds" />
     <message-input :channel-id="state.channelId" />
   </div>
 </template>
@@ -101,14 +101,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 32px;
-
 .container {
   display: flex;
   flex-direction: column;
   position: relative;
   height: 100%;
-  padding: 0 $messagePadding;
 }
 
 .fileUploadOverlay {

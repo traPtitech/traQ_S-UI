@@ -10,9 +10,9 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '../../../../lib/styles'
+import { makeStyles } from '@/lib/styles'
 
-interface Props {
+type Props = {
   userId: UserId
   isBot: boolean
 }
