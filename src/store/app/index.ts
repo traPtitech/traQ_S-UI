@@ -6,6 +6,7 @@ import { actions } from './actions'
 import { messages } from './messages'
 import { rtc } from './rtc'
 import { browserSettings } from './browserSettings'
+import { rtcSettings } from './rtcSettings'
 
 export const app = defineModule({
   namespaced: true,
@@ -16,6 +17,7 @@ export const app = defineModule({
   modules: {
     messages,
     rtc,
-    browserSettings
+    browserSettings,
+    rtcSettings
   }
 })

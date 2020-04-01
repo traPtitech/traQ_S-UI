@@ -4,11 +4,8 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export type SendKey = 'alt' | 'ctrl' | 'shift'
-export type OpenMode = 'lastOpen' | 'particular'
-
-export const browserSettings = defineDBModule({
-  path: 'app.browserSettings',
+export const rtcSettings = defineDBModule({
+  path: 'app.rtcSettings',
   namespaced: true,
   state,
   getters,
