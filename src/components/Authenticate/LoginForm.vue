@@ -28,6 +28,7 @@
     <div :class="$style.buttons">
       <authenticate-button-primary label="ログイン" @click="login" />
     </div>
+    <!-- TODO: /versionの結果によってここを出し分ける -->
     <authenticate-separator label="または" :class="$style.separator" />
     <div :class="$style.exLoginButtons">
       <authenticate-button-secondary

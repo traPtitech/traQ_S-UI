@@ -43,12 +43,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
     props: { type: 'login' }
   },
-  {
-    path: '/registration',
-    name: RouteName.Registration,
-    component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
-    props: { type: 'registration' }
-  },
+  // {
+  //   path: '/registration',
+  //   name: RouteName.Registration,
+  //   component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+  //   props: { type: 'registration' }
+  // },
   {
     path: '*',
     name: RouteName.NotFound,
