@@ -23,9 +23,13 @@ const useLogin = () => {
       state.error = 'ログインに失敗しました'
     }
   }
+  const loginExternal = async (provider: string) => {
+    location.href = `/api/auth/${provider}`
+  }
   return {
     loginState: state,
     login,
+    loginExternal,
     setName,
     setPass
   }

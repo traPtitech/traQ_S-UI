@@ -1,5 +1,5 @@
 <template>
-  <authenticate-main-view />
+  <authenticate-main-view type="login" />
 </template>
 
 <script lang="ts">

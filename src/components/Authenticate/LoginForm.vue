@@ -28,6 +28,29 @@
     <div :class="$style.buttons">
       <authenticate-button-primary label="ログイン" @click="login" />
     </div>
+    <authenticate-separator label="または" :class="$style.separator" />
+    <div :class="$style.exLoginButtons">
+      <authenticate-button-secondary
+        :class="$style.exLoginButton"
+        label="traP"
+        icon-name="traQ"
+        @click="loginExternal('traq')"
+      />
+      <authenticate-button-secondary
+        :class="$style.exLoginButton"
+        label="Google"
+        icon-mdi
+        icon-name="google"
+        @click="loginExternal('google')"
+      />
+      <authenticate-button-secondary
+        :class="$style.exLoginButton"
+        label="GitHub"
+        icon-mdi
+        icon-name="github"
+        @click="loginExternal('github')"
+      />
+    </div>
   </div>
 </template>
 
@@ -38,6 +61,8 @@ import { makeStyles } from '@/lib/styles'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
+import AuthenticateButtonSecondary from './AuthenticateButtonSecondary.vue'
+import AuthenticateSeparator from './AuthenticateSeparator.vue'
 
 const useStyles = () =>
   reactive({
@@ -54,12 +79,14 @@ export default defineComponent({
   components: {
     AuthenticateInput,
     AuthenticateHeader,
-    AuthenticateButtonPrimary
+    AuthenticateButtonPrimary,
+    AuthenticateButtonSecondary,
+    AuthenticateSeparator
   },
   setup() {
-    const { loginState, login, setName, setPass } = useLogin()
+    const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const styles = useStyles()
-    return { loginState, styles, setName, setPass, login }
+    return { loginState, styles, setName, setPass, login, loginExternal }
   }
 })
 </script>
@@ -83,5 +110,18 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   margin-top: 48px;
+}
+.separator {
+  margin: 32px 0;
+}
+.exLoginButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 32px;
+}
+.exLoginButton {
+  margin: 0 8px;
 }
 </style>

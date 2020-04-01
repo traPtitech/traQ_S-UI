@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <authenticate-modal>
-      <login-form></login-form>
+      <login-form v-if="props.type === 'login'"></login-form>
     </authenticate-modal>
   </div>
 </template>
@@ -19,16 +19,27 @@ const useStyles = () =>
     }))
   })
 
+type Props = {
+  type: 'login' | 'forgot-password' | 'create-account'
+}
+
 export default defineComponent({
   name: 'AuthenticateMainView',
   components: {
     AuthenticateModal,
     LoginForm
   },
-  setup() {
+  props: {
+    type: {
+      type: String,
+      default: 'login'
+    }
+  },
+  setup(props: Props) {
     const styles = useStyles()
 
     return {
+      props,
       styles
     }
   }
