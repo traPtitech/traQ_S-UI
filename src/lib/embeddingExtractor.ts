@@ -30,6 +30,7 @@ export const embeddingExtractor = (
   regexp = defaultRegexp
 ): EmbeddedFilesExtractedMessage => {
   const embeddings: EmbeddedFile[] = []
+  const knownIdSet: Set<FileId> = new Set([])
 
   const matches = rawMessage.matchAll(regexp)
 
@@ -45,9 +46,14 @@ export const embeddingExtractor = (
     const spaceLength = match[2]?.length ?? 0
 
     const id = match[1] ?? ''
+
     const startIndex = matchIndex
     const endIndex = matchIndex + matchLength - spaceLength
-    embeddings.push({ id, startIndex, endIndex })
+
+    if (!knownIdSet.has(id)) {
+      embeddings.push({ id, startIndex, endIndex })
+      knownIdSet.add(id)
+    }
 
     if (startIndex !== sequenceEndIndex) {
       // 連続したマッチではなかった
