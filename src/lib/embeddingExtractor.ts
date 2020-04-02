@@ -2,7 +2,7 @@ import 'core-js/features/string/virtual/match-all'
 import { filePathOrigin } from '@/lib/api'
 import { FileId } from '@/types/entity-ids'
 
-type EmbeddedFile = {
+export type EmbeddedFile = {
   id: FileId
 
   /** 埋め込みの開始インデックス */

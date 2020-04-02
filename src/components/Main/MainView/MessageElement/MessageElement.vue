@@ -13,6 +13,11 @@
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <message-file-list
+        v-if="state.fileIds.length > 0"
+        :class="$style.messageFileList"
+        :fileIds="state.fileIds"
+      />
     </div>
   </div>
 </template>
@@ -22,6 +27,7 @@ import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
+import MessageFileList from './MessageFileList.vue'
 
 interface Props {
   messageId: string
@@ -29,7 +35,7 @@ interface Props {
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader },
+  components: { UserIcon, MessageHeader, MessageFileList },
   props: {
     messageId: {
       type: String,
@@ -43,6 +49,11 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
+      ),
+      fileIds: computed(() =>
+        store.state.domain.messagesView.embeddedFilesMap[props.messageId].map(
+          e => e.id
+        )
       )
     })
 
@@ -92,5 +103,9 @@ export default defineComponent({
   & pre {
     white-space: pre-wrap;
   }
+}
+
+.messageFileList {
+  margin-top: 16px;
 }
 </style>
