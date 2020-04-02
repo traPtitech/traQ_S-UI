@@ -14,7 +14,7 @@ export const buildStampImagePath = (stampFileId: UserId) =>
 export const buildUserIconPath = (userId: UserId) =>
   `${BASE_PATH}/users/${userId}/icon`
 
-const filePathOrigin =
+export const filePathOrigin =
   location.hostname === 'localhost' || location.hostname === '127.0.0.1'
     ? 'https://traq-s-dev.tokyotech.org'
     : `${location.protocol}//${location.host}`
