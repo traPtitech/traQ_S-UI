@@ -63,10 +63,18 @@ export const actions = defineActions({
     commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
-    const { commit, rootState } = messagesViewActionContext(context)
+    const { commit, rootState, rootDispatch } = messagesViewActionContext(
+      context
+    )
     const content = rootState.entities.messages[messageId].content ?? ''
 
     const extracted = embeddingExtractor(content)
+
+    await Promise.all(
+      extracted.embeddings.map(async e =>
+        rootDispatch.entities.fetchFileMetaByFileId(e.id)
+      )
+    )
 
     const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })

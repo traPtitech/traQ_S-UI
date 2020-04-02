@@ -16,7 +16,7 @@ import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import useHover, { HoverState } from '@/use/hover'
-import { buildStampImagePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/api'
 import Stamp from '@/components/UI/Stamp.vue'
 
 type Props = {
@@ -43,7 +43,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
-    const imageUrl = fileId ? `${buildStampImagePath(fileId)}` : ''
+    const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
     const styles = useStyles(hoverState)
     return { props, context, imageUrl, onMouseEnter, onMouseLeave, styles }

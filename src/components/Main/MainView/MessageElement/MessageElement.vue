@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body">
+  <div :class="$style.body" ref="bodyRef">
     <user-icon
       :class="$style.userIcon"
       :userId="state.message.userId"
@@ -23,7 +23,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  onMounted,
+  watchEffect,
+  watch,
+  SetupContext
+} from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
@@ -42,7 +51,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
+    const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       content: computed(
@@ -57,7 +67,47 @@ export default defineComponent({
       )
     })
 
-    return { state }
+    let lastHeight = 0
+    let lastBottom = 0
+    let lastTop = 0
+    const resizeObserver = new ResizeObserver(entries => {
+      const entry = entries[0]
+      if (lastHeight === 0) {
+        lastHeight = entry.contentRect.height
+        stop()
+      } else {
+        const height = entry.contentRect.height
+        const bottom = entry.contentRect.bottom
+        const top = entry.contentRect.top
+        context.emit('change-height', {
+          heightDiff: height - lastHeight,
+          top,
+          bottom,
+          lastTop,
+          lastBottom
+        })
+        lastHeight = height
+        lastBottom = bottom
+        lastTop = top
+      }
+    })
+    const stop = watchEffect(async () => {
+      if (
+        state.content.length > 0 &&
+        state.fileIds.length > 0 &&
+        bodyRef.value
+      ) {
+        // 添付ファイルがある場合は高さ監視をする
+        resizeObserver.observe(bodyRef.value)
+      }
+    })
+    watch(
+      () => context.root.$route.path,
+      () =>
+        bodyRef.value ? resizeObserver.unobserve(bodyRef.value) : undefined
+    )
+
+    return { state, bodyRef }
   }
 })
 </script>

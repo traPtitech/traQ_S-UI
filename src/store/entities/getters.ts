@@ -1,6 +1,5 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import { compareString } from '@/lib/util/string'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
 import { User, Stamp, UserGroup } from '@traptitech/traq'
