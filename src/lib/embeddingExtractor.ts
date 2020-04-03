@@ -1,4 +1,3 @@
-import 'core-js/features/string/virtual/match-all'
 import { filePathOrigin } from '@/lib/api'
 import { FileId } from '@/types/entity-ids'
 
