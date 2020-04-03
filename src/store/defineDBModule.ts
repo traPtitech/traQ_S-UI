@@ -18,6 +18,8 @@ const dbModulePaths: string[] = []
 
 /**
  * 手元のIndexedDBに保存する情報は`defineModule`の代わりに`defineDBModule`を利用するだけで同期される
+ * 中でObjectやArrayを使用していた場合、デフォルトのものと現在のものが`_.merge`されるので注意が必要
+ * 参考: https://github.com/traPtitech/traQ_S-UI/pull/205#issuecomment-608380936
  */
 export const defineDBModule = <O extends WithOptionalState, S = StateOf<O>>(
   options: O & ModuleOptions<S> & DBPath

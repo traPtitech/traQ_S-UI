@@ -4,7 +4,11 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export type SendKey = 'alt' | 'ctrl' | 'shift'
+export interface SendKeys {
+  alt: boolean
+  ctrl: boolean
+  shift: boolean
+}
 export type OpenMode = 'lastOpen' | 'particular'
 
 export const browserSettings = defineDBModule({

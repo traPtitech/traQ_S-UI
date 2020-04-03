@@ -1,9 +1,9 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { SendKey } from '.'
+import { SendKeys } from '.'
 
 export const mutations = defineMutations<S>()({
-  setSendKey(state, key: SendKey[] | null) {
+  setSendKey(state, key: SendKeys) {
     state.sendKey = key
   }
 })
