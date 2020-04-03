@@ -8,7 +8,7 @@ const apis = new Apis({
   basePath: BASE_PATH
 })
 
-export const buildFilePath = (fileId: UserId) => `${BASE_PATH}/files/${fileId}`
+export const buildFilePath = (fileId: FileId) => `${BASE_PATH}/files/${fileId}`
 
 export const buildUserIconPath = (userId: UserId) =>
   `${BASE_PATH}/users/${userId}/icon`
