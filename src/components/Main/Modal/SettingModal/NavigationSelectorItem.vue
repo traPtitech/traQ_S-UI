@@ -1,5 +1,9 @@
 <template>
-  <button :class="$style.item" :style="styles.item">
+  <button
+    :class="$style.item"
+    :style="styles.item"
+    @click="context.emit('click')"
+  >
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -63,7 +67,8 @@ export default defineComponent({
       styles,
       props,
       size,
-      title
+      title,
+      context
     }
   }
 })
@@ -71,6 +76,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .item {
+  display: block;
   width: 100%;
   padding: 20px 60px 20px 80px;
   font-weight: bold;

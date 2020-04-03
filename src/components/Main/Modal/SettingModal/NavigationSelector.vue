@@ -1,19 +1,15 @@
 <template>
   <section :class="$style.container" :style="styles.container">
     <h2 :class="$style.header">設定</h2>
-    <div
+    <navigation-selector-item
       v-for="item in items"
       :key="item.type"
+      :type="item.type"
+      :iconName="item.iconName"
+      :iconMdi="item.iconMdi"
+      :is-selected="props.currentNavigation === item.type"
       @click="onNavigationItemClick(item.type)"
-      :style="{ display: 'content' }"
-    >
-      <navigation-selector-item
-        :type="item.type"
-        :iconName="item.iconName"
-        :iconMdi="item.iconMdi"
-        :is-selected="props.currentNavigation === item.type"
-      />
-    </div>
+    />
   </section>
 </template>
 
@@ -91,13 +87,5 @@ export default defineComponent({
 <style lang="scss" module>
 .header {
   margin: 40px 80px;
-}
-
-.item {
-  box-sizing: content-box;
-  height: 24px;
-  width: 24px;
-  padding: 4px;
-  border-left: 4px solid transparent;
 }
 </style>
