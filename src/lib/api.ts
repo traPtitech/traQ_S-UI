@@ -13,7 +13,7 @@ export const buildFilePath = (fileId: FileId) => `${BASE_PATH}/files/${fileId}`
 export const buildUserIconPath = (userId: UserId) =>
   `${BASE_PATH}/users/${userId}/icon`
 
-export const buildFileThumbnailPath = (fileId: UserId) =>
+export const buildFileThumbnailPath = (fileId: FileId) =>
   `${BASE_PATH}/files/${fileId}/thumbnail`
 
 export const filePathOrigin =
