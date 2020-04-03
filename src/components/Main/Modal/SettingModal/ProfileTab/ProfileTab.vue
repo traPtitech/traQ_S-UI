@@ -2,7 +2,8 @@
   <section :class="$style.container">
     <div>
       <h3>アイコン</h3>
-      <p>TODO: アイコンアップロード</p>
+      <user-icon :userId="detail.id" :size="100" :preventModal="true" />
+      <image-upload @input="onImgUpload" />
     </div>
     <div>
       <h3>表示名</h3>
@@ -34,6 +35,8 @@ import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/api'
+import UserIcon from '@/components/UI/UserIcon.vue'
+import ImageUpload from '../ImageUpload.vue'
 
 const createChange = <T extends Partial<UserDetail>>(
   state: Readonly<T>,
@@ -52,12 +55,12 @@ const createChange = <T extends Partial<UserDetail>>(
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
-    const detail = computed(() => store.state.domain.me.detail)
+    const detail = computed(() => store.state.domain.me.detail!)
 
     const state = reactive({
-      displayName: detail.value?.displayName ?? '',
-      bio: detail.value?.bio ?? '',
-      twitterId: detail.value?.twitterId ?? ''
+      displayName: detail.value.displayName ?? '',
+      bio: detail.value.bio ?? '',
+      twitterId: detail.value.twitterId ?? ''
     })
 
     const isChangedState = computed(() => createChange(state, detail))
@@ -69,7 +72,15 @@ export default defineComponent({
       apis.editMe(state)
     }
 
-    return { detail, state, isChanged, onUpdateClick }
+    const onImgUpload = (e: any) => {
+      console.log(e)
+    }
+
+    return { detail, state, isChanged, onUpdateClick, onImgUpload }
+  },
+  components: {
+    UserIcon,
+    ImageUpload
   }
 })
 </script>
