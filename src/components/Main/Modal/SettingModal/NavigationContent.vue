@@ -6,6 +6,16 @@
     <qall-tab v-else-if="currentNavigation === 'qall'" />
     <stamp-tab v-else-if="currentNavigation === 'stamp'" />
     <theme-tab v-else-if="currentNavigation === 'theme'" />
+    <section v-if="isSafari">
+      Safariを利用していてかつ、アプリまたはPWAをインストールをしていない場合は、
+      7日間の使用がなかった際にここの設定情報が消えることがあります。 詳細は
+      <a
+        href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
+      >
+        Webkitの公式ブログの記事
+      </a>
+      をご覧ください。
+    </section>
   </section>
 </template>
 
@@ -29,6 +39,14 @@ import BrowserTab from './BrowserTab/BrowserTab.vue'
 import QallTab from './QallTab/QallTab.vue'
 import StampTab from './StampTab/StampTab.vue'
 import ThemeTab from './ThemeTab/ThemeTab.vue'
+
+const getIsSafari = () => {
+  const ua = navigator.userAgent.toLowerCase()
+  if (ua.includes('safari') && !ua.includes('chrome') && !ua.includes('edge')) {
+    return true
+  }
+  return false
+}
 
 const useStyles = () =>
   reactive({
@@ -56,7 +74,11 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-    return { styles }
+
+    const isSafari = ref(false)
+    isSafari.value = getIsSafari()
+
+    return { styles, isSafari }
   }
 })
 </script>
