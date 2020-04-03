@@ -16,6 +16,9 @@ interface DBPath {
 
 const dbModulePaths: string[] = []
 
+/**
+ * 手元のIndexedDBに保存する情報は`defineModule`の代わりに`defineDBModule`を利用するだけで同期される
+ */
 export const defineDBModule = <O extends WithOptionalState, S = StateOf<O>>(
   options: O & ModuleOptions<S> & DBPath
 ): O => {
@@ -23,6 +26,9 @@ export const defineDBModule = <O extends WithOptionalState, S = StateOf<O>>(
   return defineModule(options)
 }
 
+/**
+ * 同期するストアのモジュールの絞り込み
+ */
 export const persistReducer: PersistOptions<any>['reducer'] = state => {
   const persistState = {}
   dbModulePaths.forEach(path => {
