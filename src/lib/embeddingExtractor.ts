@@ -29,7 +29,7 @@ export const embeddingExtractor = (
   regexp = defaultRegexp
 ): EmbeddedFilesExtractedMessage => {
   const embeddings: EmbeddedFile[] = []
-  const knownIdSet: Set<FileId> = new Set([])
+  const knownIdSet: Set<FileId> = new Set()
 
   const matches = rawMessage.matchAll(regexp)
 
