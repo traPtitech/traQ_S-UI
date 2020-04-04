@@ -1,14 +1,20 @@
 <template>
-  <div
+  <router-link
+    :to="fileLink"
     v-if="$props.isLarge"
     :class="$style.largeContainer"
     :style="styles.container"
   >
     <img draggable="false" :src="imagePath" />
-  </div>
-  <div v-else :class="$style.container" :style="styles.container">
+  </router-link>
+  <router-link
+    v-else
+    :to="fileLink"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <img draggable="false" :src="imagePath" />
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -20,9 +26,10 @@ import {
   onBeforeMount
 } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
-import { AttachmentType } from '@/lib/util/fileType'
+import { AttachmentType } from '@/lib/util/file'
 import { buildFileThumbnailPath, buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
+import useFileLink from './use/fileLink'
 
 const useStyles = () =>
   reactive({
@@ -54,7 +61,8 @@ export default defineComponent({
         : buildFileThumbnailPath(props.fileId)
     )
     const styles = useStyles()
-    return { imagePath, styles }
+    const { fileLink } = useFileLink(props)
+    return { imagePath, styles, fileLink }
   }
 })
 </script>

@@ -1,4 +1,4 @@
-import { AttachmentType } from '@/lib/util/fileType'
+import { AttachmentType } from '@/lib/util/file'
 
 export type Attachment = {
   file: File

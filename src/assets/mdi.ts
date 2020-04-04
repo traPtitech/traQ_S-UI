@@ -20,6 +20,7 @@ import {
   mdiPlus,
   mdiMagnify,
   mdiHistory,
+  mdiDownload,
   mdiEmoticonOutline
 } from '@mdi/js'
 
@@ -49,6 +50,7 @@ const mdi: MdiIconsMapping = {
   tags: mdiTagMultiple,
   email: mdiEmail,
   plus: mdiPlus,
+  download: mdiDownload,
   'emoticon-outline': mdiEmoticonOutline
 }
 

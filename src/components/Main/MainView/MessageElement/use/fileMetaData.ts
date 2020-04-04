@@ -1,6 +1,6 @@
 import { computed, reactive } from '@vue/composition-api'
 import store from '@/store'
-import { isImage, isNonPreviewable, isVideo } from '@/lib/util/fileType'
+import { isImage, isNonPreviewable, isVideo } from '@/lib/util/file'
 
 const useFileMetaData = (props: { fileIds: string[] }) => {
   const fileMetaData = computed(() =>

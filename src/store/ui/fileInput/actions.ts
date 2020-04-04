@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { fileInput } from './index'
-import { parseFileType } from '@/lib/util/fileType'
+import { mimeToFileType } from '@/lib/util/file'
 
 export const fileInputActionContext = (context: any) =>
   moduleActionContext(context, fileInput)
@@ -9,7 +9,7 @@ export const fileInputActionContext = (context: any) =>
 export const actions = defineActions({
   addAttachment(context, file: File) {
     const { commit, state } = fileInputActionContext(context)
-    const fileType = parseFileType(file.type)
+    const fileType = mimeToFileType(file.type)
     if (fileType === 'image') {
       const reader = new FileReader()
       reader.readAsDataURL(file)

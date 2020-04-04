@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div>
     <div :class="$style.imageContainer">
       <message-file-list-image
         v-for="meta in fileMetaDataState.images"
@@ -18,9 +18,11 @@
     <message-file-list-item
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
+      :class="$style.item"
       :fileId="meta.id"
       :fileName="meta.name"
-      :fileType="parseFileType(meta.mime)"
+      :fileType="mimeToFileType(meta.mime)"
+      :fileSize="meta.size"
     />
   </div>
 </template>
@@ -28,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
-import { parseFileType } from '@/lib/util/fileType'
+import { mimeToFileType } from '@/lib/util/file'
 import useFileMetaData from './use/fileMetaData'
 import MessageFileListItem from './MessageFileListItem.vue'
 import MessageFileListImage from './MessageFileListImage.vue'
@@ -54,18 +56,15 @@ export default defineComponent({
   setup(props: Props) {
     const { fileMetaDataState } = useFileMetaData(props)
     const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
-    return { fileMetaDataState, parseFileType, showLargeImage }
+    return { fileMetaDataState, mimeToFileType, showLargeImage }
   }
 })
 </script>
 
 <style lang="scss" module>
-.container {
-}
 .imageContainer {
   display: flex;
   flex-flow: row wrap;
-  overflow: scroll;
 }
 .imageItem {
   flex-shrink: 0;
@@ -73,6 +72,12 @@ export default defineComponent({
   max-width: 100%;
   &:not(:last-child) {
     margin-right: 16px;
+  }
+}
+.item {
+  flex-shrink: 0;
+  &:not(:last-child) {
+    margin-bottom: 16px;
   }
 }
 </style>
