@@ -3,7 +3,12 @@
     <div>
       <h3>アイコン</h3>
       <user-icon :userId="detail.id" :size="100" :preventModal="true" />
-      <image-upload @input="onImgSet" rounded />
+      <image-upload
+        @input="onImgSet"
+        :destroyFlag="destroyFlag"
+        @destroyed="onDestroyed"
+        rounded
+      />
     </div>
     <div>
       <h3>表示名</h3>
@@ -71,6 +76,11 @@ export default defineComponent({
       imgData.value = file
     }
 
+    const destroyFlag = ref(false)
+    const onDestroyed = () => {
+      destroyFlag.value = false
+    }
+
     const isChanged = computed(
       () => isStateChanged.value || imgData.value !== undefined
     )
@@ -83,13 +93,25 @@ export default defineComponent({
         promises.push(apis.editMe(state))
       }
       try {
+        // TODO: loading
         await Promise.all(promises)
+        imgData.value = undefined
+        destroyFlag.value = true
       } catch (e) {
-        console.error(e)
+        // TODO: error
       }
     }
 
-    return { detail, state, isStateChanged, onImgSet, isChanged, onUpdateClick }
+    return {
+      detail,
+      state,
+      isStateChanged,
+      onImgSet,
+      destroyFlag,
+      onDestroyed,
+      isChanged,
+      onUpdateClick
+    }
   },
   components: {
     UserIcon,

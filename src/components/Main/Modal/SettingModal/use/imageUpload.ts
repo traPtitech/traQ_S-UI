@@ -28,7 +28,18 @@ const useImageUpload = (onImageSelect: () => void) => {
   const addImage = () => {
     input.click()
   }
-  return { image, addImage }
+  const destroy = () => {
+    if (image.data) {
+      image.data = undefined
+    }
+    if (image.url !== '') {
+      URL.revokeObjectURL(image.url)
+      image.url = ''
+    }
+    input.addEventListener('change', onImageSelect, { once: true })
+  }
+
+  return { image, addImage, destroy }
 }
 
 export default useImageUpload

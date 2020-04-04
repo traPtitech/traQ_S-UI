@@ -6,6 +6,7 @@
         <img :src="image.url" ref="$img" />
       </div>
       <p>{{ cropperNote }}</p>
+      <button @click="destroy">キャンセル</button>
     </div>
   </div>
 </template>
@@ -15,7 +16,8 @@ import {
   defineComponent,
   ref,
   watchEffect,
-  SetupContext
+  SetupContext,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
@@ -50,10 +52,15 @@ export default defineComponent({
     rounded: {
       type: Boolean,
       default: false
+    },
+    destroyFlag: {
+      type: Boolean,
+      required: true
     }
   },
-  setup(_, context: SetupContext) {
-    const { image, addImage } = useImageUpload(() => {
+  setup(prop, context: SetupContext) {
+    const { image, addImage, destroy: destroyImage } = useImageUpload(() => {
+      // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
       context.emit('input', image.data)
     })
 
@@ -85,7 +92,19 @@ export default defineComponent({
       cropper.replace(image.url)
     })
 
-    return { $img, image, addImage, cropperNote }
+    const destroy = () => {
+      destroyImage()
+      if (cropper) cropper.destroy()
+    }
+
+    watchEffect(() => {
+      if (prop.destroyFlag) {
+        destroy()
+        context.emit('destroyed')
+      }
+    })
+
+    return { $img, image, addImage, cropperNote, destroy }
   }
 })
 </script>
