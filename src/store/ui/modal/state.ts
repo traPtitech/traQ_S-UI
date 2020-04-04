@@ -31,8 +31,12 @@ interface FileModalState extends BaseModalState {
 
 export interface S {
   modalState: ModalState[]
+
+  /** ナビゲーションを挟むことなくモーダルを表示している状態か */
+  isOnInitialModalRoute: boolean
 }
 
 export const state: S = {
-  modalState: []
+  modalState: [],
+  isOnInitialModalRoute: false
 }

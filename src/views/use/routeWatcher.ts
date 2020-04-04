@@ -32,10 +32,6 @@ const useRouteWacher = (context: SetupContext) => {
     return
   }
   const onRouteChangedToChannel = () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      // まだチャンネルツリーが構築されていない
-      return
-    }
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
@@ -74,6 +70,11 @@ const useRouteWacher = (context: SetupContext) => {
   }
 
   const onRouteParamChange = async (param: string, prevParam: string) => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
+      return
+    }
+    store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       onRouteChangedToIndex()
@@ -82,6 +83,12 @@ const useRouteWacher = (context: SetupContext) => {
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
     }
+    // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
+    const isOnInitialModalRoute =
+      state.isInitialView &&
+      history.state.modalState &&
+      !!history.state.modalState[0].relatedRoute
+    store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
     state.isInitialView = false
   }
 

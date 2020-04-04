@@ -69,7 +69,13 @@ export default defineComponent({
         type: 'user',
         id: 'test'
       })
-    const onClickPop = () => store.dispatch.ui.modal.popModal()
+    const onClickPop = () => {
+      if (store.state.ui.modal.isOnInitialModalRoute) {
+        store.dispatch.ui.modal.closeModal()
+      } else {
+        store.dispatch.ui.modal.popModal()
+      }
+    }
     const onClickClear = () => store.dispatch.ui.modal.clearModal()
     return {
       modalState,

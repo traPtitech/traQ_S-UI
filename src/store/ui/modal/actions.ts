@@ -3,7 +3,8 @@ import { moduleActionContext } from '@/store'
 import { ModalState } from './state'
 import { modal } from './index'
 import { domain } from '@/store/domain'
-import { RouteName } from '@/router'
+import router from '@/router'
+import useChannelPath from '@/use/channelPath'
 
 const deepEquals = (a: Object, b: Object) =>
   JSON.stringify(a) === JSON.stringify(b)
@@ -36,6 +37,32 @@ export const actions = defineActions({
     const { getters, dispatch } = modalActionContext(context)
     const { currentState } = getters
     history.back()
+    dispatch.collectGarbage(currentState)
+  },
+
+  /**
+   * モーダルを閉じ、現在のチャンネルにURLを変更する
+   *
+   * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ぶのは危険
+   */
+  closeModal: context => {
+    const { commit, state, dispatch, getters, rootState } = modalActionContext(
+      context
+    )
+    const { currentState } = getters
+    history.replaceState(
+      {
+        modalState: [...state.modalState.slice(0, state.modalState.length - 2)]
+      },
+      ''
+    )
+    commit.setState(history.state.modalState)
+    const { channelIdToPath } = useChannelPath()
+    router.replace(
+      `/channels/${channelIdToPath(
+        rootState.domain.messagesView.currentChannelId
+      )}`
+    )
     dispatch.collectGarbage(currentState)
   },
   clearModal: context => {
