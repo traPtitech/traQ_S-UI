@@ -8,6 +8,7 @@ export enum RouteName {
   Channel = 'channel',
   User = 'user',
   Message = 'message',
+  File = 'File',
   Login = 'login',
   NotFound = 'not-found'
 }
@@ -26,13 +27,18 @@ const routes = [
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
-    path: '/users/:user',
+    path: '/users/:id',
     name: RouteName.User,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
-    path: '/messages/:message',
+    path: '/messages/:id',
     name: RouteName.Message,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/files/:id',
+    name: RouteName.File,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {

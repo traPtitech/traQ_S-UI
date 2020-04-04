@@ -1,15 +1,16 @@
-import { ChannelId } from '@/types/entity-ids'
 import { Theme } from '@/types/theme'
 
 export interface S {
   loaded: boolean
   componentLoaded: boolean
+  initialFetchCompleted: boolean
   theme: Theme
 }
 
 export const state: S = {
   loaded: false,
   componentLoaded: false,
+  initialFetchCompleted: false,
   theme: {
     accent: {
       primary: '#005BAC',

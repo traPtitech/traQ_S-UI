@@ -21,6 +21,16 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
   },
+  replaceModal: (context, modalState: ModalState) => {
+    const { commit, state } = modalActionContext(context)
+    history.replaceState(
+      {
+        modalState: [...state.modalState, modalState]
+      },
+      ''
+    )
+    commit.setState(history.state.modalState)
+  },
   popModal: context => {
     const { getters, dispatch } = modalActionContext(context)
     const { currentState } = getters
@@ -46,6 +56,8 @@ export const actions = defineActions({
         domainCommit.deleteUserDetail(modalState.id)
         break
       case 'notification':
+        break
+      case 'file':
         break
       default:
         const invalid = (modalState as any).type
