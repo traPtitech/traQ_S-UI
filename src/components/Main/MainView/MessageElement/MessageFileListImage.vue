@@ -5,7 +5,7 @@
     :class="$style.largeContainer"
     :style="styles.container"
   >
-    <img draggable="false" :src="imagePath" />
+    <img draggable="false" :alt="$props.fileName" :src="imagePath" />
   </router-link>
   <router-link
     v-else
@@ -13,7 +13,7 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <img draggable="false" :src="imagePath" />
+    <img draggable="false" :alt="$props.fileName" :src="imagePath" />
   </router-link>
 </template>
 
@@ -29,7 +29,7 @@ import { FileId } from '@/types/entity-ids'
 import { AttachmentType } from '@/lib/util/file'
 import { buildFileThumbnailPath, buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
-import useFileLink from './use/fileLink'
+import useFileMeta from './use/fileMeta'
 
 const useStyles = () =>
   reactive({
@@ -48,20 +48,14 @@ export default defineComponent({
     fileId: {
       type: String,
       default: ''
-    },
-    fileName: {
-      type: String,
-      default: ''
     }
   },
-  setup(props) {
-    const imagePath = computed(() =>
-      props.isLarge
-        ? buildFilePath(props.fileId)
-        : buildFileThumbnailPath(props.fileId)
-    )
+  setup(props, context) {
     const styles = useStyles()
-    const { fileLink } = useFileLink(props)
+    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
+    const imagePath = computed(() =>
+      props.isLarge ? buildFilePath(props.fileId) : fileRawPath.value
+    )
     return { imagePath, styles, fileLink }
   }
 })
@@ -91,8 +85,9 @@ export default defineComponent({
     width: 2px;
     style: solid;
   }
+  max-width: min(600px, 100%);
   img {
-    max-width: min(600px, 100%);
+    max-width: 100%;
     max-height: 450px;
     cursor: pointer;
   }

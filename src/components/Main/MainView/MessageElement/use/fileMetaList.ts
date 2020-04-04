@@ -2,7 +2,7 @@ import { computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { isImage, isNonPreviewable, isVideo } from '@/lib/util/file'
 
-const useFileMetaData = (props: { fileIds: string[] }) => {
+const useFileMetaList = (props: { fileIds: string[] }) => {
   const fileMetaData = computed(() =>
     props.fileIds.map(id => store.state.entities.fileMetaData[id])
   )
@@ -20,4 +20,4 @@ const useFileMetaData = (props: { fileIds: string[] }) => {
   return { fileMetaDataState: state }
 }
 
-export default useFileMetaData
+export default useFileMetaList
