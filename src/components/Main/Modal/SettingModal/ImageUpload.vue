@@ -2,7 +2,7 @@
   <div>
     <button @click="addImage">ファイルを選択</button>
     <div v-if="image.url !== ''">
-      <div :class="$style.cropper">
+      <div :class="$style.cropper" :is-rounded="rounded">
         <img :src="image.url" ref="$img" />
       </div>
       <p>{{ cropperNote }}</p>
@@ -46,8 +46,16 @@ const cropperDefaultOptions = {
 
 export default defineComponent({
   name: 'ImageUpload',
+  props: {
+    rounded: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup(_, context: SetupContext) {
-    const { image, addImage } = useImageUpload()
+    const { image, addImage } = useImageUpload(() => {
+      context.emit('input', image.data)
+    })
 
     let cropper: Cropper | undefined
     const $img = ref<HTMLImageElement>()
@@ -78,8 +86,7 @@ export default defineComponent({
     })
 
     return { $img, image, addImage, cropperNote }
-  },
-  components: {}
+  }
 })
 </script>
 
@@ -87,5 +94,11 @@ export default defineComponent({
 .cropper {
   width: 400px;
   height: 400px;
+  &[is-rounded] {
+    :global(.cropper-view-box),
+    :global(.cropper-face) {
+      border-radius: 50%;
+    }
+  }
 }
 </style>

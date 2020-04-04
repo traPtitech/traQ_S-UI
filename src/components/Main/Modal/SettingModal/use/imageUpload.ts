@@ -1,6 +1,8 @@
 import { reactive } from '@vue/composition-api'
 
-const useImageUpload = () => {
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join()
+
+const useImageUpload = (onImageSelect: () => void) => {
   const image = reactive({
     data: undefined as File | undefined,
     url: ''
@@ -8,7 +10,7 @@ const useImageUpload = () => {
 
   const input = document.createElement('input')
   input.type = 'file'
-  input.accept = 'image/*' //TODO: 厳密る
+  input.accept = acceptImageType
   input.addEventListener('change', () => {
     if (input.files) {
       image.data = input.files[0]
@@ -21,6 +23,7 @@ const useImageUpload = () => {
       }
     }
   })
+  input.addEventListener('change', onImageSelect, { once: true })
 
   const addImage = () => {
     input.click()
