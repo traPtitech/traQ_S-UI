@@ -70,7 +70,7 @@ const useStampPicker = () => {
   const onInputStamp = (id: StampId) => {
     store.commit.domain.me.pushLocalStampHistory({
       stampId: id,
-      datetime: new Date()
+      datetime: new Date().toISOString()
     })
     store.state.ui.stampPicker.selectHandler({
       id

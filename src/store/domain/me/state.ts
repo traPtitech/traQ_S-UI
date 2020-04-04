@@ -1,8 +1,8 @@
-import { UserId, WebhookId, StampId, ChannelId } from '@/types/entity-ids'
-import { UnreadChannel, StampHistoryEntry } from '@traptitech/traq'
+import { WebhookId, StampId, ChannelId } from '@/types/entity-ids'
+import { UnreadChannel, MyUserDetail } from '@traptitech/traq'
 
 export interface S {
-  id: UserId
+  detail?: MyUserDetail
   webhooks: WebhookId[]
   stampHistory: Record<StampId, Date>
 
@@ -13,7 +13,7 @@ export interface S {
 }
 
 export const state: S = {
-  id: '',
+  detail: undefined,
   webhooks: [],
   stampHistory: {},
   unreadChannelsSet: {},

@@ -1,7 +1,8 @@
 <template>
   <div v-if="modalState.shouldShowModal" :class="$style.container">
+    <setting-modal v-if="modalState.current.type === 'setting'" />
     <user-modal
-      v-if="modalState.current.type === 'user'"
+      v-else-if="modalState.current.type === 'user'"
       :id="modalState.current.id"
     />
     <div v-else :class="$style.modal" :style="styles.modal">
@@ -27,6 +28,7 @@
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import SettingModal from '@/components/Main/Modal/SettingModal/SettingModal.vue'
 import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
 
 const useModal = () => {
@@ -86,6 +88,7 @@ export default defineComponent({
     }
   },
   components: {
+    SettingModal,
     UserModal
   }
 })

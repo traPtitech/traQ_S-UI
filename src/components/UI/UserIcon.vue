@@ -5,7 +5,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  computed
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import api, { buildUserIconPath } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
@@ -40,8 +45,12 @@ export default defineComponent({
         backgroundImage: `url(${buildUserIconPath(props.userId)})`
       }))
     })
+    const user = computed(() => store.state.entities.users[props.userId])
     const onClick = () => {
       if (!props.preventModal) {
+        if (user.value.bot && user.value.name.indexOf('@Webhook')) {
+          return
+        }
         store.dispatch.ui.modal.pushModal({
           type: 'user',
           id: props.userId

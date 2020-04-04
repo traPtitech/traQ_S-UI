@@ -50,7 +50,8 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
     })),
     icon: makeStyles(theme => ({
       marginTop: `${-iconSize / 2}px`,
-      borderColor: theme.background.secondary
+      borderColor: theme.background.secondary,
+      backgroundColor: theme.background.secondary
     }))
   })
 

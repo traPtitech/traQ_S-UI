@@ -7,7 +7,6 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from '@vue/composition-api'
 import store from './store'
-import { setupWebSocket } from '@/lib/websocket'
 
 const useWindowResizeObserver = () => {
   let lastCalled = 0
@@ -29,7 +28,6 @@ export default defineComponent({
   setup() {
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
-    setupWebSocket()
 
     return {
       isMobile

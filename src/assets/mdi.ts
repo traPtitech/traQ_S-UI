@@ -8,6 +8,8 @@ import {
   mdiFileImage,
   mdiClose,
   mdiPlusCircleOutline,
+  mdiGoogle,
+  mdiGithub,
   mdiPhone,
   mdiPin,
   mdiBell,
@@ -21,7 +23,11 @@ import {
   mdiMagnify,
   mdiHistory,
   mdiDownload,
-  mdiEmoticonOutline
+  mdiEmoticonOutline,
+  mdiCog,
+  mdiAccount,
+  mdiCogs,
+  mdiBrightness6
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -33,6 +39,8 @@ const mdi: MdiIconsMapping = {
   send: mdiSend,
   file: mdiFile,
   close: mdiClose,
+  google: mdiGoogle,
+  github: mdiGithub,
   phone: mdiPhone,
   pin: mdiPin,
   bell: mdiBell,
@@ -51,7 +59,11 @@ const mdi: MdiIconsMapping = {
   email: mdiEmail,
   plus: mdiPlus,
   download: mdiDownload,
-  'emoticon-outline': mdiEmoticonOutline
+  'emoticon-outline': mdiEmoticonOutline,
+  cog: mdiCog,
+  account: mdiAccount,
+  cogs: mdiCogs,
+  'brightness-6': mdiBrightness6
 }
 
 export default mdi

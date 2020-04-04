@@ -1,12 +1,13 @@
 import { UserId, ChannelId, FileId } from '@/types/entity-ids'
 import { RouteName } from '@/router'
 
-type ModalStateType = 'user' | 'group' | 'notification' | 'file'
+type ModalStateType = 'user' | 'group' | 'notification' | 'file' | 'setting'
 
 export type ModalState =
   | UserModalState
   | NotificationModalState
   | FileModalState
+  | SettingModalState
 
 interface BaseModalState {
   type: ModalStateType
@@ -27,6 +28,10 @@ interface FileModalState extends BaseModalState {
   type: 'file'
   id: FileId
   relatedRoute: RouteName.File
+}
+
+interface SettingModalState extends BaseModalState {
+  type: 'setting'
 }
 
 export interface S {

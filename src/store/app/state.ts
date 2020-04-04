@@ -15,7 +15,8 @@ export const state: S = {
     accent: {
       primary: '#005BAC',
       notification: '#F2994A',
-      online: '#28F0E4'
+      online: '#28F0E4',
+      error: '#F26451'
     },
     background: {
       primary: '#FFFFFF',

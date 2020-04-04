@@ -10,6 +10,8 @@ export enum RouteName {
   Message = 'message',
   File = 'File',
   Login = 'login',
+  Registration = 'registration',
+  ResetPassword = 'reset-password',
   NotFound = 'not-found'
 }
 
@@ -44,8 +46,15 @@ const routes = [
   {
     path: '/login',
     name: RouteName.Login,
-    component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+    component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+    props: { type: 'login' }
   },
+  // {
+  //   path: '/registration',
+  //   name: RouteName.Registration,
+  //   component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+  //   props: { type: 'registration' }
+  // },
   {
     path: '*',
     name: RouteName.NotFound,
