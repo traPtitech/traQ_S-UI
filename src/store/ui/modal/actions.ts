@@ -13,6 +13,9 @@ export const modalActionContext = (context: any) =>
   moduleActionContext(context, modal)
 
 export const actions = defineActions({
+  /**
+   * モーダルを開き、`history.state`に状態を追加する
+   */
   pushModal: (context, modalState: ModalState) => {
     const { commit, state } = modalActionContext(context)
     history.pushState(
@@ -23,6 +26,9 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
   },
+  /**
+   * モーダルを開き、現在の`history.state`を置き換える
+   */
   replaceModal: (context, modalState: ModalState) => {
     const { commit, state } = modalActionContext(context)
     history.replaceState(
@@ -33,6 +39,9 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
   },
+  /**
+   * モーダルを閉じ、履歴をひとつ戻る
+   */
   popModal: context => {
     const { getters, dispatch } = modalActionContext(context)
     const { currentState } = getters
@@ -41,9 +50,10 @@ export const actions = defineActions({
   },
 
   /**
-   * モーダルを閉じ、現在のチャンネルにURLを変更する
+   * モーダルを閉じ、現在開いているチャンネルにURLを変更する
    *
-   * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ぶのは危険
+   * `history.state`が残り一個の状態で、これ以上戻るとtraQの外に出る時用のメソッド (例: `/files/:id`を直に開いた場合)
+   * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
     const { commit, state, dispatch, getters, rootState } = modalActionContext(
@@ -65,6 +75,11 @@ export const actions = defineActions({
     )
     dispatch.collectGarbage(currentState)
   },
+  /**
+   * 全てのモーダルを閉じる
+   *
+   * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
+   */
   clearModal: context => {
     const { state, dispatch } = modalActionContext(context)
     const length = state.modalState.length

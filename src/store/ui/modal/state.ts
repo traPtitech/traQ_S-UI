@@ -10,7 +10,10 @@ export type ModalState =
   | SettingModalState
 
 interface BaseModalState {
+  /** モーダル種別 */
   type: ModalStateType
+
+  /** モーダルがルートに紐づいているか (例: ファイルモーダル) */
   relatedRoute?: RouteName
 }
 

@@ -73,6 +73,8 @@ export default defineComponent({
     const resizeObserver = new ResizeObserver(entries => {
       const entry = entries[0]
       if (lastHeight === 0) {
+        // 初回に高さが変化した場合、初期レンダリング完了とみなして処理を飛ばす
+        // これ以降新規にobserveしないためにwatcherを止める
         lastHeight = entry.contentRect.height
         stop()
       } else {
@@ -104,6 +106,8 @@ export default defineComponent({
     watch(
       () => context.root.$route.path,
       () =>
+        // パス変更でunobserve
+        // vue-routerのインスタンス再利用対策
         bodyRef.value ? resizeObserver.unobserve(bodyRef.value) : undefined
     )
 
