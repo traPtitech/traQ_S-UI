@@ -34,7 +34,6 @@ const useRouteWacher = (context: SetupContext) => {
   const onRouteChangedToChannel = () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
-      console.log('No Channel Tree')
       return
     }
     try {
@@ -87,7 +86,6 @@ const useRouteWacher = (context: SetupContext) => {
       onRouteChangedToIndex()
     } else if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
-      console.log(routeName, param)
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
     }
