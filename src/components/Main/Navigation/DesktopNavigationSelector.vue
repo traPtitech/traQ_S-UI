@@ -12,16 +12,21 @@
         :icon-name="item.iconName"
       />
     </div>
+    <div :class="$style.item" @click="onSettingClick">
+      <Icon name="cog" mdi />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, toRefs } from '@vue/composition-api'
+import store from '@/store'
 import {
   NavigationItemType,
   useNavigationSelectorItem
 } from '@/components/Main/Navigation/use/navigation'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 type Props = {
   currentNavigation: NavigationItemType
@@ -29,7 +34,7 @@ type Props = {
 
 export default defineComponent({
   name: 'NavigationSelector',
-  components: { NavigationSelectorItem },
+  components: { NavigationSelectorItem, Icon },
   props: {
     currentNavigation: {
       type: String,
@@ -65,10 +70,15 @@ export default defineComponent({
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
+
+    const onSettingClick = () =>
+      store.dispatch.ui.modal.pushModal({ type: 'setting' })
+
     return {
       props,
       items,
-      onNavigationItemClick
+      onNavigationItemClick,
+      onSettingClick
     }
   }
 })
