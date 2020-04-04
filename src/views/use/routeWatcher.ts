@@ -50,13 +50,6 @@ const useRouteWacher = (context: SetupContext) => {
     return
   }
   const onRouteChangedToFile = async () => {
-    if (
-      history.state?.modalState?.length &&
-      history.state.modalState[history.state.modalState.length - 1]
-        ?.relatedRoute === RouteName.File
-    ) {
-      return
-    }
     const fileId = state.idParam
     if (!store.state.entities.fileMetaData[fileId]) {
       await store.dispatch.entities.fetchFileMetaByFileId(fileId)

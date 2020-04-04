@@ -3,6 +3,7 @@ import { moduleActionContext } from '@/store'
 import { ModalState } from './state'
 import { modal } from './index'
 import { domain } from '@/store/domain'
+import { RouteName } from '@/router'
 
 const deepEquals = (a: Object, b: Object) =>
   JSON.stringify(a) === JSON.stringify(b)
