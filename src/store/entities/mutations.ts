@@ -82,11 +82,34 @@ export const mutations = defineMutations<S>()({
   deleteWebhook: deleteMutation('webhooks'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
 
-  updateMessageStamp(
-    state,
-    payload: {
-      messageId: MessageId
-      messageStamp: MessageStamp
+  onMessageStamped(state, e: MessageStampedEvent['body']) {
+    const stamps = state.messages[e.message_id].stamps
+    // 既に押されているスタンプは更新、新規は追加
+    if (
+      stamps.some(
+        stamp => stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+      )
+    ) {
+      state.messages[e.message_id].stamps = stamps.map(stamp =>
+        stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+          ? { ...stamp, count: e.count }
+          : stamp
+      )
+    } else {
+      const stamp: MessageStamp = {
+        userId: e.user_id,
+        stampId: e.stamp_id,
+        count: e.count,
+        createdAt: e.created_at,
+        updatedAt: e.created_at
+      }
+      state.messages[e.message_id].stamps.push(stamp)
     }
-  ) {}
+  },
+  onMessageUnstamped(state, e: MessageUnstampedEvent['body']) {
+    const stamps = state.messages[e.message_id].stamps
+    state.messages[e.message_id].stamps = stamps.filter(
+      stamp => !(stamp.stampId === e.stamp_id && stamp.userId === e.user_id)
+    )
+  }
 })

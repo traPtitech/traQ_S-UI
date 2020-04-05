@@ -11,7 +11,7 @@ export const actions = defineActions({
   async fetchMe(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMe()
-    commit.setId(data.id)
+    commit.setDetail(data)
   },
   async fetchUnreadChannels(context) {
     const { commit } = meActionContext(context)
@@ -46,10 +46,5 @@ export const actions = defineActions({
       data.map(h => [h.stampId, new Date(h.datetime)])
     )
     commit.setStampHistory(history)
-  },
-  async fetchMe(context) {
-    const { commit } = meActionContext(context)
-    const res = await api.getMe()
-    commit.setDetail(res.data)
   }
 })

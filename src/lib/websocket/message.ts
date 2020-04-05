@@ -31,11 +31,11 @@ export const onMessageRead = (data: MessageReadEvent['body']) => {
 }
 
 export const onMessageStamped = (data: MessageStampedEvent['body']) => {
-  store.commit.entities.updateMessageStamp(data)
+  store.commit.entities.onMessageStamped(data)
 }
 
 export const onMessageUnstamped = (data: MessageUnstampedEvent['body']) => {
-  console.error('onMessageUnstamped: Not implemented')
+  store.commit.entities.onMessageUnstamped(data)
 }
 
 export const onMessagePinned = (data: MessagePinnedEvent['body']) => {

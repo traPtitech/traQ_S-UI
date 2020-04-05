@@ -9,9 +9,11 @@
     <div :class="$style.stampContainer">
       <img :src="state.src" :alt="state.stamp.name" />
     </div>
-    <div :class="$style.count" :style="styles.count">
-      {{ state.count }}
-    </div>
+    <animated-number
+      :value="state.count"
+      :class="$style.count"
+      :style="styles.count"
+    />
   </div>
 </template>
 
@@ -20,7 +22,8 @@ import {
   defineComponent,
   reactive,
   computed,
-  SetupContext
+  SetupContext,
+  watch
 } from '@vue/composition-api'
 import { StampId } from '@/types/entity-ids'
 import store from '@/store'
@@ -28,6 +31,7 @@ import { BASE_PATH, Stamp, MessageStamp } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import useHover from '@/use/hover'
+import AnimatedNumber from '@/components/UI/AnimatedNumber.vue'
 
 type Props = {
   stampId: StampId
@@ -36,6 +40,7 @@ type Props = {
 
 export default defineComponent({
   name: 'StampElement',
+  components: { AnimatedNumber },
   props: {
     stampId: {
       type: String,
@@ -58,8 +63,11 @@ export default defineComponent({
       stamp,
       src: computed(() => `${BASE_PATH}/files/${stamp.value.fileId}`),
       includeMe: computed(() =>
-        props.stamps.some(stamp => stamp.userId === store.state.domain.me.id)
-      )
+        props.stamps.some(
+          stamp => stamp.userId === store.state.domain.me.detail?.id
+        )
+      ),
+      isProgress: false
     })
     const styles = reactive({
       body: makeStyles(theme => {
@@ -79,14 +87,21 @@ export default defineComponent({
         }
       })
     })
-
     const onClick = () => {
+      if (state.isProgress) return
       if (state.includeMe) {
         context.emit('remove-stamp', props.stampId)
       } else {
         context.emit('add-stamp', props.stampId)
       }
+      state.isProgress = true
     }
+    watch(
+      () => props.stamps,
+      () => {
+        state.isProgress = false
+      }
+    )
 
     return {
       props,
@@ -108,6 +123,7 @@ export default defineComponent({
   padding: 2px 4px;
   border-radius: 4px;
   cursor: pointer;
+  user-select: none;
 }
 
 .stampContainer {
@@ -130,6 +146,5 @@ export default defineComponent({
     left: 6px;
     right: 4px;
   }
-  user-select: none;
 }
 </style>
