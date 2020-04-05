@@ -32,7 +32,7 @@ import {
   reactive,
   watchEffect,
   watch,
-  onMounted
+  onBeforeMount
 } from '@vue/composition-api'
 import store from '@/store'
 import { setupWebSocket } from '@/lib/websocket'
@@ -76,13 +76,24 @@ export default defineComponent({
       transform: `translateX(${swipeDrawerState.currentPosition}px)`
     }))
 
-    // 初回fetch
-    Promise.all([
-      store.dispatch.entities.fetchUsers(),
-      store.dispatch.entities.fetchUserGroups(),
-      store.dispatch.entities.fetchChannels(),
-      store.dispatch.entities.fetchStamps()
-    ]).then(() => {
+    const { routeWatcherState } = useRouteWatcher(context)
+
+    setupWebSocket()
+
+    onBeforeMount(async () => {
+      try {
+        await store.dispatch.domain.me.fetchMe()
+      } catch {
+        location.href = '/login'
+      }
+      // 初回fetch
+      await Promise.all([
+        store.dispatch.entities.fetchUsers(),
+        store.dispatch.entities.fetchUserGroups(),
+        store.dispatch.entities.fetchChannels(),
+        store.dispatch.entities.fetchStamps()
+      ])
+
       store.commit.app.setInitialFetchCompleted()
       store.dispatch.domain.stampCategory.constructStampCategories()
       store.dispatch.entities.fetchStampPalettes()
@@ -91,25 +102,6 @@ export default defineComponent({
       store.dispatch.domain.me.fetchUnreadChannels()
       store.dispatch.domain.me.fetchStaredChannels()
       store.dispatch.domain.me.fetchStampHistory()
-    })
-
-    const { routeWatcherState } = useRouteWatcher(context)
-
-    setupWebSocket()
-
-    onMounted(async () => {
-      try {
-        await store.dispatch.domain.me.fetchMe()
-      } catch {
-        location.href = '/login'
-      }
-
-      // 初回fetch
-      store.dispatch.entities.fetchUsers()
-      store.dispatch.entities.fetchUserGroups()
-      store.dispatch.entities.fetchChannels()
-      store.dispatch.domain.fetchChannelActivity()
-      store.dispatch.domain.me.fetchUnreadChannels()
     })
 
     return {
