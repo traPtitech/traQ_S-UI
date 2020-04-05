@@ -16,8 +16,7 @@ import Icon from '@/components/UI/Icon.vue'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.primary
+      color: theme.ui.secondary
     })),
     circle: makeStyles(theme => ({
       borderColor: theme.ui.tertiary
@@ -41,8 +40,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 60px;
-  padding-right: 90px;
+  position: absolute;
+  top: 60px;
+  right: 90px;
   text-align: center;
   font-weight: bold;
   font-size: 0.8rem;
