@@ -7,6 +7,9 @@ export const mutations = defineMutations<S>()({
   },
   setComponentLoaded(state: S, componentLoaded: boolean) {
     state.componentLoaded = componentLoaded
+  },
+  setInitialFetchCompleted(state: S) {
+    state.initialFetchCompleted = true
   }
   // TODO: テーマの変更
 })

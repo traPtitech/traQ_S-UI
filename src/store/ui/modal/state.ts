@@ -1,14 +1,20 @@
-import { UserId, ChannelId } from '@/types/entity-ids'
+import { UserId, ChannelId, FileId } from '@/types/entity-ids'
+import { RouteName } from '@/router'
 
-type ModalStateType = 'user' | 'group' | 'notification' | 'setting'
+type ModalStateType = 'user' | 'group' | 'notification' | 'file' | 'setting'
 
 export type ModalState =
   | UserModalState
   | NotificationModalState
+  | FileModalState
   | SettingModalState
 
 interface BaseModalState {
+  /** モーダル種別 */
   type: ModalStateType
+
+  /** モーダルがルートに紐づいているか (例: ファイルモーダル) */
+  relatedRoute?: RouteName
 }
 
 interface UserModalState extends BaseModalState {
@@ -21,14 +27,24 @@ interface NotificationModalState extends BaseModalState {
   channelId: ChannelId
 }
 
+interface FileModalState extends BaseModalState {
+  type: 'file'
+  id: FileId
+  relatedRoute: RouteName.File
+}
+
 interface SettingModalState extends BaseModalState {
   type: 'setting'
 }
 
 export interface S {
   modalState: ModalState[]
+
+  /** ナビゲーションを挟むことなくモーダルを表示している状態か */
+  isOnInitialModalRoute: boolean
 }
 
 export const state: S = {
-  modalState: []
+  modalState: [],
+  isOnInitialModalRoute: false
 }

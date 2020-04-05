@@ -6,6 +6,7 @@
         v-for="messageId in props.messageIds"
         :key="messageId"
         :messageId="messageId"
+        @change-height="onChangeHeight"
       />
     </div>
   </div>
@@ -90,11 +91,27 @@ export default defineComponent({
       }
     }, 17)
 
+    const onChangeHeight = (payload: {
+      heightDiff: number
+      top: number
+      bottom: number
+      lastTop: number
+      lastBottom: number
+    }) => {
+      if (!rootRef.value) {
+        return
+      }
+      // 画像読み込みで高さがずれた
+      rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
+      state.height += payload.heightDiff
+    }
+
     return {
       props,
       state,
       rootRef,
-      handleScroll
+      handleScroll,
+      onChangeHeight
     }
   }
 })

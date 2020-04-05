@@ -28,88 +28,21 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
   reactive,
   watchEffect,
   watch,
   onMounted
 } from '@vue/composition-api'
+import store from '@/store'
 import { setupWebSocket } from '@/lib/websocket'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import store from '@/store'
-import { RouteName, constructChannelPath } from '@/router'
-import useChannelPath from '@/use/channelPath'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
-import useViewTitle from '@/views/use/viewTitle'
-
-// TODO: 起動時チャンネル
-const defaultChannelName = 'random'
-
-type Views = 'none' | 'main' | 'not-found'
-
-const useRouteWacher = (context: SetupContext) => {
-  const { channelPathToId } = useChannelPath()
-  const { changeViewTitle } = useViewTitle()
-
-  const state = reactive({
-    currentRouteName: computed(() => context.root.$route.name),
-    currentRouteParam: computed(
-      (): string =>
-        state.channelParam ?? state.messageParam ?? state.userParam ?? ''
-    ),
-    channelParam: computed(() => context.root.$route.params['channel']),
-    messageParam: computed(() => context.root.$route.params['message']),
-    userParam: computed(() => context.root.$route.params['user']),
-    view: 'none' as Views
-  })
-
-  const watcher = watchEffect(() => {
-    if (state.currentRouteName === RouteName.Index) {
-      // 何も指定されていなければ、ログインチェックをして初期チャンネルに飛ばす
-      store.dispatch.domain.me
-        .fetchMe()
-        .then(() => {
-          context.root.$router.replace({
-            name: RouteName.Channel,
-            params: { channel: defaultChannelName }
-          })
-        })
-        .catch(() => {
-          location.href = '/login'
-        })
-      return
-    }
-
-    if (state.currentRouteName === RouteName.Channel) {
-      if (store.state.domain.channelTree.channelTree.children.length === 0) {
-        // まだチャンネルツリーが構築されていない
-        return
-      }
-      try {
-        const id = channelPathToId(
-          state.channelParam.split('/'),
-          store.state.domain.channelTree.channelTree
-        )
-        store.dispatch.domain.messagesView.changeCurrentChannel(id)
-
-        state.view = 'main'
-
-        changeViewTitle(`#${state.channelParam}`)
-      } catch {
-        state.view = 'not-found'
-      }
-    }
-  })
-  return {
-    routeWatcherState: state,
-    routeWatcher: watcher
-  }
-}
+import useRouteWatcher from './use/routeWatcher'
 
 export default defineComponent({
   name: 'Home',
@@ -121,7 +54,7 @@ export default defineComponent({
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
-  setup(_, context: SetupContext) {
+  setup(_, context) {
     const {
       swipeDetectorState,
       touchmoveHandler,
@@ -143,7 +76,24 @@ export default defineComponent({
       transform: `translateX(${swipeDrawerState.currentPosition}px)`
     }))
 
-    const { routeWatcherState, routeWatcher } = useRouteWacher(context)
+    // 初回fetch
+    Promise.all([
+      store.dispatch.entities.fetchUsers(),
+      store.dispatch.entities.fetchUserGroups(),
+      store.dispatch.entities.fetchChannels(),
+      store.dispatch.entities.fetchStamps()
+    ]).then(() => {
+      store.commit.app.setInitialFetchCompleted()
+      store.dispatch.domain.stampCategory.constructStampCategories()
+      store.dispatch.entities.fetchStampPalettes()
+      store.dispatch.domain.fetchChannelActivity()
+      store.dispatch.domain.fetchOnlineUsers()
+      store.dispatch.domain.me.fetchUnreadChannels()
+      store.dispatch.domain.me.fetchStaredChannels()
+      store.dispatch.domain.me.fetchStampHistory()
+    })
+
+    const { routeWatcherState } = useRouteWatcher(context)
 
     setupWebSocket()
 

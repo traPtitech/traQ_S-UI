@@ -20,7 +20,7 @@ import {
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildStampImagePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/api'
 
 type Props = {
   stampId: StampId
@@ -57,7 +57,7 @@ export default defineComponent({
     )
     const imageUrl = computed(() => {
       const fileId = store.state.entities.stamps[props.stampId]?.fileId
-      return fileId ? `${buildStampImagePath(fileId)}` : ''
+      return fileId ? `${buildFilePath(fileId)}` : ''
     })
     const styles = useStyles(props)
     return { props, imageUrl, name, styles }

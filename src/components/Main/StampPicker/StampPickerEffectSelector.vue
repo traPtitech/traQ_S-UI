@@ -7,7 +7,7 @@ import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildStampImagePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/api'
 
 type Props = {
   stampId: StampId
@@ -30,7 +30,7 @@ export default defineComponent({
   },
   setup(props: Props, context: SetupContext) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
-    const imageUrl = fileId ? `${buildStampImagePath(fileId)}` : ''
+    const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     return { imageUrl }
   }
 })

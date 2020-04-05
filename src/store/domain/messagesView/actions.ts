@@ -4,6 +4,7 @@ import { messagesView } from './index'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
+import { embeddingExtractor } from '@/lib/embeddingExtractor'
 
 export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
@@ -62,9 +63,21 @@ export const actions = defineActions({
     commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
-    const { commit, rootState } = messagesViewActionContext(context)
+    const { commit, rootState, rootDispatch } = messagesViewActionContext(
+      context
+    )
     const content = rootState.entities.messages[messageId].content ?? ''
-    const renderedContent = render(content)
+
+    const extracted = embeddingExtractor(content)
+
+    await Promise.all(
+      extracted.embeddings.map(async e =>
+        rootDispatch.entities.fetchFileMetaByFileId(e.id)
+      )
+    )
+
+    const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })
+    commit.addEmbededFile({ messageId, files: extracted.embeddings })
   }
 })

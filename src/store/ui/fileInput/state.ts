@@ -1,4 +1,4 @@
-export type AttachmentType = 'image' | 'audio' | 'video' | 'file'
+import { AttachmentType } from '@/lib/util/file'
 
 export type Attachment = {
   file: File
