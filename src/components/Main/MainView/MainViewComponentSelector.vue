@@ -1,5 +1,6 @@
 <template>
   <messages-view
+    :class="$style.messagesView"
     v-if="props.viewInfo && props.viewInfo.type === 'messages'"
     :channel-id="channelId"
   />
@@ -41,6 +42,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.messagesView {
+  padding: 0;
+}
 .none {
   display: none;
 }

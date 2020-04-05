@@ -35,5 +35,5 @@ export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {
 export const onChannelViewersChanged = (
   data: ChannelViewersChangedEvent['body']
 ) => {
-  console.error('onChannelViewersChanged: Not implemented')
+  store.commit.domain.messagesView.setCurrentViewer(data.viewers)
 }

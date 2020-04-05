@@ -10,8 +10,13 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
+<<<<<<< HEAD
     <messages-scroller :message-ids="state.channelMessageIds" />
     <message-input :channel-id="state.channelId" />
+=======
+    <main-view :channelId="channelId" />
+    <channel-side-bar :channelId="channelId" />
+>>>>>>> wip
   </div>
 </template>
 
@@ -27,8 +32,8 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import MessagesScroller from './MessagesScroller.vue'
-import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
+import MainView from './MainView.vue'
+import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
@@ -62,7 +67,12 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
 
 export default defineComponent({
   name: 'MessagesView',
-  components: { MessagesScroller, MessageInput, MessagesViewFileUploadOverlay },
+  props: { channelId: String },
+  components: {
+    MainView,
+    MessagesViewFileUploadOverlay,
+    ChannelSideBar
+  },
   setup() {
     const state = reactive({
       channelMessageIds: computed(
@@ -100,7 +110,7 @@ $messagePadding: 32px;
 
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   position: relative;
   height: 100%;
   padding: 0 $messagePadding;

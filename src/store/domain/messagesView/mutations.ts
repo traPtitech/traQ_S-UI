@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId, MessageId } from '@/types/entity-ids'
+import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
 export const mutations = defineMutations<S>()({
@@ -34,5 +34,8 @@ export const mutations = defineMutations<S>()({
     payload: { messageId: MessageId; files: EmbeddedFile[] }
   ) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+  },
+  setCurrentViewer(state, viewerIds: UserId[]) {
+    state.currentViewerIds = viewerIds
   }
 })

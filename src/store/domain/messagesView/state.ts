@@ -1,4 +1,4 @@
-import { MessageId, ChannelId } from '@/types/entity-ids'
+import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
 export interface S {
@@ -9,6 +9,7 @@ export interface S {
   renderedContentMap: Record<MessageId, string>
   embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
   isReachedEnd: boolean
+  currentViewerIds: UserId[]
 }
 
 export const state: S = {
@@ -18,5 +19,6 @@ export const state: S = {
   fetchLimit: 50,
   renderedContentMap: {},
   embeddedFilesMap: {},
-  isReachedEnd: false
+  isReachedEnd: false,
+  currentViewerIds: []
 }
