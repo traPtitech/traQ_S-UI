@@ -6,6 +6,8 @@
       :key="stampId"
       :stamp-id="stampId"
       :stamps="stamps"
+      @add-stamp="addStamp"
+      @remove-stamp="removeStamp"
     />
   </div>
 </template>
@@ -15,9 +17,12 @@ import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { reduceToRecordOfArray } from '@/lib/util/record'
+import { StampId, MessageId } from '@/types/entity-ids'
+import store from '@/store'
 
 type Props = {
   stamps: MessageStamp[]
+  messageId: MessageId
 }
 
 export default defineComponent({
@@ -26,6 +31,10 @@ export default defineComponent({
     stamps: {
       type: Array,
       required: true
+    },
+    messageId: {
+      type: String,
+      required: true
     }
   },
   components: { StampElement },
@@ -33,7 +42,20 @@ export default defineComponent({
     const state = reactive({
       stampsById: computed(() => reduceToRecordOfArray(props.stamps, 'stampId'))
     })
-    return { props, state }
+    const addStamp = (stampId: StampId) => {
+      store.dispatch.domain.messagesView.addStamp({
+        messageId: props.messageId,
+        stampId
+      })
+    }
+    const removeStamp = (stampId: StampId) => {
+      store.dispatch.domain.messagesView.removeStamp({
+        messageId: props.messageId,
+        stampId
+      })
+    }
+
+    return { props, state, addStamp, removeStamp }
   }
 })
 </script>

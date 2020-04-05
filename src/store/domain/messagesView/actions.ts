@@ -1,9 +1,11 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messagesView } from './index'
-import { ChannelId, MessageId } from '@/types/entity-ids'
-import { Message } from '@traptitech/traq'
+import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
+import { Message, ChannelViewState } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
+import apis from '@/lib/api'
+import { changeViewState } from '@/lib/websocket'
 
 export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
@@ -12,6 +14,8 @@ export const actions = defineActions({
   async changeCurrentChannel(context, channelId: ChannelId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId === channelId) return
+
+    changeViewState(channelId, ChannelViewState.Monitoring)
 
     commit.setIsReachedEnd(false)
     commit.setCurrentChannelId(channelId)
@@ -68,5 +72,11 @@ export const actions = defineActions({
     const content = rootState.entities.messages[messageId].content ?? ''
     const renderedContent = render(content)
     commit.addRenderedContent({ messageId, renderedContent })
+  },
+  addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+    apis.addMessageStamp(payload.messageId, payload.stampId)
+  },
+  removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+    apis.removeMessageStamp(payload.messageId, payload.stampId)
   }
 })

@@ -21,6 +21,7 @@
       <message-stamp-list
         :class="$style.stamps"
         v-if="state.message.stamps.length > 0"
+        :message-id="props.messageId"
         :stamps="state.message.stamps"
       />
     </div>
@@ -64,14 +65,14 @@ export default defineComponent({
     const styles = reactive({
       body: makeStyles(theme => {
         return {
-          backgroundColor: hoverState
+          backgroundColor: hoverState.hover
             ? transparentize(theme.background.secondary, 0.6)
             : 'transparent'
         }
       })
     })
 
-    return { state, styles, onMouseEnter, onMouseLeave }
+    return { props, state, styles, onMouseEnter, onMouseLeave }
   }
 })
 </script>

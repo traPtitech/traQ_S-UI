@@ -1,4 +1,3 @@
-import { ChannelId } from '@/types/entity-ids'
 import { Theme } from '@/types/theme'
 
 export interface S {

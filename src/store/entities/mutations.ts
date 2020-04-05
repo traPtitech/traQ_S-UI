@@ -1,9 +1,13 @@
 import Vue from 'vue'
-import { Channel } from '@traptitech/traq'
+import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId } from '@/types/entity-ids'
 import store from '..'
+import {
+  MessageStampedEvent,
+  MessageUnstampedEvent
+} from '@/lib/websocket/events'
 
 type RecordKeyOf<R> = R extends Record<infer K, any> ? K : never
 type RecordValueOf<R> = R extends Record<string, infer V> ? V : never
@@ -72,5 +76,13 @@ export const mutations = defineMutations<S>()({
   deleteUserGroup: deleteMutation('userGroups'),
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
-  deleteWebhook: deleteMutation('webhooks')
+  deleteWebhook: deleteMutation('webhooks'),
+
+  updateMessageStamp(
+    state,
+    payload: {
+      messageId: MessageId
+      messageStamp: MessageStamp
+    }
+  ) {}
 })

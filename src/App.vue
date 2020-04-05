@@ -43,6 +43,7 @@ export default defineComponent({
       store.dispatch.entities.fetchStampPalettes()
       store.dispatch.domain.fetchChannelActivity()
       store.dispatch.domain.fetchOnlineUsers()
+      store.dispatch.domain.me.fetchMe()
       store.dispatch.domain.me.fetchUnreadChannels()
       store.dispatch.domain.me.fetchStaredChannels()
       store.dispatch.domain.me.fetchStampHistory()

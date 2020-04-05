@@ -1,5 +1,11 @@
 <template>
-  <div :class="$style.body" :style="styles.body">
+  <div
+    :class="$style.body"
+    :style="styles.body"
+    @click="onClick"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <div :class="$style.stampContainer">
       <img :src="state.src" :alt="state.stamp.name" />
     </div>
@@ -10,11 +16,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  SetupContext
+} from '@vue/composition-api'
 import { StampId } from '@/types/entity-ids'
 import store from '@/store'
 import { BASE_PATH, Stamp, MessageStamp } from '@/lib/api'
-import { makeStyles } from '../../../../lib/styles'
+import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
+import useHover from '@/use/hover'
 
 type Props = {
   stampId: StampId
@@ -33,8 +46,9 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props: Props, context: SetupContext) {
     const stamp = computed(() => store.state.entities.stamps[props.stampId])
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const state = reactive({
       count: computed(() =>
         props.stamps.reduce((acc, cur) => {
@@ -42,25 +56,46 @@ export default defineComponent({
         }, 0)
       ),
       stamp,
-      src: computed(() => `${BASE_PATH}/files/${stamp.value.fileId}`)
+      src: computed(() => `${BASE_PATH}/files/${stamp.value.fileId}`),
+      includeMe: computed(() =>
+        props.stamps.some(stamp => stamp.userId === store.state.domain.me.id)
+      )
     })
     const styles = reactive({
       body: makeStyles(theme => {
         return {
-          backgroundColor: theme.background.tertiary
+          backgroundColor: state.includeMe
+            ? transparentize(theme.accent.primary, 0.3)
+            : theme.background.tertiary
         }
       }),
       count: makeStyles(theme => {
         return {
-          color: theme.ui.primary
+          color: state.includeMe
+            ? theme.ui.primary
+            : hoverState.hover
+            ? theme.ui.primary
+            : transparentize(theme.ui.primary, 0.6)
         }
       })
     })
 
+    const onClick = () => {
+      if (state.includeMe) {
+        context.emit('remove-stamp', props.stampId)
+      } else {
+        context.emit('add-stamp', props.stampId)
+      }
+    }
+
     return {
       props,
       state,
-      styles
+      styles,
+      onClick,
+      hoverState,
+      onMouseEnter,
+      onMouseLeave
     }
   }
 })
@@ -95,10 +130,6 @@ export default defineComponent({
     left: 6px;
     right: 4px;
   }
-  opacity: 0.6;
-
-  .body:hover & {
-    opacity: 1;
-  }
+  user-select: none;
 }
 </style>
