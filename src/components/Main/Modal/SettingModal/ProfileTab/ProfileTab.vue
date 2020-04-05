@@ -46,18 +46,9 @@ import {
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/api'
+import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
-
-const isAnyChanged = <T extends Partial<UserDetail>>(
-  state: Readonly<T>,
-  storeState: Readonly<Ref<UserDetail>>
-): boolean => {
-  return Object.keys(state).some(key => {
-    const k = key as keyof UserDetail
-    return storeState.value[k] === undefined || state[k] !== storeState.value[k]
-  })
-}
 
 export default defineComponent({
   name: 'ProfileTab',
@@ -69,7 +60,8 @@ export default defineComponent({
       bio: detail.value.bio ?? '',
       twitterId: detail.value.twitterId ?? ''
     })
-    const isStateChanged = computed(() => isAnyChanged(state, detail))
+    const { hasDiff } = useStateDiff<UserDetail>()
+    const isStateChanged = computed(() => hasDiff(state, detail))
 
     const imgData = ref<Blob>()
     const onImgSet = (file: Blob) => {

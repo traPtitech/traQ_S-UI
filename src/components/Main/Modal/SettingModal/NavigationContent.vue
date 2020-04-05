@@ -6,7 +6,7 @@
     <qall-tab v-else-if="currentNavigation === 'qall'" />
     <stamp-tab v-else-if="currentNavigation === 'stamp'" />
     <theme-tab v-else-if="currentNavigation === 'theme'" />
-    <section v-if="isSafari">
+    <section v-if="safariFlag">
       Safariを利用していてかつ、アプリまたはPWAをインストールをしていない場合は、
       7日間の使用がなかった際にここの設定情報が消えることがあります。 詳細は
       <a
@@ -32,6 +32,7 @@ import store from '@/store'
 import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
+import { isSafari } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
@@ -39,14 +40,6 @@ import BrowserTab from './BrowserTab/BrowserTab.vue'
 import QallTab from './QallTab/QallTab.vue'
 import StampTab from './StampTab/StampTab.vue'
 import ThemeTab from './ThemeTab/ThemeTab.vue'
-
-const getIsSafari = () => {
-  const ua = navigator.userAgent.toLowerCase()
-  if (ua.includes('safari') && !ua.includes('chrome') && !ua.includes('edge')) {
-    return true
-  }
-  return false
-}
 
 const useStyles = () =>
   reactive({
@@ -75,10 +68,9 @@ export default defineComponent({
   setup() {
     const styles = useStyles()
 
-    const isSafari = ref(false)
-    isSafari.value = getIsSafari()
+    const safariFlag = isSafari()
 
-    return { styles, isSafari }
+    return { styles, safariFlag }
   }
 })
 </script>
