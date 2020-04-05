@@ -1,11 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div v-for="child in state.children" :key="child.id">
-      <span :class="$style.childHash" :style="styles.childHash">#</span>
-      <router-link :to="buildChannelLink(child)" :style="styles.child">
-        {{ child.name }}
-      </router-link>
-    </div>
+    <span :class="$style.channelHash" :style="styles.channelHash">#</span>
+    <span :style="styles.channel">{{ state.channel }}</span>
   </div>
 </template>
 
@@ -34,13 +30,18 @@ export default defineComponent({
   props: { channelId: String },
   setup(props: Props) {
     const state = reactive({
-      children: computed(() => {
-        const { channelIdToChildrenSimpleChannel } = useChannelPath()
-        return channelIdToChildrenSimpleChannel(props.channelId)
+      channel: computed(() => {
+        const { channelIdToPath } = useChannelPath()
+        const channelArray: string[] = channelIdToPath(props.channelId)
+        console.log(channelArray)
+        if (channelArray.length === 0) {
+          return ""
+        }
+        return channelArray[channelArray.length - 1]
       })
     })
-    const buildChannelLink = (channel: ChannelTreeNode) =>
-      `${location.pathname}/${channel.name}`
+    const buildChannelLink = (channel: string) =>
+      `${location.pathname}/${channel}`
     const styles = useStyles()
     return { props, state, styles, buildChannelLink }
   }
@@ -49,16 +50,17 @@ export default defineComponent({
 
 <style lang="scss" module>
 $childChannelSize: 1.5rem;
+$channelSize: 1.5rem;
 
 .container {
   height: 100%;
 }
-.child {
-  font-size: $childChannelSize;
+.channel {
+  font-size: $channelSize;
   margin: 0 0.125rem;
 }
-.childHash {
-  font-size: $childChannelSize;
+.channelHash {
+  font-size: $channelSize;
   margin-right: 0.125rem;
   margin-left: 27px;
   user-select: none;

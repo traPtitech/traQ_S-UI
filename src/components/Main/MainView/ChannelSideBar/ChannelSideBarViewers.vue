@@ -45,7 +45,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
-  widows: 250px;
+  width: 250px;
   height: 60px;
   flex-direction: row-reverse;
   justify-content: flex-end;
