@@ -32,6 +32,10 @@ const useRouteWacher = (context: SetupContext) => {
     return
   }
   const onRouteChangedToChannel = () => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
+      return
+    }
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
@@ -46,6 +50,10 @@ const useRouteWacher = (context: SetupContext) => {
     return
   }
   const onRouteChangedToFile = async () => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
+      return
+    }
     const fileId = state.idParam
     if (!store.state.entities.fileMetaData[fileId]) {
       await store.dispatch.entities.fetchFileMetaByFileId(fileId)
@@ -70,10 +78,6 @@ const useRouteWacher = (context: SetupContext) => {
   }
 
   const onRouteParamChange = async (param: string, prevParam: string) => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      // まだチャンネルツリーが構築されていない
-      return
-    }
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
