@@ -3,6 +3,7 @@ import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
 import { reduceToRecord } from '@/lib/util/record'
+import { FileId } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -13,6 +14,18 @@ interface GetMessagesParams {
   until?: Date
   inclusive?: boolean
   order?: 'asc' | 'desc'
+  options?: any
+}
+
+interface GetFilesChannelParams {
+  channelId: string
+  limit?: number
+  offset?: number
+  since?: Date
+  until?: Date
+  inclusive?: boolean
+  order?: 'asc' | 'desc'
+  mine?: boolean
   options?: any
 }
 
@@ -55,6 +68,27 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await api.getMessages(channelId, limit, offset)
     commit.extendMessages(reduceToRecord(res.data, 'id'))
+    return {
+      messages: res.data,
+      hasMore: res.headers['x-traq-more'] === 'true'
+    }
+  },
+  async fetchFileMetaByChannelId(
+    context,
+    { channelId, limit, offset }: GetFilesChannelParams
+  ) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getFiles(channelId, limit, offset)
+    commit.extendFileMetaData(reduceToRecord(res.data, 'id'))
+    return {
+      messages: res.data,
+      hasMore: res.headers['x-traq-more'] === 'true'
+    }
+  },
+  async fetchFileMetaByFileId(context, fileId: FileId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getFileMeta(fileId)
+    commit.addFileMetaData({ id: res.data.id, entity: res.data })
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'

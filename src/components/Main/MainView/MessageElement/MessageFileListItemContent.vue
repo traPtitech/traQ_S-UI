@@ -1,0 +1,108 @@
+<template>
+  <router-link
+    :to="fileLink"
+    :class="$style.container"
+    :style="styles.container"
+  >
+    <div :class="$style.icon">
+      <icon mdi :name="fileIconName" :size="32" />
+    </div>
+    <span :class="$style.fileName">
+      {{ fileMeta.name }}
+    </span>
+    <span :class="$style.fileSize" :style="styles.fileSize">{{
+      fileSize
+    }}</span>
+    <div :href="fileRawPath" :class="$style.dl">
+      <icon mdi name="download" :size="32" />
+    </div>
+  </router-link>
+</template>
+
+<script lang="ts">
+import {
+  defineComponent,
+  PropType,
+  computed,
+  reactive,
+  onBeforeMount
+} from '@vue/composition-api'
+import { FileId } from '@/types/entity-ids'
+import { AttachmentType } from '@/lib/util/file'
+import { makeStyles } from '@/lib/styles'
+import { prettifyFileSize } from '@/lib/util/file'
+import Icon from '@/components/UI/Icon.vue'
+import useFileMeta from './use/fileMeta'
+
+const useStyles = (props: { isWhite: boolean }) =>
+  reactive({
+    container: makeStyles((theme, common) => ({
+      borderColor: theme.ui.secondary,
+      color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
+    })),
+    fileSize: makeStyles((theme, common) => ({
+      color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
+    }))
+  })
+
+export default defineComponent({
+  name: 'MessageFileListItemContent',
+  components: { Icon },
+  props: {
+    fileId: {
+      type: String,
+      default: ''
+    },
+    isWhite: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props, context) {
+    const styles = useStyles(props)
+    const {
+      fileMeta,
+      fileSize,
+      fileIconName,
+      fileRawPath,
+      fileLink
+    } = useFileMeta(props, context)
+    return { styles, fileMeta, fileSize, fileIconName, fileRawPath, fileLink }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.container {
+  display: grid;
+  width: 100%;
+  grid-template:
+    'icon ...  name ... dl' 20px
+    'icon ...  size ... dl' 16px
+    /36px 16px auto 1fr 24px;
+  gap: 4px 0;
+  padding: 12px 16px;
+}
+.icon,
+.dl {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.icon {
+  grid-area: icon;
+}
+.dl {
+  grid-area: dl;
+}
+.fileName {
+  grid-area: name;
+  display: flex;
+  align-items: center;
+}
+.fileSize {
+  grid-area: size;
+  display: flex;
+  align-items: center;
+}
+</style>

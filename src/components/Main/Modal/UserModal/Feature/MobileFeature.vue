@@ -14,7 +14,7 @@
         @{{ props.user.name }}
       </p>
     </div>
-    <buttons :username="props.user.name" />
+    <buttons :username="props.user.name" :showTitle="false" />
   </section>
 </template>
 

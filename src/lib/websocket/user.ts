@@ -11,12 +11,27 @@ import {
   UserWebRTCStateChangedEvent,
   UserGroupCreatedEvent,
   UserGroupUpdatedEvent,
-  UserGroupDeletedEvent
+  UserGroupDeletedEvent,
+  UserUpdatedEvent
 } from './events'
 
 export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
   const res = await apis.getUser(id)
   store.commit.entities.addUser({ id, entity: res.data })
+}
+
+export const onUserUpdated = async ({ id }: UserUpdatedEvent['body']) => {
+  const res = await apis.getUser(id)
+  store.commit.entities.extendUsers({ [id]: res.data })
+
+  if (store.state.domain.userDetails[id]) {
+    store.commit.domain.setUserDetail(res.data)
+  }
+
+  if (store.state.domain.me.detail?.id === id) {
+    const res = await apis.getMe()
+    store.commit.domain.me.setDetail(res.data)
+  }
 }
 
 export const onUserLeft = ({ id }: UserLeftEvent['body']) => {
@@ -34,6 +49,12 @@ export const onUserIconUpdated = async ({
 }: UserIconUpdatedEvent['body']) => {
   const res = await apis.getUser(id)
   store.commit.entities.extendUsers({ [id]: res.data })
+
+  if (store.state.domain.me.detail?.id === id) {
+    const res = await apis.getMe()
+    store.commit.domain.me.setDetail(res.data)
+  }
+
   // TODO: アイコンキャッシュの削除(?)
 }
 

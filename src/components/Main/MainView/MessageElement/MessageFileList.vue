@@ -1,0 +1,78 @@
+<template>
+  <div>
+    <div :class="$style.imageContainer">
+      <message-file-list-image
+        v-for="meta in fileMetaDataState.images"
+        :key="meta.id"
+        :fileId="meta.id"
+        :is-large="showLargeImage"
+        :class="$style.imageItem"
+      />
+    </div>
+    <message-file-list-video
+      v-for="meta in fileMetaDataState.videos"
+      :key="meta.id"
+      :fileId="meta.id"
+    />
+    <message-file-list-file
+      v-for="meta in fileMetaDataState.files"
+      :key="meta.id"
+      :class="$style.item"
+      :fileId="meta.id"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { FileId } from '@/types/entity-ids'
+import { mimeToFileType } from '@/lib/util/file'
+import useFileMetaList from './use/fileMetaList'
+import MessageFileListFile from './MessageFileListFile.vue'
+import MessageFileListImage from './MessageFileListImage.vue'
+import MessageFileListVideo from './MessageFileListVideo.vue'
+
+interface Props {
+  fileIds: FileId[]
+}
+
+export default defineComponent({
+  name: 'MessageFileList',
+  components: {
+    MessageFileListFile,
+    MessageFileListImage,
+    MessageFileListVideo
+  },
+  props: {
+    fileIds: {
+      type: Array as PropType<FileId[]>,
+      default: []
+    }
+  },
+  setup(props: Props) {
+    const { fileMetaDataState } = useFileMetaList(props)
+    const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
+    return { fileMetaDataState, mimeToFileType, showLargeImage }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.imageContainer {
+  display: flex;
+  flex-flow: row wrap;
+}
+.imageItem {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+.item {
+  flex-shrink: 0;
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
+</style>

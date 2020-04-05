@@ -1,14 +1,22 @@
 <template>
   <div>
     <div @click="onDMClick" :style="{ display: 'inline-block' }">
-      <link-button iconName="email" iconMdi />
+      <link-button
+        :title="`${props.showTitle ? 'DM' : ''}`"
+        iconName="email"
+        iconMdi
+      />
     </div>
     <div
       v-if="homeChannelExists"
       @click="onHomeChannelClick"
       :style="{ display: 'inline-block' }"
     >
-      <link-button title="ホーム" iconName="home" iconMdi />
+      <link-button
+        :title="`${props.showTitle ? 'ホーム' : ''}`"
+        iconName="home"
+        iconMdi
+      />
     </div>
   </div>
 </template>
@@ -22,6 +30,7 @@ import LinkButton from './LinkButton.vue'
 
 type Props = {
   username: string
+  showTitle: boolean
 }
 
 export default defineComponent({
@@ -29,6 +38,10 @@ export default defineComponent({
   props: {
     username: {
       type: String,
+      required: true
+    },
+    showTitle: {
+      type: Boolean,
       required: true
     }
   },

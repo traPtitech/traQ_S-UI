@@ -8,7 +8,8 @@ import {
   onUserWebRTCStateChanged,
   onUserGroupCreated,
   onUserGroupUpdated,
-  onUserGroupDeleted
+  onUserGroupDeleted,
+  onUserUpdated
 } from './user'
 import {
   onChannelCreated,
@@ -57,6 +58,9 @@ export const onReceive = (data: string) => {
   switch (event.type) {
     case 'USER_JOINED':
       onUserJoined(event.body)
+      break
+    case 'USER_UPDATED':
+      onUserUpdated(event.body)
       break
     case 'USER_LEFT':
       onUserLeft(event.body)

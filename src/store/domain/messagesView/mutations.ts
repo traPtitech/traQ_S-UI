@@ -1,6 +1,8 @@
+import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId, MessageId } from '@/types/entity-ids'
+import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
@@ -26,5 +28,11 @@ export const mutations = defineMutations<S>()({
   },
   setIsReachedEnd(state, isReachedEnd: boolean) {
     state.isReachedEnd = isReachedEnd
+  },
+  addEmbededFile(
+    state,
+    payload: { messageId: MessageId; files: EmbeddedFile[] }
+  ) {
+    Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
   }
 })

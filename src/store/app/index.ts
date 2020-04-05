@@ -4,7 +4,9 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { messages } from './messages'
-import { rtc } from '../app/rtc'
+import { rtc } from './rtc'
+import { browserSettings } from './browserSettings'
+import { rtcSettings } from './rtcSettings'
 
 export const app = defineModule({
   namespaced: true,
@@ -14,6 +16,8 @@ export const app = defineModule({
   actions,
   modules: {
     messages,
-    rtc
+    rtc,
+    browserSettings,
+    rtcSettings
   }
 })

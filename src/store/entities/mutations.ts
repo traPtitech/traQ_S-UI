@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, MessageId } from '@/types/entity-ids'
 import store from '..'
 import {
   MessageStampedEvent,
@@ -55,6 +55,7 @@ export const mutations = defineMutations<S>()({
   setStamps: setMutation('stamps'),
   setStampPalettes: setMutation('stampPalettes'),
   setWebhooks: setMutation('webhooks'),
+  setFileMetaData: setMutation('fileMetaData'),
 
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
@@ -63,6 +64,7 @@ export const mutations = defineMutations<S>()({
   extendStamps: extendMutation('stamps'),
   extendStampPalettes: extendMutation('stampPalettes'),
   extendWebhooks: extendMutation('webhooks'),
+  extendFileMetaData: extendMutation('fileMetaData'),
 
   addUser: addMutation('users'),
   addChannel: addMutation('channels'),
@@ -70,6 +72,7 @@ export const mutations = defineMutations<S>()({
   addStamp: addMutation('stamps'),
   addStampPalette: addMutation('stampPalettes'),
   addWebhook: addMutation('webhooks'),
+  addFileMetaData: addMutation('fileMetaData'),
 
   deleteUser: deleteMutation('users'),
   deleteChannel: deleteMutation('channels'),
@@ -77,6 +80,7 @@ export const mutations = defineMutations<S>()({
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),
+  deleteFileMetaData: deleteMutation('fileMetaData'),
 
   updateMessageStamp(
     state,

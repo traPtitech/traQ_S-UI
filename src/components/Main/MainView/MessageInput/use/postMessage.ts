@@ -1,7 +1,7 @@
 import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import api, { buildFilePath } from '@/lib/api'
+import api, { buildFilePathForPost } from '@/lib/api'
 
 const usePostMessage = (
   textState: TextState,
@@ -16,7 +16,7 @@ const usePostMessage = (
           api.postFile(attachment.file, props.channelId)
         )
       )
-      const fileUrls = responses.map(res => buildFilePath(res.data.id))
+      const fileUrls = responses.map(res => buildFilePathForPost(res.data.id))
       const embededdUrls = fileUrls.join('\n')
       await api.postMessage(props.channelId, {
         content: textState.text + '\n' + embededdUrls

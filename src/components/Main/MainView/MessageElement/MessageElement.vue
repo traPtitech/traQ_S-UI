@@ -4,6 +4,7 @@
     :style="styles.body"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    ref="bodyRef"
   >
     <user-icon
       :class="$style.userIcon"
@@ -24,20 +25,35 @@
         :message-id="props.messageId"
         :stamps="state.message.stamps"
       />
+      <message-file-list
+        v-if="state.fileIds.length > 0"
+        :class="$style.messageFileList"
+        :fileIds="state.fileIds"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  onMounted,
+  watchEffect,
+  watch,
+  SetupContext
+} from '@vue/composition-api'
 import store from '@/store'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageStampList from './MessageStampList.vue'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
+import UserIcon from '@/components/UI/UserIcon.vue'
+import MessageHeader from './MessageHeader.vue'
+import MessageStampList from './MessageStampList.vue'
+import MessageFileList from './MessageFileList.vue'
 
 type Props = {
   messageId: MessageId
@@ -45,21 +61,27 @@ type Props = {
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageStampList },
+  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
   props: {
     messageId: {
       type: String,
       required: true
     }
   },
-  setup(props: Props, context) {
+  setup(props: Props, context: SetupContext) {
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+    const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
+      ),
+      fileIds: computed(() =>
+        store.state.domain.messagesView.embeddedFilesMap[props.messageId].map(
+          e => e.id
+        )
       )
     })
     const styles = reactive({
@@ -72,7 +94,51 @@ export default defineComponent({
       })
     })
 
-    return { props, state, styles, onMouseEnter, onMouseLeave }
+    let lastHeight = 0
+    let lastBottom = 0
+    let lastTop = 0
+    const resizeObserver = new ResizeObserver(entries => {
+      const entry = entries[0]
+      if (lastHeight === 0) {
+        // 初回に高さが変化した場合、初期レンダリング完了とみなして処理を飛ばす
+        // これ以降新規にobserveしないためにwatcherを止める
+        lastHeight = entry.contentRect.height
+        stop()
+      } else {
+        const height = entry.contentRect.height
+        const bottom = entry.contentRect.bottom
+        const top = entry.contentRect.top
+        context.emit('change-height', {
+          heightDiff: height - lastHeight,
+          top,
+          bottom,
+          lastTop,
+          lastBottom
+        })
+        lastHeight = height
+        lastBottom = bottom
+        lastTop = top
+      }
+    })
+    const stop = watchEffect(async () => {
+      if (
+        state.content.length > 0 &&
+        state.fileIds.length > 0 &&
+        bodyRef.value
+      ) {
+        // 添付ファイルがある場合は高さ監視をする
+        resizeObserver.observe(bodyRef.value)
+      }
+    })
+    watch(
+      () => context.root.$route.path,
+      () =>
+        // パス変更でunobserve
+        // vue-routerのインスタンス再利用対策
+        bodyRef.value ? resizeObserver.unobserve(bodyRef.value) : undefined
+    )
+
+    return { props, state, styles, onMouseEnter, onMouseLeave, bodyRef }
   }
 })
 </script>
@@ -118,5 +184,9 @@ export default defineComponent({
 
 .stamps {
   margin-top: 8px;
+}
+
+.messageFileList {
+  margin-top: 16px;
 }
 </style>

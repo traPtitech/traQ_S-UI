@@ -8,7 +8,10 @@ export enum RouteName {
   Channel = 'channel',
   User = 'user',
   Message = 'message',
+  File = 'File',
   Login = 'login',
+  Registration = 'registration',
+  ResetPassword = 'reset-password',
   NotFound = 'not-found'
 }
 
@@ -26,20 +29,32 @@ const routes = [
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
-    path: '/users/:user',
+    path: '/users/:id',
     name: RouteName.User,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
-    path: '/messages/:message',
+    path: '/messages/:id',
     name: RouteName.Message,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/files/:id',
+    name: RouteName.File,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
     path: '/login',
     name: RouteName.Login,
-    component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+    component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+    props: { type: 'login' }
   },
+  // {
+  //   path: '/registration',
+  //   name: RouteName.Registration,
+  //   component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+  //   props: { type: 'registration' }
+  // },
   {
     path: '*',
     name: RouteName.NotFound,

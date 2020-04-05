@@ -5,7 +5,8 @@ import {
   Stamp,
   StampPalette,
   Webhook,
-  Message
+  Message,
+  FileInfo
 } from '@traptitech/traq'
 import {
   UserId,
@@ -14,7 +15,8 @@ import {
   StampId,
   StampPaletteId,
   WebhookId,
-  MessageId
+  MessageId,
+  FileId
 } from '@/types/entity-ids'
 
 export type S = {
@@ -25,6 +27,7 @@ export type S = {
   stamps: Record<StampId, Stamp>
   stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Record<WebhookId, Webhook>
+  fileMetaData: Record<FileId, FileInfo>
 }
 
 export const state: S = {
@@ -34,5 +37,6 @@ export const state: S = {
   userGroups: {},
   stamps: {},
   stampPalettes: {},
-  webhooks: {}
+  webhooks: {},
+  fileMetaData: {}
 }
