@@ -2,7 +2,7 @@
   <div>
     <div @click="onDMClick" :style="{ display: 'inline-block' }">
       <link-button
-        :title="`${props.showTitle ? 'DM' : ''}`"
+        :title="`${showTitle ? 'DM' : ''}`"
         iconName="email"
         iconMdi
       />
@@ -13,7 +13,7 @@
       :style="{ display: 'inline-block' }"
     >
       <link-button
-        :title="`${props.showTitle ? 'ホーム' : ''}`"
+        :title="`${showTitle ? 'ホーム' : ''}`"
         iconName="home"
         iconMdi
       />
@@ -28,11 +28,6 @@ import store from '@/store'
 import useHomeChannel from '../use/homeChannel'
 import LinkButton from './LinkButton.vue'
 
-interface Props {
-  username: string
-  showTitle: boolean
-}
-
 export default defineComponent({
   name: 'Buttons',
   props: {
@@ -45,7 +40,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const username = computed(() => props.username)
     const onDMClick = () => {
       // TODO: DM対応
@@ -53,7 +48,6 @@ export default defineComponent({
     }
 
     return {
-      props,
       onDMClick,
       ...useHomeChannel(username)
     }

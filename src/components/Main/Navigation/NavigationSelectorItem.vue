@@ -1,12 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.icon" :style="styles.icon">
-      <icon
-        :name="props.iconName"
-        :mdi="props.iconMdi"
-        :width="24"
-        :height="24"
-      />
+      <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
     </div>
   </div>
 </template>
@@ -31,13 +26,6 @@ const useStyles = (props: { isSelected: boolean }) => {
   })
 }
 
-type Props = {
-  iconName: string
-  iconMdi: boolean
-  isSelected: boolean
-  hasNotification: boolean
-}
-
 export default defineComponent({
   name: 'NavigationSelectorItem',
   components: { Icon },
@@ -59,9 +47,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles(props)
-    return { props, styles }
+    return { styles }
   }
 })
 </script>

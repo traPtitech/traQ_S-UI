@@ -1,18 +1,16 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    <user-icon :class="$style.icon" :userId="props.user.id" :size="36" />
-    <users-element-user-name :user="props.user" :class="$style.user" />
+    <user-icon :class="$style.icon" :userId="user.id" :size="36" />
+    <users-element-user-name :user="user" :class="$style.user" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-
-type Props = { user: User }
 
 export default defineComponent({
   name: 'UsersElement',
@@ -22,16 +20,15 @@ export default defineComponent({
   },
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const containerStyle = makeStyles(theme => ({
       color: theme.ui.tertiary
     }))
     return {
-      props,
       containerStyle
     }
   }

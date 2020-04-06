@@ -9,14 +9,19 @@
       <navigation-selector-item
         :iconName="item.iconName"
         :iconMdi="item.iconMdi"
-        :is-selected="props.currentNavigation === item.type"
+        :is-selected="currentNavigation === item.type"
       />
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from '@/components/Main/Modal/UserModal/NavigationSelectorItem.vue'
@@ -28,20 +33,16 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  currentNavigation: NavigationItemType
-}
-
 export default defineComponent({
   name: 'NavigationSelector',
   components: { NavigationSelectorItem },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'profile' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
     const items: {
       type: NavigationItemType
@@ -65,7 +66,6 @@ export default defineComponent({
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
     return {
       styles,
-      props,
       items,
       onNavigationItemClick
     }

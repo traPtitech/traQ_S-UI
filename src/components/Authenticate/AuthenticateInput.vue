@@ -1,30 +1,29 @@
 <template>
   <div>
     <label :for="id" :class="$style.title" :style="styles.title">{{
-      props.label
+      label
     }}</label>
     <input
       :class="$style.input"
       :id="id"
       :style="styles.input"
-      :value="props.text"
-      :type="props.type"
+      :value="text"
+      :type="type"
       @input="onInput"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import useInput from '@/use/input'
 import { makeStyles } from '@/lib/styles'
 import { randomString } from '@/lib/util/randomString'
-
-type Props = {
-  text: string
-  label: string
-  type: 'text' | 'password'
-}
 
 const useStyles = () =>
   reactive({
@@ -42,13 +41,16 @@ export default defineComponent({
   props: {
     text: { type: String, default: '' },
     label: { type: String, default: '' },
-    type: { type: String, default: 'text' }
+    type: {
+      type: String as PropType<'text' | 'password'>,
+      default: 'text' as const
+    }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const { onInput } = useInput(context)
     const styles = useStyles()
     const id = randomString()
-    return { props, styles, onInput, id }
+    return { styles, onInput, id }
   }
 })
 </script>

@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <span :class="$style.hr" :style="styles.hr"></span>
     <span :class="$style.label" :style="styles.label">
-      {{ props.label }}
+      {{ label }}
     </span>
     <span :class="$style.hr" :style="styles.hr"></span>
   </div>
@@ -11,10 +11,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  label: string
-}
 
 const useStyles = () =>
   reactive({
@@ -34,9 +30,9 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props: Props) {
+  setup() {
     const styles = useStyles()
-    return { props, styles }
+    return { styles }
   }
 })
 </script>

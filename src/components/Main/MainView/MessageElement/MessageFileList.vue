@@ -32,10 +32,6 @@ import MessageFileListFile from './MessageFileListFile.vue'
 import MessageFileListImage from './MessageFileListImage.vue'
 import MessageFileListVideo from './MessageFileListVideo.vue'
 
-interface Props {
-  fileIds: FileId[]
-}
-
 export default defineComponent({
   name: 'MessageFileList',
   components: {
@@ -49,7 +45,7 @@ export default defineComponent({
       default: []
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const { fileMetaDataState } = useFileMetaList(props)
     const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
     return { fileMetaDataState, mimeToFileType, showLargeImage }

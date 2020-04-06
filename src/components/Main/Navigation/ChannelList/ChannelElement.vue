@@ -4,9 +4,9 @@
     <div :class="$style.channel">
       <div :class="$style.channelHash" @click="onChannelHashClick">
         <channel-element-hash
-          :has-child="!props.ignoreChildren && state.hasChild"
+          :has-child="!ignoreChildren && state.hasChild"
           :is-selected="state.isSelected"
-          :is-opened="props.isOpened"
+          :is-opened="isOpened"
           :has-notification="notificationState.hasNotification"
           :has-notification-on-child="notificationState.hasNotificationOnChild"
         />
@@ -16,16 +16,12 @@
         :style="styles.channelName"
         @click="onChannelNameClick"
       >
-        {{ path }}{{ props.channel.name }}
+        {{ path }}{{ channel.name }}
       </div>
     </div>
 
     <!-- 子チャンネル表示 -->
-    <div
-      :class="$style.children"
-      v-show="props.isOpened"
-      v-if="!props.ignoreChildren"
-    >
+    <div :class="$style.children" v-show="isOpened" v-if="!ignoreChildren">
       <channel-list :channels="state.children" />
     </div>
 
@@ -44,7 +40,8 @@ import {
   SetupContext,
   computed,
   ref,
-  reactive
+  reactive,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
@@ -52,17 +49,6 @@ import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import ChannelList from './ChannelList.vue'
 import ChannelElementHash from './ChannelElementHash.vue'
-
-type Props = {
-  /** 対象チャンネル */
-  channel: ChannelTreeNode
-
-  /** 子チャンネルを展開表示しているか */
-  isOpened?: boolean
-
-  /** 子チャンネルを無視する */
-  ignoreChildren: boolean
-}
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -99,7 +85,7 @@ const useStyles = (state: { isSelected: boolean }) => {
   return styles
 }
 
-const useNotification = (props: Props) => {
+const useNotification = (props: { channel: ChannelTreeNode }) => {
   const notificationState = reactive({
     hasNotification: computed(
       () => props.channel.id in store.state.domain.me.unreadChannelsSet
@@ -121,20 +107,23 @@ export default defineComponent({
     ChannelElementHash
   },
   props: {
+    /** 対象チャンネル */
     channel: {
-      type: Object,
+      type: Object as PropType<ChannelTreeNode>,
       required: true
     },
+    /** 子チャンネルを展開表示しているか */
     isOpened: {
       type: Boolean,
       default: false
     },
+    /** 子チャンネルを無視する */
     ignoreChildren: {
       type: Boolean,
       default: false
     }
   },
-  setup(props: Props, context) {
+  setup(props, context) {
     const state = reactive({
       children: computed(() => props.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
@@ -155,7 +144,6 @@ export default defineComponent({
 
     return {
       state,
-      props,
       styles,
       path,
       notificationState,

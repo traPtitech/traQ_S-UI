@@ -3,7 +3,7 @@
     ref="textareaRef"
     :class="$style.container"
     :style="styles.container"
-    :value="props.text"
+    :value="text"
     placeholder="メッセージを送信"
     @input="onInput"
     @keydown="onKeyDown"
@@ -42,11 +42,6 @@ const useEnterWatcher = (context: SetupContext) => {
   return { onKeyDown }
 }
 
-type Props = {
-  text: string
-  shouldUpdateTextAreaSize: boolean
-}
-
 export default defineComponent({
   name: 'MessageInputTextArea',
   props: {
@@ -59,7 +54,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
     const { onInput } = useInput(context)
     const { onKeyDown } = useEnterWatcher(context)
@@ -78,7 +73,6 @@ export default defineComponent({
       }
     })
     return {
-      props,
       styles,
       onInput,
       onKeyDown,

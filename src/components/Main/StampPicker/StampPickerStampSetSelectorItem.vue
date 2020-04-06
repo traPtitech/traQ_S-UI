@@ -5,24 +5,24 @@
     @click="context.emit('click')"
   >
     <div
-      v-if="props.isActive"
+      v-if="isActive"
       :class="$style.indicator"
       :style="styles.indicator"
     ></div>
     <stamp
-      v-if="props.stampSet.type === 'palette'"
-      :stamp-id="pickThumbnail(props.stampSet.id)"
+      v-if="stampSet.type === 'palette'"
+      :stamp-id="pickThumbnail(stampSet.id)"
       :size="24"
       :style="styles.paletteStamp"
     />
     <icon
-      v-else-if="props.stampSet.type === 'category'"
-      :name="`stampCategory/${props.stampSet.id}`"
+      v-else-if="stampSet.type === 'category'"
+      :name="`stampCategory/${stampSet.id}`"
       :size="24"
       :style="styles.icon"
     />
     <icon
-      v-else-if="props.stampSet.type === 'history'"
+      v-else-if="stampSet.type === 'history'"
       mdi
       name="history"
       :size="24"
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
@@ -41,12 +41,7 @@ import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampSet } from './use/stampSetSelector'
 
-type Props = {
-  stampSet: StampSet
-  isActive: boolean
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (props: { isActive: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       color: props.isActive ? theme.accent.primary : theme.ui.secondary
@@ -81,7 +76,7 @@ export default defineComponent({
   },
   props: {
     stampSet: {
-      type: Object,
+      type: Object as PropType<StampSet>,
       required: true
     },
     isActive: {
@@ -89,10 +84,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles(props)
     const { pickThumbnail } = useStampPaletteThumbnail()
-    return { props, context, styles, pickThumbnail }
+    return { context, styles, pickThumbnail }
   }
 })
 </script>

@@ -4,7 +4,7 @@
       :ref="thumbnailRef"
       :class="$style.image"
       :src="imageThumbnailState.thumbnailDataUrl"
-      :alt="props.attachment.file.name"
+      :alt="attachment.file.name"
     />
   </div>
 </template>
@@ -16,19 +16,16 @@ import {
   computed,
   reactive,
   ref,
-  Ref
+  Ref,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { Attachment } from '@/store/ui/fileInput/state'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 
-type Props = {
-  attachment: Attachment
-}
-
 const useImageThumbnail = (
-  props: Props,
+  props: { attachment: Attachment },
   thumbnailRef: Ref<HTMLImageElement | null>
 ) => {
   const state = reactive({
@@ -52,15 +49,15 @@ export default defineComponent({
   },
   props: {
     attachment: {
-      type: Object,
+      type: Object as PropType<Attachment>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const thumbnailRef = ref<HTMLImageElement>(null)
     const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
     const styles = useStyles()
-    return { thumbnailRef, props, styles, imageThumbnailState }
+    return { thumbnailRef, styles, imageThumbnailState }
   }
 })
 </script>

@@ -1,14 +1,9 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.overlay" :style="styles.overlay">
-      <message-file-list-item-content :fileId="$props.fileId" is-white />
+      <message-file-list-item-content :fileId="fileId" is-white />
     </div>
-    <video
-      controls
-      draggable="false"
-      :alt="$props.fileName"
-      :src="fileRawPath"
-    />
+    <video controls draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
   </div>
 </template>
 
@@ -49,7 +44,7 @@ export default defineComponent({
   setup(props, context) {
     const styles = useStyles()
     const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
-    return { styles, fileLink, fileRawPath }
+    return { styles, fileMeta, fileLink, fileRawPath }
   }
 })
 </script>

@@ -1,12 +1,12 @@
 <template>
   <button :class="$style.button" :style="styles.button">
     <icon
-      :name="props.iconName"
-      :mdi="props.iconMdi"
+      :name="iconName"
+      :mdi="iconMdi"
       :class="$style.icon"
       :style="styles.icon"
     />
-    {{ props.title }}
+    {{ title }}
   </button>
 </template>
 
@@ -26,12 +26,6 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
-  title?: string
-  iconName: string
-  iconMdi: boolean
-}
-
 export default defineComponent({
   name: 'LinkButton',
   props: {
@@ -48,13 +42,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup() {
     const styles = useStyles()
 
-    return {
-      styles,
-      props
-    }
+    return { styles }
   },
   components: {
     Icon

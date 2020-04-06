@@ -29,7 +29,8 @@ import {
   computed,
   reactive,
   Ref,
-  toRefs
+  toRefs,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -55,19 +56,15 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
     }))
   })
 
-interface Props {
-  id: UserId
-}
-
 export default defineComponent({
   name: 'UserModal',
   props: {
     id: {
-      type: String,
+      type: String as PropType<UserId>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const isMobile = computed(() => store.getters.ui.isMobile)
 
     const iconSize = 160

@@ -3,7 +3,7 @@
     <div :class="$style.hash" :style="styles.hash">
       <icon name="hash" />
     </div>
-    <div v-if="props.hasNotification" :class="$style.indicator">
+    <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator has-border />
     </div>
   </div>
@@ -14,36 +14,14 @@ import {
   defineComponent,
   SetupContext,
   reactive,
-  computed
+  computed,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
-
-type Props = {
-  /** 子チャンネルを持っているか */
-  hasChild: boolean
-
-  /** 現在表示中のチャンネルか */
-  isSelected: boolean
-
-  /**
-   * チャンネルリストでアクティブ表示か
-   * e.g. ホームの非購読チャンネルはアクティブでない
-   */
-  isActive: boolean
-
-  /** 子チャンネルを展開表示しているか */
-  isOpened: boolean
-
-  /** 自分自身に通知があるか */
-  hasNotification: boolean
-
-  /** 子チャンネルに通知があるか */
-  hasNotificationOnChild: boolean
-}
 
 const useLeafContainerStyle = (selected: boolean) =>
   makeStyles(theme => ({
@@ -78,32 +56,41 @@ export default defineComponent({
     NotificationIndicator
   },
   props: {
+    /** 子チャンネルを持っているか */
     hasChild: {
       type: Boolean,
       default: false
     },
+    /** 現在表示中のチャンネルか */
     isSelected: {
       type: Boolean,
       default: false
     },
+    /**
+     * チャンネルリストでアクティブ表示か
+     * e.g. ホームの非購読チャンネルはアクティブでない
+     */
     isActive: {
       type: Boolean,
       default: false
     },
+    /** 子チャンネルを展開表示しているか */
     isOpened: {
       type: Boolean,
       default: false
     },
+    /** 自分自身に通知があるか */
     hasNotification: {
       type: Boolean,
       default: false
     },
+    /** 子チャンネルに通知があるか */
     hasNotificationOnChild: {
       type: Boolean,
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = reactive({
       hash: computed(() =>
         !props.hasChild
@@ -119,7 +106,7 @@ export default defineComponent({
         backgroundColor: theme.accent.notification
       }))
     })
-    return { props, styles }
+    return { styles }
   }
 })
 </script>

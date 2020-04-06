@@ -1,15 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <!-- TODO: Markdownパース対応 -->
-    {{ props.content }}
+    {{ content }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-
-type Props = { content: string }
 
 export default defineComponent({
   name: 'ActivityElementContent',
@@ -19,14 +17,13 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.primary
       }))
     })
     return {
-      props,
       styles
     }
   }

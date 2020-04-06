@@ -6,11 +6,11 @@
     />
     <message-input-file-list-item-image
       v-if="state.showThumbnail"
-      :attachment="props.attachment"
+      :attachment="attachment"
     />
     <div v-else :class="$style.fileContainer" :style="styles.fileContainer">
       <icon mdi :name="iconName" />
-      <div :class="$style.fileName">{{ props.attachment.file.name }}</div>
+      <div :class="$style.fileName">{{ attachment.file.name }}</div>
     </div>
   </div>
 </template>
@@ -22,7 +22,8 @@ import {
   computed,
   reactive,
   ref,
-  Ref
+  Ref,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { Attachment } from '@/store/ui/fileInput/state'
@@ -31,7 +32,7 @@ import { makeStyles } from '@/lib/styles'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 
-type Props = {
+interface Props {
   attachment: Attachment
 }
 
@@ -69,11 +70,11 @@ export default defineComponent({
   },
   props: {
     attachment: {
-      type: Object,
+      type: Object as PropType<Attachment>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const state = reactive({
       showThumbnail: computed((): boolean =>
         props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
@@ -86,7 +87,6 @@ export default defineComponent({
     const onClickClose = () => context.emit('item-remove')
     return {
       state,
-      props,
       styles,
       iconName,
       onClickClose

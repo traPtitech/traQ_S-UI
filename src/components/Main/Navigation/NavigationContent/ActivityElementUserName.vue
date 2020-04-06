@@ -1,19 +1,17 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <user-icon :class="$style.icon" :userId="props.user.id" :size="20" />
+    <user-icon :class="$style.icon" :userId="user.id" :size="20" />
     <span>
-      {{ props.user.displayName }}
+      {{ user.displayName }}
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
-
-type Props = { user: User }
 
 export default defineComponent({
   name: 'ActivityElementUserName',
@@ -22,18 +20,17 @@ export default defineComponent({
   },
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.secondary
       }))
     })
     return {
-      props,
       styles
     }
   }

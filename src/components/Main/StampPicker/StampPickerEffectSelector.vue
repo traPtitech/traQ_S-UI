@@ -3,15 +3,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import { buildFilePath } from '@/lib/api'
-
-type Props = {
-  stampId: StampId
-}
 
 const useStyles = () =>
   reactive({
@@ -24,11 +20,11 @@ export default defineComponent({
   name: 'StampPickerEffectSelector',
   props: {
     stampId: {
-      type: String,
+      type: String as PropType<StampId>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     return { imageUrl }

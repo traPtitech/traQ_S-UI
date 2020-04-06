@@ -8,31 +8,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import { LayoutType, ViewInformation } from '@/store/ui/mainView/state'
-import { VNode } from 'vue'
 
 import MessagesView from '@/components/Main/MainView/MessagesView.vue'
 import QallView from '@/components/Main/MainView/QallView.vue'
-
-type Props = {
-  viewInfo?: ViewInformation
-}
 
 export default defineComponent({
   name: 'MainViewComponentSelector',
   components: { MessagesView, QallView },
   props: {
-    viewInfo: Object
+    viewInfo: Object as PropType<ViewInformation>
   },
-  setup(props: Props) {
+  setup(props) {
     const channelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
 
     return {
-      props,
+      // TODO: https://github.com/vuejs/composition-api/issues/291
+      props: props as { viewInfo: ViewInformation | undefined },
       channelId
     }
   }

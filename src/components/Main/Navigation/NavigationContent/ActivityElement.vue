@@ -9,16 +9,16 @@
     </div>
     <div :class="$style.separator" :style="styles.separator"></div>
     <activity-element-user-name :user="state.user" :class="$style.user" />
-    <activity-element-content :content="props.message.content" />
+    <activity-element-content :content="message.content" />
   </div>
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
-  reactive
+  reactive,
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { Message } from '@traptitech/traq'
@@ -26,10 +26,6 @@ import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
-
-type Props = {
-  message: Message
-}
 
 const useStyles = () =>
   reactive({
@@ -52,11 +48,11 @@ export default defineComponent({
   },
   props: {
     message: {
-      type: Object,
+      type: Object as PropType<Message>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const state = reactive({
       channelName: computed(
         () =>
@@ -71,7 +67,6 @@ export default defineComponent({
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect(context)
     return {
-      props,
       state,
       styles,
       onChannelSelect

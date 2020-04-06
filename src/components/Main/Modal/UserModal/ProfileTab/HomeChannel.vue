@@ -8,7 +8,7 @@
         :class="$style.channel"
         @click="onHomeChannelClick"
       >
-        #gps/times/{{ props.name }}
+        #gps/times/{{ name }}
       </span>
       <span v-else>存在しません</span>
     </p>
@@ -31,10 +31,6 @@ const useStyles = (channelId: Ref<boolean>) =>
     }))
   })
 
-interface Props {
-  name: string
-}
-
 export default defineComponent({
   name: 'HomeChannel',
   props: {
@@ -43,14 +39,13 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const username = computed(() => props.name)
     const { homeChannelExists, onHomeChannelClick } = useHomeChannel(username)
     const styles = useStyles(homeChannelExists)
 
     return {
       styles,
-      props,
       homeChannelExists,
       onHomeChannelClick
     }

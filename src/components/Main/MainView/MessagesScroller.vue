@@ -3,7 +3,7 @@
     <div :class="$style.viewport">
       <message-element
         :class="$style.element"
-        v-for="messageId in props.messageIds"
+        v-for="messageId in messageIds"
         :key="messageId"
         :messageId="messageId"
         @change-height="onChangeHeight"
@@ -20,16 +20,13 @@ import {
   computed,
   SetupContext,
   ref,
-  onMounted
+  onMounted,
+  PropType
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 import MessageElement from './MessageElement/MessageElement.vue'
 import { throttle } from 'lodash-es'
-
-interface Props {
-  messageIds: MessageId[]
-}
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -40,11 +37,11 @@ export default defineComponent({
   },
   props: {
     messageIds: {
-      type: Array,
+      type: Array as PropType<MessageId[]>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const state = reactive({
       height: 0,
       scrollTop: 0,
@@ -107,7 +104,6 @@ export default defineComponent({
     }
 
     return {
-      props,
       state,
       rootRef,
       handleScroll,

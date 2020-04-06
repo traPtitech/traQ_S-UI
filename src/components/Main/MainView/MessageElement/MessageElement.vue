@@ -31,27 +31,25 @@ import {
   onMounted,
   watchEffect,
   watch,
-  SetupContext
+  SetupContext,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageFileList from './MessageFileList.vue'
-
-interface Props {
-  messageId: string
-}
+import { MessageId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'MessageElement',
   components: { UserIcon, MessageHeader, MessageFileList },
   props: {
     messageId: {
-      type: String,
+      type: String as PropType<MessageId>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),

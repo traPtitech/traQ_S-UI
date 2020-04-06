@@ -15,19 +15,14 @@ import {
   defineComponent,
   reactive,
   computed,
-  SetupContext
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import { buildFilePath } from '@/lib/api'
 
-type Props = {
-  stampId: StampId
-  size: number
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (props: { size: number }) =>
   reactive({
     container: makeStyles(theme => ({
       maxWidth: `${props.size}px`,
@@ -43,7 +38,7 @@ export default defineComponent({
   name: 'Stamp',
   props: {
     stampId: {
-      type: String,
+      type: String as PropType<StampId>,
       required: true
     },
     size: {
@@ -51,7 +46,7 @@ export default defineComponent({
       default: 24
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const name = computed(
       () => store.state.entities.stamps[props.stampId]?.name ?? ''
     )
@@ -60,7 +55,7 @@ export default defineComponent({
       return fileId ? `${buildFilePath(fileId)}` : ''
     })
     const styles = useStyles(props)
-    return { props, imageUrl, name, styles }
+    return { imageUrl, name, styles }
   }
 })
 </script>
