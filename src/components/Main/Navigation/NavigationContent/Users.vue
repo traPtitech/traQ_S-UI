@@ -11,6 +11,7 @@
       >
         <users-separator
           :name="userList[0]"
+          :isOpen="userListFoldingState[userList[0]]"
           @click.native="onUserListFoldingToggle(userList[0])"
         />
         <users-element
