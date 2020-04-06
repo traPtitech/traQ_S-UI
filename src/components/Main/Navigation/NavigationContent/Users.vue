@@ -9,7 +9,10 @@
         :class="$style.list"
         :key="userList[0]"
       >
-        <users-separator :name="userList[0]" />
+        <users-separator
+          :name="userList[0]"
+          @click="onUserListFoldingToggle(userList[0])"
+        />
         <users-element
           v-show="userListFoldingState[userList[0]]"
           v-for="user in userList[1]"
@@ -40,6 +43,7 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersSeparator from './UsersSeparator.vue'
+import { isEmpty } from 'lodash-es'
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
