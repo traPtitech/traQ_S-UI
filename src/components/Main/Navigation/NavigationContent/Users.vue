@@ -11,7 +11,7 @@
       >
         <users-separator
           :name="userList[0]"
-          @click="onUserListFoldingToggle(userList[0])"
+          @click.native="onUserListFoldingToggle(userList[0])"
         />
         <users-element
           v-show="userListFoldingState[userList[0]]"
