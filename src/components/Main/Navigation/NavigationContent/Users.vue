@@ -11,6 +11,7 @@
       >
         <users-separator :name="userList[0]" />
         <users-element
+          v-show="userListFoldingState[userList[0]]"
           v-for="user in userList[1]"
           :key="user.id"
           :user="user"
@@ -27,7 +28,8 @@ import {
   SetupContext,
   computed,
   reactive,
-  toRefs
+  toRefs,
+  set
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -66,6 +68,23 @@ const useListByGradeName = () => {
   return listByGradeName
 }
 
+const useUserListFolding = () => {
+  const state = reactive({
+    userListFoldingState: {} as Record<string, boolean>
+  })
+  const onUserListFoldingToggle = (userGroupName: string) => {
+    if (state.userListFoldingState[userGroupName]) {
+      state.userListFoldingState[userGroupName] = false
+    } else {
+      set(state.userListFoldingState, userGroupName, true)
+    }
+  }
+  return {
+    ...toRefs(state),
+    onUserListFoldingToggle
+  }
+}
+
 export default defineComponent({
   name: 'Users',
   components: {
@@ -76,8 +95,14 @@ export default defineComponent({
   },
   setup() {
     const userLists = useListByGradeName()
+    const {
+      userListFoldingState,
+      onUserListFoldingToggle
+    } = useUserListFolding()
     return {
-      userLists
+      userLists,
+      userListFoldingState,
+      onUserListFoldingToggle
     }
   }
 })
