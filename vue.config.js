@@ -68,7 +68,5 @@ module.exports = {
     }
   },
 
-  productionSourceMap: false,
-
-  parallel: process.env.NODE_ENV === 'production'
+  productionSourceMap: false
 }
