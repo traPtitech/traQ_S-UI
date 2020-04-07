@@ -3,8 +3,8 @@
     <div @click="onDMClick" :style="{ display: 'inline-block' }">
       <link-button
         :title="`${showTitle ? 'DM' : ''}`"
-        iconName="email"
-        iconMdi
+        icon-name="email"
+        icon-mdi
       />
     </div>
     <div
@@ -14,8 +14,8 @@
     >
       <link-button
         :title="`${showTitle ? 'ホーム' : ''}`"
-        iconName="home"
-        iconMdi
+        icon-name="home"
+        icon-mdi
       />
     </div>
   </div>

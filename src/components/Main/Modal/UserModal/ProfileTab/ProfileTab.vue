@@ -5,7 +5,7 @@
     <accounts
       :bot="user.bot"
       :name="user.name"
-      :twitterId="
+      :twitter-id="
         props.detail === undefined ? undefined : props.detail.twitterId
       "
     />

@@ -1,8 +1,8 @@
 <template>
   <section :class="$style.feature">
     <user-icon
-      :userId="user.id"
-      :preventModal="true"
+      :user-id="user.id"
+      :prevent-modal="true"
       :size="64"
       :class="$style.icon"
       :style="styles.icon"
@@ -10,11 +10,11 @@
     <div :class="$style.name">
       <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator :userId="user.id" />
+        <online-indicator :user-id="user.id" />
         @{{ user.name }}
       </p>
     </div>
-    <buttons :username="user.name" :showTitle="false" />
+    <buttons :username="user.name" :show-title="false" />
   </section>
 </template>
 

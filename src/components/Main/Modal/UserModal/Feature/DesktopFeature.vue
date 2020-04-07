@@ -3,11 +3,11 @@
     <div>
       <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator :userId="user.id" />
+        <online-indicator :user-id="user.id" />
         @{{ user.name }}
       </p>
     </div>
-    <buttons :username="user.name" :showTitle="true" />
+    <buttons :username="user.name" :show-title="true" />
   </section>
 </template>
 

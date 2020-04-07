@@ -19,7 +19,7 @@
     :width="size"
     :height="size"
     :style="{ color: color }"
-    viewBox="0 0 24 24"
+    view-box="0 0 24 24"
     class="icon"
     v-bind="context.attrs"
     v-on="context.listeners"

@@ -13,7 +13,7 @@
           {{ tag.tag }}
         </li>
       </ul>
-      <tags-tab-add :userId="propst.detail.id" />
+      <tags-tab-add :user-id="propst.detail.id" />
     </template>
   </div>
 </template>

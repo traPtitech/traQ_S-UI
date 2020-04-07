@@ -10,7 +10,7 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <messages-scroller :messageIds="state.channelMessageIds" />
+    <messages-scroller :message-ids="state.channelMessageIds" />
     <message-input :channel-id="state.channelId" />
   </div>
 </template>

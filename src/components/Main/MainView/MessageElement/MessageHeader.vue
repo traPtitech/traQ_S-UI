@@ -3,8 +3,8 @@
     <span :class="$style.displayName">{{ state.user.displayName }}</span>
     <grade-badge
       :class="$style.badge"
-      :userId="userId"
-      :isBot="state.user.bot"
+      :user-id="userId"
+      :is-bot="state.user.bot"
     />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>

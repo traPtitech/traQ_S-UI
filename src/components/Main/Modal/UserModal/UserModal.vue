@@ -3,8 +3,8 @@
     <button :class="$style.close" @click="onClickClear">X</button>
     <user-icon
       v-if="!isMobile"
-      :userId="user.id"
-      :preventModal="true"
+      :user-id="user.id"
+      :prevent-modal="true"
       :size="iconSize"
       :class="$style.icon"
       :style="styles.icon"
@@ -13,7 +13,7 @@
       <feature :user="user" />
       <navigation-selector
         @navigation-change="onNavigationChange"
-        :currentNavigation="currentNavigation"
+        :current-navigation="currentNavigation"
       />
       <navigation-content
         :current-navigation="currentNavigation"

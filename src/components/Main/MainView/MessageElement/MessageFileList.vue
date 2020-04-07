@@ -4,7 +4,7 @@
       <message-file-list-image
         v-for="meta in fileMetaDataState.images"
         :key="meta.id"
-        :fileId="meta.id"
+        :file-id="meta.id"
         :is-large="showLargeImage"
         :class="$style.imageItem"
       />
@@ -12,13 +12,13 @@
     <message-file-list-video
       v-for="meta in fileMetaDataState.videos"
       :key="meta.id"
-      :fileId="meta.id"
+      :file-id="meta.id"
     />
     <message-file-list-file
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
       :class="$style.item"
-      :fileId="meta.id"
+      :file-id="meta.id"
     />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.overlay" :style="styles.overlay">
-      <message-file-list-item-content :fileId="fileId" is-white />
+      <message-file-list-item-content :file-id="fileId" is-white />
     </div>
     <video controls draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
   </div>

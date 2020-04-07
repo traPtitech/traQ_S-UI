@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <message-file-list-item-content :fileId="fileId" />
+    <message-file-list-item-content :file-id="fileId" />
   </div>
 </template>
 

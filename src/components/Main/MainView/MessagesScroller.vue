@@ -5,7 +5,7 @@
         :class="$style.element"
         v-for="messageId in messageIds"
         :key="messageId"
-        :messageId="messageId"
+        :message-id="messageId"
         @change-height="onChangeHeight"
       />
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    <user-icon :class="$style.icon" :userId="user.id" :size="36" />
+    <user-icon :class="$style.icon" :user-id="user.id" :size="36" />
     <users-element-user-name :user="user" :class="$style.user" />
   </div>
 </template>

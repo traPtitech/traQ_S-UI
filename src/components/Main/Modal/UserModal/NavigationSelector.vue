@@ -7,8 +7,8 @@
       :class="$style.itemWrap"
     >
       <navigation-selector-item
-        :iconName="item.iconName"
-        :iconMdi="item.iconMdi"
+        :icon-name="item.iconName"
+        :icon-mdi="item.iconMdi"
         :is-selected="currentNavigation === item.type"
       />
     </div>

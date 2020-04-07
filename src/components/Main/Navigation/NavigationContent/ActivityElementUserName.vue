@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <user-icon :class="$style.icon" :userId="user.id" :size="20" />
+    <user-icon :class="$style.icon" :user-id="user.id" :size="20" />
     <span>
       {{ user.displayName }}
     </span>

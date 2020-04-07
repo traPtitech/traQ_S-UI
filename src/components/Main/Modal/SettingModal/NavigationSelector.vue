@@ -5,8 +5,8 @@
       v-for="item in items"
       :key="item.type"
       :type="item.type"
-      :iconName="item.iconName"
-      :iconMdi="item.iconMdi"
+      :icon-name="item.iconName"
+      :icon-mdi="item.iconMdi"
       :is-selected="currentNavigation === item.type"
       @click="onNavigationItemClick(item.type)"
     />

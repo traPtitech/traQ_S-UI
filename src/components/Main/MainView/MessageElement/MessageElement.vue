@@ -2,21 +2,21 @@
   <div :class="$style.body" ref="bodyRef">
     <user-icon
       :class="$style.userIcon"
-      :userId="state.message.userId"
+      :user-id="state.message.userId"
       :size="40"
     />
     <message-header
       :class="$style.messageHeader"
-      :userId="state.message.userId"
-      :createdAt="state.message.createdAt"
-      :updatedAt="state.message.updatedAt"
+      :user-id="state.message.userId"
+      :created-at="state.message.createdAt"
+      :updated-at="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <message-file-list
         v-if="state.fileIds.length > 0"
         :class="$style.messageFileList"
-        :fileIds="state.fileIds"
+        :file-ids="state.fileIds"
       />
     </div>
   </div>

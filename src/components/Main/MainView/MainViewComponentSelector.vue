@@ -1,7 +1,7 @@
 <template>
   <messages-view
     v-if="props.viewInfo && props.viewInfo.type === 'messages'"
-    :channelId="channelId"
+    :channel-id="channelId"
   />
   <qall-view v-else-if="props.viewInfo && props.viewInfo.type === 'qall'" />
   <div :class="$style.none" v-else></div>
