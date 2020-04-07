@@ -4,7 +4,11 @@
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
     <navigation-content-container subtitle="ユーザーリスト">
-      <filter-input :onSecondary="true"></filter-input>
+      <filter-input
+        :onSecondary="true"
+        :text="userListFilterState.query"
+        @input="setQuery"
+      ></filter-input>
       <div
         v-for="userList in userLists"
         :class="$style.list"
@@ -17,7 +21,7 @@
         />
         <div v-show="userListFoldingState[userList[0]]">
           <users-element
-            v-for="user in userList[1]"
+            v-for="user in filteredItems(userList)"
             :key="user.id"
             :user="user"
             :class="$style.element"
@@ -99,7 +103,9 @@ type UserFilterState = {
   textFilterState: { query: string; filteredItems: readonly User[] }
   setQuery: (query: string) => void
 }
-const useUserListFilter = (userLists: Record<string, User[]>) => {
+const useUserListFilter = (
+  userLists: Readonly<Ref<readonly [string, User[]][]>>
+) => {
   const state = reactive({
     query: '',
     userListFilterdStates: {} as Record<string, UserFilterState>,
@@ -124,6 +130,7 @@ const useUserListFilter = (userLists: Record<string, User[]>) => {
     state.query = query
   }
   return {
+    userListFilterState: state,
     filteredItems,
     setQuery
   }
@@ -144,10 +151,16 @@ export default defineComponent({
       userListFoldingState,
       onUserListFoldingToggle
     } = useUserListFolding()
+    const { userListFilterState, filteredItems, setQuery } = useUserListFilter(
+      userLists
+    )
     return {
       userLists,
       userListFoldingState,
-      onUserListFoldingToggle
+      onUserListFoldingToggle,
+      userListFilterState,
+      filteredItems,
+      setQuery
     }
   }
 })
