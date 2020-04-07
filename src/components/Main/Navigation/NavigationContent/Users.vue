@@ -50,18 +50,36 @@ const useListByGradeName = () => {
       return []
     }
     const userGradeEntries: Record<string, User[]> = {}
+    const categorized = new Set<string>()
+
+    // 学年グループ
     for (const group of userGroups.value) {
-      userGradeEntries[group?.name ?? ''] = (
-        group?.members?.map(member => users.value[member.id]) ?? []
-      )
+      const member = (group.members.map(member => users.value[member.id]) ?? [])
         .filter(user => !!user)
         .sort((u1, u2) => compareString(u1.name, u2.name))
+      userGradeEntries[group.name] = member
+
+      member.map(user => user.id).forEach(id => categorized.add(id))
     }
 
-    // 学年なので逆順
-    return Object.entries(userGradeEntries).sort((e1, e2) =>
-      compareString(e1[0], e2[0], true)
-    )
+    // BOTグループ
+    const bots = Object.values(users.value)
+      .filter(user => user.bot)
+      .sort((u1, u2) => compareString(u1.name, u2.name))
+    bots.map(user => user.id).forEach(id => categorized.add(id))
+
+    return [
+      ...Object.entries(userGradeEntries).sort(
+        (e1, e2) => compareString(e1[0], e2[0], true) // 学年なので逆順
+      ),
+      [
+        'Others',
+        Object.values(users.value)
+          .filter(user => !categorized.has(user.id))
+          .sort((u1, u2) => compareString(u1.name, u2.name))
+      ],
+      ['BOT', bots]
+    ]
   })
   return listByGradeName
 }
