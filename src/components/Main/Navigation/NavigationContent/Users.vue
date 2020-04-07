@@ -35,7 +35,9 @@ import {
   computed,
   reactive,
   toRefs,
-  set
+  set,
+  Ref,
+  ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -90,6 +92,40 @@ const useUserListFolding = () => {
   return {
     ...toRefs(state),
     onUserListFoldingToggle
+  }
+}
+
+type UserFilterState = {
+  textFilterState: { query: string; filterdItems: User[] }
+  setQuery: (query: string) => void
+}
+const useUserListFilter = (userLists: Record<string, User[]>) => {
+  const state = reactive({
+    query: '',
+    userListFilterdStates: {} as Record<string, UserFilterState>,
+    userLists: userLists
+  })
+  const filterdItems = (userList: [string, User[]]) => {
+    const userGroupName = userList[0]
+    if (!state.userListFilterdStates[userGroupName]) {
+      var users = ref(userList[1])
+      const { textFilterState, setQuery } = useTextFilter(users, 'name')
+      const userFilterState = {} as UserFilterState
+      userFilterState.textFilterState = textFilterState
+      userFilterState.setQuery = setQuery
+      set(state.userListFilterdStates, userGroupName, userFilterState)
+    }
+
+    state.userListFilterdStates[userGroupName].setQuery(state.query)
+    return state.userListFilterdStates[userGroupName].textFilterState
+      .filterdItems
+  }
+  const setQuery = (query: string) => {
+    state.query = query
+  }
+  return {
+    filterdItems,
+    setQuery
   }
 }
 
