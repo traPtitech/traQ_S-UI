@@ -42,15 +42,16 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarViewers',
   components: { UserIconEllipsisList, ChannelSideBarViewersDetail },
-  props: { viewersId: { type: Array, required: true } },
+  props: {
+    viewersId: { type: Array, required: true }
+  },
   setup(props: Props) {
     const styles = useStyles()
     const state = reactive({
-      isOpenDetail: true
+      isOpenDetail: false
     })
     const toggle = () => {
       state.isOpenDetail = !state.isOpenDetail
-      console.log('toggle viewer detail')
     }
     return { styles, props, state, toggle }
   }

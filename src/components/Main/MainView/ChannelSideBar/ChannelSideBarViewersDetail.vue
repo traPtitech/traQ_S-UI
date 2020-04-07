@@ -26,6 +26,7 @@ import { UserId } from '../../../../types/entity-ids'
 type Props = {
   viewerIds: UserId[]
 }
+
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
@@ -57,7 +58,8 @@ $headerSize: 1.15rem;
   margin-top: 16px;
   width: 256px;
   border-radius: 4px;
-  padding: 16px;
+  padding: 8px;
+  padding-top: 0px;
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
@@ -67,6 +69,9 @@ $headerSize: 1.15rem;
   font-weight: bold;
   font-size: $headerSize;
   min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .icon {

@@ -18,7 +18,7 @@
       :pinnedMessageLength="state.pinnedMessage.length"
       @open="togglePinnedMode"
     />
-    <channel-side-bar-member />
+    <channel-side-bar-member :channelId="props.channelId" />
     <channel-side-bar-edit />
   </div>
 </template>
@@ -79,10 +79,9 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
-    // const viewersId = computed(
-    //   () => store.getters.domain.messagesView.getCurrentViewersId
-    // )
-    const viewersId = new Array(10).fill('0853a54a-7102-4d6b-b45e-720c87a26c41')
+    const viewersId = computed(
+      () => store.getters.domain.messagesView.getCurrentViewersId
+    )
     const toggle = () => {
       state.isOpen = !state.isOpen
     }
