@@ -1,3 +1,4 @@
+const CompressionPlugin = require('compression-webpack-plugin')
 const https = require('https')
 const keepAliveAgent = new https.Agent({ keepAlive: true })
 
@@ -20,7 +21,19 @@ module.exports = {
     module: {
       rules: []
     },
-    plugins: []
+    plugins:
+      process.env.NODE_ENV === 'production'
+        ? [
+            new CompressionPlugin({
+              filename: '[path].br[query]',
+              algorithm: 'brotliCompress',
+              test: /\.(js|css|html|svg|json)$/,
+              compressionOptions: { level: 11 },
+              minRatio: 1,
+              deleteOriginalAssets: false
+            })
+          ]
+        : []
   },
 
   chainWebpack: config => {
@@ -55,7 +68,5 @@ module.exports = {
     }
   },
 
-  productionSourceMap: false,
-
-  parallel: process.env.NODE_ENV === 'production'
+  productionSourceMap: false
 }
