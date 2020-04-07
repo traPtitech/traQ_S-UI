@@ -3,51 +3,69 @@
     <profile-header text="ホームチャンネル" />
     <p :style="styles.text">
       <icon name="home" mdi :class="$style.icon" />
-      <span
-        v-if="homeChannelExists"
-        :class="$style.channel"
-        @click="onHomeChannelClick"
-      >
-        #gps/times/{{ name }}
+      <span v-if="isLoading">[Now loading...]</span>
+      <span v-else-if="isEmpty">[未設定]</span>
+      <span v-else :class="$style.channel" @click="onClick">
+        #{{ channelPath }}
       </span>
-      <span v-else>存在しません</span>
     </p>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  Ref,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import useHomeChannel from '../use/homeChannel'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelId } from '@/types/entity-ids'
+import { Channel } from '@traptitech/traq'
+import useChannelPath from '@/use/channelPath'
 
-const useStyles = (channelId: Ref<boolean>) =>
+const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({
     text: makeStyles(theme => ({
-      color: channelId.value ? theme.ui.primary : theme.ui.tertiary
+      color: lowPriority.value ? theme.ui.tertiary : theme.ui.primary
     }))
   })
 
 export default defineComponent({
   name: 'HomeChannel',
   props: {
-    name: {
-      type: String,
-      required: true
-    }
+    id: String as PropType<string | null>
   },
   setup(props) {
-    const username = computed(() => props.name)
-    const { homeChannelExists, onHomeChannelClick } = useHomeChannel(username)
-    const styles = useStyles(homeChannelExists)
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { id?: string | null }
+    const isLoading = computed(() => propst.id === undefined)
+    const isEmpty = computed(() =>
+      props.id === undefined ? false : propst.id === null
+    )
+    const lowPriority = computed(() => isLoading.value || isEmpty.value)
+    const styles = useStyles(lowPriority)
+
+    const { channelIdToPath } = useChannelPath()
+    const channelPath = computed(() =>
+      propst.id ? channelIdToPath(propst.id).join('/') : ''
+    )
+
+    const onClick = () => {
+      if (!props.id) return
+      store.dispatch.domain.messagesView.changeCurrentChannel(channelPath.value)
+    }
 
     return {
       styles,
-      homeChannelExists,
-      onHomeChannelClick
+      isLoading,
+      isEmpty,
+      channelPath,
+      onClick
     }
   },
   components: {

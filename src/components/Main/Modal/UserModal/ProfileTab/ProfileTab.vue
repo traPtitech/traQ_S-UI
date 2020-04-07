@@ -1,7 +1,9 @@
 <template>
   <div>
     <bio :bio="props.detail === undefined ? undefined : props.detail.bio" />
-    <home-channel :name="user.name" />
+    <home-channel
+      :id="props.detail === undefined ? undefined : props.detail.homeChannel"
+    />
     <accounts
       :bot="user.bot"
       :name="user.name"
