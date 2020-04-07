@@ -9,23 +9,33 @@
         :text="userListFilterState.query"
         @input="setQuery"
       ></filter-input>
-      <div
-        v-for="userList in userLists"
-        :class="$style.list"
-        :key="userList[0]"
-      >
-        <users-separator
-          :name="userList[0]"
-          :isOpen="userListFoldingState[userList[0]]"
-          @click.native="onUserListFoldingToggle(userList[0])"
+      <div v-show="userListFilterState.query.length > 0">
+        <users-element
+          v-for="user in userListFilterState.filteredItems"
+          :key="user.id"
+          :user="user"
+          :class="$style.element"
         />
-        <div v-show="userListFoldingState[userList[0]]">
-          <users-element
-            v-for="user in filteredItems(userList)"
-            :key="user.id"
-            :user="user"
-            :class="$style.element"
+      </div>
+      <div v-show="userListFilterState.query.length === 0">
+        <div
+          v-for="userList in userLists"
+          :class="$style.list"
+          :key="userList[0]"
+        >
+          <users-separator
+            :name="userList[0]"
+            :isOpen="userListFoldingState[userList[0]]"
+            @click.native="onUserListFoldingToggle(userList[0])"
           />
+          <div v-show="userListFoldingState[userList[0]]">
+            <users-element
+              v-for="user in userList[1]"
+              :key="user.id"
+              :user="user"
+              :class="$style.element"
+            />
+          </div>
         </div>
       </div>
     </navigation-content-container>
@@ -99,39 +109,11 @@ const useUserListFolding = () => {
   }
 }
 
-type UserFilterState = {
-  textFilterState: { query: string; filteredItems: readonly User[] }
-  setQuery: (query: string) => void
-}
-const useUserListFilter = (
-  userLists: Readonly<Ref<readonly [string, User[]][]>>
-) => {
-  const state = reactive({
-    query: '',
-    userListFilterdStates: {} as Record<string, UserFilterState>,
-    userLists: userLists
-  })
-  const filteredItems = (userList: [string, User[]]) => {
-    const userGroupName = userList[0]
-    if (!state.userListFilterdStates[userGroupName]) {
-      var users = ref(userList[1])
-      const { textFilterState, setQuery } = useTextFilter(users, 'name')
-      const userFilterState = {} as UserFilterState
-      userFilterState.textFilterState = textFilterState
-      userFilterState.setQuery = setQuery
-      set(state.userListFilterdStates, userGroupName, userFilterState)
-    }
-
-    state.userListFilterdStates[userGroupName].setQuery(state.query)
-    return state.userListFilterdStates[userGroupName].textFilterState
-      .filteredItems
-  }
-  const setQuery = (query: string) => {
-    state.query = query
-  }
+const useUserListFilter = () => {
+  const users = computed(() => Object.values(store.state.entities.users))
+  const { textFilterState, setQuery } = useTextFilter(users, 'name')
   return {
-    userListFilterState: state,
-    filteredItems,
+    userListFilterState: textFilterState,
     setQuery
   }
 }
@@ -151,15 +133,12 @@ export default defineComponent({
       userListFoldingState,
       onUserListFoldingToggle
     } = useUserListFolding()
-    const { userListFilterState, filteredItems, setQuery } = useUserListFilter(
-      userLists
-    )
+    const { userListFilterState, setQuery } = useUserListFilter()
     return {
       userLists,
       userListFoldingState,
       onUserListFoldingToggle,
       userListFilterState,
-      filteredItems,
       setQuery
     }
   }
