@@ -50,6 +50,7 @@ export default defineComponent({
   align-items: center;
   font-size: 0.875rem;
   justify-content: space-between;
+  font-weight: bold;
 }
 .line {
   content: '';

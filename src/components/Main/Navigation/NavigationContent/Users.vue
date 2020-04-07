@@ -174,6 +174,8 @@ export default defineComponent({
   margin: 8px 0;
 }
 .list {
+  cursor: pointer;
+
   &:first-of-type {
     margin-top: 16px;
   }
