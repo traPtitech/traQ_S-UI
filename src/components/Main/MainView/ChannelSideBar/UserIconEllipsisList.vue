@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span v-if="unVisibleCount > 0" :class="$style.count" :style="styles.count">
+    <span
+      v-if="unVisibleCount > 0 && props.showCount"
+      :class="$style.count"
+      :style="styles.count"
+    >
       +{{ unVisibleCount }}
     </span>
     <user-icon
@@ -32,8 +36,8 @@ type Props = {
 const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.primary
+      flexDirection:
+        props.direction === 'row' ? 'row-reverse' : 'column-reverse'
     })),
     userIcon: makeStyles(theme => ({
       marginTop: props.direction === 'row' ? '0px' : '-12px',
@@ -76,7 +80,6 @@ $countSize: 1.15rem;
 
 .container {
   display: flex;
-  flex-direction: row-reverse;
   justify-content: flex-end;
   position: relative;
   border-radius: 4px;

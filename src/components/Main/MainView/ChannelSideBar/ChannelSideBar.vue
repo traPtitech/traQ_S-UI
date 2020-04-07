@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.isOpen" :class="$style.container" :style="styles.container">
+  <div v-if="state.isOpen" :class="$style.container">
     <channel-side-bar-header :channel-id="props.channelId" @close="close" />
     <channel-side-bar-viewers />
     <channel-side-bar-topic />
@@ -7,6 +7,7 @@
     <channel-side-bar-member />
     <channel-side-bar-edit />
   </div>
+  <channel-side-bar-hidden v-else @open="close" />
 </template>
 
 <script lang="ts">
@@ -25,18 +26,11 @@ import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
 import ChannelSideBarHeader from './ChannelSideBarHeader.vue'
 import ChannelSideBarMember from './ChannelSideBarMember.vue'
 import ChannelSideBarEdit from './ChannelSideBarEdit.vue'
+import ChannelSideBarHidden from './ChannelSideBarHidden.vue'
 
 type Props = {
   channelId: ChannelId
 }
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelSideBar',
@@ -46,13 +40,13 @@ export default defineComponent({
     ChannelSideBarViewers,
     ChannelSideBarHeader,
     ChannelSideBarMember,
-    ChannelSideBarEdit
+    ChannelSideBarEdit,
+    ChannelSideBarHidden
   },
   props: {
     channelId: { type: String, requried: true }
   },
   setup(props: Props) {
-    const styles = useStyles()
     const state = reactive({
       isOpen: true
     })
@@ -60,7 +54,6 @@ export default defineComponent({
       state.isOpen = !state.isOpen
     }
     return {
-      styles,
       state,
       props,
       close
