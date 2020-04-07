@@ -96,7 +96,7 @@ const useUserListFolding = () => {
 }
 
 type UserFilterState = {
-  textFilterState: { query: string; filterdItems: User[] }
+  textFilterState: { query: string; filteredItems: readonly User[] }
   setQuery: (query: string) => void
 }
 const useUserListFilter = (userLists: Record<string, User[]>) => {
@@ -105,7 +105,7 @@ const useUserListFilter = (userLists: Record<string, User[]>) => {
     userListFilterdStates: {} as Record<string, UserFilterState>,
     userLists: userLists
   })
-  const filterdItems = (userList: [string, User[]]) => {
+  const filteredItems = (userList: [string, User[]]) => {
     const userGroupName = userList[0]
     if (!state.userListFilterdStates[userGroupName]) {
       var users = ref(userList[1])
@@ -118,13 +118,13 @@ const useUserListFilter = (userLists: Record<string, User[]>) => {
 
     state.userListFilterdStates[userGroupName].setQuery(state.query)
     return state.userListFilterdStates[userGroupName].textFilterState
-      .filterdItems
+      .filteredItems
   }
   const setQuery = (query: string) => {
     state.query = query
   }
   return {
-    filterdItems,
+    filteredItems,
     setQuery
   }
 }
