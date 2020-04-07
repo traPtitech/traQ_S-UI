@@ -9,7 +9,7 @@
         :text="userListFilterState.query"
         @input="setQuery"
       ></filter-input>
-      <div v-show="userListFilterState.query.length > 0">
+      <div v-show="userListFilterState.query.length > 0" :class="$style.list">
         <users-element
           v-for="user in userListFilterState.filteredItems"
           :key="user.id"
@@ -154,9 +154,6 @@ export default defineComponent({
 }
 .list {
   cursor: pointer;
-
-  &:first-of-type {
-    margin-top: 16px;
-  }
+  margin: 16px 0px;
 }
 </style>
