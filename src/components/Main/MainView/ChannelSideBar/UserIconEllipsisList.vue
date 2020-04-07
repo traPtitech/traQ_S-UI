@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -50,7 +50,7 @@ const useStyles = (props: Props) =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarViewersIcons',
+  name: 'UserIconEllipsisList',
   components: { UserIcon },
   props: {
     direction: { type: String, required: true },
@@ -63,8 +63,8 @@ export default defineComponent({
   },
   setup(props: Props) {
     const styles = useStyles(props)
-    const visibleIconIds = props.userIds.slice(0, props.max)
-    const unVisibleCount = props.userIds.length - props.max
+    const visibleIconIds = computed(() => props.userIds.slice(0, props.max))
+    const unVisibleCount = computed(() => props.userIds.length - props.max)
     return {
       styles,
       props,

@@ -3,16 +3,16 @@
     <icon
       :class="$style.icon"
       mdi
-      name="chevronDouble"
+      name="chevron-double"
       width="28"
       height="28"
       @click="open"
     />
     <user-icon-ellipsis-list
       direction="col"
-      max="3"
+      :max="3"
       :showCount="false"
-      :userIds="viewersId"
+      :userIds="props.viewersId"
     />
   </div>
 </template>
@@ -29,6 +29,11 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
+import { UserId } from '../../../../types/entity-ids'
+
+type Props = {
+  viewersId: UserId[]
+}
 
 const useStyles = () =>
   reactive({
@@ -41,21 +46,18 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarHidden',
   props: {
-    channelId: { type: String, requried: true }
+    viewersId: { type: Array, requried: true }
   },
   components: { Icon, UserIconEllipsisList },
-  setup(_, context: SetupContext) {
+  setup(props: Props, context: SetupContext) {
     const styles = useStyles()
-    const viewersId = computed(
-      () => store.state.domain.messagesView.currentViewers
-    )
     const open = () => {
       context.emit('open')
     }
     return {
       styles,
-      viewersId,
-      open
+      open,
+      props
     }
   }
 })

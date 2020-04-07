@@ -1,21 +1,13 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" @click="onClick">
     <Icon
       v-if="state.isEditing"
-      @click="onClick"
       mdi
-      name="toggleSwitchOn"
+      name="toggle-switch-on"
       height="20"
       width="20"
     />
-    <Icon
-      v-else
-      @click="onClick"
-      mdi
-      name="toggleSwitchOff"
-      height="20"
-      width="20"
-    />
+    <Icon v-else mdi name="toggle-switch-off" height="20" width="20" />
     <div>編集</div>
   </div>
 </template>
@@ -66,7 +58,9 @@ $editButtonText: 0.8rem;
   margin-top: 56px;
   align-items: center;
   font-size: $editButtonText;
+  justify-content: center;
   margin: 56;
   flex-shrink: 0;
+  cursor: pointer;
 }
 </style>

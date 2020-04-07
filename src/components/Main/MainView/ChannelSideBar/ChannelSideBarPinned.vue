@@ -1,14 +1,23 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" @click="onClick">
     <div :class="$style.pinnedTitle">ピン留め</div>
-    <div>{{ state.pinnedMessage.length }}</div>
+    <div>{{ props.pinnedMessageLength }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  SetupContext
+} from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+
+type Props = {
+  pinnedMessageLength: number
+}
 
 const useStyles = () =>
   reactive({
@@ -20,16 +29,14 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarPinned',
-  setup() {
+  props: { pinnedMessageLength: { type: Number, default: 0 } },
+  setup(props: Props, context: SetupContext) {
     const styles = useStyles()
-    const state = reactive({
-      pinnedMessage: computed(
-        () => store.state.domain.messagesView.pinnedMessages
-      )
-    })
+    const onClick = () => context.emit('open')
     return {
       styles,
-      state
+      props,
+      onClick
     }
   }
 })
@@ -52,6 +59,7 @@ $pinnedSize: 1.15rem;
   font-size: $pinnedSize;
   border-radius: 4px;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .pinnedTitle {

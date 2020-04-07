@@ -84,5 +84,6 @@ $topicSize: 1.15rem;
 .icon {
   transform: rotate(180deg);
   transition: 0.7s;
+  cursor: pointer;
 }
 </style>

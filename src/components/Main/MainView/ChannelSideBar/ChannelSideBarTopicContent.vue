@@ -1,7 +1,11 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" ref="contentRef">
     <span :class="$style.topic">
-      {{ props.topicContent === '' ? 'トピック未設定' : props.topicContent }}
+      {{
+        props.topicContent === '' || !props.topicContent
+          ? 'トピック未設定'
+          : props.topicContent
+      }}
     </span>
     <icon width="20" height="20" name="pencil" mdi />
   </div>
@@ -13,7 +17,10 @@ import {
   computed,
   reactive,
   Ref,
-  SetupContext
+  SetupContext,
+  onMounted,
+  watchEffect,
+  ref
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -23,6 +30,7 @@ import Icon from '@/components/UI/Icon.vue'
 type Props = {
   topicContent: string
   isOpen: boolean
+  height: number
 }
 
 const useStyles = (props: Props) =>
@@ -42,14 +50,33 @@ export default defineComponent({
   name: 'ChannelSideBarTopicContent',
   components: { Icon },
   props: {
-    topicContent: { type: String, default: 'トピック未設定' },
-    isOpen: { type: Boolean, required: true }
+    topicContent: { type: String },
+    isOpen: { type: Boolean, required: true },
+    height: { type: Number, required: true }
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles(props)
+    const contentRef = ref<HTMLElement>(null)
+    onMounted(() => {
+      if (contentRef.value) {
+        context.emit(
+          'heightChange',
+          contentRef.value.getBoundingClientRect().height
+        )
+      }
+    })
+    watchEffect(() => {
+      if (contentRef.value?.getBoundingClientRect().height !== props.height) {
+        context.emit(
+          'heightChange',
+          contentRef.value?.getBoundingClientRect().height ?? 0
+        )
+      }
+    })
     return {
       styles,
-      props
+      props,
+      contentRef
     }
   }
 })
@@ -62,7 +89,6 @@ $topicSize: 1.15rem;
   display: flex;
   width: 256px;
   min-height: 48px;
-  align-items: center;
   flex-direction: row;
   justify-content: space-between;
   z-index: -1;
@@ -75,6 +101,7 @@ $topicSize: 1.15rem;
   padding-right: 8px;
   padding-left: 8px;
   border-radius: 4px;
+  padding-top: 12px;
 }
 
 .topic {

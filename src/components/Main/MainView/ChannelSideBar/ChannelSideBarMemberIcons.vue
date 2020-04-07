@@ -5,7 +5,7 @@
       v-for="id in props.userIds"
       :key="id"
       :userId="id"
-      size="28"
+      :size="28"
     />
   </div>
 </template>

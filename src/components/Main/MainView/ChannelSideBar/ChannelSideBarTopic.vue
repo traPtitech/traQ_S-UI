@@ -1,16 +1,18 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <channel-side-bar-topic-header @switch="show" :isOpen="state.isOpen" />
+    <channel-side-bar-topic-header @switch="toggle" :isOpen="state.isOpen" />
     <channel-side-bar-topic-content
       :topicContent="topicContent"
       :isOpen="state.isOpen"
+      :height="state.contentHeight"
       id="topic-content"
+      @heightChange="changeHeight"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -40,24 +42,22 @@ export default defineComponent({
   setup() {
     const state: State = reactive({
       isOpen: true,
-      contentHeight: computed(() => {
-        const obj = document.getElementById('topic-content')
-        if (obj) {
-          return obj.getBoundingClientRect().height
-        }
-        return 0
-      })
+      contentHeight: 0
     })
     const styles = useStyles(state)
-    const show = () => {
+    const toggle = () => {
       state.isOpen = !state.isOpen
+    }
+    const changeHeight = (height: number) => {
+      state.contentHeight = height
     }
     const topicContent = computed(() => store.state.domain.messagesView.topic)
     return {
       styles,
       state,
-      show,
-      topicContent
+      toggle,
+      topicContent,
+      changeHeight
     }
   }
 })

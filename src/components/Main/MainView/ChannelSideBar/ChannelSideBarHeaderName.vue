@@ -39,7 +39,6 @@ $channelSize: 1.5rem;
 }
 .channel {
   font-size: $channelSize;
-  margin: 0 0.125rem;
 }
 .channelHash {
   font-size: $channelSize;
