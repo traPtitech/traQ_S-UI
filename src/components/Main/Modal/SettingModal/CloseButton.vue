@@ -37,7 +37,7 @@ export default defineComponent({
   props: {
     withText: { type: Boolean, default: false },
     size: { type: Number, required: true },
-    backgroundColor: { default: 'primary'}
+    backgroundColor: { default: 'primary' }
   },
   setup(props: Props, context: SetupContext) {
     const styles = useStyles(props)

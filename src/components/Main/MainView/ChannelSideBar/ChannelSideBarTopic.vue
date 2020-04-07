@@ -73,5 +73,6 @@ export default defineComponent({
   z-index: 0;
   transition: 0.5s;
   overflow: hidden;
+  flex-shrink: 0;
 }
 </style>

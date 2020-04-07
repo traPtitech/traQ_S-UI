@@ -48,6 +48,7 @@ $memberTitleSize: 1.15rem;
   padding-right: 8px;
   padding-left: 8px;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .memberTitle {

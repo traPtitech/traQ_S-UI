@@ -51,6 +51,7 @@ $pinnedSize: 1.15rem;
   padding-left: 8px;
   font-size: $pinnedSize;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .pinnedTitle {

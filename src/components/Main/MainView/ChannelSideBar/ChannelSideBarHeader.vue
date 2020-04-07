@@ -60,5 +60,6 @@ export default defineComponent({
   margin-top: 16px;
   width: 256px;
   align-items: center;
+  flex-shrink: 0;
 }
 </style>

@@ -66,6 +66,7 @@ $editButtonText: 0.8rem;
   margin-top: 56px;
   align-items: center;
   font-size: $editButtonText;
-  margin: 0 auto;
+  margin: 56;
+  flex-shrink: 0;
 }
 </style>
