@@ -1,9 +1,16 @@
 <template>
-  <user-icon-ellipsis-list
+  <div
+    v-if="!state.isOpenDetail"
     :class="$style.container"
     :style="styles.container"
-    direction="row"
-    :userIds="props.viewersId"
+    @click="toggle"
+  >
+    <user-icon-ellipsis-list direction="row" :userIds="props.viewersId" />
+  </div>
+  <channel-side-bar-viewers-detail
+    v-else
+    :viewerIds="props.viewersId"
+    @close="toggle"
   />
 </template>
 
@@ -17,6 +24,7 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
+import ChannelSideBarViewersDetail from './ChannelSideBarViewersDetail.vue'
 import { UserId } from '../../../../types/entity-ids'
 
 type Props = {
@@ -33,17 +41,18 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarViewers',
-  components: { UserIconEllipsisList },
+  components: { UserIconEllipsisList, ChannelSideBarViewersDetail },
   props: { viewersId: { type: Array, required: true } },
   setup(props: Props) {
     const styles = useStyles()
     const state = reactive({
-      isOpenDetail: false
+      isOpenDetail: true
     })
-    return {
-      styles,
-      props
+    const toggle = () => {
+      state.isOpenDetail = !state.isOpenDetail
+      console.log('toggle viewer detail')
     }
+    return { styles, props, state, toggle }
   }
 })
 </script>
@@ -57,5 +66,6 @@ export default defineComponent({
   padding-left: 16px;
   margin-top: 16px;
   flex-shrink: 0;
+  cursor: pointer;
 }
 </style>

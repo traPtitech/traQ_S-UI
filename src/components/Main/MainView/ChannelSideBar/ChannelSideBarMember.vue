@@ -45,9 +45,7 @@ $memberTitleSize: 1.15rem;
   margin-top: 16px;
   width: 256px;
   border-radius: 4px;
-  padding-right: 8px;
-  padding-left: 8px;
-  justify-content: center;
+  padding: 8px;
   flex-shrink: 0;
 }
 

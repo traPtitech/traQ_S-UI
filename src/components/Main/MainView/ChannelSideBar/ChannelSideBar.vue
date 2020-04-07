@@ -79,9 +79,10 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
-    const viewersId = computed(
-      () => store.getters.domain.messagesView.getCurrentViewersId
-    )
+    // const viewersId = computed(
+    //   () => store.getters.domain.messagesView.getCurrentViewersId
+    // )
+    const viewersId = new Array(10).fill('0853a54a-7102-4d6b-b45e-720c87a26c41')
     const toggle = () => {
       state.isOpen = !state.isOpen
     }

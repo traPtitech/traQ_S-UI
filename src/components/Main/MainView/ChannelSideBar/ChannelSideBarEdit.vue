@@ -59,7 +59,6 @@ $editButtonText: 0.8rem;
   align-items: center;
   font-size: $editButtonText;
   justify-content: center;
-  margin: 56;
   flex-shrink: 0;
   cursor: pointer;
 }
