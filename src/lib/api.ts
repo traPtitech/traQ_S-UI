@@ -25,3 +25,4 @@ export const buildFilePathForPost = (fileId: FileId) =>
 
 export * from '@traptitech/traq'
 export default apis
+;(window as any).apis = apis

@@ -67,6 +67,7 @@ $messagePadding: 32px;
 
 .container {
   display: flex;
+  flex: 1 1;
   flex-direction: column;
   position: relative;
   height: 100%;

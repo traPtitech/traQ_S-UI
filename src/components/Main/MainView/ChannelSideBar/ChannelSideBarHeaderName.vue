@@ -1,19 +1,17 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <span :class="$style.channelHash" :style="styles.channelHash">#</span>
-    <span :style="styles.channel">{{ state.channel }}</span>
-  </div>
+  <h2 :class="$style.container" :style="styles.container">
+    <span :class="$style.channelHash">#</span>
+    <span :class="$style.channel">{{ props.channelName }}</span>
+  </h2>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import useChannelPath from '@/use/channelPath'
 
 type Props = {
-  channelId: ChannelId
+  channelName: string
 }
 
 const useStyles = () =>
@@ -25,29 +23,15 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarHeaderName',
-  props: { channelId: String },
+  props: { channelName: String },
   setup(props: Props) {
-    const state = reactive({
-      channel: computed(() => {
-        const { channelIdToPath } = useChannelPath()
-        const channelArray: string[] = channelIdToPath(props.channelId)
-        console.log(channelArray)
-        if (channelArray.length === 0) {
-          return ""
-        }
-        return channelArray[channelArray.length - 1]
-      })
-    })
-    const buildChannelLink = (channel: string) =>
-      `${location.pathname}/${channel}`
     const styles = useStyles()
-    return { props, state, styles, buildChannelLink }
+    return { props, styles }
   }
 })
 </script>
 
 <style lang="scss" module>
-$childChannelSize: 1.5rem;
 $channelSize: 1.5rem;
 
 .container {
@@ -60,7 +44,6 @@ $channelSize: 1.5rem;
 .channelHash {
   font-size: $channelSize;
   margin-right: 0.125rem;
-  margin-left: 27px;
   user-select: none;
 }
 </style>

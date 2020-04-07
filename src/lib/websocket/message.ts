@@ -38,10 +38,19 @@ export const onMessageUnstamped = (data: MessageUnstampedEvent['body']) => {
   console.error('onMessageUnstamped: Not implemented')
 }
 
-export const onMessagePinned = (data: MessagePinnedEvent['body']) => {
-  console.error('onMessagePinned: Not implemented')
+export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
+  if (data.channel_id !== store.state.domain.messagesView.currentChannelId) {
+    return
+  }
+  const message = await apis.getMessage(data.message_id)
+  const pin = await apis.getPin(data.message_id)
+  store.commit.domain.messagesView.addPinnedMessages({
+    userId: pin.data.userId,
+    message: message.data,
+    pinnedAt: pin.data.pinnedAt
+  })
 }
 
 export const onMessageUnpinned = (data: MessageUnpinnedEvent['body']) => {
-  console.error('onMessageUnpinned: Not implemented')
+  store.commit.domain.messagesView.removePinnedMessageIds(data.message_id)
 }

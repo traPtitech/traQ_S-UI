@@ -1,11 +1,11 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <h2>
-      <channel-side-bar-header :channel-id="state.channelId" />
-    </h2>
+  <div v-if="state.isOpen" :class="$style.container" :style="styles.container">
+    <channel-side-bar-header :channel-id="props.channelId" @close="close" />
     <channel-side-bar-viewers />
     <channel-side-bar-topic />
     <channel-side-bar-pinned />
+    <channel-side-bar-member />
+    <channel-side-bar-edit />
   </div>
 </template>
 
@@ -23,6 +23,8 @@ import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
 import ChannelSideBarHeader from './ChannelSideBarHeader.vue'
+import ChannelSideBarMember from './ChannelSideBarMember.vue'
+import ChannelSideBarEdit from './ChannelSideBarEdit.vue'
 
 type Props = {
   channelId: ChannelId
@@ -42,19 +44,26 @@ export default defineComponent({
     ChannelSideBarTopic,
     ChannelSideBarPinned,
     ChannelSideBarViewers,
-    ChannelSideBarHeader
+    ChannelSideBarHeader,
+    ChannelSideBarMember,
+    ChannelSideBarEdit
   },
-  setup(props: Props, _: SetupContext) {
+  props: {
+    channelId: { type: String, requried: true }
+  },
+  setup(props: Props) {
     const styles = useStyles()
     const state = reactive({
-      channelId: computed(
-        () => store.state.domain.messagesView.currentChannelId
-      )
+      isOpen: true
     })
+    const close = () => {
+      state.isOpen = !state.isOpen
+    }
     return {
       styles,
       state,
-      props
+      props,
+      close
     }
   }
 })
@@ -64,8 +73,9 @@ export default defineComponent({
 .container {
   display: flex;
   flex-direction: column;
-  flex: 0 0 320px;
-  position: static;
+  width: 320px;
   height: 100%;
+  padding: 0 32px;
+  overflow: scroll;
 }
 </style>

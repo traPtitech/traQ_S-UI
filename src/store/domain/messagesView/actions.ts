@@ -2,9 +2,11 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messagesView } from './index'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { Message } from '@traptitech/traq'
+import { Message, ChannelViewState } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import { changeViewState } from '@/lib/websocket'
+import api from '@/lib/api'
 
 export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
@@ -19,8 +21,14 @@ export const actions = defineActions({
     commit.setCurrentOffset(0)
     commit.setMessageIds([])
     commit.setRenderedContent({})
+    commit.setCurrentViewer([])
+
+    changeViewState(channelId, ChannelViewState.Monitoring)
 
     dispatch.fetchChannelMessages()
+    dispatch.fetchPinnedMessages()
+    dispatch.fetchTopic()
+    dispatch.fetchSubscribers()
   },
   async fetchChannelMessages(context) {
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(
@@ -46,6 +54,21 @@ export const actions = defineActions({
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )
     commit.setMessageIds([...messageIds.reverse(), ...state.messageIds])
+  },
+  async fetchPinnedMessages(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelPins(state.currentChannelId)
+    commit.setPinnedMessages(res.data)
+  },
+  async fetchTopic(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelTopic(state.currentChannelId)
+    commit.setTopic(res.data.topic)
+  },
+  async fetchSubscribers(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelSubscribers(state.currentChannelId)
+    commit.setSubscribers(res.data)
   },
   async fetchChannelLatestMessage(context) {
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(

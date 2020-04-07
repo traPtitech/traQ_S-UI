@@ -47,38 +47,10 @@ const useChannelPath = () => {
   const channelIdToPath = (id: ChannelId): string[] =>
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
-  // ChannelIdから、そのチャンネルの子チャンネル(孫以下は含まない)の配列を返す
-  const channelIdToChildrenSimpleChannel = (id: ChannelId): SimpleChannel[] => {
-    let channels: ChannelTreeNode[] =
-      store.state.domain.channelTree.channelTree.children
-    let children: ChannelTreeNode[] = []
-    let isFound: boolean = false
-    let targetChildren: SimpleChannel[] = []
-    while (!isFound || channels.length === 0) {
-      for (const channel of channels) {
-        if (channel.id === id) {
-          for (const targetChild of channel.children) {
-            targetChildren.push({
-              id: targetChild.id,
-              name: targetChild.name
-            })
-          }
-          isFound = true
-        } else if (channel.children.length !== 0) {
-          Array.prototype.push.apply(children, channel.children)
-        }
-      }
-      channels = children
-      children = []
-    }
-    return targetChildren
-  }
-
   return {
     channelPathToId,
     channelIdToPath,
-    channelIdToSimpleChannelPath,
-    channelIdToChildrenSimpleChannel
+    channelIdToSimpleChannelPath
   }
 }
 

@@ -7,6 +7,7 @@ import {
   ClipFolderId,
   StampPaletteId
 } from '@/types/entity-ids'
+import { ChannelViewState, Pin } from '@traptitech/traq'
 
 export type WebSocketEvent =
   | UserEvent
@@ -138,11 +139,17 @@ export interface ChannelUnstaredEvent {
   body: ChannelIdBody
 }
 
+export interface ChannelViewerState {
+  userId: UserId
+  state: ChannelViewState
+  updatedAt: string
+}
+
 export interface ChannelViewersChangedEvent {
   type: 'CHANNEL_VIEWERS_CHANGED'
   body: {
     id: ChannelId
-    viewers: UserId[]
+    viewers: ChannelViewerState[]
   }
 }
 
@@ -161,6 +168,12 @@ type MessageEvent =
 
 interface MessageIdBody {
   id: MessageId
+}
+
+interface PinBody {
+  // 使わないのとswaggerにもなかったのでid(PinnedId)も送られてますが書いてません
+  message_id: MessageId
+  channel_id: ChannelId
 }
 
 export interface MessageCreatedEvent {
@@ -205,12 +218,12 @@ export interface MessageUnstampedEvent {
 
 export interface MessagePinnedEvent {
   type: 'MESSAGE_PINNED'
-  body: MessageIdBody
+  body: PinBody
 }
 
 export interface MessageUnpinnedEvent {
   type: 'MESSAGE_UNPINNED'
-  body: MessageIdBody
+  body: PinBody
 }
 
 /*

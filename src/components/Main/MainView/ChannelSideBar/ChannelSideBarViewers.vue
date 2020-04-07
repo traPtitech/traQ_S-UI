@@ -1,20 +1,18 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <user-icon
-      :class="$style.userIcon"
-      :userId="userId"
-      :size="40"
-      v-for="userId in state.viewerIds"
-      :key="userId"
-    />
-  </div>
+  <user-icon-ellipsis-list
+    :class="$style.container"
+    direction="row"
+    :userIds="viewerIds"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import { ChannelViewState } from '@traptitech/traq'
+import UserIconEllipsisList from './UserIconEllipsisList.vue'
 
 const useStyles = () =>
   reactive({
@@ -26,17 +24,18 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarViewers',
-  components: { UserIcon },
+  components: { UserIconEllipsisList },
   setup() {
     const styles = useStyles()
-    const state = reactive({
-      viewersId: computed(
-        () => store.state.domain.messagesView.currentViewerIds
-      )
-    })
+    const viewerIds = computed(() =>
+      store.state.domain.messagesView.currentViewers
+        .filter(v => v.state === ChannelViewState.Monitoring)
+        .map(v => v.userId)
+        .reverse()
+    )
     return {
       styles,
-      state
+      viewerIds
     }
   }
 })
@@ -45,18 +44,23 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
-  width: 250px;
-  height: 60px;
+  width: 256px;
+  height: 64px;
   flex-direction: row-reverse;
   justify-content: flex-end;
   position: relative;
-  margin-left: 27px;
+  border-radius: 4px;
+  padding-left: 16px;
+  margin-top: 16px;
 }
 
-// 左との間隔をあけたいけどどうしようってなった
 .userIcon {
-  margin-top: 10px;
+  margin-top: 12px;
   margin-right: -12px;
-  border: 3px solid white;
+  border: 4px solid white;
+}
+
+.count {
+  margin-left: 8px;
 }
 </style>

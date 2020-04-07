@@ -1,18 +1,22 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span :class="$style.channelHash" :style="styles.channelHash">#</span>
-    <span :style="styles.channel">{{ state.channel }}</span>
+    <channel-side-bar-header-name :channel-name="state.channelName" />
+    <close-button @click="onClick" :size="28" :backgroundColor="'secondary'" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  SetupContext
+} from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
-import { channelTree } from '../../../../store/domain/channelTree'
-import { ChannelTreeNode } from '../../../../store/domain/channelTree/state'
+import ChannelSideBarHeaderName from './ChannelSideBarHeaderName.vue'
+import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'
 
 type Props = {
   channelId: ChannelId
@@ -28,41 +32,33 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarHeader',
   props: { channelId: String },
-  setup(props: Props) {
+  components: { ChannelSideBarHeaderName, CloseButton },
+  setup(props: Props, context: SetupContext) {
     const state = reactive({
-      channel: computed(() => {
+      channelName: computed(() => {
         const { channelIdToPath } = useChannelPath()
         const channelArray: string[] = channelIdToPath(props.channelId)
-        console.log(channelArray)
         if (channelArray.length === 0) {
-          return ""
+          return ''
         }
         return channelArray[channelArray.length - 1]
       })
     })
-    const buildChannelLink = (channel: string) =>
-      `${location.pathname}/${channel}`
+    const onClick = () => {
+      context.emit('close')
+    }
     const styles = useStyles()
-    return { props, state, styles, buildChannelLink }
+    return { props, state, styles, onClick }
   }
 })
 </script>
 
 <style lang="scss" module>
-$childChannelSize: 1.5rem;
-$channelSize: 1.5rem;
-
 .container {
-  height: 100%;
-}
-.channel {
-  font-size: $channelSize;
-  margin: 0 0.125rem;
-}
-.channelHash {
-  font-size: $channelSize;
-  margin-right: 0.125rem;
-  margin-left: 27px;
-  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  width: 256px;
+  align-items: center;
 }
 </style>
