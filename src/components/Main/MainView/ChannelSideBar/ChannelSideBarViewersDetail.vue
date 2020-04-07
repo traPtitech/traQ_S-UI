@@ -57,7 +57,7 @@ $headerSize: 1.15rem;
   margin-top: 16px;
   width: 256px;
   border-radius: 4px;
-  padding: 8px;
+  padding: 16px;
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;

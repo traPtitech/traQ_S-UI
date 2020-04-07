@@ -1,7 +1,12 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.memberTitle">メンバー</div>
-    <channel-side-bar-member-icons :userIds="userIds" />
+    <div v-if="userIds" :class="$style.memberTitle">メンバー</div>
+    <span v-else :class="$style.text">強制通知チャンネル</span>
+    <channel-side-bar-member-icons
+      v-if="userIds"
+      :class="$style.icons"
+      :userIds="userIds"
+    />
   </div>
 </template>
 
@@ -29,8 +34,8 @@ export default defineComponent({
   components: { ChannelSideBarMemberIcons },
   setup() {
     const styles = useStyles()
-    const userIds = new Array(10).fill('0853a54a-7102-4d6b-b45e-720c87a26c41')
-    //const userIds = computed(() => store.state.domain.messagesView.subscribers)
+    //const userIds = new Array(10).fill('0853a54a-7102-4d6b-b45e-720c87a26c41')
+    const userIds = computed(() => store.state.domain.messagesView.subscribers)
     return { styles, userIds }
   }
 })
@@ -50,8 +55,20 @@ $memberTitleSize: 1.15rem;
 }
 
 .memberTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   font-weight: bold;
   font-size: $memberTitleSize;
   min-height: 48px;
+}
+
+.text {
+  font-weight: bold;
+  font-size: $memberTitleSize;
+}
+
+.icons {
+  padding-bottom: 80px;
 }
 </style>
