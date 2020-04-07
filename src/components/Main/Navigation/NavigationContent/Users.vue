@@ -4,6 +4,7 @@
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
     <navigation-content-container subtitle="ユーザーリスト">
+      <filter-input :onSecondary="true"></filter-input>
       <div
         v-for="userList in userLists"
         :class="$style.list"
@@ -14,13 +15,14 @@
           :isOpen="userListFoldingState[userList[0]]"
           @click.native="onUserListFoldingToggle(userList[0])"
         />
-        <users-element
-          v-show="userListFoldingState[userList[0]]"
-          v-for="user in userList[1]"
-          :key="user.id"
-          :user="user"
-          :class="$style.element"
-        />
+        <div v-show="userListFoldingState[userList[0]]">
+          <users-element
+            v-for="user in userList[1]"
+            :key="user.id"
+            :user="user"
+            :class="$style.element"
+          />
+        </div>
       </div>
     </navigation-content-container>
   </div>
@@ -44,7 +46,8 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersSeparator from './UsersSeparator.vue'
-import { isEmpty } from 'lodash-es'
+import FilterInput from '@/components/UI/FilterInput.vue'
+import useTextFilter from '@/use/textFilter'
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
@@ -96,7 +99,8 @@ export default defineComponent({
     EmptyState,
     NavigationContentContainer,
     UsersElement,
-    UsersSeparator
+    UsersSeparator,
+    FilterInput
   },
   setup() {
     const userLists = useListByGradeName()
