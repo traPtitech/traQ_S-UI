@@ -53,8 +53,6 @@ export default defineComponent({
   font-weight: bold;
 }
 .line {
-  content: '';
-  display: block;
   margin-left: 8px;
   margin-right: 8px;
   width: 100%;
