@@ -9,7 +9,7 @@
         :text="userListFilterState.query"
         @input="setQuery"
       />
-      <div v-show="userListFilterState.query.length > 0" :class="$style.list">
+      <div v-if="userListFilterState.query.length > 0" :class="$style.list">
         <users-element
           v-for="user in userListFilterState.filteredItems"
           :key="user.id"
@@ -17,7 +17,7 @@
           :class="$style.element"
         />
       </div>
-      <div v-show="userListFilterState.query.length === 0">
+      <div v-else>
         <div
           v-for="userList in userLists"
           :class="$style.list"

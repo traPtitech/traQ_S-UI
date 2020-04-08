@@ -2,12 +2,7 @@
   <div :class="$style.container" :style="containerStyle">
     {{ props.name }}
     <div :class="$style.line"></div>
-    <icon
-      name="rounded-triangle"
-      :color="iconColor"
-      :class="$style.icon"
-      :style="iconStyle"
-    />
+    <icon name="rounded-triangle" :class="$style.icon" :style="iconStyle" />
   </div>
 </template>
 
@@ -35,8 +30,8 @@ export default defineComponent({
         borderColor: theme.ui.tertiary,
         color: theme.ui.secondary
       })),
-      iconColor: computed(() => store.state.app.theme.ui.tertiary),
       iconStyle: makeStyles(theme => ({
+        color: theme.ui.tertiary,
         transform: props.isOpen ? `rotate(0.5turn)` : `rotate(0turn)`
       }))
     }
