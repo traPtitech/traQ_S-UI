@@ -8,7 +8,7 @@
         :onSecondary="true"
         :text="userListFilterState.query"
         @input="setQuery"
-      ></filter-input>
+      />
       <div v-show="userListFilterState.query.length > 0" :class="$style.list">
         <users-element
           v-for="user in userListFilterState.filteredItems"
