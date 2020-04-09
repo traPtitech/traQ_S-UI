@@ -1,10 +1,15 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <pinned-side-bar-header @closePinned="closePinned" @closeBar="closeBar" />
+    <pinned-side-bar-header
+      @closePinned="closePinned"
+      @closeBar="closeBar"
+      :class="$style.sidebarItem"
+    />
     <pinned-side-bar-item
       v-for="message in props.pinnedMessage"
       :key="message.message.id"
       :pinnedMessage="message"
+      :class="$style.sidebarItem"
     />
   </div>
 </template>
@@ -67,5 +72,9 @@ export default defineComponent({
   height: 100%;
   padding: 0 32px;
   overflow: auto;
+}
+
+.sidebarItem {
+  margin-top: 16px;
 }
 </style>

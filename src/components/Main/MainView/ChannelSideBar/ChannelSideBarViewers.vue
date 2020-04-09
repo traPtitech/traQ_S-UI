@@ -65,7 +65,6 @@ export default defineComponent({
   height: 64px;
   border-radius: 4px;
   padding-left: 16px;
-  margin-top: 16px;
   flex-shrink: 0;
   cursor: pointer;
 }

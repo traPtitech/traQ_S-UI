@@ -55,11 +55,11 @@ $editButtonText: 0.8rem;
 
 .container {
   display: flex;
-  margin-top: 56px;
   align-items: center;
   font-size: $editButtonText;
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
+  user-select: none;
 }
 </style>

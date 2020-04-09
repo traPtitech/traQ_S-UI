@@ -1,20 +1,18 @@
 <template>
-  <div v-if="userIds" :class="$style.container" :style="styles.container">
-    <div :class="$style.memberTitle">メンバー</div>
-    <channel-side-bar-member-icons
-      v-if="userIds"
-      :class="$style.icons"
-      :userIds="userIds"
-    />
+  <span v-if="isForceNotification" :style="styles.text" :class="$style.text">
+    強制通知チャンネル
+  </span>
+  <div v-else-if="userIds" :style="styles.container">
+    <channel-side-bar-content title="メンバー">
+      <template #content>
+        <channel-side-bar-member-icons
+          v-if="userIds"
+          :class="$style.icons"
+          :viewerStates="viewStates"
+        />
+      </template>
+    </channel-side-bar-content>
   </div>
-  <span
-    v-else-if="
-      state.channelName === 'general' || state.channelName === 'random'
-    "
-    :style="styles.text"
-    :class="$style.text"
-    >強制通知チャンネル</span
-  >
 </template>
 
 <script lang="ts">
@@ -29,9 +27,18 @@ import store from '@/store'
 import ChannelSideBarMemberIcons from './ChannelSideBarMemberIcons.vue'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
+import ChannelSideBarContent from './ChannelSideBarContent.vue'
+import { User } from '@traptitech/traq'
+import { UserId } from '../../../../types/entity-ids'
 
 type Props = {
   channelId: ChannelId
+  viewerIds: UserId[]
+}
+
+type ViewState = {
+  user: User
+  viewing: boolean
 }
 
 const useStyles = () =>
@@ -48,47 +55,41 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarMember',
-  components: { ChannelSideBarMemberIcons },
-  props: { channelId: { type: String, reqired: true } },
+  components: { ChannelSideBarMemberIcons, ChannelSideBarContent },
+  props: {
+    channelId: { type: String, reqired: true },
+    viewerIds: { type: Array, default: [] }
+  },
   setup(props: Props) {
     const styles = useStyles()
-    const state = reactive({
-      channelName: computed(() => {
-        const { channelIdToPath } = useChannelPath()
-        const channelArray: string[] = channelIdToPath(props.channelId)
-        if (channelArray.length === 0) {
-          return ''
-        }
-        return channelArray[channelArray.length - 1]
-      })
-    })
+    const isForceNotification = computed(
+      () => store.state.entities.channels[props.channelId]?.force
+    )
     const userIds = computed(() => store.state.domain.messagesView.subscribers)
-    return { styles, userIds, state }
+    const viewStates = computed(() => {
+      let states: ViewState[] = []
+      for (const id of store.state.domain.messagesView.subscribers) {
+        let state: ViewState = {
+          user: store.state.entities.users[id],
+          viewing: false
+        }
+        if (props.viewerIds.findIndex(v => v === id) > -1) {
+          state.viewing = true
+        }
+        states.push(state)
+      }
+      states.sort(function (a, b) {
+        return a.viewing ? -1 : 1
+      })
+      return states
+    })
+    return { styles, userIds, isForceNotification, viewStates }
   }
 })
 </script>
 
 <style lang="scss" module>
 $memberTitleSize: 1.15rem;
-
-.container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-  width: 256px;
-  border-radius: 4px;
-  padding: 8px;
-  flex-shrink: 0;
-}
-
-.memberTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-weight: bold;
-  font-size: $memberTitleSize;
-  min-height: 48px;
-}
 
 .text {
   font-weight: bold;
@@ -100,9 +101,5 @@ $memberTitleSize: 1.15rem;
   border-radius: 4px;
   padding: 8px;
   flex-shrink: 0;
-}
-
-.icons {
-  padding-bottom: 80px;
 }
 </style>

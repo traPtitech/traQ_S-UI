@@ -45,7 +45,8 @@ export default defineComponent({
       }))
     })
     const user = computed(() => store.state.entities.users[props.userId])
-    const onClick = () => {
+    const onClick = (e: Event) => {
+      e.stopPropagation()
       if (!props.preventModal) {
         if (user.value.bot && user.value.name.indexOf('@Webhook')) {
           return

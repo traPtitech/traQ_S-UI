@@ -11,15 +11,31 @@
     :pinnedMessage="state.pinnedMessage"
   />
   <div v-else :style="styles.container" :class="$style.container">
-    <channel-side-bar-header :channel-id="props.channelId" @close="toggle" />
-    <channel-side-bar-viewers :viewersId="viewersId" />
-    <channel-side-bar-topic />
+    <channel-side-bar-header
+      :channel-id="props.channelId"
+      @close="toggle"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-viewers
+      :viewersId="viewersId"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-topic :class="$style.sidebarItem" />
     <channel-side-bar-pinned
       :pinnedMessageLength="state.pinnedMessage.length"
       @open="togglePinnedMode"
+      :class="$style.sidebarItem"
     />
-    <channel-side-bar-member :channelId="props.channelId" />
-    <channel-side-bar-edit />
+    <channel-side-bar-relation
+      :channelId="props.channelId"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-member
+      :channelId="props.channelId"
+      :class="$style.sidebarItem"
+      :viewerIds="viewersId"
+    />
+    <channel-side-bar-edit :class="$style.edit" />
   </div>
 </template>
 
@@ -42,6 +58,7 @@ import ChannelSideBarMember from './ChannelSideBarMember.vue'
 import ChannelSideBarEdit from './ChannelSideBarEdit.vue'
 import ChannelSideBarHidden from './ChannelSideBarHidden.vue'
 import PinnedSideBar from './PinnedSideBar.vue'
+import ChannelSideBarRelation from './ChannelSideBarRelation.vue'
 
 type Props = {
   channelId: ChannelId
@@ -65,7 +82,8 @@ export default defineComponent({
     ChannelSideBarMember,
     ChannelSideBarEdit,
     ChannelSideBarHidden,
-    PinnedSideBar
+    PinnedSideBar,
+    ChannelSideBarRelation
   },
   props: {
     channelId: { type: String, requried: true }
@@ -108,5 +126,14 @@ export default defineComponent({
   height: 100%;
   padding: 0 32px;
   overflow: auto;
+}
+
+.sidebarItem {
+  margin-top: 16px;
+}
+
+.edit {
+  margin-top: auto;
+  margin-bottom: 24px;
 }
 </style>

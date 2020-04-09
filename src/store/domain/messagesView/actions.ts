@@ -67,12 +67,8 @@ export const actions = defineActions({
   },
   async fetchSubscribers(context) {
     const { state, commit } = messagesViewActionContext(context)
-    try {
-      const res = await api.getChannelSubscribers(state.currentChannelId)
-      commit.setSubscribers(res.data)
-    } catch (e) {
-      commit.setSubscribers(undefined)
-    }
+    const res = await api.getChannelSubscribers(state.currentChannelId)
+    commit.setSubscribers(res.data)
   },
   async fetchChannelLatestMessage(context) {
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(

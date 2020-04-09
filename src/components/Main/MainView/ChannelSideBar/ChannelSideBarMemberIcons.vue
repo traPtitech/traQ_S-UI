@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <user-icon
-      :class="$style.userIcon"
-      v-for="id in props.userIds"
-      :key="id"
-      :userId="id"
-      :size="28"
-    />
+    <div
+      v-for="state in props.viewerStates"
+      :class="[state.viewing ? '' : $style.notView, $style.member]"
+      :key="state.user.id"
+    >
+      <user-icon :size="28" :userId="state.user.id" />
+      <span :class="$style.name">{{ state.user.displayName }}</span>
+    </div>
   </div>
 </template>
 
@@ -20,9 +21,15 @@ import {
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '../../../../types/entity-ids'
+import { User } from '@traptitech/traq'
 
 type Props = {
-  userIds: UserId[]
+  viewerStates: ViewState[]
+}
+
+type ViewState = {
+  user: User
+  viewing: boolean
 }
 
 const useStyles = () =>
@@ -37,7 +44,7 @@ export default defineComponent({
   name: 'ChannelSideBarMember',
   components: { UserIcon },
   props: {
-    userIds: { type: Array, default: [] }
+    viewerStates: { type: Array, default: [] }
   },
   setup(props: Props) {
     const styles = useStyles()
@@ -52,7 +59,18 @@ export default defineComponent({
   flex-direction: column;
 }
 
-.userIcon {
+.member {
   margin-bottom: 8px;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+}
+
+.notView {
+  opacity: 50%;
+}
+
+.name {
+  margin-left: 8px;
 }
 </style>

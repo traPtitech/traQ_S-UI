@@ -59,12 +59,9 @@ $textSize: 1.15rem;
 
 .container {
   width: 256px;
-  margin-top: 16px;
   border-radius: 4px;
   word-break: break-all;
   padding: 16px;
-  padding-right: 16px;
-  padding-left: 16px;
 }
 
 .itemHeader {

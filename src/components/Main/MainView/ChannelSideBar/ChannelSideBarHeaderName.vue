@@ -12,36 +12,38 @@ import { makeStyles } from '@/lib/styles'
 
 type Props = {
   channelName: string
+  color: string
+  size: string
 }
 
-const useStyles = () =>
+const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.primary
+      color: props.color,
+      fontSize: props.size
     }))
   })
 
 export default defineComponent({
   name: 'ChannelSideBarHeaderName',
-  props: { channelName: String },
+  props: {
+    channelName: String,
+    color: { type: String, default: 'primary' },
+    fontSize: { type: String, default: '1.5rem'}
+  },
   setup(props: Props) {
-    const styles = useStyles()
+    const styles = useStyles(props)
     return { props, styles }
   }
 })
 </script>
 
 <style lang="scss" module>
-$channelSize: 1.5rem;
-
 .container {
   height: 100%;
 }
-.channel {
-  font-size: $channelSize;
-}
+
 .channelHash {
-  font-size: $channelSize;
   margin-right: 0.125rem;
   user-select: none;
 }

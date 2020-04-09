@@ -14,7 +14,7 @@ import {
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import useChannelPath from '@/use/channelPath'
+import store from '@/store'
 import ChannelSideBarHeaderName from './ChannelSideBarHeaderName.vue'
 import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'
 
@@ -22,7 +22,7 @@ type Props = {
   channelId: ChannelId
 }
 
-const useStyles = () =>
+const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
       color: theme.ui.primary
@@ -35,19 +35,14 @@ export default defineComponent({
   components: { ChannelSideBarHeaderName, CloseButton },
   setup(props: Props, context: SetupContext) {
     const state = reactive({
-      channelName: computed(() => {
-        const { channelIdToPath } = useChannelPath()
-        const channelArray: string[] = channelIdToPath(props.channelId)
-        if (channelArray.length === 0) {
-          return ''
-        }
-        return channelArray[channelArray.length - 1]
-      })
+      channelName: computed(() =>
+        store.getters.entities.channelNameById(props.channelId)
+      )
     })
     const onClick = () => {
       context.emit('close')
     }
-    const styles = useStyles()
+    const styles = useStyles(props)
     return { props, state, styles, onClick }
   }
 })
@@ -57,7 +52,6 @@ export default defineComponent({
 .container {
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
   width: 256px;
   align-items: center;
   flex-shrink: 0;

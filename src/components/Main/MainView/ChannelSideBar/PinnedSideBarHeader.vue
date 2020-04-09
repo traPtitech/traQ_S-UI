@@ -57,7 +57,6 @@ $headerTextSize: 1.5rem;
 
 .container {
   display: flex;
-  margin-top: 16px;
   width: 256px;
   align-items: center;
   flex-shrink: 0;

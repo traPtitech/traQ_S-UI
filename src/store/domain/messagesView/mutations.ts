@@ -57,7 +57,7 @@ export const mutations = defineMutations<S>()({
   setTopic(state, topic: string) {
     state.topic = topic
   },
-  setSubscribers(state, subscribers: UserId[] | undefined) {
+  setSubscribers(state, subscribers: UserId[]) {
     state.subscribers = subscribers
   }
 })

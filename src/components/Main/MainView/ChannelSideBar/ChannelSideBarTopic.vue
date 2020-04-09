@@ -1,14 +1,16 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <channel-side-bar-topic-header @switch="toggle" :isOpen="state.isOpen" />
-    <channel-side-bar-topic-content
-      :topicContent="topicContent"
-      :isOpen="state.isOpen"
-      :height="state.contentHeight"
-      id="topic-content"
-      @heightChange="changeHeight"
-    />
-  </div>
+  <channel-side-bar-content title="トピック">
+    <template #header-control>
+      <icon width="20" height="20" @click="toggle" name="rounded-triangle" />
+    </template>
+    <template #content>
+      <channel-side-bar-topic-content
+        v-if="state.isOpen"
+        :topicContent="topicContent"
+        :isOpen="state.isOpen"
+      />
+    </template>
+  </channel-side-bar-content>
 </template>
 
 <script lang="ts">
@@ -16,48 +18,30 @@ import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import ChannelSideBarTopicHeader from './ChannelSideBarTopicHeader.vue'
+import Icon from '@/components/UI/Icon.vue'
 import ChannelSideBarTopicContent from './ChannelSideBarTopicContent.vue'
-
-type State = {
-  isOpen: boolean
-  contentHeight: number
-}
-
-const useStyles = (state: State) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      height: state.isOpen
-        ? state.contentHeight > 48
-          ? `${state.contentHeight + 52}px`
-          : '96px'
-        : '48px'
-    }))
-  })
+import ChannelSideBarContent from './ChannelSideBarContent.vue'
 
 export default defineComponent({
   name: 'ChannelSideBarTopic',
-  components: { ChannelSideBarTopicHeader, ChannelSideBarTopicContent },
+  components: {
+    ChannelSideBarTopicContent,
+    ChannelSideBarContent,
+    Icon
+  },
   setup() {
-    const state: State = reactive({
-      isOpen: true,
-      contentHeight: 0
+    const state = reactive({
+      isOpen: true
     })
-    const styles = useStyles(state)
     const toggle = () => {
       state.isOpen = !state.isOpen
     }
-    const changeHeight = (height: number) => {
-      state.contentHeight = height
-    }
-    const topicContent = computed(() => store.state.domain.messagesView.topic)
+    const topicContent = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    //const topicContent = computed(() => store.state.domain.messagesView.topic)
     return {
-      styles,
       state,
       toggle,
-      topicContent,
-      changeHeight
+      topicContent
     }
   }
 })
@@ -66,7 +50,6 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 256px;
-  margin-top: 16px;
   border-radius: 4px;
   min-height: 0px;
   position: relative;
@@ -74,5 +57,9 @@ export default defineComponent({
   transition: 0.5s;
   overflow: hidden;
   flex-shrink: 0;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

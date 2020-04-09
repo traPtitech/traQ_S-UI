@@ -14,7 +14,7 @@ export interface S {
   isReachedEnd: boolean
   currentViewers: ChannelViewerState[]
   topic: string
-  subscribers: UserId[] | undefined
+  subscribers: UserId[]
 }
 
 export const state: S = {
