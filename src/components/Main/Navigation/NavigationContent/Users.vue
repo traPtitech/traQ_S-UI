@@ -4,18 +4,39 @@
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
     <navigation-content-container subtitle="ユーザーリスト">
-      <div
-        v-for="userList in userLists"
-        :class="$style.list"
-        :key="userList[0]"
-      >
-        <users-separator :name="userList[0]" />
+      <filter-input
+        :onSecondary="true"
+        :text="userListFilterState.query"
+        @input="setQuery"
+      />
+      <div v-if="userListFilterState.query.length > 0" :class="$style.list">
         <users-element
-          v-for="user in userList[1]"
+          v-for="user in userListFilterState.filteredItems"
           :key="user.id"
           :user="user"
           :class="$style.element"
         />
+      </div>
+      <div v-else>
+        <div
+          v-for="userList in userLists"
+          :class="$style.list"
+          :key="userList[0]"
+        >
+          <users-separator
+            :name="userList[0]"
+            :isOpen="userListFoldingState[userList[0]]"
+            @click.native="onUserListFoldingToggle(userList[0])"
+          />
+          <div v-show="userListFoldingState[userList[0]]">
+            <users-element
+              v-for="user in userList[1]"
+              :key="user.id"
+              :user="user"
+              :class="$style.element"
+            />
+          </div>
+        </div>
       </div>
     </navigation-content-container>
   </div>
@@ -27,7 +48,10 @@ import {
   SetupContext,
   computed,
   reactive,
-  toRefs
+  toRefs,
+  set,
+  Ref,
+  ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -38,6 +62,8 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersSeparator from './UsersSeparator.vue'
+import FilterInput from '@/components/UI/FilterInput.vue'
+import useTextFilter from '@/use/textFilter'
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
@@ -84,18 +110,54 @@ const useListByGradeName = () => {
   return listByGradeName
 }
 
+const useUserListFolding = () => {
+  const state = reactive({
+    userListFoldingState: {} as Record<string, boolean>
+  })
+  const onUserListFoldingToggle = (userGroupName: string) => {
+    if (state.userListFoldingState[userGroupName]) {
+      state.userListFoldingState[userGroupName] = false
+    } else {
+      set(state.userListFoldingState, userGroupName, true)
+    }
+  }
+  return {
+    ...toRefs(state),
+    onUserListFoldingToggle
+  }
+}
+
+const useUserListFilter = () => {
+  const users = computed(() => Object.values(store.state.entities.users))
+  const { textFilterState, setQuery } = useTextFilter(users, 'name')
+  return {
+    userListFilterState: textFilterState,
+    setQuery
+  }
+}
+
 export default defineComponent({
   name: 'Users',
   components: {
     EmptyState,
     NavigationContentContainer,
     UsersElement,
-    UsersSeparator
+    UsersSeparator,
+    FilterInput
   },
   setup() {
     const userLists = useListByGradeName()
+    const {
+      userListFoldingState,
+      onUserListFoldingToggle
+    } = useUserListFolding()
+    const { userListFilterState, setQuery } = useUserListFilter()
     return {
-      userLists
+      userLists,
+      userListFoldingState,
+      onUserListFoldingToggle,
+      userListFilterState,
+      setQuery
     }
   }
 })
@@ -109,8 +171,7 @@ export default defineComponent({
   margin: 8px 0;
 }
 .list {
-  &:first-of-type {
-    margin-top: 16px;
-  }
+  cursor: pointer;
+  margin: 16px 0px;
 }
 </style>
