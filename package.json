@@ -48,7 +48,7 @@
     "@vue/cli-service": "^4.3.1",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "@vue/test-utils": "1.0.0-beta.32",
+    "@vue/test-utils": "1.0.0-beta.33",
     "compression-webpack-plugin": "^3.1.0",
     "csstype": "^2.6.10",
     "eslint": "^6.8.0",
