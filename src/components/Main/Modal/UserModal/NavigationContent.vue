@@ -1,18 +1,18 @@
 <template>
   <section :class="$style.container" :style="styles.container">
     <profile-tab
-      v-if="props.currentNavigation === 'profile'"
-      :user="props.user"
+      v-if="currentNavigation === 'profile'"
+      :user="user"
       :detail="detail"
       :class="$style.content"
     />
     <groups-tab
-      v-if="props.currentNavigation === 'groups'"
+      v-if="currentNavigation === 'groups'"
       :detail="detail"
       :class="$style.content"
     />
     <tags-tab
-      v-if="props.currentNavigation === 'tags'"
+      v-if="currentNavigation === 'tags'"
       :detail="detail"
       :class="$style.content"
     />
@@ -22,10 +22,9 @@
 <script lang="ts">
 import {
   defineComponent,
-  ref,
   reactive,
   computed,
-  watch
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
@@ -45,11 +44,6 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  currentNavigation: NavigationItemType
-  user: User
-}
-
 export default defineComponent({
   name: 'NavigationContent',
   components: {
@@ -59,15 +53,15 @@ export default defineComponent({
   },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'profile' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     },
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
 
     const detail = computed(() => store.state.domain.userDetails[props.user.id])
@@ -75,7 +69,6 @@ export default defineComponent({
 
     return {
       styles,
-      props,
       detail
     }
   }

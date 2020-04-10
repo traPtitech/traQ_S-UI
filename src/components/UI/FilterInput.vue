@@ -4,8 +4,8 @@
     <input
       :class="$style.input"
       :style="$style.input"
-      :value="props.text"
-      :placeholder="props.placeholder"
+      :value="text"
+      :placeholder="placeholder"
       @input="onInput"
       type="text"
     />
@@ -13,18 +13,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import useInput from '@/use/input'
 
-type Props = {
-  text: string
-  onSecondary: boolean
-  placeholder: string
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (props: { onSecondary: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       background: props.onSecondary
@@ -56,10 +50,10 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles(props)
     const { onInput } = useInput(context)
-    return { styles, props, onInput }
+    return { styles, onInput }
   }
 })
 </script>

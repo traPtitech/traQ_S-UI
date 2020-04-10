@@ -2,21 +2,21 @@
   <div :class="$style.body" ref="bodyRef">
     <user-icon
       :class="$style.userIcon"
-      :userId="state.message.userId"
+      :user-id="state.message.userId"
       :size="40"
     />
     <message-header
       :class="$style.messageHeader"
-      :userId="state.message.userId"
-      :createdAt="state.message.createdAt"
-      :updatedAt="state.message.updatedAt"
+      :user-id="state.message.userId"
+      :created-at="state.message.createdAt"
+      :updated-at="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <message-file-list
         v-if="state.fileIds.length > 0"
         :class="$style.messageFileList"
-        :fileIds="state.fileIds"
+        :file-ids="state.fileIds"
       />
     </div>
   </div>
@@ -31,27 +31,25 @@ import {
   onMounted,
   watchEffect,
   watch,
-  SetupContext
+  SetupContext,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageFileList from './MessageFileList.vue'
-
-interface Props {
-  messageId: string
-}
+import { MessageId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'MessageElement',
   components: { UserIcon, MessageHeader, MessageFileList },
   props: {
     messageId: {
-      type: String,
+      type: String as PropType<MessageId>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),

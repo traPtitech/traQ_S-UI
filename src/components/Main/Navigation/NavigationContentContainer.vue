@@ -2,7 +2,7 @@
   <!-- TODO: 折り畳み -->
   <div>
     <h3
-      v-if="props.subtitle && props.subtitle.length > 0"
+      v-if="subtitle && subtitle.length > 0"
       :class="$style.subtitle"
       :style="subtitleStyle"
     >
@@ -16,22 +16,16 @@
 import { defineComponent } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 
-type Props = { subtitle?: string }
-
 export default defineComponent({
   name: 'NavigationContentContainer',
   props: {
-    subtitle: {
-      type: String,
-      required: false
-    }
+    subtitle: String
   },
-  setup(props: Props) {
+  setup() {
     const subtitleStyle = makeStyles(theme => ({
       color: theme.ui.secondary
     }))
     return {
-      props,
       subtitleStyle
     }
   }

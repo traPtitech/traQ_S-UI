@@ -4,7 +4,7 @@
       <message-file-list-image
         v-for="meta in fileMetaDataState.images"
         :key="meta.id"
-        :fileId="meta.id"
+        :file-id="meta.id"
         :is-large="showLargeImage"
         :class="$style.imageItem"
       />
@@ -12,13 +12,13 @@
     <message-file-list-video
       v-for="meta in fileMetaDataState.videos"
       :key="meta.id"
-      :fileId="meta.id"
+      :file-id="meta.id"
     />
     <message-file-list-file
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
       :class="$style.item"
-      :fileId="meta.id"
+      :file-id="meta.id"
     />
   </div>
 </template>
@@ -31,10 +31,6 @@ import useFileMetaList from './use/fileMetaList'
 import MessageFileListFile from './MessageFileListFile.vue'
 import MessageFileListImage from './MessageFileListImage.vue'
 import MessageFileListVideo from './MessageFileListVideo.vue'
-
-interface Props {
-  fileIds: FileId[]
-}
 
 export default defineComponent({
   name: 'MessageFileList',
@@ -49,7 +45,7 @@ export default defineComponent({
       default: []
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const { fileMetaDataState } = useFileMetaList(props)
     const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
     return { fileMetaDataState, mimeToFileType, showLargeImage }

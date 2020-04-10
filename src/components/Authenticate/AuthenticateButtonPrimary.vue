@@ -4,17 +4,13 @@
     :style="styles.container"
     @click="context.emit('click')"
   >
-    {{ props.label }}
+    {{ label }}
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  label: string
-}
 
 const useStyles = () =>
   reactive({
@@ -32,9 +28,9 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
-    return { props, context, styles }
+    return { context, styles }
   }
 })
 </script>

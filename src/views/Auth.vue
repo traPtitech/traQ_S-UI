@@ -1,28 +1,29 @@
 <template>
-  <authenticate-main-view v-if="state.show" :type="props.type" />
+  <authenticate-main-view v-if="state.show" :type="type" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
-
-type Props = {
-  type: 'login' | 'password-reset' | 'registration'
-}
 
 export default defineComponent({
   name: 'Auth',
   props: {
     type: {
-      type: String,
-      default: 'login'
+      type: String as PropType<'login' | 'password-reset' | 'registration'>,
+      default: 'login' as const
     }
   },
   components: {
     AuthenticateMainView
   },
-  setup(props: Props) {
+  setup() {
     const state = reactive({
       show: false
     })
@@ -34,7 +35,7 @@ export default defineComponent({
         state.show = true
       }
     })
-    return { props, state }
+    return { state }
   }
 })
 </script>

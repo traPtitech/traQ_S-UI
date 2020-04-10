@@ -1,12 +1,12 @@
 <template>
   <div class="channel-list">
     <channel-element
-      v-for="channel in props.channels"
+      v-for="channel in channels"
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
       :is-opened="channelFoldingState[channel.id]"
-      :ignore-children="props.ignoreChildren"
+      :ignore-children="ignoreChildren"
       @channel-select="onChannelSelect"
       @channel-folding-toggle="onChannelFoldingToggle"
     />
@@ -20,7 +20,8 @@ import {
   reactive,
   set,
   toRefs,
-  SetupContext
+  SetupContext,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
@@ -45,11 +46,6 @@ const useChannelFolding = () => {
   }
 }
 
-type Props = {
-  channels: ChannelTreeNode[]
-  ignoreChildren: boolean
-}
-
 export default defineComponent({
   name: 'ChannelList',
   components: {
@@ -58,7 +54,7 @@ export default defineComponent({
   },
   props: {
     channels: {
-      type: Array,
+      type: Array as PropType<ChannelTreeNode[]>,
       required: true
     },
     ignoreChildren: {
@@ -66,11 +62,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const { onChannelSelect } = useChannelSelect(context)
     const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
     return {
-      props,
       channelFoldingState,
       onChannelSelect,
       onChannelFoldingToggle

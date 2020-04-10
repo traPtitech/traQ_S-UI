@@ -25,8 +25,6 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 
-type Props = {}
-
 export default defineComponent({
   name: 'Home',
   components: {
@@ -34,7 +32,7 @@ export default defineComponent({
     EmptyState,
     NavigationContentContainer
   },
-  setup(props: Props) {
+  setup() {
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.homeChannelTree.children ?? []
     )

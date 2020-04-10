@@ -1,28 +1,30 @@
 <template>
   <div :class="$style.container">
-    <navigation-content-title :current-navigation="props.currentNavigation" />
-    <home v-show="props.currentNavigation === 'home'" :class="$style.content" />
+    <navigation-content-title :current-navigation="currentNavigation" />
+    <home v-show="currentNavigation === 'home'" :class="$style.content" />
     <channels
-      v-show="props.currentNavigation === 'channels'"
+      v-show="currentNavigation === 'channels'"
       :class="$style.content"
     />
     <activity
-      v-show="props.currentNavigation === 'activity'"
+      v-show="currentNavigation === 'activity'"
       :class="$style.content"
     />
-    <users
-      v-show="props.currentNavigation === 'users'"
-      :class="$style.content"
-    />
+    <users v-show="currentNavigation === 'users'" :class="$style.content" />
     <not-implemented
-      v-show="props.currentNavigation === 'services'"
+      v-show="currentNavigation === 'services'"
       :class="$style.content"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
@@ -32,10 +34,6 @@ import Activity from './NavigationContent/Activity.vue'
 import Users from './NavigationContent/Users.vue'
 import NotImplemented from './NavigationContent/NotImplemented.vue'
 import NavigationContentTitle from './NavigationContentTitle.vue'
-
-type Props = {
-  currentNavigation: NavigationItemType
-}
 
 export default defineComponent({
   name: 'NavigationContent',
@@ -49,11 +47,11 @@ export default defineComponent({
   },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'home' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'home' as const
     }
   },
-  setup(props: Props) {
+  setup() {
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })
@@ -61,7 +59,7 @@ export default defineComponent({
       () => store.state.domain.channelTree.channelTree.children ?? []
     )
 
-    return { state, props, topLevelChannels }
+    return { state, topLevelChannels }
   }
 })
 </script>

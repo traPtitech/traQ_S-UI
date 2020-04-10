@@ -5,12 +5,12 @@
     @click="context.emit('click')"
   >
     <icon
-      v-if="props.iconName"
+      v-if="iconName"
       :class="$style.icon"
-      :name="props.iconName"
-      :mdi="props.iconMdi"
+      :name="iconName"
+      :mdi="iconMdi"
     />
-    {{ props.label }}
+    {{ label }}
   </button>
 </template>
 
@@ -18,12 +18,6 @@
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-
-type Props = {
-  label: string
-  iconName?: string
-  iconMdi: boolean
-}
 
 const useStyles = () =>
   reactive({
@@ -43,9 +37,9 @@ export default defineComponent({
     iconName: String,
     iconMdi: { type: Boolean, default: false }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
-    return { props, context, styles }
+    return { context, styles }
   }
 })
 </script>

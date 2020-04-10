@@ -5,16 +5,21 @@
       v-for="item in items"
       :key="item.type"
       :type="item.type"
-      :iconName="item.iconName"
-      :iconMdi="item.iconMdi"
-      :is-selected="props.currentNavigation === item.type"
+      :icon-name="item.iconName"
+      :icon-mdi="item.iconMdi"
+      :is-selected="currentNavigation === item.type"
       @click="onNavigationItemClick(item.type)"
     />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from './NavigationSelectorItem.vue'
@@ -27,20 +32,16 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  currentNavigation: NavigationItemType
-}
-
 export default defineComponent({
   name: 'NavigationSelector',
   components: { NavigationSelectorItem },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'profile' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles()
     const items: {
       type: NavigationItemType

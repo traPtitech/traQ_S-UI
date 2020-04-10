@@ -24,7 +24,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  Ref,
+  PropType
+} from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -72,8 +78,13 @@ const useStyles = (pathInfoList: Ref<readonly ChannelPathInfo[]>) =>
 
 export default defineComponent({
   name: 'MainViewHeaderChannelName',
-  props: { channelId: String },
-  setup(props: Props) {
+  props: {
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    }
+  },
+  setup(props) {
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })
@@ -86,7 +97,7 @@ export default defineComponent({
     )
     const buildChannelLink = (path: string[]) => `/channels/${path.join('/')}`
     const styles = useStyles(pathInfoList)
-    return { props, state, styles, ancestorsPath, pathInfo, buildChannelLink }
+    return { state, styles, ancestorsPath, pathInfo, buildChannelLink }
   }
 })
 </script>

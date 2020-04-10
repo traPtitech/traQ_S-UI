@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <authenticate-modal>
-      <login-form v-if="props.type === 'login'" />
-      <registration-form v-if="props.type === 'registration'" />
+      <login-form v-if="type === 'login'" />
+      <registration-form v-if="type === 'registration'" />
     </authenticate-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
@@ -21,10 +21,6 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  type: 'login' | 'password-reset' | 'registration'
-}
-
 export default defineComponent({
   name: 'AuthenticateMainView',
   components: {
@@ -34,17 +30,13 @@ export default defineComponent({
   },
   props: {
     type: {
-      type: String,
-      default: 'login'
+      type: String as PropType<'login' | 'password-reset' | 'registration'>,
+      default: 'login' as const
     }
   },
-  setup(props: Props) {
+  setup() {
     const styles = useStyles()
-
-    return {
-      props,
-      styles
-    }
+    return { styles }
   }
 })
 </script>

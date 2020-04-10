@@ -18,7 +18,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
@@ -31,21 +36,18 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
-  detail?: UserDetail
-}
-
 export default defineComponent({
   name: 'GroupsTab',
   props: {
-    detail: Object
+    detail: Object as PropType<UserDetail>
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
-        props.detail?.groups.map(
+        // TODO: https://github.com/vuejs/composition-api/issues/291
+        (props.detail as UserDetail | undefined)?.groups.map(
           groupId => store.state.entities.userGroups[groupId]
         ) ?? []
     )

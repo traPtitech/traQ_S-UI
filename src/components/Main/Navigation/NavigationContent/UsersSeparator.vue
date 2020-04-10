@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    {{ props.name }}
+    {{ name }}
     <div :class="$style.line"></div>
     <icon name="rounded-triangle" :class="$style.icon" :style="iconStyle" />
   </div>
@@ -12,8 +12,6 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-type Props = { name: string; isOpen: boolean }
-
 export default defineComponent({
   name: 'UsersSeparator',
   components: {
@@ -23,9 +21,8 @@ export default defineComponent({
     name: { type: String, default: '' },
     isOpen: { type: Boolean, default: false }
   },
-  setup(props: Props) {
+  setup(props) {
     return {
-      props,
       containerStyle: makeStyles(theme => ({
         borderColor: theme.ui.tertiary,
         color: theme.ui.secondary

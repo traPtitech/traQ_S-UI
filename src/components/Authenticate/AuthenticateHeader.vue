@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span v-if="props.title" :class="$style.logoWithTitle">
+    <span v-if="title" :class="$style.logoWithTitle">
       <img src="/img/traq-logo.svg" :class="$style.logo" />
-      <span :class="$style.title">{{ props.title }}</span>
+      <span :class="$style.title">{{ title }}</span>
     </span>
     <img v-else src="/img/traq-logo-full.svg" :class="$style.fullLogo" />
   </div>
@@ -12,10 +12,6 @@
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import useInput from '@/use/input'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  title?: string
-}
 
 const useStyles = () =>
   reactive({
@@ -35,9 +31,9 @@ export default defineComponent({
   props: {
     title: String
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
-    return { props, styles }
+    return { styles }
   }
 })
 </script>

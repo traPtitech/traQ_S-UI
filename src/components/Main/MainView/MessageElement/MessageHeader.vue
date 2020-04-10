@@ -3,32 +3,31 @@
     <span :class="$style.displayName">{{ state.user.displayName }}</span>
     <grade-badge
       :class="$style.badge"
-      :userId="props.userId"
-      :isBot="state.user.bot"
+      :user-id="userId"
+      :is-bot="state.user.bot"
     />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
 
-interface Props {
-  userId: UserId
-  createdAt: string
-  updatedAt: string
-}
-
 export default defineComponent({
   name: 'MessageHeader',
   props: {
     userId: {
-      type: String,
+      type: String as PropType<UserId>,
       required: true
     },
     createdAt: {
@@ -41,7 +40,7 @@ export default defineComponent({
     }
   },
   components: { GradeBadge },
-  setup(props: Props) {
+  setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.users[props.userId]),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
@@ -59,7 +58,7 @@ export default defineComponent({
       })
     })
 
-    return { props, state, styles }
+    return { state, styles }
   }
 })
 </script>

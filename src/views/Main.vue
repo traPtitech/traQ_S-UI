@@ -16,7 +16,7 @@
         <navigation />
       </div>
       <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
-        <main-view-controller :isActive="isNavAppeared" />
+        <main-view-controller :is-active="isNavAppeared" />
       </div>
     </div>
     <modal-container />

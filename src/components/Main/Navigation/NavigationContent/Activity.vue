@@ -20,14 +20,12 @@ import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import ActivityElement from './ActivityElement.vue'
 
-type Props = {}
-
 export default defineComponent({
   name: 'Activity',
   components: {
     ActivityElement
   },
-  setup(props: Props, context: SetupContext) {
+  setup(_, context: SetupContext) {
     const state = reactive({
       messages: computed(() => store.state.domain.channelActivity)
     })

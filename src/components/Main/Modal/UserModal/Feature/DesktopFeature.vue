@@ -1,37 +1,30 @@
 <template>
   <section :class="$style.feature">
     <div>
-      <h1>{{ props.user.displayName }}</h1>
+      <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator :userId="props.user.id" />
-        @{{ props.user.name }}
+        <online-indicator :user-id="user.id" />
+        @{{ user.name }}
       </p>
     </div>
-    <buttons :username="props.user.name" :showTitle="true" />
+    <buttons :username="user.name" :show-title="true" />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { User } from '@traptitech/traq'
 import OnlineIndicator from './OnlineIndicator.vue'
 import Buttons from './Buttons.vue'
 
-interface Props {
-  user: User
-}
-
 export default defineComponent({
   name: 'DesktopFeature',
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
     }
-  },
-  setup(props: Props) {
-    return { props }
   },
   components: {
     OnlineIndicator,

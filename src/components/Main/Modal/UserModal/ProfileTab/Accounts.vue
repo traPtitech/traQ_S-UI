@@ -13,7 +13,7 @@
         {{ wikiPageName }}
       </a>
     </p>
-    <p v-if="props.twitterId !== ''" :class="$style.p">
+    <p v-if="twitterId !== ''" :class="$style.p">
       <circle-icon
         name="twitter"
         mdi
@@ -21,10 +21,10 @@
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <template v-if="props.twitterId === undefined">Now Loading...</template>
+      <template v-if="twitterId === undefined">Now Loading...</template>
       <template v-else>
         <a :href="twitterLink" target="_blank" @click.stop="">
-          @{{ props.twitterId }}
+          @{{ twitterId }}
         </a>
       </template>
     </p>
@@ -36,12 +36,6 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
-
-interface Props {
-  bot: boolean
-  name: string
-  twitterId?: string
-}
 
 export default defineComponent({
   name: 'Accounts',
@@ -56,7 +50,7 @@ export default defineComponent({
     },
     twitterId: String
   },
-  setup(props: Props) {
+  setup(props) {
     const iconBackgroundColor = computed(() => store.state.app.theme.ui.primary)
     const iconColor = computed(() => store.state.app.theme.background.primary)
 
@@ -73,7 +67,6 @@ export default defineComponent({
       () => `https://twitter.com/${props.twitterId ?? ''}`
     )
     return {
-      props,
       iconColor,
       iconBackgroundColor,
       wikiPageName,

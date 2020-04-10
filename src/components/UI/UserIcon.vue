@@ -9,7 +9,8 @@ import {
   defineComponent,
   SetupContext,
   reactive,
-  computed
+  computed,
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import api, { buildUserIconPath } from '@/lib/api'
@@ -18,25 +19,23 @@ import store from '@/store'
 
 type IconSize = 160 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
-type Props = { userId: UserId; size: IconSize; preventModal: boolean }
-
 export default defineComponent({
   name: 'UserIcon',
   props: {
     userId: {
-      type: String,
+      type: String as PropType<UserId>,
       required: true
     },
     size: {
-      type: Number,
-      default: 36 as IconSize
+      type: Number as PropType<IconSize>,
+      default: 36
     },
     preventModal: {
       type: Boolean,
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props) {
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.secondary,
@@ -58,7 +57,6 @@ export default defineComponent({
       }
     }
     return {
-      props,
       styles,
       onClick
     }

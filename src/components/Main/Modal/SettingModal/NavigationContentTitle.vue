@@ -5,23 +5,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  currentNavigation: NavigationItemType
-}
 
 export default defineComponent({
   name: 'NavigationContentTitle',
   props: {
     currentNavigation: {
-      type: String,
-      default: 'home' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const title = computed(() => navigationTypeNameMap[props.currentNavigation])
     const containerStyle = makeStyles(theme => ({
       color: theme.ui.primary

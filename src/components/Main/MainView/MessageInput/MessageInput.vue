@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
@@ -42,10 +42,6 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
-
-export type Props = {
-  channelId: ChannelId
-}
 
 const useStyles = () =>
   reactive({
@@ -64,11 +60,11 @@ export default defineComponent({
   },
   props: {
     channelId: {
-      type: String,
+      type: String as PropType<ChannelId>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
     const { textState, onInputText } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()

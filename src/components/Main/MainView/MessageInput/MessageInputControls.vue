@@ -67,14 +67,13 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles(props)
     const { onClickSendButton, onClickStampButton } = useClickHandlers(
       props,
       context
     )
     return {
-      props,
       styles,
       onClickSendButton,
       onClickStampButton

@@ -8,14 +8,12 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 
-type Props = {}
-
 export default defineComponent({
   name: 'Channels',
   components: {
     ChannelList
   },
-  setup(props: Props) {
+  setup() {
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.channelTree.children ?? []
     )

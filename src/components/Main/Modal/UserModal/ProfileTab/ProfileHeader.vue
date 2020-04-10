@@ -1,5 +1,5 @@
 <template>
-  <h2 :class="$style.header" :style="styles.header">{{ props.text }}</h2>
+  <h2 :class="$style.header" :style="styles.header">{{ text }}</h2>
 </template>
 
 <script lang="ts">
@@ -13,10 +13,6 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
-  text: string
-}
-
 export default defineComponent({
   name: 'ProfileHeader',
   props: {
@@ -25,11 +21,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props) {
+  setup() {
     const styles = useStyles()
     return {
-      styles,
-      props
+      styles
     }
   }
 })

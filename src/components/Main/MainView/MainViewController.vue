@@ -6,11 +6,11 @@
     <div :class="$style.layoutContainer" :data-layout="state.layout">
       <main-view-component-selector
         :class="[$style.componentContainer, $style.primary]"
-        :viewInfo="state.primary"
+        :view-info="state.primary"
       />
       <main-view-component-selector
         :class="[$style.componentContainer, $style.secondary]"
-        :viewInfo="state.secondary"
+        :view-info="state.secondary"
       />
     </div>
   </div>

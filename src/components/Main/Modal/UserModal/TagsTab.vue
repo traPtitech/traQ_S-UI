@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.tags" :style="styles.tags">
-    <template v-if="props.detail === undefined">Now loading...</template>
+    <template v-if="propst.detail === undefined">Now loading...</template>
     <template v-else>
       <ul :class="$style.list">
         <li
@@ -13,13 +13,18 @@
           {{ tag.tag }}
         </li>
       </ul>
-      <tags-tab-add :userId="props.detail.id" />
+      <tags-tab-add :user-id="propst.detail.id" />
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
@@ -33,24 +38,28 @@ const useStyles = () =>
     }))
   })
 
-interface Props {
-  detail?: UserDetail
-}
-
 export default defineComponent({
   name: 'TagsTab',
   props: {
-    detail: Object
+    detail: Object as PropType<UserDetail>
   },
-  setup(props: Props) {
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { detail?: UserDetail }
+
     const styles = useStyles()
-    const tags = computed(() => props.detail?.tags ?? [])
+    const tags = computed(() => propst.detail?.tags ?? [])
 
     const onTagClick = () => {
       // TODO: Open tag modal
     }
 
-    return { styles, props, tags, onTagClick }
+    return {
+      styles,
+      tags,
+      onTagClick,
+      propst
+    }
   },
   components: {
     Icon,

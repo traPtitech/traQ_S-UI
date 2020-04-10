@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <navigation-selector
       @navigation-change="onNavigationChange"
-      :currentNavigation="currentNavigation"
+      :current-navigation="currentNavigation"
     />
     <navigation-content :current-navigation="currentNavigation" />
     <close-button />

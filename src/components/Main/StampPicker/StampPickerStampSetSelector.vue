@@ -2,11 +2,11 @@
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.innerContainer">
       <stamp-picker-stamp-set-selector-item
-        v-for="set in props.stampSets"
+        v-for="set in stampSets"
         :key="set.id"
         :class="$style.item"
         :stamp-set="set"
-        :is-active="props.currentStampSet.id === set.id"
+        :is-active="currentStampSet.id === set.id"
         @click="onStampSetSelect(set)"
       />
     </div>
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
@@ -22,12 +22,6 @@ import { buildFilePath } from '@/lib/api'
 import { StampSet } from './use/stampSetSelector'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import { StampCategory } from '@/lib/stampCategorizer'
-
-type Props = {
-  currentStampSet: StampSet
-  stampSets: StampSet[]
-  foldedStampSets: StampSet[]
-}
 
 const useStyles = () =>
   reactive({
@@ -43,24 +37,24 @@ export default defineComponent({
   },
   props: {
     currentStampSet: {
-      type: Object,
+      type: Object as PropType<StampSet>,
       required: true
     },
     stampSets: {
-      type: Array,
+      type: Array as PropType<StampSet[]>,
       required: true
     },
     foldedStampSets: {
-      type: Array,
+      type: Array as PropType<StampSet[]>,
       default: () => []
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const onStampSetSelect = (stampSet: StampSet) => {
       context.emit('stamp-set-select', stampSet)
     }
     const styles = useStyles()
-    return { props, styles, onStampSetSelect }
+    return { styles, onStampSetSelect }
   }
 })
 </script>

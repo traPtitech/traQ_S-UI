@@ -10,7 +10,7 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <messages-scroller :messageIds="state.channelMessageIds" />
+    <messages-scroller :message-ids="state.channelMessageIds" />
     <message-input :channel-id="state.channelId" />
   </div>
 </template>
@@ -32,9 +32,6 @@ import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.v
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
-type Props = {
-  channelId: ChannelId
-}
 const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   const state = reactive({
     isDragging: false
@@ -65,9 +62,8 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
 
 export default defineComponent({
   name: 'MessagesView',
-  props: { channelId: String },
   components: { MessagesScroller, MessageInput, MessagesViewFileUploadOverlay },
-  setup(props: Props, _: SetupContext) {
+  setup() {
     const state = reactive({
       channelMessageIds: computed(
         () => store.state.domain.messagesView.messageIds
@@ -88,7 +84,6 @@ export default defineComponent({
       containerRef
     )
     return {
-      props,
       state,
       fileDragDropState,
       containerStyle,
