@@ -1,23 +1,18 @@
 <template>
   <div>
-    <div @click="onDMClick" :style="{ display: 'inline-block' }">
-      <link-button
-        :title="`${showTitle ? 'DM' : ''}`"
-        icon-name="email"
-        icon-mdi
-      />
-    </div>
-    <div
+    <link-button
+      :title="`${showTitle ? 'DM' : ''}`"
+      icon-name="email"
+      icon-mdi
+      @click.native="onDMClick"
+    />
+    <link-button
       v-if="homeChannelId"
-      @click="onHomeChannelClick"
-      :style="{ display: 'inline-block' }"
-    >
-      <link-button
-        :title="`${showTitle ? 'ホーム' : ''}`"
-        icon-name="home"
-        icon-mdi
-      />
-    </div>
+      :title="`${showTitle ? 'ホーム' : ''}`"
+      icon-name="home"
+      icon-mdi
+      @click.native="onHomeChannelClick"
+    />
   </div>
 </template>
 

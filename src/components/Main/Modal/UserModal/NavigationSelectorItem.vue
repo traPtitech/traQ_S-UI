@@ -48,6 +48,7 @@ export default defineComponent({
 <style lang="scss" module>
 .item {
   box-sizing: content-box;
+  margin: 4px 0;
   padding: 8px;
   border-left: 4px solid;
   cursor: pointer;
