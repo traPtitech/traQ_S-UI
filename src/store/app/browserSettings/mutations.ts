@@ -2,9 +2,10 @@ import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 
 export const mutations = defineMutations<S>()({
-  setAll<K extends keyof S>(state: S, newState: Partial<S>) {
-    ;(Object.keys(newState) as K[]).forEach(key => {
-      state[key] = newState[key] as S[K]
-    })
+  /**
+   * keyに一致しないvalueを入れることができるので注意
+   */
+  set<K extends keyof S>(state: S, [key, value]: [K, S[K]]) {
+    state[key] = value
   }
 })

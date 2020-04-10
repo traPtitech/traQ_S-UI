@@ -1,11 +1,11 @@
 import { Ref } from '@vue/composition-api'
 
 const useStateDiff = <T>() => {
-  const hasDiff = (
+  const getDiffKeys = (
     state: Readonly<Partial<T>>,
     storeState: Readonly<Ref<T>>
-  ): boolean => {
-    return Object.keys(state).some(key => {
+  ) => {
+    return (Object.keys(state) as Array<keyof T>).filter(key => {
       const k = key as keyof T
       return (
         storeState.value[k] === undefined || state[k] !== storeState.value[k]
@@ -13,7 +13,14 @@ const useStateDiff = <T>() => {
     })
   }
 
-  return { hasDiff }
+  const hasDiff = (
+    state: Readonly<Partial<T>>,
+    storeState: Readonly<Ref<T>>
+  ): boolean => {
+    return getDiffKeys(state, storeState).length > 0
+  }
+
+  return { getDiffKeys, hasDiff }
 }
 
 export default useStateDiff

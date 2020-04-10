@@ -26,7 +26,6 @@
         デバイスが取得できませんでした
       </p>
     </div>
-    <button v-if="isStateChanged" @click="setState">更新</button>
   </section>
 </template>
 
@@ -36,7 +35,8 @@ import {
   computed,
   reactive,
   ref,
-  watchEffect
+  watchEffect,
+  watch
 } from '@vue/composition-api'
 import store from '@/store'
 import useStateDiff from '../use/stateDiff'
@@ -92,16 +92,18 @@ export default defineComponent({
   setup() {
     const rtcSettings = computed(() => store.state.app.rtcSettings)
     const state = reactive({ ...rtcSettings.value })
-    const { hasDiff } = useStateDiff<typeof store.state.app.rtcSettings>()
-    const isStateChanged = computed(() => hasDiff(state, rtcSettings))
+    const { getDiffKeys } = useStateDiff<typeof store.state.app.rtcSettings>()
 
-    const setState = () => {
-      store.commit.app.rtcSettings.setAll(state)
-    }
+    watchEffect(() => {
+      const diffKeys = getDiffKeys(state, rtcSettings)
+      diffKeys.forEach(key => {
+        store.commit.app.rtcSettings.set([key, state[key]])
+      })
+    })
 
     const devicesInfo = useDevicesInfo(state)
 
-    return { rtcSettings, state, isStateChanged, setState, ...devicesInfo }
+    return { rtcSettings, state, ...devicesInfo }
   }
 })
 </script>

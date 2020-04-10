@@ -45,19 +45,19 @@
       </label>
       <div>
         <label>
-          <input type="checkbox" v-model="state.modifierKey.shift" />
+          <input type="checkbox" v-model="state.modifierShift" />
           {{ getModifierKeyName('shift') }}
         </label>
         <label>
-          <input type="checkbox" v-model="state.modifierKey.alt" />
+          <input type="checkbox" v-model="state.modifierAlt" />
           {{ getModifierKeyName('alt') }}
         </label>
         <label>
-          <input type="checkbox" v-model="state.modifierKey.ctrl" />
+          <input type="checkbox" v-model="state.modifierCtrl" />
           {{ getModifierKeyName('ctrl') }}
         </label>
         <label v-if="macFlag">
-          <input type="checkbox" v-model="state.modifierKey.macCtrl" />
+          <input type="checkbox" v-model="state.modifierMacCtrl" />
           {{ getModifierKeyName('macCtrl') }}
         </label>
       </div>
@@ -72,7 +72,6 @@
         ON / OFF
       </label>
     </div>
-    <button v-if="isStateChanged" @click="setState">更新</button>
   </section>
 </template>
 
@@ -82,11 +81,11 @@ import {
   SetupContext,
   ref,
   computed,
-  reactive
+  reactive,
+  watchEffect
 } from '@vue/composition-api'
 import apis from '@/lib/api'
 import store from '@/store'
-import { SendKeys } from '@/store/app/browserSettings'
 import { isMac } from '@/lib/util/browser'
 import useStateDiff from '../use/stateDiff'
 
@@ -100,13 +99,15 @@ const NotifyPermissionStatusTable: Record<
   '': ''
 }
 
-const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
+type SendKeys = 'alt' | 'ctrl' | 'shift' | 'macCtrl'
+
+const windowsModifierKeyTable: Record<SendKeys, string> = {
   alt: 'Alt',
   ctrl: 'Ctrl',
   shift: 'Shift',
   macCtrl: ''
 }
-const macModifierKeyTable: Record<keyof SendKeys, string> = {
+const macModifierKeyTable: Record<SendKeys, string> = {
   alt: '⌥(Option)',
   ctrl: '⌘(Command)',
   shift: 'Shift',
@@ -143,16 +144,22 @@ export default defineComponent({
     )
 
     const browserSettings = computed(() => store.state.app.browserSettings)
-    const state = reactive({ ...browserSettings.value })
-    const { hasDiff } = useStateDiff<typeof store.state.app.browserSettings>()
-    const isStateChanged = computed(() => hasDiff(state, browserSettings))
+    const state = reactive({
+      ...browserSettings.value
+    })
+    const { getDiffKeys } = useStateDiff<
+      typeof store.state.app.browserSettings
+    >()
 
-    const setState = () => {
-      store.commit.app.browserSettings.setAll(state)
-    }
+    watchEffect(() => {
+      const diffKeys = getDiffKeys(state, browserSettings)
+      diffKeys.forEach(key => {
+        store.commit.app.browserSettings.set([key, state[key]])
+      })
+    })
 
     const macFlag = isMac()
-    const getModifierKeyName = (key: keyof SendKeys) => {
+    const getModifierKeyName = (key: SendKeys) => {
       return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
     }
 
@@ -163,10 +170,8 @@ export default defineComponent({
       requestNotifyPermission,
       notifyPermissionStatus,
       state,
-      isStateChanged,
       macFlag,
-      getModifierKeyName,
-      setState
+      getModifierKeyName
     }
   }
 })
