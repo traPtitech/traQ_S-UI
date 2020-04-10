@@ -32,7 +32,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, context) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as { homeChannelId?: string | null }
 
@@ -48,11 +48,12 @@ export default defineComponent({
         : ''
     )
 
-    const onHomeChannelClick = () => {
-      if (!props.homeChannelId) return
-      store.dispatch.domain.messagesView.changeCurrentChannel(
-        homeChannelPath.value
-      )
+    const onHomeChannelClick = async () => {
+      if (!propst.homeChannelId) return
+      // モーダル削除時に消えちゃうため、実体を退避
+      const pathCache = homeChannelPath.value
+      await store.dispatch.ui.modal.clearModal()
+      context.root.$router.push(`/channels/${pathCache}`)
     }
 
     return {

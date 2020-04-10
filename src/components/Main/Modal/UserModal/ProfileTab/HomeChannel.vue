@@ -40,7 +40,7 @@ export default defineComponent({
   props: {
     id: String as PropType<string | null>
   },
-  setup(props) {
+  setup(props, context) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as { id?: string | null }
     const isLoading = computed(() => propst.id === undefined)
@@ -55,9 +55,12 @@ export default defineComponent({
       propst.id ? channelIdToPath(propst.id).join('/') : ''
     )
 
-    const onClick = () => {
-      if (!props.id) return
-      store.dispatch.domain.messagesView.changeCurrentChannel(channelPath.value)
+    const onClick = async () => {
+      if (!propst.id) return
+      // モーダル削除時に消えちゃうため、実体を退避
+      const pathCache = channelPath.value
+      await store.dispatch.ui.modal.clearModal()
+      context.root.$router.push(`/channels/${pathCache}`)
     }
 
     return {
