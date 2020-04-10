@@ -8,9 +8,7 @@
       </p>
     </div>
     <buttons
-      :home-channel-id="
-        props.detail === undefined ? undefined : props.detail.homeChannel
-      "
+      :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
       :show-title="false"
     />
   </section>
