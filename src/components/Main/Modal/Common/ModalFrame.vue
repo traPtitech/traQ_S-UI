@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    v-click-outside="onClickOutside"
+  >
     <common-modal-header
       :class="$style.header"
       :icon-name="iconName"
@@ -40,7 +44,8 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-    return { styles }
+    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
+    return { styles, onClickOutside }
   }
 })
 </script>
