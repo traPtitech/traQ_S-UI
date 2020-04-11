@@ -11,7 +11,9 @@
     <modal-section
       title="他ユーザーの通知設定"
       description="ユーザーに通知を送るか選択できます（通知を送る場合、未読管理も有効になります）"
-    ></modal-section>
+    >
+      <user-notification-list />
+    </modal-section>
   </modal-frame>
 </template>
 
@@ -23,6 +25,7 @@ import useCurrentChannelPath from '@/use/currentChannelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
+import UserNotificationList from './UserNotificationList.vue'
 
 const useStyles = () =>
   reactive({
@@ -34,7 +37,8 @@ export default defineComponent({
   components: {
     ModalFrame,
     ModalSection,
-    NotificationStateSelector
+    NotificationStateSelector,
+    UserNotificationList
   },
   setup() {
     const styles = useStyles()
