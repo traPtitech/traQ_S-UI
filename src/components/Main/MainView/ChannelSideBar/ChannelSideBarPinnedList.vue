@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <pinned-side-bar-header
+    <channel-side-bar-pinned-list-header
       @closePinned="closePinned"
       @closeBar="closeBar"
       :class="$style.sidebarItem"
     />
-    <pinned-side-bar-item
-      v-for="message in props.pinnedMessage"
+    <channel-side-bar-pinned-list-item
+      v-for="message in propst.pinnedMessage"
       :key="message.message.id"
       :pinnedMessage="message"
       :class="$style.sidebarItem"
@@ -19,18 +19,14 @@ import {
   defineComponent,
   computed,
   reactive,
-  SetupContext
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelViewState, Pin } from '@traptitech/traq'
-import PinnedSideBarHeader from './PinnedSideBarHeader.vue'
-import PinnedSideBarItem from './PinnedSideBarItem.vue'
-
-type Props = {
-  pinnedMessage: Pin[]
-}
+import ChannelSideBarPinnedListHeader from './ChannelSideBarPinnedListHeader.vue'
+import ChannelSideBarPinnedListItem from './ChannelSideBarPinnedListItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -41,12 +37,14 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'PinnedSideBar',
-  components: { PinnedSideBarHeader, PinnedSideBarItem },
+  name: 'ChannelSideBarPinnedList',
+  components: { ChannelSideBarPinnedListHeader, ChannelSideBarPinnedListItem },
   props: {
-    pinnedMessage: { type: Array, default: [] }
+    pinnedMessage: { type: Array as PropType<Pin[]>, default: [] }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { pinnedMessage: Pin[] }
     const styles = useStyles()
     const closeBar = () => {
       context.emit('closeBar')
@@ -55,7 +53,7 @@ export default defineComponent({
       context.emit('closePinned')
     }
     return {
-      props,
+      propst,
       styles,
       closeBar,
       closePinned

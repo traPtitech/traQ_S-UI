@@ -16,14 +16,12 @@ import Icon from '@/components/UI/Icon.vue'
 type Props = {
   withText: boolean
   size: number
-  backgroundColor: 'primary' | 'secondary' | 'tertiary' | 'secondarySub'
 }
 
 const useStyles = (props: Props) =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: props.backgroundColor
+      color: theme.ui.secondary
     })),
     circle: makeStyles(theme => ({
       borderColor: theme.ui.tertiary,

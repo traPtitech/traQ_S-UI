@@ -1,28 +1,27 @@
 <template>
   <div>
-    <div v-if="props.parent.name" :class="$style.channel">
+    <div v-if="propst.parent" :class="$style.channel">
       <channel-side-bar-relation-element
-        :name="props.parent.name"
-        :topic="props.parent.topic"
+        :name="propst.parent.name"
+        :topic="propst.parent.topic"
         :link="buildParentLink()"
       />
     </div>
     <div
+      v-if="propst.current"
       :class="$style.channel"
-      :style="[props.parent.name ? styles.firstBoarder : '']"
+      :style="[propst.parent ? styles.firstBoarder : '']"
     >
       <channel-side-bar-relation-element
         :isCurrent="true"
-        :name="props.current.name"
-        :topic="props.current.topic"
+        :name="propst.current.name"
+        :topic="propst.current.topic"
       />
       <div
         :class="$style.channel"
-        :style="[
-          props.parent.name ? styles.secondBoarder : styles.firstBoarder
-        ]"
+        :style="[propst.parent ? styles.secondBoarder : styles.firstBoarder]"
       >
-        <div v-for="(child, index) in props.children" :key="child.id">
+        <div v-for="(child, index) in propst.children" :key="child.id">
           <channel-side-bar-relation-element
             v-if="index < 3 || state.isOpenChildren"
             :name="child.name"
@@ -35,23 +34,23 @@
             :class="$style.text"
             @click="toggleChildren"
           >
-            子チャンネルを全て表示(+{{ props.children.length - 3 }})
+            子チャンネルを全て表示(+{{ propst.children.length - 3 }})
           </div>
         </div>
       </div>
-      <div v-for="(sister, index) in props.sisters" :key="sister.id">
+      <div v-for="(sibling, index) in propst.siblings" :key="sibling.id">
         <channel-side-bar-relation-element
-          v-if="index < 3 || state.isOpenSisters"
-          :name="sister.name"
-          :topic="sister.topic"
-          :link="buildSisterLink(sister.name)"
+          v-if="index < 3 || state.isOpensiblings"
+          :name="sibling.name"
+          :topic="sibling.topic"
+          :link="buildSiblingLink(sibling.name)"
         />
         <div
           v-else-if="index === 3"
           :class="$style.text"
-          @click="toggleSisters"
+          @click="togglesiblings"
         >
-          兄弟チャンネルを全て表示(+{{ props.sisters.length - 3 }})
+          兄弟チャンネルを全て表示(+{{ propst.siblings.length - 3 }})
         </div>
       </div>
     </div>
@@ -59,17 +58,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
 import { ChannelState } from './ChannelSideBarRelation.vue'
-
-type Props = {
-  parent: ChannelState
-  children: ChannelState[]
-  sisters: ChannelState[]
-  current: ChannelState
-}
 
 const useStyles = () =>
   reactive({
@@ -90,39 +87,53 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarRelationContent',
   props: {
-    parent: { type: Object, required: true },
-    children: { type: Array, required: true },
-    sisters: { type: Array, required: true },
-    current: { type: Object, required: true }
+    parent: {
+      type: Object as PropType<ChannelState | undefined>
+    },
+    children: { type: Array as PropType<ChannelState[]>, required: true },
+    siblings: { type: Array as PropType<ChannelState[]>, required: true },
+    current: {
+      type: Object as PropType<ChannelState | undefined>,
+      required: true
+    }
   },
   components: { ChannelSideBarRelationElement },
-  setup(props: Props) {
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291ops
+    const propst =
+      props as
+      {
+        parent: ChannelState | undefined
+        children: ChannelState[]
+        siblings: ChannelState[]
+        current: ChannelState | undefined
+      }
     const styles = useStyles()
     const state = reactive({
-      isOpenSisters: false,
+      isOpensiblings: false,
       isOpenChildren: false
     })
     const toggleChildren = () => {
       state.isOpenChildren = !state.isOpenChildren
     }
-    const toggleSisters = () => {
-      state.isOpenSisters = !state.isOpenSisters
+    const togglesiblings = () => {
+      state.isOpensiblings = !state.isOpensiblings
     }
     const buildChildLink = (channel: string | undefined) =>
       `${location.pathname}/${channel ?? ''}`
     const buildParentLink = () =>
       `${location.pathname.split('/').slice(0, -1).join('/')}`
-    const buildSisterLink = (channel: string | undefined) =>
+    const buildSiblingLink = (channel: string | undefined) =>
       `${location.pathname.split('/').slice(0, -1).join('/')}/${channel ?? ''}`
     return {
-      props,
+      propst,
       styles,
       state,
       toggleChildren,
-      toggleSisters,
+      togglesiblings,
       buildChildLink,
       buildParentLink,
-      buildSisterLink
+      buildSiblingLink
     }
   }
 })

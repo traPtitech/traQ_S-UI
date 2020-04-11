@@ -12,7 +12,7 @@
       direction="col"
       :max="3"
       :showCount="false"
-      :userIds="props.viewersId"
+      :userIds="propst.viewerIds"
     />
   </div>
 </template>
@@ -22,7 +22,7 @@ import {
   defineComponent,
   computed,
   reactive,
-  SetupContext
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -30,10 +30,6 @@ import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
 import { UserId } from '../../../../types/entity-ids'
-
-type Props = {
-  viewersId: UserId[]
-}
 
 const useStyles = () =>
   reactive({
@@ -46,10 +42,11 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarHidden',
   props: {
-    viewersId: { type: Array, requried: true }
+    viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
   components: { Icon, UserIconEllipsisList },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
+    const propst = props as { viewerIds: UserId[] }
     const styles = useStyles()
     const open = () => {
       context.emit('open')
@@ -57,7 +54,7 @@ export default defineComponent({
     return {
       styles,
       open,
-      props
+      propst
     }
   }
 })

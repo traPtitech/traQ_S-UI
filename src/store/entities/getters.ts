@@ -36,12 +36,5 @@ export const getters = defineGetters<S>()({
     return Object.values(state.stampPalettes)
       .filter(palette => palette.stamps?.length > 0)
       .map(palette => palette.id)
-  },
-  channelNameById(state): (channelId: ChannelId) => string | undefined {
-    return (channelId: ChannelId) => {
-      return Object.values(state.channels).find(
-        channel => channel.id === channelId
-      )?.name
-    }
   }
 })

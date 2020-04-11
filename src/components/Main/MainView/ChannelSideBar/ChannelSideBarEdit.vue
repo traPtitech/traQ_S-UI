@@ -1,13 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container" @click="onClick">
     <Icon
-      v-if="state.isEditing"
       mdi
-      name="toggle-switch-on"
+      :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
       height="20"
       width="20"
     />
-    <Icon v-else mdi name="toggle-switch-off" height="20" width="20" />
     <div>編集</div>
   </div>
 </template>
@@ -35,7 +33,6 @@ const useStyles = (state: State) =>
 
 export default defineComponent({
   name: 'ChannelSideBarEdit',
-  props: { channelId: String },
   components: { Icon },
   setup() {
     const state: State = reactive({

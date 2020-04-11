@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.header">
-      <h2 :class="$style.headerTitle">{{ props.title }}</h2>
+      <h2 :class="$style.headerTitle">{{ title }}</h2>
       <slot name="header-control"></slot>
     </div>
     <slot name="content" />
@@ -13,10 +13,6 @@ import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 
-type Props = {
-  title: string
-}
-
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
@@ -27,10 +23,10 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSideBarContent',
-  props: { title: { type: String, reqired: true } },
-  setup(props: Props) {
+  props: { title: { type: String, required: true } },
+  setup() {
     const styles = useStyles()
-    return { styles, props }
+    return { styles }
   }
 })
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div
-      v-for="state in props.viewerStates"
+      v-for="state in propst.viewerStates"
       :class="[state.viewing ? '' : $style.notView, $style.member]"
       :key="state.user.id"
     >
@@ -16,16 +16,12 @@ import {
   defineComponent,
   computed,
   reactive,
-  SetupContext
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '../../../../types/entity-ids'
 import { User } from '@traptitech/traq'
-
-type Props = {
-  viewerStates: ViewState[]
-}
 
 type ViewState = {
   user: User
@@ -44,11 +40,13 @@ export default defineComponent({
   name: 'ChannelSideBarMember',
   components: { UserIcon },
   props: {
-    viewerStates: { type: Array, default: [] }
+    viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
   },
-  setup(props: Props) {
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { viewerStates: ViewState[] }
     const styles = useStyles()
-    return { styles, props }
+    return { styles, propst }
   }
 })
 </script>

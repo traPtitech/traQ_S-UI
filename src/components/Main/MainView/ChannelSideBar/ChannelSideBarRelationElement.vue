@@ -1,17 +1,17 @@
 <template>
   <div>
     <span
-      :style="[props.isCurrent ? styles.current : '']"
+      :style="[propst.isCurrent ? styles.current : '']"
       :class="$style.channelHash"
       >#</span
     >
-    <span :style="[props.isCurrent ? styles.current : '']">
-      <router-link :to="props.isCurrent ? '' : props.link">{{
-        props.name
+    <span :style="[propst.isCurrent ? styles.current : '']">
+      <router-link :to="propst.isCurrent ? '' : propst.link">{{
+        propst.name
       }}</router-link>
     </span>
-    <div v-if="props.topic" :class="$style.topic">
-      {{ props.topic }}
+    <div v-if="propst.topic" :class="$style.topic">
+      {{ propst.topic }}
     </div>
   </div>
 </template>
@@ -19,13 +19,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  name: string
-  topic: string
-  isCurrent: boolean
-  link: string
-}
 
 const useStyles = () =>
   reactive({
@@ -42,9 +35,12 @@ export default defineComponent({
     isCurrent: { type: Boolean, default: false },
     link: { type: String }
   },
-  setup(props: Props) {
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst =
+      props as { name: string; topic: string; isCurrent: boolean; link: string }
     const styles = useStyles()
-    return { props, styles }
+    return { propst, styles }
   }
 })
 </script>

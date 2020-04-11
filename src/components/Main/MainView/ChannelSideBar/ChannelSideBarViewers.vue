@@ -5,11 +5,11 @@
     :style="styles.container"
     @click="toggle"
   >
-    <user-icon-ellipsis-list direction="row" :userIds="props.viewersId" />
+    <user-icon-ellipsis-list direction="row" :userIds="viewerIds" />
   </div>
   <channel-side-bar-viewers-detail
     v-else
-    :viewerIds="props.viewersId"
+    :viewerIds="viewerIds"
     @close="toggle"
   />
 </template>
@@ -20,16 +20,13 @@ import {
   computed,
   reactive,
   watchEffect,
-  ref
+  ref,
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
 import ChannelSideBarViewersDetail from './ChannelSideBarViewersDetail.vue'
 import { UserId } from '../../../../types/entity-ids'
-
-type Props = {
-  viewersId: UserId[]
-}
 
 const useStyles = () =>
   reactive({
@@ -43,9 +40,11 @@ export default defineComponent({
   name: 'ChannelSideBarViewers',
   components: { UserIconEllipsisList, ChannelSideBarViewersDetail },
   props: {
-    viewersId: { type: Array, required: true }
+    viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
-  setup(props: Props) {
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { viewerIds: UserId[] }
     const styles = useStyles()
     const state = reactive({
       isOpenDetail: false
@@ -53,7 +52,7 @@ export default defineComponent({
     const toggle = () => {
       state.isOpenDetail = !state.isOpenDetail
     }
-    return { styles, props, state, toggle }
+    return { styles, propst, state, toggle }
   }
 })
 </script>

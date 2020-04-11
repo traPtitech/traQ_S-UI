@@ -171,7 +171,6 @@ interface MessageIdBody {
 }
 
 interface PinBody {
-  // 使わないのとswaggerにもなかったのでid(PinnedId)も送られてますが書いてません
   message_id: MessageId
   channel_id: ChannelId
 }

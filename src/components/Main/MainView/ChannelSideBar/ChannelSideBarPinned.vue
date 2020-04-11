@@ -1,23 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container" @click="onClick">
     <div :class="$style.pinnedTitle">ピン留め</div>
-    <div>{{ props.pinnedMessageLength }}</div>
+    <div>{{ propst.pinnedMessageLength }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  SetupContext
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-
-type Props = {
-  pinnedMessageLength: number
-}
 
 const useStyles = () =>
   reactive({
@@ -30,12 +21,14 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarPinned',
   props: { pinnedMessageLength: { type: Number, default: 0 } },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles()
     const onClick = () => context.emit('open')
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { pinnedMessageLength: number }
     return {
       styles,
-      props,
+      propst,
       onClick
     }
   }

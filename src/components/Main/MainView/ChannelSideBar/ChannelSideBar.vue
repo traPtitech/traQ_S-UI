@@ -2,9 +2,9 @@
   <channel-side-bar-hidden
     v-if="!state.isOpen"
     @open="toggle"
-    :viewersId="viewersId"
+    :viewerIds="viewerIds"
   />
-  <pinned-side-bar
+  <channel-side-bar-pinned-list
     v-else-if="state.pinnedMode"
     @closePinned="togglePinnedMode"
     @closeBar="toggle"
@@ -12,12 +12,12 @@
   />
   <div v-else :style="styles.container" :class="$style.container">
     <channel-side-bar-header
-      :channel-id="props.channelId"
+      :channel-id="channelId"
       @close="toggle"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-viewers
-      :viewersId="viewersId"
+      :viewerIds="viewerIds"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-topic :class="$style.sidebarItem" />
@@ -27,13 +27,13 @@
       :class="$style.sidebarItem"
     />
     <channel-side-bar-relation
-      :channelId="props.channelId"
+      :channelId="channelId"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-member
-      :channelId="props.channelId"
+      :channelId="channelId"
       :class="$style.sidebarItem"
-      :viewerIds="viewersId"
+      :viewerIds="viewerIds"
     />
     <channel-side-bar-edit :class="$style.edit" />
   </div>
@@ -44,7 +44,7 @@ import {
   defineComponent,
   computed,
   reactive,
-  SetupContext
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -57,12 +57,8 @@ import ChannelSideBarHeader from './ChannelSideBarHeader.vue'
 import ChannelSideBarMember from './ChannelSideBarMember.vue'
 import ChannelSideBarEdit from './ChannelSideBarEdit.vue'
 import ChannelSideBarHidden from './ChannelSideBarHidden.vue'
-import PinnedSideBar from './PinnedSideBar.vue'
+import ChannelSideBarPinnedList from './ChannelSideBarPinnedList.vue'
 import ChannelSideBarRelation from './ChannelSideBarRelation.vue'
-
-type Props = {
-  channelId: ChannelId
-}
 
 const useStyles = () =>
   reactive({
@@ -82,13 +78,13 @@ export default defineComponent({
     ChannelSideBarMember,
     ChannelSideBarEdit,
     ChannelSideBarHidden,
-    PinnedSideBar,
+    ChannelSideBarPinnedList,
     ChannelSideBarRelation
   },
   props: {
-    channelId: { type: String, requried: true }
+    channelId: { type: String as PropType<ChannelId>, requried: true }
   },
-  setup(props: Props) {
+  setup() {
     const state = reactive({
       isOpen: true,
       pinnedMode: false,
@@ -97,7 +93,7 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
-    const viewersId = computed(
+    const viewerIds = computed(
       () => store.getters.domain.messagesView.getCurrentViewersId
     )
     const toggle = () => {
@@ -108,10 +104,9 @@ export default defineComponent({
     }
     return {
       state,
-      props,
       toggle,
       togglePinnedMode,
-      viewersId,
+      viewerIds,
       styles
     }
   }

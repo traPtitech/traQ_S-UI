@@ -6,7 +6,7 @@
       mdi
       name="chevron-left"
       @click="closePinned"
-      :class="$style.revertButton"
+      :class="$style.returnButton"
     />
     <span :class="$style.pinnedHeaderText">ピン留め</span>
     <close-button
@@ -19,12 +19,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  SetupContext
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'
@@ -37,9 +32,9 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'PinnedSideBarHeader',
+  name: 'ChannelSideBarPinnedListHeader',
   components: { Icon, CloseButton },
-  setup(_, context: SetupContext) {
+  setup(_, context) {
     const closePinned = () => {
       context.emit('closePinned')
     }
@@ -72,7 +67,7 @@ $headerTextSize: 1.5rem;
   margin-left: auto;
 }
 
-.revertButton {
+.returnButton {
   cursor: pointer;
 }
 </style>

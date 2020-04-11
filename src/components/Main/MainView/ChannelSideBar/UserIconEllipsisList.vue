@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <span
-      v-if="unVisibleCount > 0 && props.showCount"
+      v-if="inVisibleCount > 0 && propst.showCount"
       :class="$style.count"
       :style="styles.count"
     >
-      +{{ unVisibleCount }}
+      +{{ inVisibleCount }}
     </span>
     <user-icon
       :class="$style.userIcon"
@@ -19,33 +19,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { ChannelViewState } from '@traptitech/traq'
 import { UserId } from '../../../../types/entity-ids'
 
-type Props = {
-  direction: 'row' | 'col'
-  max: number
-  showCount: boolean
-  userIds: UserId[]
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (direction: 'row' | 'col') =>
   reactive({
     container: makeStyles(theme => ({
-      flexDirection:
-        props.direction === 'row' ? 'row-reverse' : 'column-reverse'
+      flexDirection: direction === 'row' ? 'row-reverse' : 'column-reverse'
     })),
     userIcon: makeStyles(theme => ({
-      marginTop: props.direction === 'row' ? '0px' : '-12px',
-      marginRight: props.direction === 'col' ? '0px' : '-12px'
+      marginTop: direction === 'row' ? '0px' : '-12px',
+      marginRight: direction === 'col' ? '0px' : '-12px'
     })),
     count: makeStyles(theme => ({
-      marginTop: props.direction === 'row' ? '0px' : '20px',
-      marginLeft: props.direction === 'col' ? '0px' : '20px'
+      marginTop: direction === 'row' ? '0px' : '20px',
+      marginLeft: direction === 'col' ? '0px' : '20px'
     }))
   })
 
@@ -53,23 +51,32 @@ export default defineComponent({
   name: 'UserIconEllipsisList',
   components: { UserIcon },
   props: {
-    direction: { type: String, required: true },
+    direction: { type: String as PropType<'row' | 'col'>, required: true },
     /**
      * 表示するUserIconの最大数(0以上)
      */
     max: { type: Number, default: 3 },
     showCount: { type: Boolean, default: true },
-    userIds: { type: Array, required: true }
+    userIds: { type: Array as PropType<UserId[]>, default: [] }
   },
-  setup(props: Props) {
-    const styles = useStyles(props)
-    const visibleIconIds = computed(() => props.userIds.slice(0, props.max))
-    const unVisibleCount = computed(() => props.userIds.length - props.max)
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst =
+      props as
+      {
+        direction: 'row' | 'col'
+        max: number
+        showCount: boolean
+        userIds: UserId[]
+      }
+    const styles = useStyles(propst.direction)
+    const visibleIconIds = computed(() => propst.userIds.slice(0, propst.max))
+    const inVisibleCount = computed(() => propst.userIds.length - propst.max)
     return {
       styles,
-      props,
+      propst,
       visibleIconIds,
-      unVisibleCount
+      inVisibleCount
     }
   }
 })

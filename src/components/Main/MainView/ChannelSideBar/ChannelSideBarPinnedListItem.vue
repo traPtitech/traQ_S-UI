@@ -1,27 +1,28 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.itemHeader">
-      <user-icon :size="20" :userId="props.pinnedMessage.message.userId" />
+      <user-icon :size="20" :userId="pinnedMessage.message.userId" />
       <span :style="styles.displayName" :class="$style.displayName">{{
         state.user.displayName
       }}</span>
     </div>
     <span :class="$style.text" :style="styles.text">{{
-      props.pinnedMessage.message.content
+      pinnedMessage.message.content
     }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { Pin } from '@traptitech/traq'
 import store from '@/store'
-
-type Props = {
-  pinnedMessage: Pin
-}
 
 const useStyles = () =>
   reactive({
@@ -38,17 +39,17 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'PinnedSideBarItem',
+  name: 'ChannelSideBarPinnedListItem',
   components: { UserIcon },
-  props: { pinnedMessage: { type: Object, required: true } },
-  setup(props: Props) {
+  props: { pinnedMessage: { type: Object as PropType<Pin>, required: true } },
+  setup(props) {
     const state = reactive({
       user: computed(
         () => store.state.entities.users[props.pinnedMessage.message.userId]
       )
     })
     const styles = useStyles()
-    return { styles, props, state }
+    return { styles, state }
   }
 })
 </script>

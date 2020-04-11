@@ -1,7 +1,14 @@
 <template>
   <channel-side-bar-content title="トピック">
     <template #header-control>
-      <icon width="20" height="20" @click="toggle" name="rounded-triangle" />
+      <icon
+        width="20"
+        height="20"
+        @click="toggle"
+        :style="styles.icon"
+        name="rounded-triangle"
+        :class="$style.icon"
+      />
     </template>
     <template #content>
       <channel-side-bar-topic-content
@@ -22,6 +29,14 @@ import Icon from '@/components/UI/Icon.vue'
 import ChannelSideBarTopicContent from './ChannelSideBarTopicContent.vue'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 
+const useStyles = (state: { isOpen: boolean }) =>
+  reactive({
+    icon: makeStyles(theme => ({
+      transform: state.isOpen ? 'rotate(180deg)' : '',
+      transition: '0.5s'
+    }))
+  })
+
 export default defineComponent({
   name: 'ChannelSideBarTopic',
   components: {
@@ -33,6 +48,7 @@ export default defineComponent({
     const state = reactive({
       isOpen: true
     })
+    const styles = useStyles(state)
     const toggle = () => {
       state.isOpen = !state.isOpen
     }
@@ -40,7 +56,8 @@ export default defineComponent({
     return {
       state,
       toggle,
-      topicContent
+      topicContent,
+      styles
     }
   }
 })
@@ -60,5 +77,7 @@ export default defineComponent({
 
 .icon {
   cursor: pointer;
+  transform: rotate(0deg);
+  transition: 0.5s;
 }
 </style>

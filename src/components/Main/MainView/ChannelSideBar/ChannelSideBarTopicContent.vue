@@ -1,12 +1,10 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span :class="$style.topic">
-      {{
-        props.topicContent === '' || !props.topicContent
-          ? 'トピック未設定'
-          : props.topicContent
-      }}
-    </span>
+    <div :class="$style.topic">
+      <template v-if="propst.topicContent === ''">トピック未設定</template>
+      <template v-else-if="!propst.topicContent">Now Loading</template>
+      <template v-else>{{ propst.topicContent }}</template>
+    </div>
     <icon :class="$style.icon" width="20" height="20" name="pencil" mdi />
   </div>
 </template>
@@ -18,18 +16,13 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-type Props = {
-  topicContent: string
-  isOpen: boolean
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (topicContent: string | undefined) =>
   reactive({
     container: makeStyles(theme => ({
-      color: props.topicContent === '' ? theme.ui.secondary : theme.ui.primary
+      color: topicContent === '' ? theme.ui.secondary : theme.ui.primary
     })),
     topic: makeStyles(theme => ({
-      opacity: props.topicContent === '' ? '50%' : '100%'
+      opacity: topicContent === '' ? '50%' : '100%'
     }))
   })
 
@@ -40,11 +33,13 @@ export default defineComponent({
     topicContent: { type: String },
     isOpen: { type: Boolean, required: true }
   },
-  setup(props: Props) {
-    const styles = useStyles(props)
+  setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { topicContent?: string; isOpen: boolean }
+    const styles = useStyles(propst.topicContent)
     return {
       styles,
-      props
+      propst
     }
   }
 })
