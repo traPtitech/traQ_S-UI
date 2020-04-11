@@ -1,7 +1,7 @@
 <template>
   <modal-frame
     title="通知設定"
-    :subtitle="`#${currentChannelPathString}`"
+    :subtitle="`#${channelPath}`"
     icon-mdi
     icon-name="bell"
   >
@@ -12,7 +12,7 @@
       title="他ユーザーの通知設定"
       description="ユーザーに通知を送るか選択できます（通知を送る場合、未読管理も有効になります）"
     >
-      <user-notification-list />
+      <user-notification-list :channel-id="currentChannelId" />
     </modal-section>
   </modal-frame>
 </template>
@@ -21,7 +21,7 @@
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import useCurrentChannelPath from '@/use/currentChannelPath'
+import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
@@ -42,8 +42,14 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-    const { currentChannelPathString } = useCurrentChannelPath()
-    return { styles, currentChannelPathString }
+    const currentChannelId = computed(
+      () => store.state.domain.messagesView.currentChannelId
+    )
+    const { channelIdToPath } = useChannelPath()
+    const channelPath = computed(() =>
+      channelIdToPath(currentChannelId.value).join('/')
+    )
+    return { styles, currentChannelId, channelPath }
   }
 })
 </script>
