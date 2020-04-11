@@ -5,7 +5,7 @@
     </navigation-content-container>
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
-        :onSecondary="true"
+        :on-secondary="true"
         :text="userListFilterState.query"
         @input="setQuery"
       />
@@ -25,7 +25,7 @@
         >
           <users-separator
             :name="userList[0]"
-            :isOpen="userListFoldingState[userList[0]]"
+            :is-open="userListFoldingState[userList[0]]"
             @click.native="onUserListFoldingToggle(userList[0])"
           />
           <div v-show="userListFoldingState[userList[0]]">

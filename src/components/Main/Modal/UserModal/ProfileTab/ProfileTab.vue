@@ -1,13 +1,11 @@
 <template>
   <div>
-    <bio :bio="props.detail === undefined ? undefined : props.detail.bio" />
-    <home-channel :name="user.name" />
+    <bio :bio="props.detail ? props.detail.bio : undefined" />
+    <home-channel :id="props.detail ? props.detail.homeChannel : undefined" />
     <accounts
       :bot="user.bot"
       :name="user.name"
-      :twitter-id="
-        props.detail === undefined ? undefined : props.detail.twitterId
-      "
+      :twitter-id="props.detail ? props.detail.twitterId : undefined"
     />
   </div>
 </template>

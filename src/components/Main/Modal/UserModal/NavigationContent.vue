@@ -59,18 +59,12 @@ export default defineComponent({
     user: {
       type: Object as PropType<User>,
       required: true
-    }
+    },
+    detail: Object as PropType<UserDetail>
   },
-  setup(props) {
+  setup() {
     const styles = useStyles()
-
-    const detail = computed(() => store.state.domain.userDetails[props.user.id])
-    store.dispatch.domain.fetchUserDetail(props.user.id)
-
-    return {
-      styles,
-      detail
-    }
+    return { styles }
   }
 })
 </script>

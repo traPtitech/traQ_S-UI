@@ -1,6 +1,6 @@
 <template>
-  <mobile-feature v-if="isMobile" :user="user" />
-  <desktop-feature v-else :user="user" />
+  <mobile-feature v-if="isMobile" :user="user" :detail="detail" />
+  <desktop-feature v-else :user="user" :detail="detail" />
 </template>
 
 <script lang="ts">
@@ -12,7 +12,7 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserDetail } from '@traptitech/traq'
 import DesktopFeature from './DesktopFeature.vue'
 import MobileFeature from './MobileFeature.vue'
 
@@ -22,7 +22,8 @@ export default defineComponent({
     user: {
       type: Object as PropType<User>,
       required: true
-    }
+    },
+    detail: Object as PropType<UserDetail>
   },
   setup() {
     const isMobile = computed(() => store.getters.ui.isMobile)

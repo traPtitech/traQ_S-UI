@@ -10,7 +10,7 @@
       :style="styles.icon"
     />
     <div :class="$style.content" :style="styles.content">
-      <feature :user="user" />
+      <feature :user="user" :detail="detail" />
       <navigation-selector
         @navigation-change="onNavigationChange"
         :current-navigation="currentNavigation"
@@ -18,6 +18,7 @@
       <navigation-content
         :current-navigation="currentNavigation"
         :user="user"
+        :detail="detail"
       />
     </div>
   </div>
@@ -75,12 +76,16 @@ export default defineComponent({
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const user = computed(() => store.state.entities.users[props.id])
 
+    const detail = computed(() => store.state.domain.userDetails[props.id])
+    store.dispatch.domain.fetchUserDetail(props.id)
+
     return {
       isMobile,
       styles,
       onClickClear,
       iconSize,
       user,
+      detail,
       ...toRefs(navigationSelectorState),
       onNavigationChange
     }

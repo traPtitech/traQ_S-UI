@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="$style.item"
-    :style="styles.item"
-    @click="context.emit('click')"
-  >
+  <button :class="$style.item" :style="styles.item">
     <icon
       :class="$style.icon"
       :name="iconName"
