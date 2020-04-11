@@ -1,17 +1,13 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <div
+    <navigation-selector-item
       v-for="item in items"
       :key="item.type"
-      @click="onNavigationItemClick(item.type)"
-      :class="$style.itemWrap"
-    >
-      <navigation-selector-item
-        :icon-name="item.iconName"
-        :icon-mdi="item.iconMdi"
-        :is-selected="currentNavigation === item.type"
-      />
-    </div>
+      :icon-name="item.iconName"
+      :icon-mdi="item.iconMdi"
+      :is-selected="currentNavigation === item.type"
+      @click.native="onNavigationItemClick(item.type)"
+    />
   </section>
 </template>
 
@@ -77,17 +73,5 @@ export default defineComponent({
 .container {
   margin-right: 4px;
   padding-top: 8px;
-}
-
-.itemWrap {
-  margin: 4px 0;
-}
-
-.item {
-  box-sizing: content-box;
-  height: 24px;
-  width: 24px;
-  padding: 4px;
-  border-left: 4px solid transparent;
 }
 </style>

@@ -7,14 +7,17 @@
         @{{ user.name }}
       </p>
     </div>
-    <buttons :username="user.name" :show-title="true" />
+    <buttons
+      :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
+      :show-title="false"
+    />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserDetail } from '@traptitech/traq'
 import OnlineIndicator from './OnlineIndicator.vue'
 import Buttons from './Buttons.vue'
 
@@ -24,6 +27,13 @@ export default defineComponent({
     user: {
       type: Object as PropType<User>,
       required: true
+    },
+    detail: Object as PropType<UserDetail>
+  },
+  setup(props) {
+    return {
+      // TODO: https://github.com/vuejs/composition-api/issues/291
+      props: props as { detail?: UserDetail }
     }
   },
   components: {

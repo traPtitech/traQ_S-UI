@@ -42,11 +42,21 @@ export const actions = defineActions({
   /**
    * モーダルを閉じ、履歴をひとつ戻る
    */
-  popModal: context => {
+  popModal: async context => {
     const { getters, dispatch } = modalActionContext(context)
     const { currentState } = getters
     history.back()
-    dispatch.collectGarbage(currentState)
+
+    // stateの同期待ち
+    await new Promise(resolve => {
+      window.addEventListener('popstate', resolve, { once: true })
+    })
+    // どのハンドラーが最後に発火するか保証されていないので一応待つ
+    await new Promise(resolve => {
+      setTimeout(resolve, 0)
+    })
+
+    await dispatch.collectGarbage(currentState)
   },
 
   /**
@@ -80,20 +90,19 @@ export const actions = defineActions({
    *
    * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
    */
-  clearModal: context => {
+  clearModal: async context => {
     const { state, dispatch } = modalActionContext(context)
     const length = state.modalState.length
     for (let i = 0; i < length; i++) {
-      dispatch.popModal()
+      await dispatch.popModal()
     }
   },
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
 
-    // popstateが非同期で呼び出されるので現在のものと一致するのでそれは無視
-    const isUsedIndex = state.modalState
-      .slice(1)
-      .findIndex(ms => deepEquals(ms, modalState))
+    const isUsedIndex = state.modalState.findIndex(ms =>
+      deepEquals(ms, modalState)
+    )
     if (isUsedIndex !== -1) {
       return
     }
