@@ -19,6 +19,19 @@
       <input type="text" v-model="state.bio" />
     </div>
     <div>
+      <h3>ホームチャンネル</h3>
+      <select v-model="state.homeChannel">
+        <option :value="null">--未設定--</option>
+        <option
+          v-for="channel in channels"
+          :key="channel.id"
+          :value="channel.id"
+        >
+          #{{ channel.path }}
+        </option>
+      </select>
+    </div>
+    <div>
       <h3>Twitter</h3>
       <div :class="$style.twitterInput">
         <input type="text" v-model="state.twitterId" />
@@ -49,16 +62,29 @@ import apis from '@/lib/api'
 import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
+import useChannelPath from '@/use/channelPath'
 
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
     const detail = computed(() => store.state.domain.me.detail!)
 
+    // TODO: <optgroup>を使う
+    const { channelIdToPath } = useChannelPath()
+    const channels = computed(() =>
+      Object.values(store.state.entities.channels)
+        .map(channel => ({
+          id: channel.id,
+          path: channelIdToPath(channel.id).join('/')
+        }))
+        .sort((a, b) => (a.path > b.path ? 1 : -1))
+    )
+
     const state = reactive({
-      displayName: detail.value.displayName ?? '',
-      bio: detail.value.bio ?? '',
-      twitterId: detail.value.twitterId ?? ''
+      displayName: detail.value.displayName,
+      bio: detail.value.bio,
+      homeChannel: detail.value.homeChannel,
+      twitterId: detail.value.twitterId
     })
     const { hasDiff } = useStateDiff<UserDetail>()
     const isStateChanged = computed(() => hasDiff(state, detail))
@@ -82,7 +108,14 @@ export default defineComponent({
         promises.push(apis.changeUserIcon(detail.value.id, imgData.value))
       }
       if (isStateChanged.value) {
-        promises.push(apis.editMe(state))
+        const sendState = {
+          ...state,
+          homeChannel:
+            state.homeChannel === null
+              ? '00000000-0000-0000-0000-000000000000'
+              : state.homeChannel
+        }
+        promises.push(apis.editMe(sendState))
       }
       try {
         // TODO: loading
@@ -96,6 +129,7 @@ export default defineComponent({
 
     return {
       detail,
+      channels,
       state,
       isStateChanged,
       onImgSet,
