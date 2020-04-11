@@ -65,5 +65,6 @@ export default defineComponent({
 }
 .body {
   padding: 16px 24px;
+  overflow: scroll;
 }
 </style>

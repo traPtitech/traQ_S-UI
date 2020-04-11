@@ -4,8 +4,15 @@
     :subtitle="`#${currentChannelPathString}`"
     icon-mdi
     icon-name="bell"
-    >通知</modal-frame
   >
+    <modal-section title="自分の通知設定">
+      <notification-state-selector />
+    </modal-section>
+    <modal-section
+      title="他ユーザーの通知設定"
+      description="ユーザーに通知を送るか選択できます（通知を送る場合、未読管理も有効になります）"
+    ></modal-section>
+  </modal-frame>
 </template>
 
 <script lang="ts">
@@ -14,6 +21,8 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
+import ModalSection from '../Common/ModalSection.vue'
+import NotificationStateSelector from './NotificationStateSelector.vue'
 
 const useStyles = () =>
   reactive({
@@ -23,7 +32,9 @@ const useStyles = () =>
 export default defineComponent({
   name: 'NotificationModal',
   components: {
-    ModalFrame
+    ModalFrame,
+    ModalSection,
+    NotificationStateSelector
   },
   setup() {
     const styles = useStyles()
@@ -33,7 +44,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-}
-</style>
+<style lang="scss" module></style>
