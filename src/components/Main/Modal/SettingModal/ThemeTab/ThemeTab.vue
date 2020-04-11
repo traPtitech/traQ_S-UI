@@ -1,6 +1,24 @@
 <template>
   <section :class="$style.container">
-    <p>色設定…？</p>
+    <div>
+      <h3>テーマ切り替え</h3>
+      <label>
+        <input type="radio" checked />
+        ライトテーマ
+      </label>
+      <label>
+        <input type="radio" disabled />
+        ダークテーマ
+      </label>
+      <label>
+        <input type="radio" disabled />
+        カスタムテーマ
+      </label>
+    </div>
+    <div>
+      <h3>カスタムテーマ設定</h3>
+      <p title="4/1には実装されるよ">実装予定</p>
+    </div>
   </section>
 </template>
 
