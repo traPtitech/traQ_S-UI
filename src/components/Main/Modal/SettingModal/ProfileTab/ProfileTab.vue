@@ -2,10 +2,10 @@
   <section :class="$style.container">
     <div>
       <h3>アイコン</h3>
-      <user-icon :userId="detail.id" :size="100" :preventModal="true" />
+      <user-icon :user-id="detail.id" :size="100" :prevent-modal="true" />
       <image-upload
         @input="onImgSet"
-        :destroyFlag="destroyFlag"
+        :destroy-flag="destroyFlag"
         @destroyed="onDestroyed"
         rounded
       />

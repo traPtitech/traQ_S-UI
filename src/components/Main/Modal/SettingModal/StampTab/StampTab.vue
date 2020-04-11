@@ -4,7 +4,7 @@
       <h3>スタンプ新規登録</h3>
       <image-upload
         @input="onNewImgSet"
-        :destroyFlag="newDestroyFlag"
+        :destroy-flag="newDestroyFlag"
         @destroyed="onNewDestroyed"
       />
       <label>
@@ -23,7 +23,7 @@
       </div>
       <image-upload
         @input="onNewImgSet"
-        :destroyFlag="newDestroyFlag"
+        :destroy-flag="newDestroyFlag"
         @destroyed="onNewDestroyed"
       />
     </div>
