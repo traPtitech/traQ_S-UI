@@ -36,8 +36,7 @@ export default defineComponent({
     const toggle = () => {
       state.isOpen = !state.isOpen
     }
-    const topicContent = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-    //const topicContent = computed(() => store.state.domain.messagesView.topic)
+    const topicContent = computed(() => store.state.domain.messagesView.topic)
     return {
       state,
       toggle,
