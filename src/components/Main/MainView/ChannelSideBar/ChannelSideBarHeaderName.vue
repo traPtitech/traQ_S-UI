@@ -29,7 +29,7 @@ export default defineComponent({
   props: {
     channelName: String,
     color: { type: String, default: 'primary' },
-    fontSize: { type: String, default: '1.5rem'}
+    fontSize: { type: String, default: '1.5rem' }
   },
   setup(props: Props) {
     const styles = useStyles(props)

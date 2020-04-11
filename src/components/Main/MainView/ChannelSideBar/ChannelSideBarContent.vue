@@ -44,13 +44,14 @@ $headerSize: 1.15rem;
   width: 256px;
   border-radius: 4px;
   padding: 0 8px;
+  padding-bottom: 8px;
   flex-shrink: 0;
 }
 
 .header {
   display: flex;
-	justify-content: space-between;
-	align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .headerTitle {
@@ -58,6 +59,6 @@ $headerSize: 1.15rem;
   font-size: $headerSize;
   min-height: 48px;
   line-height: 48px;
-	cursor: pointer;
+  cursor: pointer;
 }
 </style>

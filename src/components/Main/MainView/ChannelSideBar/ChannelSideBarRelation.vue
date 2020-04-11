@@ -7,10 +7,10 @@
       <template #content>
         <channel-side-bar-relation-content
           v-if="state.isOpen"
-          :parent="state.parent"
-          :children="state.children"
-          :sisters="state.sisters"
-          :current="state.current"
+          :parent="parent"
+          :children="children"
+          :sisters="sisters"
+          :current="current"
         />
       </template>
     </channel-side-bar-content>
@@ -22,7 +22,11 @@ import {
   defineComponent,
   computed,
   reactive,
-  SetupContext
+  SetupContext,
+  onMounted,
+  watchEffect,
+  ref,
+  Ref
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
@@ -31,9 +35,16 @@ import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 import ChannelSideBarRelationContent from './ChannelSideBarRelationContent.vue'
+import api from '@/lib/api'
 
 type Props = {
   channelId: ChannelId
+}
+
+export type ChannelState = {
+  id?: ChannelId
+  name?: string
+  topic?: string
 }
 
 const useStyles = () =>
@@ -41,12 +52,26 @@ const useStyles = () =>
     container: makeStyles(theme => ({
       background: theme.background.primary,
       color: theme.ui.secondary
-    })),
-    text: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
     }))
   })
+
+async function getStates(channelIds: ChannelId[]): Promise<ChannelState[]> {
+  return await Promise.all(
+    channelIds.map(async id => ({
+      id: id,
+      name: store.getters.entities.channelNameById(id),
+      topic: (await api.getChannelTopic(id)).data.topic
+    }))
+  )
+}
+
+async function getState(channelId: ChannelId): Promise<ChannelState> {
+  return await {
+    id: channelId,
+    name: store.getters.entities.channelNameById(channelId),
+    topic: (await api.getChannelTopic(channelId)).data.topic
+  }
+}
 
 export default defineComponent({
   name: 'ChannelSideBarRelation',
@@ -57,61 +82,39 @@ export default defineComponent({
   setup(props: Props) {
     const styles = useStyles()
     const state = reactive({
-      isOpen: false,
-      children: computed(() => {
-        const childrenIds =
-          store.state.entities.channels[props.channelId].children
-        return childrenIds
-          .map(id => store.getters.entities.channelNameById(id))
-          .filter(v => v)
-      }),
-      parent: computed(() => {
-        const parentId = store.state.entities.channels[props.channelId].parentId
-        if (parentId) {
-          return store.getters.entities.channelNameById(parentId)
-        } else {
-          return null
-        }
-      }),
-      sisters: computed(() => {
-        const parentId = store.state.entities.channels[props.channelId].parentId
-        if (parentId) {
-          const childrenIds = store.state.entities.channels[parentId].children
-          return childrenIds
-            .map(id => store.getters.entities.channelNameById(id))
-            .filter(v => v)
-        } else {
-          return []
-        }
-      }),
-      current: computed(() => {
-        return store.getters.entities.channelNameById(props.channelId) ?? null
-      })
+      isOpen: false
+    })
+    let children: Ref<ChannelState[]> = ref([])
+    let parent: Ref<ChannelState> = ref({})
+    let current: Ref<ChannelState> = ref({})
+    let sisters: Ref<ChannelState[]> = ref([])
+    watchEffect(async () => {
+      children.value = await getStates(
+        store.state.entities.channels[props.channelId].children
+      )
+      current.value = await getState(props.channelId)
+      const parentId = store.state.entities.channels[props.channelId].parentId
+      if (parentId) {
+        parent.value = await getState(parentId)
+        sisters.value = (
+          await getStates(store.state.entities.channels[parentId].children)
+        ).filter(v => v.id !== props.channelId)
+      } else if (parentId === null) {
+        sisters.value = (
+          await getStates(
+            store.state.domain.channelTree.channelTree.children.map(v => v.id)
+          )
+        ).filter(v => v.id !== props.channelId)
+        parent.value = {}
+      } else {
+        sisters.value = []
+        parent.value = {}
+      }
     })
     const toggle = () => {
       state.isOpen = !state.isOpen
     }
-    return { styles, state, toggle }
+    return { styles, state, toggle, parent, current, children, sisters }
   }
 })
 </script>
-
-<style lang="scss" module>
-$memberTitleSize: 1.15rem;
-
-.text {
-  font-weight: bold;
-  font-size: $memberTitleSize;
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-  width: 256px;
-  border-radius: 4px;
-  padding: 8px;
-  flex-shrink: 0;
-}
-
-.icons {
-  padding-bottom: 80px;
-}
-</style>
