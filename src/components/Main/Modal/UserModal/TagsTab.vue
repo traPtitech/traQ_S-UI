@@ -7,7 +7,7 @@
           v-for="tag in tags"
           :key="tag.tagId"
           :class="$style.tag"
-          @click="onTagClick"
+          @click="onTagClick(tag.tagId)"
         >
           <icon name="tag" mdi :class="$style.icon" :size="20" />
           {{ tag.tag }}
@@ -28,6 +28,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
+import { UserTagId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
 
@@ -50,8 +51,11 @@ export default defineComponent({
     const styles = useStyles()
     const tags = computed(() => propst.detail?.tags ?? [])
 
-    const onTagClick = () => {
-      // TODO: Open tag modal
+    const onTagClick = (id: UserTagId) => {
+      store.dispatch.ui.modal.pushModal({
+        type: 'tag',
+        id
+      })
     }
 
     return {
@@ -82,6 +86,7 @@ export default defineComponent({
 
 .tag {
   margin: 16px 8px;
+  cursor: pointer;
 }
 
 .icon {

@@ -1,13 +1,28 @@
-import { UserId, ChannelId, FileId } from '@/types/entity-ids'
+import {
+  UserId,
+  ChannelId,
+  FileId,
+  UserGroupId,
+  UserTagId
+} from '@/types/entity-ids'
 import { RouteName } from '@/router'
 
-type ModalStateType = 'user' | 'group' | 'notification' | 'file' | 'setting'
+type ModalStateType =
+  | 'user'
+  | 'group'
+  | 'notification'
+  | 'file'
+  | 'setting'
+  | 'tag'
+  | 'group'
 
 export type ModalState =
   | UserModalState
   | NotificationModalState
   | FileModalState
   | SettingModalState
+  | GroupModalState
+  | TagModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -35,6 +50,16 @@ interface FileModalState extends BaseModalState {
 
 interface SettingModalState extends BaseModalState {
   type: 'setting'
+}
+
+interface GroupModalState extends BaseModalState {
+  type: 'group'
+  id: UserGroupId
+}
+
+interface TagModalState extends BaseModalState {
+  type: 'tag'
+  id: UserTagId
 }
 
 export interface S {

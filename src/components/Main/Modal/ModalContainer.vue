@@ -8,6 +8,8 @@
     <notification-modal
       v-else-if="modalState.current.type === 'notification'"
     />
+    <group-modal v-else-if="modalState.current.type === 'group'" />
+    <tag-modal v-else-if="modalState.current.type === 'tag'" />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -34,6 +36,8 @@ import { makeStyles } from '@/lib/styles'
 import SettingModal from '@/components/Main/Modal/SettingModal/SettingModal.vue'
 import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
 import NotificationModal from '@/components/Main/Modal/NotificationModal/NotificationModal.vue'
+import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
+import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -94,7 +98,9 @@ export default defineComponent({
   components: {
     SettingModal,
     UserModal,
-    NotificationModal
+    NotificationModal,
+    GroupModal,
+    TagModal
   }
 })
 </script>

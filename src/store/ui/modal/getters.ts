@@ -6,6 +6,6 @@ export const getters = defineGetters<S>()({
     return state.modalState.length > 0
   },
   currentState(state) {
-    return state.modalState[0]
+    return state.modalState[state.modalState.length - 1]
   }
 })
