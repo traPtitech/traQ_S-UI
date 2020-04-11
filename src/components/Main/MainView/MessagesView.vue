@@ -10,13 +10,8 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-<<<<<<< HEAD
-    <messages-scroller :message-ids="state.channelMessageIds" />
-    <message-input :channel-id="state.channelId" />
-=======
-    <main-view :channelId="channelId" />
-    <channel-side-bar :channelId="channelId" />
->>>>>>> wip
+    <main-view :channel-id="channelId" />
+    <channel-side-bar :channel-id="channelId" />
   </div>
 </template>
 
