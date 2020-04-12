@@ -8,7 +8,7 @@
     <channel-side-bar-pinned-list-item
       v-for="message in propst.pinnedMessage"
       :key="message.message.id"
-      :pinnedMessage="message"
+      :pinned-message="message"
       :class="$style.sidebarItem"
     />
   </div>

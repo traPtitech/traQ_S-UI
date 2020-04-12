@@ -13,7 +13,7 @@
       :style="[propst.parent ? styles.firstBoarder : '']"
     >
       <channel-side-bar-relation-element
-        :isCurrent="true"
+        :is-current="true"
         :name="propst.current.name"
         :topic="propst.current.topic"
       />
@@ -66,7 +66,7 @@ import {
 } from '@vue/composition-api'
 import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
-import { ChannelState } from './ChannelSideBarRelation.vue'
+import { RelatedChannelEntry } from './ChannelSideBarRelation.vue'
 
 const useStyles = () =>
   reactive({
@@ -88,12 +88,18 @@ export default defineComponent({
   name: 'ChannelSideBarRelationContent',
   props: {
     parent: {
-      type: Object as PropType<ChannelState | undefined>
+      type: Object as PropType<RelatedChannelEntry | undefined>
     },
-    children: { type: Array as PropType<ChannelState[]>, required: true },
-    siblings: { type: Array as PropType<ChannelState[]>, required: true },
+    children: {
+      type: Array as PropType<RelatedChannelEntry[]>,
+      required: true
+    },
+    siblings: {
+      type: Array as PropType<RelatedChannelEntry[]>,
+      required: true
+    },
     current: {
-      type: Object as PropType<ChannelState | undefined>,
+      type: Object as PropType<RelatedChannelEntry | undefined>,
       required: true
     }
   },
@@ -103,10 +109,10 @@ export default defineComponent({
     const propst =
       props as
       {
-        parent: ChannelState | undefined
-        children: ChannelState[]
-        siblings: ChannelState[]
-        current: ChannelState | undefined
+        parent: RelatedChannelEntry | undefined
+        children: RelatedChannelEntry[]
+        siblings: RelatedChannelEntry[]
+        current: RelatedChannelEntry | undefined
       }
     const styles = useStyles()
     const state = reactive({

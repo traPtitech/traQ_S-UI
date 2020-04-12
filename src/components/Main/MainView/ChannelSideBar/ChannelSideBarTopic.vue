@@ -1,10 +1,9 @@
 <template>
-  <channel-side-bar-content title="トピック">
+  <channel-side-bar-content title="トピック" @click="toggle">
     <template #header-control>
       <icon
         width="20"
         height="20"
-        @click="toggle"
         :style="styles.icon"
         name="rounded-triangle"
         :class="$style.icon"
@@ -13,8 +12,8 @@
     <template #content>
       <channel-side-bar-topic-content
         v-if="state.isOpen"
-        :topicContent="topicContent"
-        :isOpen="state.isOpen"
+        :topic-content="topicContent"
+        :is-open="state.isOpen"
       />
     </template>
   </channel-side-bar-content>
@@ -76,7 +75,6 @@ export default defineComponent({
 }
 
 .icon {
-  cursor: pointer;
   transform: rotate(0deg);
   transition: 0.5s;
 }

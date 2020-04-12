@@ -46,26 +46,24 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$topicSize: 1.15rem;
+$topicSize: 1rem;
 
 .container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   user-select: none;
-  width: 240px;
+  width: 100%;
 }
 
 .topic {
   font-size: $topicSize;
-  font-weight: bold;
   user-select: none;
   word-break: break-all;
-  max-width: 220px;
-  margin: 8px 0;
 }
 
 .icon {
-  margin-top: 8px;
+  flex-shrink: 0;
+  margin-left: 16px;
 }
 </style>

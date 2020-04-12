@@ -2,17 +2,15 @@
   <span v-if="isForceNotification" :style="styles.text" :class="$style.text">
     強制通知チャンネル
   </span>
-  <div v-else-if="userIds" :style="styles.container">
-    <channel-side-bar-content title="メンバー">
-      <template #content>
-        <channel-side-bar-member-icons
-          v-if="userIds"
-          :class="$style.icons"
-          :viewerStates="viewStates"
-        />
-      </template>
-    </channel-side-bar-content>
-  </div>
+  <channel-side-bar-content v-else-if="userIds" title="メンバー">
+    <template #content>
+      <channel-side-bar-member-icons
+        v-if="userIds"
+        :class="$style.icons"
+        :viewer-states="viewStates"
+      />
+    </template>
+  </channel-side-bar-content>
 </template>
 
 <script lang="ts">
@@ -38,10 +36,6 @@ type ViewState = {
 
 const useStyles = () =>
   reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    })),
     text: makeStyles(theme => ({
       background: theme.background.primary,
       color: theme.ui.secondary

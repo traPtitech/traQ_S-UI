@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.itemHeader">
-      <user-icon :size="20" :userId="pinnedMessage.message.userId" />
+      <user-icon :size="20" :user-id="pinnedMessage.message.userId" />
       <span :style="styles.displayName" :class="$style.displayName">{{
         state.user.displayName
       }}</span>
@@ -56,7 +56,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 $displayNameSize: 1rem;
-$textSize: 1.15rem;
+$textSize: 1rem;
 
 .container {
   width: 256px;
@@ -67,7 +67,6 @@ $textSize: 1.15rem;
 
 .itemHeader {
   display: flex;
-  margin-left: 4px;
   margin-bottom: 8px;
 }
 

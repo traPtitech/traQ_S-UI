@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.header">
+    <div :class="$style.header" @click="onClick">
       <h2 :class="$style.headerTitle">{{ title }}</h2>
       <slot name="header-control"></slot>
     </div>
@@ -24,23 +24,25 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBarContent',
   props: { title: { type: String, required: true } },
-  setup() {
+  setup(_, context) {
     const styles = useStyles()
-    return { styles }
+    const onClick = () => {
+      context.emit('click')
+    }
+    return { styles, onClick }
   }
 })
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.15rem;
+$headerSize: 1rem;
 
 .container {
   display: flex;
   flex-direction: column;
   width: 256px;
   border-radius: 4px;
-  padding: 0 8px;
-  padding-bottom: 8px;
+  padding: 12px;
   flex-shrink: 0;
 }
 
@@ -48,13 +50,15 @@ $headerSize: 1.15rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .headerTitle {
   font-weight: bold;
   font-size: $headerSize;
-  min-height: 48px;
-  line-height: 48px;
-  cursor: pointer;
 }
 </style>

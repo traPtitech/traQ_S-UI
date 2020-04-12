@@ -5,7 +5,7 @@
       :class="[state.viewing ? '' : $style.notView, $style.member]"
       :key="state.user.id"
     >
-      <user-icon :size="28" :userId="state.user.id" />
+      <user-icon :size="28" :user-id="state.user.id" />
       <span :class="$style.name">{{ state.user.displayName }}</span>
     </div>
   </div>

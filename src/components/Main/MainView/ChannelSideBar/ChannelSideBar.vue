@@ -2,13 +2,13 @@
   <channel-side-bar-hidden
     v-if="!state.isOpen"
     @open="toggle"
-    :viewerIds="viewerIds"
+    :viewer-ids="viewerIds"
   />
   <channel-side-bar-pinned-list
     v-else-if="state.pinnedMode"
     @closePinned="togglePinnedMode"
     @closeBar="toggle"
-    :pinnedMessage="state.pinnedMessage"
+    :pinned-message="state.pinnedMessage"
   />
   <div v-else :style="styles.container" :class="$style.container">
     <channel-side-bar-header
@@ -17,23 +17,23 @@
       :class="$style.sidebarItem"
     />
     <channel-side-bar-viewers
-      :viewerIds="viewerIds"
+      :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-topic :class="$style.sidebarItem" />
     <channel-side-bar-pinned
-      :pinnedMessageLength="state.pinnedMessage.length"
+      :pinned-message-length="state.pinnedMessage.length"
       @open="togglePinnedMode"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-relation
-      :channelId="channelId"
+      :channel-id="channelId"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-member
-      :channelId="channelId"
+      :channel-id="channelId"
       :class="$style.sidebarItem"
-      :viewerIds="viewerIds"
+      :viewer-ids="viewerIds"
     />
     <channel-side-bar-edit :class="$style.edit" />
   </div>

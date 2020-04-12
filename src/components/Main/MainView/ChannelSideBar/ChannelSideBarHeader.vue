@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <channel-side-bar-header-name :channel-name="state.channelName" />
-    <close-button @click="onClick" :size="28" backgroundColor="secondary" />
+    <close-button @click="onClick" :size="28" />
   </div>
 </template>
 

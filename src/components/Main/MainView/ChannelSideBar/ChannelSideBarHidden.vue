@@ -11,8 +11,8 @@
     <user-icon-ellipsis-list
       direction="col"
       :max="3"
-      :showCount="false"
-      :userIds="propst.viewerIds"
+      :show-count="false"
+      :user-ids="propst.viewerIds"
     />
   </div>
 </template>

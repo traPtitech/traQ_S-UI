@@ -5,11 +5,11 @@
     :style="styles.container"
     @click="toggle"
   >
-    <user-icon-ellipsis-list direction="row" :userIds="viewerIds" />
+    <user-icon-ellipsis-list direction="row" :user-ids="viewerIds" />
   </div>
   <channel-side-bar-viewers-detail
     v-else
-    :viewerIds="viewerIds"
+    :viewer-ids="viewerIds"
     @close="toggle"
   />
 </template>

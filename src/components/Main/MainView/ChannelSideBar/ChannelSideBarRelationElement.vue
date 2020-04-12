@@ -56,6 +56,5 @@ $topiclSize: 1rem;
 .topic {
   font-weight: normal;
   font-size: $topiclSize;
-  margin-top: -8px;
 }
 </style>

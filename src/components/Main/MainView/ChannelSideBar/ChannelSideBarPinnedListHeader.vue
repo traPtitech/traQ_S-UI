@@ -9,12 +9,7 @@
       :class="$style.returnButton"
     />
     <span :class="$style.pinnedHeaderText">ピン留め</span>
-    <close-button
-      :class="$style.closeButton"
-      :size="28"
-      :backgroundColor="'secondary'"
-      @click="closeBar"
-    />
+    <close-button :class="$style.closeButton" :size="28" @click="closeBar" />
   </div>
 </template>
 
@@ -48,7 +43,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerTextSize: 1.5rem;
+$headerTextSize: 1.25rem;
 
 .container {
   display: flex;
