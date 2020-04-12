@@ -28,7 +28,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
-import { UserTagId } from '@/types/entity-ids'
+import { TagId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
 
@@ -51,7 +51,7 @@ export default defineComponent({
     const styles = useStyles()
     const tags = computed(() => propst.detail?.tags ?? [])
 
-    const onTagClick = (id: UserTagId) => {
+    const onTagClick = (id: TagId) => {
       store.dispatch.ui.modal.pushModal({
         type: 'tag',
         id

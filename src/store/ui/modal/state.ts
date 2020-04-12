@@ -67,9 +67,13 @@ export interface S {
 
   /** ナビゲーションを挟むことなくモーダルを表示している状態か */
   isOnInitialModalRoute: boolean
+
+  /** モーダルを非表示にしようとしている最中か */
+  isClearingModal: boolean
 }
 
 export const state: S = {
   modalState: [],
-  isOnInitialModalRoute: false
+  isOnInitialModalRoute: false,
+  isClearingModal: false
 }
