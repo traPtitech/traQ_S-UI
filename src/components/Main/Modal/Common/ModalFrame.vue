@@ -57,7 +57,6 @@ export default defineComponent({
   max-height: 480px;
   max-width: 440px;
   width: 100%;
-  height: 100%;
   border-radius: 4px;
   overflow: hidden;
   border: {

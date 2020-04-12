@@ -1,7 +1,7 @@
 <template>
   <modal-frame
     title="チャンネル作成"
-    :subtitle="`#${channelPath}/`"
+    :subtitle="`#${channelPath}`"
     icon-name="hash"
   >
   </modal-frame>
