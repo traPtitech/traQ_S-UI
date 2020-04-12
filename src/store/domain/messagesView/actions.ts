@@ -45,9 +45,7 @@ export const actions = defineActions({
       commit.setIsReachedEnd(true)
     }
     commit.setCurrentOffset(state.currentOffset + state.fetchLimit)
-    const messageIds: MessageId[] = messages.map(
-      (message: Message) => message.id ?? ''
-    )
+    const messageIds: MessageId[] = messages.map(message => message.id)
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )

@@ -8,7 +8,11 @@
       {{ state.channelName }}
     </div>
     <div :class="$style.separator" :style="styles.separator"></div>
-    <activity-element-user-name :user="state.user" :class="$style.user" />
+    <activity-element-user-name
+      v-if="state.user"
+      :user="state.user"
+      :class="$style.user"
+    />
     <activity-element-content :content="props.message.content" />
   </div>
 </template>

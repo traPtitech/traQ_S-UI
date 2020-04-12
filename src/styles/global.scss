@@ -1,7 +1,8 @@
 @import './reset';
 @import './emoji';
 @import './markdown';
-@import '../node_modules/highlight.js/scss/github-gist.scss';
+@import './transition';
+@import '~highlight.js/scss/github-gist.scss';
 
 @import url('https://fonts.googleapis.com/css?family=Inter:400,700|M+PLUS+1p:400,700&display=swap&subset=japanese');
 

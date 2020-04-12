@@ -1,0 +1,13 @@
+@import './easing';
+
+$name: 'vertical-swap';
+.#{$name}-enter-active,
+.#{$name}-leave-active {
+  transition: transform 0.3s $easeOutBack;
+}
+.#{$name}-enter {
+  transform: translateY(100%);
+}
+.#{$name}-leave-to {
+  transform: translateY(-100%);
+}

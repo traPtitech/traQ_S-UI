@@ -92,7 +92,7 @@ export const mutations = defineMutations<S>()({
     ) {
       state.messages[e.message_id].stamps = stamps.map(stamp =>
         stamp.stampId === e.stamp_id && stamp.userId === e.user_id
-          ? { ...stamp, count: e.count }
+          ? { ...stamp, count: e.count, createdAt: e.created_at }
           : stamp
       )
     } else {

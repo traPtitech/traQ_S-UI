@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.header">
+  <div v-if="state.user" :class="$style.header">
     <span :class="$style.displayName">{{ state.user.displayName }}</span>
     <grade-badge
       :class="$style.badge"
