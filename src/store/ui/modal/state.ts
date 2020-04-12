@@ -3,7 +3,7 @@ import {
   ChannelId,
   FileId,
   UserGroupId,
-  UserTagId
+  TagId
 } from '@/types/entity-ids'
 import { RouteName } from '@/router'
 
@@ -59,7 +59,7 @@ interface GroupModalState extends BaseModalState {
 
 interface TagModalState extends BaseModalState {
   type: 'tag'
-  id: UserTagId
+  id: TagId
 }
 
 export interface S {

@@ -11,5 +11,8 @@ export const mutations = defineMutations<S>()({
   popState: state => state.modalState.splice(1),
   setIsOnInitialModalRoute: (state, payload: boolean) => {
     state.isOnInitialModalRoute = payload
+  },
+  setIsClearingModal: (state, payload: boolean) => {
+    state.isClearingModal = payload
   }
 })

@@ -2,7 +2,6 @@ import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
 import { ModalState } from './state'
 import { modal } from './index'
-import { domain } from '@/store/domain'
 import router from '@/router'
 import useChannelPath from '@/use/channelPath'
 
@@ -91,11 +90,13 @@ export const actions = defineActions({
    * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
    */
   clearModal: async context => {
-    const { state, dispatch } = modalActionContext(context)
+    const { state, commit, dispatch } = modalActionContext(context)
     const length = state.modalState.length
+    commit.setIsClearingModal(true)
     for (let i = 0; i < length; i++) {
       await dispatch.popModal()
     }
+    commit.setIsClearingModal(false)
   },
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
