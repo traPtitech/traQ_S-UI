@@ -8,8 +8,14 @@
     <notification-modal
       v-else-if="modalState.current.type === 'notification'"
     />
-    <group-modal v-else-if="modalState.current.type === 'group'" />
-    <tag-modal v-else-if="modalState.current.type === 'tag'" />
+    <group-modal
+      v-else-if="modalState.current.type === 'group'"
+      :group-id="modalState.current.id"
+    />
+    <tag-modal
+      v-else-if="modalState.current.type === 'tag'"
+      :tag-id="modalState.current.id"
+    />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}

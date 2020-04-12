@@ -52,6 +52,7 @@ export const mutations = defineMutations<S>()({
   setStampPalettes: setMutation('stampPalettes'),
   setWebhooks: setMutation('webhooks'),
   setFileMetaData: setMutation('fileMetaData'),
+  setTags: setMutation('tags'),
 
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
@@ -61,6 +62,7 @@ export const mutations = defineMutations<S>()({
   extendStampPalettes: extendMutation('stampPalettes'),
   extendWebhooks: extendMutation('webhooks'),
   extendFileMetaData: extendMutation('fileMetaData'),
+  extendUserTags: extendMutation('tags'),
 
   addUser: addMutation('users'),
   addChannel: addMutation('channels'),
@@ -69,6 +71,7 @@ export const mutations = defineMutations<S>()({
   addStampPalette: addMutation('stampPalettes'),
   addWebhook: addMutation('webhooks'),
   addFileMetaData: addMutation('fileMetaData'),
+  addTags: addMutation('tags'),
 
   deleteUser: deleteMutation('users'),
   deleteChannel: deleteMutation('channels'),
@@ -76,5 +79,6 @@ export const mutations = defineMutations<S>()({
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),
-  deleteFileMetaData: deleteMutation('fileMetaData')
+  deleteFileMetaData: deleteMutation('fileMetaData'),
+  deleteTags: deleteMutation('tags')
 })

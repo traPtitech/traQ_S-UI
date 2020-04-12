@@ -7,4 +7,4 @@ export type StampPaletteId = string
 export type WebhookId = string
 export type FileId = string
 export type ClipFolderId = string
-export type UserTagId = string
+export type TagId = string
