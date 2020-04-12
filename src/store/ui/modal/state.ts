@@ -15,6 +15,7 @@ type ModalStateType =
   | 'setting'
   | 'tag'
   | 'group'
+  | 'channel-create'
 
 export type ModalState =
   | UserModalState
@@ -23,6 +24,7 @@ export type ModalState =
   | SettingModalState
   | GroupModalState
   | TagModalState
+  | ChannelCreateModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -60,6 +62,17 @@ interface GroupModalState extends BaseModalState {
 interface TagModalState extends BaseModalState {
   type: 'tag'
   id: TagId
+}
+
+interface ChannelCreateModalState extends BaseModalState {
+  type: 'channel-create'
+
+  /**
+   * 親チャンネルのID
+   *
+   * 指定しない場合はルートチャンネル作成
+   */
+  parentChannelId?: ChannelId
 }
 
 export interface S {
