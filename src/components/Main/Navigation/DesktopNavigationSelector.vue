@@ -7,7 +7,7 @@
       @click="onNavigationItemClick(item.type)"
     >
       <navigation-selector-item
-        :is-selected="props.currentNavigation === item.type"
+        :is-selected="currentNavigation === item.type"
         :icon-mdi="item.iconMdi"
         :icon-name="item.iconName"
       />
@@ -19,7 +19,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, toRefs } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  toRefs,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import {
   NavigationItemType,
@@ -28,20 +33,16 @@ import {
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
 
-type Props = {
-  currentNavigation: NavigationItemType
-}
-
 export default defineComponent({
   name: 'NavigationSelector',
   components: { NavigationSelectorItem, Icon },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'home' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'home' as const
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const items: {
       type: NavigationItemType
       iconName: string
@@ -75,7 +76,6 @@ export default defineComponent({
       store.dispatch.ui.modal.pushModal({ type: 'setting' })
 
     return {
-      props,
       items,
       onNavigationItemClick,
       onSettingClick

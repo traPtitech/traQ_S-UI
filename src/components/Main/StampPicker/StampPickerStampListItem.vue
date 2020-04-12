@@ -6,22 +6,23 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <stamp :stamp-id="props.stampId" :size="24" />
+    <stamp :stamp-id="stampId" :size="24" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  SetupContext,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import useHover, { HoverState } from '@/use/hover'
 import { buildFilePath } from '@/lib/api'
 import Stamp from '@/components/UI/Stamp.vue'
-
-type Props = {
-  stampId: StampId
-}
 
 const useStyles = (hoverState: HoverState) =>
   reactive({
@@ -37,16 +38,16 @@ export default defineComponent({
   },
   props: {
     stampId: {
-      type: String,
+      type: String as PropType<StampId>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
     const styles = useStyles(hoverState)
-    return { props, context, imageUrl, onMouseEnter, onMouseLeave, styles }
+    return { context, imageUrl, onMouseEnter, onMouseLeave, styles }
   }
 })
 </script>

@@ -1,11 +1,11 @@
 <template>
   <router-link
     :to="fileLink"
-    v-if="$props.isLarge"
+    v-if="isLarge"
     :class="$style.largeContainer"
     :style="styles.container"
   >
-    <img draggable="false" :alt="$props.fileName" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
   </router-link>
   <router-link
     v-else
@@ -13,7 +13,7 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <img draggable="false" :alt="$props.fileName" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
   </router-link>
 </template>
 
@@ -56,7 +56,7 @@ export default defineComponent({
     const imagePath = computed(() =>
       props.isLarge ? buildFilePath(props.fileId) : fileRawPath.value
     )
-    return { imagePath, styles, fileLink }
+    return { imagePath, styles, fileLink, fileMeta }
   }
 })
 </script>

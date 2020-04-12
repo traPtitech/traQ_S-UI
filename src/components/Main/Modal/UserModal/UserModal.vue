@@ -3,21 +3,22 @@
     <button :class="$style.close" @click="onClickClear">X</button>
     <user-icon
       v-if="!isMobile"
-      :userId="user.id"
-      :preventModal="true"
+      :user-id="user.id"
+      :prevent-modal="true"
       :size="iconSize"
       :class="$style.icon"
       :style="styles.icon"
     />
     <div :class="$style.content" :style="styles.content">
-      <feature :user="user" />
+      <feature :user="user" :detail="detail" />
       <navigation-selector
         @navigation-change="onNavigationChange"
-        :currentNavigation="currentNavigation"
+        :current-navigation="currentNavigation"
       />
       <navigation-content
         :current-navigation="currentNavigation"
         :user="user"
+        :detail="detail"
       />
     </div>
   </div>
@@ -29,7 +30,8 @@ import {
   computed,
   reactive,
   Ref,
-  toRefs
+  toRefs,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -55,19 +57,15 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
     }))
   })
 
-type Props = {
-  id: UserId
-}
-
 export default defineComponent({
   name: 'UserModal',
   props: {
     id: {
-      type: String,
+      type: String as PropType<UserId>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const isMobile = computed(() => store.getters.ui.isMobile)
 
     const iconSize = 160
@@ -78,12 +76,16 @@ export default defineComponent({
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const user = computed(() => store.state.entities.users[props.id])
 
+    const detail = computed(() => store.state.domain.userDetails[props.id])
+    store.dispatch.domain.fetchUserDetail(props.id)
+
     return {
       isMobile,
       styles,
       onClickClear,
       iconSize,
       user,
+      detail,
       ...toRefs(navigationSelectorState),
       onNavigationChange
     }

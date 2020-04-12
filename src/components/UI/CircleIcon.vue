@@ -2,10 +2,10 @@
   <div :class="$style.circle" :style="styles.icon">
     <icon
       :class="$style.icon"
-      :name="props.name"
-      :mdi="props.mdi"
-      :size="props.innerSize"
-      :color="props.color"
+      :name="name"
+      :mdi="mdi"
+      :size="innerSize"
+      :color="color"
     />
   </div>
 </template>
@@ -23,15 +23,6 @@ const useStyles = (props: { background: string; size: number }) => {
       height: `${props.size}px`
     }))
   })
-}
-
-type Props = {
-  color: string
-  background: string
-  name: string
-  mdi?: boolean
-  innerSize: number
-  size: number
 }
 
 export default defineComponent({
@@ -60,9 +51,9 @@ export default defineComponent({
       default: 24
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles(props)
-    return { props, styles }
+    return { styles }
   }
 })
 </script>

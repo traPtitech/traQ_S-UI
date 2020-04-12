@@ -1,19 +1,17 @@
 <template>
   <div>
-    <bio :bio="props.detail === undefined ? undefined : props.detail.bio" />
-    <home-channel :name="props.user.name" />
+    <bio :bio="props.detail ? props.detail.bio : undefined" />
+    <home-channel :id="props.detail ? props.detail.homeChannel : undefined" />
     <accounts
-      :bot="props.user.bot"
-      :name="props.user.name"
-      :twitterId="
-        props.detail === undefined ? undefined : props.detail.twitterId
-      "
+      :bot="user.bot"
+      :name="user.name"
+      :twitter-id="props.detail ? props.detail.twitterId : undefined"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { User, UserDetail } from '@traptitech/traq'
 import Bio from './Bio.vue'
@@ -28,23 +26,22 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  user: User
-  detail?: UserDetail
-}
-
 export default defineComponent({
   name: 'ProfileTab',
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
     },
-    detail: Object
+    detail: Object as PropType<UserDetail>
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
-    return { styles, props }
+    return {
+      styles,
+      // TODO: https://github.com/vuejs/composition-api/issues/291
+      props: props as { detail?: UserDetail }
+    }
   },
   components: {
     Bio,

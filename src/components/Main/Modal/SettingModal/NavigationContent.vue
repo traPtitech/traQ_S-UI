@@ -1,16 +1,22 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <navigation-content-title :current-navigation="props.currentNavigation" />
-    <profile-tab v-if="props.currentNavigation === 'profile'" />
-    <browser-tab v-else-if="props.currentNavigation === 'browser'" />
-    <qall-tab v-else-if="props.currentNavigation === 'qall'" />
-    <stamp-tab v-else-if="props.currentNavigation === 'stamp'" />
-    <theme-tab v-else-if="props.currentNavigation === 'theme'" />
+    <navigation-content-title :current-navigation="currentNavigation" />
+    <profile-tab v-if="currentNavigation === 'profile'" />
+    <browser-tab v-else-if="currentNavigation === 'browser'" />
+    <qall-tab v-else-if="currentNavigation === 'qall'" />
+    <stamp-tab v-else-if="currentNavigation === 'stamp'" />
+    <theme-tab v-else-if="currentNavigation === 'theme'" />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  ref,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import apis from '@/lib/api'
@@ -32,10 +38,6 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  currentNavigation: NavigationItemType
-}
-
 export default defineComponent({
   name: 'NavigationContent',
   components: {
@@ -48,17 +50,13 @@ export default defineComponent({
   },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'profile' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     }
   },
-  setup(props: Props) {
+  setup() {
     const styles = useStyles()
-
-    return {
-      styles,
-      props
-    }
+    return { styles }
   }
 })
 </script>

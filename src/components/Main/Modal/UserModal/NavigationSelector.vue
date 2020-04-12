@@ -1,22 +1,23 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <div
+    <navigation-selector-item
       v-for="item in items"
       :key="item.type"
-      @click="onNavigationItemClick(item.type)"
-      :class="$style.itemWrap"
-    >
-      <navigation-selector-item
-        :iconName="item.iconName"
-        :iconMdi="item.iconMdi"
-        :is-selected="props.currentNavigation === item.type"
-      />
-    </div>
+      :icon-name="item.iconName"
+      :icon-mdi="item.iconMdi"
+      :is-selected="currentNavigation === item.type"
+      @click.native="onNavigationItemClick(item.type)"
+    />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from '@/components/Main/Modal/UserModal/NavigationSelectorItem.vue'
@@ -28,20 +29,16 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  currentNavigation: NavigationItemType
-}
-
 export default defineComponent({
   name: 'NavigationSelector',
   components: { NavigationSelectorItem },
   props: {
     currentNavigation: {
-      type: String,
-      default: 'profile' as NavigationItemType
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const styles = useStyles()
     const items: {
       type: NavigationItemType
@@ -65,7 +62,6 @@ export default defineComponent({
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
     return {
       styles,
-      props,
       items,
       onNavigationItemClick
     }
@@ -77,17 +73,5 @@ export default defineComponent({
 .container {
   margin-right: 4px;
   padding-top: 8px;
-}
-
-.itemWrap {
-  margin: 4px 0;
-}
-
-.item {
-  box-sizing: content-box;
-  height: 24px;
-  width: 24px;
-  padding: 4px;
-  border-left: 4px solid transparent;
 }
 </style>

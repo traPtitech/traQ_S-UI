@@ -1,4 +1,4 @@
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { reactive } from '@vue/composition-api'
 import api from '@/lib/api'
 
 const useLogin = () => {

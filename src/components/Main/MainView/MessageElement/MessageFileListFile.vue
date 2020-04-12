@@ -1,17 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <message-file-list-item-content :fileId="$props.fileId" />
+    <message-file-list-item-content :file-id="fileId" />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  reactive,
-  onBeforeMount
-} from '@vue/composition-api'
+import { defineComponent, PropType, reactive } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
 import { AttachmentType } from '@/lib/util/file'
 import { makeStyles } from '@/lib/styles'
@@ -31,11 +25,11 @@ export default defineComponent({
   components: { MessageFileListItemContent },
   props: {
     fileId: {
-      type: String,
+      type: String as PropType<FileId>,
       default: ''
     }
   },
-  setup(props, context) {
+  setup(props) {
     const styles = useStyles()
     return { styles }
   }

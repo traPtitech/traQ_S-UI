@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from '@vue/composition-api'
+import { defineComponent, reactive, ref, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import apis from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
@@ -41,19 +41,15 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  userId: UserId
-}
-
 export default defineComponent({
   name: 'TagsTab',
   props: {
     userId: {
-      type: String,
+      type: String as PropType<UserId>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
 
     const newTagName = ref('')

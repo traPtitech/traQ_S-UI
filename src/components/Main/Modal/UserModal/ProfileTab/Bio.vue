@@ -4,7 +4,7 @@
     <p :style="styles.bio">
       <template v-if="isLoading">[Now loading...]</template>
       <template v-else-if="isEmpty">[No bio]</template>
-      <template v-else>{{ props.bio }}</template>
+      <template v-else>{{ bio }}</template>
     </p>
   </section>
 </template>
@@ -21,16 +21,12 @@ const useStyles = (lowPriority: Ref<boolean>) =>
     }))
   })
 
-type Props = {
-  bio?: string
-}
-
 export default defineComponent({
   name: 'Bio',
   props: {
     bio: String
   },
-  setup(props: Props) {
+  setup(props) {
     const isLoading = computed(() => props.bio === undefined)
     const isEmpty = computed(() =>
       props.bio === undefined ? false : props.bio === ''
@@ -40,7 +36,6 @@ export default defineComponent({
 
     return {
       styles,
-      props,
       isLoading,
       isEmpty
     }

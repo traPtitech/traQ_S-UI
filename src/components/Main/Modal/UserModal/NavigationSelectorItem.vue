@@ -10,7 +10,7 @@ import { makeStyles } from '@/lib/styles'
 import { NavigationItemType } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: Props, size: number) =>
+const useStyles = (props: { isSelected: boolean }, size: number) =>
   reactive({
     item: makeStyles(theme => ({
       color: props.isSelected ? theme.accent.primary : theme.ui.secondary,
@@ -19,12 +19,6 @@ const useStyles = (props: Props, size: number) =>
       height: `${size}px`
     }))
   })
-
-type Props = {
-  iconName: string
-  iconMdi?: boolean
-  isSelected: boolean
-}
 
 export default defineComponent({
   name: 'NavigationSelectorItem',
@@ -40,12 +34,11 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const size = 24
     const styles = useStyles(props, size)
     return {
       styles,
-      props,
       size
     }
   }
@@ -55,6 +48,7 @@ export default defineComponent({
 <style lang="scss" module>
 .item {
   box-sizing: content-box;
+  margin: 4px 0;
   padding: 8px;
   border-left: 4px solid;
   cursor: pointer;

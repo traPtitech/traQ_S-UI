@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="$style.item"
-    :style="styles.item"
-    @click="context.emit('click')"
-  >
+  <button :class="$style.item" :style="styles.item">
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -20,13 +16,14 @@ import {
   defineComponent,
   SetupContext,
   reactive,
-  computed
+  computed,
+  PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: Props, size: number) =>
+const useStyles = (props: { isSelected: boolean }, size: number) =>
   reactive({
     item: makeStyles(theme => ({
       color: props.isSelected ? theme.ui.primary : theme.ui.secondary,
@@ -34,19 +31,12 @@ const useStyles = (props: Props, size: number) =>
     }))
   })
 
-type Props = {
-  type: NavigationItemType
-  iconName: string
-  iconMdi?: boolean
-  isSelected: boolean
-}
-
 export default defineComponent({
   name: 'NavigationSelectorItem',
   components: { Icon },
   props: {
     type: {
-      type: String,
+      type: String as PropType<NavigationItemType>,
       required: true
     },
     iconName: {
@@ -59,13 +49,12 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const size = 24
     const styles = useStyles(props, size)
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
       styles,
-      props,
       size,
       title,
       context

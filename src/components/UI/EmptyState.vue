@@ -8,11 +8,9 @@
 import { defineComponent } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 
-type Props = {}
-
 export default defineComponent({
   name: 'EmptyState',
-  setup(props: Props) {
+  setup() {
     return {
       containerStyle: makeStyles(theme => ({
         color: theme.ui.tertiary

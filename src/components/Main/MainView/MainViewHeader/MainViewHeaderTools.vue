@@ -20,13 +20,13 @@
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <icon
-      v-show="props.isStared"
+      v-show="isStared"
       @click="context.emit('unstar-channel')"
       :class="$style.icon"
       name="star"
     />
     <icon
-      v-show="!props.isStared"
+      v-show="!isStared"
       @click="context.emit('star-channel')"
       :class="$style.icon"
       name="star-outline"
@@ -53,10 +53,6 @@ import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
 
-type Props = {
-  isStared: boolean
-}
-
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
@@ -72,8 +68,8 @@ export default defineComponent({
     Icon
   },
   props: { isStared: { type: Boolean, default: false } },
-  setup(props: Props, context: SetupContext) {
-    return { props, context }
+  setup(_, context: SetupContext) {
+    return { context }
   }
 })
 </script>

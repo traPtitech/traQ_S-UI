@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.container" :style="styles.container">
     <h2>
-      <main-view-header-channel-name :channel-id="props.channelId" />
+      <main-view-header-channel-name :channel-id="channelId" />
     </h2>
     <main-view-header-tools
       :class="$style.tools"
@@ -14,7 +14,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -69,14 +74,18 @@ export default defineComponent({
     MainViewHeaderChannelName,
     MainViewHeaderTools
   },
-  props: { channelId: String },
-  setup(props: Props) {
+  props: {
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    }
+  },
+  setup(props) {
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
     const styles = useStyles()
     return {
-      props,
       channelState,
       styles,
       starChannel,

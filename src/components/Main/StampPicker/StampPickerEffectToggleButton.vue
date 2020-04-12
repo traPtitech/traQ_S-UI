@@ -9,16 +9,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 
-type Props = {
-  isActive: boolean
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (props: { isActive: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       background: theme.background.secondary,
@@ -37,7 +33,7 @@ export default defineComponent({
   props: {
     isActive: { type: Boolean, default: false }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const styles = useStyles(props)
     return { context, styles }
   }

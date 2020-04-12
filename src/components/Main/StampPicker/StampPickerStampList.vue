@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <stamp-picker-stamp-list-item
-      v-for="stamp in props.stamps"
+      v-for="stamp in stamps"
       :key="stamp.id"
       :stamp-id="stamp.id"
       @click="onClickStamp(stamp.id)"
@@ -11,15 +11,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
 import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import { StampId } from '@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-
-type Props = {
-  stamps: Stamp[]
-}
 
 export default defineComponent({
   name: 'StampPickerStampList',
@@ -28,18 +24,18 @@ export default defineComponent({
   },
   props: {
     stamps: {
-      type: Array,
+      type: Array as PropType<Stamp[]>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const onClickStamp = (id: StampId) => {
       context.emit('input-stamp', id)
     }
     const onStampHover = (name: string) => {
       context.emit('hover-stamp', name)
     }
-    return { props, onClickStamp, onStampHover }
+    return { onClickStamp, onStampHover }
   }
 })
 </script>

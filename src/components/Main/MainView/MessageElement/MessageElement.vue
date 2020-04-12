@@ -28,7 +28,7 @@
       <message-file-list
         v-if="state.fileIds.length > 0"
         :class="$style.messageFileList"
-        :fileIds="state.fileIds"
+        :file-ids="state.fileIds"
       />
     </div>
   </div>
@@ -43,7 +43,8 @@ import {
   onMounted,
   watchEffect,
   watch,
-  SetupContext
+  SetupContext,
+  PropType
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -55,20 +56,16 @@ import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 
-type Props = {
-  messageId: MessageId
-}
-
 export default defineComponent({
   name: 'MessageElement',
   components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
   props: {
     messageId: {
-      type: String,
+      type: String as PropType<MessageId>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context: SetupContext) {
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({

@@ -1,32 +1,34 @@
 <template>
-  <mobile-feature v-if="isMobile" :user="props.user" />
-  <desktop-feature v-else :user="props.user" />
+  <mobile-feature v-if="isMobile" :user="user" :detail="detail" />
+  <desktop-feature v-else :user="user" :detail="detail" />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  PropType
+} from '@vue/composition-api'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserDetail } from '@traptitech/traq'
 import DesktopFeature from './DesktopFeature.vue'
 import MobileFeature from './MobileFeature.vue'
-
-type Props = {
-  user: User
-}
 
 export default defineComponent({
   name: 'Feature',
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
-    }
+    },
+    detail: Object as PropType<UserDetail>
   },
-  setup(props: Props) {
+  setup() {
     const isMobile = computed(() => store.getters.ui.isMobile)
 
     return {
-      props,
       isMobile
     }
   },

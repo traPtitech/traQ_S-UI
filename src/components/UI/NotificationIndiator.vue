@@ -3,19 +3,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  reactive,
-  computed
-} from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '../../lib/styles'
-
-type Props = {
-  color: string
-  hasBorder: boolean
-}
 
 export default defineComponent({
   name: 'NotificationIndicator',
@@ -29,7 +19,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const style = makeStyles(theme => ({
       background: theme.accent.notification,
       borderColor: props.color,

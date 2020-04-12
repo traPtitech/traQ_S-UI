@@ -1,28 +1,31 @@
 <template>
   <section :class="$style.feature">
     <user-icon
-      :userId="user.id"
-      :preventModal="true"
+      :user-id="user.id"
+      :prevent-modal="true"
       :size="64"
       :class="$style.icon"
       :style="styles.icon"
     />
     <div :class="$style.name">
-      <h1>{{ props.user.displayName }}</h1>
+      <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator :userId="props.user.id" />
-        @{{ props.user.name }}
+        <online-indicator :user-id="user.id" />
+        @{{ user.name }}
       </p>
     </div>
-    <buttons :username="props.user.name" :showTitle="false" />
+    <buttons
+      :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
+      :show-title="false"
+    />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserDetail } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import OnlineIndicator from './OnlineIndicator.vue'
 import Buttons from './Buttons.vue'
@@ -34,21 +37,22 @@ const useStyles = () =>
     }))
   })
 
-type Props = {
-  user: User
-}
-
 export default defineComponent({
   name: 'MobileFeature',
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User>,
       required: true
-    }
+    },
+    detail: Object as PropType<UserDetail>
   },
-  setup(props: Props) {
+  setup(props) {
     const styles = useStyles()
-    return { props, styles }
+    return {
+      styles,
+      // TODO: https://github.com/vuejs/composition-api/issues/291
+      props: props as { detail?: UserDetail }
+    }
   },
   components: {
     UserIcon,

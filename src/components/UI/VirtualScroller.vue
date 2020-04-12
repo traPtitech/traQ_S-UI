@@ -4,8 +4,8 @@
       <div ref="spacerRef" :class="$style.spacer" :style="styles.spacerStyle">
         <div
           v-for="(item, index) in data.visibleItems"
-          :key="item[props.key]"
-          :ref="item[props.key]"
+          :key="item[key]"
+          :ref="item[key]"
           :data-index="index"
         >
           <slot :item="item" />
@@ -25,17 +25,11 @@ import {
   toRefs,
   onMounted,
   onUnmounted,
-  watch
+  watch,
+  PropType
 } from '@vue/composition-api'
-import { SetupContext } from '@vue/composition-api/dist/component/component'
 // import { ResizeObserver } from '@juggle/resize-observer'
-
-const throttle = require('lodash.throttle')
-
-type Props = {
-  items: any[]
-  key: string
-}
+import { throttle } from 'lodash-es'
 
 const binarySearch = (arr: number[], x: number) => {
   let low = 0
@@ -90,8 +84,17 @@ const PAGE_SIZE = 50
 
 export default defineComponent({
   name: 'VirtualScroller',
-  props: { items: Array },
-  setup(props: Props, context: SetupContext) {
+  props: {
+    items: {
+      type: Array,
+      required: true
+    },
+    key: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props, context) {
     const state = reactive({
       isMounted: false,
       isLoading: false,
@@ -303,7 +306,6 @@ export default defineComponent({
     )
 
     return {
-      props,
       rootRef,
       spacerRef,
       handleScroll,
