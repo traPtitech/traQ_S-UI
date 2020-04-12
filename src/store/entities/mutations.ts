@@ -80,5 +80,5 @@ export const mutations = defineMutations<S>()({
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
-  deleteTags: deleteMutation('tags')
+  deleteTag: deleteMutation('tags')
 })

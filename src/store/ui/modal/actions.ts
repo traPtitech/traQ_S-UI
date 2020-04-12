@@ -121,6 +121,7 @@ export const actions = defineActions({
       case 'group':
         break
       case 'tag':
+        store.commit.entities.deleteTag(modalState.id)
         break
       default:
         const invalid: never = modalState
