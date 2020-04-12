@@ -7,7 +7,7 @@
     @mouseleave="onMouseLeave"
   >
     <div :class="$style.stampContainer">
-      <img loading="lazy" :src="state.src" :alt="state.stamp.name" />
+      <img loading="lazy" :src="state.src" />
     </div>
     <spin-number
       :value="state.count"
@@ -79,11 +79,10 @@ export default defineComponent({
       }),
       count: makeStyles(theme => {
         return {
-          color: state.includeMe
-            ? theme.ui.primary
-            : hoverState.hover
-            ? theme.ui.primary
-            : transparentize(theme.ui.primary, 0.6)
+          color:
+            state.includeMe || hoverState.hover
+              ? theme.ui.primary
+              : transparentize(theme.ui.primary, 0.6)
         }
       })
     })
