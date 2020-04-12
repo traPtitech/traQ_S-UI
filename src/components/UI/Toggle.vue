@@ -46,6 +46,7 @@ export default defineComponent({
   height: 24px;
   border-radius: 22px;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 .knob {
   position: absolute;

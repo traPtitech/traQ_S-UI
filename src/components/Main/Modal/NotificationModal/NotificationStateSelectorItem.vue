@@ -31,6 +31,16 @@ const descriptionMap: Record<SubscriptionLevel, string> = {
     '新規メッセージの有無をチャンネルリストに表示し、通知は送信しません',
   none: '未読の管理・通知を行いません'
 }
+const iconNameMap: Record<SubscriptionLevel, string> = {
+  notified: 'bell',
+  subscribed: 'subscribed',
+  none: 'bell-outline'
+}
+const iconMdiMap: Record<SubscriptionLevel, boolean> = {
+  notified: true,
+  subscribed: false,
+  none: true
+}
 
 const useStyles = (props: { isSelected: boolean }) =>
   reactive({
