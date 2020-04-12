@@ -20,17 +20,11 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
 import UserNotificationList from './UserNotificationList.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'NotificationModal',
@@ -41,7 +35,6 @@ export default defineComponent({
     UserNotificationList
   },
   setup() {
-    const styles = useStyles()
     const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
@@ -49,7 +42,7 @@ export default defineComponent({
     const channelPath = computed(() =>
       channelIdToPath(currentChannelId.value).join('/')
     )
-    return { styles, currentChannelId, channelPath }
+    return { currentChannelId, channelPath }
   }
 })
 </script>

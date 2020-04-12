@@ -70,6 +70,9 @@ export default defineComponent({
 }
 .body {
   padding: 16px 24px;
-  overflow: scroll;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 </style>

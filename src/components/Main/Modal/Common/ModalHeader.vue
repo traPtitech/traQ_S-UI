@@ -52,7 +52,7 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   font: {
-    weight: 600;
+    weight: bold;
     size: 1.125rem;
   }
 }

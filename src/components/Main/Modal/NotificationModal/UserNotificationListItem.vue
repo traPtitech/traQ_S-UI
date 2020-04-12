@@ -1,8 +1,8 @@
 <template>
-  <div @click="onClick" :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container">
     <user-icon :user-id="userId" />
     <span :class="$style.name">{{ name }}</span>
-    <toggle :enabled="subscribed" />
+    <toggle @input="onClick" :enabled="subscribed" />
   </div>
 </template>
 

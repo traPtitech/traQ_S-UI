@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <user-notification-list-item
       v-for="entry in subscriptionStateSorted"
       :key="entry.userId"
@@ -20,7 +20,6 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import api from '@/lib/api'
-import { makeStyles } from '@/lib/styles'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareString } from '@/lib/util/string'
@@ -64,11 +63,6 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   return { ...toRefs(state), onChangeNotification }
 }
 
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
-
 export default defineComponent({
   name: 'UserNotificationList',
   components: {
@@ -81,12 +75,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const {
       subscriptionStateSorted,
       onChangeNotification
     } = useChannelNotificationState(props)
-    return { styles, subscriptionStateSorted, onChangeNotification }
+    return { subscriptionStateSorted, onChangeNotification }
   }
 })
 </script>
