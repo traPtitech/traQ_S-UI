@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ state.user.displayName }}</span>
+    <span :class="$style.displayName">{{ getUser().displayName }}</span>
     <grade-badge
       :class="$style.badge"
       :user-id="userId"
-      :is-bot="state.user.bot"
+      :is-bot="getUser().bot"
     />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
@@ -22,6 +22,8 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
+import apis from '../../../../lib/api'
+import { User } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -57,8 +59,16 @@ export default defineComponent({
         }
       })
     })
-
-    return { state, styles }
+    const getUser = () => {
+      if (state.user === undefined) {
+        apis.getUser(props.userId).then(res => {
+          const data = res.data as User
+          state.user = data
+        })
+      }
+      return state.user
+    }
+    return { state, styles, getUser }
   }
 })
 </script>
