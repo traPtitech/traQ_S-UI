@@ -3,7 +3,7 @@ import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
 import { reduceToRecord } from '@/lib/util/record'
-import { FileId } from '@/types/entity-ids'
+import { FileId, TagId } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -93,5 +93,10 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
+  },
+  async fetchTag(context, tagId: TagId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getTag(tagId)
+    commit.addTags({ id: res.data.id, entity: res.data })
   }
 })

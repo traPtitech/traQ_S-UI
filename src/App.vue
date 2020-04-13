@@ -7,18 +7,13 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from '@vue/composition-api'
 import store from './store'
+import { throttle } from 'lodash-es'
 
 const useWindowResizeObserver = () => {
-  let lastCalled = 0
-  const interval = 100
   const resizeHandler = () => {
-    const now = Date.now()
-    if (now - lastCalled < interval) return
-
     store.commit.ui.setViewportWidth(window.innerWidth)
-    lastCalled = now
   }
-  window.addEventListener('resize', resizeHandler)
+  window.addEventListener('resize', throttle(resizeHandler, 100))
   resizeHandler()
 }
 

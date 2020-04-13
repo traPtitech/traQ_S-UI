@@ -1,11 +1,7 @@
 <template>
-  <div v-if="state.user" :class="$style.header">
-    <span :class="$style.displayName">{{ state.user.displayName }}</span>
-    <grade-badge
-      :class="$style.badge"
-      :user-id="userId"
-      :is-bot="state.user.bot"
-    />
+  <div :class="$style.header">
+    <span :class="$style.displayName">{{ state.displayName }}</span>
+    <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
 </template>
@@ -43,6 +39,8 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.users[props.userId]),
+      displayName: computed((): string => state.user?.displayName ?? 'unknown'),
+      bot: computed((): boolean => state.user?.bot ?? false),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
     const styles = reactive({

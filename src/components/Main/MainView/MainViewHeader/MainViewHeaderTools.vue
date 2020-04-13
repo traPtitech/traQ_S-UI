@@ -12,13 +12,27 @@
       mdi
       name="pin"
     />
+    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <icon
-      @click="context.emit('click-notification')"
+      v-show="currentChannelSubscription === 'notified'"
+      @click="changeToNextSubscriptionLevel"
       :class="$style.icon"
       mdi
       name="bell"
     />
-    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
+    <icon
+      v-show="currentChannelSubscription === 'subscribed'"
+      @click="changeToNextSubscriptionLevel"
+      :class="$style.icon"
+      name="subscribed"
+    />
+    <icon
+      v-show="currentChannelSubscription === 'none'"
+      @click="changeToNextSubscriptionLevel"
+      :class="$style.icon"
+      mdi
+      name="bell-outline"
+    />
     <icon
       v-show="isStared"
       @click="context.emit('unstar-channel')"
@@ -32,7 +46,7 @@
       name="star-outline"
     />
     <icon
-      @click="context.emit('click-more')"
+      @click="context.emit('click-notification')"
       :class="$style.icon"
       mdi
       name="dots-horizontal"
@@ -52,6 +66,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
+import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 
 const useStyles = () =>
   reactive({
@@ -69,7 +84,15 @@ export default defineComponent({
   },
   props: { isStared: { type: Boolean, default: false } },
   setup(_, context: SetupContext) {
-    return { context }
+    const {
+      changeToNextSubscriptionLevel,
+      currentChannelSubscription
+    } = useChannelSubscriptionState()
+    return {
+      context,
+      currentChannelSubscription,
+      changeToNextSubscriptionLevel
+    }
   }
 })
 </script>

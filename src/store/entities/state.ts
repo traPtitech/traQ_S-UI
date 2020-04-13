@@ -6,12 +6,14 @@ import {
   StampPalette,
   Webhook,
   Message,
-  FileInfo
+  FileInfo,
+  Tag
 } from '@traptitech/traq'
 import {
   UserId,
   ChannelId,
   UserGroupId,
+  TagId,
   StampId,
   StampPaletteId,
   WebhookId,
@@ -28,6 +30,7 @@ export type S = {
   stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Record<WebhookId, Webhook>
   fileMetaData: Record<FileId, FileInfo>
+  tags: Record<TagId, Tag>
 }
 
 export const state: S = {
@@ -38,5 +41,6 @@ export const state: S = {
   stamps: {},
   stampPalettes: {},
   webhooks: {},
-  fileMetaData: {}
+  fileMetaData: {},
+  tags: {}
 }
