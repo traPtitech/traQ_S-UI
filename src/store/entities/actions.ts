@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api from '@/lib/api'
+import api, { User } from '@/lib/api'
 import { FileId } from '@/types/entity-ids'
 
 /**
@@ -44,6 +44,11 @@ export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
 export const actions = defineActions({
+  async fetchUser(context, userId: string) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getUser(userId)
+    commit.addUser({ id: userId, entity: res.data })
+  },
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getUsers()

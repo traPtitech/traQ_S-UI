@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ getUser().displayName }}</span>
+    <span :class="$style.displayName">{{ state.user.displayName }}</span>
     <grade-badge
       :class="$style.badge"
       :user-id="userId"
-      :is-bot="getUser().bot"
+      :is-bot="state.user.bot"
     />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
@@ -47,6 +47,10 @@ export default defineComponent({
       user: computed(() => store.state.entities.users[props.userId]),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
+    if (state.user === undefined) {
+      store.dispatch.entities.fetchUser(props.userId)
+    }
+
     const styles = reactive({
       displayName: makeStyles(theme => {
         return {
@@ -59,16 +63,7 @@ export default defineComponent({
         }
       })
     })
-    const getUser = () => {
-      if (state.user === undefined) {
-        apis.getUser(props.userId).then(res => {
-          const data = res.data as User
-          state.user = data
-        })
-      }
-      return state.user
-    }
-    return { state, styles, getUser }
+    return { state, styles }
   }
 })
 </script>
