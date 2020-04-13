@@ -22,75 +22,20 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  ref,
-  PropType
-} from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
+import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
+import usePopupMenu from './use/popupMenu'
+import useChannelState from './use/channelState'
+import useStarChannel from './use/starChannel'
+import useNotificationModal from './use/notificationModal'
+import useChannelCreateModal from './use/channelCreateModal'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
 import MainViewHeaderTools, {
   targetPortalName
 } from './MainViewHeaderTools.vue'
 import MainViewHeaderToolsMenu from './MainViewHeaderToolsMenu.vue'
-
-type Props = {
-  channelId: ChannelId
-}
-
-const usePopupMenu = () => {
-  const isPopupMenuShown = ref(false)
-  const togglePopupMenu = () => {
-    isPopupMenuShown.value = !isPopupMenuShown.value
-  }
-  const closePopupMenu = () => {
-    isPopupMenuShown.value = !isPopupMenuShown.value
-  }
-  return { isPopupMenuShown, togglePopupMenu, closePopupMenu }
-}
-
-const useChannelState = (props: Props) => {
-  const state = reactive({
-    stared: computed(
-      () => props.channelId in store.state.domain.me.staredChannelSet
-    )
-  })
-  return { channelState: state }
-}
-
-const useStarChannel = (props: Props) => {
-  const starChannel = () => {
-    store.dispatch.domain.me.starChannel(props.channelId)
-  }
-  const unstarChannel = () => {
-    store.dispatch.domain.me.unstarChannel(props.channelId)
-  }
-  return { starChannel, unstarChannel }
-}
-
-const useNotificationModal = (props: Props) => {
-  const openNotificationModal = () => {
-    store.dispatch.ui.modal.pushModal({
-      type: 'notification',
-      channelId: props.channelId
-    })
-  }
-  return { openNotificationModal }
-}
-
-const useChannelCreateModal = (props: Props) => {
-  const openChannelCreateModal = () => {
-    store.dispatch.ui.modal.pushModal({
-      type: 'channel-create',
-      parentChannelId: props.channelId
-    })
-  }
-  return { openChannelCreateModal }
-}
 
 const useStyles = () =>
   reactive({
