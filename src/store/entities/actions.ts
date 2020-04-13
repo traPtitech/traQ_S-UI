@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api, { User } from '@/lib/api'
-import { FileId, TagId } from '@/types/entity-ids'
+import { FileId } from '@/types/entity-ids'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
