@@ -18,6 +18,8 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
+import apis from '@/lib/api'
+import { User } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -43,6 +45,10 @@ export default defineComponent({
       bot: computed((): boolean => state.user?.bot ?? false),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
+    if (state.user === undefined) {
+      store.dispatch.entities.fetchUser(props.userId)
+    }
+
     const styles = reactive({
       displayName: makeStyles(theme => {
         return {
@@ -55,7 +61,6 @@ export default defineComponent({
         }
       })
     })
-
     return { state, styles }
   }
 })

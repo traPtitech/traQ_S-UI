@@ -44,6 +44,11 @@ export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
 export const actions = defineActions({
+  async fetchUser(context, userId: string) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getUser(userId)
+    commit.addUser({ id: userId, entity: res.data })
+  },
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getUsers()
