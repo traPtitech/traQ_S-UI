@@ -68,6 +68,7 @@ export default defineComponent({
   flex-shrink: 0;
 }
 .body {
+  width: 100%;
   padding: 16px 24px;
   overflow: scroll;
 }
