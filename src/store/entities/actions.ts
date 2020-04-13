@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api, { User } from '@/lib/api'
+import api from '@/lib/api'
 import { FileId } from '@/types/entity-ids'
 
 /**
