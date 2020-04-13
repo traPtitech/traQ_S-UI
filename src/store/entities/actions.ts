@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
-import { FileId, TagId } from '@/types/entity-ids'
+import { FileId, TagId, ChannelId } from '@/types/entity-ids'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
@@ -114,5 +114,22 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await api.getTag(tagId)
     commit.addTags({ id: res.data.id, entity: res.data })
+  },
+  async createChannel(
+    context,
+    payload: { name: string; parent: ChannelId | null }
+  ) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.createChannel({
+      name: payload.name,
+      parent: payload.parent
+    })
+    commit.addChannel({ id: res.data.id, entity: res.data })
+    if (res.data.parentId) {
+      // 親チャンネルの`children`が不整合になるので再取得
+      const parentRes = await api.getChannel(res.data.parentId)
+      commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
+    }
+    return res.data
   }
 })

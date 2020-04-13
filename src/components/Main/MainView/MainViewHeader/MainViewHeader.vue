@@ -9,6 +9,7 @@
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
       @click-notification="openNotificationModal"
+      @click-create-channel="openChannelCreateModal"
     />
   </header>
 </template>
@@ -59,6 +60,16 @@ const useNotificationModal = (props: Props) => {
   return { openNotificationModal }
 }
 
+const useChannelCreateModal = (props: Props) => {
+  const openChannelCreateModal = () => {
+    store.dispatch.ui.modal.pushModal({
+      type: 'channel-create',
+      parentChannelId: props.channelId
+    })
+  }
+  return { openChannelCreateModal }
+}
+
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
@@ -84,13 +95,15 @@ export default defineComponent({
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
+    const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     return {
       channelState,
       styles,
       starChannel,
       unstarChannel,
-      openNotificationModal
+      openNotificationModal,
+      openChannelCreateModal
     }
   }
 })
