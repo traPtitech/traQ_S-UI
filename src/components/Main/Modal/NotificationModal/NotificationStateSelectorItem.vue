@@ -18,28 +18,28 @@ import {
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import { SubscriptionLevel } from '@/store/domain/me'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
-const titleMap: Record<SubscriptionLevel, string> = {
-  notified: '通知オン',
-  subscribed: '未読のみ管理',
-  none: 'なし'
+const titleMap: Record<ChannelSubscribeLevel, string> = {
+  [ChannelSubscribeLevel.notified]: '通知オン',
+  [ChannelSubscribeLevel.subscribed]: '未読のみ管理',
+  [ChannelSubscribeLevel.none]: 'なし'
 }
-const descriptionMap: Record<SubscriptionLevel, string> = {
-  notified: '新規メッセージの通知を送信します',
-  subscribed:
+const descriptionMap: Record<ChannelSubscribeLevel, string> = {
+  [ChannelSubscribeLevel.notified]: '新規メッセージの通知を送信します',
+  [ChannelSubscribeLevel.subscribed]:
     '新規メッセージの有無をチャンネルリストに表示し、通知は送信しません',
-  none: '未読の管理・通知を行いません'
+  [ChannelSubscribeLevel.none]: '未読の管理・通知を行いません'
 }
-const iconNameMap: Record<SubscriptionLevel, string> = {
-  notified: 'bell',
-  subscribed: 'subscribed',
-  none: 'bell-outline'
+const iconNameMap: Record<ChannelSubscribeLevel, string> = {
+  [ChannelSubscribeLevel.notified]: 'bell',
+  [ChannelSubscribeLevel.subscribed]: 'subscribed',
+  [ChannelSubscribeLevel.none]: 'bell-outline'
 }
-const iconMdiMap: Record<SubscriptionLevel, boolean> = {
-  notified: true,
-  subscribed: false,
-  none: true
+const iconMdiMap: Record<ChannelSubscribeLevel, boolean> = {
+  [ChannelSubscribeLevel.notified]: true,
+  [ChannelSubscribeLevel.subscribed]: false,
+  [ChannelSubscribeLevel.none]: true
 }
 
 const useStyles = (props: { isSelected: boolean }) =>
@@ -60,7 +60,7 @@ export default defineComponent({
   },
   props: {
     subscriptionLevel: {
-      type: String as PropType<SubscriptionLevel>,
+      type: Number as PropType<ChannelSubscribeLevel>,
       required: true
     },
     isSelected: {
@@ -70,16 +70,8 @@ export default defineComponent({
   },
   setup(props) {
     const styles = useStyles(props)
-    const iconName = computed(() => {
-      if (props.subscriptionLevel === 'notified') return 'bell'
-      if (props.subscriptionLevel === 'subscribed') return 'subscribed'
-      else return 'bell-outline'
-    })
-    const iconMdi = computed(() => {
-      if (props.subscriptionLevel === 'notified') return true
-      if (props.subscriptionLevel === 'subscribed') return false
-      else return true
-    })
+    const iconName = computed(() => iconNameMap[props.subscriptionLevel])
+    const iconMdi = computed(() => iconMdiMap[props.subscriptionLevel])
     const title = computed(() => titleMap[props.subscriptionLevel])
     const description = computed(() => descriptionMap[props.subscriptionLevel])
     return { styles, iconName, iconMdi, title, description }
