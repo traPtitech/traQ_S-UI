@@ -7,7 +7,7 @@
           v-for="group in groups"
           :key="group.id"
           :class="$style.group"
-          @click="onGroupClick"
+          @click="onGroupClick(group.id)"
         >
           <icon name="group" :class="$style.icon" :size="20" />
           {{ group.name }}
@@ -27,6 +27,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
+import { UserGroupId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = () =>
@@ -52,8 +53,11 @@ export default defineComponent({
         ) ?? []
     )
 
-    const onGroupClick = () => {
-      // TODO: Open tag modal
+    const onGroupClick = (id: UserGroupId) => {
+      store.dispatch.ui.modal.pushModal({
+        type: 'group',
+        id
+      })
     }
 
     return { styles, isLoading, groups, onGroupClick }
@@ -76,6 +80,7 @@ export default defineComponent({
 
 .group {
   margin: 16px 8px;
+  cursor: pointer;
 }
 
 .icon {

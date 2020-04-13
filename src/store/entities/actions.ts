@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
-import { FileId } from '@/types/entity-ids'
+import { FileId, TagId } from '@/types/entity-ids'
 
 /**
  * オブジェクトの配列から特定のキーを用いたRecordを生成する
@@ -104,5 +104,10 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
+  },
+  async fetchTag(context, tagId: TagId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getTag(tagId)
+    commit.addTags({ id: res.data.id, entity: res.data })
   }
 })
