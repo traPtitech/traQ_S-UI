@@ -121,6 +121,7 @@ export const actions = defineActions({
     })
     commit.addChannel({ id: res.data.id, entity: res.data })
     if (res.data.parentId) {
+      // 親チャンネルの`children`が不整合になるので再取得
       const parentRes = await api.getChannel(res.data.parentId)
       commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
     }
