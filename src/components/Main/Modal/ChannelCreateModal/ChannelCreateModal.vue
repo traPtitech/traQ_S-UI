@@ -21,7 +21,8 @@ import {
   computed,
   reactive,
   ref,
-  Ref
+  Ref,
+  SetupContext
 } from '@vue/composition-api'
 import store from '@/store'
 import api from '@/lib/api'
@@ -39,13 +40,27 @@ const useChannelCreateForm = () => {
 
 const useCreateChannel = (
   props: { parentChannelId?: string },
+  context: SetupContext,
   channelNameRef: Ref<string>
 ) => {
-  const createChannel = () => {
-    api.createChannel({
-      name: channelNameRef.value,
-      parent: props.parentChannelId ?? null
-    })
+  const createChannel = async () => {
+    const { channelIdToPath } = useChannelPath()
+    try {
+      const channel = await store.dispatch.entities.createChannel({
+        name: channelNameRef.value,
+        parent: props.parentChannelId ?? null
+      })
+
+      // 新規作成なのでホームチャンネルにならないため、全体のみ再構築
+      await store.dispatch.domain.channelTree.constructChannelTree()
+
+      await store.dispatch.ui.modal.popModal()
+      context.root.$router.push(
+        '/channels/' + channelIdToPath(channel.id).join('/')
+      )
+    } catch {
+      // TODO: エラー処理
+    }
   }
   return { createChannel }
 }
@@ -60,9 +75,9 @@ export default defineComponent({
   props: {
     parentChannelId: String
   },
-  setup(props) {
+  setup(props, context) {
     const { channelName, setChannelName } = useChannelCreateForm()
-    const { createChannel } = useCreateChannel(props, channelName)
+    const { createChannel } = useCreateChannel(props, context, channelName)
     const { channelIdToPath } = useChannelPath()
     const subtitle = computed(() =>
       props.parentChannelId
