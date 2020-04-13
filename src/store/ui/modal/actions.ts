@@ -126,6 +126,8 @@ export const actions = defineActions({
       case 'tag':
         store.commit.entities.deleteTag(modalState.id)
         break
+      case 'channel-create':
+        break
       default:
         const invalid: never = modalState
         throw new Error(`Invalid Modal State type: ${(invalid as any).type}`)
