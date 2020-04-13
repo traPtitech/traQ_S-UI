@@ -38,13 +38,9 @@ import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 import ChannelSideBarRelationContent from './ChannelSideBarRelationContent.vue'
-import useRelatedChannels from './use/useRelatedChannels'
-
-export type RelatedChannelEntry = {
-  id: ChannelId
-  name: string
-  topic: string
-}
+import useRelatedChannels, {
+  RelatedChannelEntry
+} from './use/useRelatedChannels'
 
 const useStyles = (state: { isOpen: boolean }) =>
   reactive({

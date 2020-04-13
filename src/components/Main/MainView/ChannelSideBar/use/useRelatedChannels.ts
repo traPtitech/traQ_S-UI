@@ -1,5 +1,6 @@
 import { computed } from '@vue/composition-api'
 import store from '@/store'
+import { ChannelId } from '@/types/entity-ids'
 
 const useRelatedChannels = (props: { channelId: string }) => {
   const currentChannel = computed(
@@ -11,13 +12,13 @@ const useRelatedChannels = (props: { channelId: string }) => {
   })
   const siblingsChannel = computed(() => {
     if (!parentChannel.value) {
-      return store.state.domain.channelTree.channelTree.children.map(
-        v => store.state.entities.channels[v.id]
-      )
+      return store.state.domain.channelTree.channelTree.children
+        .map(v => store.state.entities.channels[v.id])
+        .filter(el => el.id !== currentChannel.value.id)
     }
-    return currentChannel.value.children.map(
-      v => store.state.entities.channels[v]
-    )
+    return parentChannel.value.children
+      .map(v => store.state.entities.channels[v])
+      .filter(el => el.id !== currentChannel.value.id)
   })
 
   const current = computed(() => ({
@@ -51,6 +52,12 @@ const useRelatedChannels = (props: { channelId: string }) => {
     }))
   )
   return { current, children, parent, siblings }
+}
+
+export type RelatedChannelEntry = {
+  id: ChannelId
+  name: string
+  topic: string
 }
 
 export default useRelatedChannels

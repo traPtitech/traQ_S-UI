@@ -16,13 +16,13 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (topicContent: string | undefined) =>
+const useStyles = (props: { topicContent?: string }) =>
   reactive({
     container: makeStyles(theme => ({
-      color: topicContent === '' ? theme.ui.secondary : theme.ui.primary
+      color: props.topicContent === '' ? theme.ui.secondary : theme.ui.primary
     })),
     topic: makeStyles(theme => ({
-      opacity: topicContent === '' ? '50%' : '100%'
+      opacity: props.topicContent === '' ? '50%' : '100%'
     }))
   })
 
@@ -30,13 +30,12 @@ export default defineComponent({
   name: 'ChannelSideBarTopicContent',
   components: { Icon },
   props: {
-    topicContent: { type: String },
-    isOpen: { type: Boolean, required: true }
+    topicContent: { type: String }
   },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { topicContent?: string; isOpen: boolean }
-    const styles = useStyles(propst.topicContent)
+    const propst = props as { topicContent?: string }
+    const styles = useStyles(propst)
     return {
       styles,
       propst

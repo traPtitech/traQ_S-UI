@@ -12,7 +12,7 @@
       direction="col"
       :max="3"
       :show-count="false"
-      :user-ids="propst.viewerIds"
+      :user-ids="viewerIds"
     />
   </div>
 </template>
@@ -29,7 +29,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
-import { UserId } from '../../../../types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
   reactive({
@@ -46,15 +46,13 @@ export default defineComponent({
   },
   components: { Icon, UserIconEllipsisList },
   setup(props, context) {
-    const propst = props as { viewerIds: UserId[] }
     const styles = useStyles()
     const open = () => {
       context.emit('open')
     }
     return {
       styles,
-      open,
-      propst
+      open
     }
   }
 })
@@ -66,12 +64,12 @@ export default defineComponent({
   flex-direction: column;
   width: 56px;
   height: 100%;
-  overflow: scroll;
   align-items: center;
 }
 
 .icon {
   margin-bottom: 16px;
   margin-top: 16px;
+  cursor: pointer;
 }
 </style>

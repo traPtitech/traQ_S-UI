@@ -1,6 +1,6 @@
 <template>
   <div ref="containerRef" :class="$style.container">
-    <messages-scroller :messageIds="state.channelMessageIds" />
+    <messages-scroller :message-ids="state.channelMessageIds" />
     <message-input :channel-id="state.channelId" />
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
+  PropType,
   reactive,
   computed,
   ref,
@@ -23,20 +23,16 @@ import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSid
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
-type Props = {
-  channelId: ChannelId
-}
-
 export default defineComponent({
   name: 'MessagesView',
-  props: { channelId: String },
+  props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
     MessagesScroller,
     MessageInput,
     MessagesViewFileUploadOverlay,
     ChannelSideBar
   },
-  setup(props: Props, _: SetupContext) {
+  setup() {
     const state = reactive({
       channelMessageIds: computed(
         () => store.state.domain.messagesView.messageIds
@@ -53,7 +49,6 @@ export default defineComponent({
 
     const containerRef = ref<HTMLElement>(null)
     return {
-      props,
       state,
       containerStyle,
       containerRef

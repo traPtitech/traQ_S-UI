@@ -31,8 +31,7 @@ import ChannelSideBarContent from './ChannelSideBarContent.vue'
 const useStyles = (state: { isOpen: boolean }) =>
   reactive({
     icon: makeStyles(theme => ({
-      transform: state.isOpen ? 'rotate(180deg)' : '',
-      transition: '0.5s'
+      transform: state.isOpen ? 'rotate(180deg)' : ''
     }))
   })
 

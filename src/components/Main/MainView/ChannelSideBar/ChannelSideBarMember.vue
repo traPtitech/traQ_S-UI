@@ -27,12 +27,7 @@ import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 import { User } from '@traptitech/traq'
-import { UserId } from '../../../../types/entity-ids'
-
-type ViewState = {
-  user: User
-  viewing: boolean
-}
+import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
   reactive({
@@ -50,27 +45,22 @@ export default defineComponent({
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { channelId: ChannelId; viewerIds: UserId[] }
     const styles = useStyles()
     const isForceNotification = computed(
-      () => store.state.entities.channels[propst.channelId]?.force
+      () => store.state.entities.channels[props.channelId]?.force
     )
     const userIds = computed(() => store.state.domain.messagesView.subscribers)
     const viewStates = computed(() =>
       userIds.value
         .map(id => ({
           user: store.state.entities.users[id],
-          viewing: propst.viewerIds.includes(id)
+          viewing: props.viewerIds.includes(id)
         }))
         .sort((a, b) => {
           if (a.viewing === b.viewing) {
             return 0
           }
-          if (a.viewing && !b.viewing) {
-            return -1
-          }
-          return 1
+          return a.viewing ? -1 : 1
         })
     )
     return { styles, userIds, isForceNotification, viewStates }

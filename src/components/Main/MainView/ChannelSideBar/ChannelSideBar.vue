@@ -128,7 +128,8 @@ export default defineComponent({
 }
 
 .edit {
-  margin-top: auto;
-  margin-bottom: 24px;
+  margin: 24px 0;
+  flex: 1;
+  align-items: flex-end;
 }
 </style>

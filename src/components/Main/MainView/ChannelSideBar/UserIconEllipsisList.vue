@@ -9,7 +9,7 @@
     </span>
     <user-icon
       :class="$style.userIcon"
-      :userId="userId"
+      :user-id="userId"
       :size="40"
       v-for="userId in visibleIconIds"
       :key="userId"
@@ -30,20 +30,26 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { ChannelViewState } from '@traptitech/traq'
-import { UserId } from '../../../../types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 
-const useStyles = (direction: 'row' | 'col') =>
+const useStyles = (props: {
+  direction: 'row' | 'col'
+  max: number
+  showCount: boolean
+  userIds: string[]
+}) =>
   reactive({
     container: makeStyles(theme => ({
-      flexDirection: direction === 'row' ? 'row-reverse' : 'column-reverse'
+      flexDirection:
+        props.direction === 'row' ? 'row-reverse' : 'column-reverse'
     })),
     userIcon: makeStyles(theme => ({
-      marginTop: direction === 'row' ? '0px' : '-12px',
-      marginRight: direction === 'col' ? '0px' : '-12px'
+      marginTop: props.direction === 'row' ? '0px' : '-12px',
+      marginRight: props.direction === 'col' ? '0px' : '-12px'
     })),
     count: makeStyles(theme => ({
-      marginTop: direction === 'row' ? '0px' : '20px',
-      marginLeft: direction === 'col' ? '0px' : '20px'
+      marginTop: props.direction === 'row' ? '0px' : '20px',
+      marginLeft: props.direction === 'col' ? '0px' : '20px'
     }))
   })
 
@@ -69,7 +75,7 @@ export default defineComponent({
         showCount: boolean
         userIds: UserId[]
       }
-    const styles = useStyles(propst.direction)
+    const styles = useStyles(propst)
     const visibleIconIds = computed(() => propst.userIds.slice(0, propst.max))
     const inVisibleCount = computed(() => propst.userIds.length - propst.max)
     return {

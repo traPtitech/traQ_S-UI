@@ -40,7 +40,7 @@
       </div>
       <div v-for="(sibling, index) in propst.siblings" :key="sibling.id">
         <channel-side-bar-relation-element
-          v-if="index < 3 || state.isOpensiblings"
+          v-if="index < 3 || state.isOpenSiblings"
           :name="sibling.name"
           :topic="sibling.topic"
           :link="buildSiblingLink(sibling.name)"
@@ -48,7 +48,7 @@
         <div
           v-else-if="index === 3"
           :class="$style.text"
-          @click="togglesiblings"
+          @click="toggleSiblings"
         >
           兄弟チャンネルを全て表示(+{{ propst.siblings.length - 3 }})
         </div>
@@ -66,7 +66,7 @@ import {
 } from '@vue/composition-api'
 import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
-import { RelatedChannelEntry } from './ChannelSideBarRelation.vue'
+import { RelatedChannelEntry } from './use/useRelatedChannels'
 
 const useStyles = () =>
   reactive({
@@ -88,24 +88,23 @@ export default defineComponent({
   name: 'ChannelSideBarRelationContent',
   props: {
     parent: {
-      type: Object as PropType<RelatedChannelEntry | undefined>
+      type: Object as PropType<RelatedChannelEntry>
     },
     children: {
       type: Array as PropType<RelatedChannelEntry[]>,
-      required: true
+      default: []
     },
     siblings: {
       type: Array as PropType<RelatedChannelEntry[]>,
-      required: true
+      default: []
     },
     current: {
-      type: Object as PropType<RelatedChannelEntry | undefined>,
-      required: true
+      type: Object as PropType<RelatedChannelEntry>
     }
   },
   components: { ChannelSideBarRelationElement },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291ops
+    // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst =
       props as
       {
@@ -116,27 +115,27 @@ export default defineComponent({
       }
     const styles = useStyles()
     const state = reactive({
-      isOpensiblings: false,
+      isOpenSiblings: false,
       isOpenChildren: false
     })
     const toggleChildren = () => {
       state.isOpenChildren = !state.isOpenChildren
     }
-    const togglesiblings = () => {
-      state.isOpensiblings = !state.isOpensiblings
+    const toggleSiblings = () => {
+      state.isOpenSiblings = !state.isOpenSiblings
     }
-    const buildChildLink = (channel: string | undefined) =>
-      `${location.pathname}/${channel ?? ''}`
+    const buildChildLink = (channel: string) =>
+      `${location.pathname}/${channel}`
     const buildParentLink = () =>
       `${location.pathname.split('/').slice(0, -1).join('/')}`
-    const buildSiblingLink = (channel: string | undefined) =>
-      `${location.pathname.split('/').slice(0, -1).join('/')}/${channel ?? ''}`
+    const buildSiblingLink = (channel: string) =>
+      `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
     return {
       propst,
       styles,
       state,
       toggleChildren,
-      togglesiblings,
+      toggleSiblings,
       buildChildLink,
       buildParentLink,
       buildSiblingLink

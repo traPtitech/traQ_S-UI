@@ -26,7 +26,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
 import ChannelSideBarViewersDetail from './ChannelSideBarViewersDetail.vue'
-import { UserId } from '../../../../types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
   reactive({
@@ -42,9 +42,7 @@ export default defineComponent({
   props: {
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
-  setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { viewerIds: UserId[] }
+  setup() {
     const styles = useStyles()
     const state = reactive({
       isOpenDetail: false
@@ -52,7 +50,7 @@ export default defineComponent({
     const toggle = () => {
       state.isOpenDetail = !state.isOpenDetail
     }
-    return { styles, propst, state, toggle }
+    return { styles, state, toggle }
   }
 })
 </script>

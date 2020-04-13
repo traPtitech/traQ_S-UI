@@ -3,22 +3,17 @@
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />
     </div>
-    <span :class="$style.text" v-if="props.withText">閉じる</span>
+    <span :class="$style.text" v-if="propst.withText">閉じる</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 
-type Props = {
-  withText: boolean
-  size: number
-}
-
-const useStyles = (props: Props) =>
+const useStyles = (props: { size: number }) =>
   reactive({
     container: makeStyles(theme => ({
       color: theme.ui.secondary
@@ -34,16 +29,16 @@ export default defineComponent({
   name: 'CloseButton',
   props: {
     withText: { type: Boolean, default: false },
-    size: { type: Number, required: true },
-    backgroundColor: { default: 'primary' }
+    size: { type: Number, required: true }
   },
-  setup(props: Props, context: SetupContext) {
-    const styles = useStyles(props)
+  setup(props, context) {
+    const propst = props as { withText: boolean; size: number }
+    const styles = useStyles(propst)
 
     const onClick = () => {
       context.emit('click')
     }
-    return { styles, onClick, props }
+    return { styles, onClick, propst }
   },
   components: {
     Icon
