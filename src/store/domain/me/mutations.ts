@@ -7,6 +7,7 @@ import {
   StampHistoryEntry,
   MyUserDetail
 } from '@traptitech/traq'
+import { SubscriptionLevel } from '.'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -44,14 +45,23 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.staredChannelSet, channelId)
   },
 
-  setSubscribedChannels(state: S, subscribedChannels: ChannelId[]) {
-    state.subscribedChannels = subscribedChannels
-  },
-  setNotifiedChannels(state: S, notifiedChannels: ChannelId[]) {
-    state.notifiedChannels = notifiedChannels
-  },
-
   pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
     Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
+  },
+
+  setSubscriptionMap(
+    state: S,
+    subscriptionMap: Record<ChannelId, SubscriptionLevel>
+  ) {
+    state.subscriptionMap = subscriptionMap
+  },
+  setSubscription(
+    state: S,
+    payload: {
+      channelId: ChannelId
+      subscriptionLevel: SubscriptionLevel
+    }
+  ) {
+    Vue.set(state.subscriptionMap, payload.channelId, payload.subscriptionLevel)
   }
 })

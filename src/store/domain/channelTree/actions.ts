@@ -98,10 +98,15 @@ export const actions = defineActions({
     commit.setChannelTree(tree)
   },
   constructHomeChannelTree(context) {
-    const { getters, commit, rootState } = channelTreeActionContext(context)
+    const {
+      getters,
+      commit,
+      rootState,
+      rootGetters
+    } = channelTreeActionContext(context)
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
-    const subscribedOrForceChannels = rootState.domain.me.subscribedChannels.concat(
+    const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
       Object.values(rootState.entities.channels)
         .filter(c => c.force)
         .map(c => c.id)

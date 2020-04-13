@@ -5,6 +5,9 @@
       v-else-if="modalState.current.type === 'user'"
       :id="modalState.current.id"
     />
+    <notification-modal
+      v-else-if="modalState.current.type === 'notification'"
+    />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -30,6 +33,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import SettingModal from '@/components/Main/Modal/SettingModal/SettingModal.vue'
 import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
+import NotificationModal from '@/components/Main/Modal/NotificationModal/NotificationModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -89,7 +93,8 @@ export default defineComponent({
   },
   components: {
     SettingModal,
-    UserModal
+    UserModal,
+    NotificationModal
   }
 })
 </script>
