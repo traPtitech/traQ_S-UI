@@ -8,9 +8,16 @@
       :is-stared="channelState.stared"
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
-      @click-notification="openNotificationModal"
-      @click-create-channel="openChannelCreateModal"
+      @click-more="togglePopupMenu"
     />
+    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+      <main-view-header-tools-menu
+        :class="$style.toolsMenu"
+        v-click-outside="closePopupMenu"
+        @click-notification="openNotificationModal"
+        @click-create-channel="openChannelCreateModal"
+      />
+    </portal>
   </header>
 </template>
 
@@ -19,16 +26,31 @@ import {
   defineComponent,
   computed,
   reactive,
+  ref,
   PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
-import MainViewHeaderTools from './MainViewHeaderTools.vue'
+import MainViewHeaderTools, {
+  targetPortalName
+} from './MainViewHeaderTools.vue'
+import MainViewHeaderToolsMenu from './MainViewHeaderToolsMenu.vue'
 
 type Props = {
   channelId: ChannelId
+}
+
+const usePopupMenu = () => {
+  const isPopupMenuShown = ref(false)
+  const togglePopupMenu = () => {
+    isPopupMenuShown.value = !isPopupMenuShown.value
+  }
+  const closePopupMenu = () => {
+    isPopupMenuShown.value = !isPopupMenuShown.value
+  }
+  return { isPopupMenuShown, togglePopupMenu, closePopupMenu }
 }
 
 const useChannelState = (props: Props) => {
@@ -83,7 +105,8 @@ export default defineComponent({
   name: 'MainViewHeader',
   components: {
     MainViewHeaderChannelName,
-    MainViewHeaderTools
+    MainViewHeaderTools,
+    MainViewHeaderToolsMenu
   },
   props: {
     channelId: {
@@ -92,18 +115,23 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     return {
+      isPopupMenuShown,
       channelState,
       styles,
       starChannel,
       unstarChannel,
       openNotificationModal,
-      openChannelCreateModal
+      openChannelCreateModal,
+      togglePopupMenu,
+      closePopupMenu,
+      targetPortalName
     }
   }
 })
@@ -111,6 +139,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,5 +148,11 @@ export default defineComponent({
 }
 .tools {
   flex-shrink: 0;
+}
+.toolsMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 999;
 }
 </style>
