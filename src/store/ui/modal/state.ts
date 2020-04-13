@@ -78,7 +78,7 @@ interface ChannelCreateModalState extends BaseModalState {
 export interface S {
   modalState: ModalState[]
 
-  /** ナビゲーションを挟むことなくモーダルを表示している状態か */
+  /** ロード時からモーダルを表示していて、そこからモーダルを閉じたことがないか */
   isOnInitialModalRoute: boolean
 
   /** モーダルを非表示にしようとしている最中か */
