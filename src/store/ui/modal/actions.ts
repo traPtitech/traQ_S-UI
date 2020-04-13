@@ -93,10 +93,13 @@ export const actions = defineActions({
     const { state, commit, dispatch } = modalActionContext(context)
     const length = state.modalState.length
     commit.setIsClearingModal(true)
-    for (let i = 0; i < length; i++) {
-      await dispatch.popModal()
+    try {
+      for (let i = 0; i < length; i++) {
+        await dispatch.popModal()
+      }
+    } finally {
+      commit.setIsClearingModal(false)
     }
-    commit.setIsClearingModal(false)
   },
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
