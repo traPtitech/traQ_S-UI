@@ -22,7 +22,7 @@
       <message-stamp-list
         :class="$style.stamps"
         v-if="state.message.stamps.length > 0"
-        :message-id="props.messageId"
+        :message-id="messageId"
         :stamps="state.message.stamps"
       />
       <message-file-list
