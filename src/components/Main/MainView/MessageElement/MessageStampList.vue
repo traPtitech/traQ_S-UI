@@ -13,23 +13,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  PropType
+} from '@vue/composition-api'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { reduceToRecordOfArray } from '@/lib/util/record'
 import { StampId, MessageId } from '@/types/entity-ids'
 import store from '@/store'
 
-type Props = {
-  stamps: MessageStamp[]
-  messageId: MessageId
-}
-
 export default defineComponent({
   name: 'MessageStampList',
   props: {
     stamps: {
-      type: Array,
+      type: Array as PropType<MessageStamp[]>,
       required: true
     },
     messageId: {
@@ -38,7 +38,7 @@ export default defineComponent({
     }
   },
   components: { StampElement },
-  setup(props: Props) {
+  setup(props) {
     const state = reactive({
       stampsById: computed(() => reduceToRecordOfArray(props.stamps, 'stampId'))
     })

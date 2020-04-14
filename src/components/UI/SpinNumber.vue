@@ -13,21 +13,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, reactive } from '@vue/composition-api'
-
-type Props = {
-  value: number
-}
+import {
+  defineComponent,
+  watch,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 
 export default defineComponent({
   name: 'SpinNumber',
   props: {
     value: {
-      type: Number,
+      type: Number as PropType<number>,
       required: true
     }
   },
-  setup(props: Props) {
+  setup(props) {
     const state = reactive({
       valueA: props.value,
       valueB: 0,
