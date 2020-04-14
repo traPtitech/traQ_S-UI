@@ -25,7 +25,11 @@
         <input type="radio" value="particular" v-model="state.openMode" />
         特定のチャンネル
       </label>
-      <form-input v-model="state.openChannelName" prefix="#" />
+      <form-input
+        v-if="state.openMode === 'particular'"
+        v-model="state.openChannelName"
+        prefix="#"
+      />
     </div>
     <div>
       <h3>メッセージ送信スタイル</h3>
@@ -42,6 +46,7 @@
         Enterで送信 / 修飾キー+Enterで改行
       </label>
       <div>
+        修飾キーとして利用するキー
         <label>
           <input type="checkbox" v-model="state.modifierShift" />
           {{ getModifierKeyName('shift') }}
