@@ -1,7 +1,6 @@
 import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
-import { ChannelViewerState } from '@/lib/websocket/events'
-import { Pin } from '@traptitech/traq'
+import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export interface S {
   currentChannelId: ChannelId
@@ -12,7 +11,7 @@ export interface S {
   renderedContentMap: Record<MessageId, string>
   embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
   isReachedEnd: boolean
-  currentViewers: ChannelViewerState[]
+  currentViewers: ChannelViewer[]
   topic: string
   subscribers: UserId[]
 }

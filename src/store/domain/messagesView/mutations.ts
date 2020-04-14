@@ -3,8 +3,7 @@ import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
-import { ChannelViewerState } from '@/lib/websocket/events'
-import { Pin } from '@traptitech/traq'
+import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
@@ -51,7 +50,7 @@ export const mutations = defineMutations<S>()({
   ) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
   },
-  setCurrentViewer(state, viewers: ChannelViewerState[]) {
+  setCurrentViewer(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
   },
   setTopic(state, topic: string) {

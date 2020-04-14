@@ -7,7 +7,7 @@ import {
   ClipFolderId,
   StampPaletteId
 } from '@/types/entity-ids'
-import { ChannelViewState, Pin } from '@traptitech/traq'
+import { ChannelViewState, Pin, ChannelViewer } from '@traptitech/traq'
 
 export type WebSocketEvent =
   | UserEvent
@@ -139,17 +139,11 @@ export interface ChannelUnstaredEvent {
   body: ChannelIdBody
 }
 
-export interface ChannelViewerState {
-  userId: UserId
-  state: ChannelViewState
-  updatedAt: string
-}
-
 export interface ChannelViewersChangedEvent {
   type: 'CHANNEL_VIEWERS_CHANGED'
   body: {
     id: ChannelId
-    viewers: ChannelViewerState[]
+    viewers: ChannelViewer[]
   }
 }
 
