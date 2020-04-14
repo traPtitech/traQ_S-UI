@@ -14,6 +14,12 @@ export const mutations = defineMutations<S>()({
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
   },
+  setEntryMessageId(state, messageId: MessageId) {
+    state.entryMessageId = messageId
+  },
+  unsetEntryMessageId(state) {
+    state.entryMessageId = undefined
+  },
   addRenderedContent(
     state,
     {

@@ -4,6 +4,7 @@ import { EmbeddedFile } from '@/lib/embeddingExtractor'
 export interface S {
   currentChannelId: ChannelId
   messageIds: MessageId[]
+  entryMessageId?: MessageId
   currentOffset: number
   fetchLimit: number
   renderedContentMap: Record<MessageId, string>
@@ -14,6 +15,7 @@ export interface S {
 export const state: S = {
   currentChannelId: '',
   messageIds: [],
+  entryMessageId: undefined,
   currentOffset: 0,
   fetchLimit: 50,
   renderedContentMap: {},
