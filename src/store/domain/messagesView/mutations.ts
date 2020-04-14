@@ -41,6 +41,12 @@ export const mutations = defineMutations<S>()({
   setIsReachedLatest(state, isReachedLatest: boolean) {
     state.isReachedLatest = isReachedLatest
   },
+  setEntryMessageId(state, messageId: MessageId) {
+    state.entryMessageId = messageId
+  },
+  unsetEntryMessageId(state) {
+    state.entryMessageId = undefined
+  },
   addEmbededFile(
     state,
     payload: { messageId: MessageId; files: EmbeddedFile[] }

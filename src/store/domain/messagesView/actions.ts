@@ -26,12 +26,14 @@ export const actions = defineActions({
     if (payload.entryMessageId) {
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(false)
+      commit.setEntryMessageId(payload.entryMessageId)
       dispatch.fetchAndRenderChannelMessageAroundEntryMessage(
         payload.entryMessageId
       )
     } else {
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(true)
+      commit.unsetEntryMessageId()
       dispatch.fetchAndRenderChannelFormerMessages()
     }
   },

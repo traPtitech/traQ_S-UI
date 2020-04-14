@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" ref="bodyRef">
+  <div :class="$style.body" :style="styles.body" ref="bodyRef">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -28,17 +28,28 @@ import {
   computed,
   reactive,
   ref,
-  onMounted,
   watchEffect,
   watch,
   SetupContext,
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
+import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageFileList from './MessageFileList.vue'
 import { MessageId } from '@/types/entity-ids'
+import useElementRenderObserver from './use/elementRenderObserver'
+
+const useStyles = (props: { isEntryMessage: boolean }) =>
+  reactive({
+    body: makeStyles(theme => ({
+      background: props.isEntryMessage
+        ? transparentize(theme.accent.notification, 0.1)
+        : ''
+    }))
+  })
 
 export default defineComponent({
   name: 'MessageElement',
@@ -47,6 +58,10 @@ export default defineComponent({
     messageId: {
       type: String as PropType<MessageId>,
       required: true
+    },
+    isEntryMessage: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
@@ -65,51 +80,11 @@ export default defineComponent({
       )
     })
 
-    let lastHeight = 0
-    let lastBottom = 0
-    let lastTop = 0
-    const resizeObserver = new ResizeObserver(entries => {
-      const entry = entries[0]
-      if (lastHeight === 0) {
-        // 初回に高さが変化した場合、初期レンダリング完了とみなして処理を飛ばす
-        // これ以降新規にobserveしないためにwatcherを止める
-        lastHeight = entry.contentRect.height
-        stop()
-      } else {
-        const height = entry.contentRect.height
-        const bottom = entry.contentRect.bottom
-        const top = entry.contentRect.top
-        context.emit('change-height', {
-          heightDiff: height - lastHeight,
-          top,
-          bottom,
-          lastTop,
-          lastBottom
-        })
-        lastHeight = height
-        lastBottom = bottom
-        lastTop = top
-      }
-    })
-    const stop = watchEffect(async () => {
-      if (
-        state.content.length > 0 &&
-        state.fileIds.length > 0 &&
-        bodyRef.value
-      ) {
-        // 添付ファイルがある場合は高さ監視をする
-        resizeObserver.observe(bodyRef.value)
-      }
-    })
-    watch(
-      () => context.root.$route.path,
-      () =>
-        // パス変更でunobserve
-        // vue-routerのインスタンス再利用対策
-        bodyRef.value ? resizeObserver.unobserve(bodyRef.value) : undefined
-    )
+    useElementRenderObserver(bodyRef, props, state, context)
 
-    return { state, bodyRef }
+    const styles = useStyles(props)
+
+    return { state, bodyRef, styles }
   }
 })
 </script>

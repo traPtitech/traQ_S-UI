@@ -6,7 +6,9 @@
         v-for="messageId in messageIds"
         :key="messageId"
         :message-id="messageId"
+        :is-entry-message="state.entryMessageId === messageId"
         @change-height="onChangeHeight"
+        @entry-message-loaded="onEntryMessageLoaded"
       />
     </div>
   </div>
@@ -48,6 +50,9 @@ export default defineComponent({
       isFirstView: computed(
         () =>
           store.state.domain.messagesView.loadedMessageOldestDate === undefined
+      ),
+      entryMessageId: computed(
+        () => store.state.domain.messagesView.entryMessageId
       ),
       isLoading: false
     })
@@ -104,11 +109,21 @@ export default defineComponent({
       state.height += payload.heightDiff
     }
 
+    const onEntryMessageLoaded = (clientTop: number) => {
+      if (!rootRef.value) {
+        return
+      }
+      const rootHeight = rootRef.value.getBoundingClientRect().height
+      rootRef.value.scrollTop =
+        rootRef.value.scrollTop + clientTop - rootHeight / 2
+    }
+
     return {
       state,
       rootRef,
       handleScroll,
-      onChangeHeight
+      onChangeHeight,
+      onEntryMessageLoaded
     }
   }
 })

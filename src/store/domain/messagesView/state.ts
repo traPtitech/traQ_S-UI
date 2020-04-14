@@ -23,6 +23,9 @@ export interface S {
    */
   isReachedLatest: boolean
 
+  /** 最初に表示するメッセージId */
+  entryMessageId?: MessageId
+
   fetchLimit: number
 
   renderedContentMap: Record<MessageId, string>
@@ -38,6 +41,7 @@ export const state: S = {
   fetchLimit: 10,
   renderedContentMap: {},
   embeddedFilesMap: {},
+  entryMessageId: undefined,
   isReachedEnd: false,
   isReachedLatest: false
 }
