@@ -20,16 +20,7 @@
     </div>
     <div>
       <h3>ホームチャンネル</h3>
-      <select v-model="state.homeChannel">
-        <option :value="null">--未設定--</option>
-        <option
-          v-for="channel in channels"
-          :key="channel.id"
-          :value="channel.id"
-        >
-          #{{ channel.path }}
-        </option>
-      </select>
+      <form-selector v-model="homeChannelState" :options="channelOptions" />
     </div>
     <div>
       <h3>Twitter</h3>
@@ -62,31 +53,51 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
 import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormSelector from '@/components/UI/FormSelector.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
     const detail = computed(() => store.state.domain.me.detail!)
 
-    // TODO: <optgroup>を使う
     const { channelIdToPath } = useChannelPath()
-    const channels = computed(() =>
-      Object.values(store.state.entities.channels)
-        .map(channel => ({
-          id: channel.id,
-          path: channelIdToPath(channel.id).join('/')
-        }))
-        .sort((a, b) => (a.path > b.path ? 1 : -1))
+    const channelOptions = computed(() =>
+      [
+        {
+          key: '--未設定--',
+          value: '00000000-0000-0000-0000-000000000000'
+        }
+      ].concat(
+        Object.values(store.state.entities.channels)
+          .map(channel => ({
+            key: `#${channelIdToPath(channel.id).join('/')}`,
+            value: channel.id
+          }))
+          .sort((a, b) => (a.key > b.key ? 1 : -1))
+      )
     )
 
     const state = reactive({
       displayName: detail.value.displayName,
       bio: detail.value.bio,
-      homeChannel: detail.value.homeChannel,
       twitterId: detail.value.twitterId
     })
+    const homeChannelState = ref(
+      detail.value.homeChannel ?? '00000000-0000-0000-0000-000000000000'
+    )
+    const isHomeChannelChanged = computed(
+      () =>
+        homeChannelState.value !== detail.value.homeChannel &&
+        !(
+          homeChannelState.value === '00000000-0000-0000-0000-000000000000' &&
+          detail.value.homeChannel === null
+        )
+    )
+
     const { hasDiff } = useStateDiff<UserDetail>()
-    const isStateChanged = computed(() => hasDiff(state, detail))
+    const isStateChanged = computed(
+      () => hasDiff(state, detail) || isHomeChannelChanged.value
+    )
 
     const imgData = ref<Blob>()
     const onImgSet = (file: Blob) => {
@@ -107,14 +118,7 @@ export default defineComponent({
         promises.push(apis.changeUserIcon(detail.value.id, imgData.value))
       }
       if (isStateChanged.value) {
-        const sendState = {
-          ...state,
-          homeChannel:
-            state.homeChannel === null
-              ? '00000000-0000-0000-0000-000000000000'
-              : state.homeChannel
-        }
-        promises.push(apis.editMe(sendState))
+        promises.push(apis.editMe(state))
       }
       try {
         // TODO: loading
@@ -128,8 +132,9 @@ export default defineComponent({
 
     return {
       detail,
-      channels,
+      channelOptions,
       state,
+      homeChannelState,
       isStateChanged,
       onImgSet,
       destroyFlag,
@@ -141,7 +146,8 @@ export default defineComponent({
   components: {
     UserIcon,
     ImageUpload,
-    FormInput
+    FormInput,
+    FormSelector
   }
 })
 </script>
