@@ -7,7 +7,7 @@
       <input
         :class="$style.input"
         :id="id"
-        :value="text"
+        :value="value"
         :placeholder="placeholder"
         @input="onInput"
         type="text"
@@ -41,7 +41,7 @@ export default defineComponent({
     Icon
   },
   props: {
-    text: {
+    value: {
       type: String,
       default: ''
     },
