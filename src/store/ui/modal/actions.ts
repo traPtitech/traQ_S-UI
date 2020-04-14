@@ -1,12 +1,10 @@
 import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
+import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
 import router from '@/router'
 import useChannelPath from '@/use/channelPath'
-
-const deepEquals = (a: Object, b: Object) =>
-  JSON.stringify(a) === JSON.stringify(b)
 
 export const modalActionContext = (context: any) =>
   moduleActionContext(context, modal)
@@ -105,7 +103,7 @@ export const actions = defineActions({
     const { state } = modalActionContext(context)
 
     const isUsedIndex = state.modalState.findIndex(ms =>
-      deepEquals(ms, modalState)
+      isEqual(ms, modalState)
     )
     if (isUsedIndex !== -1) {
       return
