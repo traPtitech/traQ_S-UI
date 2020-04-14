@@ -67,10 +67,10 @@
       <p>
         省エネモードがONの場合、スタンプエフェクトのアニメーションを表示しません
       </p>
-      <label>
-        <input type="checkbox" v-model="state.ecoMode" />
-        ON / OFF
-      </label>
+      <toggle
+        @input="state.ecoMode = !state.ecoMode"
+        :enabled="state.ecoMode"
+      />
     </div>
   </section>
 </template>
@@ -88,6 +88,7 @@ import apis from '@/lib/api'
 import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import useStateDiff from '../use/stateDiff'
+import Toggle from '@/components/UI/Toggle.vue'
 
 const NotifyPermissionStatusTable: Record<
   NotificationPermission | '',
@@ -173,6 +174,9 @@ export default defineComponent({
       macFlag,
       getModifierKeyName
     }
+  },
+  components: {
+    Toggle
   }
 })
 </script>

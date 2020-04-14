@@ -6,7 +6,10 @@
         通話などのリアルタイムコミュニケーション機能を有効化します<br />
         マイクなどへのアクセス許可が必要です
       </p>
-      <input type="checkbox" v-model="state.isEnabled" />
+      <toggle
+        @input="state.isEnabled = !state.isEnabled"
+        :enabled="state.isEnabled"
+      />
     </div>
     <div v-if="rtcSettings.isEnabled">
       <h3>入力デバイス</h3>
@@ -40,6 +43,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import useStateDiff from '../use/stateDiff'
+import Toggle from '@/components/UI/Toggle.vue'
 
 const useDevicesInfo = (state: { isEnabled: boolean }) => {
   const devices = ref<MediaDeviceInfo[]>([])
@@ -104,6 +108,9 @@ export default defineComponent({
     const devicesInfo = useDevicesInfo(state)
 
     return { rtcSettings, state, ...devicesInfo }
+  },
+  components: {
+    Toggle
   }
 })
 </script>
