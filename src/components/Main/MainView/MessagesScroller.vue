@@ -71,7 +71,7 @@ export default defineComponent({
         if (!rootRef.value) return
         await context.root.$nextTick()
         const newHeight = rootRef.value.scrollHeight
-        if (state.loadingDirection === 'former') {
+        if (state.loadingDirection !== 'latter') {
           rootRef.value.scrollTo({
             top:
               // 新規に一つ追加された場合は一番下までスクロール

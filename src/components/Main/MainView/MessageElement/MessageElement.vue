@@ -100,7 +100,7 @@ export default defineComponent({
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
-  padding: 8px 0;
+  padding: 8px 32px;
   overflow: hidden;
 }
 
