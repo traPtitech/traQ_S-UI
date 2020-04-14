@@ -36,27 +36,25 @@ const useRouteWacher = (context: SetupContext) => {
       // まだチャンネルツリーが構築されていない
       return
     }
-    if (
+    const entryMessageId =
       context.root.$route.query.message &&
       typeof context.root.$route.query.message === 'string'
-    ) {
-      store.commit.domain.messagesView.setEntryMessageId(
-        context.root.$route.query.message as string
-      )
-    }
+        ? context.root.$route.query.message
+        : undefined
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
-      store.dispatch.domain.messagesView.changeCurrentChannel(id)
+      store.dispatch.domain.messagesView.changeCurrentChannel({
+        channelId: id,
+        entryMessageId
+      })
     } catch (e) {
-      store.commit.domain.messagesView.unsetEntryMessageId()
       state.view = 'not-found'
       return
     }
     changeViewTitle(`#${state.channelParam}`)
-    store.commit.domain.messagesView.unsetEntryMessageId()
     state.view = 'main'
   }
   const onRouteChangedToFile = async () => {
@@ -76,7 +74,9 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     const channelPath = channelIdToPath(file.channelId)
-    store.dispatch.domain.messagesView.changeCurrentChannel(file.channelId)
+    store.dispatch.domain.messagesView.changeCurrentChannel({
+      channelId: file.channelId
+    })
     const modalPayload = {
       type: 'file' as const,
       id: fileId,

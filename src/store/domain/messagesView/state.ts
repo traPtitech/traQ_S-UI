@@ -7,13 +7,6 @@ export interface S {
   /** 現在表示対象になっている全てのメッセージID */
   messageIds: MessageId[]
 
-  /**
-   * 表示の始点となるメッセージのID
-   *
-   * 指定されていない場合は最新メッセージから表示
-   */
-  entryMessageId?: MessageId
-
   /** 読み込まれているメッセージのうち、最も新しいものの日時 */
   loadedMessageLatestDate: Date | undefined
 
@@ -40,7 +33,6 @@ export interface S {
 export const state: S = {
   currentChannelId: '',
   messageIds: [],
-  entryMessageId: undefined,
   loadedMessageLatestDate: undefined,
   loadedMessageOldestDate: undefined,
   fetchLimit: 10,

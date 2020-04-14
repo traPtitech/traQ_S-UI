@@ -10,20 +10,25 @@ export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
 
 export const actions = defineActions({
-  async changeCurrentChannel(context, channelId: ChannelId) {
+  async changeCurrentChannel(
+    context,
+    payload: { channelId: ChannelId; entryMessageId?: MessageId }
+  ) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
-    if (state.currentChannelId === channelId) return
+    if (state.currentChannelId === payload.channelId) return
 
-    commit.setCurrentChannelId(channelId)
+    commit.setCurrentChannelId(payload.channelId)
     commit.unsetLoadedMessageOldestDate()
     commit.unsetLoadedMessageLatestDate()
     commit.setMessageIds([])
     commit.setRenderedContent({})
 
-    if (state.entryMessageId) {
+    if (payload.entryMessageId) {
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(false)
-      dispatch.fetchAndRenderChannelMessageAroundEntryMessage()
+      dispatch.fetchAndRenderChannelMessageAroundEntryMessage(
+        payload.entryMessageId
+      )
     } else {
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(true)
@@ -52,18 +57,35 @@ export const actions = defineActions({
   },
 
   /** エントリーメッセージ周辺のメッセージを取得し、HTMLにレンダリングする */
-  async fetchAndRenderChannelMessageAroundEntryMessage(context) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
-    if (!state.entryMessageId) {
+  async fetchAndRenderChannelMessageAroundEntryMessage(
+    context,
+    entryMessageId: string
+  ) {
+    const {
+      commit,
+      dispatch,
+      rootState,
+      rootDispatch
+    } = messagesViewActionContext(context)
+    const entryMessage =
+      rootState.entities.messages[entryMessageId] ??
+      (await rootDispatch.entities.fetchMessage(entryMessageId))
+
+    if (!entryMessage) {
       return
     }
+
+    const date = new Date(entryMessage.createdAt)
+    commit.setLoadedMessageLatestDate(date)
+    commit.setLoadedMessageOldestDate(date)
+
     const [formerMessageIds, latterMessageIds] = await Promise.all([
       dispatch.fetchChannelFormerMessages(),
-      dispatch.fetchChannelFormerMessages()
+      dispatch.fetchChannelLatterMessages()
     ])
     const messageIds = [
       ...formerMessageIds.reverse(),
-      state.entryMessageId,
+      entryMessageId,
       ...latterMessageIds
     ]
     await Promise.all(
