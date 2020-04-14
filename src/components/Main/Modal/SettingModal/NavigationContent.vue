@@ -1,6 +1,9 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <navigation-content-title :current-navigation="currentNavigation" />
+    <navigation-content-title
+      :current-navigation="currentNavigation"
+      :class="$style.title"
+    />
     <profile-tab v-if="currentNavigation === 'profile'" />
     <browser-tab v-else-if="currentNavigation === 'browser'" />
     <qall-tab v-else-if="currentNavigation === 'qall'" />
@@ -78,10 +81,15 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   flex: 1 1;
+  padding: 40px;
   padding-right: 240px;
   overflow: {
     x: hidden;
     y: auto;
   }
+}
+
+.title {
+  margin-bottom: 40px;
 }
 </style>

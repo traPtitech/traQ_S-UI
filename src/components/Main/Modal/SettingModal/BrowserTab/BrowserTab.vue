@@ -25,9 +25,7 @@
         <input type="radio" value="particular" v-model="state.openMode" />
         特定のチャンネル
       </label>
-      <div :class="$style.channelInput">
-        <input type="text" v-model="state.openChannelName" />
-      </div>
+      <form-input v-model="state.openChannelName" prefix="#" />
     </div>
     <div>
       <h3>メッセージ送信スタイル</h3>
@@ -89,6 +87,7 @@ import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import useStateDiff from '../use/stateDiff'
 import Toggle from '@/components/UI/Toggle.vue'
+import FormInput from '@/components/UI/FormInput.vue'
 
 const NotifyPermissionStatusTable: Record<
   NotificationPermission | '',
@@ -176,6 +175,7 @@ export default defineComponent({
     }
   },
   components: {
+    FormInput,
     Toggle
   }
 })
@@ -183,13 +183,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 8px 16px;
   overflow: hidden;
-}
-
-.channelInput {
-  &::before {
-    content: '#';
-  }
 }
 </style>

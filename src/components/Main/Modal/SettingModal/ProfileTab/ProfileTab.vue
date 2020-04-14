@@ -12,11 +12,11 @@
     </div>
     <div>
       <h3>表示名</h3>
-      <input type="text" v-model="state.displayName" />
+      <form-input v-model="state.displayName" />
     </div>
     <div>
       <h3>ひとこと</h3>
-      <input type="text" v-model="state.bio" />
+      <form-input v-model="state.bio" />
     </div>
     <div>
       <h3>ホームチャンネル</h3>
@@ -33,9 +33,7 @@
     </div>
     <div>
       <h3>Twitter</h3>
-      <div :class="$style.twitterInput">
-        <input type="text" v-model="state.twitterId" />
-      </div>
+      <form-input v-model="state.twitterId" prefix="@" />
     </div>
     <p>
       パスワードの変更は
@@ -63,6 +61,7 @@ import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
 import useChannelPath from '@/use/channelPath'
+import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
@@ -141,20 +140,14 @@ export default defineComponent({
   },
   components: {
     UserIcon,
-    ImageUpload
+    ImageUpload,
+    FormInput
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  padding: 8px 16px;
   overflow: hidden;
-}
-
-.twitterInput {
-  &::before {
-    content: '@';
-  }
 }
 </style>

@@ -7,12 +7,12 @@
         :destroy-flag="newDestroyFlag"
         @destroyed="onNewDestroyed"
       />
-      <label>
-        スタンプ名
-        <div :class="$style.stampNameInput">
-          <input type="text" v-model="newStampName" />
-        </div>
-      </label>
+      <form-input
+        v-model="newStampName"
+        label="スタンプ名"
+        prefix=":"
+        suffix=":"
+      />
       <button @click="createStamp">新規登録</button>
     </div>
     <div>
@@ -40,6 +40,7 @@ import apis from '@/lib/api'
 import ImageUpload from '../ImageUpload.vue'
 import store from '@/store'
 import Stamp from './Stamp.vue'
+import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'StampTab',
@@ -85,6 +86,7 @@ export default defineComponent({
     }
   },
   components: {
+    FormInput,
     ImageUpload,
     Stamp
   }
@@ -93,16 +95,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 8px 16px;
   overflow: hidden;
-}
-
-.stampNameInput {
-  &::before {
-    content: ':';
-  }
-  &::after {
-    content: ':';
-  }
 }
 </style>

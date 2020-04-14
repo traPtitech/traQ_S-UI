@@ -4,6 +4,7 @@
       {{ label }}
     </label>
     <div :class="$style.inputContainer" :style="styles.inputContainer">
+      <span v-if="prefix" :class="$style.prefix">{{ prefix }}</span>
       <input
         :class="$style.input"
         :id="id"
@@ -12,13 +13,13 @@
         @input="onInput"
         type="text"
       />
+      <span v-if="suffix" :class="$style.suffix">{{ suffix }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
@@ -37,9 +38,6 @@ const useStyles = (props: { onSecondary: boolean }) =>
 
 export default defineComponent({
   name: 'FormInput',
-  components: {
-    Icon
-  },
   props: {
     value: {
       type: String,
@@ -53,7 +51,9 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    label: String
+    label: String,
+    prefix: String,
+    suffix: String
   },
   setup(props, context) {
     const styles = useStyles(props)
@@ -72,13 +72,15 @@ export default defineComponent({
   align-items: center;
   border-radius: 4px;
 }
-.icon {
-  margin: 0 8px;
-  flex-shrink: 0;
+.prefix {
+  margin-left: 8px;
 }
 .input {
   margin: 0 8px;
   width: 100%;
+}
+.suffix {
+  margin-right: 8px;
 }
 .label {
   margin-bottom: 8px;
