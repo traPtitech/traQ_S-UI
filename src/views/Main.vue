@@ -102,6 +102,9 @@ export default defineComponent({
       store.dispatch.domain.me.fetchUnreadChannels()
       store.dispatch.domain.me.fetchStaredChannels()
       store.dispatch.domain.me.fetchStampHistory()
+
+      // TODO: 全チャンネルについて取得する必要はないので遅延で良い
+      store.dispatch.domain.me.fetchSubscriptions()
     })
 
     return {

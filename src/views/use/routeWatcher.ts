@@ -88,9 +88,18 @@ const useRouteWacher = (context: SetupContext) => {
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
     const isOnInitialModalRoute =
       state.isInitialView &&
-      history.state.modalState &&
-      !!history.state.modalState[0].relatedRoute
+      history.state?.modalState &&
+      !!history.state?.modalState[0].relatedRoute
     store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+
+    if (state.isInitialView && !isOnInitialModalRoute) {
+      // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
+      if (store.state.ui.modal.modalState.length !== 0) {
+        store.commit.ui.modal.setState([])
+      }
+      history.replaceState(null, '')
+    }
+
     state.isInitialView = false
   }
 
