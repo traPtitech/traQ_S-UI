@@ -16,6 +16,10 @@
       v-else-if="modalState.current.type === 'tag'"
       :tag-id="modalState.current.id"
     />
+    <channel-create-modal
+      v-else-if="modalState.current.type === 'channel-create'"
+      :parent-channel-id="modalState.current.parentChannelId"
+    />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -44,6 +48,7 @@ import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
 import NotificationModal from '@/components/Main/Modal/NotificationModal/NotificationModal.vue'
 import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
 import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
+import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/ChannelCreateModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -106,7 +111,8 @@ export default defineComponent({
     UserModal,
     NotificationModal,
     GroupModal,
-    TagModal
+    TagModal,
+    ChannelCreateModal
   }
 })
 </script>
