@@ -3,15 +3,15 @@
     <div>
       <h3>テーマ切り替え</h3>
       <label>
-        <input type="radio" checked />
+        <input type="radio" v-model="state.type" value="light" />
         ライトテーマ
       </label>
       <label>
-        <input type="radio" disabled />
+        <input type="radio" v-model="state.type" value="dark" />
         ダークテーマ
       </label>
       <label>
-        <input type="radio" disabled />
+        <input type="radio" v-model="state.type" value="custom" disabled />
         カスタムテーマ
       </label>
     </div>
@@ -23,12 +23,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+import store from '@/store'
+import useSyncedState from '../use/syncedState'
 
 export default defineComponent({
   name: 'ThemeTab',
   setup() {
-    return {}
+    const browserSettings = computed(() => store.state.app.themeSettings)
+    const { state } = useSyncedState(
+      browserSettings,
+      store.commit.app.themeSettings.set
+    )
+
+    return { state }
   }
 })
 </script>
