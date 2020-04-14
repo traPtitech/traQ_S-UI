@@ -1,5 +1,6 @@
 import { SetupContext, Ref, watchEffect, watch } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
+import { Message } from '@traptitech/traq'
 
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
@@ -7,6 +8,7 @@ const useElementRenderObserver = (
   state: {
     readonly content: string
     readonly fileIds: Readonly<FileId[]>
+    readonly message: Message
   },
   context: SetupContext
 ) => {
@@ -34,7 +36,8 @@ const useElementRenderObserver = (
         top,
         bottom,
         lastTop,
-        lastBottom
+        lastBottom,
+        date: state.message.createdAt
       })
     }
     lastHeight = height

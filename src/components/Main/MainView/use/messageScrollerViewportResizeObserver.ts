@@ -1,7 +1,7 @@
 import { Ref, reactive, onMounted } from '@vue/composition-api'
 
 const useMessageScrollerViewportResizeObserver = (
-  viewportRef: Ref<HTMLDivElement | null>
+  viewportRef: Ref<HTMLElement | null>
 ) => {
   const state = reactive({
     height: 0

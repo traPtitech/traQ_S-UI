@@ -27,14 +27,18 @@ export const actions = defineActions({
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(false)
       commit.setEntryMessageId(payload.entryMessageId)
-      dispatch.fetchAndRenderChannelMessageAroundEntryMessage(
+      commit.setLastLoadingDirection('around')
+      await dispatch.fetchAndRenderChannelMessageAroundEntryMessage(
         payload.entryMessageId
       )
+      commit.setIsInitialLoad(true)
     } else {
       commit.setIsReachedEnd(false)
       commit.setIsReachedLatest(true)
       commit.unsetEntryMessageId()
-      dispatch.fetchAndRenderChannelFormerMessages()
+      commit.setLastLoadingDirection('latest')
+      await dispatch.fetchAndRenderChannelFormerMessages()
+      commit.setIsInitialLoad(true)
     }
   },
 

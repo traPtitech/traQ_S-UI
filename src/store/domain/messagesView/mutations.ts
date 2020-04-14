@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { S } from './state'
+import { S, LoadingDirection } from './state'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
@@ -52,5 +52,11 @@ export const mutations = defineMutations<S>()({
     payload: { messageId: MessageId; files: EmbeddedFile[] }
   ) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+  },
+  setIsInitialLoad(state, loadedOnce: boolean) {
+    state.isInitialLoad = loadedOnce
+  },
+  setLastLoadingDirection(state, direction: LoadingDirection) {
+    state.lastLoadingDirection = direction
   }
 })
