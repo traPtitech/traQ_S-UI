@@ -8,9 +8,6 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
   },
-  setCurrentOffset(state, currentOffset: number) {
-    state.currentOffset = currentOffset
-  },
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
   },
@@ -19,6 +16,18 @@ export const mutations = defineMutations<S>()({
   },
   unsetEntryMessageId(state) {
     state.entryMessageId = undefined
+  },
+  setLoadedMessageLatestDate(state, date: Date) {
+    state.loadedMessageLatestDate = date
+  },
+  setLoadedMessageOldestDate(state, date: Date) {
+    state.loadedMessageOldestDate = date
+  },
+  unsetLoadedMessageLatestDate(state) {
+    state.loadedMessageLatestDate = undefined
+  },
+  unsetLoadedMessageOldestDate(state) {
+    state.loadedMessageOldestDate = undefined
   },
   addRenderedContent(
     state,
@@ -34,6 +43,9 @@ export const mutations = defineMutations<S>()({
   },
   setIsReachedEnd(state, isReachedEnd: boolean) {
     state.isReachedEnd = isReachedEnd
+  },
+  setIsReachedLatest(state, isReachedLatest: boolean) {
+    state.isReachedLatest = isReachedLatest
   },
   addEmbededFile(
     state,

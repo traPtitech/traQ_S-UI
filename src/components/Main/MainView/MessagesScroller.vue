@@ -46,7 +46,8 @@ export default defineComponent({
       height: 0,
       scrollTop: 0,
       isFirstView: computed(
-        () => store.state.domain.messagesView.currentOffset === 0
+        () =>
+          store.state.domain.messagesView.loadedMessageOldestDate === undefined
       ),
       isLoading: false
     })
@@ -84,7 +85,7 @@ export default defineComponent({
       if (state.isFirstView || state.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD) {
         state.isLoading = true
-        await store.dispatch.domain.messagesView.fetchChannelMessages()
+        await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
       }
     }, 17)
 

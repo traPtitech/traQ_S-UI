@@ -3,22 +3,49 @@ import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
 export interface S {
   currentChannelId: ChannelId
+
+  /** 現在表示対象になっている全てのメッセージID */
   messageIds: MessageId[]
+
+  /**
+   * 表示の始点となるメッセージのID
+   *
+   * 指定されていない場合は最新メッセージから表示
+   */
   entryMessageId?: MessageId
-  currentOffset: number
-  fetchLimit: number
-  renderedContentMap: Record<MessageId, string>
-  embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
+
+  /** 読み込まれているメッセージのうち、最も新しいものの日時 */
+  loadedMessageLatestDate: Date | undefined
+
+  /** 読み込まれているメッセージのうち、最も古いものの日時 */
+  loadedMessageOldestDate: Date | undefined
+
+  /** チャンネルの過去方向全てのメッセージを取得したか */
   isReachedEnd: boolean
+
+  /**
+   * チャンネルの未来方向全てのメッセージを取得したか
+   *
+   * `true`になった以降はWebSocketによる通知に対応する必要がある
+   */
+  isReachedLatest: boolean
+
+  fetchLimit: number
+
+  renderedContentMap: Record<MessageId, string>
+
+  embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
 }
 
 export const state: S = {
   currentChannelId: '',
   messageIds: [],
   entryMessageId: undefined,
-  currentOffset: 0,
-  fetchLimit: 50,
+  loadedMessageLatestDate: undefined,
+  loadedMessageOldestDate: undefined,
+  fetchLimit: 10,
   renderedContentMap: {},
   embeddedFilesMap: {},
-  isReachedEnd: false
+  isReachedEnd: false,
+  isReachedLatest: false
 }

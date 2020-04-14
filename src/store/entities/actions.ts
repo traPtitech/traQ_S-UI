@@ -77,12 +77,17 @@ export const actions = defineActions({
     const res = await api.getStampPalettes()
     commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
-  async fetchMessagesByChannelId(
-    context,
-    { channelId, limit, offset }: GetMessagesParams
-  ) {
+  async fetchMessagesByChannelId(context, params: GetMessagesParams) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessages(channelId, limit, offset)
+    const res = await api.getMessages(
+      params.channelId,
+      params.limit,
+      params.offset,
+      params.since?.toISOString(),
+      params.until?.toISOString(),
+      params.inclusive,
+      params.order
+    )
     commit.extendMessages(reduceToRecord(res.data, 'id'))
     return {
       messages: res.data,
