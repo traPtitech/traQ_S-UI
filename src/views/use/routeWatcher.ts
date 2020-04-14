@@ -36,6 +36,14 @@ const useRouteWacher = (context: SetupContext) => {
       // まだチャンネルツリーが構築されていない
       return
     }
+    if (
+      context.root.$route.query.message &&
+      typeof context.root.$route.query.message === 'string'
+    ) {
+      store.commit.domain.messagesView.setEntryMessageId(
+        context.root.$route.query.message as string
+      )
+    }
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
@@ -93,11 +101,10 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
 
-    store.commit.domain.messagesView.setEntryMessageId(message.channelId)
-
     context.root.$router.replace({
       name: RouteName.Channel,
-      params: { channel: channelIdToPath(message.channelId).join('/') }
+      params: { channel: channelIdToPath(message.channelId).join('/') },
+      query: { message: message.id }
     })
   }
 
