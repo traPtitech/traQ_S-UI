@@ -1,12 +1,13 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div :class="$style.viewport">
+    <div ref="viewportRef" :class="$style.viewport">
       <message-element
         :class="$style.element"
         v-for="messageId in messageIds"
         :key="messageId"
         :message-id="messageId"
         :is-entry-message="state.entryMessageId === messageId"
+        @observer-register="onObserverRegister"
         @change-height="onChangeHeight"
         @entry-message-loaded="onEntryMessageLoaded"
       />
@@ -28,6 +29,7 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 import MessageElement from './MessageElement/MessageElement.vue'
+import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 
 const LOAD_MORE_THRESHOLD = 10
@@ -47,6 +49,7 @@ export default defineComponent({
     const state = reactive({
       height: 0,
       scrollTop: 0,
+      loadingDirection: undefined as 'former' | 'latter' | undefined,
       isFirstView: computed(
         () =>
           store.state.domain.messagesView.loadedMessageOldestDate === undefined
@@ -54,7 +57,7 @@ export default defineComponent({
       entryMessageId: computed(
         () => store.state.domain.messagesView.entryMessageId
       ),
-      isLoading: false
+      isLoading: computed((): boolean => !!state.loadingDirection)
     })
     const rootRef = ref<HTMLElement>(null)
 
@@ -68,68 +71,59 @@ export default defineComponent({
         if (!rootRef.value) return
         await context.root.$nextTick()
         const newHeight = rootRef.value.scrollHeight
-        rootRef.value.scrollTo({
-          top:
-            // 新規に一つ追加された場合は一番下までスクロール
-            // TODO: 次のようにする
-            // - 中途半端な位置にスクロールしてるときに1件追加 → 見た目上スクロールしない
-            // - 一番下までスクロールしてる時に1件追加 → 一番下までスクロール
-            state.isFirstView || ids.length - prevIds.length === 1
-              ? newHeight
-              : newHeight - state.height
-        })
+        if (state.loadingDirection === 'former') {
+          rootRef.value.scrollTo({
+            top:
+              // 新規に一つ追加された場合は一番下までスクロール
+              // TODO: 次のようにする
+              // - 中途半端な位置にスクロールしてるときに1件追加 → 見た目上スクロールしない
+              // - 一番下までスクロールしてる時に1件追加 → 一番下までスクロール
+              state.isFirstView || ids.length - prevIds.length === 1
+                ? newHeight
+                : newHeight - state.height
+          })
+        }
         state.height = newHeight
-        state.isLoading = false
+        state.loadingDirection = undefined
       }
     )
 
+    const {
+      onChangeHeight,
+      onObserverRegister,
+      onEntryMessageLoaded
+    } = useMessageScrollerElementResizeObserver(rootRef, state)
+
     const handleScroll = throttle(async () => {
       if (!rootRef.value) return
-      state.scrollTop = rootRef.value.scrollTop
+      const clientHeight = rootRef.value.clientHeight
+      const scrollHeight = rootRef.value.scrollHeight
+      const scrollTop = rootRef.value.scrollTop
+      state.scrollTop = scrollTop
 
       if (state.isFirstView || state.isLoading) return
-      if (state.scrollTop < LOAD_MORE_THRESHOLD) {
-        state.isLoading = true
+      if (
+        state.scrollTop < LOAD_MORE_THRESHOLD &&
+        !store.state.domain.messagesView.isReachedEnd
+      ) {
+        state.loadingDirection = 'former'
         await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
       }
+      if (
+        scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
+        !store.state.domain.messagesView.isReachedLatest
+      ) {
+        state.loadingDirection = 'latter'
+        await store.dispatch.domain.messagesView.fetchAndRenderChannelLatterMessages()
+      }
     }, 17)
-
-    const onChangeHeight = (payload: {
-      heightDiff: number
-      top: number
-      bottom: number
-      lastTop: number
-      lastBottom: number
-    }) => {
-      if (!rootRef.value) {
-        return
-      }
-      const {
-        height: rootHeight,
-        bottom: rootBottom,
-        top: rootTop
-      } = rootRef.value.getBoundingClientRect()
-      const clientCenterPos = (rootTop + rootBottom) / 2
-
-      if (payload.lastBottom < clientCenterPos) {
-        rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
-        state.height += payload.heightDiff
-      }
-    }
-
-    const onEntryMessageLoaded = (relativePos: number) => {
-      if (!rootRef.value) {
-        return
-      }
-      const rootHeight = rootRef.value.getBoundingClientRect().height
-      rootRef.value.scrollTop = relativePos - rootHeight / 3
-    }
 
     return {
       state,
       rootRef,
       handleScroll,
       onChangeHeight,
+      onObserverRegister,
       onEntryMessageLoaded
     }
   }

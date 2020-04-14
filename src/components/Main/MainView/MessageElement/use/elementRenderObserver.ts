@@ -17,7 +17,7 @@ const useElementRenderObserver = (
     const entry = entries[0]
     const { height, bottom, top } = entry.target.getBoundingClientRect()
     if (lastHeight === 0) {
-      // 初回に高さが変化した場合、初期レンダリング完了とみなして処理を飛ばす
+      // 初回に高さが変化した場合、初期レンダリング完了とみなす
       // これ以降新規にobserveしないためにwatcherを止める
       stop()
 
@@ -49,6 +49,9 @@ const useElementRenderObserver = (
     ) {
       // 添付ファイルがある場合は高さ監視をする
       resizeObserver.observe(bodyRef.value)
+
+      // レンダリング状態管理用の登録通知
+      context.emit('observer-register', props.isEntryMessage)
     }
   })
   watch(

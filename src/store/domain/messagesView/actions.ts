@@ -45,7 +45,9 @@ export const actions = defineActions({
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )
-    commit.setMessageIds([...messageIds.reverse(), ...state.messageIds])
+    commit.setMessageIds([
+      ...new Set([...messageIds.reverse(), ...state.messageIds])
+    ])
   },
 
   /** 読み込まれているメッセージより後のメッセージを取得し、HTMLにレンダリングする */
@@ -55,7 +57,7 @@ export const actions = defineActions({
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )
-    commit.setMessageIds([...state.messageIds, ...messageIds])
+    commit.setMessageIds([...new Set([...state.messageIds, ...messageIds])])
   },
 
   /** エントリーメッセージ周辺のメッセージを取得し、HTMLにレンダリングする */
@@ -86,9 +88,11 @@ export const actions = defineActions({
       dispatch.fetchChannelLatterMessages()
     ])
     const messageIds = [
-      ...formerMessageIds.reverse(),
-      entryMessageId,
-      ...latterMessageIds.slice(1) // FIXME: inclusive=falseがうまくいかないので暫定的な処置
+      ...new Set([
+        ...formerMessageIds.reverse(),
+        entryMessageId,
+        ...latterMessageIds
+      ])
     ]
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
