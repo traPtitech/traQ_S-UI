@@ -7,7 +7,6 @@
         :key="messageId"
         :message-id="messageId"
         :is-entry-message="entryMessageId === messageId"
-        @observer-register="onObserverRegister"
         @change-height="onChangeHeight"
         @entry-message-loaded="onEntryMessageLoaded"
       />
@@ -72,7 +71,6 @@ export default defineComponent({
 
     const {
       onChangeHeight,
-      onObserverRegister,
       onEntryMessageLoaded
     } = useMessageScrollerElementResizeObserver(rootRef, props, state)
 
@@ -129,7 +127,6 @@ export default defineComponent({
       rootRef,
       handleScroll,
       onChangeHeight,
-      onObserverRegister,
       onEntryMessageLoaded
     }
   }

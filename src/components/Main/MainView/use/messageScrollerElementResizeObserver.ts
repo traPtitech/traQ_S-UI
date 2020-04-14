@@ -61,10 +61,8 @@ const useMessageScrollerElementResizeObserver = (
     const rootHeight = rootRef.value.getBoundingClientRect().height
     rootRef.value.scrollTop = relativePos - rootHeight / 3
   }
-  const onObserverRegister = (isEntry: boolean) => {}
-  const resetObserverRegistration = (isEntry: boolean) => {}
 
-  return { onChangeHeight, onObserverRegister, onEntryMessageLoaded }
+  return { onChangeHeight, onEntryMessageLoaded }
 }
 
 export default useMessageScrollerElementResizeObserver

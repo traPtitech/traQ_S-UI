@@ -50,11 +50,8 @@ const useElementRenderObserver = (
         (state.content.length > 0 && state.fileIds.length > 0)) &&
       bodyRef.value
     ) {
-      // 添付ファイルがある場合は高さ監視をする
+      // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする
       resizeObserver.observe(bodyRef.value)
-
-      // レンダリング状態管理用の登録通知
-      context.emit('observer-register', props.isEntryMessage)
     }
   })
   watch(
