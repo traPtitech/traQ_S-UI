@@ -86,7 +86,7 @@ export const actions = defineActions({
     const messageIds = [
       ...formerMessageIds.reverse(),
       entryMessageId,
-      ...latterMessageIds
+      ...latterMessageIds.slice(1) // FIXME: inclusive=falseがうまくいかないので暫定的な処置
     ]
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
