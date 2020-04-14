@@ -48,19 +48,19 @@
       <div>
         修飾キーとして利用するキー
         <label>
-          <input type="checkbox" v-model="state.modifierShift" />
+          <input type="checkbox" v-model="state.modifierKey.shift" />
           {{ getModifierKeyName('shift') }}
         </label>
         <label>
-          <input type="checkbox" v-model="state.modifierAlt" />
+          <input type="checkbox" v-model="state.modifierKey.alt" />
           {{ getModifierKeyName('alt') }}
         </label>
         <label>
-          <input type="checkbox" v-model="state.modifierCtrl" />
+          <input type="checkbox" v-model="state.modifierKey.ctrl" />
           {{ getModifierKeyName('ctrl') }}
         </label>
         <label v-if="macFlag">
-          <input type="checkbox" v-model="state.modifierMacCtrl" />
+          <input type="checkbox" v-model="state.modifierKey.macCtrl" />
           {{ getModifierKeyName('macCtrl') }}
         </label>
       </div>
@@ -90,9 +90,10 @@ import {
 import apis from '@/lib/api'
 import store from '@/store'
 import { isMac } from '@/lib/util/browser'
-import useStateDiff from '../use/stateDiff'
+import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import { SendKeys } from '@/store/app/browserSettings'
 
 const NotifyPermissionStatusTable: Record<
   NotificationPermission | '',
@@ -104,15 +105,13 @@ const NotifyPermissionStatusTable: Record<
   '': ''
 }
 
-type SendKeys = 'alt' | 'ctrl' | 'shift' | 'macCtrl'
-
-const windowsModifierKeyTable: Record<SendKeys, string> = {
+const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
   ctrl: 'Ctrl',
   shift: 'Shift',
   macCtrl: ''
 }
-const macModifierKeyTable: Record<SendKeys, string> = {
+const macModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: '⌥(Option)',
   ctrl: '⌘(Command)',
   shift: 'Shift',
@@ -149,22 +148,13 @@ export default defineComponent({
     )
 
     const browserSettings = computed(() => store.state.app.browserSettings)
-    const state = reactive({
-      ...browserSettings.value
-    })
-    const { getDiffKeys } = useStateDiff<
-      typeof store.state.app.browserSettings
-    >()
-
-    watchEffect(() => {
-      const diffKeys = getDiffKeys(state, browserSettings)
-      diffKeys.forEach(key => {
-        store.commit.app.browserSettings.set([key, state[key]])
-      })
-    })
+    const { state } = useSyncedState(
+      browserSettings,
+      store.commit.app.browserSettings.set
+    )
 
     const macFlag = isMac()
-    const getModifierKeyName = (key: SendKeys) => {
+    const getModifierKeyName = (key: keyof SendKeys) => {
       return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
     }
 

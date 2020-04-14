@@ -42,7 +42,7 @@ import {
   watch
 } from '@vue/composition-api'
 import store from '@/store'
-import useStateDiff from '../use/stateDiff'
+import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 
 const useDevicesInfo = (state: { isEnabled: boolean }) => {
@@ -95,15 +95,10 @@ export default defineComponent({
   name: 'QallTab',
   setup() {
     const rtcSettings = computed(() => store.state.app.rtcSettings)
-    const state = reactive({ ...rtcSettings.value })
-    const { getDiffKeys } = useStateDiff<typeof store.state.app.rtcSettings>()
-
-    watchEffect(() => {
-      const diffKeys = getDiffKeys(state, rtcSettings)
-      diffKeys.forEach(key => {
-        store.commit.app.rtcSettings.set([key, state[key]])
-      })
-    })
+    const { state } = useSyncedState(
+      rtcSettings,
+      store.commit.app.rtcSettings.set
+    )
 
     const devicesInfo = useDevicesInfo(state)
 

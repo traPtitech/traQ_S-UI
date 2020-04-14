@@ -1,29 +1,12 @@
-import { SendKey, OpenMode } from '.'
+import { SendKey, OpenMode, SendKeys } from '.'
 import { ChannelId } from '@/types/entity-ids'
 
 export interface S {
   openMode: OpenMode
   lastOpenChannel: ChannelId | null
   openChannelName: string
-
   sendWithModifierKey: SendKey
-  /**
-   * Windows: Alt, Mac: ⌥(Option)
-   */
-  modifierAlt: boolean
-  /**
-   * Windows: Ctrl, Mac: ⌘(Command)
-   */
-  modifierCtrl: boolean
-  /**
-   * Windows: Shift, Mac: Shift
-   */
-  modifierShift: boolean
-  /**
-   * Windows: なし, Mac: Ctrl
-   */
-  modifierMacCtrl: boolean
-
+  modifierKey: SendKeys
   ecoMode: boolean
 }
 
@@ -32,9 +15,6 @@ export const state: S = {
   lastOpenChannel: null,
   openChannelName: 'general',
   sendWithModifierKey: 'modifier',
-  modifierAlt: true,
-  modifierCtrl: true,
-  modifierShift: true,
-  modifierMacCtrl: true,
+  modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
   ecoMode: false
 }
