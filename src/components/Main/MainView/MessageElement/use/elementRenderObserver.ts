@@ -15,21 +15,20 @@ const useElementRenderObserver = (
   let lastTop = 0
   const resizeObserver = new ResizeObserver(entries => {
     const entry = entries[0]
+    const { height, bottom, top } = entry.target.getBoundingClientRect()
     if (lastHeight === 0) {
       // 初回に高さが変化した場合、初期レンダリング完了とみなして処理を飛ばす
       // これ以降新規にobserveしないためにwatcherを止める
-      lastHeight = entry.contentRect.height
       stop()
 
       // エントリーメッセージだった場合は高さを報告する
       if (bodyRef.value && props.isEntryMessage) {
+        const parentTop =
+          bodyRef.value.parentElement?.getBoundingClientRect().top ?? 0
         const { top } = bodyRef.value.getBoundingClientRect()
-        context.emit('entry-message-loaded', top)
+        context.emit('entry-message-loaded', top - parentTop)
       }
     } else {
-      const height = entry.contentRect.height
-      const bottom = entry.contentRect.bottom
-      const top = entry.contentRect.top
       context.emit('change-height', {
         heightDiff: height - lastHeight,
         top,
@@ -37,10 +36,10 @@ const useElementRenderObserver = (
         lastTop,
         lastBottom
       })
-      lastHeight = height
-      lastBottom = bottom
-      lastTop = top
     }
+    lastHeight = height
+    lastBottom = bottom
+    lastTop = top
   })
   const stop = watchEffect(async () => {
     if (

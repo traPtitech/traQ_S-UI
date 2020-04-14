@@ -38,7 +38,7 @@ export const state: S = {
   messageIds: [],
   loadedMessageLatestDate: undefined,
   loadedMessageOldestDate: undefined,
-  fetchLimit: 10,
+  fetchLimit: 50,
   renderedContentMap: {},
   embeddedFilesMap: {},
   entryMessageId: undefined,

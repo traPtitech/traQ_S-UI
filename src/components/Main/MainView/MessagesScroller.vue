@@ -104,18 +104,25 @@ export default defineComponent({
       if (!rootRef.value) {
         return
       }
-      // 画像読み込みで高さがずれた
-      rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
-      state.height += payload.heightDiff
+      const {
+        height: rootHeight,
+        bottom: rootBottom,
+        top: rootTop
+      } = rootRef.value.getBoundingClientRect()
+      const clientCenterPos = (rootTop + rootBottom) / 2
+
+      if (payload.lastBottom < clientCenterPos) {
+        rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
+        state.height += payload.heightDiff
+      }
     }
 
-    const onEntryMessageLoaded = (clientTop: number) => {
+    const onEntryMessageLoaded = (relativePos: number) => {
       if (!rootRef.value) {
         return
       }
       const rootHeight = rootRef.value.getBoundingClientRect().height
-      rootRef.value.scrollTop =
-        rootRef.value.scrollTop + clientTop - rootHeight / 2
+      rootRef.value.scrollTop = relativePos - rootHeight / 3
     }
 
     return {
