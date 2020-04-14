@@ -13,7 +13,7 @@
         prefix=":"
         suffix=":"
       />
-      <button @click="createStamp">新規登録</button>
+      <form-button label="新規登録" @click="createStamp" />
     </div>
     <div>
       <h3>スタンプ編集</h3>
@@ -41,6 +41,7 @@ import ImageUpload from '../ImageUpload.vue'
 import store from '@/store'
 import Stamp from './Stamp.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormButton from '@/components/UI/FormButton.vue'
 
 export default defineComponent({
   name: 'StampTab',
@@ -87,6 +88,7 @@ export default defineComponent({
   },
   components: {
     FormInput,
+    FormButton,
     ImageUpload,
     Stamp
   }

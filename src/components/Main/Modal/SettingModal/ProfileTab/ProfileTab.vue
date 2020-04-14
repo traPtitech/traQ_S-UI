@@ -33,7 +33,7 @@
       </a>
       から可能です
     </p>
-    <button v-if="isChanged" @click="onUpdateClick">更新</button>
+    <form-button v-if="isChanged" label="更新" @click="onUpdateClick" />
   </section>
 </template>
 
@@ -54,6 +54,7 @@ import ImageUpload from '../ImageUpload.vue'
 import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
+import FormButton from '@/components/UI/FormButton.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
@@ -147,7 +148,8 @@ export default defineComponent({
     UserIcon,
     ImageUpload,
     FormInput,
-    FormSelector
+    FormSelector,
+    FormButton
   }
 })
 </script>

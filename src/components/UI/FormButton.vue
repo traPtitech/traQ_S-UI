@@ -11,11 +11,14 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 
-const useStyles = () =>
+const useStyles = (props: { onSecondary: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.accent.primary,
+      background: props.onSecondary
+        ? transparentize(theme.accent.primary, 0.5)
+        : theme.accent.primary,
       color: 'white'
     }))
   })
@@ -26,10 +29,14 @@ export default defineComponent({
     label: {
       type: String,
       default: ''
+    },
+    onSecondary: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
-    const styles = useStyles()
+    const styles = useStyles(props)
     return { context, styles }
   }
 })

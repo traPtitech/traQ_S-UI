@@ -1,12 +1,12 @@
 <template>
   <div>
-    <button @click="addImage">ファイルを選択</button>
+    <form-button label="ファイルを選択" on-secondary @click="addImage" />
     <div v-if="image.url !== ''">
       <div :class="$style.cropper" :is-rounded="rounded">
         <img :src="image.url" ref="$img" />
       </div>
       <p>{{ cropperNote }}</p>
-      <button @click="destroy">キャンセル</button>
+      <form-button label="キャンセル" on-secondary @click="destroy" />
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ import apis from '@/lib/api'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import FormButton from '@/components/UI/FormButton.vue'
 import useImageUpload from './use/imageUpload'
 
 // スタンプ編集用の設定
@@ -105,6 +106,9 @@ export default defineComponent({
     })
 
     return { $img, image, addImage, cropperNote, destroy }
+  },
+  components: {
+    FormButton
   }
 })
 </script>

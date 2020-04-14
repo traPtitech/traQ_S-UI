@@ -2,17 +2,21 @@
   <section>
     <div>
       <h3>アカウント</h3>
-      <button @click="onLogoutClick">ログアウト</button>
-      <button @click="onSessionDelete">全セッション破棄</button>
+      <form-button label="ログアウト" on-secondary @click="onLogoutClick" />
+      <form-button
+        label="全セッション破棄"
+        on-secondary
+        @click="onSessionDelete"
+      />
     </div>
     <div>
       <h3>通知: {{ notifyPermissionStatus }}</h3>
-      <button
+      <form-button
         v-if="notifyPermission === 'default'"
+        label="設定"
+        on-secondary
         @click="requestNotifyPermission"
-      >
-        設定
-      </button>
+      />
       <p v-else>ブラウザや端末の設定から変更できます</p>
     </div>
     <div>
@@ -93,6 +97,7 @@ import { isMac } from '@/lib/util/browser'
 import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormButton from '@/components/UI/FormButton.vue'
 import { SendKeys } from '@/store/app/browserSettings'
 
 const NotifyPermissionStatusTable: Record<
@@ -171,6 +176,7 @@ export default defineComponent({
   },
   components: {
     FormInput,
+    FormButton,
     Toggle
   }
 })
