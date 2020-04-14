@@ -15,6 +15,7 @@ type ModalStateType =
   | 'setting'
   | 'tag'
   | 'group'
+  | 'channel-create'
 
 export type ModalState =
   | UserModalState
@@ -23,6 +24,7 @@ export type ModalState =
   | SettingModalState
   | GroupModalState
   | TagModalState
+  | ChannelCreateModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -62,10 +64,21 @@ interface TagModalState extends BaseModalState {
   id: TagId
 }
 
+interface ChannelCreateModalState extends BaseModalState {
+  type: 'channel-create'
+
+  /**
+   * 親チャンネルのID
+   *
+   * 指定しない場合はルートチャンネル作成
+   */
+  parentChannelId?: ChannelId
+}
+
 export interface S {
   modalState: ModalState[]
 
-  /** ナビゲーションを挟むことなくモーダルを表示している状態か */
+  /** ロード時からモーダルを表示していて、そこからモーダルを閉じたことがないか */
   isOnInitialModalRoute: boolean
 
   /** モーダルを非表示にしようとしている最中か */

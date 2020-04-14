@@ -49,6 +49,17 @@
       @click="context.emit('click-notification')"
       :class="$style.icon"
       mdi
+      name="bell"
+    />
+    <icon
+      @click="context.emit('click-create-channel')"
+      :class="$style.icon"
+      name="hash"
+    />
+    <icon
+      @click="context.emit('click-more')"
+      :class="$style.icon"
+      mdi
       name="dots-horizontal"
     />
   </div>

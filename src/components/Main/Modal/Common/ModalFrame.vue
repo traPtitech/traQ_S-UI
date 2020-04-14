@@ -57,7 +57,6 @@ export default defineComponent({
   max-height: 480px;
   max-width: 440px;
   width: 100%;
-  height: 100%;
   border-radius: 4px;
   overflow: hidden;
   border: {
@@ -69,6 +68,7 @@ export default defineComponent({
   flex-shrink: 0;
 }
 .body {
+  width: 100%;
   padding: 16px 24px;
   overflow: {
     x: hidden;
