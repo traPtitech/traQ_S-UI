@@ -135,7 +135,7 @@ export default defineComponent({
         bodyRef.value ? resizeObserver.unobserve(bodyRef.value) : undefined
     )
 
-    return { props, state, styles, onMouseEnter, onMouseLeave, bodyRef }
+    return { state, styles, onMouseEnter, onMouseLeave, bodyRef }
   }
 })
 </script>
