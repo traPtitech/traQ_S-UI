@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section>
     <div>
       <h3>アイコン</h3>
       <user-icon :user-id="detail.id" :size="100" :prevent-modal="true" />
@@ -146,8 +146,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  overflow: hidden;
-}
-</style>
+<style lang="scss" module></style>

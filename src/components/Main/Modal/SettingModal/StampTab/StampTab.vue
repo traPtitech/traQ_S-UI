@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section>
     <div>
       <h3>スタンプ新規登録</h3>
       <image-upload
@@ -93,8 +93,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  overflow: hidden;
-}
-</style>
+<style lang="scss" module></style>

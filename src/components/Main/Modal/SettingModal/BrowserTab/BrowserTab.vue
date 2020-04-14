@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section>
     <div>
       <h3>アカウント</h3>
       <button @click="onLogoutClick">ログアウト</button>
@@ -186,8 +186,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  overflow: hidden;
-}
-</style>
+<style lang="scss" module></style>

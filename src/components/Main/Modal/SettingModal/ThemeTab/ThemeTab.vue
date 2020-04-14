@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section>
     <div>
       <h3>テーマ切り替え</h3>
       <label>
@@ -33,8 +33,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  overflow: hidden;
-}
-</style>
+<style lang="scss" module></style>
