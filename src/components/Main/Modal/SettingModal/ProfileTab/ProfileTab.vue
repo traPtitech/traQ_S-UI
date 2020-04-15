@@ -119,7 +119,11 @@ export default defineComponent({
         promises.push(apis.changeUserIcon(detail.value.id, imgData.value))
       }
       if (isStateChanged.value) {
-        promises.push(apis.editMe(state))
+        const sendState = {
+          ...state,
+          homeChannel: homeChannelState.value
+        }
+        promises.push(apis.editMe(sendState))
       }
       try {
         // TODO: loading

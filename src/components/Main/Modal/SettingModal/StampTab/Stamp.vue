@@ -121,7 +121,7 @@ export default defineComponent({
             apis.changeStampImage(props.stamp.id, imageUploadState.imgData)
           )
         }
-        await promises
+        await Promise.all(promises)
         destroyImageUploadState()
       } catch (e) {
         // TODO: error
