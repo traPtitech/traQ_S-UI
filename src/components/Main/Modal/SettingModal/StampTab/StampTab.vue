@@ -18,8 +18,14 @@
     <div>
       <h3>スタンプ編集</h3>
       <p>スタンプ選択できる何か</p>
-      <div v-for="stamp in myStamps" :key="stamp.id">
-        <stamp :stamp="stamp" />
+      <div>
+        <stamp
+          v-for="stamp in myStamps"
+          :key="stamp.id"
+          :stamp="stamp"
+          :is-selected="stamp.id === selectedStampId"
+          @click.native="selectStamp(stamp.id)"
+        />
       </div>
       <image-upload
         @input="onNewImgSet"
@@ -42,6 +48,7 @@ import store from '@/store'
 import Stamp from './Stamp.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import { StampId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'StampTab',
@@ -77,13 +84,20 @@ export default defineComponent({
       )
     )
 
+    const selectedStampId = ref<StampId>()
+    const selectStamp = (id: StampId) => {
+      selectedStampId.value = id
+    }
+
     return {
       onNewImgSet,
       newDestroyFlag,
       onNewDestroyed,
       newStampName,
       createStamp,
-      myStamps
+      myStamps,
+      selectedStampId,
+      selectStamp
     }
   },
   components: {

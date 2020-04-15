@@ -1,7 +1,13 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" :style="styles.container">
     <img :src="url" :class="$style.stamp" />
     <span>:{{ stamp.name }}:</span>
+    <image-upload
+      v-if="isSelected"
+      @input="onNewImgSet"
+      :destroy-flag="newDestroyFlag"
+      @destroyed="onNewDestroyed"
+    />
   </div>
 </template>
 
@@ -9,6 +15,16 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api'
 import apis, { buildFilePath, Stamp } from '@/lib/api'
 import store from '@/store'
+import { makeStyles } from '@/lib/styles'
+
+const useStyles = (props: { isSelected: boolean }) =>
+  reactive({
+    container: makeStyles(theme => ({
+      background: props.isSelected
+        ? theme.background.secondary
+        : theme.background.primary
+    }))
+  })
 
 export default defineComponent({
   name: 'Stamp',
@@ -16,12 +32,17 @@ export default defineComponent({
     stamp: {
       type: Object as PropType<Stamp>,
       required: true
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
     }
   },
-  setup(prop) {
-    const url = computed(() => buildFilePath(prop.stamp.fileId))
+  setup(props) {
+    const styles = useStyles(props)
+    const url = computed(() => buildFilePath(props.stamp.fileId))
 
-    return { url }
+    return { styles, url }
   }
 })
 </script>
