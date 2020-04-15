@@ -2,7 +2,7 @@ import { reactive } from '@vue/composition-api'
 
 const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join()
 
-const useImageUpload = (onImageSelect: () => void) => {
+export const useImageUploadInternal = (onImageSelect: () => void) => {
   const image = reactive({
     data: undefined as File | undefined,
     url: ''
@@ -40,6 +40,33 @@ const useImageUpload = (onImageSelect: () => void) => {
   }
 
   return { image, addImage, destroy }
+}
+
+const useImageUpload = () => {
+  const state = reactive({
+    imgData: undefined as Blob | undefined,
+    destroyFlag: false
+  })
+
+  const onNewImgSet = (file: Blob) => {
+    state.imgData = file
+  }
+
+  const onNewDestroyed = () => {
+    state.destroyFlag = false
+  }
+
+  const destroy = () => {
+    state.imgData = undefined
+    state.destroyFlag = true
+  }
+
+  return {
+    imageUploadState: state,
+    onNewImgSet,
+    onNewDestroyed,
+    destroyImageUploadState: destroy
+  }
 }
 
 export default useImageUpload

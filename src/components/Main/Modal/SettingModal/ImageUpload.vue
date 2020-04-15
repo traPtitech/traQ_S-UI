@@ -26,7 +26,7 @@ import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import useImageUpload from './use/imageUpload'
+import { useImageUploadInternal } from './use/imageUpload'
 
 // スタンプ編集用の設定
 const cropperGifOptions = {
@@ -60,10 +60,12 @@ export default defineComponent({
     }
   },
   setup(prop, context: SetupContext) {
-    const { image, addImage, destroy: destroyImage } = useImageUpload(() => {
-      // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-      context.emit('input', image.data)
-    })
+    const { image, addImage, destroy: destroyImage } = useImageUploadInternal(
+      () => {
+        // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
+        context.emit('input', image.data)
+      }
+    )
 
     let cropper: Cropper | undefined
     const $img = ref<HTMLImageElement>()
