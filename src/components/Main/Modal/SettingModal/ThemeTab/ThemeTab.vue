@@ -25,6 +25,7 @@
             :key="name"
             :label="name"
             v-model="val[name]"
+            use-change-event
           />
         </div>
       </template>

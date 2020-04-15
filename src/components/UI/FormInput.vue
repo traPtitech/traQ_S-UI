@@ -11,6 +11,7 @@
         :value="value"
         :placeholder="placeholder"
         @input="onInput"
+        @change="onChange"
         type="text"
       />
       <span v-if="suffix" :class="$style.suffix">{{ suffix }}</span>
@@ -53,13 +54,27 @@ export default defineComponent({
     },
     label: String,
     prefix: String,
-    suffix: String
+    suffix: String,
+    useChangeEvent: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props, context) {
     const styles = useStyles(props)
-    const { onInput } = useInput(context)
+    const { onInput: onInputInternal } = useInput(context)
+
+    const onInput = (e: InputEvent) => {
+      if (props.useChangeEvent) return
+      onInputInternal(e)
+    }
+    const onChange = (e: InputEvent) => {
+      if (!props.useChangeEvent) return
+      onInputInternal(e)
+    }
+
     const id = randomString()
-    return { styles, onInput, id }
+    return { styles, onInput, onChange, id }
   }
 })
 </script>
