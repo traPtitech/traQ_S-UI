@@ -32,18 +32,18 @@ export const darkTheme: Theme = {
     error: '#F26451'
   },
   background: {
-    primary: '#FFFFFF',
-    secondary: '#F6F7F9',
-    tertiary: '#ECEFF3',
-    secondarySub: '#FBFCFE'
+    primary: '#222426',
+    secondary: '#2D2F31',
+    tertiary: '#56636E',
+    secondarySub: '#3C4246'
   },
   ui: {
-    primary: '#828E96',
-    secondary: '#525E67',
-    tertiary: '#CED6DB'
+    primary: '#CACFD3',
+    secondary: '#758087',
+    tertiary: '#59656F'
   },
   text: {
-    primary: '#333333',
-    secondary: '#79797A'
+    primary: '#FFFFFF',
+    secondary: '#BAC2C9'
   }
 }
