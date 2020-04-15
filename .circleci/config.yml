@@ -37,7 +37,7 @@ jobs:
       - restore_npm_cache
       - run:
           name: lint
-          command: npm run lint
+          command: npm run lint:no-fix
   test:
     executor: default
     steps:

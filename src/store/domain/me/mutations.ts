@@ -5,9 +5,9 @@ import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   StampHistoryEntry,
-  MyUserDetail
+  MyUserDetail,
+  ChannelSubscribeLevel
 } from '@traptitech/traq'
-import { SubscriptionLevel } from '.'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -51,7 +51,7 @@ export const mutations = defineMutations<S>()({
 
   setSubscriptionMap(
     state: S,
-    subscriptionMap: Record<ChannelId, SubscriptionLevel>
+    subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
   ) {
     state.subscriptionMap = subscriptionMap
   },
@@ -59,7 +59,7 @@ export const mutations = defineMutations<S>()({
     state: S,
     payload: {
       channelId: ChannelId
-      subscriptionLevel: SubscriptionLevel
+      subscriptionLevel: ChannelSubscribeLevel
     }
   ) {
     Vue.set(state.subscriptionMap, payload.channelId, payload.subscriptionLevel)

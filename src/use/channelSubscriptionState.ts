@@ -1,6 +1,6 @@
 import { computed } from '@vue/composition-api'
 import store from '@/store'
-import { SubscriptionLevel } from '@/store/domain/me'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const useChannelSubscriptionState = () => {
   const currentChannelId = computed(
@@ -8,9 +8,10 @@ const useChannelSubscriptionState = () => {
   )
   const currentChannelSubscription = computed(
     () =>
-      store.state.domain.me.subscriptionMap[currentChannelId.value] ?? 'none'
+      store.state.domain.me.subscriptionMap[currentChannelId.value] ??
+      ChannelSubscribeLevel.none
   )
-  const changeSubscriptionLevel = (level: SubscriptionLevel) => {
+  const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {
     store.dispatch.domain.me.changeSubscriptionLevel({
       channelId: currentChannelId.value,
       subscriptionLevel: level
@@ -18,11 +19,11 @@ const useChannelSubscriptionState = () => {
   }
   const changeToNextSubscriptionLevel = () => {
     const level =
-      currentChannelSubscription.value === 'notified'
-        ? 'none'
-        : currentChannelSubscription.value === 'subscribed'
-        ? 'notified'
-        : 'subscribed'
+      currentChannelSubscription.value === ChannelSubscribeLevel.notified
+        ? ChannelSubscribeLevel.none
+        : currentChannelSubscription.value === ChannelSubscribeLevel.subscribed
+        ? ChannelSubscribeLevel.notified
+        : ChannelSubscribeLevel.subscribed
     changeSubscriptionLevel(level)
   }
   return {
