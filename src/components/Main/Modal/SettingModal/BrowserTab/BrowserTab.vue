@@ -12,10 +12,10 @@
         <input type="radio" value="particular" v-model="state.openMode" />
         特定のチャンネル
       </label>
-      <form-input
+      <form-selector
         v-if="state.openMode === 'particular'"
         v-model="state.openChannelName"
-        prefix="#"
+        :options="channelOptions"
       />
     </div>
     <div>
@@ -71,10 +71,28 @@ import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import { SendKeys } from '@/store/app/browserSettings'
 import useSyncedState from '../use/syncedState'
+import FormSelector from '@/components/UI/FormSelector.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import Account from './Account.vue'
 import Notification from './Notification.vue'
+import useChannelPath from '@/use/channelPath'
+import { ChannelId } from '@/types/entity-ids'
+
+const useChannelOptions = () => {
+  const { channelIdToPath } = useChannelPath()
+  return computed(() =>
+    Object.values(store.state.entities.channels)
+      .map(channel => {
+        const path = channelIdToPath(channel.id).join('/')
+        return {
+          key: `#${path}`,
+          value: path
+        }
+      })
+      .sort((a, b) => (a.key > b.key ? 1 : -1))
+  )
+}
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -98,6 +116,8 @@ export default defineComponent({
       store.commit.app.browserSettings.set
     )
 
+    const channelOptions = useChannelOptions()
+
     const macFlag = isMac()
     const getModifierKeyName = (key: keyof SendKeys) => {
       return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
@@ -105,6 +125,7 @@ export default defineComponent({
 
     return {
       state,
+      channelOptions,
       macFlag,
       getModifierKeyName
     }
@@ -112,6 +133,7 @@ export default defineComponent({
   components: {
     Account,
     Notification,
+    FormSelector,
     FormInput,
     Toggle
   }
