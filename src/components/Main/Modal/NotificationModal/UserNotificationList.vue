@@ -28,11 +28,11 @@ import { compareString } from '@/lib/util/string'
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const allUserIds = computed(() =>
     Object.entries(store.state.entities.users)
-      .sort((e1, e2) => compareString(e1[1].name, e2[1].name))
+      .sort((e1, e2) => compareString(e1[1]?.name, e2[1]?.name))
       .map(e => e[0])
   )
   const state = reactive({
-    subscribersMap: {} as Record<UserId, boolean>,
+    subscribersMap: {} as Record<UserId, boolean | undefined>,
     subscriptionStateSorted: computed((): {
       userId: UserId
       subscribed: boolean

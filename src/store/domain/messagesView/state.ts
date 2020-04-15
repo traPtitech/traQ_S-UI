@@ -6,8 +6,8 @@ export interface S {
   messageIds: MessageId[]
   currentOffset: number
   fetchLimit: number
-  renderedContentMap: Record<MessageId, string>
-  embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
+  renderedContentMap: Record<MessageId, string | undefined>
+  embeddedFilesMap: Record<MessageId, EmbeddedFile[] | undefined>
   isReachedEnd: boolean
 }
 

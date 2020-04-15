@@ -60,7 +60,7 @@ const useRouteWacher = (context: SetupContext) => {
     }
     const file = store.state.entities.fileMetaData[fileId]
 
-    if (!file.channelId) {
+    if (!file?.channelId) {
       // ファイルに関連づいたチャンネルIDがなかった
       state.view = 'not-found'
       return

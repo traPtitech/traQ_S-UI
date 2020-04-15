@@ -29,7 +29,7 @@ export const getters = defineGetters<S>()({
   },
   userByName(state): (name: string) => User | undefined {
     return (name: string) => {
-      return Object.values(state.users).find(user => user.name === name)
+      return Object.values(state.users).find(user => user?.name === name)
     }
   },
   nonEmptyStampPaletteIds(state) {
