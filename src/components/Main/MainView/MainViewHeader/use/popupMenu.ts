@@ -6,7 +6,7 @@ const usePopupMenu = () => {
     isPopupMenuShown.value = !isPopupMenuShown.value
   }
   const closePopupMenu = () => {
-    isPopupMenuShown.value = !isPopupMenuShown.value
+    isPopupMenuShown.value = false
   }
   return { isPopupMenuShown, togglePopupMenu, closePopupMenu }
 }
