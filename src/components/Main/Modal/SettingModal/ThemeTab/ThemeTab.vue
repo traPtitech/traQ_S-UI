@@ -11,13 +11,24 @@
         ダークテーマ
       </label>
       <label>
-        <input type="radio" v-model="state.type" value="custom" disabled />
+        <input type="radio" v-model="state.type" value="custom" />
         カスタムテーマ
       </label>
     </div>
     <div>
       <h3>カスタムテーマ設定</h3>
-      <p title="4/1には実装されるよ">実装予定</p>
+      <template v-if="state.type === 'custom'">
+        <div v-for="(val, category) in state.custom" :key="category">
+          <h4>{{ category }}</h4>
+          <form-input
+            v-for="(color, name) in val"
+            :key="name"
+            :label="name"
+            v-model="val[name]"
+          />
+        </div>
+      </template>
+      <p v-else>カスタムテーマが選択されていません</p>
     </div>
   </section>
 </template>
@@ -26,6 +37,7 @@
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
+import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'ThemeTab',
@@ -36,7 +48,13 @@ export default defineComponent({
       store.commit.app.themeSettings.set
     )
 
+    // TODO: 色のバリデーション
+    // TODO: カラーピッカー
+
     return { state }
+  },
+  components: {
+    FormInput
   }
 })
 </script>
