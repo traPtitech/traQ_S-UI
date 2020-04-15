@@ -1,24 +1,7 @@
 <template>
   <section>
-    <div>
-      <h3>アカウント</h3>
-      <form-button label="ログアウト" on-secondary @click="onLogoutClick" />
-      <form-button
-        label="全セッション破棄"
-        on-secondary
-        @click="onSessionDelete"
-      />
-    </div>
-    <div>
-      <h3>通知: {{ notifyPermissionStatus }}</h3>
-      <form-button
-        v-if="notifyPermission === 'default'"
-        label="設定"
-        on-secondary
-        @click="requestNotifyPermission"
-      />
-      <p v-else>ブラウザや端末の設定から変更できます</p>
-    </div>
+    <account />
+    <notification />
     <div>
       <h3>起動時チャンネル設定</h3>
       <label>
@@ -83,32 +66,15 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  ref,
-  computed,
-  reactive,
-  watchEffect
-} from '@vue/composition-api'
-import apis from '@/lib/api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import { isMac } from '@/lib/util/browser'
-import useSyncedState from '../use/syncedState'
-import Toggle from '@/components/UI/Toggle.vue'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormButton from '@/components/UI/FormButton.vue'
 import { SendKeys } from '@/store/app/browserSettings'
-
-const NotifyPermissionStatusTable: Record<
-  NotificationPermission | '',
-  string
-> = {
-  default: '未設定（通知は来ません）',
-  granted: '許可',
-  denied: '拒否',
-  '': ''
-}
+import useSyncedState from '../use/syncedState'
+import FormInput from '@/components/UI/FormInput.vue'
+import Toggle from '@/components/UI/Toggle.vue'
+import Account from './Account.vue'
+import Notification from './Notification.vue'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -125,33 +91,7 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
 
 export default defineComponent({
   name: 'BrowserTab',
-  setup(_, context: SetupContext) {
-    const onLogoutClick = async () => {
-      await apis.logout()
-      context.root.$router.push('/')
-    }
-
-    const onSessionDelete = async () => {
-      // TODO: セッション表示と特定のセッション破棄とかする？
-      if (
-        window.confirm(
-          'ログイン中のセッションを全て破棄します。（実行するとログアウトされます）'
-        )
-      ) {
-        await apis.logout(undefined, true)
-        context.root.$router.push('/')
-      }
-    }
-
-    const notifyPermission = ref<NotificationPermission>()
-    notifyPermission.value = Notification.permission
-    const requestNotifyPermission = async () => {
-      notifyPermission.value = await Notification.requestPermission()
-    }
-    const notifyPermissionStatus = computed(
-      () => NotifyPermissionStatusTable[notifyPermission.value ?? '']
-    )
-
+  setup() {
     const browserSettings = computed(() => store.state.app.browserSettings)
     const { state } = useSyncedState(
       browserSettings,
@@ -164,19 +104,15 @@ export default defineComponent({
     }
 
     return {
-      onLogoutClick,
-      onSessionDelete,
-      notifyPermission,
-      requestNotifyPermission,
-      notifyPermissionStatus,
       state,
       macFlag,
       getModifierKeyName
     }
   },
   components: {
+    Account,
+    Notification,
     FormInput,
-    FormButton,
     Toggle
   }
 })
