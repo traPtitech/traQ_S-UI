@@ -57,49 +57,57 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 
+const useChannelOptions = () => {
+  const { channelIdToPath } = useChannelPath()
+  return computed(() =>
+    [
+      {
+        key: '--未設定--',
+        value: '00000000-0000-0000-0000-000000000000'
+      }
+    ].concat(
+      Object.values(store.state.entities.channels)
+        .map(channel => ({
+          key: `#${channelIdToPath(channel.id).join('/')}`,
+          value: channel.id
+        }))
+        .sort((a, b) => (a.key > b.key ? 1 : -1))
+    )
+  )
+}
+
+const useState = (detail: Ref<UserDetail>) => {
+  const state = reactive({
+    displayName: detail.value.displayName,
+    bio: detail.value.bio,
+    twitterId: detail.value.twitterId
+  })
+  const homeChannelState = ref(
+    detail.value.homeChannel ?? '00000000-0000-0000-0000-000000000000'
+  )
+  const isHomeChannelChanged = computed(
+    () =>
+      homeChannelState.value !== detail.value.homeChannel &&
+      !(
+        homeChannelState.value === '00000000-0000-0000-0000-000000000000' &&
+        detail.value.homeChannel === null
+      )
+  )
+
+  const { hasDiff } = useStateDiff<UserDetail>()
+  const isStateChanged = computed(
+    () => hasDiff(state, detail) || isHomeChannelChanged.value
+  )
+
+  return { state, homeChannelState, isStateChanged }
+}
+
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
     const detail = computed(() => store.state.domain.me.detail!)
 
-    const { channelIdToPath } = useChannelPath()
-    const channelOptions = computed(() =>
-      [
-        {
-          key: '--未設定--',
-          value: '00000000-0000-0000-0000-000000000000'
-        }
-      ].concat(
-        Object.values(store.state.entities.channels)
-          .map(channel => ({
-            key: `#${channelIdToPath(channel.id).join('/')}`,
-            value: channel.id
-          }))
-          .sort((a, b) => (a.key > b.key ? 1 : -1))
-      )
-    )
-
-    const state = reactive({
-      displayName: detail.value.displayName,
-      bio: detail.value.bio,
-      twitterId: detail.value.twitterId
-    })
-    const homeChannelState = ref(
-      detail.value.homeChannel ?? '00000000-0000-0000-0000-000000000000'
-    )
-    const isHomeChannelChanged = computed(
-      () =>
-        homeChannelState.value !== detail.value.homeChannel &&
-        !(
-          homeChannelState.value === '00000000-0000-0000-0000-000000000000' &&
-          detail.value.homeChannel === null
-        )
-    )
-
-    const { hasDiff } = useStateDiff<UserDetail>()
-    const isStateChanged = computed(
-      () => hasDiff(state, detail) || isHomeChannelChanged.value
-    )
+    const channelOptions = useChannelOptions()
 
     const {
       imageUploadState,
@@ -107,6 +115,8 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed
     } = useImageUpload()
+
+    const { state, homeChannelState, isStateChanged } = useState(detail)
 
     const isChanged = computed(
       () => isStateChanged.value || imageUploadState.imgData !== undefined
@@ -119,11 +129,12 @@ export default defineComponent({
         )
       }
       if (isStateChanged.value) {
-        const sendState = {
-          ...state,
-          homeChannel: homeChannelState.value
-        }
-        promises.push(apis.editMe(sendState))
+        promises.push(
+          apis.editMe({
+            ...state,
+            homeChannel: homeChannelState.value
+          })
+        )
       }
       try {
         // TODO: loading
@@ -139,7 +150,6 @@ export default defineComponent({
       channelOptions,
       state,
       homeChannelState,
-      isStateChanged,
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
