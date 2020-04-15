@@ -45,23 +45,15 @@
       :class="$style.icon"
       name="star-outline"
     />
-    <icon
-      @click="context.emit('click-notification')"
-      :class="$style.icon"
-      mdi
-      name="bell"
-    />
-    <icon
-      @click="context.emit('click-create-channel')"
-      :class="$style.icon"
-      name="hash"
-    />
-    <icon
-      @click="context.emit('click-more')"
-      :class="$style.icon"
-      mdi
-      name="dots-horizontal"
-    />
+    <div :class="$style.moreButton">
+      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+      <icon
+        @click="context.emit('click-more')"
+        :class="$style.icon"
+        mdi
+        name="dots-horizontal"
+      />
+    </div>
   </div>
 </template>
 
@@ -88,6 +80,8 @@ const useStyles = () =>
     }))
   })
 
+export const targetPortalName = 'header-popup'
+
 export default defineComponent({
   name: 'MainViewHeaderTools',
   components: {
@@ -102,7 +96,8 @@ export default defineComponent({
     return {
       context,
       currentChannelSubscription,
-      changeToNextSubscriptionLevel
+      changeToNextSubscriptionLevel,
+      targetPortalName
     }
   }
 })
@@ -119,5 +114,14 @@ export default defineComponent({
 .icon {
   margin: 8px;
   cursor: pointer;
+}
+.moreButton {
+  position: relative;
+  display: inline;
+}
+.popupLocator {
+  position: absolute;
+  right: 0;
+  top: 100%;
 }
 </style>
