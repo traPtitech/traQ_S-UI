@@ -56,6 +56,7 @@ import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import { nullUuid } from '@/lib/util/uuid'
 
 const useChannelOptions = () => {
   const { channelIdToPath } = useChannelPath()
@@ -63,7 +64,7 @@ const useChannelOptions = () => {
     [
       {
         key: '--未設定--',
-        value: '00000000-0000-0000-0000-000000000000'
+        value: nullUuid
       }
     ].concat(
       Object.values(store.state.entities.channels)
@@ -82,15 +83,12 @@ const useState = (detail: Ref<UserDetail>) => {
     bio: detail.value.bio,
     twitterId: detail.value.twitterId
   })
-  const homeChannelState = ref(
-    detail.value.homeChannel ?? '00000000-0000-0000-0000-000000000000'
-  )
+  const homeChannelState = ref(detail.value.homeChannel ?? nullUuid)
   const isHomeChannelChanged = computed(
     () =>
       homeChannelState.value !== detail.value.homeChannel &&
       !(
-        homeChannelState.value === '00000000-0000-0000-0000-000000000000' &&
-        detail.value.homeChannel === null
+        homeChannelState.value === nullUuid && detail.value.homeChannel === null
       )
   )
 
