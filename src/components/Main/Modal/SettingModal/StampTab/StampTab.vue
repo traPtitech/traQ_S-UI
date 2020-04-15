@@ -4,7 +4,7 @@
       <h3>スタンプ新規登録</h3>
       <image-upload
         @input="onNewImgSet"
-        :destroy-flag="newDestroyFlag"
+        :destroy-flag="imageUploadState.destroyFlag"
         @destroyed="onNewDestroyed"
       />
       <form-input
@@ -27,11 +27,6 @@
           @click.native="selectStamp(stamp.id)"
         />
       </div>
-      <image-upload
-        @input="onNewImgSet"
-        :destroy-flag="newDestroyFlag"
-        @destroyed="onNewDestroyed"
-      />
     </div>
     <div>
       <h3>スタンプパレット</h3>
@@ -49,34 +44,32 @@ import Stamp from './Stamp.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { StampId } from '@/types/entity-ids'
+import useImageUpload from '../use/imageUpload'
 
 export default defineComponent({
   name: 'StampTab',
   setup() {
-    const newImgData = ref<Blob>()
-    const onNewImgSet = (file: Blob) => {
-      newImgData.value = file
-    }
-
-    const newDestroyFlag = ref(false)
-    const onNewDestroyed = () => {
-      newDestroyFlag.value = false
-    }
+    const {
+      imageUploadState,
+      destroyImageUploadState,
+      onNewImgSet,
+      onNewDestroyed
+    } = useImageUpload()
 
     const newStampName = ref('')
 
     const createStamp = async () => {
       try {
         // TODO: loading
-        await apis.createStamp(newStampName.value, newImgData.value)
-        newImgData.value = undefined
+        await apis.createStamp(newStampName.value, imageUploadState.imgData)
         newStampName.value = ''
-        newDestroyFlag.value = true
+        destroyImageUploadState()
       } catch (e) {
         // TODO: error
       }
     }
 
+    // TODO: 管理者なら全部変えられるたぶん
     const myUserId = computed(() => store.state.domain.me.detail!.id)
     const myStamps = computed(() =>
       Object.values(store.state.entities.stamps).filter(
@@ -91,7 +84,7 @@ export default defineComponent({
 
     return {
       onNewImgSet,
-      newDestroyFlag,
+      imageUploadState,
       onNewDestroyed,
       newStampName,
       createStamp,

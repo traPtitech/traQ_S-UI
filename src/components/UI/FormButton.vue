@@ -2,6 +2,7 @@
   <button
     :class="$style.container"
     :style="styles.container"
+    :disabled="disabled"
     @click="context.emit('click')"
   >
     {{ label }}
@@ -31,6 +32,10 @@ export default defineComponent({
       default: ''
     },
     onSecondary: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }
