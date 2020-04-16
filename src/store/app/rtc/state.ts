@@ -8,9 +8,9 @@ export interface S {
   isMicMuted: boolean
   activeMediaChannelId: ChannelId
   // userStateMap: Record<string, WebRTCUserState>
-  userVolumeMap: Record<UserId, number>
-  remoteAudioStreamMap: Record<UserId, MediaStream>
-  remoteVideoStreamMap: Record<UserId, MediaStream>
+  userVolumeMap: Record<UserId, number | undefined>
+  remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
+  remoteVideoStreamMap: Record<UserId, MediaStream | undefined>
   talkingStateUpdateIntervalId: number
 }
 

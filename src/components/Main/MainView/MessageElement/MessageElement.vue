@@ -75,10 +75,11 @@ export default defineComponent({
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
       ),
-      fileIds: computed(() =>
-        store.state.domain.messagesView.embeddedFilesMap[props.messageId].map(
-          e => e.id
-        )
+      fileIds: computed(
+        () =>
+          store.state.domain.messagesView.embeddedFilesMap[
+            props.messageId
+          ]?.map(e => e.id) ?? []
       )
     })
     const styles = reactive({

@@ -70,7 +70,7 @@ export const actions = defineActions({
     const { commit, rootState, rootDispatch } = messagesViewActionContext(
       context
     )
-    const content = rootState.entities.messages[messageId].content ?? ''
+    const content = rootState.entities.messages[messageId]?.content ?? ''
 
     const extracted = embeddingExtractor(content)
 

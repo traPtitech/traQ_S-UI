@@ -12,9 +12,15 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     props,
     context
   )
-  const fileRawPath = computed(() => buildFilePath(fileMeta.value.id))
-  const fileType = computed(() => mimeToFileType(fileMeta.value.mime))
-  const fileSize = computed(() => prettifyFileSize(fileMeta.value.size))
+  const fileRawPath = computed(() =>
+    fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
+  )
+  const fileType = computed(() =>
+    fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
+  )
+  const fileSize = computed(() =>
+    fileMeta.value ? prettifyFileSize(fileMeta.value.size) : '0B'
+  )
   const fileIconName = computed(() =>
     fileType.value === 'file' ? 'file' : `file-${fileType.value}`
   )
