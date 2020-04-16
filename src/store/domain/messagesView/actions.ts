@@ -164,7 +164,7 @@ export const actions = defineActions({
       commit.setLoadedMessageLatestDate(latestMessageDate)
     }
 
-    return messages.map((message: Message) => message.id ?? '')
+    return messages.map(message => message.id)
   },
 
   async fetchChannelLatestMessage(context) {
