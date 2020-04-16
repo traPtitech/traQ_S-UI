@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <router-link
+    :to="`/messages/${pinnedMessage.message.id}`"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <div :class="$style.itemHeader">
       <user-icon :size="20" :user-id="pinnedMessage.message.userId" />
       <span :style="styles.displayName" :class="$style.displayName">{{
@@ -9,7 +13,7 @@
     <span :class="$style.text" :style="styles.text">{{
       pinnedMessage.message.content
     }}</span>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
