@@ -3,7 +3,7 @@ import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
 import { reduceToRecord } from '@/lib/util/record'
-import { FileId, TagId, ChannelId } from '@/types/entity-ids'
+import { FileId, TagId, MessageId, ChannelId } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -66,17 +66,28 @@ export const actions = defineActions({
     const res = await api.getStampPalettes()
     commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
-  async fetchMessagesByChannelId(
-    context,
-    { channelId, limit, offset }: GetMessagesParams
-  ) {
+  async fetchMessagesByChannelId(context, params: GetMessagesParams) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessages(channelId, limit, offset)
+    const res = await api.getMessages(
+      params.channelId,
+      params.limit,
+      params.offset,
+      params.since?.toISOString(),
+      params.until?.toISOString(),
+      params.inclusive,
+      params.order
+    )
     commit.extendMessages(reduceToRecord(res.data, 'id'))
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
+  },
+  async fetchMessage(context, messageId: MessageId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getMessage(messageId)
+    commit.addMessage({ id: res.data.id, entity: res.data })
+    return res.data
   },
   async fetchFileMetaByChannelId(
     context,

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { S } from './state'
+import { S, LoadingDirection } from './state'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
 
@@ -8,11 +8,20 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
   },
-  setCurrentOffset(state, currentOffset: number) {
-    state.currentOffset = currentOffset
-  },
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
+  },
+  setLoadedMessageLatestDate(state, date: Date) {
+    state.loadedMessageLatestDate = date
+  },
+  setLoadedMessageOldestDate(state, date: Date) {
+    state.loadedMessageOldestDate = date
+  },
+  unsetLoadedMessageLatestDate(state) {
+    state.loadedMessageLatestDate = undefined
+  },
+  unsetLoadedMessageOldestDate(state) {
+    state.loadedMessageOldestDate = undefined
   },
   addRenderedContent(
     state,
@@ -29,10 +38,25 @@ export const mutations = defineMutations<S>()({
   setIsReachedEnd(state, isReachedEnd: boolean) {
     state.isReachedEnd = isReachedEnd
   },
+  setIsReachedLatest(state, isReachedLatest: boolean) {
+    state.isReachedLatest = isReachedLatest
+  },
+  setEntryMessageId(state, messageId: MessageId) {
+    state.entryMessageId = messageId
+  },
+  unsetEntryMessageId(state) {
+    state.entryMessageId = undefined
+  },
   addEmbededFile(
     state,
     payload: { messageId: MessageId; files: EmbeddedFile[] }
   ) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+  },
+  setIsInitialLoad(state, loadedOnce: boolean) {
+    state.isInitialLoad = loadedOnce
+  },
+  setLastLoadingDirection(state, direction: LoadingDirection) {
+    state.lastLoadingDirection = direction
   }
 })

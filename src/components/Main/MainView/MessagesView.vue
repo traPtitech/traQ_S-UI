@@ -10,7 +10,15 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <messages-scroller :message-ids="state.channelMessageIds" />
+    <messages-scroller
+      :message-ids="state.channelMessageIds"
+      :entry-message-id="state.entryMessageId"
+      :is-loading="loadMessagesState.isLoading"
+      :last-loading-direction="loadMessagesState.lastLoadingDirection"
+      :is-initial-load="loadMessagesState.isInitialLoad"
+      @request-load-former="loadFormerMessages"
+      @request-load-latter="loadLatterMessages"
+    />
     <message-input :channel-id="state.channelId" />
   </div>
 </template>
@@ -31,6 +39,7 @@ import MessagesScroller from './MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
+import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   const state = reactive({
@@ -60,6 +69,32 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   }
 }
 
+const useLoadMessages = () => {
+  const state = reactive({
+    isLoading: false,
+    lastLoadingDirection: computed(
+      () => store.state.domain.messagesView.lastLoadingDirection
+    ),
+    isInitialLoad: computed(() => store.state.domain.messagesView.isInitialLoad)
+  })
+  const loadMessages = (direction: 'former' | 'latter') => async () => {
+    state.isLoading = true
+    store.commit.domain.messagesView.setLastLoadingDirection(direction)
+    if (direction === 'former') {
+      await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
+    } else {
+      await store.dispatch.domain.messagesView.fetchAndRenderChannelLatterMessages()
+    }
+    if (store.state.domain.messagesView.isInitialLoad) {
+      store.commit.domain.messagesView.setIsInitialLoad(false)
+    }
+    state.isLoading = false
+  }
+  const loadFormerMessages = loadMessages('former')
+  const loadLatterMessages = loadMessages('latter')
+  return { loadMessagesState: state, loadFormerMessages, loadLatterMessages }
+}
+
 export default defineComponent({
   name: 'MessagesView',
   components: { MessagesScroller, MessageInput, MessagesViewFileUploadOverlay },
@@ -70,6 +105,9 @@ export default defineComponent({
       ),
       channelId: computed(
         () => store.state.domain.messagesView.currentChannelId
+      ),
+      entryMessageId: computed(
+        () => store.state.domain.messagesView.entryMessageId
       )
     })
 
@@ -83,13 +121,21 @@ export default defineComponent({
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
       containerRef
     )
+    const {
+      loadMessagesState,
+      loadFormerMessages,
+      loadLatterMessages
+    } = useLoadMessages()
     return {
       state,
+      loadMessagesState,
       fileDragDropState,
       containerStyle,
       containerRef,
       onDrop,
-      onDragOver
+      onDragOver,
+      loadFormerMessages,
+      loadLatterMessages
     }
   }
 })

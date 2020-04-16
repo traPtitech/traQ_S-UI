@@ -69,6 +69,7 @@ export const mutations = defineMutations<S>()({
   extendUserTags: extendMutation('tags'),
 
   addUser: addMutation('users'),
+  addMessage: addMutation('messages'),
   addChannel: addMutation('channels'),
   addUserGroup: addMutation('userGroups'),
   addStamp: addMutation('stamps'),

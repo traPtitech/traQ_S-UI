@@ -34,18 +34,26 @@ const useRouteWacher = (context: SetupContext) => {
       // まだチャンネルツリーが構築されていない
       return
     }
+    const entryMessageId =
+      context.root.$route.query.message &&
+      typeof context.root.$route.query.message === 'string'
+        ? context.root.$route.query.message
+        : undefined
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
-      store.dispatch.domain.messagesView.changeCurrentChannel(id)
-      changeViewTitle(`#${state.channelParam}`)
-      state.view = 'main'
+      store.dispatch.domain.messagesView.changeCurrentChannel({
+        channelId: id,
+        entryMessageId
+      })
     } catch (e) {
       state.view = 'not-found'
+      return
     }
-    return
+    changeViewTitle(`#${state.channelParam}`)
+    state.view = 'main'
   }
   const onRouteChangedToFile = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
@@ -64,7 +72,9 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     const channelPath = channelIdToPath(file.channelId)
-    store.dispatch.domain.messagesView.changeCurrentChannel(file.channelId)
+    store.dispatch.domain.messagesView.changeCurrentChannel({
+      channelId: file.channelId
+    })
     const modalPayload = {
       type: 'file' as const,
       id: fileId,
@@ -73,6 +83,27 @@ const useRouteWacher = (context: SetupContext) => {
     store.dispatch.ui.modal.replaceModal(modalPayload)
     changeViewTitle(`#${channelPath} - ${file.name}`)
     state.view = 'main'
+  }
+  const onRouteChangedToMessage = async () => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      return
+    }
+    const { channelIdToPath } = useChannelPath()
+    const messageId = state.idParam
+    const message =
+      store.state.entities.messages[messageId] ??
+      (await store.dispatch.entities.fetchMessage(messageId))
+    if (!message?.channelId) {
+      // チャンネルがなかった
+      state.view = 'not-found'
+      return
+    }
+
+    context.root.$router.replace({
+      name: RouteName.Channel,
+      params: { channel: channelIdToPath(message.channelId).join('/') },
+      query: { message: message.id }
+    })
   }
 
   const onRouteParamChange = async (param: string, prevParam: string) => {
@@ -84,6 +115,8 @@ const useRouteWacher = (context: SetupContext) => {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
+    } else if (routeName === RouteName.Message) {
+      await onRouteChangedToMessage()
     }
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
     const isOnInitialModalRoute =
