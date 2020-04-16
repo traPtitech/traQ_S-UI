@@ -6,9 +6,15 @@ absoluteWebsocketEndpoint.protocol =
   window.location.protocol === 'https:' ? 'wss' : 'ws'
 
 export let ws: WebSocket | undefined
+export let wsConnectionPromise: Promise<void> | undefined
 
 export const setupWebSocket = () => {
   ws = new WebSocket(absoluteWebsocketEndpoint.href)
+  wsConnectionPromise = new Promise(resolve => {
+    ws!.addEventListener('open', () => {
+      resolve()
+    })
+  })
   ws.addEventListener('message', event => {
     onReceive(event.data)
   })

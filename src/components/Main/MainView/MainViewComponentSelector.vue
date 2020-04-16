@@ -1,5 +1,6 @@
 <template>
   <messages-view
+    :class="$style.messagesView"
     v-if="props.viewInfo && props.viewInfo.type === 'messages'"
     :channel-id="channelId"
   />

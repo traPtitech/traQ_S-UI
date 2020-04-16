@@ -47,7 +47,11 @@ const useChannelPath = () => {
   const channelIdToPath = (id: ChannelId): string[] =>
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
-  return { channelPathToId, channelIdToPath, channelIdToSimpleChannelPath }
+  return {
+    channelPathToId,
+    channelIdToPath,
+    channelIdToSimpleChannelPath
+  }
 }
 
 export default useChannelPath

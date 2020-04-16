@@ -7,6 +7,7 @@ import { render } from '@/lib/markdown'
 import apis from '@/lib/api'
 import { changeViewState } from '@/lib/websocket'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import api from '@/lib/api'
 
 export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
@@ -25,6 +26,7 @@ export const actions = defineActions({
     commit.unsetLoadedMessageLatestDate()
     commit.setMessageIds([])
     commit.setRenderedContent({})
+    commit.setCurrentViewer([])
 
     if (payload.entryMessageId) {
       commit.setIsReachedEnd(false)
@@ -43,6 +45,9 @@ export const actions = defineActions({
       await dispatch.fetchAndRenderChannelFormerMessages()
       commit.setIsInitialLoad(true)
     }
+    dispatch.fetchPinnedMessages()
+    dispatch.fetchTopic()
+    dispatch.fetchSubscribers()
   },
 
   /** 読み込まれているメッセージより前のメッセージを取得し、HTMLにレンダリングする */
@@ -166,7 +171,21 @@ export const actions = defineActions({
 
     return messages.map(message => message.id)
   },
-
+  async fetchPinnedMessages(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelPins(state.currentChannelId)
+    commit.setPinnedMessages(res.data)
+  },
+  async fetchTopic(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelTopic(state.currentChannelId)
+    commit.setTopic(res.data.topic)
+  },
+  async fetchSubscribers(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    const res = await api.getChannelSubscribers(state.currentChannelId)
+    commit.setSubscribers(res.data)
+  },
   async fetchChannelLatestMessage(context) {
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(
       context

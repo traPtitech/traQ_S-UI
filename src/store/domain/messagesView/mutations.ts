@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
+import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
 import { S, LoadingDirection } from './state'
-import { ChannelId, MessageId } from '@/types/entity-ids'
 import { EmbeddedFile } from '@/lib/embeddingExtractor'
+import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
@@ -10,6 +11,20 @@ export const mutations = defineMutations<S>()({
   },
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
+  },
+  setPinnedMessages(state, messages: Pin[]) {
+    state.pinnedMessages = messages
+  },
+  addPinnedMessages(state, message: Pin) {
+    state.pinnedMessages.push(message)
+  },
+  removePinnedMessageIds(state, messageId: MessageId) {
+    const index = state.pinnedMessages.findIndex(
+      element => element.message.id === messageId
+    )
+    if (index > -1) {
+      state.pinnedMessages.splice(index, 1)
+    }
   },
   setLoadedMessageLatestDate(state, date: Date) {
     state.loadedMessageLatestDate = date
@@ -52,6 +67,15 @@ export const mutations = defineMutations<S>()({
     payload: { messageId: MessageId; files: EmbeddedFile[] }
   ) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+  },
+  setCurrentViewer(state, viewers: ChannelViewer[]) {
+    state.currentViewers = viewers
+  },
+  setTopic(state, topic: string) {
+    state.topic = topic
+  },
+  setSubscribers(state, subscribers: UserId[]) {
+    state.subscribers = subscribers
   },
   setIsInitialLoad(state, loadedOnce: boolean) {
     state.isInitialLoad = loadedOnce

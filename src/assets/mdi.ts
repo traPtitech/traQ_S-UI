@@ -28,7 +28,12 @@ import {
   mdiCog,
   mdiAccount,
   mdiCogs,
-  mdiBrightness6
+  mdiBrightness6,
+  mdiPencilOutline,
+  mdiToggleSwitchOff,
+  mdiToggleSwitch,
+  mdiChevronDoubleLeft,
+  mdiChevronLeft
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -65,7 +70,12 @@ const mdi: MdiIconsMapping = {
   cog: mdiCog,
   account: mdiAccount,
   cogs: mdiCogs,
-  'brightness-6': mdiBrightness6
+  'brightness-6': mdiBrightness6,
+  pencil: mdiPencilOutline,
+  'toggle-switch-off': mdiToggleSwitchOff,
+  'toggle-switch-on': mdiToggleSwitch,
+  'chevron-double': mdiChevronDoubleLeft,
+  'chevron-left': mdiChevronLeft
 }
 
 export default mdi
