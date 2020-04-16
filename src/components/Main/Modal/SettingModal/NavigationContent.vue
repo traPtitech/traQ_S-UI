@@ -23,18 +23,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
-import apis from '@/lib/api'
-import { User, UserDetail } from '@traptitech/traq'
-import { UserId } from '@/types/entity-ids'
 import { isSafari } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
 import NavigationContentTitle from './NavigationContentTitle.vue'

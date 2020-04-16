@@ -23,13 +23,10 @@ import {
   defineComponent,
   computed,
   reactive,
-  ref,
   PropType
 } from '@vue/composition-api'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import { ChannelViewState } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = (props: {
@@ -67,14 +64,12 @@ export default defineComponent({
   },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst =
-      props as
-      {
-        direction: 'row' | 'col'
-        max: number
-        showCount: boolean
-        userIds: UserId[]
-      }
+    const propst = props as {
+      direction: 'row' | 'col'
+      max: number
+      showCount: boolean
+      userIds: UserId[]
+    }
     const styles = useStyles(propst)
     const visibleIconIds = computed(() => propst.userIds.slice(0, propst.max))
     const inVisibleCount = computed(() => propst.userIds.length - propst.max)

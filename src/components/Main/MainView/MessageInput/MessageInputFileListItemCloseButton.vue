@@ -9,15 +9,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  computed,
-  reactive,
-  ref,
-  Ref
-} from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'

@@ -22,7 +22,7 @@ import {
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { reduceToRecordOfArray } from '@/lib/util/record'
-import { StampId, MessageId } from '@/types/entity-ids'
+import { StampId } from '@/types/entity-ids'
 import store from '@/store'
 
 export default defineComponent({

@@ -13,8 +13,6 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import apis from '@/lib/api'
-import { User } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'MessageQuoteListItemHeader',

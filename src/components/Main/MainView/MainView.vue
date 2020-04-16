@@ -27,7 +27,6 @@ import MessagesScroller from './MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
-import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useLoadMessages = () => {
   const state = reactive({

@@ -46,8 +46,6 @@ import {
   computed,
   reactive,
   ref,
-  watchEffect,
-  watch,
   SetupContext,
   PropType
 } from '@vue/composition-api'

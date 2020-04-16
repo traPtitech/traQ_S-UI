@@ -16,18 +16,14 @@
 <script lang="ts">
 import {
   defineComponent,
-  computed,
   reactive,
   set,
   toRefs,
-  SetupContext,
   PropType
 } from '@vue/composition-api'
-import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
-import ChannelElement from './ChannelElement.vue'
 
 const useChannelFolding = () => {
   const state = reactive({

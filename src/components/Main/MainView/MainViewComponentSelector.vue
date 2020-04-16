@@ -9,15 +9,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
-import { LayoutType, ViewInformation } from '@/store/ui/mainView/state'
-
+import { ViewInformation } from '@/store/ui/mainView/state'
 import MessagesView from '@/components/Main/MainView/MessagesView.vue'
 import QallView from '@/components/Main/MainView/QallView.vue'
 

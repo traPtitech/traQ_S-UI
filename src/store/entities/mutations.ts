@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId, MessageId } from '@/types/entity-ids'
+import { ChannelId } from '@/types/entity-ids'
 import store from '..'
 import {
   MessageStampedEvent,

@@ -9,9 +9,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
 
 const useStyles = () =>
   reactive({

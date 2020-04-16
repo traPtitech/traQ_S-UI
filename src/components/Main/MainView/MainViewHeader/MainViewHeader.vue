@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import usePopupMenu from './use/popupMenu'

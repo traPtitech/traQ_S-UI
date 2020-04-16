@@ -12,12 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { User } from '@traptitech/traq'

@@ -22,25 +22,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  watchEffect,
-  ref,
-  Ref,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 import ChannelSideBarRelationContent from './ChannelSideBarRelationContent.vue'
-import useRelatedChannels, {
-  RelatedChannelEntry
-} from './use/useRelatedChannels'
+import useRelatedChannels from './use/useRelatedChannels'
 
 const useStyles = (state: { isOpen: boolean }) =>
   reactive({
