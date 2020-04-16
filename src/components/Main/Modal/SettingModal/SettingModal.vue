@@ -70,7 +70,7 @@ export default defineComponent({
 
 .close {
   position: absolute;
-  top: 60px;
-  right: 90px;
+  top: 30px;
+  right: 120px;
 }
 </style>
