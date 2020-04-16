@@ -1,5 +1,5 @@
 import store from '@/store'
-import { UserId } from '@/types/entity-ids'
+import { UserId, UserGroupId } from '@/types/entity-ids'
 import router from './router'
 
 interface ExtendedWindow extends Window {
@@ -9,6 +9,13 @@ interface ExtendedWindow extends Window {
    * @param userId ユーザーID
    */
   openUserModal(userId: string): void
+
+  /**
+   * グループモーダルを開く
+   * markdown本文に埋め込まれるリンク(`@group`)から呼び出す
+   * @param userGroupId ユーザーグループID
+   */
+  openGroupModal(userGroupId: string): void
 
   /**
    * チャンネルを切り替える
@@ -24,6 +31,13 @@ export const setupGlobalFuncs = () => {
     store.dispatch.ui.modal.pushModal({
       type: 'user',
       id: userId
+    })
+  }
+
+  window.openGroupModal = (userGroupId: UserGroupId) => {
+    store.dispatch.ui.modal.pushModal({
+      type: 'group',
+      id: userGroupId
     })
   }
 
