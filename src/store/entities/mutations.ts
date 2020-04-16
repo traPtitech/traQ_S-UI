@@ -1,9 +1,13 @@
 import Vue from 'vue'
-import { Channel } from '@traptitech/traq'
+import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, MessageId } from '@/types/entity-ids'
 import store from '..'
+import {
+  MessageStampedEvent,
+  MessageUnstampedEvent
+} from '@/lib/websocket/events'
 
 type RecordKeyOf<R> = R extends Record<infer K, any> ? K : never
 type RecordValueOf<R> = R extends Record<string, infer V> ? V : never
@@ -80,5 +84,36 @@ export const mutations = defineMutations<S>()({
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
-  deleteTag: deleteMutation('tags')
+  deleteTag: deleteMutation('tags'),
+
+  onMessageStamped(state, e: MessageStampedEvent['body']) {
+    const stamps = state.messages[e.message_id].stamps
+    // 既に押されているスタンプは更新、新規は追加
+    if (
+      stamps.some(
+        stamp => stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+      )
+    ) {
+      state.messages[e.message_id].stamps = stamps.map(stamp =>
+        stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+          ? { ...stamp, count: e.count, createdAt: e.created_at }
+          : stamp
+      )
+    } else {
+      const stamp: MessageStamp = {
+        userId: e.user_id,
+        stampId: e.stamp_id,
+        count: e.count,
+        createdAt: e.created_at,
+        updatedAt: e.created_at
+      }
+      state.messages[e.message_id].stamps.push(stamp)
+    }
+  },
+  onMessageUnstamped(state, e: MessageUnstampedEvent['body']) {
+    const stamps = state.messages[e.message_id].stamps
+    state.messages[e.message_id].stamps = stamps.filter(
+      stamp => !(stamp.stampId === e.stamp_id && stamp.userId === e.user_id)
+    )
+  }
 })

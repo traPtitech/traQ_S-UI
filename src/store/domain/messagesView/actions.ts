@@ -1,9 +1,11 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messagesView } from './index'
-import { ChannelId, MessageId } from '@/types/entity-ids'
-import { Message } from '@traptitech/traq'
+import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
+import { Message, ChannelViewState } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
+import apis from '@/lib/api'
+import { changeViewState } from '@/lib/websocket'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
 
 export const messagesViewActionContext = (context: any) =>
@@ -13,6 +15,8 @@ export const actions = defineActions({
   async changeCurrentChannel(context, channelId: ChannelId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId === channelId) return
+
+    changeViewState(channelId, ChannelViewState.Monitoring)
 
     commit.setIsReachedEnd(false)
     commit.setCurrentChannelId(channelId)
@@ -41,7 +45,7 @@ export const actions = defineActions({
       commit.setIsReachedEnd(true)
     }
     commit.setCurrentOffset(state.currentOffset + state.fetchLimit)
-    const messageIds = messages.map((message: Message) => message.id ?? '')
+    const messageIds: MessageId[] = messages.map(message => message.id)
     await Promise.all(
       messageIds.map(messageId => dispatch.renderMessageContent(messageId))
     )
@@ -79,5 +83,11 @@ export const actions = defineActions({
     const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })
     commit.addEmbededFile({ messageId, files: extracted.embeddings })
+  },
+  addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+    apis.addMessageStamp(payload.messageId, payload.stampId)
+  },
+  removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+    apis.removeMessageStamp(payload.messageId, payload.stampId)
   }
 })

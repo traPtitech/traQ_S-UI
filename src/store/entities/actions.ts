@@ -2,19 +2,8 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
+import { reduceToRecord } from '@/lib/util/record'
 import { FileId, TagId, ChannelId } from '@/types/entity-ids'
-
-/**
- * オブジェクトの配列から特定のキーを用いたRecordを生成する
- * @param array 対象オブジェクトの配列
- * @param key Recordのキーにしたいオブジェクトのキー
- */
-const reduceToRecord = <T>(array: T[], key: keyof T) =>
-  array.reduce((acc, cur) => {
-    const ck = cur[key]
-    if (typeof ck !== 'string') return acc
-    return Object.assign(acc, { [ck]: cur })
-  }, {} as Record<string, T>)
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {

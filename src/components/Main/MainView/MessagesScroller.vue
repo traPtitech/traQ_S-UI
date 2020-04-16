@@ -9,6 +9,7 @@
         @change-height="onChangeHeight"
       />
     </div>
+    <div :class="$style.bottomSpacer"></div>
   </div>
 </template>
 
@@ -130,5 +131,10 @@ export default defineComponent({
 
 .element {
   margin: 4px 0;
+}
+
+.bottomSpacer {
+  width: 100%;
+  height: 12px;
 }
 </style>
