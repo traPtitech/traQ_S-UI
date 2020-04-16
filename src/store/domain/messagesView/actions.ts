@@ -192,11 +192,13 @@ export const actions = defineActions({
 
     await Promise.all(
       extracted.embeddings.map(async e => {
-        if (e.type === 'file') {
-          return rootDispatch.entities.fetchFileMetaByFileId(e.id)
-        }
-        if (e.type === 'message') {
-          return rootDispatch.entities.fetchMessage(e.id).then(message => {
+        try {
+          if (e.type === 'file') {
+            await rootDispatch.entities.fetchFileMetaByFileId(e.id)
+          }
+          if (e.type === 'message') {
+            const message = await rootDispatch.entities.fetchMessage(e.id)
+
             // テキスト部分のみレンダリング
             const extracted = embeddingExtractor(message.content)
             const renderedContent = render(extracted.text)
@@ -204,7 +206,9 @@ export const actions = defineActions({
               messageId: message.id,
               renderedContent
             })
-          })
+          }
+        } catch (e) {
+          // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }
       })
     )
