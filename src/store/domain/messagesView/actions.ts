@@ -134,7 +134,7 @@ export const actions = defineActions({
       commit.setLoadedMessageOldestDate(oldestMessageDate)
     }
 
-    return messages.map((message: Message) => message.id ?? '')
+    return messages.map(message => message.id)
   },
 
   /** 読み込まれているメッセージより後のメッセージを取得し、idを返す */
