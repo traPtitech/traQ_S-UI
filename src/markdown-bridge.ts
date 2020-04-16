@@ -5,21 +5,21 @@ import router from './router'
 interface ExtendedWindow extends Window {
   /**
    * ユーザーモーダルを開く
-   * markdown本文に埋め込まれるリンク(`@user`)から呼び出す
+   * レンダリングされたmarkdown本文に埋め込まれるリンク(`@user`)のクリック時に呼び出される
    * @param userId ユーザーID
    */
   openUserModal(userId: string): void
 
   /**
    * グループモーダルを開く
-   * markdown本文に埋め込まれるリンク(`@group`)から呼び出す
+   * レンダリングされたmarkdown本文に埋め込まれるリンク(`@group`)のクリック時に呼び出される
    * @param userGroupId ユーザーグループID
    */
   openGroupModal(userGroupId: string): void
 
   /**
    * チャンネルを切り替える
-   * markdown本文に埋め込まれるリンク(`#channel`)から呼び出す
+   * レンダリングされたmarkdown本文に埋め込まれるリンク(`#channel`)のクリック時に呼び出される
    * @param channelPath チャンネルのパス(`#`は含まない、`/`区切り)
    */
   changeChannel(channelPath: string): void
