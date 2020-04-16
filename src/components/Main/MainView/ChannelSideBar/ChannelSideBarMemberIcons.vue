@@ -64,7 +64,7 @@ export default defineComponent({
 }
 
 .notView {
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .name {
