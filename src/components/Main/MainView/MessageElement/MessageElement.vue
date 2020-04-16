@@ -5,6 +5,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
     ref="bodyRef"
+    v-if="state.message"
   >
     <user-icon
       :class="$style.userIcon"
