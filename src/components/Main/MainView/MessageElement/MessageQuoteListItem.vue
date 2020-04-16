@@ -1,18 +1,25 @@
 <template>
-  <div :class="$style.body" :style="styles.body" ref="bodyRef">
+  <div :class="$style.body" :style="styles.body">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
       :size="24"
+      prevent-modal
     />
-    <message-header
+    <message-quote-list-item-header
       :class="$style.messageHeader"
       :user-id="state.message.userId"
-      :created-at="state.message.createdAt"
-      :updated-at="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
+    </div>
+    <div :class="$style.footer" :style="styles.footer">
+      <span :class="$style.description">
+        {{ state.channelPath }} - {{ state.date }}
+      </span>
+      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
+        >メッセージへ</router-link
+      >
     </div>
   </div>
 </template>
@@ -22,47 +29,48 @@ import {
   defineComponent,
   computed,
   reactive,
-  ref,
-  watchEffect,
-  watch,
-  SetupContext,
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { transparentize } from '@/lib/util/color'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageFileList from './MessageFileList.vue'
+import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import { MessageId } from '@/types/entity-ids'
-import useElementRenderObserver from './use/elementRenderObserver'
-import useEmbeddings from './use/embeddings'
+import { getCreatedDate } from '@/lib/date'
 import { makeStyles } from '@/lib/styles'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = () =>
   reactive({
     body: makeStyles(theme => ({
       borderColor: theme.ui.tertiary
+    })),
+    footer: makeStyles(theme => ({
+      color: theme.ui.secondary
     }))
   })
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
-  components: { UserIcon, MessageHeader, MessageFileList },
+  components: { UserIcon, MessageQuoteListItemHeader },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
       required: true
     }
   },
-  setup(props, context: SetupContext) {
-    const bodyRef = ref<HTMLDivElement>(null)
+  setup(props) {
+    const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
+      channelPath: computed((): string =>
+        channelIdToPathString(state.message.channelId, true)
+      ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      )
+      ),
+      date: computed((): string => getCreatedDate(state.message.createdAt))
     })
     const styles = useStyles()
 
@@ -77,8 +85,9 @@ export default defineComponent({
   grid-template-areas:
     'user-icon message-header'
     'user-icon message-contents'
-    '... message-contents';
-  grid-template-rows: 24px 1fr;
+    '......... message-contents'
+    '......... footer';
+  grid-template-rows: 24px 1fr 1fr 24px;
   grid-template-columns: 24px 1fr;
   width: 100%;
   min-width: 0;
@@ -107,6 +116,7 @@ export default defineComponent({
   padding-top: 4px;
   padding-left: 8px;
   min-width: 0;
+  font-size: 0.875rem;
 }
 
 .content {
@@ -119,8 +129,17 @@ export default defineComponent({
     white-space: pre-wrap;
   }
 }
-
-.messageFileList {
-  margin-top: 16px;
+.footer {
+  grid-area: footer;
+  padding-left: 8px;
+  font-size: 0.875rem;
+  align-self: end;
+}
+.description {
+  font-weight: normal;
+  margin-right: 8px;
+}
+.link {
+  font-weight: bold;
 }
 </style>
