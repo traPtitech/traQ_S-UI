@@ -42,9 +42,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.messagesView {
-  padding: 0;
-}
 .none {
   display: none;
 }

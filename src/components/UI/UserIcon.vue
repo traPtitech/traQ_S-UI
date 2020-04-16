@@ -1,5 +1,9 @@
 <template>
-  <div @click="onClick" :class="$style.container" :style="styles.container">
+  <div
+    @click.stop="onClick"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <!-- TODO: Badge -->
   </div>
 </template>
@@ -48,8 +52,7 @@ export default defineComponent({
           : undefined
       }))
     })
-    const onClick = (e: Event) => {
-      e.stopPropagation()
+    const onClick = () => {
       if (!props.preventModal) {
         if (user.value?.bot && user.value.name.indexOf('@Webhook')) {
           return

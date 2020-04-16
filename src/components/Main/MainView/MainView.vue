@@ -9,7 +9,7 @@
       @request-load-former="loadFormerMessages"
       @request-load-latter="loadLatterMessages"
     />
-    <message-input :channel-id="state.channelId" />
+    <message-input :channel-id="channelId" />
   </div>
 </template>
 
@@ -27,7 +27,6 @@ import MessagesScroller from './MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
-import { debounce } from 'lodash-es'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useLoadMessages = () => {
@@ -69,9 +68,6 @@ export default defineComponent({
     const state = reactive({
       channelMessageIds: computed(
         () => store.state.domain.messagesView.messageIds
-      ),
-      channelId: computed(
-        () => store.state.domain.messagesView.currentChannelId
       ),
       entryMessageId: computed(
         () => store.state.domain.messagesView.entryMessageId
