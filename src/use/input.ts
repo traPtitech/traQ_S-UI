@@ -1,6 +1,6 @@
 import { SetupContext } from '@vue/composition-api'
 
-type InputElement = HTMLTextAreaElement | HTMLInputElement
+type InputElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
 
 const useInput = (context: SetupContext) => {
   const onInput = (event: InputEvent) =>

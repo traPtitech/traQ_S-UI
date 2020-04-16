@@ -1,0 +1,51 @@
+<template>
+  <div>
+    <h3>通知: {{ status }}</h3>
+    <form-button
+      v-if="permission === 'default'"
+      label="設定"
+      on-secondary
+      @click="requestPermission"
+    />
+    <p v-else>ブラウザや端末の設定から変更できます</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, computed } from '@vue/composition-api'
+import FormButton from '@/components/UI/FormButton.vue'
+
+const statusTable: Record<NotificationPermission | '', string> = {
+  default: '未設定（通知は来ません）',
+  granted: '許可',
+  denied: '拒否',
+  '': ''
+}
+
+const useNotificationPermission = () => {
+  const permission = ref<NotificationPermission>()
+  permission.value = Notification.permission
+
+  const requestPermission = async () => {
+    permission.value = await Notification.requestPermission()
+  }
+
+  const status = computed(() => statusTable[permission.value ?? ''])
+
+  return { permission, requestPermission, status }
+}
+
+export default defineComponent({
+  name: 'Notification',
+  setup() {
+    const {
+      permission,
+      status,
+      requestPermission
+    } = useNotificationPermission()
+    return { permission, status, requestPermission }
+  }
+})
+</script>
+
+<style lang="scss" module></style>
