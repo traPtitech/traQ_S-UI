@@ -5,11 +5,11 @@ import { Message } from '@traptitech/traq'
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
   props: { isEntryMessage: boolean },
-  state: {
-    readonly content: string
-    readonly fileIds: Readonly<FileId[]>
-    readonly message?: Message
-  },
+  state: Readonly<{
+    content: string
+    fileIds: readonly FileId[]
+    message: Message
+  }>,
   context: SetupContext
 ) => {
   let lastHeight = 0
@@ -51,7 +51,7 @@ const useElementRenderObserver = (
       bodyRef.value
     ) {
       // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする
-      resizeObserver.observe(bodyRef.value)
+      resizeObserver.observe(bodyRef.value, { box: 'border-box' })
     }
   })
   watch(

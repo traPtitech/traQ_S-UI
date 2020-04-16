@@ -77,25 +77,21 @@ const useLoadMessages = () => {
     ),
     isInitialLoad: computed(() => store.state.domain.messagesView.isInitialLoad)
   })
-  const loadFormerMessages = async () => {
+  const loadMessages = async (direction: 'former' | 'latter') => async () => {
     state.isLoading = true
-    store.commit.domain.messagesView.setLastLoadingDirection('former')
-    await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
+    store.commit.domain.messagesView.setLastLoadingDirection(direction)
+    if (direction === 'former') {
+      await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
+    } else {
+      await store.dispatch.domain.messagesView.fetchAndRenderChannelLatterMessages()
+    }
     if (store.state.domain.messagesView.isInitialLoad) {
       store.commit.domain.messagesView.setIsInitialLoad(false)
     }
     state.isLoading = false
   }
-  const loadLatterMessages = async () => {
-    state.isLoading = true
-    const lastDirection = store.state.domain.messagesView.lastLoadingDirection
-    store.commit.domain.messagesView.setLastLoadingDirection('latter')
-    await store.dispatch.domain.messagesView.fetchAndRenderChannelLatterMessages()
-    if (store.state.domain.messagesView.isInitialLoad) {
-      store.commit.domain.messagesView.setIsInitialLoad(false)
-    }
-    state.isLoading = false
-  }
+  const loadFormerMessages = loadMessages('former')
+  const loadLatterMessages = loadMessages('latter')
   return { loadMessagesState: state, loadFormerMessages, loadLatterMessages }
 }
 
