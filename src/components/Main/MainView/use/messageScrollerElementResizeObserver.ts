@@ -43,7 +43,7 @@ const useMessageScrollerElementResizeObserver = (
       // エントリーより過去だった場合、エントリーより上にあるのでスクロール位置をずらす
       const messageDate = new Date(payload.date)
       if (messageDate < entryMessageDate.value) {
-        rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
+        rootRef.value.scrollTop += payload.heightDiff
         viewPortState.height += payload.heightDiff
       }
     } else if (
