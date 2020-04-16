@@ -4,7 +4,6 @@ import { createDirectStore } from 'direct-vuex'
 import VuexPersistence from 'vuex-persist'
 import indexedDBStorage from './indexedDBStorage'
 import { persistReducer } from './defineDBModule'
-import { root } from './root'
 import { entities } from './entities'
 import { domain } from './domain'
 import { app } from './app'
@@ -21,12 +20,6 @@ const persisted = new VuexPersistence({
   reducer: persistReducer
 })
 
-// vuex-persist setting for strict mode
-if (vuexStrict) {
-  ;(root.mutations as Record<string, any>).RESTORE_MUTATION =
-    persisted.RESTORE_MUTATION
-}
-
 const {
   store,
   rootActionContext,
@@ -34,7 +27,12 @@ const {
   rootGetterContext,
   moduleGetterContext
 } = createDirectStore({
-  ...root,
+  // vuex-persist setting for strict mode
+  mutations: vuexStrict
+    ? {
+        RESTORE_MUTATION: persisted.RESTORE_MUTATION
+      }
+    : {},
   modules: {
     entities,
     domain,
