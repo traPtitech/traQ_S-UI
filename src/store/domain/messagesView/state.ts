@@ -38,7 +38,7 @@ export interface S {
 
   renderedContentMap: Record<MessageId, string>
 
-  embeddedFilesMap: Record<MessageId, Embedding[]>
+  embeddingsMap: Record<MessageId, Embedding[]>
 }
 
 export const state: S = {
@@ -50,7 +50,7 @@ export const state: S = {
   lastLoadingDirection: 'latest',
   fetchLimit: 50,
   renderedContentMap: {},
-  embeddedFilesMap: {},
+  embeddingsMap: {},
   entryMessageId: undefined,
   isReachedEnd: false,
   isReachedLatest: false

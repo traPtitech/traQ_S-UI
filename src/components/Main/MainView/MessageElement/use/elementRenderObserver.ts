@@ -7,8 +7,10 @@ const useElementRenderObserver = (
   props: { isEntryMessage: boolean },
   state: Readonly<{
     content: string
-    fileIds: readonly FileId[]
-    message?: Message
+    message: Message
+  }>,
+  embeddingsState: Readonly<{
+    fileIds: Readonly<FileId[]>
   }>,
   context: SetupContext
 ) => {
@@ -47,7 +49,7 @@ const useElementRenderObserver = (
   const stop = watchEffect(async () => {
     if (
       (props.isEntryMessage ||
-        (state.content.length > 0 && state.fileIds.length > 0)) &&
+        (state.content.length > 0 && embeddingsState.fileIds.length > 0)) &&
       bodyRef.value
     ) {
       // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする

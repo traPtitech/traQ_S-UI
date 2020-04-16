@@ -191,16 +191,21 @@ export const actions = defineActions({
     const extracted = embeddingExtractor(content)
 
     await Promise.all(
-      extracted.embeddings.map(async e =>
-        rootDispatch.entities.fetchFileMetaByFileId(e.id)
-      )
+      extracted.embeddings.map(async e => {
+        if (e.type === 'file') {
+          rootDispatch.entities.fetchFileMetaByFileId(e.id)
+        }
+        if (e.type === 'message') {
+          rootDispatch.entities.fetchMessage(e.id)
+        }
+      })
     )
 
     const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })
-    commit.addEmbededFile({
+    commit.addEmbedding({
       messageId,
-      files: extracted.embeddings
+      embeddings: extracted.embeddings
     })
   },
   addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {

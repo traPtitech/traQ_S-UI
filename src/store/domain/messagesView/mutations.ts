@@ -47,8 +47,11 @@ export const mutations = defineMutations<S>()({
   unsetEntryMessageId(state) {
     state.entryMessageId = undefined
   },
-  addEmbededFile(state, payload: { messageId: MessageId; files: Embedding[] }) {
-    Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+  addEmbedding(
+    state,
+    payload: { messageId: MessageId; embeddings: Embedding[] }
+  ) {
+    Vue.set(state.embeddingsMap, payload.messageId, payload.embeddings)
   },
   setIsInitialLoad(state, loadedOnce: boolean) {
     state.isInitialLoad = loadedOnce
