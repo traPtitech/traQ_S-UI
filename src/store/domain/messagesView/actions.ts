@@ -193,10 +193,10 @@ export const actions = defineActions({
     await Promise.all(
       extracted.embeddings.map(async e => {
         if (e.type === 'file') {
-          rootDispatch.entities.fetchFileMetaByFileId(e.id)
+          return rootDispatch.entities.fetchFileMetaByFileId(e.id)
         }
         if (e.type === 'message') {
-          rootDispatch.entities.fetchMessage(e.id)
+          return rootDispatch.entities.fetchMessage(e.id)
         }
       })
     )

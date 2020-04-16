@@ -25,9 +25,14 @@
         :message-id="messageId"
         :stamps="state.message.stamps"
       />
+      <message-quote-list
+        v-if="embeddingsState.quoteMessageIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :message-ids="embeddingsState.quoteMessageIds"
+      />
       <message-file-list
         v-if="embeddingsState.fileIds.length > 0"
-        :class="$style.messageFileList"
+        :class="$style.messageEmbeddingsList"
         :file-ids="embeddingsState.fileIds"
       />
     </div>
@@ -54,6 +59,7 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
+import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 
@@ -73,7 +79,7 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
+  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList, MessageQuoteList },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
@@ -150,7 +156,7 @@ export default defineComponent({
   margin-top: 8px;
 }
 
-.messageFileList {
+.messageEmbeddingsList {
   margin-top: 16px;
 }
 </style>
