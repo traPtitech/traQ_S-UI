@@ -79,7 +79,13 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList, MessageQuoteList },
+  components: {
+    UserIcon,
+    MessageHeader,
+    MessageStampList,
+    MessageFileList,
+    MessageQuoteList
+  },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
@@ -108,7 +114,14 @@ export default defineComponent({
 
     const styles = useStyles(props, hoverState)
 
-    return { state, styles, onMouseEnter, onMouseLeave, bodyRef, embeddingState }
+    return {
+      state,
+      styles,
+      onMouseEnter,
+      onMouseLeave,
+      bodyRef,
+      embeddingsState
+    }
   }
 })
 </script>
