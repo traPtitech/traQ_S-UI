@@ -5,7 +5,8 @@ import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   StampHistoryEntry,
-  MyUserDetail
+  MyUserDetail,
+  ChannelSubscribeLevel
 } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
@@ -44,14 +45,23 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.staredChannelSet, channelId)
   },
 
-  setSubscribedChannels(state: S, subscribedChannels: ChannelId[]) {
-    state.subscribedChannels = subscribedChannels
-  },
-  setNotifiedChannels(state: S, notifiedChannels: ChannelId[]) {
-    state.notifiedChannels = notifiedChannels
-  },
-
   pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
     Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
+  },
+
+  setSubscriptionMap(
+    state: S,
+    subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
+  ) {
+    state.subscriptionMap = subscriptionMap
+  },
+  setSubscription(
+    state: S,
+    payload: {
+      channelId: ChannelId
+      subscriptionLevel: ChannelSubscribeLevel
+    }
+  ) {
+    Vue.set(state.subscriptionMap, payload.channelId, payload.subscriptionLevel)
   }
 })

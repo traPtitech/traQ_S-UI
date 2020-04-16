@@ -80,18 +80,20 @@ const useListByGradeName = () => {
 
     // 学年グループ
     for (const group of userGroups.value) {
-      const member = (group.members.map(member => users.value[member.id]) ?? [])
-        .filter(user => !!user)
-        .sort((u1, u2) => compareString(u1.name, u2.name))
+      const member = ((
+        group.members.map(member => users.value[member.id]) ?? []
+      ).filter(user => !!user) as User[]).sort((u1, u2) =>
+        compareString(u1.name, u2.name)
+      )
       userGradeEntries[group.name] = member
 
       member.map(user => user.id).forEach(id => categorized.add(id))
     }
 
     // BOTグループ
-    const bots = Object.values(users.value)
-      .filter(user => user.bot)
-      .sort((u1, u2) => compareString(u1.name, u2.name))
+    const bots = (Object.values(users.value).filter(
+      user => user?.bot
+    ) as User[]).sort((u1, u2) => compareString(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     return [
@@ -100,9 +102,9 @@ const useListByGradeName = () => {
       ),
       [
         'Others',
-        Object.values(users.value)
-          .filter(user => !categorized.has(user.id))
-          .sort((u1, u2) => compareString(u1.name, u2.name))
+        (Object.values(users.value).filter(
+          user => user && !categorized.has(user.id)
+        ) as User[]).sort((u1, u2) => compareString(u1.name, u2.name))
       ],
       ['BOT', bots]
     ]
@@ -128,7 +130,9 @@ const useUserListFolding = () => {
 }
 
 const useUserListFilter = () => {
-  const users = computed(() => Object.values(store.state.entities.users))
+  const users = computed(
+    () => Object.values(store.state.entities.users) as User[]
+  )
   const { textFilterState, setQuery } = useTextFilter(users, 'name')
   return {
     userListFilterState: textFilterState,

@@ -64,6 +64,9 @@ export default defineComponent({
         () => store.state.entities.users[props.message.userId ?? '']
       )
     })
+    if (state.user === undefined) {
+      store.dispatch.entities.fetchUser(props.message.userId)
+    }
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect(context)
     return {

@@ -22,7 +22,8 @@ import {
   reactive,
   computed,
   ref,
-  Ref
+  Ref,
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -31,6 +32,7 @@ import MainView from './MainView.vue'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
+import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   const state = reactive({
@@ -62,7 +64,7 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
 
 export default defineComponent({
   name: 'MessagesView',
-  props: { channelId: String },
+  props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
     MainView,
     MessagesViewFileUploadOverlay,
@@ -88,6 +90,7 @@ export default defineComponent({
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
       containerRef
     )
+
     return {
       state,
       fileDragDropState,
@@ -101,14 +104,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 32px;
-
 .container {
   display: flex;
   flex-direction: row;
   position: relative;
   height: 100%;
-  padding: 0 $messagePadding;
 }
 
 .fileUploadOverlay {

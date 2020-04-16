@@ -53,7 +53,9 @@ export default defineComponent({
 $editButtonText: 0.8rem;
 
 .container {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .content {
@@ -64,7 +66,6 @@ $editButtonText: 0.8rem;
   flex-shrink: 0;
   cursor: pointer;
   user-select: none;
-  position: absolute;
   width: 100%;
 }
 </style>

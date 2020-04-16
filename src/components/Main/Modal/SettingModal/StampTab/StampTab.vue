@@ -1,25 +1,29 @@
 <template>
-  <section :class="$style.container">
-    <p>スタンプ登録</p>
-    <p>スタンプ編集</p>
-    <p>スタンプパレット</p>
+  <section>
+    <new-stamp />
+    <edit-stamp />
+    <div>
+      <h3>スタンプパレット</h3>
+      <p title="4/1には実装されるよ">実装予定</p>
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
+import NewStamp from './NewStamp.vue'
+import EditStamp from './EditStamp.vue'
 
 export default defineComponent({
   name: 'StampTab',
   setup() {
     return {}
+  },
+  components: {
+    NewStamp,
+    EditStamp
   }
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  padding: 8px 16px;
-  overflow: hidden;
-}
-</style>
+<style lang="scss" module></style>

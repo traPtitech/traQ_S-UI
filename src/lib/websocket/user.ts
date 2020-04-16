@@ -54,8 +54,6 @@ export const onUserIconUpdated = async ({
     const res = await apis.getMe()
     store.commit.domain.me.setDetail(res.data)
   }
-
-  // TODO: アイコンキャッシュの削除(?)
 }
 
 export const onUserOnline = ({ id }: UserOnlineEvent['body']) => {

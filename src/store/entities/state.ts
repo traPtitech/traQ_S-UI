@@ -6,12 +6,14 @@ import {
   StampPalette,
   Webhook,
   Message,
-  FileInfo
+  FileInfo,
+  Tag
 } from '@traptitech/traq'
 import {
   UserId,
   ChannelId,
   UserGroupId,
+  TagId,
   StampId,
   StampPaletteId,
   WebhookId,
@@ -20,14 +22,15 @@ import {
 } from '@/types/entity-ids'
 
 export type S = {
-  users: Record<UserId, User>
-  messages: Record<MessageId, Message>
+  users: Record<UserId, User | undefined>
+  messages: Record<MessageId, Message | undefined>
   channels: Record<ChannelId, Channel>
   userGroups: Record<UserGroupId, UserGroup>
   stamps: Record<StampId, Stamp>
   stampPalettes: Record<StampPaletteId, StampPalette>
-  webhooks: Record<WebhookId, Webhook>
-  fileMetaData: Record<FileId, FileInfo>
+  webhooks: Record<WebhookId, Webhook | undefined>
+  fileMetaData: Record<FileId, FileInfo | undefined>
+  tags: Record<TagId, Tag | undefined>
 }
 
 export const state: S = {
@@ -38,5 +41,6 @@ export const state: S = {
   stamps: {},
   stampPalettes: {},
   webhooks: {},
-  fileMetaData: {}
+  fileMetaData: {},
+  tags: {}
 }

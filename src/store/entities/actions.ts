@@ -2,19 +2,8 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import api from '@/lib/api'
-import { FileId } from '@/types/entity-ids'
-
-/**
- * オブジェクトの配列から特定のキーを用いたRecordを生成する
- * @param array 対象オブジェクトの配列
- * @param key Recordのキーにしたいオブジェクトのキー
- */
-const reduceToRecord = <T>(array: T[], key: keyof T) =>
-  array.reduce((acc, cur) => {
-    const ck = cur[key]
-    if (typeof ck !== 'string') return acc
-    return Object.assign(acc, { [ck]: cur })
-  }, {} as Record<string, T>)
+import { reduceToRecord } from '@/lib/util/record'
+import { FileId, TagId, MessageId, ChannelId } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -44,6 +33,11 @@ export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
 export const actions = defineActions({
+  async fetchUser(context, userId: string) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getUser(userId)
+    commit.addUser({ id: userId, entity: res.data })
+  },
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
     const res = await api.getUsers()
@@ -72,17 +66,28 @@ export const actions = defineActions({
     const res = await api.getStampPalettes()
     commit.setStampPalettes(reduceToRecord(res.data, 'id'))
   },
-  async fetchMessagesByChannelId(
-    context,
-    { channelId, limit, offset }: GetMessagesParams
-  ) {
+  async fetchMessagesByChannelId(context, params: GetMessagesParams) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessages(channelId, limit, offset)
+    const res = await api.getMessages(
+      params.channelId,
+      params.limit,
+      params.offset,
+      params.since?.toISOString(),
+      params.until?.toISOString(),
+      params.inclusive,
+      params.order
+    )
     commit.extendMessages(reduceToRecord(res.data, 'id'))
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
+  },
+  async fetchMessage(context, messageId: MessageId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getMessage(messageId)
+    commit.addMessage({ id: res.data.id, entity: res.data })
+    return res.data
   },
   async fetchFileMetaByChannelId(
     context,
@@ -104,5 +109,27 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
+  },
+  async fetchTag(context, tagId: TagId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getTag(tagId)
+    commit.addTags({ id: res.data.id, entity: res.data })
+  },
+  async createChannel(
+    context,
+    payload: { name: string; parent: ChannelId | null }
+  ) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.createChannel({
+      name: payload.name,
+      parent: payload.parent
+    })
+    commit.addChannel({ id: res.data.id, entity: res.data })
+    if (res.data.parentId) {
+      // 親チャンネルの`children`が不整合になるので再取得
+      const parentRes = await api.getChannel(res.data.parentId)
+      commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
+    }
+    return res.data
   }
 })

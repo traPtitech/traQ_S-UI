@@ -4,9 +4,6 @@ import { RouteName } from '@/router'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 
-// TODO: 起動時チャンネル
-const defaultChannelName = 'random'
-
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWacher = (context: SetupContext) => {
@@ -24,10 +21,11 @@ const useRouteWacher = (context: SetupContext) => {
     isInitialView: true
   })
 
-  const onRouteChangedToIndex = () => {
+  const onRouteChangedToIndex = async () => {
+    await (store.original as any).restored
     context.root.$router.replace({
       name: RouteName.Channel,
-      params: { channel: defaultChannelName }
+      params: { channel: store.state.app.browserSettings.openChannelName }
     })
     return
   }
@@ -36,18 +34,26 @@ const useRouteWacher = (context: SetupContext) => {
       // まだチャンネルツリーが構築されていない
       return
     }
+    const entryMessageId =
+      context.root.$route.query.message &&
+      typeof context.root.$route.query.message === 'string'
+        ? context.root.$route.query.message
+        : undefined
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
-      store.dispatch.domain.messagesView.changeCurrentChannel(id)
-      changeViewTitle(`#${state.channelParam}`)
-      state.view = 'main'
+      store.dispatch.domain.messagesView.changeCurrentChannel({
+        channelId: id,
+        entryMessageId
+      })
     } catch (e) {
       state.view = 'not-found'
+      return
     }
-    return
+    changeViewTitle(`#${state.channelParam}`)
+    state.view = 'main'
   }
   const onRouteChangedToFile = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
@@ -60,13 +66,15 @@ const useRouteWacher = (context: SetupContext) => {
     }
     const file = store.state.entities.fileMetaData[fileId]
 
-    if (!file.channelId) {
+    if (!file?.channelId) {
       // ファイルに関連づいたチャンネルIDがなかった
       state.view = 'not-found'
       return
     }
     const channelPath = channelIdToPath(file.channelId)
-    store.dispatch.domain.messagesView.changeCurrentChannel(file.channelId)
+    store.dispatch.domain.messagesView.changeCurrentChannel({
+      channelId: file.channelId
+    })
     const modalPayload = {
       type: 'file' as const,
       id: fileId,
@@ -76,23 +84,55 @@ const useRouteWacher = (context: SetupContext) => {
     changeViewTitle(`#${channelPath} - ${file.name}`)
     state.view = 'main'
   }
+  const onRouteChangedToMessage = async () => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      return
+    }
+    const { channelIdToPath } = useChannelPath()
+    const messageId = state.idParam
+    const message =
+      store.state.entities.messages[messageId] ??
+      (await store.dispatch.entities.fetchMessage(messageId))
+    if (!message?.channelId) {
+      // チャンネルがなかった
+      state.view = 'not-found'
+      return
+    }
+
+    context.root.$router.replace({
+      name: RouteName.Channel,
+      params: { channel: channelIdToPath(message.channelId).join('/') },
+      query: { message: message.id }
+    })
+  }
 
   const onRouteParamChange = async (param: string, prevParam: string) => {
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
-      onRouteChangedToIndex()
+      await onRouteChangedToIndex()
     } else if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
+    } else if (routeName === RouteName.Message) {
+      await onRouteChangedToMessage()
     }
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
     const isOnInitialModalRoute =
       state.isInitialView &&
-      history.state.modalState &&
-      !!history.state.modalState[0].relatedRoute
+      history.state?.modalState &&
+      !!history.state?.modalState[0].relatedRoute
     store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+
+    if (state.isInitialView && !isOnInitialModalRoute) {
+      // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
+      if (store.state.ui.modal.modalState.length !== 0) {
+        store.commit.ui.modal.setState([])
+      }
+      history.replaceState(null, '')
+    }
+
     state.isInitialView = false
   }
 

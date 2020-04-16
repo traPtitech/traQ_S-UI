@@ -1,13 +1,10 @@
 import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
+import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
-import { domain } from '@/store/domain'
 import router from '@/router'
 import useChannelPath from '@/use/channelPath'
-
-const deepEquals = (a: Object, b: Object) =>
-  JSON.stringify(a) === JSON.stringify(b)
 
 export const modalActionContext = (context: any) =>
   moduleActionContext(context, modal)
@@ -91,17 +88,22 @@ export const actions = defineActions({
    * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
    */
   clearModal: async context => {
-    const { state, dispatch } = modalActionContext(context)
+    const { state, commit, dispatch } = modalActionContext(context)
     const length = state.modalState.length
-    for (let i = 0; i < length; i++) {
-      await dispatch.popModal()
+    commit.setIsClearingModal(true)
+    try {
+      for (let i = 0; i < length; i++) {
+        await dispatch.popModal()
+      }
+    } finally {
+      commit.setIsClearingModal(false)
     }
   },
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
 
     const isUsedIndex = state.modalState.findIndex(ms =>
-      deepEquals(ms, modalState)
+      isEqual(ms, modalState)
     )
     if (isUsedIndex !== -1) {
       return
@@ -116,6 +118,13 @@ export const actions = defineActions({
       case 'file':
         break
       case 'setting':
+        break
+      case 'group':
+        break
+      case 'tag':
+        store.commit.entities.deleteTag(modalState.id)
+        break
+      case 'channel-create':
         break
       default:
         const invalid: never = modalState

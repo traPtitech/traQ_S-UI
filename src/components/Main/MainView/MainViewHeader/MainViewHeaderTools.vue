@@ -12,13 +12,27 @@
       mdi
       name="pin"
     />
+    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <icon
-      @click="context.emit('click-notification')"
+      v-show="currentChannelSubscription === 'notified'"
+      @click="changeToNextSubscriptionLevel"
       :class="$style.icon"
       mdi
       name="bell"
     />
-    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
+    <icon
+      v-show="currentChannelSubscription === 'subscribed'"
+      @click="changeToNextSubscriptionLevel"
+      :class="$style.icon"
+      name="subscribed"
+    />
+    <icon
+      v-show="currentChannelSubscription === 'none'"
+      @click="changeToNextSubscriptionLevel"
+      :class="$style.icon"
+      mdi
+      name="bell-outline"
+    />
     <icon
       v-show="isStared"
       @click="context.emit('unstar-channel')"
@@ -31,12 +45,15 @@
       :class="$style.icon"
       name="star-outline"
     />
-    <icon
-      @click="context.emit('click-more')"
-      :class="$style.icon"
-      mdi
-      name="dots-horizontal"
-    />
+    <div :class="$style.moreButton">
+      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+      <icon
+        @click="context.emit('click-more')"
+        :class="$style.icon"
+        mdi
+        name="dots-horizontal"
+      />
+    </div>
   </div>
 </template>
 
@@ -52,6 +69,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
+import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 
 const useStyles = () =>
   reactive({
@@ -62,6 +80,8 @@ const useStyles = () =>
     }))
   })
 
+export const targetPortalName = 'header-popup'
+
 export default defineComponent({
   name: 'MainViewHeaderTools',
   components: {
@@ -69,7 +89,16 @@ export default defineComponent({
   },
   props: { isStared: { type: Boolean, default: false } },
   setup(_, context: SetupContext) {
-    return { context }
+    const {
+      changeToNextSubscriptionLevel,
+      currentChannelSubscription
+    } = useChannelSubscriptionState()
+    return {
+      context,
+      currentChannelSubscription,
+      changeToNextSubscriptionLevel,
+      targetPortalName
+    }
   }
 })
 </script>
@@ -85,5 +114,14 @@ export default defineComponent({
 .icon {
   margin: 8px;
   cursor: pointer;
+}
+.moreButton {
+  position: relative;
+  display: inline;
+}
+.popupLocator {
+  position: absolute;
+  right: 0;
+  top: 100%;
 }
 </style>

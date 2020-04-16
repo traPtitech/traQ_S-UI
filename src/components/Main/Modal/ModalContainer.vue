@@ -5,6 +5,21 @@
       v-else-if="modalState.current.type === 'user'"
       :id="modalState.current.id"
     />
+    <notification-modal
+      v-else-if="modalState.current.type === 'notification'"
+    />
+    <group-modal
+      v-else-if="modalState.current.type === 'group'"
+      :group-id="modalState.current.id"
+    />
+    <tag-modal
+      v-else-if="modalState.current.type === 'tag'"
+      :tag-id="modalState.current.id"
+    />
+    <channel-create-modal
+      v-else-if="modalState.current.type === 'channel-create'"
+      :parent-channel-id="modalState.current.parentChannelId"
+    />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -30,6 +45,10 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import SettingModal from '@/components/Main/Modal/SettingModal/SettingModal.vue'
 import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
+import NotificationModal from '@/components/Main/Modal/NotificationModal/NotificationModal.vue'
+import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
+import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
+import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/ChannelCreateModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -89,7 +108,11 @@ export default defineComponent({
   },
   components: {
     SettingModal,
-    UserModal
+    UserModal,
+    NotificationModal,
+    GroupModal,
+    TagModal,
+    ChannelCreateModal
   }
 })
 </script>

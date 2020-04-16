@@ -1,14 +1,17 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div :class="$style.viewport">
+    <div ref="viewportRef" :class="$style.viewport">
       <message-element
         :class="$style.element"
         v-for="messageId in messageIds"
         :key="messageId"
         :message-id="messageId"
+        :is-entry-message="entryMessageId === messageId"
         @change-height="onChangeHeight"
+        @entry-message-loaded="onEntryMessageLoaded"
       />
     </div>
+    <div :class="$style.bottomSpacer"></div>
   </div>
 </template>
 
@@ -25,7 +28,9 @@ import {
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
+import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from './MessageElement/MessageElement.vue'
+import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 
 const LOAD_MORE_THRESHOLD = 10
@@ -39,18 +44,36 @@ export default defineComponent({
     messageIds: {
       type: Array as PropType<MessageId[]>,
       required: true
+    },
+    entryMessageId: String as PropType<MessageId>,
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
+    lastLoadingDirection: {
+      type: String as PropType<LoadingDirection>,
+      required: true
+    },
+    isInitialLoad: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
+    const rootRef = ref<HTMLElement>(null)
     const state = reactive({
       height: 0,
       scrollTop: 0,
       isFirstView: computed(
-        () => store.state.domain.messagesView.currentOffset === 0
-      ),
-      isLoading: false
+        () =>
+          store.state.domain.messagesView.loadedMessageOldestDate === undefined
+      )
     })
-    const rootRef = ref<HTMLElement>(null)
+
+    const {
+      onChangeHeight,
+      onEntryMessageLoaded
+    } = useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     onMounted(() => {
       state.height = rootRef.value?.scrollHeight ?? 0
@@ -62,52 +85,50 @@ export default defineComponent({
         if (!rootRef.value) return
         await context.root.$nextTick()
         const newHeight = rootRef.value.scrollHeight
-        rootRef.value.scrollTo({
-          top:
-            // 新規に一つ追加された場合は一番下までスクロール
-            // TODO: 次のようにする
-            // - 中途半端な位置にスクロールしてるときに1件追加 → 見た目上スクロールしない
-            // - 一番下までスクロールしてる時に1件追加 → 一番下までスクロール
-            state.isFirstView || ids.length - prevIds.length === 1
-              ? newHeight
-              : newHeight - state.height
-        })
+        if (
+          props.lastLoadingDirection === 'latest' ||
+          props.lastLoadingDirection === 'former'
+        ) {
+          // 新規に一つ追加された場合は一番下までスクロール
+          rootRef.value.scrollTo({
+            top:
+              state.isFirstView || ids.length - prevIds.length === 1
+                ? newHeight
+                : newHeight - state.height
+          })
+        }
         state.height = newHeight
-        state.isLoading = false
       }
     )
 
-    const handleScroll = throttle(async () => {
+    const handleScroll = throttle(() => {
       if (!rootRef.value) return
-      state.scrollTop = rootRef.value.scrollTop
+      const clientHeight = rootRef.value.clientHeight
+      const scrollHeight = rootRef.value.scrollHeight
+      const scrollTop = rootRef.value.scrollTop
+      state.scrollTop = scrollTop
 
-      if (state.isFirstView || state.isLoading) return
-      if (state.scrollTop < LOAD_MORE_THRESHOLD) {
-        state.isLoading = true
-        await store.dispatch.domain.messagesView.fetchChannelMessages()
+      if (state.isFirstView || props.isLoading) return
+      if (
+        state.scrollTop < LOAD_MORE_THRESHOLD &&
+        !store.state.domain.messagesView.isReachedEnd
+      ) {
+        context.emit('request-load-former')
+      }
+      if (
+        scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
+        !store.state.domain.messagesView.isReachedLatest
+      ) {
+        context.emit('request-load-latter')
       }
     }, 17)
-
-    const onChangeHeight = (payload: {
-      heightDiff: number
-      top: number
-      bottom: number
-      lastTop: number
-      lastBottom: number
-    }) => {
-      if (!rootRef.value) {
-        return
-      }
-      // 画像読み込みで高さがずれた
-      rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
-      state.height += payload.heightDiff
-    }
 
     return {
       state,
       rootRef,
       handleScroll,
-      onChangeHeight
+      onChangeHeight,
+      onEntryMessageLoaded
     }
   }
 })
@@ -130,5 +151,10 @@ export default defineComponent({
 
 .element {
   margin: 4px 0;
+}
+
+.bottomSpacer {
+  width: 100%;
+  height: 12px;
 }
 </style>

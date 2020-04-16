@@ -1,9 +1,13 @@
 import Vue from 'vue'
-import { Channel } from '@traptitech/traq'
+import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, MessageId } from '@/types/entity-ids'
 import store from '..'
+import {
+  MessageStampedEvent,
+  MessageUnstampedEvent
+} from '@/lib/websocket/events'
 
 type RecordKeyOf<R> = R extends Record<infer K, any> ? K : never
 type RecordValueOf<R> = R extends Record<string, infer V> ? V : never
@@ -52,6 +56,7 @@ export const mutations = defineMutations<S>()({
   setStampPalettes: setMutation('stampPalettes'),
   setWebhooks: setMutation('webhooks'),
   setFileMetaData: setMutation('fileMetaData'),
+  setTags: setMutation('tags'),
 
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
@@ -61,14 +66,17 @@ export const mutations = defineMutations<S>()({
   extendStampPalettes: extendMutation('stampPalettes'),
   extendWebhooks: extendMutation('webhooks'),
   extendFileMetaData: extendMutation('fileMetaData'),
+  extendUserTags: extendMutation('tags'),
 
   addUser: addMutation('users'),
+  addMessage: addMutation('messages'),
   addChannel: addMutation('channels'),
   addUserGroup: addMutation('userGroups'),
   addStamp: addMutation('stamps'),
   addStampPalette: addMutation('stampPalettes'),
   addWebhook: addMutation('webhooks'),
   addFileMetaData: addMutation('fileMetaData'),
+  addTags: addMutation('tags'),
 
   deleteUser: deleteMutation('users'),
   deleteChannel: deleteMutation('channels'),
@@ -76,5 +84,42 @@ export const mutations = defineMutations<S>()({
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),
-  deleteFileMetaData: deleteMutation('fileMetaData')
+  deleteFileMetaData: deleteMutation('fileMetaData'),
+  deleteTag: deleteMutation('tags'),
+
+  onMessageStamped(state, e: MessageStampedEvent['body']) {
+    const message = state.messages[e.message_id]
+    if (!message) return
+
+    const { stamps } = message
+    // 既に押されているスタンプは更新、新規は追加
+    if (
+      stamps.some(
+        stamp => stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+      )
+    ) {
+      message.stamps = stamps.map(stamp =>
+        stamp.stampId === e.stamp_id && stamp.userId === e.user_id
+          ? { ...stamp, count: e.count, createdAt: e.created_at }
+          : stamp
+      )
+    } else {
+      const stamp: MessageStamp = {
+        userId: e.user_id,
+        stampId: e.stamp_id,
+        count: e.count,
+        createdAt: e.created_at,
+        updatedAt: e.created_at
+      }
+      message.stamps.push(stamp)
+    }
+  },
+  onMessageUnstamped(state, e: MessageUnstampedEvent['body']) {
+    const message = state.messages[e.message_id]
+    if (!message) return
+
+    message.stamps = message.stamps.filter(
+      stamp => !(stamp.stampId === e.stamp_id && stamp.userId === e.user_id)
+    )
+  }
 })

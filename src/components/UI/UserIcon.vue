@@ -13,7 +13,7 @@ import {
   PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import api, { buildUserIconPath } from '@/lib/api'
+import api, { buildUserIconPath, buildFilePath } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 
@@ -36,19 +36,22 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const user = computed(() => store.state.entities.users[props.userId])
+    const userIconFileId = computed(() => user.value?.iconFileId ?? '')
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.secondary,
         width: `${props.size}px`,
         height: `${props.size}px`,
-        backgroundImage: `url(${buildUserIconPath(props.userId)})`
+        backgroundImage: userIconFileId.value
+          ? `url(${buildUserIconPath(userIconFileId.value)})`
+          : undefined
       }))
     })
-    const user = computed(() => store.state.entities.users[props.userId])
     const onClick = (e: Event) => {
       e.stopPropagation()
       if (!props.preventModal) {
-        if (user.value.bot && user.value.name.indexOf('@Webhook')) {
+        if (user.value?.bot && user.value.name.indexOf('@Webhook')) {
           return
         }
         store.dispatch.ui.modal.pushModal({

@@ -1,11 +1,7 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ state.user.displayName }}</span>
-    <grade-badge
-      :class="$style.badge"
-      :user-id="userId"
-      :is-bot="state.user.bot"
-    />
+    <span :class="$style.displayName">{{ state.displayName }}</span>
+    <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
 </template>
@@ -22,6 +18,8 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
+import apis from '@/lib/api'
+import { User } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -43,8 +41,14 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.users[props.userId]),
+      displayName: computed((): string => state.user?.displayName ?? 'unknown'),
+      bot: computed((): boolean => state.user?.bot ?? false),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
+    if (state.user === undefined) {
+      store.dispatch.entities.fetchUser(props.userId)
+    }
+
     const styles = reactive({
       displayName: makeStyles(theme => {
         return {
@@ -57,7 +61,6 @@ export default defineComponent({
         }
       })
     })
-
     return { state, styles }
   }
 })

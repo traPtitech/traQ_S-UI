@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.hash" :style="styles.hash">
-      <icon name="hash" />
+      <icon name="hash" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator has-border />
@@ -121,11 +121,13 @@ export default defineComponent({
   height: 32px;
 }
 .hash {
+  border: solid 2px transparent;
   border-radius: 4px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
+  box-sizing: content-box;
 }
 .inactive {
   opacity: 0.5;

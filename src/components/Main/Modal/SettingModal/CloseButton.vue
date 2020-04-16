@@ -48,6 +48,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: absolute;
+  top: 30px;
+  right: 120px;
   text-align: center;
   font-weight: bold;
   font-size: 0.8rem;

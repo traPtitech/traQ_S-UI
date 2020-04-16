@@ -8,56 +8,34 @@
       :is-stared="channelState.stared"
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
-      @click-notification="openNotificationModal"
+      @click-more="togglePopupMenu"
     />
+    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+      <main-view-header-tools-menu
+        :class="$style.toolsMenu"
+        v-click-outside="closePopupMenu"
+        @click-notification="openNotificationModal"
+        @click-create-channel="openChannelCreateModal"
+      />
+    </portal>
   </header>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
+import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
+import usePopupMenu from './use/popupMenu'
+import useChannelState from './use/channelState'
+import useStarChannel from './use/starChannel'
+import useNotificationModal from './use/notificationModal'
+import useChannelCreateModal from './use/channelCreateModal'
 import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
-import MainViewHeaderTools from './MainViewHeaderTools.vue'
-
-type Props = {
-  channelId: ChannelId
-}
-
-const useChannelState = (props: Props) => {
-  const state = reactive({
-    stared: computed(
-      () => props.channelId in store.state.domain.me.staredChannelSet
-    )
-  })
-  return { channelState: state }
-}
-
-const useStarChannel = (props: Props) => {
-  const starChannel = () => {
-    store.dispatch.domain.me.starChannel(props.channelId)
-  }
-  const unstarChannel = () => {
-    store.dispatch.domain.me.unstarChannel(props.channelId)
-  }
-  return { starChannel, unstarChannel }
-}
-
-const useNotificationModal = (props: Props) => {
-  const openNotificationModal = () => {
-    store.dispatch.ui.modal.pushModal({
-      type: 'notification',
-      channelId: props.channelId
-    })
-  }
-  return { openNotificationModal }
-}
+import MainViewHeaderTools, {
+  targetPortalName
+} from './MainViewHeaderTools.vue'
+import MainViewHeaderToolsMenu from './MainViewHeaderToolsMenu.vue'
 
 const useStyles = () =>
   reactive({
@@ -72,7 +50,8 @@ export default defineComponent({
   name: 'MainViewHeader',
   components: {
     MainViewHeaderChannelName,
-    MainViewHeaderTools
+    MainViewHeaderTools,
+    MainViewHeaderToolsMenu
   },
   props: {
     channelId: {
@@ -81,16 +60,23 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
+    const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     return {
+      isPopupMenuShown,
       channelState,
       styles,
       starChannel,
       unstarChannel,
-      openNotificationModal
+      openNotificationModal,
+      openChannelCreateModal,
+      togglePopupMenu,
+      closePopupMenu,
+      targetPortalName
     }
   }
 })
@@ -98,6 +84,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,5 +93,11 @@ export default defineComponent({
 }
 .tools {
   flex-shrink: 0;
+}
+.toolsMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 999;
 }
 </style>
