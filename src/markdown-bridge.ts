@@ -28,6 +28,7 @@ export const setupGlobalFuncs = () => {
   }
 
   window.changeChannel = (channelPath: string) => {
-    router.push(`/channels/${channelPath}`)
+    // 同じ場所に移動しようとした際のエラーを消す
+    router.push(`/channels/${channelPath}`).catch(() => {})
   }
 }
