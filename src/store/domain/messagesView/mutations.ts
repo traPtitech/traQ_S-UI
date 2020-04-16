@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S, LoadingDirection } from './state'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { EmbeddedFile } from '@/lib/embeddingExtractor'
+import { Embedding } from '@/lib/embeddingExtractor'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
@@ -47,10 +47,7 @@ export const mutations = defineMutations<S>()({
   unsetEntryMessageId(state) {
     state.entryMessageId = undefined
   },
-  addEmbededFile(
-    state,
-    payload: { messageId: MessageId; files: EmbeddedFile[] }
-  ) {
+  addEmbededFile(state, payload: { messageId: MessageId; files: Embedding[] }) {
     Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
   },
   setIsInitialLoad(state, loadedOnce: boolean) {

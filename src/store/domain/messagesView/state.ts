@@ -1,5 +1,5 @@
 import { MessageId, ChannelId } from '@/types/entity-ids'
-import { EmbeddedFile } from '@/lib/embeddingExtractor'
+import { Embedding } from '@/lib/embeddingExtractor'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -38,7 +38,7 @@ export interface S {
 
   renderedContentMap: Record<MessageId, string>
 
-  embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
+  embeddedFilesMap: Record<MessageId, Embedding[]>
 }
 
 export const state: S = {

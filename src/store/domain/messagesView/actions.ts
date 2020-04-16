@@ -198,7 +198,10 @@ export const actions = defineActions({
 
     const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })
-    commit.addEmbededFile({ messageId, files: extracted.embeddings })
+    commit.addEmbededFile({
+      messageId,
+      files: extracted.embeddings
+    })
   },
   addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
