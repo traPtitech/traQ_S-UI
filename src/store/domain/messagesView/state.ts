@@ -1,5 +1,6 @@
-import { MessageId, ChannelId } from '@/types/entity-ids'
 import { Embedding } from '@/lib/embeddingExtractor'
+import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
+import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -8,6 +9,10 @@ export interface S {
 
   /** 現在表示対象になっている全てのメッセージID */
   messageIds: MessageId[]
+
+  pinnedMessages: Pin[]
+
+  currentOffset: number
 
   /** 読み込まれているメッセージのうち、最も新しいものの日時 */
   loadedMessageLatestDate: Date | undefined
@@ -39,11 +44,19 @@ export interface S {
   renderedContentMap: Record<MessageId, string>
 
   embeddingsMap: Record<MessageId, Embedding[]>
+
+  currentViewers: ChannelViewer[]
+
+  topic: string
+
+  subscribers: UserId[]
 }
 
 export const state: S = {
   currentChannelId: '',
   messageIds: [],
+  pinnedMessages: [],
+  currentOffset: 0,
   loadedMessageLatestDate: undefined,
   loadedMessageOldestDate: undefined,
   isInitialLoad: false,
@@ -53,5 +66,8 @@ export const state: S = {
   embeddingsMap: {},
   entryMessageId: undefined,
   isReachedEnd: false,
-  isReachedLatest: false
+  isReachedLatest: false,
+  currentViewers: [],
+  topic: '',
+  subscribers: []
 }

@@ -37,6 +37,7 @@ const useNotificationPermission = () => {
 
 export default defineComponent({
   name: 'Notification',
+  components: { FormButton },
   setup() {
     const {
       permission,

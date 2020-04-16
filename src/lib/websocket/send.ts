@@ -1,12 +1,13 @@
-import { ws } from './index'
+import { ws, wsConnectionPromise } from './index'
 import { ChannelViewState } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
 type WebSocketCommand = 'viewstate'
 
-const sendWebSocket = (
+const sendWebSocket = async (
   ...command: readonly [WebSocketCommand, ...string[]]
-): void => {
+): Promise<void> => {
+  await wsConnectionPromise
   if (ws === undefined) {
     throw new Error('WebSocket is not connected')
   }
@@ -23,10 +24,10 @@ type ChangeViewStateFunction = {
 export const changeViewState: ChangeViewStateFunction = (
   channelId: ChannelId | null,
   viewState?: ChannelViewState
-): void => {
+): Promise<void> => {
   if (channelId === null) {
-    sendWebSocket(VIEWSTATE_COMMAND, 'null')
+    return sendWebSocket(VIEWSTATE_COMMAND, 'null')
   } else {
-    sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
+    return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
 }

@@ -7,6 +7,7 @@ import {
   ClipFolderId,
   StampPaletteId
 } from '@/types/entity-ids'
+import { ChannelViewState, Pin, ChannelViewer } from '@traptitech/traq'
 
 export type WebSocketEvent =
   | UserEvent
@@ -142,7 +143,7 @@ export interface ChannelViewersChangedEvent {
   type: 'CHANNEL_VIEWERS_CHANGED'
   body: {
     id: ChannelId
-    viewers: UserId[]
+    viewers: ChannelViewer[]
   }
 }
 
@@ -161,6 +162,11 @@ type MessageEvent =
 
 interface MessageIdBody {
   id: MessageId
+}
+
+interface PinBody {
+  message_id: MessageId
+  channel_id: ChannelId
 }
 
 export interface MessageCreatedEvent {
@@ -205,12 +211,12 @@ export interface MessageUnstampedEvent {
 
 export interface MessagePinnedEvent {
   type: 'MESSAGE_PINNED'
-  body: MessageIdBody
+  body: PinBody
 }
 
 export interface MessageUnpinnedEvent {
   type: 'MESSAGE_UNPINNED'
-  body: MessageIdBody
+  body: PinBody
 }
 
 /*

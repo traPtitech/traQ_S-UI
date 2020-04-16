@@ -5,7 +5,9 @@
       :current-navigation="currentNavigation"
     />
     <navigation-content :current-navigation="currentNavigation" />
-    <close-button />
+    <div :class="$style.close">
+      <close-button with-text @click="onClickClear" :size="56" />
+    </div>
   </div>
 </template>
 
@@ -40,10 +42,13 @@ export default defineComponent({
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
 
+    const onClickClear = () => store.dispatch.ui.modal.clearModal()
+
     return {
       styles,
       ...toRefs(navigationSelectorState),
-      onNavigationChange
+      onNavigationChange,
+      onClickClear
     }
   },
   components: {
@@ -64,5 +69,8 @@ export default defineComponent({
 }
 
 .close {
+  position: absolute;
+  top: 30px;
+  right: 120px;
 }
 </style>

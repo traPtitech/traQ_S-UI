@@ -1,5 +1,9 @@
 <template>
-  <div @click="onClick" :class="$style.container" :style="styles.container">
+  <div
+    @click.stop="onClick"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <!-- TODO: Badge -->
   </div>
 </template>
