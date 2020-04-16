@@ -50,7 +50,7 @@ const useMessageScrollerElementResizeObserver = (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
-      rootRef.value.scrollTop = rootRef.value.scrollTop + payload.heightDiff
+      rootRef.value.scrollTop += payload.heightDiff
       viewPortState.height += payload.heightDiff
     }
   }
