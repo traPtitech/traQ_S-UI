@@ -22,7 +22,7 @@ const useStyles = (props: { topicContent?: string }) =>
       color: props.topicContent === '' ? theme.ui.secondary : theme.ui.primary
     })),
     topic: makeStyles(theme => ({
-      opacity: props.topicContent === '' ? '50%' : '100%'
+      opacity: props.topicContent === '' ? '0.5' : '1'
     }))
   })
 

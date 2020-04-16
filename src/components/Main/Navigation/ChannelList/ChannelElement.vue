@@ -199,7 +199,7 @@ $bgLeftShift: 4px;
   z-index: 0;
   border-top-left-radius: 100vw;
   border-bottom-left-radius: 100vw;
-  opacity: 10%;
+  opacity: 0.1;
   pointer-events: none;
 }
 </style>
