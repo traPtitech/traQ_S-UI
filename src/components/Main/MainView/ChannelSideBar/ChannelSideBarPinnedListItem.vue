@@ -3,7 +3,7 @@
     <div :class="$style.itemHeader">
       <user-icon :size="20" :user-id="pinnedMessage.message.userId" />
       <span :style="styles.displayName" :class="$style.displayName">{{
-        state.user.displayName
+        state.userDisplayName
       }}</span>
     </div>
     <span :class="$style.text" :style="styles.text">{{
@@ -44,8 +44,10 @@ export default defineComponent({
   props: { pinnedMessage: { type: Object as PropType<Pin>, required: true } },
   setup(props) {
     const state = reactive({
-      user: computed(
-        () => store.state.entities.users[props.pinnedMessage.message.userId]
+      userDisplayName: computed(
+        () =>
+          store.state.entities.users[props.pinnedMessage.message.userId]
+            ?.displayName ?? ''
       )
     })
     const styles = useStyles()
