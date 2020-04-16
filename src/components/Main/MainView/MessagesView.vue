@@ -77,7 +77,7 @@ const useLoadMessages = () => {
     ),
     isInitialLoad: computed(() => store.state.domain.messagesView.isInitialLoad)
   })
-  const loadMessages = async (direction: 'former' | 'latter') => async () => {
+  const loadMessages = (direction: 'former' | 'latter') => async () => {
     state.isLoading = true
     store.commit.domain.messagesView.setLastLoadingDirection(direction)
     if (direction === 'former') {
