@@ -60,7 +60,8 @@ export default defineComponent({
       // モーダル削除時に消えちゃうため、実体を退避
       const pathCache = channelPath.value
       await store.dispatch.ui.modal.clearModal()
-      context.root.$router.push(`/channels/${pathCache}`)
+      // 同じ場所に移動しようとした際のエラーを消す
+      context.root.$router.push(`/channels/${pathCache}`).catch(() => {})
     }
 
     return {

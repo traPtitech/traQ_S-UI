@@ -6,6 +6,9 @@ import router from './router'
 import store from './store'
 import PortalVue from 'portal-vue'
 import vClickOutside from 'v-click-outside'
+import { setupGlobalFuncs } from './markdown-bridge'
+
+setupGlobalFuncs()
 
 Vue.use(VueCompositionApi)
 Vue.use(PortalVue)
