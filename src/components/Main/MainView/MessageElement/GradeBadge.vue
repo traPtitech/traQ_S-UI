@@ -15,7 +15,7 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '../../../../lib/styles'
+import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'GradeBadge',

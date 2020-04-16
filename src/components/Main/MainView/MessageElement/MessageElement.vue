@@ -1,5 +1,11 @@
 <template>
-  <div :class="$style.body" :style="styles.body" ref="bodyRef">
+  <div
+    :class="$style.body"
+    :style="styles.body"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    ref="bodyRef"
+  >
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -13,6 +19,12 @@
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <message-stamp-list
+        :class="$style.stamps"
+        v-if="state.message.stamps.length > 0"
+        :message-id="messageId"
+        :stamps="state.message.stamps"
+      />
       <message-file-list
         v-if="state.fileIds.length > 0"
         :class="$style.messageFileList"
@@ -36,24 +48,28 @@ import {
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
+import { MessageId } from '@/types/entity-ids'
+import useHover from '@/use/hover'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
+import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
-import { MessageId } from '@/types/entity-ids'
 import useElementRenderObserver from './use/elementRenderObserver'
 
-const useStyles = (props: { isEntryMessage: boolean }) =>
+const useStyles = (props: { isEntryMessage: boolean }, hoverState: { isHover: boolean }) =>
   reactive({
     body: makeStyles(theme => ({
       background: props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
-        : ''
+        : hoverState.hover
+        ? transparentize(theme.background.secondary, 0.6)        
+        : 'transparent'
     }))
   })
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageFileList },
+  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
@@ -65,6 +81,7 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const bodyRef = ref<HTMLDivElement>(null)
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
@@ -73,10 +90,11 @@ export default defineComponent({
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
       ),
-      fileIds: computed(() =>
-        store.state.domain.messagesView.embeddedFilesMap[props.messageId].map(
-          e => e.id
-        )
+      fileIds: computed(
+        () =>
+          store.state.domain.messagesView.embeddedFilesMap[
+            props.messageId
+          ]?.map(e => e.id) ?? []
       )
     })
 
@@ -84,7 +102,7 @@ export default defineComponent({
 
     const styles = useStyles(props)
 
-    return { state, bodyRef, styles }
+    return { state, styles, onMouseEnter, onMouseLeave, bodyRef }
   }
 })
 </script>
@@ -92,7 +110,7 @@ export default defineComponent({
 <style lang="scss" module>
 .body {
   display: grid;
-  grid-template-areas:
+  grid-template:
     'user-icon message-header'
     'user-icon message-contents'
     '... message-contents';
@@ -126,10 +144,10 @@ export default defineComponent({
   word-break: break-word;
   word-wrap: break-word;
   line-break: loose;
+}
 
-  & pre {
-    white-space: pre-wrap;
-  }
+.stamps {
+  margin-top: 8px;
 }
 
 .messageFileList {

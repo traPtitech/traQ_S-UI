@@ -4,9 +4,6 @@ import { RouteName } from '@/router'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 
-// TODO: 起動時チャンネル
-const defaultChannelName = 'random'
-
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWacher = (context: SetupContext) => {
@@ -24,10 +21,11 @@ const useRouteWacher = (context: SetupContext) => {
     isInitialView: true
   })
 
-  const onRouteChangedToIndex = () => {
+  const onRouteChangedToIndex = async () => {
+    await (store.original as any).restored
     context.root.$router.replace({
       name: RouteName.Channel,
-      params: { channel: defaultChannelName }
+      params: { channel: store.state.app.browserSettings.openChannelName }
     })
     return
   }
@@ -68,7 +66,7 @@ const useRouteWacher = (context: SetupContext) => {
     }
     const file = store.state.entities.fileMetaData[fileId]
 
-    if (!file.channelId) {
+    if (!file?.channelId) {
       // ファイルに関連づいたチャンネルIDがなかった
       state.view = 'not-found'
       return
@@ -112,7 +110,7 @@ const useRouteWacher = (context: SetupContext) => {
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
-      onRouteChangedToIndex()
+      await onRouteChangedToIndex()
     } else if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.File) {

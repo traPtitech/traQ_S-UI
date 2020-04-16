@@ -5,9 +5,9 @@ import { ChannelState } from './index'
 export interface S {
   channelActivity: ActivityTimelineMessage[]
   messageActivity: MessageId[]
-  channelStateMap: Record<ChannelId, ChannelState>
+  channelStateMap: Record<ChannelId, ChannelState | undefined>
   onlineUsers: UserId[]
-  userDetails: Record<ChannelId, UserDetail>
+  userDetails: Record<UserId, UserDetail | undefined>
 
   /** キャッシュ削除用 */
   channelStateUpdateHistory: ChannelId[]

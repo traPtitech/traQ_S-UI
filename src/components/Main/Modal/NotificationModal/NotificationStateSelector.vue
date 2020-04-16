@@ -16,9 +16,13 @@ import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
-import { SubscriptionLevel } from '@/store/domain/me'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
-const levels: SubscriptionLevel[] = ['notified', 'subscribed', 'none']
+const levels: ReadonlyArray<ChannelSubscribeLevel> = [
+  ChannelSubscribeLevel.none,
+  ChannelSubscribeLevel.subscribed,
+  ChannelSubscribeLevel.notified
+]
 
 export default defineComponent({
   name: 'NotificationStateSelector',

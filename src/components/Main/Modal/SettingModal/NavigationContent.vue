@@ -1,11 +1,24 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <navigation-content-title :current-navigation="currentNavigation" />
+    <navigation-content-title
+      :current-navigation="currentNavigation"
+      :class="$style.title"
+    />
     <profile-tab v-if="currentNavigation === 'profile'" />
     <browser-tab v-else-if="currentNavigation === 'browser'" />
     <qall-tab v-else-if="currentNavigation === 'qall'" />
     <stamp-tab v-else-if="currentNavigation === 'stamp'" />
     <theme-tab v-else-if="currentNavigation === 'theme'" />
+    <section v-if="safariFlag">
+      Safariを利用していてかつ、アプリまたはPWAをインストールをしていない場合は、
+      7日間の使用がなかった際にここの設定情報が消えることがあります。 詳細は
+      <a
+        href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
+      >
+        Webkitの公式ブログの記事
+      </a>
+      をご覧ください。
+    </section>
   </section>
 </template>
 
@@ -22,6 +35,7 @@ import store from '@/store'
 import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
+import { isSafari } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
@@ -56,7 +70,10 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-    return { styles }
+
+    const safariFlag = isSafari()
+
+    return { styles, safariFlag }
   }
 })
 </script>
@@ -64,5 +81,15 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   flex: 1 1;
+  padding: 40px;
+  padding-right: 240px;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
+}
+
+.title {
+  margin-bottom: 40px;
 }
 </style>

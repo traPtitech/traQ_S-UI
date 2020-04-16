@@ -8,8 +8,7 @@
     <form-input
       label="チャンネル名"
       :class="$style.input"
-      :text="channelName"
-      @input="setChannelName"
+      v-model="channelName"
     />
     <form-button label="作成" :class="$style.button" @click="createChannel" />
   </modal-frame>
@@ -31,12 +30,6 @@ import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-
-const useChannelCreateForm = () => {
-  const channelName = ref('')
-  const setChannelName = (input: string) => (channelName.value = input)
-  return { channelName, setChannelName }
-}
 
 const useCreateChannel = (
   props: { parentChannelId?: string },
@@ -76,7 +69,7 @@ export default defineComponent({
     parentChannelId: String
   },
   setup(props, context) {
-    const { channelName, setChannelName } = useChannelCreateForm()
+    const channelName = ref('')
     const { createChannel } = useCreateChannel(props, context, channelName)
     const { channelIdToPath } = useChannelPath()
     const subtitle = computed(() =>
@@ -84,7 +77,7 @@ export default defineComponent({
         ? '#' + channelIdToPath(props.parentChannelId).join('/')
         : 'ルートチャンネル作成'
     )
-    return { channelName, setChannelName, createChannel, subtitle }
+    return { channelName, createChannel, subtitle }
   }
 })
 </script>

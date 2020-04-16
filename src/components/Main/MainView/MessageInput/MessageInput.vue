@@ -118,13 +118,23 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+$inputPadding: 32px;
+$radius: 4px;
+
 .container {
-  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
-  border-radius: 4px;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0.5rem 1rem;
+  margin: {
+    left: $inputPadding;
+    right: $inputPadding;
+    bottom: 24px - $radius;
+  }
+  border-radius: $radius;
+  transform: translateY(-$radius);
 }
 .stampPickerLocator {
   width: 100%;

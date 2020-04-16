@@ -7,6 +7,7 @@ import { messages } from './messages'
 import { rtc } from './rtc'
 import { browserSettings } from './browserSettings'
 import { rtcSettings } from './rtcSettings'
+import { themeSettings } from './themeSettings'
 
 export const app = defineModule({
   namespaced: true,
@@ -18,6 +19,7 @@ export const app = defineModule({
     messages,
     rtc,
     browserSettings,
-    rtcSettings
+    rtcSettings,
+    themeSettings
   }
 })
