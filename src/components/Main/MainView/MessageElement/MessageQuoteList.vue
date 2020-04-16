@@ -2,6 +2,7 @@
   <div>
     <message-quote-list-item
       v-for="id in messageIds"
+      :class="$style.item"
       :key="id"
       :message-id="id"
     />
@@ -32,19 +33,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.imageContainer {
-  display: flex;
-  flex-flow: row wrap;
-}
-.imageItem {
-  flex-shrink: 0;
-  margin-bottom: 16px;
-  &:not(:last-child) {
-    margin-right: 16px;
-  }
-}
 .item {
-  flex-shrink: 0;
   &:not(:last-child) {
     margin-bottom: 16px;
   }
