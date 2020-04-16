@@ -7,7 +7,7 @@ const useElementRenderObserver = (
   props: { isEntryMessage: boolean },
   state: Readonly<{
     content: string
-    message: Message
+    message?: Message
   }>,
   embeddingsState: Readonly<{
     fileIds: Readonly<FileId[]>
