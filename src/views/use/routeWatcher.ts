@@ -17,11 +17,6 @@ const useRouteWacher = (context: SetupContext) => {
     ),
     idParam: computed(() => context.root.$route.params['id']),
     channelParam: computed(() => context.root.$route.params['channel']),
-    messageQuery: computed(() =>
-      context.root.$route.query['message'] instanceof Array
-        ? ''
-        : context.root.$route.query['message']
-    ),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -136,26 +131,17 @@ const useRouteWacher = (context: SetupContext) => {
     state.isInitialView = false
   }
 
-  const onMessageQueryChange = () => {
-    onRouteChangedToChannel()
-  }
-
   const routeWatcher = watch(
     computed(() =>
       store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
     ),
     onRouteParamChange
   )
-  const messageQueryWatcher = watch(
-    () => state.messageQuery,
-    onMessageQueryChange
-  )
   onRouteParamChange(state.channelParam, '')
 
   return {
     routeWatcherState: state,
     routeWatcher,
-    messageQueryWatcher,
     onRouteChangedToIndex,
     onRouteChangedToChannel,
     onRouteChangedToFile
