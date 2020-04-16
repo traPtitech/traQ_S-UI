@@ -8,7 +8,7 @@ const useElementRenderObserver = (
   state: Readonly<{
     content: string
     fileIds: readonly FileId[]
-    message: Message
+    message?: Message
   }>,
   context: SetupContext
 ) => {
