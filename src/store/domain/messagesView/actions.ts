@@ -196,7 +196,15 @@ export const actions = defineActions({
           return rootDispatch.entities.fetchFileMetaByFileId(e.id)
         }
         if (e.type === 'message') {
-          return rootDispatch.entities.fetchMessage(e.id)
+          return rootDispatch.entities.fetchMessage(e.id).then(message => {
+            // テキスト部分のみレンダリング
+            const extracted = embeddingExtractor(message.content)
+            const renderedContent = render(extracted.text)
+            commit.addRenderedContent({
+              messageId: message.id,
+              renderedContent
+            })
+          })
         }
       })
     )

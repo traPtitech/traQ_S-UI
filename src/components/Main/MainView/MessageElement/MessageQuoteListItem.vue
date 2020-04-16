@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" :style="styles.body">
+  <div :class="$style.body" :style="styles.body" v-if="state.message">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -63,14 +63,18 @@ export default defineComponent({
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       channelPath: computed((): string =>
-        channelIdToPathString(state.message.channelId, true)
+        state.message
+          ? channelIdToPathString(state.message.channelId, true)
+          : ''
       ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
       ),
-      date: computed((): string => getCreatedDate(state.message.createdAt))
+      date: computed((): string =>
+        state.message ? getCreatedDate(state.message.createdAt) : ''
+      )
     })
     const styles = useStyles()
 
