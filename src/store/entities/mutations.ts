@@ -87,14 +87,17 @@ export const mutations = defineMutations<S>()({
   deleteTag: deleteMutation('tags'),
 
   onMessageStamped(state, e: MessageStampedEvent['body']) {
-    const stamps = state.messages[e.message_id].stamps
+    const message = state.messages[e.message_id]
+    if (!message) return
+
+    const { stamps } = message
     // 既に押されているスタンプは更新、新規は追加
     if (
       stamps.some(
         stamp => stamp.stampId === e.stamp_id && stamp.userId === e.user_id
       )
     ) {
-      state.messages[e.message_id].stamps = stamps.map(stamp =>
+      message.stamps = stamps.map(stamp =>
         stamp.stampId === e.stamp_id && stamp.userId === e.user_id
           ? { ...stamp, count: e.count, createdAt: e.created_at }
           : stamp
@@ -107,12 +110,14 @@ export const mutations = defineMutations<S>()({
         createdAt: e.created_at,
         updatedAt: e.created_at
       }
-      state.messages[e.message_id].stamps.push(stamp)
+      message.stamps.push(stamp)
     }
   },
   onMessageUnstamped(state, e: MessageUnstampedEvent['body']) {
-    const stamps = state.messages[e.message_id].stamps
-    state.messages[e.message_id].stamps = stamps.filter(
+    const message = state.messages[e.message_id]
+    if (!message) return
+
+    message.stamps = message.stamps.filter(
       stamp => !(stamp.stampId === e.stamp_id && stamp.userId === e.user_id)
     )
   }
