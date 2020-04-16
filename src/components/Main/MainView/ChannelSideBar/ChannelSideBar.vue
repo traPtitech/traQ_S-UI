@@ -86,7 +86,7 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      isOpen: true,
+      isOpen: false,
       pinnedMode: false,
       pinnedMessage: computed(
         () => store.state.domain.messagesView.pinnedMessages

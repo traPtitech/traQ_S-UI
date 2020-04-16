@@ -1,12 +1,14 @@
 <template>
-  <div :class="$style.container" :style="styles.container" @click="onClick">
-    <Icon
-      mdi
-      :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
-      height="20"
-      width="20"
-    />
-    <div>編集</div>
+  <div :class="$style.container">
+    <div :class="$style.content" :style="styles.content" @click="onClick">
+      <Icon
+        mdi
+        :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
+        height="20"
+        width="20"
+      />
+      <div>編集</div>
+    </div>
   </div>
 </template>
 
@@ -26,7 +28,7 @@ type State = {
 
 const useStyles = (state: State) =>
   reactive({
-    container: makeStyles(theme => ({
+    content: makeStyles(theme => ({
       color: state.isEditing ? theme.ui.primary : theme.ui.secondary
     }))
   })
@@ -51,12 +53,18 @@ export default defineComponent({
 $editButtonText: 0.8rem;
 
 .container {
+  position: relative;
+}
+
+.content {
+  bottom: 0;
   display: flex;
-  align-items: center;
   font-size: $editButtonText;
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
   user-select: none;
+  position: absolute;
+  width: 100%;
 }
 </style>
