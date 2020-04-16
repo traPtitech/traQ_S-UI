@@ -8,7 +8,7 @@ const useElementRenderObserver = (
   state: {
     readonly content: string
     readonly fileIds: Readonly<FileId[]>
-    readonly message: Message
+    readonly message?: Message
   },
   context: SetupContext
 ) => {
@@ -37,7 +37,7 @@ const useElementRenderObserver = (
         bottom,
         lastTop,
         lastBottom,
-        date: state.message.createdAt
+        date: state.message?.createdAt
       })
     }
     lastHeight = height

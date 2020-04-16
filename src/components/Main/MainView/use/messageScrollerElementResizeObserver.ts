@@ -13,14 +13,14 @@ const useMessageScrollerElementResizeObserver = (
     height: number
   }
 ) => {
-  const entryMessageDate = computed(() =>
-    scrollerProps.entryMessageId &&
-    store.state.entities.messages[scrollerProps.entryMessageId]
-      ? new Date(
-          store.state.entities.messages[scrollerProps.entryMessageId].createdAt
-        )
-      : undefined
-  )
+  const entryMessageDate = computed(() => {
+    if (scrollerProps.entryMessageId) {
+      const message =
+        store.state.entities.messages[scrollerProps.entryMessageId]
+      return message ? new Date(message.createdAt) : undefined
+    }
+    return undefined
+  })
 
   const onChangeHeight = (payload: {
     heightDiff: number
@@ -28,7 +28,7 @@ const useMessageScrollerElementResizeObserver = (
     bottom: number
     lastTop: number
     lastBottom: number
-    date: string
+    date?: string
   }) => {
     if (!rootRef.value) {
       return
@@ -36,7 +36,8 @@ const useMessageScrollerElementResizeObserver = (
 
     if (
       scrollerProps.lastLoadingDirection === 'around' &&
-      entryMessageDate.value
+      entryMessageDate.value &&
+      payload.date
     ) {
       // エントリーメッセージがあり、かつ初回ロードの場合、メッセージの時刻を確認する
       // エントリーより過去だった場合、エントリーより上にあるのでスクロール位置をずらす

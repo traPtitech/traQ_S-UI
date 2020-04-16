@@ -56,13 +56,16 @@ import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 
-const useStyles = (props: { isEntryMessage: boolean }, hoverState: { isHover: boolean }) =>
+const useStyles = (
+  props: { isEntryMessage: boolean },
+  hoverState: { hover: boolean }
+) =>
   reactive({
     body: makeStyles(theme => ({
       background: props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
         : hoverState.hover
-        ? transparentize(theme.background.secondary, 0.6)        
+        ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
     }))
   })
@@ -100,7 +103,7 @@ export default defineComponent({
 
     useElementRenderObserver(bodyRef, props, state, context)
 
-    const styles = useStyles(props)
+    const styles = useStyles(props, hoverState)
 
     return { state, styles, onMouseEnter, onMouseLeave, bodyRef }
   }

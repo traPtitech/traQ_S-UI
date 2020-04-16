@@ -19,7 +19,7 @@ export const actions = defineActions({
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId === payload.channelId) return
 
-    changeViewState(channelId, ChannelViewState.Monitoring)
+    changeViewState(payload.channelId, ChannelViewState.Monitoring)
     commit.setCurrentChannelId(payload.channelId)
     commit.unsetLoadedMessageOldestDate()
     commit.unsetLoadedMessageLatestDate()
