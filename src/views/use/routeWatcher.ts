@@ -17,6 +17,11 @@ const useRouteWacher = (context: SetupContext) => {
     ),
     idParam: computed(() => context.root.$route.params['id']),
     channelParam: computed(() => context.root.$route.params['channel']),
+    messageQuery: computed(() =>
+      context.root.$route.query['message'] instanceof Array
+        ? ''
+        : context.root.$route.query['message']
+    ),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -34,11 +39,6 @@ const useRouteWacher = (context: SetupContext) => {
       // まだチャンネルツリーが構築されていない
       return
     }
-    const entryMessageId =
-      context.root.$route.query.message &&
-      typeof context.root.$route.query.message === 'string'
-        ? context.root.$route.query.message
-        : undefined
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
@@ -46,7 +46,7 @@ const useRouteWacher = (context: SetupContext) => {
       )
       store.dispatch.domain.messagesView.changeCurrentChannel({
         channelId: id,
-        entryMessageId
+        entryMessageId: state.messageQuery
       })
     } catch (e) {
       state.view = 'not-found'
@@ -106,7 +106,7 @@ const useRouteWacher = (context: SetupContext) => {
     })
   }
 
-  const onRouteParamChange = async (param: string, prevParam: string) => {
+  const onRouteParamChange = async (_: string, __: string) => {
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
@@ -136,17 +136,26 @@ const useRouteWacher = (context: SetupContext) => {
     state.isInitialView = false
   }
 
-  const watcher = watch(
+  const onMessageQueryChange = () => {
+    onRouteChangedToChannel()
+  }
+
+  const routeWatcher = watch(
     computed(() =>
       store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
     ),
     onRouteParamChange
   )
+  const messageQueryWatcher = watch(
+    () => state.messageQuery,
+    onMessageQueryChange
+  )
   onRouteParamChange(state.channelParam, '')
 
   return {
     routeWatcherState: state,
-    routeWatcher: watcher,
+    routeWatcher,
+    messageQueryWatcher,
     onRouteChangedToIndex,
     onRouteChangedToChannel,
     onRouteChangedToFile
