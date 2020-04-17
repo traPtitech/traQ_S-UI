@@ -13,7 +13,6 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import apis from '@/lib/api'
 import { User } from '@traptitech/traq'
 
@@ -34,14 +33,7 @@ export default defineComponent({
       store.dispatch.entities.fetchUser(props.userId)
     }
 
-    const styles = reactive({
-      displayName: makeStyles(theme => {
-        return {
-          color: theme.ui.tertiary
-        }
-      })
-    })
-    return { state, styles }
+    return { state }
   }
 })
 </script>

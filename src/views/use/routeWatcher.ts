@@ -40,8 +40,7 @@ const useRouteWacher = (context: SetupContext) => {
         store.state.domain.channelTree.channelTree
       )
       store.dispatch.domain.messagesView.changeCurrentChannel({
-        channelId: id,
-        entryMessageId: state.messageQuery
+        channelId: id
       })
     } catch (e) {
       state.view = 'not-found'

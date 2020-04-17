@@ -43,7 +43,7 @@ export interface S {
 
   renderedContentMap: Record<MessageId, string>
 
-  embeddingsMap: Record<MessageId, Embedding[]>
+  embeddingsMap: Record<MessageId, Embedding[] | undefined>
 
   currentViewers: ChannelViewer[]
 
