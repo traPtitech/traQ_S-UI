@@ -57,6 +57,43 @@ module.exports = {
       })
   },
 
+  pwa: {
+    name: 'traQ',
+    themeColor: '#0D67EA',
+    msTileColor: '#0D67EA',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    assetsVersion: require('./package.json').version,
+
+    manifestPath: 'site.webmanifest',
+    manifestOptions: {
+      start_url: '/',
+      background_color: '#f6f7f9',
+      icons: [
+        {
+          src: '/img/icons/android-chrome-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/img/icons/android-chrome-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ],
+      gcm_sender_id: '103953800507'
+    },
+    iconPaths: {
+      favicon32: 'img/icons/favicon-32x32.png',
+      favicon16: 'img/icons/favicon-16x16.png',
+      appleTouchIcon: 'img/icons/apple-touch-icon.png',
+      maskIcon: 'img/icons/safari-pinned-tab.svg',
+      msTileImage: 'img/icons/mstile-144x144.png'
+    },
+
+    workboxPluginMode: 'GenerateSW'
+  },
+
   devServer: {
     proxy: {
       '/api/v3/*': {
