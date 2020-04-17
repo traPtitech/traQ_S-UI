@@ -17,6 +17,8 @@
       :created-at="state.message.createdAt"
       :updated-at="state.message.updatedAt"
     />
+    <!-- <message-tools :class="$style.tools" v-if="hoverState.hover" /> -->
+    <message-tools :class="$style.tools" />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <message-stamp-list
@@ -55,6 +57,7 @@ import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
+import MessageTools from './MessageTools.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -72,7 +75,13 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
+  components: {
+    UserIcon,
+    MessageHeader,
+    MessageStampList,
+    MessageFileList,
+    MessageTools
+  },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
@@ -105,7 +114,7 @@ export default defineComponent({
 
     const styles = useStyles(props, hoverState)
 
-    return { state, styles, onMouseEnter, onMouseLeave, bodyRef }
+    return { state, styles, onMouseEnter, onMouseLeave, bodyRef, hoverState }
   }
 })
 </script>
@@ -155,5 +164,11 @@ export default defineComponent({
 
 .messageFileList {
   margin-top: 16px;
+}
+
+.tools {
+  grid-area: message-header;
+  //position: absolute;
+  justify-self: end;
 }
 </style>
