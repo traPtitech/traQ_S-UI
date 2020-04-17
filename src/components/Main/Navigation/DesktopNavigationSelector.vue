@@ -66,6 +66,11 @@ export default defineComponent({
         iconName: 'user'
       },
       {
+        type: 'clips',
+        iconName: 'bookmark',
+        iconMdi: true
+      },
+      {
         type: 'services',
         iconName: 'services'
       }

@@ -11,6 +11,10 @@
       :class="$style.content"
     />
     <users v-show="currentNavigation === 'users'" :class="$style.content" />
+    <clip-folders
+      v-show="currentNavigation === 'clips'"
+      :class="$style.content"
+    />
     <not-implemented
       v-show="currentNavigation === 'services'"
       :class="$style.content"
@@ -34,6 +38,7 @@ import Activity from './NavigationContent/Activity.vue'
 import Users from './NavigationContent/Users.vue'
 import NotImplemented from './NavigationContent/NotImplemented.vue'
 import NavigationContentTitle from './NavigationContentTitle.vue'
+import ClipFolders from './NavigationContent/ClipFolders.vue'
 
 export default defineComponent({
   name: 'NavigationContent',
@@ -43,7 +48,8 @@ export default defineComponent({
     Activity,
     Users,
     NotImplemented,
-    NavigationContentTitle
+    NavigationContentTitle,
+    ClipFolders
   },
   props: {
     currentNavigation: {
