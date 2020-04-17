@@ -10,9 +10,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
-import useFileMetaList from './use/fileMetaList'
 import MessageQuoteListItem from './MessageQuoteListItem.vue'
 
 export default defineComponent({

@@ -13,7 +13,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  computed,
   reactive,
   ref,
   onMounted,
@@ -21,9 +20,7 @@ import {
   watchEffect
 } from '@vue/composition-api'
 import autosize from 'autosize'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { ChannelId } from '@/types/entity-ids'
 import useInput from '@/use/input'
 
 const useStyles = () =>

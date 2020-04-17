@@ -20,17 +20,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  reactive,
-  onBeforeMount
-} from '@vue/composition-api'
-import { FileId } from '@/types/entity-ids'
-import { AttachmentType } from '@/lib/util/file'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { prettifyFileSize } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import useFileMeta from './use/fileMeta'
 

@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'

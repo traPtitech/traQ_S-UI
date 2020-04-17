@@ -11,13 +11,12 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   reactive,
   computed,
   PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import api, { buildUserIconPath, buildFilePath } from '@/lib/api'
+import { buildUserIconPath } from '@/lib/api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 

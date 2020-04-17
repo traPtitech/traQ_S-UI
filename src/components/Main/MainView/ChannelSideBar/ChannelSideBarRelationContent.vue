@@ -58,12 +58,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
 import { RelatedChannelEntry } from './use/useRelatedChannels'
@@ -105,14 +100,12 @@ export default defineComponent({
   components: { ChannelSideBarRelationElement },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst =
-      props as
-      {
-        parent: RelatedChannelEntry | undefined
-        children: RelatedChannelEntry[]
-        siblings: RelatedChannelEntry[]
-        current: RelatedChannelEntry | undefined
-      }
+    const propst = props as {
+      parent: RelatedChannelEntry | undefined
+      children: RelatedChannelEntry[]
+      siblings: RelatedChannelEntry[]
+      current: RelatedChannelEntry | undefined
+    }
     const styles = useStyles()
     const state = reactive({
       isOpenSiblings: false,

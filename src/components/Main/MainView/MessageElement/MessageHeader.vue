@@ -18,8 +18,6 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
-import apis from '@/lib/api'
-import { User } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'MessageHeader',

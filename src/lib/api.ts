@@ -1,5 +1,5 @@
 import { Apis } from '@traptitech/traq'
-import { UserId, FileId } from '@/types/entity-ids'
+import { FileId } from '@/types/entity-ids'
 
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'

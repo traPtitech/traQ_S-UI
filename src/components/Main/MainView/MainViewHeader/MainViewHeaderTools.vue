@@ -58,17 +58,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  computed,
-  reactive
-} from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import MainViewHeaderChannelName from './MainViewHeaderChannelName.vue'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 
 const useStyles = () =>

@@ -77,7 +77,6 @@ import Toggle from '@/components/UI/Toggle.vue'
 import Account from './Account.vue'
 import Notification from './Notification.vue'
 import useChannelPath from '@/use/channelPath'
-import { ChannelId } from '@/types/entity-ids'
 
 const useChannelOptions = () => {
   const { channelIdToPath } = useChannelPath()

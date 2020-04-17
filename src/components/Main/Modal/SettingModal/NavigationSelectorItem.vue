@@ -14,7 +14,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   reactive,
   computed,
   PropType

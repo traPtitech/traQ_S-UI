@@ -18,7 +18,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   reactive,
   computed,
   ref,
@@ -32,7 +31,6 @@ import MainView from './MainView.vue'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
-import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
   const state = reactive({

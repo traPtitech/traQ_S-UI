@@ -39,7 +39,6 @@ import {
   defineComponent,
   SetupContext,
   computed,
-  ref,
   reactive,
   PropType
 } from '@vue/composition-api'
@@ -47,7 +46,6 @@ import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
-import ChannelList from './ChannelList.vue'
 import ChannelElementHash from './ChannelElementHash.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {

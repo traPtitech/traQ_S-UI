@@ -7,10 +7,7 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
-import { AttachmentType } from '@/lib/util/file'
 import { makeStyles } from '@/lib/styles'
-import { prettifyFileSize } from '@/lib/util/file'
-import useFileLink from './use/fileLink'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 
 const useStyles = () =>

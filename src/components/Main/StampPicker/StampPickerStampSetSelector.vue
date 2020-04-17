@@ -15,13 +15,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import store from '@/store'
-import { StampPaletteId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildFilePath } from '@/lib/api'
 import { StampSet } from './use/stampSetSelector'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
-import { StampCategory } from '@/lib/stampCategorizer'
 
 const useStyles = () =>
   reactive({

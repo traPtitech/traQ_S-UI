@@ -49,7 +49,6 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { ChannelViewState } from '@traptitech/traq'
 import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'

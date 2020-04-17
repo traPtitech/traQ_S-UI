@@ -39,10 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
 import { StampId } from '@/types/entity-ids'
 import useTextFilter from '@/use/textFilter'
 import Icon from '@/components/UI/Icon.vue'
@@ -55,8 +54,6 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-
-import api from '@/lib/api'
 
 const useStampPicker = () => {
   const state = reactive({

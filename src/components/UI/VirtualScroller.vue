@@ -22,11 +22,9 @@ import {
   computed,
   reactive,
   ref,
-  toRefs,
   onMounted,
   onUnmounted,
-  watch,
-  PropType
+  watch
 } from '@vue/composition-api'
 // import { ResizeObserver } from '@juggle/resize-observer'
 import { throttle } from 'lodash-es'

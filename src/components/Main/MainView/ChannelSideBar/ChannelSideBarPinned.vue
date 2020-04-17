@@ -5,9 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
-import store from '@/store'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
 
 export default defineComponent({
