@@ -7,8 +7,10 @@ import store from './store'
 import PortalVue from 'portal-vue'
 import vClickOutside from 'v-click-outside'
 import { setupGlobalFuncs } from './markdown-bridge'
+import { setupFirebase } from './lib/firebase'
 
 setupGlobalFuncs()
+setupFirebase()
 
 Vue.use(VueCompositionApi)
 Vue.use(PortalVue)

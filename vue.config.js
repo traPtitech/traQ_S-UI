@@ -91,7 +91,11 @@ module.exports = {
       msTileImage: 'img/icons/mstile-144x144.png'
     },
 
-    workboxPluginMode: 'GenerateSW'
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: 'public/sw.js',
+      swDest: 'sw.js'
+    }
   },
 
   devServer: {

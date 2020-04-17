@@ -4,3 +4,7 @@ export const isSafari = () => {
   const ua = navigator.userAgent.toLowerCase()
   return ua.includes('safari') && !ua.includes('chrome') && !ua.includes('edge')
 }
+
+export const isIOSApp = () => {
+  return navigator.userAgent.includes('traQ-iOS')
+}
