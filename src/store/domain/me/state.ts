@@ -23,3 +23,18 @@ export const state: S = {
   staredChannelSet: {},
   subscriptionMap: {}
 }
+
+export interface StampHistoryEntry {
+  /**
+   * スタンプUUID
+   * @type {StampId}
+   * @memberof StampHistoryEntry
+   */
+  stampId: StampId
+  /**
+   * 使用日時
+   * @type {Date}
+   * @memberof StampHistoryEntry
+   */
+  datetime: Date
+}

@@ -4,6 +4,7 @@
       v-for="stamp in stamps"
       :key="stamp.id"
       :stamp-id="stamp.id"
+      :class="$style.stampListItem"
       @click="onClickStamp(stamp.id)"
       @hover="onStampHover(stamp.name)"
     />
@@ -47,5 +48,13 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   align-content: flex-start;
+}
+
+.stampListItem {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  cursor: pointer;
+  user-select: none;
 }
 </style>

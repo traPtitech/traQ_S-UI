@@ -1,8 +1,12 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <stamp :stamp-id="stamp.id" :size="16" />
-    <stamp :stamp-id="stamp.id" :size="16" />
-    <stamp :stamp-id="stamp.id" :size="16" />
+    <stamp-picker-stamp-list-item
+      v-for="stamp in stamps"
+      :key="stamp"
+      :stamp-id="stamp"
+      @click="addStamp(stamp)"
+      :size="16"
+    />
     <div :class="$style.emojiOutline">
       <icon
         mdi
@@ -18,9 +22,9 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
-  reactive
+  reactive,
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -28,6 +32,8 @@ import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import { buildFilePath } from '@/lib/api'
 import Stamp from '@/components/UI/Stamp.vue'
+import { StampId, MessageId } from '@/types/entity-ids'
+import StampPickerStampListItem from '@/components/Main/StampPicker/StampPickerStampListItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -37,22 +43,31 @@ const useStyles = () =>
     }))
   })
 
-export const targetPortalName = 'header-popup'
-
 export default defineComponent({
   name: 'MessageTools',
   components: {
     Icon,
-    Stamp
+    Stamp,
+    StampPickerStampListItem
   },
-  setup() {
+  props: { messageId: { type: String as PropType<MessageId>, required: true } },
+  setup(props) {
     const styles = useStyles()
-    const stamp = computed(
-      () => store.state.entities.stamps['44f5ccb9-068a-47bb-9421-4f093e1a1c22']
-    )
+    const addStamp = (stampId: StampId) => {
+      store.dispatch.domain.messagesView.addStamp({
+        messageId: props.messageId,
+        stampId
+      })
+      store.commit.domain.me.pushLocalStampHistory({
+        stampId: stampId,
+        datetime: new Date()
+      })
+    }
+    const stamps = computed(() => store.getters.domain.me.recentStampIds)
     return {
       styles,
-      stamp
+      addStamp,
+      stamps
     }
   }
 })
@@ -75,7 +90,7 @@ export default defineComponent({
   border-left: solid 2px;
   padding-left: 4px;
   height: 16px;
-  margin-left: 4px;
+  margin-left: 2px;
 }
 
 .emojiOutlineIcon {

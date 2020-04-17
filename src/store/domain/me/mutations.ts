@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { S } from './state'
+import { S, StampHistoryEntry } from './state'
 import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
-  StampHistoryEntry,
   MyUserDetail,
   ChannelSubscribeLevel
 } from '@traptitech/traq'

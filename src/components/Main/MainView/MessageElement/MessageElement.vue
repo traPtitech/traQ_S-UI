@@ -18,7 +18,7 @@
       :updated-at="state.message.updatedAt"
     />
     <!-- <message-tools :class="$style.tools" v-if="hoverState.hover" /> -->
-    <message-tools :class="$style.tools" />
+    <message-tools :message-id="messageId" :class="$style.tools" />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <message-stamp-list

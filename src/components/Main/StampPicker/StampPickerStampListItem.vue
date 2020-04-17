@@ -3,10 +3,9 @@
     @click="context.emit('click')"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
-    :class="$style.container"
     :style="styles.container"
   >
-    <stamp :stamp-id="stampId" :size="24" />
+    <stamp :stamp-id="stampId" :size="propst.size" />
   </div>
 </template>
 
@@ -40,24 +39,17 @@ export default defineComponent({
     stampId: {
       type: String as PropType<StampId>,
       required: true
-    }
+    },
+    size: { type: Number, default: 24 }
   },
   setup(props, context) {
-    const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { stampId: StampId; size: number }
+    const fileId = store.state.entities.stamps[propst.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
     const styles = useStyles(hoverState)
-    return { context, imageUrl, onMouseEnter, onMouseLeave, styles }
+    return { context, imageUrl, onMouseEnter, onMouseLeave, styles, propst }
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  cursor: pointer;
-  user-select: none;
-}
-</style>
