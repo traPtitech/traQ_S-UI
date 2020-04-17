@@ -131,5 +131,10 @@ export const actions = defineActions({
       commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
     }
     return res.data
+  },
+  async fetchClipFolders(context) {
+    const { commit } = entitiesActionContext(context)
+    const res = await api.getClipFolders()
+    commit.setClipFolders(reduceToRecord(res.data, 'id'))
   }
 })
