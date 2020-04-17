@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
 import { S, LoadingDirection } from './state'
-import { EmbeddedFile } from '@/lib/embeddingExtractor'
+import { Embedding } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
@@ -62,11 +62,11 @@ export const mutations = defineMutations<S>()({
   unsetEntryMessageId(state) {
     state.entryMessageId = undefined
   },
-  addEmbededFile(
+  addEmbedding(
     state,
-    payload: { messageId: MessageId; files: EmbeddedFile[] }
+    payload: { messageId: MessageId; embeddings: Embedding[] }
   ) {
-    Vue.set(state.embeddedFilesMap, payload.messageId, payload.files)
+    Vue.set(state.embeddingsMap, payload.messageId, payload.embeddings)
   },
   setCurrentViewer(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers

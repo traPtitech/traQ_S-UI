@@ -1,8 +1,8 @@
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
 
-const fileBasePath = `https://example.com/files`
+const basePath = `https://example.com/`
 const regexp = RegExp(
-  `${fileBasePath}/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
+  `${basePath}/(files|messages)/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
   'g'
 )
 
@@ -10,8 +10,8 @@ const extractor = (message: string) => embeddingExtractor(message, regexp)
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
-const path1 = `${fileBasePath}/${id1}`
-const path2 = `${fileBasePath}/${id2}`
+const path1 = `${basePath}/files/${id1}`
+const path2 = `${basePath}/files/${id2}`
 
 describe('embeddingExtractor', () => {
   it('can extract a file from url', () => {
@@ -22,6 +22,7 @@ describe('embeddingExtractor', () => {
       text: '',
       embeddings: [
         {
+          type: 'file',
           id: id1,
           startIndex: 0,
           endIndex: path1.length
@@ -38,6 +39,7 @@ describe('embeddingExtractor', () => {
       text: message,
       embeddings: [
         {
+          type: 'file',
           id: id1,
           startIndex: 5,
           endIndex: 5 + path1.length
@@ -54,11 +56,13 @@ describe('embeddingExtractor', () => {
       text: message,
       embeddings: [
         {
+          type: 'file',
           id: id1,
           startIndex: 5,
           endIndex: 5 + path1.length
         },
         {
+          type: 'file',
           id: id2,
           startIndex: 5 + path1.length + 5,
           endIndex: 5 + path1.length + 5 + path2.length
@@ -76,6 +80,7 @@ describe('embeddingExtractor', () => {
       text: noAttachMessage,
       embeddings: [
         {
+          type: 'file',
           id: id1,
           startIndex: noAttachMessage.length,
           endIndex: noAttachMessage.length + path1.length

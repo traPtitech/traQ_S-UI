@@ -1,34 +1,52 @@
-import { filePathOrigin } from '@/lib/api'
-import { FileId } from '@/types/entity-ids'
+import { embeddingOrigin } from '@/lib/api'
+import { FileId, MessageId } from '@/types/entity-ids'
 
-export type EmbeddedFile = {
+export type EmbeddingType = 'file' | 'message'
+
+export type Embedding = EmbeddingFile | EmbeddingMessage
+
+export type EmbeddingFile = {
+  type: 'file'
   id: FileId
-
-  /** 埋め込みの開始インデックス */
   startIndex: number
-
-  /** 埋め込みの終了インデックス */
   endIndex: number
 }
 
-type EmbeddedFilesExtractedMessage = {
-  rawText: string
-  text: string
-  embeddings: EmbeddedFile[]
+export type EmbeddingMessage = {
+  type: 'message'
+  id: MessageId
+  startIndex: number
+  endIndex: number
 }
 
-const defaultFileBasePath = `${filePathOrigin}/files`
+type EmbeddingsExtractedMessage = {
+  rawText: string
+  text: string
+  embeddings: Embedding[]
+}
+
 const defaultRegexp = RegExp(
-  `${defaultFileBasePath}/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
+  `${embeddingOrigin}/(files|messages)/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
   'g'
 )
 
-/** markdownから埋め込みファイルURLを抽出する */
+/**
+ * markdownから埋め込みURLを抽出する
+ *
+ * @param regexp
+ * マッチに使う正規表現。グループは順に
+ *
+ * - 種別
+ * - UUID
+ * - 削除されるスペース
+ *
+ * であることを期待する
+ */
 export const embeddingExtractor = (
   rawMessage: string,
   regexp = defaultRegexp
-): EmbeddedFilesExtractedMessage => {
-  const embeddings: EmbeddedFile[] = []
+): EmbeddingsExtractedMessage => {
+  const embeddings: Embedding[] = []
   const knownIdSet: Set<FileId> = new Set()
 
   const matches = rawMessage.matchAll(regexp)
@@ -42,15 +60,21 @@ export const embeddingExtractor = (
   for (const match of matches) {
     const matchIndex = match.index ?? 0
     const matchLength = match[0]?.length ?? 0
-    const spaceLength = match[2]?.length ?? 0
+    const spaceLength = match[3]?.length ?? 0
 
-    const id = match[1] ?? ''
+    const type = match[1] ?? ''
+    const id = match[2] ?? ''
 
     const startIndex = matchIndex
     const endIndex = matchIndex + matchLength - spaceLength
 
     if (!knownIdSet.has(id)) {
-      embeddings.push({ id, startIndex, endIndex })
+      if (type === 'files') {
+        embeddings.push({ type: 'file', id, startIndex, endIndex })
+      }
+      if (type === 'messages') {
+        embeddings.push({ type: 'message', id, startIndex, endIndex })
+      }
       knownIdSet.add(id)
     }
 

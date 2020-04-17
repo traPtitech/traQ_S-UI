@@ -1,5 +1,5 @@
+import { Embedding } from '@/lib/embeddingExtractor'
 import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
-import { EmbeddedFile } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
@@ -43,7 +43,7 @@ export interface S {
 
   renderedContentMap: Record<MessageId, string>
 
-  embeddedFilesMap: Record<MessageId, EmbeddedFile[]>
+  embeddingsMap: Record<MessageId, Embedding[] | undefined>
 
   currentViewers: ChannelViewer[]
 
@@ -63,7 +63,7 @@ export const state: S = {
   lastLoadingDirection: 'latest',
   fetchLimit: 50,
   renderedContentMap: {},
-  embeddedFilesMap: {},
+  embeddingsMap: {},
   entryMessageId: undefined,
   isReachedEnd: false,
   isReachedLatest: false,

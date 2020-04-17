@@ -47,10 +47,14 @@ const useChannelPath = () => {
   const channelIdToPath = (id: ChannelId): string[] =>
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
+  const channelIdToPathString = (id: ChannelId, hashed = false): string =>
+    (hashed ? '#' : '') + channelIdToPath(id).join('/')
+
   return {
     channelPathToId,
     channelIdToPath,
-    channelIdToSimpleChannelPath
+    channelIdToSimpleChannelPath,
+    channelIdToPathString
   }
 }
 

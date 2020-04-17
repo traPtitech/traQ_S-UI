@@ -16,12 +16,12 @@ export const buildUserIconPath = (userIconFileId: FileId) =>
 export const buildFileThumbnailPath = (fileId: FileId) =>
   `${BASE_PATH}/files/${fileId}/thumbnail`
 
-export const filePathOrigin =
+export const embeddingOrigin =
   location.hostname === 'localhost' || location.hostname === '127.0.0.1'
     ? 'https://traq-s-dev.tokyotech.org'
     : `${location.protocol}//${location.host}`
 export const buildFilePathForPost = (fileId: FileId) =>
-  `${filePathOrigin}/files/${fileId}`
+  `${embeddingOrigin}/files/${fileId}`
 
 export * from '@traptitech/traq'
 export default apis
