@@ -16,7 +16,6 @@
     </div>
     <buttons
       :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
-      :show-title="false"
     />
   </section>
 </template>

@@ -28,7 +28,7 @@ export default defineComponent({
     homeChannelId: String as PropType<string | null>,
     showTitle: {
       type: Boolean,
-      required: true
+      default: false
     }
   },
   setup(props, context) {
