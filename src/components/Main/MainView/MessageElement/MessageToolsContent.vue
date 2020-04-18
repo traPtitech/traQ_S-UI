@@ -6,19 +6,26 @@
       :stamp-id="stamp"
       @click="addStamp(stamp)"
       :size="16"
-			:class="$style.stampListItem"
+      :class="$style.stampListItem"
     />
     <div :class="$style.emojiOutline">
       <icon
         mdi
         name="emoticon-outline"
         :size="16"
-        :class="$style.emojiOutlineIcon"
+        :class="$style.emojiIcon"
+        @click="clickStampIcon"
       />
     </div>
     <div>
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
-      <icon :size="16" mdi name="dots-horizontal" @click="clickDots" />
+      <icon
+        :class="$style.dotIcon"
+        :size="16"
+        mdi
+        name="dots-horizontal"
+        @click="clickDots"
+      />
     </div>
   </div>
 </template>
@@ -68,8 +75,13 @@ export default defineComponent({
         stampId: stampId,
         datetime: new Date()
       })
-		}
-		const clickDots = () => { context.emit('dots') }
+    }
+    const clickDots = () => {
+      context.emit('dots')
+    }
+    const clickStampIcon = () => {
+      context.emit('stampPalette')
+    }
     const stamps = computed(() =>
       store.getters.domain.me.recentStampIds.filter((_, i) => i < 3)
     )
@@ -77,8 +89,9 @@ export default defineComponent({
       styles,
       addStamp,
       stamps,
-			targetPortalName,
-			clickDots
+      targetPortalName,
+      clickDots,
+      clickStampIcon
     }
   }
 })
@@ -95,7 +108,7 @@ export default defineComponent({
   box-shadow: 0 1px 3px 0;
   padding: 4px;
   justify-content: space-between;
-	position: relative;
+  position: relative;
 }
 
 .emojiOutline {
@@ -105,8 +118,14 @@ export default defineComponent({
   margin-left: 2px;
 }
 
-.emojiOutlineIcon {
+.emojiIcon {
   margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.dotIcon {
+  margin-top: 4px;
+  cursor: pointer;
 }
 
 .popupLocator {
@@ -115,7 +134,6 @@ export default defineComponent({
   top: 16px;
 }
 
-// memo: MessageElementでついてる`overflow: hidden`で下にメッセージがあるとかくれる。消してみてもいい感じだったけどつけてる理由はなんなんだろう？
 .stampListItem {
   width: 16px;
   height: 16px;

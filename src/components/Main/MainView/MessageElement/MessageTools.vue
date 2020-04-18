@@ -1,6 +1,10 @@
 <template>
   <div>
-    <message-tools-content :message-id="messageId" @dots="openPopupMenu" />
+    <message-tools-content
+      :message-id="messageId"
+      @dots="openPopupMenu"
+      @stampPalette="onStampClick"
+    />
     <portal v-if="isPopupMenuShown" :to="targetPortalName">
       <message-tools-menu
         :class="$style.toolsMenu"
@@ -17,7 +21,8 @@ import {
   computed,
   reactive,
   PropType,
-  ref
+  ref,
+  watch
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
@@ -31,6 +36,7 @@ import MessageToolsContent, {
   targetPortalName
 } from './MessageToolsContent.vue'
 import MessageToolsMenu from './MessageToolsMenu.vue'
+import useStampPickerInvoker from '@/use/stampPickerInvoker'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -61,13 +67,38 @@ export default defineComponent({
     const closePopupMenu = () => {
       isPopupMenuShown.value = false
     }
+    const { invokeStampPicker } = useStampPickerInvoker(
+      targetPortalName,
+      stampData => {
+        store.dispatch.domain.messagesView.addStamp({
+          messageId: props.messageId,
+          stampId: stampData.id
+        })
+      }
+    )
+    const onStampClick = () => {
+      if (store.getters.ui.stampPicker.isStampPickerShown) {
+        store.dispatch.ui.stampPicker.closeStampPicker()
+      } else {
+        invokeStampPicker()
+      }
+    }
+    watch(
+      () => props.messageId,
+      (newV, oldV) => {
+        if (store.getters.ui.stampPicker.isStampPickerShown) {
+          store.dispatch.ui.stampPicker.closeStampPicker()
+        }
+      }
+    )
     return {
       addStamp,
       stamps,
       targetPortalName,
       isPopupMenuShown,
       openPopupMenu,
-      closePopupMenu
+      closePopupMenu,
+      onStampClick
     }
   }
 })
