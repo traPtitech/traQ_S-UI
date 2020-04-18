@@ -3,7 +3,7 @@
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />
     </div>
-    <span :class="$style.text" v-if="propst.withText">閉㝘る</span>
+    <span :class="$style.text" v-if="propst.withText">閉じる</span>
   </div>
 </template>
 
