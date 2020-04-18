@@ -22,7 +22,6 @@ import {
   reactive,
   PropType
 } from '@vue/composition-api'
-
 import {
   NavigationItemType,
   useNavigationSelectorItem
