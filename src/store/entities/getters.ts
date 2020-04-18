@@ -29,7 +29,18 @@ export const getters = defineGetters<S>()({
   },
   userByName(state): (name: string) => User | undefined {
     return (name: string) => {
-      return Object.values(state.users).find(user => user?.name === name)
+      const loweredName = name.toLowerCase()
+      return Object.values(state.users).find(
+        user => user?.name.toLowerCase() === loweredName
+      )
+    }
+  },
+  userGroupByName(state): (name: string) => UserGroup | undefined {
+    return (name: string) => {
+      const loweredName = name.toLowerCase()
+      return Object.values(state.userGroups).find(
+        userGroup => userGroup?.name.toLowerCase() === loweredName
+      )
     }
   },
   nonEmptyStampPaletteIds(state) {
