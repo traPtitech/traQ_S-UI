@@ -15,7 +15,6 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 
 const useStyles = (props: { onSecondary: boolean }) =>

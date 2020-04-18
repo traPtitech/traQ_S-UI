@@ -18,16 +18,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  reactive,
-  onBeforeMount
-} from '@vue/composition-api'
-import { FileId } from '@/types/entity-ids'
-import { AttachmentType } from '@/lib/util/file'
-import { buildFileThumbnailPath, buildFilePath } from '@/lib/api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from './use/fileMeta'
 

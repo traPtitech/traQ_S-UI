@@ -14,18 +14,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  ref,
-  onMounted,
-  SetupContext,
-  watchEffect
-} from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { ChannelId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 
 type Props = {

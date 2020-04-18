@@ -11,12 +11,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  computed,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
 

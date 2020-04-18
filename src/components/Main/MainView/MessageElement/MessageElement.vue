@@ -27,10 +27,15 @@
         :message-id="messageId"
         :stamps="state.message.stamps"
       />
+      <message-quote-list
+        v-if="embeddingsState.quoteMessageIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :message-ids="embeddingsState.quoteMessageIds"
+      />
       <message-file-list
-        v-if="state.fileIds.length > 0"
-        :class="$style.messageFileList"
-        :file-ids="state.fileIds"
+        v-if="embeddingsState.fileIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :file-ids="embeddingsState.fileIds"
       />
     </div>
   </div>
@@ -42,8 +47,6 @@ import {
   computed,
   reactive,
   ref,
-  watchEffect,
-  watch,
   SetupContext,
   PropType
 } from '@vue/composition-api'
@@ -57,7 +60,9 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
+import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
+import useEmbeddings from './use/embeddings'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -75,7 +80,13 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageElement',
-  components: { UserIcon, MessageHeader, MessageStampList, MessageFileList },
+  components: {
+    UserIcon,
+    MessageHeader,
+    MessageStampList,
+    MessageFileList,
+    MessageQuoteList
+  },
   props: {
     messageId: {
       type: String as PropType<MessageId>,
@@ -96,20 +107,24 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      fileIds: computed(
-        () =>
-          store.state.domain.messagesView.embeddedFilesMap[
-            props.messageId
-          ]?.map(e => e.id) ?? []
       )
     })
 
-    useElementRenderObserver(bodyRef, props, state, context)
+    const { embeddingsState } = useEmbeddings(props)
+
+    useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
     const styles = useStyles(props, hoverState)
 
-    return { state, styles, onMouseEnter, onMouseLeave, bodyRef, isMobile }
+    return {
+      state,
+      styles,
+      onMouseEnter,
+      onMouseLeave,
+      bodyRef,
+      embeddingsState,
+      isMobile
+    }
   }
 })
 </script>
@@ -163,7 +178,7 @@ $messagePaddingMobile: 16px;
   margin-top: 8px;
 }
 
-.messageFileList {
+.messageEmbeddingsList {
   margin-top: 16px;
 }
 </style>

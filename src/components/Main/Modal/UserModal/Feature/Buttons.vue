@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import LinkButton from './LinkButton.vue'
 import useChannelPath from '@/use/channelPath'

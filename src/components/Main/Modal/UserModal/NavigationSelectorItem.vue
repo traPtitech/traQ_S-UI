@@ -7,7 +7,6 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { NavigationItemType } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { isSelected: boolean }, size: number) =>

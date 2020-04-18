@@ -36,10 +36,8 @@
 import {
   defineComponent,
   computed,
-  reactive,
   ref,
-  watchEffect,
-  watch
+  watchEffect
 } from '@vue/composition-api'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'

@@ -18,14 +18,11 @@
 import {
   defineComponent,
   computed,
-  reactive,
   ref,
   Ref,
   SetupContext
 } from '@vue/composition-api'
 import store from '@/store'
-import api from '@/lib/api'
-import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'

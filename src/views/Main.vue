@@ -26,14 +26,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  watchEffect,
-  watch,
-  onBeforeMount
-} from '@vue/composition-api'
+import { defineComponent, computed, onBeforeMount } from '@vue/composition-api'
 import store from '@/store'
 import { setupWebSocket } from '@/lib/websocket'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'

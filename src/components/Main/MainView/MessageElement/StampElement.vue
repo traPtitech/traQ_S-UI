@@ -27,7 +27,7 @@ import {
 } from '@vue/composition-api'
 import { StampId } from '@/types/entity-ids'
 import store from '@/store'
-import { BASE_PATH, Stamp, MessageStamp, buildFilePath } from '@/lib/api'
+import { MessageStamp, buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import useHover from '@/use/hover'

@@ -15,16 +15,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { ChannelViewState, Pin } from '@traptitech/traq'
+import { Pin } from '@traptitech/traq'
 import ChannelSideBarPinnedListHeader from './ChannelSideBarPinnedListHeader.vue'
 import ChannelSideBarPinnedListItem from './ChannelSideBarPinnedListItem.vue'
 

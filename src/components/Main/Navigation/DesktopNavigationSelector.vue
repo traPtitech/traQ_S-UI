@@ -19,12 +19,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  toRefs,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
 import store from '@/store'
 import {
   NavigationItemType,

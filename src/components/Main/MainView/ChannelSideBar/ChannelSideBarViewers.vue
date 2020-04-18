@@ -15,14 +15,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  watchEffect,
-  ref,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
 import ChannelSideBarViewersDetail from './ChannelSideBarViewersDetail.vue'

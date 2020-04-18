@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from './store'
 import { throttle } from 'lodash-es'
 

@@ -39,7 +39,6 @@ import {
   defineComponent,
   SetupContext,
   computed,
-  ref,
   reactive,
   PropType
 } from '@vue/composition-api'
@@ -47,7 +46,6 @@ import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
-import ChannelList from './ChannelList.vue'
 import ChannelElementHash from './ChannelElementHash.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
@@ -199,7 +197,7 @@ $bgLeftShift: 4px;
   z-index: 0;
   border-top-left-radius: 100vw;
   border-bottom-left-radius: 100vw;
-  opacity: 10%;
+  opacity: 0.1;
   pointer-events: none;
 }
 </style>

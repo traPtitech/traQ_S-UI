@@ -45,19 +45,14 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
   reactive,
   toRefs,
-  set,
-  Ref,
-  ref
+  set
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { User } from '@traptitech/traq'
 import { compareString } from '@/lib/util/string'
-import { UserId, UserGroupId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'

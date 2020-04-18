@@ -10,9 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -22,7 +20,7 @@ const useStyles = (props: { topicContent?: string }) =>
       color: props.topicContent === '' ? theme.ui.secondary : theme.ui.primary
     })),
     topic: makeStyles(theme => ({
-      opacity: props.topicContent === '' ? '50%' : '100%'
+      opacity: props.topicContent === '' ? '0.5' : '1'
     }))
   })
 

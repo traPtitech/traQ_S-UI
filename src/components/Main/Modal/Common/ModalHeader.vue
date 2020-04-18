@@ -8,8 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 

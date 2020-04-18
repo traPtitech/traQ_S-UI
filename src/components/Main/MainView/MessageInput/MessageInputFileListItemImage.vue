@@ -12,14 +12,12 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
   reactive,
   ref,
   Ref,
   PropType
 } from '@vue/composition-api'
-import store from '@/store'
 import { Attachment } from '@/store/ui/fileInput/state'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'

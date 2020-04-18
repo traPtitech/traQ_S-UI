@@ -26,7 +26,6 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
 import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
 import Home from './NavigationContent/Home.vue'
 import Channels from './NavigationContent/Channels.vue'
