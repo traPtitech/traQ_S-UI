@@ -31,16 +31,12 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
+
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import useIsMobile from '@/use/isMobile'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
@@ -84,8 +80,8 @@ export default defineComponent({
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
     const { openChannelCreateModal } = useChannelCreateModal(props)
-    const isMobile = computed(() => store.getters.ui.isMobile)
     const styles = useStyles()
+    const { isMobile } = useIsMobile()
     return {
       isPopupMenuShown,
       channelState,
