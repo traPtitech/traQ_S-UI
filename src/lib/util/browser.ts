@@ -8,3 +8,7 @@ export const isSafari = () => {
 export const isIOSApp = () => {
   return navigator.userAgent.includes('traQ-iOS')
 }
+
+export const isPWA = () => {
+  return matchMedia('(display-mode: standalone)').matches
+}
