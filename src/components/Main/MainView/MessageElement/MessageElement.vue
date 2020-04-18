@@ -17,8 +17,11 @@
       :created-at="state.message.createdAt"
       :updated-at="state.message.updatedAt"
     />
-    <!-- <message-tools :class="$style.tools" v-if="hoverState.hover" /> -->
-    <message-tools :message-id="messageId" :class="$style.tools" />
+    <message-tools
+      :class="$style.tools"
+      :message-id="messageId"
+      v-if="hoverState.hover"
+    />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <message-stamp-list
@@ -131,7 +134,7 @@ export default defineComponent({
   width: 100%;
   min-width: 0;
   padding: 8px 32px;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .userIcon {
@@ -168,7 +171,6 @@ export default defineComponent({
 
 .tools {
   grid-area: message-header;
-  //position: absolute;
   justify-self: end;
 }
 </style>
