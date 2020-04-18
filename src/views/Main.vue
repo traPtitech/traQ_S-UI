@@ -16,6 +16,7 @@
       <main-view-frame
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
+        :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
       >
         <main-view-controller :class="$style.mainViewWrapper" />
@@ -89,6 +90,7 @@ export default defineComponent({
       isNavAppeared,
       isNavCompletelyAppeared,
       isSidebarAppeared,
+      isSidebarCompletelyAppeared,
       isMainViewActive
     } = useMainViewLayout(navWidth, sidebarWidth)
 
@@ -116,6 +118,7 @@ export default defineComponent({
       showNav,
       hideOuter,
       isNavCompletelyAppeared,
+      isSidebarCompletelyAppeared,
       isSidebarAppeared,
       isMainViewActive,
       isMobile,

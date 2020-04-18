@@ -78,6 +78,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     isNavAppeared,
     isNavCompletelyAppeared,
     isSidebarAppeared,
+    isSidebarCompletelyAppeared,
     isMainViewActive
   }
 }
