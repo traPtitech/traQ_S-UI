@@ -33,7 +33,7 @@ export type S = {
   webhooks: Record<WebhookId, Webhook | undefined>
   fileMetaData: Record<FileId, FileInfo | undefined>
   tags: Record<TagId, Tag | undefined>
-  clipFolders: Record<ClipFolderId, ClipFolder>
+  clipFolders: Record<ClipFolderId, ClipFolder | undefined>
 }
 
 export const state: S = {

@@ -1,14 +1,10 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <navigation-content-container subtitle="すべてのクリップ">
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
     <navigation-content-container subtitle="クリップフォルダ">
-      <div
-        v-for="clipFolder in clipFolders"
-        :key="clipFolder.id"
-        :class="$style.list"
-      >
+      <div v-for="clipFolder in clipFolders" :key="clipFolder.id">
         <clip-folders-element
           :clip-folder="clipFolder"
           :class="$style.element"
@@ -26,11 +22,6 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
 
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
-
 export default defineComponent({
   name: 'ClipFolders',
   components: {
@@ -40,8 +31,7 @@ export default defineComponent({
   },
   setup() {
     const clipFolders = computed(() => store.state.entities.clipFolders)
-    const styles = useStyles()
-    return { clipFolders, styles }
+    return { clipFolders }
   }
 })
 </script>
@@ -51,9 +41,6 @@ export default defineComponent({
   padding: 0 16px 0 0;
 }
 .element {
-  margin: 8px 0;
-}
-.list {
-  margin: 16px 0px;
+  margin: 16px 0;
 }
 </style>
