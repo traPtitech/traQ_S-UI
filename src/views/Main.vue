@@ -21,6 +21,8 @@
     </div>
     <modal-container />
     <stamp-picker-container />
+    
+    <portal-target :name="targetPortalName" />
   </div>
   <div v-else></div>
 </template>
@@ -43,6 +45,8 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
 import useRouteWatcher from './use/routeWatcher'
+
+export const targetPortalName = 'message-menu-popup'
 
 export default defineComponent({
   name: 'Home',
@@ -116,7 +120,8 @@ export default defineComponent({
 
       isNavAppeared: isAppeared,
 
-      mainViewWrapperStyle
+      mainViewWrapperStyle,
+      targetPortalName
     }
   }
 })

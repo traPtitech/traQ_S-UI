@@ -18,7 +18,6 @@
       />
     </div>
     <div>
-      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
       <icon
         :class="$style.dotIcon"
         :size="16"
@@ -54,8 +53,6 @@ const useStyles = () =>
     }))
   })
 
-export const targetPortalName = 'message-menu-popup'
-
 export default defineComponent({
   name: 'MessageToolsContent',
   components: {
@@ -76,11 +73,11 @@ export default defineComponent({
         datetime: new Date()
       })
     }
-    const clickDots = () => {
-      context.emit('dots')
+    const clickDots = (e: MouseEvent) => {
+      context.emit('open', 'dot', e)
     }
-    const clickStampIcon = () => {
-      context.emit('stampPalette')
+    const clickStampIcon = (e: MouseEvent) => {
+      context.emit('open', 'stampPicker', e)
     }
     const stamps = computed(() =>
       store.getters.domain.me.recentStampIds.filter((_, i) => i < 3)
@@ -89,7 +86,6 @@ export default defineComponent({
       styles,
       addStamp,
       stamps,
-      targetPortalName,
       clickDots,
       clickStampIcon
     }
@@ -108,7 +104,6 @@ export default defineComponent({
   box-shadow: 0 1px 3px 0;
   padding: 4px;
   justify-content: space-between;
-  position: relative;
 }
 
 .emojiOutline {
@@ -126,12 +121,6 @@ export default defineComponent({
 .dotIcon {
   margin-top: 4px;
   cursor: pointer;
-}
-
-.popupLocator {
-  position: absolute;
-  right: 0;
-  top: 16px;
 }
 
 .stampListItem {

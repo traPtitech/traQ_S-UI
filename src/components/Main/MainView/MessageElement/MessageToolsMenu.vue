@@ -7,7 +7,7 @@
     <span :class="$style.text" @click="editMessage" v-if="isMine">編集</span>
     <span :class="$style.text" @click="copyLink">リンクをコピー</span>
     <span :class="$style.text" @click="copyMd">Markdownをコピー</span>
-    <span :class="$style.text" @click="deleteMessage">削除</span>
+    <span :class="$style.text" @click="deleteMessage" v-if="isMine">削除</span>
   </div>
 </template>
 
@@ -47,6 +47,7 @@ const togglePinned = (props: { messageId: MessageId }) => {
 
 const changeMessage = (props: { messageId: MessageId }) => {
   const editMessage = () => {
+    // TODO
     alert('edit: Not implemented')
   }
   const deleteMessage = () => {
@@ -105,6 +106,7 @@ export default defineComponent({
   width: max-content;
   padding: 8px 16px;
   border-radius: 4px;
+	position: absolute;
 }
 
 .text {
