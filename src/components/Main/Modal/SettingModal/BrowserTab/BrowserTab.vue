@@ -34,22 +34,23 @@
       />
       <div>
         修飾キーとして利用するキー
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.shift" />
-          {{ getModifierKeyName('shift') }}
-        </label>
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.alt" />
-          {{ getModifierKeyName('alt') }}
-        </label>
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.ctrl" />
-          {{ getModifierKeyName('ctrl') }}
-        </label>
-        <label v-if="macFlag">
-          <input type="checkbox" v-model="state.modifierKey.macCtrl" />
-          {{ getModifierKeyName('macCtrl') }}
-        </label>
+        <form-checkbox
+          :label="getModifierKeyName('shift')"
+          v-model="state.modifierKey.shift"
+        />
+        <form-checkbox
+          :label="getModifierKeyName('alt')"
+          v-model="state.modifierKey.alt"
+        />
+        <form-checkbox
+          :label="getModifierKeyName('ctrl')"
+          v-model="state.modifierKey.ctrl"
+        />
+        <form-checkbox
+          v-if="macFlag"
+          :label="getModifierKeyName('macCtrl')"
+          v-model="state.modifierKey.macCtrl"
+        />
       </div>
     </div>
     <div>
@@ -74,6 +75,7 @@ import useSyncedState from '../use/syncedState'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
+import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import Account from './Account.vue'
 import Notification from './Notification.vue'
@@ -136,6 +138,7 @@ export default defineComponent({
     FormRadio,
     FormSelector,
     FormInput,
+    FormCheckbox,
     Toggle
   }
 })
