@@ -16,12 +16,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  toRefs
-} from '@vue/composition-api'
+import { defineComponent, reactive, toRefs } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 // FIXME: モバイル用のレイアウト
 import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'

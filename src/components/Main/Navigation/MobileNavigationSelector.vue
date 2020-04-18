@@ -19,11 +19,10 @@
 import {
   defineComponent,
   SetupContext,
-  toRefs,
   reactive,
   PropType
 } from '@vue/composition-api'
-import store from '@/store'
+
 import {
   NavigationItemType,
   useNavigationSelectorItem
