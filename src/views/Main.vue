@@ -11,13 +11,20 @@
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
   >
-    <div :class="$style.homeContainer">
-      <div :class="$style.navigationWrapper">
-        <navigation />
-      </div>
-      <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
-        <main-view-controller :is-active="isNavAppeared" />
-      </div>
+    <div :class="$style.homeContainer" :style="styles.homeContainer">
+      <navigation v-show="isNavAppeared" :class="$style.navigationWrapper" />
+      <main-view-frame
+        :is-active="isMainViewActive"
+        :hide-outer="isNavCompletelyAppeared"
+        :style="styles.mainViewWrapper"
+      >
+        <main-view-controller :class="$style.mainViewWrapper" />
+      </main-view-frame>
+      <div
+        :class="$style.sidebarWrapper"
+        :style="styles.sidebarWrapper"
+        v-show="isSidebarAppeared"
+      ></div>
     </div>
     <modal-container />
     <stamp-picker-container />
@@ -26,79 +33,67 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive, Ref } from '@vue/composition-api'
 import { setupWebSocket } from '@/lib/websocket'
+import { makeStyles } from '@/lib/styles'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
+import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import useSwipeDetector from '@/use/swipeDetector'
-import useSwipeDrawer from '@/use/swipeDrawer'
+import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
+import useInitialFetch from './use/initialFetch'
+
+const useStyles = (
+  mainViewPosition: Readonly<Ref<number>>,
+  sidebarPosition: Readonly<Ref<number>>
+) =>
+  reactive({
+    mainViewWrapper: makeStyles(_ => ({
+      transform: `translateX(${mainViewPosition.value}px)`
+    })),
+    sidebarWrapper: makeStyles(_ => ({
+      transform: `translateX(${sidebarPosition.value}px)`
+    })),
+    homeContainer: makeStyles(theme => ({
+      background: theme.background.tertiary
+    }))
+  })
 
 export default defineComponent({
   name: 'Home',
   components: {
     Navigation,
     MainViewController,
+    MainViewFrame,
     ModalContainer,
     StampPickerContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
   setup(_, context) {
+    const navWidth = 320
+    const sidebarWidth = 320
     const {
-      swipeDetectorState,
       touchmoveHandler,
       touchstartHandler,
-      touchendHandler
-    } = useSwipeDetector()
-
-    // TODO: 幅をどこかに移す
-    const navWidth = 320
-    const { swipeDrawerState, isAppeared } = useSwipeDrawer(
-      swipeDetectorState,
-      'right',
-      navWidth,
-      navWidth / 4,
-      navWidth / 2
-    )
-
-    const mainViewWrapperStyle = computed(() => ({
-      transform: `translateX(${swipeDrawerState.currentPosition}px)`
-    }))
+      touchendHandler,
+      mainViewPosition,
+      sidebarPosition,
+      isNavAppeared,
+      isNavCompletelyAppeared,
+      isSidebarAppeared,
+      isMainViewActive
+    } = useMainViewLayout(navWidth, sidebarWidth)
 
     const { routeWatcherState } = useRouteWatcher(context)
 
     setupWebSocket()
 
-    onBeforeMount(async () => {
-      try {
-        await store.dispatch.domain.me.fetchMe()
-      } catch {
-        location.href = '/login'
-      }
-      // 初回fetch
-      await Promise.all([
-        store.dispatch.entities.fetchUsers(),
-        store.dispatch.entities.fetchUserGroups(),
-        store.dispatch.entities.fetchChannels(),
-        store.dispatch.entities.fetchStamps()
-      ])
+    useInitialFetch()
 
-      store.commit.app.setInitialFetchCompleted()
-      store.dispatch.domain.stampCategory.constructStampCategories()
-      store.dispatch.entities.fetchStampPalettes()
-      store.dispatch.domain.fetchChannelActivity()
-      store.dispatch.domain.fetchOnlineUsers()
-      store.dispatch.domain.me.fetchUnreadChannels()
-      store.dispatch.domain.me.fetchStaredChannels()
-      store.dispatch.domain.me.fetchStampHistory()
-
-      // TODO: 全チャンネルについて取得する必要はないので遅延で良い
-      store.dispatch.domain.me.fetchSubscriptions()
-    })
+    const styles = useStyles(mainViewPosition, sidebarPosition)
 
     return {
       touchstartHandler,
@@ -107,9 +102,12 @@ export default defineComponent({
 
       routeWatcherState,
 
-      isNavAppeared: isAppeared,
+      isNavAppeared,
+      isNavCompletelyAppeared,
+      isSidebarAppeared,
+      isMainViewActive,
 
-      mainViewWrapperStyle
+      styles
     }
   }
 })
@@ -135,6 +133,14 @@ export default defineComponent({
     top: 0;
     left: 0;
   }
+}
+.sidebarWrapper {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 320px;
+  height: 100%;
+  background: red;
 }
 .mainViewWrapper {
   width: 100%;

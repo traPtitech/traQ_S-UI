@@ -60,9 +60,9 @@ const useSwipeDetector = () => {
     ) {
       return
     }
-    const x = e.touches[0].clientX
-    const y = e.touches[0].clientY
-    const deg = Math.atan2(y - state.lastTouchPosY, x - state.lastTouchPosX)
+    const diffX = e.touches[0].clientX - state.lastTouchPosX
+    const diffY = e.touches[0].clientY - state.lastTouchPosY
+    const deg = Math.atan2(diffY, diffX)
     const normalizedDeg = Math.abs(((deg / Math.PI / 2) * 360) % 180)
     const isHorizontalScroll =
       (0 <= normalizedDeg && normalizedDeg < 30) ||

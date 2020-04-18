@@ -1,4 +1,4 @@
-import { computed, reactive, watch } from '@vue/composition-api'
+import { computed, reactive, watch, Ref } from '@vue/composition-api'
 import { SwipeDetectorState } from '@/use/swipeDetector'
 
 /**
@@ -16,6 +16,7 @@ const useSwipeDrawer = (
   destination: number,
   showThreshould: number,
   hideThreshould: number,
+  inactive?: Readonly<Ref<boolean>>,
   animationDurationMs = 500
 ) => {
   const state = reactive({
@@ -30,7 +31,15 @@ const useSwipeDrawer = (
   })
 
   /** ナビゲーションは表示状態になっているか */
-  const isAppeared = computed(() => state.currentPosition > showThreshould)
+  const isAppeared = computed(() => state.currentPosition > 0)
+
+  /** ナビゲーションは完全に表示状態になっているか */
+  const isCompletelyAppeared = computed(
+    () => state.currentPosition >= destination
+  )
+
+  /** ナビゲーションの表示が開始されたか */
+  const isAppearingStarted = computed(() => state.currentPosition > 0)
 
   /** 指定した位置まで`state.currentPosition`をアニメーションさせる */
   const animatePosition = (to: number) => {
@@ -59,6 +68,9 @@ const useSwipeDrawer = (
   watch(
     () => swipeDetectorState.swipeDistanceX,
     swipeDistanceX => {
+      if (inactive && inactive.value) {
+        return
+      }
       const diff = normalize(swipeDistanceX)
       const pos = state.startPosition + diff
       state.currentPosition = Math.max(Math.min(pos, destination), 0)
@@ -92,7 +104,9 @@ const useSwipeDrawer = (
 
   return {
     swipeDrawerState: state,
-    isAppeared
+    isAppeared,
+    isCompletelyAppeared,
+    isAppearingStarted
   }
 }
 
