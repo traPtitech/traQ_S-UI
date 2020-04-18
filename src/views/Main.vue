@@ -12,10 +12,10 @@
     @touchend="touchendHandler"
   >
     <div :class="$style.homeContainer" :style="styles.homeContainer">
-      <navigation v-show="isNavAppeared" :class="$style.navigationWrapper" />
+      <navigation v-show="showNav" :class="$style.navigationWrapper" />
       <main-view-frame
         :is-active="isMainViewActive"
-        :hide-outer="isNavCompletelyAppeared"
+        :hide-outer="hideOuter"
         :style="styles.mainViewWrapper"
       >
         <main-view-controller :class="$style.mainViewWrapper" />
@@ -23,8 +23,11 @@
       <div
         :class="$style.sidebarWrapper"
         :style="styles.sidebarWrapper"
+        v-if="isMobile"
         v-show="isSidebarAppeared"
-      ></div>
+      >
+        <portal-target name="sidebar" v-if="isMobile" />
+      </div>
     </div>
     <modal-container />
     <stamp-picker-container />
@@ -33,9 +36,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, Ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 import { setupWebSocket } from '@/lib/websocket'
 import { makeStyles } from '@/lib/styles'
+import useIsMobile from '@/use/isMobile'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
@@ -53,8 +57,9 @@ const useStyles = (
     mainViewWrapper: makeStyles(_ => ({
       transform: `translateX(${mainViewPosition.value}px)`
     })),
-    sidebarWrapper: makeStyles(_ => ({
-      transform: `translateX(${sidebarPosition.value}px)`
+    sidebarWrapper: makeStyles(theme => ({
+      transform: `translateX(${sidebarPosition.value}px)`,
+      background: theme.background.secondary
     })),
     homeContainer: makeStyles(theme => ({
       background: theme.background.tertiary
@@ -62,7 +67,7 @@ const useStyles = (
   })
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Main',
   components: {
     Navigation,
     MainViewController,
@@ -74,7 +79,7 @@ export default defineComponent({
   },
   setup(_, context) {
     const navWidth = 320
-    const sidebarWidth = 320
+    const sidebarWidth = 256 + 64
     const {
       touchmoveHandler,
       touchstartHandler,
@@ -86,6 +91,12 @@ export default defineComponent({
       isSidebarAppeared,
       isMainViewActive
     } = useMainViewLayout(navWidth, sidebarWidth)
+
+    const { isMobile } = useIsMobile()
+    const showNav = computed(() => !isMobile.value || isNavAppeared.value)
+    const hideOuter = computed(
+      () => isMobile.value && isNavCompletelyAppeared.value
+    )
 
     const { routeWatcherState } = useRouteWatcher(context)
 
@@ -102,10 +113,12 @@ export default defineComponent({
 
       routeWatcherState,
 
-      isNavAppeared,
+      showNav,
+      hideOuter,
       isNavCompletelyAppeared,
       isSidebarAppeared,
       isMainViewActive,
+      isMobile,
 
       styles
     }
@@ -140,7 +153,7 @@ export default defineComponent({
   left: 100%;
   width: 320px;
   height: 100%;
-  background: red;
+  padding: 8px 32px;
 }
 .mainViewWrapper {
   width: 100%;

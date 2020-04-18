@@ -12,6 +12,7 @@
     />
     <main-view :channel-id="channelId" />
     <channel-side-bar :channel-id="channelId" />
+    <portal-target name="sidebar" v-if="!isMobile" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import useIsMobile from '@/use/isMobile'
 import MainView from './MainView.vue'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
@@ -88,6 +90,7 @@ export default defineComponent({
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
       containerRef
     )
+    const { isMobile } = useIsMobile()
 
     return {
       state,
@@ -95,7 +98,8 @@ export default defineComponent({
       containerStyle,
       containerRef,
       onDrop,
-      onDragOver
+      onDragOver,
+      isMobile
     }
   }
 })

@@ -14,7 +14,7 @@ const useStyles = (props: { isActive: boolean; hideOuter: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       opacity: props.isActive ? '1' : '0.5',
-      overflow: props.hideOuter ? '' : 'hidden'
+      overflow: props.hideOuter ? 'hidden' : ''
     }))
   })
 

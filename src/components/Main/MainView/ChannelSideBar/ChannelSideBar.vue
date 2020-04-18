@@ -12,31 +12,33 @@
     :pinned-message="state.pinnedMessage"
   />
   <div v-else :style="styles.container" :class="$style.container">
-    <channel-side-bar-header
-      :channel-id="channelId"
-      @close="toggle"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-viewers
-      :viewer-ids="viewerIds"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-topic :class="$style.sidebarItem" />
-    <channel-side-bar-pinned
-      :pinned-message-length="state.pinnedMessage.length"
-      @open="togglePinnedMode"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-relation
-      :channel-id="channelId"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-member
-      :channel-id="channelId"
-      :class="$style.sidebarItem"
-      :viewer-ids="viewerIds"
-    />
-    <channel-side-bar-edit :class="$style.edit" />
+    <portal to="sidebar">
+      <channel-side-bar-header
+        :channel-id="channelId"
+        @close="toggle"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-viewers
+        :viewer-ids="viewerIds"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-topic :class="$style.sidebarItem" />
+      <channel-side-bar-pinned
+        :pinned-message-length="state.pinnedMessage.length"
+        @open="togglePinnedMode"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-relation
+        :channel-id="channelId"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-member
+        :channel-id="channelId"
+        :class="$style.sidebarItem"
+        :viewer-ids="viewerIds"
+      />
+      <channel-side-bar-edit :class="$style.edit" />
+    </portal>
   </div>
 </template>
 
