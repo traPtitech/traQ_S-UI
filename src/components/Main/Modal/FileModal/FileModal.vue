@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.wrapper">
     <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
+    <file-modal-video v-else-if="fileType === 'video'" :file-id="fileMeta.id" />
     <file-modal-file v-else :file-id="fileMeta.id" />
   </div>
 </template>
@@ -13,6 +14,7 @@ import useFileMeta from '@/use/fileMeta'
 import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'
 import useChannelPath from '@/use/channelPath'
 import FileModalFile from '@/components/Main/Modal/FileModal/FileModalFile.vue'
+import FileModalVideo from '@/components/Main/Modal/FileModal/FileModalVideo.vue'
 
 const useStyles = () =>
   reactive({
@@ -23,7 +25,8 @@ export default defineComponent({
   name: 'FileModal',
   components: {
     FileModalImage,
-    FileModalFile
+    FileModalFile,
+    FileModalVideo
   },
   props: {
     fileId: {
