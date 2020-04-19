@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.wrapper">
+  <div>
     <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
     <file-modal-video v-else-if="fileType === 'video'" :file-id="fileMeta.id" />
     <file-modal-audio v-else-if="fileType === 'audio'" :file-id="fileMeta.id" />
@@ -8,20 +8,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import store from '@/store'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'
-import useChannelPath from '@/use/channelPath'
 import FileModalFile from '@/components/Main/Modal/FileModal/FileModalFile.vue'
 import FileModalVideo from '@/components/Main/Modal/FileModal/FileModalVideo.vue'
 import FileModalAudio from '@/components/Main/Modal/FileModal/FileModalAudio.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'FileModal',
@@ -38,26 +30,13 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
-
-    store.dispatch.entities.fetchFileMetaByFileId(props.fileId)
     const { fileMeta, fileType } = useFileMeta(props, context)
-    const channelPath = useChannelPath().channelIdToPathString(
-      fileMeta.value?.channelId ?? '',
-      true
-    )
-
-    const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
-
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
-    return { styles, fileMeta, fileType, channelPath, user, onClickClear }
+    return { fileMeta, fileType }
   }
 })
 </script>
 
 <style lang="scss" module>
-.wrapper {
-}
 .close {
   position: absolute;
   top: 0;

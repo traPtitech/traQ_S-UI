@@ -21,13 +21,16 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileSize = computed(() =>
     fileMeta.value ? prettifyFileSize(fileMeta.value.size) : '0B'
   )
-  const fileIconName = computed(() =>
-    fileType.value === 'file'
-      ? 'file'
-      : 'audio'
-      ? 'file-music'
-      : `file-${fileType.value}`
-  )
+  const fileIconName = computed(() => {
+    switch (fileType.value) {
+      case 'file':
+        return 'file'
+      case 'audio':
+        return 'file-music'
+      default:
+        return `file-${fileType.value}`
+    }
+  })
   return {
     fileMeta,
     fileLink,
