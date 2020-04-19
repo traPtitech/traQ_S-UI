@@ -29,6 +29,7 @@
 import { defineComponent, computed, onBeforeMount } from '@vue/composition-api'
 import store from '@/store'
 import { setupWebSocket } from '@/lib/websocket'
+import { connectFirebase } from '@/lib/firebase'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
@@ -72,6 +73,7 @@ export default defineComponent({
     const { routeWatcherState } = useRouteWatcher(context)
 
     setupWebSocket()
+    connectFirebase()
 
     onBeforeMount(async () => {
       try {
