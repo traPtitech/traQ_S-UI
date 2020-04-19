@@ -11,7 +11,9 @@
       :class="$style.fileUploadOverlay"
     />
     <main-view :channel-id="channelId" />
-    <channel-side-bar :channel-id="channelId" />
+    <portal v-if="shouldShowSidebar" to="sidebar">
+      <channel-side-bar :channel-id="channelId" />
+    </portal>
     <portal v-if="!isSidebarOpen" to="sidebar-opener">
       <channel-side-bar-hidden
         @open="openSidebar"
@@ -99,7 +101,7 @@ export default defineComponent({
       containerRef
     )
 
-    const { isSidebarOpen, openSidebar } = useSidebar()
+    const { shouldShowSidebar, isSidebarOpen, openSidebar } = useSidebar()
     const viewerIds = computed(
       () => store.getters.domain.messagesView.getCurrentViewersId
     )
@@ -112,6 +114,7 @@ export default defineComponent({
       onDrop,
       onDragOver,
       viewerIds,
+      shouldShowSidebar,
       isSidebarOpen,
       openSidebar
     }

@@ -1,39 +1,37 @@
 <template>
-  <portal v-if="shouldShowSidebar" to="sidebar">
-    <channel-side-bar-pinned-list
-      v-if="state.pinnedMode"
-      @closePinned="togglePinnedMode"
-      @closeBar="closeSidebar"
-      :pinned-message="state.pinnedMessage"
+  <channel-side-bar-pinned-list
+    v-if="state.pinnedMode"
+    @closePinned="togglePinnedMode"
+    @closeBar="closeSidebar"
+    :pinned-message="state.pinnedMessage"
+  />
+  <div v-else :style="styles.container" :class="$style.container">
+    <channel-side-bar-header
+      :channel-id="channelId"
+      @close="closeSidebar"
+      :class="$style.sidebarItem"
     />
-    <div v-else :style="styles.container" :class="$style.container">
-      <channel-side-bar-header
-        :channel-id="channelId"
-        @close="closeSidebar"
-        :class="$style.sidebarItem"
-      />
-      <channel-side-bar-viewers
-        :viewer-ids="viewerIds"
-        :class="$style.sidebarItem"
-      />
-      <channel-side-bar-topic :class="$style.sidebarItem" />
-      <channel-side-bar-pinned
-        :pinned-message-length="state.pinnedMessage.length"
-        @open="togglePinnedMode"
-        :class="$style.sidebarItem"
-      />
-      <channel-side-bar-relation
-        :channel-id="channelId"
-        :class="$style.sidebarItem"
-      />
-      <channel-side-bar-member
-        :channel-id="channelId"
-        :class="$style.sidebarItem"
-        :viewer-ids="viewerIds"
-      />
-      <channel-side-bar-edit :class="$style.edit" />
-    </div>
-  </portal>
+    <channel-side-bar-viewers
+      :viewer-ids="viewerIds"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-topic :class="$style.sidebarItem" />
+    <channel-side-bar-pinned
+      :pinned-message-length="state.pinnedMessage.length"
+      @open="togglePinnedMode"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-relation
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+    />
+    <channel-side-bar-member
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+      :viewer-ids="viewerIds"
+    />
+    <channel-side-bar-edit :class="$style.edit" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,7 +45,6 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
-import useIsMobile from '@/use/isMobile'
 import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
@@ -96,18 +93,14 @@ export default defineComponent({
     const togglePinnedMode = () => {
       state.pinnedMode = !state.pinnedMode
     }
-    const { shouldShowSidebar, openSidebar, closeSidebar } = useSidebar()
-    const { isMobile } = useIsMobile()
+    const { closeSidebar } = useSidebar()
 
     return {
       state,
       togglePinnedMode,
       viewerIds,
       styles,
-      openSidebar,
-      closeSidebar,
-      isMobile,
-      shouldShowSidebar
+      closeSidebar
     }
   }
 })
