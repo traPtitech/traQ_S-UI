@@ -26,12 +26,16 @@ const useSidebar = () => {
   )
   const openSidebar = () => {
     store.commit.ui.mainView.setMainViewComponentState(
-      MainViewComponentState.SidebarShown
+      store.getters.ui.isMobile
+        ? MainViewComponentState.SidebarAppearingAuto
+        : MainViewComponentState.SidebarShown
     )
   }
   const closeSidebar = () => {
     store.commit.ui.mainView.setMainViewComponentState(
-      MainViewComponentState.Hidden
+      store.getters.ui.isMobile
+        ? MainViewComponentState.SidebarDisappearingAuto
+        : MainViewComponentState.Hidden
     )
   }
   return { isSidebarOpen, shouldShowSidebar, openSidebar, closeSidebar }
