@@ -3,15 +3,15 @@ import store from '@/store'
 import { MainViewComponentState } from '@/store/ui/mainView/state'
 
 const useSidebar = () => {
-  const isSidebarOpen = computed(() => store.state.ui.mainView.isSidebarOpen)
+  const isSidebarOpen = computed(() => store.getters.ui.mainView.isSidebarOpen)
   const openSidebar = () => {
     store.commit.ui.mainView.setMainViewComponentState(
-      MainViewComponentState.SidebarAppearingAuto
+      MainViewComponentState.SidebarShown
     )
   }
   const closeSidebar = () => {
     store.commit.ui.mainView.setMainViewComponentState(
-      MainViewComponentState.SidebarDisappearingAuto
+      MainViewComponentState.Hidden
     )
   }
   return { isSidebarOpen, openSidebar, closeSidebar }
