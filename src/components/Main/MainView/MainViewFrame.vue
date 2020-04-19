@@ -67,5 +67,6 @@ $paddingSize: 16px;
   top: -$paddingSize;
   left: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 </style>

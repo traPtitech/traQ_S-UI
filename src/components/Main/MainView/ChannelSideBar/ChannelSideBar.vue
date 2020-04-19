@@ -1,21 +1,15 @@
 <template>
-  <channel-side-bar-hidden
-    v-if="!state.isOpen"
-    @open="toggle"
-    :viewer-ids="viewerIds"
-    :class="$style.hidden"
-  />
-  <channel-side-bar-pinned-list
-    v-else-if="state.pinnedMode"
-    @closePinned="togglePinnedMode"
-    @closeBar="toggle"
-    :pinned-message="state.pinnedMessage"
-  />
-  <div v-else :style="styles.container" :class="$style.container">
-    <portal to="sidebar">
+  <portal v-if="isSidebarOpen || isMobile" to="sidebar">
+    <channel-side-bar-pinned-list
+      v-if="state.pinnedMode"
+      @closePinned="togglePinnedMode"
+      @closeBar="closeSidebar"
+      :pinned-message="state.pinnedMessage"
+    />
+    <div v-else :style="styles.container" :class="$style.container">
       <channel-side-bar-header
         :channel-id="channelId"
-        @close="toggle"
+        @close="closeSidebar"
         :class="$style.sidebarItem"
       />
       <channel-side-bar-viewers
@@ -38,8 +32,8 @@
         :viewer-ids="viewerIds"
       />
       <channel-side-bar-edit :class="$style.edit" />
-    </portal>
-  </div>
+    </div>
+  </portal>
 </template>
 
 <script lang="ts">
@@ -52,6 +46,8 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import useSidebar from '@/use/sidebar'
+import useIsMobile from '@/use/isMobile'
 import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
@@ -88,7 +84,6 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      isOpen: false,
       pinnedMode: false,
       pinnedMessage: computed(
         () => store.state.domain.messagesView.pinnedMessages
@@ -98,18 +93,21 @@ export default defineComponent({
     const viewerIds = computed(
       () => store.getters.domain.messagesView.getCurrentViewersId
     )
-    const toggle = () => {
-      state.isOpen = !state.isOpen
-    }
     const togglePinnedMode = () => {
       state.pinnedMode = !state.pinnedMode
     }
+    const { isSidebarOpen, openSidebar, closeSidebar } = useSidebar()
+    const { isMobile } = useIsMobile()
+
     return {
       state,
-      toggle,
       togglePinnedMode,
       viewerIds,
-      styles
+      styles,
+      isSidebarOpen,
+      openSidebar,
+      closeSidebar,
+      isMobile
     }
   }
 })
@@ -123,12 +121,6 @@ export default defineComponent({
   height: 100%;
   padding: 0 32px;
   overflow: auto;
-}
-
-.hidden {
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 
 .sidebarItem {

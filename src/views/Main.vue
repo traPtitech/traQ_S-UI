@@ -38,6 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
+
 import { setupWebSocket } from '@/lib/websocket'
 import { makeStyles } from '@/lib/styles'
 import useIsMobile from '@/use/isMobile'
@@ -91,7 +92,10 @@ export default defineComponent({
       isNavCompletelyAppeared,
       isSidebarAppeared,
       isSidebarCompletelyAppeared,
-      isMainViewActive
+      isMainViewActive,
+      openSidebar: animateOpenSidebar,
+      closeSidebar: animateCloseSidebar,
+      currentActiveDrawer
     } = useMainViewLayout(navWidth, sidebarWidth)
 
     const { isMobile } = useIsMobile()
@@ -123,7 +127,8 @@ export default defineComponent({
       isMainViewActive,
       isMobile,
 
-      styles
+      styles,
+      currentActiveDrawer
     }
   }
 })
@@ -156,7 +161,7 @@ export default defineComponent({
   left: 100%;
   width: 320px;
   height: 100%;
-  padding: 8px 32px;
+  padding: 8px 0;
 }
 .mainViewWrapper {
   width: 100%;

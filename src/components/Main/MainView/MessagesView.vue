@@ -12,7 +12,13 @@
     />
     <main-view :channel-id="channelId" />
     <channel-side-bar :channel-id="channelId" />
-    <portal-target name="sidebar" v-if="!isMobile" />
+    <portal v-if="!isSidebarOpen" to="sidebar-opener">
+      <channel-side-bar-hidden
+        @open="openSidebar"
+        :viewer-ids="viewerIds"
+        :class="$style.hidden"
+      />
+    </portal>
   </div>
 </template>
 
@@ -28,9 +34,10 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import useIsMobile from '@/use/isMobile'
 import MainView from './MainView.vue'
+import useSidebar from '@/use/sidebar'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
+import ChannelSideBarHidden from '@/components/Main/MainView/ChannelSideBar/ChannelSideBarHidden.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
@@ -68,7 +75,8 @@ export default defineComponent({
   components: {
     MainView,
     MessagesViewFileUploadOverlay,
-    ChannelSideBar
+    ChannelSideBar,
+    ChannelSideBarHidden
   },
   setup() {
     const state = reactive({
@@ -90,7 +98,11 @@ export default defineComponent({
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
       containerRef
     )
-    const { isMobile } = useIsMobile()
+
+    const { isSidebarOpen, openSidebar } = useSidebar()
+    const viewerIds = computed(
+      () => store.getters.domain.messagesView.getCurrentViewersId
+    )
 
     return {
       state,
@@ -99,7 +111,9 @@ export default defineComponent({
       containerRef,
       onDrop,
       onDragOver,
-      isMobile
+      viewerIds,
+      isSidebarOpen,
+      openSidebar
     }
   }
 })
