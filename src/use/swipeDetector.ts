@@ -85,7 +85,7 @@ const useSwipeDetector = () => {
     if (state.swipeDirection === 'none') {
       return
     }
-    e.stopPropagation()
+    e.stopImmediatePropagation()
     if (e.touches.length !== 1) return
     const x = e.touches[0].clientX
     const dx = x - state.lastTouchPosX
