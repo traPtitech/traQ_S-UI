@@ -1,5 +1,5 @@
 <template>
-  <portal v-if="isSidebarOpen || shouldShowSidebar" to="sidebar">
+  <portal v-if="shouldShowSidebar" to="sidebar">
     <channel-side-bar-pinned-list
       v-if="state.pinnedMode"
       @closePinned="togglePinnedMode"
@@ -96,12 +96,7 @@ export default defineComponent({
     const togglePinnedMode = () => {
       state.pinnedMode = !state.pinnedMode
     }
-    const {
-      isSidebarOpen,
-      shouldShowSidebar,
-      openSidebar,
-      closeSidebar
-    } = useSidebar()
+    const { shouldShowSidebar, openSidebar, closeSidebar } = useSidebar()
     const { isMobile } = useIsMobile()
 
     return {
@@ -109,7 +104,6 @@ export default defineComponent({
       togglePinnedMode,
       viewerIds,
       styles,
-      isSidebarOpen,
       openSidebar,
       closeSidebar,
       isMobile,
