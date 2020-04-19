@@ -1,13 +1,7 @@
 <template>
   <div :class="$style.wrapper">
     <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
-    <div v-else>
-      <button :class="$style.close" @click="onClickClear">X</button>
-      {{ fileMeta.name }}
-      {{ channelPath }}
-      {{ fileMeta.createdAt }}
-      {{ user.name }}
-    </div>
+    <file-modal-file v-else :file-id="fileMeta.id" />
   </div>
 </template>
 
@@ -18,6 +12,7 @@ import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'
 import useChannelPath from '@/use/channelPath'
+import FileModalFile from '@/components/Main/Modal/FileModal/FileModalFile.vue'
 
 const useStyles = () =>
   reactive({
@@ -27,7 +22,8 @@ const useStyles = () =>
 export default defineComponent({
   name: 'FileModal',
   components: {
-    FileModalImage
+    FileModalImage,
+    FileModalFile
   },
   props: {
     fileId: {
