@@ -1,11 +1,13 @@
 <template>
   <div :class="$style.wrapper">
-    <button :class="$style.close" @click="onClickClear">X</button>
-    {{ fileMeta.name }}
-    {{ channelPath }}
-    {{ fileMeta.createdAt }}
-    {{ user.name }}
     <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
+    <div v-else>
+      <button :class="$style.close" @click="onClickClear">X</button>
+      {{ fileMeta.name }}
+      {{ channelPath }}
+      {{ fileMeta.createdAt }}
+      {{ user.name }}
+    </div>
   </div>
 </template>
 
@@ -53,11 +55,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .wrapper {
-  position: relative;
-  width: 80%;
-  height: 60%;
-  max-width: 640px;
-  max-height: 480px;
 }
 .close {
   position: absolute;
