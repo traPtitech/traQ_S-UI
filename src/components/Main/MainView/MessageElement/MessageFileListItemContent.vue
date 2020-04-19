@@ -23,7 +23,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import useFileMeta from './use/fileMeta'
+import useFileMeta from '@/use/fileMeta'
 
 const useStyles = (props: { isWhite: boolean }) =>
   reactive({

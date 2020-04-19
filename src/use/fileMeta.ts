@@ -2,7 +2,7 @@ import { computed, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import { buildFilePath } from '@/lib/api'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
-import useFileLink from './fileLink'
+import useFileLink from '@/use/fileLink'
 
 const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileMeta = computed(
