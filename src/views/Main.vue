@@ -27,6 +27,7 @@
         v-if="isMobile"
         v-show="isSidebarAppeared"
       >
+        <!-- モバイル時はスワイプ表示するためここにportal表示 -->
         <portal-target name="sidebar" v-if="isMobile" />
       </div>
     </div>

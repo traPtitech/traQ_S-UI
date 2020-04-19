@@ -10,7 +10,11 @@ const useSidebar = () => {
   /** サイドバーが開ききっているか */
   const isSidebarOpen = computed(() => store.getters.ui.mainView.isSidebarOpen)
 
-  /** サイドバーが表示されている必要があるか */
+  /**
+   * サイドバーが表示されている必要があるか
+   *
+   * モバイルの場合は引き出し開始時点で表示する必要があるため特殊な扱いとなる
+   */
   const shouldShowSidebar = computed(
     () =>
       state.value === MainViewComponentState.SidebarShown ||

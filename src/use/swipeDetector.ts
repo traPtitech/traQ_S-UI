@@ -15,7 +15,7 @@ export interface SwipeDetectorState {
   /** X速度 */
   swipeSpeedX: number
 
-  /** スワイプ中か */
+  /** スワイプの向き */
   swipeDirection: SwipeDirection
 
   /** スワイプを開始の判定途中か */
@@ -46,7 +46,7 @@ const useSwipeDetector = () => {
     state.isStartingSwipe = true
   }
 
-  const touchendHandler = (e: TouchEvent) => {
+  const touchendHandler = (_: TouchEvent) => {
     state.lastTouchPosX = -1
     state.lastTouchPosY = -1
     state.isStartingSwipe = false
