@@ -29,29 +29,31 @@
       <authenticate-button-primary label="ログイン" @click="login" />
     </div>
     <!-- TODO: /versionの結果によってここを出し分ける -->
-    <authenticate-separator label="または" :class="$style.separator" />
-    <div :class="$style.exLoginButtons">
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="traP"
-        icon-name="traQ"
-        @click="loginExternal('traq')"
-      />
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="Google"
-        icon-mdi
-        icon-name="google"
-        @click="loginExternal('google')"
-      />
-      <authenticate-button-secondary
-        :class="$style.exLoginButton"
-        label="GitHub"
-        icon-mdi
-        icon-name="github"
-        @click="loginExternal('github')"
-      />
-    </div>
+    <template v-if="!isIOS">
+      <authenticate-separator label="または" :class="$style.separator" />
+      <div :class="$style.exLoginButtons">
+        <authenticate-button-secondary
+          :class="$style.exLoginButton"
+          label="traP"
+          icon-name="traQ"
+          @click="loginExternal('traq')"
+        />
+        <authenticate-button-secondary
+          :class="$style.exLoginButton"
+          label="Google"
+          icon-mdi
+          icon-name="google"
+          @click="loginExternal('google')"
+        />
+        <authenticate-button-secondary
+          :class="$style.exLoginButton"
+          label="GitHub"
+          icon-mdi
+          icon-name="github"
+          @click="loginExternal('github')"
+        />
+      </div>
+    </template>
   </form>
 </template>
 
@@ -59,6 +61,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import useLogin from './use/login'
 import { makeStyles } from '@/lib/styles'
+import { isIOSApp } from '@/lib/util/browser'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
@@ -87,7 +90,8 @@ export default defineComponent({
   setup() {
     const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const styles = useStyles()
-    return { loginState, styles, setName, setPass, login, loginExternal }
+    const isIOS = isIOSApp()
+    return { loginState, styles, setName, setPass, login, loginExternal, isIOS }
   }
 })
 </script>
