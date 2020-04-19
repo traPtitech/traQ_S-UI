@@ -6,7 +6,9 @@
     :value="text"
     placeholder="メッセージを送信"
     @input="onInput"
+    @before-input="onBeforeInput"
     @keydown="onKeyDown"
+    @keyup="onKeyUp"
   ></textarea>
 </template>
 
@@ -17,11 +19,15 @@ import {
   ref,
   onMounted,
   SetupContext,
-  watchEffect
+  watchEffect,
+  PropType,
+  Ref
 } from '@vue/composition-api'
 import autosize from 'autosize'
 import { makeStyles } from '@/lib/styles'
 import useInput from '@/use/input'
+import useSendKeyWatcher from './use/sendKeyWatcher'
+import { LineBreakPostProcessState } from './use/lineBreakPostProcess'
 
 const useStyles = () =>
   reactive({
@@ -30,13 +36,29 @@ const useStyles = () =>
     }))
   })
 
-const useEnterWatcher = (context: SetupContext) => {
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.metaKey && event.key === 'Enter') {
-      context.emit('post-message')
-    }
+const useLineBreak = (
+  props: { text: string; lineBreakPostProcessState: LineBreakPostProcessState },
+  textareaRef: Ref<HTMLTextAreaElement | null>,
+  context: SetupContext
+) => {
+  const insertLineBreak = () => {
+    if (!textareaRef.value) return
+    const pre = props.text.slice(0, textareaRef.value.selectionStart)
+    const suf = props.text.slice(textareaRef.value.selectionEnd)
+    const newText = `${pre}\n${suf}`
+    context.emit('insert-line-break', newText, pre.length + 1)
   }
-  return { onKeyDown }
+
+  watchEffect(() => {
+    if (props.lineBreakPostProcessState.shouldRun && textareaRef.value) {
+      textareaRef.value!.selectionStart = textareaRef.value!.selectionEnd =
+        props.lineBreakPostProcessState.selectionIndex
+      autosize.update(textareaRef.value)
+      context.emit('line-break-post-process-done')
+    }
+  })
+
+  return { insertLineBreak }
 }
 
 export default defineComponent({
@@ -49,13 +71,27 @@ export default defineComponent({
     shouldUpdateTextAreaSize: {
       type: Boolean,
       default: false
+    },
+    lineBreakPostProcessState: {
+      type: Object as PropType<LineBreakPostProcessState>,
+      required: true
     }
   },
   setup(props, context: SetupContext) {
     const styles = useStyles()
     const { onInput } = useInput(context)
-    const { onKeyDown } = useEnterWatcher(context)
+
     const textareaRef = ref<HTMLTextAreaElement>(null)
+    const { insertLineBreak } = useLineBreak(props, textareaRef, context)
+
+    const { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
+      context,
+      'post-message',
+      'modifier-key-down',
+      'modifier-key-up',
+      insertLineBreak
+    )
+
     onMounted(() => {
       if (textareaRef.value) {
         autosize(textareaRef.value)
@@ -69,10 +105,13 @@ export default defineComponent({
         autosize.update(textareaRef.value)
       }
     })
+
     return {
       styles,
       onInput,
+      onBeforeInput,
       onKeyDown,
+      onKeyUp,
       textareaRef
     }
   }
