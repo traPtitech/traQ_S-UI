@@ -3,6 +3,7 @@
     v-if="!state.isOpen"
     @open="toggle"
     :viewer-ids="viewerIds"
+    :class="$style.hidden"
   />
   <channel-side-bar-pinned-list
     v-else-if="state.pinnedMode"
@@ -120,6 +121,12 @@ export default defineComponent({
   height: 100%;
   padding: 0 32px;
   overflow: auto;
+}
+
+.hidden {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .sidebarItem {

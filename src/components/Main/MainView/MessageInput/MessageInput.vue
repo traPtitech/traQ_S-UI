@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    :data-is-mobile="isMobile"
+  >
     <portal-target
       :class="$style.stampPickerLocator"
       :name="targetPortalName"
@@ -34,6 +38,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import useIsMobile from '@/use/isMobile'
 import useAttachments from './use/attachments'
 import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
@@ -66,6 +71,7 @@ export default defineComponent({
   },
   setup(props) {
     const styles = useStyles()
+    const { isMobile } = useIsMobile()
     const { textState, onInputText } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
     const {
@@ -104,6 +110,7 @@ export default defineComponent({
     return {
       targetPortalName,
       styles,
+      isMobile,
       textState,
       attachmentsState,
       shouldUpdateSize,
@@ -119,6 +126,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 $inputPadding: 32px;
+$inputPaddingMobile: 16px;
 $radius: 4px;
 
 .container {
@@ -132,6 +140,12 @@ $radius: 4px;
     left: $inputPadding;
     right: $inputPadding;
     bottom: 24px - $radius;
+  }
+  &[data-is-mobile='true'] {
+    margin: {
+      left: $inputPaddingMobile;
+      right: $inputPaddingMobile;
+    }
   }
   border-radius: $radius;
   transform: translateY(-$radius);

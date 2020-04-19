@@ -62,7 +62,7 @@ export default defineComponent({
       swipeDetectorState,
       'right',
       navWidth,
-      navWidth / 2,
+      navWidth / 4,
       navWidth / 2
     )
 

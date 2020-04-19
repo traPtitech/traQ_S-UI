@@ -12,24 +12,34 @@
         :icon-name="item.iconName"
       />
     </div>
-    <div :class="$style.item" @click="onSettingClick">
-      <Icon name="cog" mdi />
-    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
-import store from '@/store'
+import {
+  defineComponent,
+  SetupContext,
+  reactive,
+  PropType
+} from '@vue/composition-api'
 import {
   NavigationItemType,
   useNavigationSelectorItem
 } from '@/components/Main/Navigation/use/navigation'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
+import { makeStyles } from '@/lib/styles'
+
+const useStyles = () =>
+  reactive({
+    container: makeStyles(theme => ({
+      background: theme.background.secondary,
+      color: theme.ui.primary
+    }))
+  })
 
 export default defineComponent({
-  name: 'NavigationSelector',
+  name: 'MobileNavigationSelector',
   components: { NavigationSelectorItem, Icon },
   props: {
     currentNavigation: {
@@ -61,25 +71,15 @@ export default defineComponent({
         iconName: 'user'
       },
       {
-        type: 'clips',
-        iconName: 'bookmark',
-        iconMdi: true
-      },
-      {
         type: 'services',
         iconName: 'services'
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
 
-    // TODO: 下部アイテムに移動
-    const onSettingClick = () =>
-      store.dispatch.ui.modal.pushModal({ type: 'setting' })
-
     return {
       items,
-      onNavigationItemClick,
-      onSettingClick
+      onNavigationItemClick
     }
   }
 })
@@ -88,6 +88,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: block;
+  display: flex;
 }
 .item {
   margin: 16px 0;

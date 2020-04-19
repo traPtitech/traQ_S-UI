@@ -6,6 +6,7 @@
     @mouseleave="onMouseLeave"
     ref="bodyRef"
     v-if="state.message"
+    :data-is-mobile="isMobile"
   >
     <user-icon
       :class="$style.userIcon"
@@ -54,6 +55,7 @@ import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
+import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
@@ -98,6 +100,7 @@ export default defineComponent({
   setup(props, context: SetupContext) {
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const bodyRef = ref<HTMLDivElement>(null)
+    const { isMobile } = useIsMobile()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       content: computed(
@@ -119,13 +122,17 @@ export default defineComponent({
       onMouseEnter,
       onMouseLeave,
       bodyRef,
-      embeddingsState
+      embeddingsState,
+      isMobile
     }
   }
 })
 </script>
 
 <style lang="scss" module>
+$messagePadding: 32px;
+$messagePaddingMobile: 16px;
+
 .body {
   display: grid;
   grid-template:
@@ -136,8 +143,11 @@ export default defineComponent({
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
-  padding: 8px 32px;
   overflow: hidden;
+  padding: 8px $messagePadding;
+  &[data-is-mobile='true'] {
+    padding: 8px $messagePaddingMobile;
+  }
 }
 
 .userIcon {
