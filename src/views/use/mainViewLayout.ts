@@ -40,7 +40,8 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     isAppeared: isNavAppeared,
     isCompletelyAppeared: isNavCompletelyAppeared,
     openDrawer: openNav,
-    closeDrawer: closeNav
+    closeDrawer: closeNav,
+    resetState: resetNav
   } = useSwipeDrawer(
     swipeDetectorState,
     'right',
@@ -61,7 +62,8 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     isAppeared: isSidebarAppeared,
     isCompletelyAppeared: isSidebarCompletelyAppeared,
     openDrawer: openSidebar,
-    closeDrawer: closeSidebar
+    closeDrawer: closeSidebar,
+    resetState: resetSidebar
   } = useSwipeDrawer(
     swipeDetectorState,
     'left',
@@ -86,6 +88,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
       closeSidebar()
     }
   })
+
   // state machine transitions
   // TODO: まとめる
   watch(isNavCompletelyAppeared, newVal => {
@@ -139,12 +142,12 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     computed(() => store.getters.ui.isMobile),
     isMobile => {
       if (!isMobile) {
-        closeSidebar()
-      } else {
-        store.commit.ui.mainView.setMainViewComponentState(
-          MainViewComponentState.Hidden
-        )
+        resetNav()
+        resetSidebar()
       }
+      store.commit.ui.mainView.setMainViewComponentState(
+        MainViewComponentState.Hidden
+      )
     }
   )
 

@@ -76,6 +76,14 @@ const useSwipeDrawer = (
     animate()
   }
 
+  /** 状態初期化 */
+  const resetState = () => {
+    state.currentPosition = 0
+    state.startPosition = 0
+    state.requestId = -1
+    state.isInitial = true
+  }
+
   /** 軸を揃える */
   const normalize = (v: number) => (direction === 'right' ? v : -v)
 
@@ -137,7 +145,8 @@ const useSwipeDrawer = (
     isCompletelyAppeared,
     isAppearingStarted,
     openDrawer,
-    closeDrawer
+    closeDrawer,
+    resetState
   }
 }
 
