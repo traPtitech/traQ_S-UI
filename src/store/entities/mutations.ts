@@ -57,6 +57,7 @@ export const mutations = defineMutations<S>()({
   setWebhooks: setMutation('webhooks'),
   setFileMetaData: setMutation('fileMetaData'),
   setTags: setMutation('tags'),
+  setClipFolders: setMutation('clipFolders'),
 
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),

@@ -33,7 +33,9 @@ import {
   mdiToggleSwitchOff,
   mdiToggleSwitch,
   mdiChevronDoubleLeft,
-  mdiChevronLeft
+  mdiChevronLeft,
+  mdiBookmark,
+  mdiBookmarkMultiple
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -75,7 +77,9 @@ const mdi: MdiIconsMapping = {
   'toggle-switch-off': mdiToggleSwitchOff,
   'toggle-switch-on': mdiToggleSwitch,
   'chevron-double': mdiChevronDoubleLeft,
-  'chevron-left': mdiChevronLeft
+  'chevron-left': mdiChevronLeft,
+  bookmark: mdiBookmark,
+  'bookmark-multiple': mdiBookmarkMultiple
 }
 
 export default mdi
