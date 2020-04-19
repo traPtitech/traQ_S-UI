@@ -209,7 +209,6 @@ export default defineComponent({
       let pageIndices = new Set()
       for (let i = 0; i < children.length; i++) {
         const { scrollHeight } = children[i]
-        console.log(scrollHeight)
         const index = Number(children[i].getAttribute('data-index'))
         if (!index) continue
         Vue.set(state.itemHeights, index, scrollHeight)

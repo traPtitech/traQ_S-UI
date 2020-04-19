@@ -1,4 +1,5 @@
-const isStrict = process.env.CI === 'true' || process.env.NODE_ENV === 'production'
+const isStrict =
+  process.env.CI === 'true' || process.env.NODE_ENV === 'production'
 
 module.exports = {
   root: true,
