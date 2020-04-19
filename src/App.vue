@@ -18,17 +18,18 @@ const useWindowResizeObserver = () => {
 }
 
 const useThemeObserver = () => {
+  const themeColor = computed(
+    () => store.getters.app.themeSettings.currentTheme.accent.primary
+  )
+
   const $themeColor = document.querySelector(
     'meta[name="theme-color"]'
   ) as HTMLMetaElement
-  $themeColor.content =
-    store.getters.app.themeSettings.currentTheme.accent.primary
+  $themeColor.content = themeColor.value
 
   watchEffect(() => {
-    const themeColor =
-      store.getters.app.themeSettings.currentTheme.accent.primary
-    if ($themeColor.content !== themeColor) {
-      $themeColor.content = themeColor
+    if ($themeColor.content !== themeColor.value) {
+      $themeColor.content = themeColor.value
     }
   })
 }
