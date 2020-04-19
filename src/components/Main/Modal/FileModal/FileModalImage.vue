@@ -1,9 +1,12 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.overlay">
-      <file-modal-item-content-header :file-id="fileMeta.id" :is-white="true" />
+    <div :class="$style.header" :style="styles.header">
+      <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
     </div>
     <img draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
+    <div :class="$style.footer" :style="styles.footer">
+      <file-modal-content-footer :file-id="fileMeta.id" :is-white="true" />
+    </div>
   </div>
 </template>
 
@@ -12,17 +15,27 @@ import { defineComponent, reactive } from '@vue/composition-api'
 
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
-import FileModalItemContentHeader from '@/components/Main/Modal/FileModal/FileModalItemContentHeader.vue'
+import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
 
 const useStyles = () =>
   reactive({
-    container: makeStyles(theme => ({}))
+    container: makeStyles((theme, common) => ({
+      backgroundColor: common.background.black
+    })),
+    header: makeStyles((theme, common) => ({
+      background: `linear-gradient(to bottom, ${common.background.black}, transparent)`
+    })),
+    footer: makeStyles((theme, common) => ({
+      background: `linear-gradient(to top, ${common.background.black}, transparent)`
+    }))
   })
 
 export default defineComponent({
   name: 'FileModalImage',
   components: {
-    FileModalItemContentHeader
+    FileModalContentHeader,
+    FileModalContentFooter
   },
   props: {
     fileId: {
@@ -41,7 +54,6 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   position: relative;
-  background-color: #222222;
   width: 100vw;
   height: 100vh;
   max-height: 100%;
@@ -51,13 +63,24 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
 }
-.overlay {
+.header {
   position: absolute;
   top: 0;
   width: 100%;
-  background: linear-gradient(to bottom, #222222, transparent);
   backdrop-filter: blur(4px);
-  cursor: pointer;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.2s ease;
+
+  .container:hover & {
+    opacity: 1;
+  }
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  backdrop-filter: blur(4px);
   z-index: 1;
   opacity: 0;
   transition: all 0.2s ease;

@@ -1,18 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.icon">
-      <icon mdi :name="fileIconName" :size="32" />
+    <div :class="$style.channelPath">
+      {{ channelPath }}
     </div>
-    <div :class="$style.fileName">
-      {{ fileMeta.name }}
+    <div :class="$style.userName" :style="styles.userName">
+      {{ userName }}
     </div>
-    <div :class="$style.fileSize" :style="styles.fileSize">
-      {{ fileSize }}
+    <div :class="$style.createdAt" :style="styles.createdAt">
+      {{ fileMeta.createdAt }}
     </div>
-    <div :class="$style.dl">
-      <icon mdi name="download" :size="32" />
-    </div>
-    <button :class="$style.close" @click="onClickClear">X</button>
   </div>
 </template>
 
@@ -21,23 +17,23 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
-import Icon from '@/components/UI/Icon.vue'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = (props: { isWhite: boolean }) =>
   reactive({
     container: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
     })),
-    fileSize: makeStyles((theme, common) => ({
+    userName: makeStyles((theme, common) => ({
+      color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
+    })),
+    createdAt: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
     }))
   })
 
 export default defineComponent({
-  name: 'FileModalItemContentHeader',
-  components: {
-    Icon
-  },
+  name: 'FileModalContentFooter',
   props: {
     fileId: {
       type: String,
@@ -50,9 +46,14 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles(props)
-    const { fileMeta, fileIconName, fileSize } = useFileMeta(props, context)
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
-    return { styles, fileMeta, fileIconName, fileSize, onClickClear }
+    const { fileMeta } = useFileMeta(props, context)
+    const channelPath = useChannelPath().channelIdToPathString(
+      fileMeta.value?.channelId ?? '',
+      true
+    )
+    const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+    const userName = '@' + user?.name
+    return { styles, fileMeta, channelPath, userName }
   }
 })
 </script>
@@ -62,37 +63,25 @@ export default defineComponent({
   display: grid;
   width: 100%;
   grid-template:
-    'icon ...  name ... dl ... close' 20px
-    'icon ...  size ... dl ... close' 16px
-    /36px 16px auto 1fr 24px 16px 36px;
+    'channelPath ... ...' 20px
+    'userName ... createdAt' 16px
+    / auto 1fr auto;
   gap: 4px 0;
   padding: 12px 16px;
 }
-.icon,
-.dl {
-  display: flex;
-  align-items: center;
-  height: 40px;
-}
-.icon {
-  grid-area: icon;
-}
-.dl {
-  grid-area: dl;
-}
-.fileName {
-  grid-area: name;
+.channelPath {
+  grid-area: channelPath;
   display: flex;
   align-items: center;
 }
-.fileSize {
-  grid-area: size;
+.userName {
+  grid-area: userName;
   display: flex;
   align-items: center;
 }
-.close {
-  grid-area: close;
-  background-color: white;
-  cursor: pointer;
+.createdAt {
+  grid-area: createdAt;
+  display: flex;
+  align-items: center;
 }
 </style>
