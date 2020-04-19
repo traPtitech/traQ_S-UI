@@ -8,7 +8,7 @@
     v-else-if="routeWatcherState.view === 'main'"
     :class="$style.homeWrapper"
     @touchstart="touchstartHandler"
-    @touchmove.capture="touchmoveHandler"
+    @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
   >
     <div :class="$style.homeContainer" :style="styles.homeContainer">
