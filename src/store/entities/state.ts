@@ -7,7 +7,8 @@ import {
   Webhook,
   Message,
   FileInfo,
-  Tag
+  Tag,
+  ClipFolder
 } from '@traptitech/traq'
 import {
   UserId,
@@ -18,7 +19,8 @@ import {
   StampPaletteId,
   WebhookId,
   MessageId,
-  FileId
+  FileId,
+  ClipFolderId
 } from '@/types/entity-ids'
 
 export type S = {
@@ -31,6 +33,7 @@ export type S = {
   webhooks: Record<WebhookId, Webhook | undefined>
   fileMetaData: Record<FileId, FileInfo | undefined>
   tags: Record<TagId, Tag | undefined>
+  clipFolders: Record<ClipFolderId, ClipFolder | undefined>
 }
 
 export const state: S = {
@@ -42,5 +45,6 @@ export const state: S = {
   stampPalettes: {},
   webhooks: {},
   fileMetaData: {},
-  tags: {}
+  tags: {},
+  clipFolders: {}
 }

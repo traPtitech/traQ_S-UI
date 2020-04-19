@@ -40,6 +40,7 @@
 import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 
 import { setupWebSocket } from '@/lib/websocket'
+import { connectFirebase } from '@/lib/firebase'
 import { makeStyles } from '@/lib/styles'
 import useIsMobile from '@/use/isMobile'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
@@ -107,7 +108,7 @@ export default defineComponent({
     const { routeWatcherState } = useRouteWatcher(context)
 
     setupWebSocket()
-
+    connectFirebase()
     useInitialFetch()
 
     const styles = useStyles(mainViewPosition, sidebarPosition)

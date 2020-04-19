@@ -6,6 +6,7 @@ export type NavigationItemType =
   | 'activity'
   | 'users'
   | 'services'
+  | 'clips'
 
 // TODO: 言語系リソースの置き場所
 export const navigationTypeNameMap: Record<NavigationItemType, string> = {
@@ -13,7 +14,8 @@ export const navigationTypeNameMap: Record<NavigationItemType, string> = {
   channels: 'チャンネル',
   activity: 'アクティビティ',
   users: 'ユーザー',
-  services: 'サービス'
+  services: 'サービス',
+  clips: 'クリップ'
 }
 
 export const { useNavigation, useNavigationSelectorItem } = createNavigation<

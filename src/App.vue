@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, watchEffect } from '@vue/composition-api'
 import store from './store'
 import { throttle } from 'lodash-es'
 
@@ -17,12 +17,30 @@ const useWindowResizeObserver = () => {
   resizeHandler()
 }
 
+const useThemeObserver = () => {
+  const $themeColor = document.querySelector(
+    'meta[name="theme-color"]'
+  ) as HTMLMetaElement
+  $themeColor.content =
+    store.getters.app.themeSettings.currentTheme.accent.primary
+
+  watchEffect(() => {
+    const themeColor =
+      store.getters.app.themeSettings.currentTheme.accent.primary
+    if ($themeColor.content !== themeColor) {
+      $themeColor.content = themeColor
+    }
+  })
+}
+
 export default defineComponent({
   name: 'App',
   components: {},
   setup() {
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
+
+    useThemeObserver()
 
     return {
       isMobile
