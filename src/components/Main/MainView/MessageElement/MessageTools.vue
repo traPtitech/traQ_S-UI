@@ -1,15 +1,5 @@
 <template>
-  <div>
-    <message-tools-content :message-id="messageId" @open="onOpen" />
-    <portal v-if="isPopupMenuShown" :to="targetPortalName">
-      <message-tools-menu
-        :style="styles.toolsMenu"
-        :class="$style.toolsMenu"
-        :message-id="messageId"
-        v-click-outside="closePopupMenu"
-      />
-    </portal>
-  </div>
+  <message-tools-content :message-id="messageId" @open="onOpen" />
 </template>
 
 <script lang="ts">
@@ -30,15 +20,14 @@ import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import StampPickerStampListItem from '@/components/Main/StampPicker/StampPickerStampListItem.vue'
 import MessageToolsContent from './MessageToolsContent.vue'
-import MessageToolsMenu from './MessageToolsMenu.vue'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import { targetPortalName } from '../MainView.vue'
+import { targetPortalName } from '@/views/Main.vue'
 
-const useStyles = (position: { x: number; y: number }) =>
+const useStyles = () =>
   reactive({
     toolsMenu: makeStyles(theme => ({
-      top: `${position.y}px`,
-      left: `${position.x}px`
+      top: `${store.state.ui.messageContextMenu.position.y}px`,
+      left: `${store.state.ui.messageContextMenu.position.x}px`
     }))
   })
 
@@ -48,16 +37,11 @@ export default defineComponent({
     Icon,
     Stamp,
     StampPickerStampListItem,
-    MessageToolsContent,
-    MessageToolsMenu
+    MessageToolsContent
   },
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
   setup(props) {
-    const positionState = reactive({
-      x: 0,
-      y: 0
-    })
-    const styles = useStyles(positionState)
+    const styles = useStyles()
     const addStamp = (stampId: StampId) => {
       store.dispatch.domain.messagesView.addStamp({
         messageId: props.messageId,
@@ -69,10 +53,6 @@ export default defineComponent({
       })
     }
     const stamps = computed(() => store.getters.domain.me.recentStampIds)
-    const isPopupMenuShown = ref(false)
-    const closePopupMenu = () => {
-      isPopupMenuShown.value = false
-    }
     const { invokeStampPicker } = useStampPickerInvoker(
       targetPortalName,
       stampData => {
@@ -83,32 +63,36 @@ export default defineComponent({
       }
     )
     const onOpen = (type: 'dot' | 'stampPicker', e: MouseEvent) => {
-      positionState.x = e.screenX
-      positionState.y = e.screenY
       if (type === 'dot') {
-        isPopupMenuShown.value = true
+        store.dispatch.ui.messageContextMenu.openMessageContextMenu({
+          messageId: props.messageId,
+          x: e.pageX,
+          y: e.pageY
+        })
       } else {
         if (store.getters.ui.stampPicker.isStampPickerShown) {
           store.dispatch.ui.stampPicker.closeStampPicker()
+          store.commit.ui.stampPicker.initPosition()
         } else {
+          store.commit.ui.stampPicker.setPosition({
+            x: e.pageX,
+            y: e.pageY
+          })
           invokeStampPicker()
         }
       }
     }
-    watch(
-      () => props.messageId,
-      (newV, oldV) => {
-        if (store.getters.ui.stampPicker.isStampPickerShown) {
-          store.dispatch.ui.stampPicker.closeStampPicker()
-        }
-      }
-    )
+    // watch(
+    //   () => props.messageId,
+    //   (newV, oldV) => {
+    //     store.dispatch.ui.stampPicker.closeStampPicker()
+    //     store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
+    //   }
+    // )
     return {
       addStamp,
       stamps,
       targetPortalName,
-      isPopupMenuShown,
-      closePopupMenu,
       onOpen,
       styles
     }
@@ -120,9 +104,6 @@ export default defineComponent({
 .toolsMenu {
   position: absolute;
   z-index: 999;
-}
-
-.menuRef {
-  position: relative;
+  transform: translateX(-100%);
 }
 </style>

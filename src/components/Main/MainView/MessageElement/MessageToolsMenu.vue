@@ -56,7 +56,7 @@ const changeMessage = (props: { messageId: MessageId }) => {
   return { editMessage, deleteMessage }
 }
 
-const copy = (props: { messageId: MessageId }) => {
+const useCopy = (props: { messageId: MessageId }) => {
   const copyLink = async () => {
     const link = `!{"raw":"","type":"message","id":"${props.messageId}"}`
     await navigator.clipboard.writeText(link)
@@ -82,7 +82,7 @@ export default defineComponent({
         store.state.entities.messages[props.messageId]?.userId ===
         store.state.domain.me.detail?.id
     )
-    const { copyLink, copyMd } = copy(props)
+    const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = togglePinned(props)
     const { editMessage, deleteMessage } = changeMessage(props)
     return {
@@ -106,7 +106,7 @@ export default defineComponent({
   width: max-content;
   padding: 8px 16px;
   border-radius: 4px;
-	position: absolute;
+  position: absolute;
 }
 
 .text {

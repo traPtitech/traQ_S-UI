@@ -21,7 +21,7 @@
     </div>
     <modal-container />
     <stamp-picker-container />
-    
+    <message-tools-menu-container />
     <portal-target :name="targetPortalName" />
   </div>
   <div v-else></div>
@@ -45,6 +45,7 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
 import useRouteWatcher from './use/routeWatcher'
+import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 
 export const targetPortalName = 'message-menu-popup'
 
@@ -55,6 +56,7 @@ export default defineComponent({
     MainViewController,
     ModalContainer,
     StampPickerContainer,
+    MessageToolsMenuContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },

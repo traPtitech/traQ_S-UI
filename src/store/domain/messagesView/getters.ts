@@ -18,8 +18,6 @@ export const getters = defineGetters<S>()({
   getIsPinned(state): (id: MessageId) => boolean {
     return (id: MessageId) => {
       return state.pinnedMessages.findIndex(v => v.message.id === id) > -1
-        ? true
-        : false
     }
   }
 })

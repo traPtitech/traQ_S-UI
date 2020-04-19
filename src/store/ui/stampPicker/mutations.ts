@@ -23,5 +23,11 @@ export const mutations = defineMutations<S>()({
       type: 'history',
       id: ''
     }
+  },
+  setPosition(state, position: { x: number; y: number }) {
+    state.position = position
+  },
+  initPosition(state) {
+    state.position = { x: 0, y: 0 }
   }
 })

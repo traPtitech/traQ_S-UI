@@ -97,6 +97,7 @@ export default defineComponent({
       if (store.getters.ui.stampPicker.isStampPickerShown) {
         store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
+        store.commit.ui.stampPicker.initPosition()
         invokeStampPicker()
       }
     }

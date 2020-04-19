@@ -37,8 +37,12 @@ export default defineComponent({
   },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst =
-      props as { name: string; topic: string; isCurrent: boolean; link: string }
+    const propst = props as {
+      name: string
+      topic: string
+      isCurrent: boolean
+      link: string
+    }
     const styles = useStyles()
     return { propst, styles }
   }

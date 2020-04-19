@@ -110,6 +110,9 @@ export default defineComponent({
           store.state.domain.messagesView.embeddedFilesMap[
             props.messageId
           ]?.map(e => e.id) ?? []
+      ),
+      isOpenToolsModal: computed(
+        () => store.state.ui.messageContextMenu.position.x !== 0
       )
     })
 
@@ -134,7 +137,7 @@ export default defineComponent({
   width: 100%;
   min-width: 0;
   padding: 8px 32px;
-  //overflow: hidden;
+  overflow: hidden;
 }
 
 .userIcon {

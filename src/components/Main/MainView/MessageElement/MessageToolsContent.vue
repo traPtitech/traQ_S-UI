@@ -80,7 +80,7 @@ export default defineComponent({
       context.emit('open', 'stampPicker', e)
     }
     const stamps = computed(() =>
-      store.getters.domain.me.recentStampIds.filter((_, i) => i < 3)
+      store.getters.domain.me.recentStampIds.slice(0, 3)
     )
     return {
       styles,
