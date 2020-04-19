@@ -28,6 +28,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     fileMeta,
     fileLink,
     fileRawPath,
+    fileType,
     fileSize,
     fileIconName,
     onFileLinkClick,

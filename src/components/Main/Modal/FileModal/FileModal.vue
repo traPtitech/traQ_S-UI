@@ -1,14 +1,21 @@
 <template>
-  <modal-frame title="ファイル" :subtitle="file.name" icon-name="tag">
-    {{ file }}
-  </modal-frame>
+  <div :class="$style.wrapper">
+    <button :class="$style.close" @click="onClickClear">X</button>
+    {{ fileMeta.name }}
+    {{ channelPath }}
+    {{ fileMeta.createdAt }}
+    {{ user.name }}
+    <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import ModalFrame from '@/components/Main/Modal/Common/ModalFrame.vue'
+import useFileMeta from '@/use/fileMeta'
+import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = () =>
   reactive({
@@ -18,7 +25,7 @@ const useStyles = () =>
 export default defineComponent({
   name: 'FileModal',
   components: {
-    ModalFrame
+    FileModalImage
   },
   props: {
     fileId: {
@@ -26,16 +33,36 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, context) {
     const styles = useStyles()
+
     store.dispatch.entities.fetchFileMetaByFileId(props.fileId)
-    const file = computed(() => store.state.entities.fileMetaData[props.fileId])
-    return { styles, file }
+    const { fileMeta, fileType } = useFileMeta(props, context)
+    const channelPath = useChannelPath().channelIdToPathString(
+      fileMeta.value?.channelId ?? '',
+      true
+    )
+
+    const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+
+    const onClickClear = () => store.dispatch.ui.modal.clearModal()
+    return { styles, fileMeta, fileType, channelPath, user, onClickClear }
   }
 })
 </script>
 
 <style lang="scss" module>
-.container {
+.wrapper {
+  position: relative;
+  width: 80%;
+  height: 60%;
+  max-width: 640px;
+  max-height: 480px;
+}
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 }
 </style>
