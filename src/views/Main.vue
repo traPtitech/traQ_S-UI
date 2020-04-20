@@ -29,7 +29,11 @@
         v-show="isSidebarAppeared"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
-        <portal-target name="sidebar" v-if="isMobile" />
+        <portal-target
+          name="sidebar"
+          v-if="isMobile"
+          :class="$style.sidebarPortal"
+        />
       </div>
     </div>
     <modal-container />
@@ -164,6 +168,14 @@ export default defineComponent({
   width: 320px;
   height: 100%;
   padding: 8px 0;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
+}
+.sidebarPortal {
+  width: 100%;
+  height: 100%;
 }
 .mainViewWrapper {
   width: 100%;
