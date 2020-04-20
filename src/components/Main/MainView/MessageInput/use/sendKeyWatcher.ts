@@ -60,19 +60,32 @@ const withModifierKey = (keyEvent: KeyboardEvent) => {
   return hasModifierKey(keyEvent)
 }
 
+/**
+ * 改行の挿入のイベントであり、送信する必要があるかどうか
+ * (タッチ端末では無視する)
+ *
+ * 修飾キーなしで送信の設定の際に、送信が必要かの判定で利用
+ */
 const isSendKeyInput = (inputEvent: InputEvent) => {
-  // modifierが押されているときはisBRKey()を利用してpreventされる
   return (
     store.state.app.browserSettings.sendWithModifierKey === 'none' &&
     inputEvent.inputType === 'insertLineBreak' &&
     !touchDeviceFlag
   )
 }
-const isBRKey = (keyEvent: KeyboardEvent) => {
+
+/**
+ * 修飾キーを押した状態での改行で、それによって改行を挿入する必要があるかどうか
+ * 修飾キーなしでの改行はデフォルトのものを利用
+ *
+ * 修飾キーなしで送信の設定の際に、改行の挿入が必要かの判定で利用
+ */
+const needBreakLineInsert = (keyEvent: KeyboardEvent) => {
   return (
     store.state.app.browserSettings.sendWithModifierKey === 'none' &&
     keyEvent.key === 'Enter' &&
-    withModifierKey(keyEvent)
+    withModifierKey(keyEvent) &&
+    !keyEvent.isComposing
   )
 }
 
@@ -90,6 +103,11 @@ const useSendKeyWatcher = (
     isModifierKeyPressed: false
   })
 
+  /*
+   * 修飾キーが押されている際は先に発火する`keydown`イベントで
+   * 既にpreventされているため`beforeinput`イベントは発火しない
+   * したがって、これが発火したときは修飾キーが押されていないことが保障されている
+   */
   const onBeforeInput = (event: InputEvent) => {
     if (isSendKeyInput(event)) {
       event.preventDefault()
@@ -106,12 +124,31 @@ const useSendKeyWatcher = (
     if (event.key === 'Enter' && !event.isComposing) {
       const { sendWithModifierKey } = store.state.app.browserSettings
 
+      /*
+       * 修飾キーありで送信の設定の際に、送信が必要かの判定
+       *
+       * TODO: ここでSafariの場合、
+       *       変換確定のEnterでもこの分岐に入ってしまうため、
+       *       下と同じような処理をする必要がある
+       *       refs https://github.com/traPtitech/traQ_R-UI/pull/945#issuecomment-509942373
+       */
       if (sendWithModifierKey === 'modifier' && withModifierKey(event)) {
         event.preventDefault()
         context.emit('post-message')
         return
       }
 
+      /*
+       * 修飾キーなしで送信の設定の際に、
+       * `beforeinput`イベントに対応していないブラウザの場合、
+       * 送信が必要かの判定
+       *
+       * `beforeinput`イベントが利用できる場合はここで処理しない
+       * Safari出ない場合はここで処理を行ってもよいが、
+       * Safariの場合は変換確定のEnterでの`keydown`イベントの
+       * isComposingがfalseなので、変換確定でも送信がされてしまうため、
+       * `beforeinput`で判定を行うようにする
+       */
       if (
         sendWithModifierKey === 'none' &&
         !withModifierKey(event) &&
@@ -123,7 +160,7 @@ const useSendKeyWatcher = (
       }
     }
 
-    if (isBRKey(event) && !event.isComposing) {
+    if (needBreakLineInsert(event)) {
       event.preventDefault()
       insertLineBreak()
     }
