@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
-
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
 import { makeStyles } from '@/lib/styles'

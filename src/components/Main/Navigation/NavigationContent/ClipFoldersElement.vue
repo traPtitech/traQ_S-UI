@@ -6,13 +6,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
+
 import { makeStyles } from '@/lib/styles'
 import { ClipFolder } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
