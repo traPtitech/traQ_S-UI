@@ -7,7 +7,7 @@
       {{ userName }}
     </div>
     <div :class="$style.createdAt" :style="styles.createdAt">
-      {{ fileMeta.createdAt }}
+      {{ createdAt }}
     </div>
   </div>
 </template>
@@ -18,6 +18,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
+import { getCreatedDate } from '@/lib/date'
 
 const useStyles = (props: { isWhite: boolean }) =>
   reactive({
@@ -53,7 +54,8 @@ export default defineComponent({
     )
     const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
     const userName = '@' + user?.name
-    return { styles, fileMeta, channelPath, userName }
+    const createdAt = getCreatedDate(fileMeta.value?.createdAt ?? '')
+    return { styles, channelPath, userName, createdAt }
   }
 })
 </script>
