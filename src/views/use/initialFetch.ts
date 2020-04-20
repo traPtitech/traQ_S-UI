@@ -27,8 +27,8 @@ const useInitialFetch = (context: SetupContext) => {
     store.dispatch.domain.me.fetchStaredChannels()
     store.dispatch.domain.me.fetchStampHistory()
 
-    // TODO: 全チャンネルについて取得する必要はないので遅延で良い
-    store.dispatch.domain.me.fetchSubscriptions()
+    await store.dispatch.domain.me.fetchSubscriptions()
+    store.dispatch.domain.channelTree.constructHomeChannelTree()
   })
 }
 
