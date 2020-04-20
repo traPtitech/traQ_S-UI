@@ -1,8 +1,5 @@
 <template>
   <nav :class="$style.container" :style="styles.container">
-    <div :class="$style.header" :style="styles.componentWrap">
-      へっだ
-    </div>
     <div :class="$style.content" :style="styles.componentWrap">
       <navigation-content :current-navigation="currentNavigation" />
     </div>
@@ -52,7 +49,6 @@ export default defineComponent({
 .container {
   display: grid;
   grid-template:
-    'header' 36px
     'content' 1fr
     'selector' 60px;
   row-gap: 16px;
