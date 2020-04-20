@@ -93,7 +93,7 @@ const useSwipeDrawer = (
   watch(
     () => swipeDetectorState.swipeDistanceX,
     swipeDistanceX => {
-      if (inactive && inactive.value) {
+      if (inactive?.value) {
         return
       }
       const diff = normalize(swipeDistanceX)
