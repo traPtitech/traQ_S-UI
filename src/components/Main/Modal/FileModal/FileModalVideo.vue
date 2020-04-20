@@ -53,7 +53,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  position: relative;
   width: 100vw;
   height: 100vh;
   max-height: 100%;
@@ -61,35 +60,33 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
   video {
     display: block;
     max-width: 100%;
-    max-height: 80%; // footerが再生ボタンなどとかぶらないようにする必要あり
+    max-height: calc(100% - 128px);
   }
 }
 .header {
-  position: absolute;
-  top: 0;
   width: 100%;
   backdrop-filter: blur(4px);
   z-index: 1;
   opacity: 0;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   .container:hover & {
     opacity: 1;
   }
 }
 .footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   backdrop-filter: blur(4px);
   z-index: 1;
   opacity: 0;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   .container:hover & {
     opacity: 1;
