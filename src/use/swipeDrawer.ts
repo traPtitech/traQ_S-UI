@@ -104,7 +104,7 @@ const useSwipeDrawer = (
   watch(
     () => swipeDetectorState.swipeDirection,
     swipeDirection => {
-      if (inactive && inactive.value) {
+      if (inactive?.value) {
         return
       }
       if (swipeDirection === supporsedDirection.value) {
