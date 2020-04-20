@@ -1,12 +1,14 @@
-import { onBeforeMount } from '@vue/composition-api'
+import { onBeforeMount, SetupContext } from '@vue/composition-api'
 import store from '@/store'
+import { RouteName } from '@/router'
 
-const useInitialFetch = () => {
+const useInitialFetch = (context: SetupContext) => {
   onBeforeMount(async () => {
     try {
       await store.dispatch.domain.me.fetchMe()
     } catch {
-      location.href = '/login'
+      context.root.$router.replace({ name: RouteName.Login })
+      return
     }
     // 初回fetch
     await Promise.all([

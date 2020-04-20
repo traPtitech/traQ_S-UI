@@ -109,7 +109,7 @@ export default defineComponent({
 
     setupWebSocket()
     connectFirebase()
-    useInitialFetch()
+    useInitialFetch(context)
 
     const styles = useStyles(mainViewPosition, sidebarPosition)
 
