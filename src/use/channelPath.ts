@@ -16,8 +16,9 @@ const useChannelPath = () => {
       throw 'channelPathToId: Empty path'
     }
 
+    const loweredChildName = separatedPath[0].toLowerCase()
     const nextTree = channelTree.children.find(
-      child => child.name === separatedPath[0]
+      child => child.name.toLowerCase() === loweredChildName
     )
     if (!nextTree) {
       throw `channelPathToId: No channel: ${separatedPath[0]}`

@@ -17,10 +17,11 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
+import { ClipFolder } from '@traptitech/traq'
+import { ClipFolderId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ClipFolders',
@@ -30,7 +31,9 @@ export default defineComponent({
     ClipFoldersElement
   },
   setup() {
-    const clipFolders = computed(() => store.state.entities.clipFolders)
+    const clipFolders = computed(
+      () => store.state.entities.clipFolders as Record<ClipFolderId, ClipFolder>
+    )
     return { clipFolders }
   }
 })
