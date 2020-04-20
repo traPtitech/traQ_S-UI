@@ -4,10 +4,18 @@
       <main-view-header :channel-id="channelId" />
     </div>
     <div :class="$style.layoutContainer" :data-layout="state.layout">
-      <main-view-component-selector
-        :class="[$style.componentContainer, $style.primary]"
-        :view-info="state.primary"
-      />
+      <div :class="$style.primaryContainer">
+        <main-view-component-selector
+          :class="[$style.componentContainer, $style.primary]"
+          :view-info="state.primary"
+        />
+        <portal-target
+          name="sidebar"
+          v-if="!isMobile"
+          :class="$style.sidebar"
+        />
+      </div>
+      <portal-target name="sidebar-opener" :class="$style.hidden" />
       <main-view-component-selector
         :class="[$style.componentContainer, $style.secondary]"
         :view-info="state.secondary"
@@ -19,6 +27,7 @@
 <script lang="ts">
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
+import useIsMobile from '@/use/isMobile'
 
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeader from './MainViewHeader/MainViewHeader.vue'
@@ -35,10 +44,12 @@ export default defineComponent({
     const channelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
+    const { isMobile } = useIsMobile()
 
     return {
       state,
-      channelId
+      channelId,
+      isMobile
     }
   }
 })
@@ -64,6 +75,7 @@ $headerHeight: 80px;
 
 // レイアウト系
 .layoutContainer {
+  position: relative;
   height: 100%;
   min-height: 0;
   display: flex;
@@ -83,5 +95,22 @@ $headerHeight: 80px;
   &[data-layout='split-reverse'] {
     flex-direction: column-reverse;
   }
+}
+
+.hidden {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.primary {
+  width: 100%;
+}
+.primaryContainer {
+  display: flex;
+  height: 100%;
+}
+.sidebar {
+  height: 100%;
+  flex-shrink: 0;
 }
 </style>

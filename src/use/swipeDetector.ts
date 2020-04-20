@@ -1,5 +1,7 @@
 import { reactive } from '@vue/composition-api'
 
+type SwipeDirection = 'left' | 'right' | 'none'
+
 export interface SwipeDetectorState {
   /** 最後にタッチで移動があったX座標 */
   lastTouchPosX: number
@@ -13,8 +15,8 @@ export interface SwipeDetectorState {
   /** X速度 */
   swipeSpeedX: number
 
-  /** スワイプ中か */
-  isSwiping: boolean
+  /** スワイプの向き */
+  swipeDirection: SwipeDirection
 
   /** スワイプを開始の判定途中か */
   isStartingSwipe: boolean
@@ -29,7 +31,7 @@ const useSwipeDetector = () => {
     lastTouchPosY: -1,
     swipeDistanceX: 0,
     swipeSpeedX: 0,
-    isSwiping: false,
+    swipeDirection: 'none',
     isStartingSwipe: false
   })
 
@@ -44,11 +46,11 @@ const useSwipeDetector = () => {
     state.isStartingSwipe = true
   }
 
-  const touchendHandler = (e: TouchEvent) => {
+  const touchendHandler = (_: TouchEvent) => {
     state.lastTouchPosX = -1
     state.lastTouchPosY = -1
     state.isStartingSwipe = false
-    state.isSwiping = false
+    state.swipeDirection = 'none'
   }
 
   /** 横方向へのスワイプを開始するか判定する */
@@ -60,15 +62,19 @@ const useSwipeDetector = () => {
     ) {
       return
     }
-    const x = e.touches[0].clientX
-    const y = e.touches[0].clientY
-    const deg = Math.atan2(y - state.lastTouchPosY, x - state.lastTouchPosX)
+    const diffX = e.touches[0].clientX - state.lastTouchPosX
+    const diffY = e.touches[0].clientY - state.lastTouchPosY
+    const deg = Math.atan2(diffY, diffX)
     const normalizedDeg = Math.abs(((deg / Math.PI / 2) * 360) % 180)
     const isHorizontalScroll =
       (0 <= normalizedDeg && normalizedDeg < 30) ||
       (150 < normalizedDeg && normalizedDeg <= 180)
     state.isStartingSwipe = false
-    state.isSwiping = isHorizontalScroll
+    state.swipeDirection = !isHorizontalScroll
+      ? 'none'
+      : diffX > 0
+      ? 'right'
+      : 'left'
   }
 
   const touchmoveHandler = (e: TouchEvent) => {
@@ -76,7 +82,7 @@ const useSwipeDetector = () => {
       checkSwipeStarted(e)
       return
     }
-    if (!state.isSwiping) {
+    if (state.swipeDirection === 'none') {
       return
     }
     e.stopPropagation()

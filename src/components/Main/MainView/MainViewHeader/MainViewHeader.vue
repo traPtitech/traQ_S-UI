@@ -6,7 +6,7 @@
         :style="styles.navigationButton"
         v-if="isMobile"
       >
-        <icon :size="32" name="traQ" />
+        <icon name="traQ" />
       </button>
       <h2>
         <main-view-header-channel-name :channel-id="channelId" />

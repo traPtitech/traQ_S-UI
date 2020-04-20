@@ -1,5 +1,9 @@
-import { computed, reactive, watch } from '@vue/composition-api'
+import { computed, reactive, watch, Ref } from '@vue/composition-api'
 import { SwipeDetectorState } from '@/use/swipeDetector'
+
+type Direction = 'left' | 'right'
+
+const inverse = (d: Direction) => (d === 'left' ? 'right' : 'left')
 
 /**
  * スワイプで引き出す系コンポーネントの表示/非表示を決定する
@@ -12,11 +16,13 @@ import { SwipeDetectorState } from '@/use/swipeDetector'
  */
 const useSwipeDrawer = (
   swipeDetectorState: SwipeDetectorState,
-  direction: 'left' | 'right',
+  direction: Direction,
   destination: number,
   showThreshould: number,
   hideThreshould: number,
-  animationDurationMs = 500
+  inactive?: Readonly<Ref<boolean>>,
+  onInteractionStart?: (isAppearing: boolean) => void,
+  animationDurationMs = 700
 ) => {
   const state = reactive({
     /** 現在のメインビューの位置 */
@@ -26,11 +32,28 @@ const useSwipeDrawer = (
     startPosition: 0,
 
     /** requestAnimationFrameのId */
-    requestId: -1
+    requestId: -1,
+
+    /** 引き出しはじめか */
+    isInitial: true
   })
 
+  /** 次はどちら向きへの操作か */
+  const supporsedDirection = computed(
+    (): Direction =>
+      state.startPosition < destination / 2 ? direction : inverse(direction)
+  )
+
   /** ナビゲーションは表示状態になっているか */
-  const isAppeared = computed(() => state.currentPosition > showThreshould)
+  const isAppeared = computed(() => state.currentPosition > 0)
+
+  /** ナビゲーションは完全に表示状態になっているか */
+  const isCompletelyAppeared = computed(
+    () => state.currentPosition >= destination
+  )
+
+  /** ナビゲーションの表示が開始されたか */
+  const isAppearingStarted = computed(() => state.currentPosition > 0)
 
   /** 指定した位置まで`state.currentPosition`をアニメーションさせる */
   const animatePosition = (to: number) => {
@@ -53,24 +76,48 @@ const useSwipeDrawer = (
     animate()
   }
 
+  /** 状態初期化 */
+  const resetState = () => {
+    state.currentPosition = 0
+    state.startPosition = 0
+    state.requestId = -1
+    state.isInitial = true
+  }
+
   /** 軸を揃える */
   const normalize = (v: number) => (direction === 'right' ? v : -v)
+
+  const openDrawer = () => animatePosition(destination)
+  const closeDrawer = () => animatePosition(0)
 
   watch(
     () => swipeDetectorState.swipeDistanceX,
     swipeDistanceX => {
+      if (inactive?.value) {
+        return
+      }
       const diff = normalize(swipeDistanceX)
       const pos = state.startPosition + diff
       state.currentPosition = Math.max(Math.min(pos, destination), 0)
     }
   )
   watch(
-    () => swipeDetectorState.isSwiping,
-    isSwiping => {
-      if (isSwiping) {
-        state.startPosition = state.currentPosition
+    () => swipeDetectorState.swipeDirection,
+    swipeDirection => {
+      if (inactive?.value) {
+        return
       }
-      if (isSwiping && state.requestId !== -1) {
+      if (swipeDirection === supporsedDirection.value) {
+        state.startPosition = state.currentPosition
+        if (state.isInitial && onInteractionStart) {
+          onInteractionStart(supporsedDirection.value === direction)
+          state.isInitial = false
+        }
+      }
+      if (
+        swipeDirection === supporsedDirection.value &&
+        state.requestId !== -1
+      ) {
         // スワイプ開始時にanimationFrameをキャンセル
         cancelAnimationFrame(state.requestId)
         state.requestId = -1
@@ -80,19 +127,26 @@ const useSwipeDrawer = (
       ) {
         // スワイプ終了、速度がマイナスなので戻す
         animatePosition(0)
+        state.isInitial = true
       } else if (
         normalize(swipeDetectorState.swipeSpeedX) > 0 ||
         state.currentPosition > showThreshould
       ) {
         // スワイプ終了、速度がプラスなので出す
         animatePosition(destination)
+        state.isInitial = true
       }
     }
   )
 
   return {
     swipeDrawerState: state,
-    isAppeared
+    isAppeared,
+    isCompletelyAppeared,
+    isAppearingStarted,
+    openDrawer,
+    closeDrawer,
+    resetState
   }
 }
 
