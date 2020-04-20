@@ -2,18 +2,21 @@
   <section>
     <div>
       <h3>テーマ切り替え</h3>
-      <label>
-        <input type="radio" v-model="state.type" value="light" />
-        ライトテーマ
-      </label>
-      <label>
-        <input type="radio" v-model="state.type" value="dark" />
-        ダークテーマ
-      </label>
-      <label>
-        <input type="radio" v-model="state.type" value="custom" />
-        カスタムテーマ
-      </label>
+      <form-radio
+        label="ライトテーマ"
+        v-model="state.type"
+        input-value="light"
+      />
+      <form-radio
+        label="ダークテーマ"
+        v-model="state.type"
+        input-value="dark"
+      />
+      <form-radio
+        label="カスタムテーマ"
+        v-model="state.type"
+        input-value="custom"
+      />
     </div>
     <div>
       <h3>カスタムテーマ設定</h3>
@@ -38,6 +41,7 @@
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
+import FormRadio from '@/components/UI/FormRadio.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
@@ -55,6 +59,7 @@ export default defineComponent({
     return { state }
   },
   components: {
+    FormRadio,
     FormInput
   }
 })

@@ -4,14 +4,16 @@
     <notification />
     <div>
       <h3>起動時チャンネル設定</h3>
-      <label>
-        <input type="radio" value="lastOpen" v-model="state.openMode" />
-        最後に開いたチャンネル
-      </label>
-      <label>
-        <input type="radio" value="particular" v-model="state.openMode" />
-        特定のチャンネル
-      </label>
+      <form-radio
+        label="最後に開いたチャンネル"
+        input-value="lastOpen"
+        v-model="state.openMode"
+      />
+      <form-radio
+        label="特定のチャンネル"
+        input-value="particular"
+        v-model="state.openMode"
+      />
       <form-selector
         v-if="state.openMode === 'particular'"
         v-model="state.openChannelName"
@@ -20,36 +22,35 @@
     </div>
     <div>
       <h3>メッセージ送信スタイル</h3>
-      <label>
-        <input
-          type="radio"
-          value="modifier"
-          v-model="state.sendWithModifierKey"
-        />
-        修飾キー+Enterで送信 / Enterで改行
-      </label>
-      <label>
-        <input type="radio" value="none" v-model="state.sendWithModifierKey" />
-        Enterで送信 / 修飾キー+Enterで改行
-      </label>
+      <form-radio
+        label="修飾キー+Enterで送信 / Enterで改行"
+        input-value="modifier"
+        v-model="state.sendWithModifierKey"
+      />
+      <form-radio
+        label="Enterで送信 / 修飾キー+Enterで改行"
+        input-value="none"
+        v-model="state.sendWithModifierKey"
+      />
       <div>
         修飾キーとして利用するキー
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.shift" />
-          {{ getModifierKeyName('shift') }}
-        </label>
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.alt" />
-          {{ getModifierKeyName('alt') }}
-        </label>
-        <label>
-          <input type="checkbox" v-model="state.modifierKey.ctrl" />
-          {{ getModifierKeyName('ctrl') }}
-        </label>
-        <label v-if="macFlag">
-          <input type="checkbox" v-model="state.modifierKey.macCtrl" />
-          {{ getModifierKeyName('macCtrl') }}
-        </label>
+        <form-checkbox
+          :label="getModifierKeyName('shift')"
+          v-model="state.modifierKey.shift"
+        />
+        <form-checkbox
+          :label="getModifierKeyName('alt')"
+          v-model="state.modifierKey.alt"
+        />
+        <form-checkbox
+          :label="getModifierKeyName('ctrl')"
+          v-model="state.modifierKey.ctrl"
+        />
+        <form-checkbox
+          v-if="macFlag"
+          :label="getModifierKeyName('macCtrl')"
+          v-model="state.modifierKey.macCtrl"
+        />
       </div>
     </div>
     <div>
@@ -73,6 +74,8 @@ import { SendKeys } from '@/store/app/browserSettings'
 import useSyncedState from '../use/syncedState'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormRadio from '@/components/UI/FormRadio.vue'
+import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import Account from './Account.vue'
 import Notification from './Notification.vue'
@@ -132,8 +135,10 @@ export default defineComponent({
   components: {
     Account,
     Notification,
+    FormRadio,
     FormSelector,
     FormInput,
+    FormCheckbox,
     Toggle
   }
 })
