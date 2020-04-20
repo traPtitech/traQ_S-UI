@@ -95,7 +95,8 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     if (!store.getters.ui.isMobile || !newVal) return
     if (
       componentStateMachine.value === MainViewComponentState.NavAppearingAuto ||
-      componentStateMachine.value === MainViewComponentState.NavAppearing
+      componentStateMachine.value === MainViewComponentState.NavAppearing ||
+      componentStateMachine.value === MainViewComponentState.NavDisappearing
     ) {
       store.commit.ui.mainView.setMainViewComponentState(
         MainViewComponentState.NavShown
@@ -107,7 +108,8 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     if (
       componentStateMachine.value ===
         MainViewComponentState.NavDisappearingAuto ||
-      componentStateMachine.value === MainViewComponentState.NavDisappearing
+      componentStateMachine.value === MainViewComponentState.NavDisappearing ||
+      componentStateMachine.value === MainViewComponentState.NavAppearing
     ) {
       store.commit.ui.mainView.setMainViewComponentState(
         MainViewComponentState.Hidden
@@ -119,7 +121,8 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     if (
       componentStateMachine.value ===
         MainViewComponentState.SidebarAppearingAuto ||
-      componentStateMachine.value === MainViewComponentState.SidebarAppearing
+      componentStateMachine.value === MainViewComponentState.SidebarAppearing ||
+      componentStateMachine.value === MainViewComponentState.SidebarDisappearing
     ) {
       store.commit.ui.mainView.setMainViewComponentState(
         MainViewComponentState.SidebarShown
@@ -131,7 +134,9 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     if (
       componentStateMachine.value ===
         MainViewComponentState.SidebarDisappearingAuto ||
-      componentStateMachine.value === MainViewComponentState.SidebarDisappearing
+      componentStateMachine.value ===
+        MainViewComponentState.SidebarDisappearing ||
+      componentStateMachine.value === MainViewComponentState.SidebarAppearing
     ) {
       store.commit.ui.mainView.setMainViewComponentState(
         MainViewComponentState.Hidden
