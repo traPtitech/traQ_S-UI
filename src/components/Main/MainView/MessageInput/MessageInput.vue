@@ -20,6 +20,8 @@
         :text="textState.text"
         :should-update-size="shouldUpdateSize"
         :line-break-post-process-state="lineBreakPostProcessState"
+        @focus="onFocus"
+        @blur="onBlur"
         @input="onInputText"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -55,6 +57,8 @@ import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
 import useLineBreakPostProcess from './use/lineBreakPostProcess'
 import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
+import useFocus from './use/focus'
+import useEditingStatus from './use/editingStatus'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
@@ -103,6 +107,8 @@ export default defineComponent({
       runLineBreakPostProcess,
       onLineBreakPostProcessDone
     } = useLineBreakPostProcess()
+    const { isFocused, onFocus, onBlur } = useFocus()
+    useEditingStatus(props.channelId, textState, isFocused)
 
     const onInsertLineBreak = (newText: string, selectionIndex: number) => {
       textState.text = newText
@@ -156,6 +162,8 @@ export default defineComponent({
       textState,
       attachmentsState,
       shouldUpdateSize,
+      onFocus,
+      onBlur,
       onInputText,
       onModifierKeyDown,
       onModifierKeyUp,
