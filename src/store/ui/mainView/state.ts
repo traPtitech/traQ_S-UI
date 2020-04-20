@@ -14,6 +14,11 @@ export interface QallView extends ViewInformationBase {
   type: 'qall'
 }
 
+/**
+ * ナビゲーションとサイドバーの表示状態を表すステートマシンの状態
+ *
+ * SEE: https://github.com/traPtitech/traQ_S-UI/pull/321#discussion_r410817394
+ */
 export enum MainViewComponentState {
   Hidden = 'hidden',
   SidebarAppearing = 'sidebar-appearing',
