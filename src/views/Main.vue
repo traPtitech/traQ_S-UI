@@ -10,6 +10,7 @@
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
+    @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer" :style="styles.homeContainer">
       <navigation v-show="showNav" :class="$style.navigationWrapper" />

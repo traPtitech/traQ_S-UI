@@ -1,4 +1,4 @@
-import { computed, watch } from '@vue/composition-api'
+import { computed, watch, Ref } from '@vue/composition-api'
 import store from '@/store'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'
@@ -11,13 +11,17 @@ const stateMachineDrawerTypeMap: Record<MainViewComponentState, DrawerType> = {
   [MainViewComponentState.NavShown]: 'nav',
   [MainViewComponentState.NavAppearing]: 'nav',
   [MainViewComponentState.NavAppearingAuto]: 'nav',
+  [MainViewComponentState.NavAppearingWaitingTouchEnd]: 'nav',
   [MainViewComponentState.NavDisappearing]: 'nav',
   [MainViewComponentState.NavDisappearingAuto]: 'nav',
+  [MainViewComponentState.NavDisappearingWaitingTouchEnd]: 'nav',
   [MainViewComponentState.SidebarShown]: 'sidebar',
   [MainViewComponentState.SidebarAppearing]: 'sidebar',
   [MainViewComponentState.SidebarAppearingAuto]: 'sidebar',
+  [MainViewComponentState.SidebarAppearingWaitingTouchEnd]: 'sidebar',
   [MainViewComponentState.SidebarDisappearingAuto]: 'sidebar',
-  [MainViewComponentState.SidebarDisappearing]: 'sidebar'
+  [MainViewComponentState.SidebarDisappearing]: 'sidebar',
+  [MainViewComponentState.SidebarDisappearingWaitingTouchEnd]: 'sidebar'
 }
 
 const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
@@ -28,11 +32,11 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     touchendHandler
   } = useSwipeDetector()
 
-  const componentStateMachine = computed(
+  const mState = computed(
     () => store.state.ui.mainView.currentMainViewComponentState
   )
   const currentActiveDrawer = computed(
-    (): DrawerType => stateMachineDrawerTypeMap[componentStateMachine.value]
+    (): DrawerType => stateMachineDrawerTypeMap[mState.value]
   )
 
   const {
@@ -40,8 +44,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     isAppeared: isNavAppeared,
     isCompletelyAppeared: isNavCompletelyAppeared,
     openDrawer: openNav,
-    closeDrawer: closeNav,
-    resetState: resetNav
+    closeDrawer: closeNav
   } = useSwipeDrawer(
     swipeDetectorState,
     'right',
@@ -62,8 +65,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     isAppeared: isSidebarAppeared,
     isCompletelyAppeared: isSidebarCompletelyAppeared,
     openDrawer: openSidebar,
-    closeDrawer: closeSidebar,
-    resetState: resetSidebar
+    closeDrawer: closeSidebar
   } = useSwipeDrawer(
     swipeDetectorState,
     'left',
@@ -80,7 +82,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   )
 
   // state machine hooks
-  watch(componentStateMachine, (newState, oldState) => {
+  watch(mState, newState => {
     if (!store.getters.ui.isMobile) return
     if (newState === MainViewComponentState.SidebarAppearingAuto) {
       openSidebar()
@@ -90,70 +92,105 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   })
 
   // state machine transitions
-  // TODO: まとめる
-  watch(isNavCompletelyAppeared, newVal => {
-    if (!store.getters.ui.isMobile || !newVal) return
-    if (
-      componentStateMachine.value === MainViewComponentState.NavAppearingAuto ||
-      componentStateMachine.value === MainViewComponentState.NavAppearing ||
-      componentStateMachine.value === MainViewComponentState.NavDisappearing
-    ) {
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.NavShown
-      )
-    }
-  })
-  watch(isNavAppeared, newVal => {
-    if (!store.getters.ui.isMobile || newVal) return
-    if (
-      componentStateMachine.value ===
-        MainViewComponentState.NavDisappearingAuto ||
-      componentStateMachine.value === MainViewComponentState.NavDisappearing ||
-      componentStateMachine.value === MainViewComponentState.NavAppearing
-    ) {
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.Hidden
-      )
-    }
-  })
-  watch(isSidebarCompletelyAppeared, newVal => {
-    if (!store.getters.ui.isMobile || !newVal) return
-    if (
-      componentStateMachine.value ===
-        MainViewComponentState.SidebarAppearingAuto ||
-      componentStateMachine.value === MainViewComponentState.SidebarAppearing ||
-      componentStateMachine.value === MainViewComponentState.SidebarDisappearing
-    ) {
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.SidebarShown
-      )
-    }
-  })
-  watch(isSidebarAppeared, newVal => {
-    if (!store.getters.ui.isMobile || newVal) return
-    if (
-      componentStateMachine.value ===
-        MainViewComponentState.SidebarDisappearingAuto ||
-      componentStateMachine.value ===
-        MainViewComponentState.SidebarDisappearing ||
-      componentStateMachine.value === MainViewComponentState.SidebarAppearing
-    ) {
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.Hidden
-      )
-    }
-  })
-  watch(
-    computed(() => store.getters.ui.isMobile),
-    isMobile => {
-      if (!isMobile) {
-        resetNav()
-        resetSidebar()
+  const buildStateMachineTransitions = (
+    states: {
+      shown: MainViewComponentState
+      hidden: MainViewComponentState.Hidden
+      appearing: MainViewComponentState
+      appearingAuto: MainViewComponentState
+      appearingWaitingTouchEnd: MainViewComponentState
+      disappearing: MainViewComponentState
+      disappearingAuto: MainViewComponentState
+      disappearingWaitingTouchEnd: MainViewComponentState
+    },
+    appeared: Readonly<Ref<boolean>>,
+    completelyAppeared: Readonly<Ref<boolean>>
+  ) => {
+    watch(completelyAppeared, newVal => {
+      if (!store.getters.ui.isMobile || !newVal) return
+      if (
+        mState.value === states.appearingAuto ||
+        mState.value === states.appearing ||
+        mState.value === states.disappearing
+      ) {
+        store.commit.ui.mainView.setMainViewComponentState(states.shown)
       }
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.Hidden
+    })
+    watch(appeared, newVal => {
+      if (!store.getters.ui.isMobile) return
+      if (newVal && mState.value === states.appearingWaitingTouchEnd) {
+        store.commit.ui.mainView.setMainViewComponentState(states.appearing)
+      }
+      if (newVal && mState.value === states.disappearingWaitingTouchEnd) {
+        store.commit.ui.mainView.setMainViewComponentState(states.disappearing)
+      }
+      if (!newVal && mState.value === states.disappearingAuto) {
+        store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+      }
+      if (!newVal && mState.value === states.appearing) {
+        if (swipeDetectorState.swipeDirection === 'none') {
+          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+        } else {
+          store.commit.ui.mainView.setMainViewComponentState(
+            states.appearingWaitingTouchEnd
+          )
+        }
+      }
+      if (!newVal && mState.value === states.disappearing) {
+        if (swipeDetectorState.swipeDirection === 'none') {
+          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+        } else {
+          store.commit.ui.mainView.setMainViewComponentState(
+            states.disappearingWaitingTouchEnd
+          )
+        }
+      }
+    }),
+      watch(
+        () => swipeDetectorState.swipeDirection,
+        newVal => {
+          if (!store.getters.ui.isMobile || newVal !== 'none') return
+          if (
+            mState.value === states.appearingWaitingTouchEnd ||
+            mState.value === states.disappearingWaitingTouchEnd
+          ) {
+            store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+          }
+        }
       )
-    }
+  }
+
+  buildStateMachineTransitions(
+    {
+      shown: MainViewComponentState.NavShown,
+      hidden: MainViewComponentState.Hidden,
+      appearing: MainViewComponentState.NavAppearing,
+      appearingAuto: MainViewComponentState.NavAppearingAuto,
+      appearingWaitingTouchEnd:
+        MainViewComponentState.NavAppearingWaitingTouchEnd,
+      disappearing: MainViewComponentState.NavDisappearing,
+      disappearingAuto: MainViewComponentState.NavDisappearingAuto,
+      disappearingWaitingTouchEnd:
+        MainViewComponentState.NavDisappearingWaitingTouchEnd
+    },
+    isNavAppeared,
+    isNavCompletelyAppeared
+  )
+  buildStateMachineTransitions(
+    {
+      shown: MainViewComponentState.SidebarShown,
+      hidden: MainViewComponentState.Hidden,
+      appearing: MainViewComponentState.SidebarAppearing,
+      appearingAuto: MainViewComponentState.SidebarAppearingAuto,
+      appearingWaitingTouchEnd:
+        MainViewComponentState.SidebarAppearingWaitingTouchEnd,
+      disappearing: MainViewComponentState.SidebarDisappearing,
+      disappearingAuto: MainViewComponentState.SidebarDisappearingAuto,
+      disappearingWaitingTouchEnd:
+        MainViewComponentState.SidebarDisappearingWaitingTouchEnd
+    },
+    isSidebarAppeared,
+    isSidebarCompletelyAppeared
   )
 
   const isMainViewActive = computed(
