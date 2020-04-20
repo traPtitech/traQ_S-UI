@@ -86,9 +86,6 @@ export default defineComponent({
 
     const { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
       context,
-      'post-message',
-      'modifier-key-down',
-      'modifier-key-up',
       insertLineBreak
     )
 

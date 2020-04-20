@@ -76,11 +76,14 @@ const isBRKey = (keyEvent: KeyboardEvent) => {
   )
 }
 
+/**
+ * contextに対して発火されるイベント
+ * - `post-message`: 投稿トリガー時
+ * - `modifier-key-down`: 修飾キーが押された
+ * - `modifier-key-up`: 修飾キーが離された
+ */
 const useSendKeyWatcher = (
   context: SetupContext,
-  sendEventName: string,
-  modifierKeyDownEventName: string,
-  modifierKeyUpEventName: string,
   insertLineBreak: () => void
 ) => {
   const state = reactive({
@@ -90,13 +93,13 @@ const useSendKeyWatcher = (
   const onBeforeInput = (event: InputEvent) => {
     if (isSendKeyInput(event)) {
       event.preventDefault()
-      context.emit(sendEventName)
+      context.emit('post-message')
     }
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (withModifierKey(event) && !event.isComposing) {
-      context.emit(modifierKeyDownEventName)
+      context.emit('modifier-key-down')
     }
 
     // https://github.com/traPtitech/traQ_R-UI/pull/945
@@ -105,7 +108,7 @@ const useSendKeyWatcher = (
 
       if (sendWithModifierKey === 'modifier' && withModifierKey(event)) {
         event.preventDefault()
-        context.emit(sendEventName)
+        context.emit('post-message')
         return
       }
 
@@ -115,7 +118,7 @@ const useSendKeyWatcher = (
         !isLevel2InputEventsSupported
       ) {
         event.preventDefault()
-        context.emit(sendEventName)
+        context.emit('post-message')
         return
       }
     }
@@ -128,7 +131,7 @@ const useSendKeyWatcher = (
 
   const onKeyUp = (event: KeyboardEvent) => {
     if (isModifierKey(event)) {
-      context.emit(modifierKeyUpEventName)
+      context.emit('modifier-key-up')
     }
   }
 
