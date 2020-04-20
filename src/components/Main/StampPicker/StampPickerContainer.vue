@@ -31,14 +31,18 @@ const useStampPicker = () => {
 
 const useStyles = (state: { isAsMessageStampPicker: boolean }) =>
   reactive({
-    stampPicker: makeStyles(theme => ({
-      top: state.isAsMessageStampPicker
-        ? `${store.state.ui.stampPicker.position.y}px`
-        : '',
-      left: state.isAsMessageStampPicker
-        ? `${store.state.ui.stampPicker.position.x}px`
-        : ''
-    }))
+    stampPicker: makeStyles(theme => {
+      const height = 320
+      const marginBottom = 20
+      return {
+        top: state.isAsMessageStampPicker
+          ? `min(calc(100vh - ${height}px - ${marginBottom}px),${store.state.ui.stampPicker.position.y}px)`
+          : '',
+        left: state.isAsMessageStampPicker
+          ? `${store.state.ui.stampPicker.position.x}px`
+          : ''
+      }
+    })
   })
 
 export default defineComponent({
