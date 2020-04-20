@@ -37,7 +37,8 @@ import {
   mdiBookmark,
   mdiBookmarkMultiple,
   mdiLink,
-  mdiQrcode
+  mdiQrcode,
+  mdiApps
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -83,7 +84,8 @@ const mdi: MdiIconsMapping = {
   bookmark: mdiBookmark,
   'bookmark-multiple': mdiBookmarkMultiple,
   link: mdiLink,
-  qrcode: mdiQrcode
+  qrcode: mdiQrcode,
+  apps: mdiApps
 }
 
 export default mdi
