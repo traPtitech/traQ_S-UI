@@ -107,13 +107,17 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     completelyAppeared: Readonly<Ref<boolean>>
   ) => {
     watch(completelyAppeared, newVal => {
-      if (!store.getters.ui.isMobile || !newVal) return
+      if (!store.getters.ui.isMobile) return
       if (
-        mState.value === states.appearingAuto ||
-        mState.value === states.appearing ||
-        mState.value === states.disappearing
+        newVal &&
+        (mState.value === states.appearingAuto ||
+          mState.value === states.appearing ||
+          mState.value === states.disappearing)
       ) {
         store.commit.ui.mainView.setMainViewComponentState(states.shown)
+      }
+      if (!newVal && mState.value === states.shown) {
+        store.commit.ui.mainView.setMainViewComponentState(states.disappearing)
       }
     })
     watch(appeared, newVal => {
