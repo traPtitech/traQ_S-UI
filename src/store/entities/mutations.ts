@@ -80,6 +80,7 @@ export const mutations = defineMutations<S>()({
   addTags: addMutation('tags'),
 
   deleteUser: deleteMutation('users'),
+  deleteMessage: deleteMutation('messages'),
   deleteChannel: deleteMutation('channels'),
   deleteUserGroup: deleteMutation('userGroups'),
   deleteStamp: deleteMutation('stamps'),

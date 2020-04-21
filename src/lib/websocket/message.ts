@@ -13,17 +13,26 @@ import {
 } from './events'
 
 export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
-  //const res = await apis.getMessage(id)
-  //store.commit.entities.addMessage({ id, entity: res.data })
-  console.error('onMessageCreated: Not implemented')
+  const res = await apis.getMessage(id)
+  store.commit.entities.addMessage({ id, entity: res.data })
+  if (res.data.channelId === store.state.domain.messagesView.currentChannelId) {
+    await store.dispatch.domain.messagesView.addMessageId({ message: res.data })
+  }
 }
 
-export const onMessageUpdated = (data: MessageUpdatedEvent['body']) => {
-  console.error('onMessageUpdated: Not implemented')
+export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
+  const res = await apis.getMessage(id)
+  store.commit.entities.addMessage({ id, entity: res.data })
+  if (res.data.channelId === store.state.domain.messagesView.currentChannelId) {
+    await store.dispatch.domain.messagesView.updateMessageId({
+      message: res.data
+    })
+  }
 }
 
-export const onMessageDeleted = (data: MessageDeletedEvent['body']) => {
-  console.error('onMessageDeleted: Not implemented')
+export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
+  store.commit.entities.deleteMessage(id)
+  store.commit.domain.messagesView.deleteMessageId(id)
 }
 
 export const onMessageRead = (data: MessageReadEvent['body']) => {

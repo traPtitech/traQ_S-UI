@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messagesView } from './index'
 import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
-import { ChannelViewState } from '@traptitech/traq'
+import { ChannelViewState, Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import apis from '@/lib/api'
 import { changeViewState } from '@/lib/websocket'
@@ -239,7 +239,19 @@ export const actions = defineActions({
       embeddings: extracted.embeddings
     })
   },
-  addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+  async addMessageId(context, payload: { message: Message }) {
+    const { commit, dispatch } = messagesViewActionContext(context)
+    await dispatch.renderMessageContent(payload.message.id)
+    commit.setLoadedMessageLatestDate(new Date(payload.message.createdAt))
+    commit.addMessageId(payload.message.id)
+  },
+  async updateMessageId(context, payload: { message: Message }) {
+    const { commit, dispatch } = messagesViewActionContext(context)
+    await dispatch.renderMessageContent(payload.message.id)
+    commit.setLoadedMessageLatestDate(new Date(payload.message.updatedAt))
+    commit.updateMessageId(payload.message.id)
+  },
+  async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
   },
   removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
