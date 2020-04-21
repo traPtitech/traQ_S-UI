@@ -14,5 +14,13 @@ export const getters = defineGetters<S>()({
       .filter(v => v.state === ChannelViewState.Monitoring)
       .map(v => v.userId)
       .reverse()
+  },
+  typingUsers(...args): UserId[] {
+    const { rootState, state } = getterContext(args)
+
+    const myId = rootState.domain.me.detail?.id
+    return state.currentViewers
+      .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
+      .map(v => v.userId)
   }
 })

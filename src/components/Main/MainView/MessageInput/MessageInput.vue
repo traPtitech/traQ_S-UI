@@ -66,7 +66,6 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
-import { ChannelViewState } from '@traptitech/traq'
 
 const useStyles = () =>
   reactive({
@@ -123,10 +122,8 @@ export default defineComponent({
     }
     const postMessage = usePostMessage(textState, props)
 
-    const typingUsers = computed(() =>
-      store.state.domain.messagesView.currentViewers
-        .filter(v => v.state === ChannelViewState.Editing)
-        .map(v => v.userId)
+    const typingUsers = computed(
+      () => store.getters.domain.messagesView.typingUsers
     )
 
     const canPostMessage = computed(
