@@ -103,7 +103,7 @@ export default defineComponent({
 
     const { shouldShowSidebar, isSidebarOpen, openSidebar } = useSidebar()
     const viewerIds = computed(
-      () => store.getters.domain.messagesView.getCurrentViewersId
+      () => store.getters.domain.messagesView.viewingUsers
     )
 
     return {

@@ -9,6 +9,8 @@
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
+    @focus="onFocus"
+    @blur="onBlur"
   ></textarea>
 </template>
 
@@ -35,6 +37,17 @@ const useStyles = () =>
       color: theme.text.primary
     }))
   })
+
+const useFocus = (context: SetupContext) => {
+  const onFocus = () => {
+    context.emit('focus')
+  }
+  const onBlur = () => {
+    context.emit('blur')
+  }
+
+  return { onFocus, onBlur }
+}
 
 const useLineBreak = (
   props: { text: string; lineBreakPostProcessState: LineBreakPostProcessState },
@@ -103,13 +116,17 @@ export default defineComponent({
       }
     })
 
+    const { onFocus, onBlur } = useFocus(context)
+
     return {
       styles,
       onInput,
       onBeforeInput,
       onKeyDown,
       onKeyUp,
-      textareaRef
+      textareaRef,
+      onFocus,
+      onBlur
     }
   }
 })
