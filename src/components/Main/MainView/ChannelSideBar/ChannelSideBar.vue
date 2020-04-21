@@ -1,19 +1,14 @@
 <template>
-  <channel-side-bar-hidden
-    v-if="!state.isOpen"
-    @open="toggle"
-    :viewer-ids="viewerIds"
-  />
   <channel-side-bar-pinned-list
-    v-else-if="state.pinnedMode"
+    v-if="state.pinnedMode"
     @closePinned="togglePinnedMode"
-    @closeBar="toggle"
+    @closeBar="closeSidebar"
     :pinned-message="state.pinnedMessage"
   />
   <div v-else :style="styles.container" :class="$style.container">
     <channel-side-bar-header
       :channel-id="channelId"
-      @close="toggle"
+      @close="closeSidebar"
       :class="$style.sidebarItem"
     />
     <channel-side-bar-viewers
@@ -49,7 +44,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { ChannelViewState } from '@traptitech/traq'
+import useSidebar from '@/use/sidebar'
 import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
@@ -86,7 +81,6 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      isOpen: false,
       pinnedMode: false,
       pinnedMessage: computed(
         () => store.state.domain.messagesView.pinnedMessages
@@ -96,18 +90,17 @@ export default defineComponent({
     const viewerIds = computed(
       () => store.getters.domain.messagesView.getCurrentViewersId
     )
-    const toggle = () => {
-      state.isOpen = !state.isOpen
-    }
     const togglePinnedMode = () => {
       state.pinnedMode = !state.pinnedMode
     }
+    const { closeSidebar } = useSidebar()
+
     return {
       state,
-      toggle,
       togglePinnedMode,
       viewerIds,
-      styles
+      styles,
+      closeSidebar
     }
   }
 })

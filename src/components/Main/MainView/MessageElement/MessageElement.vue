@@ -5,6 +5,8 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
     ref="bodyRef"
+    v-if="state.message"
+    :data-is-mobile="isMobile"
   >
     <user-icon
       :class="$style.userIcon"
@@ -30,10 +32,15 @@
         :message-id="messageId"
         :stamps="state.message.stamps"
       />
+      <message-quote-list
+        v-if="embeddingsState.quoteMessageIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :message-ids="embeddingsState.quoteMessageIds"
+      />
       <message-file-list
-        v-if="state.fileIds.length > 0"
-        :class="$style.messageFileList"
-        :file-ids="state.fileIds"
+        v-if="embeddingsState.fileIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :file-ids="embeddingsState.fileIds"
       />
     </div>
   </div>
@@ -45,8 +52,6 @@ import {
   computed,
   reactive,
   ref,
-  watchEffect,
-  watch,
   SetupContext,
   PropType
 } from '@vue/composition-api'
@@ -55,12 +60,15 @@ import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
+import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
+import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import MessageTools from './MessageTools.vue'
+import useEmbeddings from './use/embeddings'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -83,7 +91,8 @@ export default defineComponent({
     MessageHeader,
     MessageStampList,
     MessageFileList,
-    MessageTools
+    MessageTools,
+    MessageQuoteList
   },
   props: {
     messageId: {
@@ -98,6 +107,7 @@ export default defineComponent({
   setup(props, context: SetupContext) {
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const bodyRef = ref<HTMLDivElement>(null)
+    const { isMobile } = useIsMobile()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       content: computed(
@@ -105,27 +115,35 @@ export default defineComponent({
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
       ),
-      fileIds: computed(
-        () =>
-          store.state.domain.messagesView.embeddedFilesMap[
-            props.messageId
-          ]?.map(e => e.id) ?? []
-      ),
       isOpenToolsModal: computed(
         () => store.state.ui.messageContextMenu.position.x !== 0
       )
     })
 
-    useElementRenderObserver(bodyRef, props, state, context)
+    const { embeddingsState } = useEmbeddings(props)
+
+    useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
     const styles = useStyles(props, hoverState)
 
-    return { state, styles, onMouseEnter, onMouseLeave, bodyRef, hoverState }
+    return {
+      state,
+      styles,
+      onMouseEnter,
+      onMouseLeave,
+      bodyRef,
+      embeddingsState,
+      isMobile,
+      hoverState
+    }
   }
 })
 </script>
 
 <style lang="scss" module>
+$messagePadding: 32px;
+$messagePaddingMobile: 16px;
+
 .body {
   display: grid;
   grid-template:
@@ -136,8 +154,11 @@ export default defineComponent({
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
-  padding: 8px 32px;
   overflow: hidden;
+  padding: 8px $messagePadding;
+  &[data-is-mobile='true'] {
+    padding: 8px $messagePaddingMobile;
+  }
 }
 
 .userIcon {
@@ -168,7 +189,7 @@ export default defineComponent({
   margin-top: 8px;
 }
 
-.messageFileList {
+.messageEmbeddingsList {
   margin-top: 16px;
 }
 

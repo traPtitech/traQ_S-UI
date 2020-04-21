@@ -16,7 +16,6 @@ import {
   reactive,
   computed
 } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import ActivityElement from './ActivityElement.vue'
 

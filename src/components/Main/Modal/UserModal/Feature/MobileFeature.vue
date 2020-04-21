@@ -16,7 +16,6 @@
     </div>
     <buttons
       :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
-      :show-title="false"
     />
   </section>
 </template>
@@ -24,7 +23,6 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
 import { User, UserDetail } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import OnlineIndicator from './OnlineIndicator.vue'

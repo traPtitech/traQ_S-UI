@@ -20,17 +20,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
-import apis from '@/lib/api'
 import { User, UserDetail } from '@traptitech/traq'
-import { UserId } from '@/types/entity-ids'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'

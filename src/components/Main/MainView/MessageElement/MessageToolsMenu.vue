@@ -3,11 +3,53 @@
     <span :class="$style.text" @click="removePinned" v-if="isPinned">
       ピン留めを外す
     </span>
-    <span :class="$style.text" @click="addPinned" v-else>ピン留め</span>
-    <span :class="$style.text" @click="editMessage" v-if="isMine">編集</span>
-    <span :class="$style.text" @click="copyLink">リンクをコピー</span>
-    <span :class="$style.text" @click="copyMd">Markdownをコピー</span>
-    <span :class="$style.text" @click="deleteMessage" v-if="isMine">削除</span>
+    <span
+      :class="$style.text"
+      @click="
+        addPinned()
+        close()
+      "
+      v-else
+    >
+      ピン留め
+    </span>
+    <span
+      :class="$style.text"
+      @click="
+        editMessage()
+        close()
+      "
+      v-if="isMine"
+      >編集</span
+    >
+    <span
+      :class="$style.text"
+      @click="
+        copyLink()
+        close()
+      "
+    >
+      リンクをコピー
+    </span>
+    <span
+      :class="$style.text"
+      @click="
+        copyMd()
+        close()
+      "
+    >
+      Markdownをコピー
+    </span>
+    <span
+      :class="$style.text"
+      @click="
+        deleteMessage()
+        close()
+      "
+      v-if="isMine"
+    >
+      削除
+    </span>
   </div>
 </template>
 
@@ -19,6 +61,7 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
+import apis from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
 
@@ -51,7 +94,7 @@ const changeMessage = (props: { messageId: MessageId }) => {
     alert('edit: Not implemented')
   }
   const deleteMessage = () => {
-    alert('delete')
+    apis.deleteMessage(props.messageId)
   }
   return { editMessage, deleteMessage }
 }
@@ -85,6 +128,9 @@ export default defineComponent({
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = togglePinned(props)
     const { editMessage, deleteMessage } = changeMessage(props)
+    const close = () => {
+      store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
+    }
     return {
       styles,
       isPinned,
@@ -94,7 +140,8 @@ export default defineComponent({
       copyMd,
       isMine,
       editMessage,
-      deleteMessage
+      deleteMessage,
+      close
     }
   }
 })

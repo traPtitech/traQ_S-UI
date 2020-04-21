@@ -7,7 +7,7 @@ import {
   ClipFolderId,
   StampPaletteId
 } from '@/types/entity-ids'
-import { ChannelViewState, Pin, ChannelViewer } from '@traptitech/traq'
+import { ChannelViewer } from '@traptitech/traq'
 
 export type WebSocketEvent =
   | UserEvent

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'

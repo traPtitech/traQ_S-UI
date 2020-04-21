@@ -19,12 +19,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  toRefs,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
 import store from '@/store'
 import {
   NavigationItemType,
@@ -66,12 +61,18 @@ export default defineComponent({
         iconName: 'user'
       },
       {
+        type: 'clips',
+        iconName: 'bookmark',
+        iconMdi: true
+      },
+      {
         type: 'services',
         iconName: 'services'
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
 
+    // TODO: 下部アイテムに移動
     const onSettingClick = () =>
       store.dispatch.ui.modal.pushModal({ type: 'setting' })
 

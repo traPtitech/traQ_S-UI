@@ -17,7 +17,11 @@ export const actions = defineActions({
   },
   openMessageStampPicker(
     context,
-    payload: { targetPortalName: string; selectHandler: StampSelectHandler; position: { x: number, y: number } }
+    payload: {
+      targetPortalName: string
+      selectHandler: StampSelectHandler
+      position: { x: number; y: number }
+    }
   ) {
     const { commit } = stampPickerActionContext(context)
     commit.setTargetPortalName(payload.targetPortalName)

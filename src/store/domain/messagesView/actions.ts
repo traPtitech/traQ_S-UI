@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messagesView } from './index'
 import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
-import { Message, ChannelViewState } from '@traptitech/traq'
+import { ChannelViewState } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import apis from '@/lib/api'
 import { changeViewState } from '@/lib/websocket'
@@ -209,14 +209,34 @@ export const actions = defineActions({
     const extracted = embeddingExtractor(content)
 
     await Promise.all(
-      extracted.embeddings.map(async e =>
-        rootDispatch.entities.fetchFileMetaByFileId(e.id)
-      )
+      extracted.embeddings.map(async e => {
+        try {
+          if (e.type === 'file') {
+            await rootDispatch.entities.fetchFileMetaByFileId(e.id)
+          }
+          if (e.type === 'message') {
+            const message = await rootDispatch.entities.fetchMessage(e.id)
+
+            // テキスト部分のみレンダリング
+            const extracted = embeddingExtractor(message.content)
+            const renderedContent = render(extracted.text)
+            commit.addRenderedContent({
+              messageId: message.id,
+              renderedContent
+            })
+          }
+        } catch (e) {
+          // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
+        }
+      })
     )
 
     const renderedContent = render(extracted.text)
     commit.addRenderedContent({ messageId, renderedContent })
-    commit.addEmbededFile({ messageId, files: extracted.embeddings })
+    commit.addEmbedding({
+      messageId,
+      embeddings: extracted.embeddings
+    })
   },
   addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)

@@ -16,15 +16,10 @@ import {
   defineComponent,
   ref,
   watchEffect,
-  SetupContext,
-  PropType
+  SetupContext
 } from '@vue/composition-api'
-import store from '@/store'
-import { UserDetail } from '@traptitech/traq'
-import apis from '@/lib/api'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import UserIcon from '@/components/UI/UserIcon.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { useImageUploadInternal } from './use/imageUpload'
 

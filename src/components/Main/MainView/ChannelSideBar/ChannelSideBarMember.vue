@@ -24,9 +24,7 @@ import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import ChannelSideBarMemberIcons from './ChannelSideBarMemberIcons.vue'
 import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
 import ChannelSideBarContent from './ChannelSideBarContent.vue'
-import { User } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>

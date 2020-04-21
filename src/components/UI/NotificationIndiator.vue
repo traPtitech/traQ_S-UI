@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     color: {
       type: String,
-      default: store.state.app.theme.background.secondary
+      default: store.getters.app.themeSettings.currentTheme.background.secondary
     },
     hasBorder: {
       type: Boolean,

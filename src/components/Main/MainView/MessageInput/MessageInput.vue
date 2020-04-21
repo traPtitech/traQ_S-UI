@@ -1,10 +1,15 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    :data-is-mobile="isMobile"
+  >
     <portal-target
       :class="$style.stampPickerLocator"
       :name="targetPortalName"
     />
     <message-input-file-list :class="$style.inputFileList" />
+    <message-input-key-guide :show="showKeyGuide" />
     <div :class="$style.inputContainer">
       <message-input-upload-button
         :class="$style.controls"
@@ -14,13 +19,18 @@
         :class="$style.inputTextArea"
         :text="textState.text"
         :should-update-size="shouldUpdateSize"
+        :line-break-post-process-state="lineBreakPostProcessState"
         @input="onInputText"
+        @modifier-key-down="onModifierKeyDown"
+        @modifier-key-up="onModifierKeyUp"
         @post-message="postMessage"
+        @insert-line-break="onInsertLineBreak"
+        @line-break-post-process-done="onLineBreakPostProcessDone"
         @update-size="onUpdateSize"
       />
       <message-input-controls
         :class="$style.controls"
-        :can-post-message="!(textState.isEmpty && attachmentsState.isEmpty)"
+        :can-post-message="canPostMessage"
         @click-send="postMessage"
         @click-stamp="onStampClick"
       />
@@ -29,15 +39,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import useIsMobile from '@/use/isMobile'
 import useAttachments from './use/attachments'
-import useTextInput, { TextState } from './use/textInput'
+import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
+import useLineBreakPostProcess from './use/lineBreakPostProcess'
 import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
+import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
@@ -53,6 +71,7 @@ const useStyles = () =>
 export default defineComponent({
   name: 'MessageInput',
   components: {
+    MessageInputKeyGuide,
     MessageInputTextArea,
     MessageInputControls,
     MessageInputFileList,
@@ -64,16 +83,45 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, context) {
     const styles = useStyles()
-    const { textState, onInputText } = useTextInput()
+    const { isMobile } = useIsMobile()
+    const {
+      textState,
+      onInputText,
+      onModifierKeyDown,
+      onModifierKeyUp
+    } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
     const {
       shouldUpdateSize,
       onUpdateSize,
       onStampInput
     } = useTextAreaSizeUpdater()
+    const {
+      lineBreakPostProcessState,
+      runLineBreakPostProcess,
+      onLineBreakPostProcessDone
+    } = useLineBreakPostProcess()
+
+    const onInsertLineBreak = (newText: string, selectionIndex: number) => {
+      textState.text = newText
+
+      context.root.$nextTick(() => {
+        runLineBreakPostProcess(selectionIndex)
+      })
+    }
     const postMessage = usePostMessage(textState, props)
+
+    const canPostMessage = computed(
+      () => !(textState.isEmpty && attachmentsState.isEmpty)
+    )
+    const showKeyGuide = computed(
+      () =>
+        textState.isModifierKeyPressed &&
+        (store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
+          canPostMessage.value)
+    )
 
     const targetPortalName = 'message-input-stamp-picker'
     const { invokeStampPicker } = useStampPickerInvoker(
@@ -105,14 +153,22 @@ export default defineComponent({
     return {
       targetPortalName,
       styles,
+      isMobile,
       textState,
       attachmentsState,
       shouldUpdateSize,
       onInputText,
+      onModifierKeyDown,
+      onModifierKeyUp,
       onStampClick,
       onUpdateSize,
       postMessage,
-      addAttachment
+      onInsertLineBreak,
+      lineBreakPostProcessState,
+      onLineBreakPostProcessDone,
+      addAttachment,
+      showKeyGuide,
+      canPostMessage
     }
   }
 })
@@ -120,6 +176,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 $inputPadding: 32px;
+$inputPaddingMobile: 16px;
 $radius: 4px;
 
 .container {
@@ -133,6 +190,12 @@ $radius: 4px;
     left: $inputPadding;
     right: $inputPadding;
     bottom: 24px - $radius;
+  }
+  &[data-is-mobile='true'] {
+    margin: {
+      left: $inputPaddingMobile;
+      right: $inputPaddingMobile;
+    }
   }
   border-radius: $radius;
   transform: translateY(-$radius);

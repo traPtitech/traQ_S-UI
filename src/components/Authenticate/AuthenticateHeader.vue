@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
-import useInput from '@/use/input'
 import { makeStyles } from '@/lib/styles'
 
 const useStyles = () =>

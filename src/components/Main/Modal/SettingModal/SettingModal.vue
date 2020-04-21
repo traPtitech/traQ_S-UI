@@ -20,7 +20,6 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'

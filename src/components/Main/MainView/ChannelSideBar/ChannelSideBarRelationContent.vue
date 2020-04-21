@@ -58,12 +58,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
 import { RelatedChannelEntry } from './use/useRelatedChannels'

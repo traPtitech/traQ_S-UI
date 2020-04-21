@@ -14,12 +14,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from './NavigationSelectorItem.vue'

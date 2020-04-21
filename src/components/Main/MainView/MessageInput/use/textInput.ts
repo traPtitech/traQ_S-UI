@@ -1,20 +1,32 @@
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from '@vue/composition-api'
 
 export type TextState = {
   text: string
   isEmpty: boolean
+  isModifierKeyPressed: boolean
 }
 const useTextInput = () => {
   const state: TextState = reactive({
     text: '',
-    isEmpty: computed(() => state.text.length === 0)
+    isEmpty: computed(() => state.text.length === 0),
+    isModifierKeyPressed: false
   })
   const onInputText = (text: string) => {
     state.text = text
   }
+
+  const onModifierKeyDown = () => {
+    state.isModifierKeyPressed = true
+  }
+  const onModifierKeyUp = () => {
+    state.isModifierKeyPressed = false
+  }
+
   return {
     textState: state,
-    onInputText
+    onInputText,
+    onModifierKeyDown,
+    onModifierKeyUp
   }
 }
 

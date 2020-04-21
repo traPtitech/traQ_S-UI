@@ -25,9 +25,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import MessagesScroller from './MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
-import { LoadingDirection } from '@/store/domain/messagesView/state'
 
 const useLoadMessages = () => {
   const state = reactive({
@@ -61,8 +59,7 @@ export default defineComponent({
   components: {
     MessagesScroller,
     MessageInput,
-    MessagesViewFileUploadOverlay,
-    ChannelSideBar
+    MessagesViewFileUploadOverlay
   },
   setup() {
     const state = reactive({
@@ -97,14 +94,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 32px;
-
 .container {
   display: flex;
   flex: 1 1;
   flex-direction: column;
   position: relative;
   height: 100%;
-  padding: 0 $messagePadding;
 }
 </style>

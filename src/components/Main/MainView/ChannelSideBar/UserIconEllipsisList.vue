@@ -23,13 +23,10 @@ import {
   defineComponent,
   computed,
   reactive,
-  ref,
   PropType
 } from '@vue/composition-api'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import { ChannelViewState } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = (props: {

@@ -10,13 +10,30 @@
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
     @touchend="touchendHandler"
+    @touchcancel="touchendHandler"
   >
-    <div :class="$style.homeContainer">
-      <div :class="$style.navigationWrapper">
-        <navigation />
-      </div>
-      <div :class="$style.mainViewWrapper" :style="mainViewWrapperStyle">
-        <main-view-controller :is-active="isNavAppeared" />
+    <div :class="$style.homeContainer" :style="styles.homeContainer">
+      <navigation v-show="showNav" :class="$style.navigationWrapper" />
+      <main-view-frame
+        :is-active="isMainViewActive"
+        :hide-outer="hideOuter"
+        :dim-inner="isSidebarCompletelyAppeared"
+        :style="styles.mainViewWrapper"
+      >
+        <main-view-controller :class="$style.mainViewWrapper" />
+      </main-view-frame>
+      <div
+        :class="$style.sidebarWrapper"
+        :style="styles.sidebarWrapper"
+        v-if="isMobile"
+        v-show="isSidebarAppeared"
+      >
+        <!-- モバイル時はスワイプ表示するためここにportal表示 -->
+        <portal-target
+          name="sidebar"
+          v-if="isMobile"
+          :class="$style.sidebarPortal"
+        />
       </div>
     </div>
     <modal-container />
@@ -28,32 +45,46 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  watchEffect,
-  watch,
-  onBeforeMount
-} from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 import { setupWebSocket } from '@/lib/websocket'
+import { connectFirebase } from '@/lib/firebase'
+import { makeStyles } from '@/lib/styles'
+import useIsMobile from '@/use/isMobile'
 import MainViewController from '@/components/Main/MainView/MainViewController.vue'
+import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import useSwipeDetector from '@/use/swipeDetector'
-import useSwipeDrawer from '@/use/swipeDrawer'
+import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 
 export const targetPortalName = 'message-menu-popup'
+import useInitialFetch from './use/initialFetch'
+
+const useStyles = (
+  mainViewPosition: Readonly<Ref<number>>,
+  sidebarPosition: Readonly<Ref<number>>
+) =>
+  reactive({
+    mainViewWrapper: makeStyles(_ => ({
+      transform: `translateX(${mainViewPosition.value}px)`
+    })),
+    sidebarWrapper: makeStyles(theme => ({
+      transform: `translateX(${sidebarPosition.value}px)`,
+      background: theme.background.secondary
+    })),
+    homeContainer: makeStyles(theme => ({
+      background: theme.background.tertiary
+    }))
+  })
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Main',
   components: {
     Navigation,
     MainViewController,
+    MainViewFrame,
     ModalContainer,
     StampPickerContainer,
     MessageToolsMenuContainer,
@@ -61,57 +92,37 @@ export default defineComponent({
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
   setup(_, context) {
+    const navWidth = 320
+    const sidebarWidth = 256 + 64
     const {
-      swipeDetectorState,
       touchmoveHandler,
       touchstartHandler,
-      touchendHandler
-    } = useSwipeDetector()
+      touchendHandler,
+      mainViewPosition,
+      sidebarPosition,
+      isNavAppeared,
+      isNavCompletelyAppeared,
+      isSidebarAppeared,
+      isSidebarCompletelyAppeared,
+      isMainViewActive,
+      openSidebar: animateOpenSidebar,
+      closeSidebar: animateCloseSidebar,
+      currentActiveDrawer
+    } = useMainViewLayout(navWidth, sidebarWidth)
 
-    // TODO: 幅をどこかに移す
-    const navWidth = 320
-    const { swipeDrawerState, isAppeared } = useSwipeDrawer(
-      swipeDetectorState,
-      'right',
-      navWidth,
-      navWidth / 2,
-      navWidth / 2
+    const { isMobile } = useIsMobile()
+    const showNav = computed(() => !isMobile.value || isNavAppeared.value)
+    const hideOuter = computed(
+      () => isMobile.value && isNavCompletelyAppeared.value
     )
-
-    const mainViewWrapperStyle = computed(() => ({
-      transform: `translateX(${swipeDrawerState.currentPosition}px)`
-    }))
 
     const { routeWatcherState } = useRouteWatcher(context)
 
     setupWebSocket()
+    connectFirebase()
+    useInitialFetch(context)
 
-    onBeforeMount(async () => {
-      try {
-        await store.dispatch.domain.me.fetchMe()
-      } catch {
-        location.href = '/login'
-      }
-      // 初回fetch
-      await Promise.all([
-        store.dispatch.entities.fetchUsers(),
-        store.dispatch.entities.fetchUserGroups(),
-        store.dispatch.entities.fetchChannels(),
-        store.dispatch.entities.fetchStamps()
-      ])
-
-      store.commit.app.setInitialFetchCompleted()
-      store.dispatch.domain.stampCategory.constructStampCategories()
-      store.dispatch.entities.fetchStampPalettes()
-      store.dispatch.domain.fetchChannelActivity()
-      store.dispatch.domain.fetchOnlineUsers()
-      store.dispatch.domain.me.fetchUnreadChannels()
-      store.dispatch.domain.me.fetchStaredChannels()
-      store.dispatch.domain.me.fetchStampHistory()
-
-      // TODO: 全チャンネルについて取得する必要はないので遅延で良い
-      store.dispatch.domain.me.fetchSubscriptions()
-    })
+    const styles = useStyles(mainViewPosition, sidebarPosition)
 
     return {
       touchstartHandler,
@@ -120,10 +131,17 @@ export default defineComponent({
 
       routeWatcherState,
 
-      isNavAppeared: isAppeared,
+      showNav,
+      hideOuter,
+      isNavCompletelyAppeared,
+      isSidebarCompletelyAppeared,
+      isSidebarAppeared,
+      isMainViewActive,
+      isMobile,
 
-      mainViewWrapperStyle,
-      targetPortalName
+      targetPortalName,
+      styles,
+      currentActiveDrawer
     }
   }
 })
@@ -149,6 +167,22 @@ export default defineComponent({
     top: 0;
     left: 0;
   }
+}
+.sidebarWrapper {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 320px;
+  height: 100%;
+  padding: 8px 0;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
+}
+.sidebarPortal {
+  width: 100%;
+  height: 100%;
 }
 .mainViewWrapper {
   width: 100%;

@@ -51,8 +51,12 @@ export default defineComponent({
     twitterId: String
   },
   setup(props) {
-    const iconBackgroundColor = computed(() => store.state.app.theme.ui.primary)
-    const iconColor = computed(() => store.state.app.theme.background.primary)
+    const iconBackgroundColor = computed(
+      () => store.getters.app.themeSettings.currentTheme.ui.primary
+    )
+    const iconColor = computed(
+      () => store.getters.app.themeSettings.currentTheme.background.primary
+    )
 
     const wikiPageName = computed(() => {
       if (props.bot) {

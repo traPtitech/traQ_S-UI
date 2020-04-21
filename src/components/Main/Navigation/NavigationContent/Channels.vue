@@ -3,9 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 
 export default defineComponent({

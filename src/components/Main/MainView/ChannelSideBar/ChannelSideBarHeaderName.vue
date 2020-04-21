@@ -6,8 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 
 const useStyles = () =>

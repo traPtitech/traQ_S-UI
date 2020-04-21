@@ -1,3 +1,6 @@
+const isStrict =
+  process.env.CI === 'true' || process.env.NODE_ENV === 'production'
+
 module.exports = {
   root: true,
   env: {
@@ -11,10 +14,14 @@ module.exports = {
     '@vue/prettier',
     '@vue/typescript'
   ],
+  plugins: ['unused-imports'],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-fallthrough': 'error'
+    'no-console': isStrict ? 'error' : 'warn',
+    'no-debugger': isStrict ? 'error' : 'warn',
+    'no-fallthrough': 'error',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports-ts': isStrict ? 'error' : 'warn',
+    'unused-imports/no-unused-vars-ts': 'off'
   },
   overrides: [
     {

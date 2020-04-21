@@ -1,8 +1,17 @@
 <template>
   <header :class="$style.container" :style="styles.container">
-    <h2>
-      <main-view-header-channel-name :channel-id="channelId" />
-    </h2>
+    <div :class="$style.headerContainer">
+      <button
+        :class="$style.navigationButton"
+        :style="styles.navigationButton"
+        v-if="isMobile"
+      >
+        <icon name="traQ" />
+      </button>
+      <h2>
+        <main-view-header-channel-name :channel-id="channelId" />
+      </h2>
+    </div>
     <main-view-header-tools
       :class="$style.tools"
       :is-stared="channelState.stared"
@@ -23,9 +32,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
+import Icon from '@/components/UI/Icon.vue'
+import useIsMobile from '@/use/isMobile'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
@@ -43,12 +53,16 @@ const useStyles = () =>
       background: theme.background.primary,
       color: theme.ui.primary,
       borderBottom: `2px solid ${theme.ui.tertiary}`
+    })),
+    navigationButton: makeStyles(theme => ({
+      color: theme.ui.primary
     }))
   })
 
 export default defineComponent({
   name: 'MainViewHeader',
   components: {
+    Icon,
     MainViewHeaderChannelName,
     MainViewHeaderTools,
     MainViewHeaderToolsMenu
@@ -66,6 +80,7 @@ export default defineComponent({
     const { openNotificationModal } = useNotificationModal(props)
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
+    const { isMobile } = useIsMobile()
     return {
       isPopupMenuShown,
       channelState,
@@ -76,7 +91,8 @@ export default defineComponent({
       openChannelCreateModal,
       togglePopupMenu,
       closePopupMenu,
-      targetPortalName
+      targetPortalName,
+      isMobile
     }
   }
 })
@@ -90,6 +106,14 @@ export default defineComponent({
   justify-content: space-between;
   height: 100%;
   padding: 16px;
+}
+.headerContainer {
+  display: flex;
+}
+.navigationButton {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
 }
 .tools {
   flex-shrink: 0;

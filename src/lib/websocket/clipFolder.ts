@@ -1,6 +1,4 @@
 /* eslint-disable no-console */
-import apis from '@/lib/api'
-import store from '@/store'
 import {
   ClipFolderCreatedEvent,
   ClipFolderUpdatedEvent,

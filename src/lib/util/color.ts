@@ -1,3 +1,8 @@
+/**
+ * 透過化
+ * @param color 色
+ * @param opacity 0～1
+ */
 export const transparentize = (color: string, opacity: number) => {
   const _opacity = Math.max(0, Math.min(1, opacity))
   const c = Color.fromText(color)

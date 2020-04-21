@@ -15,7 +15,6 @@ import {
   reactive,
   computed
 } from '@vue/composition-api'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'

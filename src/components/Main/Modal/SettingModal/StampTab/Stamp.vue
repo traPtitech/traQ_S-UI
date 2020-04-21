@@ -21,8 +21,7 @@ import {
   defineComponent,
   computed,
   PropType,
-  reactive,
-  ref
+  reactive
 } from '@vue/composition-api'
 import apis, { buildFilePath, Stamp } from '@/lib/api'
 import store from '@/store'

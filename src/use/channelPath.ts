@@ -1,6 +1,5 @@
 import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
 import store from '@/store'
 
 type SimpleChannel = {
@@ -17,8 +16,9 @@ const useChannelPath = () => {
       throw 'channelPathToId: Empty path'
     }
 
+    const loweredChildName = separatedPath[0].toLowerCase()
     const nextTree = channelTree.children.find(
-      child => child.name === separatedPath[0]
+      child => child.name.toLowerCase() === loweredChildName
     )
     if (!nextTree) {
       throw `channelPathToId: No channel: ${separatedPath[0]}`
@@ -47,10 +47,14 @@ const useChannelPath = () => {
   const channelIdToPath = (id: ChannelId): string[] =>
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
+  const channelIdToPathString = (id: ChannelId, hashed = false): string =>
+    (hashed ? '#' : '') + channelIdToPath(id).join('/')
+
   return {
     channelPathToId,
     channelIdToPath,
-    channelIdToSimpleChannelPath
+    channelIdToSimpleChannelPath,
+    channelIdToPathString
   }
 }
 

@@ -7,15 +7,11 @@ import {
   defineComponent,
   computed,
   reactive,
-  PropType,
-  ref,
-  watch
+  PropType
 } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import { buildFilePath } from '@/lib/api'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import StampPickerStampListItem from '@/components/Main/StampPicker/StampPickerStampListItem.vue'
@@ -82,13 +78,6 @@ export default defineComponent({
         }
       }
     }
-    // watch(
-    //   () => props.messageId,
-    //   (newV, oldV) => {
-    //     store.dispatch.ui.stampPicker.closeStampPicker()
-    //     store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
-    //   }
-    // )
     return {
       addStamp,
       stamps,

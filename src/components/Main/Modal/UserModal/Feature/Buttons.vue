@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import LinkButton from './LinkButton.vue'
 import useChannelPath from '@/use/channelPath'
@@ -29,7 +28,7 @@ export default defineComponent({
     homeChannelId: String as PropType<string | null>,
     showTitle: {
       type: Boolean,
-      required: true
+      default: false
     }
   },
   setup(props, context) {

@@ -24,8 +24,6 @@ import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { ChannelId } from '@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
 import useChannelPath from '@/use/channelPath'
 
 const useStyles = (lowPriority: Ref<boolean>) =>

@@ -9,7 +9,7 @@
     <qall-tab v-else-if="currentNavigation === 'qall'" />
     <stamp-tab v-else-if="currentNavigation === 'stamp'" />
     <theme-tab v-else-if="currentNavigation === 'theme'" />
-    <section v-if="safariFlag">
+    <section v-if="showSafariWarning">
       Safariを利用していてかつ、アプリまたはPWAをインストールをしていない場合は、
       7日間の使用がなかった際にここの設定情報が消えることがあります。 詳細は
       <a
@@ -23,19 +23,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
-import apis from '@/lib/api'
-import { User, UserDetail } from '@traptitech/traq'
-import { UserId } from '@/types/entity-ids'
-import { isSafari } from '@/lib/util/browser'
+import { isSafari, isIOSApp, isPWA } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
@@ -71,9 +61,9 @@ export default defineComponent({
   setup() {
     const styles = useStyles()
 
-    const safariFlag = isSafari()
+    const showSafariWarning = isSafari() && !isIOSApp() && !isPWA()
 
-    return { styles, safariFlag }
+    return { styles, showSafariWarning }
   }
 })
 </script>
