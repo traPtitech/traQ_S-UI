@@ -20,14 +20,11 @@
       v-else-if="modalState.current.type === 'channel-create'"
       :parent-channel-id="modalState.current.parentChannelId"
     />
-    <<<<<<< HEAD
     <file-modal
       v-else-if="modalState.current.type === 'file'"
       :file-id="modalState.current.id"
     />
-    =======
     <qr-code-modal v-else-if="modalState.current.type === 'qrcode'" />
-    >>>>>>> store
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}

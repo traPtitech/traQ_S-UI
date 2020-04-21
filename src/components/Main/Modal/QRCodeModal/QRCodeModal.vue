@@ -5,10 +5,7 @@
       :class="$style.qrCodeModalImage"
       :style="qrImageStyle"
     />
-    <div v-else>
-      エラーが起きました<br />
-      {{ state.err }}
-    </div>
+    <modal-section v-else title="エラー" :description="state.err" />
   </modal-frame>
 </template>
 
@@ -22,11 +19,13 @@ import {
 import apis from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import ModalFrame from '../Common/ModalFrame.vue'
+import ModalSection from '../Common/ModalSection.vue'
 
 export default defineComponent({
   name: 'QrCodeModal',
   components: {
-    ModalFrame
+    ModalFrame,
+    ModalSection
   },
   setup(props) {
     const state = reactive({
@@ -54,7 +53,7 @@ export default defineComponent({
           responseType: 'arraybuffer'
         })
         .catch(e => {
-          throw new Error(e)
+          throw e
         })
 
       const blob = new Blob([response.data], { type: 'image/png' })
