@@ -52,6 +52,7 @@ import MainViewHeaderTools, {
   targetPortalName
 } from './MainViewHeaderTools.vue'
 import MainViewHeaderToolsMenu from './MainViewHeaderToolsMenu.vue'
+import { embeddingOrigin } from '@/lib/api'
 
 const useStyles = () =>
   reactive({
@@ -68,7 +69,7 @@ const useStyles = () =>
 const useCopy = (context: SetupContext) => {
   const copyLink = async () => {
     await navigator.clipboard.writeText(
-      `[#${context.root.$route.params['channel']}](${location.origin}${context.root.$route.path})`
+      `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
     )
   }
   return { copyLink }
