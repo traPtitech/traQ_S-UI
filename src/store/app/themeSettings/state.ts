@@ -1,8 +1,9 @@
 import { Theme } from '@/types/theme'
 import { lightTheme } from './default'
+import { ThemeType } from '@/store/app/themeSettings/index'
 
 export interface S {
-  type: 'light' | 'dark' | 'custom'
+  type: ThemeType
   custom: Theme
 }
 

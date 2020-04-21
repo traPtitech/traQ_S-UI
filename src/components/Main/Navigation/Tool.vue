@@ -1,7 +1,13 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.icon" :style="styles.icon">
-      <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
+      <icon
+        :name="iconName"
+        :mdi="iconMdi"
+        :disabled="disabled"
+        :width="24"
+        :height="24"
+      />
     </div>
   </div>
 </template>
@@ -27,6 +33,10 @@ export default defineComponent({
       required: true
     },
     iconMdi: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }

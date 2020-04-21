@@ -1,20 +1,13 @@
 import store from '@/store'
 
-export const openServices = () => {
+export const openAppsModal = () => {
   return
 }
 
 export const toggleNotification = () => {
   return
 }
-
-export const toggleTheme = () => {
-  return
-}
+export const toggleTheme = () => store.dispatch.app.themeSettings.toggleTheme()
 
 export const openSettingsModal = () =>
   store.dispatch.ui.modal.pushModal({ type: 'setting' })
-
-export const openUserModal = () => {
-  return
-}
