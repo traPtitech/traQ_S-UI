@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import store, { moduleActionContext } from '@/store'
 import { messagesView } from './index'
 import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
 import { ChannelViewState, Message } from '@traptitech/traq'
@@ -244,12 +244,14 @@ export const actions = defineActions({
     await dispatch.renderMessageContent(payload.message.id)
     commit.setLoadedMessageLatestDate(new Date(payload.message.createdAt))
     commit.addMessageId(payload.message.id)
+    store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateMessageId(context, payload: { message: Message }) {
     const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.setLoadedMessageLatestDate(new Date(payload.message.updatedAt))
     commit.updateMessageId(payload.message.id)
+    store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
