@@ -25,13 +25,19 @@
         v-click-outside="closePopupMenu"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
+        @click-copy-channel-link="copyLink"
       />
     </portal>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  SetupContext
+} from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
@@ -59,6 +65,15 @@ const useStyles = () =>
     }))
   })
 
+const useCopy = (context: SetupContext) => {
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(
+      `[#${context.root.$route.params['channel']}](${location.origin}${context.root.$route.path})`
+    )
+  }
+  return { copyLink }
+}
+
 export default defineComponent({
   name: 'MainViewHeader',
   components: {
@@ -73,7 +88,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, context) {
     const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
@@ -81,6 +96,7 @@ export default defineComponent({
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     const { isMobile } = useIsMobile()
+    const { copyLink } = useCopy(context)
     return {
       isPopupMenuShown,
       channelState,
@@ -89,6 +105,7 @@ export default defineComponent({
       unstarChannel,
       openNotificationModal,
       openChannelCreateModal,
+      copyLink,
       togglePopupMenu,
       closePopupMenu,
       targetPortalName,
