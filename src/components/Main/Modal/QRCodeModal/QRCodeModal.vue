@@ -11,10 +11,9 @@ import {
   onUnmounted,
   reactive
 } from '@vue/composition-api'
-
+import apis from '@/lib/api'
+import { makeStyles } from '@/lib/styles'
 import ModalFrame from '../Common/ModalFrame.vue'
-import apis from '../../../../lib/api'
-import { makeStyles } from '../../../../lib/styles'
 
 export default defineComponent({
   name: 'QrCodeModal',
