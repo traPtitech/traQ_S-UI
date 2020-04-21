@@ -65,7 +65,7 @@ export default defineComponent({
   video {
     display: block;
     max-width: 100%;
-    max-height: calc(100% - 128px);
+    min-height: 0;
   }
 }
 .header {
