@@ -20,10 +20,14 @@
       v-else-if="modalState.current.type === 'channel-create'"
       :parent-channel-id="modalState.current.parentChannelId"
     />
+    <<<<<<< HEAD
     <file-modal
       v-else-if="modalState.current.type === 'file'"
       :file-id="modalState.current.id"
     />
+    =======
+    <qr-code-modal v-else-if="modalState.current.type === 'qrcode'" />
+    >>>>>>> store
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -54,6 +58,7 @@ import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
 import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
 import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/ChannelCreateModal.vue'
 import FileModal from '@/components/Main/Modal/FileModal/FileModal.vue'
+import QrCodeModal from '@/components/Main/Modal/QRCodeModal/QRCodeModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -118,7 +123,8 @@ export default defineComponent({
     GroupModal,
     TagModal,
     ChannelCreateModal,
-    FileModal
+    FileModal,
+    QrCodeModal
   }
 })
 </script>

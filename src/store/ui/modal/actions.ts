@@ -122,6 +122,8 @@ export const actions = defineActions({
         break
       case 'channel-create':
         break
+      case 'qrcode':
+        break
       default:
         const invalid: never = modalState
         throw new Error(`Invalid Modal State type: ${(invalid as any).type}`)
