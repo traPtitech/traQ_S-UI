@@ -1,6 +1,14 @@
 <template>
   <modal-frame title="QR Code" icon-mdi icon-name="qrcode">
-    <div :class="$style.qrCodeModalImage" :style="qrImageStyle" />
+    <div
+      v-if="!state.err"
+      :class="$style.qrCodeModalImage"
+      :style="qrImageStyle"
+    />
+    <div v-else>
+      エラーが起きました<br />
+      {{ state.err }}
+    </div>
   </modal-frame>
 </template>
 
@@ -22,7 +30,8 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      url: ''
+      url: '',
+      err: ''
     })
 
     onMounted(() => {
@@ -31,7 +40,7 @@ export default defineComponent({
           state.url = value
         })
         .catch(err => {
-          // Todo
+          state.err = err
         })
     })
 
@@ -40,9 +49,13 @@ export default defineComponent({
     })
 
     const makeBlob = async () => {
-      const response = await apis.getMyQRCode(false, {
-        responseType: 'arraybuffer'
-      })
+      const response = await apis
+        .getMyQRCode(false, {
+          responseType: 'arraybuffer'
+        })
+        .catch(e => {
+          throw new Error(e)
+        })
 
       const blob = new Blob([response.data], { type: 'image/png' })
 
@@ -53,7 +66,7 @@ export default defineComponent({
       backgroundImage: `url(${state.url})`
     }))
 
-    return { qrImageStyle }
+    return { qrImageStyle, state }
   }
 })
 </script>
