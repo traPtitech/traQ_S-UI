@@ -995,3 +995,23 @@
   margin: 0 0.2em 0.25em -1.6em;
   vertical-align: middle;
 }
+
+.markdown-body {
+  .spoiler {
+    color: transparent;
+    background-color: black;
+    user-select: none;
+    cursor: pointer;
+
+    &:not([shown]) {
+      * {
+        visibility: hidden;
+      }
+    }
+
+    &[shown] {
+      color: inherit;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

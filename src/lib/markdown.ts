@@ -42,3 +42,8 @@ const md = new MarkdownIt(storeProvider)
 export const render = (text: string) => {
   return md.render(text)
 }
+
+export const toggleSpoiler = (element: HTMLElement) => {
+  const $spoiler = element.closest('.spoiler')
+  $spoiler?.toggleAttribute('shown')
+}
