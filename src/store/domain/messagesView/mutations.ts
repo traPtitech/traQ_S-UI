@@ -21,7 +21,7 @@ export const mutations = defineMutations<S>()({
     }
   },
   deleteMessageId(state, messageId: MessageId) {
-    state.messageIds.filter(id => id !== messageId)
+    state.messageIds = state.messageIds.filter(id => id !== messageId)
   },
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
