@@ -20,6 +20,10 @@
       v-else-if="modalState.current.type === 'channel-create'"
       :parent-channel-id="modalState.current.parentChannelId"
     />
+    <file-modal
+      v-else-if="modalState.current.type === 'file'"
+      :file-id="modalState.current.id"
+    />
     <div v-else :class="$style.modal" :style="styles.modal">
       <pre>
         {{ (modalState.currentJson) }}
@@ -49,6 +53,7 @@ import NotificationModal from '@/components/Main/Modal/NotificationModal/Notific
 import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
 import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
 import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/ChannelCreateModal.vue'
+import FileModal from '@/components/Main/Modal/FileModal/FileModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -112,7 +117,8 @@ export default defineComponent({
     NotificationModal,
     GroupModal,
     TagModal,
-    ChannelCreateModal
+    ChannelCreateModal,
+    FileModal
   }
 })
 </script>

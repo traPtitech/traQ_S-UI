@@ -17,7 +17,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({

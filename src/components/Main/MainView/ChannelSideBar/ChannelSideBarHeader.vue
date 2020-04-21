@@ -16,7 +16,7 @@ import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import ChannelSideBarHeaderName from './ChannelSideBarHeaderName.vue'
-import CloseButton from '@/components/Main/Modal/SettingModal/CloseButton.vue'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({

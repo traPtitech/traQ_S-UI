@@ -1,34 +1,29 @@
 <template>
-  <router-link
-    :to="fileLink"
-    :class="$style.container"
-    :style="styles.container"
-  >
+  <div :class="$style.container" :style="styles.container">
     <div :class="$style.icon">
       <icon mdi :name="fileIconName" :size="32" />
     </div>
-    <span :class="$style.fileName">
+    <div :class="$style.fileName">
       {{ fileMeta.name }}
-    </span>
-    <span :class="$style.fileSize" :style="styles.fileSize">{{
-      fileSize
-    }}</span>
-    <div :href="fileRawPath" :class="$style.dl">
-      <icon mdi name="download" :size="32" />
     </div>
-  </router-link>
+    <div :class="$style.fileSize" :style="styles.fileSize">
+      {{ fileSize }}
+    </div>
+    <div :class="$style.dl" @click="onFileDownloadLinkClick">
+      <icon mdi name="download" :size="24" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import Icon from '@/components/UI/Icon.vue'
 import useFileMeta from '@/use/fileMeta'
+import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { isWhite: boolean }) =>
   reactive({
     container: makeStyles((theme, common) => ({
-      borderColor: theme.ui.secondary,
       color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
     })),
     fileSize: makeStyles((theme, common) => ({
@@ -37,12 +32,14 @@ const useStyles = (props: { isWhite: boolean }) =>
   })
 
 export default defineComponent({
-  name: 'MessageFileListItemContent',
-  components: { Icon },
+  name: 'FileDescription',
+  components: {
+    Icon
+  },
   props: {
     fileId: {
       type: String,
-      default: ''
+      required: true
     },
     isWhite: {
       type: Boolean,
@@ -53,12 +50,18 @@ export default defineComponent({
     const styles = useStyles(props)
     const {
       fileMeta,
-      fileSize,
       fileIconName,
-      fileRawPath,
-      fileLink
+      fileSize,
+      onFileDownloadLinkClick
     } = useFileMeta(props, context)
-    return { styles, fileMeta, fileSize, fileIconName, fileRawPath, fileLink }
+    return {
+      props,
+      styles,
+      fileMeta,
+      fileIconName,
+      fileSize,
+      onFileDownloadLinkClick
+    }
   }
 })
 </script>
@@ -68,11 +71,10 @@ export default defineComponent({
   display: grid;
   width: 100%;
   grid-template:
-    'icon ...  name ... dl' 20px
-    'icon ...  size ... dl' 16px
+    'icon ... name ... dl' 20px
+    'icon ... size ... dl' 16px
     /36px 16px auto 1fr 24px;
-  gap: 4px 0;
-  padding: 12px 16px;
+  padding: 0 16px;
 }
 .icon,
 .dl {
@@ -85,6 +87,7 @@ export default defineComponent({
 }
 .dl {
   grid-area: dl;
+  cursor: pointer;
 }
 .fileName {
   grid-area: name;

@@ -15,10 +15,12 @@ export const makeStyles = (claim: ThemeClaim) => {
 export const commonStyles = {
   text: {
     whitePrimary: '#ffffff' as const,
-    whiteSecondary: 'rgba(255, 255, 255, 0.5)' as const
+    whiteSecondary: 'rgba(255, 255, 255, 0.5)' as const,
+    black: '#222222' as const
   },
   background: {
-    overlay: 'rgba(25, 26, 29, 0.5)' as const
+    overlay: 'rgba(25, 26, 29, 0.5)' as const,
+    black: '#222426' as const
   },
   dropShadow: {
     default: 'drop-shadow(0 2px 4px rgba(33, 63, 99, 0.3))' as const
