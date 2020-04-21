@@ -88,7 +88,7 @@ export default defineComponent({
     })
     const styles = useStyles()
     const viewerIds = computed(
-      () => store.getters.domain.messagesView.getCurrentViewersId
+      () => store.getters.domain.messagesView.viewingUsers
     )
     const togglePinnedMode = () => {
       state.pinnedMode = !state.pinnedMode

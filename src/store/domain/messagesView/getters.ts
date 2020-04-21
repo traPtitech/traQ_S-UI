@@ -9,9 +9,11 @@ const getterContext = (args: [any, any, any, any]) =>
   moduleGetterContext(args, messagesView)
 
 export const getters = defineGetters<S>()({
-  getCurrentViewersId(state): UserId[] {
+  viewingUsers(state): UserId[] {
     return state.currentViewers
-      .filter(v => v.state === ChannelViewState.Monitoring)
+      .filter(
+        v => v.state === ChannelViewState.Monitoring || ChannelViewState.Editing
+      )
       .map(v => v.userId)
       .reverse()
   },
