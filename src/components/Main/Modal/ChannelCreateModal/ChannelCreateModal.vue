@@ -27,6 +27,7 @@ import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import { changeChannelById } from '@/router/channel'
 
 const useCreateChannel = (
   props: { parentChannelId?: string },
@@ -34,7 +35,6 @@ const useCreateChannel = (
   channelNameRef: Ref<string>
 ) => {
   const createChannel = async () => {
-    const { channelIdToPath } = useChannelPath()
     try {
       const channel = await store.dispatch.entities.createChannel({
         name: channelNameRef.value,
@@ -45,9 +45,7 @@ const useCreateChannel = (
       await store.dispatch.domain.channelTree.constructChannelTree()
 
       await store.dispatch.ui.modal.popModal()
-      context.root.$router.push(
-        '/channels/' + channelIdToPath(channel.id).join('/')
-      )
+      changeChannelById(channel.id)
     } catch {
       // TODO: エラー処理
     }
@@ -68,10 +66,10 @@ export default defineComponent({
   setup(props, context) {
     const channelName = ref('')
     const { createChannel } = useCreateChannel(props, context, channelName)
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const subtitle = computed(() =>
       props.parentChannelId
-        ? '#' + channelIdToPath(props.parentChannelId).join('/')
+        ? channelIdToPathString(props.parentChannelId, true)
         : 'ルートチャンネル作成'
     )
     return { channelName, createChannel, subtitle }

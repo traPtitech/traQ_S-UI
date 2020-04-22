@@ -21,6 +21,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import LinkButton from './LinkButton.vue'
 import useChannelPath from '@/use/channelPath'
+import { changeChannelByPath } from '@/router/channel'
 
 export default defineComponent({
   name: 'Buttons',
@@ -40,11 +41,9 @@ export default defineComponent({
       //store.dispatch.domain.messagesView.changeCurrentChannel(/* DM Channel */)
     }
 
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const homeChannelPath = computed(() =>
-      propst.homeChannelId
-        ? channelIdToPath(propst.homeChannelId).join('/')
-        : ''
+      propst.homeChannelId ? channelIdToPathString(propst.homeChannelId) : ''
     )
 
     const onHomeChannelClick = async () => {
@@ -52,8 +51,7 @@ export default defineComponent({
       // モーダル削除時に消えちゃうため、実体を退避
       const pathCache = homeChannelPath.value
       await store.dispatch.ui.modal.clearModal()
-      // 同じ場所に移動しようとした際のエラーを消す
-      context.root.$router.push(`/channels/${pathCache}`).catch(() => {})
+      changeChannelByPath(pathCache)
     }
 
     return {

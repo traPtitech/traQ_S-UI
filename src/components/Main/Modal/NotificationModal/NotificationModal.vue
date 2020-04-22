@@ -1,7 +1,7 @@
 <template>
   <modal-frame
     title="通知設定"
-    :subtitle="`#${channelPath}`"
+    :subtitle="`#${currentChannelPathString}`"
     icon-mdi
     icon-name="bell"
   >
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import useChannelPath from '@/use/channelPath'
+import useCurrentChannelPath from '@/use/currentChannelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
@@ -38,11 +38,8 @@ export default defineComponent({
     const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
-    const { channelIdToPath } = useChannelPath()
-    const channelPath = computed(() =>
-      channelIdToPath(currentChannelId.value).join('/')
-    )
-    return { currentChannelId, channelPath }
+    const { currentChannelPathString } = useCurrentChannelPath()
+    return { currentChannelId, currentChannelPathString }
   }
 })
 </script>

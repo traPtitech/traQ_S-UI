@@ -59,7 +59,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { onChannelSelect } = useChannelSelect(context)
+    const { onChannelSelect } = useChannelSelect()
     const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
     return {
       channelFoldingState,

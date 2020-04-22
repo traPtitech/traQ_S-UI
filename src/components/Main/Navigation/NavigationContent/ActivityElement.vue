@@ -68,7 +68,7 @@ export default defineComponent({
       store.dispatch.entities.fetchUser(props.message.userId)
     }
     const styles = useStyles()
-    const { onChannelSelect } = useChannelSelect(context)
+    const { onChannelSelect } = useChannelSelect()
     return {
       state,
       styles,

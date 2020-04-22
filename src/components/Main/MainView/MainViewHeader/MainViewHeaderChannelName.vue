@@ -35,6 +35,7 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
+import { constructChannelPath } from '@/router'
 
 type Props = {
   channelId: ChannelId
@@ -95,7 +96,8 @@ export default defineComponent({
     const pathInfo = computed(
       () => pathInfoList.value[pathInfoList.value.length - 1]
     )
-    const buildChannelLink = (path: string[]) => `/channels/${path.join('/')}`
+    const buildChannelLink = (path: string[]) =>
+      constructChannelPath(path.join('/'))
     const styles = useStyles(pathInfoList)
     return { state, styles, ancestorsPath, pathInfo, buildChannelLink }
   }

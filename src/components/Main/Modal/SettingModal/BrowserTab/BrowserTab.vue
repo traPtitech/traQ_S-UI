@@ -82,14 +82,14 @@ import Notification from './Notification.vue'
 import useChannelPath from '@/use/channelPath'
 
 const useChannelOptions = () => {
-  const { channelIdToPath } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
   return computed(() =>
     Object.values(store.state.entities.channels)
       .map(channel => {
-        const path = channelIdToPath(channel.id).join('/')
+        const pathString = channelIdToPathString(channel.id)
         return {
-          key: `#${path}`,
-          value: path
+          key: `#${pathString}`,
+          value: pathString
         }
       })
       .sort((a, b) => (a.key > b.key ? 1 : -1))
