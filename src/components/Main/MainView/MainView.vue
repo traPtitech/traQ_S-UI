@@ -33,7 +33,7 @@ import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeader from './MainViewHeader/MainViewHeader.vue'
 
 export default defineComponent({
-  name: 'MainViewController',
+  name: 'MainView',
   components: { MainViewComponentSelector, MainViewHeader },
   setup() {
     const state = reactive({
