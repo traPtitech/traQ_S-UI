@@ -1,5 +1,10 @@
 <template>
-  <modal-frame title="QR Code" icon-mdi icon-name="qrcode">
+  <modal-frame
+    title="QR Code"
+    icon-mdi
+    icon-name="qrcode"
+    :class="$style.qrCodeModalFrame"
+  >
     <img v-if="!state.err" :src="state.url" :class="$style.qrCodeModalImage" />
     <modal-section v-else title="エラー" :description="state.err" />
   </modal-frame>
@@ -61,13 +66,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .qrCodeModalImage {
-  height: 50vh;
-  background: {
-    size: contain;
-    position: center;
-    repeat: no-repeat;
-  }
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  max-height: 50vh;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+.qrCodeModalFrame {
+  max-height: 90vh;
 }
 </style>
