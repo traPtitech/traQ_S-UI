@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { reactive, defineComponent } from '@vue/composition-api'
-import useHeaderStyle from './use/headerStyle'
+import useHeaderStyle from '@/components/Main/MainView/MainViewHeader/use/headerStyle'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({

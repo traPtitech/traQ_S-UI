@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.headerContainer">
-      <main-view-header :channel-id="channelId" />
-    </div>
+    <portal-target :class="$style.headerContainer" name="mainview-header" />
     <div :class="$style.layoutContainer" :data-layout="state.layout">
       <div :class="$style.primaryContainer">
         <main-view-component-selector

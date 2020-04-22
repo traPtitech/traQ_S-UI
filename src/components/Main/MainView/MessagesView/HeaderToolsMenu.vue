@@ -1,17 +1,17 @@
 <template>
   <main-view-header-popup-frame>
-    <main-view-header-tools-menu-item
+    <header-tools-menu-item
       @click.native="context.emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
     />
-    <main-view-header-tools-menu-item
+    <header-tools-menu-item
       @click.native="context.emit('click-notification')"
       icon-name="bell"
       icon-mdi
       label="通知設定"
     />
-    <main-view-header-tools-menu-item
+    <header-tools-menu-item
       @click.native="context.emit('click-copy-channel-link')"
       icon-name="link"
       icon-mdi
@@ -23,8 +23,8 @@
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import MainViewHeaderPopupFrame from './MainViewHeaderPopupFrame.vue'
-import MainViewHeaderToolsMenuItem from './MainViewHeaderToolsMenuItem.vue'
+import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
+import HeaderToolsMenuItem from './HeaderToolsMenuItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -35,7 +35,7 @@ export default defineComponent({
   name: 'MainViewHeaderToolsMenu',
   components: {
     MainViewHeaderPopupFrame,
-    MainViewHeaderToolsMenuItem
+    HeaderToolsMenuItem
   },
   setup(_, context) {
     const styles = useStyles()
