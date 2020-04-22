@@ -31,7 +31,7 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
-import MessageElement from './MessageElement/MessageElement.vue'
+import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'

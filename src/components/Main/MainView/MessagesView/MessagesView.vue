@@ -10,7 +10,7 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <main-view :channel-id="channelId" />
+    <messages-view-content :channel-id="channelId" />
     <portal v-if="shouldShowSidebar" to="sidebar">
       <channel-side-bar :channel-id="channelId" />
     </portal>
@@ -36,10 +36,10 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import MainView from './MainView.vue'
 import useSidebar from '@/use/sidebar'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import ChannelSideBarHidden from '@/components/Main/MainView/ChannelSideBar/ChannelSideBarHidden.vue'
+import MessagesViewContent from './MessagesViewContent.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
@@ -75,7 +75,7 @@ export default defineComponent({
   name: 'MessagesView',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
-    MainView,
+    MessagesViewContent,
     MessagesViewFileUploadOverlay,
     ChannelSideBar,
     ChannelSideBarHidden
