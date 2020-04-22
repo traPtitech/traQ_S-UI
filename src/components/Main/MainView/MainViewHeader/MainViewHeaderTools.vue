@@ -1,57 +1,50 @@
 <template>
-  <div>
-    <icon
+  <div :class="$style.container">
+    <main-view-header-tools-item
       @click="context.emit('click-qall')"
-      :class="$style.icon"
-      mdi
-      name="phone"
+      icon-mdi
+      icon-name="phone"
     />
-    <icon
+    <main-view-header-tools-item
       @click="context.emit('click-pin')"
-      :class="$style.icon"
-      mdi
-      name="pin"
+      icon-mdi
+      icon-name="pin"
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
-    <icon
+    <main-view-header-tools-item
       v-show="currentChannelSubscription === 'notified'"
       @click="changeToNextSubscriptionLevel"
-      :class="$style.icon"
-      mdi
-      name="bell"
+      icon-mdi
+      icon-name="bell"
     />
-    <icon
+    <main-view-header-tools-item
       v-show="currentChannelSubscription === 'subscribed'"
       @click="changeToNextSubscriptionLevel"
-      :class="$style.icon"
-      name="subscribed"
+      icon-name="subscribed"
     />
-    <icon
+    <main-view-header-tools-item
       v-show="currentChannelSubscription === 'none'"
       @click="changeToNextSubscriptionLevel"
       :class="$style.icon"
-      mdi
-      name="bell-outline"
+      icon-mdi
+      icon-name="bell-outline"
     />
-    <icon
+    <main-view-header-tools-item
       v-show="isStared"
       @click="context.emit('unstar-channel')"
-      :class="$style.icon"
-      name="star"
+      icon-name="star"
     />
-    <icon
+    <main-view-header-tools-item
       v-show="!isStared"
       @click="context.emit('star-channel')"
-      :class="$style.icon"
-      name="star-outline"
+      icon-name="star-outline"
     />
     <div :class="$style.moreButton">
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
-      <icon
+      <main-view-header-tools-item
         @click="context.emit('click-more')"
-        :class="$style.icon"
-        mdi
-        name="dots-horizontal"
+        icon-mdi
+        icon-name="dots-horizontal"
       />
     </div>
   </div>
@@ -60,8 +53,8 @@
 <script lang="ts">
 import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import Icon from '@/components/UI/Icon.vue'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
+import MainViewHeaderToolsItem from './MainViewHeaderToolsItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -77,7 +70,7 @@ export const targetPortalName = 'header-popup'
 export default defineComponent({
   name: 'MainViewHeaderTools',
   components: {
-    Icon
+    MainViewHeaderToolsItem
   },
   props: { isStared: { type: Boolean, default: false } },
   setup(_, context: SetupContext) {
@@ -101,11 +94,6 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  padding: 16px;
-}
-.icon {
-  margin: 8px;
-  cursor: pointer;
 }
 .moreButton {
   position: relative;
