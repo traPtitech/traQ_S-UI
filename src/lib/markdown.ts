@@ -2,7 +2,7 @@ import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 
-const { channelIdToPath } = useChannelPath()
+const { channelIdToPathString } = useChannelPath()
 
 const storeProvider: Store = {
   getUser(id) {
@@ -12,7 +12,7 @@ const storeProvider: Store = {
     return store.state.entities.channels[id]
   },
   getChannelPath(id) {
-    return channelIdToPath(id).join('/')
+    return channelIdToPathString(id)
   },
   getUserGroup(id) {
     return store.state.entities.userGroups[id]

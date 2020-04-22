@@ -5,7 +5,7 @@ import { ChannelId } from '@/types/entity-ids'
 import { constructChannelPath } from '@/router'
 
 const useChannelSelect = (context: SetupContext) => {
-  const { channelIdToPath } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
 
   const onChannelSelect = (id: ChannelId) => {
     // 未読を除去する
@@ -19,8 +19,8 @@ const useChannelSelect = (context: SetupContext) => {
       return
     }
     try {
-      const channelPath = channelIdToPath(id)
-      context.root.$router.push(constructChannelPath(channelPath.join('/')))
+      const channelPathString = channelIdToPathString(id)
+      context.root.$router.push(constructChannelPath(channelPathString))
     } catch {
       throw 'Invalid Channel'
     }

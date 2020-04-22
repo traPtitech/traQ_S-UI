@@ -7,7 +7,7 @@ import useViewTitle from './viewTitle'
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWacher = (context: SetupContext) => {
-  const { channelPathToId, channelIdToPath } = useChannelPath()
+  const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
 
   const state = reactive({
@@ -65,7 +65,7 @@ const useRouteWacher = (context: SetupContext) => {
       state.view = 'not-found'
       return
     }
-    const channelPath = channelIdToPath(file.channelId)
+    const channelPath = channelIdToPathString(file.channelId)
     store.dispatch.domain.messagesView.changeCurrentChannel({
       channelId: file.channelId
     })
@@ -82,7 +82,7 @@ const useRouteWacher = (context: SetupContext) => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const messageId = state.idParam
     const message =
       store.state.entities.messages[messageId] ??
@@ -95,7 +95,7 @@ const useRouteWacher = (context: SetupContext) => {
 
     context.root.$router.replace({
       name: RouteName.Channel,
-      params: { channel: channelIdToPath(message.channelId).join('/') },
+      params: { channel: channelIdToPathString(message.channelId) },
       query: { message: message.id }
     })
   }

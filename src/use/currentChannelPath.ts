@@ -3,9 +3,9 @@ import { computed } from '@vue/composition-api'
 import store from '@/store'
 
 const useCurrentChannelPath = () => {
-  const { channelIdToPath } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
   const currentChannelPathString = computed(() =>
-    channelIdToPath(store.state.domain.messagesView.currentChannelId).join('/')
+    channelIdToPathString(store.state.domain.messagesView.currentChannelId)
   )
   return { currentChannelPathString }
 }

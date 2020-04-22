@@ -34,7 +34,7 @@ const useCreateChannel = (
   channelNameRef: Ref<string>
 ) => {
   const createChannel = async () => {
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     try {
       const channel = await store.dispatch.entities.createChannel({
         name: channelNameRef.value,
@@ -46,7 +46,7 @@ const useCreateChannel = (
 
       await store.dispatch.ui.modal.popModal()
       context.root.$router.push(
-        '/channels/' + channelIdToPath(channel.id).join('/')
+        `/channels/${channelIdToPathString(channel.id)}`
       )
     } catch {
       // TODO: エラー処理
@@ -68,10 +68,10 @@ export default defineComponent({
   setup(props, context) {
     const channelName = ref('')
     const { createChannel } = useCreateChannel(props, context, channelName)
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const subtitle = computed(() =>
       props.parentChannelId
-        ? '#' + channelIdToPath(props.parentChannelId).join('/')
+        ? channelIdToPathString(props.parentChannelId, true)
         : 'ルートチャンネル作成'
     )
     return { channelName, createChannel, subtitle }

@@ -40,11 +40,9 @@ export default defineComponent({
       //store.dispatch.domain.messagesView.changeCurrentChannel(/* DM Channel */)
     }
 
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const homeChannelPath = computed(() =>
-      propst.homeChannelId
-        ? channelIdToPath(propst.homeChannelId).join('/')
-        : ''
+      propst.homeChannelId ? channelIdToPathString(propst.homeChannelId) : ''
     )
 
     const onHomeChannelClick = async () => {

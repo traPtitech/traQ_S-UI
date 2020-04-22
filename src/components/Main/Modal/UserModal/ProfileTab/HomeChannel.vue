@@ -48,9 +48,9 @@ export default defineComponent({
     const lowPriority = computed(() => isLoading.value || isEmpty.value)
     const styles = useStyles(lowPriority)
 
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const channelPath = computed(() =>
-      propst.id ? channelIdToPath(propst.id).join('/') : ''
+      propst.id ? channelIdToPathString(propst.id) : ''
     )
 
     const onClick = async () => {
