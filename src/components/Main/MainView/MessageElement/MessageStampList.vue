@@ -1,14 +1,15 @@
 <template>
   <div :class="$style.body">
-    <stamp-element
-      :class="$style.element"
-      v-for="(stamps, stampId) in state.stampsById"
-      :key="stampId"
-      :stamp-id="stampId"
-      :stamps="stamps"
-      @add-stamp="addStamp"
-      @remove-stamp="removeStamp"
-    />
+    <div v-for="(stamps, stampId) in state.stampsById" :key="stampId">
+      <stamp-element
+        :class="$style.element"
+        :stamp-id="stampId"
+        :stamps="stamps"
+        @add-stamp="addStamp"
+        @remove-stamp="removeStamp"
+      />
+      <stamp-detail-element :stamp-id="stampId" :stamps="stamps" />
+    </div>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import StampElement from './StampElement.vue'
 import { reduceToRecordOfArray } from '@/lib/util/record'
 import { StampId } from '@/types/entity-ids'
 import store from '@/store'
+import StampDetailElement from './StampDetailElement.vue'
 
 export default defineComponent({
   name: 'MessageStampList',
@@ -37,7 +39,7 @@ export default defineComponent({
       required: true
     }
   },
-  components: { StampElement },
+  components: { StampElement, StampDetailElement },
   setup(props) {
     const state = reactive({
       stampsById: computed(() => reduceToRecordOfArray(props.stamps, 'stampId'))

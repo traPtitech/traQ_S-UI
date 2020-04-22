@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <!-- ユーザー名(count) -->
-    {{ user.name + props.count }}
+    {{ user.name + '(' }}
+    <spin-number :value="props.count" />
+    {{ ')' }}
   </div>
 </template>
 
@@ -14,8 +15,8 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-
 import { UserId } from '@/types/entity-ids'
+import SpinNumber from '@/components/UI/SpinNumber.vue'
 
 const useStyles = () =>
   reactive({
@@ -24,6 +25,9 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'StampDetailListElementContent',
+  components: {
+    SpinNumber
+  },
   props: {
     userId: {
       type: String as PropType<UserId>,
@@ -44,5 +48,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  margin: 0 4px;
 }
 </style>

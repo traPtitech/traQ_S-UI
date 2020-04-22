@@ -1,11 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    {{ state.stamp.name }}
+    <div :class="$style.stamp">
+      {{ ':' + state.stamp.name + ': from' }}
+    </div>
     <stamp-detail-element-content
       v-for="(stamp, userId) in state.stampByUserId"
       :key="userId"
       :user-id="userId"
       :count="stamp.count"
+      :class="$style.content"
     />
   </div>
 </template>
@@ -22,7 +25,7 @@ import { makeStyles } from '@/lib/styles'
 import { StampId } from '@/types/entity-ids'
 import { MessageStamp } from '@traptitech/traq'
 import StampDetailElementContent from './StampDetailElementContent.vue'
-import { reduceToRecord } from '../../../../lib/util/record'
+import { reduceToRecord } from '@/lib/util/record'
 
 const useStyles = () =>
   reactive({
@@ -57,5 +60,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  display: flex;
+}
+.stamp {
+}
+.content {
 }
 </style>
