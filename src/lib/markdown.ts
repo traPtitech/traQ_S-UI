@@ -1,5 +1,8 @@
 import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
+import useChannelPath from '@/use/channelPath'
+
+const { channelIdToPathString } = useChannelPath()
 
 const storeProvider: Store = {
   getUser(id) {
@@ -9,19 +12,7 @@ const storeProvider: Store = {
     return store.state.entities.channels[id]
   },
   getChannelPath(id) {
-    let current = this.getChannel(id)
-    if (!current) return ''
-
-    let path = current.name
-    let next = this.getChannel(current.parentId ?? '')
-    if (!next) return path
-
-    while (next) {
-      path = next.name + '/' + path
-      current = next
-      next = this.getChannel(current.parentId ?? '')
-    }
-    return path
+    return channelIdToPathString(id)
   },
   getUserGroup(id) {
     return store.state.entities.userGroups[id]

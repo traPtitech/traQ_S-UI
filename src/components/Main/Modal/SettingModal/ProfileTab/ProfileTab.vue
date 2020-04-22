@@ -59,7 +59,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 
 const useChannelOptions = () => {
-  const { channelIdToPath } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
   return computed(() =>
     [
       {
@@ -69,7 +69,7 @@ const useChannelOptions = () => {
     ].concat(
       Object.values(store.state.entities.channels)
         .map(channel => ({
-          key: `#${channelIdToPath(channel.id).join('/')}`,
+          key: channelIdToPathString(channel.id, true),
           value: channel.id
         }))
         .sort((a, b) => (a.key > b.key ? 1 : -1))
