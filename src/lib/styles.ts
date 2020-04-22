@@ -26,3 +26,4 @@ export const commonStyles = {
     default: 'drop-shadow(0 2px 4px rgba(33, 63, 99, 0.3))' as const
   }
 }
+export type CommonStyles = typeof commonStyles
