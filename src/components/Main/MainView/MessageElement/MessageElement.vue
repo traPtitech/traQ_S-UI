@@ -27,6 +27,11 @@
         :message-id="messageId"
         :stamps="state.message.stamps"
       />
+      <message-stamp-detail-list
+        :class="$style.stampDetails"
+        v-if="state.message.stamps.length > 0"
+        :stamps="state.message.stamps"
+      />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
@@ -63,6 +68,7 @@ import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
+import MessageStampDetailList from './MessageStampDetailList.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -85,7 +91,8 @@ export default defineComponent({
     MessageHeader,
     MessageStampList,
     MessageFileList,
-    MessageQuoteList
+    MessageQuoteList,
+    MessageStampDetailList
   },
   props: {
     messageId: {
