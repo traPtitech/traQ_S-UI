@@ -17,7 +17,7 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { buildUserIconPath } from '@/lib/api'
-import { UserId } from '@/types/entity-ids'
+import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
 
 type IconSize = 160 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
@@ -29,6 +29,7 @@ export default defineComponent({
       type: String as PropType<UserId>,
       required: true
     },
+    fallbackIconFileId: String as PropType<FileId>,
     size: {
       type: Number as PropType<IconSize>,
       default: 36
@@ -39,8 +40,13 @@ export default defineComponent({
     }
   },
   setup(props) {
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const propst = props as { fallbackIconFileId?: FileId }
+
     const user = computed(() => store.state.entities.users[props.userId])
-    const userIconFileId = computed(() => user.value?.iconFileId ?? '')
+    const userIconFileId = computed(
+      () => user.value?.iconFileId ?? propst.fallbackIconFileId ?? ''
+    )
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.secondary,
