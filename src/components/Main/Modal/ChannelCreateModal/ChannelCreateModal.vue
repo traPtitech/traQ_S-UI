@@ -27,7 +27,7 @@ import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import { constructChannelPath } from '@/router'
+import { changeChannelById } from '@/router/channel'
 
 const useCreateChannel = (
   props: { parentChannelId?: string },
@@ -46,9 +46,7 @@ const useCreateChannel = (
       await store.dispatch.domain.channelTree.constructChannelTree()
 
       await store.dispatch.ui.modal.popModal()
-      context.root.$router.push(
-        constructChannelPath(channelIdToPathString(channel.id))
-      )
+      changeChannelById(channel.id)
     } catch {
       // TODO: エラー処理
     }

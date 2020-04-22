@@ -1,12 +1,8 @@
-import { SetupContext } from '@vue/composition-api'
 import store from '@/store'
-import useChannelPath from '@/use/channelPath'
 import { ChannelId } from '@/types/entity-ids'
-import { constructChannelPath } from '@/router'
+import { changeChannelById } from '@/router/channel'
 
-const useChannelSelect = (context: SetupContext) => {
-  const { channelIdToPathString } = useChannelPath()
-
+const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId) => {
     // 未読を除去する
     // TODO: 新着メッセージ基準設定などの処理
@@ -19,8 +15,7 @@ const useChannelSelect = (context: SetupContext) => {
       return
     }
     try {
-      const channelPathString = channelIdToPathString(id)
-      context.root.$router.push(constructChannelPath(channelPathString))
+      changeChannelById(id)
     } catch {
       throw 'Invalid Channel'
     }
