@@ -15,6 +15,7 @@ import { makeStyles } from '@/lib/styles'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
+      borderColor: theme.accent.primary,
       background: theme.accent.primary,
       color: 'white'
     }))
@@ -38,7 +39,11 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 12px 64px;
-  border-radius: 4px;
+  border: {
+    style: solid;
+    width: 2px;
+    radius: 4px;
+  }
   font-weight: bold;
   cursor: pointer;
 }
