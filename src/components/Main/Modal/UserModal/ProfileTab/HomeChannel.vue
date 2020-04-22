@@ -25,7 +25,7 @@ import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
-import { constructChannelPath } from '@/router'
+import { changeChannelByPath } from '@/router/channel'
 
 const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({

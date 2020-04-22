@@ -21,7 +21,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import LinkButton from './LinkButton.vue'
 import useChannelPath from '@/use/channelPath'
-import { constructChannelPath } from '@/router'
+import { changeChannelByPath } from '@/router/channel'
 
 export default defineComponent({
   name: 'Buttons',

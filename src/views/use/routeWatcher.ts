@@ -82,7 +82,6 @@ const useRouteWacher = (context: SetupContext) => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
-    const { channelIdToPathString } = useChannelPath()
     const messageId = state.idParam
     const message =
       store.state.entities.messages[messageId] ??

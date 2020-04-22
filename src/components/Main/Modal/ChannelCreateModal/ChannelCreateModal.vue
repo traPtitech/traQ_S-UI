@@ -35,7 +35,6 @@ const useCreateChannel = (
   channelNameRef: Ref<string>
 ) => {
   const createChannel = async () => {
-    const { channelIdToPathString } = useChannelPath()
     try {
       const channel = await store.dispatch.entities.createChannel({
         name: channelNameRef.value,
