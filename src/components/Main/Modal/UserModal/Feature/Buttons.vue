@@ -21,6 +21,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import LinkButton from './LinkButton.vue'
 import useChannelPath from '@/use/channelPath'
+import { constructChannelPath } from '@/router'
 
 export default defineComponent({
   name: 'Buttons',
@@ -51,7 +52,7 @@ export default defineComponent({
       const pathCache = homeChannelPath.value
       await store.dispatch.ui.modal.clearModal()
       // 同じ場所に移動しようとした際のエラーを消す
-      context.root.$router.push(`/channels/${pathCache}`).catch(() => {})
+      context.root.$router.push(constructChannelPath(pathCache)).catch(() => {})
     }
 
     return {

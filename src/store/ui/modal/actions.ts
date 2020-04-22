@@ -3,7 +3,7 @@ import store, { moduleActionContext } from '@/store'
 import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
-import router from '@/router'
+import router, { constructChannelPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 
 export const modalActionContext = (context: any) =>
@@ -75,7 +75,7 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
     const { currentChannelPathString } = useCurrentChannelPath()
-    router.replace(`/channels/${currentChannelPathString.value}`)
+    router.replace(constructChannelPath(currentChannelPathString.value))
     dispatch.collectGarbage(currentState)
   },
   /**

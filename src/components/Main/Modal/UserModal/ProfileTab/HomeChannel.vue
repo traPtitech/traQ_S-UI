@@ -25,6 +25,7 @@ import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
+import { constructChannelPath } from '@/router'
 
 const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({
@@ -59,7 +60,7 @@ export default defineComponent({
       const pathCache = channelPath.value
       await store.dispatch.ui.modal.clearModal()
       // 同じ場所に移動しようとした際のエラーを消す
-      context.root.$router.push(`/channels/${pathCache}`).catch(() => {})
+      context.root.$router.push(constructChannelPath(pathCache)).catch(() => {})
     }
 
     return {
