@@ -57,7 +57,6 @@ export default defineComponent({
 .description,
 .close {
   align-items: center;
-  height: 40px;
 }
 .close {
   display: flex;

@@ -71,16 +71,15 @@ export default defineComponent({
   display: grid;
   width: 100%;
   grid-template:
-    'icon ... name ... dl' 20px
-    'icon ... size ... dl' 16px
-    /36px 16px auto 1fr 24px;
+    'icon ... name ... dl' minmax(min-content, 20px)
+    'icon ... size ... dl' minmax(min-content, 16px)
+    / 36px 16px auto 1fr 24px;
   padding: 0 16px;
 }
 .icon,
 .dl {
   display: flex;
   align-items: center;
-  height: 40px;
 }
 .icon {
   grid-area: icon;
@@ -91,8 +90,9 @@ export default defineComponent({
 }
 .fileName {
   grid-area: name;
-  display: flex;
-  align-items: center;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .fileSize {
   grid-area: size;
