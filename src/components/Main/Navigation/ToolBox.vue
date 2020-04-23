@@ -13,7 +13,9 @@
         <user-icon :size="44" :user-id="myId" />
       </div>
     </div>
-    <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+      <app-list :class="$style.toolsMenu" v-click-outside="closePopupMenu" />
+    </portal>
   </div>
 </template>
 
@@ -37,7 +39,7 @@ export default defineComponent({
   name: 'ToolBox',
   components: { Tool, UserIcon, Icon, AppList },
   setup() {
-    const { togglePopupMenu } = usePopupMenu()
+    const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
 
     const themeIcon = computed(() => {
       switch (store.state.app.themeSettings.type) {
@@ -107,7 +109,10 @@ export default defineComponent({
     return {
       items,
       myId,
-      targetPortalName
+      targetPortalName,
+      isPopupMenuShown,
+      closePopupMenu,
+      togglePopupMenu
     }
   }
 })
@@ -126,12 +131,7 @@ export default defineComponent({
 .toolsMenu {
   position: absolute;
   right: 0;
-  top: 100%;
+  top: 0;
   z-index: 999;
-}
-.popupLocator {
-  position: absolute;
-  right: 0;
-  top: 100%;
 }
 </style>

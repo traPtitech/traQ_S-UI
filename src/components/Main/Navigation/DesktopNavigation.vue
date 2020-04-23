@@ -7,9 +7,7 @@
       />
       <tool-box />
     </div>
-    <portal v-if="isPopupMenuShown" :to="targetPortalName">
-      <app-list :class="$style.toolsMenu" v-click-outside="closePopupMenu" />
-    </portal>
+    <portal-target :class="$style.popupLocator" :name="targetPortalName" />
     <navigation-content :current-navigation="currentNavigation" />
   </div>
 </template>
@@ -23,14 +21,12 @@ import ToolBox, {
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import { makeStyles } from '@/lib/styles'
-import usePopupMenu from '@/components/Main/Navigation/use/popupMenu'
 
 export default defineComponent({
   name: 'DesktopNavigation',
   components: { NavigationContent, DesktopNavigationSelector, ToolBox },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
-    const { isPopupMenuShown, closePopupMenu } = usePopupMenu()
     const navigationStyle = makeStyles(theme => ({
       background: theme.background.secondary,
       color: theme.ui.primary
@@ -39,9 +35,7 @@ export default defineComponent({
       ...toRefs(navigationSelectorState),
       onNavigationChange,
       navigationStyle,
-      targetPortalName,
-      isPopupMenuShown,
-      closePopupMenu
+      targetPortalName
     }
   }
 })
@@ -61,5 +55,10 @@ $selectorWidth: 64px;
   width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
+}
+.popupLocator {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 </style>

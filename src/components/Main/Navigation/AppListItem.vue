@@ -1,15 +1,21 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <icon
-      :class="$style.icon"
-      :name="iconName"
-      :mdi="iconMdi"
-      :to="appLink"
-      :width="24"
-      :height="24"
-    />
-    <span :class="$style.label">{{ label }}</span>
-  </div>
+  <a
+    :class="$style.link"
+    :href="appLink"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <div :class="$style.container" :style="styles.container">
+      <icon
+        :class="$style.icon"
+        :name="iconName"
+        :mdi="iconMdi"
+        :width="32"
+        :height="32"
+      />
+      <span :class="$style.label">{{ label }}</span>
+    </div>
+  </a>
 </template>
 
 <script lang="ts">
@@ -20,7 +26,8 @@ import Icon from '@/components/UI/Icon.vue'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.primary
+      color: theme.ui.primary,
+      background: theme.background.secondary
     }))
   })
 
@@ -43,14 +50,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.link {
+  width: 100%;
+  height: 100%;
+}
 .container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
-.icon {
-  flex-shrink: 0;
-  margin-right: 12px;
-}
+
 .label {
   font: {
     size: 1rem;

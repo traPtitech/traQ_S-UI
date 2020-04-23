@@ -1,6 +1,7 @@
 <template>
   <app-list-frame>
-    <div v-for="app in apps" :key="app.appName">
+    <span>サービス</span>
+    <div v-for="app in apps" :key="app.appName" :class="$style.container">
       <app-list-item
         :icon-name="app.iconName"
         :icon-mdi="app.iconMdi"
@@ -16,9 +17,10 @@ import { computed, defineComponent } from '@vue/composition-api'
 import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
 import AppListFrame from '@/components/Main/Navigation/AppListFrame.vue'
 
+
 export default defineComponent({
   name: 'AppList',
-  components: { AppListItem, AppListFrame },
+  components: { AppListItem, AppListFrame, CloseButton },
   setup() {
     const apps = computed(
       (): Array<{
@@ -49,3 +51,16 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: stretch;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  border-radius: 4px;
+}
+</style>
