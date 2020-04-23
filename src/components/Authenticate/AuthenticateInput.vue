@@ -9,6 +9,7 @@
       :style="styles.input"
       :value="text"
       :type="type"
+      :autocapitalize="autocapitalize"
       @input="onInput"
     />
   </div>
@@ -44,6 +45,10 @@ export default defineComponent({
     type: {
       type: String as PropType<'text' | 'password'>,
       default: 'text' as const
+    },
+    autocapitalize: {
+      type: String,
+      default: 'off'
     }
   },
   setup(props, context: SetupContext) {
