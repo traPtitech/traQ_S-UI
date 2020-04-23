@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { stampPicker } from './index'
-import { StampSelectHandler, defaultSelectHandler } from './state'
+import { stampPicker, Place } from '.'
+import { StampSelectHandler } from './state'
 
 export const stampPickerActionContext = (context: any) =>
   moduleActionContext(context, stampPicker)
@@ -9,18 +9,10 @@ export const stampPickerActionContext = (context: any) =>
 export const actions = defineActions({
   openStampPicker(
     context,
-    payload: { targetPortalName: string; selectHandler: StampSelectHandler }
-  ) {
-    const { commit } = stampPickerActionContext(context)
-    commit.setTargetPortalName(payload.targetPortalName)
-    commit.setSelectHandler(payload.selectHandler)
-  },
-  openMessageStampPicker(
-    context,
     payload: {
       targetPortalName: string
       selectHandler: StampSelectHandler
-      position: { x: number; y: number }
+      position?: Place
     }
   ) {
     const { commit } = stampPickerActionContext(context)
@@ -30,8 +22,8 @@ export const actions = defineActions({
   },
   closeStampPicker(context) {
     const { commit } = stampPickerActionContext(context)
-    commit.setTargetPortalName('')
-    commit.setSelectHandler(defaultSelectHandler)
-    commit.initPosition()
+    commit.clearTargetPortalName()
+    commit.clearSelectHandler()
+    commit.clearPosition()
   }
 })

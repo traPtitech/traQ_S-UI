@@ -1,13 +1,13 @@
 import store from '@/store'
 import { StampSelectHandler } from '@/store/ui/stampPicker/state'
+import { Place } from '@/store/ui/stampPicker'
 
 const useStampPickerInvoker = (
   targetPortalName: string,
-  selectHandler: StampSelectHandler,
-  position: { x: number; y: number } = { x: 0, y: 0 }
+  selectHandler: StampSelectHandler
 ) => {
-  const invokeStampPicker = () => {
-    store.dispatch.ui.stampPicker.openMessageStampPicker({
+  const invokeStampPicker = (position?: Place) => {
+    store.dispatch.ui.stampPicker.openStampPicker({
       targetPortalName,
       selectHandler,
       position

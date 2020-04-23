@@ -25,7 +25,7 @@ export interface S {
 
   selectHandler: StampSelectHandler
   currentStampSet: StampSet
-  position: { x: number; y: number }
+  position: { x: number; y: number } | undefined
 }
 
 export const state: S = {
@@ -35,5 +35,5 @@ export const state: S = {
     type: 'history',
     id: ''
   },
-  position: { x: 0, y: 0 }
+  position: undefined
 }

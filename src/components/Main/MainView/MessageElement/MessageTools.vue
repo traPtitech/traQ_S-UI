@@ -40,24 +40,25 @@ export default defineComponent({
   setup(props) {
     const position = computed(() => store.state.ui.messageContextMenu.position)
     const styles = useStyles(position)
+
+    const stamps = computed(() => store.getters.domain.me.recentStampIds)
     const addStamp = (stampId: StampId) => {
       store.dispatch.domain.messagesView.addStamp({
         messageId: props.messageId,
         stampId
       })
     }
-    const stamps = computed(() => store.getters.domain.me.recentStampIds)
+
+    const { invokeStampPicker } = useStampPickerInvoker(
+      targetPortalName,
+      stampData => {
+        store.dispatch.domain.messagesView.addStamp({
+          messageId: props.messageId,
+          stampId: stampData.id
+        })
+      }
+    )
     const onOpen = (type: 'dot' | 'stampPicker', e: MouseEvent) => {
-      const { invokeStampPicker } = useStampPickerInvoker(
-        targetPortalName,
-        stampData => {
-          store.dispatch.domain.messagesView.addStamp({
-            messageId: props.messageId,
-            stampId: stampData.id
-          })
-        },
-        { x: e.pageX, y: e.pageY }
-      )
       if (type === 'dot') {
         store.dispatch.ui.messageContextMenu.openMessageContextMenu({
           messageId: props.messageId,
@@ -68,7 +69,7 @@ export default defineComponent({
         if (store.getters.ui.stampPicker.isStampPickerShown) {
           store.dispatch.ui.stampPicker.closeStampPicker()
         } else {
-          invokeStampPicker()
+          invokeStampPicker({ x: e.pageX, y: e.pageY })
         }
       }
     }
