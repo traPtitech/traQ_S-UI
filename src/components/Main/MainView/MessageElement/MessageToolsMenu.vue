@@ -1,6 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span :class="$style.text" @click="removePinned" v-if="isPinned">
+    <span
+      :class="$style.text"
+      @click="
+        removePinned()
+        close()
+      "
+      v-if="isPinned"
+    >
       ピン留めを外す
     </span>
     <span
