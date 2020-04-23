@@ -38,6 +38,8 @@
     </div>
     <modal-container />
     <stamp-picker-container />
+    <message-tools-menu-container />
+    <portal-target :name="targetPortalName" />
   </div>
   <div v-else></div>
 </template>
@@ -55,6 +57,9 @@ import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
+import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
+
+export const targetPortalName = 'message-menu-popup'
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -82,6 +87,7 @@ export default defineComponent({
     MainViewFrame,
     ModalContainer,
     StampPickerContainer,
+    MessageToolsMenuContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
@@ -133,6 +139,7 @@ export default defineComponent({
       isMainViewActive,
       isMobile,
 
+      targetPortalName,
       styles,
       currentActiveDrawer
     }

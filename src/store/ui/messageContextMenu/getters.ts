@@ -1,4 +1,13 @@
 import { defineGetters } from 'direct-vuex'
+import { moduleGetterContext } from '@/store'
 import { S } from './state'
+import { messageContextMenu } from './index'
 
-export const getters = defineGetters<S>()({})
+const getterContext = (args: [any, any, any, any]) =>
+  moduleGetterContext(args, messageContextMenu)
+
+export const getters = defineGetters<S>()({
+  isShow(state) {
+    return state.target ? true : false
+  }
+})

@@ -3,10 +3,9 @@
     @click="context.emit('click')"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
-    :class="$style.container"
     :style="styles.container"
   >
-    <stamp :stamp-id="stampId" :size="24" />
+    <stamp :stamp-id="stampId" :size="size" />
   </div>
 </template>
 
@@ -35,7 +34,8 @@ export default defineComponent({
     stampId: {
       type: String as PropType<StampId>,
       required: true
-    }
+    },
+    size: { type: Number, default: 24 }
   },
   setup(props, context) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
@@ -46,13 +46,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  cursor: pointer;
-  user-select: none;
-}
-</style>

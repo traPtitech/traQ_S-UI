@@ -7,7 +7,6 @@ import { render } from '@/lib/markdown'
 import apis from '@/lib/api'
 import { changeViewState } from '@/lib/websocket'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
-import api from '@/lib/api'
 
 export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
@@ -173,17 +172,17 @@ export const actions = defineActions({
   },
   async fetchPinnedMessages(context) {
     const { state, commit } = messagesViewActionContext(context)
-    const res = await api.getChannelPins(state.currentChannelId)
+    const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
   },
   async fetchTopic(context) {
     const { state, commit } = messagesViewActionContext(context)
-    const res = await api.getChannelTopic(state.currentChannelId)
+    const res = await apis.getChannelTopic(state.currentChannelId)
     commit.setTopic(res.data.topic)
   },
   async fetchSubscribers(context) {
     const { state, commit } = messagesViewActionContext(context)
-    const res = await api.getChannelSubscribers(state.currentChannelId)
+    const res = await apis.getChannelSubscribers(state.currentChannelId)
     commit.setSubscribers(res.data)
   },
   async fetchChannelLatestMessage(context) {
@@ -255,8 +254,18 @@ export const actions = defineActions({
   },
   async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
+    store.commit.domain.me.upsertLocalStampHistory({
+      stampId: payload.stampId,
+      datetime: new Date()
+    })
   },
   removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.removeMessageStamp(payload.messageId, payload.stampId)
+  },
+  addPinned(context, payload: { messageId: MessageId }) {
+    apis.createPin(payload.messageId)
+  },
+  removePinned(context, payload: { messageId: MessageId }) {
+    apis.removePin(payload.messageId)
   }
 })
