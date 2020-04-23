@@ -7,6 +7,9 @@
       />
       <tool-box />
     </div>
+    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+      <app-list :class="$style.toolsMenu" v-click-outside="closePopupMenu" />
+    </portal>
     <navigation-content :current-navigation="currentNavigation" />
   </div>
 </template>
@@ -14,16 +17,20 @@
 <script lang="ts">
 import { defineComponent, toRefs } from '@vue/composition-api'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
-import ToolBox from '@/components/Main/Navigation/ToolBox.vue'
+import ToolBox, {
+  targetPortalName
+} from '@/components/Main/Navigation/ToolBox.vue'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import { makeStyles } from '@/lib/styles'
+import usePopupMenu from '@/components/Main/Navigation/use/popupMenu'
 
 export default defineComponent({
   name: 'DesktopNavigation',
   components: { NavigationContent, DesktopNavigationSelector, ToolBox },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
+    const { isPopupMenuShown, closePopupMenu } = usePopupMenu()
     const navigationStyle = makeStyles(theme => ({
       background: theme.background.secondary,
       color: theme.ui.primary
@@ -31,7 +38,10 @@ export default defineComponent({
     return {
       ...toRefs(navigationSelectorState),
       onNavigationChange,
-      navigationStyle
+      navigationStyle,
+      targetPortalName,
+      isPopupMenuShown,
+      closePopupMenu
     }
   }
 })

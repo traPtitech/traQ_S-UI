@@ -1,16 +1,19 @@
 <template>
-  <div :class="$style.container">
-    <div v-for="item in items" :key="item.type" :class="$style.item">
-      <tool
-        :icon-name="item.iconName"
-        :icon-mdi="item.iconMdi"
-        :disabled="item.disabled"
-        @click.native="item.onClick"
-      />
+  <div>
+    <div :class="$style.container">
+      <div v-for="item in items" :key="item.type" :class="$style.item">
+        <tool
+          :icon-name="item.iconName"
+          :icon-mdi="item.iconMdi"
+          :disabled="item.disabled"
+          @click.native="item.onClick"
+        />
+      </div>
+      <div :class="$style.item">
+        <user-icon :size="44" :user-id="myId" />
+      </div>
     </div>
-    <div :class="$style.item">
-      <user-icon :size="44" :user-id="myId" />
-    </div>
+    <portal-target :class="$style.popupLocator" :name="targetPortalName" />
   </div>
 </template>
 
@@ -21,22 +24,27 @@ import Tool from '@/components/Main/Navigation/Tool.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import Icon from '@/components/UI/Icon.vue'
 import {
-  openAppsModal,
   toggleNotification,
   toggleTheme,
   openSettingsModal
 } from '@/components/Main/Navigation/use/tool'
+import usePopupMenu from '@/components/Main/Navigation/use/popupMenu'
+import AppList from '@/components/Main/Navigation/AppList.vue'
+
+export const targetPortalName = 'app-list'
 
 export default defineComponent({
   name: 'ToolBox',
-  components: { Tool, UserIcon, Icon },
+  components: { Tool, UserIcon, Icon, AppList },
   setup() {
+    const { togglePopupMenu } = usePopupMenu()
+
     const themeIcon = computed(() => {
       switch (store.state.app.themeSettings.type) {
         case 'light':
           return 'crescent-outline'
         case 'dark':
-          return 'crescent' // なんかリアクティブになってない気がする
+          return 'crescent'
         case 'custom':
           return 'brightness-6'
         default:
@@ -70,7 +78,7 @@ export default defineComponent({
         {
           iconName: 'apps',
           iconMdi: true,
-          onClick: openAppsModal
+          onClick: togglePopupMenu
         },
         // notification
         {
@@ -96,7 +104,11 @@ export default defineComponent({
 
     const myId = computed(() => store.state.domain.me.detail!.id)
 
-    return { items, myId }
+    return {
+      items,
+      myId,
+      targetPortalName
+    }
   }
 })
 </script>
@@ -110,5 +122,16 @@ export default defineComponent({
 }
 .item {
   margin: 8px 0;
+}
+.toolsMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 999;
+}
+.popupLocator {
+  position: absolute;
+  right: 0;
+  top: 100%;
 }
 </style>

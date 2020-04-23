@@ -1,9 +1,5 @@
 import store from '@/store'
 
-export const openAppsModal = () => {
-  return
-}
-
 export const toggleNotification = () => {
   return
 }
