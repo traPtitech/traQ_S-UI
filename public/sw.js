@@ -92,7 +92,7 @@ const postMessage = (channelId, text) =>
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ text, embed: true })
+    body: JSON.stringify({ content: text, embed: true })
   })
 
 /* 通知関係 */

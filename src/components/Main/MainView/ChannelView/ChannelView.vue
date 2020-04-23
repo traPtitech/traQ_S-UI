@@ -6,11 +6,11 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <messages-view-file-upload-overlay
+    <channel-view-file-upload-overlay
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <messages-view-content :channel-id="channelId" />
+    <channel-view-content :channel-id="channelId" />
     <portal v-if="shouldShowSidebar" to="sidebar">
       <channel-side-bar :channel-id="channelId" />
     </portal>
@@ -39,9 +39,9 @@ import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import ChannelSideBarHidden from '@/components/Main/MainView/ChannelSideBar/ChannelSideBarHidden.vue'
-import MessagesViewHeader from './Header.vue'
-import MessagesViewContent from './MessagesViewContent.vue'
-import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
+import ChannelViewHeader from './Header.vue'
+import ChannelViewContent from './ChannelViewContent.vue'
+import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
 const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
@@ -73,12 +73,12 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
 }
 
 export default defineComponent({
-  name: 'MessagesView',
+  name: 'ChannelView',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
-    MessagesViewHeader,
-    MessagesViewContent,
-    MessagesViewFileUploadOverlay,
+    ChannelViewHeader,
+    ChannelViewContent,
+    ChannelViewFileUploadOverlay,
     ChannelSideBar,
     ChannelSideBarHidden
   },

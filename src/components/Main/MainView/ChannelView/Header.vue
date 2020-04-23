@@ -68,7 +68,7 @@ const useCopy = (context: SetupContext) => {
 }
 
 export default defineComponent({
-  name: 'MessagesViewHeader',
+  name: 'ChannelViewHeader',
   components: {
     Icon,
     MainViewHeader,

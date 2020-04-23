@@ -1,10 +1,10 @@
 <template>
-  <messages-view
+  <channel-view
     :class="$style.messagesView"
-    v-if="props.viewInfo && props.viewInfo.type === 'messages'"
+    v-if="viewInfo && viewInfo.type === 'channel'"
     :channel-id="channelId"
   />
-  <qall-view v-else-if="props.viewInfo && props.viewInfo.type === 'qall'" />
+  <qall-view v-else-if="viewInfo && viewInfo.type === 'qall'" />
   <div :class="$style.none" v-else></div>
 </template>
 
@@ -12,12 +12,12 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { ViewInformation } from '@/store/ui/mainView/state'
-import MessagesView from '@/components/Main/MainView/MessagesView/MessagesView.vue'
+import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
 import QallView from '@/components/Main/MainView/QallView/QallView.vue'
 
 export default defineComponent({
   name: 'MainViewComponentSelector',
-  components: { MessagesView, QallView },
+  components: { ChannelView, QallView },
   props: {
     viewInfo: Object as PropType<ViewInformation>
   },
@@ -27,8 +27,6 @@ export default defineComponent({
     )
 
     return {
-      // TODO: https://github.com/vuejs/composition-api/issues/291
-      props: props as { viewInfo: ViewInformation | undefined },
       channelId
     }
   }
