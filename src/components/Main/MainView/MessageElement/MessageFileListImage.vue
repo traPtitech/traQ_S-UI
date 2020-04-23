@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 

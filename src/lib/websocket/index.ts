@@ -1,4 +1,4 @@
-import { WEBSOCKET_ENDPOINT } from '@/lib/api'
+import { WEBSOCKET_ENDPOINT } from '@/lib/apis'
 import { onReceive } from './receive'
 
 const absoluteWebsocketEndpoint = new URL(WEBSOCKET_ENDPOINT, document.baseURI)

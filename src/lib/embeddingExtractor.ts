@@ -1,4 +1,4 @@
-import { embeddingOrigin } from '@/lib/api'
+import { embeddingOrigin } from '@/lib/apis'
 import { FileId, MessageId } from '@/types/entity-ids'
 
 export type EmbeddingType = 'file' | 'message'

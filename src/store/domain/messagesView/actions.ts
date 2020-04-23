@@ -4,7 +4,7 @@ import { messagesView } from './index'
 import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
 import { ChannelViewState, Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import { changeViewState } from '@/lib/websocket'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
 

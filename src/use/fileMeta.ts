@@ -1,6 +1,6 @@
 import { computed, SetupContext } from '@vue/composition-api'
 import store from '@/store'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
 import useFileLink from '@/use/fileLink'
 

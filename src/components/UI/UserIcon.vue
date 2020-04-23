@@ -16,7 +16,7 @@ import {
   PropType
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { buildUserIconPath } from '@/lib/api'
+import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
 

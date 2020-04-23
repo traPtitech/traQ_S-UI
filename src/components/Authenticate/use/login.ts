@@ -1,5 +1,5 @@
 import { reactive } from '@vue/composition-api'
-import api from '@/lib/api'
+import apis from '@/lib/apis'
 
 const useLogin = () => {
   const state = reactive({
@@ -17,7 +17,7 @@ const useLogin = () => {
   }
   const login = async () => {
     try {
-      await api.login('/', { name: state.name, password: state.pass })
+      await apis.login('/', { name: state.name, password: state.pass })
       location.href = '/'
     } catch (e) {
       // TODO 修正

@@ -1,8 +1,9 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import apis, { ChannelSubscribeLevel } from '@/lib/api'
+import apis from '@/lib/apis'
 import { me } from './index'
 import { ChannelId } from '@/types/entity-ids'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 export const meActionContext = (context: any) =>
   moduleActionContext(context, me)

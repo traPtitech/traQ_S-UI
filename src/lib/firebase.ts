@@ -4,7 +4,7 @@ import {
   ExtendedNotificationOptions,
   NotificationClickEvent
 } from '@/types/InlineNotificationReplies'
-import apis from './api'
+import apis from './apis'
 import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'

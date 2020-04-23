@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 
