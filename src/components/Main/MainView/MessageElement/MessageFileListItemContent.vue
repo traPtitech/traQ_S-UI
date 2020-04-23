@@ -7,9 +7,11 @@
     <div :class="$style.icon">
       <icon mdi :name="fileIconName" :size="32" />
     </div>
-    <span :class="$style.fileName">
-      {{ fileMeta.name }}
-    </span>
+    <div :class="$style.fileName">
+      <span :class="$style.fileNameInner">
+        {{ fileMeta.name }}
+      </span>
+    </div>
     <span :class="$style.fileSize" :style="styles.fileSize">{{
       fileSize
     }}</span>
@@ -68,9 +70,9 @@ export default defineComponent({
   display: grid;
   width: 100%;
   grid-template:
-    'icon ...  name ... dl' 20px
-    'icon ...  size ... dl' 16px
-    /36px 16px auto 1fr 24px;
+    'icon ... name ... dl' 20px
+    'icon ... size ... dl' 16px
+    / 36px 16px auto 1fr 24px;
   gap: 4px 0;
   padding: 12px 16px;
 }
@@ -87,9 +89,16 @@ export default defineComponent({
   grid-area: dl;
 }
 .fileName {
-  grid-area: name;
   display: flex;
   align-items: center;
+  grid-area: name;
+  overflow: hidden;
+}
+// flexに直接text-overflow: ellipsisをつけるとバグるため
+.fileNameInner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .fileSize {
   grid-area: size;
