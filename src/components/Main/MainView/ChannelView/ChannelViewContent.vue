@@ -25,7 +25,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
+import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 
 const useLoadMessages = () => {
   const state = reactive({
@@ -54,12 +54,12 @@ const useLoadMessages = () => {
 }
 
 export default defineComponent({
-  name: 'MessagesViewContent',
+  name: 'ChannelViewContent',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
     MessagesScroller,
     MessageInput,
-    MessagesViewFileUploadOverlay
+    ChannelViewFileUploadOverlay
   },
   setup() {
     const state = reactive({

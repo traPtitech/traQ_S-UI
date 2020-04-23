@@ -1,13 +1,13 @@
-export type ViewType = 'messages' | 'qall'
+export type ViewType = 'channel' | 'qall'
 export interface ViewInformationBase {
   type: ViewType
 }
-export type ViewInformation = MessagesView | QallView
+export type ViewInformation = ChannelView | QallView
 
 export type LayoutType = 'single' | 'split' | 'split-reverse'
 
-export interface MessagesView extends ViewInformationBase {
-  type: 'messages'
+export interface ChannelView extends ViewInformationBase {
+  type: 'channel'
 }
 
 export interface QallView extends ViewInformationBase {
@@ -50,7 +50,7 @@ export const state: S = {
   isSidebarOpen: false,
   currentMainViewComponentState: MainViewComponentState.Hidden,
   primaryView: {
-    type: 'messages'
+    type: 'channel'
   },
   secondaryView: {
     type: 'qall'

@@ -24,7 +24,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'MainViewHeaderToolsMenuItem',
+  name: 'ChannelViewHeaderToolsMenuItem',
   components: {
     Icon
   },

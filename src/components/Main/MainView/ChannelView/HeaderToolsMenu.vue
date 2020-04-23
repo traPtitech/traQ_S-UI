@@ -32,7 +32,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'MainViewHeaderToolsMenu',
+  name: 'ChannelViewHeaderToolsMenu',
   components: {
     MainViewHeaderPopupFrame,
     HeaderToolsMenuItem
