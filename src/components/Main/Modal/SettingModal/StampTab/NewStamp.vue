@@ -22,7 +22,7 @@ import ImageUpload from '../ImageUpload.vue'
 import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 
 export default defineComponent({
   name: 'NewStamp',

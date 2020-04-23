@@ -19,7 +19,7 @@ import {
   toRefs
 } from '@vue/composition-api'
 import store from '@/store'
-import api from '@/lib/api'
+import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareString } from '@/lib/util/string'
@@ -43,7 +43,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
       }))
     )
   })
-  api.getChannelSubscribers(props.channelId).then(result => {
+  apis.getChannelSubscribers(props.channelId).then(result => {
     const subscribers = new Set(result.data)
     state.subscribersMap = Object.fromEntries(
       allUserIds.value.map(id => [id, subscribers.has(id)])
@@ -52,7 +52,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const onChangeNotification = async (userId: UserId, subscribe: boolean) => {
     const newMap = { ...state.subscribersMap, [userId]: subscribe }
     try {
-      await api.setChannelSubscribers(props.channelId, {
+      await apis.setChannelSubscribers(props.channelId, {
         on: Object.entries(newMap)
           .filter(e => e[1])
           .map(e => e[0])

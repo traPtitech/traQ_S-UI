@@ -20,7 +20,7 @@ import {
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 
 const useStyles = (props: { size: number }) =>
   reactive({

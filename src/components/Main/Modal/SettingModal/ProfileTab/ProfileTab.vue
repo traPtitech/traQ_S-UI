@@ -47,7 +47,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'

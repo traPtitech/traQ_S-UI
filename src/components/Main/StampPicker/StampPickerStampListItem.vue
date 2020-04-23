@@ -15,7 +15,7 @@ import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import useHover, { HoverState } from '@/use/hover'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 import Stamp from '@/components/UI/Stamp.vue'
 
 const useStyles = (hoverState: HoverState) =>

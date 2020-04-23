@@ -44,7 +44,7 @@ import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHe
 import HeaderChannelName from './HeaderChannelName.vue'
 import HeaderTools, { targetPortalName } from './HeaderTools.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
-import { embeddingOrigin } from '@/lib/api'
+import { embeddingOrigin } from '@/lib/apis'
 
 const useStyles = () =>
   reactive({

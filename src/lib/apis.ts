@@ -25,5 +25,4 @@ export const buildFilePathForPost = (fileId: FileId) =>
 
 export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
 
-export * from '@traptitech/traq'
 export default apis
