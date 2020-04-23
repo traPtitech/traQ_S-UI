@@ -2,7 +2,7 @@ import { computed, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import { buildFilePath } from '@/lib/api'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
-import useFileLink from './fileLink'
+import useFileLink from '@/use/fileLink'
 
 const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileMeta = computed(
@@ -21,13 +21,21 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileSize = computed(() =>
     fileMeta.value ? prettifyFileSize(fileMeta.value.size) : '0B'
   )
-  const fileIconName = computed(() =>
-    fileType.value === 'file' ? 'file' : `file-${fileType.value}`
-  )
+  const fileIconName = computed(() => {
+    switch (fileType.value) {
+      case 'file':
+        return 'file'
+      case 'audio':
+        return 'file-music'
+      default:
+        return `file-${fileType.value}`
+    }
+  })
   return {
     fileMeta,
     fileLink,
     fileRawPath,
+    fileType,
     fileSize,
     fileIconName,
     onFileLinkClick,

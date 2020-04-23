@@ -23,7 +23,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import MessagesScroller from './MessagesScroller.vue'
+import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 
@@ -54,7 +54,7 @@ const useLoadMessages = () => {
 }
 
 export default defineComponent({
-  name: 'MessagesView',
+  name: 'MessagesViewContent',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
     MessagesScroller,

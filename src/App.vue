@@ -34,6 +34,26 @@ const useThemeObserver = () => {
   })
 }
 
+const useEcoModeObserver = () => {
+  const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
+
+  const $html = document.documentElement
+  if (ecoMode.value) {
+    $html.dataset.ecoMode = ''
+  }
+
+  watchEffect(() => {
+    const isEcoModeAttrOn = $html.dataset.ecoMode === ''
+    if (isEcoModeAttrOn !== ecoMode.value) {
+      if (ecoMode.value) {
+        $html.dataset.ecoMode = ''
+      } else {
+        delete $html.dataset.ecoMode
+      }
+    }
+  })
+}
+
 export default defineComponent({
   name: 'App',
   components: {},
@@ -42,6 +62,7 @@ export default defineComponent({
     const isMobile = computed(() => store.getters.ui.isMobile)
 
     useThemeObserver()
+    useEcoModeObserver()
 
     return {
       isMobile

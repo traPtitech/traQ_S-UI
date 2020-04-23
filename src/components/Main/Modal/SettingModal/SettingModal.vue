@@ -23,7 +23,7 @@ import { makeStyles } from '@/lib/styles'
 import { useNavigation } from './use/navigation'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
-import CloseButton from './CloseButton.vue'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({

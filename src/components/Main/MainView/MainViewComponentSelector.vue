@@ -12,8 +12,8 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { ViewInformation } from '@/store/ui/mainView/state'
-import MessagesView from '@/components/Main/MainView/MessagesView.vue'
-import QallView from '@/components/Main/MainView/QallView.vue'
+import MessagesView from '@/components/Main/MainView/MessagesView/MessagesView.vue'
+import QallView from '@/components/Main/MainView/QallView/QallView.vue'
 
 export default defineComponent({
   name: 'MainViewComponentSelector',

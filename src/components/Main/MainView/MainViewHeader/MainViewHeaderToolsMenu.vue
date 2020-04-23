@@ -11,6 +11,12 @@
       icon-mdi
       label="通知設定"
     />
+    <main-view-header-tools-menu-item
+      @click.native="context.emit('click-copy-channel-link')"
+      icon-name="link"
+      icon-mdi
+      label="チャンネルリンクをコピー"
+    />
   </main-view-header-popup-frame>
 </template>
 

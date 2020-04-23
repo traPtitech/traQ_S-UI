@@ -3,8 +3,8 @@ import store, { moduleActionContext } from '@/store'
 import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
-import router from '@/router'
-import useChannelPath from '@/use/channelPath'
+import router, { constructChannelPath } from '@/router'
+import useCurrentChannelPath from '@/use/currentChannelPath'
 
 export const modalActionContext = (context: any) =>
   moduleActionContext(context, modal)
@@ -74,12 +74,8 @@ export const actions = defineActions({
       ''
     )
     commit.setState(history.state.modalState)
-    const { channelIdToPath } = useChannelPath()
-    router.replace(
-      `/channels/${channelIdToPath(
-        rootState.domain.messagesView.currentChannelId
-      )}`
-    )
+    const { currentChannelPathString } = useCurrentChannelPath()
+    router.replace(constructChannelPath(currentChannelPathString.value))
     dispatch.collectGarbage(currentState)
   },
   /**
@@ -125,6 +121,8 @@ export const actions = defineActions({
         store.commit.entities.deleteTag(modalState.id)
         break
       case 'channel-create':
+        break
+      case 'qrcode':
         break
       default:
         const invalid: never = modalState

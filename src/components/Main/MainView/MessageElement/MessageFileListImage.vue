@@ -21,7 +21,7 @@
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import { buildFilePath } from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
-import useFileMeta from './use/fileMeta'
+import useFileMeta from '@/use/fileMeta'
 
 const useStyles = () =>
   reactive({

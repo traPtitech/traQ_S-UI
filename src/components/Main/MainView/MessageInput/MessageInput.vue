@@ -9,6 +9,7 @@
       :name="targetPortalName"
     />
     <message-input-file-list :class="$style.inputFileList" />
+    <message-input-typing-users :typing-users="typingUsers" />
     <message-input-key-guide :show="showKeyGuide" />
     <div :class="$style.inputContainer">
       <message-input-upload-button
@@ -20,6 +21,8 @@
         :text="textState.text"
         :should-update-size="shouldUpdateSize"
         :line-break-post-process-state="lineBreakPostProcessState"
+        @focus="onFocus"
+        @blur="onBlur"
         @input="onInputText"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -55,6 +58,9 @@ import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
 import useLineBreakPostProcess from './use/lineBreakPostProcess'
 import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
+import useFocus from './use/focus'
+import useEditingStatus from './use/editingStatus'
+import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
 import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
@@ -71,6 +77,7 @@ const useStyles = () =>
 export default defineComponent({
   name: 'MessageInput',
   components: {
+    MessageInputTypingUsers,
     MessageInputKeyGuide,
     MessageInputTextArea,
     MessageInputControls,
@@ -103,6 +110,8 @@ export default defineComponent({
       runLineBreakPostProcess,
       onLineBreakPostProcessDone
     } = useLineBreakPostProcess()
+    const { isFocused, onFocus, onBlur } = useFocus()
+    useEditingStatus(props.channelId, textState, isFocused)
 
     const onInsertLineBreak = (newText: string, selectionIndex: number) => {
       textState.text = newText
@@ -112,6 +121,10 @@ export default defineComponent({
       })
     }
     const postMessage = usePostMessage(textState, props)
+
+    const typingUsers = computed(
+      () => store.getters.domain.messagesView.typingUsers
+    )
 
     const canPostMessage = computed(
       () => !(textState.isEmpty && attachmentsState.isEmpty)
@@ -154,9 +167,12 @@ export default defineComponent({
       targetPortalName,
       styles,
       isMobile,
+      typingUsers,
       textState,
       attachmentsState,
       shouldUpdateSize,
+      onFocus,
+      onBlur,
       onInputText,
       onModifierKeyDown,
       onModifierKeyUp,

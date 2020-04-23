@@ -1,0 +1,23 @@
+import { watch, Ref } from '@vue/composition-api'
+import { changeViewState } from '@/lib/websocket'
+import { ChannelId } from '@/types/entity-ids'
+import { ChannelViewState } from '@traptitech/traq'
+
+const useEditingStatus = (
+  channelId: ChannelId,
+  textStatus: { text: string },
+  isFocused: Ref<boolean>
+) => {
+  watch(
+    () => textStatus.text !== '' && isFocused.value,
+    (isEditing, wasEditing) => {
+      if (isEditing === wasEditing) return
+      changeViewState(
+        channelId,
+        isEditing ? ChannelViewState.Editing : ChannelViewState.Monitoring
+      )
+    }
+  )
+}
+
+export default useEditingStatus

@@ -35,7 +35,9 @@ import {
   mdiChevronDoubleLeft,
   mdiChevronLeft,
   mdiBookmark,
-  mdiBookmarkMultiple
+  mdiBookmarkMultiple,
+  mdiLink,
+  mdiQrcode
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -79,7 +81,9 @@ const mdi: MdiIconsMapping = {
   'chevron-double': mdiChevronDoubleLeft,
   'chevron-left': mdiChevronLeft,
   bookmark: mdiBookmark,
-  'bookmark-multiple': mdiBookmarkMultiple
+  'bookmark-multiple': mdiBookmarkMultiple,
+  link: mdiLink,
+  qrcode: mdiQrcode
 }
 
 export default mdi

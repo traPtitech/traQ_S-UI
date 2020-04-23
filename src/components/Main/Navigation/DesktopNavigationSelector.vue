@@ -12,6 +12,9 @@
         :icon-name="item.iconName"
       />
     </div>
+    <div :class="$style.item" @click="onQrCodeClick">
+      <Icon name="qrcode" mdi />
+    </div>
     <div :class="$style.item" @click="onSettingClick">
       <Icon name="cog" mdi />
     </div>
@@ -76,10 +79,14 @@ export default defineComponent({
     const onSettingClick = () =>
       store.dispatch.ui.modal.pushModal({ type: 'setting' })
 
+    const onQrCodeClick = () =>
+      store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
+
     return {
       items,
       onNavigationItemClick,
-      onSettingClick
+      onSettingClick,
+      onQrCodeClick
     }
   }
 })

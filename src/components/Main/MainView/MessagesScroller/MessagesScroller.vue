@@ -24,16 +24,35 @@ import {
   SetupContext,
   ref,
   onMounted,
-  PropType
+  PropType,
+  Ref,
+  onBeforeUnmount
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
-import MessageElement from './MessageElement/MessageElement.vue'
+import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
+import { toggleSpoiler } from '@/lib/markdown'
 
 const LOAD_MORE_THRESHOLD = 10
+
+const useSpoilerToggler = (rootRef: Ref<HTMLElement | null>) => {
+  const toggleSpoilerHandler = (event: MouseEvent) => {
+    if (event.target) {
+      toggleSpoiler(event.target as HTMLElement)
+    }
+  }
+
+  onMounted(() => {
+    rootRef.value?.addEventListener('click', toggleSpoilerHandler)
+  })
+
+  onBeforeUnmount(() => {
+    rootRef.value?.removeEventListener('click', toggleSpoilerHandler)
+  })
+}
 
 export default defineComponent({
   name: 'MessagesScroller',
@@ -122,6 +141,8 @@ export default defineComponent({
         context.emit('request-load-latter')
       }
     }, 17)
+
+    useSpoilerToggler(rootRef)
 
     return {
       state,

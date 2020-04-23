@@ -821,12 +821,22 @@
 
 .markdown-body .highlight pre,
 .markdown-body pre {
+  position: relative;
   padding: 16px;
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
   background-color: #f6f8fa;
   border-radius: 3px;
+}
+
+.markdown-body pre cite {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 4px;
+  border-bottom-left-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .markdown-body pre code {
@@ -984,4 +994,24 @@
 .markdown-body .task-list-item input {
   margin: 0 0.2em 0.25em -1.6em;
   vertical-align: middle;
+}
+
+.markdown-body {
+  .spoiler {
+    color: transparent;
+    background-color: black;
+    user-select: none;
+    cursor: pointer;
+
+    &:not([shown]) {
+      * {
+        visibility: hidden;
+      }
+    }
+
+    &[shown] {
+      color: inherit;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
 }

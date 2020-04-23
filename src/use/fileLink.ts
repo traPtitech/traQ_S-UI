@@ -8,7 +8,7 @@ const useFileLink = (props: { fileId: FileId }, context: SetupContext) => {
     context.root.$router.push(fileLink.value)
   }
   const onFileDownloadLinkClick = () => {
-    context.root.$router.push(buildFilePath(props.fileId))
+    window.open(buildFilePath(props.fileId), '_blank')
   }
   return { fileLink, onFileLinkClick, onFileDownloadLinkClick }
 }
