@@ -1,7 +1,7 @@
 <template>
-  <messages-view-header
+  <channel-view-header
     :class="$style.messagesView"
-    v-if="viewInfo && viewInfo.type === 'messages'"
+    v-if="viewInfo && viewInfo.type === 'channel'"
     :channel-id="channelId"
   />
   <div :class="$style.none" v-else></div>
@@ -11,11 +11,11 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { ViewInformation } from '@/store/ui/mainView/state'
-import MessagesViewHeader from '@/components/Main/MainView/MessagesView/Header.vue'
+import ChannelViewHeader from '@/components/Main/MainView/ChannelView/Header.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderSelector',
-  components: { MessagesViewHeader },
+  components: { ChannelViewHeader },
   props: {
     viewInfo: Object as PropType<ViewInformation>
   },

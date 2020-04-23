@@ -68,7 +68,7 @@ const useStyles = () =>
 export const targetPortalName = 'header-popup'
 
 export default defineComponent({
-  name: 'MainViewHeaderTools',
+  name: 'ChannelViewHeaderTools',
   components: {
     HeaderToolsItem
   },

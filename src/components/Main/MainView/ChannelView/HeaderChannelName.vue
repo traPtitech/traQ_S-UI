@@ -78,7 +78,7 @@ const useStyles = (pathInfoList: Ref<readonly ChannelPathInfo[]>) =>
   })
 
 export default defineComponent({
-  name: 'MainViewHeaderChannelName',
+  name: 'ChannelViewHeaderChannelName',
   props: {
     channelId: {
       type: String as PropType<ChannelId>,

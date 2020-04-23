@@ -25,7 +25,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'MessagesViewFileUploadOverlay',
+  name: 'ChannelViewFileUploadOverlay',
   components: { Icon },
   setup() {
     const styles = useStyles()
