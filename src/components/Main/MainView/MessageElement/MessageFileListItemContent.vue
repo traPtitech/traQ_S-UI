@@ -98,6 +98,7 @@ export default defineComponent({
 .fileNameInner {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .fileSize {
   grid-area: size;
