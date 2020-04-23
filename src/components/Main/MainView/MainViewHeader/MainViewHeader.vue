@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import useIsMobile from '@/use/isMobile'
