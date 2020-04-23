@@ -1,21 +1,19 @@
 <template>
-  <portal to="mainview-header">
-    <header :class="$style.container" :style="styles.container">
-      <div :class="$style.headerContainer">
-        <button
-          :class="$style.navigationButton"
-          :style="styles.navigationButton"
-          v-if="isMobile"
-        >
-          <icon name="traQ" />
-        </button>
-        <h2>
-          <slot name="header" />
-        </h2>
-      </div>
-      <slot name="tools" />
-    </header>
-  </portal>
+  <header :class="$style.container" :style="styles.container">
+    <div :class="$style.headerContainer">
+      <button
+        :class="$style.navigationButton"
+        :style="styles.navigationButton"
+        v-if="isMobile"
+      >
+        <icon name="traQ" />
+      </button>
+      <h2>
+        <slot name="header" />
+      </h2>
+    </div>
+    <slot name="tools" />
+  </header>
 </template>
 
 <script lang="ts">
@@ -54,12 +52,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+$headerHeight: 80px;
+
 .container {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100%;
+  height: $headerHeight;
+  width: 100%;
+  flex: 0 0 $headerHeight;
   padding: 16px;
 }
 .headerContainer {

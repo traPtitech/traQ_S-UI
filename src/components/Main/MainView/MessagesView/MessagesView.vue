@@ -6,7 +6,6 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <messages-view-header :channel-id="channelId" />
     <messages-view-file-upload-overlay
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
