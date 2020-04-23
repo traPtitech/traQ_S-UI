@@ -20,9 +20,7 @@ import { targetPortalName } from '@/views/Main.vue'
 const useStampPicker = () => {
   const state = reactive({
     messageId: computed(() => store.state.ui.messageContextMenu.target),
-    isPopupMenuShown: computed(
-      () => store.getters.ui.messageContextMenu.getIsShowMenu
-    )
+    isPopupMenuShown: computed(() => store.getters.ui.messageContextMenu.isShow)
   })
   return { state }
 }

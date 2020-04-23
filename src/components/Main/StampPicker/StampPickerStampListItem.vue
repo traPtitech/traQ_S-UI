@@ -5,7 +5,7 @@
     @mouseleave="onMouseLeave"
     :style="styles.container"
   >
-    <stamp :stamp-id="stampId" :size="propst.size" />
+    <stamp :stamp-id="stampId" :size="size" />
   </div>
 </template>
 
@@ -38,13 +38,11 @@ export default defineComponent({
     size: { type: Number, default: 24 }
   },
   setup(props, context) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { stampId: StampId; size: number }
-    const fileId = store.state.entities.stamps[propst.stampId]?.fileId ?? ''
+    const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
     const styles = useStyles(hoverState)
-    return { context, imageUrl, onMouseEnter, onMouseLeave, styles, propst }
+    return { context, imageUrl, onMouseEnter, onMouseLeave, styles }
   }
 })
 </script>

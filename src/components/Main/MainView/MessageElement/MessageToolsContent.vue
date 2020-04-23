@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <stamp-picker-stamp-list-item
-      v-for="stamp in stamps"
+      v-for="stamp in recentStamps"
       :key="stamp"
       :stamp-id="stamp"
       @click="addStamp(stamp)"
@@ -77,13 +77,13 @@ export default defineComponent({
     const clickStampIcon = (e: MouseEvent) => {
       context.emit('open', 'stampPicker', e)
     }
-    const stamps = computed(() =>
+    const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
     )
     return {
       styles,
       addStamp,
-      stamps,
+      recentStamps,
       clickDots,
       clickStampIcon
     }

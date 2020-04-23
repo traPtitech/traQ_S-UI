@@ -114,9 +114,6 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      isOpenToolsModal: computed(
-        () => store.state.ui.messageContextMenu.position.x !== 0
       )
     })
 

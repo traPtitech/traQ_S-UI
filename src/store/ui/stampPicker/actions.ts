@@ -32,5 +32,6 @@ export const actions = defineActions({
     const { commit } = stampPickerActionContext(context)
     commit.setTargetPortalName('')
     commit.setSelectHandler(defaultSelectHandler)
+    commit.initPosition()
   }
 })

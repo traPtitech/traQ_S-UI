@@ -7,7 +7,8 @@ import {
   defineComponent,
   computed,
   reactive,
-  PropType
+  PropType,
+  Ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -19,11 +20,11 @@ import MessageToolsContent from './MessageToolsContent.vue'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import { targetPortalName } from '@/views/Main.vue'
 
-const useStyles = () =>
+const useStyles = (position: Ref<{ x: number; y: number }>) =>
   reactive({
     toolsMenu: makeStyles(theme => ({
-      top: `${store.state.ui.messageContextMenu.position.y}px`,
-      left: `${store.state.ui.messageContextMenu.position.x}px`
+      top: `${position.value.y}px`,
+      left: `${position.value.x}px`
     }))
   })
 
@@ -37,7 +38,8 @@ export default defineComponent({
   },
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
   setup(props) {
-    const styles = useStyles()
+    const position = computed(() => store.state.ui.messageContextMenu.position)
+    const styles = useStyles(position)
     const addStamp = (stampId: StampId) => {
       store.dispatch.domain.messagesView.addStamp({
         messageId: props.messageId,
@@ -49,16 +51,17 @@ export default defineComponent({
       })
     }
     const stamps = computed(() => store.getters.domain.me.recentStampIds)
-    const { invokeStampPicker } = useStampPickerInvoker(
-      targetPortalName,
-      stampData => {
-        store.dispatch.domain.messagesView.addStamp({
-          messageId: props.messageId,
-          stampId: stampData.id
-        })
-      }
-    )
     const onOpen = (type: 'dot' | 'stampPicker', e: MouseEvent) => {
+      const { invokeStampPicker } = useStampPickerInvoker(
+        targetPortalName,
+        stampData => {
+          store.dispatch.domain.messagesView.addStamp({
+            messageId: props.messageId,
+            stampId: stampData.id
+          })
+        },
+        { x: e.pageX, y: e.pageY }
+      )
       if (type === 'dot') {
         store.dispatch.ui.messageContextMenu.openMessageContextMenu({
           messageId: props.messageId,
@@ -68,12 +71,7 @@ export default defineComponent({
       } else {
         if (store.getters.ui.stampPicker.isStampPickerShown) {
           store.dispatch.ui.stampPicker.closeStampPicker()
-          store.commit.ui.stampPicker.initPosition()
         } else {
-          store.commit.ui.stampPicker.setPosition({
-            x: e.pageX,
-            y: e.pageY
-          })
           invokeStampPicker()
         }
       }

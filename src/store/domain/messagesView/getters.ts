@@ -15,7 +15,7 @@ export const getters = defineGetters<S>()({
       .map(v => v.userId)
       .reverse()
   },
-  getIsPinned(state): (id: MessageId) => boolean {
+  isPinned(state): (id: MessageId) => boolean {
     return (id: MessageId) => {
       return state.pinnedMessages.findIndex(v => v.message.id === id) > -1
     }

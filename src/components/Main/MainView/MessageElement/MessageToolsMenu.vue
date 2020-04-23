@@ -64,6 +64,7 @@ import store from '@/store'
 import apis from '@/lib/api'
 import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
+import { embeddingOrigin } from '@/lib/api'
 
 const useStyles = () =>
   reactive({
@@ -74,7 +75,7 @@ const useStyles = () =>
     }))
   })
 
-const togglePinned = (props: { messageId: MessageId }) => {
+const usePinToggler = (props: { messageId: MessageId }) => {
   const addPinned = () => {
     store.dispatch.domain.messagesView.addPinned({
       messageId: props.messageId
@@ -88,7 +89,7 @@ const togglePinned = (props: { messageId: MessageId }) => {
   return { addPinned, removePinned }
 }
 
-const changeMessage = (props: { messageId: MessageId }) => {
+const useMessageChanger = (props: { messageId: MessageId }) => {
   const editMessage = () => {
     // TODO
     alert('edit: Not implemented')
@@ -101,7 +102,7 @@ const changeMessage = (props: { messageId: MessageId }) => {
 
 const useCopy = (props: { messageId: MessageId }) => {
   const copyLink = async () => {
-    const link = `!{"raw":"","type":"message","id":"${props.messageId}"}`
+    const link = `${embeddingOrigin}/messages/${props.messageId}`
     await navigator.clipboard.writeText(link)
   }
   const copyMd = async () => {
@@ -118,7 +119,7 @@ export default defineComponent({
   setup(props) {
     const styles = useStyles()
     const isPinned = computed(() =>
-      store.getters.domain.messagesView.getIsPinned(props.messageId)
+      store.getters.domain.messagesView.isPinned(props.messageId)
     )
     const isMine = computed(
       () =>
@@ -126,8 +127,8 @@ export default defineComponent({
         store.state.domain.me.detail?.id
     )
     const { copyLink, copyMd } = useCopy(props)
-    const { addPinned, removePinned } = togglePinned(props)
-    const { editMessage, deleteMessage } = changeMessage(props)
+    const { addPinned, removePinned } = usePinToggler(props)
+    const { editMessage, deleteMessage } = useMessageChanger(props)
     const close = () => {
       store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
     }

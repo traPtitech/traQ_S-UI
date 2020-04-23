@@ -7,7 +7,7 @@ const getterContext = (args: [any, any, any, any]) =>
   moduleGetterContext(args, messageContextMenu)
 
 export const getters = defineGetters<S>()({
-  getIsShowMenu(state) {
+  isShow(state) {
     return state.target ? true : false
   }
 })

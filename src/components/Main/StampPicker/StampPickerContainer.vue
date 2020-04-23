@@ -36,7 +36,7 @@ const useStyles = (state: { isAsMessageStampPicker: boolean }) =>
       const marginBottom = 20
       return {
         top: state.isAsMessageStampPicker
-          ? `min(calc(100vh - ${height}px - ${marginBottom}px),${store.state.ui.stampPicker.position.y}px)`
+          ? `min(calc(100vh - ${height}px - ${marginBottom}px), ${store.state.ui.stampPicker.position.y}px)`
           : '',
         left: state.isAsMessageStampPicker
           ? `${store.state.ui.stampPicker.position.x}px`
