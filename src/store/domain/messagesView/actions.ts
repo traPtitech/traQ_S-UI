@@ -254,6 +254,10 @@ export const actions = defineActions({
   },
   async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
+    store.commit.domain.me.upsertLocalStampHistory({
+      stampId: payload.stampId,
+      datetime: new Date()
+    })
   },
   removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
     apis.removeMessageStamp(payload.messageId, payload.stampId)

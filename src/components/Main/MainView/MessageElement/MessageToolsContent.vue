@@ -66,10 +66,6 @@ export default defineComponent({
         messageId: props.messageId,
         stampId
       })
-      store.commit.domain.me.pushLocalStampHistory({
-        stampId: stampId,
-        datetime: new Date()
-      })
     }
     const clickDots = (e: MouseEvent) => {
       context.emit('open', 'dot', e)

@@ -45,10 +45,6 @@ export default defineComponent({
         messageId: props.messageId,
         stampId
       })
-      store.commit.domain.me.pushLocalStampHistory({
-        stampId: stampId,
-        datetime: new Date()
-      })
     }
     const stamps = computed(() => store.getters.domain.me.recentStampIds)
     const onOpen = (type: 'dot' | 'stampPicker', e: MouseEvent) => {

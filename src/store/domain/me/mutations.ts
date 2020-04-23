@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { S, StampHistoryEntry } from './state'
+import { S } from './state'
 import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
@@ -44,8 +44,11 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.staredChannelSet, channelId)
   },
 
-  pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
-    Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
+  upsertLocalStampHistory(
+    state: S,
+    { stampId, datetime }: { stampId: StampId; datetime: Date }
+  ) {
+    Vue.set(state.stampHistory, stampId, datetime)
   },
 
   setSubscriptionMap(

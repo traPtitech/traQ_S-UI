@@ -65,7 +65,7 @@ const useStampPicker = () => {
     )
   })
   const onInputStamp = (id: StampId) => {
-    store.commit.domain.me.pushLocalStampHistory({
+    store.commit.domain.me.upsertLocalStampHistory({
       stampId: id,
       datetime: new Date()
     })
