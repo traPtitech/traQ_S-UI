@@ -5,33 +5,37 @@
     @closeBar="closeSidebar"
     :pinned-message="state.pinnedMessage"
   />
-  <div v-else :style="styles.container" :class="$style.container">
-    <channel-side-bar-header
-      :channel-id="channelId"
-      @close="closeSidebar"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-viewers
-      :viewer-ids="viewerIds"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-topic :class="$style.sidebarItem" />
-    <channel-side-bar-pinned
-      :pinned-message-length="state.pinnedMessage.length"
-      @open="togglePinnedMode"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-relation
-      :channel-id="channelId"
-      :class="$style.sidebarItem"
-    />
-    <channel-side-bar-member
-      :channel-id="channelId"
-      :class="$style.sidebarItem"
-      :viewer-ids="viewerIds"
-    />
-    <channel-side-bar-edit :class="$style.edit" />
-  </div>
+  <main-view-sidebar v-else :style="styles.container" :class="$style.container">
+    <template #header>
+      <channel-side-bar-header
+        :channel-id="channelId"
+        @close="closeSidebar"
+        :class="$style.sidebarItem"
+      />
+    </template>
+    <template #content>
+      <channel-side-bar-viewers
+        :viewer-ids="viewerIds"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-topic :class="$style.sidebarItem" />
+      <channel-side-bar-pinned
+        :pinned-message-length="state.pinnedMessage.length"
+        @open="togglePinnedMode"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-relation
+        :channel-id="channelId"
+        :class="$style.sidebarItem"
+      />
+      <channel-side-bar-member
+        :channel-id="channelId"
+        :class="$style.sidebarItem"
+        :viewer-ids="viewerIds"
+      />
+      <channel-side-bar-edit :class="$style.edit" />
+    </template>
+  </main-view-sidebar>
 </template>
 
 <script lang="ts">
@@ -45,6 +49,7 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
+import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
 import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
 import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
@@ -66,6 +71,7 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSideBar',
   components: {
+    MainViewSidebar,
     ChannelSideBarTopic,
     ChannelSideBarPinned,
     ChannelSideBarViewers,
