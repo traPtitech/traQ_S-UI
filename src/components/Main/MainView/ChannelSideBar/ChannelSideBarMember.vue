@@ -2,15 +2,15 @@
   <span v-if="isForceNotification" :style="styles.text" :class="$style.text">
     強制通知チャンネル
   </span>
-  <channel-side-bar-content v-else-if="userIds" title="メンバー">
+  <channel-sidebar-content v-else-if="userIds" title="メンバー">
     <template #content>
-      <channel-side-bar-member-icons
+      <channel-sidebar-member-icons
         v-if="userIds"
         :class="$style.icons"
         :viewer-states="viewStates"
       />
     </template>
-  </channel-side-bar-content>
+  </channel-sidebar-content>
 </template>
 
 <script lang="ts">
@@ -22,9 +22,9 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import ChannelSideBarMemberIcons from './ChannelSideBarMemberIcons.vue'
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { ChannelId } from '@/types/entity-ids'
-import ChannelSideBarContent from './ChannelSideBarContent.vue'
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
@@ -36,8 +36,8 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarMember',
-  components: { ChannelSideBarMemberIcons, ChannelSideBarContent },
+  name: 'ChannelSidebarMember',
+  components: { ChannelSidebarMemberIcons, ChannelSidebarContent },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }

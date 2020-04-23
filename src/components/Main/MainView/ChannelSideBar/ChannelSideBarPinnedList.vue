@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <channel-side-bar-pinned-list-header
+    <channel-sidebar-pinned-list-header
       @closePinned="closePinned"
       @closeBar="closeBar"
       :class="$style.sidebarItem"
     />
-    <channel-side-bar-pinned-list-item
+    <channel-sidebar-pinned-list-item
       v-for="message in propst.pinnedMessage"
       :key="message.message.id"
       :pinned-message="message"
@@ -18,8 +18,8 @@
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { Pin } from '@traptitech/traq'
-import ChannelSideBarPinnedListHeader from './ChannelSideBarPinnedListHeader.vue'
-import ChannelSideBarPinnedListItem from './ChannelSideBarPinnedListItem.vue'
+import ChannelSidebarPinnedListHeader from './ChannelSidebarPinnedListHeader.vue'
+import ChannelSidebarPinnedListItem from './ChannelSidebarPinnedListItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -30,8 +30,8 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarPinnedList',
-  components: { ChannelSideBarPinnedListHeader, ChannelSideBarPinnedListItem },
+  name: 'ChannelSidebarPinnedList',
+  components: { ChannelSidebarPinnedListHeader, ChannelSidebarPinnedListItem },
   props: {
     pinnedMessage: { type: Array as PropType<Pin[]>, default: [] }
   },

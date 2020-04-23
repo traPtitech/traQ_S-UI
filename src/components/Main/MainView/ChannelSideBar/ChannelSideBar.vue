@@ -1,5 +1,5 @@
 <template>
-  <channel-side-bar-pinned-list
+  <channel-sidebar-pinned-list
     v-if="state.pinnedMode"
     @closePinned="togglePinnedMode"
     @closeBar="closeSidebar"
@@ -7,33 +7,33 @@
   />
   <main-view-sidebar v-else :style="styles.container" :class="$style.container">
     <template #header>
-      <channel-side-bar-header
+      <channel-sidebar-header
         :channel-id="channelId"
         @close="closeSidebar"
         :class="$style.sidebarItem"
       />
     </template>
     <template #content>
-      <channel-side-bar-viewers
+      <channel-sidebar-viewers
         :viewer-ids="viewerIds"
         :class="$style.sidebarItem"
       />
-      <channel-side-bar-topic :class="$style.sidebarItem" />
-      <channel-side-bar-pinned
+      <channel-sidebar-topic :class="$style.sidebarItem" />
+      <channel-sidebar-pinned
         :pinned-message-length="state.pinnedMessage.length"
         @open="togglePinnedMode"
         :class="$style.sidebarItem"
       />
-      <channel-side-bar-relation
+      <channel-sidebar-relation
         :channel-id="channelId"
         :class="$style.sidebarItem"
       />
-      <channel-side-bar-member
+      <channel-sidebar-member
         :channel-id="channelId"
         :class="$style.sidebarItem"
         :viewer-ids="viewerIds"
       />
-      <channel-side-bar-edit :class="$style.edit" />
+      <channel-sidebar-edit :class="$style.edit" />
     </template>
   </main-view-sidebar>
 </template>
@@ -50,15 +50,15 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import ChannelSideBarTopic from './ChannelSideBarTopic.vue'
-import ChannelSideBarPinned from './ChannelSideBarPinned.vue'
-import ChannelSideBarViewers from './ChannelSideBarViewers.vue'
-import ChannelSideBarHeader from './ChannelSideBarHeader.vue'
-import ChannelSideBarMember from './ChannelSideBarMember.vue'
-import ChannelSideBarEdit from './ChannelSideBarEdit.vue'
-import ChannelSideBarHidden from './ChannelSideBarHidden.vue'
-import ChannelSideBarPinnedList from './ChannelSideBarPinnedList.vue'
-import ChannelSideBarRelation from './ChannelSideBarRelation.vue'
+import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
+import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
+import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
+import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
+import ChannelSidebarMember from './ChannelSidebarMember.vue'
+import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
+import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
+import ChannelSidebarPinnedList from './ChannelSidebarPinnedList.vue'
+import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 
 const useStyles = () =>
   reactive({
@@ -69,18 +69,18 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBar',
+  name: 'ChannelSidebar',
   components: {
     MainViewSidebar,
-    ChannelSideBarTopic,
-    ChannelSideBarPinned,
-    ChannelSideBarViewers,
-    ChannelSideBarHeader,
-    ChannelSideBarMember,
-    ChannelSideBarEdit,
-    ChannelSideBarHidden,
-    ChannelSideBarPinnedList,
-    ChannelSideBarRelation
+    ChannelSidebarTopic,
+    ChannelSidebarPinned,
+    ChannelSidebarViewers,
+    ChannelSidebarHeader,
+    ChannelSidebarMember,
+    ChannelSidebarEdit,
+    ChannelSidebarHidden,
+    ChannelSidebarPinnedList,
+    ChannelSidebarRelation
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, requried: true }

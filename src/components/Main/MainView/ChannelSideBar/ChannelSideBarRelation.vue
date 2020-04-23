@@ -1,5 +1,5 @@
 <template>
-  <channel-side-bar-content title="関連チャンネル" @click="toggle">
+  <channel-sidebar-content title="関連チャンネル" @click="toggle">
     <template #header-control>
       <icon
         width="20"
@@ -10,7 +10,7 @@
       />
     </template>
     <template #content>
-      <channel-side-bar-relation-content
+      <channel-sidebar-relation-content
         v-if="state.isOpen"
         :parent="parent"
         :children="children"
@@ -18,7 +18,7 @@
         :current="current"
       />
     </template>
-  </channel-side-bar-content>
+  </channel-sidebar-content>
 </template>
 
 <script lang="ts">
@@ -26,8 +26,8 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
-import ChannelSideBarContent from './ChannelSideBarContent.vue'
-import ChannelSideBarRelationContent from './ChannelSideBarRelationContent.vue'
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
+import ChannelSidebarRelationContent from './ChannelSidebarRelationContent.vue'
 import useRelatedChannels from './use/useRelatedChannels'
 
 const useStyles = (state: { isOpen: boolean }) =>
@@ -39,8 +39,8 @@ const useStyles = (state: { isOpen: boolean }) =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarRelation',
-  components: { Icon, ChannelSideBarRelationContent, ChannelSideBarContent },
+  name: 'ChannelSidebarRelation',
+  components: { Icon, ChannelSidebarRelationContent, ChannelSidebarContent },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true }
   },

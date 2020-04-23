@@ -21,7 +21,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarContent',
+  name: 'ChannelSidebarContent',
   props: { title: { type: String, required: true } },
   setup(_, context) {
     const styles = useStyles()

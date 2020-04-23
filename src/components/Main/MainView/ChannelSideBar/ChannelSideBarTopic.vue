@@ -1,5 +1,5 @@
 <template>
-  <channel-side-bar-content title="トピック" @click="toggle">
+  <channel-sidebar-content title="トピック" @click="toggle">
     <template #header-control>
       <icon
         width="20"
@@ -10,13 +10,13 @@
       />
     </template>
     <template #content>
-      <channel-side-bar-topic-content
+      <channel-sidebar-topic-content
         v-if="state.isOpen"
         :topic-content="topicContent"
         :is-open="state.isOpen"
       />
     </template>
-  </channel-side-bar-content>
+  </channel-sidebar-content>
 </template>
 
 <script lang="ts">
@@ -24,8 +24,8 @@ import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import ChannelSideBarTopicContent from './ChannelSideBarTopicContent.vue'
-import ChannelSideBarContent from './ChannelSideBarContent.vue'
+import ChannelSidebarTopicContent from './ChannelSidebarTopicContent.vue'
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
 
 const useStyles = (state: { isOpen: boolean }) =>
   reactive({
@@ -35,10 +35,10 @@ const useStyles = (state: { isOpen: boolean }) =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarTopic',
+  name: 'ChannelSidebarTopic',
   components: {
-    ChannelSideBarTopicContent,
-    ChannelSideBarContent,
+    ChannelSidebarTopicContent,
+    ChannelSidebarContent,
     Icon
   },
   setup() {

@@ -29,7 +29,7 @@ const useStyles = (state: State) =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarEdit',
+  name: 'ChannelSidebarEdit',
   components: { Icon },
   setup() {
     const state: State = reactive({

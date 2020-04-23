@@ -1,17 +1,17 @@
 <template>
-  <channel-side-bar-content title="ピン留め" @click="onClick">
+  <channel-sidebar-content title="ピン留め" @click="onClick">
     <template #header-control>{{ propst.pinnedMessageLength }}</template>
-  </channel-side-bar-content>
+  </channel-sidebar-content>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import ChannelSideBarContent from './ChannelSideBarContent.vue'
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
 
 export default defineComponent({
-  name: 'ChannelSideBarPinned',
+  name: 'ChannelSidebarPinned',
   props: { pinnedMessageLength: { type: Number, default: 0 } },
-  components: { ChannelSideBarContent },
+  components: { ChannelSidebarContent },
   setup(props, context) {
     const onClick = () => context.emit('open')
     // TODO: https://github.com/vuejs/composition-api/issues/291

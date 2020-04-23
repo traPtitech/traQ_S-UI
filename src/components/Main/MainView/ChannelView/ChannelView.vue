@@ -12,7 +12,7 @@
     />
     <channel-view-content :channel-id="channelId" />
     <portal v-if="!isSidebarOpen" to="sidebar-opener">
-      <channel-side-bar-hidden
+      <channel-sidebar-hidden
         @open="openSidebar"
         :viewer-ids="viewerIds"
         :class="$style.hidden"
@@ -34,7 +34,7 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
-import ChannelSideBarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSideBarHidden.vue'
+import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import ChannelViewHeader from './Header.vue'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
@@ -75,7 +75,7 @@ export default defineComponent({
     ChannelViewHeader,
     ChannelViewContent,
     ChannelViewFileUploadOverlay,
-    ChannelSideBarHidden
+    ChannelSidebarHidden
   },
   setup() {
     const state = reactive({

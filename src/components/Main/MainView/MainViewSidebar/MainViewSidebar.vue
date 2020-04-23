@@ -21,7 +21,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBar',
+  name: 'ChannelSidebar',
   setup() {
     const styles = useStyles()
     const { closeSidebar } = useSidebar()

@@ -7,7 +7,7 @@
   >
     <user-icon-ellipsis-list direction="row" :user-ids="viewerIds" />
   </div>
-  <channel-side-bar-viewers-detail
+  <channel-sidebar-viewers-detail
     v-else
     :viewer-ids="viewerIds"
     @close="toggle"
@@ -18,7 +18,7 @@
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
-import ChannelSideBarViewersDetail from './ChannelSideBarViewersDetail.vue'
+import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
@@ -30,8 +30,8 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarViewers',
-  components: { UserIconEllipsisList, ChannelSideBarViewersDetail },
+  name: 'ChannelSidebarViewers',
+  components: { UserIconEllipsisList, ChannelSidebarViewersDetail },
   props: {
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },

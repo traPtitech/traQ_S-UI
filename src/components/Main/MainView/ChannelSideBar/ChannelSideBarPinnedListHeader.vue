@@ -27,7 +27,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarPinnedListHeader',
+  name: 'ChannelSidebarPinnedListHeader',
   components: { Icon, CloseButton },
   setup(_, context) {
     const closePinned = () => {
