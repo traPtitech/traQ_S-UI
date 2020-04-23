@@ -20,7 +20,7 @@
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
       >
-        <main-view-controller :class="$style.mainViewWrapper" />
+        <main-view :class="$style.mainViewWrapper" />
       </main-view-frame>
       <div
         :class="$style.sidebarWrapper"
@@ -50,7 +50,7 @@ import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
 import { makeStyles } from '@/lib/styles'
 import useIsMobile from '@/use/isMobile'
-import MainViewController from '@/components/Main/MainView/MainViewController.vue'
+import MainView from '@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Main/Modal/ModalContainer.vue'
@@ -83,7 +83,7 @@ export default defineComponent({
   name: 'Main',
   components: {
     Navigation,
-    MainViewController,
+    MainView,
     MainViewFrame,
     ModalContainer,
     StampPickerContainer,

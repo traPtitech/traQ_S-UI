@@ -1,8 +1,9 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.headerContainer">
-      <main-view-header :channel-id="channelId" />
-    </div>
+    <main-view-header-selector
+      :class="$style.headerContainer"
+      :view-info="state.primary"
+    />
     <div :class="$style.layoutContainer" :data-layout="state.layout">
       <div :class="$style.primaryContainer">
         <main-view-component-selector
@@ -30,11 +31,11 @@ import store from '@/store'
 import useIsMobile from '@/use/isMobile'
 
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
-import MainViewHeader from './MainViewHeader/MainViewHeader.vue'
+import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
 
 export default defineComponent({
-  name: 'MainViewController',
-  components: { MainViewComponentSelector, MainViewHeader },
+  name: 'MainView',
+  components: { MainViewComponentSelector, MainViewHeaderSelector },
   setup() {
     const state = reactive({
       layout: computed(() => store.state.ui.mainView.layout),
@@ -56,8 +57,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerHeight: 80px;
-
+.headerContainer {
+  width: 100%;
+}
 .container {
   height: 100%;
   position: relative;
@@ -66,11 +68,6 @@ $headerHeight: 80px;
 }
 .componentContainer {
   height: 100%;
-}
-.headerContainer {
-  height: $headerHeight;
-  width: 100%;
-  flex: 0 0 $headerHeight;
 }
 
 // レイアウト系

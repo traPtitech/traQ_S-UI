@@ -39,6 +39,7 @@ import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import ChannelSideBar from '@/components/Main/MainView/ChannelSideBar/ChannelSideBar.vue'
 import ChannelSideBarHidden from '@/components/Main/MainView/ChannelSideBar/ChannelSideBarHidden.vue'
+import MessagesViewHeader from './Header.vue'
 import MessagesViewContent from './MessagesViewContent.vue'
 import MessagesViewFileUploadOverlay from './MessagesViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
@@ -75,6 +76,7 @@ export default defineComponent({
   name: 'MessagesView',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
   components: {
+    MessagesViewHeader,
     MessagesViewContent,
     MessagesViewFileUploadOverlay,
     ChannelSideBar,
