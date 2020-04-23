@@ -10,8 +10,9 @@ import { get as shvlGet, set as shvlSet } from 'shvl'
 interface DBPath {
   /**
    * `.`区切りのそのモジュールへのパス (ex. `app.browserSettings`)
+   * あるいは`.`区切りのその値へのパスの配列 (ex. `domain.me.details`)
    */
-  path: string
+  path: string | string[]
 }
 
 const dbModulePaths: string[] = []
@@ -24,12 +25,16 @@ const dbModulePaths: string[] = []
 export const defineDBModule = <O extends WithOptionalState, S = StateOf<O>>(
   options: O & ModuleOptions<S> & DBPath
 ): O => {
-  dbModulePaths.push(options.path)
+  if (Array.isArray(options.path)) {
+    dbModulePaths.push(...options.path)
+  } else {
+    dbModulePaths.push(options.path)
+  }
   return defineModule(options)
 }
 
 /**
- * 同期するストアのモジュールの絞り込み
+ * 同期するストアのモジュール/値の絞り込み
  */
 export const persistReducer: PersistOptions<any>['reducer'] = state => {
   const persistState = {}
