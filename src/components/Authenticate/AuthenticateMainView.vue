@@ -3,6 +3,7 @@
     <authenticate-modal>
       <login-form v-if="type === 'login'" />
       <registration-form v-if="type === 'registration'" />
+      <consent-form v-if="type === 'consent'" />
     </authenticate-modal>
   </div>
 </template>
@@ -13,6 +14,8 @@ import { makeStyles } from '@/lib/styles'
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
+import ConsentForm from './ConsentForm/ConsentForm.vue'
+import { PageType } from '@/views/Auth.vue'
 
 const useStyles = () =>
   reactive({
@@ -26,11 +29,12 @@ export default defineComponent({
   components: {
     AuthenticateModal,
     LoginForm,
-    RegistrationForm
+    RegistrationForm,
+    ConsentForm
   },
   props: {
     type: {
-      type: String as PropType<'login' | 'password-reset' | 'registration'>,
+      type: String as PropType<PageType>,
       default: 'login' as const
     }
   },

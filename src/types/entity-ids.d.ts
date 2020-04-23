@@ -8,3 +8,4 @@ export type WebhookId = string
 export type FileId = string
 export type ClipFolderId = string
 export type TagId = string
+export type OAuthClientId = string

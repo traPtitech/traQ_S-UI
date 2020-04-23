@@ -23,5 +23,7 @@ export const embeddingOrigin =
 export const buildFilePathForPost = (fileId: FileId) =>
   `${embeddingOrigin}/files/${fileId}`
 
+export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
+
 export * from '@traptitech/traq'
 export default apis

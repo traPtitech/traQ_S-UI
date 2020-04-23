@@ -2,6 +2,7 @@
   <button
     :class="$style.container"
     :style="styles.container"
+    :disabled="disabled"
     @click="context.emit('click')"
   >
     {{ label }}
@@ -9,14 +10,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 
-const useStyles = () =>
+const useStyles = (props: { disabled: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
+      borderColor: theme.accent.primary,
       background: theme.accent.primary,
-      color: 'white'
+      color: 'white',
+      cursor: props.disabled ? 'not-allowed' : 'pointer'
     }))
   })
 
@@ -26,10 +29,14 @@ export default defineComponent({
     label: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const styles = useStyles()
+  setup(props, context) {
+    const styles = useStyles(props)
     return { context, styles }
   }
 })
@@ -38,8 +45,11 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 12px 64px;
-  border-radius: 4px;
+  border: {
+    style: solid;
+    width: 2px;
+    radius: 4px;
+  }
   font-weight: bold;
-  cursor: pointer;
 }
 </style>
