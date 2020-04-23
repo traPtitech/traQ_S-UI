@@ -95,7 +95,9 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
     alert('edit: Not implemented')
   }
   const deleteMessage = () => {
-    apis.deleteMessage(props.messageId)
+    if (confirm('本当にメッセージを削除しますか？')) {
+      apis.deleteMessage(props.messageId)
+    }
   }
   return { editMessage, deleteMessage }
 }
