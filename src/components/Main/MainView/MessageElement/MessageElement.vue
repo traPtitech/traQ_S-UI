@@ -142,6 +142,7 @@ $messagePadding: 32px;
 $messagePaddingMobile: 16px;
 
 .body {
+  position: relative;
   display: grid;
   grid-template:
     'user-icon message-header'
@@ -191,7 +192,9 @@ $messagePaddingMobile: 16px;
 }
 
 .tools {
-  grid-area: message-header;
-  justify-self: end;
+  position: absolute;
+  top: 4px;
+  right: 16px;
+  z-index: 1;
 }
 </style>
