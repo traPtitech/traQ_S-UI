@@ -27,11 +27,12 @@ import {
 } from '@vue/composition-api'
 import { StampId } from '@/types/entity-ids'
 import store from '@/store'
-import { MessageStamp, buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import useHover from '@/use/hover'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
+import { MessageStamp } from '@traptitech/traq'
 
 type Props = {
   stampId: StampId

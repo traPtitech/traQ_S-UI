@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { S, LoadingDirection } from './state'
 import { Embedding } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
@@ -8,6 +8,15 @@ import { Pin, ChannelViewer } from '@traptitech/traq'
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
+  },
+  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
+    state.currentClipFolderId = currentClipFolderId
+  },
+  unsetCurrentChannelId(state) {
+    state.currentChannelId = undefined
+  },
+  unsetCurrentClipFolderId(state) {
+    state.currentClipFolderId = undefined
   },
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds

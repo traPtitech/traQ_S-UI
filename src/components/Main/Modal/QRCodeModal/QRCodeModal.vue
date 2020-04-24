@@ -19,7 +19,7 @@ import {
 } from '@vue/composition-api'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 
 const useQrCode = () => {
   const state = reactive({

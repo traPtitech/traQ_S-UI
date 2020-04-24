@@ -1,11 +1,17 @@
 import { Embedding } from '@/lib/embeddingExtractor'
-import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
+import { MessageId, ChannelId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
 export interface S {
-  currentChannelId: ChannelId
+  // FIXME: 分離
+
+  /** 現在のチャンネルID、日時ベースのフェッチを行う */
+  currentChannelId?: ChannelId
+
+  /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
+  currentClipFolderId?: ClipFolderId
 
   /** 現在表示対象になっている全てのメッセージID */
   messageIds: MessageId[]
@@ -53,7 +59,8 @@ export interface S {
 }
 
 export const state: S = {
-  currentChannelId: '',
+  currentChannelId: undefined,
+  currentClipFolderId: undefined,
   messageIds: [],
   pinnedMessages: [],
   currentOffset: 0,

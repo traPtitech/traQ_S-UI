@@ -20,13 +20,13 @@ import {
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 
 const useStyles = (props: { size: number }) =>
   reactive({
     container: makeStyles(theme => ({
-      maxWidth: `${props.size}px`,
-      maxHeight: `${props.size}px`
+      width: `${props.size}px`,
+      height: `${props.size}px`
     })),
     noImageContainer: makeStyles(theme => ({
       width: `${props.size}px`,
@@ -62,6 +62,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  object-fit: contain;
   user-select: none;
 }
 </style>

@@ -1,4 +1,4 @@
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import store from '@/store'
 import {
   StampCreatedEvent,

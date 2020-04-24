@@ -92,7 +92,7 @@ const postMessage = (channelId, text) =>
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ text, embed: true })
+    body: JSON.stringify({ content: text, embed: true })
   })
 
 /* 通知関係 */
@@ -195,9 +195,9 @@ const postMessage = (channelId, text) =>
     )
   })
 
-  importScripts('https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js')
+  importScripts('https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js')
   importScripts(
-    'https://www.gstatic.com/firebasejs/7.14.1/firebase-messaging.js'
+    'https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js'
   )
 
   firebase.initializeApp({

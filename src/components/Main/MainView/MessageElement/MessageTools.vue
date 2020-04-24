@@ -5,27 +5,24 @@
       :key="stamp"
       :stamp-id="stamp"
       @click="addStamp(stamp)"
-      :size="16"
+      :size="20"
       :class="$style.stampListItem"
     />
-    <div :class="$style.emojiOutline">
-      <icon
-        mdi
-        name="emoticon-outline"
-        :size="16"
-        :class="$style.emojiIcon"
-        @click="onStampIconClick"
-      />
-    </div>
-    <div>
-      <icon
-        :class="$style.dotIcon"
-        :size="16"
-        mdi
-        name="dots-horizontal"
-        @click="onDotsClick"
-      />
-    </div>
+    <span :class="$style.line"></span>
+    <icon
+      mdi
+      name="emoticon-outline"
+      :size="20"
+      :class="$style.emojiIcon"
+      @click="onStampIconClick"
+    />
+    <icon
+      :class="$style.dotIcon"
+      :size="20"
+      mdi
+      name="dots-horizontal"
+      @click="onDotsClick"
+    />
   </div>
 </template>
 
@@ -109,8 +106,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  height: 24px;
-  width: 104px;
   border-radius: 4px;
   border: solid 2px;
   display: flex;
@@ -120,27 +115,20 @@ export default defineComponent({
   justify-content: space-between;
 }
 
-.emojiOutline {
+.line {
   border-left: solid 2px;
-  padding-left: 4px;
-  height: 16px;
-  margin-left: 2px;
+  height: 20px;
+  margin: 0 4px;
 }
 
-.emojiIcon {
-  margin-bottom: 4px;
-  cursor: pointer;
-}
-
-.dotIcon {
-  margin-top: 4px;
+.emojiIcon,
+.dotIcon,
+.stampListItem {
   cursor: pointer;
 }
 
 .stampListItem {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
   user-select: none;
+  margin: 0 2px;
 }
 </style>

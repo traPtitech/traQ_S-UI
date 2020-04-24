@@ -1,7 +1,7 @@
 import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import api, { buildFilePathForPost } from '@/lib/api'
+import apis, { buildFilePathForPost } from '@/lib/apis'
 import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
@@ -11,7 +11,7 @@ const uploadAttachments = async (
   channelId: ChannelId
 ) => {
   const responses = await Promise.all(
-    attachments.map(attachment => api.postFile(attachment.file, channelId))
+    attachments.map(attachment => apis.postFile(attachment.file, channelId))
   )
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
@@ -48,7 +48,7 @@ const usePostMessage = (
       )
       const embededdUrls = fileUrls.join('\n')
 
-      await api.postMessage(props.channelId, {
+      await apis.postMessage(props.channelId, {
         content: embededText + '\n' + embededdUrls
       })
 

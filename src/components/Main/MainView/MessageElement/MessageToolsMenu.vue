@@ -68,10 +68,9 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import apis from '@/lib/api'
+import apis, { embeddingOrigin } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
-import { embeddingOrigin } from '@/lib/api'
 
 const useStyles = () =>
   reactive({

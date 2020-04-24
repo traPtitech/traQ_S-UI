@@ -21,6 +21,7 @@ const useInitialFetch = (context: SetupContext) => {
     store.commit.app.setInitialFetchCompleted()
     store.dispatch.domain.stampCategory.constructStampCategories()
     store.dispatch.entities.fetchStampPalettes()
+    store.dispatch.entities.fetchClipFolders()
     store.dispatch.domain.fetchChannelActivity()
     store.dispatch.domain.fetchOnlineUsers()
     store.dispatch.domain.me.fetchUnreadChannels()
