@@ -53,12 +53,11 @@ const useRouteWacher = (context: SetupContext) => {
 
   const onRouteChangedToClipFolders = async () => {
     const id = state.idParam
-    const clipSymbol = '🖇 '
     try {
       const clipFolder =
         store.state.entities.clipFolders[id] ??
         (await store.dispatch.entities.fetchClipFolder(id))
-      changeViewTitle(`${clipSymbol}${clipFolder.name}`)
+      changeViewTitle(clipFolder.name)
     } catch {
       state.view = 'not-found'
       return
