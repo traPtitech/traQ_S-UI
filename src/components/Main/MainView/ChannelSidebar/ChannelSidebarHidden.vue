@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" :style="styles.container">
     <icon
       :class="$style.icon"
       mdi
@@ -27,7 +27,6 @@ import { UserId } from '@/types/entity-ids'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.background.secondary,
       color: theme.ui.primary
     }))
   })
