@@ -20,7 +20,7 @@ import useInput from '@/use/input'
 const useStyles = (props: { onSecondary: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.secondary,
+      color: theme.ui.primary,
       background: props.onSecondary
         ? theme.background.primary
         : theme.background.secondary
@@ -62,5 +62,6 @@ export default defineComponent({
 .select {
   margin: 0 8px;
   width: 100%;
+  color: inherit;
 }
 </style>
