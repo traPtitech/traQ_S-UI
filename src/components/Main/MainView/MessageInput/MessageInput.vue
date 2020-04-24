@@ -19,17 +19,12 @@
       <message-input-text-area
         :class="$style.inputTextArea"
         :text="textState.text"
-        :should-update-size="shouldUpdateSize"
-        :line-break-post-process-state="lineBreakPostProcessState"
         @focus="onFocus"
         @blur="onBlur"
         @input="onInputText"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="postMessage"
-        @insert-line-break="onInsertLineBreak"
-        @line-break-post-process-done="onLineBreakPostProcessDone"
-        @update-size="onUpdateSize"
       />
       <message-input-controls
         :class="$style.controls"
@@ -56,8 +51,6 @@ import useIsMobile from '@/use/isMobile'
 import useAttachments from './use/attachments'
 import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
-import useLineBreakPostProcess from './use/lineBreakPostProcess'
-import useTextAreaSizeUpdater from './use/textAreaSizeUpdater'
 import useFocus from './use/focus'
 import useEditingStatus from './use/editingStatus'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
@@ -100,26 +93,9 @@ export default defineComponent({
       onModifierKeyUp
     } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
-    const {
-      shouldUpdateSize,
-      onUpdateSize,
-      onStampInput
-    } = useTextAreaSizeUpdater()
-    const {
-      lineBreakPostProcessState,
-      runLineBreakPostProcess,
-      onLineBreakPostProcessDone
-    } = useLineBreakPostProcess()
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(props.channelId, textState, isFocused)
 
-    const onInsertLineBreak = (newText: string, selectionIndex: number) => {
-      textState.text = newText
-
-      context.root.$nextTick(() => {
-        runLineBreakPostProcess(selectionIndex)
-      })
-    }
     const postMessage = usePostMessage(textState, props)
 
     const typingUsers = computed(
@@ -148,9 +124,7 @@ export default defineComponent({
           stampData.effects && stampData.effects.length > 0
             ? `.${stampData.effects.join('.')}`
             : ''
-        const stampText = textState.text + `:${stampName}${size}${effects}:`
-        textState.text = stampText
-        onStampInput()
+        textState.text += `:${stampName}${size}${effects}:`
       }
     )
 
@@ -169,18 +143,13 @@ export default defineComponent({
       typingUsers,
       textState,
       attachmentsState,
-      shouldUpdateSize,
       onFocus,
       onBlur,
       onInputText,
       onModifierKeyDown,
       onModifierKeyUp,
       onStampClick,
-      onUpdateSize,
       postMessage,
-      onInsertLineBreak,
-      lineBreakPostProcessState,
-      onLineBreakPostProcessDone,
       addAttachment,
       showKeyGuide,
       canPostMessage
