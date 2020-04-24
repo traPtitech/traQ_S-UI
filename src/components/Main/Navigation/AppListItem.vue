@@ -40,7 +40,7 @@ export default defineComponent({
     iconName: { type: String, required: true },
     iconMdi: { type: Boolean, default: false },
     label: { type: String, default: '' },
-    appLink: { type: URL, default: '' }
+    appLink: { type: String, default: '' }
   },
   setup() {
     const styles = useStyles()

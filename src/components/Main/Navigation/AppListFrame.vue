@@ -27,10 +27,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  display: grid;
-  row-gap: 16px;
+  display: block;
   width: max-content;
   padding: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 </style>
