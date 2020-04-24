@@ -21,7 +21,7 @@
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import UserIconEllipsisList from './UserIconEllipsisList.vue'
+import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>

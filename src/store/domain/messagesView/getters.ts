@@ -15,7 +15,6 @@ export const getters = defineGetters<S>()({
         v => v.state === ChannelViewState.Monitoring || ChannelViewState.Editing
       )
       .map(v => v.userId)
-      .reverse()
   },
   typingUsers(...args): UserId[] {
     const { rootState, state } = getterContext(args)
