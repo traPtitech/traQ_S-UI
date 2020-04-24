@@ -64,31 +64,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  padding: 16px;
-}
-.headerContainer {
-  display: flex;
-}
-.navigationButton {
-  display: flex;
-  align-items: center;
-  margin-right: 8px;
-}
-.tools {
-  flex-shrink: 0;
-}
-.toolsMenu {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  z-index: 999;
-}
-</style>
