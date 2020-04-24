@@ -19,6 +19,7 @@
       </div>
       <portal-target name="sidebar-opener" :class="$style.hidden" />
       <main-view-component-selector
+        v-if="state.secondary"
         :class="[$style.componentContainer, $style.secondary]"
         :view-info="state.secondary"
       />

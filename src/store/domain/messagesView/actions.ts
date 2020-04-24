@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
 import { messagesView } from './index'
-import { ChannelId, MessageId, StampId } from '@/types/entity-ids'
+import { ChannelId, MessageId, StampId, ClipFolderId } from '@/types/entity-ids'
 import { ChannelViewState, Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import apis from '@/lib/apis'
@@ -12,6 +12,14 @@ export const messagesViewActionContext = (context: any) =>
   moduleActionContext(context, messagesView)
 
 export const actions = defineActions({
+  resetViewState(context) {
+    const { commit } = messagesViewActionContext(context)
+    commit.unsetLoadedMessageOldestDate()
+    commit.unsetLoadedMessageLatestDate()
+    commit.setMessageIds([])
+    commit.setRenderedContent({})
+    commit.setCurrentViewer([])
+  },
   async changeCurrentChannel(
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
@@ -19,13 +27,11 @@ export const actions = defineActions({
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId === payload.channelId) return
 
+    commit.unsetCurrentClipFolderId()
+
     changeViewState(payload.channelId, ChannelViewState.Monitoring)
     commit.setCurrentChannelId(payload.channelId)
-    commit.unsetLoadedMessageOldestDate()
-    commit.unsetLoadedMessageLatestDate()
-    commit.setMessageIds([])
-    commit.setRenderedContent({})
-    commit.setCurrentViewer([])
+    dispatch.resetViewState()
 
     if (payload.entryMessageId) {
       commit.setIsReachedEnd(false)
@@ -47,6 +53,15 @@ export const actions = defineActions({
     dispatch.fetchPinnedMessages()
     dispatch.fetchTopic()
     dispatch.fetchSubscribers()
+  },
+
+  /** クリップフォルダに移行 */
+  async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
+    const { commit, dispatch } = messagesViewActionContext(context)
+    commit.unsetCurrentChannelId()
+    changeViewState(null)
+    dispatch.resetViewState()
+    commit.setCurrentClipFolderId(clipFolderId)
   },
 
   /** 読み込まれているメッセージより前のメッセージを取得し、HTMLにレンダリングする */

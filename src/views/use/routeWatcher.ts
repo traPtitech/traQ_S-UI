@@ -29,6 +29,7 @@ const useRouteWacher = (context: SetupContext) => {
     })
     return
   }
+
   const onRouteChangedToChannel = () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
@@ -39,7 +40,7 @@ const useRouteWacher = (context: SetupContext) => {
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
-      store.dispatch.domain.messagesView.changeCurrentChannel({
+      store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id
       })
     } catch (e) {
@@ -49,6 +50,23 @@ const useRouteWacher = (context: SetupContext) => {
     changeViewTitle(`#${state.channelParam}`)
     state.view = 'main'
   }
+
+  const onRouteChangedToClipFolders = async () => {
+    const id = state.idParam
+    const clipSymbol = '🖇 '
+    try {
+      const clipFolder =
+        store.state.entities.clipFolders[id] ??
+        (await store.dispatch.entities.fetchClipFolder(id))
+      changeViewTitle(`${clipSymbol}${clipFolder.name}`)
+    } catch {
+      state.view = 'not-found'
+      return
+    }
+    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    state.view = 'main'
+  }
+
   const onRouteChangedToFile = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
@@ -66,7 +84,7 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     const channelPath = channelIdToPathString(file.channelId)
-    store.dispatch.domain.messagesView.changeCurrentChannel({
+    store.dispatch.ui.mainView.changePrimaryViewToChannel({
       channelId: file.channelId
     })
     const modalPayload = {
@@ -78,6 +96,7 @@ const useRouteWacher = (context: SetupContext) => {
     changeViewTitle(`#${channelPath} - ${file.name}`)
     state.view = 'main'
   }
+
   const onRouteChangedToMessage = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       return
@@ -106,6 +125,8 @@ const useRouteWacher = (context: SetupContext) => {
       await onRouteChangedToIndex()
     } else if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
+    } else if (routeName === RouteName.ClipFolders) {
+      onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
     } else if (routeName === RouteName.Message) {
