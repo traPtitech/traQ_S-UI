@@ -70,6 +70,7 @@ const useChannelMessageFetcher = (
 
     if (!hasMore) {
       isReachedLatest.value = true
+      store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
       onReachedLatest()
     }
 

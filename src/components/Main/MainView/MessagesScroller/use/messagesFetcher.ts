@@ -1,4 +1,4 @@
-import { ref, Ref } from '@vue/composition-api'
+import { computed, ref, Ref } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
@@ -19,7 +19,8 @@ const useMessageFetcher = (
       ) => Promise<ChannelId[]>)
     | undefined
 ) => {
-  const messageIds = ref([] as MessageId[])
+  // メッセージIDはwsイベントで処理されるため、storeに置く
+  const messageIds = computed(() => store.state.domain.messagesView.messageIds)
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
   const isLoading = ref(false)
@@ -35,9 +36,11 @@ const useMessageFetcher = (
   }
 
   const reset = () => {
-    messageIds.value = []
+    store.commit.domain.messagesView.setMessageIds([])
     isReachedEnd.value = false
     isReachedLatest.value = false
+    store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
+    store.commit.domain.messagesView.setMessageIds([])
     isLoading.value = false
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
@@ -56,9 +59,9 @@ const useMessageFetcher = (
     isInitialLoad.value = false
     lastLoadingDirection.value = 'former'
 
-    messageIds.value = [
+    store.commit.domain.messagesView.setMessageIds([
       ...new Set([...newMessageIds.reverse(), ...messageIds.value])
-    ]
+    ])
   }
 
   const onLoadLatterMessagesRequest = async () => {
@@ -74,7 +77,9 @@ const useMessageFetcher = (
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latter'
 
-    messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
+    store.commit.domain.messagesView.setMessageIds([
+      ...new Set([...messageIds.value, ...newMessageIds])
+    ])
   }
 
   const onLoadAroundMessagesRequest = async (messageId: MessageId) => {
@@ -105,7 +110,7 @@ const useMessageFetcher = (
     isInitialLoad.value = false
     lastLoadingDirection.value = 'around'
 
-    messageIds.value = newMessageIds
+    store.commit.domain.messagesView.setMessageIds(newMessageIds)
   }
 
   const init = () => {
@@ -114,6 +119,7 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
+      store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
       onLoadFormerMessagesRequest()
     }
   }

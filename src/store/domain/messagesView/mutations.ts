@@ -21,6 +21,12 @@ export const mutations = defineMutations<S>()({
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
   },
+  setShouldRetriveMessageCreateEvent(
+    state,
+    shouldRetriveMessageCreateEvent: boolean
+  ) {
+    state.shouldRetriveMessageCreateEvent = shouldRetriveMessageCreateEvent
+  },
   addMessageId(state, messageId: MessageId) {
     state.messageIds.push(messageId)
   },
