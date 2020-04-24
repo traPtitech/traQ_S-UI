@@ -5,7 +5,9 @@ import store from '@/store'
 const useCurrentChannelPath = () => {
   const { channelIdToPathString } = useChannelPath()
   const currentChannelPathString = computed(() =>
-    channelIdToPathString(store.state.domain.messagesView.currentChannelId)
+    store.state.domain.messagesView.currentChannelId
+      ? channelIdToPathString(store.state.domain.messagesView.currentChannelId)
+      : ''
   )
   return { currentChannelPathString }
 }

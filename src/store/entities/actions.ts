@@ -3,7 +3,13 @@ import { moduleActionContext } from '@/store'
 import { entities } from './index'
 import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
-import { FileId, TagId, MessageId, ChannelId } from '@/types/entity-ids'
+import {
+  FileId,
+  TagId,
+  MessageId,
+  ChannelId,
+  ClipFolderId
+} from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -136,5 +142,11 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await apis.getClipFolders()
     commit.setClipFolders(reduceToRecord(res.data, 'id'))
+  },
+  async fetchClipFolder(context, id: ClipFolderId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await apis.getClipFolder(id)
+    commit.addClipFolder({ id, entity: res.data })
+    return res.data
   }
 })

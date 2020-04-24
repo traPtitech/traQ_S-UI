@@ -9,6 +9,7 @@ export enum RouteName {
   User = 'user',
   Message = 'message',
   File = 'File',
+  ClipFolders = 'clip-folders',
   Login = 'login',
   Registration = 'registration',
   ResetPassword = 'reset-password',
@@ -17,6 +18,8 @@ export enum RouteName {
 }
 
 export const constructChannelPath = (channel: string) => `/channels/${channel}`
+export const constructClipFoldersPath = (channel: string) =>
+  `/clip-folders/${channel}`
 
 const routes = [
   {
@@ -42,6 +45,11 @@ const routes = [
   {
     path: '/files/:id',
     name: RouteName.File,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/clip-folders/:id',
+    name: RouteName.ClipFolders,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
