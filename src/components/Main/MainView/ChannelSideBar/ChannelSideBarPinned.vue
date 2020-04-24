@@ -1,25 +1,22 @@
 <template>
-  <channel-sidebar-content title="ピン留め" @click="onClick">
-    <template #header-control>{{ propst.pinnedMessageLength }}</template>
-  </channel-sidebar-content>
+  <sidebar-content-container-link
+    title="ピン留め"
+    @click="onClick"
+    :count="pinnedMessageLength"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
+import SidebarContentContainerLink from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarPinned',
   props: { pinnedMessageLength: { type: Number, default: 0 } },
-  components: { ChannelSidebarContent },
-  setup(props, context) {
+  components: { SidebarContentContainerLink },
+  setup(_, context) {
     const onClick = () => context.emit('open')
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { pinnedMessageLength: number }
-    return {
-      propst,
-      onClick
-    }
+    return { onClick }
   }
 })
 </script>

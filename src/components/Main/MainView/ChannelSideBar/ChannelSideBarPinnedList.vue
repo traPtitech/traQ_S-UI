@@ -59,9 +59,8 @@ export default defineComponent({
 .container {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 100%;
   height: 100%;
-  padding: 0 32px;
   overflow: auto;
 }
 

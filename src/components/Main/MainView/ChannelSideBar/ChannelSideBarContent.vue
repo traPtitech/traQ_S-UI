@@ -1,63 +1,73 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.header" @click="onClick">
-      <h2 :class="$style.headerTitle">{{ title }}</h2>
-      <slot name="header-control"></slot>
-    </div>
-    <slot name="content" />
+  <div>
+    <channel-sidebar-viewers
+      :viewer-ids="viewerIds"
+      :class="$style.sidebarItem"
+    />
+    <channel-sidebar-topic :class="$style.sidebarItem" />
+    <channel-sidebar-pinned
+      :pinned-message-length="pinnedMessagesCount"
+      @open="context.emit('pinned-mode-toggle')"
+      :class="$style.sidebarItem"
+    />
+    <channel-sidebar-relation
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+    />
+    <channel-sidebar-member
+      :channel-id="channelId"
+      :class="$style.sidebarItem"
+      :viewer-ids="viewerIds"
+    />
+    <channel-sidebar-edit :class="$style.edit" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    }))
-  })
+import { defineComponent, PropType } from '@vue/composition-api'
+import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
+import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
+import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
+import ChannelSidebarMember from './ChannelSidebarMember.vue'
+import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
+import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import { UserId, ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarContent',
-  props: { title: { type: String, required: true } },
-  setup(_, context) {
-    const styles = useStyles()
-    const onClick = () => {
-      context.emit('click')
+  props: {
+    channelId: { type: String as PropType<ChannelId>, requried: true },
+    viewerIds: {
+      type: Array as PropType<UserId[]>,
+      required: true
+    },
+    pinnedMessagesCount: {
+      type: Number,
+      default: 0
     }
-    return { styles, onClick }
+  },
+  components: {
+    ChannelSidebarTopic,
+    ChannelSidebarPinned,
+    ChannelSidebarViewers,
+    ChannelSidebarMember,
+    ChannelSidebarEdit,
+    ChannelSidebarRelation
+  },
+  setup(_, context) {
+    return { context }
   }
 })
 </script>
 
 <style lang="scss" module>
-$headerSize: 1rem;
-
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 256px;
-  border-radius: 4px;
-  padding: 12px;
-  flex-shrink: 0;
+.sidebarItem {
+  margin: 16px 0;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  cursor: pointer;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.headerTitle {
-  font-weight: bold;
-  font-size: $headerSize;
+.edit {
+  margin: 24px 0;
+  flex: 1;
+  align-items: flex-end;
 }
 </style>

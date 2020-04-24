@@ -1,12 +1,13 @@
 <template>
-  <div
-    v-if="!state.isOpenDetail"
+  <sidebar-content-container
+    large-padding
+    clickable
     :class="$style.container"
-    :style="styles.container"
+    v-if="!state.isOpenDetail"
     @click="toggle"
   >
     <user-icon-ellipsis-list direction="row" :user-ids="viewerIds" />
-  </div>
+  </sidebar-content-container>
   <channel-sidebar-viewers-detail
     v-else
     :viewer-ids="viewerIds"
@@ -16,46 +17,35 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from './UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 import { UserId } from '@/types/entity-ids'
 
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.primary
-    }))
-  })
-
 export default defineComponent({
   name: 'ChannelSidebarViewers',
-  components: { UserIconEllipsisList, ChannelSidebarViewersDetail },
+  components: {
+    UserIconEllipsisList,
+    ChannelSidebarViewersDetail,
+    SidebarContentContainer
+  },
   props: {
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
   setup() {
-    const styles = useStyles()
     const state = reactive({
       isOpenDetail: false
     })
     const toggle = () => {
       state.isOpenDetail = !state.isOpenDetail
     }
-    return { styles, state, toggle }
+    return { state, toggle }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  display: flex;
-  width: 256px;
-  height: 64px;
-  border-radius: 4px;
-  padding-left: 16px;
-  flex-shrink: 0;
   cursor: pointer;
 }
 </style>

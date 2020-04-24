@@ -1,16 +1,13 @@
 <template>
-  <span v-if="isForceNotification" :style="styles.text" :class="$style.text">
-    強制通知チャンネル
-  </span>
-  <channel-sidebar-content v-else-if="userIds" title="メンバー">
-    <template #content>
-      <channel-sidebar-member-icons
-        v-if="userIds"
-        :class="$style.icons"
-        :viewer-states="viewStates"
-      />
-    </template>
-  </channel-sidebar-content>
+  <sidebar-content-container title="メンバー">
+    <empty-state v-if="isForceNotification">強制通知チャンネル</empty-state>
+    <channel-sidebar-member-icons
+      v-else-if="userIds.length > 0"
+      :class="$style.icons"
+      :viewer-states="viewStates"
+    />
+    <empty-state v-else>メンバーはいません</empty-state>
+  </sidebar-content-container>
 </template>
 
 <script lang="ts">
@@ -22,10 +19,10 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
+import { ChannelId, UserId } from '@/types/entity-ids'
+import EmptyState from '@/components/UI/EmptyState.vue'
+import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import { ChannelId } from '@/types/entity-ids'
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
-import { UserId } from '@/types/entity-ids'
 
 const useStyles = () =>
   reactive({
@@ -37,7 +34,11 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSidebarMember',
-  components: { ChannelSidebarMemberIcons, ChannelSidebarContent },
+  components: {
+    EmptyState,
+    ChannelSidebarMemberIcons,
+    SidebarContentContainer
+  },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }

@@ -1,60 +1,28 @@
 <template>
-  <channel-sidebar-content title="トピック" @click="toggle">
-    <template #header-control>
-      <icon
-        width="20"
-        height="20"
-        :style="styles.icon"
-        name="rounded-triangle"
-        :class="$style.icon"
-      />
-    </template>
-    <template #content>
-      <channel-sidebar-topic-content
-        v-if="state.isOpen"
-        :topic-content="topicContent"
-        :is-open="state.isOpen"
-      />
-    </template>
-  </channel-sidebar-content>
+  <sidebar-content-container-foldable title="トピック">
+    <channel-sidebar-topic-content :topic-content="topicContent" />
+  </sidebar-content-container-foldable>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
-import Icon from '@/components/UI/Icon.vue'
-import ChannelSidebarTopicContent from './ChannelSidebarTopicContent.vue'
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
 
-const useStyles = (state: { isOpen: boolean }) =>
-  reactive({
-    icon: makeStyles(theme => ({
-      transform: state.isOpen ? 'rotate(180deg)' : ''
-    }))
-  })
+import Icon from '@/components/UI/Icon.vue'
+import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ChannelSidebarTopicContent from './ChannelSidebarTopicContent.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarTopic',
   components: {
+    SidebarContentContainerFoldable,
     ChannelSidebarTopicContent,
-    ChannelSidebarContent,
     Icon
   },
   setup() {
-    const state = reactive({
-      isOpen: true
-    })
-    const styles = useStyles(state)
-    const toggle = () => {
-      state.isOpen = !state.isOpen
-    }
     const topicContent = computed(() => store.state.domain.messagesView.topic)
     return {
-      state,
-      toggle,
-      topicContent,
-      styles
+      topicContent
     }
   }
 })
