@@ -4,9 +4,7 @@
       <icon mdi :name="fileIconName" :size="32" />
     </div>
     <div :class="$style.fileName" :style="styles.fileName">
-      <span :class="$style.fileNameInner" :style="styles.fileNameInner">
-        {{ fileMeta.name }}
-      </span>
+      {{ fileMeta.name }}
     </div>
     <div :class="$style.fileSize" :style="styles.fileSize">
       {{ fileSize }}
@@ -31,9 +29,6 @@ const useStyles = (props: { isWhite: boolean; isEllipsis: boolean }) =>
     fileName: makeStyles(() => ({
       wordBreak: props.isEllipsis ? `normal` : `break-all`,
       overflowWrap: props.isEllipsis ? `normal` : `break-word`,
-      overflow: props.isEllipsis ? `hidden` : `auto`
-    })),
-    fileNameInner: makeStyles(() => ({
       overflow: props.isEllipsis ? `hidden` : `auto`,
       textOverflow: props.isEllipsis ? `ellipsis` : `clip`,
       whiteSpace: props.isEllipsis ? `nowrap` : `normal`
