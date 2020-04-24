@@ -5,7 +5,11 @@
     v-if="!state.isOpenDetail"
     @click="toggle"
   >
-    <user-icon-ellipsis-list direction="row" :user-ids="viewerIds" />
+    <user-icon-ellipsis-list
+      direction="row"
+      :user-ids="viewerIds"
+      @click.native="toggle"
+    />
   </sidebar-content-container>
   <channel-sidebar-viewers-detail
     v-else
