@@ -14,8 +14,6 @@ export const messagesViewActionContext = (context: any) =>
 export const actions = defineActions({
   resetViewState(context) {
     const { commit } = messagesViewActionContext(context)
-    commit.unsetLoadedMessageOldestDate()
-    commit.unsetLoadedMessageLatestDate()
     commit.setMessageIds([])
     commit.setRenderedContent({})
     commit.setCurrentViewer([])
@@ -70,13 +68,14 @@ export const actions = defineActions({
       context
     )
     if (!state.currentChannelId) throw 'no channel id'
+
     const { messages } = await rootDispatch.entities.fetchMessagesByChannelId({
       channelId: state.currentChannelId,
       limit: 1,
       offset: 0
     })
     if (messages.length !== 1) return
-    commit.setLoadedMessageLatestDate(new Date(messages[0].createdAt))
+
     const messageId = messages[0].id
     await dispatch.renderMessageContent(messageId)
     commit.setMessageIds([...state.messageIds, messageId])
@@ -122,14 +121,12 @@ export const actions = defineActions({
   async addAndRenderMessage(context, payload: { message: Message }) {
     const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
-    commit.setLoadedMessageLatestDate(new Date(payload.message.createdAt))
     commit.addMessageId(payload.message.id)
     store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
     const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
-    commit.setLoadedMessageLatestDate(new Date(payload.message.updatedAt))
     commit.updateMessageId(payload.message.id)
     store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },

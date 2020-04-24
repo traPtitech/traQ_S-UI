@@ -18,34 +18,12 @@ export interface S {
 
   pinnedMessages: Pin[]
 
-  currentOffset: number
-
-  /** 読み込まれているメッセージのうち、最も新しいものの日時 */
-  loadedMessageLatestDate: Date | undefined
-
-  /** 読み込まれているメッセージのうち、最も古いものの日時 */
-  loadedMessageOldestDate: Date | undefined
-
-  /** 初回のロードのみしか行われていないか */
-  isInitialLoad: boolean
-
-  /** 最後に行った読み込みの方向 */
-  lastLoadingDirection: LoadingDirection
-
-  /** チャンネルの過去方向全てのメッセージを取得したか */
-  isReachedEnd: boolean
-
   /**
-   * チャンネルの未来方向全てのメッセージを取得したか
+   * WebSocketの`MESSAGE_CREATED`イベントに対応する必要があるか
    *
-   * `true`になった以降はWebSocketによる通知に対応する必要がある
+   * `isReachedLatest`と同期する必要がある
    */
-  isReachedLatest: boolean
-
-  /** 最初に表示するメッセージId */
-  entryMessageId?: MessageId
-
-  fetchLimit: number
+  shouldRetriveMessageCreateEvent: boolean
 
   renderedContentMap: Record<MessageId, string>
 
@@ -63,17 +41,9 @@ export const state: S = {
   currentClipFolderId: undefined,
   messageIds: [],
   pinnedMessages: [],
-  currentOffset: 0,
-  loadedMessageLatestDate: undefined,
-  loadedMessageOldestDate: undefined,
-  isInitialLoad: false,
-  lastLoadingDirection: 'latest',
-  fetchLimit: 50,
   renderedContentMap: {},
   embeddingsMap: {},
-  entryMessageId: undefined,
-  isReachedEnd: false,
-  isReachedLatest: false,
+  shouldRetriveMessageCreateEvent: false,
   currentViewers: [],
   topic: '',
   subscribers: []
