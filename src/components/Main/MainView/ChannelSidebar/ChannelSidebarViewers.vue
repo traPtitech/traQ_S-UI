@@ -2,7 +2,6 @@
   <sidebar-content-container
     large-padding
     clickable
-    :class="$style.container"
     v-if="!state.isOpenDetail"
     @click="toggle"
   >
@@ -43,9 +42,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  cursor: pointer;
-}
-</style>

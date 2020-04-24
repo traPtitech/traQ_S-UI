@@ -27,21 +27,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  width: 256px;
-  border-radius: 4px;
-  min-height: 0px;
-  position: relative;
-  z-index: 0;
-  transition: 0.5s;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.icon {
-  transform: rotate(0deg);
-  transition: 0.5s;
-}
-</style>
