@@ -1,4 +1,5 @@
 <template>
+  <!-- Enterキーでログインするため -->
   <form @submit.prevent="login">
     <authenticate-header :class="$style.header" />
     <authenticate-input
@@ -26,7 +27,7 @@
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button-primary label="ログイン" @click="login" />
+      <authenticate-button-primary label="ログイン" />
     </div>
     <!-- TODO: /versionの結果によってここを出し分ける -->
     <template v-if="!isIOS">
