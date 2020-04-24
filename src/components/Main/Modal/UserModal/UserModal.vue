@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.wrapper">
-    <button :class="$style.close" @click="onClickClear">X</button>
+    <close-button @click="onClickClear" :size="32" :class="$style.close" />
     <user-icon
       v-if="!isMobile"
       :user-id="user.id"
@@ -41,6 +41,7 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import Feature from './Feature/Feature.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
@@ -94,7 +95,8 @@ export default defineComponent({
     UserIcon,
     Feature,
     NavigationSelector,
-    NavigationContent
+    NavigationContent,
+    CloseButton
   }
 })
 </script>
@@ -121,8 +123,8 @@ export default defineComponent({
 
 .close {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 12px;
+  right: 12px;
   z-index: 1;
 }
 
