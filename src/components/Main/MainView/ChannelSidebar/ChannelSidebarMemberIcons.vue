@@ -31,7 +31,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarMember',
+  name: 'ChannelSidebarMember',
   components: { UserIcon },
   props: {
     viewerStates: { type: Array as PropType<ViewState[]>, default: [] }

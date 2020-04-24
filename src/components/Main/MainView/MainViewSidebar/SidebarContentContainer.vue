@@ -1,10 +1,16 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.header" @click="onClick">
+  <div
+    :data-is-large-padding="largePadding"
+    :data-is-clickable="clickable"
+    :class="$style.container"
+    :style="styles.container"
+    @click.self="onContainerClick"
+  >
+    <div v-if="title" :class="$style.header" @click="onTitleClick">
       <h2 :class="$style.headerTitle">{{ title }}</h2>
       <slot name="header-control"></slot>
     </div>
-    <slot name="content" />
+    <slot />
   </div>
 </template>
 
@@ -21,14 +27,29 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarContent',
-  props: { title: { type: String, required: true } },
-  setup(_, context) {
+  name: 'SidebarContentContainer',
+  props: {
+    title: String,
+    largePadding: {
+      type: Boolean,
+      default: false
+    },
+    clickable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props, context) {
     const styles = useStyles()
-    const onClick = () => {
+    const onTitleClick = () => {
       context.emit('click')
     }
-    return { styles, onClick }
+    const onContainerClick = () => {
+      if (props.clickable) {
+        context.emit('click')
+      }
+    }
+    return { styles, onTitleClick, onContainerClick }
   }
 })
 </script>
@@ -39,10 +60,16 @@ $headerSize: 1rem;
 .container {
   display: flex;
   flex-direction: column;
-  width: 256px;
-  border-radius: 4px;
+  width: 100%;
   padding: 12px;
+  border-radius: 4px;
   flex-shrink: 0;
+  &[data-is-clickable] {
+    cursor: pointer;
+  }
+  &[data-is-large-padding] {
+    padding: 16px;
+  }
 }
 
 .header {
@@ -52,6 +79,7 @@ $headerSize: 1rem;
   margin-bottom: 8px;
   cursor: pointer;
   &:last-child {
+    // 折り畳み時の見た目調整
     margin-bottom: 0;
   }
 }

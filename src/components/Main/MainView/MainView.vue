@@ -4,6 +4,7 @@
       :class="$style.headerContainer"
       :view-info="state.primary"
     />
+    <main-view-sidebar-selector :view-info="state.primary" />
     <div :class="$style.layoutContainer" :data-layout="state.layout">
       <div :class="$style.primaryContainer">
         <main-view-component-selector
@@ -29,13 +30,17 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import store from '@/store'
 import useIsMobile from '@/use/isMobile'
-
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
+import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
 
 export default defineComponent({
   name: 'MainView',
-  components: { MainViewComponentSelector, MainViewHeaderSelector },
+  components: {
+    MainViewComponentSelector,
+    MainViewHeaderSelector,
+    MainViewSidebarSelector
+  },
   setup() {
     const state = reactive({
       layout: computed(() => store.state.ui.mainView.layout),

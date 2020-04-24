@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="propst.parent" :class="$style.channel">
-      <channel-side-bar-relation-element
+      <channel-sidebar-relation-element
         :name="propst.parent.name"
         :topic="propst.parent.topic"
         :link="buildParentLink()"
@@ -12,7 +12,7 @@
       :class="$style.channel"
       :style="[propst.parent ? styles.firstBoarder : '']"
     >
-      <channel-side-bar-relation-element
+      <channel-sidebar-relation-element
         :is-current="true"
         :name="propst.current.name"
         :topic="propst.current.topic"
@@ -22,7 +22,7 @@
         :style="[propst.parent ? styles.secondBoarder : styles.firstBoarder]"
       >
         <div v-for="(child, index) in propst.children" :key="child.id">
-          <channel-side-bar-relation-element
+          <channel-sidebar-relation-element
             v-if="index < 3 || state.isOpenChildren"
             :name="child.name"
             :topic="child.topic"
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div v-for="(sibling, index) in propst.siblings" :key="sibling.id">
-        <channel-side-bar-relation-element
+        <channel-sidebar-relation-element
           v-if="index < 3 || state.isOpenSiblings"
           :name="sibling.name"
           :topic="sibling.topic"
@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import ChannelSideBarRelationElement from './ChannelSideBarRelationElement.vue'
+import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
 import { RelatedChannelEntry } from './use/useRelatedChannels'
 
@@ -80,7 +80,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarRelationContent',
+  name: 'ChannelSidebarRelationContent',
   props: {
     parent: {
       type: Object as PropType<RelatedChannelEntry>
@@ -97,7 +97,7 @@ export default defineComponent({
       type: Object as PropType<RelatedChannelEntry>
     }
   },
-  components: { ChannelSideBarRelationElement },
+  components: { ChannelSidebarRelationElement },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as {

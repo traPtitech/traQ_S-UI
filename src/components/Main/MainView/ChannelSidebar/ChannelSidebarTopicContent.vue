@@ -25,7 +25,7 @@ const useStyles = (props: { topicContent?: string }) =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarTopicContent',
+  name: 'ChannelSidebarTopicContent',
   components: { Icon },
   props: {
     topicContent: { type: String }

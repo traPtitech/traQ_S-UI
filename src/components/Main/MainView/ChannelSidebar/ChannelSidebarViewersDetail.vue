@@ -1,20 +1,18 @@
 <template>
-  <channel-side-bar-content title="閲覧者" @click="closeDetail">
-    <template #content>
-      <user-icon v-for="id in viewerIds" :key="id" :user-id="id" :size="40" />
-    </template>
-  </channel-side-bar-content>
+  <sidebar-content-container clickable title="閲覧者" @click="closeDetail">
+    <user-icon v-for="id in viewerIds" :key="id" :user-id="id" :size="40" />
+  </sidebar-content-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '@/types/entity-ids'
-import ChannelSideBarContent from './ChannelSideBarContent.vue'
+import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 
 export default defineComponent({
-  name: 'ChannelSideBarViewerDetail',
-  components: { UserIcon, ChannelSideBarContent },
+  name: 'ChannelSidebarViewerDetail',
+  components: { UserIcon, SidebarContentContainer },
   props: { viewerIds: { type: Array as PropType<UserId[]>, default: [] } },
   setup(_, context) {
     const closeDetail = () => {

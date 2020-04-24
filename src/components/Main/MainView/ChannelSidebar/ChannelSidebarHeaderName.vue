@@ -17,7 +17,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarHeaderName',
+  name: 'ChannelSidebarHeaderName',
   props: {
     channelName: { type: String, required: true }
   },

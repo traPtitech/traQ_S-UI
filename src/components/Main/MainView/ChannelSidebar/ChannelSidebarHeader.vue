@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <channel-side-bar-header-name :channel-name="state.channelName" />
+    <channel-sidebar-header-name :channel-name="state.channelName" />
     <close-button @click="onClick" :size="28" />
   </div>
 </template>
@@ -15,7 +15,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import ChannelSideBarHeaderName from './ChannelSideBarHeaderName.vue'
+import ChannelSidebarHeaderName from './ChannelSidebarHeaderName.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
@@ -26,9 +26,9 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarHeader',
+  name: 'ChannelSidebarHeader',
   props: { channelId: { type: String as PropType<ChannelId>, required: true } },
-  components: { ChannelSideBarHeaderName, CloseButton },
+  components: { ChannelSidebarHeaderName, CloseButton },
   setup(props, context) {
     const state = reactive({
       channelName: computed(

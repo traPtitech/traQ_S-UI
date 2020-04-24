@@ -28,7 +28,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarRelationElement',
+  name: 'ChannelSidebarRelationElement',
   props: {
     name: { type: String, required: true },
     topic: { type: String, default: '' },

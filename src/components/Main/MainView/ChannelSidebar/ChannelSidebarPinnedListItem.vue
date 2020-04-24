@@ -43,7 +43,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarPinnedListItem',
+  name: 'ChannelSidebarPinnedListItem',
   components: { UserIcon },
   props: { pinnedMessage: { type: Object as PropType<Pin>, required: true } },
   setup(props) {

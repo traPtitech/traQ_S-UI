@@ -33,7 +33,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSideBarHidden',
+  name: 'ChannelSidebarHidden',
   props: {
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
