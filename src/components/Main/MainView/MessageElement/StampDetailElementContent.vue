@@ -1,8 +1,9 @@
 <template>
   <div :class="$style.container">
-    {{ user.name + '(' }}
-    <spin-number :value="props.count" />
-    {{ ')' }}
+    {{ user.name }}
+    <span :class="$style.numberWrap">
+      <spin-number :value="props.count" />
+    </span>
   </div>
 </template>
 
@@ -37,5 +38,18 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
+}
+.numberWrap {
+  display: flex;
+  height: 1.5rem;
+  overflow: hidden;
+  &::before {
+    content: '(';
+    display: block;
+  }
+  &::after {
+    content: ')';
+    display: block;
+  }
 }
 </style>
