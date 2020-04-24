@@ -5,7 +5,11 @@
     v-if="!state.isOpenDetail"
     @click="toggle"
   >
-    <user-icon-ellipsis-list direction="row" :user-ids="viewerIds" />
+    <user-icon-ellipsis-list
+      direction="row"
+      :user-ids="viewerIds"
+      @click.native="toggle"
+    />
   </sidebar-content-container>
   <channel-sidebar-viewers-detail
     v-else
@@ -17,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import UserIconEllipsisList from './UserIconEllipsisList.vue'
+import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 import { UserId } from '@/types/entity-ids'
 

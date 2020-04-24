@@ -31,6 +31,7 @@ const useStyles = (props: { onSecondary: boolean }) =>
       color: theme.ui.secondary
     })),
     inputContainer: makeStyles(theme => ({
+      color: theme.ui.primary,
       background: props.onSecondary
         ? theme.background.primary
         : theme.background.secondary
@@ -93,6 +94,7 @@ export default defineComponent({
 .input {
   margin: 0 8px;
   width: 100%;
+  color: inherit;
 }
 .suffix {
   margin-right: 8px;
