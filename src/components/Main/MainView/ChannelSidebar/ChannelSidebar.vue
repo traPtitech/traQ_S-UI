@@ -20,7 +20,7 @@
         v-else
         :channel-id="channelId"
         :viewer-ids="viewerIds"
-        :pinned-messages-count="state.pinnedMessage.count"
+        :pinned-messages-count="state.pinnedMessage.length"
         @pinned-mode-toggle="togglePinnedMode"
       />
     </template>
