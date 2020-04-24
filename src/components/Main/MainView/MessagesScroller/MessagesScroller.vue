@@ -28,7 +28,6 @@ import {
   onBeforeUnmount
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
-
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
