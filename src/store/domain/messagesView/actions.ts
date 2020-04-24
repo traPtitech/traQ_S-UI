@@ -114,7 +114,7 @@ export const actions = defineActions({
   /** 読み込まれているメッセージより前のメッセージを取得し、idを返す */
   async fetchChannelFormerMessages(context): Promise<ChannelId[]> {
     const { state, commit, rootDispatch } = messagesViewActionContext(context)
-    if (state.isReachedEnd) return []
+    if (state.isReachedEnd || !state.currentChannelId) return []
     const {
       messages,
       hasMore
@@ -144,7 +144,7 @@ export const actions = defineActions({
   /** 読み込まれているメッセージより後のメッセージを取得し、idを返す */
   async fetchChannelLatterMessages(context): Promise<ChannelId[]> {
     const { state, commit, rootDispatch } = messagesViewActionContext(context)
-    if (state.isReachedLatest) return []
+    if (state.isReachedLatest || !state.currentChannelId) return []
     const {
       messages,
       hasMore
@@ -170,18 +170,22 @@ export const actions = defineActions({
 
     return messages.map(message => message.id)
   },
+
   async fetchPinnedMessages(context) {
     const { state, commit } = messagesViewActionContext(context)
+    if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
   },
   async fetchTopic(context) {
     const { state, commit } = messagesViewActionContext(context)
+    if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelTopic(state.currentChannelId)
     commit.setTopic(res.data.topic)
   },
   async fetchSubscribers(context) {
     const { state, commit } = messagesViewActionContext(context)
+    if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelSubscribers(state.currentChannelId)
     commit.setSubscribers(res.data)
   },
@@ -189,6 +193,7 @@ export const actions = defineActions({
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(
       context
     )
+    if (!state.currentChannelId) throw 'no channel id'
     const { messages } = await rootDispatch.entities.fetchMessagesByChannelId({
       channelId: state.currentChannelId,
       limit: 1,
@@ -252,20 +257,20 @@ export const actions = defineActions({
     commit.updateMessageId(payload.message.id)
     store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
-  async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+  async addStamp(_, payload: { messageId: MessageId; stampId: StampId }) {
     apis.addMessageStamp(payload.messageId, payload.stampId)
     store.commit.domain.me.upsertLocalStampHistory({
       stampId: payload.stampId,
       datetime: new Date()
     })
   },
-  removeStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+  removeStamp(_, payload: { messageId: MessageId; stampId: StampId }) {
     apis.removeMessageStamp(payload.messageId, payload.stampId)
   },
-  addPinned(context, payload: { messageId: MessageId }) {
+  addPinned(_, payload: { messageId: MessageId }) {
     apis.createPin(payload.messageId)
   },
-  removePinned(context, payload: { messageId: MessageId }) {
+  removePinned(_, payload: { messageId: MessageId }) {
     apis.removePin(payload.messageId)
   }
 })
