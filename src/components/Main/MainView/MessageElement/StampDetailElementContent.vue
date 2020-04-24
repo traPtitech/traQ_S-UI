@@ -49,6 +49,5 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
-  margin: 0 4px;
 }
 </style>

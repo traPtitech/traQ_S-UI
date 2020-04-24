@@ -62,8 +62,10 @@ export default defineComponent({
 .container {
   display: flex;
 }
-.stamp {
-}
 .content {
+  &::before {
+    white-space: pre;
+    content: ' ';
+  }
 }
 </style>
