@@ -11,7 +11,7 @@ export type NavigationItemType =
 export const navigationTypeNameMap: Record<NavigationItemType, string> = {
   profile: 'プロフィール',
   browser: 'ブラウザ',
-  qall: '通話',
+  qall: '通話 (Qall)',
   stamp: 'スタンプ',
   theme: 'テーマ'
 }
