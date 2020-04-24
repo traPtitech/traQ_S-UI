@@ -1,6 +1,7 @@
 <template>
   <a
     :class="$style.link"
+    :style="styles.container"
     :href="appLink"
     target="_blank"
     rel="noopener noreferrer"
@@ -51,21 +52,17 @@ export default defineComponent({
 
 <style lang="scss" module>
 .link {
-  width: 100%;
-  height: 100%;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  flex: 1 0;
 }
 .container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 16px;
-  border-radius: 4px;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
 }
-
 .label {
   font: {
     size: 1rem;

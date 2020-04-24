@@ -7,7 +7,7 @@
       />
       <tool-box />
     </div>
-    <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+    <portal-target :name="targetPortalName" />
     <navigation-content :current-navigation="currentNavigation" />
   </div>
 </template>
@@ -55,10 +55,5 @@ $selectorWidth: 64px;
   width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
-}
-.popupLocator {
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 </style>

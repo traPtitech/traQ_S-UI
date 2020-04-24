@@ -1,15 +1,17 @@
 <template>
-  <app-list-frame>
+  <div>
     <span>サービス</span>
-    <div v-for="app in apps" :key="app.appName" :class="$style.container">
-      <app-list-item
-        :icon-name="app.iconName"
-        :icon-mdi="app.iconMdi"
-        :label="app.label"
-        :app-link="app.appLink"
-      />
-    </div>
-  </app-list-frame>
+      <app-list-frame>
+        <div v-for="app in apps" :key="app.appName" :class="$style.container">
+          <app-list-item
+            :icon-name="app.iconName"
+            :icon-mdi="app.iconMdi"
+            :label="app.label"
+            :app-link="app.appLink"
+          />
+        </div>
+      </app-list-frame>
+  </div>
 </template>
 
 <script lang="ts">
@@ -97,8 +99,6 @@ export default defineComponent({
   flex-flow: row wrap;
   justify-content: stretch;
   align-items: stretch;
-  width: 100%;
-  height: 100%;
   padding: 16px;
   border-radius: 4px;
 }

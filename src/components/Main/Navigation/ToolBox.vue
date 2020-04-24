@@ -130,8 +130,8 @@ export default defineComponent({
 }
 .toolsMenu {
   position: absolute;
-  right: 0;
-  top: 0;
+  bottom: 0;
+  left: 0;
   z-index: 999;
 }
 </style>
