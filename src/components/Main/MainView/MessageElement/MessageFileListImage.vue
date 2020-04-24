@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
-import { buildFilePath } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 
@@ -44,9 +43,12 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles()
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
+    const { fileMeta, fileLink, fileRawPath, fileThumbnailPath } = useFileMeta(
+      props,
+      context
+    )
     const imagePath = computed(() =>
-      props.isLarge ? buildFilePath(props.fileId) : fileRawPath.value
+      props.isLarge ? fileRawPath.value : fileThumbnailPath.value
     )
     return { imagePath, styles, fileLink, fileMeta }
   }
