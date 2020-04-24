@@ -101,12 +101,20 @@ export default defineComponent({
           props.lastLoadingDirection === 'latest' ||
           props.lastLoadingDirection === 'former'
         ) {
-          // 新規に一つ追加された場合は一番下までスクロール
+          if (ids.length - prevIds.length === -1) {
+            // 削除された場合は何もしない
+            return
+          }
+          // XXX: 追加時にここは0になる
+          if (ids.length - prevIds.length === 0) {
+            // 新規に一つ追加された場合は一番下までスクロール
+            rootRef.value.scrollTo({
+              top: newHeight
+            })
+            return
+          }
           rootRef.value.scrollTo({
-            top:
-              ids.length - prevIds.length === 1
-                ? newHeight
-                : newHeight - state.height
+            top: newHeight - state.height
           })
         }
         state.height = newHeight
