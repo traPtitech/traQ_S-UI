@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <div :class="$style.stamp">
       {{ ':' + state.stamp.name + ': from' }}
     </div>
@@ -21,16 +21,10 @@ import {
   computed
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { StampId } from '@/types/entity-ids'
 import { MessageStamp } from '@traptitech/traq'
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { reduceToRecord } from '@/lib/util/record'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'StampDetailListElement',
@@ -48,12 +42,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const state = reactive({
-      stampByUserId: reduceToRecord(props.stamps, 'userId'),
+      stampByUserId: computed(() => reduceToRecord(props.stamps, 'userId')),
       stamp: computed(() => store.state.entities.stamps[props.stampId])
     })
-    return { styles, state }
+    return { state }
   }
 })
 </script>
