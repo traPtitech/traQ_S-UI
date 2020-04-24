@@ -3,8 +3,10 @@
     <div :class="$style.icon">
       <icon mdi :name="fileIconName" :size="32" />
     </div>
-    <div :class="$style.fileName">
-      {{ fileMeta.name }}
+    <div :class="$style.fileName" :style="styles.fileName">
+      <span :class="$style.fileNameInner" :style="styles.fileNameInner">
+        {{ fileMeta.name }}
+      </span>
     </div>
     <div :class="$style.fileSize" :style="styles.fileSize">
       {{ fileSize }}
@@ -21,10 +23,20 @@ import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { isWhite: boolean }) =>
+const useStyles = (props: { isWhite: boolean; isEllipsis: boolean }) =>
   reactive({
     container: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
+    })),
+    fileName: makeStyles(() => ({
+      wordBreak: props.isEllipsis ? `normal` : `break-all`,
+      overflowWrap: props.isEllipsis ? `normal` : `break-word`,
+      overflow: props.isEllipsis ? `hidden` : `auto`
+    })),
+    fileNameInner: makeStyles(() => ({
+      overflow: props.isEllipsis ? `hidden` : `auto`,
+      textOverflow: props.isEllipsis ? `ellipsis` : `clip`,
+      whiteSpace: props.isEllipsis ? `nowrap` : `normal`
     })),
     fileSize: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
@@ -42,6 +54,10 @@ export default defineComponent({
       required: true
     },
     isWhite: {
+      type: Boolean,
+      default: false
+    },
+    isEllipsis: {
       type: Boolean,
       default: false
     }
@@ -74,7 +90,6 @@ export default defineComponent({
     'icon ... name ... dl' minmax(min-content, 20px)
     'icon ... size ... dl' minmax(min-content, 16px)
     / 36px 16px auto 1fr 24px;
-  padding: 0 16px;
 }
 .icon,
 .dl {
@@ -91,8 +106,6 @@ export default defineComponent({
 .fileName {
   grid-area: name;
   min-width: 0;
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 .fileSize {
   grid-area: size;
