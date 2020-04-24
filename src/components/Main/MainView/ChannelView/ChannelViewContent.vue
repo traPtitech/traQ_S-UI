@@ -1,93 +1,69 @@
 <template>
   <div :class="$style.container">
     <messages-scroller
-      :message-ids="state.channelMessageIds"
-      :entry-message-id="state.entryMessageId"
-      :is-loading="loadMessagesState.isLoading"
-      :last-loading-direction="loadMessagesState.lastLoadingDirection"
-      :is-initial-load="loadMessagesState.isInitialLoad"
-      @request-load-former="loadFormerMessages"
-      @request-load-latter="loadLatterMessages"
+      :message-ids="messageIds"
+      :is-reached-end="isReachedEnd"
+      :is-reached-latest="isReachedLatest"
+      :entry-message-id="entryMessageId"
+      :is-loading="isLoading"
+      :last-loading-direction="lastLoadingDirection"
+      @request-load-former="onLoadFormerMessagesRequest"
+      @request-load-latter="onLoadLatterMessagesRequest"
     />
     <message-input :channel-id="channelId" />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  reactive,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+
 import { makeStyles } from '@/lib/styles'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 
-const useLoadMessages = () => {
-  const state = reactive({
-    isLoading: false,
-    lastLoadingDirection: computed(
-      () => store.state.domain.messagesView.lastLoadingDirection
-    ),
-    isInitialLoad: computed(() => store.state.domain.messagesView.isInitialLoad)
-  })
-  const loadMessages = (direction: 'former' | 'latter') => async () => {
-    state.isLoading = true
-    store.commit.domain.messagesView.setLastLoadingDirection(direction)
-    if (direction === 'former') {
-      await store.dispatch.domain.messagesView.fetchAndRenderChannelFormerMessages()
-    } else {
-      await store.dispatch.domain.messagesView.fetchAndRenderChannelLatterMessages()
-    }
-    if (store.state.domain.messagesView.isInitialLoad) {
-      store.commit.domain.messagesView.setIsInitialLoad(false)
-    }
-    state.isLoading = false
-  }
-  const loadFormerMessages = loadMessages('former')
-  const loadLatterMessages = loadMessages('latter')
-  return { loadMessagesState: state, loadFormerMessages, loadLatterMessages }
-}
+import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
+import useChannelMessageFetcher from './use/channelMessageFetcher'
 
 export default defineComponent({
   name: 'ChannelViewContent',
-  props: { channelId: { type: String as PropType<ChannelId>, required: true } },
+  props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
+    entryMessageId: String
+  },
   components: {
     MessagesScroller,
     MessageInput,
     ChannelViewFileUploadOverlay
   },
-  setup() {
-    const state = reactive({
-      channelMessageIds: computed(
-        () => store.state.domain.messagesView.messageIds
-      ),
-      entryMessageId: computed(
-        () => store.state.domain.messagesView.entryMessageId
-      )
-    })
-
+  setup(props) {
     const containerStyle = makeStyles(theme => ({
       background: theme.background.primary,
       color: theme.ui.primary
     }))
 
     const {
-      loadMessagesState,
-      loadFormerMessages,
-      loadLatterMessages
-    } = useLoadMessages()
+      messageIds,
+      isReachedEnd,
+      isReachedLatest,
+      isLoading,
+      lastLoadingDirection,
+      renderMessageFromIds,
+      onLoadFormerMessagesRequest,
+      onLoadLatterMessagesRequest,
+      onLoadAroundMessagesRequest
+    } = useChannelMessageFetcher(props)
 
     return {
-      state,
+      messageIds,
+      isReachedEnd,
+      isReachedLatest,
       containerStyle,
-      loadMessagesState,
-      loadFormerMessages,
-      loadLatterMessages
+      isLoading,
+      lastLoadingDirection,
+      onLoadFormerMessagesRequest,
+      onLoadLatterMessagesRequest,
+      onLoadAroundMessagesRequest
     }
   }
 })
