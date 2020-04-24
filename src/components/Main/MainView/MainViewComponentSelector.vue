@@ -1,21 +1,20 @@
 <template>
   <channel-view
     :class="$style.messagesView"
-    v-if="viewInfo.type === 'channel' && channelId"
+    v-if="viewInfo.type === 'channel'"
     :channel-id="viewInfo.channelId"
     :entry-message-id="viewInfo.entryMessageId"
   />
   <clips-view
     :class="$style.messagesView"
-    v-else-if="viewInfo.type === 'clips' && clipFolderId"
-    :clip-folder-id="clipFolderId"
+    v-else-if="viewInfo.type === 'clips'"
+    :clip-folder-id="viewInfo.clipFolderId"
   />
   <div :class="$style.none" v-else></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
 import ClipsView from '@/components/Main/MainView/ClipsView/ClipsView.vue'
@@ -29,18 +28,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
-    const channelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-    const clipFolderId = computed(
-      () => store.state.domain.messagesView.currentClipFolderId
-    )
-
-    return {
-      channelId,
-      clipFolderId
-    }
+  setup() {
+    return {}
   }
 })
 </script>
