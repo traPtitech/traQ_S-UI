@@ -33,12 +33,18 @@ const useStyles = (position: Ref<Place | undefined>) =>
   reactive({
     stampPicker: makeStyles(theme => {
       const height = 320
-      const marginBottom = 20
+      const width = 340
+      const margin = 20
       return {
         top: position.value
-          ? `min(calc(100vh - ${height}px - ${marginBottom}px), ${position.value.y}px)`
+          ? `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`
           : '',
-        left: position.value ? `${position.value.x}px` : ''
+        left: position.value
+          ? `min(${Math.max(
+              position.value.x,
+              width + margin
+            )}px, calc(100vw - ${margin}px))`
+          : ''
       }
     })
   })
