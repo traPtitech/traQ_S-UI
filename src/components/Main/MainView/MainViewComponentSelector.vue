@@ -2,7 +2,8 @@
   <channel-view
     :class="$style.messagesView"
     v-if="viewInfo.type === 'channel' && channelId"
-    :channel-id="channelId"
+    :channel-id="viewInfo.channelId"
+    :entry-message-id="viewInfo.entryMessageId"
   />
   <clips-view
     :class="$style.messagesView"

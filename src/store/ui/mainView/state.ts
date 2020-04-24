@@ -1,4 +1,4 @@
-import { ClipFolderId, ChannelId } from '@/types/entity-ids'
+import { ClipFolderId, ChannelId, MessageId } from '@/types/entity-ids'
 
 export type ViewType = 'channel' | 'qall' | 'clips'
 export interface ViewInformationBase {
@@ -12,6 +12,7 @@ export interface ChannelView extends ViewInformationBase {
   type: 'channel'
   /** まだ使われていない */
   channelId: ChannelId
+  entryMessageId?: MessageId
 }
 export interface QallView extends ViewInformationBase {
   type: 'qall'
@@ -58,7 +59,8 @@ export const state: S = {
   currentMainViewComponentState: MainViewComponentState.Hidden,
   primaryView: {
     type: 'channel',
-    channelId: ''
+    channelId: '',
+    entryMessageId: undefined
   },
   secondaryView: undefined
 }

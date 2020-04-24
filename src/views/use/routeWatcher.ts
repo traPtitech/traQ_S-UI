@@ -41,7 +41,8 @@ const useRouteWacher = (context: SetupContext) => {
         store.state.domain.channelTree.channelTree
       )
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
-        channelId: id
+        channelId: id,
+        entryMessageId: context.root.$route.query?.message as string
       })
     } catch (e) {
       state.view = 'not-found'
