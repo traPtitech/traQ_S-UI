@@ -62,8 +62,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
-}
 .icon {
   transform: rotate(0deg);
   transition: 0.5s;
