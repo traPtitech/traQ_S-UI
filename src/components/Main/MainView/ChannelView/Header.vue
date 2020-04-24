@@ -34,7 +34,6 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import useIsMobile from '@/use/isMobile'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
@@ -89,7 +88,6 @@ export default defineComponent({
     const { openNotificationModal } = useNotificationModal(props)
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
-    const { isMobile } = useIsMobile()
     const { copyLink } = useCopy(context)
     return {
       isPopupMenuShown,
@@ -102,8 +100,7 @@ export default defineComponent({
       copyLink,
       togglePopupMenu,
       closePopupMenu,
-      targetPortalName,
-      isMobile
+      targetPortalName
     }
   }
 })
