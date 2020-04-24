@@ -2,6 +2,7 @@
   <div
     @click="onChannelSelect(propst.id)"
     :style="[propst.isCurrent ? styles.current : '']"
+    :class="[propst.isCurrent ? $style.current : '']"
   >
     <span :class="$style.channelHash">#</span>
     {{ propst.name }}
@@ -15,12 +16,13 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useChannelSelect from '@/use/channelSelect'
+import { transparentize } from '@/lib/util/color'
 
 const useStyles = () =>
   reactive({
     current: makeStyles(theme => ({
       color: theme.accent.primary,
-      backgroundColor: theme.background.primary
+      backgroundColor: transparentize(theme.accent.primary, 0.1)
     }))
   })
 
@@ -58,5 +60,8 @@ $topiclSize: 1rem;
 .topic {
   font-weight: normal;
   font-size: $topiclSize;
+}
+.current {
+  font-weight: bold;
 }
 </style>
