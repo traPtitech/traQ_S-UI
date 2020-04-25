@@ -1,9 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.icon">
-      <icon mdi :name="fileIconName" :size="32" />
+      <icon mdi :name="fileIconName" :size="36" />
     </div>
-    <div :class="$style.fileName" :style="styles.fileName">
+    <div
+      :class="$style.fileName"
+      :data-is-ellipsis="props.isEllipsis"
+      :data-is-no-ellipsis="!props.isEllipsis"
+    >
       {{ fileMeta.name }}
     </div>
     <div :class="$style.fileSize" :style="styles.fileSize">
@@ -25,13 +29,6 @@ const useStyles = (props: { isWhite: boolean; isEllipsis: boolean }) =>
   reactive({
     container: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
-    })),
-    fileName: makeStyles(() => ({
-      wordBreak: props.isEllipsis ? `normal` : `break-all`,
-      overflowWrap: props.isEllipsis ? `normal` : `break-word`,
-      overflow: props.isEllipsis ? `hidden` : `auto`,
-      textOverflow: props.isEllipsis ? `ellipsis` : `clip`,
-      whiteSpace: props.isEllipsis ? `nowrap` : `normal`
     })),
     fileSize: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
@@ -90,6 +87,7 @@ export default defineComponent({
 .dl {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .icon {
   grid-area: icon;
@@ -101,6 +99,14 @@ export default defineComponent({
 .fileName {
   grid-area: name;
   min-width: 0;
+  &[data-is-ellipsis] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &[data-is-no-ellipsis] {
+    overflow-wrap: break-word;
+  }
 }
 .fileSize {
   grid-area: size;

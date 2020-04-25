@@ -58,7 +58,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 0;
 }
 .description {
   padding: 0 16px;
