@@ -5,7 +5,7 @@
     :class="$style.largeContainer"
     :style="styles.container"
   >
-    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
   <router-link
     v-else
@@ -13,7 +13,7 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
 </template>
 
@@ -43,14 +43,11 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles()
-    const { fileMeta, fileLink, fileRawPath, fileThumbnailPath } = useFileMeta(
+    const { fileMeta, fileLink, fileThumbnailPath } = useFileMeta(
       props,
       context
     )
-    const imagePath = computed(() =>
-      props.isLarge ? fileRawPath.value : fileThumbnailPath.value
-    )
-    return { imagePath, styles, fileLink, fileMeta }
+    return { fileThumbnailPath, styles, fileLink, fileMeta }
   }
 })
 </script>
