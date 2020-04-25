@@ -17,6 +17,7 @@
       />
       <a
         href="https://portal.trap.jp/reset-password"
+        v-show="state.showPasswordResetLink"
         :class="$style.forgotPassword"
         :style="styles.forgotPassword"
       >
@@ -92,7 +93,20 @@ export default defineComponent({
     const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const styles = useStyles()
     const isIOS = isIOSApp()
-    return { loginState, styles, setName, setPass, login, loginExternal, isIOS }
+    const state = reactive({
+      // 簡易的にhost名で分岐させてる
+      showPasswordResetLink: location.host === 'q.trap.jp'
+    })
+    return {
+      state,
+      loginState,
+      styles,
+      setName,
+      setPass,
+      login,
+      loginExternal,
+      isIOS
+    }
   }
 })
 </script>
