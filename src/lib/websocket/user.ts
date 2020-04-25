@@ -67,7 +67,7 @@ export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
 export const onUserWebRTCStateChanged = (
   data: UserWebRTCStateChangedEvent['body']
 ) => {
-  console.error('onUserWebRTCStateChanged: Not implemented')
+  store.commit.app.rtc.updateRTCState(data)
 }
 
 export const onUserGroupCreated = async ({
