@@ -18,6 +18,9 @@ export const commonStyles = {
     whiteSecondary: 'rgba(255, 255, 255, 0.5)' as const,
     black: '#222222' as const
   },
+  ui: {
+    qall: '#00ACA2' as const
+  },
   background: {
     overlay: 'rgba(25, 26, 29, 0.5)' as const,
     black: '#222426' as const
