@@ -1,27 +1,33 @@
 <template>
-  <div>
-    <span>サービス</span>
-      <app-list-frame>
-        <div v-for="app in apps" :key="app.appName" :class="$style.container">
-          <app-list-item
-            :icon-name="app.iconName"
-            :icon-mdi="app.iconMdi"
-            :label="app.label"
-            :app-link="app.appLink"
-          />
-        </div>
-      </app-list-frame>
+  <div :class="$style.container" :style="styles.container">
+    <app-list-item
+      v-for="app in apps"
+      :key="app.appName"
+      :class="$style.item"
+      :icon-name="app.iconName"
+      :icon-mdi="app.iconMdi"
+      :label="app.label"
+      :app-link="app.appLink"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent, reactive } from '@vue/composition-api'
 import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
-import AppListFrame from '@/components/Main/Navigation/AppListFrame.vue'
+import { makeStyles } from '@/lib/styles'
+
+const useStyles = () =>
+  reactive({
+    container: makeStyles((theme, common) => ({
+      filter: common.dropShadow.default,
+      background: theme.background.primary
+    }))
+  })
 
 export default defineComponent({
   name: 'AppList',
-  components: { AppListItem, AppListFrame },
+  components: { AppListItem },
   setup() {
     const apps = computed(
       (): Array<{
@@ -48,7 +54,7 @@ export default defineComponent({
         {
           label: 'Blog',
           iconName: 'ghost',
-          appLink: 'https://blog.trap.jp'
+          appLink: 'https://blog-admin.trap.jp'
         },
         {
           label: 'Drive',
@@ -63,7 +69,7 @@ export default defineComponent({
         {
           label: 'Showcase',
           iconName: 'showcase',
-          appLink: 'https://showcase.trap'
+          appLink: 'https://showcase.trapti.tech'
         },
         {
           label: 'HackMD',
@@ -88,7 +94,9 @@ export default defineComponent({
       ]
     )
 
-    return { apps }
+    const styles = useStyles()
+
+    return { apps, styles }
   }
 })
 </script>
@@ -97,9 +105,14 @@ export default defineComponent({
 .container {
   display: flex;
   flex-flow: row wrap;
-  justify-content: stretch;
-  align-items: stretch;
   padding: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
+}
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
 }
 </style>

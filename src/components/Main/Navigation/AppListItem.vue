@@ -6,7 +6,7 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    <div :class="$style.container" :style="styles.container">
+    <div :class="$style.container">
       <icon
         :class="$style.icon"
         :name="iconName"

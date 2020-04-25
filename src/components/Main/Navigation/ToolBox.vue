@@ -129,9 +129,10 @@ export default defineComponent({
   margin: 8px 0;
 }
 .toolsMenu {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: fixed;
+  bottom: 100px;
+  left: 100px;
+  width: 33vw;
   z-index: 999;
 }
 </style>
