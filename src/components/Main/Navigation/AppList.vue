@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
+    <span :class="$style.title">サービス</span>
     <app-list-item
       v-for="app in apps"
       :key="app.appName"
@@ -114,5 +115,10 @@ export default defineComponent({
   align-items: center;
   padding: 16px;
   border-radius: 8px;
+}
+.title {
+  margin-bottom: 40px;
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 </style>
