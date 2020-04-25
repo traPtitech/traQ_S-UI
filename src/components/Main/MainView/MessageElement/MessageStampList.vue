@@ -1,32 +1,23 @@
 <template>
-  <div :class="$style.body">
-    <icon
-      name="rounded-triangle"
-      :size="24"
-      @click="onStampDetailFoldingToggle"
-      :class="$style.toggle"
-      :style="styles.toggle"
-    />
-    <div :class="$style.stampList" :style="styles.stampList">
-      <div
-        v-for="(stamps, stampId) in state.stampsById"
-        :key="stampId"
-        :class="$style.stamp"
-      >
-        <stamp-element
-          :class="$style.element"
-          :stamp-id="stampId"
-          :stamps="stamps"
-          @add-stamp="addStamp"
-          @remove-stamp="removeStamp"
-        />
-        <stamp-detail-element
-          :stamp-id="stampId"
-          :stamps="stamps"
-          v-if="stampDetailFoldingState"
-          :class="$style.detail"
-        />
-      </div>
+  <div :class="$style.stampList" :style="styles.stampList">
+    <div
+      v-for="(stamps, stampId) in state.stampsById"
+      :key="stampId"
+      :class="$style.stamp"
+    >
+      <stamp-element
+        :class="$style.element"
+        :stamp-id="stampId"
+        :stamps="stamps"
+        @add-stamp="addStamp"
+        @remove-stamp="removeStamp"
+      />
+      <stamp-detail-element
+        :stamp-id="stampId"
+        :stamps="stamps"
+        v-if="props.isShowDetail"
+        :class="$style.detail"
+      />
     </div>
   </div>
 </template>
@@ -36,9 +27,7 @@ import {
   defineComponent,
   reactive,
   computed,
-  PropType,
-  toRefs,
-  Ref
+  PropType
 } from '@vue/composition-api'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
@@ -49,29 +38,10 @@ import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 
-const useStampDetailFolding = () => {
-  const state = reactive({
-    stampDetailFoldingState: false
-  })
-  const onStampDetailFoldingToggle = () => {
-    state.stampDetailFoldingState = !state.stampDetailFoldingState
-  }
-  return {
-    ...toRefs(state),
-    onStampDetailFoldingToggle
-  }
-}
-
-const useStyles = (stampDetailFoldingState: Ref<boolean>) =>
+const useStyles = (props: { isShowDetail: boolean }) =>
   reactive({
-    toggle: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      transform: stampDetailFoldingState.value
-        ? `rotate(0.5turn)`
-        : `rotate(0turn)`
-    })),
     stampList: makeStyles(theme => ({
-      flexDirection: stampDetailFoldingState.value ? `column` : `row`
+      flexDirection: props.isShowDetail ? `column` : `row`
     }))
   })
 
@@ -84,6 +54,10 @@ export default defineComponent({
     },
     messageId: {
       type: String,
+      required: true
+    },
+    isShowDetail: {
+      type: Boolean,
       required: true
     }
   },
@@ -104,18 +78,12 @@ export default defineComponent({
         stampId
       })
     }
-    const {
-      stampDetailFoldingState,
-      onStampDetailFoldingToggle
-    } = useStampDetailFolding()
-    const styles = useStyles(stampDetailFoldingState)
+    const styles = useStyles(props)
     return {
       props,
       state,
       addStamp,
       removeStamp,
-      stampDetailFoldingState,
-      onStampDetailFoldingToggle,
       styles
     }
   }
@@ -123,15 +91,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.body {
-  display: inline-flex;
-  flex-wrap: wrap;
-}
 .toggle {
   margin-right: 4px;
 }
 .stampList {
   display: flex;
+  flex-wrap: wrap;
 }
 .stamp {
   margin: {
