@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mdi/js": "^5.1.45",
-    "@traptitech/traq": "3.0.0-22",
+    "@traptitech/traq": "3.0.0-24",
     "@traptitech/traq-markdown-it": "^2.1.4",
     "@vue/composition-api": "^0.5.0",
     "core-js": "^3.6.5",
