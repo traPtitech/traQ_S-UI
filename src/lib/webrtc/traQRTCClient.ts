@@ -1,6 +1,5 @@
 import Peer, { SfuRoom, RoomData } from 'skyway-js'
-import { randomString } from '@/lib/util/randomString'
-import axios from 'axios'
+import apis from '@/lib/apis'
 
 const skywayApiKey = '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
 
@@ -43,16 +42,8 @@ interface QRTCEventMap {
   connectionerror: QRTCConnectionErrorEvent
 }
 
-/**
- * @class リアルタイム系機能を提供するクラス
- */
-export default class traQRTCClient implements EventTarget {
-  private peer?: Peer
-  private room?: SfuRoom
-
+class traQRTCClientBase {
   private eventTargetDeligator: EventTarget = document.createDocumentFragment()
-
-  constructor(private id: string) {}
 
   public addEventListener<K extends keyof QRTCEventMap>(
     event: K,
@@ -81,6 +72,18 @@ export default class traQRTCClient implements EventTarget {
   public dispatchEvent<K extends keyof QRTCEventMap>(event: QRTCEventMap[K]) {
     return this.eventTargetDeligator.dispatchEvent(event)
   }
+}
+
+/**
+ * @class リアルタイム系機能を提供するクラス
+ */
+class traQRTCClient extends traQRTCClientBase {
+  private peer?: Peer
+  private room?: SfuRoom
+
+  constructor(private id: string) {
+    super()
+  }
 
   /**
    * @returns a Promise instance to be resolved when a connection has been established.
@@ -102,7 +105,7 @@ export default class traQRTCClient implements EventTarget {
     this.peer.on('disnonected', this.handlePeerDisconnected.bind(this))
     this.peer.on('error', this.handlePeerError.bind(this))
 
-    this.id = this.peer.id
+    // this.id = this.peer.id
     return this.id
   }
 
@@ -138,7 +141,6 @@ export default class traQRTCClient implements EventTarget {
       room.on('data', this.handleRoomData.bind(this))
       room.on('close', this.handleRoomClose.bind(this))
       this.room = room
-      // await this.dummyRoomJoin()
       resolve()
     })
   }
@@ -151,7 +153,6 @@ export default class traQRTCClient implements EventTarget {
       throw 'Not joined to any room'
     }
     this.room.replaceStream(stream)
-    // await this.dummyRoomJoin()
   }
 
   get roomName() {
@@ -160,9 +161,7 @@ export default class traQRTCClient implements EventTarget {
 
   private createPeer(peerId: string) {
     return new Promise<Peer>(async (resolve, reject) => {
-      const res = await axios.post('/api/1.0/skyway/authenticate', {
-        peerId
-      })
+      const res = await apis.postWebRTCAuthenticate({ peerId })
       if (res.status !== 200) {
         reject("Couldn't get credential")
         return
@@ -178,29 +177,6 @@ export default class traQRTCClient implements EventTarget {
       peer.on('open', () => {
         console.log(`[RTC] Connection established, ID: ${peer.id}`)
         resolve(peer)
-      })
-    })
-  }
-
-  private dummyRoomJoin() {
-    return new Promise(async (resolve, reject) => {
-      if (!this.room) {
-        reject('No room to join')
-      }
-      // create dummy peer with random id
-      const dummyPeer = await this.createPeer('-dummy--' + randomString())
-      dummyPeer.on('close', () => {
-        console.log(`[RTC] Dummy connection closed, ID: ${dummyPeer.id}`)
-      })
-      const dummyRoom = dummyPeer.joinRoom(this.roomName, { mode: 'sfu' })
-      if (!dummyRoom) {
-        reject('Failed to open dummy room')
-        return
-      }
-      dummyRoom.on('open', () => dummyRoom.close())
-      dummyRoom.on('close', () => {
-        dummyPeer.destroy()
-        resolve()
       })
     })
   }
@@ -223,17 +199,11 @@ export default class traQRTCClient implements EventTarget {
     this.dispatchEvent(new Event('roomclose'))
   }
   private async handleRoomPeerJoin(peerId: string) {
-    if (peerId.startsWith('-dummy--')) {
-      return
-    }
     this.dispatchEvent(
       new CustomEvent('userjoin', { detail: { userId: peerId } })
     )
   }
   private async handleRoomPeerLeave(peerId: string) {
-    if (peerId.startsWith('-dummy--')) {
-      return
-    }
     this.dispatchEvent(
       new CustomEvent('userleave', { detail: { userId: peerId } })
     )
@@ -244,4 +214,16 @@ export default class traQRTCClient implements EventTarget {
   private async handleRoomData(data: RoomData) {
     this.dispatchEvent(new CustomEvent('datarecieve', { detail: { data } }))
   }
+}
+
+export let client: traQRTCClient | undefined = undefined
+
+export const initClient = (id: string) => {
+  if (!client) {
+    client = new traQRTCClient(id)
+  }
+}
+
+export const destroyClient = () => {
+  client = undefined
 }

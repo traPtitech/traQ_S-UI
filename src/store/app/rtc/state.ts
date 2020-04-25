@@ -1,12 +1,16 @@
 import { UserId, ChannelId } from '@/types/entity-ids'
+import AudioStreamMixer from '@/lib/audioStreamMixer'
 import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
 
 export interface S {
-  // client?: traQRTCClient
-  // mixer?: AudioStreamMixer
+  /** ミキサー */
+  mixer?: AudioStreamMixer
+
+  /** 送信するMediaStream */
   localStream?: MediaStream
+
+  /** マイクミュート */
   isMicMuted: boolean
-  activeMediaChannelId: ChannelId
 
   /** 自分が参加しているRTCセッションのチャンネルID */
   currentRTCChannel?: ChannelId
@@ -20,23 +24,21 @@ export interface S {
   /** ローカルで指定するユーザー音量のマップ */
   userVolumeMap: Record<UserId, number | undefined>
 
+  /** 他ユーザーのオーディオ */
   remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
-  remoteVideoStreamMap: Record<UserId, MediaStream | undefined>
 
+  /** 現在発話しているユーザーを判定するsetIntervalのID */
   talkingStateUpdateIntervalId: number
 }
 
 export const state: S = {
-  // client?: undefined,
-  // mixer?: undefined,
+  mixer: undefined,
   localStream: undefined,
   currentRTCChannel: undefined,
   currentRTCSessions: [],
   isMicMuted: false,
-  activeMediaChannelId: '',
   userStateMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
-  remoteVideoStreamMap: {},
   talkingStateUpdateIntervalId: 0
 }

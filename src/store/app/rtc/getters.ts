@@ -11,5 +11,8 @@ export const getters = defineGetters<S>()({
         userState => [userState.channelId, userState.sessions] as const
       )
     )
+  },
+  qallState(state) {
+    return state.currentRTCSessions.find(s => s.state.startsWith('qall'))
   }
 })
