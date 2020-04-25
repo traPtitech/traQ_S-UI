@@ -17,6 +17,7 @@
           :topic="channel.topic"
           :id="channel.id"
           :is-current="channelId == channel.id"
+          :class="$style.element"
         />
       </div>
     </div>
@@ -71,10 +72,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .element {
-  margin: 8px 0;
+  cursor: pointer;
 }
 .list {
-  cursor: pointer;
   margin: 16px 0px;
 }
 .input {

@@ -35,7 +35,6 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
 
@@ -50,7 +49,6 @@ $topicSize: 1rem;
 .channelHash {
   margin-right: 0.125rem;
 }
-
 .topic {
   font-weight: normal;
   font-size: $topicSize;
