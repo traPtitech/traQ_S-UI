@@ -1,5 +1,11 @@
 <template>
-  <modal-frame title="タグ" :subtitle="tagName" icon-mdi icon-name="tag">
+  <modal-frame
+    title="タグ"
+    :subtitle="tagName"
+    icon-mdi
+    icon-name="tag"
+    :return-button="true"
+  >
     <user-list-item
       v-for="id in taggedUsers"
       :key="id"

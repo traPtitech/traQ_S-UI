@@ -10,6 +10,7 @@
       :icon-mdi="iconMdi"
       :title="title"
       :subtitle="subtitle"
+      :return-button="returnButton"
     />
     <div :class="$style.body">
       <slot></slot>
@@ -40,9 +41,10 @@ export default defineComponent({
     iconMdi: { type: Boolean, default: false },
     iconName: { type: String, required: true },
     title: { type: String, required: true },
-    subtitle: { type: String, default: '' }
+    subtitle: { type: String, default: '' },
+    returnButton: { type: Boolean, default: false }
   },
-  setup() {
+  setup(props) {
     const styles = useStyles()
     const onClickOutside = () => store.dispatch.ui.modal.clearModal()
     return { styles, onClickOutside }
