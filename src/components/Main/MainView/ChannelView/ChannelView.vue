@@ -10,7 +10,10 @@
       v-if="fileDragDropState.isDragging"
       :class="$style.fileUploadOverlay"
     />
-    <channel-view-content :channel-id="channelId" />
+    <channel-view-content
+      :channel-id="channelId"
+      :entry-message-id="entryMessageId"
+    />
     <portal v-if="!isSidebarOpen" to="sidebar-opener">
       <channel-sidebar-hidden
         @open="openSidebar"
@@ -70,7 +73,10 @@ const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
 
 export default defineComponent({
   name: 'ChannelView',
-  props: { channelId: { type: String as PropType<ChannelId>, required: true } },
+  props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
+    entryMessageId: String as PropType<ChannelId>
+  },
   components: {
     ChannelViewHeader,
     ChannelViewContent,
