@@ -67,7 +67,13 @@ export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
 export const onUserWebRTCStateChanged = (
   data: UserWebRTCStateChangedEvent['body']
 ) => {
-  store.commit.app.rtc.updateRTCState(data)
+  //FIXME
+  const _data = data as any
+  store.commit.app.rtc.updateRTCState({
+    userId: _data['user_id'],
+    channelId: _data['channel_id'],
+    sessions: data.sessions
+  })
 }
 
 export const onUserGroupCreated = async ({
