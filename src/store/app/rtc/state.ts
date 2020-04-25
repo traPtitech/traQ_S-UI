@@ -5,15 +5,17 @@ export interface S {
   // client?: traQRTCClient
   // mixer?: AudioStreamMixer
   localStream?: MediaStream
-  rtcState: string[]
   isMicMuted: boolean
   activeMediaChannelId: ChannelId
 
+  /** 自分が参加しているRTCセッションのチャンネルID */
+  currentRTCChannel?: ChannelId
+
+  /** 自分が参加しているRTCセッション */
+  currentRTCSessions: WebRTCUserStateSessions[]
+
   /** ユーザーのRTC状態のマップ */
   userStateMap: Record<UserId, WebRTCUserState>
-
-  /** チャンネルで行われているRTCセッションのマップ */
-  channelSessionsMap: Record<ChannelId, WebRTCUserStateSessions[]>
 
   /** ローカルで指定するユーザー音量のマップ */
   userVolumeMap: Record<UserId, number | undefined>
@@ -28,11 +30,11 @@ export const state: S = {
   // client?: undefined,
   // mixer?: undefined,
   localStream: undefined,
-  rtcState: [],
+  currentRTCChannel: undefined,
+  currentRTCSessions: [],
   isMicMuted: false,
   activeMediaChannelId: '',
   userStateMap: {},
-  channelSessionsMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
   remoteVideoStreamMap: {},
