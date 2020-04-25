@@ -11,5 +11,11 @@ export const state: S = {
   loaded: false,
   componentLoaded: false,
   initialFetchCompleted: false,
-  version: {}
+  version: {
+    version: '',
+    revision: '',
+    flags: {
+      externalLogin: []
+    }
+  }
 }
