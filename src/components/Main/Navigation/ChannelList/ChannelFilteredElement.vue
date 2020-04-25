@@ -1,13 +1,13 @@
 <template>
   <div
-    @click="onChannelSelect(propst.id)"
-    :style="[propst.isCurrent ? styles.current : '']"
-    :class="[propst.isCurrent ? $style.current : '']"
+    @click="onChannelSelect(props.id)"
+    :style="[props.isCurrent ? styles.current : '']"
+    :class="[props.isCurrent ? $style.current : '']"
   >
     <span :class="$style.channelHash">#</span>
-    {{ propst.name }}
-    <div v-if="propst.topic" :class="$style.topic">
-      {{ propst.topic }}
+    {{ props.name }}
+    <div v-if="props.topic" :class="$style.topic">
+      {{ props.topic }}
     </div>
   </div>
 </template>
@@ -32,26 +32,20 @@ export default defineComponent({
     name: { type: String, required: true },
     topic: { type: String, default: '' },
     isCurrent: { type: Boolean, default: false },
-    id: { type: String }
+    id: { type: String, required: true }
   },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as {
-      name: string
-      topic: string
-      isCurrent: boolean
-      id: string
-    }
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
 
-    return { propst, styles, onChannelSelect }
+    return { props, styles, onChannelSelect }
   }
 })
 </script>
 
 <style lang="scss" module>
-$topiclSize: 1rem;
+$topicSize: 1rem;
 
 .channelHash {
   margin-right: 0.125rem;
@@ -59,7 +53,7 @@ $topiclSize: 1rem;
 
 .topic {
   font-weight: normal;
-  font-size: $topiclSize;
+  font-size: $topicSize;
 }
 .current {
   font-weight: bold;
