@@ -17,12 +17,15 @@ export const actions = defineActions({
     commit.setMessageIds([])
     commit.setRenderedContent({})
     commit.setCurrentViewer([])
+    commit.setSubscribers([])
   },
   async changeCurrentChannel(
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
   ) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch, rootState } = messagesViewActionContext(
+      context
+    )
     if (state.currentChannelId === payload.channelId) return
 
     commit.unsetCurrentClipFolderId()
@@ -33,7 +36,9 @@ export const actions = defineActions({
 
     dispatch.fetchPinnedMessages()
     dispatch.fetchTopic()
-    dispatch.fetchSubscribers()
+    if (!rootState.entities.channels[payload.channelId]?.force) {
+      dispatch.fetchSubscribers()
+    }
   },
 
   /** クリップフォルダに移行 */
