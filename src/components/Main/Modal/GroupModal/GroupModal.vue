@@ -1,5 +1,10 @@
 <template>
-  <modal-frame title="グループ" :subtitle="groupName" icon-name="group">
+  <modal-frame
+    title="グループ"
+    :subtitle="groupName"
+    icon-name="group"
+    return-button
+  >
     <user-list-item
       v-for="id in groupMember"
       :key="id"
