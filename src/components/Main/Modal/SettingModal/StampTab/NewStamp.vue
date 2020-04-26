@@ -17,7 +17,7 @@
       />
       <form-button
         label="新規登録"
-        :disabled="!isEnableCreate"
+        :disabled="!isCreateEnabled"
         @click="createStamp"
         :class="$style.form"
       />
@@ -45,7 +45,7 @@ export default defineComponent({
 
     const newStampName = ref('')
 
-    const isEnableCreate = computed(
+    const isCreateEnabled = computed(
       () => newStampName.value !== '' && imageUploadState.imgData !== undefined
     )
 
@@ -66,7 +66,7 @@ export default defineComponent({
       onNewDestroyed,
       newStampName,
       createStamp,
-      isEnableCreate
+      isCreateEnabled
     }
   },
   components: {

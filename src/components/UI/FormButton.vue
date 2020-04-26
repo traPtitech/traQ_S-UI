@@ -20,7 +20,8 @@ const useStyles = (props: { disabled: boolean }) =>
       background: props.disabled
         ? transparentize(theme.accent.primary, 0.5)
         : theme.accent.primary,
-      color: 'white'
+      color: 'white',
+      cursor: props.disabled ? 'not-allowed' : ' pointer'
     }))
   })
 
@@ -48,6 +49,5 @@ export default defineComponent({
   padding: 8px 32px;
   border-radius: 4px;
   font-weight: bold;
-  cursor: pointer;
 }
 </style>

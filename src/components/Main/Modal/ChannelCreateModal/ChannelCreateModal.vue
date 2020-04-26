@@ -12,7 +12,7 @@
     />
     <form-button
       label="作成"
-      :disabled="!isEnableCreate"
+      :disabled="!isCreateEnabled"
       :class="$style.button"
       @click="createChannel"
     />
@@ -77,8 +77,8 @@ export default defineComponent({
         ? channelIdToPathString(props.parentChannelId, true)
         : 'ルートチャンネル作成'
     )
-    const isEnableCreate = computed(() => channelName.value !== '')
-    return { channelName, createChannel, subtitle, isEnableCreate }
+    const isCreateEnabled = computed(() => channelName.value !== '')
+    return { channelName, createChannel, subtitle, isCreateEnabled }
   }
 })
 </script>
