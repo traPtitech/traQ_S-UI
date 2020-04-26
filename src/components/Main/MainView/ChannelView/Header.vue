@@ -6,6 +6,7 @@
     <template #tools>
       <header-tools
         :class="$style.tools"
+        :has-active-qall-session="hasActiveQallSession"
         :is-qall-session-opened="isQallSessionOpened"
         :is-joined-qall-session="isJoinedQallSession"
         :is-stared="channelState.stared"
@@ -94,10 +95,14 @@ export default defineComponent({
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     const { copyLink } = useCopy(context)
-    const { isJoinedQallSession, isQallSessionOpened, toggleQall } = useQall(
-      props
-    )
+    const {
+      hasActiveQallSession,
+      isJoinedQallSession,
+      isQallSessionOpened,
+      toggleQall
+    } = useQall(props)
     return {
+      hasActiveQallSession,
       isQallSessionOpened,
       isJoinedQallSession,
       isPopupMenuShown,

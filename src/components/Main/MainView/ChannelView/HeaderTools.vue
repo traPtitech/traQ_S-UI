@@ -5,6 +5,7 @@
       icon-mdi
       :icon-name="qallIconName"
       :style="styles.qallIcon"
+      :disabled="hasActiveQallSession && !isJoinedQallSession"
     />
     <header-tools-item
       @click="context.emit('click-pin')"
@@ -86,6 +87,7 @@ export default defineComponent({
   },
   props: {
     isStared: { type: Boolean, default: false },
+    hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false }
   },

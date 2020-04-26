@@ -2,7 +2,8 @@
   <div
     :class="$style.container"
     :style="styles.container"
-    @click="context.emit('click')"
+    @click="onClick"
+    :data-is-disabled="disabled"
   >
     <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </div>
@@ -27,6 +28,10 @@ export default defineComponent({
     iconMdi: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
@@ -34,7 +39,11 @@ export default defineComponent({
     const styles = reactive({
       container: stylesWithColor({})
     })
-    return { context, styles }
+    const onClick = () => {
+      if (props.disabled) return
+      context.emit('click')
+    }
+    return { onClick, styles }
   }
 })
 </script>
@@ -45,5 +54,9 @@ export default defineComponent({
   cursor: pointer;
   width: 40px;
   height: 40px;
+  &[data-is-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 </style>

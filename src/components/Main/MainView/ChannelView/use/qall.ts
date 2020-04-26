@@ -31,6 +31,7 @@ const useQall = (props: { channelId: ChannelId }) => {
     }
   }
   return {
+    hasActiveQallSession,
     isJoinedQallSession,
     isQallSessionOpened,
     toggleQall
