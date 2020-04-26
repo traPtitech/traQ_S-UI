@@ -19,7 +19,7 @@ const useStyles = () =>
   reactive({
     button: makeStyles(theme => ({
       color: theme.ui.secondary,
-      background: '#ffffff'
+      background: theme.background.primary
     })),
     icon: makeStyles(theme => ({
       color: theme.ui.secondary
