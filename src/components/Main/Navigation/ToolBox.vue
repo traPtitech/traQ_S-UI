@@ -128,4 +128,7 @@ export default defineComponent({
 .item {
   margin: 8px 0;
 }
+.userIcon {
+  cursor: pointer;
+}
 </style>

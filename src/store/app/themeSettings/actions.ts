@@ -6,7 +6,7 @@ export const themeSettingsActionContext = (context: any) =>
   moduleActionContext(context, themeSettings)
 
 export const actions = defineActions({
-  toggleTheme: context => {
+  toggleTheme(context) {
     const { commit, state } = themeSettingsActionContext(context)
     switch (state.type) {
       case 'light':
