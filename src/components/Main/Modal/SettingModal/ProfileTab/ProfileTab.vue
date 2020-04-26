@@ -44,7 +44,11 @@
       から可能です
     </p>
     <div :class="$style.updater">
-      <form-button v-if="isChanged" label="更新" @click="onUpdateClick" />
+      <form-button
+        label="更新"
+        :on-secondary="!isChanged"
+        @click="onUpdateClick"
+      />
     </div>
   </section>
 </template>

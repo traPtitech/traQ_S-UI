@@ -15,13 +15,19 @@
         suffix=":"
         :class="$style.form"
       />
-      <form-button label="新規登録" @click="createStamp" :class="$style.form" />
+      <form-button
+        label="新規登録"
+        :disabled="!stampCreated"
+        :on-secondary="!stampCreated"
+        @click="createStamp"
+        :class="$style.form"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, computed } from '@vue/composition-api'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -40,6 +46,10 @@ export default defineComponent({
 
     const newStampName = ref('')
 
+    const stampCreated = computed(
+      () => newStampName.value !== '' && imageUploadState.imgData !== undefined
+    )
+
     const createStamp = async () => {
       try {
         // TODO: loading
@@ -56,7 +66,8 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed,
       newStampName,
-      createStamp
+      createStamp,
+      stampCreated
     }
   },
   components: {

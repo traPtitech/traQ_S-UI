@@ -5,7 +5,6 @@
       <form-button
         v-if="permission === 'default'"
         label="設定"
-        on-secondary
         @click="requestPermission"
       />
       <p v-else>ブラウザや端末の設定から変更できます</p>
