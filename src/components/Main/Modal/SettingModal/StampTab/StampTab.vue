@@ -2,9 +2,9 @@
   <section>
     <new-stamp />
     <edit-stamp />
-    <div>
+    <div :class="$style.element">
       <h3>スタンプパレット</h3>
-      <p title="4/1には実装されるよ">実装予定</p>
+      <p title="4/1には実装されるよ" :class="$style.content">実装予定</p>
     </div>
   </section>
 </template>
@@ -26,4 +26,14 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+h3 {
+  margin-bottom: 8px;
+}
+.element {
+  margin: 24px 0;
+}
+.content {
+  margin-left: 12px;
+}
+</style>
