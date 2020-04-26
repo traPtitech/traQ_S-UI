@@ -6,7 +6,11 @@
     <template #tools>
       <header-tools
         :class="$style.tools"
+        :has-active-qall-session="hasActiveQallSession"
+        :is-qall-session-opened="isQallSessionOpened"
+        :is-joined-qall-session="isJoinedQallSession"
         :is-stared="channelState.stared"
+        @click-qall="toggleQall"
         @star-channel="starChannel"
         @unstar-channel="unstarChannel"
         @click-more="togglePopupMenu"
@@ -35,6 +39,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import useQall from './use/qall'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
@@ -90,10 +95,20 @@ export default defineComponent({
     const { openChannelCreateModal } = useChannelCreateModal(props)
     const styles = useStyles()
     const { copyLink } = useCopy(context)
+    const {
+      hasActiveQallSession,
+      isJoinedQallSession,
+      isQallSessionOpened,
+      toggleQall
+    } = useQall(props)
     return {
+      hasActiveQallSession,
+      isQallSessionOpened,
+      isJoinedQallSession,
       isPopupMenuShown,
       channelState,
       styles,
+      toggleQall,
       starChannel,
       unstarChannel,
       openNotificationModal,
