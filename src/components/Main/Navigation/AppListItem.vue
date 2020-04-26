@@ -1,21 +1,13 @@
 <template>
   <a
-    :class="$style.link"
+    :class="$style.container"
     :style="styles.container"
     :href="appLink"
     target="_blank"
     rel="noopener noreferrer"
   >
-    <div :class="$style.container">
-      <icon
-        :class="$style.icon"
-        :name="iconName"
-        :mdi="iconMdi"
-        :width="32"
-        :height="32"
-      />
-      <span :class="$style.label">{{ label }}</span>
-    </div>
+    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="32" />
+    <span :class="$style.label">{{ label }}</span>
   </a>
 </template>
 
@@ -51,21 +43,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.link {
-  margin: 16px;
-  padding: 16px;
+.container {
+  margin: 8px;
+  padding: 16px 8px;
   border-radius: 8px;
   flex: 1 0;
-}
-.container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  min-width: 120px;
+}
+.icon {
+  margin: 4px;
 }
 .label {
-  font: {
-    size: 1rem;
-  }
+  font-size: 1rem;
 }
 </style>

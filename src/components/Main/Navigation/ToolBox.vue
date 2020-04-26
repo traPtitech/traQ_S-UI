@@ -14,7 +14,7 @@
       </div>
     </div>
     <portal v-if="isPopupMenuShown" :to="targetPortalName">
-      <app-list :class="$style.toolsMenu" v-click-outside="closePopupMenu" />
+      <app-list @close="closePopupMenu" />
     </portal>
   </div>
 </template>
@@ -127,12 +127,5 @@ export default defineComponent({
 }
 .item {
   margin: 8px 0;
-}
-.toolsMenu {
-  position: fixed;
-  bottom: 100px;
-  left: 100px;
-  width: 33vw;
-  z-index: 999;
 }
 </style>

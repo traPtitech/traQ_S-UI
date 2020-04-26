@@ -1,15 +1,29 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <span :class="$style.title">サービス</span>
-    <app-list-item
-      v-for="app in apps"
-      :key="app.appName"
-      :class="$style.item"
-      :icon-name="app.iconName"
-      :icon-mdi="app.iconMdi"
-      :label="app.label"
-      :app-link="app.appLink"
-    />
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    v-click-outside="close"
+  >
+    <div :class="$style.header">
+      <span :class="$style.title">サービス</span>
+      <close-button
+        :class="$style.close"
+        :size="20"
+        :border-width="2"
+        @click="close"
+      />
+    </div>
+    <div :class="$style.list">
+      <app-list-item
+        v-for="app in apps"
+        :key="app.appName"
+        :class="$style.item"
+        :icon-name="app.iconName"
+        :icon-mdi="app.iconMdi"
+        :label="app.label"
+        :app-link="app.appLink"
+      />
+    </div>
   </div>
 </template>
 
@@ -17,6 +31,7 @@
 import { computed, defineComponent, reactive } from '@vue/composition-api'
 import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
 import { makeStyles } from '@/lib/styles'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({
@@ -28,8 +43,8 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'AppList',
-  components: { AppListItem },
-  setup() {
+  components: { AppListItem, CloseButton },
+  setup(_, context) {
     const apps = computed(
       (): Array<{
         label: string
@@ -95,30 +110,45 @@ export default defineComponent({
       ]
     )
 
+    const close = () => {
+      context.emit('close')
+    }
+
     const styles = useStyles()
 
-    return { apps, styles }
+    return { apps, styles, close }
   }
 })
 </script>
 
 <style lang="scss" module>
+$header-width: 64px;
+
 .container {
+  position: fixed;
+  bottom: $header-width;
+  left: $header-width;
+  max-width: min(calc(100vw - #{$header-width * 2}), 500px);
+  padding: 16px;
+  border-radius: 8px;
+  z-index: 999;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.close {
+  margin-left: auto;
+}
+
+.list {
   display: flex;
   flex-flow: row wrap;
-  padding: 16px;
-  border-radius: 8px;
-}
-.item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  border-radius: 8px;
-}
-.title {
-  margin-bottom: 40px;
-  font-size: 1.25rem;
-  font-weight: bold;
 }
 </style>
