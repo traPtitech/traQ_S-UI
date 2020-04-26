@@ -23,7 +23,7 @@ const usePostMessage = (
   const { channelPathToId } = useChannelPath()
 
   const postMessage = async () => {
-    if (textState.text.length === 0) return
+    if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return
 
     const embededText = embedInternalLink(textState.text, {
       getUser: store.getters.entities.userByName,
