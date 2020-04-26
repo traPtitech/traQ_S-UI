@@ -255,7 +255,7 @@ export const actions = defineActions({
     if (!state.localStream || !qallSession) {
       return
     }
-    commit.muteLocalStream()
+    commit.unmuteLocalStream()
     const stateSet = new Set(qallSession?.states ?? [])
     stateSet.delete('micmuted')
     const states = [...stateSet]
