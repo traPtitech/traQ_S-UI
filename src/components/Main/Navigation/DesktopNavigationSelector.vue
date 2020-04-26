@@ -1,17 +1,15 @@
 <template>
   <div :class="$style.container">
-    <div
-      v-for="item in items"
+    <navigation-selector-item
+      v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      @click="onNavigationItemClick(item.type)"
-    >
-      <navigation-selector-item
-        :is-selected="currentNavigation === item.type"
-        :icon-mdi="item.iconMdi"
-        :icon-name="item.iconName"
-      />
-    </div>
+      @click.native="onNavigationItemClick(item.type)"
+      :is-selected="currentNavigation === item.type"
+      :icon-mdi="item.iconMdi"
+      :icon-name="item.iconName"
+      :color-claim="item.colorClaim"
+    />
     <div :class="$style.item" @click="onQrCodeClick">
       <Icon name="qrcode" mdi />
     </div>
@@ -28,6 +26,7 @@ import {
   NavigationItemType,
   useNavigationSelectorItem
 } from '@/components/Main/Navigation/use/navigation'
+import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -41,39 +40,8 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const items: {
-      type: NavigationItemType
-      iconName: string
-      iconMdi?: true
-    }[] = [
-      {
-        type: 'home',
-        iconName: 'home',
-        iconMdi: true
-      },
-      {
-        type: 'channels',
-        iconName: 'hash'
-      },
-      {
-        type: 'activity',
-        iconName: 'activity'
-      },
-      {
-        type: 'users',
-        iconName: 'user'
-      },
-      {
-        type: 'clips',
-        iconName: 'bookmark',
-        iconMdi: true
-      },
-      {
-        type: 'services',
-        iconName: 'services'
-      }
-    ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
+    const { entries } = useNavigationSelectorEntry()
 
     // TODO: 下部アイテムに移動
     const onSettingClick = () =>
@@ -83,7 +51,7 @@ export default defineComponent({
       store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
 
     return {
-      items,
+      entries,
       onNavigationItemClick,
       onSettingClick,
       onQrCodeClick
