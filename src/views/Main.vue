@@ -13,12 +13,13 @@
     @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer" :style="styles.homeContainer">
-      <navigation v-show="showNav" :class="$style.navigationWrapper" />
+      <navigation v-show="shouldShowNav" :class="$style.navigationWrapper" />
       <main-view-frame
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
+        @click.native.capture="onClickMainViewFrame"
       >
         <main-view :class="$style.mainViewWrapper" />
       </main-view-frame>
@@ -49,7 +50,9 @@ import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
 import { makeStyles } from '@/lib/styles'
+
 import useIsMobile from '@/use/isMobile'
+import useNavigationController from '@/use/navigationController'
 import MainView from '@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
@@ -109,7 +112,8 @@ export default defineComponent({
     } = useMainViewLayout(navWidth, sidebarWidth)
 
     const { isMobile } = useIsMobile()
-    const showNav = computed(() => !isMobile.value || isNavAppeared.value)
+    const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
+    const { closeNav } = useNavigationController()
     const hideOuter = computed(
       () => isMobile.value && isNavCompletelyAppeared.value
     )
@@ -122,6 +126,14 @@ export default defineComponent({
 
     const styles = useStyles(mainViewPosition, sidebarPosition)
 
+    const onClickMainViewFrame = (e: MouseEvent) => {
+      if (!isMobile.value || !isNavCompletelyAppeared.value) {
+        return
+      }
+      e.stopPropagation()
+      closeNav()
+    }
+
     return {
       touchstartHandler,
       touchmoveHandler,
@@ -129,13 +141,15 @@ export default defineComponent({
 
       routeWatcherState,
 
-      showNav,
+      shouldShowNav,
       hideOuter,
       isNavCompletelyAppeared,
       isSidebarCompletelyAppeared,
       isSidebarAppeared,
       isMainViewActive,
       isMobile,
+
+      onClickMainViewFrame,
 
       targetPortalName,
       styles,
