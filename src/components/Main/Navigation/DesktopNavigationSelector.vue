@@ -24,12 +24,6 @@
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
     />
-    <div :class="$style.item" @click="onQrCodeClick">
-      <Icon name="qrcode" mdi />
-    </div>
-    <div :class="$style.item" @click="onSettingClick">
-      <Icon name="cog" mdi />
-    </div>
   </div>
 </template>
 
@@ -41,7 +35,7 @@ import {
   computed,
   reactive
 } from '@vue/composition-api'
-import store from '@/store'
+
 import {
   NavigationItemType,
   useNavigationSelectorItem,
@@ -80,22 +74,13 @@ export default defineComponent({
 
     const styles = useStyles()
 
-    // TODO: 下部アイテムに移動
-    const onSettingClick = () =>
-      store.dispatch.ui.modal.pushModal({ type: 'setting' })
-
-    const onQrCodeClick = () =>
-      store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
-
     return {
       styles,
       entries,
       ephemeralEntries,
       showSeparator,
       onNavigationItemClick,
-      onEphemeralNavigationItemClick,
-      onSettingClick,
-      onQrCodeClick
+      onEphemeralNavigationItemClick
     }
   }
 })
@@ -105,10 +90,12 @@ export default defineComponent({
 .container {
   display: flex;
   flex-direction: column;
+  flex: 1 0;
   align-items: center;
+  padding: 8px 0;
 }
 .item {
-  margin: 16px 0;
+  margin: 8px 0;
 }
 .separator {
   opacity: 0.3;

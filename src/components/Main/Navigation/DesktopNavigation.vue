@@ -10,6 +10,7 @@
         "
       />
     </div>
+    <portal-target :name="targetPortalName" />
     <div class="$style.navigations">
       <navigation-content
         class="$style.navigation"
@@ -22,6 +23,7 @@
           ephemeralNavigationSelectorState.currentNavigation
         "
       />
+      <desktop-tool-box />
     </div>
   </div>
 </template>
@@ -30,12 +32,15 @@
 import { defineComponent } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent.vue'
-import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import {
   useNavigation,
   useEphemeralNavigation,
   EphemeralNavigationItemType
 } from '@/components/Main/Navigation/use/navigation'
+import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
+import DesktopToolBox, {
+  targetPortalName
+} from '@/components/Main/Navigation/DesktopToolBox.vue'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
@@ -43,7 +48,8 @@ export default defineComponent({
   components: {
     NavigationContent,
     EphemeralNavigationContent,
-    DesktopNavigationSelector
+    DesktopNavigationSelector,
+    DesktopToolBox
   },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
@@ -70,7 +76,8 @@ export default defineComponent({
       ephemeralNavigationSelectorState,
       onNavigationChange,
       onEphemeralNavigationChange,
-      navigationStyle
+      navigationStyle,
+      targetPortalName
     }
   }
 })
@@ -85,6 +92,7 @@ $selectorWidth: 64px;
 }
 .selector {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: $selectorWidth;
   height: 100%;

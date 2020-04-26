@@ -1,13 +1,14 @@
 <template>
   <div>
     <h3>通知: {{ status }}</h3>
-    <form-button
-      v-if="permission === 'default'"
-      label="設定"
-      on-secondary
-      @click="requestPermission"
-    />
-    <p v-else>ブラウザや端末の設定から変更できます</p>
+    <div :class="$style.content">
+      <form-button
+        v-if="permission === 'default'"
+        label="設定"
+        @click="requestPermission"
+      />
+      <p v-else>ブラウザや端末の設定から変更できます</p>
+    </div>
   </div>
 </template>
 
@@ -49,4 +50,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.content {
+  margin-left: 12px;
+}
+</style>

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <form-button label="ファイルを選択" on-secondary @click="addImage" />
+    <form-button label="ファイルを選択" @click="addImage" />
     <div v-if="image.url !== ''">
       <div :class="$style.cropper" :is-rounded="rounded">
         <img :src="image.url" ref="$img" />
       </div>
-      <p>{{ cropperNote }}</p>
-      <form-button label="キャンセル" on-secondary @click="destroy" />
+      <p :class="$style.note">{{ cropperNote }}</p>
+      <form-button label="キャンセル" @click="destroy" />
     </div>
   </div>
 </template>
@@ -114,11 +114,15 @@ export default defineComponent({
 .cropper {
   width: 400px;
   height: 400px;
+  margin: 12px;
   &[is-rounded] {
     :global(.cropper-view-box),
     :global(.cropper-face) {
       border-radius: 50%;
     }
   }
+}
+.note {
+  margin: 12px;
 }
 </style>

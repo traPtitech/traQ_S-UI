@@ -34,10 +34,6 @@ export const items: NavigationSelectorEntry[] = [
   {
     type: 'users',
     iconName: 'user'
-  },
-  {
-    type: 'services',
-    iconName: 'services'
   }
 ]
 export const ephemeralItems: Record<

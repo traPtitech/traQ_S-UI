@@ -54,10 +54,11 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const svgComponent = computed(() => () =>
-      import(`@/assets/icons/${[props.name]}.svg`)
-    )
+    // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
+    const getComponent = (name: string) => () =>
+      import(`@/assets/icons/${name}.svg`)
 
+    const svgComponent = computed(() => getComponent(props.name))
     const getMdiPath = (name: string) => {
       return mdi[name]
     }
