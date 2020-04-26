@@ -9,13 +9,17 @@ export enum RouteName {
   User = 'user',
   Message = 'message',
   File = 'File',
+  ClipFolders = 'clip-folders',
   Login = 'login',
   Registration = 'registration',
   ResetPassword = 'reset-password',
+  Consent = 'consent',
   NotFound = 'not-found'
 }
 
 export const constructChannelPath = (channel: string) => `/channels/${channel}`
+export const constructClipFoldersPath = (channel: string) =>
+  `/clip-folders/${channel}`
 
 const routes = [
   {
@@ -44,6 +48,11 @@ const routes = [
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
   },
   {
+    path: '/clip-folders/:id',
+    name: RouteName.ClipFolders,
+    component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
     path: '/login',
     name: RouteName.Login,
     component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
@@ -55,6 +64,12 @@ const routes = [
   //   component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
   //   props: { type: 'registration' }
   // },
+  {
+    path: '/consent',
+    name: RouteName.Consent,
+    component: () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue'),
+    props: { type: 'consent' }
+  },
   {
     path: '*',
     name: RouteName.NotFound,

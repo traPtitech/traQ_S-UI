@@ -1,45 +1,29 @@
 import { Embedding } from '@/lib/embeddingExtractor'
-import { MessageId, ChannelId, UserId } from '@/types/entity-ids'
+import { MessageId, ChannelId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
 export interface S {
-  currentChannelId: ChannelId
+  // FIXME: 分離
+
+  /** 現在のチャンネルID、日時ベースのフェッチを行う */
+  currentChannelId?: ChannelId
+
+  /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
+  currentClipFolderId?: ClipFolderId
 
   /** 現在表示対象になっている全てのメッセージID */
   messageIds: MessageId[]
 
   pinnedMessages: Pin[]
 
-  currentOffset: number
-
-  /** 読み込まれているメッセージのうち、最も新しいものの日時 */
-  loadedMessageLatestDate: Date | undefined
-
-  /** 読み込まれているメッセージのうち、最も古いものの日時 */
-  loadedMessageOldestDate: Date | undefined
-
-  /** 初回のロードのみしか行われていないか */
-  isInitialLoad: boolean
-
-  /** 最後に行った読み込みの方向 */
-  lastLoadingDirection: LoadingDirection
-
-  /** チャンネルの過去方向全てのメッセージを取得したか */
-  isReachedEnd: boolean
-
   /**
-   * チャンネルの未来方向全てのメッセージを取得したか
+   * WebSocketの`MESSAGE_CREATED`イベントに対応する必要があるか
    *
-   * `true`になった以降はWebSocketによる通知に対応する必要がある
+   * `isReachedLatest`と同期する必要がある
    */
-  isReachedLatest: boolean
-
-  /** 最初に表示するメッセージId */
-  entryMessageId?: MessageId
-
-  fetchLimit: number
+  shouldRetriveMessageCreateEvent: boolean
 
   renderedContentMap: Record<MessageId, string>
 
@@ -53,20 +37,13 @@ export interface S {
 }
 
 export const state: S = {
-  currentChannelId: '',
+  currentChannelId: undefined,
+  currentClipFolderId: undefined,
   messageIds: [],
   pinnedMessages: [],
-  currentOffset: 0,
-  loadedMessageLatestDate: undefined,
-  loadedMessageOldestDate: undefined,
-  isInitialLoad: false,
-  lastLoadingDirection: 'latest',
-  fetchLimit: 50,
   renderedContentMap: {},
   embeddingsMap: {},
-  entryMessageId: undefined,
-  isReachedEnd: false,
-  isReachedLatest: false,
+  shouldRetriveMessageCreateEvent: false,
   currentViewers: [],
   topic: '',
   subscribers: []

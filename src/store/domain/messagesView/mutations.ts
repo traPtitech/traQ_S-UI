@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
-import { S, LoadingDirection } from './state'
+import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
+import { S } from './state'
 import { Embedding } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 
@@ -9,8 +9,23 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
   },
+  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
+    state.currentClipFolderId = currentClipFolderId
+  },
+  unsetCurrentChannelId(state) {
+    state.currentChannelId = undefined
+  },
+  unsetCurrentClipFolderId(state) {
+    state.currentClipFolderId = undefined
+  },
   setMessageIds(state, messageIds: MessageId[]) {
     state.messageIds = messageIds
+  },
+  setShouldRetriveMessageCreateEvent(
+    state,
+    shouldRetriveMessageCreateEvent: boolean
+  ) {
+    state.shouldRetriveMessageCreateEvent = shouldRetriveMessageCreateEvent
   },
   addMessageId(state, messageId: MessageId) {
     state.messageIds.push(messageId)
@@ -37,18 +52,6 @@ export const mutations = defineMutations<S>()({
       state.pinnedMessages.splice(index, 1)
     }
   },
-  setLoadedMessageLatestDate(state, date: Date) {
-    state.loadedMessageLatestDate = date
-  },
-  setLoadedMessageOldestDate(state, date: Date) {
-    state.loadedMessageOldestDate = date
-  },
-  unsetLoadedMessageLatestDate(state) {
-    state.loadedMessageLatestDate = undefined
-  },
-  unsetLoadedMessageOldestDate(state) {
-    state.loadedMessageOldestDate = undefined
-  },
   addRenderedContent(
     state,
     {
@@ -60,18 +63,6 @@ export const mutations = defineMutations<S>()({
   },
   setRenderedContent(state, renderedContentMap: Record<string, string>) {
     state.renderedContentMap = renderedContentMap
-  },
-  setIsReachedEnd(state, isReachedEnd: boolean) {
-    state.isReachedEnd = isReachedEnd
-  },
-  setIsReachedLatest(state, isReachedLatest: boolean) {
-    state.isReachedLatest = isReachedLatest
-  },
-  setEntryMessageId(state, messageId: MessageId) {
-    state.entryMessageId = messageId
-  },
-  unsetEntryMessageId(state) {
-    state.entryMessageId = undefined
   },
   addEmbedding(
     state,
@@ -87,11 +78,5 @@ export const mutations = defineMutations<S>()({
   },
   setSubscribers(state, subscribers: UserId[]) {
     state.subscribers = subscribers
-  },
-  setIsInitialLoad(state, loadedOnce: boolean) {
-    state.isInitialLoad = loadedOnce
-  },
-  setLastLoadingDirection(state, direction: LoadingDirection) {
-    state.lastLoadingDirection = direction
   }
 })

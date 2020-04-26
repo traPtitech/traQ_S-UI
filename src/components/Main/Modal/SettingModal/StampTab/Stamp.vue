@@ -23,13 +23,14 @@ import {
   PropType,
   reactive
 } from '@vue/composition-api'
-import apis, { buildFilePath, Stamp } from '@/lib/api'
+import apis, { buildFilePath } from '@/lib/apis'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import { Stamp } from '@traptitech/traq'
 
 const useStyles = (props: { isSelected: boolean }) =>
   reactive({

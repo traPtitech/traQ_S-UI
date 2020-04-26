@@ -62,23 +62,54 @@
   )
 }
 
-// TODO: 自分の情報のキャッシュのDB
 // TODO: メッセージのキャッシュのDB
 
+const getStore = async () => {
+  try {
+    const dbEvent = await new Promise((resolve, reject) => {
+      const openReq = indexedDB.open('vuex')
+      openReq.onsuccess = resolve
+      openReq.onerror = reject
+    })
+    const db = dbEvent.target.result
+    const storeEvent = await new Promise((resolve, reject) => {
+      const getReq = db.transaction('vuex').objectStore('vuex').get('vuex')
+      getReq.onsuccess = resolve
+      getReq.onerror = reject
+    })
+    return storeEvent.target.result
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(`[sw] failed to get store: ${e}`)
+    return null
+  }
+}
+
+const postMessage = (channelId, text) =>
+  fetch(`/api/v3/channels/${channelId}/messages`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ content: text, embed: true })
+  })
+
 /* 通知関係 */
-// TODO: 通知からの返信
 // refs src/lib/firebase.ts showNotification()
 {
+  // TODO: いい感じにする
+  const ignoredChannels = ['#general', '#random']
+
   const showNotification = data => {
-    // Customize notification here
     const title = data.title
     const notificationTitle = title || 'traQ'
     const notificationOptions = data
     notificationOptions.data = data
     notificationOptions.renotify = true
     notificationOptions.badge = '/img/icons/badge.png'
-    /*
-    if (title && !['#general', '#random'].includes(title)) {
+
+    if (title && !ignoredChannels.includes(title)) {
       const verb = title.includes('#') ? '投稿' : '返信'
       notificationOptions.actions = [
         {
@@ -89,47 +120,48 @@
         }
       ]
     }
-    */
 
     return self.registration
       .showNotification(notificationTitle, notificationOptions)
       .catch(err => {
+        // eslint-disable-next-line no-console
         console.error('[sw] showNotification error:', err)
       })
   }
 
-  // const delay = () => new Promise(resolve => setTimeout(resolve, 0))
+  const delay = () => new Promise(resolve => setTimeout(resolve, 0))
 
   self.addEventListener('notificationclick', event => {
-    /*
     if (event.reply) {
       const data = event.notification.data
-      const channelID = data.tag.slice('c:'.length)
+      const channelId = data.tag.slice('c:'.length)
       // https://crbug.com/1050352#c5
       // androidでしか通知の再度の発火は発生しない模様
       event.waitUntil(
-        Promise.all([
-          getMeData(),
-          fetch(`/api/1.0/channels/${channelID}/messages?embed=1`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: event.reply
-            })
-          })
-        ]).then(
-          ([{ data: me }]) => {
+        (async () => {
+          try {
+            const [store] = await Promise.all([
+              getStore(),
+              postMessage(channelId, event.reply)
+            ])
             event.notification.close()
-            data.body = `${me.displayName}: ${event.reply}`
-            data.icon = `/api/1.0/public/icon/${me.name}`
+
+            if (store && store.domain.me.detail) {
+              const me = store.domain.me.detail
+              data.body = `${me.displayName}: ${event.reply}`
+              data.icon = `/api/1.0/public/icon/${me.name}`
+            } else {
+              // eslint-disable-next-line no-console
+              console.warn('[sw] no store or me.detail found')
+              data.body = `自分: ${event.reply}`
+            }
+
             data.silent = true
             return showNotification(data)
-          },
-          err => {
+          } catch (err) {
+            // eslint-disable-next-line no-console
             console.error('[sw] sendReply error:', err)
+
             return showNotification(data)
               .then(delay)
               .then(() => {
@@ -139,11 +171,10 @@
                 notifications.forEach(notification => notification.close())
               )
           }
-        )
+        })()
       )
       return
     }
-    */
     event.notification.close()
 
     event.waitUntil(
@@ -151,13 +182,12 @@
         .matchAll({ type: 'window', includeUncontrolled: true })
         .then(clientsArr => {
           if (clientsArr.length > 0) {
-            return clientsArr[0].focus().then(function (client) {
-              const data = {
+            return clientsArr[0].focus().then(client =>
+              client.postMessage({
                 type: 'navigate',
                 to: event.notification.data.path
-              }
-              return client.postMessage(data)
-            })
+              })
+            )
           } else {
             return clients.openWindow(event.notification.data.path)
           }
@@ -165,9 +195,9 @@
     )
   })
 
-  importScripts('https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js')
+  importScripts('https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js')
   importScripts(
-    'https://www.gstatic.com/firebasejs/7.14.1/firebase-messaging.js'
+    'https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js'
   )
 
   firebase.initializeApp({

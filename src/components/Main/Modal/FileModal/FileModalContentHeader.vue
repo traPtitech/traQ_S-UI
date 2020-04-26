@@ -54,13 +54,11 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
 }
-.description,
-.close {
-  align-items: center;
-  height: 40px;
-}
 .close {
   display: flex;
-  cursor: pointer;
+  align-items: center;
+}
+.description {
+  padding: 0 16px;
 }
 </style>

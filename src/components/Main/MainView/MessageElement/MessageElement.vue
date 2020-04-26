@@ -19,6 +19,11 @@
       :created-at="state.message.createdAt"
       :updated-at="state.message.updatedAt"
     />
+    <message-tools
+      :class="$style.tools"
+      :message-id="messageId"
+      v-if="hoverState.hover"
+    />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
       <div :class="$style.stampWrapper">
@@ -73,6 +78,7 @@ import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
+import MessageTools from './MessageTools.vue'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -105,7 +111,8 @@ export default defineComponent({
     MessageStampList,
     MessageFileList,
     MessageQuoteList,
-    Icon
+    Icon,
+    MessageTools,
   },
   props: {
     messageId: {
@@ -149,7 +156,8 @@ export default defineComponent({
       bodyRef,
       embeddingsState,
       isMobile,
-      onStampDetailFoldingToggle
+      onStampDetailFoldingToggle,
+      hoverState
     }
   }
 })
@@ -160,6 +168,7 @@ $messagePadding: 32px;
 $messagePaddingMobile: 16px;
 
 .body {
+  position: relative;
   display: grid;
   grid-template:
     'user-icon message-header'
@@ -212,5 +221,12 @@ $messagePaddingMobile: 16px;
 
 .messageEmbeddingsList {
   margin-top: 16px;
+}
+
+.tools {
+  position: absolute;
+  top: 4px;
+  right: 16px;
+  z-index: 1;
 }
 </style>

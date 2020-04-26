@@ -1,17 +1,25 @@
-export type ViewType = 'messages' | 'qall'
+import { ClipFolderId, ChannelId, MessageId } from '@/types/entity-ids'
+
+export type ViewType = 'channel' | 'qall' | 'clips'
 export interface ViewInformationBase {
   type: ViewType
 }
-export type ViewInformation = MessagesView | QallView
+export type ViewInformation = ChannelView | QallView | ClipsView
 
 export type LayoutType = 'single' | 'split' | 'split-reverse'
 
-export interface MessagesView extends ViewInformationBase {
-  type: 'messages'
+export interface ChannelView extends ViewInformationBase {
+  type: 'channel'
+  /** まだ使われていない */
+  channelId: ChannelId
+  entryMessageId?: MessageId
 }
-
 export interface QallView extends ViewInformationBase {
   type: 'qall'
+}
+export interface ClipsView extends ViewInformationBase {
+  type: 'clips'
+  clipFolderId: ClipFolderId
 }
 
 /**
@@ -50,9 +58,9 @@ export const state: S = {
   isSidebarOpen: false,
   currentMainViewComponentState: MainViewComponentState.Hidden,
   primaryView: {
-    type: 'messages'
+    type: 'channel',
+    channelId: '',
+    entryMessageId: undefined
   },
-  secondaryView: {
-    type: 'qall'
-  }
+  secondaryView: undefined
 }

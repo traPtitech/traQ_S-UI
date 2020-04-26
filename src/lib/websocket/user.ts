@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import store from '@/store'
 import {
   UserJoinedEvent,
@@ -67,7 +67,13 @@ export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
 export const onUserWebRTCStateChanged = (
   data: UserWebRTCStateChangedEvent['body']
 ) => {
-  console.error('onUserWebRTCStateChanged: Not implemented')
+  //FIXME
+  const _data = data as any
+  store.commit.app.rtc.updateRTCState({
+    userId: _data['user_id'],
+    channelId: _data['channel_id'],
+    sessions: data.sessions
+  })
 }
 
 export const onUserGroupCreated = async ({

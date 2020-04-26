@@ -7,7 +7,7 @@ import useViewTitle from './viewTitle'
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWacher = (context: SetupContext) => {
-  const { channelPathToId, channelIdToPath } = useChannelPath()
+  const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
 
   const state = reactive({
@@ -29,6 +29,7 @@ const useRouteWacher = (context: SetupContext) => {
     })
     return
   }
+
   const onRouteChangedToChannel = () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
@@ -39,8 +40,9 @@ const useRouteWacher = (context: SetupContext) => {
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
-      store.dispatch.domain.messagesView.changeCurrentChannel({
-        channelId: id
+      store.dispatch.ui.mainView.changePrimaryViewToChannel({
+        channelId: id,
+        entryMessageId: context.root.$route.query?.message as string
       })
     } catch (e) {
       state.view = 'not-found'
@@ -49,6 +51,22 @@ const useRouteWacher = (context: SetupContext) => {
     changeViewTitle(`#${state.channelParam}`)
     state.view = 'main'
   }
+
+  const onRouteChangedToClipFolders = async () => {
+    const id = state.idParam
+    try {
+      const clipFolder =
+        store.state.entities.clipFolders[id] ??
+        (await store.dispatch.entities.fetchClipFolder(id))
+      changeViewTitle(clipFolder.name)
+    } catch {
+      state.view = 'not-found'
+      return
+    }
+    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    state.view = 'main'
+  }
+
   const onRouteChangedToFile = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
@@ -65,8 +83,8 @@ const useRouteWacher = (context: SetupContext) => {
       state.view = 'not-found'
       return
     }
-    const channelPath = channelIdToPath(file.channelId)
-    store.dispatch.domain.messagesView.changeCurrentChannel({
+    const channelPath = channelIdToPathString(file.channelId)
+    store.dispatch.ui.mainView.changePrimaryViewToChannel({
       channelId: file.channelId
     })
     const modalPayload = {
@@ -78,11 +96,11 @@ const useRouteWacher = (context: SetupContext) => {
     changeViewTitle(`#${channelPath} - ${file.name}`)
     state.view = 'main'
   }
+
   const onRouteChangedToMessage = async () => {
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
-    const { channelIdToPath } = useChannelPath()
     const messageId = state.idParam
     const message =
       store.state.entities.messages[messageId] ??
@@ -95,18 +113,29 @@ const useRouteWacher = (context: SetupContext) => {
 
     context.root.$router.replace({
       name: RouteName.Channel,
-      params: { channel: channelIdToPath(message.channelId).join('/') },
+      params: { channel: channelIdToPathString(message.channelId) },
       query: { message: message.id }
     })
   }
 
-  const onRouteParamChange = async (_: string, __: string) => {
+  const onRouteParamChange = async (
+    routeParam: string,
+    prevRouteParam: string
+  ) => {
+    if (
+      !store.state.app.initialFetchCompleted ||
+      routeParam === prevRouteParam
+    ) {
+      return
+    }
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
     } else if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
+    } else if (routeName === RouteName.ClipFolders) {
+      onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
     } else if (routeName === RouteName.Message) {

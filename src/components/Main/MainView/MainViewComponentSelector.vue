@@ -1,36 +1,35 @@
 <template>
-  <messages-view
+  <channel-view
     :class="$style.messagesView"
-    v-if="props.viewInfo && props.viewInfo.type === 'messages'"
-    :channel-id="channelId"
+    v-if="viewInfo.type === 'channel'"
+    :channel-id="viewInfo.channelId"
+    :entry-message-id="viewInfo.entryMessageId"
   />
-  <qall-view v-else-if="props.viewInfo && props.viewInfo.type === 'qall'" />
+  <clips-view
+    :class="$style.messagesView"
+    v-else-if="viewInfo.type === 'clips'"
+    :clip-folder-id="viewInfo.clipFolderId"
+  />
   <div :class="$style.none" v-else></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ViewInformation } from '@/store/ui/mainView/state'
-import MessagesView from '@/components/Main/MainView/MessagesView/MessagesView.vue'
-import QallView from '@/components/Main/MainView/QallView/QallView.vue'
+import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
+import ClipsView from '@/components/Main/MainView/ClipsView/ClipsView.vue'
 
 export default defineComponent({
   name: 'MainViewComponentSelector',
-  components: { MessagesView, QallView },
+  components: { ChannelView, ClipsView },
   props: {
-    viewInfo: Object as PropType<ViewInformation>
-  },
-  setup(props) {
-    const channelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-
-    return {
-      // TODO: https://github.com/vuejs/composition-api/issues/291
-      props: props as { viewInfo: ViewInformation | undefined },
-      channelId
+    viewInfo: {
+      type: Object as PropType<ViewInformation>,
+      required: true
     }
+  },
+  setup() {
+    return {}
   }
 })
 </script>

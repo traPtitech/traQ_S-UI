@@ -1,9 +1,15 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from './index'
-import api from '@/lib/api'
+import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
-import { FileId, TagId, MessageId, ChannelId } from '@/types/entity-ids'
+import {
+  FileId,
+  TagId,
+  MessageId,
+  ChannelId,
+  ClipFolderId
+} from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
 interface GetMessagesParams {
@@ -29,23 +35,30 @@ interface GetFilesChannelParams {
   options?: any
 }
 
+interface GetClipsParam {
+  folderId: string
+  limit?: number
+  offset?: number
+  order?: 'asc' | 'desc'
+}
+
 export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
 export const actions = defineActions({
   async fetchUser(context, userId: string) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getUser(userId)
+    const res = await apis.getUser(userId)
     commit.addUser({ id: userId, entity: res.data })
   },
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getUsers()
+    const res = await apis.getUsers()
     commit.setUsers(reduceToRecord(res.data, 'id'))
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getChannels(true)
+    const res = await apis.getChannels(true)
     // TODO: DM対応
     if (res.data.public) {
       commit.setChannels(reduceToRecord(res.data.public, 'id'))
@@ -53,22 +66,42 @@ export const actions = defineActions({
   },
   async fetchUserGroups(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getUserGroups()
+    const res = await apis.getUserGroups()
     commit.setUserGroups(reduceToRecord(res.data, 'id'))
   },
   async fetchStamps(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getStamps()
+    const res = await apis.getStamps()
     commit.setStamps(reduceToRecord(res.data, 'id'))
   },
   async fetchStampPalettes(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getStampPalettes()
+    const res = await apis.getStampPalettes()
     commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+  },
+  // TODO: ドメインデータっぽい
+  async fetchMessagesInClipFolder(context, params: GetClipsParam) {
+    const { commit } = entitiesActionContext(context)
+    const { data, headers } = await apis.getClips(
+      params.folderId,
+      params.limit,
+      params.offset,
+      params.order
+    )
+    commit.extendMessages(
+      reduceToRecord(
+        data.map(c => c.message),
+        'id'
+      )
+    )
+    return {
+      clips: data,
+      hasMore: headers['x-traq-more'] === 'true'
+    }
   },
   async fetchMessagesByChannelId(context, params: GetMessagesParams) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessages(
+    const res = await apis.getMessages(
       params.channelId,
       params.limit,
       params.offset,
@@ -85,7 +118,7 @@ export const actions = defineActions({
   },
   async fetchMessage(context, messageId: MessageId) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getMessage(messageId)
+    const res = await apis.getMessage(messageId)
     commit.addMessage({ id: res.data.id, entity: res.data })
     return res.data
   },
@@ -94,7 +127,7 @@ export const actions = defineActions({
     { channelId, limit, offset }: GetFilesChannelParams
   ) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getFiles(channelId, limit, offset)
+    const res = await apis.getFiles(channelId, limit, offset)
     commit.extendFileMetaData(reduceToRecord(res.data, 'id'))
     return {
       messages: res.data,
@@ -103,7 +136,7 @@ export const actions = defineActions({
   },
   async fetchFileMetaByFileId(context, fileId: FileId) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getFileMeta(fileId)
+    const res = await apis.getFileMeta(fileId)
     commit.addFileMetaData({ id: res.data.id, entity: res.data })
     return {
       messages: res.data,
@@ -112,7 +145,7 @@ export const actions = defineActions({
   },
   async fetchTag(context, tagId: TagId) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getTag(tagId)
+    const res = await apis.getTag(tagId)
     commit.addTags({ id: res.data.id, entity: res.data })
   },
   async createChannel(
@@ -120,21 +153,27 @@ export const actions = defineActions({
     payload: { name: string; parent: ChannelId | null }
   ) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.createChannel({
+    const res = await apis.createChannel({
       name: payload.name,
       parent: payload.parent
     })
     commit.addChannel({ id: res.data.id, entity: res.data })
     if (res.data.parentId) {
       // 親チャンネルの`children`が不整合になるので再取得
-      const parentRes = await api.getChannel(res.data.parentId)
+      const parentRes = await apis.getChannel(res.data.parentId)
       commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
     }
     return res.data
   },
   async fetchClipFolders(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await api.getClipFolders()
+    const res = await apis.getClipFolders()
     commit.setClipFolders(reduceToRecord(res.data, 'id'))
+  },
+  async fetchClipFolder(context, id: ClipFolderId) {
+    const { commit } = entitiesActionContext(context)
+    const res = await apis.getClipFolder(id)
+    commit.addClipFolder({ id, entity: res.data })
+    return res.data
   }
 })

@@ -1,8 +1,8 @@
 import { ws, wsConnectionPromise } from './index'
-import { ChannelViewState } from '@traptitech/traq'
+import { ChannelViewState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
-type WebSocketCommand = 'viewstate'
+type WebSocketCommand = 'viewstate' | 'rtcstate'
 
 const sendWebSocket = async (
   ...command: readonly [WebSocketCommand, ...string[]]
@@ -30,4 +30,21 @@ export const changeViewState: ChangeViewStateFunction = (
   } else {
     return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
+}
+
+const RTCSTATE_COMMAND = 'rtcstate'
+
+export const changeRTCState = (
+  channelId: ChannelId,
+  states: WebRTCUserStateSessions[]
+) => {
+  if (states.length === 0) {
+    return sendWebSocket(RTCSTATE_COMMAND, channelId, '')
+  }
+  return sendWebSocket(
+    RTCSTATE_COMMAND,
+    channelId,
+    ...states.flatMap(s => [s.state, s.sessionId]),
+    '' // 終端の:をつける
+  )
 }

@@ -1,10 +1,3 @@
-const options = {
-  plugins: [
-    '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-proposal-nullish-coalescing-operator'
-  ]
-}
-
 const vueCliPreset = require('@vue/cli-plugin-babel/preset')
 
 module.exports = api => {
@@ -21,5 +14,5 @@ module.exports = api => {
     process.env.VUE_CLI_MODERN_BUILD = 'true'
   }
 
-  return { ...options, ...config }
+  return config
 }

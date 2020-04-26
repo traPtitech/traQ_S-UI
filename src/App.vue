@@ -1,13 +1,20 @@
 <template>
-  <div :class="$style.app" :data-is-mobile="isMobile">
+  <div :class="$style.app" :style="scrollbarStyle" :data-is-mobile="isMobile">
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect } from '@vue/composition-api'
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  watchEffect
+} from '@vue/composition-api'
 import store from './store'
 import { throttle } from 'lodash-es'
+import { makeStyles } from '@/lib/styles'
+import { Properties } from 'csstype'
 
 const useWindowResizeObserver = () => {
   const resizeHandler = () => {
@@ -54,6 +61,15 @@ const useEcoModeObserver = () => {
   })
 }
 
+const useScrollbarStyle = () =>
+  makeStyles(
+    theme =>
+      ({
+        '--scrollbar-color': theme.ui.secondary,
+        '--scrollbar-hover-color': theme.ui.primary
+      } as Properties)
+  )
+
 export default defineComponent({
   name: 'App',
   components: {},
@@ -64,8 +80,15 @@ export default defineComponent({
     useThemeObserver()
     useEcoModeObserver()
 
+    const scrollbarStyle = useScrollbarStyle()
+
+    onBeforeMount(async () => {
+      await store.dispatch.app.fetchVersionInfo()
+    })
+
     return {
-      isMobile
+      isMobile,
+      scrollbarStyle
     }
   }
 })

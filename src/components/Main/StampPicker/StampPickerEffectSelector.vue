@@ -7,7 +7,7 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath } from '@/lib/apis'
 
 const useStyles = () =>
   reactive({

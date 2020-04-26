@@ -4,26 +4,20 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <div :class="$style.icon">
-      <icon mdi :name="fileIconName" :size="32" />
-    </div>
-    <span :class="$style.fileName">
-      {{ fileMeta.name }}
-    </span>
-    <span :class="$style.fileSize" :style="styles.fileSize">{{
-      fileSize
-    }}</span>
-    <div :href="fileRawPath" :class="$style.dl">
-      <icon mdi name="download" :size="32" />
-    </div>
+    <file-description
+      :file-id="props.fileId"
+      :is-white="props.isWhite"
+      :is-ellipsis="true"
+      :class="$style.description"
+    />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import Icon from '@/components/UI/Icon.vue'
 import useFileMeta from '@/use/fileMeta'
+import FileDescription from '@/components/UI/FileDescription.vue'
 
 const useStyles = (props: { isWhite: boolean }) =>
   reactive({
@@ -38,7 +32,7 @@ const useStyles = (props: { isWhite: boolean }) =>
 
 export default defineComponent({
   name: 'MessageFileListItemContent',
-  components: { Icon },
+  components: { FileDescription },
   props: {
     fileId: {
       type: String,
@@ -51,49 +45,21 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles(props)
-    const {
-      fileMeta,
-      fileSize,
-      fileIconName,
-      fileRawPath,
-      fileLink
-    } = useFileMeta(props, context)
-    return { styles, fileMeta, fileSize, fileIconName, fileRawPath, fileLink }
+    const { fileLink } = useFileMeta(props, context)
+    return {
+      styles,
+      fileLink,
+      props
+    }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  display: grid;
   width: 100%;
-  grid-template:
-    'icon ...  name ... dl' 20px
-    'icon ...  size ... dl' 16px
-    /36px 16px auto 1fr 24px;
-  gap: 4px 0;
-  padding: 12px 16px;
 }
-.icon,
-.dl {
-  display: flex;
-  align-items: center;
-  height: 40px;
-}
-.icon {
-  grid-area: icon;
-}
-.dl {
-  grid-area: dl;
-}
-.fileName {
-  grid-area: name;
-  display: flex;
-  align-items: center;
-}
-.fileSize {
-  grid-area: size;
-  display: flex;
-  align-items: center;
+.description {
+  padding: 0 16px;
 }
 </style>

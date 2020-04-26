@@ -1,9 +1,9 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import api, { ChannelSubscribeLevel } from '@/lib/api'
+import apis from '@/lib/apis'
 import { me } from './index'
 import { ChannelId } from '@/types/entity-ids'
-import apis from '@/lib/api'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 export const meActionContext = (context: any) =>
   moduleActionContext(context, me)
@@ -50,7 +50,7 @@ export const actions = defineActions({
   },
   async fetchSubscriptions(context) {
     const { commit } = meActionContext(context)
-    const res = await api.getMyChannelSubscriptions()
+    const res = await apis.getMyChannelSubscriptions()
     const subscriptions: Record<
       ChannelId,
       ChannelSubscribeLevel
@@ -62,7 +62,7 @@ export const actions = defineActions({
     payload: { channelId: ChannelId; subscriptionLevel: ChannelSubscribeLevel }
   ) {
     const { commit } = meActionContext(context)
-    api.setChannelSubscribeLevel(payload.channelId, {
+    apis.setChannelSubscribeLevel(payload.channelId, {
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)

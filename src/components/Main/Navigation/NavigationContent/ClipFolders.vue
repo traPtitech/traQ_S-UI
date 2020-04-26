@@ -1,8 +1,10 @@
 <template>
   <div :class="$style.container">
+    <!--
     <navigation-content-container subtitle="すべてのクリップ">
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
+    -->
     <navigation-content-container subtitle="クリップフォルダ">
       <div v-for="clipFolder in clipFolders" :key="clipFolder.id">
         <clip-folders-element

@@ -4,7 +4,6 @@ import { S } from './state'
 import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
-  StampHistoryEntry,
   MyUserDetail,
   ChannelSubscribeLevel
 } from '@traptitech/traq'
@@ -45,8 +44,11 @@ export const mutations = defineMutations<S>()({
     Vue.delete(state.staredChannelSet, channelId)
   },
 
-  pushLocalStampHistory(state: S, stampHistory: StampHistoryEntry) {
-    Vue.set(state.stampHistory, stampHistory.stampId, stampHistory.datetime)
+  upsertLocalStampHistory(
+    state: S,
+    { stampId, datetime }: { stampId: StampId; datetime: Date }
+  ) {
+    Vue.set(state.stampHistory, stampId, datetime)
   },
 
   setSubscriptionMap(

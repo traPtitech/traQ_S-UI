@@ -6,6 +6,7 @@
       :style="$style.input"
       :value="text"
       :placeholder="placeholder"
+      :autocapitalize="autocapitalize"
       @input="onInput"
       type="text"
     />
@@ -48,6 +49,10 @@ export default defineComponent({
     placeholder: {
       type: String,
       default: ''
+    },
+    autocapitalize: {
+      type: String,
+      default: 'off'
     }
   },
   setup(props, context) {

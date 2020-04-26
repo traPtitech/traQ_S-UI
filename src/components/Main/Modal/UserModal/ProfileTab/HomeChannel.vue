@@ -25,6 +25,7 @@ import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
+import { changeChannelByPath } from '@/router/channel'
 
 const useStyles = (lowPriority: Ref<boolean>) =>
   reactive({
@@ -48,9 +49,9 @@ export default defineComponent({
     const lowPriority = computed(() => isLoading.value || isEmpty.value)
     const styles = useStyles(lowPriority)
 
-    const { channelIdToPath } = useChannelPath()
+    const { channelIdToPathString } = useChannelPath()
     const channelPath = computed(() =>
-      propst.id ? channelIdToPath(propst.id).join('/') : ''
+      propst.id ? channelIdToPathString(propst.id) : ''
     )
 
     const onClick = async () => {
@@ -58,8 +59,7 @@ export default defineComponent({
       // モーダル削除時に消えちゃうため、実体を退避
       const pathCache = channelPath.value
       await store.dispatch.ui.modal.clearModal()
-      // 同じ場所に移動しようとした際のエラーを消す
-      context.root.$router.push(`/channels/${pathCache}`).catch(() => {})
+      changeChannelByPath(pathCache)
     }
 
     return {

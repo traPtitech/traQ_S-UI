@@ -1,6 +1,6 @@
 import { computed, SetupContext } from '@vue/composition-api'
 import store from '@/store'
-import { buildFilePath } from '@/lib/api'
+import { buildFilePath, buildFileThumbnailPath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
 import useFileLink from '@/use/fileLink'
 
@@ -14,6 +14,11 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   )
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
+  )
+  const fileThumbnailPath = computed(() =>
+    fileMeta.value && fileMeta.value.thumbnail != null
+      ? buildFileThumbnailPath(fileMeta.value.id)
+      : ''
   )
   const fileType = computed(() =>
     fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
@@ -35,6 +40,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     fileMeta,
     fileLink,
     fileRawPath,
+    fileThumbnailPath,
     fileType,
     fileSize,
     fileIconName,

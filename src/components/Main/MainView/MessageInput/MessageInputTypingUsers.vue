@@ -1,14 +1,15 @@
 <template>
-  <div v-if="users.length > 0" :class="$style.container">
+  <div v-if="typingUsers.length > 0" :class="$style.container">
     <div :class="$style.text" :style="styles.text">
       {{ text }}
     </div>
-    <user-icon
-      v-for="userId in users"
-      :key="userId"
-      :class="$style.icon"
-      :user-id="userId"
-      :size="24"
+    <user-icon-ellipsis-list
+      direction="row"
+      :show-count="false"
+      :user-ids="typingUsers"
+      :border-width="1"
+      :icon-size="24"
+      :overlap="8"
     />
   </div>
 </template>
@@ -22,7 +23,7 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { UserId } from '@/types/entity-ids'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 
 const useStyles = () =>
   reactive({
@@ -42,7 +43,6 @@ export default defineComponent({
   setup(props) {
     const styles = useStyles()
 
-    const users = computed(() => props.typingUsers.reverse().slice(0, 3))
     const text = computed(
       () =>
         `${props.typingUsers.length > 3 ? 'and others' : ''} ${
@@ -50,17 +50,15 @@ export default defineComponent({
         } typing`
     )
 
-    return { styles, users, text }
+    return { styles, text }
   },
   components: {
-    UserIcon
+    UserIconEllipsisList
   }
 })
 </script>
 
 <style lang="scss" module>
-$overlap: 8px;
-
 .container {
   position: absolute;
   top: -4px;
@@ -68,15 +66,9 @@ $overlap: 8px;
   transform: translateY(-100%);
   display: flex;
   flex-direction: row-reverse;
-  margin-left: $overlap;
 }
 
 .text {
   margin-left: 4px;
-}
-
-.icon {
-  margin-left: -$overlap;
-  border: solid 1px white;
 }
 </style>

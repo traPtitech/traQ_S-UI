@@ -1,15 +1,25 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <router-link
+    :to="clipFolderPath"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <icon name="bookmark" mdi :class="$style.icon" />
     {{ clipFolder.name }}
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { ClipFolder } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
+import { constructClipFoldersPath } from '@/router'
 
 const useStyles = () =>
   reactive({
@@ -29,9 +39,12 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
     const styles = useStyles()
-    return { styles }
+    const clipFolderPath = computed(() =>
+      constructClipFoldersPath(props.clipFolder.id)
+    )
+    return { styles, clipFolderPath }
   }
 })
 </script>

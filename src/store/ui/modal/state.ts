@@ -16,6 +16,7 @@ type ModalStateType =
   | 'tag'
   | 'group'
   | 'channel-create'
+  | 'qrcode'
 
 export type ModalState =
   | UserModalState
@@ -25,6 +26,7 @@ export type ModalState =
   | GroupModalState
   | TagModalState
   | ChannelCreateModalState
+  | QrCodeModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -73,6 +75,10 @@ interface ChannelCreateModalState extends BaseModalState {
    * 指定しない場合はルートチャンネル作成
    */
   parentChannelId?: ChannelId
+}
+
+interface QrCodeModalState extends BaseModalState {
+  type: 'qrcode'
 }
 
 export interface S {

@@ -21,11 +21,13 @@ const useInitialFetch = (context: SetupContext) => {
     store.commit.app.setInitialFetchCompleted()
     store.dispatch.domain.stampCategory.constructStampCategories()
     store.dispatch.entities.fetchStampPalettes()
+    store.dispatch.entities.fetchClipFolders()
     store.dispatch.domain.fetchChannelActivity()
     store.dispatch.domain.fetchOnlineUsers()
     store.dispatch.domain.me.fetchUnreadChannels()
     store.dispatch.domain.me.fetchStaredChannels()
     store.dispatch.domain.me.fetchStampHistory()
+    store.dispatch.app.rtc.fetchRTCState()
 
     await store.dispatch.domain.me.fetchSubscriptions()
     store.dispatch.domain.channelTree.constructHomeChannelTree()

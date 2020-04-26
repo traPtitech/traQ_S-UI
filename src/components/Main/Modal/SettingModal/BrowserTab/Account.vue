@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import apis from '@/lib/api'
+import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 
 export default defineComponent({
