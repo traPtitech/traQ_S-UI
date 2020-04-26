@@ -1,6 +1,7 @@
 import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
 import store from '@/store'
 import { RouteName } from '@/router'
+import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 
@@ -9,6 +10,7 @@ type Views = 'none' | 'main' | 'not-found'
 const useRouteWacher = (context: SetupContext) => {
   const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
+  const { closeNav } = useNavigationController()
 
   const state = reactive({
     currentRouteName: computed(() => context.root.$route.name ?? ''),
@@ -157,6 +159,7 @@ const useRouteWacher = (context: SetupContext) => {
     }
 
     state.isInitialView = false
+    closeNav()
   }
 
   const routeWatcher = watch(

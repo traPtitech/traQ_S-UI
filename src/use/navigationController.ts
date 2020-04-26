@@ -1,19 +1,27 @@
 import store from '@/store'
 import { MainViewComponentState } from '@/store/ui/mainView/state'
 
+/**
+ * モバイル用にナビゲーションの開閉を行う
+ */
 const useNavigation = () => {
   const openNav = () => {
+    if (
+      !store.getters.ui.isMobile ||
+      !store.getters.ui.mainView.isNoComponentOpen
+    ) {
+      return
+    }
     store.commit.ui.mainView.setMainViewComponentState(
-      store.getters.ui.isMobile
-        ? MainViewComponentState.NavAppearingAuto
-        : MainViewComponentState.NavShown
+      MainViewComponentState.NavAppearingAuto
     )
   }
   const closeNav = () => {
+    if (!store.getters.ui.isMobile || !store.getters.ui.mainView.isNavOpen) {
+      return
+    }
     store.commit.ui.mainView.setMainViewComponentState(
-      store.getters.ui.isMobile
-        ? MainViewComponentState.NavDisappearingAuto
-        : MainViewComponentState.Hidden
+      MainViewComponentState.NavDisappearingAuto
     )
   }
   return { openNav, closeNav }

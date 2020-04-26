@@ -10,6 +10,14 @@ export const getters = defineGetters<S>()({
       MainViewComponentState.SidebarShown
     )
   },
+  isNavOpen(state: S) {
+    return (
+      state.currentMainViewComponentState === MainViewComponentState.NavShown
+    )
+  },
+  isNoComponentOpen(state: S) {
+    return state.currentMainViewComponentState === MainViewComponentState.Hidden
+  },
   headerStyle(state: S): HeaderStyle {
     if (
       state.layout === 'split-reverse' &&
