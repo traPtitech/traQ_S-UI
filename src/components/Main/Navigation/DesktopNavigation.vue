@@ -9,21 +9,21 @@
           ephemeralNavigationSelectorState.currentNavigation
         "
       />
+      <desktop-tool-box />
     </div>
     <portal-target :name="targetPortalName" />
-    <div class="$style.navigations">
+    <div :class="$style.navigations">
       <navigation-content
-        class="$style.navigation"
+        :class="$style.navigation"
         :current-navigation="navigationSelectorState.currentNavigation"
       />
       <ephemeral-navigation-content
-        class="$style.navigation"
+        :class="$style.navigation"
         v-if="ephemeralNavigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
       />
-      <desktop-tool-box />
     </div>
   </div>
 </template>
@@ -101,6 +101,7 @@ $selectorWidth: 64px;
 .navigations {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 .navigation {
   width: 100%;
