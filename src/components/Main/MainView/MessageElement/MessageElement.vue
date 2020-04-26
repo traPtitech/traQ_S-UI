@@ -26,12 +26,23 @@
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-      />
+      <div :class="$style.stampWrapper">
+        <icon
+          name="rounded-triangle"
+          :size="24"
+          v-if="state.message.stamps.length > 0"
+          :class="$style.toggleButton"
+          :style="styles.toggleButton"
+          @click="onStampDetailFoldingToggle"
+        />
+        <message-stamp-list
+          :class="$style.stamps"
+          v-if="state.message.stamps.length > 0"
+          :message-id="messageId"
+          :stamps="state.message.stamps"
+          :is-show-detail="state.stampDetailFoldingState"
+        />
+      </div>
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
@@ -69,10 +80,12 @@ import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import MessageTools from './MessageTools.vue'
 import useEmbeddings from './use/embeddings'
+import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
-  hoverState: { hover: boolean }
+  hoverState: { hover: boolean },
+  state: { stampDetailFoldingState: boolean }
 ) =>
   reactive({
     body: makeStyles(theme => ({
@@ -81,6 +94,12 @@ const useStyles = (
         : hoverState.hover
         ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
+    })),
+    toggleButton: makeStyles(theme => ({
+      transform: state.stampDetailFoldingState
+        ? `rotate(0.5turn)`
+        : `rotate(0turn)`,
+      color: hoverState.hover ? theme.ui.secondary : 'transparent'
     }))
   })
 
@@ -91,8 +110,9 @@ export default defineComponent({
     MessageHeader,
     MessageStampList,
     MessageFileList,
+    MessageQuoteList,
+    Icon,
     MessageTools,
-    MessageQuoteList
   },
   props: {
     messageId: {
@@ -114,14 +134,19 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      )
+      ),
+      stampDetailFoldingState: false
     })
 
     const { embeddingsState } = useEmbeddings(props)
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
-    const styles = useStyles(props, hoverState)
+    const onStampDetailFoldingToggle = () => {
+      state.stampDetailFoldingState = !state.stampDetailFoldingState
+    }
+
+    const styles = useStyles(props, hoverState, state)
 
     return {
       state,
@@ -131,6 +156,7 @@ export default defineComponent({
       bodyRef,
       embeddingsState,
       isMobile,
+      onStampDetailFoldingToggle,
       hoverState
     }
   }
@@ -183,8 +209,14 @@ $messagePaddingMobile: 16px;
   line-break: loose;
 }
 
-.stamps {
+.stampWrapper {
   margin-top: 8px;
+  position: relative;
+}
+
+.toggleButton {
+  position: absolute;
+  left: -28px;
 }
 
 .messageEmbeddingsList {
