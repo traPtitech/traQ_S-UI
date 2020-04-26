@@ -4,7 +4,7 @@
     :subtitle="tagName"
     icon-mdi
     icon-name="tag"
-    :return-button="true"
+    return-button
   >
     <user-list-item
       v-for="id in taggedUsers"

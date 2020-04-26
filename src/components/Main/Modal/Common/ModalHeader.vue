@@ -46,7 +46,7 @@ export default defineComponent({
     subtitle: { type: String, default: '' },
     returnButton: { type: Boolean, default: false }
   },
-  setup(props) {
+  setup() {
     const styles = useStyles()
     return { styles }
   }

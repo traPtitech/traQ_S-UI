@@ -44,7 +44,7 @@ export default defineComponent({
     subtitle: { type: String, default: '' },
     returnButton: { type: Boolean, default: false }
   },
-  setup(props) {
+  setup() {
     const styles = useStyles()
     const onClickOutside = () => store.dispatch.ui.modal.clearModal()
     return { styles, onClickOutside }

@@ -11,7 +11,6 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
-
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
