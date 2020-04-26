@@ -25,10 +25,14 @@ const useRouteWacher = (context: SetupContext) => {
 
   const onRouteChangedToIndex = async () => {
     await (store.original as any).restored
-    context.root.$router.replace({
-      name: RouteName.Channel,
-      params: { channel: store.state.app.browserSettings.openChannelName }
-    })
+    try {
+      await context.root.$router.replace({
+        name: RouteName.Channel,
+        params: { channel: store.state.app.browserSettings.openChannelName }
+      })
+    } catch (e) {
+      if (!!e) throw e
+    }
     return
   }
 
@@ -124,17 +128,19 @@ const useRouteWacher = (context: SetupContext) => {
     routeParam: string,
     prevRouteParam: string
   ) => {
+    store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    const routeName = state.currentRouteName
+    if (routeName === RouteName.Index) {
+      await onRouteChangedToIndex()
+      return
+    }
     if (
       !store.state.app.initialFetchCompleted ||
       routeParam === prevRouteParam
     ) {
       return
     }
-    store.commit.ui.modal.setIsOnInitialModalRoute(false)
-    const routeName = state.currentRouteName
-    if (routeName === RouteName.Index) {
-      await onRouteChangedToIndex()
-    } else if (routeName === RouteName.Channel) {
+    if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
