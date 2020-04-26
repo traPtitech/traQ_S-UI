@@ -4,15 +4,10 @@
     <div :class="$style.content">
       <form-button
         label="ログアウト"
-        on-secondary
         @click="onLogoutClick"
         :class="$style.logout"
       />
-      <form-button
-        label="全セッション破棄"
-        on-secondary
-        @click="onSessionDelete"
-      />
+      <form-button label="全セッション破棄" @click="onSessionDelete" />
     </div>
   </div>
 </template>

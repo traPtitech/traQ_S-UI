@@ -10,7 +10,12 @@
       :class="$style.input"
       v-model="channelName"
     />
-    <form-button label="作成" :class="$style.button" @click="createChannel" />
+    <form-button
+      label="作成"
+      :disabled="!isCreateEnabled"
+      :class="$style.button"
+      @click="createChannel"
+    />
   </modal-frame>
 </template>
 
@@ -72,7 +77,8 @@ export default defineComponent({
         ? channelIdToPathString(props.parentChannelId, true)
         : 'ルートチャンネル作成'
     )
-    return { channelName, createChannel, subtitle }
+    const isCreateEnabled = computed(() => channelName.value !== '')
+    return { channelName, createChannel, subtitle, isCreateEnabled }
   }
 })
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <form-button label="ファイルを選択" on-secondary @click="addImage" />
+    <form-button label="ファイルを選択" @click="addImage" />
     <div v-if="image.url !== ''">
       <div :class="$style.cropper" :is-rounded="rounded">
         <img :src="image.url" ref="$img" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
-      <form-button label="キャンセル" on-secondary @click="destroy" />
+      <form-button label="キャンセル" @click="destroy" />
     </div>
   </div>
 </template>
