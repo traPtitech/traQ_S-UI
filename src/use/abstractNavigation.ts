@@ -1,10 +1,9 @@
 import { reactive, SetupContext } from '@vue/composition-api'
 
-const createNavigation = <NavigationItemType extends string>(
-  defaultItem: NavigationItemType
+const createNavigation = <NavigationItemType extends string | undefined>(
+  defaultItem: NavigationItemType,
+  navigationChangeEvent = 'navigation-change'
 ) => {
-  const navigationChangeEvent = 'navigation-change'
-
   const useNavigation = () => {
     const navigationSelectorState = reactive({
       currentNavigation: defaultItem
