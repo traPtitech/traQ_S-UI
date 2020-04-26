@@ -1,11 +1,33 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <icon name="close" mdi @click="removeTag" :size="24" />
+    <icon
+      name="lock"
+      mdi
+      :size="20"
+      v-if="state.isLocked"
+      @click="toggleTagState"
+    />
+    <div v-else>
+      <icon
+        name="lock-open"
+        mdi
+        :size="20"
+        v-if="state.isMine"
+        @click="toggleTagState"
+        :class="$style.open"
+      />
+      <icon name="close" mdi @click="removeTag" :size="20" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 
 import { makeStyles } from '@/lib/styles'
 import { UserId, TagId } from '@/types/entity-ids'
@@ -36,25 +58,41 @@ export default defineComponent({
   setup(props) {
     const styles = useStyles()
     const state = reactive({
-      me: store.state.domain.me.detail
+      isMine: computed(() => store.state.domain.me.detail?.id === props.userId),
+      isLocked: computed(
+        () =>
+          store.state.domain.userDetails[props.userId]?.tags.find(
+            tag => tag.tagId === props.tagId
+          )?.isLocked ?? false
+      )
     })
-    const isMine = () => {
-      return props.userId === state.me?.id
-    }
 
     const removeTag = async () => {
-      if (isMine()) {
+      if (state.isMine) {
         await apis.removeMyUserTag(props.tagId)
       } else {
         await apis.removeUserTag(props.userId, props.tagId)
       }
     }
-    return { styles, removeTag }
+
+    const toggleTagState = async () => {
+      if (state.isMine) {
+        await apis.editUserTag(props.userId, props.tagId, {
+          isLocked: !state.isLocked
+        })
+        store.dispatch.domain.fetchUserDetail(props.userId)
+      }
+    }
+
+    return { styles, state, removeTag, toggleTagState }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+}
+.open {
+  margin-right: 4px;
 }
 </style>
