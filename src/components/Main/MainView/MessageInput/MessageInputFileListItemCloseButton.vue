@@ -17,6 +17,7 @@ import { transparentize } from '@/lib/util/color'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
+      color: theme.background.primary,
       background: transparentize(theme.ui.primary, 0.8)
     }))
   })
@@ -41,7 +42,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
   cursor: pointer;
 }
 </style>
