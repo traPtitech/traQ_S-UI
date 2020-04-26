@@ -12,18 +12,11 @@
         :icon-name="item.iconName"
       />
     </div>
-    <div :class="$style.item" @click="onQrCodeClick">
-      <Icon name="qrcode" mdi />
-    </div>
-    <div :class="$style.item" @click="onSettingClick">
-      <Icon name="cog" mdi />
-    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
-import store from '@/store'
 import {
   NavigationItemType,
   useNavigationSelectorItem
@@ -41,11 +34,11 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const items: {
+    const items: Array<{
       type: NavigationItemType
       iconName: string
       iconMdi?: true
-    }[] = [
+    }> = [
       {
         type: 'home',
         iconName: 'home',
@@ -67,26 +60,13 @@ export default defineComponent({
         type: 'clips',
         iconName: 'bookmark',
         iconMdi: true
-      },
-      {
-        type: 'services',
-        iconName: 'services'
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
 
-    // TODO: 下部アイテムに移動
-    const onSettingClick = () =>
-      store.dispatch.ui.modal.pushModal({ type: 'setting' })
-
-    const onQrCodeClick = () =>
-      store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
-
     return {
       items,
-      onNavigationItemClick,
-      onSettingClick,
-      onQrCodeClick
+      onNavigationItemClick
     }
   }
 })
@@ -94,9 +74,13 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  padding: 8px 0;
 }
 .item {
-  margin: 16px 0;
+  margin: 8px 0;
 }
 </style>

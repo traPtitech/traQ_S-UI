@@ -69,10 +69,6 @@ export default defineComponent({
       {
         type: 'users',
         iconName: 'user'
-      },
-      {
-        type: 'services',
-        iconName: 'services'
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)

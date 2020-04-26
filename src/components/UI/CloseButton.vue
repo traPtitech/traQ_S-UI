@@ -12,12 +12,17 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { size: number; isWhite: boolean }) =>
+const useStyles = (props: {
+  borderWidth: number
+  size: number
+  isWhite: boolean
+}) =>
   reactive({
     container: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.black : theme.ui.secondary
     })),
     circle: makeStyles((theme, common) => ({
+      borderWidth: `${props.borderWidth}px`,
       borderColor: props.isWhite ? 'transparent' : theme.ui.tertiary,
       width: `${props.size}px`,
       height: `${props.size}px`,
@@ -29,6 +34,7 @@ export default defineComponent({
   name: 'CloseButton',
   props: {
     withText: { type: Boolean, default: false },
+    borderWidth: { type: Number, default: 3 },
     size: { type: Number, required: true },
     isWhite: { type: Boolean, default: false }
   },
@@ -55,11 +61,9 @@ export default defineComponent({
 
 .circle {
   display: flex;
-  height: 52px;
-  width: 52px;
   justify-content: center;
   align-items: center;
-  border: solid 3px;
+  border: solid;
   border-radius: 50%;
   cursor: pointer;
 }

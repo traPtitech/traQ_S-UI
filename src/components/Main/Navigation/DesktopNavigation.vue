@@ -5,21 +5,26 @@
         @navigation-change="onNavigationChange"
         :current-navigation="currentNavigation"
       />
+      <desktop-tool-box />
     </div>
+    <portal-target :name="targetPortalName" />
     <navigation-content :current-navigation="currentNavigation" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from '@vue/composition-api'
-import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
+import DesktopToolBox, {
+  targetPortalName
+} from '@/components/Main/Navigation/DesktopToolBox.vue'
+import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'DesktopNavigation',
-  components: { NavigationContent, DesktopNavigationSelector },
+  components: { NavigationContent, DesktopNavigationSelector, DesktopToolBox },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const navigationStyle = makeStyles(theme => ({
@@ -29,7 +34,8 @@ export default defineComponent({
     return {
       ...toRefs(navigationSelectorState),
       onNavigationChange,
-      navigationStyle
+      navigationStyle,
+      targetPortalName
     }
   }
 })
@@ -44,6 +50,7 @@ $selectorWidth: 64px;
 }
 .selector {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: $selectorWidth;
   height: 100%;

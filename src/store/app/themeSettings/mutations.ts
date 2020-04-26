@@ -1,5 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
+import { ThemeType } from '@/store/app/themeSettings/index'
 
 export const mutations = defineMutations<S>()({
   /**
@@ -7,5 +8,9 @@ export const mutations = defineMutations<S>()({
    */
   set<K extends keyof S>(state: S, [key, value]: [K, S[K]]) {
     state[key] = value
+  },
+
+  setCurrentTheme(state, type: ThemeType) {
+    state.type = type
   }
 })

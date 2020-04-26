@@ -40,6 +40,7 @@ import {
   mdiBookmarkCheck,
   mdiLink,
   mdiQrcode,
+  mdiApps,
   mdiLock,
   mdiLockOpenOutline
 } from '@mdi/js'
@@ -90,6 +91,7 @@ const mdi: MdiIconsMapping = {
   'bookmark-check': mdiBookmarkCheck,
   link: mdiLink,
   qrcode: mdiQrcode,
+  apps: mdiApps,
   lock: mdiLock,
   'lock-open': mdiLockOpenOutline
 }

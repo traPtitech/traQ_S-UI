@@ -50,8 +50,9 @@ module.exports = {
       .options({
         svgo: {
           plugins: [
-            { removeViewBox: true },
-            { removeAttrs: { attrs: 'path:fill' } }
+            { removeDimensions: true },
+            { removeViewBox: false },
+            { removeAttrs: { attrs: '(path|rect):fill' } }
           ]
         }
       })
