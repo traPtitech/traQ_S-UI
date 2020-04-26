@@ -19,7 +19,7 @@ import Icon from '@/components/UI/Icon.vue'
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.primary,
+      color: theme.ui.secondary,
       background: theme.background.secondary
     }))
   })
