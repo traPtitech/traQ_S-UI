@@ -1,33 +1,38 @@
 <template>
   <section>
-    <div>
-      <h3>RTC機能を有効にする (β)</h3>
-      <p>
+    <div :class="$style.element">
+      <div :class="$style.enable">
+        <h3>RTC機能を有効にする (β)</h3>
+        <toggle
+          @input="state.isEnabled = !state.isEnabled"
+          :enabled="state.isEnabled"
+          :class="$style.toggle"
+        />
+      </div>
+      <p :class="$style.content">
         通話などのリアルタイムコミュニケーション機能を有効化します<br />
         マイクなどへのアクセス許可が必要です
       </p>
-      <toggle
-        @input="state.isEnabled = !state.isEnabled"
-        :enabled="state.isEnabled"
-      />
     </div>
-    <div v-if="rtcSettings.isEnabled">
+    <div v-if="rtcSettings.isEnabled" :class="$style.element">
       <h3>入力デバイス</h3>
-      <select
-        v-if="!fetchFailed && audioInputDevices.length > 0"
-        v-model="state.audioInputDeviceId"
-      >
-        <option
-          v-for="device in audioInputDevices"
-          :key="device.deviceId"
-          :value="device.deviceId"
+      <div :class="$style.content">
+        <select
+          v-if="!fetchFailed && audioInputDevices.length > 0"
+          v-model="state.audioInputDeviceId"
         >
-          {{ device.label }}
-        </option>
-      </select>
-      <p v-else>
-        デバイスが取得できませんでした
-      </p>
+          <option
+            v-for="device in audioInputDevices"
+            :key="device.deviceId"
+            :value="device.deviceId"
+          >
+            {{ device.label }}
+          </option>
+        </select>
+        <p v-else>
+          デバイスが取得できませんでした
+        </p>
+      </div>
     </div>
   </section>
 </template>
@@ -108,4 +113,25 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+h3 {
+  margin-bottom: 8px;
+}
+.element {
+  margin: 24px 0;
+}
+.content {
+  margin-left: 12px;
+}
+.enable {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  h3 {
+    margin: 0;
+  }
+  .toggle {
+    margin-left: 12px;
+  }
+}
+</style>
