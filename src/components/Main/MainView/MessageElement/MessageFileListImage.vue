@@ -5,7 +5,7 @@
     :class="$style.largeContainer"
     :style="styles.container"
   >
-    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
   <router-link
     v-else
@@ -13,13 +13,12 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <img draggable="false" :alt="fileMeta.name" :src="imagePath" />
+    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
-import { buildFilePath } from '@/lib/apis'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 
@@ -44,11 +43,11 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles()
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
-    const imagePath = computed(() =>
-      props.isLarge ? buildFilePath(props.fileId) : fileRawPath.value
+    const { fileMeta, fileLink, fileThumbnailPath } = useFileMeta(
+      props,
+      context
     )
-    return { imagePath, styles, fileLink, fileMeta }
+    return { fileThumbnailPath, styles, fileLink, fileMeta }
   }
 })
 </script>

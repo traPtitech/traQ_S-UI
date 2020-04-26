@@ -17,6 +17,7 @@
       <portal v-if="isPopupMenuShown" :to="targetPortalName">
         <header-tools-menu
           :class="$style.toolsMenu"
+          :show-notification-setting-btn="!channelState.forced"
           v-click-outside="closePopupMenu"
           @click-notification="openNotificationModal"
           @click-create-channel="openChannelCreateModal"

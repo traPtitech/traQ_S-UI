@@ -41,7 +41,8 @@ const useRouteWacher = (context: SetupContext) => {
         store.state.domain.channelTree.channelTree
       )
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
-        channelId: id
+        channelId: id,
+        entryMessageId: context.root.$route.query?.message as string
       })
     } catch (e) {
       state.view = 'not-found'
@@ -117,7 +118,16 @@ const useRouteWacher = (context: SetupContext) => {
     })
   }
 
-  const onRouteParamChange = async (_: string, __: string) => {
+  const onRouteParamChange = async (
+    routeParam: string,
+    prevRouteParam: string
+  ) => {
+    if (
+      !store.state.app.initialFetchCompleted ||
+      routeParam === prevRouteParam
+    ) {
+      return
+    }
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {

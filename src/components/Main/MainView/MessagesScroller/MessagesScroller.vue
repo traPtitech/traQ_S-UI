@@ -20,7 +20,6 @@ import {
   defineComponent,
   watch,
   reactive,
-  computed,
   SetupContext,
   ref,
   onMounted,
@@ -29,7 +28,6 @@ import {
   onBeforeUnmount
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
-import store from '@/store'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
@@ -64,6 +62,8 @@ export default defineComponent({
       type: Array as PropType<MessageId[]>,
       required: true
     },
+    isReachedEnd: { type: Boolean, required: true },
+    isReachedLatest: { type: Boolean, required: true },
     entryMessageId: String as PropType<MessageId>,
     isLoading: {
       type: Boolean,
@@ -72,21 +72,13 @@ export default defineComponent({
     lastLoadingDirection: {
       type: String as PropType<LoadingDirection>,
       required: true
-    },
-    isInitialLoad: {
-      type: Boolean,
-      default: false
     }
   },
   setup(props, context: SetupContext) {
     const rootRef = ref<HTMLElement>(null)
     const state = reactive({
       height: 0,
-      scrollTop: 0,
-      isFirstView: computed(
-        () =>
-          store.state.domain.messagesView.loadedMessageOldestDate === undefined
-      )
+      scrollTop: 0
     })
 
     const {
@@ -108,12 +100,20 @@ export default defineComponent({
           props.lastLoadingDirection === 'latest' ||
           props.lastLoadingDirection === 'former'
         ) {
-          // 新規に一つ追加された場合は一番下までスクロール
+          if (ids.length - prevIds.length === -1) {
+            // 削除された場合は何もしない
+            return
+          }
+          // XXX: 追加時にここは0になる
+          if (ids.length - prevIds.length === 0) {
+            // 新規に一つ追加された場合は一番下までスクロール
+            rootRef.value.scrollTo({
+              top: newHeight
+            })
+            return
+          }
           rootRef.value.scrollTo({
-            top:
-              state.isFirstView || ids.length - prevIds.length === 1
-                ? newHeight
-                : newHeight - state.height
+            top: newHeight - state.height
           })
         }
         state.height = newHeight
@@ -127,16 +127,13 @@ export default defineComponent({
       const scrollTop = rootRef.value.scrollTop
       state.scrollTop = scrollTop
 
-      if (state.isFirstView || props.isLoading) return
-      if (
-        state.scrollTop < LOAD_MORE_THRESHOLD &&
-        !store.state.domain.messagesView.isReachedEnd
-      ) {
+      if (props.isLoading) return
+      if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
         context.emit('request-load-former')
       }
       if (
         scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
-        !store.state.domain.messagesView.isReachedLatest
+        !props.isReachedLatest
       ) {
         context.emit('request-load-latter')
       }
