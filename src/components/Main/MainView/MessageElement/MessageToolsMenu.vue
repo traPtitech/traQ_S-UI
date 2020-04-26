@@ -1,60 +1,22 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <span
-      :class="$style.text"
-      @click="
-        removePinned()
-        close()
-      "
-      v-if="isPinned"
-    >
+    <span :class="$style.text" @click="withClose(removePinned)" v-if="isPinned">
       ピン留めを外す
     </span>
-    <span
-      :class="$style.text"
-      @click="
-        addPinned()
-        close()
-      "
-      v-else
-    >
+    <span :class="$style.text" @click="withClose(addPinned)" v-else>
       ピン留め
     </span>
-    <span
-      :class="$style.text"
-      @click="
-        editMessage()
-        close()
-      "
-      v-if="isMine"
+    >
+    <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine"
       >編集</span
     >
-    <span
-      :class="$style.text"
-      @click="
-        copyLink()
-        close()
-      "
-    >
+    <span :class="$style.text" @click="withClose(copyLink)">
       リンクをコピー
     </span>
-    <span
-      :class="$style.text"
-      @click="
-        copyMd()
-        close()
-      "
-    >
+    <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
     </span>
-    <span
-      :class="$style.text"
-      @click="
-        deleteMessage()
-        close()
-      "
-      v-if="isMine"
-    >
+    <span :class="$style.text" @click="withClose(deleteMessage)" v-if="isMine">
       削除
     </span>
   </div>
@@ -137,7 +99,8 @@ export default defineComponent({
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
-    const close = () => {
+    const withClose = async (func: () => void | Promise<void>) => {
+      await func()
       store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
     }
     return {
@@ -151,6 +114,7 @@ export default defineComponent({
       editMessage,
       deleteMessage,
       close
+      withClose
     }
   }
 })
