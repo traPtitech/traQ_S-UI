@@ -84,7 +84,11 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   // state machine hooks
   watch(mState, newState => {
     if (!store.getters.ui.isMobile) return
-    if (newState === MainViewComponentState.SidebarAppearingAuto) {
+    if (newState === MainViewComponentState.NavAppearingAuto) {
+      openNav()
+    } else if (newState === MainViewComponentState.NavDisappearingAuto) {
+      closeNav()
+    } else if (newState === MainViewComponentState.SidebarAppearingAuto) {
       openSidebar()
     } else if (newState === MainViewComponentState.SidebarDisappearingAuto) {
       closeSidebar()

@@ -5,6 +5,7 @@
         :class="$style.navigationButton"
         :style="styles.navigationButton"
         v-if="isMobile"
+        @click="openNav"
       >
         <icon name="traQ" />
       </button>
@@ -21,6 +22,7 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import useIsMobile from '@/use/isMobile'
+import useNavigationController from '@/use/navigationController'
 
 const useStyles = () =>
   reactive({
@@ -42,9 +44,11 @@ export default defineComponent({
   setup(props, context) {
     const styles = useStyles()
     const { isMobile } = useIsMobile()
+    const { openNav } = useNavigationController()
     return {
       styles,
-      isMobile
+      isMobile,
+      openNav
     }
   }
 })
