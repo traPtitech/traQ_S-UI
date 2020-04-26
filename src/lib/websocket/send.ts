@@ -44,6 +44,7 @@ export const changeRTCState = (
   return sendWebSocket(
     RTCSTATE_COMMAND,
     channelId,
-    ...states.flatMap(s => [s.state, s.sessionId])
+    ...states.flatMap(s => [s.state, s.sessionId]),
+    '' // 終端の:をつける
   )
 }

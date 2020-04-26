@@ -1,7 +1,7 @@
 <template>
   <section>
     <profile-header text="アカウント" />
-    <p :class="$style.p">
+    <p v-if="showWikiPageLink" :class="$style.p">
       <circle-icon
         name="book"
         mdi
@@ -58,6 +58,7 @@ export default defineComponent({
       () => store.getters.app.themeSettings.currentTheme.background.primary
     )
 
+    const showWikiPageLink = computed(() => location.host === 'q.trap.jp') // 簡易的にhost名で分岐させてる
     const wikiPageName = computed(() => {
       if (props.bot) {
         return `bot/${props.name.replace(/^BOT_/, '')}`
@@ -73,6 +74,7 @@ export default defineComponent({
     return {
       iconColor,
       iconBackgroundColor,
+      showWikiPageLink,
       wikiPageName,
       wikiPageLink,
       twitterLink
@@ -89,7 +91,6 @@ export default defineComponent({
 .p {
   margin: 8px 0;
 }
-
 .icon {
   margin-right: 4px;
   vertical-align: bottom;

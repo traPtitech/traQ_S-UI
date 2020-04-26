@@ -5,7 +5,7 @@
       <div :class="$style.cropper" :is-rounded="rounded">
         <img :src="image.url" ref="$img" />
       </div>
-      <p>{{ cropperNote }}</p>
+      <p :class="$style.note">{{ cropperNote }}</p>
       <form-button label="キャンセル" on-secondary @click="destroy" />
     </div>
   </div>
@@ -114,11 +114,15 @@ export default defineComponent({
 .cropper {
   width: 400px;
   height: 400px;
+  margin: 12px;
   &[is-rounded] {
     :global(.cropper-view-box),
     :global(.cropper-face) {
       border-radius: 50%;
     }
   }
+}
+.note {
+  margin: 12px;
 }
 </style>

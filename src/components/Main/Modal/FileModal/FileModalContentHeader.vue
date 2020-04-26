@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container">
-    <file-description :file-id="props.fileId" :is-white="props.isWhite" />
+    <file-description
+      :file-id="props.fileId"
+      :is-white="props.isWhite"
+      :class="$style.description"
+    />
     <div :class="$style.close">
       <close-button
         @click="onClickClear"
@@ -53,5 +57,8 @@ export default defineComponent({
 .close {
   display: flex;
   align-items: center;
+}
+.description {
+  padding: 0 16px;
 }
 </style>

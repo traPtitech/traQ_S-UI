@@ -5,7 +5,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect } from '@vue/composition-api'
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  watchEffect
+} from '@vue/composition-api'
 import store from './store'
 import { throttle } from 'lodash-es'
 import { makeStyles } from '@/lib/styles'
@@ -76,6 +81,10 @@ export default defineComponent({
     useEcoModeObserver()
 
     const scrollbarStyle = useScrollbarStyle()
+
+    onBeforeMount(async () => {
+      await store.dispatch.app.fetchVersionInfo()
+    })
 
     return {
       isMobile,

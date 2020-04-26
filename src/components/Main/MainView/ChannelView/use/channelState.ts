@@ -6,6 +6,9 @@ const useChannelState = (props: { channelId: ChannelId }) => {
   const state = reactive({
     stared: computed(
       () => props.channelId in store.state.domain.me.staredChannelSet
+    ),
+    forced: computed(
+      () => store.state.entities.channels[props.channelId]?.force ?? false
     )
   })
   return { channelState: state }

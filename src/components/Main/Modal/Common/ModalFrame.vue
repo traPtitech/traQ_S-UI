@@ -10,6 +10,7 @@
       :icon-mdi="iconMdi"
       :title="title"
       :subtitle="subtitle"
+      :return-button="returnButton"
     />
     <div :class="$style.body">
       <slot></slot>
@@ -40,7 +41,8 @@ export default defineComponent({
     iconMdi: { type: Boolean, default: false },
     iconName: { type: String, required: true },
     title: { type: String, required: true },
-    subtitle: { type: String, default: '' }
+    subtitle: { type: String, default: '' },
+    returnButton: { type: Boolean, default: false }
   },
   setup() {
     const styles = useStyles()
@@ -56,7 +58,7 @@ export default defineComponent({
   flex-flow: column nowrap;
   max-height: 480px;
   max-width: 440px;
-  width: 100%;
+  width: #{calc(100% - 32px)};
   border-radius: 4px;
   overflow: hidden;
   border: {

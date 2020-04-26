@@ -6,6 +6,7 @@
       label="子チャンネルを作成"
     />
     <header-tools-menu-item
+      v-if="showNotificationSettingBtn"
       @click.native="context.emit('click-notification')"
       icon-name="bell"
       icon-mdi
@@ -36,6 +37,9 @@ export default defineComponent({
   components: {
     MainViewHeaderPopupFrame,
     HeaderToolsMenuItem
+  },
+  props: {
+    showNotificationSettingBtn: { type: Boolean, default: true }
   },
   setup(_, context) {
     const styles = useStyles()

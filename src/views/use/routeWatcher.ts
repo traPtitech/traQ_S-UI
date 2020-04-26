@@ -1,6 +1,7 @@
 import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
 import store from '@/store'
 import { RouteName } from '@/router'
+import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 
@@ -9,6 +10,7 @@ type Views = 'none' | 'main' | 'not-found'
 const useRouteWacher = (context: SetupContext) => {
   const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
+  const { closeNav } = useNavigationController()
 
   const state = reactive({
     currentRouteName: computed(() => context.root.$route.name ?? ''),
@@ -23,10 +25,14 @@ const useRouteWacher = (context: SetupContext) => {
 
   const onRouteChangedToIndex = async () => {
     await (store.original as any).restored
-    context.root.$router.replace({
-      name: RouteName.Channel,
-      params: { channel: store.state.app.browserSettings.openChannelName }
-    })
+    try {
+      await context.root.$router.replace({
+        name: RouteName.Channel,
+        params: { channel: store.state.app.browserSettings.openChannelName }
+      })
+    } catch (e) {
+      if (!!e) throw e
+    }
     return
   }
 
@@ -41,7 +47,8 @@ const useRouteWacher = (context: SetupContext) => {
         store.state.domain.channelTree.channelTree
       )
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
-        channelId: id
+        channelId: id,
+        entryMessageId: context.root.$route.query?.message as string
       })
     } catch (e) {
       state.view = 'not-found'
@@ -117,12 +124,23 @@ const useRouteWacher = (context: SetupContext) => {
     })
   }
 
-  const onRouteParamChange = async (_: string, __: string) => {
+  const onRouteParamChange = async (
+    routeParam: string,
+    prevRouteParam: string
+  ) => {
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
-    } else if (routeName === RouteName.Channel) {
+      return
+    }
+    if (
+      !store.state.app.initialFetchCompleted ||
+      routeParam === prevRouteParam
+    ) {
+      return
+    }
+    if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
@@ -147,6 +165,7 @@ const useRouteWacher = (context: SetupContext) => {
     }
 
     state.isInitialView = false
+    closeNav()
   }
 
   const routeWatcher = watch(

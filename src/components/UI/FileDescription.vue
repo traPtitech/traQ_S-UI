@@ -1,9 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div :class="$style.icon">
-      <icon mdi :name="fileIconName" :size="32" />
+      <icon mdi :name="fileIconName" :size="36" />
     </div>
-    <div :class="$style.fileName">
+    <div
+      :class="$style.fileName"
+      :data-is-ellipsis="props.isEllipsis"
+      :data-is-no-ellipsis="!props.isEllipsis"
+    >
       {{ fileMeta.name }}
     </div>
     <div :class="$style.fileSize" :style="styles.fileSize">
@@ -21,7 +25,7 @@ import { makeStyles } from '@/lib/styles'
 import useFileMeta from '@/use/fileMeta'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { isWhite: boolean }) =>
+const useStyles = (props: { isWhite: boolean; isEllipsis: boolean }) =>
   reactive({
     container: makeStyles((theme, common) => ({
       color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
@@ -42,6 +46,10 @@ export default defineComponent({
       required: true
     },
     isWhite: {
+      type: Boolean,
+      default: false
+    },
+    isEllipsis: {
       type: Boolean,
       default: false
     }
@@ -74,12 +82,12 @@ export default defineComponent({
     'icon ... name ... dl' minmax(min-content, 20px)
     'icon ... size ... dl' minmax(min-content, 16px)
     / 36px 16px auto 1fr 24px;
-  padding: 0 16px;
 }
 .icon,
 .dl {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .icon {
   grid-area: icon;
@@ -91,8 +99,14 @@ export default defineComponent({
 .fileName {
   grid-area: name;
   min-width: 0;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  &[data-is-ellipsis] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &[data-is-no-ellipsis] {
+    overflow-wrap: break-word;
+  }
 }
 .fileSize {
   grid-area: size;

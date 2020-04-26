@@ -32,7 +32,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 </style>

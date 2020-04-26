@@ -27,6 +27,7 @@ const useInitialFetch = (context: SetupContext) => {
     store.dispatch.domain.me.fetchUnreadChannels()
     store.dispatch.domain.me.fetchStaredChannels()
     store.dispatch.domain.me.fetchStampHistory()
+    store.dispatch.app.rtc.fetchRTCState()
 
     await store.dispatch.domain.me.fetchSubscriptions()
     store.dispatch.domain.channelTree.constructHomeChannelTree()

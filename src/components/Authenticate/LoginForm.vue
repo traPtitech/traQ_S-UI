@@ -17,6 +17,7 @@
       />
       <a
         href="https://portal.trap.jp/reset-password"
+        v-show="state.showPasswordResetLink"
         :class="$style.forgotPassword"
         :style="styles.forgotPassword"
       >
@@ -29,18 +30,19 @@
     <div :class="$style.buttons">
       <authenticate-button-primary label="ログイン" />
     </div>
-    <!-- TODO: /versionの結果によってここを出し分ける -->
-    <template v-if="!isIOS">
+    <template v-if="!isIOS && externalLogin.length > 0">
       <authenticate-separator label="または" :class="$style.separator" />
       <div :class="$style.exLoginButtons">
         <authenticate-button-secondary
           :class="$style.exLoginButton"
+          v-show="externalLogin.includes('traQ')"
           label="traP"
           icon-name="traQ"
           @click="loginExternal('traq')"
         />
         <authenticate-button-secondary
           :class="$style.exLoginButton"
+          v-show="externalLogin.includes('google')"
           label="Google"
           icon-mdi
           icon-name="google"
@@ -48,6 +50,7 @@
         />
         <authenticate-button-secondary
           :class="$style.exLoginButton"
+          v-show="externalLogin.includes('github')"
           label="GitHub"
           icon-mdi
           icon-name="github"
@@ -59,8 +62,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { computed, defineComponent, reactive } from '@vue/composition-api'
 import useLogin from './use/login'
+import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { isIOSApp } from '@/lib/util/browser'
 import AuthenticateInput from './AuthenticateInput.vue'
@@ -92,7 +96,25 @@ export default defineComponent({
     const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const styles = useStyles()
     const isIOS = isIOSApp()
-    return { loginState, styles, setName, setPass, login, loginExternal, isIOS }
+    const state = reactive({
+      // 簡易的にhost名で分岐させてる
+      showPasswordResetLink: location.host === 'q.trap.jp'
+    })
+    const externalLogin = computed(
+      () => store.state.app.version.flags.externalLogin
+    )
+
+    return {
+      state,
+      loginState,
+      styles,
+      setName,
+      setPass,
+      login,
+      loginExternal,
+      isIOS,
+      externalLogin
+    }
   }
 })
 </script>

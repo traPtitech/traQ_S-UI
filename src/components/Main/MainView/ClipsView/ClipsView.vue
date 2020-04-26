@@ -1,6 +1,6 @@
 <template>
-  <div ref="containerRef" :class="$style.container" :style="styles.container">
-    くりっぷ {{ clipFolder }}
+  <div :class="$style.container" :style="styles.container">
+    <clips-view-content :clip-folder-id="clipFolderId" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import {
 import { ClipFolderId } from '@/types/entity-ids'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import ClipsViewContent from './ClipsViewContent.vue'
 
 const useStyles = () =>
   reactive({
@@ -28,7 +29,7 @@ export default defineComponent({
   props: {
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
   },
-  components: {},
+  components: { ClipsViewContent },
   setup(props) {
     const messageIds = computed(
       () => store.state.domain.messagesView.messageIds

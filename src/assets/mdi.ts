@@ -11,6 +11,7 @@ import {
   mdiGoogle,
   mdiGithub,
   mdiPhone,
+  mdiPhoneOutline,
   mdiPin,
   mdiBell,
   mdiBellOutline,
@@ -36,9 +37,12 @@ import {
   mdiChevronLeft,
   mdiBookmark,
   mdiBookmarkMultiple,
+  mdiBookmarkCheck,
   mdiLink,
   mdiQrcode,
-  mdiApps
+  mdiApps,
+  mdiLock,
+  mdiLockOpenOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -53,6 +57,7 @@ const mdi: MdiIconsMapping = {
   google: mdiGoogle,
   github: mdiGithub,
   phone: mdiPhone,
+  'phone-outline': mdiPhoneOutline,
   pin: mdiPin,
   bell: mdiBell,
   'bell-outline': mdiBellOutline,
@@ -83,9 +88,12 @@ const mdi: MdiIconsMapping = {
   'chevron-left': mdiChevronLeft,
   bookmark: mdiBookmark,
   'bookmark-multiple': mdiBookmarkMultiple,
+  'bookmark-check': mdiBookmarkCheck,
   link: mdiLink,
   qrcode: mdiQrcode,
-  apps: mdiApps
+  apps: mdiApps,
+  lock: mdiLock,
+  'lock-open': mdiLockOpenOutline
 }
 
 export default mdi
