@@ -3,14 +3,12 @@
     <template v-if="propst.detail === undefined">Now loading...</template>
     <template v-else>
       <ul :class="$style.list">
-        <li
-          v-for="tag in tags"
-          :key="tag.tagId"
-          :class="$style.tag"
-          @click="onTagClick(tag.tagId)"
-        >
-          <icon name="tag" mdi :class="$style.icon" :size="20" />
-          {{ tag.tag }}
+        <li v-for="tag in tags" :key="tag.tagId" :class="$style.tag">
+          <div @click="onTagClick(tag.tagId)">
+            <icon name="tag" mdi :class="$style.icon" :size="20" />
+            {{ tag.tag }}
+          </div>
+          <tags-tab-edit :tag-id="tag.tagId" :user-id="propst.detail.id" />
         </li>
       </ul>
       <tags-tab-add :user-id="propst.detail.id" />
@@ -31,6 +29,7 @@ import { UserDetail } from '@traptitech/traq'
 import { TagId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
+import TagsTabEdit from '@/components/Main/Modal/UserModal/TagsTabEdit.vue'
 
 const useStyles = () =>
   reactive({
@@ -67,7 +66,8 @@ export default defineComponent({
   },
   components: {
     Icon,
-    TagsTabAdd
+    TagsTabAdd,
+    TagsTabEdit
   }
 })
 </script>
@@ -87,6 +87,8 @@ export default defineComponent({
 .tag {
   margin: 16px 8px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
 }
 
 .icon {
