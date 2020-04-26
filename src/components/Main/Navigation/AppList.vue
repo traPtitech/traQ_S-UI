@@ -59,16 +59,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$header-width: 64px;
-
 .container {
-  position: fixed;
-  bottom: $header-width;
-  left: $header-width;
-  max-width: min(calc(100vw - #{$header-width * 2}), 500px);
+  display: flex;
+  flex-direction: column;
   padding: 16px;
   border-radius: 8px;
-  z-index: 999;
 }
 
 .header {
@@ -87,5 +82,9 @@ $header-width: 64px;
 .list {
   display: flex;
   flex-flow: row wrap;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 </style>

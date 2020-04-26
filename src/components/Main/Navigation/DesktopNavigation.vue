@@ -5,7 +5,7 @@
         @navigation-change="onNavigationChange"
         :current-navigation="currentNavigation"
       />
-      <tool-box />
+      <desktop-tool-box />
     </div>
     <portal-target :name="targetPortalName" />
     <navigation-content :current-navigation="currentNavigation" />
@@ -15,16 +15,16 @@
 <script lang="ts">
 import { defineComponent, toRefs } from '@vue/composition-api'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
-import ToolBox, {
+import DesktopToolBox, {
   targetPortalName
-} from '@/components/Main/Navigation/ToolBox.vue'
+} from '@/components/Main/Navigation/DesktopToolBox.vue'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'DesktopNavigation',
-  components: { NavigationContent, DesktopNavigationSelector, ToolBox },
+  components: { NavigationContent, DesktopNavigationSelector, DesktopToolBox },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const navigationStyle = makeStyles(theme => ({

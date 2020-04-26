@@ -1,5 +1,7 @@
 <template>
   <nav :class="$style.container" :style="styles.container">
+    <mobile-tool-box :class="$style.toolBox" />
+    <portal-target :name="targetPortalName" />
     <div :class="$style.content" :style="styles.componentWrap">
       <navigation-content :current-navigation="currentNavigation" />
     </div>
@@ -15,6 +17,9 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
+import MobileToolBox, {
+  targetPortalName
+} from '@/components/Main/Navigation/MobileToolBox.vue'
 // FIXME: モバイル用のレイアウト
 import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'
 import { useNavigation } from '@/components/Main/Navigation/use/navigation'
@@ -32,14 +37,15 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'MobileNavigation',
-  components: { NavigationContent, NavigationSelector },
+  components: { NavigationContent, NavigationSelector, MobileToolBox },
   setup() {
     const styles = useStyles()
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     return {
       ...toRefs(navigationSelectorState),
       onNavigationChange,
-      styles
+      styles,
+      targetPortalName
     }
   }
 })
@@ -49,6 +55,7 @@ export default defineComponent({
 .container {
   display: grid;
   grid-template:
+    'toolbox' min-content
     'content' 1fr
     'selector' 60px;
   row-gap: 16px;
@@ -56,14 +63,14 @@ export default defineComponent({
   height: 100%;
   padding: 16px;
 }
-.header,
+.toolBox,
 .content,
 .selector {
   border-radius: 4px;
   overflow: hidden;
 }
-.header {
-  grid-area: header;
+.toolBox {
+  grid-area: toolbox;
 }
 .content {
   grid-area: content;
