@@ -1,12 +1,19 @@
 <template>
   <div>
     <h3>アカウント</h3>
-    <form-button label="ログアウト" on-secondary @click="onLogoutClick" />
-    <form-button
-      label="全セッション破棄"
-      on-secondary
-      @click="onSessionDelete"
-    />
+    <div :class="$style.content">
+      <form-button
+        label="ログアウト"
+        on-secondary
+        @click="onLogoutClick"
+        :class="$style.logout"
+      />
+      <form-button
+        label="全セッション破棄"
+        on-secondary
+        @click="onSessionDelete"
+      />
+    </div>
   </div>
 </template>
 
@@ -42,4 +49,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.content {
+  margin-left: 12px;
+}
+.logout {
+  margin-right: 8px;
+}
+</style>

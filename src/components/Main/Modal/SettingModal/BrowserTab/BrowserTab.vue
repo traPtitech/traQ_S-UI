@@ -1,67 +1,87 @@
 <template>
   <section>
-    <account />
-    <notification />
-    <div>
+    <account :class="$style.element" />
+    <notification :class="$style.element" />
+    <div :class="$style.element">
       <h3>起動時チャンネル設定</h3>
-      <form-radio
-        label="最後に開いたチャンネル"
-        input-value="lastOpen"
-        v-model="state.openMode"
-      />
-      <form-radio
-        label="特定のチャンネル"
-        input-value="particular"
-        v-model="state.openMode"
-      />
-      <form-selector
-        v-if="state.openMode === 'particular'"
-        v-model="state.openChannelName"
-        :options="channelOptions"
-      />
-    </div>
-    <div>
-      <h3>メッセージ送信スタイル</h3>
-      <form-radio
-        label="修飾キー+Enterで送信 / Enterで改行"
-        input-value="modifier"
-        v-model="state.sendWithModifierKey"
-      />
-      <form-radio
-        label="Enterで送信 / 修飾キー+Enterで改行"
-        input-value="none"
-        v-model="state.sendWithModifierKey"
-      />
-      <div>
-        修飾キーとして利用するキー
-        <form-checkbox
-          :label="getModifierKeyName('shift')"
-          v-model="state.modifierKey.shift"
+      <div :class="$style.content">
+        <form-radio
+          label="最後に開いたチャンネル"
+          input-value="lastOpen"
+          v-model="state.openMode"
+          :class="$style.form"
         />
-        <form-checkbox
-          :label="getModifierKeyName('alt')"
-          v-model="state.modifierKey.alt"
+        <form-radio
+          label="特定のチャンネル"
+          input-value="particular"
+          v-model="state.openMode"
+          :class="$style.form"
         />
-        <form-checkbox
-          :label="getModifierKeyName('ctrl')"
-          v-model="state.modifierKey.ctrl"
-        />
-        <form-checkbox
-          v-if="macFlag"
-          :label="getModifierKeyName('macCtrl')"
-          v-model="state.modifierKey.macCtrl"
+        <form-selector
+          v-if="state.openMode === 'particular'"
+          v-model="state.openChannelName"
+          :options="channelOptions"
+          :class="$style.selector"
         />
       </div>
     </div>
-    <div>
-      <h3>省エネモード</h3>
-      <p>
-        省エネモードがONの場合、スタンプエフェクトのアニメーションを表示しません
-      </p>
-      <toggle
-        @input="state.ecoMode = !state.ecoMode"
-        :enabled="state.ecoMode"
-      />
+    <div :class="$style.element">
+      <h3>メッセージ送信スタイル</h3>
+      <div :class="$style.content">
+        <form-radio
+          label="修飾キー+Enterで送信 / Enterで改行"
+          input-value="modifier"
+          v-model="state.sendWithModifierKey"
+          :class="$style.form"
+        />
+        <form-radio
+          label="Enterで送信 / 修飾キー+Enterで改行"
+          input-value="none"
+          v-model="state.sendWithModifierKey"
+          :class="$style.form"
+        />
+        <div :class="$style.key">
+          <p>
+            修飾キーとして利用するキー
+          </p>
+          <form-checkbox
+            :label="getModifierKeyName('shift')"
+            v-model="state.modifierKey.shift"
+            :class="$style.form"
+          />
+          <form-checkbox
+            :label="getModifierKeyName('alt')"
+            v-model="state.modifierKey.alt"
+            :class="$style.form"
+          />
+          <form-checkbox
+            :label="getModifierKeyName('ctrl')"
+            v-model="state.modifierKey.ctrl"
+            :class="$style.form"
+          />
+          <form-checkbox
+            v-if="macFlag"
+            :label="getModifierKeyName('macCtrl')"
+            v-model="state.modifierKey.macCtrl"
+            :class="$style.form"
+          />
+        </div>
+      </div>
+    </div>
+    <div :class="$style.element">
+      <div :class="$style.echo">
+        <h3>省エネモード</h3>
+        <toggle
+          @input="state.ecoMode = !state.ecoMode"
+          :enabled="state.ecoMode"
+          :class="$style.toggle"
+        />
+      </div>
+      <div :class="$style.content">
+        <p>
+          省エネモードがONの場合、スタンプエフェクトのアニメーションを表示しません
+        </p>
+      </div>
     </div>
   </section>
 </template>
@@ -144,4 +164,38 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.element {
+  margin: 24px 0;
+}
+h3 {
+  margin-bottom: 8px;
+}
+.form {
+  margin-right: 12px;
+}
+.selector {
+  margin-top: 4px;
+}
+.content {
+  margin-left: 12px;
+}
+.key {
+  margin-top: 4px;
+  display: flex;
+  p {
+    margin-right: 24px;
+  }
+}
+.echo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  h3 {
+    margin: 0;
+  }
+  .toggle {
+    margin-left: 12px;
+  }
+}
+</style>
