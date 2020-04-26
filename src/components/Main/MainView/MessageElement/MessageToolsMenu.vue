@@ -6,6 +6,8 @@
     <span :class="$style.text" @click="withClose(addPinned)" v-else>
       ピン留め
     </span>
+    <span :class="$style.text" @click="withClose(showClipCreateModal)"
+      >クリップ</span
     >
     <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine"
       >編集</span
@@ -83,6 +85,16 @@ const useCopy = (props: { messageId: MessageId }) => {
   return { copyLink, copyMd }
 }
 
+const useShowClipCreateModal = (props: { messageId: MessageId }) => {
+  const showClipCreateModal = () => {
+    store.dispatch.ui.modal.pushModal({
+      type: 'clip-create',
+      messageId: props.messageId
+    })
+  }
+  return { showClipCreateModal }
+}
+
 export default defineComponent({
   name: 'MessageToolsMenu',
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
@@ -99,6 +111,7 @@ export default defineComponent({
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
+    const { showClipCreateModal } = useShowClipCreateModal(props)
     const withClose = async (func: () => void | Promise<void>) => {
       await func()
       store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
@@ -113,7 +126,7 @@ export default defineComponent({
       isMine,
       editMessage,
       deleteMessage,
-      close
+      showClipCreateModal,
       withClose
     }
   }
