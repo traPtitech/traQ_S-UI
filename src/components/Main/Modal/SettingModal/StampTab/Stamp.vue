@@ -11,12 +11,7 @@
         :destroy-flag="imageUploadState.destroyFlag"
         @destroyed="onNewDestroyed"
       />
-      <form-button
-        label="変更"
-        :disabled="!stampChanged"
-        :on-secondary="!stampChanged"
-        @click="editStamp"
-      />
+      <form-button label="変更" :disabled="!stampChanged" @click="editStamp" />
     </template>
   </div>
 </template>

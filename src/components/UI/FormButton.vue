@@ -14,10 +14,10 @@ import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 
-const useStyles = (props: { onSecondary: boolean }) =>
+const useStyles = (props: { disabled: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      background: props.onSecondary
+      background: props.disabled
         ? transparentize(theme.accent.primary, 0.5)
         : theme.accent.primary,
       color: 'white'
@@ -30,10 +30,6 @@ export default defineComponent({
     label: {
       type: String,
       default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
     },
     disabled: {
       type: Boolean,

@@ -44,11 +44,7 @@
       から可能です
     </p>
     <div :class="$style.updater">
-      <form-button
-        label="更新"
-        :on-secondary="!isChanged"
-        @click="onUpdateClick"
-      />
+      <form-button label="更新" :disabled="!isChanged" @click="onUpdateClick" />
     </div>
   </section>
 </template>
