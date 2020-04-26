@@ -7,7 +7,14 @@ type NavigationSelectorEntry = {
   type: NavigationItemType
   iconName: string
   iconMdi?: boolean
-  colorClaim?: ThemeClaim<string>
+}
+
+type Color = string
+type EphemeralNavigationSelectorEntry = {
+  type: EphemeralNavigationItemType
+  iconName: string
+  iconMdi?: boolean
+  colorClaim?: ThemeClaim<Color>
 }
 
 export const items: NavigationSelectorEntry[] = [
@@ -34,8 +41,8 @@ export const items: NavigationSelectorEntry[] = [
   }
 ]
 export const ephemeralItems: Record<
-  EphemeralNavigationItemType,
-  NavigationSelectorEntry
+  NonNullable<EphemeralNavigationItemType>,
+  EphemeralNavigationSelectorEntry
 > = {
   qall: {
     type: 'qall',
@@ -49,12 +56,16 @@ const useNavigationSelectorEntry = () => {
   const hasActiveQallSession = computed(() => {
     return !!store.getters.app.rtc.qallSession
   })
-  const entries = computed(() =>
-    [
-      ...items,
-      hasActiveQallSession.value ? ephemeralItems.qall : undefined
-    ].filter(e => !!e)
+  const entries = computed(() => items)
+  const ephemeralEntries = computed(
+    () =>
+      [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(
+        e => !!e
+      ) as EphemeralNavigationSelectorEntry[]
   )
-  return { entries }
+  return {
+    entries,
+    ephemeralEntries
+  }
 }
 export default useNavigationSelectorEntry
