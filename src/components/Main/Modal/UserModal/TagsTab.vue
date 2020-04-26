@@ -4,11 +4,17 @@
     <template v-else>
       <ul :class="$style.list">
         <li v-for="tag in tags" :key="tag.tagId" :class="$style.tag">
-          <div @click="onTagClick(tag.tagId)">
+          <div @click="onTagClick(tag.tagId)" :class="$style.content">
             <icon name="tag" mdi :class="$style.icon" :size="20" />
-            {{ tag.tag }}
+            <div :class="$style.text">
+              {{ tag.tag }}
+            </div>
           </div>
-          <tags-tab-edit :tag-id="tag.tagId" :user-id="propst.detail.id" />
+          <tags-tab-edit
+            :tag-id="tag.tagId"
+            :user-id="propst.detail.id"
+            :class="$style.edit"
+          />
         </li>
       </ul>
       <tags-tab-add :user-id="propst.detail.id" />
@@ -89,10 +95,27 @@ export default defineComponent({
   cursor: pointer;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .icon {
-  vertical-align: bottom;
-  margin-right: 4px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.text {
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.edit {
+  margin-left: 8px;
+  width: 44px;
+  flex-shrink: 0;
 }
 </style>

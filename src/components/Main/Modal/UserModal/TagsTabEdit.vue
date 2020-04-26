@@ -7,7 +7,7 @@
       v-if="state.isLocked"
       @click="toggleTagState"
     />
-    <div v-else>
+    <div v-else :class="$style.element">
       <icon
         name="lock-open"
         mdi
@@ -91,6 +91,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  justify-content: flex-end;
+}
+.element {
+  display: flex;
 }
 .open {
   margin-right: 4px;
