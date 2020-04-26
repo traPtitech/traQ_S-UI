@@ -15,9 +15,7 @@
         suffix=":"
         :class="$style.form"
       />
-      <div :class="$style.create">
-        <form-button label="新規登録" @click="createStamp" />
-      </div>
+      <form-button label="新規登録" @click="createStamp" :class="$style.form" />
     </div>
   </div>
 </template>
@@ -78,10 +76,5 @@ export default defineComponent({
 }
 .form {
   margin: 8px 0;
-}
-.create {
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
 }
 </style>

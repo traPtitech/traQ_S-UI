@@ -5,24 +5,26 @@
     <div :class="$style.element">
       <h3>起動時チャンネル設定</h3>
       <div :class="$style.content">
-        <form-radio
-          label="最後に開いたチャンネル"
-          input-value="lastOpen"
-          v-model="state.openMode"
-          :class="$style.form"
-        />
-        <form-radio
-          label="特定のチャンネル"
-          input-value="particular"
-          v-model="state.openMode"
-          :class="$style.form"
-        />
-        <form-selector
-          v-if="state.openMode === 'particular'"
-          v-model="state.openChannelName"
-          :options="channelOptions"
-          :class="$style.selector"
-        />
+        <div :class="$style.channel">
+          <form-radio
+            label="最後に開いたチャンネル"
+            input-value="lastOpen"
+            v-model="state.openMode"
+          />
+        </div>
+        <div :class="$style.channel">
+          <form-radio
+            label="特定のチャンネル"
+            input-value="particular"
+            v-model="state.openMode"
+          />
+          <form-selector
+            v-if="state.openMode === 'particular'"
+            v-model="state.openChannelName"
+            :options="channelOptions"
+            :class="$style.selector"
+          />
+        </div>
       </div>
     </div>
     <div :class="$style.element">
@@ -174,8 +176,14 @@ h3 {
 .form {
   margin-right: 12px;
 }
+.channel {
+  margin-bottom: 12px;
+}
 .selector {
-  margin-top: 4px;
+  margin: {
+    top: 4px;
+    left: 12px;
+  }
 }
 .content {
   margin-left: 12px;
