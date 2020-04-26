@@ -3,18 +3,17 @@ import { computed } from '@vue/composition-api'
 import { NavigationItemType, EphemeralNavigationItemType } from './navigation'
 import { ThemeClaim } from '@/lib/styles'
 
-type NavigationSelectorEntry = {
+export type NavigationSelectorEntry = {
   type: NavigationItemType
   iconName: string
   iconMdi?: boolean
 }
 
-type Color = string
-type EphemeralNavigationSelectorEntry = {
+export type EphemeralNavigationSelectorEntry = {
   type: EphemeralNavigationItemType
   iconName: string
   iconMdi?: boolean
-  colorClaim?: ThemeClaim<Color>
+  colorClaim?: ThemeClaim<string> // 色
 }
 
 export const items: NavigationSelectorEntry[] = [

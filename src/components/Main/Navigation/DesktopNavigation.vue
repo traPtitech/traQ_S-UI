@@ -4,6 +4,7 @@
       <desktop-navigation-selector
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
+        @ephemeral-entry-remove="onEphemeralEntryRemove"
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -42,6 +43,7 @@ import DesktopToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
 import { makeStyles } from '@/lib/styles'
+import { EphemeralNavigationSelectorEntry } from './use/navigationSelectorEntry'
 
 export default defineComponent({
   name: 'DesktopNavigation',
@@ -71,11 +73,20 @@ export default defineComponent({
       }
     }
 
+    const onEphemeralEntryRemove = (
+      entry: EphemeralNavigationSelectorEntry
+    ) => {
+      if (entry.type === ephemeralNavigationSelectorState.currentNavigation) {
+        _onEphemeralNavigationChange(undefined)
+      }
+    }
+
     return {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
       onNavigationChange,
       onEphemeralNavigationChange,
+      onEphemeralEntryRemove,
       navigationStyle,
       targetPortalName
     }

@@ -33,7 +33,8 @@ import {
   SetupContext,
   PropType,
   computed,
-  reactive
+  reactive,
+  watch
 } from '@vue/composition-api'
 
 import {
@@ -45,7 +46,7 @@ import {
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '../../../lib/styles'
+import { makeStyles } from '@/lib/styles'
 
 const useStyles = () =>
   reactive({
@@ -73,6 +74,14 @@ export default defineComponent({
     const showSeparator = computed(() => ephemeralEntries.value.length > 0)
 
     const styles = useStyles()
+
+    watch(ephemeralEntries, (entries, prevEntries) => {
+      ;(prevEntries ?? [])
+        .filter(e => !entries.includes(e))
+        .forEach(e => {
+          context.emit('ephemeral-entry-remove', e)
+        })
+    })
 
     return {
       styles,
