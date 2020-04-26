@@ -26,6 +26,16 @@
     />
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <message-quote-list
+        v-if="embeddingsState.quoteMessageIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :message-ids="embeddingsState.quoteMessageIds"
+      />
+      <message-file-list
+        v-if="embeddingsState.fileIds.length > 0"
+        :class="$style.messageEmbeddingsList"
+        :file-ids="embeddingsState.fileIds"
+      />
       <div :class="$style.stampWrapper">
         <icon
           name="rounded-triangle"
@@ -43,16 +53,6 @@
           :is-show-detail="state.stampDetailFoldingState"
         />
       </div>
-      <message-quote-list
-        v-if="embeddingsState.quoteMessageIds.length > 0"
-        :class="$style.messageEmbeddingsList"
-        :message-ids="embeddingsState.quoteMessageIds"
-      />
-      <message-file-list
-        v-if="embeddingsState.fileIds.length > 0"
-        :class="$style.messageEmbeddingsList"
-        :file-ids="embeddingsState.fileIds"
-      />
     </div>
   </div>
 </template>
