@@ -105,8 +105,6 @@ export default defineComponent({
       isSidebarAppeared,
       isSidebarCompletelyAppeared,
       isMainViewActive,
-      openSidebar: animateOpenSidebar,
-      closeSidebar: animateCloseSidebar,
       currentActiveDrawer
     } = useMainViewLayout(navWidth, sidebarWidth)
 
