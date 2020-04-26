@@ -3,7 +3,8 @@ import {
   ChannelId,
   FileId,
   UserGroupId,
-  TagId
+  TagId,
+  MessageId
 } from '@/types/entity-ids'
 import { RouteName } from '@/router'
 
@@ -17,6 +18,7 @@ type ModalStateType =
   | 'group'
   | 'channel-create'
   | 'qrcode'
+  | 'clip-create'
 
 export type ModalState =
   | UserModalState
@@ -27,6 +29,7 @@ export type ModalState =
   | TagModalState
   | ChannelCreateModalState
   | QrCodeModalState
+  | ClipCreateModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -79,6 +82,11 @@ interface ChannelCreateModalState extends BaseModalState {
 
 interface QrCodeModalState extends BaseModalState {
   type: 'qrcode'
+}
+
+interface ClipCreateModalState extends BaseModalState {
+  type: 'clip-create'
+  messageId: MessageId
 }
 
 export interface S {

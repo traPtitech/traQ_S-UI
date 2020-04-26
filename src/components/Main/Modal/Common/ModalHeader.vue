@@ -60,7 +60,7 @@ export default defineComponent({
   display: flex;
 }
 .content {
-  display: inline;
+  width: 100%;
 }
 .returnButton {
   padding-right: 4px;
@@ -76,6 +76,10 @@ export default defineComponent({
   }
 }
 .subtitle {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   padding-left: 40px;
   font: {
     weight: 500;
