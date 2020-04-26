@@ -112,6 +112,7 @@ class traQRTCClient extends traQRTCClientBase {
   public closeConnection() {
     if (this.peer) {
       this.peer.destroy()
+      // eslint-disable-next-line no-console
       console.log('[RTC] Connection closed')
     }
   }
@@ -175,6 +176,7 @@ class traQRTCClient extends traQRTCClientBase {
         return
       }
       peer.on('open', () => {
+        // eslint-disable-next-line no-console
         console.log(`[RTC] Connection established, ID: ${peer.id}`)
         resolve(peer)
       })
@@ -188,10 +190,12 @@ class traQRTCClient extends traQRTCClientBase {
     this.dispatchEvent(new Event('disconnect'))
   }
   private handlePeerError(err: any) {
+    // eslint-disable-next-line no-console
     console.error(`[RTC] ${err}`)
     this.dispatchEvent(new CustomEvent('connectionerror', { detail: { err } }))
   }
   private async handleRoomOpen() {
+    // eslint-disable-next-line no-console
     console.log(`[RTC] Room opened, name: ${this.roomName}`)
     this.dispatchEvent(new Event('roomopen'))
   }

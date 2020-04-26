@@ -113,7 +113,6 @@ export default class AudioStreamMixer {
     delete this.streamSourceNodeMap[key]
     if (Object.keys(this.gainNodeMap).length === 0) {
       await this.context.suspend()
-      console.log('audio context suspended')
     }
   }
 
