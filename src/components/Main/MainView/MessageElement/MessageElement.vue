@@ -112,7 +112,7 @@ export default defineComponent({
     MessageFileList,
     MessageQuoteList,
     Icon,
-    MessageTools,
+    MessageTools
   },
   props: {
     messageId: {
