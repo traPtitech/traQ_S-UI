@@ -1,6 +1,24 @@
 import { UserId, ChannelId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
+
+export type SessionId = string
+export type SessionType = 'qall' | 'draw'
+export type SessionInfoBase = {
+  sessionId: SessionId
+  type: SessionType
+  channelId: ChannelId
+}
+export type QallSessionInfo = SessionInfoBase & { type: 'qall' }
+export type DrawSessionInfo = SessionInfoBase & { type: 'draw' }
+export type SessionInfo = QallSessionInfo | DrawSessionInfo
+export type UserSessionState = {
+  sessionId: SessionId
+  states: string[]
+}
+export type UserRTCState = {
+  channelId: ChannelId
+  sessionStates: UserSessionState[]
+}
 
 export interface S {
   /** ミキサー */
@@ -12,14 +30,20 @@ export interface S {
   /** マイクミュート */
   isMicMuted: boolean
 
-  /** 自分が参加しているRTCセッションのチャンネルID */
-  currentRTCChannel?: ChannelId
-
-  /** 自分が参加しているRTCセッション */
-  currentRTCSessions: WebRTCUserStateSessions[]
+  /** 自分のRTC状態 */
+  currentRTCState?: UserRTCState
 
   /** ユーザーのRTC状態のマップ */
-  userStateMap: Record<UserId, WebRTCUserState>
+  userStateMap: Record<UserId, UserRTCState | undefined>
+
+  /** チャンネルIDと立っているセッションIDのマップ */
+  channelSessionsMap: Record<ChannelId, SessionId[] | undefined>
+
+  /** セッションIDとセッションの状態のマップ */
+  sessionInfoMap: Record<SessionId, SessionInfo | undefined>
+
+  /** セッションIDとセッションの状態のマップ */
+  sessionUsersMap: Record<SessionId, UserId[] | undefined>
 
   /** ローカルで指定するユーザー音量のマップ */
   userVolumeMap: Record<UserId, number | undefined>
@@ -34,10 +58,12 @@ export interface S {
 export const state: S = {
   mixer: undefined,
   localStream: undefined,
-  currentRTCChannel: undefined,
-  currentRTCSessions: [],
   isMicMuted: false,
+  currentRTCState: undefined,
   userStateMap: {},
+  channelSessionsMap: {},
+  sessionInfoMap: {},
+  sessionUsersMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
   talkingStateUpdateIntervalId: 0

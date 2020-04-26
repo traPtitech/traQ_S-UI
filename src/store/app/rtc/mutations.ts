@@ -1,69 +1,155 @@
 import { defineMutations } from 'direct-vuex'
-import { S } from './state'
-import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
-import { reduceToRecord } from '@/lib/util/record'
+import { S, UserRTCState, SessionInfo, SessionId } from './state'
+import { WebRTCUserState } from '@traptitech/traq'
 import Vue from 'vue'
-import { changeRTCState } from '@/lib/websocket/send'
+
 import { ChannelId, UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
 
+const toSessionInfo = (
+  sessionId: SessionId,
+  channelId: ChannelId
+): SessionInfo => {
+  const [sessionType, id] = sessionId.split('-')
+  if (
+    id &&
+    (sessionType === ('qall' as const) || sessionType === ('draw' as const))
+  ) {
+    return {
+      sessionId,
+      channelId,
+      type: sessionType
+    }
+  }
+  throw 'invalid session id'
+}
+
+const toUserRTCState = (userState: WebRTCUserState): UserRTCState => ({
+  channelId: userState.channelId,
+  sessionStates: userState.sessions.map(session => ({
+    sessionId: session.sessionId,
+    states: session.state.split('.')
+  }))
+})
+
+/** 現在のチャンネルセッションと、新規に追加するユーザー状態が整合性をもつか */
+const isSessionCompatible = (
+  channelSessionsMap: Record<ChannelId, SessionId[] | undefined>,
+  userSessionState: UserRTCState
+) => {
+  // チャンネルにセッションが立っていないか、既存セッションの部分集合か
+  const currentSessions = channelSessionsMap[userSessionState.channelId]
+  if (!currentSessions) return true
+
+  const sessionInfoSet = new Set<SessionId>([
+    ...currentSessions,
+    ...userSessionState.sessionStates.map(s => s.sessionId)
+  ])
+  return sessionInfoSet.size <= currentSessions.length
+}
+
 export const mutations = defineMutations<S>()({
   setRTCState(state, payload: WebRTCUserState[]) {
-    state.userStateMap = reduceToRecord(payload, 'userId')
+    const userStateMap: typeof state.userStateMap = {}
+    const channelSessionsMap: typeof state.channelSessionsMap = {}
+    const sessionInfoMap: typeof state.sessionInfoMap = {}
+    const sessionUsersMap: typeof state.sessionUsersMap = {}
+    payload.forEach(rtcState => {
+      const userSessionState = toUserRTCState(rtcState)
+      if (!isSessionCompatible(channelSessionsMap, userSessionState)) {
+        throw 'channel session conflict'
+      }
+
+      userStateMap[rtcState.userId] = userSessionState
+      channelSessionsMap[
+        rtcState.channelId
+      ] = userSessionState.sessionStates.map(s => s.sessionId)
+      userSessionState.sessionStates.forEach(s => {
+        if (sessionInfoMap[s.sessionId]) {
+          sessionUsersMap[s.sessionId]?.push(rtcState.userId)
+        } else {
+          const newSessionInfo = toSessionInfo(s.sessionId, rtcState.channelId)
+          sessionInfoMap[s.sessionId] = newSessionInfo
+          sessionUsersMap[s.sessionId] = [rtcState.userId]
+        }
+      })
+    })
+    state.userStateMap = userStateMap
+    state.channelSessionsMap = channelSessionsMap
+    state.sessionInfoMap = sessionInfoMap
+    state.sessionUsersMap = sessionUsersMap
   },
   updateRTCState(state, payload: WebRTCUserState) {
-    Vue.set(state.userStateMap, payload.userId, payload)
-  },
-  setCurrentRTCChannel(state, payload: ChannelId) {
-    state.currentRTCChannel = payload
-  },
-  unsetCurrentRTCChannel(state) {
-    state.currentRTCChannel = undefined
-  },
-  setCurrentRTCSessions(state, payload: WebRTCUserStateSessions[]) {
-    state.currentRTCSessions = payload
-  },
-  addCurrentRTCSession(state, payload: WebRTCUserStateSessions) {
-    if (!state.currentRTCChannel) {
-      throw 'no rtc channel'
+    const userSessionState = toUserRTCState(payload)
+    if (!isSessionCompatible(state.channelSessionsMap, userSessionState)) {
+      throw 'channel session conflict'
     }
-    const index = state.currentRTCSessions.findIndex(
-      session =>
-        session.state === payload.state ||
-        session.sessionId === payload.sessionId
+
+    const currentSessionIds =
+      state.userStateMap[payload.userId]?.sessionStates?.map(
+        s => s.sessionId
+      ) ?? []
+    const newSessionIds = userSessionState.sessionStates.map(s => s.sessionId)
+    const removedSessionIds = currentSessionIds.filter(
+      id => !newSessionIds.includes(id)
     )
-    if (index !== -1) {
-      throw 'rtc session conflict'
-    }
-    state.currentRTCSessions.push(payload)
-    changeRTCState(state.currentRTCChannel, state.currentRTCSessions)
-  },
-  modifyCurrentRTCSessionBySessionType(
-    state,
-    payload: { sessionType: string; sessionState: string }
-  ) {
-    if (!state.currentRTCChannel) {
-      throw 'no rtc channel'
-    }
-    const index = state.currentRTCSessions.findIndex(session =>
-      session.state.startsWith(payload.sessionType)
+    const addedSessionIds = newSessionIds.filter(
+      id => !currentSessionIds.includes(id)
     )
-    if (index !== -1) {
-      state.currentRTCSessions[index].state = payload.sessionState
+    if (userSessionState.sessionStates.length === 0) {
+      Vue.delete(state.userStateMap, payload.userId)
+    } else {
+      Vue.set(state.userStateMap, payload.userId, userSessionState)
     }
-    changeRTCState(state.currentRTCChannel, state.currentRTCSessions)
+
+    addedSessionIds.forEach(sessionId => {
+      if (state.sessionInfoMap[sessionId]) {
+        state.sessionUsersMap[sessionId]?.push(payload.userId)
+      } else {
+        const newSessionInfo = toSessionInfo(sessionId, payload.channelId)
+        const newChannelSessions = [
+          ...(state.channelSessionsMap[payload.channelId] ?? []),
+          sessionId
+        ]
+        Vue.set(state.channelSessionsMap, payload.channelId, newChannelSessions)
+        Vue.set(state.sessionInfoMap, sessionId, newSessionInfo)
+        Vue.set(state.sessionUsersMap, sessionId, [payload.userId])
+      }
+    })
+
+    removedSessionIds.forEach(sessionId => {
+      const index =
+        state.sessionUsersMap[sessionId]?.findIndex(
+          userId => userId === payload.userId
+        ) ?? -1
+      if (index < 0) {
+        throw 'something went wrong'
+      }
+      state.sessionUsersMap[sessionId]?.splice(index, 1)
+      // セッションの最後の一人が消えた
+      const isLastUserforSession =
+        (state.sessionUsersMap[sessionId]?.length ?? 0) === 0
+      if (isLastUserforSession) {
+        const channelId = state.sessionInfoMap[sessionId]?.channelId ?? ''
+        const sessionIds = state.channelSessionsMap[channelId]
+        if (!sessionIds) return
+        const newSessionIds = [...sessionIds]
+        const index = newSessionIds.findIndex(sid => sid === sessionId)
+        newSessionIds.splice(index, 1)
+        Vue.delete(state.sessionInfoMap, sessionId)
+        if (newSessionIds.length === 0) {
+          Vue.delete(state.channelSessionsMap, channelId)
+        } else {
+          Vue.set(state.channelSessionsMap, channelId, newSessionIds)
+        }
+      }
+    })
   },
-  removeCurrentRTCSessionBySessionType(state, sessionType: string) {
-    if (!state.currentRTCChannel) {
-      throw 'no rtc channel'
-    }
-    const index = state.currentRTCSessions.findIndex(session =>
-      session.state.startsWith(sessionType)
-    )
-    if (index !== -1) {
-      state.currentRTCSessions.splice(index, 1)
-    }
-    changeRTCState(state.currentRTCChannel, state.currentRTCSessions)
+  setCurrentRTCState(state, payload: UserRTCState) {
+    state.currentRTCState = payload
+  },
+  unsetCurrentRTCState(state) {
+    state.currentRTCState = undefined
   },
   setMixer(state, mixer: AudioStreamMixer) {
     state.mixer = mixer

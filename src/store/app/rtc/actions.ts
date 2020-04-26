@@ -7,6 +7,11 @@ import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer, { maxGain } from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
+import { UserSessionState, SessionId } from './state'
+import { changeRTCState } from '@/lib/websocket'
+import { WebRTCUserStateSessions } from '@traptitech/traq'
+
+const defaultState = 'joined'
 
 export const rtcActionContext = (context: any) =>
   moduleActionContext(context, rtc)
@@ -21,29 +26,90 @@ export const actions = defineActions({
     }
   },
 
-  async startOrJoinRTCSession(
+  syncRTCState(context) {
+    const { state } = rtcActionContext(context)
+    if (!state.currentRTCState) return
+    const sessionStates = state.currentRTCState.sessionStates
+    const userStateSessions: WebRTCUserStateSessions[] = sessionStates.map(
+      s => ({
+        state: s.states.join('.'),
+        sessionId: s.sessionId
+      })
+    )
+    changeRTCState(state.currentRTCState.channelId, userStateSessions)
+  },
+
+  addRTCSession(context, payload: UserSessionState) {
+    const { state, commit, dispatch } = rtcActionContext(context)
+    const currentState = state.currentRTCState
+    if (!currentState) return
+    commit.setCurrentRTCState({
+      channelId: currentState.channelId,
+      sessionStates: [...currentState.sessionStates, payload]
+    })
+    dispatch.syncRTCState()
+  },
+  removeRTCSession(context, payload: { sessionId: SessionId }) {
+    const { state, commit, dispatch } = rtcActionContext(context)
+    const currentState = state.currentRTCState
+    if (!currentState) return
+    const sessionStates = [...currentState.sessionStates]
+    const index = sessionStates.findIndex(
+      s => s.sessionId === payload.sessionId
+    )
+    sessionStates.splice(index, 1)
+    commit.setCurrentRTCState({
+      channelId: currentState.channelId,
+      sessionStates: sessionStates
+    })
+    dispatch.syncRTCState()
+  },
+  modifyRTCSession(
+    context,
+    payload: { sessionId: SessionId; states: string[] }
+  ) {
+    const { state, commit, dispatch } = rtcActionContext(context)
+    const currentState = state.currentRTCState
+    const index = currentState?.sessionStates.findIndex(
+      s => s.sessionId === payload.sessionId
+    )
+    if (!currentState || !index || index < 0) return
+    const newSessionStates = [...currentState.sessionStates]
+    newSessionStates.splice(index, 1, payload)
+    commit.setCurrentRTCState({
+      channelId: currentState.channelId,
+      sessionStates: newSessionStates
+    })
+    dispatch.syncRTCState()
+  },
+
+  startOrJoinRTCSession(
     context,
     payload: { channelId: ChannelId; sessionType: string }
-  ): Promise<string> {
-    const { state, commit, getters } = rtcActionContext(context)
+  ): { sessionId: string; isNewSession: boolean } {
+    const { state, commit, dispatch } = rtcActionContext(context)
     if (
-      state.currentRTCChannel &&
-      state.currentRTCChannel !== payload.channelId
+      state.currentRTCState &&
+      state.currentRTCState.channelId !== payload.channelId
     ) {
       throw `RTC session is already open for channel ${payload.channelId}`
     }
-    if (!state.currentRTCChannel) {
-      commit.setCurrentRTCChannel(payload.channelId)
+    if (!state.currentRTCState) {
+      commit.setCurrentRTCState({
+        channelId: payload.channelId,
+        sessionStates: []
+      })
     }
-    const currentSession = getters.channelSessionsMap[payload.channelId]?.find(
-      session => session.state === payload.sessionType
-    )
-    const sessionId = currentSession?.sessionId ?? randomString()
-    commit.addCurrentRTCSession({
-      state: payload.sessionType,
-      sessionId
+    const currentSession = state.channelSessionsMap[payload.channelId]
+      ?.map(sessionId => state.sessionInfoMap[sessionId])
+      .find(session => session?.type === payload.sessionType)
+    const sessionId =
+      currentSession?.sessionId ?? payload.sessionType + '-' + randomString()
+    dispatch.addRTCSession({
+      sessionId,
+      states: [defaultState]
     })
-    return sessionId
+    return { sessionId, isNewSession: !currentSession }
   },
 
   // ---- RTC Connection ---- //
@@ -171,34 +237,31 @@ export const actions = defineActions({
     state.mixer.playFileSource('qall_start')
   },
   muteLocalStream(context) {
-    const { state, commit, getters } = rtcActionContext(context)
-    if (!state.localStream || !getters.qallState) {
+    const { state, commit, getters, dispatch } = rtcActionContext(context)
+    const qallSession = getters.qallSession
+    if (!state.localStream || !qallSession) {
       return
     }
     commit.muteLocalStream()
-    const currentStateList = getters.qallState.state.split('.')
-    if (!currentStateList.find(s => s === 'micmuted')) {
-      currentStateList.push('micmuted')
-    }
-    const newState = currentStateList.join('.')
-    commit.modifyCurrentRTCSessionBySessionType({
-      sessionType: 'qall',
-      sessionState: newState
+    const states = [...new Set([...(qallSession?.states ?? []), 'micmuted'])]
+    dispatch.modifyRTCSession({
+      sessionId: qallSession?.sessionId,
+      states
     })
   },
   unmuteLocalStream(context) {
-    const { state, commit, getters } = rtcActionContext(context)
-    if (!state.localStream || !getters.qallState) {
+    const { state, commit, getters, dispatch } = rtcActionContext(context)
+    const qallSession = getters.qallSession
+    if (!state.localStream || !qallSession) {
       return
     }
-    commit.unmuteLocalStream()
-    const newState = getters.qallState.state
-      .split('.')
-      .filter(s => s !== 'micmuted')
-      .join('.')
-    commit.modifyCurrentRTCSessionBySessionType({
-      sessionType: 'qall',
-      sessionState: newState
+    commit.muteLocalStream()
+    const stateSet = new Set(qallSession?.states ?? [])
+    stateSet.delete('micmuted')
+    const states = [...stateSet]
+    dispatch.modifyRTCSession({
+      sessionId: qallSession?.sessionId,
+      states
     })
   },
 
@@ -206,18 +269,20 @@ export const actions = defineActions({
   async startQall(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
     await dispatch.establishConnection()
-    const sessionId = await dispatch.startOrJoinRTCSession({
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
       channelId,
       sessionType: 'qall'
     })
-    /* eslint-disable-next-line no-console */
-    console.log(`[RTC] Got session id: ${sessionId}`)
     dispatch.joinVoiceChannel(sessionId)
   },
 
   async endQall(context) {
-    const { commit, dispatch } = rtcActionContext(context)
+    const { getters, dispatch } = rtcActionContext(context)
+    const qallSession = getters.qallSession
+    if (!qallSession) {
+      throw 'something went wrong'
+    }
     await dispatch.closeConnection()
-    commit.removeCurrentRTCSessionBySessionType('qall')
+    dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
   }
 })
