@@ -124,17 +124,19 @@ const useRouteWacher = (context: SetupContext) => {
     routeParam: string,
     prevRouteParam: string
   ) => {
+    store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    const routeName = state.currentRouteName
+    if (routeName === RouteName.Index) {
+      await onRouteChangedToIndex()
+      return
+    }
     if (
       !store.state.app.initialFetchCompleted ||
       routeParam === prevRouteParam
     ) {
       return
     }
-    store.commit.ui.modal.setIsOnInitialModalRoute(false)
-    const routeName = state.currentRouteName
-    if (routeName === RouteName.Index) {
-      await onRouteChangedToIndex()
-    } else if (routeName === RouteName.Channel) {
+    if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
