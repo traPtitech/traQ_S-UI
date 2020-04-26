@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div :class="$style.element">
     <h3>スタンプ編集</h3>
-    <div>
+    <div :class="$style.content">
       <stamp
         v-for="stamp in myStamps"
         :key="stamp.id"
@@ -46,4 +46,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.element {
+  margin: 24px 0;
+}
+.content {
+  margin-left: 12px;
+}
+</style>

@@ -1,18 +1,22 @@
 <template>
-  <div>
+  <div :class="$style.element">
     <h3>スタンプ新規登録</h3>
-    <image-upload
-      @input="onNewImgSet"
-      :destroy-flag="imageUploadState.destroyFlag"
-      @destroyed="onNewDestroyed"
-    />
-    <form-input
-      v-model="newStampName"
-      label="スタンプ名"
-      prefix=":"
-      suffix=":"
-    />
-    <form-button label="新規登録" @click="createStamp" />
+    <div :class="$style.content">
+      <image-upload
+        @input="onNewImgSet"
+        :destroy-flag="imageUploadState.destroyFlag"
+        @destroyed="onNewDestroyed"
+        :class="$style.form"
+      />
+      <form-input
+        v-model="newStampName"
+        label="スタンプ名"
+        prefix=":"
+        suffix=":"
+        :class="$style.form"
+      />
+      <form-button label="新規登録" @click="createStamp" :class="$style.form" />
+    </div>
   </div>
 </template>
 
@@ -63,4 +67,14 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.element {
+  margin: 24px 0;
+}
+.content {
+  margin-left: 12px;
+}
+.form {
+  margin: 8px 0;
+}
+</style>
