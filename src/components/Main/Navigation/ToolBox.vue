@@ -10,7 +10,7 @@
         />
       </div>
       <div :class="$style.item">
-        <user-icon :size="44" :user-id="myId" />
+        <user-icon :class="$style.userIcon" :size="44" :user-id="myId" />
       </div>
     </div>
     <portal v-if="isPopupMenuShown" :to="targetPortalName">
@@ -26,8 +26,8 @@ import Tool from '@/components/Main/Navigation/Tool.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import Icon from '@/components/UI/Icon.vue'
 import {
-  toggleNotification,
   toggleTheme,
+  openQrCodeModal,
   openSettingsModal
 } from '@/components/Main/Navigation/use/tool'
 import usePopupMenu from '@/components/Main/Navigation/use/popupMenu'
@@ -82,18 +82,18 @@ export default defineComponent({
           iconMdi: true,
           onClick: togglePopupMenu
         },
-        // notification
-        {
-          iconName: 'bell',
-          iconMdi: true,
-          onClick: toggleNotification
-        },
         // theme
         {
           iconName: themeIcon.value,
           iconMdi: isMdi.value,
           disabled: isDisabled.value,
           onClick: toggleTheme
+        },
+        // qr
+        {
+          iconName: 'qrcode',
+          iconMdi: true,
+          onClick: openQrCodeModal
         },
         // settings
         {
