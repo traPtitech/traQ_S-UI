@@ -56,7 +56,7 @@ export default defineComponent({
   flex-flow: column nowrap;
   max-height: 480px;
   max-width: 440px;
-  width: 100%;
+  width: #{calc(100% - 32px)};
   border-radius: 4px;
   overflow: hidden;
   border: {

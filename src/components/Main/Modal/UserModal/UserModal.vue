@@ -104,8 +104,8 @@ export default defineComponent({
 <style lang="scss" module>
 .wrapper {
   position: relative;
-  width: 80%;
-  height: 60%;
+  width: #{calc(100% - 32px)};
+  height: 80%;
   max-width: 640px;
   max-height: 480px;
 }
