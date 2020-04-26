@@ -35,6 +35,13 @@ interface GetFilesChannelParams {
   options?: any
 }
 
+interface GetClipsParam {
+  folderId: string
+  limit?: number
+  offset?: number
+  order?: 'asc' | 'desc'
+}
+
 export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
@@ -71,6 +78,26 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await apis.getStampPalettes()
     commit.setStampPalettes(reduceToRecord(res.data, 'id'))
+  },
+  // TODO: ドメインデータっぽい
+  async fetchMessagesInClipFolder(context, params: GetClipsParam) {
+    const { commit } = entitiesActionContext(context)
+    const { data, headers } = await apis.getClips(
+      params.folderId,
+      params.limit,
+      params.offset,
+      params.order
+    )
+    commit.extendMessages(
+      reduceToRecord(
+        data.map(c => c.message),
+        'id'
+      )
+    )
+    return {
+      clips: data,
+      hasMore: headers['x-traq-more'] === 'true'
+    }
   },
   async fetchMessagesByChannelId(context, params: GetMessagesParams) {
     const { commit } = entitiesActionContext(context)
