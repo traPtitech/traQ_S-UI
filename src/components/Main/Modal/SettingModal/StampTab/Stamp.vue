@@ -170,7 +170,7 @@ export default defineComponent({
     }
 
     const onStartEdit = () => {
-      context.emit('startEdit')
+      context.emit('start-edit')
     }
 
     return {
