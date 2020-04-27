@@ -73,7 +73,7 @@ export const actions = defineActions({
     const index = currentState?.sessionStates.findIndex(
       s => s.sessionId === payload.sessionId
     )
-    if (!currentState || !index || index < 0) return
+    if (!currentState || index === undefined || index < 0) return
     const newSessionStates = [...currentState.sessionStates]
     newSessionStates.splice(index, 1, payload)
     commit.setCurrentRTCState({
