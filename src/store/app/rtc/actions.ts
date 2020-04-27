@@ -5,7 +5,7 @@ import apis from '@/lib/apis'
 import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer, { maxGain } from '@/lib/audioStreamMixer'
+import AudioStreamMixer from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
@@ -26,7 +26,7 @@ export const actions = defineActions({
     }
   },
 
-  syncRTCState(context) {
+  async syncRTCState(context) {
     const { state } = rtcActionContext(context)
     if (!state.currentRTCState) return
     const sessionStates = state.currentRTCState.sessionStates
@@ -36,10 +36,10 @@ export const actions = defineActions({
         sessionId: s.sessionId
       })
     )
-    changeRTCState(state.currentRTCState.channelId, userStateSessions)
+    await changeRTCState(state.currentRTCState.channelId, userStateSessions)
   },
 
-  addRTCSession(context, payload: UserSessionState) {
+  async addRTCSession(context, payload: UserSessionState) {
     const { state, commit, dispatch } = rtcActionContext(context)
     const currentState = state.currentRTCState
     if (!currentState) return
@@ -47,9 +47,9 @@ export const actions = defineActions({
       channelId: currentState.channelId,
       sessionStates: [...currentState.sessionStates, payload]
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
-  removeRTCSession(context, payload: { sessionId: SessionId }) {
+  async removeRTCSession(context, payload: { sessionId: SessionId }) {
     const { state, commit, dispatch } = rtcActionContext(context)
     const currentState = state.currentRTCState
     if (!currentState) return
@@ -62,9 +62,9 @@ export const actions = defineActions({
       channelId: currentState.channelId,
       sessionStates: sessionStates
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
-  modifyRTCSession(
+  async modifyRTCSession(
     context,
     payload: { sessionId: SessionId; states: string[] }
   ) {
@@ -73,14 +73,14 @@ export const actions = defineActions({
     const index = currentState?.sessionStates.findIndex(
       s => s.sessionId === payload.sessionId
     )
-    if (!currentState || !index || index < 0) return
+    if (!currentState || index === undefined || index < 0) return
     const newSessionStates = [...currentState.sessionStates]
     newSessionStates.splice(index, 1, payload)
     commit.setCurrentRTCState({
       channelId: currentState.channelId,
       sessionStates: newSessionStates
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
 
   startOrJoinRTCSession(
@@ -218,7 +218,7 @@ export const actions = defineActions({
         await new Promise(resolve => setTimeout(resolve, 1000))
         await state.mixer.addStream(stream.peerId, stream)
       }
-      commit.setUserVolume({ userId, volume: 1 / maxGain })
+      commit.setUserVolume({ userId, volume: 0.5 })
     })
 
     const localStream = await getUserAudio(
@@ -227,16 +227,16 @@ export const actions = defineActions({
     commit.setLocalStream(localStream)
 
     if (state.isMicMuted) {
-      dispatch.muteLocalStream()
+      dispatch.mute()
     } else {
-      dispatch.unmuteLocalStream()
+      dispatch.unmute()
     }
 
     await client.joinRoom(room, localStream)
 
     state.mixer.playFileSource('qall_start')
   },
-  muteLocalStream(context) {
+  mute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!state.localStream || !qallSession) {
@@ -249,7 +249,7 @@ export const actions = defineActions({
       states
     })
   },
-  unmuteLocalStream(context) {
+  unmute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!state.localStream || !qallSession) {
@@ -268,12 +268,15 @@ export const actions = defineActions({
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
-    await dispatch.establishConnection()
-    const { sessionId } = await dispatch.startOrJoinRTCSession({
-      channelId,
-      sessionType: 'qall'
-    })
-    dispatch.joinVoiceChannel(sessionId)
+    try {
+      const { sessionId } = await dispatch.startOrJoinRTCSession({
+        channelId,
+        sessionType: 'qall'
+      })
+      dispatch.joinVoiceChannel(sessionId)
+    } catch {
+      // TODO: エラー
+    }
   },
 
   async endQall(context) {

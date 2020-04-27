@@ -11,7 +11,10 @@ import {
   mdiGoogle,
   mdiGithub,
   mdiPhone,
+  mdiPhoneHangup,
   mdiPhoneOutline,
+  mdiMicrophone,
+  mdiMicrophoneOff,
   mdiPin,
   mdiBell,
   mdiBellOutline,
@@ -42,7 +45,9 @@ import {
   mdiQrcode,
   mdiApps,
   mdiLock,
-  mdiLockOpenOutline
+  mdiLockOpenOutline,
+  mdiCheck,
+  mdiTuneVertical
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -58,6 +63,9 @@ const mdi: MdiIconsMapping = {
   github: mdiGithub,
   phone: mdiPhone,
   'phone-outline': mdiPhoneOutline,
+  'phone-hangup': mdiPhoneHangup,
+  microphone: mdiMicrophone,
+  'microphone-off': mdiMicrophoneOff,
   pin: mdiPin,
   bell: mdiBell,
   'bell-outline': mdiBellOutline,
@@ -93,7 +101,9 @@ const mdi: MdiIconsMapping = {
   qrcode: mdiQrcode,
   apps: mdiApps,
   lock: mdiLock,
-  'lock-open': mdiLockOpenOutline
+  'lock-open': mdiLockOpenOutline,
+  check: mdiCheck,
+  tune: mdiTuneVertical
 }
 
 export default mdi

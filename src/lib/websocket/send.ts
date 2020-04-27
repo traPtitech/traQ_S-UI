@@ -11,6 +11,9 @@ const sendWebSocket = async (
   if (ws === undefined) {
     throw new Error('WebSocket is not connected')
   }
+  if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
+    throw 'WebSocket is already in CLOSING or CLOSED state.'
+  }
   ws.send(command.join(':'))
 }
 

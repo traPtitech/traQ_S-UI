@@ -121,7 +121,8 @@ export default class AudioStreamMixer {
   }
 
   public setVolumeOf(key: string, volume: number) {
-    const value = Math.max(0, Math.min(1, volume)) * maxGain
+    const v = Math.max(0, Math.min(1, volume))
+    const value = v * v * maxGain
     this.gainNodeMap[key].gain.setValueAtTime(value, this.context.currentTime)
   }
 

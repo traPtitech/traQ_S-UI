@@ -1,22 +1,21 @@
 <template>
-  <div :class="$style.container">
-    <not-implemented
-      v-if="currentEphemeralNavigation === 'qall'"
-      :class="$style.content"
-    />
-  </div>
+  <ephemeral-navigation-content-container>
+    <qall v-if="currentEphemeralNavigation === 'qall'" />
+  </ephemeral-navigation-content-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
-
 import { EphemeralNavigationItemType } from '@/components/Main/Navigation/use/navigation'
-import NotImplemented from './NavigationContent/NotImplemented.vue'
+
+import EphemeralNavigationContentContainer from './EphemeralNavigationContentContainer.vue'
+import Qall from './Qall/Qall.vue'
 
 export default defineComponent({
   name: 'EphemeralNavigationContent',
   components: {
-    NotImplemented
+    EphemeralNavigationContentContainer,
+    Qall
   },
   props: {
     currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
@@ -26,18 +25,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-  padding: {
-    top: 24px;
-    left: 24px;
-  }
-}
-.content {
-  margin: 24px 0;
-}
-</style>

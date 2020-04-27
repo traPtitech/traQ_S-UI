@@ -5,6 +5,7 @@
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
         @ephemeral-entry-remove="onEphemeralEntryRemove"
+        @ephemeral-entry-add="onEphemeralEntryAdd"
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -19,7 +20,7 @@
         :current-navigation="navigationSelectorState.currentNavigation"
       />
       <ephemeral-navigation-content
-        :class="$style.navigation"
+        :class="$style.ephemeralNavigation"
         v-if="ephemeralNavigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -32,7 +33,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
-import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent.vue'
+import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import {
   useNavigation,
   useEphemeralNavigation,
@@ -81,12 +82,17 @@ export default defineComponent({
       }
     }
 
+    const onEphemeralEntryAdd = (entry: EphemeralNavigationSelectorEntry) => {
+      _onEphemeralNavigationChange(entry.type)
+    }
+
     return {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
       onNavigationChange,
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
+      onEphemeralEntryAdd,
       navigationStyle,
       targetPortalName
     }
@@ -96,6 +102,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 $selectorWidth: 64px;
+$ephemeralNavigationLeftMargin: 8px;
+$ephemeralNavigationRightMargin: 16px;
+$ephemeralNavigationMinHeight: 64px;
+
 .container {
   display: flex;
   width: 100%;
@@ -116,5 +126,12 @@ $selectorWidth: 64px;
 }
 .navigation {
   width: 100%;
+}
+.ephemeralNavigation {
+  width: #{calc(
+      100% - #{$ephemeralNavigationLeftMargin + $ephemeralNavigationRightMargin}
+    )};
+  margin-left: $ephemeralNavigationLeftMargin;
+  flex: 0 1 $ephemeralNavigationMinHeight;
 }
 </style>
