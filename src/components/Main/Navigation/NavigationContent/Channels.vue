@@ -41,8 +41,8 @@ import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vu
 import useTextFilter from '@/use/textFilter'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import ChannelFilteredElement from '../ChannelList/ChannelFilteredElement.vue'
-import { constructTree } from '../../../../store/domain/channelTree/actions'
-import { ChannelTreeNode } from '../../../../store/domain/channelTree/state'
+import { constructTree } from '@/store/domain/channelTree/actions'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 
 const useChannelListFilter = () => {
   const channels = computed(() => Object.values(store.state.entities.channels))
