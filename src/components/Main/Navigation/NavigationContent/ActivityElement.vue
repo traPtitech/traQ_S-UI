@@ -97,6 +97,6 @@ export default defineComponent({
   margin: 4px 0;
 }
 .user {
-  margin-bottom: 1px;
+  margin-bottom: 8px;
 }
 </style>
