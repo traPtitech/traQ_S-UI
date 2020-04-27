@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   ClipFolderCreatedEvent,
   ClipFolderUpdatedEvent,
@@ -35,7 +34,6 @@ export const onClipFolderMessageAdded = async (
     currentPrimaryView.type !== 'clips' ||
     currentPrimaryView.clipFolderId !== data.folder_id
   ) {
-    console.log(currentPrimaryView)
     return
   }
   const res = await apis.getMessage(data.message_id)

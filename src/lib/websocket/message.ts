@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import apis from '@/lib/apis'
 import store from '@/store'
 import {
