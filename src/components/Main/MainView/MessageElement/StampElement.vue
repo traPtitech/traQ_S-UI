@@ -22,10 +22,9 @@ import {
   defineComponent,
   reactive,
   computed,
-  SetupContext,
-  watch
+  watch,
+  PropType
 } from '@vue/composition-api'
-import { StampId } from '@/types/entity-ids'
 import store from '@/store'
 import { buildFilePath } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
@@ -33,28 +32,24 @@ import { transparentize } from '@/lib/util/color'
 import useHover from '@/use/hover'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import { MessageStamp } from '@traptitech/traq'
-
-type Props = {
-  stampId: StampId
-  stamps: MessageStamp[]
-}
+import { StampId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'StampElement',
   components: { SpinNumber },
   props: {
     stampId: {
-      type: String,
+      type: String as PropType<StampId>,
       required: true
     },
     stamps: {
-      type: Array,
+      type: Array as PropType<MessageStamp[]>,
       required: true
     }
   },
-  setup(props: Props, context: SetupContext) {
+  setup(props, context) {
     const stamp = computed(() => store.state.entities.stamps[props.stampId])
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const state = reactive({
       count: computed(() =>
         props.stamps.reduce((acc, cur) => {

@@ -40,7 +40,7 @@ export default defineComponent({
   setup(props, context) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context, true)
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
     const styles = useStyles(hoverState)
     return { context, imageUrl, onMouseEnter, onMouseLeave, styles }
   }

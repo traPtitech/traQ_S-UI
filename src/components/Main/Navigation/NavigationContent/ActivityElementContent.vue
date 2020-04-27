@@ -1,54 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="['markdown-body', $style.content]" v-html="state.content" />
+    <div :class="['markdown-body', $style.content]" v-html="renderedContent" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import store from '@/store'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
-import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
-import useChannelPath from '@/use/channelPath'
-
-const useRenderContent = (props: { content: string }) => {
-  const { channelIdToPathString } = useChannelPath()
-  const storeProvider: Store = {
-    getUser(id) {
-      return store.state.entities.users[id]
-    },
-    getChannel(id) {
-      return store.state.entities.channels[id]
-    },
-    getChannelPath(id) {
-      return channelIdToPathString(id)
-    },
-    getUserGroup(id) {
-      return store.state.entities.userGroups[id]
-    },
-    getMe() {
-      return store.state.entities.users[store.state.domain.me.detail?.id ?? '']
-    },
-    getStampByName(name) {
-      return store.getters.entities.stampByName(name)
-    },
-    getUserByName(name) {
-      return store.getters.entities.userByName(name)
-    }
-  }
-  const md = new MarkdownIt(storeProvider)
-
-  const state = reactive({
-    content: computed(() => {
-      const extracted = embeddingExtractor(props.content)
-      const renderedContent = md.renderInline(extracted.text)
-      return renderedContent
-    })
-  })
-
-  return state
-}
+import { renderInline } from '@/lib/markdown'
 
 export default defineComponent({
   name: 'ActivityElementContent',
@@ -65,12 +25,12 @@ export default defineComponent({
       }))
     })
 
-    const state = useRenderContent(props)
+    const renderedContent = computed(() => {
+      const extracted = embeddingExtractor(props.content)
+      return renderInline(extracted.text)
+    })
 
-    return {
-      styles,
-      state
-    }
+    return { styles, renderedContent }
   }
 })
 </script>

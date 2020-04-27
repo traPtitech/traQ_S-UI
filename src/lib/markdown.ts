@@ -34,6 +34,10 @@ export const render = (text: string) => {
   return md.render(text)
 }
 
+export const renderInline = (text: string) => {
+  return md.renderInline(text)
+}
+
 export const toggleSpoiler = (element: HTMLElement) => {
   const $spoiler = element.closest('.spoiler')
   $spoiler?.toggleAttribute('shown')
