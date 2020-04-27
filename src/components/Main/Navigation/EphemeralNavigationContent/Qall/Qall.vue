@@ -4,6 +4,7 @@
     :class="$style.container"
     :style="styles.container"
   >
+    <qall-details-panel />
     <qall-control-panel
       :class="$style.control"
       :status="status"
@@ -19,6 +20,7 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import QallControlPanel from './QallControlPanel.vue'
+import QallDetailsPanel from './QallDetailsPanel.vue'
 import store from '@/store'
 
 const useStyles = () =>
@@ -29,7 +31,8 @@ const useStyles = () =>
 export default defineComponent({
   name: 'NavigationContentQall',
   components: {
-    QallControlPanel
+    QallControlPanel,
+    QallDetailsPanel
   },
   setup() {
     const styles = useStyles()
