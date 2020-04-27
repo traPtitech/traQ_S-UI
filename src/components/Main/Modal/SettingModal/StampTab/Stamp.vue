@@ -1,17 +1,50 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <img :src="url" :class="$style.stamp" />
-    <span v-if="!isSelected">:{{ stamp.name }}:</span>
-    <template v-else>
-      <form-input prefix=":" suffix=":" v-model="nameState.newName" />
-      <form-input label="所有者" prefix="@" v-model="creatorState.newName" />
-      <image-upload
-        :class="$style.imageUpload"
-        @input="onNewImgSet"
-        :destroy-flag="imageUploadState.destroyFlag"
-        @destroyed="onNewDestroyed"
+    <div v-if="!isSelected" :class="$style.notSelected">
+      <p>:{{ stamp.name }}:</p>
+      <icon
+        name="pencil"
+        mdi
+        :size="20"
+        @click="onStartEdit"
+        v-if="hoverState.hover"
       />
-      <form-button label="変更" :disabled="!stampChanged" @click="editStamp" />
+    </div>
+    <template v-else>
+      <div :class="$style.selected">
+        <div :class="$style.forms">
+          <form-input
+            label="スタンプ名"
+            prefix=":"
+            suffix=":"
+            v-model="nameState.newName"
+            :class="$style.form"
+          />
+          <form-input
+            label="所有者"
+            prefix="@"
+            v-model="creatorState.newName"
+            :class="$style.form"
+          />
+          <image-upload
+            :class="$style.imageUpload"
+            @input="onNewImgSet"
+            :destroy-flag="imageUploadState.destroyFlag"
+            @destroyed="onNewDestroyed"
+          />
+        </div>
+        <form-button
+          label="変更"
+          :disabled="!stampChanged"
+          @click="editStamp"
+        />
+      </div>
     </template>
   </div>
 </template>
@@ -21,7 +54,8 @@ import {
   defineComponent,
   computed,
   PropType,
-  reactive
+  reactive,
+  SetupContext
 } from '@vue/composition-api'
 import apis, { buildFilePath } from '@/lib/apis'
 import store from '@/store'
@@ -31,13 +65,19 @@ import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { Stamp } from '@traptitech/traq'
+import Icon from '@/components/UI/Icon.vue'
+import useHover from '@/use/hover'
 
-const useStyles = (props: { isSelected: boolean }) =>
+const useStyles = (
+  props: { isSelected: boolean },
+  hoverState: { hover: boolean }
+) =>
   reactive({
     container: makeStyles(theme => ({
-      background: props.isSelected
-        ? theme.background.tertiary
-        : theme.background.primary
+      background:
+        !props.isSelected && hoverState.hover
+          ? theme.background.tertiary
+          : theme.background.primary
     }))
   })
 
@@ -76,8 +116,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
-    const styles = useStyles(props)
+  setup(props, context: SetupContext) {
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+    const styles = useStyles(props, hoverState)
     const url = computed(() => buildFilePath(props.stamp.fileId))
 
     const {
@@ -128,6 +169,10 @@ export default defineComponent({
       }
     }
 
+    const onStartEdit = () => {
+      context.emit('start-edit')
+    }
+
     return {
       styles,
       url,
@@ -137,13 +182,18 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed,
       stampChanged,
-      editStamp
+      editStamp,
+      onStartEdit,
+      hoverState,
+      onMouseEnter,
+      onMouseLeave
     }
   },
   components: {
     FormInput,
     FormButton,
-    ImageUpload
+    ImageUpload,
+    Icon
   }
 })
 </script>
@@ -152,11 +202,38 @@ export default defineComponent({
 .container {
   display: flex;
   align-items: center;
-  flex-flow: row wrap;
+  padding: {
+    left: 12px;
+    top: 12px;
+    bottom: 12px;
+  }
 }
 
 .stamp {
   height: 40px;
   width: 40px;
+}
+
+.notSelected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.selected {
+  padding-left: 12px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.forms {
+  display: flex;
+  align-items: flex-end;
+}
+.form {
+  margin-right: 12px;
 }
 </style>
