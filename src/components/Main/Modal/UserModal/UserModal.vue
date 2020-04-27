@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.wrapper">
+  <div :class="$style.wrapper" v-click-outside="onClickOutside">
     <close-button @click="onClickClear" :size="32" :class="$style.close" />
     <user-icon
       v-if="!isMobile"
@@ -80,6 +80,8 @@ export default defineComponent({
     const detail = computed(() => store.state.domain.userDetails[props.id])
     store.dispatch.domain.fetchUserDetail(props.id)
 
+    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
+
     return {
       isMobile,
       styles,
@@ -88,7 +90,8 @@ export default defineComponent({
       user,
       detail,
       ...toRefs(navigationSelectorState),
-      onNavigationChange
+      onNavigationChange,
+      onClickOutside
     }
   },
   components: {
