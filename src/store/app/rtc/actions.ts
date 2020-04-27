@@ -26,7 +26,7 @@ export const actions = defineActions({
     }
   },
 
-  syncRTCState(context) {
+  async syncRTCState(context) {
     const { state } = rtcActionContext(context)
     if (!state.currentRTCState) return
     const sessionStates = state.currentRTCState.sessionStates
@@ -36,10 +36,10 @@ export const actions = defineActions({
         sessionId: s.sessionId
       })
     )
-    changeRTCState(state.currentRTCState.channelId, userStateSessions)
+    await changeRTCState(state.currentRTCState.channelId, userStateSessions)
   },
 
-  addRTCSession(context, payload: UserSessionState) {
+  async addRTCSession(context, payload: UserSessionState) {
     const { state, commit, dispatch } = rtcActionContext(context)
     const currentState = state.currentRTCState
     if (!currentState) return
@@ -47,9 +47,9 @@ export const actions = defineActions({
       channelId: currentState.channelId,
       sessionStates: [...currentState.sessionStates, payload]
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
-  removeRTCSession(context, payload: { sessionId: SessionId }) {
+  async removeRTCSession(context, payload: { sessionId: SessionId }) {
     const { state, commit, dispatch } = rtcActionContext(context)
     const currentState = state.currentRTCState
     if (!currentState) return
@@ -62,9 +62,9 @@ export const actions = defineActions({
       channelId: currentState.channelId,
       sessionStates: sessionStates
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
-  modifyRTCSession(
+  async modifyRTCSession(
     context,
     payload: { sessionId: SessionId; states: string[] }
   ) {
@@ -80,7 +80,7 @@ export const actions = defineActions({
       channelId: currentState.channelId,
       sessionStates: newSessionStates
     })
-    dispatch.syncRTCState()
+    await dispatch.syncRTCState()
   },
 
   startOrJoinRTCSession(
@@ -268,12 +268,15 @@ export const actions = defineActions({
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
-    await dispatch.establishConnection()
-    const { sessionId } = await dispatch.startOrJoinRTCSession({
-      channelId,
-      sessionType: 'qall'
-    })
-    dispatch.joinVoiceChannel(sessionId)
+    try {
+      const { sessionId } = await dispatch.startOrJoinRTCSession({
+        channelId,
+        sessionType: 'qall'
+      })
+      dispatch.joinVoiceChannel(sessionId)
+    } catch {
+      // TODO: エラー
+    }
   },
 
   async endQall(context) {
