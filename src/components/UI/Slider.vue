@@ -2,6 +2,11 @@
   <vue-slider
     :value="value"
     @input="onInput"
+    :min="min"
+    :max="max"
+    :disabled="disabled"
+    :tooltip="tooltip"
+    :tooltip-formatter="tooltipFormatter"
     :dot-size="12"
     :dot-style="styles.dotStyle"
     :rail-style="styles.railStyle"
@@ -17,6 +22,7 @@ import 'vue-slider-component/theme/default.css'
 
 import { makeStyles } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
+import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 
 const useStyles = () =>
   reactive({
@@ -45,6 +51,25 @@ export default defineComponent({
     value: {
       type: [Number, String] as PropType<number | string>,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 100
+    },
+    tooltipFormatter: [String, Function] as PropType<TooltipFormatter>,
+    tooltip: {
+      type: String as PropType<
+        'none' | 'always' | 'hover' | 'focus' | 'active'
+      >,
+      default: 'active'
     }
   },
   setup(props, context) {

@@ -1,14 +1,15 @@
 <template>
   <div :class="$style.container">
     <qall-details-panel-user-volume-slider
-      :class="$style.slider"
       v-if="me"
+      :class="$style.slider"
       :key="me"
       :user-id="me"
+      disabled
     />
     <qall-details-panel-user-volume-slider
-      :class="$style.slider"
       v-for="id in users"
+      :class="$style.slider"
       :key="id"
       :user-id="id"
     />

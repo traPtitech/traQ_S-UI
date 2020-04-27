@@ -2,7 +2,14 @@
   <div :class="$style.container">
     <user-icon :class="$style.icon" :user-id="userId" :size="28" />
     <div :class="$style.slider">
-      <slider :value="50" />
+      <slider
+        :value="100"
+        :min="0"
+        :max="200"
+        tooltip-formatter="{value}%"
+        :disabled="disabled"
+        :tooltip="disabled ? 'none' : 'active'"
+      />
     </div>
   </div>
 </template>
@@ -20,7 +27,8 @@ export default defineComponent({
     UserIcon
   },
   props: {
-    userId: { type: String as PropType<UserId>, required: true }
+    userId: { type: String as PropType<UserId>, required: true },
+    disabled: { type: Boolean, default: false }
   },
   setup() {
     return {}
