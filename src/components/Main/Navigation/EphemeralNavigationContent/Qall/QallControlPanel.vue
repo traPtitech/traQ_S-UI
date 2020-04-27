@@ -34,7 +34,8 @@ import { constructChannelPath } from '@/router'
 const useStyles = (props: { isMicMuted: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.secondary
+      color: theme.ui.secondary,
+      borderColor: theme.background.secondary
     })),
     micIcon: makeStyles((theme, common) => ({
       color: props.isMicMuted ? common.ui.muted : theme.ui.secondary
@@ -83,6 +84,10 @@ export default defineComponent({
   width: 100%;
   padding: 12px;
   align-items: center;
+  border-top: {
+    style: solid;
+    width: 2px;
+  }
 }
 .top,
 .mic,

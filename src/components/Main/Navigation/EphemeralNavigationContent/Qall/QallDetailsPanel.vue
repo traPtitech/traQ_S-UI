@@ -1,35 +1,43 @@
 <template>
   <div :class="$style.container">
-    <qall-details-panel-user-volume-slider
+    <qall-details-panel-user
       v-if="me"
       :class="$style.slider"
       :key="me"
       :user-id="me"
       :mic-muted="me in mutedUsersMap"
+      :show-tune-button="!showVolumeTune"
+      :show-tune-done-button="showVolumeTune"
+      @tune="toggleVolumeTune(true)"
+      @tune-done="toggleVolumeTune(false)"
       disabled
     />
-    <qall-details-panel-user-volume-slider
+    <qall-details-panel-user
       v-for="id in users"
       :class="$style.slider"
       :key="id"
       :user-id="id"
       :mic-muted="id in mutedUsersMap"
+      :show-volume-control="showVolumeTune"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
-import QallDetailsPanelUserVolumeSlider from './QallDetailsPanelUserVolumeSlider.vue'
+import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 
 export default defineComponent({
   name: 'QallDetailsPanel',
   components: {
-    QallDetailsPanelUserVolumeSlider
+    QallDetailsPanelUser
   },
   setup() {
+    const showVolumeTune = ref(false)
+    const toggleVolumeTune = (show: boolean) => {
+      showVolumeTune.value = show
+    }
     const currentSession = computed(() => store.getters.app.rtc.qallSession)
     const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() => {
@@ -53,7 +61,7 @@ export default defineComponent({
         )
       )
     )
-    return { users, me, mutedUsersMap }
+    return { users, me, mutedUsersMap, showVolumeTune, toggleVolumeTune }
   }
 })
 </script>
@@ -63,7 +71,7 @@ export default defineComponent({
   padding: 12px;
 }
 .slider {
-  margin: 8px 0;
+  margin: 12px 0;
   &:first-child {
     margin-top: 0;
   }
