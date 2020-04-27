@@ -54,7 +54,7 @@ const useChannelListFilter = () => {
 }
 
 const useStaredChannel = () => {
-  const staredChannelId = computed(() =>
+  const staredChannel = computed(() =>
     Object.keys(store.state.domain.me.staredChannelSet).map(
       v => store.state.entities.channels[v]
     )
@@ -86,7 +86,7 @@ const useStaredChannel = () => {
 
   const tree = computed(
     () =>
-      staredChannelId.value
+      staredChannel.value
         .map(ch => {
           const _tree =
             constructTree(ch, store.state.entities.channels) ??
