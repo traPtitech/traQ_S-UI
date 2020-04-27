@@ -5,6 +5,8 @@
     :href="appLink"
     target="_blank"
     rel="noopener noreferrer"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
     <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="32" />
     <span :class="$style.label">{{ label }}</span>
@@ -12,15 +14,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import useHover from '@/use/hover'
 
-const useStyles = () =>
+const useStyles = (hoverState: { hover: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary
+      color: hoverState.hover ? theme.ui.primary : theme.ui.secondary,
+      background: hoverState.hover
+        ? theme.background.tertiary
+        : theme.background.secondary
     }))
   })
 
@@ -35,9 +40,10 @@ export default defineComponent({
     label: { type: String, default: '' },
     appLink: { type: String, default: '' }
   },
-  setup() {
-    const styles = useStyles()
-    return { styles }
+  setup(context: SetupContext) {
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+    const styles = useStyles(hoverState)
+    return { styles, onMouseEnter, onMouseLeave }
   }
 })
 </script>
