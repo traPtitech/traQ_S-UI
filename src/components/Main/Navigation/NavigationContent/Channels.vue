@@ -22,20 +22,20 @@
         />
       </div>
     </div>
-    <button @click="test(tree)">button</button>
+    <button @click="toggleStar">button</button>
     <channel-list
-      v-show="channelListFilterState.query.length <= 0"
-      :channels="tree.children"
+      v-show="channelListFilterState.query.length <= 0 && state.isStar"
+      :channels="tree"
     />
-    <!-- <channel-list
-      v-show="channelListFilterState.query.length <= 0"
+    <channel-list
+      v-show="channelListFilterState.query.length <= 0 && !state.isStar"
       :channels="topLevelChannels"
-    /> -->
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
@@ -70,18 +70,35 @@ const useStaredChannel = () => {
     }
     return name
   }
-  const tree = computed(() => {
-    return {
-      children: staredChannelId.value.map(ch => {
-        const tree = constructTree(ch, store.state.entities.channels)
-        if (tree != undefined) {
-          const path = buildPath(ch.parentId, ch.name)
-          tree.name = path
-        }
-        return tree
-      }) as ChannelTreeNode[]
+
+  const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) => {
+    const nameA = a.name.toUpperCase()
+    const nameB = b.name.toUpperCase()
+
+    let comparison = 0
+    if (nameA > nameB) {
+      comparison = 1
+    } else if (nameA < nameB) {
+      comparison = -1
     }
-  })
+    return comparison
+  }
+
+  const tree = computed(
+    () =>
+      staredChannelId.value
+        .map(ch => {
+          const _tree =
+            constructTree(ch, store.state.entities.channels) ??
+            ({} as ChannelTreeNode)
+
+          const path = buildPath(ch.parentId, ch.name)
+
+          _tree.name = path
+          return _tree
+        })
+        .sort(sortChannelTreeNode) as ChannelTreeNode[]
+  )
 
   return { tree }
 }
@@ -97,37 +114,12 @@ export default defineComponent({
     const topLevelChannels = computed(() => {
       return store.state.domain.channelTree.channelTree.children ?? []
     })
-    // const staredChannel = computed(() =>
-    //   Object.keys(store.state.domain.me.staredChannelSet).map(
-    //     v => store.state.entities.channels[v]
-    //   )
-    // )
-    // const tree = computed(() => {
-    //   return {
-    //     children: staredChannel.value.map(ch => {
-    //       const tree = constructTree(ch, store.state.entities.channels)
-    //       if (tree != undefined) {
-    //         const path = buildPath(ch.parentId, ch.name)
-    //         tree.name = path
-    //       }
-    //       return tree
-    //     }) as ChannelTreeNode[]
-    //   }
-    // })
 
-    // const buildPath = (parentid: string | null, name: string): string => {
-    //   if (parentid != null) {
-    //     const parentCh = store.state.entities.channels[parentid]
-    //     name = parentCh.name[0] + '/' + name
-    //     if (parentCh.parentId) {
-    //       return buildPath(parentCh.parentId, name)
-    //     }
-    //   }
-    //   return name
-    // }
-
-    const test = (test: any) => {
-      console.log(test)
+    const state = reactive({
+      isStar: false
+    })
+    const toggleStar = () => {
+      state.isStar = !state.isStar
     }
 
     const { channelListFilterState, setQuery } = useChannelListFilter()
@@ -135,14 +127,15 @@ export default defineComponent({
       () => store.state.domain.messagesView.currentChannelId
     )
     const { tree } = useStaredChannel()
+
     return {
       topLevelChannels,
       channelListFilterState,
       setQuery,
       channelId,
-      // staredChannel,
       tree,
-      test
+      toggleStar,
+      state
     }
   }
 })
