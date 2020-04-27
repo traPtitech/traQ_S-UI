@@ -1,12 +1,11 @@
 <template>
   <div>
     チャンネル検索
-    <!-- {{ staredChannel }} -->
-    <filter-input
-      :on-secondary="true"
+    <channel-filter
+      :at-click="toggleStar"
+      :at-input="setQuery"
       :text="channelListFilterState.query"
-      @input="setQuery"
-      :class="$style.input"
+      :is-stared="state.isStar"
     />
     <div v-show="channelListFilterState.query.length > 0" :class="$style.list">
       <div
@@ -22,7 +21,6 @@
         />
       </div>
     </div>
-    <button @click="toggleStar">button</button>
     <channel-list
       v-show="channelListFilterState.query.length <= 0 && state.isStar"
       :channels="tree"
@@ -43,6 +41,8 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import ChannelFilteredElement from '../ChannelList/ChannelFilteredElement.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import Icon from '@/components/UI/Icon.vue'
+import ChannelFilter from '../ChannelList/ChannelFIlter.vue'
 
 const useChannelListFilter = () => {
   const channels = computed(() => Object.values(store.state.entities.channels))
@@ -108,7 +108,9 @@ export default defineComponent({
   components: {
     ChannelList,
     FilterInput,
-    ChannelFilteredElement
+    ChannelFilteredElement,
+    Icon,
+    ChannelFilter
   },
   setup() {
     const topLevelChannels = computed(() => {
@@ -150,5 +152,8 @@ export default defineComponent({
 }
 .input {
   margin-bottom: 16px;
+}
+.container {
+  display: flex;
 }
 </style>
