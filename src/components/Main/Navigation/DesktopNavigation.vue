@@ -5,6 +5,7 @@
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
         @ephemeral-entry-remove="onEphemeralEntryRemove"
+        @ephemeral-entry-add="onEphemeralEntryAdd"
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -81,12 +82,17 @@ export default defineComponent({
       }
     }
 
+    const onEphemeralEntryAdd = (entry: EphemeralNavigationSelectorEntry) => {
+      _onEphemeralNavigationChange(entry.type)
+    }
+
     return {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
       onNavigationChange,
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
+      onEphemeralEntryAdd,
       navigationStyle,
       targetPortalName
     }

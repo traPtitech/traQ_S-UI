@@ -81,6 +81,11 @@ export default defineComponent({
         .forEach(e => {
           context.emit('ephemeral-entry-remove', e)
         })
+      ;(entries ?? [])
+        .filter(e => !prevEntries.includes(e))
+        .forEach(e => {
+          context.emit('ephemeral-entry-add', e)
+        })
     })
 
     return {
@@ -107,9 +112,9 @@ export default defineComponent({
   margin: 8px 0;
 }
 .separator {
-  opacity: 0.3;
+  opacity: 0.5;
   height: 2px;
-  width: 16px;
-  margin: 8px 0;
+  width: 24px;
+  margin: 12px 0;
 }
 </style>
