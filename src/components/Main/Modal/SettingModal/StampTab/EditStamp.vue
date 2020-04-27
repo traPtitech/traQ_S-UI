@@ -7,7 +7,7 @@
         :key="stamp.id"
         :stamp="stamp"
         :is-selected="stamp.id === selectedStampId"
-        @click.native="selectStamp(stamp.id)"
+        @startEdit="selectStamp(stamp.id)"
       />
     </div>
   </div>
