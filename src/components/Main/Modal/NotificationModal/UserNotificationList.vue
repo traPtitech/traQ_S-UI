@@ -23,31 +23,42 @@ import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareString } from '@/lib/util/string'
+import { User } from '@traptitech/traq'
 
-// TODO: BOTユーザーの除外、ユーザー検索、通知ONユーザーの上部表示、自分を変更した際の通知状況更新
+// TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
-  const allUserIds = computed(() =>
-    Object.entries(store.state.entities.users)
-      .sort((e1, e2) => compareString(e1[1]?.name, e2[1]?.name))
-      .map(e => e[0])
+  const allUsers = computed(
+    () =>
+      (Object.values(store.state.entities.users) as User[]).filter(u => !u.bot) // BOT除外
   )
   const state = reactive({
+    initialSubscribers: new Set<string>(),
     subscribersMap: {} as Record<UserId, boolean | undefined>,
     subscriptionStateSorted: computed((): {
       userId: UserId
+      name: string
       subscribed: boolean
     }[] =>
-      allUserIds.value.map(id => ({
-        userId: id,
-        subscribed: state.subscribersMap[id] ?? false
-      }))
+      allUsers.value
+        .map(u => ({
+          userId: u.id,
+          name: u.name,
+          subscribed: state.subscribersMap[u.id] ?? false
+        }))
+        .sort((u1, u2) => {
+          const s1 = state.initialSubscribers.has(u1.userId)
+          const s2 = state.initialSubscribers.has(u2.userId)
+          return s1 && !s2
+            ? -1
+            : !s1 && s2
+            ? 1
+            : compareString(u1.name, u2.name)
+        })
     )
   })
-  apis.getChannelSubscribers(props.channelId).then(result => {
-    const subscribers = new Set(result.data)
-    state.subscribersMap = Object.fromEntries(
-      allUserIds.value.map(id => [id, subscribers.has(id)])
-    )
+  apis.getChannelSubscribers(props.channelId).then(res => {
+    state.initialSubscribers = new Set(res.data)
+    state.subscribersMap = Object.fromEntries(res.data.map(uid => [uid, true]))
   })
   const onChangeNotification = async (userId: UserId, subscribe: boolean) => {
     const newMap = { ...state.subscribersMap, [userId]: subscribe }
