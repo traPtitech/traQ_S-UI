@@ -4,18 +4,18 @@ export type HoverState = {
   hover: boolean
 }
 
-const useHover = (context: SetupContext, emitEvent = false) => {
+const useHover = (context?: SetupContext) => {
   const state: HoverState = reactive({
     hover: false
   })
   const onMouseEnter = () => {
-    if (emitEvent) {
+    if (context) {
       context.emit('hover')
     }
     state.hover = true
   }
   const onMouseLeave = () => {
-    if (emitEvent) {
+    if (context) {
       context.emit('hover-end')
     }
     state.hover = false

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import useHover from '@/use/hover'
@@ -40,8 +40,8 @@ export default defineComponent({
     label: { type: String, default: '' },
     appLink: { type: String, default: '' }
   },
-  setup(context: SetupContext) {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+  setup() {
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const styles = useStyles(hoverState)
     return { styles, onMouseEnter, onMouseLeave }
   }

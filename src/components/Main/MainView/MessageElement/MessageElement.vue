@@ -63,7 +63,6 @@ import {
   computed,
   reactive,
   ref,
-  SetupContext,
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
@@ -124,8 +123,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
+  setup(props, context) {
+    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const bodyRef = ref<HTMLDivElement>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
