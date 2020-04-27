@@ -49,6 +49,8 @@ export default defineComponent({
   width: 100%;
 }
 .content {
+  overflow: hidden;
+  max-height: 120px;
   a {
     pointer-events: none;
     color: currentColor;
