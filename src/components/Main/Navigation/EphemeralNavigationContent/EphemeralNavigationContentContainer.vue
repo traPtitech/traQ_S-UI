@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    えふぇめらる
+    <slot />
   </div>
 </template>
 

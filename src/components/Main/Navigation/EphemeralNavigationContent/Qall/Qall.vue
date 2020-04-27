@@ -1,12 +1,17 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    Qallだよ
+    <qall-control-panel
+      :class="$style.control"
+      status="通話中"
+      channel-id="channelid"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
+import QallControlPanel from './QallControlPanel.vue'
 
 const useStyles = () =>
   reactive({
@@ -15,6 +20,9 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'NavigationContentQall',
+  components: {
+    QallControlPanel
+  },
   setup() {
     const styles = useStyles()
     return { styles }
@@ -24,5 +32,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+.control {
+  flex: 0 1 64px;
 }
 </style>

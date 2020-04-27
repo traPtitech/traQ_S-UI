@@ -27,4 +27,8 @@ $scrollbar-width: 8px;
       background: var(--scrollbar-hover-color)
     }
   }
+  &::-webkit-scrollbar-corner {
+    visibility: hidden;
+    display: none;
+  }
 }
