@@ -1,29 +1,43 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <button :class="$style.top"><icon name="phone" mdi /></button>
+    <button @click="$emit('top-toggle-click')" :class="$style.top">
+      <icon name="phone" mdi />
+    </button>
     <div :class="$style.info">
       <div :class="$style.status">
         {{ status }}
       </div>
-      <router-link to="/channels/random" :class="$style.channelName">
-        チャンネル名
+      <router-link :to="channelLink" :class="$style.channelName">
+        #{{ channelName }}
       </router-link>
     </div>
-    <button :class="$style.mic"><icon name="microphone" mdi /></button>
-    <button :class="$style.end"><icon name="phone-hangup" mdi /></button>
+    <button
+      @click="$emit('mic-click')"
+      :class="$style.mic"
+      :style="styles.micIcon"
+    >
+      <icon :name="micIconName" mdi />
+    </button>
+    <button @click="$emit('end-qall-click')" :class="$style.end">
+      <icon name="phone-hangup" mdi />
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import useChannelPath from '@/use/channelPath'
+import { constructChannelPath } from '@/router'
 
-const useStyles = () =>
+const useStyles = (props: { isMicMuted: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       color: theme.ui.secondary
+    })),
+    micIcon: makeStyles((theme, common) => ({
+      color: props.isMicMuted ? common.ui.muted : theme.ui.secondary
     }))
   })
 
@@ -40,11 +54,21 @@ export default defineComponent({
     channelId: {
       type: String,
       required: true
+    },
+    isMicMuted: {
+      type: Boolean,
+      default: false
     }
   },
-  setup() {
-    const styles = useStyles()
-    return { styles }
+  setup(props) {
+    const styles = useStyles(props)
+    const { channelIdToPathString } = useChannelPath()
+    const channelName = computed(() => channelIdToPathString(props.channelId))
+    const channelLink = computed(() => constructChannelPath(channelName.value))
+    const micIconName = computed(() =>
+      props.isMicMuted ? 'microphone-off' : 'microphone'
+    )
+    return { styles, channelName, channelLink, micIconName }
   }
 })
 </script>

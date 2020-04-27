@@ -1,17 +1,25 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    v-if="currentChannel"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <qall-control-panel
       :class="$style.control"
-      status="通話中"
-      channel-id="channelid"
+      :status="status"
+      :channel-id="currentChannel"
+      :is-mic-muted="isMicMuted"
+      @end-qall-click="onEndQallClick"
+      @mic-click="onMicClick"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import QallControlPanel from './QallControlPanel.vue'
+import store from '@/store'
 
 const useStyles = () =>
   reactive({
@@ -25,7 +33,31 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-    return { styles }
+    const currentChannel = computed(() =>
+      store.getters.app.rtc.qallSession
+        ? store.state.app.rtc.currentRTCState?.channelId
+        : undefined
+    )
+    const onEndQallClick = () => {
+      store.dispatch.app.rtc.endQall()
+    }
+    const isMicMuted = computed(() => store.state.app.rtc.isMicMuted)
+    const onMicClick = () => {
+      if (isMicMuted.value) {
+        store.dispatch.app.rtc.unmute()
+      } else {
+        store.dispatch.app.rtc.mute()
+      }
+    }
+    const status = computed(() => '通話中')
+    return {
+      styles,
+      currentChannel,
+      status,
+      isMicMuted,
+      onEndQallClick,
+      onMicClick
+    }
   }
 })
 </script>

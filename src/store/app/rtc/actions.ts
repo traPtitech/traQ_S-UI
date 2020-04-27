@@ -227,16 +227,16 @@ export const actions = defineActions({
     commit.setLocalStream(localStream)
 
     if (state.isMicMuted) {
-      dispatch.muteLocalStream()
+      dispatch.mute()
     } else {
-      dispatch.unmuteLocalStream()
+      dispatch.unmute()
     }
 
     await client.joinRoom(room, localStream)
 
     state.mixer.playFileSource('qall_start')
   },
-  muteLocalStream(context) {
+  mute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!state.localStream || !qallSession) {
@@ -249,7 +249,7 @@ export const actions = defineActions({
       states
     })
   },
-  unmuteLocalStream(context) {
+  unmute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!state.localStream || !qallSession) {

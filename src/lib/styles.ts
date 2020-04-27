@@ -19,7 +19,8 @@ export const commonStyles = {
     black: '#222222' as const
   },
   ui: {
-    qall: '#00ACA2' as const
+    qall: '#00ACA2' as const,
+    muted: '#F26451' as const
   },
   background: {
     overlay: 'rgba(25, 26, 29, 0.5)' as const,

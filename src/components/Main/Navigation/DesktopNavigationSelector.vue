@@ -51,7 +51,7 @@ import { makeStyles } from '@/lib/styles'
 const useStyles = () =>
   reactive({
     separator: makeStyles(theme => ({
-      background: theme.ui.secondary
+      background: theme.ui.tertiary
     }))
   })
 
@@ -110,5 +110,6 @@ export default defineComponent({
   opacity: 0.3;
   height: 2px;
   width: 16px;
+  margin: 8px 0;
 }
 </style>

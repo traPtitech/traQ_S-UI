@@ -172,6 +172,7 @@ export const mutations = defineMutations<S>()({
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = false
     })
+    state.isMicMuted = true
   },
   unmuteLocalStream(state) {
     if (!state.localStream) return
@@ -179,6 +180,7 @@ export const mutations = defineMutations<S>()({
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = true
     })
+    state.isMicMuted = false
   },
   addRemoteStream(
     state,
