@@ -3,9 +3,9 @@ import { Theme } from '@/types/theme'
 import { computed } from '@vue/composition-api'
 import * as CSS from 'csstype'
 
-type ThemeClaim = (theme: Theme, common: typeof commonStyles) => CSS.Properties
+export type ThemeClaim<T> = (theme: Theme, common: typeof commonStyles) => T
 
-export const makeStyles = (claim: ThemeClaim) => {
+export const makeStyles = (claim: ThemeClaim<CSS.Properties>) => {
   return computed(() =>
     claim(store.getters.app.themeSettings.currentTheme, commonStyles)
   )

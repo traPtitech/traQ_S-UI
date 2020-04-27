@@ -7,20 +7,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { makeStyles, ThemeClaim } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { isSelected: boolean }) => {
+const useStyles = (props: {
+  isSelected: boolean
+  colorClaim?: ThemeClaim<string>
+}) => {
   return reactive({
-    container: makeStyles(theme => ({
+    container: makeStyles((theme, common) => ({
       background: props.isSelected
-        ? transparentize(theme.accent.primary, 0.1)
+        ? transparentize(
+            props.colorClaim
+              ? props.colorClaim(theme, common)
+              : theme.accent.primary,
+            0.1
+          )
         : 'none'
     })),
-    icon: makeStyles(theme => ({
-      color: theme.accent.primary,
+    icon: makeStyles((theme, common) => ({
+      color: props.colorClaim
+        ? props.colorClaim(theme, common)
+        : theme.accent.primary,
       opacity: props.isSelected ? '1' : '0.3'
     }))
   })
@@ -45,7 +55,8 @@ export default defineComponent({
     hasNotification: {
       type: Boolean,
       default: false
-    }
+    },
+    colorClaim: Function as PropType<ThemeClaim<string>>
   },
   setup(props) {
     const styles = useStyles(props)

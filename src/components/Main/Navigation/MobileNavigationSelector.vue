@@ -1,17 +1,14 @@
 <template>
   <div :class="$style.container">
-    <div
+    <navigation-selector-item
       v-for="item in items"
       :key="item.type"
       :class="$style.item"
-      @click="onNavigationItemClick(item.type)"
-    >
-      <navigation-selector-item
-        :is-selected="currentNavigation === item.type"
-        :icon-mdi="item.iconMdi"
-        :icon-name="item.iconName"
-      />
-    </div>
+      @click.native="onNavigationItemClick(item.type)"
+      :is-selected="currentNavigation === item.type"
+      :icon-mdi="item.iconMdi"
+      :icon-name="item.iconName"
+    />
   </div>
 </template>
 
@@ -22,10 +19,8 @@ import {
   reactive,
   PropType
 } from '@vue/composition-api'
-import {
-  NavigationItemType,
-  useNavigationSelectorItem
-} from '@/components/Main/Navigation/use/navigation'
+import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
+import { items, ephemeralItems } from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
@@ -48,33 +43,11 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const items: {
-      type: NavigationItemType
-      iconName: string
-      iconMdi?: true
-    }[] = [
-      {
-        type: 'home',
-        iconName: 'home',
-        iconMdi: true
-      },
-      {
-        type: 'channels',
-        iconName: 'hash'
-      },
-      {
-        type: 'activity',
-        iconName: 'activity'
-      },
-      {
-        type: 'users',
-        iconName: 'user'
-      }
-    ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
 
     return {
       items,
+      ephemeralItems,
       onNavigationItemClick
     }
   }

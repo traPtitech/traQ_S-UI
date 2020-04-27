@@ -1,28 +1,59 @@
 <template>
   <div :class="$style.container">
-    <div
-      v-for="item in items"
+    <navigation-selector-item
+      v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      @click="onNavigationItemClick(item.type)"
-    >
-      <navigation-selector-item
-        :is-selected="currentNavigation === item.type"
-        :icon-mdi="item.iconMdi"
-        :icon-name="item.iconName"
-      />
-    </div>
+      @click.native="onNavigationItemClick(item.type)"
+      :is-selected="currentNavigation === item.type"
+      :icon-mdi="item.iconMdi"
+      :icon-name="item.iconName"
+    />
+    <div
+      v-if="showSeparator"
+      :class="$style.separator"
+      :style="styles.separator"
+    ></div>
+    <navigation-selector-item
+      v-for="item in ephemeralEntries"
+      :key="item.type"
+      :class="$style.item"
+      @click.native="onEphemeralNavigationItemClick(item.type)"
+      :is-selected="currentEphemeralNavigation === item.type"
+      :icon-mdi="item.iconMdi"
+      :icon-name="item.iconName"
+      :color-claim="item.colorClaim"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  SetupContext,
+  PropType,
+  computed,
+  reactive,
+  watch
+} from '@vue/composition-api'
+
 import {
   NavigationItemType,
-  useNavigationSelectorItem
+  useNavigationSelectorItem,
+  useEphemeralNavigationSelectorItem,
+  EphemeralNavigationItemType
 } from '@/components/Main/Navigation/use/navigation'
+import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
+import { makeStyles } from '@/lib/styles'
+
+const useStyles = () =>
+  reactive({
+    separator: makeStyles(theme => ({
+      background: theme.ui.secondary
+    }))
+  })
 
 export default defineComponent({
   name: 'NavigationSelector',
@@ -31,42 +62,34 @@ export default defineComponent({
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
       default: 'home' as const
-    }
+    },
+    currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
   },
   setup(props, context: SetupContext) {
-    const items: Array<{
-      type: NavigationItemType
-      iconName: string
-      iconMdi?: true
-    }> = [
-      {
-        type: 'home',
-        iconName: 'home',
-        iconMdi: true
-      },
-      {
-        type: 'channels',
-        iconName: 'hash'
-      },
-      {
-        type: 'activity',
-        iconName: 'activity'
-      },
-      {
-        type: 'users',
-        iconName: 'user'
-      },
-      {
-        type: 'clips',
-        iconName: 'bookmark',
-        iconMdi: true
-      }
-    ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
+    const {
+      onNavigationItemClick: onEphemeralNavigationItemClick
+    } = useEphemeralNavigationSelectorItem(context)
+    const { entries, ephemeralEntries } = useNavigationSelectorEntry()
+    const showSeparator = computed(() => ephemeralEntries.value.length > 0)
+
+    const styles = useStyles()
+
+    watch(ephemeralEntries, (entries, prevEntries) => {
+      ;(prevEntries ?? [])
+        .filter(e => !entries.includes(e))
+        .forEach(e => {
+          context.emit('ephemeral-entry-remove', e)
+        })
+    })
 
     return {
-      items,
-      onNavigationItemClick
+      styles,
+      entries,
+      ephemeralEntries,
+      showSeparator,
+      onNavigationItemClick,
+      onEphemeralNavigationItemClick
     }
   }
 })
@@ -82,5 +105,10 @@ export default defineComponent({
 }
 .item {
   margin: 8px 0;
+}
+.separator {
+  opacity: 0.3;
+  height: 2px;
+  width: 16px;
 }
 </style>

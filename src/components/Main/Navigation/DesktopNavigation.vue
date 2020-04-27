@@ -3,37 +3,90 @@
     <div :class="$style.selector">
       <desktop-navigation-selector
         @navigation-change="onNavigationChange"
-        :current-navigation="currentNavigation"
+        @ephemeral-navigation-change="onEphemeralNavigationChange"
+        @ephemeral-entry-remove="onEphemeralEntryRemove"
+        :current-navigation="navigationSelectorState.currentNavigation"
+        :current-ephemeral-navigation="
+          ephemeralNavigationSelectorState.currentNavigation
+        "
       />
       <desktop-tool-box />
     </div>
     <portal-target :name="targetPortalName" />
-    <navigation-content :current-navigation="currentNavigation" />
+    <div :class="$style.navigations">
+      <navigation-content
+        :class="$style.navigation"
+        :current-navigation="navigationSelectorState.currentNavigation"
+      />
+      <ephemeral-navigation-content
+        :class="$style.navigation"
+        v-if="ephemeralNavigationSelectorState.currentNavigation"
+        :current-ephemeral-navigation="
+          ephemeralNavigationSelectorState.currentNavigation
+        "
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
+import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
+import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent.vue'
+import {
+  useNavigation,
+  useEphemeralNavigation,
+  EphemeralNavigationItemType
+} from '@/components/Main/Navigation/use/navigation'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import DesktopToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
-import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
-import { useNavigation } from '@/components/Main/Navigation/use/navigation'
 import { makeStyles } from '@/lib/styles'
+import { EphemeralNavigationSelectorEntry } from './use/navigationSelectorEntry'
 
 export default defineComponent({
   name: 'DesktopNavigation',
-  components: { NavigationContent, DesktopNavigationSelector, DesktopToolBox },
+  components: {
+    NavigationContent,
+    EphemeralNavigationContent,
+    DesktopNavigationSelector,
+    DesktopToolBox
+  },
   setup() {
     const { navigationSelectorState, onNavigationChange } = useNavigation()
+    const {
+      navigationSelectorState: ephemeralNavigationSelectorState,
+      onNavigationChange: _onEphemeralNavigationChange
+    } = useEphemeralNavigation()
     const navigationStyle = makeStyles(theme => ({
       background: theme.background.secondary,
       color: theme.ui.primary
     }))
+
+    // もう一度押すと消えて欲しいので一段階ラップ
+    const onEphemeralNavigationChange = (type: EphemeralNavigationItemType) => {
+      if (ephemeralNavigationSelectorState.currentNavigation === type) {
+        _onEphemeralNavigationChange(undefined)
+      } else {
+        _onEphemeralNavigationChange(type)
+      }
+    }
+
+    const onEphemeralEntryRemove = (
+      entry: EphemeralNavigationSelectorEntry
+    ) => {
+      if (entry.type === ephemeralNavigationSelectorState.currentNavigation) {
+        _onEphemeralNavigationChange(undefined)
+      }
+    }
+
     return {
-      ...toRefs(navigationSelectorState),
+      navigationSelectorState,
+      ephemeralNavigationSelectorState,
       onNavigationChange,
+      onEphemeralNavigationChange,
+      onEphemeralEntryRemove,
       navigationStyle,
       targetPortalName
     }
@@ -55,5 +108,13 @@ $selectorWidth: 64px;
   width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
+}
+.navigations {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.navigation {
+  width: 100%;
 }
 </style>
