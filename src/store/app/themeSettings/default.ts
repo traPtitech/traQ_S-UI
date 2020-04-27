@@ -26,21 +26,21 @@ export const lightTheme: Theme = {
 
 export const darkTheme: Theme = {
   accent: {
-    primary: '#005BAC',
+    primary: '#60A7DC',
     notification: '#F2994A',
     online: '#28F0E4',
     error: '#F26451'
   },
   background: {
-    primary: '#222426',
-    secondary: '#2D2F31',
-    tertiary: '#56636E',
-    secondarySub: '#3C4246'
+    primary: '#252B32',
+    secondary: '#22282F',
+    tertiary: '#1E262E',
+    secondarySub: '#2A3038'
   },
   ui: {
-    primary: '#CACFD3',
-    secondary: '#758087',
-    tertiary: '#59656F'
+    primary: '#D7E0E7',
+    secondary: '#7E8D99',
+    tertiary: '#53636F'
   },
   text: {
     primary: '#FFFFFF',
