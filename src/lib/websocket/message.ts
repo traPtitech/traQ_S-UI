@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import apis from '@/lib/apis'
 import store from '@/store'
 import {
@@ -38,7 +37,7 @@ export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
 }
 
 export const onMessageRead = (data: MessageReadEvent['body']) => {
-  console.error('onMessageRead: Not implemented')
+  // TODO
 }
 
 export const onMessageStamped = (data: MessageStampedEvent['body']) => {

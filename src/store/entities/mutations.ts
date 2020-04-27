@@ -68,6 +68,7 @@ export const mutations = defineMutations<S>()({
   extendWebhooks: extendMutation('webhooks'),
   extendFileMetaData: extendMutation('fileMetaData'),
   extendUserTags: extendMutation('tags'),
+  extendClipFolder: extendMutation('clipFolders'),
 
   addUser: addMutation('users'),
   addMessage: addMutation('messages'),
@@ -89,6 +90,7 @@ export const mutations = defineMutations<S>()({
   deleteWebhook: deleteMutation('webhooks'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
   deleteTag: deleteMutation('tags'),
+  deleteClipFolder: deleteMutation('clipFolders'),
 
   onMessageStamped(state, e: MessageStampedEvent['body']) {
     const message = state.messages[e.message_id]
