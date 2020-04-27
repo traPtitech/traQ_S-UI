@@ -1,17 +1,55 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <!-- TODO: Markdownパース対応 -->
-    <!-- {{ content }} -->
     <div :class="['markdown-body', $style.content]" v-html="state.content" />
-    <!-- <div :class="$style.content" v-html="state.content" /> -->
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { render } from '@/lib/markdown'
+
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
+import store from '@/store'
+import useChannelPath from '@/use/channelPath'
+
+const useRenderContent = (props: { content: string }) => {
+  const { channelIdToPathString } = useChannelPath()
+  const storeProvider: Store = {
+    getUser(id) {
+      return store.state.entities.users[id]
+    },
+    getChannel(id) {
+      return store.state.entities.channels[id]
+    },
+    getChannelPath(id) {
+      return channelIdToPathString(id)
+    },
+    getUserGroup(id) {
+      return store.state.entities.userGroups[id]
+    },
+    getMe() {
+      return store.state.entities.users[store.state.domain.me.detail?.id ?? '']
+    },
+    getStampByName(name) {
+      return store.getters.entities.stampByName(name)
+    },
+    getUserByName(name) {
+      return store.getters.entities.userByName(name)
+    }
+  }
+  const md = new MarkdownIt(storeProvider)
+
+  const state = reactive({
+    content: computed(() => {
+      const extracted = embeddingExtractor(props.content)
+      const renderedContent = md.renderInline(extracted.text)
+      return renderedContent
+    })
+  })
+
+  return state
+}
 
 export default defineComponent({
   name: 'ActivityElementContent',
@@ -21,19 +59,15 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
+  setup(props) {
     const styles = reactive({
       container: makeStyles(theme => ({
         color: theme.ui.primary
       }))
     })
-    const state = reactive({
-      content: computed(() => {
-        const extracted = embeddingExtractor(props.content)
-        const renderedContent = render(extracted.text)
-        return renderedContent
-      })
-    })
+
+    const state = useRenderContent(props)
+
     return {
       styles,
       state
@@ -49,26 +83,9 @@ export default defineComponent({
   width: 100%;
 }
 .content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  max-height: 120px;
-  a {
-    pointer-events: none;
-    color: currentColor;
-  }
-  pre {
-    background-color: initial;
-    padding: 0;
-    overflow: initial;
-  }
-  code {
-    background-color: initial;
-    padding: 0;
-    font-size: initial;
-  }
-  span {
-    color: currentColor;
-    word-break: break-all;
-    white-space: pre-wrap;
-  }
 }
 </style>
