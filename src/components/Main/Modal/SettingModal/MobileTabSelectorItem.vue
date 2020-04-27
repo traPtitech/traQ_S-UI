@@ -22,16 +22,16 @@ import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { isSelected: boolean }, size: number) =>
+const useStyles = (size: number) =>
   reactive({
     item: makeStyles(theme => ({
-      color: props.isSelected ? theme.ui.primary : theme.ui.secondary,
-      background: props.isSelected ? theme.ui.tertiary : 'transparent'
+      color: theme.ui.primary,
+      background: theme.ui.tertiary
     }))
   })
 
 export default defineComponent({
-  name: 'NavigationSelectorItem',
+  name: 'MobileTabSelectorItem',
   components: { Icon },
   props: {
     type: {
@@ -42,15 +42,11 @@ export default defineComponent({
       type: String,
       required: true
     },
-    iconMdi: Boolean,
-    isSelected: {
-      type: Boolean,
-      required: true
-    }
+    iconMdi: Boolean
   },
   setup(props, context) {
     const size = 24
-    const styles = useStyles(props, size)
+    const styles = useStyles(size)
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
       styles,

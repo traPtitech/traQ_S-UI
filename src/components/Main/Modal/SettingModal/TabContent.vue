@@ -1,9 +1,5 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
-    <navigation-content-title
-      :current-navigation="currentNavigation"
-      :class="$style.title"
-    />
+  <div>
     <profile-tab v-if="currentNavigation === 'profile'" />
     <browser-tab v-else-if="currentNavigation === 'browser'" />
     <qall-tab v-else-if="currentNavigation === 'qall'" />
@@ -19,7 +15,7 @@
       </a>
       をご覧ください。
     </section>
-  </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -27,7 +23,6 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { isSafari, isIOSApp, isPWA } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
-import NavigationContentTitle from './NavigationContentTitle.vue'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import BrowserTab from './BrowserTab/BrowserTab.vue'
 import QallTab from './QallTab/QallTab.vue'
@@ -43,9 +38,8 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'NavigationContent',
+  name: 'TabContent',
   components: {
-    NavigationContentTitle,
     ProfileTab,
     BrowserTab,
     QallTab,

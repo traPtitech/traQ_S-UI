@@ -10,7 +10,7 @@ import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
-  name: 'NavigationContentTitle',
+  name: 'TabContentTitle',
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
