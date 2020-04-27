@@ -3,11 +3,12 @@
     <user-icon :class="$style.icon" :user-id="userId" :size="28" />
     <div :class="$style.slider">
       <slider
-        :value="100"
+        :value="volume ? volume : 0"
+        @change="onChange"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
-        :disabled="disabled"
+        :disabled="disabled || volume === undefined"
         :tooltip="disabled ? 'none' : 'active'"
       />
     </div>
@@ -15,10 +16,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import Slider from '@/components/UI/Slider.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '@/types/entity-ids'
+import store from '@/store'
+
+const maxVolumeValue = 200
 
 export default defineComponent({
   name: 'QallDetailsPanelUserVolumeSlider',
@@ -30,8 +34,20 @@ export default defineComponent({
     userId: { type: String as PropType<UserId>, required: true },
     disabled: { type: Boolean, default: false }
   },
-  setup() {
-    return {}
+  setup(props) {
+    const volume = computed(
+      () => store.state.app.rtc.userVolumeMap[props.userId] * maxVolumeValue
+    )
+    const onChange = (value: number) => {
+      store.commit.app.rtc.setUserVolume({
+        userId: props.userId,
+        volume: value / maxVolumeValue
+      })
+    }
+    return {
+      volume,
+      onChange
+    }
   }
 })
 </script>

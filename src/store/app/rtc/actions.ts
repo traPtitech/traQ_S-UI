@@ -5,7 +5,7 @@ import apis from '@/lib/apis'
 import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer, { maxGain } from '@/lib/audioStreamMixer'
+import AudioStreamMixer from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
@@ -218,7 +218,7 @@ export const actions = defineActions({
         await new Promise(resolve => setTimeout(resolve, 1000))
         await state.mixer.addStream(stream.peerId, stream)
       }
-      commit.setUserVolume({ userId, volume: 1 / maxGain })
+      commit.setUserVolume({ userId, volume: 0.5 })
     })
 
     const localStream = await getUserAudio(

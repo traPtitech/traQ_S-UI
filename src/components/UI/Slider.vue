@@ -1,7 +1,7 @@
 <template>
   <vue-slider
     :value="value"
-    @input="onInput"
+    @change="onChange"
     :min="min"
     :max="max"
     :disabled="disabled"
@@ -74,10 +74,10 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles()
-    const onInput = (val: number | string) => {
-      context.emit('input', val)
+    const onChange = (val: number | string) => {
+      context.emit('change', val)
     }
-    return { styles, onInput }
+    return { styles, onChange }
   }
 })
 </script>
