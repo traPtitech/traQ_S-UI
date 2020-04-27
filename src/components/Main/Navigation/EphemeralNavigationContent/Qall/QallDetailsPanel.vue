@@ -5,6 +5,7 @@
       :class="$style.slider"
       :key="me"
       :user-id="me"
+      :mic-muted="me in mutedUsersMap"
       disabled
     />
     <qall-details-panel-user-volume-slider
@@ -12,6 +13,7 @@
       :class="$style.slider"
       :key="id"
       :user-id="id"
+      :mic-muted="id in mutedUsersMap"
     />
   </div>
 </template>
@@ -28,19 +30,30 @@ export default defineComponent({
     QallDetailsPanelUserVolumeSlider
   },
   setup() {
+    const currentSession = computed(() => store.getters.app.rtc.qallSession)
     const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() => {
-      const currentSession = store.getters.app.rtc.qallSession
-      if (!currentSession) {
+      if (!currentSession.value) {
         return []
       }
       return (
-        store.state.app.rtc.sessionUsersMap[currentSession.sessionId]?.filter(
-          id => id !== me.value
-        ) ?? []
+        store.state.app.rtc.sessionUsersMap[
+          currentSession.value.sessionId
+        ]?.filter(id => id !== me.value) ?? []
       )
     })
-    return { users, me }
+    const mutedUsersMap = computed(() =>
+      Object.fromEntries(
+        Object.entries(store.state.app.rtc.userStateMap).filter(([_, state]) =>
+          state?.sessionStates.find(
+            s =>
+              s.sessionId === currentSession.value?.sessionId &&
+              s.states.includes('micmuted')
+          )
+        )
+      )
+    )
+    return { users, me, mutedUsersMap }
   }
 })
 </script>
