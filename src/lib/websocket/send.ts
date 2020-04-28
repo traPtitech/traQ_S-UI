@@ -7,12 +7,12 @@ type WebSocketCommand = 'viewstate' | 'rtcstate'
 const sendWebSocket = async (
   ...command: readonly [WebSocketCommand, ...string[]]
 ): Promise<void> => {
-  await wsConnectionPromise
   if (ws === undefined) {
     throw new Error('WebSocket is not connected')
   }
+  await wsConnectionPromise
   if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
-    throw 'WebSocket is already in CLOSING or CLOSED state.'
+    throw new Error('WebSocket is already in CLOSING or CLOSED state.')
   }
   ws.send(command.join(':'))
 }
@@ -29,7 +29,7 @@ export const changeViewState: ChangeViewStateFunction = (
   viewState?: ChannelViewState
 ): Promise<void> => {
   if (channelId === null) {
-    return sendWebSocket(VIEWSTATE_COMMAND, 'null')
+    return sendWebSocket(VIEWSTATE_COMMAND, '')
   } else {
     return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
