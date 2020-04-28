@@ -49,6 +49,7 @@ import {
   mdiLockOpenOutline,
   mdiCheck,
   mdiTuneVertical,
+  mdiStar,
   mdiInformationOutline
 } from '@mdi/js'
 
@@ -107,6 +108,7 @@ const mdi: MdiIconsMapping = {
   'lock-open': mdiLockOpenOutline,
   check: mdiCheck,
   tune: mdiTuneVertical,
+  star: mdiStar,
   info: mdiInformationOutline
 }
 
