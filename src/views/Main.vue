@@ -120,9 +120,13 @@ export default defineComponent({
 
     const { routeWatcherState } = useRouteWatcher(context)
 
-    setupWebSocket()
-    connectFirebase()
-    useInitialFetch(context)
+    useInitialFetch(context).then(
+      () => {
+        setupWebSocket()
+        connectFirebase()
+      },
+      () => {}
+    )
 
     const styles = useStyles(mainViewPosition, sidebarPosition)
 
