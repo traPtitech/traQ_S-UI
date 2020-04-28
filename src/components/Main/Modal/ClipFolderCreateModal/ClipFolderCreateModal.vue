@@ -2,7 +2,7 @@
   <modal-frame
     title="クリップフォルダ作成"
     subtitle="メッセージを保存するフォルダを作成します"
-    icon-name="hash"
+    icon-name="bookmark"
     :class="$style.container"
   >
     <form-input label="名前" :class="$style.input" v-model="name" />
@@ -27,7 +27,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 const useCreateClipFolder = () => {
   const createClipFolder = async (name: string, description: string) => {
     try {
-      const channel = await apis.createClipFolder({ name, description })
+      await apis.createClipFolder({ name, description })
       store.dispatch.ui.modal.clearModal()
     } catch {
       // TODO: エラー処理
