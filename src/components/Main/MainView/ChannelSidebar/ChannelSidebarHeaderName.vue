@@ -30,7 +30,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.23rem;
+$headerSize: 1.25rem;
 
 .container {
   height: 100%;
