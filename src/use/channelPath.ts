@@ -55,11 +55,9 @@ const useChannelPath = () => {
     hashed = false
   ): string => {
     const channels = channelIdToPath(id)
-    let last = channels.pop() ?? ''
-    for (let v of channels) {
-      last = v[0] + '/' + last
-    }
-    return (hashed ? '#' : '') + last
+    const formattedChannels = channels.slice(0, -1).map(c => c[0])
+    formattedChannels.push(channels.pop() ?? '')
+    return (hashed ? '#' : '') + formattedChannels.join('/')
   }
 
   return {
