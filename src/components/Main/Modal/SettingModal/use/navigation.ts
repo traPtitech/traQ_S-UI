@@ -27,8 +27,7 @@ export const navigations: {
 }[] = [
   {
     type: 'profile',
-    iconName: 'account', //'user'
-    iconMdi: true
+    iconName: 'user'
   },
   {
     type: 'browser',

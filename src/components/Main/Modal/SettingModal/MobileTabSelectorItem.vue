@@ -17,7 +17,7 @@ import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (size: number) =>
+const useStyles = () =>
   reactive({
     item: makeStyles(theme => ({
       color: theme.ui.secondary,
@@ -42,7 +42,7 @@ export default defineComponent({
   },
   setup(props) {
     const size = 24
-    const styles = useStyles(size)
+    const styles = useStyles()
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
       styles,

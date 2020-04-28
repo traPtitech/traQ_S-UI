@@ -6,15 +6,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent } from '@vue/composition-api'
+import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from './DesktopSettingModal.vue'
 import MobileSettingModal from './MobileSettingModal.vue'
 
 export default defineComponent({
   name: 'SettingModal',
   setup() {
-    const isMobile = computed(() => store.getters.ui.isMobile)
+    const { isMobile } = useIsMobile()
     return { isMobile }
   },
   components: {
