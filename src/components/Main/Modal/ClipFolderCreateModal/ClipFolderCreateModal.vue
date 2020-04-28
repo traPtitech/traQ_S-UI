@@ -3,6 +3,7 @@
     title="クリップフォルダ作成"
     subtitle="メッセージを保存するフォルダを作成します"
     icon-name="bookmark"
+    icon-mdi
     :class="$style.container"
   >
     <form-input label="名前" :class="$style.input" v-model="name" />
