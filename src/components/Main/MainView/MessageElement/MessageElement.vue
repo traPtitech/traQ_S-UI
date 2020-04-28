@@ -10,7 +10,7 @@
   >
     <message-pinned
       :message-id="messageId"
-      :v-if="state.message.pinned"
+      v-if="state.message.pinned"
       :class="$style.pinned"
     />
     <user-icon
