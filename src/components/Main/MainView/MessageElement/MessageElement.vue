@@ -91,7 +91,7 @@ import MessagePinned from './MessagePinned.vue'
 const useStyles = (
   props: { isEntryMessage: boolean },
   hoverState: { hover: boolean },
-  state: { message: Message | undefined; stampDetailFoldingState: boolean }
+  state: { message?: Message; stampDetailFoldingState: boolean }
 ) =>
   reactive({
     body: makeStyles((theme, common) => ({
