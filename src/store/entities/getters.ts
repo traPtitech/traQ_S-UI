@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
-import { User, Stamp, UserGroup, DMChannel } from '@traptitech/traq'
+import { User, Stamp, UserGroup } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 
 const entitiesGetterContext = (args: [any, any, any, any]) =>
