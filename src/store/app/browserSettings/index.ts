@@ -24,6 +24,10 @@ export interface SendKeys {
   macCtrl: boolean
 }
 export type OpenMode = 'lastOpen' | 'particular'
+export interface ActivityMode {
+  all: boolean
+  perChannel: boolean
+}
 
 export const browserSettings = defineDBModule({
   path: 'app.browserSettings',

@@ -14,6 +14,9 @@ import {
 export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
+
+  store.commit.domain.addActivity(res.data)
+
   if (res.data.channelId === store.state.domain.messagesView.currentChannelId) {
     await store.dispatch.domain.messagesView.addAndRenderMessage({
       message: res.data
