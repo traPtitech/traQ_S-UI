@@ -1,7 +1,18 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <channel-sidebar-header-name :channel-name="state.channelName" />
-    <close-button @click="onClick" :size="28" />
+  <div :class="$style.container">
+    <icon
+      v-if="showBackButton"
+      :height="28"
+      :width="28"
+      mdi
+      name="chevron-left"
+      @click="$emit('back')"
+      :class="$style.backButton"
+    />
+    <channel-sidebar-header-name
+      :channel-name="state.channelName"
+      :show-hash="state.showHash"
+    />
   </div>
 </template>
 
@@ -15,8 +26,8 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
+import Icon from '@/components/UI/Icon.vue'
 import ChannelSidebarHeaderName from './ChannelSidebarHeaderName.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({
@@ -27,19 +38,23 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSidebarHeader',
-  props: { channelId: { type: String as PropType<ChannelId>, required: true } },
-  components: { ChannelSidebarHeaderName, CloseButton },
+  props: {
+    channelId: { type: String as PropType<ChannelId>, required: false },
+    title: { type: String, default: 'チャンネル' },
+    showBackButton: { type: Boolean, default: false }
+  },
+  components: { ChannelSidebarHeaderName, Icon },
   setup(props, context) {
     const state = reactive({
       channelName: computed(
-        () => store.state.entities.channels[props.channelId]?.name
-      )
+        () =>
+          store.state.entities.channels[props.channelId ?? '']?.name ??
+          props.title
+      ),
+      showHash: computed(() => !!props.channelId)
     })
-    const onClick = () => {
-      context.emit('close')
-    }
     const styles = useStyles()
-    return { state, styles, onClick }
+    return { state, styles }
   }
 })
 </script>
@@ -47,9 +62,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
-  justify-content: space-between;
-  width: 256px;
-  align-items: center;
+}
+.backButton {
   flex-shrink: 0;
+  margin-right: 8px;
+  cursor: pointer;
 }
 </style>

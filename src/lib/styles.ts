@@ -20,7 +20,8 @@ export const commonStyles = {
   },
   ui: {
     qall: '#00ACA2' as const,
-    muted: '#F26451' as const
+    muted: '#F26451' as const,
+    pin: '#f2ba4a' as const
   },
   background: {
     overlay: 'rgba(25, 26, 29, 0.5)' as const,

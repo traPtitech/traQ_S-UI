@@ -12,8 +12,7 @@ import {
 } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
-interface GetMessagesParams {
-  channelId: string
+interface BaseGetMessagesParams {
   limit?: number
   offset?: number
   since?: Date
@@ -21,6 +20,9 @@ interface GetMessagesParams {
   inclusive?: boolean
   order?: 'asc' | 'desc'
   options?: any
+}
+interface GetMessagesParams extends BaseGetMessagesParams {
+  channelId: string
 }
 
 interface GetFilesChannelParams {
@@ -42,6 +44,10 @@ interface GetClipsParam {
   order?: 'asc' | 'desc'
 }
 
+interface GetDirectMessagesParams extends BaseGetMessagesParams {
+  userId: string
+}
+
 export const entitiesActionContext = (context: any) =>
   moduleActionContext(context, entities)
 
@@ -58,11 +64,8 @@ export const actions = defineActions({
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getChannels(true)
-    // TODO: DM対応
-    if (res.data.public) {
-      commit.setChannels(reduceToRecord(res.data.public, 'id'))
-    }
+    const res = await apis.getChannels(false)
+    commit.setChannels(reduceToRecord(res.data.public, 'id'))
   },
   async fetchUserGroups(context) {
     const { commit } = entitiesActionContext(context)

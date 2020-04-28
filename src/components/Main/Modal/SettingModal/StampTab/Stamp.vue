@@ -16,36 +16,30 @@
         v-if="hoverState.hover"
       />
     </div>
-    <template v-else>
-      <div :class="$style.selected">
-        <div :class="$style.forms">
-          <form-input
-            label="スタンプ名"
-            prefix=":"
-            suffix=":"
-            v-model="nameState.newName"
-            :class="$style.form"
-          />
-          <form-input
-            label="所有者"
-            prefix="@"
-            v-model="creatorState.newName"
-            :class="$style.form"
-          />
-          <image-upload
-            :class="$style.imageUpload"
-            @input="onNewImgSet"
-            :destroy-flag="imageUploadState.destroyFlag"
-            @destroyed="onNewDestroyed"
-          />
-        </div>
-        <form-button
-          label="変更"
-          :disabled="!stampChanged"
-          @click="editStamp"
+    <div v-else :class="$style.selected">
+      <div :class="$style.forms">
+        <form-input
+          label="スタンプ名"
+          prefix=":"
+          suffix=":"
+          v-model="nameState.newName"
+          :class="$style.form"
+        />
+        <form-input
+          label="所有者"
+          prefix="@"
+          v-model="creatorState.newName"
+          :class="$style.form"
+        />
+        <image-upload
+          :class="$style.imageUpload"
+          @input="onNewImgSet"
+          :destroy-flag="imageUploadState.destroyFlag"
+          @destroyed="onNewDestroyed"
         />
       </div>
-    </template>
+      <form-button label="変更" :disabled="!stampChanged" @click="editStamp" />
+    </div>
   </div>
 </template>
 
@@ -231,6 +225,7 @@ export default defineComponent({
 }
 .forms {
   display: flex;
+  flex-flow: row wrap;
   align-items: flex-end;
 }
 .form {
