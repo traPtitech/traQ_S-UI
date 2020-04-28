@@ -2,7 +2,7 @@
   <div :class="$style.container" :style="containerStyle">
     {{ name }}
     <div :class="$style.line"></div>
-    <icon name="rounded-triangle" :class="$style.icon" :style="iconStyle" />
+    <icon name="rounded-triangle" :class="$style.icon" :style="iconStyle" size="20" />
   </div>
 </template>
 
@@ -54,5 +54,6 @@ export default defineComponent({
 }
 .icon {
   transition: transform 0.1s cubic-bezier(1, 0, 0, 1);
+  flex-shrink: 0;
 }
 </style>

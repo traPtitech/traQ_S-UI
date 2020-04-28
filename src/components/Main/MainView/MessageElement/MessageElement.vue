@@ -39,7 +39,7 @@
       <div :class="$style.stampWrapper">
         <icon
           name="rounded-triangle"
-          :size="24"
+          :size="16"
           v-if="state.message.stamps.length > 0"
           :class="$style.toggleButton"
           :style="styles.toggleButton"
@@ -216,6 +216,7 @@ $messagePaddingMobile: 16px;
 .toggleButton {
   position: absolute;
   left: -28px;
+  top: 4px;
 }
 
 .messageEmbeddingsList {
