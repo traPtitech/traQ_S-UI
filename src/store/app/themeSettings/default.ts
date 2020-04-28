@@ -26,7 +26,7 @@ export const lightTheme: Theme = {
 
 export const darkTheme: Theme = {
   accent: {
-    primary: '#60A7DC',
+    primary: '#4899F9',
     notification: '#F2994A',
     online: '#28F0E4',
     error: '#F26451'

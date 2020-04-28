@@ -134,4 +134,7 @@ export default defineComponent({
   top: 1px;
   right: 1px;
 }
+.icon {
+  margin-left: 0.5px;
+}
 </style>

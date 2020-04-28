@@ -19,6 +19,7 @@ type ModalStateType =
   | 'channel-create'
   | 'qrcode'
   | 'clip-create'
+  | 'clip-folder-create'
 
 export type ModalState =
   | UserModalState
@@ -30,6 +31,7 @@ export type ModalState =
   | ChannelCreateModalState
   | QrCodeModalState
   | ClipCreateModalState
+  | ClipFolderCreateModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -87,6 +89,10 @@ interface QrCodeModalState extends BaseModalState {
 interface ClipCreateModalState extends BaseModalState {
   type: 'clip-create'
   messageId: MessageId
+}
+
+interface ClipFolderCreateModalState extends BaseModalState {
+  type: 'clip-folder-create'
 }
 
 export interface S {
