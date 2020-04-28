@@ -2,9 +2,10 @@
   <div :class="$style.container" :style="styles.container">
     <textarea-autosize
       v-if="isEditing"
+      v-model="internalValue"
       :class="$style.editor"
       :style="styles.textarea"
-      v-model="internalValue"
+      :maxlength="maxlength"
     />
     <div v-else :class="$style.content" :data-is-empty="isEmpty">
       {{ content }}
@@ -42,7 +43,8 @@ export default defineComponent({
   props: {
     value: { type: String, required: false },
     isEditing: { type: Boolean, default: false },
-    fallbackValue: { type: String, default: '未設定' }
+    fallbackValue: { type: String, default: '未設定' },
+    maxlength: { type: Number, required: false }
   },
   setup(props, context) {
     const styles = useStyles(props)
