@@ -24,7 +24,6 @@ import useInput from '@/use/input'
 
 const useStyles = (props: { isStared: Boolean }) =>
   reactive({
-    // container: makeStyles(theme => ({})),
     star: makeStyles((theme, isStared) => ({
       color: props.isStared ? theme.accent.primary : theme.ui.secondary,
       backgroundColor: theme.background.primary
