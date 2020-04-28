@@ -1,7 +1,6 @@
 <template>
   <main-view-sidebar :style="styles.container" :class="$style.container">
     <template #header>
-      <!--TODO: ヘッダのコンポーネント分離-->
       <channel-sidebar-header
         v-if="!state.pinnedMode"
         :channel-id="channelId"
@@ -32,16 +31,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import useSidebar from '@/use/sidebar'
+import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
@@ -66,21 +59,14 @@ export default defineComponent({
   props: {
     channelId: { type: String as PropType<ChannelId>, requried: true }
   },
-  setup() {
-    const state = reactive({
-      pinnedMode: false,
-      pinnedMessage: computed(
-        () => store.state.domain.messagesView.pinnedMessages
-      )
-    })
+  setup(props) {
     const styles = useStyles()
-    const viewerIds = computed(
-      () => store.getters.domain.messagesView.viewingUsers
-    )
-    const togglePinnedMode = () => {
-      state.pinnedMode = !state.pinnedMode
-    }
-    const { closeSidebar } = useSidebar()
+    const {
+      state,
+      viewerIds,
+      togglePinnedMode,
+      closeSidebar
+    } = useChannelSidebarCommon()
 
     return {
       state,
