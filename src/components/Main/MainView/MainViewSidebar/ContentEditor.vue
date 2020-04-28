@@ -76,6 +76,7 @@ export default defineComponent({
 }
 .content {
   width: 100%;
+  white-space: pre-line;
   &[data-is-empty] {
     opacity: 0.5;
   }
