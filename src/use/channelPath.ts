@@ -1,6 +1,7 @@
 import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
+import { dmParentUuid } from '@/lib/util/uuid'
 
 type SimpleChannel = {
   id: ChannelId
@@ -35,7 +36,7 @@ const useChannelPath = () => {
       throw `channelIdToPath: No channel: ${id}`
     }
     const channel = store.state.entities.channels[id]
-    if (!channel.parentId) {
+    if (!channel.parentId || channel.parentId === dmParentUuid) {
       return [{ id, name: channel.name }]
     }
     return [
