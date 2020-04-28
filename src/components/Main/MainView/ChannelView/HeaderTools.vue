@@ -6,6 +6,7 @@
       :icon-name="qallIconName"
       :style="styles.qallIcon"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
+      v-if="isQallEnabled"
     />
     <header-tools-item
       @click="context.emit('click-pin')"
@@ -62,7 +63,7 @@ import {
 
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import HeaderToolsItem from './HeaderToolsItem.vue'
-
+import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 
 export const targetPortalName = 'header-popup'
@@ -97,6 +98,8 @@ export default defineComponent({
       currentChannelSubscription
     } = useChannelSubscriptionState()
 
+    const isQallEnabled = computed(() => store.state.app.rtcSettings.isEnabled)
+
     const styles = useStyles(props)
     const qallIconName = computed(() =>
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
@@ -108,7 +111,8 @@ export default defineComponent({
       context,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
-      targetPortalName
+      targetPortalName,
+      isQallEnabled
     }
   }
 })

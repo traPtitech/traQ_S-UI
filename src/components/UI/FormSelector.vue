@@ -63,5 +63,6 @@ export default defineComponent({
   margin: 0 8px;
   width: 100%;
   color: inherit;
+  background: inherit;
 }
 </style>

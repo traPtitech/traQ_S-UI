@@ -1,22 +1,16 @@
 <template>
-  <icon
-    :size="24"
-    mdi
-    name="chevron-left"
-    @click="onClickPop"
-    :class="$style.button"
-  />
+  <return-button @click="onClickPop" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
-import Icon from '@/components/UI/Icon.vue'
+import ReturnButton from '@/components/UI/ReturnButton.vue'
 
 export default defineComponent({
   name: 'ModalReturnButton',
   components: {
-    Icon
+    ReturnButton
   },
   setup() {
     const onClickPop = () => {
@@ -31,8 +25,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.button {
-  cursor: pointer;
-}
-</style>
+<style lang="scss" module></style>
