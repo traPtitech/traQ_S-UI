@@ -58,10 +58,13 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 const useChannels = (state: { isStar: boolean }) =>
   computed(() =>
     state.isStar
-      ? Object.keys(store.state.domain.me.staredChannelSet)
-          .map(v => buildDescendantsChannelArray(v))
-          .flat()
-          .filter((x, i, self) => self.indexOf(x) === i)
+      ? [
+          ...new Set(
+            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
+              buildDescendantsChannelArray(v)
+            )
+          )
+        ]
       : Object.values(store.state.entities.channels)
   )
 
