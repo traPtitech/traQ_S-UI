@@ -63,6 +63,18 @@ module.exports = {
           src: '/img/icons/android-chrome-512x512.png',
           sizes: '512x512',
           type: 'image/png'
+        },
+        {
+          src: '/img/icons/android-chrome-192x192-maskable.png',
+          sizes: '192x192',
+          type: 'image/png',
+          purpose: 'maskable'
+        },
+        {
+          src: '/img/icons/android-chrome-512x512-maskable.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable'
         }
       ],
       gcm_sender_id: '103953800507'
