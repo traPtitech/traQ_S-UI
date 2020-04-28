@@ -65,10 +65,8 @@ export const actions = defineActions({
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
     const res = await apis.getChannels(true)
-    // TODO: DM対応
-    if (res.data.public) {
-      commit.setChannels(reduceToRecord(res.data.public, 'id'))
-    }
+    commit.setChannels(reduceToRecord(res.data.public, 'id'))
+    commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
   },
   async fetchUserGroups(context) {
     const { commit } = entitiesActionContext(context)
