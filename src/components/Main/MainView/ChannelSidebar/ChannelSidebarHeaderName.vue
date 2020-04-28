@@ -1,7 +1,7 @@
 <template>
   <h2 :class="$style.container" :style="styles.container">
-    <span :class="$style.channelHash">#</span>
-    <span :class="$style.channel">{{ channelName }}</span>
+    <span v-if="showHash" :class="$style.channelHash">#</span>
+    <span>{{ channelName }}</span>
   </h2>
 </template>
 
@@ -19,7 +19,8 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSidebarHeaderName',
   props: {
-    channelName: { type: String, required: true }
+    channelName: { type: String, required: true },
+    showHash: { type: Boolean, default: false }
   },
   setup() {
     const styles = useStyles()
@@ -29,7 +30,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.23rem;
+$headerSize: 1.25rem;
 
 .container {
   height: 100%;

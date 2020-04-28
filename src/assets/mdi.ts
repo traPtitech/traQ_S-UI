@@ -38,6 +38,7 @@ import {
   mdiToggleSwitch,
   mdiChevronDoubleLeft,
   mdiChevronLeft,
+  mdiChevronRight,
   mdiBookmark,
   mdiBookmarkMultiple,
   mdiBookmarkCheck,
@@ -47,7 +48,8 @@ import {
   mdiLock,
   mdiLockOpenOutline,
   mdiCheck,
-  mdiTuneVertical
+  mdiTuneVertical,
+  mdiInformationOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -94,6 +96,7 @@ const mdi: MdiIconsMapping = {
   'toggle-switch-on': mdiToggleSwitch,
   'chevron-double': mdiChevronDoubleLeft,
   'chevron-left': mdiChevronLeft,
+  'chevron-right': mdiChevronRight,
   bookmark: mdiBookmark,
   'bookmark-multiple': mdiBookmarkMultiple,
   'bookmark-check': mdiBookmarkCheck,
@@ -103,7 +106,8 @@ const mdi: MdiIconsMapping = {
   lock: mdiLock,
   'lock-open': mdiLockOpenOutline,
   check: mdiCheck,
-  tune: mdiTuneVertical
+  tune: mdiTuneVertical,
+  info: mdiInformationOutline
 }
 
 export default mdi

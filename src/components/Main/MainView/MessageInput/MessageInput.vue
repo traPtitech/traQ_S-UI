@@ -102,7 +102,11 @@ export default defineComponent({
     } = useTextInput()
     const { attachmentsState, addAttachment } = useAttachments()
     const { isFocused, onFocus, onBlur } = useFocus()
-    useEditingStatus(props.channelId, textState, isFocused)
+    useEditingStatus(
+      computed(() => props.channelId),
+      textState,
+      isFocused
+    )
 
     const postMessage = usePostMessage(
       textState,
@@ -174,7 +178,6 @@ export default defineComponent({
 $inputPadding: 32px;
 $inputPaddingMobile: 16px;
 $radius: 4px;
-
 .container {
   position: relative;
   display: flex;
@@ -187,12 +190,14 @@ $radius: 4px;
     right: $inputPadding;
     bottom: 24px - $radius;
   }
+
   &[data-is-mobile='true'] {
     margin: {
       left: $inputPaddingMobile;
       right: $inputPaddingMobile;
     }
   }
+
   border-radius: $radius;
   transform: translateY(-$radius);
 }
@@ -219,12 +224,12 @@ $radius: 4px;
     grow: 0;
     shrink: 0;
   }
-
   margin: 0 16px;
 
   &:first-child {
     margin-left: 0;
   }
+
   &:last-child {
     margin-right: 0;
   }

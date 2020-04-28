@@ -25,7 +25,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
-import HeaderToolsMenuItem from './HeaderToolsMenuItem.vue'
+import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPpopupMenuItem.vue'
 
 const useStyles = () =>
   reactive({
