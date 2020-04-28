@@ -5,7 +5,7 @@
     @click="onChannelSelect(state.channelId)"
   >
     <div :class="$style.name" :style="styles.name">
-      {{ state.channelName }}
+      {{ ancestorsPath + state.channelName }}
     </div>
     <div :class="$style.separator" :style="styles.separator"></div>
     <activity-element-user-name :user="state.user" :class="$style.user" />
@@ -26,6 +26,7 @@ import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
+import useChannelPath from '../../../../use/channelPath'
 
 const useStyles = () =>
   reactive({
@@ -62,6 +63,9 @@ export default defineComponent({
       channelId: computed(() => props.message.channelId ?? ''),
       user: computed(
         () => store.state.entities.users[props.message.userId ?? '']
+      ),
+      simpleChannelPaths: computed(() =>
+        useChannelPath().channelIdToSimpleChannelPath(props.message.channelId)
       )
     })
     if (state.user === undefined) {
@@ -69,10 +73,20 @@ export default defineComponent({
     }
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
+
+    const ancestorsPath = computed(() => {
+      var path = ''
+      for (var i = 0; i < state.simpleChannelPaths.length - 1; i++) {
+        path += state.simpleChannelPaths[i].name[0] + '/'
+      }
+      return path
+    })
+
     return {
       state,
       styles,
-      onChannelSelect
+      onChannelSelect,
+      ancestorsPath
     }
   }
 })
