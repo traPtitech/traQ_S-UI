@@ -13,7 +13,7 @@
         :key="channel.id"
       >
         <channel-filtered-element
-          :name="channel.name"
+          :name="channelIdToShortPathString(channel.id)"
           :topic="channel.topic"
           :id="channel.id"
           :is-current="currentChannelId == channel.id"
@@ -125,6 +125,7 @@ export default defineComponent({
       () => store.state.domain.messagesView.currentChannelId
     )
     const { tree } = useStaredChannel()
+    const { channelIdToShortPathString } = useChannelPath()
 
     return {
       topLevelChannels,
@@ -133,7 +134,8 @@ export default defineComponent({
       currentChannelId,
       tree,
       toggleStar,
-      state
+      state,
+      channelIdToShortPathString
     }
   }
 })
