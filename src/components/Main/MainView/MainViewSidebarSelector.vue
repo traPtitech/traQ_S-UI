@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
-import store from '@/store'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelSidebar from '@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue'
 import ClipsSidebar from '@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue'
@@ -26,13 +25,7 @@ export default defineComponent({
     viewInfo: { type: Object as PropType<ViewInformation>, required: true }
   },
   setup(props) {
-    const channelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-
-    return {
-      channelId
-    }
+    return {}
   }
 })
 </script>
