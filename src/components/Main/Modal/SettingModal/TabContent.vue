@@ -5,29 +5,20 @@
     <qall-tab v-else-if="currentNavigation === 'qall'" />
     <stamp-tab v-else-if="currentNavigation === 'stamp'" />
     <theme-tab v-else-if="currentNavigation === 'theme'" />
-    <section v-if="showSafariWarning">
-      Safariを利用していてかつ、アプリまたはPWAをインストールをしていない場合は、
-      7日間の使用がなかった際にここの設定情報が消えることがあります。 詳細は
-      <a
-        href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
-      >
-        Webkitの公式ブログの記事
-      </a>
-      をご覧ください。
-    </section>
+    <safari-warning v-if="mayShowSafariWarning" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { isSafari, isIOSApp, isPWA } from '@/lib/util/browser'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import BrowserTab from './BrowserTab/BrowserTab.vue'
 import QallTab from './QallTab/QallTab.vue'
 import StampTab from './StampTab/StampTab.vue'
 import ThemeTab from './ThemeTab/ThemeTab.vue'
+import SafariWarning from './SafariWarning.vue'
 
 const useStyles = () =>
   reactive({
@@ -44,20 +35,23 @@ export default defineComponent({
     BrowserTab,
     QallTab,
     StampTab,
-    ThemeTab
+    ThemeTab,
+    SafariWarning
   },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
       default: 'profile' as const
+    },
+    mayShowSafariWarning: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
     const styles = useStyles()
 
-    const showSafariWarning = isSafari() && !isIOSApp() && !isPWA()
-
-    return { styles, showSafariWarning }
+    return { styles }
   }
 })
 </script>
@@ -71,9 +65,5 @@ export default defineComponent({
     x: hidden;
     y: auto;
   }
-}
-
-.title {
-  margin-bottom: 40px;
 }
 </style>

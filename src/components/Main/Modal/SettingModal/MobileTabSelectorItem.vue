@@ -1,13 +1,8 @@
 <template>
   <button :class="$style.item" :style="styles.item">
-    <icon
-      :class="$style.icon"
-      :name="iconName"
-      :mdi="iconMdi"
-      :width="size"
-      :height="size"
-    />
-    {{ title }}
+    <icon :name="iconName" :mdi="iconMdi" :size="size" />
+    <span :class="$style.title">{{ title }}</span>
+    <icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
   </button>
 </template>
 
@@ -25,8 +20,9 @@ import Icon from '@/components/UI/Icon.vue'
 const useStyles = (size: number) =>
   reactive({
     item: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.ui.tertiary
+      color: theme.ui.secondary,
+      background: theme.background.primary,
+      borderColor: theme.ui.tertiary
     }))
   })
 
@@ -44,15 +40,14 @@ export default defineComponent({
     },
     iconMdi: Boolean
   },
-  setup(props, context) {
+  setup(props) {
     const size = 24
     const styles = useStyles(size)
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
       styles,
       size,
-      title,
-      context
+      title
     }
   }
 })
@@ -60,15 +55,25 @@ export default defineComponent({
 
 <style lang="scss" module>
 .item {
-  display: block;
+  display: flex;
   width: 100%;
-  padding: 20px 60px 20px 80px;
+  padding: 12px 40px;
+  border-top: solid 2px;
+  border-bottom: solid 2px;
   font-weight: bold;
-  text-align: left;
   cursor: pointer;
 }
+.item + .item {
+  border-top: none;
+}
 
-.icon {
+.title {
+  flex: 1 0;
+  margin: 0 16px;
+  text-align: left;
+}
+
+.chevron {
   margin-right: 8px;
   vertical-align: bottom;
 }

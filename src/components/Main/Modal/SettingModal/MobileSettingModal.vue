@@ -14,33 +14,15 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  toRefs,
-  ref
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, toRefs, ref } from '@vue/composition-api'
 import { useNavigation, NavigationItemType } from './use/navigation'
 import MobileTabSelector from './MobileTabSelector.vue'
 import MobileTabFrame from './MobileTabFrame.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
-const useStyles = () =>
-  reactive({
-    content: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary,
-      borderColor: theme.background.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'MobileSettingModal',
   setup() {
-    const styles = computed(() => useStyles())
-
     const isSelectorShown = ref(true)
     const {
       navigationSelectorState,
@@ -55,7 +37,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
       ...toRefs(navigationSelectorState),
       isSelectorShown,
       onNavigationChange,

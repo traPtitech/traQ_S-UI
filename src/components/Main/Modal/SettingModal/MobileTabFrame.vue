@@ -1,14 +1,18 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <tab-content-title
-      :current-navigation="currentNavigation"
-      :class="$style.title"
-    />
-    <button @click="back">back</button>
-    <div :class="$style.close">
+    <div :class="$style.header" :style="styles.header">
+      <return-button @click="back" :size="40" />
+      <tab-content-title
+        :current-navigation="currentNavigation"
+        :class="$style.title"
+        is-mobile
+      />
       <close-button @click="close" :size="56" />
     </div>
-    <tab-content :current-navigation="currentNavigation" />
+    <tab-content
+      :class="$style.content"
+      :current-navigation="currentNavigation"
+    />
   </section>
 </template>
 
@@ -19,6 +23,7 @@ import store from '@/store'
 import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
 import TabContent from './TabContent.vue'
+import ReturnButton from '@/components/UI/ReturnButton.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
@@ -26,6 +31,10 @@ const useStyles = () =>
     container: makeStyles(theme => ({
       color: theme.ui.primary,
       background: theme.background.primary
+    })),
+    header: makeStyles(theme => ({
+      color: theme.ui.primary,
+      background: theme.background.secondary
     }))
   })
 
@@ -34,6 +43,7 @@ export default defineComponent({
   components: {
     TabContentTitle,
     TabContent,
+    ReturnButton,
     CloseButton
   },
   props: {
@@ -58,16 +68,25 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  flex: 1 1;
-  padding: 40px;
-  padding-right: 240px;
+  height: 100%;
+  width: 100%;
   overflow: {
     x: hidden;
     y: auto;
   }
 }
 
+.header {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+}
 .title {
-  margin-bottom: 40px;
+  flex: 1;
+}
+
+.content {
+  padding: 40px;
+  padding-top: 0;
 }
 </style>

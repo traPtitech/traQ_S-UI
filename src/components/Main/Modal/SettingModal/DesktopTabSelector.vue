@@ -45,7 +45,6 @@ export default defineComponent({
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
     return {
       styles,
-      props,
       navigations,
       onNavigationItemClick
     }

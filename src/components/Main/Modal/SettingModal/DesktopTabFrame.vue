@@ -4,7 +4,10 @@
       :current-navigation="currentNavigation"
       :class="$style.title"
     />
-    <tab-content :current-navigation="currentNavigation" />
+    <tab-content
+      :current-navigation="currentNavigation"
+      may-show-safari-warning
+    />
   </section>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <h2 :class="$style.header">設定</h2>
-    <div :class="$style.close">
-      <close-button @click="close" :size="56" />
+    <div :class="$style.header">
+      <h2 :class="$style.title">設定</h2>
+      <close-button :class="$style.close" @click="close" :size="56" />
     </div>
     <mobile-tab-selector-item
       v-for="navigation in navigations"
@@ -12,6 +12,7 @@
       :icon-mdi="navigation.iconMdi"
       @click.native="onNavigationItemClick(navigation.type)"
     />
+    <safari-warning :class="$style.safariWarning" />
   </section>
 </template>
 
@@ -25,6 +26,7 @@ import {
   navigations
 } from './use/navigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
+import SafariWarning from './SafariWarning.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
@@ -37,7 +39,7 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'MobileTabSelector',
-  components: { MobileTabSelectorItem, CloseButton },
+  components: { MobileTabSelectorItem, SafariWarning, CloseButton },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
@@ -50,7 +52,6 @@ export default defineComponent({
     const close = () => store.dispatch.ui.modal.clearModal()
     return {
       styles,
-      props,
       navigations,
       onNavigationItemClick,
       close
@@ -66,6 +67,17 @@ export default defineComponent({
 }
 
 .header {
-  margin: 40px 80px;
+  display: flex;
+  padding: 20px;
+  align-items: center;
+}
+.title {
+  padding-left: 40px;
+  flex: 1 0;
+  font-size: 1.25rem;
+}
+
+.safariWarning {
+  margin: 40px 20px;
 }
 </style>
