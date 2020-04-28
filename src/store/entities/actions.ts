@@ -12,8 +12,7 @@ import {
 } from '@/types/entity-ids'
 
 // TODO: リクエストパラメータの型置き場
-interface GetMessagesParams {
-  channelId: string
+interface BaseGetMessagesParams {
   limit?: number
   offset?: number
   since?: Date
@@ -21,6 +20,9 @@ interface GetMessagesParams {
   inclusive?: boolean
   order?: 'asc' | 'desc'
   options?: any
+}
+interface GetMessagesParams extends BaseGetMessagesParams {
+  channelId: string
 }
 
 interface GetFilesChannelParams {
@@ -40,6 +42,10 @@ interface GetClipsParam {
   limit?: number
   offset?: number
   order?: 'asc' | 'desc'
+}
+
+interface GetDirectMessagesParams extends BaseGetMessagesParams {
+  userId: string
 }
 
 export const entitiesActionContext = (context: any) =>
@@ -96,6 +102,23 @@ export const actions = defineActions({
     )
     return {
       clips: data,
+      hasMore: headers['x-traq-more'] === 'true'
+    }
+  },
+  async fetchDirectMessagesByUserId(context, params: GetDirectMessagesParams) {
+    const { commit } = entitiesActionContext(context)
+    const { data, headers } = await apis.getDirectMessages(
+      params.userId,
+      params.limit,
+      params.offset,
+      params.since?.toISOString(),
+      params.until?.toISOString(),
+      params.inclusive,
+      params.order
+    )
+    commit.extendMessages(reduceToRecord(data, 'id'))
+    return {
+      messages: data,
       hasMore: headers['x-traq-more'] === 'true'
     }
   },

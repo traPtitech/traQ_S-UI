@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <clips-view-content :clip-folder-id="clipFolderId" />
+    <view-content :user-id="userId" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { ClipFolderId } from '@/types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
-import ClipsViewContent from './ClipsViewContent.vue'
+import ViewContent from './DMViewContent.vue'
 
 const useStyles = () =>
   reactive({
@@ -19,13 +19,14 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ClipsView',
+  name: 'DMView',
   props: {
-    clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
+    userId: { type: String as PropType<UserId>, required: true }
   },
-  components: { ClipsViewContent },
+  components: { ViewContent },
   setup() {
     const styles = useStyles()
+
     return {
       styles
     }

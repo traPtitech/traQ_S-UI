@@ -15,10 +15,11 @@ const useRouteWacher = (context: SetupContext) => {
   const state = reactive({
     currentRouteName: computed(() => context.root.$route.name ?? ''),
     currentRouteParam: computed(
-      (): string => state.idParam ?? state.channelParam ?? ''
+      (): string => state.idParam ?? state.channelParam ?? state.userParam ?? ''
     ),
     idParam: computed(() => context.root.$route.params['id']),
     channelParam: computed(() => context.root.$route.params['channel']),
+    userParam: computed(() => context.root.$route.params['user']),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -55,6 +56,19 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     changeViewTitle(`#${state.channelParam}`)
+    state.view = 'main'
+  }
+
+  const onRouteChangedToUser = () => {
+    const user = store.getters.entities.userByName(state.currentRouteParam)
+    if (!user) {
+      state.view = 'not-found'
+      return
+    }
+    store.dispatch.ui.mainView.changePrimaryViewToDM({
+      userId: user.id
+    })
+    changeViewTitle(user.name)
     state.view = 'main'
   }
 
@@ -142,6 +156,8 @@ const useRouteWacher = (context: SetupContext) => {
     }
     if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
+    } else if (routeName === RouteName.User) {
+      onRouteChangedToUser()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
