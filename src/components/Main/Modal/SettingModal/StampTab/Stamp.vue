@@ -90,7 +90,7 @@ const useName = (stamp: Stamp) => {
 
 const creatorOptions = computed(() =>
   Object.values(store.state.entities.users)
-    .filter(u => !(u?.bot) && u?.state == UserAccountState.active)
+    .filter(u => !u?.bot && u?.state == UserAccountState.active)
     .map(u => ({
       key: u?.name ?? '',
       value: u?.id ?? null
