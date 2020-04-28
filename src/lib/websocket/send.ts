@@ -29,7 +29,7 @@ export const changeViewState: ChangeViewStateFunction = (
   viewState?: ChannelViewState
 ): Promise<void> => {
   if (channelId === null) {
-    return sendWebSocket(VIEWSTATE_COMMAND, 'null')
+    return sendWebSocket(VIEWSTATE_COMMAND, '')
   } else {
     return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
