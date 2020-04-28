@@ -6,7 +6,7 @@
       name="rounded-triangle"
       :class="$style.icon"
       :style="iconStyle"
-      size="20"
+      :size="20"
     />
   </div>
 </template>
