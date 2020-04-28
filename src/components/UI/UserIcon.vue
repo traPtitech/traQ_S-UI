@@ -59,7 +59,7 @@ export default defineComponent({
     })
     const onClick = () => {
       if (!props.preventModal) {
-        if (user.value?.bot && user.value.name.indexOf('@Webhook')) {
+        if (user.value?.bot && user.value.name.startsWith('Webhook#')) {
           return
         }
         store.dispatch.ui.modal.pushModal({
