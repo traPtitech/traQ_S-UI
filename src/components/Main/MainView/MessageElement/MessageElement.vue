@@ -39,7 +39,7 @@
       <div :class="$style.stampWrapper">
         <icon
           name="rounded-triangle"
-          :size="16"
+          :size="20"
           v-if="state.message.stamps.length > 0"
           :class="$style.toggleButton"
           :style="styles.toggleButton"
