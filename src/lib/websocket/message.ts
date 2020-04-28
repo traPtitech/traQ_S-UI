@@ -10,25 +10,36 @@ import {
   MessagePinnedEvent,
   MessageUnpinnedEvent
 } from './events'
+import { MessageId } from '@/types/entity-ids'
+
+const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
+  const currentView = store.state.ui.mainView.primaryView
+  return (
+    (currentView.type === 'channel' || currentView.type === 'dm') &&
+    recievedChannelId === currentView.channelId
+  )
+}
 
 export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
-  if (res.data.channelId === store.state.domain.messagesView.currentChannelId) {
-    await store.dispatch.domain.messagesView.addAndRenderMessage({
-      message: res.data
-    })
+  if (!isMessageForCurrentChannel(res.data.channelId)) {
+    return
   }
+  await store.dispatch.domain.messagesView.addAndRenderMessage({
+    message: res.data
+  })
 }
 
 export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
-  if (res.data.channelId === store.state.domain.messagesView.currentChannelId) {
-    await store.dispatch.domain.messagesView.updateAndRenderMessageId({
-      message: res.data
-    })
+  if (!isMessageForCurrentChannel(res.data.channelId)) {
+    return
   }
+  await store.dispatch.domain.messagesView.updateAndRenderMessageId({
+    message: res.data
+  })
 }
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
@@ -49,7 +60,7 @@ export const onMessageUnstamped = (data: MessageUnstampedEvent['body']) => {
 }
 
 export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
-  if (data.channel_id !== store.state.domain.messagesView.currentChannelId) {
+  if (!isMessageForCurrentChannel(data.channel_id)) {
     return
   }
   const message = await apis.getMessage(data.message_id)
