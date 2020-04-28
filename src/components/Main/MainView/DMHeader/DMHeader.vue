@@ -1,7 +1,7 @@
 <template>
   <main-view-header>
     <template #header>
-      <main-view-header-title :title="title"/>
+      <main-view-header-title :title="title" />
     </template>
     <template #tools>
       <main-view-header-tools-item
@@ -41,4 +41,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module></style>

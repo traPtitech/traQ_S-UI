@@ -20,7 +20,8 @@ export const actions = defineActions({
     rootDispatch.domain.messagesView.changeCurrentChannel(payload)
   },
   changePrimaryViewToDM(
-    context, payload: { channelId: ChannelId, username: string }
+    context,
+    payload: { channelId: ChannelId; userName: string }
   ) {
     const { commit } = mainViewActionContext(context)
     commit.setPrimaryView({
