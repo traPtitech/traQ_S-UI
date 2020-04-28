@@ -18,7 +18,8 @@ const uploadAttachments = async (
 
 const usePostMessage = (
   textState: TextState,
-  props: { channelId: ChannelId }
+  props: { channelId: ChannelId },
+  postMessageDelegate: (content: string) => Promise<void>
 ) => {
   const { channelPathToId } = useChannelPath()
 
@@ -48,9 +49,7 @@ const usePostMessage = (
       )
       const embededdUrls = fileUrls.join('\n')
 
-      await apis.postMessage(props.channelId, {
-        content: embededText + '\n' + embededdUrls
-      })
+      await postMessageDelegate(embededText + '\n' + embededdUrls)
 
       textState.text = ''
       store.commit.ui.fileInput.clearAttachments()

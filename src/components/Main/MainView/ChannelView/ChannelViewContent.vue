@@ -10,20 +10,28 @@
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
     />
-    <message-input :channel-id="channelId" />
+    <message-input
+      :channel-id="channelId"
+      :post-message-delegate="postMessageDelegate"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-
 import { makeStyles } from '@/lib/styles'
+import apis from '@/lib/apis'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
+
+const usePostMessageToChannel = (props: { channelId: ChannelId }) => async (
+  content: string
+) => {
+  return apis.postMessage(props.channelId, { content })
+}
 
 export default defineComponent({
   name: 'ChannelViewContent',
@@ -41,6 +49,8 @@ export default defineComponent({
       background: theme.background.primary,
       color: theme.ui.primary
     }))
+
+    const postMessageDelegate = usePostMessageToChannel(props)
 
     const {
       messageIds,
@@ -63,7 +73,8 @@ export default defineComponent({
       lastLoadingDirection,
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
-      onLoadAroundMessagesRequest
+      onLoadAroundMessagesRequest,
+      postMessageDelegate
     }
   }
 })

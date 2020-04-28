@@ -8,19 +8,30 @@
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
     />
-    <message-input :channel-id="''" />
+    <message-input
+      :channel-id="''"
+      :post-message-delegate="postMessageDelegate"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
+
+import apis from '@/lib/apis'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import useDMFetcher from './use/dmFetcher'
 
+const usePostMessageToDM = (props: { userId: UserId }) => async (
+  content: string
+) => {
+  return apis.postMessage(props.userId, { content })
+}
+
 export default defineComponent({
-  name: 'ClipsViewContent',
+  name: 'DMViewContent',
   props: {
     userId: { type: String as PropType<UserId>, required: true }
   },
@@ -39,13 +50,16 @@ export default defineComponent({
       onLoadFormerMessagesRequest
     } = useDMFetcher(props)
 
+    const postMessageDelegate = usePostMessageToDM(props)
+
     return {
       messageIds,
       isReachedEnd,
       isReachedLatest,
       isLoading,
       lastLoadingDirection,
-      onLoadFormerMessagesRequest
+      onLoadFormerMessagesRequest,
+      postMessageDelegate
     }
   }
 })
