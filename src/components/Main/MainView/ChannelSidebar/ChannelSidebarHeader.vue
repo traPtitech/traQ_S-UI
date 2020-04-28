@@ -41,7 +41,7 @@ export default defineComponent({
   props: {
     channelId: { type: String as PropType<ChannelId>, required: false },
     title: { type: String, default: 'チャンネル' },
-    showBackButton: { type: Boolean, defualt: false }
+    showBackButton: { type: Boolean, default: false }
   },
   components: { ChannelSidebarHeaderName, Icon },
   setup(props, context) {
