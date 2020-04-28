@@ -43,13 +43,6 @@ export const getters = defineGetters<S>()({
       )
     }
   },
-  dmChannelByUserId(state): (name: string) => DMChannel | undefined {
-    return (userId: UserId) => {
-      return Object.values(state.dmChannels).find(
-        dmChannel => dmChannel?.userId === userId
-      )
-    }
-  },
   nonEmptyStampPaletteIds(state) {
     return Object.values(state.stampPalettes)
       .filter(palette => palette.stamps?.length > 0)

@@ -18,8 +18,7 @@ const uploadAttachments = async (
 
 const usePostMessage = (
   textState: TextState,
-  props: { channelId: ChannelId },
-  postMessageDelegate: (content: string) => Promise<void>
+  props: { channelId: ChannelId }
 ) => {
   const { channelPathToId } = useChannelPath()
 

@@ -64,9 +64,8 @@ export const actions = defineActions({
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getChannels(true)
+    const res = await apis.getChannels(false)
     commit.setChannels(reduceToRecord(res.data.public, 'id'))
-    commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
   },
   async fetchUserGroups(context) {
     const { commit } = entitiesActionContext(context)
@@ -100,23 +99,6 @@ export const actions = defineActions({
     )
     return {
       clips: data,
-      hasMore: headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchDirectMessagesByUserId(context, params: GetDirectMessagesParams) {
-    const { commit } = entitiesActionContext(context)
-    const { data, headers } = await apis.getDirectMessages(
-      params.userId,
-      params.limit,
-      params.offset,
-      params.since?.toISOString(),
-      params.until?.toISOString(),
-      params.inclusive,
-      params.order
-    )
-    commit.extendMessages(reduceToRecord(data, 'id'))
-    return {
-      messages: data,
       hasMore: headers['x-traq-more'] === 'true'
     }
   },
