@@ -1,8 +1,8 @@
 <template>
   <channel-sidebar
     :class="$style.messagesView"
-    v-if="viewInfo && viewInfo.type === 'channel'"
-    :channel-id="channelId"
+    v-if="viewInfo.type === 'channel'"
+    :channel-id="viewInfo.channelId"
   />
   <div :class="$style.none" v-else></div>
 </template>
@@ -17,7 +17,7 @@ export default defineComponent({
   name: 'MainViewSidebarSelector',
   components: { ChannelSidebar },
   props: {
-    viewInfo: Object as PropType<ViewInformation>
+    viewInfo: { type: Object as PropType<ViewInformation>, required: true }
   },
   setup(props) {
     const channelId = computed(

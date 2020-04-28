@@ -1,7 +1,7 @@
 <template>
   <h2 :class="$style.container" :style="styles.container">
     <span v-if="showHash" :class="$style.channelHash">#</span>
-    <span :class="$style.channel">{{ channelName }}</span>
+    <span>{{ channelName }}</span>
   </h2>
 </template>
 
