@@ -74,7 +74,7 @@ export default defineComponent({
 }
 .input {
   @extend .item;
-  margin-right: 8px;
+  margin-right: 16px;
 }
 .star {
   @extend .item;
@@ -83,5 +83,6 @@ export default defineComponent({
   flex-shrink: 0;
   border: solid 1px transparent;
   border-radius: 4px;
+  margin-right: 16px;
 }
 </style>
