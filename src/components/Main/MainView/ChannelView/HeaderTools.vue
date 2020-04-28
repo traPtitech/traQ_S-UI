@@ -5,9 +5,7 @@
       icon-mdi
       :icon-name="qallIconName"
       :style="styles.qallIcon"
-      :disabled="
-        (hasActiveQallSession && !isJoinedQallSession) || !isQallEnabled
-      "
+      :disabled="hasActiveQallSession && !isJoinedQallSession"
       v-if="isQallEnabled"
     />
     <header-tools-item
