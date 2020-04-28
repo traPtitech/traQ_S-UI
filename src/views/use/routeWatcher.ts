@@ -4,6 +4,7 @@ import { RouteName } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
+import apis from '@/lib/apis'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -59,19 +60,20 @@ const useRouteWacher = (context: SetupContext) => {
     state.view = 'main'
   }
 
-  const onRouteChangedToUser = () => {
+  const onRouteChangedToUser = async () => {
     const user = store.getters.entities.userByName(state.currentRouteParam)
-    const dmChannel = user && store.getters.entities.dmChannelByUserId(user.id)
-    if (!user || !dmChannel) {
+    try {
+      if (!user) throw 'user not found'
+      const dmChannel = await apis.getUserDMChannel(user.id)
+      store.dispatch.ui.mainView.changePrimaryViewToDM({
+        channelId: dmChannel.data.id
+      })
+      changeViewTitle(user.name)
+      state.view = 'main'
+    } catch {
       state.view = 'not-found'
       return
     }
-    store.dispatch.ui.mainView.changePrimaryViewToDM({
-      channelId: dmChannel.id,
-      userId: user.id
-    })
-    changeViewTitle(user.name)
-    state.view = 'main'
   }
 
   const onRouteChangedToClipFolders = async () => {

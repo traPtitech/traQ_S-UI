@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { mainView } from './index'
-import { ClipFolderId, ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import { ClipFolderId, ChannelId, MessageId } from '@/types/entity-ids'
 
 export const mainViewActionContext = (context: any) =>
   moduleActionContext(context, mainView)
@@ -19,15 +19,11 @@ export const actions = defineActions({
     })
     rootDispatch.domain.messagesView.changeCurrentChannel(payload)
   },
-  changePrimaryViewToDM(
-    context,
-    payload: { userId: UserId; channelId: ChannelId }
-  ) {
+  changePrimaryViewToDM(context, payload: { channelId: ChannelId }) {
     const { commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'dm',
-      channelId: payload.channelId,
-      userId: payload.userId
+      channelId: payload.channelId
     })
   },
   changePrimaryViewToClip(

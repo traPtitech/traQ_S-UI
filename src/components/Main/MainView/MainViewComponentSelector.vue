@@ -14,7 +14,6 @@
     :class="$style.messagesView"
     v-else-if="viewInfo.type === 'dm'"
     :channel-id="viewInfo.channelId"
-    :user-id="viewInfo.userId"
   />
   <div :class="$style.none" v-else></div>
 </template>
