@@ -8,6 +8,7 @@
         :stamp="stamp"
         :is-selected="stamp.id === selectedStampId"
         @start-edit="selectStamp(stamp.id)"
+        @end-edit="unselectStamp"
       />
     </div>
   </div>
@@ -22,7 +23,7 @@ import Stamp from './Stamp.vue'
 export default defineComponent({
   name: 'EditStamp',
   setup() {
-    // TODO: 管理者なら全部変えられるたぶん
+    // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
     const myUserId = computed(() => store.state.domain.me.detail!.id)
     const myStamps = computed(() =>
       Object.values(store.state.entities.stamps).filter(
@@ -30,14 +31,18 @@ export default defineComponent({
       )
     )
 
-    const selectedStampId = ref<StampId>()
+    const selectedStampId = ref<StampId | null>()
     const selectStamp = (id: StampId) => {
       selectedStampId.value = id
+    }
+    const unselectStamp = () => {
+      selectedStampId.value = null
     }
     return {
       myStamps,
       selectedStampId,
-      selectStamp
+      selectStamp,
+      unselectStamp
     }
   },
   components: {

@@ -132,6 +132,13 @@ export default defineComponent({
         imageUploadState.imgData !== undefined
     )
 
+    const onStartEdit = () => {
+      context.emit('start-edit')
+    }
+    const onEndEdit = () => {
+      context.emit('end-edit')
+    }
+
     const editStamp = async () => {
       try {
         // TODO: loading
@@ -158,13 +165,10 @@ export default defineComponent({
         }
         await Promise.all(promises)
         destroyImageUploadState()
+        onEndEdit()
       } catch (e) {
         // TODO: error
       }
-    }
-
-    const onStartEdit = () => {
-      context.emit('start-edit')
     }
 
     return {
@@ -202,12 +206,10 @@ export default defineComponent({
     bottom: 12px;
   }
 }
-
 .stamp {
   height: 40px;
   width: 40px;
 }
-
 .notSelected {
   display: flex;
   align-items: center;
@@ -215,7 +217,6 @@ export default defineComponent({
   width: 100%;
   padding: 0 24px;
 }
-
 .selected {
   padding-left: 12px;
   width: 100%;
