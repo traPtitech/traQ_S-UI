@@ -45,7 +45,7 @@ $headerSize: 1.25rem;
 
 .container {
   height: 100%;
-  width: #{calc(100% - 32px)};
+  width: calc(100% - 32px);
   display: flex;
   align-items: center;
 }
