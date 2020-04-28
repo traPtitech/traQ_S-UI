@@ -5,15 +5,19 @@
       <channel-sidebar-header
         v-if="!state.pinnedMode"
         :channel-id="channelId"
-        @close="closeSidebar"
+        :class="$style.sidebarItem"
+      />
+      <channel-sidebar-header
+        v-else
+        show-back-button
+        @back="togglePinnedMode"
+        title="ピン留め"
         :class="$style.sidebarItem"
       />
     </template>
     <template #content>
       <channel-sidebar-pinned-list
         v-if="state.pinnedMode"
-        @closePinned="togglePinnedMode"
-        @closeBar="closeSidebar"
         :pinned-message="state.pinnedMessage"
       />
       <channel-sidebar-content

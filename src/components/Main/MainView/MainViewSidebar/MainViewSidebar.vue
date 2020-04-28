@@ -1,7 +1,10 @@
 <template>
   <portal v-if="shouldShowSidebar" to="sidebar">
     <div :style="styles.container" :class="$style.container">
-      <slot name="header" />
+      <div :class="$style.header">
+        <slot name="header" />
+        <close-button @click="closeSidebar" :size="28" />
+      </div>
       <slot name="content" />
     </div>
   </portal>
@@ -11,6 +14,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = () =>
   reactive({
@@ -22,11 +26,13 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSidebar',
+  components: { CloseButton },
   setup() {
     const styles = useStyles()
     const { closeSidebar } = useSidebar()
 
     const { shouldShowSidebar, isSidebarOpen, openSidebar } = useSidebar()
+
     return {
       styles,
       closeSidebar,
@@ -49,7 +55,12 @@ export default defineComponent({
   overflow: auto;
 }
 
-.sidebarItem {
-  margin-top: 16px;
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  flex-shrink: 0;
 }
 </style>

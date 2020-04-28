@@ -4,7 +4,7 @@ import { ChannelId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
 
 const useEditingStatus = (
-  channelId: ChannelId,
+  channelId: Ref<ChannelId>,
   textStatus: { text: string },
   isFocused: Ref<boolean>
 ) => {
@@ -13,7 +13,7 @@ const useEditingStatus = (
     (isEditing, wasEditing) => {
       if (isEditing === wasEditing) return
       changeViewState(
-        channelId,
+        channelId.value,
         isEditing ? ChannelViewState.Editing : ChannelViewState.Monitoring
       )
     }
