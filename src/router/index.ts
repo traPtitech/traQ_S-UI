@@ -83,5 +83,13 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes: routes as RouteConfig[]
 })
+router.beforeEach((to, from, next) => {
+  // trailing slashを消す
+  if (to.path !== '/' && to.path.endsWith('/')) {
+    next(to.path.slice(0, -1))
+  }
+
+  next()
+})
 
 export default router
