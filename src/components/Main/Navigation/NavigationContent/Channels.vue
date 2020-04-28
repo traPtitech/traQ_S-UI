@@ -63,7 +63,7 @@ const useChannels = (state: { isStar: boolean }) =>
       : Object.values(store.state.entities.channels)
   )
 
-const useStaredChannel = () => {
+const useStaredChannelTreeNode = () => {
   const staredChannel = computed(() =>
     Object.keys(store.state.domain.me.staredChannelSet).map(
       v => store.state.entities.channels[v]
@@ -122,7 +122,7 @@ export default defineComponent({
     const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
-    const { tree } = useStaredChannel()
+    const { tree } = useStaredChannelTreeNode()
 
     return {
       topLevelChannels,
