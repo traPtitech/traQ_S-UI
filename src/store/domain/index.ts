@@ -16,6 +16,8 @@ export interface ChannelState {
   notifiedUser: UserId[]
 }
 
+export const ACTIVITY_LENGTH = 50
+
 export const domain = defineModule({
   namespaced: true,
   state,

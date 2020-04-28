@@ -50,5 +50,6 @@ export default defineComponent({
 }
 .logout {
   margin-right: 8px;
+  margin-bottom: 8px;
 }
 </style>

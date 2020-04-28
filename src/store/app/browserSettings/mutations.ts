@@ -7,5 +7,11 @@ export const mutations = defineMutations<S>()({
    */
   set<K extends keyof S>(state: S, [key, value]: [K, S[K]]) {
     state[key] = value
+  },
+  setActivityModeAll(state, all: boolean) {
+    state.activityMode = { ...state.activityMode, all }
+  },
+  setActivityModePerChannel(state, perChannel: boolean) {
+    state.activityMode = { ...state.activityMode, perChannel }
   }
 })

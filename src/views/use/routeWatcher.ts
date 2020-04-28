@@ -1,5 +1,5 @@
 import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
-import store from '@/store'
+import store, { originalStore } from '@/store'
 import { RouteName } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
@@ -26,7 +26,7 @@ const useRouteWacher = (context: SetupContext) => {
   })
 
   const onRouteChangedToIndex = async () => {
-    await (store.original as any).restored
+    await originalStore.restored
     try {
       await context.root.$router.replace({
         name: RouteName.Channel,

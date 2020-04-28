@@ -23,6 +23,9 @@ const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
 export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
+
+  store.commit.domain.addActivity(res.data)
+
   if (!isMessageForCurrentChannel(res.data.channelId)) {
     return
   }
