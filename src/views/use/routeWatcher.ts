@@ -61,11 +61,13 @@ const useRouteWacher = (context: SetupContext) => {
 
   const onRouteChangedToUser = () => {
     const user = store.getters.entities.userByName(state.currentRouteParam)
-    if (!user) {
+    const dmChannel = user && store.getters.entities.dmChannelByUserId(user.id)
+    if (!user || !dmChannel) {
       state.view = 'not-found'
       return
     }
     store.dispatch.ui.mainView.changePrimaryViewToDM({
+      channelId: dmChannel.id,
       userId: user.id
     })
     changeViewTitle(user.name)

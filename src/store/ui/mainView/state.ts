@@ -1,4 +1,10 @@
-import { ClipFolderId, ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import {
+  ClipFolderId,
+  ChannelId,
+  MessageId,
+  DMChannelId,
+  UserId
+} from '@/types/entity-ids'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {
@@ -23,6 +29,7 @@ export interface ClipsView extends ViewInformationBase {
 }
 export interface DMView extends ViewInformationBase {
   type: 'dm'
+  channelId: DMChannelId
   userId: UserId
 }
 

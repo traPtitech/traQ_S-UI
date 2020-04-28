@@ -9,16 +9,16 @@
       @request-load-former="onLoadFormerMessagesRequest"
     />
     <message-input
-      :channel-id="dmChannelId"
+      :channel-id="channelId"
       :post-message-delegate="postMessageDelegate"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
-import { UserId } from '@/types/entity-ids'
-import store from '@/store'
+import { defineComponent, PropType } from '@vue/composition-api'
+import { UserId, ChannelId } from '@/types/entity-ids'
+
 import apis from '@/lib/apis'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
@@ -33,6 +33,7 @@ const usePostMessageToDM = (props: { userId: UserId }) => async (
 export default defineComponent({
   name: 'DMViewContent',
   props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
     userId: { type: String as PropType<UserId>, required: true }
   },
   components: {
@@ -40,9 +41,6 @@ export default defineComponent({
     MessageInput
   },
   setup(props) {
-    const dmChannelId = computed(
-      () => store.state.entities.dmChannels[props.userId]?.id ?? ''
-    )
     const {
       messageIds,
       isReachedEnd,
@@ -57,7 +55,6 @@ export default defineComponent({
 
     return {
       messageIds,
-      dmChannelId,
       isReachedEnd,
       isReachedLatest,
       isLoading,

@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <view-content :user-id="userId" />
+    <view-content :user-id="userId" :channel-id="channelId" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { UserId } from '@/types/entity-ids'
+import { UserId, ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import ViewContent from './DMViewContent.vue'
 
@@ -21,7 +21,8 @@ const useStyles = () =>
 export default defineComponent({
   name: 'DMView',
   props: {
-    userId: { type: String as PropType<UserId>, required: true }
+    userId: { type: String as PropType<UserId>, required: true },
+    channelId: { type: String as PropType<ChannelId>, required: true }
   },
   components: { ViewContent },
   setup() {
