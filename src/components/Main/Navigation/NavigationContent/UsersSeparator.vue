@@ -2,7 +2,12 @@
   <div :class="$style.container" :style="containerStyle">
     {{ name }}
     <div :class="$style.line"></div>
-    <icon name="rounded-triangle" :class="$style.icon" :style="iconStyle" size="20" />
+    <icon
+      name="rounded-triangle"
+      :class="$style.icon"
+      :style="iconStyle"
+      size="20"
+    />
   </div>
 </template>
 
