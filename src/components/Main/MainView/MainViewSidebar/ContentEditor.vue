@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <textarea
+    <textarea-autosize
       v-if="isEditing"
       :class="$style.editor"
       :style="styles.textarea"
