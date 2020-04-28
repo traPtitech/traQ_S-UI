@@ -1,59 +1,44 @@
 <template>
   <main-view-header>
     <template #header>
-      <main-view-header-title :title="userName" icon-mdi icon-name="bookmark" />
+      <main-view-header-title :title="title"/>
     </template>
     <template #tools>
-      <header-tools :channel-id="channelId" />
+      <main-view-header-tools-item
+        @click="openSidebar"
+        icon-mdi
+        icon-name="info"
+      />
     </template>
   </main-view-header>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
+import { defineComponent, computed } from '@vue/composition-api'
+import useSidebar from '@/use/sidebar'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
-import HeaderTools from '@/components/Main/MainView/ChannelView/HeaderTools.vue'
+import MainViewHeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 export default defineComponent({
   name: 'DMViewHeader',
   components: {
     MainViewHeader,
     MainViewHeaderTitle,
-    HeaderTools
+    MainViewHeaderToolsItem
   },
   props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    },
     userName: {
       type: String,
       required: true
     }
   },
   setup(props, context) {
-    return {}
+    const { openSidebar } = useSidebar()
+    const title = computed(() => `@ ${props.userName}`)
+    return { openSidebar, title }
   }
 })
 </script>
 
 <style lang="scss" module>
-.container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  padding: 16px;
-}
-.headerContainer {
-  display: flex;
-}
-.navigationButton {
-  display: flex;
-  align-items: center;
-  margin-right: 8px;
-}
-</style>

@@ -9,7 +9,6 @@
   />
   <d-m-header
     v-else-if="viewInfo.type === 'dm'"
-    :channel-id="viewInfo.channelId"
     :user-name="viewInfo.userName"
   />
   <div :class="$style.none" v-else></div>
