@@ -41,7 +41,6 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import ChannelFilteredElement from '../ChannelList/ChannelFilteredElement.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
-import Icon from '@/components/UI/Icon.vue'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
@@ -92,13 +91,12 @@ export default defineComponent({
     ChannelList,
     FilterInput,
     ChannelFilteredElement,
-    Icon,
     ChannelFilter
   },
   setup() {
-    const topLevelChannels = computed(() => {
-      return store.state.domain.channelTree.channelTree.children ?? []
-    })
+    const topLevelChannels = computed(
+      () => store.state.domain.channelTree.channelTree.children ?? []
+    )
 
     const state = reactive({
       isStar: false
