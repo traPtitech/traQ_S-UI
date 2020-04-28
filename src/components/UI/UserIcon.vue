@@ -1,7 +1,7 @@
 <template>
   <div
     @click.stop="onClick"
-    :role="preventModal ? 'img' : 'button'"
+    :role="isClickable ? 'button' : 'img'"
     :class="$style.container"
     :style="styles.container"
   >
@@ -58,19 +58,24 @@ export default defineComponent({
           : undefined
       }))
     })
+    const isClickable = computed(
+      () =>
+        user.value &&
+        !props.preventModal &&
+        !(user.value.bot && user.value.name.indexOf('@Webhook'))
+    )
     const onClick = () => {
-      if (!props.preventModal) {
-        if (user.value?.bot && user.value.name.indexOf('@Webhook')) {
-          return
-        }
-        store.dispatch.ui.modal.pushModal({
-          type: 'user',
-          id: props.userId
-        })
+      if (!isClickable.value) {
+        return
       }
+      store.dispatch.ui.modal.pushModal({
+        type: 'user',
+        id: props.userId
+      })
     }
     return {
       styles,
+      isClickable,
       onClick
     }
   }
