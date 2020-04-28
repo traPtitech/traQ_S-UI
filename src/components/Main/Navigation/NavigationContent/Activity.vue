@@ -1,10 +1,22 @@
 <template>
   <div :class="$style.container">
-    <div>
-      <span>すべてのチャンネル</span>
-      <toggle :enabled="isAll" @input="toggleAll" />
-      <span>チャンネルアクティビティ</span>
-      <toggle :enabled="isPerChannel" @input="togglePerChannel" />
+    <div :class="$style.buttons">
+      <toggle-button
+        :class="$style.button"
+        title="通知チャンネルのみ表示"
+        icon-name="bell"
+        icon-mdi
+        :value="!isAll"
+        @click="toggleAll"
+      />
+      <toggle-button
+        :class="$style.button"
+        title="同じチャンネルでも複数のメッセージを表示する"
+        icon-name="comment-multiple-outline"
+        icon-mdi
+        :value="isPerChannel"
+        @click="togglePerChannel"
+      />
     </div>
     <activity-element
       v-for="message in state.messages"
@@ -29,7 +41,7 @@ import {
 import store from '@/store'
 import { setTimelineStreamingState } from '@/lib/websocket'
 import ActivityElement from './ActivityElement.vue'
-import Toggle from '@/components/UI/Toggle.vue'
+import ToggleButton from './ToggleButton.vue'
 
 const useActivityStream = () => {
   const mode = computed(() => store.state.app.browserSettings.activityMode)
@@ -83,7 +95,7 @@ const useActivityMode = () => {
 export default defineComponent({
   name: 'Activity',
   components: {
-    Toggle,
+    ToggleButton,
     ActivityElement
   },
   setup(_, context: SetupContext) {
@@ -113,6 +125,18 @@ export default defineComponent({
 .container {
   padding: 0 16px 0 0;
 }
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  flex: 1 1;
+}
+.button + .button {
+  margin-left: 12px;
+}
+
 .element {
   margin: 16px 0;
 }
