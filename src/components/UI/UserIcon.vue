@@ -1,6 +1,7 @@
 <template>
   <div
     @click.stop="onClick"
+    :role="preventModal ? 'img' : 'button'"
     :class="$style.container"
     :style="styles.container"
   >
@@ -87,6 +88,9 @@ export default defineComponent({
     position: center;
     repeat: no-repeat;
     size: cover;
+  }
+  &[role='button'] {
+    cursor: pointer;
   }
 }
 </style>
