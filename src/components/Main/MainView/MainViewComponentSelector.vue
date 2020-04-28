@@ -5,15 +5,15 @@
     :channel-id="viewInfo.channelId"
     :entry-message-id="viewInfo.entryMessageId"
   />
+  <channel-view
+    :class="$style.messagesView"
+    v-else-if="viewInfo.type === 'dm'"
+    :channel-id="viewInfo.channelId"
+  />
   <clips-view
     :class="$style.messagesView"
     v-else-if="viewInfo.type === 'clips'"
     :clip-folder-id="viewInfo.clipFolderId"
-  />
-  <d-m-view
-    :class="$style.messagesView"
-    v-else-if="viewInfo.type === 'dm'"
-    :channel-id="viewInfo.channelId"
   />
   <div :class="$style.none" v-else></div>
 </template>
@@ -23,11 +23,10 @@ import { defineComponent, PropType } from '@vue/composition-api'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
 import ClipsView from '@/components/Main/MainView/ClipsView/ClipsView.vue'
-import DMView from '@/components/Main/MainView/DMView/DMView.vue'
 
 export default defineComponent({
   name: 'MainViewComponentSelector',
-  components: { ChannelView, ClipsView, DMView },
+  components: { ChannelView, ClipsView },
   props: {
     viewInfo: {
       type: Object as PropType<ViewInformation>,
