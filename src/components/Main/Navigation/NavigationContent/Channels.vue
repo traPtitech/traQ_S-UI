@@ -2,8 +2,8 @@
   <div>
     チャンネル検索
     <channel-filter
-      :at-click="toggleStar"
-      :at-input="setQuery"
+      @click="toggleStar"
+      @input="setQuery"
       :text="channelListFilterState.query"
       :is-stared="state.isStar"
     />
@@ -42,7 +42,8 @@ import ChannelFilteredElement from '../ChannelList/ChannelFilteredElement.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import Icon from '@/components/UI/Icon.vue'
-import ChannelFilter from '../ChannelList/ChannelFIlter.vue'
+import ChannelFilter from '../ChannelList/ChannelFilter.vue'
+import useChannelPath from '@/use/channelPath'
 
 const useChannelListFilter = () => {
   const channels = computed(() => Object.values(store.state.entities.channels))
@@ -59,17 +60,6 @@ const useStaredChannel = () => {
       v => store.state.entities.channels[v]
     )
   )
-
-  const buildPath = (parentid: string | null, name: string): string => {
-    if (parentid != null) {
-      const parentCh = store.state.entities.channels[parentid]
-      name = parentCh.name[0] + '/' + name
-      if (parentCh.parentId) {
-        return buildPath(parentCh.parentId, name)
-      }
-    }
-    return name
-  }
 
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) => {
     const nameA = a.name.toUpperCase()
@@ -92,7 +82,8 @@ const useStaredChannel = () => {
             constructTree(ch, store.state.entities.channels) ??
             ({} as ChannelTreeNode)
 
-          const path = buildPath(ch.parentId, ch.name)
+          const { channelIdToShortPathString } = useChannelPath()
+          const path = channelIdToShortPathString(ch.id)
 
           _tree.name = path
           return _tree

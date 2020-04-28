@@ -1,14 +1,11 @@
 <template>
   <div :class="$style.container">
-    <filter-input
-      :on-secondary="true"
-      :text="props.text"
-      @input="props.atInput"
-      :class="$style.input"
-    />
-    <div :class="$style.hash" :style="styles.hash">
+    <div :class="$style.input">
+      <filter-input :on-secondary="true" :text="props.text" @input="onInput" />
+    </div>
+    <div :class="$style.star" :style="styles.star">
       <icon
-        @click="props.atClick"
+        @click="context.emit('click')"
         name="star"
         :width="24"
         :height="24"
@@ -19,48 +16,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '../../../../lib/styles'
-
-const useOpenedParentContainerStyle = (selected: boolean) =>
-  makeStyles(theme => ({
-    background: selected ? theme.accent.primary : theme.ui.primary,
-    color: theme.background.secondary
-  }))
-
-const useClosedParentContainerStyle = (selected: boolean) =>
-  makeStyles(theme => ({
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    borderColor: selected ? theme.accent.primary : theme.ui.primary,
-    color: selected ? theme.accent.primary : theme.ui.primary
-  }))
+import { makeStyles } from '@/lib/styles'
+import useInput from '@/use/input'
 
 const useStyles = (props: { isStared: Boolean }) =>
   reactive({
-    container: makeStyles(theme => ({}))
+    // container: makeStyles(theme => ({})),
+    star: makeStyles((theme, isStared) => ({
+      color: props.isStared ? theme.accent.primary : theme.ui.secondary,
+      backgroundColor: theme.background.primary
+    }))
   })
 
 export default defineComponent({
   name: 'ChannelFilter',
   components: {
-    FilterInput,
-
-    Icon
+    Icon,
+    FilterInput
   },
   props: {
-    atInput: {
-      type: Function,
-      required: true
-    },
     text: {
       type: String,
-      required: true
-    },
-    atClick: {
-      type: Function,
       required: true
     },
     isStared: {
@@ -68,42 +47,41 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
-    const styles = reactive({
-      hash: computed(() =>
-        props.isStared
-          ? useOpenedParentContainerStyle(props.isStared).value
-          : useClosedParentContainerStyle(props.isStared).value
-      )
-    })
+  setup(props, context) {
+    const styles = useStyles(props)
+    const { onInput } = useInput(context)
     return {
       props,
-      styles
+      context,
+      styles,
+      onInput
     }
   }
 })
 </script>
 
 <style lang="scss" module>
-.element {
-  cursor: pointer;
-}
-.list {
-  margin: 16px 0px;
-}
-.input {
-  margin-bottom: 16px;
-}
 .container {
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.hash {
-  border: solid 2px transparent;
-  border-radius: 4px;
-  width: 22px;
-  height: 22px;
+.item {
   display: flex;
   align-items: center;
+  justify-content: center;
   box-sizing: content-box;
+}
+.input {
+  @extend .item;
+  margin-right: 8px;
+}
+.star {
+  @extend .item;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: solid 1px transparent;
+  border-radius: 4px;
 }
 </style>
