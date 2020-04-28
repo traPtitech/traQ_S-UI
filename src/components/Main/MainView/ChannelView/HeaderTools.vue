@@ -6,8 +6,9 @@
       :icon-name="qallIconName"
       :style="styles.qallIcon"
       :disabled="
-        (hasActiveQallSession && !isJoinedQallSession) || !state.isEnableQall
+        (hasActiveQallSession && !isJoinedQallSession) || !isQallEnabled
       "
+      v-if="isQallEnabled"
     />
     <header-tools-item
       @click="context.emit('click-pin')"
@@ -69,20 +70,16 @@ import { makeStyles } from '@/lib/styles'
 
 export const targetPortalName = 'header-popup'
 
-const useStyles = (
-  props: {
-    isQallSessionOpened: boolean
-    isJoinedQallSession: boolean
-  },
-  state: { isEnableQall: boolean }
-) =>
+const useStyles = (props: {
+  isQallSessionOpened: boolean
+  isJoinedQallSession: boolean
+}) =>
   reactive({
     qallIcon: makeStyles((_, common) => ({
       color:
         props.isJoinedQallSession || props.isQallSessionOpened
           ? common.ui.qall
-          : '',
-      display: state.isEnableQall ? '' : `none`
+          : ''
     }))
   })
 
@@ -103,11 +100,9 @@ export default defineComponent({
       currentChannelSubscription
     } = useChannelSubscriptionState()
 
-    const state = reactive({
-      isEnableQall: computed(() => store.state.app.rtcSettings.isEnabled)
-    })
+    const isQallEnabled = computed(() => store.state.app.rtcSettings.isEnabled)
 
-    const styles = useStyles(props, state)
+    const styles = useStyles(props)
     const qallIconName = computed(() =>
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
     )
@@ -119,7 +114,7 @@ export default defineComponent({
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
       targetPortalName,
-      state
+      isQallEnabled
     }
   }
 })
