@@ -49,7 +49,9 @@ const usePostMessage = (
       )
       const embededdUrls = fileUrls.join('\n')
 
-      await postMessageDelegate(embededText + '\n' + embededdUrls)
+      await apis.postMessage(props.channelId, {
+        content: embededText + '\n' + embededdUrls
+      })
 
       textState.text = ''
       store.commit.ui.fileInput.clearAttachments()

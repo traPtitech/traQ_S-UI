@@ -81,14 +81,6 @@ export default defineComponent({
     channelId: {
       type: String as PropType<ChannelId>,
       required: true
-    },
-    /** メッセージ送信のデリゲート
-     *
-     * 双方向のイベントの取り扱いを回避するため
-     */
-    postMessageDelegate: {
-      type: Function as PropType<(content: string) => Promise<void>>,
-      required: true
     }
   },
   setup(props, context) {
@@ -108,11 +100,7 @@ export default defineComponent({
       isFocused
     )
 
-    const postMessage = usePostMessage(
-      textState,
-      props,
-      props.postMessageDelegate
-    )
+    const postMessage = usePostMessage(textState, props)
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers
