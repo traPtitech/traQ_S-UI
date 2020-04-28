@@ -23,7 +23,7 @@ import {
   computed,
   onBeforeMount,
   onBeforeUnmount,
-  watchEffect,
+  watch,
   ref
 } from '@vue/composition-api'
 import store from '@/store'
@@ -40,10 +40,15 @@ const useActivityStream = () => {
       setTimelineStreamingState(true)
     }
   })
-  watchEffect(async () => {
-    await store.dispatch.domain.fetchActivityTimeline(mode.value)
-    setTimelineStreamingState(mode.value.all)
-  })
+  watch(
+    () => mode.value,
+    async (newMode, oldMode) => {
+      await store.dispatch.domain.fetchActivityTimeline(newMode)
+      if (newMode.all !== oldMode.all) {
+        setTimelineStreamingState(newMode.all)
+      }
+    }
+  )
   onBeforeUnmount(() => {
     if (mode.value.all) {
       setTimelineStreamingState(mode.value.all)
