@@ -66,7 +66,8 @@ const useRouteWacher = (context: SetupContext) => {
       if (!user) throw 'user not found'
       const dmChannel = await apis.getUserDMChannel(user.id)
       store.dispatch.ui.mainView.changePrimaryViewToDM({
-        channelId: dmChannel.data.id
+        channelId: dmChannel.data.id,
+        userName: user.name
       })
       changeViewTitle(user.name)
       state.view = 'main'

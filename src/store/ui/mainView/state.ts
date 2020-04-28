@@ -29,6 +29,7 @@ export interface ClipsView extends ViewInformationBase {
 export interface DMView extends ViewInformationBase {
   type: 'dm'
   channelId: DMChannelId
+  userName: string
 }
 
 /**
