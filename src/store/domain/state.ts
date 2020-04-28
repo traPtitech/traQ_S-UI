@@ -1,10 +1,17 @@
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import { ChannelId, UserId } from '@/types/entity-ids'
 import { ActivityTimelineMessage, UserDetail } from '@traptitech/traq'
 import { ChannelState } from './index'
 
 export interface S {
-  channelActivity: ActivityTimelineMessage[]
-  messageActivity: MessageId[]
+  /**
+   * アクティビティ
+   * 新しいもの順
+   */
+  activityTimeline: ActivityTimelineMessage[]
+  activityTimelineChannelMap: Record<
+    ChannelId,
+    ActivityTimelineMessage | undefined
+  >
   channelStateMap: Record<ChannelId, ChannelState | undefined>
   onlineUsers: UserId[]
   userDetails: Record<UserId, UserDetail | undefined>
@@ -14,8 +21,8 @@ export interface S {
 }
 
 export const state: S = {
-  channelActivity: [],
-  messageActivity: [],
+  activityTimeline: [],
+  activityTimelineChannelMap: {},
   channelStateMap: {},
   onlineUsers: [],
   userDetails: {},

@@ -1,4 +1,4 @@
-import { SendKey, OpenMode, SendKeys } from '.'
+import { SendKey, OpenMode, SendKeys, ActivityMode } from '.'
 import { ChannelId } from '@/types/entity-ids'
 
 export interface S {
@@ -8,6 +8,7 @@ export interface S {
   sendWithModifierKey: SendKey
   modifierKey: SendKeys
   ecoMode: boolean
+  activityMode: ActivityMode
 }
 
 export const state: S = {
@@ -16,5 +17,6 @@ export const state: S = {
   openChannelName: 'general',
   sendWithModifierKey: 'modifier',
   modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
-  ecoMode: false
+  ecoMode: false,
+  activityMode: { all: false, perChannel: false }
 }

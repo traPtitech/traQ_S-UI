@@ -2,7 +2,7 @@ import { ws, wsConnectionPromise } from './index'
 import { ChannelViewState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
-type WebSocketCommand = 'viewstate' | 'rtcstate'
+type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
 
 const sendWebSocket = async (
   ...command: readonly [WebSocketCommand, ...string[]]
@@ -50,4 +50,16 @@ export const changeRTCState = (
     ...states.flatMap(s => [s.state, s.sessionId]),
     '' // 終端の:をつける
   )
+}
+
+const TIMELINE_STREAMING_COMMAND = 'timeline_streaming'
+
+type TimelineStreamingType = 'on' | 'off' | 'true' | 'false'
+
+const changeTimelineStreamingState = (type: TimelineStreamingType) => {
+  return sendWebSocket(TIMELINE_STREAMING_COMMAND, type)
+}
+
+export const setTimelineStreamingState = (type: boolean) => {
+  return changeTimelineStreamingState(type ? 'on' : 'off')
 }

@@ -56,3 +56,9 @@ declare module 'vuex' {
     direct: AppStore
   }
 }
+
+type OriginalStore = typeof store.original & {
+  readonly restored: Promise<void>
+}
+
+export const originalStore = store.original as OriginalStore
