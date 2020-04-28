@@ -45,6 +45,7 @@ import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
+import { buildDescendantsChannelArray } from '../use/buildChannel'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -57,9 +58,10 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 const useChannels = (state: { isStar: boolean }) =>
   computed(() =>
     state.isStar
-      ? Object.keys(store.state.domain.me.staredChannelSet).map(
-          v => store.state.entities.channels[v]
-        )
+      ? Object.keys(store.state.domain.me.staredChannelSet)
+          .map(v => buildDescendantsChannelArray(v))
+          .flat()
+          .filter((x, i, self) => self.indexOf(x) === i)
       : Object.values(store.state.entities.channels)
   )
 
