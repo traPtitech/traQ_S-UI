@@ -44,7 +44,7 @@ const useActivityStream = () => {
     () => mode.value,
     async (newMode, oldMode) => {
       await store.dispatch.domain.fetchActivityTimeline(newMode)
-      if (newMode.all !== oldMode.all) {
+      if (newMode.all !== oldMode?.all) {
         setTimelineStreamingState(newMode.all)
       }
     }
