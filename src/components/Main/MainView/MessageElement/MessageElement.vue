@@ -8,6 +8,11 @@
     v-if="state.message"
     :data-is-mobile="isMobile"
   >
+    <message-pinned
+      :message-id="messageId"
+      :v-if="state.message.pinned"
+      :class="$style.pinned"
+    />
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -80,15 +85,19 @@ import useElementRenderObserver from './use/elementRenderObserver'
 import MessageTools from './MessageTools.vue'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
+import { Message } from '@traptitech/traq'
+import MessagePinned from './MessagePinned.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
   hoverState: { hover: boolean },
-  state: { stampDetailFoldingState: boolean }
+  state: { message: Message | undefined; stampDetailFoldingState: boolean }
 ) =>
   reactive({
-    body: makeStyles(theme => ({
-      background: props.isEntryMessage
+    body: makeStyles((theme, common) => ({
+      background: state.message?.pinned
+        ? transparentize(common.ui.pin, 0.2)
+        : props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
         : hoverState.hover
         ? transparentize(theme.background.secondary, 0.6)
@@ -111,7 +120,8 @@ export default defineComponent({
     MessageFileList,
     MessageQuoteList,
     Icon,
-    MessageTools
+    MessageTools,
+    MessagePinned
   },
   props: {
     messageId: {
@@ -170,10 +180,11 @@ $messagePaddingMobile: 16px;
   position: relative;
   display: grid;
   grid-template:
+    'pinned pinned'
     'user-icon message-header'
     'user-icon message-contents'
     '... message-contents';
-  grid-template-rows: 20px 1fr;
+  grid-template-rows: 28px 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
@@ -181,6 +192,14 @@ $messagePaddingMobile: 16px;
   padding: 8px $messagePadding;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
+  }
+}
+
+.pinned {
+  grid-area: pinned;
+  margin: {
+    top: 4px;
+    bottom: 8px;
   }
 }
 
