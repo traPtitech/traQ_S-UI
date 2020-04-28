@@ -215,7 +215,7 @@ $messagePaddingMobile: 16px;
 
 .toggleButton {
   position: absolute;
-  left: -28px;
+  left: -24px;
   top: 4px;
 }
 
