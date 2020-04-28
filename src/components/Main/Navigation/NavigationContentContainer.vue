@@ -1,13 +1,18 @@
 <template>
   <!-- TODO: 折り畳み -->
   <div>
-    <h3
-      v-if="subtitle && subtitle.length > 0"
-      :class="$style.subtitle"
-      :style="subtitleStyle"
-    >
-      {{ subtitle }}
-    </h3>
+    <div :class="$style.subtitleContainer">
+      <h3
+        v-if="subtitle && subtitle.length > 0"
+        :class="$style.subtitle"
+        :style="subtitleStyle"
+      >
+        {{ subtitle }}
+      </h3>
+      <div :class="$style.control">
+        <slot name="control"></slot>
+      </div>
+    </div>
     <slot></slot>
   </div>
 </template>
@@ -33,9 +38,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.subtitleContainer {
+  display: flex;
+  justify-content: space-between;
+}
 .subtitle {
   font-size: 0.875rem;
   margin-bottom: 8px;
   font-weight: bold;
+}
+.control {
+  flex-shrink: 0;
 }
 </style>

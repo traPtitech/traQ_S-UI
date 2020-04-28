@@ -1,13 +1,8 @@
 <template>
   <button :class="$style.item" :style="styles.item">
-    <icon
-      :class="$style.icon"
-      :name="iconName"
-      :mdi="iconMdi"
-      :width="size"
-      :height="size"
-    />
-    {{ title }}
+    <icon :name="iconName" :mdi="iconMdi" :size="size" />
+    <span :class="$style.title">{{ title }}</span>
+    <icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
   </button>
 </template>
 
@@ -22,16 +17,17 @@ import { makeStyles } from '@/lib/styles'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { isSelected: boolean }, size: number) =>
+const useStyles = () =>
   reactive({
     item: makeStyles(theme => ({
-      color: props.isSelected ? theme.ui.primary : theme.ui.secondary,
-      background: props.isSelected ? theme.ui.tertiary : 'transparent'
+      color: theme.ui.secondary,
+      background: theme.background.primary,
+      borderColor: theme.ui.tertiary
     }))
   })
 
 export default defineComponent({
-  name: 'NavigationSelectorItem',
+  name: 'MobileTabSelectorItem',
   components: { Icon },
   props: {
     type: {
@@ -42,21 +38,16 @@ export default defineComponent({
       type: String,
       required: true
     },
-    iconMdi: Boolean,
-    isSelected: {
-      type: Boolean,
-      required: true
-    }
+    iconMdi: Boolean
   },
-  setup(props, context) {
+  setup(props) {
     const size = 24
-    const styles = useStyles(props, size)
+    const styles = useStyles()
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
       styles,
       size,
-      title,
-      context
+      title
     }
   }
 })
@@ -64,15 +55,25 @@ export default defineComponent({
 
 <style lang="scss" module>
 .item {
-  display: block;
+  display: flex;
   width: 100%;
-  padding: 20px 60px 20px 80px;
+  padding: 12px 40px;
+  border-top: solid 2px;
+  border-bottom: solid 2px;
   font-weight: bold;
-  text-align: left;
   cursor: pointer;
 }
+.item + .item {
+  border-top: none;
+}
 
-.icon {
+.title {
+  flex: 1 0;
+  margin: 0 16px;
+  text-align: left;
+}
+
+.chevron {
   margin-right: 8px;
   vertical-align: bottom;
 }

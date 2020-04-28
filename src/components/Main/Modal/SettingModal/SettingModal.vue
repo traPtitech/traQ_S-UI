@@ -1,75 +1,32 @@
 <template>
   <div :class="$style.container">
-    <navigation-selector
-      @navigation-change="onNavigationChange"
-      :current-navigation="currentNavigation"
-    />
-    <navigation-content :current-navigation="currentNavigation" />
-    <div :class="$style.close">
-      <close-button with-text @click="onClickClear" :size="56" />
-    </div>
+    <mobile-setting-modal v-if="isMobile" />
+    <desktop-setting-modal v-else />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  toRefs
-} from '@vue/composition-api'
-import store from '@/store'
-import { makeStyles } from '@/lib/styles'
-import { useNavigation } from './use/navigation'
-import NavigationSelector from './NavigationSelector.vue'
-import NavigationContent from './NavigationContent.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
-
-const useStyles = () =>
-  reactive({
-    content: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary,
-      borderColor: theme.background.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
+import useIsMobile from '@/use/isMobile'
+import DesktopSettingModal from './DesktopSettingModal.vue'
+import MobileSettingModal from './MobileSettingModal.vue'
 
 export default defineComponent({
   name: 'SettingModal',
   setup() {
-    const styles = computed(() => useStyles())
-
-    const { navigationSelectorState, onNavigationChange } = useNavigation()
-
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
-
-    return {
-      styles,
-      ...toRefs(navigationSelectorState),
-      onNavigationChange,
-      onClickClear
-    }
+    const { isMobile } = useIsMobile()
+    return { isMobile }
   },
   components: {
-    NavigationSelector,
-    NavigationContent,
-    CloseButton
+    DesktopSettingModal,
+    MobileSettingModal
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  position: relative;
-  display: flex;
-  flex-flow: row;
   width: 100%;
   height: 100%;
-}
-
-.close {
-  position: absolute;
-  top: 30px;
-  right: 120px;
 }
 </style>
