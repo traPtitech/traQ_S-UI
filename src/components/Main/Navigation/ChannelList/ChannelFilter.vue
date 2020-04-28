@@ -63,20 +63,14 @@ export default defineComponent({
 .container {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 .input {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: content-box;
   margin-right: 16px;
 }
 .star {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: content-box;
   width: 30px;
   height: 30px;
   flex-shrink: 0;
