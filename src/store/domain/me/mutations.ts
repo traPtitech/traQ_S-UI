@@ -10,6 +10,30 @@ import {
 } from '@traptitech/traq'
 import { detectMentionOfMe } from '@/lib/detector'
 import store from '@/store'
+import { checkBadgeAPISupport } from '@/lib/util/browser'
+
+const isBadgingAPISupported = checkBadgeAPISupport()
+const updateBadge = async () => {
+  if (!isBadgingAPISupported) return
+
+  const unreadChannelsSet = store.state.domain.me.unreadChannelsSet
+  const subscriptionMap = store.state.domain.me.subscriptionMap
+  const dmChannels = store.state.entities.dmChannels
+
+  const unreadCount = Object.entries(unreadChannelsSet)
+    .filter(
+      ([channelId, unreadChannel]) =>
+        channelId in dmChannels ||
+        unreadChannel.noticeable ||
+        subscriptionMap[channelId] === ChannelSubscribeLevel.subscribed
+    )
+    .reduce((acc, [, current]) => acc + current.count, 0)
+  if (unreadCount > 0) {
+    await navigator.setAppBadge(unreadCount)
+  } else {
+    await navigator.clearAppBadge()
+  }
+}
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -26,6 +50,7 @@ export const mutations = defineMutations<S>()({
     state.unreadChannelsSet = Object.fromEntries(
       unreadChannels.map(unread => [unread.channelId, unread])
     )
+    updateBadge()
   },
   upsertUnreadChannel(state: S, message: Message) {
     const noticeable = detectMentionOfMe(
@@ -59,10 +84,12 @@ export const mutations = defineMutations<S>()({
         updatedAt: message.createdAt
       })
     }
+    updateBadge()
   },
   // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
+    updateBadge()
   },
 
   setStaredChannels(state: S, channelIds: ChannelId[]) {
