@@ -44,6 +44,7 @@ import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import Icon from '@/components/UI/Icon.vue'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import useChannelPath from '@/use/channelPath'
+import { compareString } from '@/lib/util/string'
 
 const useChannelListFilter = () => {
   const channels = computed(() => Object.values(store.state.entities.channels))
@@ -61,34 +62,25 @@ const useStaredChannel = () => {
     )
   )
 
-  const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) => {
-    const nameA = a.name.toUpperCase()
-    const nameB = b.name.toUpperCase()
-
-    let comparison = 0
-    if (nameA > nameB) {
-      comparison = 1
-    } else if (nameA < nameB) {
-      comparison = -1
-    }
-    return comparison
-  }
+  const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
+    compareString(a.name.toUpperCase(), b.name.toUpperCase())
 
   const tree = computed(
     () =>
-      staredChannel.value
-        .map(ch => {
-          const _tree =
-            constructTree(ch, store.state.entities.channels) ??
-            ({} as ChannelTreeNode)
-
-          const { channelIdToShortPathString } = useChannelPath()
-          const path = channelIdToShortPathString(ch.id)
-
-          _tree.name = path
-          return _tree
-        })
-        .sort(sortChannelTreeNode) as ChannelTreeNode[]
+      constructTree(
+        {
+          id: '',
+          name: '',
+          parentId: null,
+          children: Object.keys(store.state.domain.me.staredChannelSet)
+        },
+        store.state.entities.channels
+      )
+        ?.children?.map(c => ({
+          ...c,
+          name: useChannelPath().channelIdToShortPathString(c.id)
+        }))
+        .sort(sortChannelTreeNode) ?? []
   )
 
   return { tree }
