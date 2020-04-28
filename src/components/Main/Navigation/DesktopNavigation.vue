@@ -123,6 +123,7 @@ $ephemeralNavigationMinHeight: 64px;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  flex: 1;
 }
 .navigation {
   width: 100%;
