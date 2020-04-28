@@ -7,11 +7,6 @@
       :style="styles.qallIcon"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
     />
-    <header-tools-item
-      @click="context.emit('click-pin')"
-      icon-mdi
-      icon-name="pin"
-    />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <header-tools-item
       v-show="currentChannelSubscription === 'notified'"
@@ -41,6 +36,11 @@
       @click="context.emit('star-channel')"
       icon-name="star-outline"
     />
+    <header-tools-item
+      @click="context.emit('click-pin')"
+      icon-mdi
+      icon-name="pin"
+    />
     <div :class="$style.moreButton">
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
       <header-tools-item
@@ -61,7 +61,7 @@ import {
 } from '@vue/composition-api'
 
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
-import HeaderToolsItem from './HeaderToolsItem.vue'
+import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 import { makeStyles } from '@/lib/styles'
 
