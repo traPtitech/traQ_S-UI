@@ -29,6 +29,9 @@
       v-else-if="modalState.current.type === 'clip-create'"
       :message-id="modalState.current.messageId"
     />
+    <clip-folder-create-modal
+      v-else-if="modalState.current.type === 'clip-folder-create'"
+    />
   </div>
 </template>
 
@@ -44,6 +47,7 @@ import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/Chann
 import FileModal from '@/components/Main/Modal/FileModal/FileModal.vue'
 import QrCodeModal from '@/components/Main/Modal/QRCodeModal/QRCodeModal.vue'
 import ClipCreateModal from '@/components/Main/Modal/ClipCreateModal/ClipCreateModal.vue'
+import ClipFolderCreateModal from '@/components/Main/Modal/ClipFolderCreateModal/ClipFolderCreateModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -84,7 +88,8 @@ export default defineComponent({
     ChannelCreateModal,
     FileModal,
     QrCodeModal,
-    ClipCreateModal
+    ClipCreateModal,
+    ClipFolderCreateModal
   }
 })
 </script>

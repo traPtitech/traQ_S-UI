@@ -109,22 +109,17 @@ export const actions = defineActions({
       case 'user':
         store.commit.domain.deleteUserDetail(modalState.id)
         break
-      case 'notification':
-        break
-      case 'file':
-        break
-      case 'setting':
-        break
-      case 'group':
-        break
       case 'tag':
         store.commit.entities.deleteTag(modalState.id)
         break
+      case 'notification':
+      case 'file':
+      case 'setting':
+      case 'group':
       case 'channel-create':
-        break
       case 'qrcode':
-        break
       case 'clip-create':
+      case 'clip-folder-create':
         break
       default:
         const invalid: never = modalState
