@@ -9,6 +9,7 @@
     </div>
     <buttons
       :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
+      :user-name="user.name"
       show-title
     />
   </section>

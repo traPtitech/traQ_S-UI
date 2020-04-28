@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
     <user-icon :class="$style.icon" :user-id="user.id" :size="36" />
-    <users-element-user-name :user="user" :class="$style.user" />
+    <users-element-user-name
+      @click.native="onClick"
+      :user="user"
+      :class="$style.user"
+    />
   </div>
 </template>
 
@@ -11,6 +15,7 @@ import { User } from '@traptitech/traq'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
+import { changeRouteByPath, constructUserPath } from '@/router'
 
 export default defineComponent({
   name: 'UsersElement',
@@ -28,8 +33,15 @@ export default defineComponent({
     const containerStyle = makeStyles(theme => ({
       color: theme.ui.tertiary
     }))
+    const onClick = () => {
+      if (props.user.bot) {
+        return
+      }
+      changeRouteByPath(constructUserPath(props.user.name))
+    }
     return {
-      containerStyle
+      containerStyle,
+      onClick
     }
   }
 })

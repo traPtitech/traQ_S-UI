@@ -17,37 +17,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import LinkButton from './LinkButton.vue'
-import useChannelPath from '@/use/channelPath'
 import { changeChannelByPath } from '@/router/channel'
+import { constructUserPath, changeRouteByPath } from '@/router'
+import useChannelPath from '@/use/channelPath'
+import LinkButton from './LinkButton.vue'
 
 export default defineComponent({
   name: 'Buttons',
   props: {
-    homeChannelId: String as PropType<string | null>,
+    homeChannelId: {
+      type: String,
+      required: false
+    },
+    userName: {
+      type: String,
+      required: true
+    },
     showTitle: {
       type: Boolean,
       default: false
     }
   },
   setup(props, context) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { homeChannelId?: string | null }
-
-    const onDMClick = () => {
-      // TODO: DM対応
-      //store.dispatch.domain.messagesView.changeCurrentChannel(/* DM Channel */)
+    const onDMClick = async () => {
+      const nameCache = props.userName
+      await store.dispatch.ui.modal.clearModal()
+      changeRouteByPath(constructUserPath(nameCache))
     }
 
     const { channelIdToPathString } = useChannelPath()
     const homeChannelPath = computed(() =>
-      propst.homeChannelId ? channelIdToPathString(propst.homeChannelId) : ''
+      props.homeChannelId ? channelIdToPathString(props.homeChannelId) : ''
     )
 
     const onHomeChannelClick = async () => {
-      if (!propst.homeChannelId) return
+      if (!props.homeChannelId) return
       // モーダル削除時に消えちゃうため、実体を退避
       const pathCache = homeChannelPath.value
       await store.dispatch.ui.modal.clearModal()
