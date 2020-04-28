@@ -62,7 +62,7 @@ export default defineComponent({
       () =>
         user.value &&
         !props.preventModal &&
-        !(user.value.bot && user.value.name.indexOf('@Webhook'))
+        !(user.value.bot || !user.value.name.startsWith('Webhook#')) // Webhookはbotかつ`Webhook#`で始まるidのユーザー
     )
     const onClick = () => {
       if (!isClickable.value) {
