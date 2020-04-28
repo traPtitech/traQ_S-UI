@@ -16,7 +16,7 @@
           :name="channel.name"
           :topic="channel.topic"
           :id="channel.id"
-          :is-current="channelId == channel.id"
+          :is-current="currentChannelId == channel.id"
           :class="$style.element"
         />
       </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
@@ -44,15 +44,24 @@ import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
+import { Channel } from '@traptitech/traq'
 
-const useChannelListFilter = () => {
-  const channels = computed(() => Object.values(store.state.entities.channels))
+const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
   return {
     channelListFilterState: textFilterState,
     setQuery
   }
 }
+
+const useChannels = (state: { isStar: boolean }) =>
+  computed(() =>
+    state.isStar
+      ? Object.keys(store.state.domain.me.staredChannelSet).map(
+          v => store.state.entities.channels[v]
+        )
+      : Object.values(store.state.entities.channels)
+  )
 
 const useStaredChannel = () => {
   const staredChannel = computed(() =>
@@ -64,8 +73,9 @@ const useStaredChannel = () => {
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
 
-  const tree = computed(
-    () =>
+  const tree = computed(() => {
+    const { channelIdToShortPathString } = useChannelPath()
+    return (
       constructTree(
         {
           id: '',
@@ -77,10 +87,11 @@ const useStaredChannel = () => {
       )
         ?.children?.map(c => ({
           ...c,
-          name: useChannelPath().channelIdToShortPathString(c.id)
+          name: channelIdToShortPathString(c.id)
         }))
         .sort(sortChannelTreeNode) ?? []
-  )
+    )
+  })
 
   return { tree }
 }
@@ -105,8 +116,10 @@ export default defineComponent({
       state.isStar = !state.isStar
     }
 
-    const { channelListFilterState, setQuery } = useChannelListFilter()
-    const channelId = computed(
+    const { channelListFilterState, setQuery } = useChannelListFilter(
+      useChannels(state)
+    )
+    const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
     )
     const { tree } = useStaredChannel()
@@ -115,7 +128,7 @@ export default defineComponent({
       topLevelChannels,
       channelListFilterState,
       setQuery,
-      channelId,
+      currentChannelId,
       tree,
       toggleStar,
       state
