@@ -16,7 +16,6 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { ClipFolderId } from '@/types/entity-ids'
-
 import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
