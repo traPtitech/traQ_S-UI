@@ -184,7 +184,7 @@ $messagePaddingMobile: 16px;
     'user-icon message-header'
     'user-icon message-contents'
     '... message-contents';
-  grid-template-rows: 28px 20px 1fr;
+  grid-template-rows: auto 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
@@ -197,7 +197,8 @@ $messagePaddingMobile: 16px;
 
 .pinned {
   grid-area: pinned;
-  margin: {
+  height: 28px;
+  padding: {
     top: 4px;
     bottom: 8px;
   }
