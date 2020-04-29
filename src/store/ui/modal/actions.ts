@@ -37,6 +37,18 @@ export const actions = defineActions({
     commit.setState(history.state.modalState)
   },
   /**
+   * モーダルを閉じ、場合によって適切な処理をする
+   */
+  popOrCloseModal: async context => {
+    const { state, dispatch } = modalActionContext(context)
+    if (state.isOnInitialModalRoute && state.modalState.length === 1) {
+      await dispatch.closeModal()
+    } else {
+      await dispatch.popModal()
+    }
+  },
+
+  /**
    * モーダルを閉じ、履歴をひとつ戻る
    */
   popModal: async context => {
