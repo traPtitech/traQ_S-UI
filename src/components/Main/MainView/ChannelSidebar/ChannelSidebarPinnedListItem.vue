@@ -2,6 +2,7 @@
   <message-panel
     title-type="user"
     hide-subtitle
+    line-clamp-content
     :message="message"
     @click="onMessageSelect"
   />
