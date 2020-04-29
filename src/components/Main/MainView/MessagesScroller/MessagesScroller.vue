@@ -67,11 +67,7 @@ const useCompareDate = (messageIds: MessageId[]) => {
     const current = store.state.entities.messages[messageIds[index]]
     const preDate = new Date(pre?.createdAt || ``)
     const currentDate = new Date(current?.createdAt || ``)
-    return (
-      preDate.getDate() !== currentDate.getDate() ||
-      preDate.getMonth() !== currentDate.getMonth() ||
-      preDate.getFullYear() !== currentDate.getFullYear()
-    )
+    return preDate.toDateString() !== currentDate.toDateString()
   }
   return dayDiff
 }
