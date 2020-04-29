@@ -9,7 +9,7 @@ import { makeStyles } from '@/lib/styles'
 const useStyles = () =>
   reactive({
     header: makeStyles(theme => ({
-      color: theme.ui.tertiary
+      color: theme.ui.secondary
     }))
   })
 

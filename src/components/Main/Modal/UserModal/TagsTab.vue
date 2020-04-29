@@ -40,7 +40,7 @@ import TagsTabEdit from '@/components/Main/Modal/UserModal/TagsTabEdit.vue'
 const useStyles = () =>
   reactive({
     tags: makeStyles(theme => ({
-      color: theme.ui.secondary
+      color: theme.ui.primary
     }))
   })
 
@@ -96,6 +96,10 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &:first-child {
+    // ナビゲーションと頭を揃える
+    margin-top: 8px;
+  }
 }
 
 .content {
