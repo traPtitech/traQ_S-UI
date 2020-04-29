@@ -1,7 +1,8 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div>
     <message-input-text-area
       :class="$style.inputTextArea"
+      :style="styles.inputTextArea"
       :text="textState.text"
       @input="onInputText"
       @modifier-key-down="onModifierKeyDown"
@@ -41,7 +42,7 @@ const useEditMessage = (props: { messageId: string }, textState: TextState) => {
 
 const useStyles = () =>
   reactive({
-    container: makeStyles(theme => ({
+    inputTextArea: makeStyles(theme => ({
       background: theme.background.secondary
     }))
   })
@@ -85,7 +86,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
+.inputTextArea {
   padding: 8px 12px;
   border-radius: 4px;
   overflow: hidden;

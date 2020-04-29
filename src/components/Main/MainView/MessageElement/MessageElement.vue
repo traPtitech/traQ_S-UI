@@ -101,7 +101,11 @@ import MessagePinned from './MessagePinned.vue'
 const useStyles = (
   props: { isEntryMessage: boolean },
   hoverState: { hover: boolean },
-  state: { message?: Message; stampDetailFoldingState: boolean }
+  state: {
+    message?: Message
+    stampDetailFoldingState: boolean
+    isEditing: boolean
+  }
 ) =>
   reactive({
     body: makeStyles((theme, common) => ({
@@ -109,7 +113,7 @@ const useStyles = (
         ? transparentize(common.ui.pin, 0.2)
         : props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
-        : hoverState.hover
+        : hoverState.hover && !state.isEditing
         ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
     })),
