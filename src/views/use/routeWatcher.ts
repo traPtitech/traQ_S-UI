@@ -194,7 +194,7 @@ const useRouteWacher = (context: SetupContext) => {
     const isOnInitialModalRoute =
       state.isInitialView &&
       history.state?.modalState &&
-      !!history.state?.modalState[0].relatedRoute
+      !!history.state?.modalState[0]?.relatedRoute
     store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
 
     if (state.isInitialView && !isOnInitialModalRoute) {

@@ -63,9 +63,7 @@ export const actions = defineActions({
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
-    const { commit, state, dispatch, getters, rootState } = modalActionContext(
-      context
-    )
+    const { commit, state, dispatch, getters } = modalActionContext(context)
     const { currentState } = getters
     history.replaceState(
       {
@@ -80,8 +78,6 @@ export const actions = defineActions({
   },
   /**
    * 全てのモーダルを閉じる
-   *
-   * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
    */
   clearModal: async context => {
     const { state, commit, dispatch } = modalActionContext(context)
@@ -89,6 +85,11 @@ export const actions = defineActions({
     commit.setIsClearingModal(true)
     try {
       for (let i = 0; i < length; i++) {
+        if (state.isOnInitialModalRoute && i === length - 1) {
+          await dispatch.closeModal()
+          continue
+        }
+
         await dispatch.popModal()
       }
     } finally {
