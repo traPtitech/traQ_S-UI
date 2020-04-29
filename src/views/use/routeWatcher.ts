@@ -1,9 +1,10 @@
 import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
-import store from '@/store'
+import store, { originalStore } from '@/store'
 import { RouteName } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
+import apis from '@/lib/apis'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -15,16 +16,17 @@ const useRouteWacher = (context: SetupContext) => {
   const state = reactive({
     currentRouteName: computed(() => context.root.$route.name ?? ''),
     currentRouteParam: computed(
-      (): string => state.idParam ?? state.channelParam ?? ''
+      (): string => state.idParam ?? state.channelParam ?? state.userParam ?? ''
     ),
     idParam: computed(() => context.root.$route.params['id']),
     channelParam: computed(() => context.root.$route.params['channel']),
+    userParam: computed(() => context.root.$route.params['user']),
     view: 'none' as Views,
     isInitialView: true
   })
 
   const onRouteChangedToIndex = async () => {
-    await (store.original as any).restored
+    await originalStore.restored
     try {
       await context.root.$router.replace({
         name: RouteName.Channel,
@@ -56,6 +58,22 @@ const useRouteWacher = (context: SetupContext) => {
     }
     changeViewTitle(`#${state.channelParam}`)
     state.view = 'main'
+  }
+
+  const onRouteChangedToUser = async () => {
+    const user = store.getters.entities.userByName(state.currentRouteParam)
+    try {
+      if (!user) throw 'user not found'
+      const dmChannel = await apis.getUserDMChannel(user.id)
+      store.dispatch.ui.mainView.changePrimaryViewToDM({
+        channelId: dmChannel.data.id
+      })
+      changeViewTitle(user.name)
+      state.view = 'main'
+    } catch {
+      state.view = 'not-found'
+      return
+    }
   }
 
   const onRouteChangedToClipFolders = async () => {
@@ -142,6 +160,8 @@ const useRouteWacher = (context: SetupContext) => {
     }
     if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
+    } else if (routeName === RouteName.User) {
+      onRouteChangedToUser()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {

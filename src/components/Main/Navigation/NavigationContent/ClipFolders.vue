@@ -66,7 +66,7 @@ export default defineComponent({
   padding: 0 16px 0 0;
 }
 .element {
-  margin: 16px 0;
+  margin: 8px 0;
 }
 .button {
   opacity: 0.5;

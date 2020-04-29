@@ -8,7 +8,13 @@
       />
     </template>
     <template #tools>
-      <!-- TODO: クリップフォルダの編集 -->
+      <div :class="$style.container">
+        <main-view-header-tools-item
+          @click="openSidebar"
+          icon-mdi
+          icon-name="info"
+        />
+      </div>
     </template>
   </main-view-header>
 </template>
@@ -23,9 +29,11 @@ import {
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
+import useSidebar from '@/use/sidebar'
 import Icon from '@/components/UI/Icon.vue'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
+import MainViewHeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 const useStyles = () =>
   reactive({
@@ -44,7 +52,8 @@ export default defineComponent({
   components: {
     Icon,
     MainViewHeader,
-    MainViewHeaderTitle
+    MainViewHeaderTitle,
+    MainViewHeaderToolsItem
   },
   props: {
     clipFolderId: {
@@ -57,10 +66,30 @@ export default defineComponent({
     const clipFolderName = computed(
       () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
     )
+    const { openSidebar } = useSidebar()
     return {
       styles,
-      clipFolderName
+      clipFolderName,
+      openSidebar
     }
   }
 })
 </script>
+
+<style lang="scss" module>
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.moreButton {
+  position: relative;
+  display: inline;
+}
+.popupLocator {
+  position: absolute;
+  right: 0;
+  top: 100%;
+}
+</style>

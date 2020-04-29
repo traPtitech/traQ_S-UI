@@ -2,17 +2,17 @@ import { ws, wsConnectionPromise } from './index'
 import { ChannelViewState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
-type WebSocketCommand = 'viewstate' | 'rtcstate'
+type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
 
 const sendWebSocket = async (
   ...command: readonly [WebSocketCommand, ...string[]]
 ): Promise<void> => {
-  await wsConnectionPromise
   if (ws === undefined) {
     throw new Error('WebSocket is not connected')
   }
+  await wsConnectionPromise
   if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
-    throw 'WebSocket is already in CLOSING or CLOSED state.'
+    throw new Error('WebSocket is already in CLOSING or CLOSED state.')
   }
   ws.send(command.join(':'))
 }
@@ -29,7 +29,7 @@ export const changeViewState: ChangeViewStateFunction = (
   viewState?: ChannelViewState
 ): Promise<void> => {
   if (channelId === null) {
-    return sendWebSocket(VIEWSTATE_COMMAND, 'null')
+    return sendWebSocket(VIEWSTATE_COMMAND, '')
   } else {
     return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
   }
@@ -50,4 +50,16 @@ export const changeRTCState = (
     ...states.flatMap(s => [s.state, s.sessionId]),
     '' // 終端の:をつける
   )
+}
+
+const TIMELINE_STREAMING_COMMAND = 'timeline_streaming'
+
+type TimelineStreamingType = 'on' | 'off' | 'true' | 'false'
+
+const changeTimelineStreamingState = (type: TimelineStreamingType) => {
+  return sendWebSocket(TIMELINE_STREAMING_COMMAND, type)
+}
+
+export const setTimelineStreamingState = (type: boolean) => {
+  return changeTimelineStreamingState(type ? 'on' : 'off')
 }

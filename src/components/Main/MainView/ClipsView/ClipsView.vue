@@ -5,14 +5,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { ClipFolderId } from '@/types/entity-ids'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import ClipsViewContent from './ClipsViewContent.vue'
 
@@ -30,19 +24,9 @@ export default defineComponent({
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
   },
   components: { ClipsViewContent },
-  setup(props) {
-    const messageIds = computed(
-      () => store.state.domain.messagesView.messageIds
-    )
-    const clipFolder = computed(
-      () => store.state.entities.clipFolders?.[props.clipFolderId]
-    )
-
+  setup() {
     const styles = useStyles()
-
     return {
-      messageIds,
-      clipFolder,
       styles
     }
   }

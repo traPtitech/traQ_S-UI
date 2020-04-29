@@ -34,39 +34,41 @@
           label="修飾キー+Enterで送信 / Enterで改行"
           input-value="modifier"
           v-model="state.sendWithModifierKey"
-          :class="$style.form"
+          :class="$style.sendWithModifierKey"
         />
         <form-radio
           label="Enterで送信 / 修飾キー+Enterで改行"
           input-value="none"
           v-model="state.sendWithModifierKey"
-          :class="$style.form"
+          :class="$style.sendWithModifierKey"
         />
         <div :class="$style.key">
           <p>
             修飾キーとして利用するキー
           </p>
-          <form-checkbox
-            :label="getModifierKeyName('shift')"
-            v-model="state.modifierKey.shift"
-            :class="$style.form"
-          />
-          <form-checkbox
-            :label="getModifierKeyName('alt')"
-            v-model="state.modifierKey.alt"
-            :class="$style.form"
-          />
-          <form-checkbox
-            :label="getModifierKeyName('ctrl')"
-            v-model="state.modifierKey.ctrl"
-            :class="$style.form"
-          />
-          <form-checkbox
-            v-if="macFlag"
-            :label="getModifierKeyName('macCtrl')"
-            v-model="state.modifierKey.macCtrl"
-            :class="$style.form"
-          />
+          <div>
+            <form-checkbox
+              :label="getModifierKeyName('shift')"
+              v-model="state.modifierKey.shift"
+              :class="$style.keyCheckbox"
+            />
+            <form-checkbox
+              :label="getModifierKeyName('alt')"
+              v-model="state.modifierKey.alt"
+              :class="$style.keyCheckbox"
+            />
+            <form-checkbox
+              :label="getModifierKeyName('ctrl')"
+              v-model="state.modifierKey.ctrl"
+              :class="$style.keyCheckbox"
+            />
+            <form-checkbox
+              v-if="macFlag"
+              :label="getModifierKeyName('macCtrl')"
+              v-model="state.modifierKey.macCtrl"
+              :class="$style.keyCheckbox"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -173,7 +175,11 @@ export default defineComponent({
 h3 {
   margin-bottom: 8px;
 }
-.form {
+.sendWithModifierKey {
+  display: inline-block;
+  margin-right: 12px;
+}
+.keyCheckbox {
   margin-right: 12px;
 }
 .channel {
@@ -189,10 +195,12 @@ h3 {
   margin-left: 12px;
 }
 .key {
-  margin-top: 4px;
   display: flex;
-  p {
-    margin-right: 24px;
+  margin-top: 16px;
+  flex-flow: row wrap;
+  align-items: center;
+  > div {
+    margin-left: 24px;
   }
 }
 .echo {

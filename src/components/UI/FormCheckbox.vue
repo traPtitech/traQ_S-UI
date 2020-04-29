@@ -84,6 +84,7 @@ export default defineComponent({
   width: 13px;
   border: solid 2px;
   border-radius: 4px;
+  vertical-align: middle;
 }
 .pseudoCheckboxInner {
   display: inline-block;

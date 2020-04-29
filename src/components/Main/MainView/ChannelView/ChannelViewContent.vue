@@ -17,11 +17,10 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-
 import { makeStyles } from '@/lib/styles'
+
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
 

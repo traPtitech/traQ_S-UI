@@ -57,6 +57,7 @@ export default defineComponent({
   font-size: 18px;
 }
 .icon {
+  flex-shrink: 0;
   margin-right: 16px;
 }
 </style>

@@ -15,7 +15,7 @@ import useHeaderStyle from '@/components/Main/MainView/MainViewHeader/use/header
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
-  name: 'ChannelViewHeaderToolsItem',
+  name: 'MainViewHeaderToolsItem',
   components: {
     Icon
   },

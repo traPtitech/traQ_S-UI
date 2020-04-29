@@ -1,35 +1,61 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 import { ActivityTimelineMessage, UserDetail } from '@traptitech/traq'
 import { S } from './state'
-import { ChannelState } from '.'
+import store from '..'
+import { ACTIVITY_LENGTH } from '.'
 
 export const mutations = defineMutations<S>()({
-  setChannelActivity(state: S, activity: ActivityTimelineMessage[]) {
-    state.channelActivity = activity
+  setActivityTimeline(state: S, activities: ActivityTimelineMessage[]) {
+    state.activityTimeline = activities
+    state.activityTimelineChannelMap = Object.fromEntries(
+      activities.map(activity => [activity.channelId, activity])
+    )
   },
-  setMessageActivity(state: S, activity: MessageId[]) {
-    state.messageActivity = activity
-  },
-  addChannelState(
-    state: S,
-    payload: {
-      id: ChannelId
-      state: ChannelState
+  addActivity(state: S, activity: ActivityTimelineMessage) {
+    // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
+    if (!store.getters.app.browserSettings.isActivityModeAll) {
+      const subscriptionLevel =
+        store.state.domain.me.subscriptionMap[activity.channelId]
+      if (!subscriptionLevel || subscriptionLevel <= 0) {
+        return
+      }
     }
-  ) {
-    // [TODO] ここでキャッシュされてるエントリを適切に削除する必要あり
-    Vue.set(state.messageActivity, payload.id, payload.state)
+
+    // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す
+    if (store.getters.app.browserSettings.isActivityModePerChannel) {
+      const sameChannelActivity =
+        state.activityTimelineChannelMap[activity.channelId]
+      if (sameChannelActivity) {
+        const sameChannelActivityIndex = state.activityTimeline.indexOf(
+          sameChannelActivity
+        )
+        state.activityTimeline.splice(sameChannelActivityIndex, 1)
+      }
+    }
+    state.activityTimeline.unshift(activity)
+    Vue.set(state.activityTimelineChannelMap, activity.channelId, activity)
+
+    // ガーベッジコレクタ
+    if (state.activityTimeline.length > ACTIVITY_LENGTH) {
+      const lastActivity = state.activityTimeline.pop()!
+      if (
+        state.activityTimelineChannelMap[lastActivity.channelId] ===
+        lastActivity
+      ) {
+        state.activityTimelineChannelMap[lastActivity.channelId] = undefined
+      }
+    }
   },
-  setOnlineUsers(state: S, activity: UserId[]) {
-    state.onlineUsers = activity
+  setOnlineUsers(state: S, users: UserId[]) {
+    state.onlineUsers = users
   },
-  addOnlineUser(state: S, activity: UserId) {
-    state.onlineUsers.push(activity)
+  addOnlineUser(state: S, userId: UserId) {
+    state.onlineUsers.push(userId)
   },
-  deleteOnlineUser(state: S, activity: UserId) {
-    state.onlineUsers.splice(state.onlineUsers.indexOf(activity), 1)
+  deleteOnlineUser(state: S, userId: UserId) {
+    state.onlineUsers.splice(state.onlineUsers.indexOf(userId), 1)
   },
   setUserDetail: (state, userDetail: UserDetail) => {
     Vue.set(state.userDetails, userDetail.id, userDetail)
