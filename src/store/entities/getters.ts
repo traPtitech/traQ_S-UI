@@ -5,7 +5,7 @@ import { moduleGetterContext } from '@/store'
 import { User, Stamp, UserGroup } from '@traptitech/traq'
 import { UserId, DMChannelId } from '@/types/entity-ids'
 
-const entitiesGetterContext = (args: [any, any, any, any]) =>
+const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
 
 export const getters = defineGetters<S>()({

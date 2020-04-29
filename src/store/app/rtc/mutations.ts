@@ -1,8 +1,13 @@
 import { defineMutations } from 'direct-vuex'
-import { S, UserRTCState, SessionInfo, SessionId } from './state'
+import {
+  S,
+  UserRTCState,
+  SessionInfo,
+  SessionId,
+  ExtendedMediaStream
+} from './state'
 import { WebRTCUserState } from '@traptitech/traq'
 import Vue from 'vue'
-
 import { ChannelId, UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
 
@@ -157,7 +162,7 @@ export const mutations = defineMutations<S>()({
   unsetMixer(state) {
     state.mixer = undefined
   },
-  setLocalStream(state, mediaStream: MediaStream) {
+  setLocalStream(state, mediaStream: ExtendedMediaStream) {
     state.localStream = mediaStream
   },
   unsetLocalStream(state) {
@@ -168,7 +173,7 @@ export const mutations = defineMutations<S>()({
   },
   muteLocalStream(state) {
     if (!state.localStream) return
-    ;(state.localStream as any).userMuted = true
+    state.localStream.userMuted = true
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = false
     })
@@ -176,7 +181,7 @@ export const mutations = defineMutations<S>()({
   },
   unmuteLocalStream(state) {
     if (!state.localStream) return
-    ;(state.localStream as any).userMuted = true
+    state.localStream.userMuted = true
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = true
     })

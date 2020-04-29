@@ -2,9 +2,11 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { mainView } from './index'
 import { ClipFolderId, ChannelId, MessageId } from '@/types/entity-ids'
+import { ActionContext } from 'vuex'
 
-export const mainViewActionContext = (context: any) =>
-  moduleActionContext(context, mainView)
+export const mainViewActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, mainView)
 
 export const actions = defineActions({
   changePrimaryViewToChannel(

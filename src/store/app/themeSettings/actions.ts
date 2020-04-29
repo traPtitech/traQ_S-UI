@@ -1,9 +1,11 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { themeSettings } from './index'
+import { ActionContext } from 'vuex'
 
-export const themeSettingsActionContext = (context: any) =>
-  moduleActionContext(context, themeSettings)
+export const themeSettingsActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, themeSettings)
 
 export const actions = defineActions({
   toggleTheme(context) {
@@ -17,12 +19,13 @@ export const actions = defineActions({
         break
       case 'custom': // ボタンをちゃんと無効化したら外す？
         break
-      default:
+      default: {
         const invalid: never = state.type
         // eslint-disable-next-line no-console
         console.warn(`Invalid theme type: ${invalid}`)
 
         commit.setCurrentTheme('light')
+      }
     }
   }
 })

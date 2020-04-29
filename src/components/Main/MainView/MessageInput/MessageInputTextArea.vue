@@ -59,6 +59,7 @@ const useLineBreak = (
     context.emit('input', `${pre}\n${suf}`)
 
     context.root.$nextTick(() => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       textareaRef.value!.selectionStart = textareaRef.value!.selectionEnd = selectionIndex
     })
   }

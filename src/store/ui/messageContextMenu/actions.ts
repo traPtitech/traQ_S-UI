@@ -2,9 +2,11 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messageContextMenu } from './index'
 import { MessageId } from '@/types/entity-ids'
+import { ActionContext } from 'vuex'
 
-export const messageContextMenuActionContext = (context: any) =>
-  moduleActionContext(context, messageContextMenu)
+export const messageContextMenuActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, messageContextMenu)
 
 export const actions = defineActions({
   openMessageContextMenu(

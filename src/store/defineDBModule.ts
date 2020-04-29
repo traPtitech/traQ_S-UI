@@ -6,6 +6,7 @@ import {
 } from 'direct-vuex'
 import { PersistOptions } from 'vuex-persist'
 import { get as shvlGet, set as shvlSet } from 'shvl'
+import { AppStore } from '.'
 
 interface DBPath {
   /**
@@ -36,10 +37,11 @@ export const defineDBModule = <O extends WithOptionalState, S = StateOf<O>>(
 /**
  * 同期するストアのモジュール/値の絞り込み
  */
-export const persistReducer: PersistOptions<any>['reducer'] = state => {
+export const persistReducer: PersistOptions<unknown>['reducer'] = state => {
+  const typedState = state as AppStore['state']
   const persistState = {}
   dbModulePaths.forEach(path => {
-    shvlSet(persistState, path, shvlGet(state, path))
+    shvlSet(persistState, path, shvlGet(typedState, path))
   })
   return persistState
 }

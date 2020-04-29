@@ -10,6 +10,7 @@ import {
   ChannelId,
   ClipFolderId
 } from '@/types/entity-ids'
+import { ActionContext } from 'vuex'
 
 // TODO: リクエストパラメータの型置き場
 interface BaseGetMessagesParams {
@@ -19,7 +20,6 @@ interface BaseGetMessagesParams {
   until?: Date
   inclusive?: boolean
   order?: 'asc' | 'desc'
-  options?: any
 }
 interface GetMessagesParams extends BaseGetMessagesParams {
   channelId: string
@@ -34,7 +34,6 @@ interface GetFilesChannelParams {
   inclusive?: boolean
   order?: 'asc' | 'desc'
   mine?: boolean
-  options?: any
 }
 
 interface GetClipsParam {
@@ -48,8 +47,9 @@ interface GetDirectMessagesParams extends BaseGetMessagesParams {
   userId: string
 }
 
-export const entitiesActionContext = (context: any) =>
-  moduleActionContext(context, entities)
+export const entitiesActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, entities)
 
 export const actions = defineActions({
   async fetchUser(context, userId: string) {

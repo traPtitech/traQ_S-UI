@@ -46,7 +46,9 @@ export default defineComponent({
   name: 'ChannelList',
   components: {
     // 型エラー・コンポーネント循環参照の回避
-    ChannelElement: () => import('./ChannelElement.vue') as any
+    ChannelElement: (() =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      import('./ChannelElement.vue')) as any
   },
   props: {
     channels: {

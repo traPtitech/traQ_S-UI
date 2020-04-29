@@ -65,6 +65,7 @@ const useActivityStream = () => {
   }
 
   onBeforeMount(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     await fetch(mode.value).catch(() => {})
     if (mode.value.all) {
       setTimelineStreamingState(true)
@@ -75,6 +76,7 @@ const useActivityStream = () => {
   watch(
     () => mode.value,
     async (newMode, oldMode) => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       await fetch(mode.value).catch(() => {})
       if (newMode.all !== oldMode?.all) {
         setTimelineStreamingState(newMode.all)

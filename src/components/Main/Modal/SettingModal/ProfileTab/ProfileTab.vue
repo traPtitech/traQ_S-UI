@@ -115,6 +115,7 @@ const useState = (detail: Ref<UserDetail>) => {
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const detail = computed(() => store.state.domain.me.detail!)
 
     const channelOptions = useChannelOptions()

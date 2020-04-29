@@ -5,7 +5,7 @@ import { moduleGetterContext } from '@/store'
 import { me } from '.'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
-const meGetterContext = (args: [any, any, any, any]) =>
+const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
 
 export const getters = defineGetters<S>()({

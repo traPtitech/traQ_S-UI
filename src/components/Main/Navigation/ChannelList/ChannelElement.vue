@@ -101,7 +101,8 @@ export default defineComponent({
   name: 'ChannelElement',
   components: {
     // 型エラー・コンポーネント循環参照の回避
-    ChannelList: () => import('./ChannelList.vue') as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ChannelList: (() => import('./ChannelList.vue')) as any,
     ChannelElementHash
   },
   props: {

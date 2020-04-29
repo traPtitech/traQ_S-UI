@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import apis from '@/lib/apis'
 import store from '@/store'
 import {
@@ -14,6 +13,8 @@ import {
   UserGroupDeletedEvent,
   UserUpdatedEvent
 } from './events'
+import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
+import { WebRTCUserState } from '@traptitech/traq'
 
 export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
   const res = await apis.getUser(id)
@@ -65,15 +66,12 @@ export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
 }
 
 export const onUserWebRTCStateChanged = (
-  data: UserWebRTCStateChangedEvent['body']
+  dataSnake: UserWebRTCStateChangedEvent['body']
 ) => {
-  //FIXME
-  const _data = data as any
-  store.commit.app.rtc.updateRTCState({
-    userId: _data['user_id'],
-    channelId: _data['channel_id'],
-    sessions: data.sessions
-  })
+  const data = (formatSnakeKeysToCamelShallow(
+    dataSnake
+  ) as unknown) as WebRTCUserState
+  store.commit.app.rtc.updateRTCState(data)
 }
 
 export const onUserGroupCreated = async ({

@@ -39,7 +39,7 @@ export default defineComponent({
     const styles = useStyles()
     const username = computed(() => {
       const pin = store.state.domain.messagesView.pinnedMessages.find(
-        v => v.message.id == props.messageId
+        v => v.message.id === props.messageId
       )
       const user = store.state.entities.users[pin?.userId ?? '']
       return user?.name

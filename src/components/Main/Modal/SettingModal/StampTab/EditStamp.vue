@@ -24,6 +24,7 @@ export default defineComponent({
   name: 'EditStamp',
   setup() {
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const myUserId = computed(() => store.state.domain.me.detail!.id)
     const myStamps = computed(() =>
       Object.values(store.state.entities.stamps).filter(

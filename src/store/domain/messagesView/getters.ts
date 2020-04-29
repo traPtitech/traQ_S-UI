@@ -5,7 +5,7 @@ import { messagesView } from './index'
 import { UserId, MessageId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
 
-const getterContext = (args: [any, any, any, any]) =>
+const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, messagesView)
 
 export const getters = defineGetters<S>()({

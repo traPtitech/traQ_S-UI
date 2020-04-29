@@ -20,12 +20,16 @@ export type UserRTCState = {
   sessionStates: UserSessionState[]
 }
 
+export interface ExtendedMediaStream extends MediaStream {
+  userMuted?: boolean
+}
+
 export interface S {
   /** ミキサー */
   mixer?: AudioStreamMixer
 
   /** 送信するMediaStream */
-  localStream?: MediaStream
+  localStream?: ExtendedMediaStream
 
   /** マイクミュート */
   isMicMuted: boolean

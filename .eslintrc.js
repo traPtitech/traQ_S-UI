@@ -10,6 +10,9 @@ module.exports = {
     parser: '@typescript-eslint/parser'
   },
   extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:vue/strongly-recommended',
     '@vue/prettier',
     '@vue/typescript'
@@ -18,7 +21,21 @@ module.exports = {
   rules: {
     'no-console': isStrict ? 'error' : 'warn',
     'no-debugger': isStrict ? 'error' : 'warn',
-    'no-fallthrough': 'error',
+    'no-empty': ['error', { allowEmptyCatch: true }],
+    eqeqeq: 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/member-delimiter-style': [
+      'error',
+      {
+        multiline: {
+          delimiter: 'none'
+        },
+        singleline: {
+          delimiter: 'semi'
+        }
+      }
+    ],
+    '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports-ts': isStrict ? 'error' : 'warn',
     'unused-imports/no-unused-vars-ts': 'off'

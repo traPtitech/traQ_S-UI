@@ -9,7 +9,7 @@ import {
   MessageUnstampedEvent
 } from '@/lib/websocket/events'
 
-type RecordKeyOf<R> = R extends Record<infer K, any> ? K : never
+type RecordKeyOf<R> = R extends Record<infer K, unknown> ? K : never
 type RecordValueOf<R> = R extends Record<string, infer V> ? V : never
 
 const setMutation = <O, K extends keyof O>(key: K) => (
@@ -25,7 +25,7 @@ const extendMutation = <O, K extends keyof O>(key: K) => (
   state[key] = { ...state[key], ...entities }
 }
 const addMutation = <
-  O extends Record<string, Record<string, any>>,
+  O extends Record<string, Record<string, unknown>>,
   K extends keyof O
 >(
   key: K
@@ -36,7 +36,7 @@ const addMutation = <
   Vue.set(state[key], payload.id, payload.entity)
 }
 const deleteMutation = <
-  O extends Record<string, Record<string, any>>,
+  O extends Record<string, Record<string, unknown>>,
   K extends keyof O
 >(
   key: K

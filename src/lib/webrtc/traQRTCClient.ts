@@ -3,31 +3,26 @@ import apis from '@/lib/apis'
 
 const skywayApiKey = '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
 
-interface QRTCStreamChangeEvent extends Event {
-  detail: {
-    stream: MediaStream & { peerId: string }
-  }
-}
-interface QRTCDataRecieveEvent extends Event {
-  detail: {
-    data: RoomData
-  }
-}
-interface QRTCUserJoinEvent extends Event {
-  detail: {
-    userId: string
-  }
-}
-interface QRTCUserLeaveEvent extends Event {
-  detail: {
-    userId: string
-  }
-}
-interface QRTCConnectionErrorEvent extends Event {
-  detail: {
-    err: any
-  }
-}
+type QRTCStreamChangeEvent = CustomEvent<{
+  stream: MediaStream & { peerId: string }
+}>
+
+type QRTCDataRecieveEvent = CustomEvent<{
+  data: RoomData
+}>
+
+type QRTCUserJoinEvent = CustomEvent<{
+  userId: string
+}>
+
+type QRTCUserLeaveEvent = CustomEvent<{
+  userId: string
+}>
+
+type QRTCConnectionErrorEvent = CustomEvent<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  err: any
+}>
 
 interface QRTCEventMap {
   connect: Event
@@ -42,6 +37,7 @@ interface QRTCEventMap {
   connectionerror: QRTCConnectionErrorEvent
 }
 
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class traQRTCClientBase {
   private eventTargetDeligator: EventTarget = document.createDocumentFragment()
 
@@ -59,7 +55,7 @@ class traQRTCClientBase {
 
   public removeEventListener<K extends keyof QRTCEventMap>(
     event: K,
-    listener: (ev: QRTCEventMap[K]) => any,
+    listener: (ev: QRTCEventMap[K]) => void,
     options?: boolean | EventListenerOptions
   ) {
     return this.eventTargetDeligator.removeEventListener(
@@ -77,6 +73,7 @@ class traQRTCClientBase {
 /**
  * @class リアルタイム系機能を提供するクラス
  */
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class traQRTCClient extends traQRTCClientBase {
   private peer?: Peer
   private room?: SfuRoom
@@ -121,29 +118,26 @@ class traQRTCClient extends traQRTCClientBase {
    * Join to the room.
    * @param roomName a name of room to join.
    */
-  public joinRoom(roomName: string, stream: MediaStream) {
-    return new Promise(async (resolve, reject) => {
-      if (!this.peer || !this.peer.open) {
-        reject('connection has not been established')
-        return
-      }
-      const room = this.peer.joinRoom(roomName, {
-        mode: 'sfu',
-        stream
-      }) as SfuRoom
-      if (!room) {
-        reject(`failed to join room: ${roomName}.`)
-        return
-      }
-      room.on('open', this.handleRoomOpen.bind(this))
-      room.on('peerJoin', this.handleRoomPeerJoin.bind(this))
-      room.on('peerLeave', this.handleRoomPeerLeave.bind(this))
-      room.on('stream', this.handleRoomStream.bind(this))
-      room.on('data', this.handleRoomData.bind(this))
-      room.on('close', this.handleRoomClose.bind(this))
-      this.room = room
-      resolve()
+  public async joinRoom(roomName: string, stream: MediaStream) {
+    if (!this.peer || !this.peer.open) {
+      throw 'connection has not been established'
+    }
+
+    const room = this.peer.joinRoom<SfuRoom>(roomName, {
+      mode: 'sfu',
+      stream
     })
+    if (!room) {
+      throw `failed to join room: ${roomName}.`
+    }
+
+    room.on('open', this.handleRoomOpen.bind(this))
+    room.on('peerJoin', this.handleRoomPeerJoin.bind(this))
+    room.on('peerLeave', this.handleRoomPeerLeave.bind(this))
+    room.on('stream', this.handleRoomStream.bind(this))
+    room.on('data', this.handleRoomData.bind(this))
+    room.on('close', this.handleRoomClose.bind(this))
+    this.room = room
   }
 
   public async setStream(stream: MediaStream) {
@@ -160,21 +154,21 @@ class traQRTCClient extends traQRTCClientBase {
     return this.room ? this.room.name : ''
   }
 
-  private createPeer(peerId: string) {
-    return new Promise<Peer>(async (resolve, reject) => {
-      const res = await apis.postWebRTCAuthenticate({ peerId })
-      if (res.status !== 200) {
-        reject("Couldn't get credential")
-        return
-      }
-      const peer = new Peer(peerId, {
-        key: skywayApiKey,
-        credential: res.data
-      })
-      if (!peer) {
-        reject("Couldn't establish connection")
-        return
-      }
+  private async createPeer(peerId: string) {
+    const res = await apis.postWebRTCAuthenticate({ peerId })
+    if (res.status !== 200) {
+      throw "Couldn't get credential"
+    }
+
+    const peer = new Peer(peerId, {
+      key: skywayApiKey,
+      credential: res.data
+    })
+    if (!peer) {
+      throw "Couldn't establish connection"
+    }
+
+    return new Promise<Peer>(resolve => {
       peer.on('open', () => {
         // eslint-disable-next-line no-console
         console.log(`[RTC] Connection established, ID: ${peer.id}`)
@@ -189,7 +183,7 @@ class traQRTCClient extends traQRTCClientBase {
   private handlePeerDisconnected() {
     this.dispatchEvent(new Event('disconnect'))
   }
-  private handlePeerError(err: any) {
+  private handlePeerError(err: unknown) {
     // eslint-disable-next-line no-console
     console.error(`[RTC] ${err}`)
     this.dispatchEvent(new CustomEvent('connectionerror', { detail: { err } }))

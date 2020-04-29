@@ -4,8 +4,9 @@ import apis from '@/lib/apis'
 import { me } from './index'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { ActionContext } from 'vuex'
 
-export const meActionContext = (context: any) =>
+export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
 
 export const actions = defineActions({

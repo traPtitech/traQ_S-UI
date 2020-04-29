@@ -164,9 +164,10 @@ export const onReceive = (data: string) => {
     case 'CLIP_FOLDER_MESSAGE_DELETED':
       onClipFolderMessageDeleted(event.body)
       break
-    default:
+    default: {
       const strangeValue: never = event
       // eslint-disable-next-line no-console
       console.warn(`[WebSocket] Unknown event: `, strangeValue)
+    }
   }
 }

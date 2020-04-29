@@ -16,7 +16,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
   )
   const fileThumbnailPath = computed(() =>
-    fileMeta.value && fileMeta.value.thumbnail != null
+    fileMeta.value && fileMeta.value.thumbnail !== null
       ? buildFileThumbnailPath(fileMeta.value.id)
       : ''
   )

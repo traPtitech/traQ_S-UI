@@ -4,6 +4,11 @@ export const maxGain = 5
 export const maxMasterGain = 3
 export const talkingThreshould = 300
 
+type WebkitWindow = Window &
+  typeof globalThis & {
+    webkitAudioContext: AudioContext
+  }
+
 export default class AudioStreamMixer {
   private streamSourceNodeMap: Record<string, MediaStreamAudioSourceNode> = {}
   private audioBufferMap: Record<string, AudioBuffer> = {}
@@ -16,8 +21,8 @@ export default class AudioStreamMixer {
   readonly analyserFftSize = 128
 
   constructor() {
-    this.context = new ((window as any).AudioContext ||
-      (window as any).webkitAudioContext)() as AudioContext
+    this.context = new (window.AudioContext ||
+      (window as WebkitWindow).webkitAudioContext)()
   }
 
   private async createAudioSourceNodeGraph(buffer: AudioBuffer) {
