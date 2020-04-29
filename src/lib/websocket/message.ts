@@ -66,18 +66,26 @@ export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
   if (!isMessageForCurrentChannel(data.channel_id)) {
     return
   }
-  const message = await apis.getMessage(data.message_id)
-  const pin = await apis.getPin(data.message_id)
+  const [message, pin] = await Promise.all([
+    apis.getMessage(data.message_id),
+    apis.getPin(data.message_id)
+  ])
   store.commit.domain.messagesView.addPinnedMessages({
     userId: pin.data.userId,
     message: message.data,
     pinnedAt: pin.data.pinnedAt
   })
-  store.commit.entities.extendMessages({ [data.message_id]: message.data })
+  const m = store.state.entities.messages[data.message_id]
+  if (m) {
+    store.commit.entities.extendMessages({ [data.message_id]: message.data })
+  }
 }
 
 export const onMessageUnpinned = async (data: MessageUnpinnedEvent['body']) => {
-  const message = await apis.getMessage(data.message_id)
-  store.commit.entities.extendMessages({ [data.message_id]: message.data })
+  let message = store.state.entities.messages[data.message_id]
+  if (message) {
+    message.pinned = false
+    store.commit.entities.extendMessages({ [data.message_id]: message })
+  }
   store.commit.domain.messagesView.removePinnedMessageIds(data.message_id)
 }
