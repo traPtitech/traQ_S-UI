@@ -30,7 +30,12 @@
       v-if="hoverState.hover"
     />
     <div :class="$style.messageContents">
-      <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <div
+        v-show="!state.isEditing"
+        :class="['markdown-body', $style.content]"
+        v-html="state.content"
+      />
+      <message-editor v-if="state.isEditing" :raw-content="state.rawContent" />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
@@ -78,6 +83,7 @@ import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
+import MessageEditor from './MessageEditor.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
@@ -116,6 +122,7 @@ export default defineComponent({
   components: {
     UserIcon,
     MessageHeader,
+    MessageEditor,
     MessageStampList,
     MessageFileList,
     MessageQuoteList,
@@ -143,6 +150,13 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
+      ),
+      rawContent: computed(
+        () => store.state.entities.messages[props.messageId]?.content ?? ''
+      ),
+      isEditing: computed(
+        () =>
+          props.messageId === store.state.domain.messagesView.editingMessageId
       ),
       stampDetailFoldingState: false
     })
