@@ -113,7 +113,7 @@ const useRouteWacher = (context: SetupContext) => {
       state.view = 'not-found'
       return
     }
-    const channelPath = channelIdToPathString(file.channelId)
+    const channelPath = channelIdToPathString(file.channelId, true)
     store.dispatch.ui.mainView.changePrimaryViewToChannel({
       channelId: file.channelId
     })
@@ -123,7 +123,7 @@ const useRouteWacher = (context: SetupContext) => {
       relatedRoute: RouteName.File as const
     }
     store.dispatch.ui.modal.replaceModal(modalPayload)
-    changeViewTitle(`#${channelPath} - ${file.name}`)
+    changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
 
