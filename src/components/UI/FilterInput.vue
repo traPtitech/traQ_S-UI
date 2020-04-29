@@ -3,7 +3,7 @@
     <icon mdi name="search" :size="18" :class="$style.icon" />
     <input
       :class="$style.input"
-      :style="$style.input"
+      :style="styles.input"
       :value="text"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
