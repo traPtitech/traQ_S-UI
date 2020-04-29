@@ -26,7 +26,7 @@ import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
-import useChannelPath from '../../../../use/channelPath'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = () =>
   reactive({
