@@ -35,7 +35,11 @@
         :class="['markdown-body', $style.content]"
         v-html="state.content"
       />
-      <message-editor v-if="state.isEditing" :raw-content="state.rawContent" />
+      <message-editor
+        v-if="state.isEditing"
+        :raw-content="state.rawContent"
+        :message-id="messageId"
+      />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
