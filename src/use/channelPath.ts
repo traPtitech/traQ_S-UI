@@ -36,10 +36,7 @@ const useChannelPath = () => {
       return [
         {
           id,
-          name:
-            store.state.entities.users[
-              store.state.entities.dmChannels[id].userId
-            ]?.name ?? ''
+          name: store.getters.entities.userNameByDMChannelId(id) ?? ''
         }
       ]
     } else if (!(id in store.state.entities.channels)) {
@@ -59,9 +56,7 @@ const useChannelPath = () => {
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
   const dmChannelIdToPathString = (id: ChannelId, hashed = false): string =>
-    (hashed ? '@' : '') +
-      store.state.entities.users[store.state.entities.dmChannels[id].userId]
-        ?.name ?? ''
+    (hashed ? '@' : '') + store.getters.entities.userNameByDMChannelId(id) ?? ''
 
   const channelIdToPathString = (id: ChannelId, hashed = false): string => {
     if (id in store.state.entities.dmChannels)

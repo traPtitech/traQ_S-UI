@@ -3,7 +3,7 @@ import { S } from './state'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
 import { User, Stamp, UserGroup } from '@traptitech/traq'
-import { UserId } from '@/types/entity-ids'
+import { UserId, DMChannelId } from '@/types/entity-ids'
 
 const entitiesGetterContext = (args: [any, any, any, any]) =>
   moduleGetterContext(args, entities)
@@ -34,6 +34,9 @@ export const getters = defineGetters<S>()({
         user => user?.name.toLowerCase() === loweredName
       )
     }
+  },
+  userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
+    return (id: DMChannelId) => state.users[state.dmChannels[id].userId]?.name
   },
   userGroupByName(state): (name: string) => UserGroup | undefined {
     return (name: string) => {
