@@ -3,7 +3,13 @@
     <div :class="$style.overlay" :style="styles.overlay">
       <message-file-list-item-content :file-id="fileId" is-white />
     </div>
-    <video controls draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
+    <video
+      controls
+      preload="none"
+      draggable="false"
+      :alt="fileMeta.name"
+      :src="fileRawPath"
+    />
   </div>
 </template>
 
