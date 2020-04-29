@@ -75,17 +75,17 @@ export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
     message: message.data,
     pinnedAt: pin.data.pinnedAt
   })
-  const m = store.state.entities.messages[data.message_id]
-  if (m) {
+  if (store.state.entities.messages[data.message_id]) {
     store.commit.entities.extendMessages({ [data.message_id]: message.data })
   }
 }
 
 export const onMessageUnpinned = async (data: MessageUnpinnedEvent['body']) => {
-  let message = store.state.entities.messages[data.message_id]
+  const message = store.state.entities.messages[data.message_id]
   if (message) {
-    message.pinned = false
-    store.commit.entities.extendMessages({ [data.message_id]: message })
+    store.commit.entities.extendMessages({
+      [data.message_id]: { ...message, pinned: false }
+    })
   }
   store.commit.domain.messagesView.removePinnedMessageIds(data.message_id)
 }
