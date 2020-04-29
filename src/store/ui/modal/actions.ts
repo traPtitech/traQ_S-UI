@@ -3,7 +3,7 @@ import store, { moduleActionContext } from '@/store'
 import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
-import router, { constructChannelPath } from '@/router'
+import router, { constructChannelPath, constructUserPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
 
@@ -38,6 +38,18 @@ export const actions = defineActions({
     commit.setState(history.state.modalState)
   },
   /**
+   * モーダルを閉じ、場合によって適切な処理をする
+   */
+  popOrCloseModal: async context => {
+    const { state, dispatch } = modalActionContext(context)
+    if (state.isOnInitialModalRoute && state.modalState.length === 1) {
+      await dispatch.closeModal()
+    } else {
+      await dispatch.popModal()
+    }
+  },
+
+  /**
    * モーダルを閉じ、履歴をひとつ戻る
    */
   popModal: async context => {
@@ -64,9 +76,7 @@ export const actions = defineActions({
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
-    const { commit, state, dispatch, getters, rootState } = modalActionContext(
-      context
-    )
+    const { commit, state, dispatch, getters } = modalActionContext(context)
     const { currentState } = getters
     history.replaceState(
       {
@@ -76,13 +86,19 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
     const { currentChannelPathString } = useCurrentChannelPath()
-    router.replace(constructChannelPath(currentChannelPathString.value))
+    const primaryViewType = store.state.ui.mainView.primaryView.type
+    if (primaryViewType === 'dm') {
+      router.replace(constructUserPath(currentChannelPathString.value))
+    } else if (primaryViewType === 'channel') {
+      router.replace(constructChannelPath(currentChannelPathString.value))
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`Unexpected closeModal: ${primaryViewType}`)
+    }
     dispatch.collectGarbage(currentState)
   },
   /**
    * 全てのモーダルを閉じる
-   *
-   * NOTE: `popModal`を呼ぶため、`closeModal`が適当な状況に対応していない
    */
   clearModal: async context => {
     const { state, commit, dispatch } = modalActionContext(context)
@@ -90,6 +106,11 @@ export const actions = defineActions({
     commit.setIsClearingModal(true)
     try {
       for (let i = 0; i < length; i++) {
+        if (state.isOnInitialModalRoute && i === length - 1) {
+          await dispatch.closeModal()
+          continue
+        }
+
         await dispatch.popModal()
       }
     } finally {

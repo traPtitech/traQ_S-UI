@@ -114,7 +114,7 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     const channelPath = channelIdToPathString(file.channelId, true)
-    store.dispatch.ui.mainView.changePrimaryViewToChannel({
+    store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
       channelId: file.channelId
     })
     const modalPayload = {
@@ -194,7 +194,7 @@ const useRouteWacher = (context: SetupContext) => {
     const isOnInitialModalRoute =
       state.isInitialView &&
       history.state?.modalState &&
-      !!history.state?.modalState[0].relatedRoute
+      !!history.state?.modalState[0]?.relatedRoute
     store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
 
     if (state.isInitialView && !isOnInitialModalRoute) {

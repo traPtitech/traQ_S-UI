@@ -14,11 +14,7 @@ export default defineComponent({
   },
   setup() {
     const onClickPop = () => {
-      if (store.state.ui.modal.isOnInitialModalRoute) {
-        store.dispatch.ui.modal.closeModal()
-      } else {
-        store.dispatch.ui.modal.popModal()
-      }
+      store.dispatch.ui.modal.popOrCloseModal()
     }
     return { onClickPop }
   }
