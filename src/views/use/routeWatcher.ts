@@ -114,7 +114,7 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
     const channelPath = channelIdToPathString(file.channelId, true)
-    store.dispatch.ui.mainView.changePrimaryViewToChannel({
+    store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
       channelId: file.channelId
     })
     const modalPayload = {

@@ -3,7 +3,7 @@ import store, { moduleActionContext } from '@/store'
 import { isEqual } from 'lodash-es'
 import { ModalState } from './state'
 import { modal } from './index'
-import router, { constructChannelPath } from '@/router'
+import router, { constructChannelPath, constructUserPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 
 export const modalActionContext = (context: any) =>
@@ -73,7 +73,15 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
     const { currentChannelPathString } = useCurrentChannelPath()
-    router.replace(constructChannelPath(currentChannelPathString.value))
+    const primaryViewType = store.state.ui.mainView.primaryView.type
+    if (primaryViewType === 'dm') {
+      router.replace(constructUserPath(currentChannelPathString.value))
+    } else if (primaryViewType === 'channel') {
+      router.replace(constructChannelPath(currentChannelPathString.value))
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`Unexpected closeModal: ${primaryViewType}`)
+    }
     dispatch.collectGarbage(currentState)
   },
   /**
