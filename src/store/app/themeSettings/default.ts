@@ -32,15 +32,15 @@ export const darkTheme: Theme = {
     error: '#F26451'
   },
   background: {
-    primary: '#252B32',
-    secondary: '#22282F',
-    tertiary: '#1E262E',
-    secondarySub: '#2A3038'
+    primary: '#242B33',
+    secondary: '#1E262E',
+    tertiary: '#1A242D',
+    secondarySub: '#1E262F'
   },
   ui: {
-    primary: '#D7E0E7',
-    secondary: '#7E8D99',
-    tertiary: '#53636F'
+    primary: '#F2F5F8',
+    secondary: '#C7D0D9',
+    tertiary: '#8795A3'
   },
   text: {
     primary: '#FFFFFF',
