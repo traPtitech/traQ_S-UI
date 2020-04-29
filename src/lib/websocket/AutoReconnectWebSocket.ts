@@ -47,7 +47,8 @@ export default class AutoReconnectWebSocket {
     this.protocols = protocols
     this.options = { ...options, ...defaultOptions }
 
-    this.eventTarget = new EventTarget()
+    // SafariでEventTargetのコンストラクタ使えないので`<span>`で代用
+    this.eventTarget = document.createElement('span')
   }
 
   get isOpen() {
