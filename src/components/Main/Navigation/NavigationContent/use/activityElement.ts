@@ -15,7 +15,9 @@ const useActiviyElement = (props: { message: Message }) => {
   if (state.user === undefined) {
     store.dispatch.entities.fetchUser(props.message.userId)
   }
-  const path = useChannelPath().channelIdToShortPathString(state.channelId)
+  const path = computed(() =>
+    useChannelPath().channelIdToShortPathString(state.channelId)
+  )
   return { activityElementState: state, path }
 }
 
