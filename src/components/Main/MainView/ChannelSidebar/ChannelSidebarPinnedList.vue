@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <channel-sidebar-pinned-list-item
-      v-for="message in propst.pinnedMessage"
+      v-for="message in pinnedMessage"
       :key="message.message.id"
       :pinned-message="message"
       :class="$style.sidebarItem"
@@ -30,14 +30,11 @@ export default defineComponent({
     pinnedMessage: { type: Array as PropType<Pin[]>, default: [] }
   },
   setup(props, context) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { pinnedMessage: Pin[] }
     const styles = useStyles()
     const closeBar = () => {
       context.emit('closeBar')
     }
     return {
-      propst,
       styles,
       closeBar
     }
