@@ -22,13 +22,13 @@
           label="スタンプ名"
           prefix=":"
           suffix=":"
-          v-model="nameState.newName"
+          v-model="nameState.new"
           :class="$style.form"
         />
-        <form-input
+        <form-selector
           label="所有者"
-          prefix="@"
-          v-model="creatorState.newName"
+          :options="creatorOptions"
+          v-model="creatorState.new"
           :class="$style.form"
         />
         <image-upload
@@ -57,8 +57,9 @@ import { makeStyles } from '@/lib/styles'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import { Stamp } from '@traptitech/traq'
+import { Stamp, UserAccountState } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import useHover from '@/use/hover'
 
@@ -77,25 +78,40 @@ const useStyles = (
 
 const useName = (stamp: Stamp) => {
   const state = reactive({
-    newName: stamp.name,
-    changed: computed((): boolean => stamp.name !== state.newName)
+    old: stamp.name,
+    new: stamp.name,
+    changed: computed((): boolean => state.old !== state.new)
   })
-  return state
+  const applyChange = () => {
+    state.old = state.new
+  }
+  return { nameState: state, applyNameChange: applyChange }
 }
 
+const creatorOptions = computed(() =>
+  Object.values(store.state.entities.users)
+    .filter(u => !u?.bot && u?.state == UserAccountState.active)
+    .map(u => ({
+      key: u?.name ?? '',
+      value: u?.id ?? null
+    }))
+    .sort((a, b) => (a.key > b.key ? 1 : -1))
+)
+
 const useCreator = (stamp: Stamp) => {
-  const name = computed(
-    () => store.state.entities.users[stamp.creatorId]?.name ?? ''
-  )
   const state = reactive({
-    newName: name.value,
-    newId: computed(
-      (): string | undefined =>
-        store.getters.entities.userByName(state.newName)?.id
-    ),
-    changed: computed((): boolean => name.value !== state.newName)
+    old: stamp.creatorId,
+    new: stamp.creatorId,
+    changed: computed((): boolean => state.old !== state.new)
   })
-  return state
+  const applyChange = () => {
+    state.old = state.new
+  }
+  return {
+    creatorState: state,
+    applyCreatorChange: applyChange,
+    creatorOptions
+  }
 }
 
 export default defineComponent({
@@ -122,8 +138,10 @@ export default defineComponent({
       onNewDestroyed
     } = useImageUpload()
 
-    const nameState = useName(props.stamp)
-    const creatorState = useCreator(props.stamp)
+    const { nameState, applyNameChange } = useName(props.stamp)
+    const { creatorState, applyCreatorChange, creatorOptions } = useCreator(
+      props.stamp
+    )
 
     const stampChanged = computed(
       () =>
@@ -132,22 +150,22 @@ export default defineComponent({
         imageUploadState.imgData !== undefined
     )
 
+    const onStartEdit = () => {
+      context.emit('start-edit')
+    }
+    const onEndEdit = () => {
+      context.emit('end-edit')
+    }
+
     const editStamp = async () => {
       try {
         // TODO: loading
-
-        // TODO: 選択をもっとやりやすくする
-        if (!creatorState.newId) {
-          // TODO: 存在しなかったエラー
-          return
-        }
-
         const promises = []
         if (nameState.changed || creatorState.changed) {
           promises.push(
             apis.editStamp(props.stamp.id, {
-              name: nameState.newName,
-              creatorId: creatorState.newId
+              name: nameState.changed ? nameState.new : undefined,
+              creatorId: creatorState.changed ? creatorState.new : undefined
             })
           )
         }
@@ -158,13 +176,12 @@ export default defineComponent({
         }
         await Promise.all(promises)
         destroyImageUploadState()
+        applyNameChange()
+        applyCreatorChange()
+        onEndEdit()
       } catch (e) {
         // TODO: error
       }
-    }
-
-    const onStartEdit = () => {
-      context.emit('start-edit')
     }
 
     return {
@@ -172,6 +189,7 @@ export default defineComponent({
       url,
       nameState,
       creatorState,
+      creatorOptions,
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
@@ -185,6 +203,7 @@ export default defineComponent({
   },
   components: {
     FormInput,
+    FormSelector,
     FormButton,
     ImageUpload,
     Icon
@@ -202,12 +221,10 @@ export default defineComponent({
     bottom: 12px;
   }
 }
-
 .stamp {
   height: 40px;
   width: 40px;
 }
-
 .notSelected {
   display: flex;
   align-items: center;
@@ -215,7 +232,6 @@ export default defineComponent({
   width: 100%;
   padding: 0 24px;
 }
-
 .selected {
   padding-left: 12px;
   width: 100%;
