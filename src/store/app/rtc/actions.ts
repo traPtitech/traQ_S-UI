@@ -10,10 +10,11 @@ import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
+import { ActionContext } from 'vuex'
 
 const defaultState = 'joined'
 
-export const rtcActionContext = (context: any) =>
+export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
 
 export const actions = defineActions({

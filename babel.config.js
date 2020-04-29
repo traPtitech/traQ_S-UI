@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const vueCliPreset = require('@vue/cli-plugin-babel/preset')
 
 module.exports = api => {

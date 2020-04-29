@@ -14,12 +14,13 @@ const useToolBox = () => {
         return 'crescent'
       case 'custom':
         return 'brightness-6'
-      default:
+      default: {
         const invalid: never = type
         // eslint-disable-next-line no-console
         console.warn(`Invalid theme type: ${invalid}`)
 
         return 'crescent'
+      }
     }
   })
   const isMdi = computed(() => {

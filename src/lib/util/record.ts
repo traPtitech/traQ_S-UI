@@ -19,9 +19,19 @@ export const reduceToRecordOfArray = <T>(array: T[], key: keyof T) =>
   array.reduce((acc, cur) => {
     const ck = cur[key]
     if (typeof ck !== 'string') return acc
+    // eslint-disable-next-line no-prototype-builtins
     if (acc.hasOwnProperty(ck)) {
       acc[ck].push(cur)
       return acc
     }
     return Object.assign(acc, { [ck]: [cur] })
   }, {} as Record<string, T[]>)
+
+export const formatSnakeKeysToCamelShallow = (obj: {}) => {
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [
+      k.replace(/(_[a-zA-Z])/g, (_, char: string) => char.toUpperCase()),
+      v
+    ])
+  )
+}

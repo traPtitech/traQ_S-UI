@@ -17,6 +17,7 @@ export const mutations = defineMutations<S>()({
     state.position = position
   },
   clearSelectHandler(state) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     state.selectHandler = (_: SelectedStampData) => {}
   },
   clearTargetPortalName(state) {

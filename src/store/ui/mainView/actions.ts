@@ -7,9 +7,11 @@ import {
   MessageId,
   DMChannelId
 } from '@/types/entity-ids'
+import { ActionContext } from 'vuex'
 
-export const mainViewActionContext = (context: any) =>
-  moduleActionContext(context, mainView)
+export const mainViewActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, mainView)
 
 export const actions = defineActions({
   async changePrimaryViewToChannelOrDM(

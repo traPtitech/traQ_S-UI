@@ -3,7 +3,7 @@ import { moduleGetterContext } from '@/store'
 import { S } from './state'
 import { messageContextMenu } from './index'
 
-const getterContext = (args: [any, any, any, any]) =>
+const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, messageContextMenu)
 
 export const getters = defineGetters<S>()({

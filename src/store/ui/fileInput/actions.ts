@@ -2,9 +2,11 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { fileInput } from './index'
 import { mimeToFileType } from '@/lib/util/file'
+import { ActionContext } from 'vuex'
 
-export const fileInputActionContext = (context: any) =>
-  moduleActionContext(context, fileInput)
+export const fileInputActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, fileInput)
 
 export const actions = defineActions({
   addAttachment(context, file: File) {

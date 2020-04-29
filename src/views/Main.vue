@@ -125,6 +125,7 @@ export default defineComponent({
         setupWebSocket()
         connectFirebase()
       },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => {}
     )
 

@@ -4,7 +4,7 @@ import { S } from './state'
 import { moduleGetterContext } from '@/store'
 import { channelTree } from './index'
 
-const getterContext = (args: [any, any, any, any]) =>
+const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, channelTree)
 
 export const getters = defineGetters<S>()({

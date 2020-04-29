@@ -30,7 +30,16 @@
       v-if="hoverState.hover"
     />
     <div :class="$style.messageContents">
-      <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <div
+        v-show="!state.isEditing"
+        :class="['markdown-body', $style.content]"
+        v-html="state.content"
+      />
+      <message-editor
+        v-if="state.isEditing"
+        :raw-content="state.rawContent"
+        :message-id="messageId"
+      />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
@@ -78,6 +87,7 @@ import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
+import MessageEditor from './MessageEditor.vue'
 import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
@@ -91,7 +101,11 @@ import MessagePinned from './MessagePinned.vue'
 const useStyles = (
   props: { isEntryMessage: boolean },
   hoverState: { hover: boolean },
-  state: { message?: Message; stampDetailFoldingState: boolean }
+  state: {
+    message?: Message
+    stampDetailFoldingState: boolean
+    isEditing: boolean
+  }
 ) =>
   reactive({
     body: makeStyles((theme, common) => ({
@@ -99,7 +113,7 @@ const useStyles = (
         ? transparentize(common.ui.pin, 0.2)
         : props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
-        : hoverState.hover
+        : hoverState.hover && !state.isEditing
         ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
     })),
@@ -116,6 +130,7 @@ export default defineComponent({
   components: {
     UserIcon,
     MessageHeader,
+    MessageEditor,
     MessageStampList,
     MessageFileList,
     MessageQuoteList,
@@ -143,6 +158,13 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
+      ),
+      rawContent: computed(
+        () => store.state.entities.messages[props.messageId]?.content ?? ''
+      ),
+      isEditing: computed(
+        () =>
+          props.messageId === store.state.domain.messagesView.editingMessageId
       ),
       stampDetailFoldingState: false
     })

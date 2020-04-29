@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/camelcase */
 const CompressionPlugin = require('compression-webpack-plugin')
 const https = require('https')
 const keepAliveAgent = new https.Agent({ keepAlive: true })

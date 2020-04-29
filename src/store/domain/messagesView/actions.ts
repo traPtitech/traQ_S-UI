@@ -7,9 +7,11 @@ import { render } from '@/lib/markdown'
 import apis from '@/lib/apis'
 import { changeViewState } from '@/lib/websocket'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import { ActionContext } from 'vuex'
 
-export const messagesViewActionContext = (context: any) =>
-  moduleActionContext(context, messagesView)
+export const messagesViewActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, messagesView)
 
 export const actions = defineActions({
   resetViewState(context) {

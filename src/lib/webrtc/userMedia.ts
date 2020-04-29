@@ -11,10 +11,16 @@ export const getUserAudio = async (deviceId?: string) => {
   return rawAudio
 }
 
+interface ExtendedMediaDevices extends MediaDevices {
+  getDisplayMedia(constraints?: MediaStreamConstraints): Promise<MediaStream>
+}
+
 export const getUserDisplay = async () => {
-  const rawVideo = await (navigator.mediaDevices as any).getDisplayMedia({
-    audio: false,
-    video: true
-  })
+  const rawVideo = await (navigator.mediaDevices as ExtendedMediaDevices).getDisplayMedia(
+    {
+      audio: false,
+      video: true
+    }
+  )
   return rawVideo
 }

@@ -33,7 +33,7 @@ const useRouteWacher = (context: SetupContext) => {
         params: { channel: store.state.app.browserSettings.openChannelName }
       })
     } catch (e) {
-      if (!!e) throw e
+      if (e) throw e
     }
     return
   }

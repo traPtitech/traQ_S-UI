@@ -12,12 +12,13 @@ export const getters = defineGetters<S>()({
         return darkTheme
       case 'custom':
         return state.custom
-      default:
+      default: {
         const invalid: never = state.type
         // eslint-disable-next-line no-console
         console.warn(`Invalid theme type: ${invalid}`)
 
         return lightTheme
+      }
     }
   }
 })
