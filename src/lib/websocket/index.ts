@@ -19,7 +19,7 @@ export const setupWebSocket = () => {
   ws.connect()
 
   ws.addEventListener('message', event => {
-    onReceive(event.detail)
+    onReceive(event.detail as string)
   })
 }
 

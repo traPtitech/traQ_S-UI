@@ -20,7 +20,8 @@ type QRTCUserLeaveEvent = CustomEvent<{
 }>
 
 type QRTCConnectionErrorEvent = CustomEvent<{
-  err: unknown
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  err: any
 }>
 
 interface QRTCEventMap {

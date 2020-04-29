@@ -24,7 +24,6 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
-import { AsyncComponent } from 'vue'
 
 const useChannelFolding = () => {
   const state = reactive({
@@ -43,14 +42,13 @@ const useChannelFolding = () => {
   }
 }
 
-type UnknownAsyncComponent = AsyncComponent<unknown, unknown, unknown, unknown>
-
 export default defineComponent({
   name: 'ChannelList',
   components: {
     // 型エラー・コンポーネント循環参照の回避
     ChannelElement: (() =>
-      import('./ChannelElement.vue')) as UnknownAsyncComponent
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      import('./ChannelElement.vue')) as any
   },
   props: {
     channels: {
