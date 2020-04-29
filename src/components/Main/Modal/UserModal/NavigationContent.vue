@@ -63,7 +63,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 8px 16px;
+  padding: 12px 16px;
   overflow: hidden;
 }
 </style>

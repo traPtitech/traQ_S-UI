@@ -33,7 +33,7 @@ import Icon from '@/components/UI/Icon.vue'
 const useStyles = () =>
   reactive({
     groups: makeStyles(theme => ({
-      color: theme.ui.secondary
+      color: theme.ui.primary
     }))
   })
 
@@ -81,6 +81,10 @@ export default defineComponent({
 .group {
   margin: 16px 8px;
   cursor: pointer;
+  &:first-child {
+    // ナビゲーションと頭を揃える
+    margin-top: 8px;
+  }
 }
 
 .icon {

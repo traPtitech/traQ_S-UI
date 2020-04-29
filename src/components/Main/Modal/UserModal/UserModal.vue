@@ -46,7 +46,7 @@ import CloseButton from '@/components/UI/CloseButton.vue'
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
     content: makeStyles(theme => ({
-      color: theme.ui.secondary,
+      color: theme.ui.primary,
       background: theme.background.secondary,
       borderColor: theme.background.secondary,
       paddingTop: isMobile.value ? 0 : `${iconSize / 2}px`
