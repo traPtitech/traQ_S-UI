@@ -11,12 +11,13 @@ const useChannelSubscriptionState = () => {
       store.state.domain.me.subscriptionMap[currentChannelId.value ?? ''] ??
       ChannelSubscribeLevel.none
   )
-  const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {
+  const changeSubscriptionLevel = async (level: ChannelSubscribeLevel) => {
     if (!currentChannelId.value) return
-    store.dispatch.domain.me.changeSubscriptionLevel({
+    await store.dispatch.domain.me.changeSubscriptionLevel({
       channelId: currentChannelId.value,
       subscriptionLevel: level
     })
+    await store.dispatch.domain.channelTree.constructHomeChannelTree()
   }
   const changeToNextSubscriptionLevel = () => {
     const level =
