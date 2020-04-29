@@ -83,6 +83,9 @@ export default defineComponent({
         clipFolders.value.map(folder => [folder?.id ?? '', false])
       ) as Record<ClipFolderId, boolean>
     )
+    apis.getMessageClips(props.messageId).then(res => {
+      res.data.forEach(mc => (selectedState[mc.folderId] = true))
+    })
     const messageContent = computed(() => message.value?.content ?? '')
     const { toggleClip } = useCreateClip(props, selectedState)
     return { messageContent, clipFolders, selectedState, toggleClip }
@@ -93,9 +96,11 @@ export default defineComponent({
 <style lang="scss" module>
 .item {
   margin: 16px 0;
+
   &:first-child {
     margin-top: 0;
   }
+
   &:last-child {
     margin-bottom: 0;
   }
