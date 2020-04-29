@@ -5,9 +5,11 @@ import { compareString } from '@/lib/util/string'
 import { ChannelId } from '@/types/entity-ids'
 import { channelTree } from './index'
 import { ChannelTreeNode, rootChannelId } from './state'
+import { ActionContext } from 'vuex'
 
-export const channelTreeActionContext = (context: any) =>
-  moduleActionContext(context, channelTree)
+export const channelTreeActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, channelTree)
 
 const channelNameSortFunction = (
   channelEntities: Record<ChannelId, ChannelLike>

@@ -21,7 +21,7 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 
-const useStyles = (props: { isStared: Boolean }) =>
+const useStyles = (props: { isStared: boolean }) =>
   reactive({
     star: makeStyles(theme => ({
       color: props.isStared ? theme.accent.primary : theme.ui.secondary,

@@ -16,6 +16,7 @@ const useChannelMessageFetcher = (
     channelId: ChannelId
     entryMessageId?: MessageId
   },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onReachedLatest = () => {}
 ) => {
   const state: State = reactive({

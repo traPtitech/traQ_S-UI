@@ -77,6 +77,7 @@ export default defineComponent({
             cropend: () => {
               cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
                 context.emit('input', blob)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               }, image.data!.type)
             }
           }

@@ -6,8 +6,9 @@ import {
 } from '@/lib/stampCategorizer'
 import { moduleActionContext } from '@/store'
 import { stampCategory } from '.'
+import { ActionContext } from 'vuex'
 
-const stampCategoryActionContext = (context: any) =>
+const stampCategoryActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, stampCategory)
 
 export const actions = defineActions({

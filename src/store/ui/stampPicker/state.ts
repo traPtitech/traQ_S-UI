@@ -18,6 +18,7 @@ export type SelectedStampData = {
 }
 export type StampSelectHandler = (stamp: SelectedStampData) => void
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
 export interface S {

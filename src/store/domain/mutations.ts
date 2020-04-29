@@ -39,6 +39,7 @@ export const mutations = defineMutations<S>()({
 
     // ガーベッジコレクタ
     if (state.activityTimeline.length > ACTIVITY_LENGTH) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastActivity = state.activityTimeline.pop()!
       if (
         state.activityTimelineChannelMap[lastActivity.channelId] ===

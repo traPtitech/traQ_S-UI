@@ -5,7 +5,7 @@ export const buildDescendantsChannelArray = (id: ChannelId) => {
   if (!(id in store.state.entities.channels)) {
     throw `channelIdToPath: No channel: ${id}`
   }
-  let channel = store.state.entities.channels[id]
+  const channel = store.state.entities.channels[id]
   const result = [channel]
   let i = 0
   while (result.length !== i + 1 || result[i].children.length !== 0) {

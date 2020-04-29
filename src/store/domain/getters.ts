@@ -4,7 +4,7 @@ import { UserId } from '@/types/entity-ids'
 import { moduleGetterContext } from '..'
 import { domain } from './index'
 
-const domainGetterContext = (args: [any, any, any, any]) =>
+const domainGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, domain)
 
 export const getters = defineGetters<S>()({

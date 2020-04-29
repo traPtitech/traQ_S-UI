@@ -13,10 +13,10 @@ const defaultOptions: Options = {
 }
 
 interface EventMap {
-  message: CustomEvent<any>
+  message: CustomEvent<unknown>
   reconnect: Event
 }
-type EventListener<T extends keyof EventMap> = (ev: EventMap[T]) => any
+type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
 const wait = (ms: number) => {
   return new Promise(resolve => {
@@ -56,6 +56,7 @@ export default class AutoReconnectWebSocket {
   }
 
   _sendCommand(commands: readonly [WebSocketCommand, ...string[]]) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._ws!.send(commands.join(':'))
   }
 
@@ -117,17 +118,21 @@ export default class AutoReconnectWebSocket {
 
   addEventListener<T extends keyof EventMap>(
     type: T,
-    listener: EventListener<T>,
+    listener: TypedEventListener<T>,
     options?: boolean | AddEventListenerOptions
   ): void {
-    this.eventTarget.addEventListener(type, listener as any, options)
+    this.eventTarget.addEventListener(type, listener as EventListener, options)
   }
   removeEventListener<T extends keyof EventMap>(
     type: T,
-    listener: EventListener<T>,
+    listener: TypedEventListener<T>,
     options?: boolean | AddEventListenerOptions
   ): void {
-    this.eventTarget.removeEventListener(type, listener as any, options)
+    this.eventTarget.removeEventListener(
+      type,
+      listener as EventListener,
+      options
+    )
   }
 
   connect() {
@@ -139,6 +144,7 @@ export default class AutoReconnectWebSocket {
     this.reconnecting = true
 
     let count = 1
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const delay = this._getDelay(count)
       await wait(delay)

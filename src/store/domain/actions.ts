@@ -3,8 +3,9 @@ import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
 import { domain, ACTIVITY_LENGTH } from '.'
 import { UserId } from '@/types/entity-ids'
+import { ActionContext } from 'vuex'
 
-export const domainActionContext = (context: any) =>
+export const domainActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, domain)
 
 export const actions = defineActions({

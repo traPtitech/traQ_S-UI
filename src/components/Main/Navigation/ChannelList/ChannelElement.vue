@@ -97,11 +97,13 @@ const useNotification = (props: { channel: ChannelTreeNode }) => {
   return notificationState
 }
 
+type UnknownAsyncComponent = AsyncComponent<unknown, unknown, unknown, unknown>
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
     // 型エラー・コンポーネント循環参照の回避
-    ChannelList: () => import('./ChannelList.vue') as any,
+    ChannelList: (() => import('./ChannelList.vue')) as UnknownAsyncComponent,
     ChannelElementHash
   },
   props: {

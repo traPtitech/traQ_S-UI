@@ -2,9 +2,11 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { stampPicker, Place } from '.'
 import { StampSelectHandler } from './state'
+import { ActionContext } from 'vuex'
 
-export const stampPickerActionContext = (context: any) =>
-  moduleActionContext(context, stampPicker)
+export const stampPickerActionContext = (
+  context: ActionContext<unknown, unknown>
+) => moduleActionContext(context, stampPicker)
 
 export const actions = defineActions({
   openStampPicker(

@@ -35,7 +35,7 @@ const binarySearch = (arr: number[], x: number) => {
   let mid
   while (low < high) {
     mid = Math.floor((high + low) / 2)
-    if (arr[mid] == x) {
+    if (arr[mid] === x) {
       break
     } else if (arr[mid] > x) {
       high = mid - 1
@@ -123,7 +123,7 @@ export default defineComponent({
         )
         let totalDisplacement =
           state.rollingPageHeights[state.pageStartIndex - 1] || 0
-        let displacements = []
+        const displacements = []
         for (let i = 0; i < currentHeights.length; i++) {
           displacements.push(totalDisplacement)
           totalDisplacement += currentHeights[i]
@@ -168,7 +168,7 @@ export default defineComponent({
         (pageStartIndex + 1) * PAGE_SIZE
       )
       let totalDisplacement = state.rollingPageHeights[pageStartIndex - 1] || 0
-      let displacements = []
+      const displacements = []
       for (let i = 0; i < currentHeights.length; i++) {
         displacements.push(totalDisplacement)
         totalDisplacement += currentHeights[i]
@@ -206,10 +206,10 @@ export default defineComponent({
       if (!spacerRef.value) return
 
       const children = spacerRef.value.children
-      let pageIndices = new Set()
-      for (let i = 0; i < children.length; i++) {
-        const { scrollHeight } = children[i]
-        const index = Number(children[i].getAttribute('data-index'))
+      const pageIndices = new Set<number>()
+      for (const child of children) {
+        const { scrollHeight } = child
+        const index = Number(child.getAttribute('data-index'))
         if (!index) continue
         Vue.set(state.itemHeights, index, scrollHeight)
         // Update the largest and smallest row heights
@@ -224,10 +224,10 @@ export default defineComponent({
         const pageIndex = Math.floor(index / PAGE_SIZE)
         pageIndices.add(pageIndex)
       }
-      let pageIndicesArray = Array.from(pageIndices) as number[]
-      updatePageHeights(pageIndicesArray)
+      updatePageHeights([...pageIndices])
     }
     // TODO: fetch new messages
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const loadMore = () => {}
 
     onMounted(() => {

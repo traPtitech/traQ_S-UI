@@ -18,6 +18,7 @@ export const changeViewState: ChangeViewStateFunction = (
   if (channelId === null) {
     ws.sendCommand(VIEWSTATE_COMMAND, '')
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ws.sendCommand(VIEWSTATE_COMMAND, channelId, viewState!)
   }
 }

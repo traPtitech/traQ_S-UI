@@ -85,6 +85,7 @@ export const connectFirebase = async () => {
     navigator.serviceWorker.addEventListener('message', data => {
       if (data.data.type === 'navigate') {
         // 同じ場所に移動しようとした際のエラーを消す
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         router.push(data.data.to).catch(() => {})
       }
     })
@@ -132,6 +133,7 @@ export const connectFirebase = async () => {
 
         if (payload.data.path) {
           // 同じ場所に移動しようとした際のエラーを消す
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           router.push(payload.data.path).catch(() => {})
         }
       }

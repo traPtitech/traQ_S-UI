@@ -23,6 +23,7 @@ export const constructClipFoldersPath = (id: string) => `/clip-folders/${id}`
 
 export const changeRouteByPath = (path: string) => {
   // 同じ場所に移動しようとした際のエラーを消す
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   router.push(path).catch(() => {})
 }
 

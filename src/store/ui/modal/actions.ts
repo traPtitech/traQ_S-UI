@@ -5,8 +5,9 @@ import { ModalState } from './state'
 import { modal } from './index'
 import router, { constructChannelPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
+import { ActionContext } from 'vuex'
 
-export const modalActionContext = (context: any) =>
+export const modalActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, modal)
 
 export const actions = defineActions({
@@ -121,9 +122,11 @@ export const actions = defineActions({
       case 'clip-create':
       case 'clip-folder-create':
         break
-      default:
+      default: {
         const invalid: never = modalState
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         throw new Error(`Invalid Modal State type: ${(invalid as any).type}`)
+      }
     }
   }
 })
