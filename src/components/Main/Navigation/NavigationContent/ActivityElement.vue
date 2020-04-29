@@ -4,8 +4,8 @@
     :style="styles.container"
     @click="onChannelSelect(state.channelId)"
   >
-    <div :class="$style.name" :style="styles.name">
-      {{ ancestorsPath + state.channelName }}
+    <div :class="$style.path" :style="styles.path">
+      {{ path }}
     </div>
     <div :class="$style.separator" :style="styles.separator"></div>
     <activity-element-user-name :user="state.user" :class="$style.user" />
@@ -33,7 +33,7 @@ const useStyles = () =>
     container: makeStyles(theme => ({
       background: theme.background.primary
     })),
-    name: makeStyles(theme => ({
+    path: makeStyles(theme => ({
       color: theme.ui.secondary
     })),
     separator: makeStyles(theme => ({
@@ -63,9 +63,6 @@ export default defineComponent({
       channelId: computed(() => props.message.channelId ?? ''),
       user: computed(
         () => store.state.entities.users[props.message.userId ?? '']
-      ),
-      simpleChannelPaths: computed(() =>
-        useChannelPath().channelIdToSimpleChannelPath(props.message.channelId)
       )
     })
     if (state.user === undefined) {
@@ -74,19 +71,13 @@ export default defineComponent({
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
 
-    const ancestorsPath = computed(() => {
-      var path = ''
-      for (var i = 0; i < state.simpleChannelPaths.length - 1; i++) {
-        path += state.simpleChannelPaths[i].name[0] + '/'
-      }
-      return path
-    })
+    const path = useChannelPath().channelIdToShortPathString(state.channelId)
 
     return {
       state,
       styles,
       onChannelSelect,
-      ancestorsPath
+      path
     }
   }
 })
@@ -98,7 +89,7 @@ export default defineComponent({
   padding: 8px 20px;
   cursor: pointer;
 }
-.name {
+.path {
   font-size: 1.125rem;
   font-weight: bold;
   &::before {
