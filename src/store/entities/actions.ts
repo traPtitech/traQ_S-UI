@@ -64,8 +64,9 @@ export const actions = defineActions({
   },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getChannels(false)
+    const res = await apis.getChannels(true)
     commit.setChannels(reduceToRecord(res.data.public, 'id'))
+    commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
   },
   async fetchUserGroups(context) {
     const { commit } = entitiesActionContext(context)
