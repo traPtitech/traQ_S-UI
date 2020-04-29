@@ -32,7 +32,17 @@ const useChannelPath = () => {
   }
 
   const channelIdToSimpleChannelPath = (id: ChannelId): SimpleChannel[] => {
-    if (!(id in store.state.entities.channels)) {
+    if (id in store.state.entities.dmChannels) {
+      return [
+        {
+          id,
+          name:
+            store.state.entities.users[
+              store.state.entities.dmChannels[id].userId
+            ]?.name ?? ''
+        }
+      ]
+    } else if (!(id in store.state.entities.channels)) {
       throw `channelIdToPath: No channel: ${id}`
     }
     const channel = store.state.entities.channels[id]
