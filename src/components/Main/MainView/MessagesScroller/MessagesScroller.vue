@@ -1,15 +1,19 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div ref="viewportRef" :class="$style.viewport">
-      <message-element
-        :class="$style.element"
-        v-for="messageId in messageIds"
-        :key="messageId"
-        :message-id="messageId"
-        :is-entry-message="entryMessageId === messageId"
-        @change-height="onChangeHeight"
-        @entry-message-loaded="onEntryMessageLoaded"
-      />
+      <div v-for="(messageId, index) in messageIds" :key="messageId">
+        <messages-scroller-day-separator
+          v-if="dayDiff(index)"
+          :message-id="messageId"
+        />
+        <message-element
+          :class="$style.element"
+          :message-id="messageId"
+          :is-entry-message="entryMessageId === messageId"
+          @change-height="onChangeHeight"
+          @entry-message-loaded="onEntryMessageLoaded"
+        />
+      </div>
     </div>
     <div :class="$style.bottomSpacer"></div>
   </div>
@@ -33,6 +37,8 @@ import MessageElement from '@/components/Main/MainView/MessageElement/MessageEle
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
+import store from '@/store'
+import MessagesScrollerDaySeparator from './MessagesScrollerDaySeparator.vue'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -52,10 +58,29 @@ const useSpoilerToggler = (rootRef: Ref<HTMLElement | null>) => {
   })
 }
 
+const useCompareDate = (messageIds: MessageId[]) => {
+  const dayDiff = (index: number) => {
+    if (index === 0) {
+      return true
+    }
+    const pre = store.state.entities.messages[messageIds[index - 1]]
+    const current = store.state.entities.messages[messageIds[index]]
+    const preDate = new Date(pre?.createdAt || ``)
+    const currentDate = new Date(current?.createdAt || ``)
+    return (
+      preDate.getDate() !== currentDate.getDate() ||
+      preDate.getMonth() !== currentDate.getMonth() ||
+      preDate.getFullYear() !== currentDate.getFullYear()
+    )
+  }
+  return dayDiff
+}
+
 export default defineComponent({
   name: 'MessagesScroller',
   components: {
-    MessageElement
+    MessageElement,
+    MessagesScrollerDaySeparator
   },
   props: {
     messageIds: {
@@ -141,12 +166,15 @@ export default defineComponent({
 
     useSpoilerToggler(rootRef)
 
+    const dayDiff = useCompareDate(props.messageIds)
+
     return {
       state,
       rootRef,
       handleScroll,
       onChangeHeight,
-      onEntryMessageLoaded
+      onEntryMessageLoaded,
+      dayDiff
     }
   }
 })
