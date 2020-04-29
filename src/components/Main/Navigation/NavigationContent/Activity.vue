@@ -49,7 +49,7 @@ import {
   ref
 } from '@vue/composition-api'
 import store from '@/store'
-import { setTimelineStreamingState } from '@/lib/websocket'
+import { ws, setTimelineStreamingState } from '@/lib/websocket'
 import ActivityChannelElement from './ActivityChannelElement.vue'
 import ActivityMessageElement from './ActivityMessageElement.vue'
 import ToggleButton from './ToggleButton.vue'
@@ -57,16 +57,25 @@ import ToggleButton from './ToggleButton.vue'
 const useActivityStream = () => {
   const mode = computed(() => store.state.app.browserSettings.activityMode)
 
+  const fetch = (payload: { all?: boolean; perChannel?: boolean }) => {
+    return store.dispatch.domain.fetchActivityTimeline(payload)
+  }
+  const handler = () => {
+    fetch(mode.value)
+  }
+
   onBeforeMount(async () => {
-    await store.dispatch.domain.fetchActivityTimeline(mode.value)
+    await fetch(mode.value).catch(() => {})
     if (mode.value.all) {
       setTimelineStreamingState(true)
     }
+
+    ws.addEventListener('reconnect', handler)
   })
   watch(
     () => mode.value,
     async (newMode, oldMode) => {
-      await store.dispatch.domain.fetchActivityTimeline(newMode)
+      await fetch(mode.value).catch(() => {})
       if (newMode.all !== oldMode?.all) {
         setTimelineStreamingState(newMode.all)
       }
@@ -76,6 +85,8 @@ const useActivityStream = () => {
     if (mode.value.all) {
       setTimelineStreamingState(mode.value.all)
     }
+
+    ws.removeEventListener('reconnect', handler)
   })
 }
 

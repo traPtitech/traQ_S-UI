@@ -1,6 +1,30 @@
 import { onBeforeMount, SetupContext } from '@vue/composition-api'
 import store from '@/store'
 import { RouteName } from '@/router'
+import { ws } from '@/lib/websocket'
+
+const initialFetch = async () => {
+  // 初回fetch
+  await Promise.all([
+    store.dispatch.entities.fetchUsers(),
+    store.dispatch.entities.fetchUserGroups(),
+    store.dispatch.entities.fetchChannels(),
+    store.dispatch.entities.fetchStamps()
+  ])
+
+  store.commit.app.setInitialFetchCompleted()
+  store.dispatch.domain.stampCategory.constructStampCategories()
+  store.dispatch.entities.fetchStampPalettes()
+  store.dispatch.entities.fetchClipFolders()
+  store.dispatch.domain.fetchOnlineUsers()
+  store.dispatch.domain.me.fetchUnreadChannels()
+  store.dispatch.domain.me.fetchStaredChannels()
+  store.dispatch.domain.me.fetchStampHistory()
+  store.dispatch.app.rtc.fetchRTCState()
+
+  await store.dispatch.domain.me.fetchSubscriptions()
+  store.dispatch.domain.channelTree.constructHomeChannelTree()
+}
 
 /**
  * ログインチェック後にpromiseがsettledになる
@@ -18,26 +42,11 @@ const useInitialFetch = (context: SetupContext) => {
 
       resolve()
 
-      // 初回fetch
-      await Promise.all([
-        store.dispatch.entities.fetchUsers(),
-        store.dispatch.entities.fetchUserGroups(),
-        store.dispatch.entities.fetchChannels(),
-        store.dispatch.entities.fetchStamps()
-      ])
+      initialFetch()
 
-      store.commit.app.setInitialFetchCompleted()
-      store.dispatch.domain.stampCategory.constructStampCategories()
-      store.dispatch.entities.fetchStampPalettes()
-      store.dispatch.entities.fetchClipFolders()
-      store.dispatch.domain.fetchOnlineUsers()
-      store.dispatch.domain.me.fetchUnreadChannels()
-      store.dispatch.domain.me.fetchStaredChannels()
-      store.dispatch.domain.me.fetchStampHistory()
-      store.dispatch.app.rtc.fetchRTCState()
-
-      await store.dispatch.domain.me.fetchSubscriptions()
-      store.dispatch.domain.channelTree.constructHomeChannelTree()
+      ws.addEventListener('reconnect', () => {
+        initialFetch()
+      })
     })
   })
 }
