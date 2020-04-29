@@ -3,14 +3,14 @@
     <user-icon
       :user-id="user.id"
       :prevent-modal="true"
-      :size="64"
+      :size="48"
       :class="$style.icon"
       :style="styles.icon"
     />
     <div :class="$style.name">
-      <h1>{{ user.displayName }}</h1>
+      <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <p>
-        <online-indicator :user-id="user.id" />
+        <online-indicator :class="$style.name" :user-id="user.id" />
         @{{ user.name }}
       </p>
     </div>
@@ -63,16 +63,28 @@ export default defineComponent({
 <style lang="scss" module>
 .feature {
   grid-column: 1/3;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  column-gap: 16px;
+  width: 100%;
   align-items: center;
+  padding: {
+    left: 16px;
+    right: 32px;
+    top: 16px;
+    bottom: 16px;
+  }
 }
-
-.icon {
-  margin: 16px;
+.displayName {
+  font-size: 1.125rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
 .name {
-  margin: 16px 32px;
+  font-size: 0.875rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

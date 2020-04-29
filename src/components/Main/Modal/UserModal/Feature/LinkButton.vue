@@ -3,6 +3,7 @@
     <icon
       :name="iconName"
       :mdi="iconMdi"
+      :size="isMobile ? 20 : 24"
       :class="$style.icon"
       :style="styles.icon"
     />
@@ -14,6 +15,7 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import useIsMobile from '@/use/isMobile'
 
 const useStyles = () =>
   reactive({
@@ -44,8 +46,8 @@ export default defineComponent({
   },
   setup() {
     const styles = useStyles()
-
-    return { styles }
+    const { isMobile } = useIsMobile()
+    return { styles, isMobile }
   },
   components: {
     Icon
@@ -59,6 +61,8 @@ export default defineComponent({
   margin: 8px 4px;
   border-radius: 1em;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
 }
 
 .icon {

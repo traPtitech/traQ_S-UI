@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.wrapper" v-click-outside="onClickOutside">
-    <close-button @click="onClickClear" :size="32" :class="$style.close" />
+    <close-button
+      @click="onClickClear"
+      :size="isMobile ? 24 : 32"
+      :class="$style.close"
+    />
     <user-icon
       v-if="!isMobile"
       :user-id="user.id"
