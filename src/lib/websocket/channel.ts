@@ -21,6 +21,7 @@ export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
 export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   const res = await apis.getChannel(id)
   store.commit.entities.extendChannels({ [id]: res.data })
+  store.commit.domain.messagesView.setTopic(res.data.topic)
 }
 
 export const onChannelStared = (data: ChannelStaredEvent['body']) => {
