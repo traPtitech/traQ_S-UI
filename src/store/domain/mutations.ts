@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
-import { UserId } from '@/types/entity-ids'
+import { UserId, MessageId } from '@/types/entity-ids'
 import { ActivityTimelineMessage, UserDetail } from '@traptitech/traq'
 import { S } from './state'
 import store from '..'
@@ -42,11 +42,34 @@ export const mutations = defineMutations<S>()({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastActivity = state.activityTimeline.pop()!
       if (
-        state.activityTimelineChannelMap[lastActivity.channelId] ===
-        lastActivity
+        state.activityTimelineChannelMap[lastActivity.channelId]?.id ===
+        lastActivity.id
       ) {
         state.activityTimelineChannelMap[lastActivity.channelId] = undefined
       }
+    }
+  },
+  updateActivity(state: S, activity: ActivityTimelineMessage) {
+    const sameMessageIndex = state.activityTimeline.findIndex(
+      a => a.id === activity.id
+    )
+    if (sameMessageIndex < 0) return
+
+    Vue.set(state.activityTimeline, sameMessageIndex, activity)
+  },
+  deleteActivity(state: S, messageId: MessageId) {
+    const sameMessageIndex = state.activityTimeline.findIndex(
+      a => a.id === messageId
+    )
+    if (sameMessageIndex < 0) return
+
+    // ガーベッジコレクタ
+    const activity = state.activityTimeline[sameMessageIndex]
+    state.activityTimeline.splice(sameMessageIndex, 1)
+    if (
+      state.activityTimelineChannelMap[activity.channelId]?.id === activity.id
+    ) {
+      state.activityTimelineChannelMap[activity.channelId] = undefined
     }
   },
   setOnlineUsers(state: S, users: UserId[]) {
