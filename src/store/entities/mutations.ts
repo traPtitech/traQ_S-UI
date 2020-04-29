@@ -51,6 +51,7 @@ export const mutations = defineMutations<S>()({
     state.channels = payload
     store.dispatch.domain.channelTree.constructAllTrees()
   },
+  setDMChannels: setMutation('dmChannels'),
   setUserGroups: setMutation('userGroups'),
   setStamps: setMutation('stamps'),
   setStampPalettes: setMutation('stampPalettes'),
@@ -62,6 +63,7 @@ export const mutations = defineMutations<S>()({
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
   extendChannels: extendMutation('channels'),
+  extendDMChannels: extendMutation('dmChannels'),
   extendUserGroups: extendMutation('userGroups'),
   extendStamps: extendMutation('stamps'),
   extendStampPalettes: extendMutation('stampPalettes'),
@@ -73,6 +75,7 @@ export const mutations = defineMutations<S>()({
   addUser: addMutation('users'),
   addMessage: addMutation('messages'),
   addChannel: addMutation('channels'),
+  addDMChannel: addMutation('dmChannels'),
   addUserGroup: addMutation('userGroups'),
   addStamp: addMutation('stamps'),
   addStampPalette: addMutation('stampPalettes'),
@@ -84,6 +87,7 @@ export const mutations = defineMutations<S>()({
   deleteUser: deleteMutation('users'),
   deleteMessage: deleteMutation('messages'),
   deleteChannel: deleteMutation('channels'),
+  deleteDMChannel: deleteMutation('dmChannels'),
   deleteUserGroup: deleteMutation('userGroups'),
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),

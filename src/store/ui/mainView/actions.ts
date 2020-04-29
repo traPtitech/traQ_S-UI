@@ -21,13 +21,18 @@ export const actions = defineActions({
   },
   changePrimaryViewToDM(
     context,
-    payload: { channelId: ChannelId; userName: string }
+    payload: {
+      channelId: ChannelId
+      userName: string
+      entryMessageId?: MessageId
+    }
   ) {
     const { commit, rootDispatch } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'dm',
       channelId: payload.channelId,
-      userName: payload.userName
+      userName: payload.userName,
+      entryMessageId: payload.entryMessageId
     })
     rootDispatch.domain.messagesView.changeCurrentChannel({
       ...payload,

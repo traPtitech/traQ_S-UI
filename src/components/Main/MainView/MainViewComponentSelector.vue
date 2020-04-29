@@ -1,14 +1,9 @@
 <template>
   <channel-view
     :class="$style.messagesView"
-    v-if="viewInfo.type === 'channel'"
+    v-if="viewInfo.type === 'channel' || viewInfo.type === 'dm'"
     :channel-id="viewInfo.channelId"
     :entry-message-id="viewInfo.entryMessageId"
-  />
-  <channel-view
-    :class="$style.messagesView"
-    v-else-if="viewInfo.type === 'dm'"
-    :channel-id="viewInfo.channelId"
   />
   <clips-view
     :class="$style.messagesView"
