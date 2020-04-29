@@ -9,13 +9,13 @@ export const lightTheme: Theme = {
   },
   background: {
     primary: '#FFFFFF',
-    secondary: '#F6F7F9',
+    secondary: '#F0F2F5',
     tertiary: '#ECEFF3',
     secondarySub: '#FBFCFE'
   },
   ui: {
-    primary: '#525E67',
-    secondary: '#768794',
+    primary: '#49535B',
+    secondary: '#6B7D8A',
     tertiary: '#CED6DB'
   },
   text: {
