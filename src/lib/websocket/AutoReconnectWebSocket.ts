@@ -60,10 +60,9 @@ export default class AutoReconnectWebSocket {
   }
 
   sendCommand(...commands: readonly [WebSocketCommand, ...string[]]) {
+    this.sendQueue.set(commands[0], commands.slice(1))
     if (this.isOpen) {
       this._sendCommand(commands)
-    } else {
-      this.sendQueue.set(commands[0], commands.slice(1))
     }
   }
 
@@ -89,7 +88,6 @@ export default class AutoReconnectWebSocket {
           this.sendQueue.forEach((args, command) => {
             this._sendCommand([command, ...args])
           })
-          this.sendQueue.clear()
         },
         { once: true }
       )
