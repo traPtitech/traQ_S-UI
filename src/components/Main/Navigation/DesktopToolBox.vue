@@ -10,7 +10,7 @@
         />
       </div>
       <div :class="$style.item">
-        <user-icon :class="$style.userIcon" :size="44" :user-id="myId" />
+        <user-icon :class="$style.userIcon" :size="36" :user-id="myId" />
       </div>
     </div>
     <portal v-if="isServicesShown" :to="targetPortalName">
