@@ -18,22 +18,13 @@
         @click="togglePerChannel"
       />
     </div>
-    <template v-if="isPerChannel">
-      <activity-channel-element
-        v-for="message in state.messages"
-        :key="message.id"
-        :class="$style.element"
-        :message="message"
-      />
-    </template>
-    <template v-else>
-      <activity-message-element
-        v-for="message in state.messages"
-        :key="message.id"
-        :class="$style.element"
-        :message="message"
-      />
-    </template>
+    <activity-element
+      v-for="message in state.messages"
+      :key="message.id"
+      :class="$style.element"
+      :type="isPerChannel ? 'channel' : 'message'"
+      :message="message"
+    />
   </div>
 </template>
 
@@ -50,8 +41,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { ws, setTimelineStreamingState } from '@/lib/websocket'
-import ActivityChannelElement from './ActivityChannelElement.vue'
-import ActivityMessageElement from './ActivityMessageElement.vue'
+import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 
 const useActivityStream = () => {
@@ -120,8 +110,7 @@ export default defineComponent({
   name: 'Activity',
   components: {
     ToggleButton,
-    ActivityChannelElement,
-    ActivityMessageElement
+    ActivityElement
   },
   setup(_, context: SetupContext) {
     useActivityStream()

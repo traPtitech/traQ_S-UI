@@ -3,7 +3,7 @@
     <channel-sidebar-pinned-list-item
       v-for="message in pinnedMessage"
       :key="message.message.id"
-      :pinned-message="message"
+      :message="message.message"
       :class="$style.sidebarItem"
     />
   </div>
@@ -44,11 +44,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+  padding-bottom: 32px;
 }
 
 .sidebarItem {

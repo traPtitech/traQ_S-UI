@@ -16,7 +16,7 @@ const useStyles = (props: { isTitle: boolean }) =>
   })
 
 export default defineComponent({
-  name: 'ActivityElementChannelName',
+  name: 'ChannelName',
   props: {
     path: {
       type: String,
@@ -30,9 +30,7 @@ export default defineComponent({
   setup(props, context) {
     const styles = useStyles(props)
 
-    return {
-      styles
-    }
+    return { styles }
   }
 })
 </script>

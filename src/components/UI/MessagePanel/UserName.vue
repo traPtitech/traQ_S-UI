@@ -24,13 +24,13 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 
 const useStyles = (props: { isTitle: boolean }) =>
   reactive({
-    path: makeStyles(theme => ({
+    container: makeStyles(theme => ({
       color: props.isTitle ? theme.ui.primary : theme.ui.secondary
     }))
   })
 
 export default defineComponent({
-  name: 'ActivityElementUserName',
+  name: 'UserName',
   components: {
     UserIcon
   },

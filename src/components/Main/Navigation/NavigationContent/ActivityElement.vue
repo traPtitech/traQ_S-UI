@@ -1,25 +1,23 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    @click="onChannelSelect(state.channelId)"
-  >
-    <activity-element-channel-name is-title :path="path" :class="$style.item" />
-    <div :class="$style.separator" :style="styles.separator"></div>
-    <activity-element-user-name :user="state.user" :class="$style.item" />
-    <activity-element-content :content="message.content" />
-  </div>
+  <message-panel
+    @click="onChannelSelect(message.channelId)"
+    :message="message"
+    :title-type="titleType"
+    line-clamp-content
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { Message } from '@traptitech/traq'
 import useChannelSelect from '@/use/channelSelect'
-import useActiviyElement from './use/activityElement'
-import ActivityElementUserName from './ActivityElementUserName.vue'
-import ActivityElementChannelName from './ActivityElementChannelName.vue'
-import ActivityElementContent from './ActivityElementContent.vue'
+import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
 
 const useStyles = () =>
   reactive({
@@ -37,26 +35,30 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ActivityElement',
   components: {
-    ActivityElementUserName,
-    ActivityElementChannelName,
-    ActivityElementContent
+    MessagePanel
   },
   props: {
+    type: {
+      type: String as PropType<'channel' | 'message'>,
+      required: true
+    },
     message: {
       type: Object as PropType<Message>,
       required: true
     }
   },
   setup(props, context) {
-    const { activityElementState: state, path } = useActiviyElement(props)
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
 
+    const titleType = computed(() =>
+      props.type === 'channel' ? 'channel' : 'user'
+    )
+
     return {
-      state,
       styles,
       onChannelSelect,
-      path
+      titleType
     }
   }
 })

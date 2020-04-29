@@ -5,7 +5,9 @@
         <slot name="header" />
         <close-button @click="closeSidebar" :size="28" />
       </div>
-      <slot name="content" />
+      <div :class="$style.content">
+        <slot name="content" />
+      </div>
     </div>
   </portal>
 </template>
@@ -51,7 +53,6 @@ export default defineComponent({
   flex-direction: column;
   width: 320px;
   height: 100%;
-  padding: 0 32px;
   overflow: auto;
 }
 
@@ -63,5 +64,14 @@ export default defineComponent({
   align-items: center;
   flex-shrink: 0;
   height: 64px;
+  padding: 0 32px;
+}
+
+.content {
+  padding: 0 32px;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 </style>
