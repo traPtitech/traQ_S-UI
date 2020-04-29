@@ -74,7 +74,7 @@ const useRouteWacher = (context: SetupContext) => {
         userName: user.name,
         entryMessageId: context.root.$route.query?.message as string
       })
-      changeViewTitle(user.name)
+      changeViewTitle('@' + user.name)
       state.view = 'main'
     } catch {
       state.view = 'not-found'
