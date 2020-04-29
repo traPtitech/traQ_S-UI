@@ -4,8 +4,8 @@
     :style="styles.container"
     @click="onChannelSelect(state.channelId)"
   >
-    <div :class="$style.name" :style="styles.name">
-      {{ state.channelName }}
+    <div :class="$style.path" :style="styles.path">
+      {{ path }}
     </div>
     <div :class="$style.separator" :style="styles.separator"></div>
     <activity-element-user-name :user="state.user" :class="$style.user" />
@@ -26,13 +26,14 @@ import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
 import ActivityElementUserName from './ActivityElementUserName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
       background: theme.background.primary
     })),
-    name: makeStyles(theme => ({
+    path: makeStyles(theme => ({
       color: theme.ui.secondary
     })),
     separator: makeStyles(theme => ({
@@ -69,10 +70,14 @@ export default defineComponent({
     }
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
+
+    const path = useChannelPath().channelIdToShortPathString(state.channelId)
+
     return {
       state,
       styles,
-      onChannelSelect
+      onChannelSelect,
+      path
     }
   }
 })
@@ -84,7 +89,7 @@ export default defineComponent({
   padding: 8px 20px;
   cursor: pointer;
 }
-.name {
+.path {
   font-size: 1.125rem;
   font-weight: bold;
   &::before {
