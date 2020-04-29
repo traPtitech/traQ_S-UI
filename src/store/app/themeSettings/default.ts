@@ -15,7 +15,7 @@ export const lightTheme: Theme = {
   },
   ui: {
     primary: '#525E67',
-    secondary: '#828E96',
+    secondary: '#768794',
     tertiary: '#CED6DB'
   },
   text: {
