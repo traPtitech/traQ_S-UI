@@ -58,13 +58,13 @@ const useSpoilerToggler = (rootRef: Ref<HTMLElement | null>) => {
   })
 }
 
-const useCompareDate = (messageIds: MessageId[]) => {
+const useCompareDate = (props: { messageIds: MessageId[] }) => {
   const dayDiff = (index: number) => {
     if (index === 0) {
       return true
     }
-    const pre = store.state.entities.messages[messageIds[index - 1]]
-    const current = store.state.entities.messages[messageIds[index]]
+    const pre = store.state.entities.messages[props.messageIds[index - 1]]
+    const current = store.state.entities.messages[props.messageIds[index]]
     const preDate = new Date(pre?.createdAt || ``)
     const currentDate = new Date(current?.createdAt || ``)
     return preDate.toDateString() !== currentDate.toDateString()
@@ -162,7 +162,7 @@ export default defineComponent({
 
     useSpoilerToggler(rootRef)
 
-    const dayDiff = useCompareDate(props.messageIds)
+    const dayDiff = useCompareDate(props)
 
     return {
       state,
