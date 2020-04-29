@@ -37,6 +37,9 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
 export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
+
+  store.commit.domain.updateActivity(res.data)
+
   if (!isMessageForCurrentChannel(res.data.channelId)) {
     return
   }
@@ -47,6 +50,9 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
   store.commit.entities.deleteMessage(id)
+
+  store.commit.domain.deleteActivity(id)
+
   store.commit.domain.messagesView.deleteMessageId(id)
 }
 
