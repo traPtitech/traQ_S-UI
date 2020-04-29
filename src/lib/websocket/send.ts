@@ -1,21 +1,8 @@
-import { ws, wsConnectionPromise } from './index'
+import { ws } from './index'
 import { ChannelViewState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
-type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
-
-const sendWebSocket = async (
-  ...command: readonly [WebSocketCommand, ...string[]]
-): Promise<void> => {
-  if (ws === undefined) {
-    throw new Error('WebSocket is not connected')
-  }
-  await wsConnectionPromise
-  if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
-    throw new Error('WebSocket is already in CLOSING or CLOSED state.')
-  }
-  ws.send(command.join(':'))
-}
+export type WebSocketCommand = 'viewstate' | 'rtcstate' | 'timeline_streaming'
 
 const VIEWSTATE_COMMAND = 'viewstate'
 
@@ -27,11 +14,11 @@ type ChangeViewStateFunction = {
 export const changeViewState: ChangeViewStateFunction = (
   channelId: ChannelId | null,
   viewState?: ChannelViewState
-): Promise<void> => {
+) => {
   if (channelId === null) {
-    return sendWebSocket(VIEWSTATE_COMMAND, '')
+    ws.sendCommand(VIEWSTATE_COMMAND, '')
   } else {
-    return sendWebSocket(VIEWSTATE_COMMAND, channelId, viewState!)
+    ws.sendCommand(VIEWSTATE_COMMAND, channelId, viewState!)
   }
 }
 
@@ -42,9 +29,9 @@ export const changeRTCState = (
   states: WebRTCUserStateSessions[]
 ) => {
   if (states.length === 0) {
-    return sendWebSocket(RTCSTATE_COMMAND, channelId, '')
+    ws.sendCommand(RTCSTATE_COMMAND, channelId, '')
   }
-  return sendWebSocket(
+  ws.sendCommand(
     RTCSTATE_COMMAND,
     channelId,
     ...states.flatMap(s => [s.state, s.sessionId]),
@@ -57,7 +44,7 @@ const TIMELINE_STREAMING_COMMAND = 'timeline_streaming'
 type TimelineStreamingType = 'on' | 'off' | 'true' | 'false'
 
 const changeTimelineStreamingState = (type: TimelineStreamingType) => {
-  return sendWebSocket(TIMELINE_STREAMING_COMMAND, type)
+  return ws.sendCommand(TIMELINE_STREAMING_COMMAND, type)
 }
 
 export const setTimelineStreamingState = (type: boolean) => {
