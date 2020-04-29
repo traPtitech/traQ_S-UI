@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import store, { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
 import { me } from './index'
 import { ChannelId } from '@/types/entity-ids'
@@ -66,5 +66,6 @@ export const actions = defineActions({
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)
+    store.dispatch.domain.channelTree.constructHomeChannelTree()
   }
 })
