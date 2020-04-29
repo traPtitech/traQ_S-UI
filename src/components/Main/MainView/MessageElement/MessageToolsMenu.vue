@@ -61,8 +61,7 @@ const usePinToggler = (props: { messageId: MessageId }) => {
 
 const useMessageChanger = (props: { messageId: MessageId }) => {
   const editMessage = () => {
-    // TODO
-    alert('edit: Not implemented')
+    store.commit.domain.messagesView.setEditingMessageId(props.messageId)
   }
   const deleteMessage = () => {
     if (confirm('本当にメッセージを削除しますか？')) {

@@ -59,7 +59,7 @@ export const mutations = defineMutations<S>()({
       renderedContent
     }: { messageId: MessageId; renderedContent: string }
   ) {
-    state.renderedContentMap[messageId] = renderedContent
+    Vue.set(state.renderedContentMap, messageId, renderedContent)
   },
   setRenderedContent(state, renderedContentMap: Record<string, string>) {
     state.renderedContentMap = renderedContentMap
@@ -78,5 +78,11 @@ export const mutations = defineMutations<S>()({
   },
   setSubscribers(state, subscribers: UserId[]) {
     state.subscribers = subscribers
+  },
+  setEditingMessageId(state, messageId: MessageId) {
+    state.editingMessageId = messageId
+  },
+  unsetEditingMessageId(state) {
+    state.editingMessageId = undefined
   }
 })

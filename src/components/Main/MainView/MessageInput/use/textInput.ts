@@ -5,9 +5,9 @@ export type TextState = {
   isEmpty: boolean
   isModifierKeyPressed: boolean
 }
-const useTextInput = () => {
+const useTextInput = (initialText: string = '') => {
   const state: TextState = reactive({
-    text: '',
+    text: initialText,
     isEmpty: computed(() => state.text.length === 0),
     isModifierKeyPressed: false
   })
