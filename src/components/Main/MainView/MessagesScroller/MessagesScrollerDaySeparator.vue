@@ -13,9 +13,7 @@ import {
   PropType,
   computed
 } from '@vue/composition-api'
-
 import { makeStyles } from '@/lib/styles'
-
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
 
@@ -40,7 +38,14 @@ export default defineComponent({
       () => store.state.entities.messages[props.messageId]
     )
     const createdDate = computed(() => {
-      const date = new Date(message.value?.createdAt || ``)
+      if (
+        message.value === undefined ||
+        message.value.createdAt === undefined
+      ) {
+        return ``
+      }
+
+      const date = new Date(message.value.createdAt)
       return date.getFullYear() + `/` + date.getMonth() + `/` + date.getDate()
     })
     return { styles, createdDate }
@@ -63,7 +68,7 @@ export default defineComponent({
     height: 1px;
     width: calc(50% - 70px);
     content: ' ';
-    opacity: 0.6;
+    opacity: 0.1;
   }
 }
 </style>
