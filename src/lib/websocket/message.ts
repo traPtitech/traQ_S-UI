@@ -73,8 +73,11 @@ export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
     message: message.data,
     pinnedAt: pin.data.pinnedAt
   })
+  store.commit.entities.extendMessages({ [data.message_id]: message.data })
 }
 
-export const onMessageUnpinned = (data: MessageUnpinnedEvent['body']) => {
+export const onMessageUnpinned = async (data: MessageUnpinnedEvent['body']) => {
+  const message = await apis.getMessage(data.message_id)
+  store.commit.entities.extendMessages({ [data.message_id]: message.data })
   store.commit.domain.messagesView.removePinnedMessageIds(data.message_id)
 }
