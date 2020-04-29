@@ -21,7 +21,11 @@ export const actions = defineActions({
   },
   async changeCurrentChannel(
     context,
-    payload: { channelId: ChannelId; entryMessageId?: MessageId }
+    payload: {
+      channelId: ChannelId
+      entryMessageId?: MessageId
+      isDM?: boolean
+    }
   ) {
     const { state, commit, dispatch, rootState } = messagesViewActionContext(
       context
@@ -35,8 +39,13 @@ export const actions = defineActions({
     dispatch.resetViewState()
 
     dispatch.fetchPinnedMessages()
-    dispatch.fetchTopic()
-    if (!rootState.entities.channels[payload.channelId]?.force) {
+    if (!payload.isDM) {
+      dispatch.fetchTopic()
+    }
+    if (
+      !payload.isDM &&
+      !rootState.entities.channels[payload.channelId]?.force
+    ) {
       dispatch.fetchSubscribers()
     }
   },

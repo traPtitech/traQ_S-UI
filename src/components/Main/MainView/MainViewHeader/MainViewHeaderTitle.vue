@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <icon
+      :class="$style.icon"
+      v-if="iconName"
+      :name="iconName"
+      :mdi="iconMdi"
+    />
     <h1 :class="$style.title">{{ title }}</h1>
   </div>
 </template>

@@ -64,9 +64,15 @@ const useRouteWacher = (context: SetupContext) => {
     const user = store.getters.entities.userByName(state.currentRouteParam)
     try {
       if (!user) throw 'user not found'
-      const dmChannel = await apis.getUserDMChannel(user.id)
+      const res = await apis.getUserDMChannel(user.id)
+      store.commit.entities.addDMChannel({
+        id: res.data.id,
+        entity: res.data
+      })
       store.dispatch.ui.mainView.changePrimaryViewToDM({
-        channelId: dmChannel.data.id
+        channelId: res.data.id,
+        userName: user.name,
+        entryMessageId: context.root.$route.query?.message as string
       })
       changeViewTitle(user.name)
       state.view = 'main'
@@ -135,11 +141,26 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
 
-    context.root.$router.replace({
-      name: RouteName.Channel,
-      params: { channel: channelIdToPathString(message.channelId) },
-      query: { message: message.id }
-    })
+    const channelId = message.channelId
+
+    if (channelId in store.state.entities.channels) {
+      context.root.$router.replace({
+        name: RouteName.Channel,
+        params: { channel: channelIdToPathString(message.channelId) },
+        query: { message: message.id }
+      })
+    } else if (channelId in store.state.entities.dmChannels) {
+      const dmChannel = store.state.entities.dmChannels[channelId]
+      const user = store.state.entities.users[dmChannel.userId]
+      context.root.$router.replace({
+        name: RouteName.User,
+        params: { user: user?.name ?? '' },
+        query: { message: message.id }
+      })
+    } else {
+      // チャンネルがなかった
+      state.view = 'not-found'
+    }
   }
 
   const onRouteParamChange = async (

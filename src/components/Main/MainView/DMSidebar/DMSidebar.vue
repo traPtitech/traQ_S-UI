@@ -1,11 +1,8 @@
 <template>
   <main-view-sidebar :style="styles.container" :class="$style.container">
     <template #header>
-      <channel-sidebar-header
-        v-if="!state.pinnedMode"
-        :channel-id="channelId"
-        :class="$style.sidebarItem"
-      />
+      <sidebar-header v-if="!state.pinnedMode" :name="userName" />
+      <!--TODO: これはチャンネル関係ないので切り出し-->
       <channel-sidebar-header
         v-else
         show-back-button
@@ -15,11 +12,12 @@
       />
     </template>
     <template #content>
+      <!--TODO: チャンネルと共通のコンポーネントを1つ上に持っていく-->
       <channel-sidebar-pinned-list
         v-if="state.pinnedMode"
         :pinned-message="state.pinnedMessage"
       />
-      <channel-sidebar-content
+      <sidebar-content
         v-else
         :channel-id="channelId"
         :viewer-ids="viewerIds"
@@ -35,10 +33,11 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import { makeStyles } from '@/lib/styles'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
+import ChannelSidebarPinnedList from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinnedList.vue'
+import ChannelSidebarHeader from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHeader.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
-import ChannelSidebarContent from './ChannelSidebarContent.vue'
-import ChannelSidebarPinnedList from './ChannelSidebarPinnedList.vue'
+import SidebarHeader from './DMSidebarHeader.vue'
+import SidebarContent from './DMSidebarContent.vue'
 
 const useStyles = () =>
   reactive({
@@ -49,17 +48,19 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: 'ChannelSidebar',
+  name: 'DMSidebar',
   components: {
     MainViewSidebar,
     ChannelSidebarPinnedList,
     ChannelSidebarHeader,
-    ChannelSidebarContent
+    SidebarHeader,
+    SidebarContent
   },
   props: {
-    channelId: { type: String as PropType<ChannelId>, requried: true }
+    channelId: { type: String as PropType<ChannelId>, requried: true },
+    userName: { type: String, requried: true }
   },
-  setup(props) {
+  setup() {
     const styles = useStyles()
     const {
       state,

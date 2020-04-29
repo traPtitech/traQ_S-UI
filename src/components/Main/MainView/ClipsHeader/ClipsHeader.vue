@@ -8,13 +8,11 @@
       />
     </template>
     <template #tools>
-      <div :class="$style.container">
-        <main-view-header-tools-item
-          @click="openSidebar"
-          icon-mdi
-          icon-name="info"
-        />
-      </div>
+      <main-view-header-tools-item
+        @click="openSidebar"
+        icon-mdi
+        icon-name="info"
+      />
     </template>
   </main-view-header>
 </template>
@@ -76,20 +74,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-}
-.moreButton {
-  position: relative;
-  display: inline;
-}
-.popupLocator {
-  position: absolute;
-  right: 0;
-  top: 100%;
-}
-</style>
+<style lang="scss" module></style>

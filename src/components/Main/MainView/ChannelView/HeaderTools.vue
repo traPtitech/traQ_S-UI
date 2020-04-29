@@ -1,137 +1,107 @@
 <template>
-  <div :class="$style.container">
-    <header-tools-item
-      @click="context.emit('click-qall')"
-      icon-mdi
-      :icon-name="qallIconName"
-      :style="styles.qallIcon"
-      :disabled="hasActiveQallSession && !isJoinedQallSession"
-      v-if="isQallEnabled"
+  <div>
+    <header-tools-list
+      :class="$style.tools"
+      :has-active-qall-session="hasActiveQallSession"
+      :is-qall-session-opened="isQallSessionOpened"
+      :is-joined-qall-session="isJoinedQallSession"
+      :is-stared="channelState.stared"
+      @click-qall="toggleQall"
+      @star-channel="starChannel"
+      @unstar-channel="unstarChannel"
+      @click-more="togglePopupMenu"
     />
-    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
-    <header-tools-item
-      v-show="currentChannelSubscription === 'notified'"
-      @click="changeToNextSubscriptionLevel"
-      icon-mdi
-      icon-name="bell"
-    />
-    <header-tools-item
-      v-show="currentChannelSubscription === 'subscribed'"
-      @click="changeToNextSubscriptionLevel"
-      icon-name="subscribed"
-    />
-    <header-tools-item
-      v-show="currentChannelSubscription === 'none'"
-      @click="changeToNextSubscriptionLevel"
-      :class="$style.icon"
-      icon-mdi
-      icon-name="bell-outline"
-    />
-    <header-tools-item
-      v-show="isStared"
-      @click="context.emit('unstar-channel')"
-      icon-name="star"
-    />
-    <header-tools-item
-      v-show="!isStared"
-      @click="context.emit('star-channel')"
-      icon-name="star-outline"
-    />
-    <header-tools-item
-      @click="context.emit('click-pin')"
-      icon-mdi
-      icon-name="pin"
-    />
-    <div :class="$style.moreButton">
-      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
-      <header-tools-item
-        @click="context.emit('click-more')"
-        icon-mdi
-        icon-name="dots-horizontal"
+    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+      <header-tools-menu
+        :class="$style.toolsMenu"
+        :show-notification-setting-btn="!channelState.forced"
+        v-click-outside="closePopupMenu"
+        @click-notification="openNotificationModal"
+        @click-create-channel="openChannelCreateModal"
+        @click-copy-channel-link="copyLink"
       />
-    </div>
+    </portal>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  computed,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, PropType, SetupContext } from '@vue/composition-api'
+import { ChannelId } from '@/types/entity-ids'
 
-import useChannelSubscriptionState from '@/use/channelSubscriptionState'
-import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
-import store from '@/store'
-import { makeStyles } from '@/lib/styles'
+import Icon from '@/components/UI/Icon.vue'
+import useQall from './use/qall'
+import usePopupMenu from './use/popupMenu'
+import useChannelState from './use/channelState'
+import useStarChannel from './use/starChannel'
+import useNotificationModal from './use/notificationModal'
+import useChannelCreateModal from './use/channelCreateModal'
+import HeaderToolsList, { targetPortalName } from './HeaderToolsList.vue'
+import HeaderToolsMenu from './HeaderToolsMenu.vue'
+import { embeddingOrigin } from '@/lib/apis'
 
-export const targetPortalName = 'header-popup'
-
-const useStyles = (props: {
-  isQallSessionOpened: boolean
-  isJoinedQallSession: boolean
-}) =>
-  reactive({
-    qallIcon: makeStyles((_, common) => ({
-      color:
-        props.isJoinedQallSession || props.isQallSessionOpened
-          ? common.ui.qall
-          : ''
-    }))
-  })
+const useCopy = (context: SetupContext) => {
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(
+      `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
+    )
+  }
+  return { copyLink }
+}
 
 export default defineComponent({
-  name: 'ChannelViewHeaderTools',
+  name: 'ChannelViewHeader',
   components: {
-    HeaderToolsItem
+    Icon,
+    HeaderToolsList,
+    HeaderToolsMenu
   },
   props: {
-    isStared: { type: Boolean, default: false },
-    hasActiveQallSession: { type: Boolean, default: false },
-    isQallSessionOpened: { type: Boolean, default: false },
-    isJoinedQallSession: { type: Boolean, default: false }
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    }
   },
-  setup(props, context: SetupContext) {
+  setup(props, context) {
+    const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
+    const { channelState } = useChannelState(props)
+    const { starChannel, unstarChannel } = useStarChannel(props)
+    const { openNotificationModal } = useNotificationModal(props)
+    const { openChannelCreateModal } = useChannelCreateModal(props)
+    const { copyLink } = useCopy(context)
     const {
-      changeToNextSubscriptionLevel,
-      currentChannelSubscription
-    } = useChannelSubscriptionState()
-
-    const isQallEnabled = computed(() => store.state.app.rtcSettings.isEnabled)
-
-    const styles = useStyles(props)
-    const qallIconName = computed(() =>
-      props.isJoinedQallSession ? 'phone' : 'phone-outline'
-    )
-
+      hasActiveQallSession,
+      isJoinedQallSession,
+      isQallSessionOpened,
+      toggleQall
+    } = useQall(props)
     return {
-      styles,
-      qallIconName,
-      context,
-      currentChannelSubscription,
-      changeToNextSubscriptionLevel,
-      targetPortalName,
-      isQallEnabled
+      hasActiveQallSession,
+      isQallSessionOpened,
+      isJoinedQallSession,
+      isPopupMenuShown,
+      channelState,
+      toggleQall,
+      starChannel,
+      unstarChannel,
+      openNotificationModal,
+      openChannelCreateModal,
+      copyLink,
+      togglePopupMenu,
+      closePopupMenu,
+      targetPortalName
     }
   }
 })
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
+.tools {
+  flex-shrink: 0;
 }
-.moreButton {
-  position: relative;
-  display: inline;
-}
-.popupLocator {
+.toolsMenu {
   position: absolute;
   right: 0;
   top: 100%;
+  z-index: 999;
 }
 </style>

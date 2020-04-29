@@ -18,8 +18,13 @@ export enum RouteName {
 }
 
 export const constructChannelPath = (channel: string) => `/channels/${channel}`
-export const constructClipFoldersPath = (channel: string) =>
-  `/clip-folders/${channel}`
+export const constructUserPath = (name: string) => `/users/${name}`
+export const constructClipFoldersPath = (id: string) => `/clip-folders/${id}`
+
+export const changeRouteByPath = (path: string) => {
+  // 同じ場所に移動しようとした際のエラーを消す
+  router.push(path).catch(() => {})
+}
 
 const routes = [
   {

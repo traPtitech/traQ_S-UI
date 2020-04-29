@@ -8,7 +8,8 @@ import {
   Message,
   FileInfo,
   Tag,
-  ClipFolder
+  ClipFolder,
+  DMChannel
 } from '@traptitech/traq'
 import {
   UserId,
@@ -20,13 +21,15 @@ import {
   WebhookId,
   MessageId,
   FileId,
-  ClipFolderId
+  ClipFolderId,
+  DMChannelId
 } from '@/types/entity-ids'
 
 export type S = {
   users: Record<UserId, User | undefined>
   messages: Record<MessageId, Message | undefined>
   channels: Record<ChannelId, Channel>
+  dmChannels: Record<DMChannelId, DMChannel>
   userGroups: Record<UserGroupId, UserGroup>
   stamps: Record<StampId, Stamp>
   stampPalettes: Record<StampPaletteId, StampPalette>
@@ -40,6 +43,7 @@ export const state: S = {
   users: {},
   messages: {},
   channels: {},
+  dmChannels: {},
   userGroups: {},
   stamps: {},
   stampPalettes: {},
