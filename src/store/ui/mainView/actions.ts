@@ -24,6 +24,7 @@ export const actions = defineActions({
       if (!(DMChannel.userId in store.state.entities.users)) {
         await store.dispatch.entities.fetchUser(DMChannel.userId)
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const user = store.state.entities.users[DMChannel.userId]!
 
       dispatch.changePrimaryViewToDM({
