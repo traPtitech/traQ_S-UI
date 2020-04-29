@@ -4,29 +4,22 @@
     :style="styles.container"
     @click="onChannelSelect(state.channelId)"
   >
-    <div :class="$style.path" :style="styles.path">
-      {{ path }}
-    </div>
+    <activity-element-channel-name is-title :path="path" :class="$style.item" />
     <div :class="$style.separator" :style="styles.separator"></div>
-    <activity-element-user-name :user="state.user" :class="$style.user" />
+    <activity-element-user-name :user="state.user" :class="$style.item" />
     <activity-element-content :content="message.content" />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { Message } from '@traptitech/traq'
-import store from '@/store'
 import useChannelSelect from '@/use/channelSelect'
+import useActiviyElement from './use/activityElement'
 import ActivityElementUserName from './ActivityElementUserName.vue'
+import ActivityElementChannelName from './ActivityElementChannelName.vue'
 import ActivityElementContent from './ActivityElementContent.vue'
-import useChannelPath from '@/use/channelPath'
 
 const useStyles = () =>
   reactive({
@@ -34,10 +27,10 @@ const useStyles = () =>
       background: theme.background.primary
     })),
     path: makeStyles(theme => ({
-      color: theme.ui.secondary
+      color: theme.ui.primary
     })),
     separator: makeStyles(theme => ({
-      background: theme.background.tertiary
+      background: theme.background.secondary
     }))
   })
 
@@ -45,6 +38,7 @@ export default defineComponent({
   name: 'ActivityElement',
   components: {
     ActivityElementUserName,
+    ActivityElementChannelName,
     ActivityElementContent
   },
   props: {
@@ -54,24 +48,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const state = reactive({
-      channelName: computed(
-        () =>
-          store.state.entities.channels[props.message.channelId ?? '']?.name ??
-          ''
-      ),
-      channelId: computed(() => props.message.channelId ?? ''),
-      user: computed(
-        () => store.state.entities.users[props.message.userId ?? '']
-      )
-    })
-    if (state.user === undefined) {
-      store.dispatch.entities.fetchUser(props.message.userId)
-    }
+    const { activityElementState: state, path } = useActiviyElement(props)
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
-
-    const path = useChannelPath().channelIdToShortPathString(state.channelId)
 
     return {
       state,
@@ -86,22 +65,15 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   border-radius: 4px;
-  padding: 8px 20px;
+  padding: 8px 16px;
   cursor: pointer;
 }
-.path {
-  font-size: 1.125rem;
-  font-weight: bold;
-  &::before {
-    content: '# ';
-  }
+.item {
+  margin: 4px 0;
 }
 .separator {
   width: 100%;
   height: 2px;
   margin: 4px 0;
-}
-.user {
-  margin-bottom: 8px;
 }
 </style>

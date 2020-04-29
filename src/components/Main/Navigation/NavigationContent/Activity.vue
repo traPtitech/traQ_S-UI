@@ -18,12 +18,12 @@
         @click="togglePerChannel"
       />
     </div>
-    <activity-element
-      v-for="message in state.messages"
-      :key="message.id"
-      :class="$style.element"
-      :message="message"
-    />
+      <activity-channel-element
+        v-for="message in state.messages"
+        :key="message.id"
+        :class="$style.element"
+        :message="message"
+      />
   </div>
 </template>
 
@@ -40,7 +40,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { setTimelineStreamingState } from '@/lib/websocket'
-import ActivityElement from './ActivityElement.vue'
+import ActivityChannelElement from './ActivityChannelElement.vue'
 import ToggleButton from './ToggleButton.vue'
 
 const useActivityStream = () => {
@@ -96,7 +96,7 @@ export default defineComponent({
   name: 'Activity',
   components: {
     ToggleButton,
-    ActivityElement
+    ActivityChannelElement,
   },
   setup(_, context: SetupContext) {
     useActivityStream()
