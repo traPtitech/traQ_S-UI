@@ -1,14 +1,13 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="['markdown-body', $style.content]" v-html="renderedContent" />
+    <markdown-inline-content :class="$style.content" :content="content" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { embeddingExtractor } from '@/lib/embeddingExtractor'
-import { renderInline } from '@/lib/markdown'
+import MarkdownInlineContent from '@/components/UI/MarkdownInlineContent.vue'
 
 export default defineComponent({
   name: 'ActivityElementContent',
@@ -25,12 +24,10 @@ export default defineComponent({
       }))
     })
 
-    const renderedContent = computed(() => {
-      const extracted = embeddingExtractor(props.content)
-      return renderInline(extracted.text)
-    })
-
-    return { styles, renderedContent }
+    return { styles }
+  },
+  components: {
+    MarkdownInlineContent
   }
 })
 </script>

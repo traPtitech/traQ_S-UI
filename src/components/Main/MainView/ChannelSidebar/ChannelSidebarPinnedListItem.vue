@@ -10,9 +10,11 @@
         state.userDisplayName
       }}</span>
     </div>
-    <span :class="$style.text" :style="styles.text">{{
-      pinnedMessage.message.content
-    }}</span>
+    <markdown-inline-content
+      :class="$style.text"
+      :style="styles.text"
+      :content="pinnedMessage.message.content"
+    />
   </router-link>
 </template>
 
@@ -27,6 +29,7 @@ import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { Pin } from '@traptitech/traq'
 import store from '@/store'
+import MarkdownInlineContent from '@/components/UI/MarkdownInlineContent.vue'
 
 const useStyles = () =>
   reactive({
@@ -44,7 +47,7 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'ChannelSidebarPinnedListItem',
-  components: { UserIcon },
+  components: { UserIcon, MarkdownInlineContent },
   props: { pinnedMessage: { type: Object as PropType<Pin>, required: true } },
   setup(props) {
     const state = reactive({
@@ -54,6 +57,7 @@ export default defineComponent({
             ?.displayName ?? ''
       )
     })
+
     const styles = useStyles()
     return { styles, state }
   }
