@@ -762,16 +762,12 @@
 .markdown-body table td,
 .markdown-body table th {
   padding: 6px 13px;
-  border: 1px solid #dfe2e5;
+  border: 1px solid;
 }
 
 .markdown-body table tr {
   background-color: #fff;
-  border-top: 1px solid #c6cbd1;
-}
-
-.markdown-body table tr:nth-child(2n) {
-  background-color: #f6f8fa;
+  border-top: 1px solid;
 }
 
 .markdown-body img {
@@ -826,7 +822,6 @@
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  background-color: #f6f8fa;
   border-radius: 3px;
 }
 
@@ -994,6 +989,49 @@
 .markdown-body .task-list-item input {
   margin: 0 0.2em 0.25em -1.6em;
   vertical-align: middle;
+}
+
+html:not([data-is-dark-theme]) {
+  @import '~highlight.js/styles/atom-one-light';
+
+  .markdown-body {
+    pre, code {
+      background-color: #f6f8fa;
+    }
+
+    table {
+      td, th {
+        border-color: #dfe2e5;
+      }
+      tr {
+        background-color: #fff;
+        border-color: #c6cbd1;
+        &:nth-child(2n) {
+          background-color: #f6f8fa;
+        }
+      }
+    }
+  }
+}
+html[data-is-dark-theme] {
+  @import '~highlight.js/styles/atom-one-dark';
+
+  pre, code {
+    background-color: #243342;
+  }
+
+  table {
+    td, th {
+      border-color: #191c1f;
+    }
+    tr {
+      background-color: #243342;
+      border-color: #2d3239;
+      &:nth-child(2n) {
+        background-color: #1b2631;
+      }
+    }
+  }
 }
 
 .markdown-body {

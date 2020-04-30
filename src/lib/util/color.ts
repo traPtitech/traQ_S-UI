@@ -9,6 +9,19 @@ export const transparentize = (color: string, opacity: number) => {
   return new Color(c.r, c.g, c.b, c.a * _opacity).toString()
 }
 
+/**
+ * その色の輝度が閾値を超えているかどうか
+ * @param color 色
+ * @param threshold 0～1
+ */
+export const isDarkColor = (color: string, threshold = 0.5) => {
+  const c = Color.fromText(color)
+  return (
+    (0.298912 * c.r) / 255 + (0.586611 * c.g) / 255 + (0.114478 * c.b) / 255 <
+    threshold
+  )
+}
+
 class Color {
   constructor(
     readonly r: number,
