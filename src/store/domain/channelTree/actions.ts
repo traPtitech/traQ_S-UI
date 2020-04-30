@@ -20,7 +20,10 @@ const channelNameSortFunction = (
   return compareString(name1, name2)
 }
 
-export type ChannelLike = Pick<Channel, 'id' | 'name' | 'parentId' | 'children'>
+export type ChannelLike = Pick<
+  Channel,
+  'id' | 'name' | 'parentId' | 'children' | 'archived'
+>
 
 export const constructTree = (
   channel: ChannelLike,
@@ -38,6 +41,7 @@ export const constructTree = (
           id: channel.id,
           name: channel.name,
           active: true,
+          archived: channel.archived,
           children: []
         }
       : undefined
@@ -72,6 +76,7 @@ export const constructTree = (
     id: channel.id,
     name: channel.name,
     active: isSubscribed,
+    archived: channel.archived,
     children
   }
 }
@@ -84,7 +89,10 @@ export const actions = defineActions({
   },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
+    const topLevelChannelIds = getters.topLevelChannels
+      .filter(c => !c.archived)
+      .map(c => c.id)
+
     const tree = {
       children:
         constructTree(
@@ -92,6 +100,7 @@ export const actions = defineActions({
             id: rootChannelId,
             name: '',
             parentId: null,
+            archived: false,
             children: topLevelChannelIds
           },
           rootState.entities.channels
@@ -110,7 +119,7 @@ export const actions = defineActions({
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
       Object.values(rootState.entities.channels)
-        .filter(c => c.force)
+        .filter(c => c.force && !c.archived)
         .map(c => c.id)
     )
     const tree = {
@@ -120,6 +129,7 @@ export const actions = defineActions({
             id: rootChannelId,
             name: '',
             parentId: null,
+            archived: false,
             children: topLevelChannelIds
           },
           rootState.entities.channels,

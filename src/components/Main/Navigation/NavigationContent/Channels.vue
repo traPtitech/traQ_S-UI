@@ -39,6 +39,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
+import useChannelState from '../../MainView/ChannelView/use/channelState'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -53,21 +54,21 @@ const useChannels = (state: { isStar: boolean }) =>
     state.isStar
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
-              buildDescendantsChannelArray(v)
-            )
+            Object.keys(store.state.domain.me.staredChannelSet)
+              .filter(
+                channelId =>
+                  !useChannelState({ channelId }).channelState.archived
+              )
+              .flatMap(v => buildDescendantsChannelArray(v))
           )
         ]
-      : Object.values(store.state.entities.channels)
+      : Object.values(store.state.entities.channels).filter(
+          channel =>
+            !useChannelState({ channelId: channel.id }).channelState.archived
+        )
   )
 
 const useStaredChannel = () => {
-  const staredChannel = computed(() =>
-    Object.keys(store.state.domain.me.staredChannelSet).map(
-      v => store.state.entities.channels[v]
-    )
-  )
-
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
 
@@ -79,7 +80,10 @@ const useStaredChannel = () => {
           id: '',
           name: '',
           parentId: null,
-          children: Object.keys(store.state.domain.me.staredChannelSet)
+          archived: false,
+          children: Object.keys(store.state.domain.me.staredChannelSet).filter(
+            channelId => !useChannelState({ channelId }).channelState.archived
+          )
         },
         store.state.entities.channels
       )
@@ -103,7 +107,10 @@ export default defineComponent({
   },
   setup() {
     const topLevelChannels = computed(
-      () => store.state.domain.channelTree.channelTree.children ?? []
+      () =>
+        store.state.domain.channelTree.channelTree.children.filter(
+          node => !node.archived
+        ) ?? []
     )
 
     const state = reactive({
