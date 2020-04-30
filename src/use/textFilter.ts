@@ -21,7 +21,7 @@ const useTextFilter = <T, K extends keyof T>(
           item =>
             ((item[searchTargetKey] as unknown) as string)
               .toLowerCase()
-              .indexOf(state.query.toLowerCase()) === 0
+              .startsWith(state.query.toLowerCase()) === 0
         )
       }
       return items.value.filter(
