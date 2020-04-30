@@ -1,9 +1,17 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div
-      :class="[lineClampContent ? $style.content : '', 'markdown-body']"
-      v-html="renderedContent"
+  <div
+    :class="[$style.container, lineClampContent ? $style.lineClamp : '']"
+    :style="styles.container"
+  >
+    <icon v-if="hasFile" :class="$style.icon" name="file" mdi :size="20" />
+    <icon
+      v-if="hasMessage"
+      :class="$style.icon"
+      name="comment-quote"
+      mdi
+      :size="20"
     />
+    <span :class="$style.content" v-html="renderedContent" />
   </div>
 </template>
 
@@ -12,6 +20,7 @@ import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import { embeddingExtractor } from '@/lib/embeddingExtractor'
 import { renderInline } from '@/lib/markdown'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'RenderContent',
@@ -32,12 +41,19 @@ export default defineComponent({
       }))
     })
 
-    const renderedContent = computed(() => {
-      const extracted = embeddingExtractor(props.content)
-      return renderInline(extracted.text)
-    })
+    const extracted = computed(() => embeddingExtractor(props.content))
+    const hasFile = computed(
+      () => extracted.value.embeddings.findIndex(e => e.type === 'file') >= 0
+    )
+    const hasMessage = computed(
+      () => extracted.value.embeddings.findIndex(e => e.type === 'message') >= 0
+    )
+    const renderedContent = computed(() => renderInline(extracted.value.text))
 
-    return { styles, renderedContent }
+    return { styles, hasFile, hasMessage, renderedContent }
+  },
+  components: {
+    Icon
   }
 })
 </script>
@@ -48,10 +64,23 @@ export default defineComponent({
   word-break: break-all;
   width: 100%;
 }
-.content {
+.lineClamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.icon {
+  vertical-align: middle;
+}
+.content {
+  text-size-adjust: 100%;
+  line-height: 1.2;
+  word-break: break-all;
+}
+.icon + .icon,
+.icon + .content {
+  margin-left: 4px;
 }
 </style>
