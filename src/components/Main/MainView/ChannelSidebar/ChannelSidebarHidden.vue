@@ -11,12 +11,9 @@
     <user-icon-ellipsis-list
       direction="col"
       :max="3"
-      :show-count="false"
+      show-count
       :user-ids="viewerIds"
     />
-    <span v-if="viewersRest > 0" :class="$style.rest" :style="styles.rest"
-      >+{{ viewersRest }}</span
-    >
   </div>
 </template>
 
