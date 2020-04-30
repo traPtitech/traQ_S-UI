@@ -2,8 +2,7 @@
   <modal-frame
     title="通知設定"
     :subtitle="`#${currentChannelPathString}`"
-    icon-mdi
-    icon-name="bell"
+    icon-name="notified"
   >
     <modal-section title="自分の通知設定">
       <notification-state-selector />

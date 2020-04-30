@@ -10,18 +10,17 @@
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <header-tools-item
-      v-show="currentChannelSubscription === 'notified'"
+      v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
       @click="changeToNextSubscriptionLevel"
-      icon-mdi
-      icon-name="bell"
+      icon-name="notified"
     />
     <header-tools-item
-      v-show="currentChannelSubscription === 'subscribed'"
+      v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"
       @click="changeToNextSubscriptionLevel"
       icon-name="subscribed"
     />
     <header-tools-item
-      v-show="currentChannelSubscription === 'none'"
+      v-show="currentChannelSubscription === ChannelSubscribeLevel.none"
       @click="changeToNextSubscriptionLevel"
       :class="$style.icon"
       icon-mdi
@@ -60,11 +59,11 @@ import {
   computed,
   reactive
 } from '@vue/composition-api'
-
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
+import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 export const targetPortalName = 'header-popup'
 
@@ -112,7 +111,8 @@ export default defineComponent({
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
       targetPortalName,
-      isQallEnabled
+      isQallEnabled,
+      ChannelSubscribeLevel
     }
   }
 })
