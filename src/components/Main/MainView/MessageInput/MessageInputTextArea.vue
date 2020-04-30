@@ -71,32 +71,16 @@ const useLineBreak = (
 }
 
 const usePaste = () => {
-  const onPaste = async () => {
-    try {
-      const clipboardItems = await clipboard.read()
-      for (const clipboardItem of clipboardItems) {
-        for (const type of clipboardItem.types) {
-          const blob: Blob = await clipboardItem.getType(type)
-          let fileName = ''
-          switch (blob.type) {
-            case 'image/png':
-              fileName = 'image.png'
-              break
-            case 'image/jpg':
-              fileName = 'image.jpg'
-              break
-            case 'image/gif':
-              fileName = 'image.gif'
-              break
-            default:
-              return
-          }
-          const file = new File([blob], fileName, { type: blob.type })
-          store.dispatch.ui.fileInput.addAttachment(file)
-        }
+  const onPaste = (event: ClipboardEvent) => {
+    const items = event?.clipboardData?.items
+    if (!items) return
+    for (let i = 0; i < items.length ?? 0; i++) {
+      if (items[i].kind === 'string') {
+        continue
       }
-    } catch (err) {
-      return
+      const item = items[i]
+      const file = item.getAsFile()
+      if (file) store.dispatch.ui.fileInput.addAttachment(file)
     }
   }
   return { onPaste }
