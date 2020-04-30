@@ -6,8 +6,8 @@
   >
     <div :class="$style.inputContainer">
       <filter-input
-        :text="queryString"
-        @input="updateQueryString"
+        :text="textFilterState.query"
+        @input="setQuery"
         :placeholder="placeholder"
       />
       <!--
