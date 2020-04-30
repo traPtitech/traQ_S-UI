@@ -124,11 +124,12 @@ export default defineComponent({
 .emojiIcon,
 .dotIcon,
 .stampListItem {
+  display: block;
   cursor: pointer;
+  margin: 0 4px;
 }
 
 .stampListItem {
   user-select: none;
-  margin: 0 2px;
 }
 </style>

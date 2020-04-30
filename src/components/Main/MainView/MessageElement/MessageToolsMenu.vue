@@ -142,6 +142,7 @@ export default defineComponent({
 }
 
 .text {
+  margin: 2px 0;
   cursor: pointer;
 }
 </style>
