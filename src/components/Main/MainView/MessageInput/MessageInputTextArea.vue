@@ -27,7 +27,6 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useSendKeyWatcher from './use/sendKeyWatcher'
-import clipboard from '@cloudcmd/clipboard'
 import store from '@/store'
 
 const useStyles = () =>
