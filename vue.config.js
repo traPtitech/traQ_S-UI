@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/camelcase */
-const CompressionPlugin = require('compression-webpack-plugin')
 const https = require('https')
 const keepAliveAgent = new https.Agent({ keepAlive: true })
+const configureWebpack = require('./vue-webpack.config')
 
 module.exports = {
   css: {
@@ -13,30 +13,7 @@ module.exports = {
     }
   },
 
-  configureWebpack: {
-    resolve: {
-      alias: {
-        vue$: 'vue/dist/vue.esm.js'
-      }
-    },
-    context: __dirname,
-    module: {
-      rules: []
-    },
-    plugins:
-      process.env.NODE_ENV === 'production'
-        ? [
-            new CompressionPlugin({
-              filename: '[path].br[query]',
-              algorithm: 'brotliCompress',
-              test: /\.(js|css|html|svg|json)$/,
-              compressionOptions: { level: 11 },
-              minRatio: 1,
-              deleteOriginalAssets: false
-            })
-          ]
-        : []
-  },
+  configureWebpack,
 
   chainWebpack: config => {
     const svgRule = config.module.rule('svg')
