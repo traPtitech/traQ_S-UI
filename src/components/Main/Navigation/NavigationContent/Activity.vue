@@ -33,7 +33,6 @@ import {
   SetupContext,
   reactive,
   computed,
-  onBeforeMount,
   onBeforeUnmount,
   watch,
   ref
@@ -53,15 +52,7 @@ const useActivityStream = () => {
     fetch(mode.value)
   }
 
-  onBeforeMount(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    await fetch(mode.value).catch(() => {})
-    if (mode.value.all) {
-      setTimelineStreamingState(true)
-    }
-
-    ws.addEventListener('reconnect', handler)
-  })
+  // mountedの際に`oldMode`が`undefined`なものが発火する
   watch(
     () => mode.value,
     async (newMode, oldMode) => {
@@ -72,6 +63,8 @@ const useActivityStream = () => {
       }
     }
   )
+  ws.addEventListener('reconnect', handler)
+
   onBeforeUnmount(() => {
     if (mode.value.all) {
       setTimelineStreamingState(mode.value.all)
