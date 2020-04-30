@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <div :class="$style.icon" :style="styles.icon">
+    <div
+      :class="$style.icon"
+      :style="styles.icon"
+      :data-is-selected="isSelected"
+    >
       <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
     </div>
   </div>
@@ -30,8 +34,7 @@ const useStyles = (props: {
     icon: makeStyles((theme, common) => ({
       color: props.colorClaim
         ? props.colorClaim(theme, common)
-        : theme.accent.primary,
-      opacity: props.isSelected ? '1' : '0.3'
+        : theme.accent.primary
     }))
   })
 }
@@ -78,5 +81,12 @@ export default defineComponent({
 .icon {
   width: 24px;
   height: 24px;
+  opacity: 0.3;
+  &:hover {
+    opacity: 0.7;
+  }
+  &[data-is-selected] {
+    opacity: 1;
+  }
 }
 </style>
