@@ -1,6 +1,6 @@
 import { StampId } from '@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-import { compareString } from './util/string'
+import { compareStringInsensitive } from './util/string'
 
 type StampName = string
 
@@ -77,7 +77,7 @@ export const traQStampsToStampCategory = (
     .sort((entry1, entry2) => {
       const name1 = entry1[0]
       const name2 = entry2[0]
-      return compareString(name1, name2)
+      return compareStringInsensitive(name1, name2)
     })
     .map(entry => entry[1])
 

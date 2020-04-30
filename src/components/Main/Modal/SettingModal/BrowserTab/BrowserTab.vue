@@ -104,6 +104,7 @@ import Toggle from '@/components/UI/Toggle.vue'
 import Account from './Account.vue'
 import Notification from './Notification.vue'
 import useChannelPath from '@/use/channelPath'
+import { compareStringInsensitive } from '@/lib/util/string'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -116,7 +117,7 @@ const useChannelOptions = () => {
           value: pathString
         }
       })
-      .sort((a, b) => (a.key > b.key ? 1 : -1))
+      .sort((a, b) => compareStringInsensitive(a.key, b.key))
   )
 }
 

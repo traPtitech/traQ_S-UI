@@ -62,6 +62,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { Stamp, UserAccountState } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import useHover from '@/use/hover'
+import { compareStringInsensitive } from '@/lib/util/string'
 
 const useStyles = (
   props: { isSelected: boolean },
@@ -95,7 +96,7 @@ const creatorOptions = computed(() =>
       key: u?.name ?? '',
       value: u?.id ?? null
     }))
-    .sort((a, b) => (a.key > b.key ? 1 : -1))
+    .sort((a, b) => compareStringInsensitive(a.key, b.key))
 )
 
 const useCreator = (stamp: Stamp) => {

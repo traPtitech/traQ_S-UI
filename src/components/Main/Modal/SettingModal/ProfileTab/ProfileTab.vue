@@ -69,6 +69,7 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
+import { compareStringInsensitive } from '@/lib/util/string'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -84,7 +85,7 @@ const useChannelOptions = () => {
           key: channelIdToPathString(channel.id, true),
           value: channel.id
         }))
-        .sort((a, b) => (a.key > b.key ? 1 : -1))
+        .sort((a, b) => compareStringInsensitive(a.key, b.key))
     )
   )
 }

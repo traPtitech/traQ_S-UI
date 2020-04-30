@@ -54,7 +54,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { User } from '@traptitech/traq'
-import { compareString } from '@/lib/util/string'
+import { compareStringInsensitive } from '@/lib/util/string'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
@@ -80,7 +80,7 @@ const useListByGradeName = () => {
       const member = ((
         group.members.map(member => users.value[member.id]) ?? []
       ).filter(user => !!user) as User[]).sort((u1, u2) =>
-        compareString(u1.name, u2.name)
+        compareStringInsensitive(u1.name, u2.name)
       )
       userGradeEntries[group.name] = member
 
@@ -90,18 +90,20 @@ const useListByGradeName = () => {
     // BOTグループ
     const bots = (Object.values(users.value).filter(
       user => user?.bot
-    ) as User[]).sort((u1, u2) => compareString(u1.name, u2.name))
+    ) as User[]).sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     return [
       ...Object.entries(userGradeEntries).sort(
-        (e1, e2) => compareString(e1[0], e2[0], true) // 学年なので逆順
+        (e1, e2) => compareStringInsensitive(e1[0], e2[0], true) // 学年なので逆順
       ),
       [
         'Others',
         (Object.values(users.value).filter(
           user => user && !categorized.has(user.id)
-        ) as User[]).sort((u1, u2) => compareString(u1.name, u2.name))
+        ) as User[]).sort((u1, u2) =>
+          compareStringInsensitive(u1.name, u2.name)
+        )
       ],
       ['BOT', bots]
     ]
