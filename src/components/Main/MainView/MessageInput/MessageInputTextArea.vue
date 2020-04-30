@@ -73,11 +73,10 @@ const usePaste = () => {
   const onPaste = (event: ClipboardEvent) => {
     const items = event?.clipboardData?.items
     if (!items) return
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].kind === 'string') {
+    for (const item of items) {
+      if (item.kind === 'string') {
         continue
       }
-      const item = items[i]
       const file = item.getAsFile()
       if (file) store.dispatch.ui.fileInput.addAttachment(file)
     }
