@@ -10,7 +10,6 @@
     v-on="context.listeners"
     role="img"
   >
-    <title>{{ name }}</title>
     <path :d="getMdiPath(name)" />
   </svg>
   <component

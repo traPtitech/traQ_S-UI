@@ -10,7 +10,7 @@
       />
       <toggle-button
         :class="$style.button"
-        title="同じチャンネルでも複数のメッセージを表示する"
+        title="同じチャンネルでは一つしかメッセージを表示しない"
         icon-name="comment-multiple-outline"
         icon-mdi
         :value="isPerChannel"
