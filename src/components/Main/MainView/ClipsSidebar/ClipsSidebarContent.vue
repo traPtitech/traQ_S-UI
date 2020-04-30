@@ -116,11 +116,11 @@ export default defineComponent({
 <style lang="scss" module>
 .item {
   margin: 16px 0;
-          &:first-child {
-            margin-top: 0;
-          }
-          &:last-child {
-            margin-bottom: 0;
-          }
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>
