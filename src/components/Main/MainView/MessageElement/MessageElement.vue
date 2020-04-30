@@ -259,6 +259,7 @@ $messagePaddingMobile: 16px;
   position: absolute;
   left: -26px;
   top: 2px;
+  cursor: pointer;
 }
 
 .messageEmbeddingsList {
