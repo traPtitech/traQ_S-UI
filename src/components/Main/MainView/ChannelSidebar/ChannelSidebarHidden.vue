@@ -13,17 +13,13 @@
       :max="3"
       show-count
       :user-ids="viewerIds"
+      :style="styles.rest"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
@@ -50,11 +46,9 @@ export default defineComponent({
     const open = () => {
       context.emit('open')
     }
-    const viewersRest = computed(() => props.viewerIds.length - 3)
     return {
       styles,
-      open,
-      viewersRest
+      open
     }
   }
 })
@@ -73,10 +67,5 @@ export default defineComponent({
   margin-bottom: 16px;
   margin-top: 16px;
   cursor: pointer;
-}
-
-.rest {
-  user-select: none;
-  font-weight: bold;
 }
 </style>

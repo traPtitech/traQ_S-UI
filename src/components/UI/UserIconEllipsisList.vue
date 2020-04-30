@@ -106,5 +106,6 @@ $countSize: 1.15rem;
 
 .count {
   font-weight: bold;
+  user-select: none;
 }
 </style>
