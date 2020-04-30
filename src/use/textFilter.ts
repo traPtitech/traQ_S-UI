@@ -28,7 +28,7 @@ const useTextFilter = <T, K extends keyof T>(
         item =>
           ((item[searchTargetKey] as unknown) as string)
             .toLowerCase()
-            .indexOf(state.query.toLowerCase()) >= 0
+            .includes(state.query.toLowerCase())
       )
     })
   })
