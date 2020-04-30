@@ -2,7 +2,6 @@ import { computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
-
 import useTextFilter from '@/use/textFilter'
 
 const useStampList = (
