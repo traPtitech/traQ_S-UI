@@ -9,17 +9,18 @@ import { defineComponent, reactive } from '@vue/composition-api'
 
 import { makeStyles } from '@/lib/styles'
 
-const useStyles = () =>
+const useStyles = (props: { transparent: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      background: theme.background.tertiary
+      background: props.transparent ? 'transparent' : theme.background.tertiary
     }))
   })
 
 export default defineComponent({
   name: 'EphemeralNavigationContentContainer',
-  setup() {
-    const styles = useStyles()
+  props: { transparent: { type: Boolean, default: false } },
+  setup(props) {
+    const styles = useStyles(props)
     return { styles }
   }
 })

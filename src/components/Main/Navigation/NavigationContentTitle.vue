@@ -9,7 +9,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api'
 import {
   NavigationItemType,
   navigationTypeNameMap
-} from '@/components/Main/Navigation/use/navigation'
+} from '@/components/Main/Navigation/use/navigationConstructor'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
