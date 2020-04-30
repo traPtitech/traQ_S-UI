@@ -11,8 +11,9 @@
     <user-icon-ellipsis-list
       direction="col"
       :max="3"
-      :show-count="false"
+      show-count
       :user-ids="viewerIds"
+      :style="styles.rest"
     />
   </div>
 </template>
@@ -28,6 +29,9 @@ const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
       color: theme.ui.primary
+    })),
+    rest: makeStyles(theme => ({
+      color: theme.ui.secondary
     }))
   })
 
