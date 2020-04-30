@@ -16,6 +16,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
 import store from '@/store'
+import { getFullDayString } from '@/lib/date'
 
 const useStyles = () =>
   reactive({
@@ -38,15 +39,11 @@ export default defineComponent({
       () => store.state.entities.messages[props.messageId]
     )
     const createdDate = computed(() => {
-      if (
-        message.value === undefined ||
-        message.value.createdAt === undefined
-      ) {
-        return ``
+      if (!message.value?.createdAt) {
+        return ''
       }
 
-      const date = new Date(message.value.createdAt)
-      return date.getFullYear() + `/` + date.getMonth() + `/` + date.getDate()
+      return getFullDayString(new Date(message.value.createdAt))
     })
     return { styles, createdDate }
   }
@@ -67,7 +64,7 @@ export default defineComponent({
     background-color: currentColor;
     height: 1px;
     width: calc(50% - 70px);
-    content: ' ';
+    content: '';
     opacity: 0.1;
   }
 }
