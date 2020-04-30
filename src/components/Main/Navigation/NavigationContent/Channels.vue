@@ -39,7 +39,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
-import useChannelState from '../../MainView/ChannelView/use/channelState'
+import useChannelState from '@/components/Main/MainView/ChannelView/use/channelState'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
