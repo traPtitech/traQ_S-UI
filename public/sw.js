@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // TODO: Typescript化やimportはWorkbox5にアップデート時
 
 /* workbox設定 */
@@ -149,7 +150,7 @@ const postMessage = (channelId, text) =>
             if (store && store.domain.me.detail) {
               const me = store.domain.me.detail
               data.body = `${me.displayName}: ${event.reply}`
-              data.icon = `/api/1.0/public/icon/${me.name}`
+              data.icon = `/api/v3/files/${me.iconFileId}`
             } else {
               // eslint-disable-next-line no-console
               console.warn('[sw] no store or me.detail found')
