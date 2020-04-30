@@ -2,6 +2,7 @@
   <div
     :class="$style.body"
     :style="styles.body"
+    :title="state.tooltip"
     @click="onClick"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
@@ -34,6 +35,24 @@ import SpinNumber from '@/components/UI/SpinNumber.vue'
 import { MessageStamp } from '@traptitech/traq'
 import { StampId } from '@/types/entity-ids'
 
+const useStyles = (
+  state: { includeMe: boolean },
+  hoverState: { hover: boolean }
+) =>
+  reactive({
+    body: makeStyles(theme => ({
+      backgroundColor: state.includeMe
+        ? transparentize(theme.accent.primary, 0.3)
+        : theme.background.tertiary
+    })),
+    count: makeStyles(theme => ({
+      color:
+        state.includeMe || hoverState.hover
+          ? theme.ui.primary
+          : transparentize(theme.ui.primary, 0.6)
+    }))
+  })
+
 export default defineComponent({
   name: 'StampElement',
   components: { SpinNumber },
@@ -49,6 +68,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const stamp = computed(() => store.state.entities.stamps[props.stampId])
+
     const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const state = reactive({
       count: computed(() =>
@@ -63,25 +83,22 @@ export default defineComponent({
           stamp => stamp.userId === store.state.domain.me.detail?.id
         )
       ),
+      tooltip: computed(() =>
+        [
+          `:${stamp.value.name}:`,
+          ...props.stamps.map(
+            s =>
+              `${store.state.entities.users[s.userId]?.displayName ?? ''}(${
+                s.count
+              })`
+          )
+        ].join(' ')
+      ),
       isProgress: false
     })
-    const styles = reactive({
-      body: makeStyles(theme => {
-        return {
-          backgroundColor: state.includeMe
-            ? transparentize(theme.accent.primary, 0.3)
-            : theme.background.tertiary
-        }
-      }),
-      count: makeStyles(theme => {
-        return {
-          color:
-            state.includeMe || hoverState.hover
-              ? theme.ui.primary
-              : transparentize(theme.ui.primary, 0.6)
-        }
-      })
-    })
+
+    const styles = useStyles(state, hoverState)
+
     const onClick = () => {
       if (state.isProgress) return
       if (state.includeMe) {
