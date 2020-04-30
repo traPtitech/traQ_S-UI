@@ -21,6 +21,7 @@
       :style="styles.componentWrap"
     >
       <ephemeral-navigation-content
+        transparent
         :class="$style.ephemeralNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
@@ -118,6 +119,7 @@ export default defineComponent({
 }
 .toolBox,
 .content,
+.ephemeralContent,
 .selector {
   border-radius: 4px;
   overflow: hidden;
@@ -130,6 +132,11 @@ export default defineComponent({
 }
 .ephemeralContent {
   grid-area: ephemeral-content;
+  padding: {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+  }
 }
 .selector {
   grid-area: selector;

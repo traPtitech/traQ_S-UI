@@ -16,18 +16,23 @@
         userName
       }}</span>
     </div>
-    <div v-if="showTuneButton" @click="$emit('tune')" :class="$style.button">
+    <button
+      v-if="showTuneButton"
+      @click="$emit('tune')"
+      :class="$style.button"
+      :style="styles.icon"
+    >
       <icon mdi name="tune" :size="16" />
-    </div>
-    <div
+    </button>
+    <button
       v-else-if="showTuneDoneButton"
       @click="$emit('tune-done')"
       :class="$style.button"
       :style="styles.tuneDone"
     >
       <icon mdi name="check" :size="16" />
-    </div>
-    <div v-else-if="micMuted" :class="$style.icon">
+    </button>
+    <div :style="styles.icon" v-else-if="micMuted" :class="$style.icon">
       <icon mdi name="microphone-off" :size="16" />
     </div>
   </div>
@@ -52,6 +57,7 @@ const maxVolumeValue = 200
 const useStyles = () =>
   reactive({
     userName: makeStyles(theme => ({ color: theme.ui.secondary })),
+    icon: makeStyles(theme => ({ color: theme.ui.secondary })),
     tuneDone: makeStyles(theme => ({ color: theme.accent.primary }))
   })
 

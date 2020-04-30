@@ -1,5 +1,5 @@
 <template>
-  <ephemeral-navigation-content-container>
+  <ephemeral-navigation-content-container :transparent="transparent">
     <qall v-if="currentEphemeralNavigation === 'qall'" />
   </ephemeral-navigation-content-container>
 </template>
@@ -18,7 +18,8 @@ export default defineComponent({
     Qall
   },
   props: {
-    currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
+    currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>,
+    transparent: { type: Boolean, default: false }
   },
   setup() {
     return {}

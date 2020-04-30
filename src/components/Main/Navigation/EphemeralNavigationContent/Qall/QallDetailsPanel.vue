@@ -69,6 +69,8 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 12px;
+  max-height: 120px;
+  overflow: scroll;
 }
 .slider {
   margin: 12px 0;
