@@ -4,8 +4,11 @@
       v-if="channelsWithNotification.length !== 0"
       subtitle="未読"
     >
-      <!-- TODO: フルパス表示 -->
-      <channel-list :channels="channelsWithNotification" ignore-children />
+      <channel-list
+        :channels="channelsWithNotification"
+        ignore-children
+        show-shortened-path
+      />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル">
       <channel-list
