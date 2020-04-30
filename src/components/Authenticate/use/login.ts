@@ -1,7 +1,10 @@
 import { reactive } from '@vue/composition-api'
 import apis from '@/lib/apis'
+import router, { RouteName } from '@/router'
+import { redirectToPipelineIfNeeded } from '@/router/pipeline'
+import { RedirectState } from './redirectParam'
 
-const useLogin = () => {
+const useLogin = (redirectState: RedirectState = {}) => {
   const state = reactive({
     name: '',
     pass: '',
@@ -18,7 +21,20 @@ const useLogin = () => {
   const login = async () => {
     try {
       await apis.login('/', { name: state.name, password: state.pass })
-      location.href = '/'
+
+      if (!redirectState.redirectUrl) {
+        router.replace({ name: RouteName.Index })
+        return
+      }
+
+      if (redirectState.isInternal) {
+        router.replace(redirectState.redirectUrl)
+        return
+      }
+
+      if (!redirectToPipelineIfNeeded()) {
+        router.replace({ name: RouteName.Index })
+      }
     } catch (e) {
       // TODO 修正
       const message = e.response.data.message as string
@@ -45,6 +61,7 @@ const useLogin = () => {
     }
   }
   const loginExternal = async (provider: string) => {
+    // TODO: 内部リダイレクト対応
     location.href = `/api/auth/${provider}`
   }
   return {

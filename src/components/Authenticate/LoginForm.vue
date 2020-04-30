@@ -67,6 +67,7 @@ import useLogin from './use/login'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { isIOSApp } from '@/lib/util/browser'
+import useRedirectParam from './use/redirectParam'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
@@ -92,8 +93,11 @@ export default defineComponent({
     AuthenticateButtonSecondary,
     AuthenticateSeparator
   },
-  setup() {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin()
+  setup(_, context) {
+    const redirectState = useRedirectParam(context)
+    const { loginState, login, loginExternal, setName, setPass } = useLogin(
+      redirectState
+    )
     const styles = useStyles()
     const isIOS = isIOSApp()
     const state = reactive({

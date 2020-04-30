@@ -35,7 +35,10 @@ const useInitialFetch = (context: SetupContext) => {
       try {
         await store.dispatch.domain.me.fetchMe()
       } catch {
-        context.root.$router.replace({ name: RouteName.Login })
+        context.root.$router.replace({
+          name: RouteName.Login,
+          query: { redirect: `${location.pathname}${location.search}` }
+        })
         reject()
         return
       }
