@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const CompressionPlugin = require('compression-webpack-plugin')
 const crypto = require('crypto')
+const path = require('path')
 
 module.exports = {
   resolve: {
     alias: {
-      vue$: 'vue/dist/vue.esm.js'
+      vue$: 'vue/dist/vue.esm.js',
+      // vuex-persist
+      'lodash.merge': path.resolve('./node_modules/lodash-es/merge.js')
     }
   },
   context: __dirname,
