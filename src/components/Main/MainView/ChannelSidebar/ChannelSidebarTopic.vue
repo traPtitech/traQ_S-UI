@@ -56,7 +56,9 @@ export default defineComponent({
     const state = reactive({
       topic: store.state.domain.messagesView.topic
     })
-    watchEffect(() => { topic.value = store.state.domain.messagesView.topic })
+    watchEffect(() => {
+      topic.value = store.state.domain.messagesView.topic
+    })
     const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, state)
     return {
       topic,
