@@ -18,7 +18,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileThumbnailPath = computed(() =>
     fileMeta.value && fileMeta.value.thumbnail !== null
       ? buildFileThumbnailPath(fileMeta.value.id)
-      : ''
+      : fileRawPath.value
   )
   const fileType = computed(() =>
     fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
