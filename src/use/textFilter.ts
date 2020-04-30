@@ -17,17 +17,16 @@ const useTextFilter = <T, K extends keyof T>(
         return items.value
       }
       if (state.query.length === 1) {
-        return oneLetterItems.value.filter(
-          item =>
-            ((item[searchTargetKey] as unknown) as string).indexOf(
-              state.query
-            ) === 0
+        return oneLetterItems.value.filter(item =>
+          ((item[searchTargetKey] as unknown) as string)
+            .toLowerCase()
+            .startsWith(state.query.toLowerCase())
         )
       }
-      return items.value.filter(
-        item =>
-          ((item[searchTargetKey] as unknown) as string).indexOf(state.query) >=
-          0
+      return items.value.filter(item =>
+        ((item[searchTargetKey] as unknown) as string)
+          .toLowerCase()
+          .includes(state.query.toLowerCase())
       )
     })
   })
