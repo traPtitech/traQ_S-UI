@@ -4,6 +4,7 @@
       <content-editor
         :value="name"
         :is-editing="isNameEditing"
+        @input="onNameInput"
         @edit-done="onNameEditDone"
         @edit-start="startNameEdit"
         :maxlength="30"
@@ -13,6 +14,7 @@
       <content-editor
         :value="description"
         :is-editing="isDesciptionEditing"
+        @input="onDesciptionInput"
         @edit-done="onDesciptionEditDone"
         @edit-start="startDesciptionEdit"
       />
@@ -26,7 +28,7 @@ import {
   computed,
   PropType,
   ref,
-  Ref
+  reactive
 } from '@vue/composition-api'
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
@@ -37,22 +39,27 @@ import apis from '@/lib/apis'
 
 const useEdit = (
   props: { clipFolderId: string },
-  name: Ref<string>,
-  description: Ref<string>,
+  state: {
+    name: string
+    description: string
+  },
   forField: 'name' | 'description'
 ) => {
   const isEditing = ref(false)
+  const onInput = (value: string) => {
+    state[forField] = value
+  }
   const startEdit = () => {
     isEditing.value = true
   }
-  const onEditDone = async (v: string) => {
+  const onEditDone = async () => {
     await apis.editClipFolder(props.clipFolderId, {
-      name: forField === 'name' ? v : name.value,
-      description: forField === 'description' ? v : description.value
+      name: state.name,
+      description: state.description
     })
     isEditing.value = false
   }
-  return { isEditing, startEdit, onEditDone }
+  return { isEditing, onInput, startEdit, onEditDone }
 }
 
 export default defineComponent({
@@ -73,23 +80,32 @@ export default defineComponent({
       () =>
         store.state.entities.clipFolders[props.clipFolderId]?.description ?? ''
     )
+    const state = reactive({
+      name: store.state.entities.clipFolders[props.clipFolderId]?.name ?? '',
+      description:
+        store.state.entities.clipFolders[props.clipFolderId]?.description ?? ''
+    })
     const {
       isEditing: isNameEditing,
+      onInput: onNameInput,
       startEdit: startNameEdit,
       onEditDone: onNameEditDone
-    } = useEdit(props, name, description, 'name')
+    } = useEdit(props, state, 'name')
     const {
       isEditing: isDesciptionEditing,
+      onInput: onDesciptionInput,
       startEdit: startDesciptionEdit,
       onEditDone: onDesciptionEditDone
-    } = useEdit(props, name, description, 'description')
+    } = useEdit(props, state, 'description')
     return {
       name,
       description,
       isNameEditing,
+      onNameInput,
       startNameEdit,
       onNameEditDone,
       isDesciptionEditing,
+      onDesciptionInput,
       startDesciptionEdit,
       onDesciptionEditDone
     }
