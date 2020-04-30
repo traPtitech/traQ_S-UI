@@ -109,10 +109,6 @@ export default defineComponent({
 
     const onClickOutside = () =>
       store.dispatch.ui.stampPicker.closeStampPicker()
-    const updateQueryString = (query: string) => {
-      queryString.value = query
-    }
-
     return {
       stampSetState,
       stampPickerState,
