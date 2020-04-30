@@ -22,7 +22,9 @@
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
+    <!--
     <channel-sidebar-edit :class="$style.edit" />
+    -->
   </div>
 </template>
 
