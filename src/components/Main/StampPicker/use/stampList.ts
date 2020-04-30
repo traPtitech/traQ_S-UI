@@ -4,10 +4,7 @@ import { StampId } from '@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
 import useTextFilter from '@/use/textFilter'
 
-const useStampList = (
-  currentStampSet: Ref<StampSet>,
-  queryString: Ref<string>
-) => {
+const useStampList = (currentStampSet: Ref<StampSet>) => {
   const stampIds = computed((): StampId[] => {
     if (currentStampSet.value.type === 'history') {
       return store.getters.domain.me.recentStampIds
@@ -34,13 +31,11 @@ const useStampList = (
     }
     return []
   })
-  const allStamps = computed(() =>
-    Object.values(store.state.entities.stamps)
-  )
+  const allStamps = computed(() => Object.values(store.state.entities.stamps))
   const { textFilterState, setQuery } = useTextFilter(allStamps, 'name')
 
   const stamps = computed(() => {
-    if (queryString.value === '') {
+    if (textFilterState.query === '') {
       return stampIds.value.map(id => store.state.entities.stamps[id])
     }
     return textFilterState.filteredItems

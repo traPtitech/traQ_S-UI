@@ -99,7 +99,7 @@ export default defineComponent({
     )
     const queryString = ref('')
 
-    const { stamps, textFilterState, setQuery } = useStampList(currentStampSet, queryString)
+    const { stamps, textFilterState, setQuery } = useStampList(currentStampSet)
     const { stampPickerState, onInputStamp } = useStampPicker()
     const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
