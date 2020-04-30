@@ -31,12 +31,12 @@ const descriptionMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.none]: '未読の管理・通知を行いません'
 }
 const iconNameMap: Record<ChannelSubscribeLevel, string> = {
-  [ChannelSubscribeLevel.notified]: 'bell',
+  [ChannelSubscribeLevel.notified]: 'notified',
   [ChannelSubscribeLevel.subscribed]: 'subscribed',
   [ChannelSubscribeLevel.none]: 'bell-outline'
 }
 const iconMdiMap: Record<ChannelSubscribeLevel, boolean> = {
-  [ChannelSubscribeLevel.notified]: true,
+  [ChannelSubscribeLevel.notified]: false,
   [ChannelSubscribeLevel.subscribed]: false,
   [ChannelSubscribeLevel.none]: true
 }

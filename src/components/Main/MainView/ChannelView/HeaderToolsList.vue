@@ -12,8 +12,7 @@
     <header-tools-item
       v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
       @click="changeToNextSubscriptionLevel"
-      icon-mdi
-      icon-name="bell"
+      icon-name="notified"
     />
     <header-tools-item
       v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"

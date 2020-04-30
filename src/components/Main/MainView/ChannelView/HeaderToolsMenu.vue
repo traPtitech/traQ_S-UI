@@ -8,8 +8,7 @@
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
       @click.native="context.emit('click-notification')"
-      icon-name="bell"
-      icon-mdi
+      icon-name="notified"
       label="通知設定"
     />
     <header-tools-menu-item

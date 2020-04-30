@@ -4,8 +4,7 @@
       <toggle-button
         :class="$style.button"
         title="通知チャンネルのみ表示"
-        icon-name="bell"
-        icon-mdi
+        icon-name="notified"
         :value="!isAll"
         @click="toggleAll"
       />
