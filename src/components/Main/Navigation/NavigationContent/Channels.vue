@@ -8,18 +8,12 @@
       :class="$style.filter"
     />
     <div v-show="channelListFilterState.query.length > 0" :class="$style.list">
-      <div
-        v-for="channel in channelListFilterState.filteredItems"
-        :key="channel.id"
-      >
-        <channel-filtered-element
-          :name="channelIdToShortPathString(channel.id)"
-          :topic="channel.topic"
-          :id="channel.id"
-          :is-current="currentChannelId == channel.id"
-          :class="$style.element"
-        />
-      </div>
+      <channel-list
+        :channels="channelListFilterState.filteredItems"
+        ignore-children
+        show-shortened-path
+        show-topic
+      />
     </div>
     <channel-list
       v-show="channelListFilterState.query.length <= 0 && state.isStar"
@@ -38,7 +32,6 @@ import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
 import FilterInput from '@/components/UI/FilterInput.vue'
-import ChannelFilteredElement from '../ChannelList/ChannelFilteredElement.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
@@ -106,7 +99,6 @@ export default defineComponent({
   components: {
     ChannelList,
     FilterInput,
-    ChannelFilteredElement,
     ChannelFilter
   },
   setup() {
@@ -147,6 +139,7 @@ export default defineComponent({
 <style lang="scss" module>
 .element {
   cursor: pointer;
+  margin: 8px 0;
 }
 .list {
   margin: 16px 0px;
