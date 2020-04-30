@@ -30,7 +30,7 @@ export const reduceToRecordOfArray = <T>(array: T[], key: keyof T) =>
 export const formatSnakeKeysToCamelShallow = (obj: {}) => {
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => [
-      k.replace(/(_[a-zA-Z])/g, (_, char: string) => char.toUpperCase()),
+      k.replace(/_([a-zA-Z])/g, (_, char: string) => char.toUpperCase()),
       v
     ])
   )
