@@ -1,10 +1,14 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <button
+    :class="$style.container"
+    :style="styles.container"
+    :data-react-hover="reactHover"
+  >
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />
     </div>
     <span :class="$style.text" v-if="props.withText">閉じる</span>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -23,7 +27,7 @@ const useStyles = (props: {
     })),
     circle: makeStyles((theme, common) => ({
       borderWidth: `${props.borderWidth}px`,
-      borderColor: props.isWhite ? 'transparent' : theme.ui.tertiary,
+      borderColor: props.isWhite ? 'transparent' : theme.ui.secondary,
       width: `${props.size}px`,
       height: `${props.size}px`,
       backgroundColor: props.isWhite ? common.text.whitePrimary : 'transparent'
@@ -34,9 +38,10 @@ export default defineComponent({
   name: 'CloseButton',
   props: {
     withText: { type: Boolean, default: false },
-    borderWidth: { type: Number, default: 3 },
+    borderWidth: { type: Number, default: 2 },
     size: { type: Number, required: true },
-    isWhite: { type: Boolean, default: false }
+    isWhite: { type: Boolean, default: false },
+    reactHover: { type: Boolean, default: true }
   },
   setup(props, context) {
     const styles = useStyles(props)
@@ -57,6 +62,11 @@ export default defineComponent({
   text-align: center;
   font-weight: bold;
   font-size: 0.8rem;
+  opacity: 0.5;
+  &:hover,
+  &:not([data-react-hover]) {
+    opacity: 1;
+  }
 }
 
 .circle {
