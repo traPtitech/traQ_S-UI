@@ -56,7 +56,7 @@ export default defineComponent({
   display: flex;
   padding: 2px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1rem;
 }
 .icon {
   flex-shrink: 0;
