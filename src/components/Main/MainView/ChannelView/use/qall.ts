@@ -3,11 +3,10 @@ import { computed } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 
 const useQall = (props: { channelId: ChannelId }) => {
-  const isQallSessionOpened = computed(
-    () =>
-      !!Object.values(store.state.app.rtc.sessionInfoMap).find(
-        s => s?.channelId === props.channelId && s?.type === 'qall'
-      )
+  const isQallSessionOpened = computed(() =>
+    Object.values(store.state.app.rtc.sessionInfoMap).some(
+      s => s?.channelId === props.channelId && s?.type === 'qall'
+    )
   )
   const hasActiveQallSession = computed(() => {
     return !!store.getters.app.rtc.qallSession

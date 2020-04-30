@@ -42,11 +42,11 @@ export default defineComponent({
     })
 
     const extracted = computed(() => embeddingExtractor(props.content))
-    const hasFile = computed(
-      () => extracted.value.embeddings.findIndex(e => e.type === 'file') >= 0
+    const hasFile = computed(() =>
+      extracted.value.embeddings.some(e => e.type === 'file')
     )
-    const hasMessage = computed(
-      () => extracted.value.embeddings.findIndex(e => e.type === 'message') >= 0
+    const hasMessage = computed(() =>
+      extracted.value.embeddings.some(e => e.type === 'message')
     )
     const renderedContent = computed(() => renderInline(extracted.value.text))
 
