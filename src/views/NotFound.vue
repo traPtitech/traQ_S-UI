@@ -18,7 +18,8 @@ import { makeStyles } from '@/lib/styles'
 const useStyle = () =>
   reactive({
     container: makeStyles(theme => ({
-      color: theme.ui.primary
+      color: theme.ui.primary,
+      background: theme.background.primary
     }))
   })
 
@@ -38,6 +39,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  height: 100%;
   padding: 1rem;
 }
 </style>
