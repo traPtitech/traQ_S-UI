@@ -12,6 +12,7 @@
     @keyup.native="onKeyUp"
     @focus.native="onFocus"
     @blur.native="onBlur"
+    @paste.native="onPaste"
   />
 </template>
 
@@ -26,6 +27,7 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useSendKeyWatcher from './use/sendKeyWatcher'
+import store from '@/store'
 
 const useStyles = () =>
   reactive({
@@ -67,6 +69,21 @@ const useLineBreak = (
   return { insertLineBreak }
 }
 
+const usePaste = () => {
+  const onPaste = (event: ClipboardEvent) => {
+    const items = event?.clipboardData?.items
+    if (!items) return
+    for (const item of items) {
+      if (item.kind === 'string') {
+        continue
+      }
+      const file = item.getAsFile()
+      if (file) store.dispatch.ui.fileInput.addAttachment(file)
+    }
+  }
+  return { onPaste }
+}
+
 export default defineComponent({
   name: 'MessageInputTextArea',
   props: {
@@ -93,6 +110,7 @@ export default defineComponent({
     )
 
     const { onFocus, onBlur } = useFocus(context)
+    const { onPaste } = usePaste()
 
     return {
       styles,
@@ -102,7 +120,8 @@ export default defineComponent({
       onKeyUp,
       textareaAutosizeRef,
       onFocus,
-      onBlur
+      onBlur,
+      onPaste
     }
   }
 })
