@@ -7,8 +7,8 @@
       <icon
         @click="context.emit('click')"
         name="star"
-        :width="24"
-        :height="24"
+        :width="22"
+        :height="22"
         mdi
       />
     </button>
@@ -20,11 +20,14 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 
 const useStyles = (props: { isStared: boolean }) =>
   reactive({
     star: makeStyles(theme => ({
-      color: props.isStared ? theme.accent.primary : theme.ui.secondary,
+      color: props.isStared
+        ? theme.accent.primary
+        : transparentize(theme.ui.secondary, 0.5),
       backgroundColor: theme.background.primary
     }))
   })
