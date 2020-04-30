@@ -17,18 +17,11 @@
     <div v-if="rtcSettings.isEnabled" :class="$style.element">
       <h3>入力デバイス</h3>
       <div :class="$style.content">
-        <select
+        <form-selector
           v-if="!fetchFailed && audioInputDevices.length > 0"
           v-model="state.audioInputDeviceId"
-        >
-          <option
-            v-for="device in audioInputDevices"
-            :key="device.deviceId"
-            :value="device.deviceId"
-          >
-            {{ device.label }}
-          </option>
-        </select>
+          :options="audioInputDeviceOptions"
+        />
         <p v-else>
           デバイスが取得できませんでした
         </p>
@@ -47,6 +40,7 @@ import {
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
+import FormSelector from '@/components/UI/FormSelector.vue'
 
 const useDevicesInfo = (state: { isEnabled: boolean }) => {
   const devices = ref<MediaDeviceInfo[]>([])
@@ -105,10 +99,18 @@ export default defineComponent({
 
     const devicesInfo = useDevicesInfo(state)
 
-    return { rtcSettings, state, ...devicesInfo }
+    const audioInputDeviceOptions = computed(() =>
+      devicesInfo.audioInputDevices.value.map(d => ({
+        key: d.label,
+        value: d.deviceId
+      }))
+    )
+
+    return { rtcSettings, state, ...devicesInfo, audioInputDeviceOptions }
   },
   components: {
-    Toggle
+    Toggle,
+    FormSelector
   }
 })
 </script>
