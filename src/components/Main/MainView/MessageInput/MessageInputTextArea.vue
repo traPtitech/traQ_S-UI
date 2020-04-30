@@ -12,6 +12,7 @@
     @keyup.native="onKeyUp"
     @focus.native="onFocus"
     @blur.native="onBlur"
+    @paste.native="onPaste"
   />
 </template>
 
@@ -26,6 +27,8 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useSendKeyWatcher from './use/sendKeyWatcher'
+import clipboard from '@cloudcmd/clipboard'
+import store from '@/store'
 
 const useStyles = () =>
   reactive({
@@ -67,6 +70,38 @@ const useLineBreak = (
   return { insertLineBreak }
 }
 
+const usePaste = () => {
+  const onPaste = async () => {
+    try {
+      const clipboardItems = await clipboard.read()
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          const blob: Blob = await clipboardItem.getType(type)
+          let fileName = ''
+          switch (blob.type) {
+            case 'image/png':
+              fileName = 'image.png'
+              break
+            case 'image/jpg':
+              fileName = 'image.jpg'
+              break
+            case 'image/gif':
+              fileName = 'image.gif'
+              break
+            default:
+              return
+          }
+          const file = new File([blob], fileName, { type: blob.type })
+          store.dispatch.ui.fileInput.addAttachment(file)
+        }
+      }
+    } catch (err) {
+      return
+    }
+  }
+  return { onPaste }
+}
+
 export default defineComponent({
   name: 'MessageInputTextArea',
   props: {
@@ -93,6 +128,7 @@ export default defineComponent({
     )
 
     const { onFocus, onBlur } = useFocus(context)
+    const { onPaste } = usePaste()
 
     return {
       styles,
@@ -102,7 +138,8 @@ export default defineComponent({
       onKeyUp,
       textareaAutosizeRef,
       onFocus,
-      onBlur
+      onBlur,
+      onPaste
     }
   }
 })
