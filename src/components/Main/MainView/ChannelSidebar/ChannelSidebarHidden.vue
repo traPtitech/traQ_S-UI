@@ -14,11 +14,19 @@
       :show-count="false"
       :user-ids="viewerIds"
     />
+    <span v-if="viewersRest > 0" :class="$style.rest" :style="styles.rest"
+      >+{{ viewersRest }}</span
+    >
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
@@ -28,6 +36,9 @@ const useStyles = () =>
   reactive({
     container: makeStyles(theme => ({
       color: theme.ui.primary
+    })),
+    rest: makeStyles(theme => ({
+      color: theme.ui.secondary
     }))
   })
 
@@ -42,9 +53,11 @@ export default defineComponent({
     const open = () => {
       context.emit('open')
     }
+    const viewersRest = computed(() => props.viewerIds.length - 3)
     return {
       styles,
-      open
+      open,
+      viewersRest
     }
   }
 })
@@ -63,5 +76,10 @@ export default defineComponent({
   margin-bottom: 16px;
   margin-top: 16px;
   cursor: pointer;
+}
+
+.rest {
+  user-select: none;
+  font-weight: bold;
 }
 </style>
