@@ -8,8 +8,9 @@
     <div :class="$style.close">
       <close-button
         @click="onClickClear"
-        :size="32"
+        :size="24"
         :is-white="props.isWhite"
+        :react-hover="!props.isWhite"
       />
     </div>
   </div>
