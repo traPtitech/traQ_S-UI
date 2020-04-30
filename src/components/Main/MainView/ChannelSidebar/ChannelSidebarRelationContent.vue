@@ -5,6 +5,7 @@
         :name="propst.parent.name"
         :topic="propst.parent.topic"
         :link="buildParentLink()"
+        :class="$style.element"
       />
     </div>
     <div
@@ -16,6 +17,7 @@
         :is-current="true"
         :name="propst.current.name"
         :topic="propst.current.topic"
+        :class="$style.element"
       />
       <div
         :class="$style.channel"
@@ -27,6 +29,7 @@
             :name="child.name"
             :topic="child.topic"
             :link="buildChildLink(child.name)"
+            :class="$style.element"
           />
 
           <div
@@ -44,6 +47,7 @@
           :name="sibling.name"
           :topic="sibling.topic"
           :link="buildSiblingLink(sibling.name)"
+          :class="$style.element"
         />
         <div
           v-else-if="index === 3"
@@ -138,11 +142,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$channelSize: 1.15rem;
 $textSize: 0.95rem;
 
 .channel {
-  font-size: $channelSize;
   margin-left: 4px;
   padding-left: 12px;
   font-weight: bold;
@@ -151,6 +153,11 @@ $textSize: 0.95rem;
     margin-left: 0px;
     padding-left: 0px;
   }
+}
+
+.element {
+  // FIXME: 例外的に6px、あとでデザイン修正
+  margin: 6px 0;
 }
 
 .text {

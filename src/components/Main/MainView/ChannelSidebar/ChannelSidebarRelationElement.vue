@@ -1,15 +1,17 @@
 <template>
   <div>
-    <span
-      :style="[propst.isCurrent ? styles.current : '']"
-      :class="$style.channelHash"
-      >#</span
-    >
-    <span :style="[propst.isCurrent ? styles.current : '']">
-      <router-link :to="propst.isCurrent ? '' : propst.link">{{
-        propst.name
-      }}</router-link>
-    </span>
+    <div :class="$style.channelNameContainer">
+      <span
+        :style="[propst.isCurrent ? styles.current : '']"
+        :class="$style.channelHash"
+        >#</span
+      >
+      <span :style="[propst.isCurrent ? styles.current : '']">
+        <router-link :to="propst.isCurrent ? '' : propst.link">{{
+          propst.name
+        }}</router-link>
+      </span>
+    </div>
     <div v-if="propst.topic" :class="$style.topic">
       {{ propst.topic }}
     </div>
@@ -50,7 +52,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$topiclSize: 1rem;
+$channelNameSize: 1.125rem;
+$topiclSize: 0.875rem;
+
+.channelNameContainer {
+  font-size: $channelNameSize;
+}
 
 .channelHash {
   margin-right: 0.125rem;
@@ -60,5 +67,9 @@ $topiclSize: 1rem;
 .topic {
   font-weight: normal;
   font-size: $topiclSize;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
