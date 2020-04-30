@@ -34,18 +34,19 @@ const useStampList = (
     }
     return []
   })
+  const allStamps = computed(() =>
+    Object.values(store.state.entities.stamps)
+  )
+  const { textFilterState, setQuery } = useTextFilter(allStamps, 'name')
+
   const stamps = computed(() => {
-    if (queryString.value !== '') {
-      const allStamps = computed(() =>
-        Object.values(store.state.entities.stamps)
-      )
-      const { textFilterState, setQuery } = useTextFilter(allStamps, 'name')
-      setQuery(queryString.value)
-      return textFilterState.filteredItems
+    if (queryString.value === '') {
+      return stampIds.value.map(id => store.state.entities.stamps[id])
     }
-    return stampIds.value.map(id => store.state.entities.stamps[id])
+    return textFilterState.filteredItems
   })
-  return { stamps }
+
+  return { stamps, textFilterState, setQuery }
 }
 
 export default useStampList
