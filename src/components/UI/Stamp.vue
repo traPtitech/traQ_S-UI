@@ -6,6 +6,7 @@
     :style="styles.container"
     :src="imageUrl"
     :alt="name"
+    :title="name"
   />
   <div v-else :class="$style.container" :style="styles.noImageContainer" />
 </template>
