@@ -73,7 +73,7 @@ const usePaste = () => {
   const onPaste = (event: ClipboardEvent) => {
     const items = event?.clipboardData?.items
     if (!items) return
-    for (let i = 0; i < items.length ?? 0; i++) {
+    for (let i = 0; i < items.length; i++) {
       if (items[i].kind === 'string') {
         continue
       }
