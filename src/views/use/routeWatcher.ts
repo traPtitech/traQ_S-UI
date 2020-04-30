@@ -108,14 +108,33 @@ const useRouteWacher = (context: SetupContext) => {
     }
     const file = store.state.entities.fileMetaData[fileId]
 
-    if (!file?.channelId) {
-      // ファイルに関連づいたチャンネルIDがなかった
+    if (!file) {
+      // ファイルがなかった
       state.view = 'not-found'
       return
     }
-    const channelPath = channelIdToPathString(file.channelId, true)
+
+    let channelPath = ''
+    let channelId = ''
+
+    if (file.channelId) {
+      channelPath = channelIdToPathString(file.channelId, true)
+      channelId = file.channelId
+    } else {
+      channelPath = store.state.app.browserSettings.openChannelName
+      try {
+        channelId = channelPathToId(
+          channelPath.split('/'),
+          store.state.domain.channelTree.channelTree
+        )
+      } catch (e) {
+        state.view = 'not-found'
+        return
+      }
+    }
+
     store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
-      channelId: file.channelId
+      channelId: channelId
     })
     const modalPayload = {
       type: 'file' as const,
