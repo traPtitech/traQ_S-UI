@@ -1,4 +1,5 @@
 import { SetupContext, Ref, watchEffect, watch } from '@vue/composition-api'
+import { ResizeObserver } from '@juggle/resize-observer'
 import { FileId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 

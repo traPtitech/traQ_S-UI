@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, PropType, SetupContext } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-
+import clipboard from '@cloudcmd/clipboard'
 import Icon from '@/components/UI/Icon.vue'
 import useQall from './use/qall'
 import usePopupMenu from './use/popupMenu'
@@ -41,7 +41,7 @@ import { embeddingOrigin } from '@/lib/apis'
 
 const useCopy = (context: SetupContext) => {
   const copyLink = async () => {
-    await navigator.clipboard.writeText(
+    await clipboard.writeText(
       `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
     )
   }
