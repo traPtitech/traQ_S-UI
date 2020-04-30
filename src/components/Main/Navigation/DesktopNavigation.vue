@@ -34,17 +34,12 @@
 import { defineComponent } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
-import {
-  useNavigation,
-  useEphemeralNavigation,
-  EphemeralNavigationItemType
-} from '@/components/Main/Navigation/use/navigation'
+import useNavigation from './use/navigation'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import DesktopToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
 import { makeStyles } from '@/lib/styles'
-import { EphemeralNavigationSelectorEntry } from './use/navigationSelectorEntry'
 
 export default defineComponent({
   name: 'DesktopNavigation',
@@ -55,36 +50,19 @@ export default defineComponent({
     DesktopToolBox
   },
   setup() {
-    const { navigationSelectorState, onNavigationChange } = useNavigation()
     const {
-      navigationSelectorState: ephemeralNavigationSelectorState,
-      onNavigationChange: _onEphemeralNavigationChange
-    } = useEphemeralNavigation()
+      navigationSelectorState,
+      ephemeralNavigationSelectorState,
+      onNavigationChange,
+      onEphemeralNavigationChange,
+      onEphemeralEntryRemove,
+      onEphemeralEntryAdd
+    } = useNavigation()
+
     const navigationStyle = makeStyles(theme => ({
       background: theme.background.secondary,
       color: theme.ui.primary
     }))
-
-    // もう一度押すと消えて欲しいので一段階ラップ
-    const onEphemeralNavigationChange = (type: EphemeralNavigationItemType) => {
-      if (ephemeralNavigationSelectorState.currentNavigation === type) {
-        _onEphemeralNavigationChange(undefined)
-      } else {
-        _onEphemeralNavigationChange(type)
-      }
-    }
-
-    const onEphemeralEntryRemove = (
-      entry: EphemeralNavigationSelectorEntry
-    ) => {
-      if (entry.type === ephemeralNavigationSelectorState.currentNavigation) {
-        _onEphemeralNavigationChange(undefined)
-      }
-    }
-
-    const onEphemeralEntryAdd = (entry: EphemeralNavigationSelectorEntry) => {
-      _onEphemeralNavigationChange(entry.type)
-    }
 
     return {
       navigationSelectorState,

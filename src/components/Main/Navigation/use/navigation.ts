@@ -1,43 +1,45 @@
-import createNavigation from '@/use/abstractNavigation'
+import {
+  useNavigation,
+  useEphemeralNavigation,
+  EphemeralNavigationItemType
+} from '@/components/Main/Navigation/use/navigationConstructor'
 
-export type NavigationItemType =
-  | 'home'
-  | 'channels'
-  | 'activity'
-  | 'users'
-  | 'clips'
+import { EphemeralNavigationSelectorEntry } from './navigationSelectorEntry'
 
-/**
- * 特定の状況に応じて表示されるナビゲーションコンポーネント用の種別
- *
- * 「選択しない」を許すのでnullable
- */
-export type EphemeralNavigationItemType = 'qall' | undefined
+const useNav = () => {
+  const { navigationSelectorState, onNavigationChange } = useNavigation()
+  const {
+    navigationSelectorState: ephemeralNavigationSelectorState,
+    onNavigationChange: _onEphemeralNavigationChange
+  } = useEphemeralNavigation()
 
-// TODO: 言語系リソースの置き場所
-export const navigationTypeNameMap: Record<NavigationItemType, string> = {
-  home: 'ホーム',
-  channels: 'チャンネル',
-  activity: 'アクティビティ',
-  users: 'ユーザー',
-  clips: 'クリップ'
+  // もう一度押すと消えて欲しいので一段階ラップ
+  const onEphemeralNavigationChange = (type: EphemeralNavigationItemType) => {
+    if (ephemeralNavigationSelectorState.currentNavigation === type) {
+      _onEphemeralNavigationChange(undefined)
+    } else {
+      _onEphemeralNavigationChange(type)
+    }
+  }
+
+  const onEphemeralEntryRemove = (entry: EphemeralNavigationSelectorEntry) => {
+    if (entry.type === ephemeralNavigationSelectorState.currentNavigation) {
+      _onEphemeralNavigationChange(undefined)
+    }
+  }
+
+  const onEphemeralEntryAdd = (entry: EphemeralNavigationSelectorEntry) => {
+    _onEphemeralNavigationChange(entry.type)
+  }
+
+  return {
+    navigationSelectorState,
+    ephemeralNavigationSelectorState,
+    onNavigationChange,
+    onEphemeralNavigationChange,
+    onEphemeralEntryRemove,
+    onEphemeralEntryAdd
+  }
 }
 
-export const ephemeralNavigationTypeNameMap: Record<
-  NonNullable<EphemeralNavigationItemType>,
-  string
-> = {
-  qall: 'Qall'
-}
-
-export const { useNavigation, useNavigationSelectorItem } = createNavigation<
-  NavigationItemType
->('home')
-
-export const {
-  useNavigation: useEphemeralNavigation,
-  useNavigationSelectorItem: useEphemeralNavigationSelectorItem
-} = createNavigation<EphemeralNavigationItemType>(
-  undefined,
-  'ephemeral-navigation-change'
-)
+export default useNav

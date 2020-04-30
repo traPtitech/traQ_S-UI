@@ -42,7 +42,7 @@ import {
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
-} from '@/components/Main/Navigation/use/navigation'
+} from '@/components/Main/Navigation/use/navigationConstructor'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'

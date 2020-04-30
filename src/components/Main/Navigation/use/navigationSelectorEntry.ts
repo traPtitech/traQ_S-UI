@@ -1,6 +1,9 @@
 import store from '@/store'
 import { computed } from '@vue/composition-api'
-import { NavigationItemType, EphemeralNavigationItemType } from './navigation'
+import {
+  NavigationItemType,
+  EphemeralNavigationItemType
+} from './navigationConstructor'
 import { ThemeClaim } from '@/lib/styles'
 
 export type NavigationSelectorEntry = {

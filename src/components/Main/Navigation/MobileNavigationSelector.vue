@@ -19,7 +19,10 @@ import {
   reactive,
   PropType
 } from '@vue/composition-api'
-import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
+import {
+  NavigationItemType,
+  useNavigationSelectorItem
+} from './use/navigationConstructor'
 import { items, ephemeralItems } from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'

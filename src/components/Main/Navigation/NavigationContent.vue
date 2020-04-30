@@ -30,7 +30,7 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { NavigationItemType } from '@/components/Main/Navigation/use/navigation'
+import { NavigationItemType } from '@/components/Main/Navigation/use/navigationConstructor'
 import Home from './NavigationContent/Home.vue'
 import Channels from './NavigationContent/Channels.vue'
 import Activity from './NavigationContent/Activity.vue'

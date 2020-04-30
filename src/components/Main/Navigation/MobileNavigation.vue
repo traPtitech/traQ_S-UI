@@ -5,26 +5,41 @@
       <portal-target :name="targetPortalName" />
     </div>
     <div :class="$style.content" :style="styles.componentWrap">
-      <navigation-content :current-navigation="currentNavigation" />
+      <navigation-content
+        :current-navigation="navigationSelectorState.currentNavigation"
+      />
+      <ephemeral-navigation-content
+        :class="$style.ephemeralNavigation"
+        v-if="ephemeralNavigationSelectorState.currentNavigation"
+        :current-ephemeral-navigation="
+          ephemeralNavigationSelectorState.currentNavigation
+        "
+      />
     </div>
     <div :class="$style.selector" :style="styles.componentWrap">
       <navigation-selector
         @navigation-change="onNavigationChange"
-        :current-navigation="currentNavigation"
+        @ephemeral-navigation-change="onEphemeralNavigationChange"
+        @ephemeral-entry-remove="onEphemeralEntryRemove"
+        @ephemeral-entry-add="onEphemeralEntryAdd"
+        :current-navigation="navigationSelectorState.currentNavigation"
+        :current-ephemeral-navigation="
+          ephemeralNavigationSelectorState.currentNavigation
+        "
       />
     </div>
   </nav>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
+import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import MobileToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/MobileToolBox.vue'
-// FIXME: モバイル用のレイアウト
 import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'
-import { useNavigation } from '@/components/Main/Navigation/use/navigation'
+import useNavigation from './use/navigation'
 import { makeStyles } from '@/lib/styles'
 
 const useStyles = () =>
@@ -39,14 +54,34 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'MobileNavigation',
-  components: { NavigationContent, NavigationSelector, MobileToolBox },
+  components: {
+    NavigationContent,
+    EphemeralNavigationContent,
+    NavigationSelector,
+    MobileToolBox
+  },
+
   setup() {
     const styles = useStyles()
-    const { navigationSelectorState, onNavigationChange } = useNavigation()
-    return {
-      ...toRefs(navigationSelectorState),
+    const {
+      navigationSelectorState,
+      ephemeralNavigationSelectorState,
       onNavigationChange,
+      onEphemeralNavigationChange,
+      onEphemeralEntryRemove,
+      onEphemeralEntryAdd,
+      navigationStyle
+    } = useNavigation()
+
+    return {
       styles,
+      navigationSelectorState,
+      ephemeralNavigationSelectorState,
+      onNavigationChange,
+      onEphemeralNavigationChange,
+      onEphemeralEntryRemove,
+      onEphemeralEntryAdd,
+      navigationStyle,
       targetPortalName
     }
   }
