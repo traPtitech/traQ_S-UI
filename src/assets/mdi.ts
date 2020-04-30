@@ -50,7 +50,8 @@ import {
   mdiTuneVertical,
   mdiCommentMultipleOutline,
   mdiStar,
-  mdiInformationOutline
+  mdiInformationOutline,
+  mdiCommentQuote
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -109,7 +110,8 @@ const mdi: MdiIconsMapping = {
   tune: mdiTuneVertical,
   'comment-multiple-outline': mdiCommentMultipleOutline,
   star: mdiStar,
-  info: mdiInformationOutline
+  info: mdiInformationOutline,
+  'comment-quote': mdiCommentQuote
 }
 
 export default mdi
