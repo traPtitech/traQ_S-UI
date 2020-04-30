@@ -1,5 +1,11 @@
 <template>
-  <nav :class="$style.container" :style="styles.container">
+  <nav
+    :class="$style.container"
+    :style="styles.container"
+    :data-has-ephemeral-content="
+      ephemeralNavigationSelectorState.currentNavigation
+    "
+  >
     <div>
       <mobile-tool-box :class="$style.toolBox" />
       <portal-target :name="targetPortalName" />
@@ -8,9 +14,14 @@
       <navigation-content
         :current-navigation="navigationSelectorState.currentNavigation"
       />
+    </div>
+    <div
+      v-if="ephemeralNavigationSelectorState.currentNavigation"
+      :class="$style.ephemeralContent"
+      :style="styles.componentWrap"
+    >
       <ephemeral-navigation-content
         :class="$style.ephemeralNavigation"
-        v-if="ephemeralNavigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
@@ -69,8 +80,7 @@ export default defineComponent({
       onNavigationChange,
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
-      onEphemeralEntryAdd,
-      navigationStyle
+      onEphemeralEntryAdd
     } = useNavigation()
 
     return {
@@ -81,7 +91,6 @@ export default defineComponent({
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
       onEphemeralEntryAdd,
-      navigationStyle,
       targetPortalName
     }
   }
@@ -99,6 +108,13 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   padding: 16px;
+  &[data-has-ephemeral-content] {
+    grid-template:
+      'toolbox' min-content
+      'content' 2fr
+      'ephemeral-content' auto
+      'selector' 60px;
+  }
 }
 .toolBox,
 .content,
@@ -112,12 +128,15 @@ export default defineComponent({
 .content {
   grid-area: content;
 }
+.ephemeralContent {
+  grid-area: ephemeral-content;
+}
 .selector {
   grid-area: selector;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 32px;
+  padding: 0 16px;
   flex-shrink: 0;
 }
 </style>

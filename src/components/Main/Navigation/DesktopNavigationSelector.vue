@@ -82,7 +82,7 @@ export default defineComponent({
           context.emit('ephemeral-entry-remove', e)
         })
       ;(entries ?? [])
-        .filter(e => !prevEntries.includes(e))
+        .filter(e => !prevEntries?.includes(e))
         .forEach(e => {
           context.emit('ephemeral-entry-add', e)
         })
