@@ -1,13 +1,15 @@
 <template>
   <div
-    @click="onChannelSelect(props.id)"
-    :style="[props.isCurrent ? styles.current : '']"
-    :class="[props.isCurrent ? $style.current : '']"
+    @click="onChannelSelect(id)"
+    :style="[isCurrent ? styles.current : '']"
+    :class="[isCurrent ? $style.current : '']"
   >
-    <span :class="$style.channelHash">#</span>
-    {{ props.name }}
-    <div v-if="props.topic" :class="$style.topic">
-      {{ props.topic }}
+    <div :class="$style.channelNameContainer">
+      <div :class="$style.channelHash">#</div>
+      <div :class="$style.name">{{ name }}</div>
+    </div>
+    <div v-if="topic" :class="$style.topic">
+      {{ topic }}
     </div>
   </div>
 </template>
@@ -34,20 +36,36 @@ export default defineComponent({
     isCurrent: { type: Boolean, default: false },
     id: { type: String, required: true }
   },
-  setup(props) {
+  setup() {
     const styles = useStyles()
     const { onChannelSelect } = useChannelSelect()
 
-    return { props, styles, onChannelSelect }
+    return { styles, onChannelSelect }
   }
 })
 </script>
 
 <style lang="scss" module>
-$topicSize: 1rem;
+$channelNameSize: 1.125rem;
+$topicSize: 0.875rem;
 
+.channelNameContainer {
+  display: flex;
+  align-items: center;
+  font: {
+    size: $channelNameSize;
+    weight: bold;
+  }
+}
 .channelHash {
+  flex-shrink: 0;
   margin-right: 0.125rem;
+}
+.name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .topic {
   font-weight: normal;

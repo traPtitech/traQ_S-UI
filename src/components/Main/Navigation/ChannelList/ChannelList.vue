@@ -7,6 +7,8 @@
       :channel="channel"
       :is-opened="channelFoldingState[channel.id]"
       :ignore-children="ignoreChildren"
+      :show-shortened-path="showShortenedPath"
+      :show-topic="showTopic"
       @channel-select="onChannelSelect"
       @channel-folding-toggle="onChannelFoldingToggle"
     />
@@ -56,6 +58,14 @@ export default defineComponent({
       required: true
     },
     ignoreChildren: {
+      type: Boolean,
+      default: false
+    },
+    showShortenedPath: {
+      type: Boolean,
+      default: false
+    },
+    showTopic: {
       type: Boolean,
       default: false
     }

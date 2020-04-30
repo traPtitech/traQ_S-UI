@@ -16,8 +16,13 @@
         :style="styles.channelName"
         @click="onChannelNameClick"
       >
-        {{ path }}{{ channel.name }}
+        <span :class="$style.channelNameInner">
+          {{ pathToShow }}
+        </span>
       </div>
+    </div>
+    <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
+      {{ topic }}
     </div>
 
     <!-- 子チャンネル表示 -->
@@ -46,11 +51,19 @@ import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
+import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
     path: computed(() => skippedAncestorNames?.join('/')?.concat('/') ?? '')
+  }
+}
+
+const useShortenedPath = (props: { channel: ChannelTreeNode }) => {
+  const { channelIdToShortPathString } = useChannelPath()
+  return {
+    path: computed(() => channelIdToShortPathString(props.channel.id))
   }
 }
 
@@ -97,6 +110,15 @@ const useNotification = (props: { channel: ChannelTreeNode }) => {
   return notificationState
 }
 
+const useTopic = (props: { showTopic: boolean; channel: ChannelTreeNode }) => {
+  const topic = computed(() =>
+    props.showTopic
+      ? store.state.entities.channels[props.channel.id]?.topic ?? ''
+      : ''
+  )
+  return { topic }
+}
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
@@ -120,6 +142,14 @@ export default defineComponent({
     ignoreChildren: {
       type: Boolean,
       default: false
+    },
+    showShortenedPath: {
+      type: Boolean,
+      default: false
+    },
+    showTopic: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
@@ -133,19 +163,26 @@ export default defineComponent({
     })
 
     const styles = useStyles(state)
-    const { path } = useAncestorPath(props.channel.skippedAncestorNames)
+    const { path } = props.showShortenedPath
+      ? useShortenedPath(props)
+      : useAncestorPath(props.channel.skippedAncestorNames)
+    const pathToShow = computed(() =>
+      props.showShortenedPath ? path.value : path.value + props.channel.name
+    )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       props.channel.id,
       state.hasChild
     )
     const notificationState = useNotification(props)
+    const { topic } = useTopic(props)
 
     return {
       state,
       styles,
-      path,
+      pathToShow,
       notificationState,
+      topic,
       onChannelHashClick,
       onChannelNameClick
     }
@@ -157,6 +194,7 @@ export default defineComponent({
 $elementHeight: 32px;
 $bgHeight: 36px;
 $bgLeftShift: 4px;
+$topicLeftPadding: 40px;
 
 .container {
   display: block;
@@ -178,10 +216,17 @@ $bgLeftShift: 4px;
   display: flex;
   align-items: center;
   width: 100%;
+  min-width: 0;
   height: 100%;
-  padding-left: 8px;
+  padding: 0 8px;
   font-size: 1rem;
   cursor: pointer;
+}
+.channelNameInner {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .children {
   display: block;
@@ -200,5 +245,19 @@ $bgLeftShift: 4px;
   border-bottom-left-radius: 100vw;
   opacity: 0.1;
   pointer-events: none;
+}
+.topic {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  font-size: 0.875rem;
+
+  padding: {
+    left: $topicLeftPadding;
+    right: 8px;
+  }
+  cursor: pointer;
 }
 </style>
