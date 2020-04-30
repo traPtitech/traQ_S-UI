@@ -1,11 +1,24 @@
 <template>
   <div :class="$style.container">
     <navigation-content-container
+      v-if="homeChannel"
+      subtitle="ホームチャンネル"
+    >
+      <channel-list
+        :channels="[homeChannel]"
+        ignore-children
+        show-shortened-path
+      />
+    </navigation-content-container>
+    <navigation-content-container
       v-if="channelsWithNotification.length !== 0"
       subtitle="未読"
     >
-      <!-- TODO: フルパス表示 -->
-      <channel-list :channels="channelsWithNotification" ignore-children />
+      <channel-list
+        :channels="channelsWithNotification"
+        ignore-children
+        show-shortened-path
+      />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル">
       <channel-list
@@ -44,10 +57,17 @@ export default defineComponent({
     const subtitleStyle = makeStyles(theme => ({
       color: theme.ui.secondary
     }))
+    const homeChannel = computed(
+      () =>
+        store.state.entities.channels[
+          store.state.domain.me.detail?.homeChannel ?? ''
+        ]
+    )
     return {
       topLevelChannels,
       channelsWithNotification,
-      subtitleStyle
+      subtitleStyle,
+      homeChannel
     }
   }
 })
