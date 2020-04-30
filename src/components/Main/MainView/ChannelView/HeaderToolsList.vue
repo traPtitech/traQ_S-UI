@@ -36,11 +36,13 @@
       @click="context.emit('star-channel')"
       icon-name="star-outline"
     />
+    <!--
     <header-tools-item
       @click="context.emit('click-pin')"
       icon-mdi
       icon-name="pin"
     />
+    -->
     <div :class="$style.moreButton">
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
       <header-tools-item
