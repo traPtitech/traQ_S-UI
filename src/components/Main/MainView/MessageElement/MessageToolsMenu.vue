@@ -35,6 +35,7 @@ import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
+import clipboard from '@cloudcmd/clipboard'
 
 const useStyles = () =>
   reactive({
@@ -74,10 +75,10 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
 const useCopy = (props: { messageId: MessageId }) => {
   const copyLink = async () => {
     const link = `${embeddingOrigin}/messages/${props.messageId}`
-    await navigator.clipboard.writeText(link)
+    await clipboard.writeText(link)
   }
   const copyMd = async () => {
-    await navigator.clipboard.writeText(
+    await clipboard.writeText(
       store.state.entities.messages[props.messageId]?.content ?? ''
     )
   }
