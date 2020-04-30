@@ -14,8 +14,9 @@ import {
 import store from './store'
 import { throttle } from 'lodash-es'
 import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
+import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
+import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 
 const useWindowResizeObserver = () => {
   const resizeHandler = () => {
@@ -40,26 +41,19 @@ const useThemeObserver = () => {
       $themeColor.content = themeColor.value
     }
   })
+
+  const themeType = computed(() => store.state.app.themeSettings.type)
+  const isDark = computed(() =>
+    themeType.value === 'custom'
+      ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
+      : themeType.value === 'dark'
+  )
+  useHtmlDatasetBoolean('isDarkTheme', isDark)
 }
 
 const useEcoModeObserver = () => {
   const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
-
-  const $html = document.documentElement
-  if (ecoMode.value) {
-    $html.dataset.ecoMode = ''
-  }
-
-  watchEffect(() => {
-    const isEcoModeAttrOn = $html.dataset.ecoMode === ''
-    if (isEcoModeAttrOn !== ecoMode.value) {
-      if (ecoMode.value) {
-        $html.dataset.ecoMode = ''
-      } else {
-        delete $html.dataset.ecoMode
-      }
-    }
-  })
+  useHtmlDatasetBoolean('ecoMode', ecoMode)
 }
 
 const useScrollbarStyle = () =>
