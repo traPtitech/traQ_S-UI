@@ -7,7 +7,7 @@
       :is-stared="state.isStar"
       :class="$style.filter"
     />
-    <div v-show="channelListFilterState.query.length > 0" :class="$style.list">
+    <div v-if="channelListFilterState.query.length > 0" :class="$style.list">
       <channel-list
         :channels="channelListFilterState.filteredItems"
         ignore-children
