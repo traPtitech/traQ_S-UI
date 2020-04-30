@@ -5,7 +5,9 @@
     :style="styles.container"
   >
     <icon name="bookmark" mdi :class="$style.icon" />
-    {{ clipFolder.name }}
+    <span :class="$style.name">
+      {{ clipFolder.name }}
+    </span>
   </router-link>
 </template>
 
@@ -59,5 +61,11 @@ export default defineComponent({
 .icon {
   flex-shrink: 0;
   margin-right: 16px;
+}
+.name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
