@@ -19,7 +19,7 @@
     </div>
     <stamp-picker-stamp-list
       :class="$style.stampList"
-      :stamps="textFilterState.filteredItems"
+      :stamps="stamps"
       @input-stamp="onInputStamp"
       @hover-stamp="onHoverStamp"
     />
@@ -39,11 +39,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { StampId } from '@/types/entity-ids'
-import useTextFilter from '@/use/textFilter'
 import Icon from '@/components/UI/Icon.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
@@ -98,22 +97,24 @@ export default defineComponent({
     const currentStampSet = computed(
       () => store.state.ui.stampPicker.currentStampSet
     )
-    const { stamps } = useStampList(currentStampSet)
+    const queryString = ref('')
+
+    const { stamps, textFilterState, setQuery } = useStampList(currentStampSet)
     const { stampPickerState, onInputStamp } = useStampPicker()
     const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
-    const { textFilterState, setQuery } = useTextFilter(stamps, 'name')
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const styles = useStyles(effectSelectorState)
 
     const onClickOutside = () =>
       store.dispatch.ui.stampPicker.closeStampPicker()
-
     return {
       stampSetState,
       stampPickerState,
       effectSelectorState,
+      stamps,
+      queryString,
       textFilterState,
       setQuery,
       placeholder,
