@@ -3,7 +3,7 @@
     <div :class="$style.input">
       <filter-input on-secondary :text="text" @input="onInput" />
     </div>
-    <div :class="$style.star" :style="styles.star">
+    <button :class="$style.star" :style="styles.star">
       <icon
         @click="context.emit('click')"
         name="star"
@@ -11,7 +11,7 @@
         :height="24"
         mdi
       />
-    </div>
+    </button>
   </div>
 </template>
 
@@ -76,5 +76,6 @@ export default defineComponent({
   flex-shrink: 0;
   border-radius: 4px;
   margin-right: 16px;
+  cursor: pointer;
 }
 </style>
