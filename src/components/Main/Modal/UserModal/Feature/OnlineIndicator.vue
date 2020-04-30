@@ -17,7 +17,7 @@ import { UserId } from '@/types/entity-ids'
 const useStyles = (isOnline: Ref<boolean>) =>
   reactive({
     indicator: makeStyles(theme => ({
-      background: isOnline.value ? '#18fcfc' : theme.ui.tertiary,
+      background: isOnline.value ? theme.accent.online : theme.ui.tertiary,
       borderColor: theme.background.primary
     }))
   })
