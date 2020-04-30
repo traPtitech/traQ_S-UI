@@ -19,15 +19,16 @@ const useTextFilter = <T, K extends keyof T>(
       if (state.query.length === 1) {
         return oneLetterItems.value.filter(
           item =>
-            ((item[searchTargetKey] as unknown) as string).indexOf(
-              state.query
-            ) === 0
+            ((item[searchTargetKey] as unknown) as string)
+              .toLowerCase()
+              .indexOf(state.query.toLowerCase()) === 0
         )
       }
       return items.value.filter(
         item =>
-          ((item[searchTargetKey] as unknown) as string).indexOf(state.query) >=
-          0
+          ((item[searchTargetKey] as unknown) as string)
+            .toLowerCase()
+            .indexOf(state.query.toLowerCase()) >= 0
       )
     })
   })
