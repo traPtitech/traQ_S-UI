@@ -2,10 +2,11 @@
   <div :class="$style.container" :style="styles.container">
     <textarea-autosize
       v-if="isEditing"
-      v-model="internalValue"
+      :value="value"
       :class="$style.editor"
       :style="styles.textarea"
       :maxlength="maxlength"
+      @input="onInput"
     />
     <div v-else :class="$style.content" :data-is-empty="isEmpty">
       {{ content }}
@@ -22,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -48,7 +49,6 @@ export default defineComponent({
   },
   setup(props, context) {
     const styles = useStyles(props)
-    const internalValue = ref(props.value ?? '')
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue
       if (props.value === undefined) return 'ロード中'
@@ -59,12 +59,13 @@ export default defineComponent({
     )
     const onButtonClick = () => {
       if (props.isEditing) {
-        context.emit('edit-done', internalValue.value)
+        context.emit('edit-done')
       } else {
         context.emit('edit-start')
       }
     }
-    return { styles, content, isEmpty, onButtonClick, internalValue }
+    const onInput = (payload: string) => context.emit('input', payload)
+    return { styles, content, isEmpty, onButtonClick, onInput }
   }
 })
 </script>

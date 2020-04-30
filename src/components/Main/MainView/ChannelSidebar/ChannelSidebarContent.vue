@@ -4,7 +4,10 @@
       :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
-    <channel-sidebar-topic :class="$style.sidebarItem" />
+    <channel-sidebar-topic
+      :class="$style.sidebarItem"
+      :channel-id="channelId"
+    />
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       @open="context.emit('pinned-mode-toggle')"
