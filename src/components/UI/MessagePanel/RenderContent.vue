@@ -1,20 +1,28 @@
 <template>
   <div :class="$style.container" :style="styles.container">
-    <markdown-inline-content :class="$style.content" :content="content" />
+    <div
+      :class="[lineClampContent ? $style.content : '', 'markdown-body']"
+      v-html="renderedContent"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import MarkdownInlineContent from '@/components/UI/MarkdownInlineContent.vue'
+import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import { renderInline } from '@/lib/markdown'
 
 export default defineComponent({
-  name: 'ActivityElementContent',
+  name: 'RenderContent',
   props: {
     content: {
       type: String,
       default: ''
+    },
+    lineClampContent: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -24,10 +32,12 @@ export default defineComponent({
       }))
     })
 
-    return { styles }
-  },
-  components: {
-    MarkdownInlineContent
+    const renderedContent = computed(() => {
+      const extracted = embeddingExtractor(props.content)
+      return renderInline(extracted.text)
+    })
+
+    return { styles, renderedContent }
   }
 })
 </script>

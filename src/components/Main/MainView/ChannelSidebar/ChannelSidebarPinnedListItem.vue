@@ -1,65 +1,33 @@
 <template>
-  <router-link
-    :to="`/messages/${pinnedMessage.message.id}`"
-    :class="$style.container"
-    :style="styles.container"
-  >
-    <div :class="$style.itemHeader">
-      <user-icon :size="20" :user-id="pinnedMessage.message.userId" />
-      <span :style="styles.displayName" :class="$style.displayName">{{
-        state.userDisplayName
-      }}</span>
-    </div>
-    <markdown-inline-content
-      :class="$style.text"
-      :style="styles.text"
-      :content="pinnedMessage.message.content"
-    />
-  </router-link>
+  <message-panel
+    title-type="user"
+    hide-subtitle
+    line-clamp-content
+    :message="message"
+    @click="onMessageSelect"
+  />
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import { Pin } from '@traptitech/traq'
-import store from '@/store'
-import MarkdownInlineContent from '@/components/UI/MarkdownInlineContent.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.primary
-    })),
-    displayName: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    text: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
+import { defineComponent, PropType } from '@vue/composition-api'
+import { Message } from '@traptitech/traq'
+import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarPinnedListItem',
-  components: { UserIcon, MarkdownInlineContent },
-  props: { pinnedMessage: { type: Object as PropType<Pin>, required: true } },
-  setup(props) {
-    const state = reactive({
-      userDisplayName: computed(
-        () =>
-          store.state.entities.users[props.pinnedMessage.message.userId]
-            ?.displayName ?? ''
-      )
-    })
+  components: { MessagePanel },
+  props: {
+    message: {
+      type: Object as PropType<Message>,
+      required: true
+    }
+  },
+  setup(props, context) {
+    const onMessageSelect = () => {
+      context.root.$router.push(`/messages/${props.message.id}`)
+    }
 
-    const styles = useStyles()
-    return { styles, state }
+    return { onMessageSelect }
   }
 })
 </script>
@@ -69,6 +37,7 @@ $displayNameSize: 1rem;
 $textSize: 1rem;
 
 .container {
+  display: block;
   width: 256px;
   border-radius: 4px;
   word-break: break-all;
@@ -77,11 +46,14 @@ $textSize: 1rem;
 
 .itemHeader {
   display: flex;
-  margin-bottom: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: solid 2px;
 }
 
 .displayName {
   font-size: $displayNameSize;
+  font-weight: bold;
   margin-left: 8px;
 }
 
