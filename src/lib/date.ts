@@ -8,6 +8,9 @@ const getDayString = (date: Date) =>
   '/' +
   date.getDate().toString().padStart(2, '0')
 
+export const getFullDayString = (date: Date) =>
+  date.getFullYear() + '/' + getDayString(date)
+
 /**
  * 2つの日時を比べ、差異がない部分については省略したものを出力する
  * @param ofDate 出力する日時
