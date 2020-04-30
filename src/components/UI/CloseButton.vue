@@ -79,6 +79,7 @@ export default defineComponent({
 }
 
 .text {
+  display: block;
   margin-top: 8px;
 }
 </style>
