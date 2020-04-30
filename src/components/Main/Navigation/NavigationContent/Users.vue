@@ -1,8 +1,10 @@
 <template>
   <div :class="$style.container">
+    <!-- TODO: DMタイムライン
     <navigation-content-container subtitle="ダイレクトメッセージ">
       <empty-state>Not Implemented</empty-state>
     </navigation-content-container>
+    -->
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
         :on-secondary="true"

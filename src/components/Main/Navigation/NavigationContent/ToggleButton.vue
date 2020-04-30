@@ -5,7 +5,7 @@
     :title="title"
     @click="$emit('click')"
   >
-    <Icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <Icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
@@ -13,12 +13,15 @@
 import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import { transparentize } from '@/lib/util/color'
 
 const useStyles = (props: { value: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
-      background: props.value ? theme.accent.primary : theme.background.primary,
-      color: props.value ? theme.background.primary : theme.accent.primary
+      background: theme.background.primary,
+      color: props.value
+        ? theme.accent.primary
+        : transparentize(theme.ui.secondary, 0.5)
     }))
   })
 
@@ -51,7 +54,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 8px 32px;
+  padding: 4px 32px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;

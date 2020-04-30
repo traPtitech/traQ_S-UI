@@ -3,15 +3,15 @@
     <div :class="$style.input">
       <filter-input on-secondary :text="text" @input="onInput" />
     </div>
-    <div :class="$style.star" :style="styles.star">
+    <button :class="$style.star" :style="styles.star">
       <icon
         @click="context.emit('click')"
         name="star"
-        :width="24"
-        :height="24"
+        :width="22"
+        :height="22"
         mdi
       />
-    </div>
+    </button>
   </div>
 </template>
 
@@ -20,11 +20,14 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 
 const useStyles = (props: { isStared: boolean }) =>
   reactive({
     star: makeStyles(theme => ({
-      color: props.isStared ? theme.accent.primary : theme.ui.secondary,
+      color: props.isStared
+        ? theme.accent.primary
+        : transparentize(theme.ui.secondary, 0.5),
       backgroundColor: theme.background.primary
     }))
   })
@@ -76,5 +79,6 @@ export default defineComponent({
   flex-shrink: 0;
   border-radius: 4px;
   margin-right: 16px;
+  cursor: pointer;
 }
 </style>

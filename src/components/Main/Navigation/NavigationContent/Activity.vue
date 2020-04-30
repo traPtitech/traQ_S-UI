@@ -147,7 +147,7 @@ export default defineComponent({
   flex: 1 1;
 }
 .button + .button {
-  margin-left: 12px;
+  margin-left: 16px;
 }
 
 .element {

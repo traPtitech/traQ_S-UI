@@ -1,11 +1,11 @@
 <template>
   <div>
-    チャンネル検索
     <channel-filter
       @click="toggleStar"
       @input="setQuery"
       :text="channelListFilterState.query"
       :is-stared="state.isStar"
+      :class="$style.filter"
     />
     <div v-show="channelListFilterState.query.length > 0" :class="$style.list">
       <div
@@ -156,5 +156,8 @@ export default defineComponent({
 }
 .container {
   display: flex;
+}
+.filter {
+  margin-bottom: 16px;
 }
 </style>

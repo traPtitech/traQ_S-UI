@@ -14,6 +14,7 @@ import {
 import store from './store'
 import { throttle } from 'lodash-es'
 import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
 import { Properties } from 'csstype'
 
 const useWindowResizeObserver = () => {
@@ -65,8 +66,8 @@ const useScrollbarStyle = () =>
   makeStyles(
     theme =>
       ({
-        '--scrollbar-color': theme.ui.secondary,
-        '--scrollbar-hover-color': theme.ui.primary
+        '--scrollbar-color': transparentize(theme.ui.secondary, 0.5),
+        '--scrollbar-hover-color': transparentize(theme.ui.secondary, 0.8)
       } as Properties)
   )
 

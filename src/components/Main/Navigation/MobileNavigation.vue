@@ -1,7 +1,9 @@
 <template>
   <nav :class="$style.container" :style="styles.container">
-    <mobile-tool-box :class="$style.toolBox" />
-    <portal-target :name="targetPortalName" />
+    <div>
+      <mobile-tool-box :class="$style.toolBox" />
+      <portal-target :name="targetPortalName" />
+    </div>
     <div :class="$style.content" :style="styles.componentWrap">
       <navigation-content :current-navigation="currentNavigation" />
     </div>
