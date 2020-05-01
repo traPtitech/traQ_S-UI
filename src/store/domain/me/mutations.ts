@@ -33,10 +33,7 @@ export const mutations = defineMutations<S>()({
   upsertUnreadChannel(state: S, message: Message) {
     const myId = state.detail?.id
     const detectMentions = detecter(message.content)
-    // userIdがgroupIdと衝突する可能性は未考慮
-    const noticeable = detectMentions.some(
-      data => data.id === myId || state.detail?.groups.includes(data.id)
-    )
+    const noticeable = detectMentionOfMe(message.content, myId, state.detail?.groups)
     if (message.channelId in state.subscriptionMap || noticeable) {
       if (message.channelId in state.unreadChannelsSet) {
         const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
