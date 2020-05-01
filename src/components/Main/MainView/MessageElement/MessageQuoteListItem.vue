@@ -13,11 +13,7 @@
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
-    <div
-      :class="$style.footer"
-      :style="styles.footer"
-      :data-is-mobile="isMobile"
-    >
+    <div :class="$style.footer" :style="styles.footer">
       <span :class="$style.description">
         {{ state.channelPath }} - {{ state.date }}
       </span>
@@ -42,7 +38,6 @@ import { MessageId } from '@/types/entity-ids'
 import { getCreatedDate } from '@/lib/date'
 import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
-import useIsMobile from '@/use/isMobile'
 
 const useStyles = () =>
   reactive({
@@ -82,9 +77,8 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
-    const { isMobile } = useIsMobile()
 
-    return { state, styles, isMobile }
+    return { state, styles }
   }
 })
 </script>
@@ -145,10 +139,8 @@ export default defineComponent({
   font-size: 0.875rem;
   align-self: end;
   margin-top: 4px;
-  &[data-is-mobile='true'] {
-    display: flex;
-    flex-direction: column;
-  }
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .description {
   font-weight: normal;
