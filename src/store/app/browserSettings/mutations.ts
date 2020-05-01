@@ -13,5 +13,8 @@ export const mutations = defineMutations<S>()({
   },
   setActivityModePerChannel(state, perChannel: boolean) {
     state.activityMode = { ...state.activityMode, perChannel }
+  },
+  setLastOpenChannelName(state, channelName: string) {
+    state.lastOpenChannelName = channelName
   }
 })

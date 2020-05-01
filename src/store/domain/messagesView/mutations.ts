@@ -11,10 +11,9 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
     const { currentChannelPathString } = useCurrentChannelPath()
-    store.commit.app.browserSettings.set([
-      'lastOpenChannel',
+    store.commit.app.browserSettings.setLastOpenChannelName(
       currentChannelPathString.value
-    ])
+    )
   },
   setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
     state.currentClipFolderId = currentClipFolderId
