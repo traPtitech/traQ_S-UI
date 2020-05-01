@@ -32,8 +32,11 @@ export const mutations = defineMutations<S>()({
   },
   upsertUnreadChannel(state: S, message: Message) {
     const myId = state.detail?.id
-    const detectMentions = detecter(message.content)
-    const noticeable = detectMentionOfMe(message.content, myId, state.detail?.groups)
+    const noticeable = detectMentionOfMe(
+      message.content,
+      myId ?? '',
+      state.detail?.groups ?? []
+    )
     if (message.channelId in state.subscriptionMap || noticeable) {
       if (message.channelId in state.unreadChannelsSet) {
         const oldUnreadChannel = state.unreadChannelsSet[message.channelId]

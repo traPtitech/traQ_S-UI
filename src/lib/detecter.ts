@@ -1,10 +1,13 @@
+import { UserGroupId, UserId } from '@/types/entity-ids'
+
 interface StructData {
   type: string
   raw: string
   id: string
 }
 
-const isStructData = (data: unknown): data is StructData =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isStructData = (data: any): data is StructData =>
   typeof data['type'] === 'string' &&
   typeof data['raw'] === 'string' &&
   typeof data['id'] === 'string'
@@ -21,7 +24,7 @@ const parse = (str: string): StructData | null => {
   }
 }
 
-const detect = (text: string, checker: (text: string) => boolean) => {
+const makeDectector = (text: string, checker: (text: string) => boolean) => {
   let isInside = false
   let startIndex = -1
   let isString = false
@@ -51,13 +54,23 @@ const detect = (text: string, checker: (text: string) => boolean) => {
   return ret
 }
 
-const isMentionOfMe = (myId: UserId, myGroupIds: UserGroupId[], data: StructData | null) => {
+const isMentionOfMe = (
+  myId: UserId,
+  myGroupIds: UserGroupId[],
+  data: StructData | null
+) => {
   if (data === null) return false
   if (data.type === 'user' && data.id === myId) return true
   if (data.type === 'group' && myGroupIds.includes(data.id)) return true
   return false
 }
 
-export const detectMentionOfMe = (text: string, myId: UserId, myGroupIds: UserGroupId[]) => {
-  return makeDectector(text, str => isMentionOfMe(myId, myGroupIds, parse(str))))
+export const detectMentionOfMe = (
+  text: string,
+  myId: UserId,
+  myGroupIds: UserGroupId[]
+) => {
+  return makeDectector(text, text =>
+    isMentionOfMe(myId, myGroupIds, parse(text))
+  )
 }
