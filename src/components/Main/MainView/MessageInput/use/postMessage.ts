@@ -70,7 +70,7 @@ const usePostMessage = (
 
       isPosting.value = true
       await apis.postMessage(props.channelId, {
-        content: embededText + '\n' + embededdUrls
+        content: embededText + (embededdUrls ? '\n' + embededdUrls : '')
       })
     } catch {
       // TODO: エラー処理
