@@ -24,19 +24,22 @@ const parse = (str: string): StructData | null => {
   }
 }
 
-const makeDectector = (text: string, checker: (text: string) => boolean) => {
+const detect = (
+  text: string,
+  checker: (data: StructData | null) => boolean
+) => {
   let isInside = false
   let startIndex = -1
   let isString = false
-  const ret = []
   for (let i = 0; i < text.length; i++) {
     if (isInside) {
       if (text[i] === '"') {
         isString = !isString
       } else if (!isString && text[i] === '}') {
         isInside = false
-        if (checker(text.substr(startIndex + 1, i - startIndex))) {
-          ret.push(JSON.parse(text.substr(startIndex + 1, i - startIndex)))
+        const data = parse(text.substr(startIndex + 1, i - startIndex))
+        if (checker(data)) {
+          return true
         } else {
           i = startIndex + 1
         }
@@ -50,7 +53,7 @@ const makeDectector = (text: string, checker: (text: string) => boolean) => {
       }
     }
   }
-  return ret
+  return false
 }
 
 const isMentionOfMe = (
@@ -68,8 +71,4 @@ export const detectMentionOfMe = (
   text: string,
   myId: UserId,
   myGroupIds: UserGroupId[]
-) => {
-  return makeDectector(text, text =>
-    isMentionOfMe(myId, myGroupIds, parse(text))
-  )
-}
+) => detect(text, data => isMentionOfMe(myId, myGroupIds, data))
