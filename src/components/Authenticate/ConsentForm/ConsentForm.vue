@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="styles.container">
     <authenticate-header :class="$style.header" title="OAuth認可" />
     <client-description
       v-if="state.client"
