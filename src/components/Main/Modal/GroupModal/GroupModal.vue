@@ -36,7 +36,10 @@ export default defineComponent({
     const group = computed(() => store.state.entities.userGroups[props.groupId])
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
-      () => group.value?.members.map(member => member.id) ?? []
+      () =>
+        group.value?.members
+          .map(member => member.id)
+          .filter(id => store.state.entities.users[id]) ?? []
     )
     return { groupName, groupMember }
   }

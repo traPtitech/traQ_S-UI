@@ -37,7 +37,9 @@ export default defineComponent({
     store.dispatch.entities.fetchTag(props.tagId)
     const tag = computed(() => store.state.entities.tags[props.tagId])
     const tagName = computed(() => tag.value?.tag)
-    const taggedUsers = computed(() => tag.value?.users ?? [])
+    const taggedUsers = computed(
+      () => tag.value?.users.filter(id => store.state.entities.users[id]) ?? []
+    )
     return { tagName, taggedUsers }
   }
 })
