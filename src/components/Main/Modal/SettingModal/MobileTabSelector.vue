@@ -1,18 +1,21 @@
 <template>
   <section :class="$style.container" :style="styles.container">
-    <div :class="$style.header">
-      <h2 :class="$style.title">設定</h2>
-      <close-button :class="$style.close" @click="close" :size="36" />
+    <div>
+      <div :class="$style.header">
+        <h2 :class="$style.title">設定</h2>
+        <close-button :class="$style.close" @click="close" :size="36" />
+      </div>
+      <mobile-tab-selector-item
+        v-for="navigation in navigations"
+        :key="navigation.type"
+        :type="navigation.type"
+        :icon-name="navigation.iconName"
+        :icon-mdi="navigation.iconMdi"
+        @click.native="onNavigationItemClick(navigation.type)"
+      />
+      <safari-warning :class="$style.safariWarning" />
     </div>
-    <mobile-tab-selector-item
-      v-for="navigation in navigations"
-      :key="navigation.type"
-      :type="navigation.type"
-      :icon-name="navigation.iconName"
-      :icon-mdi="navigation.iconMdi"
-      @click.native="onNavigationItemClick(navigation.type)"
-    />
-    <safari-warning :class="$style.safariWarning" />
+    <version :class="$style.version" />
   </section>
 </template>
 
@@ -28,6 +31,7 @@ import {
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
+import Version from '@/components/UI/Version.vue'
 
 const useStyles = () =>
   reactive({
@@ -39,7 +43,7 @@ const useStyles = () =>
 
 export default defineComponent({
   name: 'MobileTabSelector',
-  components: { MobileTabSelectorItem, SafariWarning, CloseButton },
+  components: { MobileTabSelectorItem, SafariWarning, CloseButton, Version },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
@@ -64,6 +68,9 @@ export default defineComponent({
 .container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .header {
@@ -79,5 +86,8 @@ export default defineComponent({
 
 .safariWarning {
   margin: 40px 20px;
+}
+.version {
+  margin-bottom: 16px;
 }
 </style>
