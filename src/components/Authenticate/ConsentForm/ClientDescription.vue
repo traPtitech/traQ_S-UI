@@ -89,11 +89,11 @@ export default defineComponent({
   grid-template-rows: 1fr 1fr;
   grid-column-gap: 12px;
   grid-row-gap: 8px;
-  word-break: break-all;
 }
 .descTitle {
   word-break: keep-all;
   padding: 4px 12px;
+  margin: auto 0;
   border: solid 2px;
   border-radius: 18px;
   font-weight: bold;
@@ -101,6 +101,7 @@ export default defineComponent({
 }
 .descContent {
   word-break: keep-all;
+  overflow-wrap: anywhere;
   margin: auto 0;
 }
 .developerIcon {
