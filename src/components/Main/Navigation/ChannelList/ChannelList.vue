@@ -26,6 +26,7 @@ import {
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
+import { Channel } from '@traptitech/traq'
 
 const useChannelFolding = () => {
   const state = reactive({
@@ -54,7 +55,7 @@ export default defineComponent({
   },
   props: {
     channels: {
-      type: Array as PropType<ChannelTreeNode[]>,
+      type: Array as PropType<ChannelTreeNode[] | Channel[]>,
       required: true
     },
     ignoreChildren: {
