@@ -32,8 +32,7 @@ const makeDectector = (text: string, checker: (text: string) => boolean) => {
   for (let i = 0; i < text.length; i++) {
     if (isInside) {
       if (text[i] === '"') {
-        if (isString) isString = false
-        else isString = true
+        isString = !isString
       } else if (!isString && text[i] === '}') {
         isInside = false
         if (checker(text.substr(startIndex + 1, i - startIndex))) {
