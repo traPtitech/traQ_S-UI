@@ -25,22 +25,22 @@ const useRouteWacher = (context: SetupContext) => {
     isInitialView: true
   })
 
+  const useOpenChannel = async () => {
+    await originalStore.restored
+    switch (store.state.app.browserSettings.openMode) {
+      case 'lastOpen':
+        return store.state.app.browserSettings.lastOpenChannelName ?? 'general'
+      case 'particular':
+        return store.state.app.browserSettings.openChannelName ?? 'general'
+    }
+  }
   const onRouteChangedToIndex = async () => {
     await originalStore.restored
-    const openChannel = () => {
-      switch (store.state.app.browserSettings.openMode) {
-        case 'lastOpen':
-          return (
-            store.state.app.browserSettings.lastOpenChannelName ?? 'general'
-          )
-        case 'particular':
-          return store.state.app.browserSettings.openChannelName ?? 'general'
-      }
-    }
+    const openChannelPath = await useOpenChannel()
     try {
       await context.root.$router.replace({
         name: RouteName.Channel,
-        params: { channel: openChannel() }
+        params: { channel: openChannelPath }
       })
     } catch (e) {
       if (e) throw e
@@ -124,14 +124,14 @@ const useRouteWacher = (context: SetupContext) => {
       return
     }
 
+    const openChannelPath = await useOpenChannel()
     let channelPath = ''
     let channelId = ''
-
     if (file.channelId) {
       channelPath = channelIdToPathString(file.channelId, true)
       channelId = file.channelId
     } else {
-      channelPath = store.state.app.browserSettings.openChannelName
+      channelPath = openChannelPath
       try {
         channelId = channelPathToId(
           channelPath.split('/'),
