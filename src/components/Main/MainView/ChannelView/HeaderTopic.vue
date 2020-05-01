@@ -55,6 +55,10 @@ export default defineComponent({
     style: solid;
     width: 2px;
   }
+  [data-is-mobile] & {
+    padding-left: 12px;
+    padding-right: 4px;
+  }
 }
 .topic {
   width: 100%;

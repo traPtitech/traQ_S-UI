@@ -55,6 +55,9 @@ export default defineComponent({
 }
 .topic {
   margin-left: 16px;
+  [data-is-mobile] & {
+    margin-left: 12px;
+  }
 }
 .headerContainer {
   display: flex;
