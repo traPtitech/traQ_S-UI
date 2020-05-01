@@ -95,3 +95,49 @@ export const embeddingExtractor = (
     embeddings
   }
 }
+
+/**
+ * markdownから埋め込みURLを抽出してすべて置換する
+ *
+ * @param regexp
+ * マッチに使う正規表現。グループは順に
+ *
+ * - 種別
+ * - UUID
+ * - 削除されるスペース
+ *
+ * であることを期待する
+ */
+export const embeddingReplacer = (
+  rawMessage: string,
+  regexp = defaultRegexp
+) => {
+  const { text, embeddings } = embeddingExtractor(rawMessage, regexp)
+
+  let newText = text
+  // 置換で文字数がずれるのでずれた数を保持する
+  let placeDiff = 0
+
+  for (const embedding of embeddings) {
+    // 末尾のものは抽出で消えているので置換しない
+    if (text.length <= embedding.startIndex) break
+
+    let replaced
+    if (embedding.type === 'file') {
+      replaced = '[[添付ファイル]]'
+    } else if (embedding.type === 'message') {
+      replaced = '[[添付メッセージ]]'
+    } else {
+      const invalid: never = embedding
+      throw new Error(`embeddingReplacer unknown embedding type: ${invalid}`)
+    }
+
+    newText =
+      newText.slice(0, placeDiff + embedding.startIndex) +
+      replaced +
+      newText.slice(placeDiff + embedding.endIndex)
+
+    placeDiff += replaced.length - (embedding.endIndex - embedding.startIndex)
+  }
+  return { text: newText, embeddings }
+}
