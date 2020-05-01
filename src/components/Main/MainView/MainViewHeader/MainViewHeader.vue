@@ -9,11 +9,11 @@
       >
         <icon name="traQ" />
       </button>
-      <h2>
+      <h2 :class="$style.headerBody">
         <slot name="header" />
       </h2>
     </div>
-    <slot name="tools" />
+    <slot :class="$style.tools" name="tools" />
   </header>
 </template>
 
@@ -67,12 +67,20 @@ $headerHeight: 80px;
   flex: 0 0 $headerHeight;
   padding: 16px;
 }
+.headerBody {
+  width: 100%;
+  min-width: 0;
+}
 .headerContainer {
   display: flex;
+  min-width: 0;
 }
 .navigationButton {
   display: flex;
   align-items: center;
   margin-right: 8px;
+}
+.tools {
+  flex-shrink: 0;
 }
 </style>

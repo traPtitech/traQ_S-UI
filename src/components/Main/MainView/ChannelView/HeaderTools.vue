@@ -15,10 +15,14 @@
       <header-tools-menu
         :class="$style.toolsMenu"
         :show-notification-setting-btn="!channelState.forced"
+        :has-active-qall-session="hasActiveQallSession"
+        :is-qall-session-opened="isQallSessionOpened"
+        :is-joined-qall-session="isJoinedQallSession"
         v-click-outside="closePopupMenu"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
         @click-copy-channel-link="copyLink"
+        @click-qall="toggleQall"
       />
     </portal>
   </div>

@@ -6,26 +6,28 @@
       :icon-name="qallIconName"
       :style="styles.qallIcon"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
-      v-if="isQallEnabled"
+      v-if="isQallEnabled && !isMobile"
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
-    <header-tools-item
-      v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
-      @click="changeToNextSubscriptionLevel"
-      icon-name="notified"
-    />
-    <header-tools-item
-      v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"
-      @click="changeToNextSubscriptionLevel"
-      icon-name="subscribed"
-    />
-    <header-tools-item
-      v-show="currentChannelSubscription === ChannelSubscribeLevel.none"
-      @click="changeToNextSubscriptionLevel"
-      :class="$style.icon"
-      icon-mdi
-      icon-name="bell-outline"
-    />
+    <template v-if="!isMobile">
+      <header-tools-item
+        v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
+        @click="changeToNextSubscriptionLevel"
+        icon-name="notified"
+      />
+      <header-tools-item
+        v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"
+        @click="changeToNextSubscriptionLevel"
+        icon-name="subscribed"
+      />
+      <header-tools-item
+        v-show="currentChannelSubscription === ChannelSubscribeLevel.none"
+        @click="changeToNextSubscriptionLevel"
+        :class="$style.icon"
+        icon-mdi
+        icon-name="bell-outline"
+      />
+    </template>
     <header-tools-item
       v-show="isStared"
       @click="context.emit('unstar-channel')"
@@ -66,6 +68,7 @@ import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewH
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import useIsMobile from '@/use/isMobile'
 
 export const targetPortalName = 'header-popup'
 
@@ -106,6 +109,8 @@ export default defineComponent({
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
     )
 
+    const { isMobile } = useIsMobile()
+
     return {
       styles,
       qallIconName,
@@ -114,7 +119,8 @@ export default defineComponent({
       changeToNextSubscriptionLevel,
       targetPortalName,
       isQallEnabled,
-      ChannelSubscribeLevel
+      ChannelSubscribeLevel,
+      isMobile
     }
   }
 })
