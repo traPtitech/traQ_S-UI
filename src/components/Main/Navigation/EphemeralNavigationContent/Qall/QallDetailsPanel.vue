@@ -53,7 +53,7 @@ export default defineComponent({
     const mutedUsersMap = computed(() =>
       Object.fromEntries(
         Object.entries(store.state.app.rtc.userStateMap).filter(([_, state]) =>
-          state?.sessionStates.find(
+          state?.sessionStates.some(
             s =>
               s.sessionId === currentSession.value?.sessionId &&
               s.states.includes('micmuted')

@@ -120,10 +120,8 @@ export const actions = defineActions({
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
 
-    const isUsedIndex = state.modalState.findIndex(ms =>
-      isEqual(ms, modalState)
-    )
-    if (isUsedIndex !== -1) {
+    const isUsed = state.modalState.some(ms => isEqual(ms, modalState))
+    if (isUsed) {
       return
     }
 
