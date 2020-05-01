@@ -82,6 +82,8 @@ const useListByGradeName = () => {
       ).filter(user => !!user) as User[]).sort((u1, u2) =>
         compareStringInsensitive(u1.name, u2.name)
       )
+      if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
+
       userGradeEntries[group.name] = member
 
       member.map(user => user.id).forEach(id => categorized.add(id))
@@ -93,20 +95,20 @@ const useListByGradeName = () => {
     ) as User[]).sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
-    return [
+    // その他グループ
+    const others = (Object.values(users.value).filter(
+      user => user && !categorized.has(user.id)
+    ) as User[]).sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
+
+    const result = [
       ...Object.entries(userGradeEntries).sort(
         (e1, e2) => compareStringInsensitive(e1[0], e2[0], true) // 学年なので逆順
-      ),
-      [
-        'Others',
-        (Object.values(users.value).filter(
-          user => user && !categorized.has(user.id)
-        ) as User[]).sort((u1, u2) =>
-          compareStringInsensitive(u1.name, u2.name)
-        )
-      ],
-      ['BOT', bots]
+      )
     ]
+    if (others.length > 0) result.push(['Others', others])
+    if (bots.length > 0) result.push(['BOT', bots])
+
+    return result
   })
   return listByGradeName
 }
