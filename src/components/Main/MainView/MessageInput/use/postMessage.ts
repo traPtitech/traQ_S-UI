@@ -24,7 +24,7 @@ const usePostMessage = (
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
 
   const isForce = computed(
-    () => store.state.entities.channels[props.channelId].force
+    () => store.state.entities.channels[props.channelId]?.force
   )
   const confirmString = computed(() =>
     isForce
