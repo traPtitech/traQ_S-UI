@@ -12,7 +12,6 @@ import {
   computed
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { transparentize } from '@/lib/util/color'
