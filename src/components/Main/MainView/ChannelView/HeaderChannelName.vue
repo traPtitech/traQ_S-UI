@@ -13,7 +13,7 @@
         :to="buildChannelLink(ancestor.path)"
         :class="$style.ancestor"
         :style="styles.ancestor"
-        >{{ ancestor.name }}</router-link
+        >{{ isMobile ? ancestor.name[0] : ancestor.name }}</router-link
       >
       <span :class="$style.ancestorSeparator" :style="styles.ancestorSeparator"
         >/</span
@@ -36,6 +36,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
+import useIsMobile from '@/use/isMobile'
 
 type Props = {
   channelId: ChannelId
@@ -89,6 +90,7 @@ export default defineComponent({
     const state = reactive({
       channels: computed(() => store.state.entities.channels)
     })
+    const { isMobile } = useIsMobile()
     const { pathInfoList } = usePathInfo(props)
     const ancestorsPath = computed(() =>
       pathInfoList.value.slice(0, pathInfoList.value.length - 1)
@@ -99,7 +101,14 @@ export default defineComponent({
     const buildChannelLink = (path: string[]) =>
       constructChannelPath(path.join('/'))
     const styles = useStyles(pathInfoList)
-    return { state, styles, ancestorsPath, pathInfo, buildChannelLink }
+    return {
+      state,
+      styles,
+      ancestorsPath,
+      pathInfo,
+      buildChannelLink,
+      isMobile
+    }
   }
 })
 </script>
