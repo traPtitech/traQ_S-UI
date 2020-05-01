@@ -80,6 +80,8 @@ export default defineComponent({
 .content {
   width: 100%;
   white-space: pre-line;
+  overflow: auto;
+  overflow-wrap: break-word;
   &[data-is-empty] {
     opacity: 0.5;
   }
