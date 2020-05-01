@@ -74,6 +74,14 @@ interface NotificationPayload {
 }
 
 export const connectFirebase = async () => {
+  if (isIOSApp()) {
+    // iOSはNotificationがないため、先にFCMトークンを登録する
+    const token = window.iOSToken
+    if (token && token !== 'No Token') {
+      apis.registerFCMDevice({ token })
+    }
+  }
+
   if (Notification?.permission === 'default') {
     const permission = await Notification.requestPermission()
     if (permission === 'granted') {
@@ -141,12 +149,5 @@ export const connectFirebase = async () => {
 
     const token = await messaging.getToken()
     apis.registerFCMDevice({ token })
-  }
-
-  if (isIOSApp()) {
-    const token = window.iOSToken
-    if (token && token !== 'No Token') {
-      apis.registerFCMDevice({ token })
-    }
   }
 }
