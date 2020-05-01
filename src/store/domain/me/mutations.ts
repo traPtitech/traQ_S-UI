@@ -28,6 +28,11 @@ export const mutations = defineMutations<S>()({
     if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
     Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
   },
+  updateUnreadChannel(state: S, unreadChannel: UnreadChannel) {
+    if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
+    Vue.delete(state.unreadChannelsSet, unreadChannel.channelId)
+    Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+  },
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
   },

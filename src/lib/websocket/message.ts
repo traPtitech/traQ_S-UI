@@ -11,6 +11,7 @@ import {
   MessageUnpinnedEvent
 } from './events'
 import { MessageId } from '@/types/entity-ids'
+import { UnreadChannel } from '@traptitech/traq'
 
 const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
   const currentView = store.state.ui.mainView.primaryView
@@ -29,8 +30,43 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   }
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {
+    // 未読処理
+    const myId = store.state.domain.me.detail?.id
+    if (res.data.userId !== myId) {
+      const unreadChannel: UnreadChannel = {
+        channelId: res.data.channelId,
+        count: 1,
+        noticeable: false,
+        // ????
+        since: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      let message = res.data.content.replace(/:.+?:/g, '')
+      message = message.replace(/`.+?`/g, '')
+      if (
+        message.includes(
+          `!{"type""@${store.state.domain.me.detail?.name}","id":"${myId}"}`
+        )
+      ) {
+        unreadChannel.noticeable = true
+      }
+      if (
+        res.data.channelId in store.state.domain.me.subscriptionMap ||
+        unreadChannel.noticeable
+      ) {
+        if (res.data.channelId in store.state.domain.me.unreadChannelsSet) {
+          const preUnreadChannel =
+            store.state.domain.me.unreadChannelsSet[res.data.channelId]
+          unreadChannel.count = preUnreadChannel.count + 1
+          unreadChannel.since = preUnreadChannel.since
+          store.commit.domain.me.updateUnreadChannel(unreadChannel)
+        }
+        store.commit.domain.me.addUnreadChannel(unreadChannel)
+      }
+    }
     return
   }
+
   await store.dispatch.domain.messagesView.addAndRenderMessage({
     message: res.data
   })
