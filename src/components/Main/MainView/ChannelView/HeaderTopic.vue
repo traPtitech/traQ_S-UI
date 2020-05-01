@@ -46,6 +46,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
+  min-width: 0;
   display: flex;
   align-items: center;
   height: 16px;

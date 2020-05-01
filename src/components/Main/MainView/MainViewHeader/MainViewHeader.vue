@@ -9,7 +9,7 @@
       >
         <icon name="traQ" />
       </button>
-      <h2>
+      <h2 :class="$style.headerBody">
         <slot name="header" />
       </h2>
     </div>
@@ -66,6 +66,10 @@ $headerHeight: 80px;
   width: 100%;
   flex: 0 0 $headerHeight;
   padding: 16px;
+}
+.headerBody {
+  width: 100%;
+  min-width: 0;
 }
 .headerContainer {
   display: flex;
