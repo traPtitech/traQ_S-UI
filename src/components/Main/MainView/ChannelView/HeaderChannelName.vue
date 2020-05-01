@@ -13,7 +13,7 @@
         :to="buildChannelLink(ancestor.path)"
         :class="$style.ancestor"
         :style="styles.ancestor"
-        >{{ isMobile ? ancestor.name.slice(0, 1) : ancestor.name }}</router-link
+        >{{ isMobile ? ancestor.name[0] : ancestor.name }}</router-link
       >
       <span :class="$style.ancestorSeparator" :style="styles.ancestorSeparator"
         >/</span
