@@ -33,7 +33,7 @@
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
-import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPpopupMenuItem.vue'
+import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'
 
 const useStyles = (props: {
