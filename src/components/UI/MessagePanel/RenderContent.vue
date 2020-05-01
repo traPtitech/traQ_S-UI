@@ -11,7 +11,10 @@
       mdi
       :size="20"
     />
-    <span :class="$style.content" v-html="renderedContent" />
+    <span
+      :class="[$style.content, 'markdown-inline-body']"
+      v-html="renderedContent"
+    />
   </div>
 </template>
 
