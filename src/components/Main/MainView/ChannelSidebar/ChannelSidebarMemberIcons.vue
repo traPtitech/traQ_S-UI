@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :style="styles.container">
     <div
-      v-for="state in propst.viewerStates"
+      v-for="state in viewerStates"
       :class="[state.viewing ? '' : $style.notView, $style.member]"
       :key="state.user.id"
     >
@@ -37,10 +37,8 @@ export default defineComponent({
     viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { viewerStates: ViewState[] }
     const styles = useStyles()
-    return { styles, propst }
+    return { styles }
   }
 })
 </script>
