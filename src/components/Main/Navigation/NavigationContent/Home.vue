@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div>
     <navigation-content-container
       v-if="homeChannel"
       subtitle="ホームチャンネル"
@@ -33,7 +33,6 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
@@ -46,36 +45,28 @@ export default defineComponent({
     NavigationContentContainer
   },
   setup() {
-    const topLevelChannels = computed(
-      () => store.state.domain.channelTree.homeChannelTree.children ?? []
-    )
-    const channelsWithNotification = computed(() =>
-      Object.values(store.state.domain.me.unreadChannelsSet)
-        .map(unread => store.state.entities.channels[unread.channelId ?? ''])
-        .filter(c => !!c)
-    )
-    const subtitleStyle = makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
     const homeChannel = computed(
       () =>
         store.state.entities.channels[
           store.state.domain.me.detail?.homeChannel ?? ''
         ]
     )
+    const channelsWithNotification = computed(() =>
+      Object.values(store.state.domain.me.unreadChannelsSet)
+        .map(unread => store.state.entities.channels[unread.channelId ?? ''])
+        .filter(c => !!c)
+    )
+    const topLevelChannels = computed(
+      () => store.state.domain.channelTree.homeChannelTree.children ?? []
+    )
+
     return {
+      homeChannel,
       topLevelChannels,
-      channelsWithNotification,
-      subtitleStyle,
-      homeChannel
+      channelsWithNotification
     }
   }
 })
 </script>
 
-<style lang="scss" module>
-.subtitle {
-  font-size: 0.75rem;
-  margin-bottom: 8px;
-}
-</style>
+<style lang="scss" module></style>

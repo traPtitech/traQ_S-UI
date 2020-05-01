@@ -54,6 +54,7 @@ import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
 import { deepSome } from '@/lib/util/tree'
+import { Channel } from '@traptitech/traq'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -61,7 +62,7 @@ const useAncestorPath = (skippedAncestorNames?: string[]) => {
   }
 }
 
-const useShortenedPath = (props: { channel: ChannelTreeNode }) => {
+const useShortenedPath = (props: TypedProps) => {
   const { channelIdToShortPathString } = useChannelPath()
   return {
     path: computed(() => channelIdToShortPathString(props.channel.id))
@@ -97,20 +98,22 @@ const useStyles = (state: { isSelected: boolean }) => {
   return styles
 }
 
-const useNotification = (props: { channel: ChannelTreeNode }) => {
+const useNotification = (props: TypedProps) => {
   const isUnread = (channelId: ChannelId) =>
     channelId in store.state.domain.me.unreadChannelsSet
 
   const notificationState = reactive({
     hasNotification: computed(() => isUnread(props.channel.id)),
     hasNotificationOnChild: computed(() =>
-      deepSome(props.channel, channel => isUnread(channel.id))
+      props.ignoreChildren
+        ? false
+        : deepSome(props.channel, channel => isUnread(channel.id))
     )
   })
   return notificationState
 }
 
-const useTopic = (props: { showTopic: boolean; channel: ChannelTreeNode }) => {
+const useTopic = (props: TypedProps) => {
   const topic = computed(() =>
     props.showTopic
       ? store.state.entities.channels[props.channel.id]?.topic ?? ''
@@ -118,6 +121,26 @@ const useTopic = (props: { showTopic: boolean; channel: ChannelTreeNode }) => {
   )
   return { topic }
 }
+
+interface Props {
+  channel: ChannelTreeNode | Channel
+  isOpened: boolean
+  ignoreChildren: boolean
+  showShortenedPath: boolean
+  showTopic: boolean
+}
+
+interface WithChildrenProps extends Props {
+  channel: ChannelTreeNode
+  ignoreChildren: true
+}
+
+interface IgnoreChildrenProps extends Props {
+  channel: ChannelTreeNode
+  ignoreChildren: false
+}
+
+type TypedProps = WithChildrenProps | IgnoreChildrenProps
 
 export default defineComponent({
   name: 'ChannelElement',
@@ -130,7 +153,7 @@ export default defineComponent({
   props: {
     /** 対象チャンネル */
     channel: {
-      type: Object as PropType<ChannelTreeNode>,
+      type: Object as PropType<ChannelTreeNode | Channel>,
       required: true
     },
     /** 子チャンネルを展開表示しているか */
@@ -153,29 +176,34 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const typedProps = props as TypedProps
+
     const state = reactive({
-      children: computed(() => props.channel.children ?? []),
+      children: computed(() => typedProps.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
       isSelected: computed(
         () =>
-          store.state.domain.messagesView.currentChannelId === props.channel.id
+          store.state.domain.messagesView.currentChannelId ===
+          typedProps.channel.id
       )
     })
 
     const styles = useStyles(state)
-    const { path } = props.showShortenedPath
-      ? useShortenedPath(props)
-      : useAncestorPath(props.channel.skippedAncestorNames)
+    const { path } = typedProps.showShortenedPath
+      ? useShortenedPath(typedProps)
+      : useAncestorPath(typedProps.channel.skippedAncestorNames)
     const pathToShow = computed(() =>
-      props.showShortenedPath ? path.value : path.value + props.channel.name
+      typedProps.showShortenedPath
+        ? path.value
+        : path.value + typedProps.channel.name
     )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
-      props.channel.id,
+      typedProps.channel.id,
       state.hasChild
     )
-    const notificationState = useNotification(props)
-    const { topic } = useTopic(props)
+    const notificationState = useNotification(typedProps)
+    const { topic } = useTopic(typedProps)
 
     return {
       state,
