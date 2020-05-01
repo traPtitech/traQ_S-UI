@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const CompressionPlugin = require('compression-webpack-plugin')
+const webpack = require('webpack')
 const crypto = require('crypto')
 const path = require('path')
 
@@ -25,9 +26,16 @@ module.exports = {
             compressionOptions: { level: 11 },
             minRatio: 1,
             deleteOriginalAssets: false
+          }),
+          new webpack.DefinePlugin({
+            __VERSION__: JSON.stringify(require('./package.json').version)
           })
         ]
-      : [],
+      : [
+          new webpack.DefinePlugin({
+            __VERSION__: JSON.stringify('dev')
+          })
+        ],
   optimization: {
     // https://web.dev/granular-chunking-nextjs/
     splitChunks: {
