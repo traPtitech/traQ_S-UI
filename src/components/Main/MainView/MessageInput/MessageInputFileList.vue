@@ -38,6 +38,7 @@ export default defineComponent({
   width: 100%;
   display: flex;
   padding: 16px;
+  overflow-x: scroll;
 }
 .element {
   margin: 0 8px;
