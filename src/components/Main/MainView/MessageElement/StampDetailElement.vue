@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.stamp">
+    <div>
       {{ ':' + state.stamp.name + ': from' }}
     </div>
     <stamp-detail-element-content
@@ -54,6 +54,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
+  flex-wrap: wrap;
 }
 .content {
   &::before {

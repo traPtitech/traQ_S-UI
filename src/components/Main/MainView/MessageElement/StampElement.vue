@@ -131,6 +131,8 @@ export default defineComponent({
 <style lang="scss" module>
 .body {
   display: inline-flex;
+  flex-shrink: 0;
+  height: 24px;
   align-items: center;
   padding: 2px 4px;
   border-radius: 4px;
