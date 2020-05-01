@@ -26,11 +26,20 @@ const useRouteWacher = (context: SetupContext) => {
   })
 
   const onRouteChangedToIndex = async () => {
+    const openChannel = computed(() => {
+      switch (store.state.app.browserSettings.openMode) {
+        case 'lastOpen':
+          return store.state.app.browserSettings.lastOpenChannel ?? 'general'
+        case 'particular':
+          return store.state.app.browserSettings.openChannelName ?? 'general'
+      }
+    })
+
     await originalStore.restored
     try {
       await context.root.$router.replace({
         name: RouteName.Channel,
-        params: { channel: store.state.app.browserSettings.openChannelName }
+        params: { channel: openChannel.value }
       })
     } catch (e) {
       if (e) throw e
