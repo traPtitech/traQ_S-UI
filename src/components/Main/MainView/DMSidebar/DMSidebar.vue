@@ -19,7 +19,6 @@
       />
       <sidebar-content
         v-else
-        :channel-id="channelId"
         :viewer-ids="viewerIds"
         :pinned-messages-count="state.pinnedMessage.length"
         @pinned-mode-toggle="togglePinnedMode"
@@ -29,8 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { ChannelId } from '@/types/entity-ids'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import ChannelSidebarPinnedList from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinnedList.vue'
@@ -57,7 +55,6 @@ export default defineComponent({
     SidebarContent
   },
   props: {
-    channelId: { type: String as PropType<ChannelId>, requried: true },
     userName: { type: String, requried: true }
   },
   setup() {

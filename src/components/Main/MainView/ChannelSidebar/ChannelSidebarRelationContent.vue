@@ -14,7 +14,7 @@
       :style="[propst.parent ? styles.firstBoarder : '']"
     >
       <channel-sidebar-relation-element
-        :is-current="true"
+        is-current
         :name="propst.current.name"
         :topic="propst.current.topic"
         :class="$style.element"
@@ -65,7 +65,7 @@
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { makeStyles } from '@/lib/styles'
-import { RelatedChannelEntry } from './use/useRelatedChannels'
+import { Channel } from '@traptitech/traq'
 
 const useStyles = () =>
   reactive({
@@ -86,29 +86,25 @@ const useStyles = () =>
 export default defineComponent({
   name: 'ChannelSidebarRelationContent',
   props: {
-    parent: {
-      type: Object as PropType<RelatedChannelEntry>
-    },
+    parent: Object as PropType<Channel>,
     children: {
-      type: Array as PropType<RelatedChannelEntry[]>,
+      type: Array as PropType<Channel[]>,
       default: []
     },
     siblings: {
-      type: Array as PropType<RelatedChannelEntry[]>,
+      type: Array as PropType<Channel[]>,
       default: []
     },
-    current: {
-      type: Object as PropType<RelatedChannelEntry>
-    }
+    current: Object as PropType<Channel>
   },
   components: { ChannelSidebarRelationElement },
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as {
-      parent: RelatedChannelEntry | undefined
-      children: RelatedChannelEntry[]
-      siblings: RelatedChannelEntry[]
-      current: RelatedChannelEntry | undefined
+      parent: Channel | undefined
+      children: Channel[]
+      siblings: Channel[]
+      current: Channel | undefined
     }
     const styles = useStyles()
     const state = reactive({

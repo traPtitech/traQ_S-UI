@@ -1,5 +1,5 @@
 import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { dmParentUuid } from '@/lib/util/uuid'
 
@@ -31,7 +31,9 @@ const useChannelPath = () => {
     return channelPathToId(separatedPath.slice(1), nextTree)
   }
 
-  const channelIdToSimpleChannelPath = (id: ChannelId): SimpleChannel[] => {
+  const channelIdToSimpleChannelPath = (
+    id: ChannelId | DMChannelId
+  ): SimpleChannel[] => {
     if (id in store.state.entities.dmChannels) {
       return [
         {
@@ -52,20 +54,23 @@ const useChannelPath = () => {
     ]
   }
 
-  const channelIdToPath = (id: ChannelId): string[] =>
+  const channelIdToPath = (id: ChannelId | DMChannelId): string[] =>
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
-  const dmChannelIdToPathString = (id: ChannelId, hashed = false): string =>
+  const dmChannelIdToPathString = (id: DMChannelId, hashed = false): string =>
     (hashed ? '@' : '') + store.getters.entities.userNameByDMChannelId(id) ?? ''
 
-  const channelIdToPathString = (id: ChannelId, hashed = false): string => {
+  const channelIdToPathString = (
+    id: ChannelId | DMChannelId,
+    hashed = false
+  ): string => {
     if (id in store.state.entities.dmChannels)
       return dmChannelIdToPathString(id, hashed)
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
 
   const channelIdToShortPathString = (
-    id: ChannelId,
+    id: ChannelId | DMChannelId,
     hashed = false
   ): string => {
     if (id in store.state.entities.dmChannels)
