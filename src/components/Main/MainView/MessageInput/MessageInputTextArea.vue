@@ -6,6 +6,7 @@
     :value="text"
     placeholder="メッセージを送信"
     rows="1"
+    :max-height="160"
     @input="onInput"
     @before-input.native="onBeforeInput"
     @keydown.native="onKeyDown"
@@ -130,6 +131,5 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
-  max-height: 10rem;
 }
 </style>
