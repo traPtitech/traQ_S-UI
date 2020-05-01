@@ -8,6 +8,7 @@
     rows="1"
     :max-height="160"
     @input="onInput"
+    @compositionupdate.native="onCompositionUpdate"
     @before-input.native="onBeforeInput"
     @keydown.native="onKeyDown"
     @keyup.native="onKeyUp"
@@ -100,10 +101,17 @@ export default defineComponent({
       context.emit('input', value)
     }
 
-    const textareaAutosizeRef = ref<{ $el: HTMLTextAreaElement }>()
+    const textareaAutosizeRef = ref<{
+      $el: HTMLTextAreaElement
+      resize: () => void
+    }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
+
+    const onCompositionUpdate = () => {
+      textareaAutosizeRef.value?.resize()
+    }
 
     const { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
       context,
@@ -116,6 +124,7 @@ export default defineComponent({
     return {
       styles,
       onInput,
+      onCompositionUpdate,
       onBeforeInput,
       onKeyDown,
       onKeyUp,
