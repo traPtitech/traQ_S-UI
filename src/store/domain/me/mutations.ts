@@ -26,10 +26,6 @@ export const mutations = defineMutations<S>()({
       unreadChannels.map(unread => [unread.channelId, unread])
     )
   },
-  addUnreadChannel(state: S, unreadChannel: UnreadChannel) {
-    if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
-    Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
-  },
   upsertUnreadChannel(state: S, message: Message) {
     const myId = state.detail?.id
     const noticeable = detectMentionOfMe(
@@ -56,6 +52,7 @@ export const mutations = defineMutations<S>()({
       }
     }
   },
+  // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
   },
