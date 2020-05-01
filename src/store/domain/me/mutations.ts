@@ -8,7 +8,7 @@ import {
   ChannelSubscribeLevel,
   Message
 } from '@traptitech/traq'
-import { detectMentionOfMe } from '@/lib/detecter'
+import { detectMentionOfMe } from '@/lib/detector'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
