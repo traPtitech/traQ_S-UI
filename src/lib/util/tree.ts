@@ -16,5 +16,15 @@ export const deepSome = <T extends Tree<T>>(
 ): boolean => {
   if (includeParent && f(tree)) return true
 
-  return tree.children.some(t => deepSome(t, f, true))
+  if (tree.children.length <= 0) return false
+
+  const queue = [...tree.children]
+  let now: T
+  while (queue.length > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    now = queue.shift()!
+    if (f(now)) return true
+    queue.push(...now.children)
+  }
+  return false
 }
