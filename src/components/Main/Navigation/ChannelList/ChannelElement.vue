@@ -53,6 +53,7 @@ import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
+import { deepSome } from '@/lib/util/tree'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -97,14 +98,13 @@ const useStyles = (state: { isSelected: boolean }) => {
 }
 
 const useNotification = (props: { channel: ChannelTreeNode }) => {
+  const isUnread = (channelId: ChannelId) =>
+    channelId in store.state.domain.me.unreadChannelsSet
+
   const notificationState = reactive({
-    hasNotification: computed(
-      () => props.channel.id in store.state.domain.me.unreadChannelsSet
-    ),
+    hasNotification: computed(() => isUnread(props.channel.id)),
     hasNotificationOnChild: computed(() =>
-      props.channel.children.some(
-        treeNode => treeNode.id in store.state.domain.me.unreadChannelsSet
-      )
+      deepSome(props.channel, channel => isUnread(channel.id))
     )
   })
   return notificationState
