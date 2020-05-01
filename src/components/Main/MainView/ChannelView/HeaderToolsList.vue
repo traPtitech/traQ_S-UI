@@ -6,7 +6,7 @@
       :icon-name="qallIconName"
       :style="styles.qallIcon"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
-      v-if="isQallEnabled"
+      v-if="isQallEnabled && !isMobile"
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <template v-if="!isMobile">

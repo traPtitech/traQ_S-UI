@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" :disabled="disabled">
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -31,7 +31,8 @@ export default defineComponent({
   props: {
     iconName: { type: String, required: true },
     iconMdi: { type: Boolean, default: false },
-    label: { type: String, default: '' }
+    label: { type: String, default: '' },
+    disabled: { type: Boolean, default: false }
   },
   setup() {
     const styles = useStyles()
@@ -44,6 +45,10 @@ export default defineComponent({
 .container {
   display: flex;
   cursor: pointer;
+  &[disabled] {
+    opacity: 0.5;
+    cursor: pointer;
+  }
 }
 .icon {
   flex-shrink: 0;
