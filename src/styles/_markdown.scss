@@ -1079,4 +1079,10 @@ html[data-is-dark-theme] {
       }
     }
   }
+
+  .message-emoji {
+    &.large, &.ex-large {
+      font-size: 24px;
+    }
+  }
 }
