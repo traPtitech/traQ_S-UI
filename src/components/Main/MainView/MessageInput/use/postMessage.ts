@@ -5,6 +5,7 @@ import apis, { buildFilePathForPost } from '@/lib/apis'
 import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
+import { ref } from '@vue/composition-api'
 
 const uploadAttachments = async (
   attachments: Attachment[],
@@ -22,7 +23,10 @@ const usePostMessage = (
 ) => {
   const { channelPathToId } = useChannelPath()
 
+  const isPosting = ref(false)
+
   const postMessage = async () => {
+    if (isPosting.value) return
     if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return
 
     const embededText = embedInternalLink(textState.text, {
@@ -48,17 +52,20 @@ const usePostMessage = (
       )
       const embededdUrls = fileUrls.join('\n')
 
+      isPosting.value = true
       await apis.postMessage(props.channelId, {
         content: embededText + '\n' + embededdUrls
       })
-
-      textState.text = ''
-      store.commit.ui.fileInput.clearAttachments()
     } catch {
       // TODO: エラー処理
+    } finally {
+      textState.text = ''
+      store.commit.ui.fileInput.clearAttachments()
+
+      isPosting.value = false
     }
   }
-  return postMessage
+  return { postMessage, isPosting }
 }
 
 export default usePostMessage

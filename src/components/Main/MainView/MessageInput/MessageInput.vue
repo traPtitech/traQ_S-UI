@@ -100,14 +100,14 @@ export default defineComponent({
       isFocused
     )
 
-    const postMessage = usePostMessage(textState, props)
+    const { postMessage, isPosting } = usePostMessage(textState, props)
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers
     )
 
     const canPostMessage = computed(
-      () => !(textState.isEmpty && attachmentsState.isEmpty)
+      () => !isPosting.value && !(textState.isEmpty && attachmentsState.isEmpty)
     )
     const showKeyGuide = computed(
       () =>
