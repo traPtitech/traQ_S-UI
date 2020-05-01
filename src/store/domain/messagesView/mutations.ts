@@ -4,10 +4,16 @@ import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
 import { Embedding } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
+import store from '@/store'
+import useCurrentChannelPath from '@/use/currentChannelPath'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
+    const { currentChannelPathString } = useCurrentChannelPath()
+    store.commit.app.browserSettings.setLastOpenChannelName(
+      currentChannelPathString.value
+    )
   },
   setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
     state.currentClipFolderId = currentClipFolderId
