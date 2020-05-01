@@ -8,7 +8,7 @@ import {
   ChannelSubscribeLevel,
   Message
 } from '@traptitech/traq'
-import useDetecter from '@/use/detecter'
+import detecter from '@/lib/detecter'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -32,27 +32,28 @@ export const mutations = defineMutations<S>()({
   },
   upsertUnreadChannel(state: S, message: Message) {
     const myId = state.detail?.id
-    const unreadChannel: UnreadChannel = {
-      channelId: message.channelId,
-      count: 1,
-      noticeable: false,
-      since: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-    const { detectMentions } = useDetecter(message.content)
-    unreadChannel.noticeable = detectMentions.some(data => data.id === myId)
-    if (
-      message.channelId in state.subscriptionMap ||
-      unreadChannel.noticeable
-    ) {
+    const detectMentions = detecter(message.content)
+    // userIdがgroupIdと衝突する可能性は未考慮
+    const noticeable = detectMentions.some(
+      data => data.id === myId || state.detail?.groups.includes(data.id)
+    )
+    if (message.channelId in state.subscriptionMap || noticeable) {
       if (message.channelId in state.unreadChannelsSet) {
-        const preUnreadChannel = state.unreadChannelsSet[message.channelId]
-        unreadChannel.count = preUnreadChannel.count + 1
-        unreadChannel.since = preUnreadChannel.since
-        Vue.delete(state.unreadChannelsSet, unreadChannel.channelId)
-        Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+        const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
+        Vue.set(state.unreadChannelsSet, message.channelId, {
+          ...oldUnreadChannel,
+          count: oldUnreadChannel.count + 1,
+          since: new Date().toISOString()
+        })
+      } else {
+        Vue.set(state.unreadChannelsSet, message.channelId, {
+          channelId: message.channelId,
+          count: 1,
+          noticeable,
+          since: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        })
       }
-      Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
     }
   },
   deleteUnreadChannel(state: S, channelId: ChannelId) {

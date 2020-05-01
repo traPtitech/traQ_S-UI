@@ -1,4 +1,4 @@
-const useDetecter = (text: string) => {
+export default function detecter(text: string) {
   let isInside = false
   let startIndex = -1
   let isString = false
@@ -8,6 +8,12 @@ const useDetecter = (text: string) => {
       const data = JSON.parse(str)
       if (
         data['type'] === 'user' &&
+        typeof data['id'] === 'string' &&
+        typeof data['raw'] === 'string'
+      ) {
+        return true
+      } else if (
+        data['type'] === 'group' &&
         typeof data['id'] === 'string' &&
         typeof data['raw'] === 'string'
       ) {
@@ -41,7 +47,5 @@ const useDetecter = (text: string) => {
       }
     }
   }
-  return { detectMentions: ret }
+  return ret
 }
-
-export default useDetecter
