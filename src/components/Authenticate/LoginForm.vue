@@ -56,6 +56,14 @@
           icon-name="github"
           @click="loginExternal('github')"
         />
+        <authenticate-button-secondary
+          :class="$style.exLoginButton"
+          v-show="externalLogin.includes('oidc')"
+          label="OpenID Connect"
+          icon-mdi
+          icon-name="openid"
+          @click="loginExternal('oidc')"
+        />
       </div>
     </template>
   </form>
