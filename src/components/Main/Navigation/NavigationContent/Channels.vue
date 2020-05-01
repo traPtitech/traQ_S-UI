@@ -39,7 +39,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
-import { ChannelId } from '@/types/entity-ids'
+import useChannelArchiveCheck from '@/use/channelArchiveCheck'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -47,12 +47,6 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
     channelListFilterState: textFilterState,
     setQuery
   }
-}
-
-const useChannelArchiveCheck = () => {
-  const filterNotArchive = (cid: ChannelId) =>
-    !store.state.entities.channels[cid].archived
-  return { filterNotArchive }
 }
 
 const useChannels = (state: { isStar: boolean }) => {
@@ -63,7 +57,7 @@ const useChannels = (state: { isStar: boolean }) => {
           ...new Set(
             Object.keys(store.state.domain.me.staredChannelSet)
               .filter(filterNotArchive)
-              .flatMap(v => buildDescendantsChannelArray(v))
+              .flatMap(v => buildDescendantsChannelArray(v, false))
           )
         ]
       : Object.values(store.state.entities.channels).filter(ch =>
@@ -75,7 +69,6 @@ const useChannels = (state: { isStar: boolean }) => {
 const useStaredChannel = () => {
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
-  const { filterNotArchive } = useChannelArchiveCheck()
 
   const tree = computed(() => {
     const { channelIdToShortPathString } = useChannelPath()
@@ -86,11 +79,10 @@ const useStaredChannel = () => {
           name: '',
           parentId: null,
           archived: false,
-          children: Object.keys(store.state.domain.me.staredChannelSet).filter(
-            filterNotArchive
-          )
+          children: Object.keys(store.state.domain.me.staredChannelSet)
         },
-        store.state.entities.channels
+        store.state.entities.channels,
+        false
       )
         ?.children?.map(c => ({
           ...c,

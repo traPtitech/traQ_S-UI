@@ -28,14 +28,17 @@ export type ChannelLike = Pick<
 export const constructTree = (
   channel: ChannelLike,
   channelEntities: Record<ChannelId, ChannelLike>,
+  containArchive: boolean,
   subscribedChannels?: Set<ChannelId>
 ): ChannelTreeNode | undefined => {
+  if (!containArchive && channel.archived) return undefined
   const isRootChannel = channel.id === rootChannelId
   const isSubscribed =
     isRootChannel || (subscribedChannels?.has(channel.id) ?? true)
 
   if (channel.children.length === 0) {
     // 葉チャンネル
+    if (containArchive && channel.archived) undefined
     return isSubscribed
       ? {
           id: channel.id,
@@ -51,10 +54,15 @@ export const constructTree = (
   const children = channel.children
     .reduce((acc, id) => {
       const child = channelEntities[id]
-      if (!child) {
+      if (!child || (!containArchive && child.archived)) {
         return acc
       }
-      const result = constructTree(child, channelEntities, subscribedChannels)
+      const result = constructTree(
+        child,
+        channelEntities,
+        containArchive,
+        subscribedChannels
+      )
       return result ? [...acc, result] : acc
     }, [] as ChannelTreeNode[])
     .sort(channelNameSortFunction(channelEntities))
@@ -103,7 +111,8 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels
+          rootState.entities.channels,
+          false
         )?.children ?? []
     }
     commit.setChannelTree(tree)
@@ -135,6 +144,7 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channels,
+          false,
           new Set(subscribedOrForceChannels)
         )?.children ?? []
     }
