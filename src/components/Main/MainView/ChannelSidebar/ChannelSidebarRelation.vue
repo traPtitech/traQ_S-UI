@@ -15,7 +15,7 @@ import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ChannelSidebarRelationContent from './ChannelSidebarRelationContent.vue'
-import useRelatedChannels from './use/useRelatedChannels'
+import useRelatedChannels from './use/relatedChannels'
 
 export default defineComponent({
   name: 'ChannelSidebarRelation',
