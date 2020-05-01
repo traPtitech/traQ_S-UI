@@ -67,8 +67,7 @@ const withModifierKey = (keyEvent: KeyboardEvent) => {
 const isSendKeyInput = (inputEvent: InputEvent) => {
   return (
     store.state.app.browserSettings.sendWithModifierKey === 'none' &&
-    inputEvent.inputType === 'insertLineBreak' &&
-    !touchDeviceFlag
+    inputEvent.inputType === 'insertLineBreak'
   )
 }
 
@@ -107,13 +106,15 @@ const useSendKeyWatcher = (
    * したがって、これが発火したときは修飾キーが押されていないことが保障されている
    */
   const onBeforeInput = (event: InputEvent) => {
-    if (isSendKeyInput(event)) {
+    if (!touchDeviceFlag && isSendKeyInput(event)) {
       event.preventDefault()
       context.emit('post-message')
     }
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
+    if (touchDeviceFlag) return
+
     if (withModifierKey(event) && !event.isComposing) {
       context.emit('modifier-key-down')
     }
@@ -165,7 +166,7 @@ const useSendKeyWatcher = (
   }
 
   const onKeyUp = (event: KeyboardEvent) => {
-    if (isModifierKey(event)) {
+    if (!touchDeviceFlag && isModifierKey(event)) {
       context.emit('modifier-key-up')
     }
   }
