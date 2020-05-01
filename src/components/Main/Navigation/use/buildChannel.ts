@@ -1,6 +1,5 @@
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
 
 export const buildDescendantsChannelArray = (
   id: ChannelId,
@@ -10,7 +9,7 @@ export const buildDescendantsChannelArray = (
     throw `channelIdToPath: No channel: ${id}`
   }
   const channel = store.state.entities.channels[id]
-  if (channel.archived) [{}] as Channel[]
+  if (channel.archived) return []
 
   const result = [channel]
   let i = 0

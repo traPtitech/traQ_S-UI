@@ -38,7 +38,7 @@ export const constructTree = (
 
   if (channel.children.length === 0) {
     // 葉チャンネル
-    if (containArchive && channel.archived) undefined
+    if (containArchive && channel.archived) return undefined
     return isSubscribed
       ? {
           id: channel.id,
