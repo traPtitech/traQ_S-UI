@@ -1,7 +1,11 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div ref="viewportRef" :class="$style.viewport">
-      <div v-for="(messageId, index) in messageIds" :key="messageId">
+      <div
+        v-for="(messageId, index) in messageIds"
+        :key="messageId"
+        :class="$style.messageContainer"
+      >
         <messages-scroller-day-separator
           v-if="dayDiff(index)"
           :message-id="messageId"
@@ -182,6 +186,10 @@ export default defineComponent({
   overflow-y: scroll;
   overflow-anchor: none;
   padding: 12px 0;
+}
+
+.messageContainer {
+  display: contents;
 }
 
 .viewport {
