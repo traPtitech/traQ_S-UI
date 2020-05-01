@@ -136,9 +136,7 @@ export default defineComponent({
     const onUpdateClick = async () => {
       const promises = []
       if (imageUploadState.imgData !== undefined) {
-        promises.push(
-          apis.changeUserIcon(detail.value.id, imageUploadState.imgData)
-        )
+        promises.push(apis.changeMyIcon(imageUploadState.imgData))
       }
       if (isStateChanged.value) {
         promises.push(
