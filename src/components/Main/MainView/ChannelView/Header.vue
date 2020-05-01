@@ -1,7 +1,10 @@
 <template>
   <main-view-header>
     <template #header>
-      <header-channel-name :channel-id="channelId" />
+      <div :class="$style.header">
+        <header-channel-name :channel-id="channelId" />
+        <header-topic :class="$style.topic" :channel-id="channelId" />
+      </div>
     </template>
     <template #tools>
       <header-tools :channel-id="channelId" />
@@ -14,12 +17,14 @@ import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import HeaderChannelName from './HeaderChannelName.vue'
+import HeaderTopic from './HeaderTopic.vue'
 import HeaderTools from './HeaderTools.vue'
 
 export default defineComponent({
   name: 'ChannelViewHeader',
   components: {
     MainViewHeader,
+    HeaderTopic,
     HeaderChannelName,
     HeaderTools
   },
@@ -43,6 +48,13 @@ export default defineComponent({
   justify-content: space-between;
   height: 100%;
   padding: 16px;
+}
+.header {
+  display: flex;
+  align-items: center;
+}
+.topic {
+  margin-left: 16px;
 }
 .headerContainer {
   display: flex;
