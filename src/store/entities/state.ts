@@ -1,42 +1,33 @@
+import { UserGroup, Stamp, StampPalette, Channel } from '@traptitech/traq'
 import {
-  User,
-  UserGroup,
-  Channel,
-  Stamp,
-  StampPalette,
-  Webhook,
-  Message,
-  FileInfo,
-  Tag,
-  ClipFolder,
-  DMChannel
-} from '@traptitech/traq'
-import {
-  UserId,
-  ChannelId,
   UserGroupId,
-  TagId,
   StampId,
   StampPaletteId,
-  WebhookId,
-  MessageId,
-  FileId,
-  ClipFolderId,
-  DMChannelId
+  ChannelId
 } from '@/types/entity-ids'
+import {
+  UserMap,
+  MessageMap,
+  Undefinedable,
+  DMChannelMap,
+  WebhookMap,
+  FileMetaDataMap,
+  TagMap,
+  ClipFolderMap
+} from '.'
 
 export type S = {
-  users: Record<UserId, User | undefined>
-  messages: Record<MessageId, Message | undefined>
+  users: Undefinedable<UserMap>
+  messages: Undefinedable<MessageMap>
   channels: Record<ChannelId, Channel>
-  dmChannels: Record<DMChannelId, DMChannel>
+  dmChannels: DMChannelMap
   userGroups: Record<UserGroupId, UserGroup>
   stamps: Record<StampId, Stamp>
   stampPalettes: Record<StampPaletteId, StampPalette>
-  webhooks: Record<WebhookId, Webhook | undefined>
-  fileMetaData: Record<FileId, FileInfo | undefined>
-  tags: Record<TagId, Tag | undefined>
-  clipFolders: Record<ClipFolderId, ClipFolder | undefined>
+  webhooks: Undefinedable<WebhookMap>
+  fileMetaData: Undefinedable<FileMetaDataMap>
+  tags: Undefinedable<TagMap>
+  clipFolders: Undefinedable<ClipFolderMap>
 }
 
 export const state: S = {
