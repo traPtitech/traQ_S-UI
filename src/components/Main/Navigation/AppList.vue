@@ -37,6 +37,7 @@ const useStyles = () =>
   reactive({
     container: makeStyles((theme, common) => ({
       filter: common.dropShadow.default,
+      color: theme.ui.primary,
       background: theme.background.primary
     }))
   })
