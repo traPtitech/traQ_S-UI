@@ -11,18 +11,17 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
-import { ClipFolderId, UserId } from '@/types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 import ChannelSidebarPinned from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
 
 export default defineComponent({
-  name: 'ClipsSidebarContent',
+  name: 'DMSidebarContent',
   components: {
     ChannelSidebarPinned,
     ChannelSidebarViewers
   },
   props: {
-    channelId: { type: String as PropType<ClipFolderId>, required: true },
     viewerIds: {
       type: Array as PropType<UserId[]>,
       required: true

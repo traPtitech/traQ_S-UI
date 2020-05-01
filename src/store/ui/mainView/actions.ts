@@ -50,7 +50,7 @@ export const actions = defineActions({
   changePrimaryViewToDM(
     context,
     payload: {
-      channelId: ChannelId
+      channelId: DMChannelId
       userName: string
       entryMessageId?: MessageId
     }

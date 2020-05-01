@@ -45,7 +45,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useIsMobile from '@/use/isMobile'
 import useAttachments from './use/attachments'
@@ -79,7 +79,7 @@ export default defineComponent({
   },
   props: {
     channelId: {
-      type: String as PropType<ChannelId>,
+      type: String as PropType<ChannelId | DMChannelId>,
       required: true
     }
   },

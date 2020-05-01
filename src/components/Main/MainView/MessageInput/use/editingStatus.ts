@@ -1,10 +1,10 @@
 import { watch, Ref } from '@vue/composition-api'
 import { changeViewState } from '@/lib/websocket'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
 
 const useEditingStatus = (
-  channelId: Ref<ChannelId>,
+  channelId: Ref<ChannelId | DMChannelId>,
   textStatus: { text: string },
   isFocused: Ref<boolean>
 ) => {
