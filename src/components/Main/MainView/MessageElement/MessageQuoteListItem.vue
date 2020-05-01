@@ -13,7 +13,11 @@
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
-    <div :class="$style.footer" :style="styles.footer">
+    <div
+      :class="$style.footer"
+      :style="styles.footer"
+      :data-is-mobile="isMobile"
+    >
       <span :class="$style.description">
         {{ state.channelPath }} - {{ state.date }}
       </span>
@@ -38,6 +42,7 @@ import { MessageId } from '@/types/entity-ids'
 import { getCreatedDate } from '@/lib/date'
 import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
+import useIsMobile from '@/use/isMobile'
 
 const useStyles = () =>
   reactive({
@@ -77,8 +82,9 @@ export default defineComponent({
       )
     })
     const styles = useStyles()
+    const { isMobile } = useIsMobile()
 
-    return { state, styles }
+    return { state, styles, isMobile }
   }
 })
 </script>
@@ -91,7 +97,7 @@ export default defineComponent({
     'user-icon message-contents'
     '......... message-contents'
     '......... footer';
-  grid-template-rows: 24px 1fr 1fr 24px;
+  grid-template-rows: 24px 1fr 1fr auto;
   grid-template-columns: 24px 1fr;
   width: 100%;
   min-width: 0;
@@ -138,6 +144,11 @@ export default defineComponent({
   padding-left: 8px;
   font-size: 0.875rem;
   align-self: end;
+  margin-top: 4px;
+  &[data-is-mobile='true'] {
+    display: flex;
+    flex-direction: column;
+  }
 }
 .description {
   font-weight: normal;
