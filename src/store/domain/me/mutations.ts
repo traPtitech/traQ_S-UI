@@ -5,8 +5,10 @@ import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   MyUserDetail,
-  ChannelSubscribeLevel
+  ChannelSubscribeLevel,
+  Message
 } from '@traptitech/traq'
+import useDetecter from '@/use/detecter'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -28,10 +30,30 @@ export const mutations = defineMutations<S>()({
     if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
     Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
   },
-  updateUnreadChannel(state: S, unreadChannel: UnreadChannel) {
-    if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
-    Vue.delete(state.unreadChannelsSet, unreadChannel.channelId)
-    Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+  upsertUnreadChannel(state: S, message: Message) {
+    const myId = state.detail?.id
+    const unreadChannel: UnreadChannel = {
+      channelId: message.channelId,
+      count: 1,
+      noticeable: false,
+      since: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+    const { detectMentions } = useDetecter(message.content)
+    unreadChannel.noticeable = detectMentions.some(data => data.id === myId)
+    if (
+      message.channelId in state.subscriptionMap ||
+      unreadChannel.noticeable
+    ) {
+      if (message.channelId in state.unreadChannelsSet) {
+        const preUnreadChannel = state.unreadChannelsSet[message.channelId]
+        unreadChannel.count = preUnreadChannel.count + 1
+        unreadChannel.since = preUnreadChannel.since
+        Vue.delete(state.unreadChannelsSet, unreadChannel.channelId)
+        Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+      }
+      Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+    }
   },
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
