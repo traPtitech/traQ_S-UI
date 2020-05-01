@@ -1052,4 +1052,16 @@ html[data-is-dark-theme] {
       background-color: rgba(0, 0, 0, 0.1);
     }
   }
+
+  .message-user-link,
+  .message-channel-link,
+  .message-group-link {
+    cursor: pointer;
+    color: #005BAC;
+    font-weight: bold;
+  }
+  .message-user-link-highlight,
+  .message-group-link-highlight {
+    background-color: #FAFFAD;
+  }
 }
