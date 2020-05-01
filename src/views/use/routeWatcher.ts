@@ -1,6 +1,6 @@
 import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
 import store, { originalStore } from '@/store'
-import { RouteName } from '@/router'
+import { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
@@ -38,10 +38,7 @@ const useRouteWacher = (context: SetupContext) => {
     await originalStore.restored
     const openChannelPath = await useOpenChannel()
     try {
-      await context.root.$router.replace({
-        name: RouteName.Channel,
-        params: { channel: openChannelPath }
-      })
+      await context.root.$router.replace(constructChannelPath(openChannelPath))
     } catch (e) {
       if (e) throw e
     }
