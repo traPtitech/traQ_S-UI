@@ -20,6 +20,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
+import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'TagModal',
@@ -37,7 +38,13 @@ export default defineComponent({
     store.dispatch.entities.fetchTag(props.tagId)
     const tag = computed(() => store.state.entities.tags[props.tagId])
     const tagName = computed(() => tag.value?.tag)
-    const taggedUsers = computed(() => tag.value?.users ?? [])
+    const taggedUsers = computed(
+      () =>
+        tag.value?.users.filter(
+          user =>
+            store.state.entities.users[user]?.state === UserAccountState.active
+        ) ?? []
+    )
     return { tagName, taggedUsers }
   }
 })

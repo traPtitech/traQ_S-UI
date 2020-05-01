@@ -19,6 +19,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
+import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'GroupModal',
@@ -36,7 +37,14 @@ export default defineComponent({
     const group = computed(() => store.state.entities.userGroups[props.groupId])
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
-      () => group.value?.members.map(member => member.id) ?? []
+      () =>
+        group.value?.members
+          .filter(
+            member =>
+              store.state.entities.users[member.id]?.state ===
+              UserAccountState.active
+          )
+          .map(member => member.id) ?? []
     )
     return { groupName, groupMember }
   }
