@@ -33,7 +33,7 @@ export const mutations = defineMutations<S>()({
       myId ?? '',
       state.detail?.groups ?? []
     )
-    if (message.channelId in state.subscriptionMap || noticeable) {
+    if (state.subscriptionMap[message.channelId] > 0 || noticeable.length > 0) {
       if (message.channelId in state.unreadChannelsSet) {
         const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
         Vue.set(state.unreadChannelsSet, message.channelId, {
