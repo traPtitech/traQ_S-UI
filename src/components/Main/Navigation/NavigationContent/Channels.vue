@@ -39,7 +39,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
-import useChannelState from '@/components/Main/MainView/ChannelView/use/channelState'
+import { ChannelId } from '@/types/entity-ids'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -49,28 +49,33 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   }
 }
 
-const useChannels = (state: { isStar: boolean }) =>
-  computed(() =>
+const useChannelArchiveCheck = () => {
+  const filterNotArchive = (cid: ChannelId) =>
+    !store.state.entities.channels[cid].archived
+  return { filterNotArchive }
+}
+
+const useChannels = (state: { isStar: boolean }) => {
+  const { filterNotArchive } = useChannelArchiveCheck()
+  return computed(() =>
     state.isStar
       ? [
           ...new Set(
             Object.keys(store.state.domain.me.staredChannelSet)
-              .filter(
-                channelId =>
-                  !useChannelState({ channelId }).channelState.archived
-              )
+              .filter(filterNotArchive)
               .flatMap(v => buildDescendantsChannelArray(v))
           )
         ]
-      : Object.values(store.state.entities.channels).filter(
-          channel =>
-            !useChannelState({ channelId: channel.id }).channelState.archived
+      : Object.values(store.state.entities.channels).filter(ch =>
+          filterNotArchive(ch.id)
         )
   )
+}
 
 const useStaredChannel = () => {
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
+  const { filterNotArchive } = useChannelArchiveCheck()
 
   const tree = computed(() => {
     const { channelIdToShortPathString } = useChannelPath()
@@ -82,7 +87,7 @@ const useStaredChannel = () => {
           parentId: null,
           archived: false,
           children: Object.keys(store.state.domain.me.staredChannelSet).filter(
-            channelId => !useChannelState({ channelId }).channelState.archived
+            filterNotArchive
           )
         },
         store.state.entities.channels
