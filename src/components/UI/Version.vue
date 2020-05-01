@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-
 import { makeStyles } from '@/lib/styles'
 import version from '@/lib/version'
 
@@ -18,7 +17,7 @@ const useStyles = () =>
   })
 
 export default defineComponent({
-  name: '',
+  name: 'Version',
   setup() {
     const styles = useStyles()
     return { version, styles }
