@@ -5,8 +5,10 @@ import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   MyUserDetail,
-  ChannelSubscribeLevel
+  ChannelSubscribeLevel,
+  Message
 } from '@traptitech/traq'
+import { detectMentionOfMe } from '@/lib/detector'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -24,10 +26,33 @@ export const mutations = defineMutations<S>()({
       unreadChannels.map(unread => [unread.channelId, unread])
     )
   },
-  addUnreadChannel(state: S, unreadChannel: UnreadChannel) {
-    if (!unreadChannel.channelId) throw 'addUnreadChannel: No Channel Id'
-    Vue.set(state.unreadChannelsSet, unreadChannel.channelId, unreadChannel)
+  upsertUnreadChannel(state: S, message: Message) {
+    const myId = state.detail?.id
+    const noticeable = detectMentionOfMe(
+      message.content,
+      myId ?? '',
+      state.detail?.groups ?? []
+    )
+    if (message.channelId in state.subscriptionMap || noticeable) {
+      if (message.channelId in state.unreadChannelsSet) {
+        const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
+        Vue.set(state.unreadChannelsSet, message.channelId, {
+          ...oldUnreadChannel,
+          count: oldUnreadChannel.count + 1,
+          updatedAt: new Date().toISOString()
+        })
+      } else {
+        Vue.set(state.unreadChannelsSet, message.channelId, {
+          channelId: message.channelId,
+          count: 1,
+          noticeable,
+          since: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        })
+      }
+    }
   },
+  // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
   },

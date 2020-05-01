@@ -29,8 +29,14 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   }
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {
+    // 未読処理
+    const myId = store.state.domain.me.detail?.id
+    if (res.data.userId !== myId) {
+      store.commit.domain.me.upsertUnreadChannel(res.data)
+    }
     return
   }
+
   await store.dispatch.domain.messagesView.addAndRenderMessage({
     message: res.data
   })
