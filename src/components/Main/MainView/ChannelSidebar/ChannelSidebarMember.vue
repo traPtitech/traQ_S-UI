@@ -3,7 +3,6 @@
     <empty-state v-if="isForceNotification">強制通知チャンネル</empty-state>
     <channel-sidebar-member-icons
       v-else-if="userIds.length > 0"
-      :class="$style.icons"
       :viewer-states="viewStates"
     />
     <empty-state v-else>メンバーはいません</empty-state>
@@ -11,26 +10,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-
-const useStyles = () =>
-  reactive({
-    text: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    }))
-  })
+import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'ChannelSidebarMember',
@@ -44,7 +30,6 @@ export default defineComponent({
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
   setup(props) {
-    const styles = useStyles()
     const isForceNotification = computed(
       () => store.state.entities.channels[props.channelId]?.force
     )
@@ -55,6 +40,7 @@ export default defineComponent({
           user: store.state.entities.users[id],
           viewing: props.viewerIds.includes(id)
         }))
+        .filter(state => state.user?.state === UserAccountState.active)
         .sort((a, b) => {
           if (a.viewing === b.viewing) {
             return 0
@@ -62,23 +48,9 @@ export default defineComponent({
           return a.viewing ? -1 : 1
         })
     )
-    return { styles, userIds, isForceNotification, viewStates }
+    return { userIds, isForceNotification, viewStates }
   }
 })
 </script>
 
-<style lang="scss" module>
-$memberTitleSize: 1.15rem;
-
-.text {
-  font-weight: bold;
-  font-size: $memberTitleSize;
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-  width: 256px;
-  border-radius: 4px;
-  padding: 8px;
-  flex-shrink: 0;
-}
-</style>
+<style lang="scss" module></style>
