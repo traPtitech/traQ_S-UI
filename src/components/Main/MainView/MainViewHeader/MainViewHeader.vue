@@ -13,7 +13,7 @@
         <slot name="header" />
       </h2>
     </div>
-    <slot name="tools" />
+    <slot :class="$style.tools" name="tools" />
   </header>
 </template>
 
@@ -69,10 +69,14 @@ $headerHeight: 80px;
 }
 .headerContainer {
   display: flex;
+  min-width: 0;
 }
 .navigationButton {
   display: flex;
   align-items: center;
   margin-right: 8px;
+}
+.tools {
+  flex-shrink: 0;
 }
 </style>
