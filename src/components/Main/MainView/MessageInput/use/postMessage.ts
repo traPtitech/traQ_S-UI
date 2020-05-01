@@ -5,7 +5,7 @@ import apis, { buildFilePathForPost } from '@/lib/apis'
 import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
-import { ref } from '@vue/composition-api'
+import { computed, ref } from '@vue/composition-api'
 
 const uploadAttachments = async (
   attachments: Attachment[],
@@ -21,13 +21,29 @@ const usePostMessage = (
   textState: TextState,
   props: { channelId: ChannelId }
 ) => {
-  const { channelPathToId } = useChannelPath()
+  const { channelPathToId, channelIdToShortPathString } = useChannelPath()
+
+  const isForce = computed(
+    () => store.state.entities.channels[props.channelId].force
+  )
+  const confirmString = computed(() =>
+    isForce
+      ? `#${channelIdToShortPathString(
+          props.channelId
+        )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
+      : ''
+  )
 
   const isPosting = ref(false)
 
   const postMessage = async () => {
     if (isPosting.value) return
     if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return
+
+    if (isForce.value && !confirm(confirmString.value)) {
+      // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
+      return
+    }
 
     const embededText = embedInternalLink(textState.text, {
       getUser: store.getters.entities.userByName,
