@@ -91,7 +91,7 @@ export default defineComponent({
     'user-icon message-contents'
     '......... message-contents'
     '......... footer';
-  grid-template-rows: 24px 1fr 1fr 24px;
+  grid-template-rows: 24px 1fr 1fr auto;
   grid-template-columns: 24px 1fr;
   width: 100%;
   min-width: 0;
@@ -138,6 +138,9 @@ export default defineComponent({
   padding-left: 8px;
   font-size: 0.875rem;
   align-self: end;
+  margin-top: 4px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .description {
   font-weight: normal;
