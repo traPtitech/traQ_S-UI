@@ -39,6 +39,8 @@ export default defineComponent({
   setup(props) {
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as { viewerStates: ViewState[] }
+    propst.viewerStates.filter(v => v.user.id)
+
     const styles = useStyles()
     return { styles, propst }
   }
