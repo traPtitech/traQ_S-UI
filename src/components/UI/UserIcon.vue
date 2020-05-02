@@ -5,7 +5,9 @@
     :class="$style.container"
     :style="styles.container"
   >
-    <!-- TODO: Badge -->
+    <div v-if="hasNotification" :class="$style.indicator">
+      <notification-indicator />
+    </div>
   </div>
 </template>
 
@@ -21,11 +23,15 @@ import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
 import { useUserModalOpener } from '@/use/modalOpener'
+import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
 
 type IconSize = 160 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
 export default defineComponent({
   name: 'UserIcon',
+  components: {
+    NotificationIndicator
+  },
   props: {
     userId: {
       type: String as PropType<UserId>,
@@ -37,6 +43,10 @@ export default defineComponent({
       default: 36
     },
     preventModal: {
+      type: Boolean,
+      default: false
+    },
+    hasNotification: {
       type: Boolean,
       default: false
     }
@@ -73,6 +83,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: relative;
   border-radius: 100vw;
   flex: {
     shrink: 0;
@@ -86,5 +97,10 @@ export default defineComponent({
   &[role='button'] {
     cursor: pointer;
   }
+}
+.indicator {
+  position: absolute;
+  top: 1px;
+  right: 1px;
 }
 </style>
