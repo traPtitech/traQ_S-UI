@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="$style.container">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -110,6 +110,10 @@ export default defineComponent({
 <style lang="scss" module>
 $messagePadding: 32px;
 $messagePaddingMobile: 16px;
+
+.container {
+  display: contents;
+}
 
 .userIcon {
   grid-area: user-icon;

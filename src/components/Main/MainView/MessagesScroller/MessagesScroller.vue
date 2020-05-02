@@ -1,23 +1,18 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div ref="viewportRef" :class="$style.viewport">
-      <div
-        v-for="(messageId, index) in messageIds"
-        :key="messageId"
-        :class="$style.messageContainer"
-      >
+      <div v-for="(messageId, index) in messageIds" :key="messageId">
         <messages-scroller-day-separator
           v-if="dayDiff(index)"
           :message-id="messageId"
         />
-        <message-selector
+        <component
+          :is="messageComponent"
+          :class="$style.element"
           :message-id="messageId"
           :is-entry-message="entryMessageId === messageId"
-          :view-info="state.primary"
-          :is-reached-end="isReachedEnd"
-          :is-reached-latest="isReachedLatest"
-          :is-loading="isLoading"
-          :last-loading-direction="lastLoadingDirection"
+          @change-height="onChangeHeight"
+          @entry-message-loaded="onEntryMessageLoaded"
         />
       </div>
     </div>
@@ -41,12 +36,12 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
+import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
 import MessagesScrollerDaySeparator from './MessagesScrollerDaySeparator.vue'
-import MessageSelector from '@/components/Main/MainView/MessagesScroller/MessageSelector.vue'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -84,8 +79,8 @@ export default defineComponent({
   name: 'MessagesScroller',
   components: {
     MessageElement,
-    MessagesScrollerDaySeparator,
-    MessageSelector
+    ClipElement,
+    MessagesScrollerDaySeparator
   },
   props: {
     messageIds: {
@@ -108,14 +103,19 @@ export default defineComponent({
     const rootRef = ref<HTMLElement>(null)
     const state = reactive({
       height: 0,
-      scrollTop: 0,
-      primary: computed(() => store.state.ui.mainView.primaryView)
+      scrollTop: 0
     })
 
     const {
       onChangeHeight,
       onEntryMessageLoaded
     } = useMessageScrollerElementResizeObserver(rootRef, props, state)
+
+    const messageComponent = computed(() =>
+      store.state.ui.mainView.primaryView.type === 'clips'
+        ? ClipElement
+        : MessageElement
+    )
 
     onMounted(() => {
       state.height = rootRef.value?.scrollHeight ?? 0
@@ -180,7 +180,8 @@ export default defineComponent({
       handleScroll,
       onChangeHeight,
       onEntryMessageLoaded,
-      dayDiff
+      dayDiff,
+      messageComponent
     }
   }
 })
@@ -194,15 +195,15 @@ export default defineComponent({
   padding: 12px 0;
 }
 
-.messageContainer {
-  display: contents;
-}
-
 .viewport {
   display: flex;
   flex-flow: column;
   justify-content: flex-end;
   min-height: 100%;
+}
+
+.element {
+  margin: 4px 0;
 }
 
 .bottomSpacer {
