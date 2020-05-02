@@ -3,6 +3,21 @@
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
     <span :class="$style.name" :style="styles.name">@{{ state.name }}</span>
+    <icon
+      v-if="createdAt !== updatedAt"
+      :class="$style.date"
+      :style="styles.date"
+      :width="12"
+      :height="12"
+      name="pencil"
+      mdi
+    />
+    <span
+      v-if="createdAt !== updatedAt"
+      :class="$style.edit"
+      :style="styles.date"
+      >編集済み</span
+    >
     <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
 </template>
@@ -19,6 +34,7 @@ import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = () =>
   reactive({
@@ -46,7 +62,7 @@ export default defineComponent({
       required: true
     }
   },
-  components: { GradeBadge },
+  components: { GradeBadge, Icon },
   setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.users[props.userId]),
@@ -90,6 +106,10 @@ export default defineComponent({
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.edit {
+  font-size: 0.75rem;
 }
 
 .date {
