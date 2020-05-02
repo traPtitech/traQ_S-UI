@@ -6,11 +6,10 @@ const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId | DMChannelId) => {
     // 未読を除去する
     // TODO: 新着メッセージ基準設定などの処理
-    store.commit.domain.messagesView.setUnreadSince('')
-    if (store.state.domain.me.subscriptionMap[id] > 0) {
-      store.commit.domain.messagesView.setUnreadSince(
-        store.state.domain.me.unreadChannelsSet[id]?.since ?? ''
-      )
+    store.commit.domain.messagesView.unsetUnreadSince()
+    const unreadChannel = store.state.domain.me.unreadChannelsSet[id]
+    if (store.state.domain.me.subscriptionMap[id] > 0 && unreadChannel) {
+      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
     }
     if (id in store.state.domain.me.unreadChannelsSet) {
       store.dispatch.domain.me.readChannel({ channelId: id })
