@@ -17,18 +17,22 @@ export const actions = defineActions({
       reader.readAsDataURL(file)
       const index = state.attachments.length
 
-      reader.addEventListener('load', event => {
-        // `readAsDataURL`を用いるため、結果の型はstring
-        // see: https://developer.mozilla.org/ja/docs/Web/API/FileReader/result
-        const thumbnailDataUrl = event.target?.result as string
-        if (!thumbnailDataUrl) {
-          return
-        }
-        commit.addThumbnailTo({
-          index,
-          thumbnailDataUrl
-        })
-      })
+      reader.addEventListener(
+        'load',
+        event => {
+          // `readAsDataURL`を用いるため、結果の型はstring
+          // see: https://developer.mozilla.org/ja/docs/Web/API/FileReader/result
+          const thumbnailDataUrl = event.target?.result as string
+          if (!thumbnailDataUrl) {
+            return
+          }
+          commit.addThumbnailTo({
+            index,
+            thumbnailDataUrl
+          })
+        },
+        { once: true }
+      )
     }
     commit.addAttachment({
       type: fileType,

@@ -10,19 +10,28 @@ const useAttachments = () => {
   const input = document.createElement('input')
   input.type = 'file'
   input.multiple = true
-  input.addEventListener('change', () => {
+
+  const onChange = () => {
     for (const file of input.files ?? []) {
       store.dispatch.ui.fileInput.addAttachment(file)
     }
     input.files = null
-  })
+  }
+
+  input.addEventListener('change', onChange)
 
   const addAttachment = () => {
     input.click()
   }
+
+  const destroy = () => {
+    input.removeEventListener('change', onChange)
+  }
+
   return {
     attachmentsState: state,
-    addAttachment
+    addAttachment,
+    destroy
   }
 }
 

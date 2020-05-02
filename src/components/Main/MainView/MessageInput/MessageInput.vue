@@ -41,7 +41,8 @@ import {
   defineComponent,
   reactive,
   PropType,
-  computed
+  computed,
+  onBeforeUnmount
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -92,7 +93,12 @@ export default defineComponent({
       onModifierKeyDown,
       onModifierKeyUp
     } = useTextInput()
-    const { attachmentsState, addAttachment } = useAttachments()
+    const { attachmentsState, addAttachment, destroy } = useAttachments()
+
+    onBeforeUnmount(() => {
+      destroy()
+    })
+
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(
       computed(() => props.channelId),

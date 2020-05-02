@@ -100,9 +100,13 @@ export default class AudioStreamMixer {
     )
     if (suspended) {
       await this.context.resume()
-      source.addEventListener('ended', () => {
-        this.context.suspend()
-      })
+      source.addEventListener(
+        'ended',
+        () => {
+          this.context.suspend()
+        },
+        { once: true }
+      )
     }
     source.start(0)
   }
