@@ -1,6 +1,6 @@
 <template>
   <div
-    @click.stop="onClick"
+    @click.stop="openModal"
     :role="isClickable ? 'button' : 'img'"
     :class="$style.container"
     :style="styles.container"
@@ -20,6 +20,7 @@ import { makeStyles } from '@/lib/styles'
 import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
+import { useUserModalOpener } from '@/use/modalOpener'
 
 type IconSize = 160 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
@@ -58,25 +59,13 @@ export default defineComponent({
           : undefined
       }))
     })
-    const isClickable = computed(
-      () =>
-        user.value &&
-        !props.preventModal &&
-        !(user.value.bot && user.value.name.startsWith('Webhook#')) // Webhookはbotかつ`Webhook#`で始まるidのユーザー
-    )
-    const onClick = () => {
-      if (!isClickable.value) {
-        return
-      }
-      store.dispatch.ui.modal.pushModal({
-        type: 'user',
-        id: props.userId
-      })
-    }
+
+    const { isClickable, openModal } = useUserModalOpener(props, user)
+
     return {
       styles,
       isClickable,
-      onClick
+      openModal
     }
   }
 })
