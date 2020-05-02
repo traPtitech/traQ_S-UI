@@ -69,10 +69,13 @@ export default defineComponent({
 .header {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
 }
 
 .displayName {
   font-weight: bold;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 
 .badge {
@@ -82,6 +85,11 @@ export default defineComponent({
 .name {
   margin-left: 4px;
   font-size: 0.8rem;
+
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .date {

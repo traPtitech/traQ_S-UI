@@ -119,6 +119,8 @@ $currentChannelSize: 1.5rem;
 
 .container {
   height: 100%;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 .ancestor {
   font-size: $ancestorSize;
