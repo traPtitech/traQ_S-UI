@@ -30,7 +30,7 @@ export default defineComponent({
       color: theme.ui.tertiary
     }))
     const onClick = () => {
-      if (props.user.bot) {
+      if (props.user.bot && props.user.name.startsWith('Webhook#')) {
         return
       }
       changeRouteByPath(constructUserPath(props.user.name))
