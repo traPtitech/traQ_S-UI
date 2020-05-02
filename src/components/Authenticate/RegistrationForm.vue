@@ -20,7 +20,7 @@
       :class="$style.item"
       @input="setName"
     />
-    <div :style="styles.error" :class="$style.error">
+    <div :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
@@ -30,22 +30,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useLogin from './use/login'
-import { makeStyles } from '@/lib/styles'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
-
-const useStyles = () =>
-  reactive({
-    forgotPassword: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    error: makeStyles(theme => ({
-      color: theme.accent.error
-    }))
-  })
 
 export default defineComponent({
   name: 'RegistrationForm',
@@ -56,8 +45,7 @@ export default defineComponent({
   },
   setup() {
     const { loginState, login, loginExternal, setName, setPass } = useLogin()
-    const styles = useStyles()
-    return { loginState, styles, setName, setPass, login, loginExternal }
+    return { loginState, setName, setPass, login, loginExternal }
   }
 })
 </script>
@@ -71,6 +59,7 @@ export default defineComponent({
   margin-bottom: 48px;
 }
 .forgotPassword {
+  @include color-ui-secondary;
   display: block;
   margin-top: 16px;
   font-size: 0.75rem;
@@ -94,5 +83,8 @@ export default defineComponent({
 }
 .exLoginButton {
   margin: 0 8px;
+}
+.error {
+  color: $theme-accent-error;
 }
 </style>

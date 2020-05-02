@@ -1,0 +1,30 @@
+@import './variables';
+
+@mixin background-accent-primary {
+    background: $theme-accent-primary;
+}
+@mixin background-primary {
+    background: $theme-background-primary;
+}
+@mixin background-secondary {
+    background: $theme-background-secondary;
+}
+@mixin background-tertiary {
+    background: $theme-background-tertiary;
+}
+
+@mixin color-accent-primary {
+    color: $theme-accent-primary;
+}
+@mixin color-ui-primary {
+    color: $theme-ui-primary;
+}
+@mixin color-ui-secondary {
+    color: $theme-ui-secondary;
+}
+@mixin color-ui-tertiary {
+    color: $theme-ui-tertiary;
+}
+@mixin color-text-primary {
+    color: $theme-text-primary;
+}

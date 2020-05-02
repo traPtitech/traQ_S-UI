@@ -1,11 +1,13 @@
 import store from '@/store'
-import { Theme } from '@/types/theme'
+import { Theme, ThemeVariables } from '@/types/theme'
 import { computed } from '@vue/composition-api'
 import * as CSS from 'csstype'
 
 export type ThemeClaim<T> = (theme: Theme, common: typeof commonStyles) => T
 
-export const makeStyles = (claim: ThemeClaim<CSS.Properties>) => {
+export type ThemeVariablesOrProperties = CSS.Properties | ThemeVariables
+
+export const makeStyles = (claim: ThemeClaim<ThemeVariablesOrProperties>) => {
   return computed(() =>
     claim(store.getters.app.themeSettings.currentTheme, commonStyles)
   )

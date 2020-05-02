@@ -19,12 +19,11 @@
         href="https://portal.trap.jp/reset-password"
         v-show="state.showPasswordResetLink"
         :class="$style.forgotPassword"
-        :style="styles.forgotPassword"
       >
         パスワードを忘れた
       </a>
     </span>
-    <div :style="styles.error" :class="$style.error">
+    <div :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
@@ -73,7 +72,6 @@
 import { computed, defineComponent, reactive } from '@vue/composition-api'
 import useLogin from './use/login'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { isIOSApp } from '@/lib/util/browser'
 import useRedirectParam from './use/redirectParam'
 import AuthenticateInput from './AuthenticateInput.vue'
@@ -81,16 +79,6 @@ import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
 import AuthenticateButtonSecondary from './AuthenticateButtonSecondary.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
-
-const useStyles = () =>
-  reactive({
-    forgotPassword: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    error: makeStyles(theme => ({
-      color: theme.accent.error
-    }))
-  })
 
 export default defineComponent({
   name: 'LoginForm',
@@ -106,7 +94,6 @@ export default defineComponent({
     const { loginState, login, loginExternal, setName, setPass } = useLogin(
       redirectState
     )
-    const styles = useStyles()
     const isIOS = isIOSApp()
     const state = reactive({
       // 簡易的にhost名で分岐させてる
@@ -119,7 +106,6 @@ export default defineComponent({
     return {
       state,
       loginState,
-      styles,
       setName,
       setPass,
       login,
@@ -140,6 +126,7 @@ export default defineComponent({
   margin-bottom: 48px;
 }
 .forgotPassword {
+  @include color-ui-secondary;
   display: block;
   margin-top: 16px;
   font-size: 0.75rem;
@@ -165,6 +152,7 @@ export default defineComponent({
   margin: 0 8px;
 }
 .error {
+  color: $theme-accent-error;
   font-weight: bold;
 }
 </style>

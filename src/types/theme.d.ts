@@ -22,3 +22,19 @@ export interface Theme {
     secondary: string
   }
 }
+
+export interface ThemeVariables {
+  '--theme-accent-primary': string
+  '--theme-accent-notification': string
+  '--theme-accent-online': string
+  '--theme-accent-error': string
+  '--theme-background-primary': string
+  '--theme-background-secondary': string
+  '--theme-background-tertiary': string
+  '--theme-background-secondarySub': string
+  '--theme-ui-primary': string
+  '--theme-ui-secondary': string
+  '--theme-ui-tertiary': string
+  '--theme-text-primary': string
+  '--theme-text-secondary': string
+}

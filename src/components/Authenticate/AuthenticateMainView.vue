@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <authenticate-modal>
       <login-form v-if="type === 'login'" />
       <registration-form v-if="type === 'registration'" />
@@ -9,20 +9,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
 import ConsentForm from './ConsentForm/ConsentForm.vue'
 import { PageType } from '@/views/Auth.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'AuthenticateMainView',
@@ -39,14 +31,14 @@ export default defineComponent({
     }
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   width: 100vw;
   height: 100vh;
   display: flex;

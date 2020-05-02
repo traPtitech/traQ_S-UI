@@ -1,5 +1,5 @@
 <template>
-  <div :style="styles.container">
+  <div :class="$style.container">
     <authenticate-header :class="$style.header" title="OAuth認可" />
     <client-description
       v-if="state.client"
@@ -11,7 +11,7 @@
       {{ state.client.name }}がtraQアカウントへのアクセスを要求しています
     </p>
     <client-scopes :scopes="state.scopes" />
-    <div :style="styles.error" :class="$style.error">
+    <div :class="$style.error">
       <span v-if="state.error">{{ state.error }}</span>
     </div>
     <div :class="$style.buttons">
@@ -26,24 +26,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useConsent from './use/consent'
-import { makeStyles } from '@/lib/styles'
 import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
 import AuthenticateButtonPrimary from '../AuthenticateButtonPrimary.vue'
 import AuthenticateButtonSecondary from '../AuthenticateButtonSecondary.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    error: makeStyles(theme => ({
-      color: theme.accent.error
-    }))
-  })
 
 export default defineComponent({
   name: 'ConsentForm',
@@ -55,8 +44,6 @@ export default defineComponent({
     AuthenticateButtonSecondary
   },
   setup(_, context) {
-    const styles = useStyles()
-
     const {
       scopes: rawScopes,
       client_id: rawClientId
@@ -67,12 +54,15 @@ export default defineComponent({
       clientId: !Array.isArray(rawClientId) ? rawClientId : undefined
     })
 
-    return { state, styles, approve, deny }
+    return { state, approve, deny }
   }
 })
 </script>
 
 <style lang="scss" module>
+.container {
+  @include color-ui-primary;
+}
 .item {
   margin: 24px 0;
   display: block;
@@ -94,5 +84,6 @@ export default defineComponent({
 }
 .error {
   font-weight: bold;
+  color: $theme-accent-error;
 }
 </style>
