@@ -19,115 +19,86 @@
           :class="$style.element"
         />
       </div>
-      <div v-else>
-        <div
+      <template v-else>
+        <users-grade-list
           v-for="userList in userLists"
+          :key="userList.gradeName"
+          :name="userList.gradeName"
+          :users="userList.users"
           :class="$style.list"
-          :key="userList[0]"
-        >
-          <users-separator
-            :name="userList[0]"
-            :is-open="userListFoldingState[userList[0]]"
-            @click.native="onUserListFoldingToggle(userList[0])"
-          />
-          <div v-show="userListFoldingState[userList[0]]">
-            <users-element
-              v-for="user in userList[1]"
-              :key="user.id"
-              :user="user"
-              :class="$style.element"
-            />
-          </div>
-        </div>
-      </div>
+        />
+      </template>
     </navigation-content-container>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  toRefs,
-  set
-} from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import { User } from '@traptitech/traq'
 import { compareStringInsensitive } from '@/lib/util/string'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
-import UsersSeparator from './UsersSeparator.vue'
+import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
+import { UserMap } from '@/store/entities'
+
+interface UsersGradeList {
+  gradeName: string
+  users: User[]
+}
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
   const users = computed(() => store.state.entities.users)
-  const listByGradeName = computed(() => {
+  const listByGradeName = computed((): UsersGradeList[] => {
     if (
       userGroups.value.length === 0 ||
       Object.keys(users.value).length === 0
     ) {
       return []
     }
-    const userGradeEntries: Record<string, User[]> = {}
+    const userGrades: UsersGradeList[] = []
     const categorized = new Set<string>()
 
     // 学年グループ
     for (const group of userGroups.value) {
-      const member = ((
-        group.members.map(member => users.value[member.id]) ?? []
-      ).filter(user => !!user) as User[]).sort((u1, u2) =>
+      const member = (group.members
+        .map(member => users.value[member.id])
+        .filter(user => !!user) as User[]).sort((u1, u2) =>
         compareStringInsensitive(u1.name, u2.name)
       )
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
 
-      userGradeEntries[group.name] = member
+      userGrades.push({ gradeName: group.name, users: member })
 
       member.map(user => user.id).forEach(id => categorized.add(id))
     }
 
     // BOTグループ
-    const bots = (Object.values(users.value).filter(
-      user => user?.bot
-    ) as User[]).sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
+    const bots = Object.values(users.value as UserMap)
+      .filter(user => user.bot)
+      .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
-    const others = (Object.values(users.value).filter(
-      user => user && !categorized.has(user.id)
-    ) as User[]).sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
+    const others = Object.values(users.value as UserMap)
+      .filter(user => user && !categorized.has(user.id))
+      .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
     const result = [
-      ...Object.entries(userGradeEntries).sort(
-        (e1, e2) => compareStringInsensitive(e1[0], e2[0], true) // 学年なので逆順
+      ...userGrades.sort(
+        (e1, e2) => compareStringInsensitive(e1.gradeName, e2.gradeName, true) // 学年なので逆順
       )
     ]
-    if (others.length > 0) result.push(['Others', others])
-    if (bots.length > 0) result.push(['BOT', bots])
+    if (others.length > 0) result.push({ gradeName: 'Others', users: others })
+    if (bots.length > 0) result.push({ gradeName: 'BOT', users: bots })
 
     return result
   })
   return listByGradeName
-}
-
-const useUserListFolding = () => {
-  const state = reactive({
-    userListFoldingState: {} as Record<string, boolean>
-  })
-  const onUserListFoldingToggle = (userGroupName: string) => {
-    if (state.userListFoldingState[userGroupName]) {
-      state.userListFoldingState[userGroupName] = false
-    } else {
-      set(state.userListFoldingState, userGroupName, true)
-    }
-  }
-  return {
-    ...toRefs(state),
-    onUserListFoldingToggle
-  }
 }
 
 const useUserListFilter = () => {
@@ -147,20 +118,14 @@ export default defineComponent({
     EmptyState,
     NavigationContentContainer,
     UsersElement,
-    UsersSeparator,
+    UsersGradeList,
     FilterInput
   },
   setup() {
     const userLists = useListByGradeName()
-    const {
-      userListFoldingState,
-      onUserListFoldingToggle
-    } = useUserListFolding()
     const { userListFilterState, setQuery } = useUserListFilter()
     return {
       userLists,
-      userListFoldingState,
-      onUserListFoldingToggle,
       userListFilterState,
       setQuery
     }
@@ -176,7 +141,6 @@ export default defineComponent({
   margin: 8px 0;
 }
 .list {
-  cursor: pointer;
   margin: 16px 0px;
 }
 </style>
