@@ -48,7 +48,7 @@ export const mutations = defineMutations<S>()({
       Vue.set(state.unreadChannelsSet, message.channelId, {
         ...oldUnreadChannel,
         count: oldUnreadChannel.count + 1,
-        updatedAt: new Date().toISOString()
+        updatedAt: message.createdAt
       })
     } else {
       Vue.set(state.unreadChannelsSet, message.channelId, {
@@ -56,7 +56,7 @@ export const mutations = defineMutations<S>()({
         count: 1,
         noticeable,
         since: message.createdAt,
-        updatedAt: new Date().toISOString()
+        updatedAt: message.createdAt
       })
     }
   },

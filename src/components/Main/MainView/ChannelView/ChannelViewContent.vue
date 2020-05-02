@@ -6,7 +6,6 @@
       :is-reached-latest="isReachedLatest"
       :entry-message-id="entryMessageId"
       :is-loading="isLoading"
-      :channel-id="channelId"
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"

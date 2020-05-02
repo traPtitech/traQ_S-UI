@@ -42,7 +42,7 @@ import {
   Ref,
   onBeforeUnmount
 } from '@vue/composition-api'
-import { MessageId, ChannelId } from '@/types/entity-ids'
+import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
@@ -104,10 +104,6 @@ export default defineComponent({
     },
     lastLoadingDirection: {
       type: String as PropType<LoadingDirection>,
-      required: true
-    },
-    channelId: {
-      type: String as PropType<ChannelId>,
       required: true
     }
   },

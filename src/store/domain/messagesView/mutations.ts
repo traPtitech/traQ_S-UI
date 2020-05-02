@@ -97,5 +97,8 @@ export const mutations = defineMutations<S>()({
   },
   setUnreadSince(state, since: string) {
     state.unreadSince = since
+  },
+  unsetUnreadSince(state) {
+    state.unreadSince = undefined
   }
 })
