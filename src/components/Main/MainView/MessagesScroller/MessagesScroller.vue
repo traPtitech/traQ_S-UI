@@ -124,13 +124,13 @@ export default defineComponent({
       return getFullDayString(new Date(message.createdAt))
     }
 
-    const unreadIndex = computed(() =>
-      props.messageIds.findIndex(
-        id =>
-          store.state.entities.messages[id]?.createdAt ===
-          store.state.domain.messagesView.unreadSince
+    const unreadIndex = computed(() => {
+      const unreadSince = store.state.domain.messagesView.unreadSince
+      if (!unreadSince) return -1
+      return props.messageIds.findIndex(
+        id => store.state.entities.messages[id]?.createdAt === unreadSince
       )
-    )
+    })
 
     const {
       onChangeHeight,
