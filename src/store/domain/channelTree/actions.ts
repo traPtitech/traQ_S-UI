@@ -4,7 +4,7 @@ import { Channel } from '@traptitech/traq'
 import { compareString } from '@/lib/util/string'
 import { ChannelId } from '@/types/entity-ids'
 import { channelTree } from './index'
-import { ChannelTreeNode, rootChannelId } from './state'
+import { ChannelTreeNode, rootChannelId, ChannelTree } from './state'
 import { ActionContext } from 'vuex'
 
 export const channelTreeActionContext = (
@@ -82,6 +82,14 @@ export const actions = defineActions({
     dispatch.constructChannelTree()
     dispatch.constructHomeChannelTree()
   },
+  // addChannelTree(context, channel: Channel) {
+  //   const { commit, state, getters } = channelTreeActionContext(context)
+  //   let isReached = false
+  //   let channelTreeNodes: ChannelTreeNode[] = getters.getChannelTree
+  //   while (!isReached) {
+  //     let nextNodes: ChannelTreeNode[] = []
+  //   }
+  // },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)

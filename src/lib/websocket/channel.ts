@@ -8,6 +8,7 @@ import {
   ChannelUnstaredEvent,
   ChannelViewersChangedEvent
 } from './events'
+import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 
 const isCurrentChannel = (channelId: string) => {
   const primaryView = store.state.ui.mainView.primaryView
@@ -20,6 +21,15 @@ const isCurrentChannel = (channelId: string) => {
 export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
   const res = await apis.getChannel(id)
   store.commit.entities.addChannel({ id, entity: res.data })
+  if (res.data.parentId) {
+    // 親チャンネルの`children`が不整合になるので再取得
+    const parentRes = await apis.getChannel(res.data.parentId)
+    store.commit.entities.addChannel({
+      id: parentRes.data.id,
+      entity: parentRes.data
+    })
+  }
+  await store.dispatch.domain.channelTree.constructChannelTree()
 }
 
 export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
