@@ -37,10 +37,10 @@ export default defineComponent({
     style: solid;
     width: 2px;
     radius: 4px;
-    color: var(--theme-ui-secondary);
+    color: $theme-ui-secondary;
   }
-  color: var(--theme-ui-secondary);
-  background: var(--theme-background-primary);
+  color: $theme-ui-secondary;
+  background: $theme-background-primary;
   font-weight: bold;
   display: flex;
   align-items: center;
