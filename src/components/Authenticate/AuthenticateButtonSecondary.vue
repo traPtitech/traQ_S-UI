@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="$style.container"
-    :style="styles.container"
-    @click="context.emit('click')"
-  >
+  <button :class="$style.container" @click="context.emit('click')">
     <icon
       v-if="iconName"
       :class="$style.icon"
@@ -15,17 +11,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      borderColor: theme.ui.secondary,
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'AuthenticateButtonSecondary',
@@ -38,8 +25,7 @@ export default defineComponent({
     iconMdi: { type: Boolean, default: false }
   },
   setup(props, context: SetupContext) {
-    const styles = useStyles()
-    return { context, styles }
+    return { context }
   }
 })
 </script>
@@ -51,11 +37,17 @@ export default defineComponent({
     style: solid;
     width: 2px;
     radius: 4px;
+    color: var(--theme-ui-secondary);
   }
+  color: var(--theme-ui-secondary);
+  background: var(--theme-background-primary);
   font-weight: bold;
-  cursor: pointer;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  &[disabled] {
+    cursor: not-allowed;
+  }
 }
 .icon {
   margin-right: 12px;

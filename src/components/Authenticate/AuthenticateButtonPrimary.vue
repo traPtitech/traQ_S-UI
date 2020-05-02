@@ -1,7 +1,6 @@
 <template>
   <button
     :class="$style.container"
-    :style="styles.container"
     :disabled="disabled"
     @click="context.emit('click')"
   >
@@ -10,18 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { disabled: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      borderColor: theme.accent.primary,
-      background: theme.accent.primary,
-      color: 'white',
-      cursor: props.disabled ? 'not-allowed' : 'pointer'
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AuthenticateButtonPrimary',
@@ -36,8 +24,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
-    return { context, styles }
+    return { context }
   }
 })
 </script>
@@ -49,7 +36,14 @@ export default defineComponent({
     style: solid;
     width: 2px;
     radius: 4px;
+    color: var(--theme-accent-primary);
   }
+  background: var(--theme-accent-primary);
+  color: white;
   font-weight: bold;
+  cursor: pointer;
+  &[disabled] {
+    cursor: not-allowed;
+  }
 }
 </style>
