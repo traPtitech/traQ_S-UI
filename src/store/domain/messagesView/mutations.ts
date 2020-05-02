@@ -95,7 +95,7 @@ export const mutations = defineMutations<S>()({
   unsetEditingMessageId(state) {
     state.editingMessageId = undefined
   },
-  setUnreadCount(state, count: number) {
-    state.unreadCount = count
+  setUnreadSince(state, since: string) {
+    state.unreadSince = since
   }
 })

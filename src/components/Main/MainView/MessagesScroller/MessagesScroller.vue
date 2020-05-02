@@ -6,9 +6,7 @@
         :key="messageId"
         :class="$style.messageContainer"
       >
-        <messages-scroller-unread-separator
-          v-if="messageIds.length - index === unreadCount"
-        />
+        <messages-scroller-unread-separator v-if="index === unreadIndex" />
         <messages-scroller-day-separator
           v-if="dayDiff(index)"
           :message-id="messageId"
@@ -116,8 +114,12 @@ export default defineComponent({
       scrollTop: 0
     })
 
-    const unreadCount = computed(
-      () => store.state.domain.messagesView.unreadCount
+    const unreadIndex = computed(() =>
+      props.messageIds.findIndex(
+        id =>
+          store.state.entities.messages[id]?.createdAt ===
+          store.state.domain.messagesView.unreadSince
+      )
     )
 
     const {
@@ -187,7 +189,7 @@ export default defineComponent({
       rootRef,
       handleScroll,
       onChangeHeight,
-      unreadCount,
+      unreadIndex,
       onEntryMessageLoaded,
       dayDiff
     }

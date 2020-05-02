@@ -55,7 +55,7 @@ export const mutations = defineMutations<S>()({
         channelId: message.channelId,
         count: 1,
         noticeable,
-        since: new Date().toISOString(),
+        since: message.createdAt,
         updatedAt: new Date().toISOString()
       })
     }
