@@ -18,7 +18,7 @@ import {
 } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
-import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
 const useLeafContainerStyle = (selected: boolean) =>
   makeStyles(theme => ({

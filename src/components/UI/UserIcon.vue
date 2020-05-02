@@ -23,7 +23,7 @@ import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
 import { useUserModalOpener } from '@/use/modalOpener'
-import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
 type IconSize = 160 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 

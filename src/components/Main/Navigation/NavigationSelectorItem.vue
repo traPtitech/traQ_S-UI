@@ -18,7 +18,7 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles, ThemeClaim } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import Icon from '@/components/UI/Icon.vue'
-import NotificationIndicator from '@/components/UI/NotificationIndiator.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
 const useStyles = (props: {
   isSelected: boolean
