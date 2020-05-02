@@ -37,7 +37,12 @@ export default defineComponent({
 .container {
   width: 100%;
   display: flex;
-  padding: 16px;
+  padding: {
+    left: 16px;
+    right: 16px;
+    bottom: 12px;
+  }
+  margin-top: 4px;
   overflow-x: scroll;
 }
 .element {
