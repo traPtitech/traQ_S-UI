@@ -4,20 +4,17 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    class="icon"
-    :style="{ color: color }"
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
   >
-    <path :d="getMdiPath(name)" />
+    <path :d="getMdiPath(name)" fill="currentColor" />
   </svg>
   <component
     v-else
     :is="svgComponent"
     :width="size"
     :height="size"
-    :style="{ color: color }"
     view-box="0 0 24 24"
     class="icon"
     v-bind="context.attrs"
@@ -43,10 +40,6 @@ export default defineComponent({
       type: Number,
       default: 24
     },
-    color: {
-      type: String,
-      default: 'currentColor'
-    },
     mdi: {
       type: Boolean,
       default: false
@@ -70,9 +63,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss">
-.icon {
-  fill: currentColor;
-}
-</style>
