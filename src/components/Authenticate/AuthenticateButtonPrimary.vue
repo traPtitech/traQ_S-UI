@@ -36,9 +36,9 @@ export default defineComponent({
     style: solid;
     width: 2px;
     radius: 4px;
-    color: var(--theme-accent-primary);
+    color: $theme-accent-primary;
   }
-  background: var(--theme-accent-primary);
+  background: $theme-accent-primary;
   color: white;
   font-weight: bold;
   cursor: pointer;
