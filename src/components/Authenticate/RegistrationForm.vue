@@ -32,7 +32,6 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import useLogin from './use/login'
-
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
