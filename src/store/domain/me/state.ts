@@ -1,4 +1,4 @@
-import { WebhookId, StampId, ChannelId } from '@/types/entity-ids'
+import { WebhookId, StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   MyUserDetail,
@@ -10,7 +10,7 @@ export interface S {
   webhooks: WebhookId[]
   stampHistory: Record<StampId, Date>
 
-  unreadChannelsSet: Record<ChannelId, UnreadChannel>
+  unreadChannelsSet: Record<ChannelId | DMChannelId, UnreadChannel>
   staredChannelSet: Record<ChannelId, true>
   subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
 }

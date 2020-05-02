@@ -7,6 +7,9 @@
     >
       <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
     </div>
+    <div v-if="hasNotification" :class="$style.indicator">
+      <notification-indicator :size="6" />
+    </div>
   </div>
 </template>
 
@@ -15,6 +18,7 @@ import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles, ThemeClaim } from '@/lib/styles'
 import { transparentize } from '@/lib/util/color'
 import Icon from '@/components/UI/Icon.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
 const useStyles = (props: {
   isSelected: boolean
@@ -41,7 +45,7 @@ const useStyles = (props: {
 
 export default defineComponent({
   name: 'NavigationSelectorItem',
-  components: { Icon },
+  components: { Icon, NotificationIndicator },
   props: {
     iconName: {
       type: String,
@@ -70,6 +74,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,5 +93,10 @@ export default defineComponent({
   &[data-is-selected] {
     opacity: 1;
   }
+}
+.indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 </style>

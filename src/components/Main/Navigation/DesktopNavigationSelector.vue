@@ -6,6 +6,7 @@
       :class="$style.item"
       @click.native="onNavigationItemClick(item.type)"
       :is-selected="currentNavigation === item.type"
+      :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
     />

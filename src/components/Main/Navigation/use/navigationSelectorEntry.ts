@@ -1,5 +1,5 @@
 import store from '@/store'
-import { computed } from '@vue/composition-api'
+import { computed, reactive } from '@vue/composition-api'
 import {
   NavigationItemType,
   EphemeralNavigationItemType
@@ -10,6 +10,7 @@ export type NavigationSelectorEntry = {
   type: NavigationItemType
   iconName: string
   iconMdi?: boolean
+  hasNotification?: boolean
 }
 
 export type EphemeralNavigationSelectorEntry = {
@@ -19,11 +20,15 @@ export type EphemeralNavigationSelectorEntry = {
   colorClaim?: ThemeClaim<string> // 色
 }
 
-export const items: NavigationSelectorEntry[] = [
+export const createItems = (notificationState: {
+  channel: boolean
+  dm: boolean
+}): NavigationSelectorEntry[] => [
   {
     type: 'home',
     iconName: 'home',
-    iconMdi: true
+    iconMdi: true,
+    hasNotification: notificationState.channel
   },
   {
     type: 'channels',
@@ -35,7 +40,8 @@ export const items: NavigationSelectorEntry[] = [
   },
   {
     type: 'users',
-    iconName: 'user'
+    iconName: 'user',
+    hasNotification: notificationState.dm
   },
   {
     type: 'clips',
@@ -56,16 +62,33 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
+  const unreadChannels = computed(() =>
+    Object.values(store.state.domain.me.unreadChannelsSet)
+  )
+  const notificationState = reactive({
+    channel: computed(() =>
+      unreadChannels.value.some(
+        c => c.channelId in store.state.entities.channels
+      )
+    ),
+    dm: computed(() =>
+      unreadChannels.value.some(
+        c => c.channelId in store.state.entities.dmChannels
+      )
+    )
+  })
+  const entries = computed(() => createItems(notificationState))
+
   const hasActiveQallSession = computed(() => {
     return !!store.getters.app.rtc.qallSession
   })
-  const entries = computed(() => items)
   const ephemeralEntries = computed(
     () =>
       [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(
         e => !!e
       ) as EphemeralNavigationSelectorEntry[]
   )
+
   return {
     entries,
     ephemeralEntries
