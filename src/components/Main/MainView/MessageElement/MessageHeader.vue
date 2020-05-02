@@ -96,7 +96,7 @@ export default defineComponent({
   color: $theme-ui-secondary;
 }
 
-.editicon {
+.editIcon {
   color: $theme-ui-secondary;
   margin-left: 4px;
 }
