@@ -38,7 +38,7 @@ export const mutations = defineMutations<S>()({
     Vue.set(state.activityTimelineChannelMap, activity.channelId, activity)
 
     // ガーベッジコレクタ
-    if (state.activityTimeline.length > ACTIVITY_LENGTH) {
+    if (state.activityTimeline.length > ACTIVITY_LENGTH * 2) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastActivity = state.activityTimeline.pop()!
       if (
