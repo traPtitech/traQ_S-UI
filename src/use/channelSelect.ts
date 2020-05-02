@@ -6,6 +6,9 @@ const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId | DMChannelId) => {
     // 未読を除去する
     // TODO: 新着メッセージ基準設定などの処理
+    store.commit.domain.messagesView.setUnreadCount(
+      store.state.domain.me.unreadChannelsSet[id]?.count ?? 0
+    )
     if (id in store.state.domain.me.unreadChannelsSet) {
       store.dispatch.domain.me.readChannel({ channelId: id })
     }

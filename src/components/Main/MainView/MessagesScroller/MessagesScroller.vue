@@ -6,6 +6,9 @@
         :key="messageId"
         :class="$style.messageContainer"
       >
+        <messages-scroller-unread-separator
+          v-if="messageIds.length - index === unreadCount"
+        />
         <messages-scroller-day-separator
           v-if="dayDiff(index)"
           :message-id="messageId"
@@ -28,6 +31,7 @@ import {
   defineComponent,
   watch,
   reactive,
+  computed,
   SetupContext,
   ref,
   onMounted,
@@ -35,7 +39,7 @@ import {
   Ref,
   onBeforeUnmount
 } from '@vue/composition-api'
-import { MessageId } from '@/types/entity-ids'
+import { MessageId, ChannelId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
@@ -43,6 +47,7 @@ import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
 import MessagesScrollerDaySeparator from './MessagesScrollerDaySeparator.vue'
+import MessagesScrollerUnreadSeparator from './MessagesScrollerUnreadSeparator.vue'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -80,7 +85,8 @@ export default defineComponent({
   name: 'MessagesScroller',
   components: {
     MessageElement,
-    MessagesScrollerDaySeparator
+    MessagesScrollerDaySeparator,
+    MessagesScrollerUnreadSeparator
   },
   props: {
     messageIds: {
@@ -97,6 +103,10 @@ export default defineComponent({
     lastLoadingDirection: {
       type: String as PropType<LoadingDirection>,
       required: true
+    },
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
     }
   },
   setup(props, context: SetupContext) {
@@ -105,6 +115,10 @@ export default defineComponent({
       height: 0,
       scrollTop: 0
     })
+
+    const unreadCount = computed(
+      () => store.state.domain.messagesView.unreadCount
+    )
 
     const {
       onChangeHeight,
@@ -173,6 +187,7 @@ export default defineComponent({
       rootRef,
       handleScroll,
       onChangeHeight,
+      unreadCount,
       onEntryMessageLoaded,
       dayDiff
     }
