@@ -37,6 +37,9 @@ export interface S {
 
   /** 現在編集中のメッセージID */
   editingMessageId?: MessageId
+
+  /** 現在のチャンネルの未読メッセージの数 */
+  unreadSince: string | undefined
 }
 
 export const state: S = {
@@ -50,5 +53,6 @@ export const state: S = {
   currentViewers: [],
   topic: '',
   subscribers: [],
-  editingMessageId: undefined
+  editingMessageId: undefined,
+  unreadSince: undefined
 }
