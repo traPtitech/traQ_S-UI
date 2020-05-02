@@ -1,8 +1,8 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" @click="openModal">
     {{ user ? user.displayName : 'unknown' }}
     <span :class="$style.numberWrap">
-      <spin-number :value="props.count" />
+      <spin-number :value="count" />
     </span>
   </div>
 </template>
@@ -12,6 +12,7 @@ import { defineComponent, PropType, computed } from '@vue/composition-api'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
+import { useUserModalOpener } from '@/use/modalOpener'
 
 export default defineComponent({
   name: 'StampDetailListElementContent',
@@ -30,7 +31,10 @@ export default defineComponent({
   },
   setup(props) {
     const user = computed(() => store.state.entities.users[props.userId])
-    return { user, props }
+
+    const { openModal } = useUserModalOpener(props, user)
+
+    return { user, openModal }
   }
 })
 </script>
@@ -38,6 +42,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
+  cursor: pointer;
 }
 .numberWrap {
   display: flex;
