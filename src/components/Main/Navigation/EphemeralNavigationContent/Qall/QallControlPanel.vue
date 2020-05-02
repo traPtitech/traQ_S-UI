@@ -102,6 +102,7 @@ export default defineComponent({
   grid-area: info;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .mic {
   grid-area: mic;
