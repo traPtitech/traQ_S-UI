@@ -1,11 +1,7 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <div :class="$style.container" :style="containerStyle" @click="onClick">
     <user-icon :class="$style.icon" :user-id="user.id" :size="36" />
-    <users-element-user-name
-      @click.native="onClick"
-      :user="user"
-      :class="$style.user"
-    />
+    <users-element-user-name :user="user" :class="$style.user" />
   </div>
 </template>
 
