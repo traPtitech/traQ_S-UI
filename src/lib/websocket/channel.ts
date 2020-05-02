@@ -8,7 +8,6 @@ import {
   ChannelUnstaredEvent,
   ChannelViewersChangedEvent
 } from './events'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 
 const isCurrentChannel = (channelId: string) => {
   const primaryView = store.state.ui.mainView.primaryView

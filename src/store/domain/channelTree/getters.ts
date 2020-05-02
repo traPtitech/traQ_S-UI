@@ -1,6 +1,6 @@
 import { defineGetters } from 'direct-vuex'
 import { Channel } from '@traptitech/traq'
-import { S, ChannelTreeNode } from './state'
+import { S } from './state'
 import { moduleGetterContext } from '@/store'
 import { channelTree } from './index'
 
@@ -13,8 +13,5 @@ export const getters = defineGetters<S>()({
     return Object.values(rootState.entities.channels).filter(
       channel => channel.parentId === undefined || channel.parentId === null
     )
-  },
-  getChannelTree(state): ChannelTreeNode[] {
-    return state.channelTree.children
   }
 })
