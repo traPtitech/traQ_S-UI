@@ -36,14 +36,13 @@ export default defineComponent({
       color: theme.ui.tertiary
     }))
 
-    const dmChannelId = computed(
-      () =>
-        Object.values(store.state.entities.dmChannels).find(
-          c => c.userId === props.user.id
-        )?.id ?? ''
+    const dmChannelId = computed(() =>
+      store.getters.entities.DMChannelIdByUserId(props.user.id)
     )
-    const hasNotification = computed(
-      () => !!store.state.domain.me.unreadChannelsSet[dmChannelId.value]
+    const hasNotification = computed(() =>
+      dmChannelId.value
+        ? !!store.state.domain.me.unreadChannelsSet[dmChannelId.value]
+        : false
     )
 
     const { onDMChannelSelect } = useChannelSelect()

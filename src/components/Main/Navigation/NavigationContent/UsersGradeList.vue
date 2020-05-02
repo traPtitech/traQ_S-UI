@@ -3,6 +3,7 @@
     <users-separator
       :name="name"
       :is-open="!isFolding"
+      :has-notification="hasNotification"
       @click.native="toggleFolding"
     />
     <div v-show="isFolding">
@@ -17,10 +18,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from '@vue/composition-api'
+import { defineComponent, ref, PropType, computed } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
+import store from '@/store'
 
 const useFolding = () => {
   const isFolding = ref(false)
@@ -47,9 +49,21 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
     const { isFolding, toggleFolding } = useFolding()
-    return { isFolding, toggleFolding }
+
+    const dmChannelIds = computed(() =>
+      props.users
+        .map(user => store.getters.entities.DMChannelIdByUserId(user.id))
+        .filter((id): id is string => !!id)
+    )
+    const hasNotification = computed(() =>
+      dmChannelIds.value.some(
+        id => !!store.state.domain.me.unreadChannelsSet[id]
+      )
+    )
+
+    return { isFolding, toggleFolding, hasNotification }
   }
 })
 </script>
