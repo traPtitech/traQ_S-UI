@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <div :class="$style.title">
       {{ title }}
     </div>
@@ -7,24 +7,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'MessagesScrollerSeparator',
   props: {
     title: { type: String, required: true }
   },
-  setup(props) {
-    const styles = useStyles()
-    return { styles }
+  setup() {
+    return {}
   }
 })
 </script>
