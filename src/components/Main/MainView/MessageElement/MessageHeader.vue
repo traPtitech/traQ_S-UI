@@ -2,23 +2,16 @@
   <div :class="$style.header">
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
-    <span :class="$style.name" :style="styles.name">@{{ state.name }}</span>
+    <span :class="$style.name">@{{ state.name }}</span>
+    <span :class="$style.date">{{ state.date }}</span>
     <icon
       v-if="createdAt !== updatedAt"
-      :class="$style.date"
-      :style="styles.date"
-      :width="12"
-      :height="12"
+      :class="$style.editIcon"
+      :width="16"
+      :height="16"
       name="pencil"
       mdi
     />
-    <span
-      v-if="createdAt !== updatedAt"
-      :class="$style.edit"
-      :style="styles.date"
-      >編集済み</span
-    >
-    <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
   </div>
 </template>
 
@@ -31,20 +24,9 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    date: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    name: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -74,9 +56,7 @@ export default defineComponent({
     if (state.user === undefined) {
       store.dispatch.entities.fetchUser(props.userId)
     }
-
-    const styles = useStyles()
-    return { state, styles }
+    return { state }
   }
 })
 </script>
@@ -106,14 +86,18 @@ export default defineComponent({
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.edit {
-  font-size: 0.75rem;
+  color: $theme-ui-secondary;
 }
 
 .date {
   @include size-caption;
+  margin-left: 4px;
+  font-size: 0.8rem;
+  color: $theme-ui-secondary;
+}
+
+.editicon {
+  color: $theme-ui-secondary;
   margin-left: 4px;
 }
 </style>
