@@ -15,7 +15,6 @@
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
 import useInput from '@/use/input'
-
 import { randomString } from '@/lib/util/randomString'
 
 export default defineComponent({
