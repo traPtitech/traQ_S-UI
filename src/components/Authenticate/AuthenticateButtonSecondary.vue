@@ -24,7 +24,7 @@ export default defineComponent({
     iconName: String,
     iconMdi: { type: Boolean, default: false }
   },
-  setup(props, context: SetupContext) {
+  setup(props, context) {
     return { context }
   }
 })
