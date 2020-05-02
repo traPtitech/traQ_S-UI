@@ -16,7 +16,7 @@ import { User } from '@traptitech/traq'
 import { makeStyles } from '@/lib/styles'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-import { changeRouteByPath, constructUserPath } from '@/router'
+import useChannelSelect from '@/use/channelSelect'
 import store from '@/store'
 
 export default defineComponent({
@@ -46,11 +46,13 @@ export default defineComponent({
       () => !!store.state.domain.me.unreadChannelsSet[dmChannelId.value]
     )
 
+    const { onDMChannelSelect } = useChannelSelect()
+
     const onClick = () => {
       if (props.user.bot && props.user.name.startsWith('Webhook#')) {
         return
       }
-      changeRouteByPath(constructUserPath(props.user.name))
+      onDMChannelSelect(props.user.name, props.user.id)
     }
 
     return {
