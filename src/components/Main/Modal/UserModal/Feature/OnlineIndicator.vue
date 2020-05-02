@@ -1,5 +1,5 @@
 <template>
-  <span :class="$style.indicator" :style="styles.indicator" />
+  <span :class="$style.indicator" :style="styles.indicator" :title="tooltip" />
 </template>
 
 <script lang="ts">
@@ -13,6 +13,7 @@ import {
 import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
+import { getFullDayWithTimeString } from '@/lib/date'
 
 const useStyles = (isOnline: Ref<boolean>) =>
   reactive({
@@ -28,16 +29,23 @@ export default defineComponent({
     userId: {
       type: String as PropType<UserId>,
       required: true
-    }
+    },
+    lastOnline: String
   },
   setup(props) {
     const isOnline = computed(() =>
       store.getters.domain.isUserOnline(props.userId)
     )
 
+    const tooltip = computed(() =>
+      props.lastOnline
+        ? `Last Online: ${getFullDayWithTimeString(new Date(props.lastOnline))}`
+        : undefined
+    )
+
     const styles = useStyles(isOnline)
 
-    return { styles }
+    return { styles, tooltip }
   }
 })
 </script>

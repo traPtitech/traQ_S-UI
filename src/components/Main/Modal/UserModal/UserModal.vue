@@ -7,8 +7,8 @@
     />
     <user-icon
       v-if="!isMobile"
-      :user-id="user.id"
-      :prevent-modal="true"
+      :user-id="id"
+      prevent-modal
       :size="iconSize"
       :class="$style.icon"
       :style="styles.icon"

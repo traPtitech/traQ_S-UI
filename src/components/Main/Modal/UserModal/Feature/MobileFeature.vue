@@ -10,7 +10,11 @@
     <div :class="$style.name">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <p>
-        <online-indicator :class="$style.name" :user-id="user.id" />
+        <online-indicator
+          :class="$style.name"
+          :user-id="user.id"
+          :last-online="props.detail ? props.detail.lastOnline : undefined"
+        />
         @{{ user.name }}
       </p>
     </div>
