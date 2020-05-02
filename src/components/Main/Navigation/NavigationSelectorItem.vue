@@ -8,7 +8,7 @@
       <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator />
+      <notification-indicator :size="6" />
     </div>
   </div>
 </template>
@@ -96,7 +96,7 @@ export default defineComponent({
 }
 .indicator {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: 8px;
+  right: 8px;
 }
 </style>

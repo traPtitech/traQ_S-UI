@@ -11,6 +11,10 @@ export default defineComponent({
   name: 'NotificationIndicator',
   props: {
     color: String,
+    size: {
+      type: Number,
+      default: 10
+    },
     hasBorder: {
       type: Boolean,
       default: false
@@ -22,7 +26,9 @@ export default defineComponent({
       borderColor:
         props.color ??
         store.getters.app.themeSettings.currentTheme.background.secondary,
-      borderWidth: props.hasBorder ? '2px' : '0'
+      borderWidth: props.hasBorder ? '2px' : '0',
+      width: `${props.size}px`,
+      height: `${props.size}px`
     }))
     return { style }
   }
@@ -31,8 +37,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  width: 10px;
-  height: 10px;
   border-radius: 100vw;
   border-style: solid;
 }
