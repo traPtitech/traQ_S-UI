@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <span v-if="title" :class="$style.logoWithTitle">
       <img src="/img/traq-logo.svg" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
@@ -9,30 +9,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    logoMain: makeStyles(theme => ({
-      fill: theme.accent.primary
-    })),
-    logoType: makeStyles(theme => ({
-      fill: theme.accent.primary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AuthenticateHeader',
   props: {
     title: String
   },
-  setup(props, context: SetupContext) {
-    const styles = useStyles()
-    return { styles }
+  setup() {
+    return {}
   }
 })
 </script>
@@ -40,6 +25,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   height: 48px;
+  color: $theme-ui-primary;
 }
 .logo {
   height: 40px;
