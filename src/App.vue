@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.app" :style="scrollbarStyle" :data-is-mobile="isMobile">
+  <div :class="$style.app" :style="style" :data-is-mobile="isMobile">
     <router-view />
   </div>
 </template>
@@ -65,6 +65,29 @@ const useScrollbarStyle = () =>
       } as Properties)
   )
 
+const useThemeVariables = () =>
+  makeStyles(theme => ({
+    '--theme-accent-primary': theme.accent.primary,
+    '--theme-accent-notification': theme.accent.notification,
+    '--theme-accent-online': theme.accent.online,
+    '--theme-accent-error': theme.accent.error,
+    '--theme-background-primary': theme.background.primary,
+    '--theme-background-secondary': theme.background.secondary,
+    '--theme-background-tertiary': theme.background.tertiary,
+    '--theme-background-secondarySub': theme.background.secondarySub,
+    '--theme-ui-primary': theme.ui.primary,
+    '--theme-ui-secondary': theme.ui.secondary,
+    '--theme-ui-tertiary': theme.ui.tertiary,
+    '--theme-text-primary': theme.text.primary,
+    '--theme-text-secondary': theme.text.secondary
+  }))
+
+const useStyle = () =>
+  computed(() => ({
+    ...useThemeVariables().value,
+    ...useScrollbarStyle().value
+  }))
+
 export default defineComponent({
   name: 'App',
   components: {},
@@ -75,7 +98,7 @@ export default defineComponent({
     useThemeObserver()
     useEcoModeObserver()
 
-    const scrollbarStyle = useScrollbarStyle()
+    const style = useStyle()
 
     onBeforeMount(async () => {
       await store.dispatch.app.fetchVersionInfo()
@@ -83,7 +106,7 @@ export default defineComponent({
 
     return {
       isMobile,
-      scrollbarStyle
+      style
     }
   }
 })
