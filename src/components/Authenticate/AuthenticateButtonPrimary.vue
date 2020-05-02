@@ -31,6 +31,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-accent-primary;
   padding: 12px 64px;
   border: {
     style: solid;
@@ -38,7 +39,6 @@ export default defineComponent({
     radius: 4px;
     color: $theme-accent-primary;
   }
-  background: $theme-accent-primary;
   color: white;
   font-weight: bold;
   cursor: pointer;

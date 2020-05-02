@@ -38,11 +38,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: $theme-background-secondary;
 }
 </style>

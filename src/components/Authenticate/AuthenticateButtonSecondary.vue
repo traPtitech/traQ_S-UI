@@ -32,6 +32,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
+  @include background-primary;
   padding: 12px;
   border: {
     style: solid;
@@ -39,8 +41,6 @@ export default defineComponent({
     radius: 4px;
     color: $theme-ui-secondary;
   }
-  color: $theme-ui-secondary;
-  background: $theme-background-primary;
   font-weight: bold;
   display: flex;
   align-items: center;

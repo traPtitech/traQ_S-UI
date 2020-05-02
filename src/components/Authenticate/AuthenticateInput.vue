@@ -42,19 +42,19 @@ export default defineComponent({
 
 <style lang="scss" module>
 .title {
+  @include color-ui-secondary;
   margin-bottom: 16px;
-  color: $theme-ui-secondary;
   font: {
     size: 1rem;
     weight: bold;
   }
 }
 .input {
+  @include background-secondary;
+  @include color-text-primary;
   width: 100%;
   height: 2rem;
   padding: 0.5rem;
   border-radius: 4px;
-  background: $theme-background-secondary;
-  color: $theme-text-primary;
 }
 </style>

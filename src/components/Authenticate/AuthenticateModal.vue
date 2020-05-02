@@ -15,11 +15,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   border-radius: 4px;
   width: 100%;
   margin: 16px;
   max-width: 480px;
   padding: 48px;
-  background: $theme-background-primary;
 }
 </style>

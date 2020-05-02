@@ -32,14 +32,14 @@ export default defineComponent({
   align-items: center;
 }
 .hr {
+  @include background-tertiary;
   width: 100%;
   height: 2px;
-  background: $theme-ui-tertiary;
 }
 .label {
+  @include background-secondary;
   margin: 0 16px;
   flex-shrink: 0;
   font-weight: bold;
-  color: $theme-ui-secondary;
 }
 </style>

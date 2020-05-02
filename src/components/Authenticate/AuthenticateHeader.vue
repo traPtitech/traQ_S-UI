@@ -24,8 +24,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   height: 48px;
-  color: $theme-ui-primary;
 }
 .logo {
   height: 40px;
