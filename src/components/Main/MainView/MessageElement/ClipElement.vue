@@ -8,11 +8,6 @@
     v-if="state.message"
     :data-is-mobile="isMobile"
   >
-    <message-pinned
-      :message-id="messageId"
-      v-if="state.message.pinned"
-      :class="$style.pinned"
-    />
     <message-contents
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
@@ -25,23 +20,6 @@
         />
       </template>
     </message-contents>
-    <div :class="$style.stampWrapper">
-      <icon
-        name="rounded-triangle"
-        :size="20"
-        v-if="state.message.stamps.length > 0"
-        :class="$style.toggleButton"
-        :style="styles.toggleButton"
-        @click="onStampDetailFoldingToggle"
-      />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-        :is-show-detail="state.stampDetailFoldingState"
-      />
-    </div>
   </div>
 </template>
 

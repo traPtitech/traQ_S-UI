@@ -10,12 +10,14 @@
           v-if="dayDiff(index)"
           :message-id="messageId"
         />
-        <message-element
-          :class="$style.element"
+        <message-selector
           :message-id="messageId"
           :is-entry-message="entryMessageId === messageId"
-          @change-height="onChangeHeight"
-          @entry-message-loaded="onEntryMessageLoaded"
+          :view-info="state.primary"
+          :is-reached-end="isReachedEnd"
+          :is-reached-latest="isReachedLatest"
+          :is-loading="isLoading"
+          :last-loading-direction="lastLoadingDirection"
         />
       </div>
     </div>
@@ -33,7 +35,8 @@ import {
   onMounted,
   PropType,
   Ref,
-  onBeforeUnmount
+  onBeforeUnmount,
+  computed
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
@@ -43,6 +46,7 @@ import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
 import MessagesScrollerDaySeparator from './MessagesScrollerDaySeparator.vue'
+import MessageSelector from '@/components/Main/MainView/MessagesScroller/MessageSelector.vue'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -80,7 +84,8 @@ export default defineComponent({
   name: 'MessagesScroller',
   components: {
     MessageElement,
-    MessagesScrollerDaySeparator
+    MessagesScrollerDaySeparator,
+    MessageSelector
   },
   props: {
     messageIds: {
@@ -103,7 +108,8 @@ export default defineComponent({
     const rootRef = ref<HTMLElement>(null)
     const state = reactive({
       height: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      primary: computed(() => store.state.ui.mainView.primaryView)
     })
 
     const {
@@ -197,10 +203,6 @@ export default defineComponent({
   flex-flow: column;
   justify-content: flex-end;
   min-height: 100%;
-}
-
-.element {
-  margin: 4px 0;
 }
 
 .bottomSpacer {
