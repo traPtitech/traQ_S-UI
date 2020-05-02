@@ -9,6 +9,7 @@
         :text="textFilterState.query"
         @input="setQuery"
         :placeholder="placeholder"
+        disable-ime
       />
       <!--
       <stamp-picker-effect-toggle-button

@@ -7,6 +7,7 @@
       :value="text"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
+      :inputmode="disableIme ? 'url' : undefined"
       @input="onInput"
       type="text"
     />
@@ -19,7 +20,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import useInput from '@/use/input'
 
-const useStyles = (props: { onSecondary: boolean }) =>
+const useStyles = (props: { onSecondary: boolean; disableIme: boolean }) =>
   reactive({
     container: makeStyles(theme => ({
       background: props.onSecondary
@@ -28,7 +29,8 @@ const useStyles = (props: { onSecondary: boolean }) =>
       color: theme.ui.secondary
     })),
     input: makeStyles(theme => ({
-      color: theme.ui.primary
+      color: theme.ui.primary,
+      imeMode: props.disableIme ? 'disabled' : undefined
     }))
   })
 
@@ -53,6 +55,10 @@ export default defineComponent({
     autocapitalize: {
       type: String,
       default: 'off'
+    },
+    disableIme: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
