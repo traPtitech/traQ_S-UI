@@ -10,6 +10,7 @@
         @input="setQuery"
         :placeholder="placeholder"
         disable-ime
+        focus-on-mount
       />
       <!--
       <stamp-picker-effect-toggle-button

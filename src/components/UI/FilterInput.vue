@@ -2,6 +2,7 @@
   <div :class="$style.container" :style="styles.container">
     <icon mdi name="search" :size="18" :class="$style.icon" />
     <input
+      ref="inputRef"
       :class="$style.input"
       :style="styles.input"
       :value="text"
@@ -15,10 +16,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, ref, onMounted } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import { makeStyles } from '@/lib/styles'
 import useInput from '@/use/input'
+import { isTouchDevice } from '@/lib/util/browser'
 
 const useStyles = (props: { onSecondary: boolean; disableIme: boolean }) =>
   reactive({
@@ -59,12 +61,23 @@ export default defineComponent({
     disableIme: {
       type: Boolean,
       default: false
+    },
+    focusOnMount: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
     const styles = useStyles(props)
     const { onInput } = useInput(context)
-    return { styles, onInput }
+
+    const inputRef = ref<HTMLInputElement>(null)
+    onMounted(() => {
+      if (!props.focusOnMount || isTouchDevice()) return
+      inputRef.value?.focus()
+    })
+
+    return { styles, inputRef, onInput }
   }
 })
 </script>
