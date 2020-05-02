@@ -3,7 +3,6 @@
     <input
       type="text"
       :class="$style.input"
-      :style="styles.input"
       v-model="newTagName"
       placeholder="タグを追加"
       minlength="1"
@@ -11,7 +10,6 @@
     />
     <button
       :class="$style.button"
-      :style="styles.button"
       @click="addTag"
       :disabled="newTagName.length === 0 || adding"
     >
@@ -21,24 +19,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, ref, PropType } from '@vue/composition-api'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    input: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary,
-      '--placeholder-color': theme.ui.secondary
-    })),
-    button: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'TagsTab',
@@ -49,8 +33,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
-
     const newTagName = ref('')
     const adding = ref(false)
 
@@ -63,7 +45,7 @@ export default defineComponent({
       newTagName.value = ''
     }
 
-    return { styles, newTagName, addTag, adding }
+    return { newTagName, addTag, adding }
   },
   components: {
     Icon
@@ -79,16 +61,20 @@ export default defineComponent({
 }
 
 .input {
+  @include color-ui-secondary;
+  @include background-secondary;
   flex: 1 1;
   padding: 4px;
   padding-left: 16px;
   border-radius: 6px;
   &::placeholder {
-    color: var(--placeholder-color);
+    @include color-ui-secondary;
   }
 }
 
 .button {
+  @include color-ui-secondary;
+  @include background-secondary;
   padding: 0 12px;
   margin-left: 8px;
   border-radius: 6px;

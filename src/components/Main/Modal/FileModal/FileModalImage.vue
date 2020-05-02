@@ -1,34 +1,20 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.header" :style="styles.header">
+  <div :class="$style.container">
+    <div :class="$style.header">
       <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
     </div>
     <img draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
-    <div :class="$style.footer" :style="styles.footer">
+    <div :class="$style.footer">
       <file-modal-content-footer :file-id="fileMeta.id" :is-white="true" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      backgroundColor: common.background.black
-    })),
-    header: makeStyles((theme, common) => ({
-      background: `linear-gradient(to bottom, ${common.background.black}, transparent)`
-    })),
-    footer: makeStyles((theme, common) => ({
-      background: `linear-gradient(to top, ${common.background.black}, transparent)`
-    }))
-  })
 
 export default defineComponent({
   name: 'FileModalImage',
@@ -43,15 +29,15 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { fileMeta, fileRawPath } = useFileMeta(props, context)
-    return { styles, fileMeta, fileRawPath }
+    return { fileMeta, fileRawPath }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-common-black;
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -70,6 +56,7 @@ export default defineComponent({
   z-index: 1;
   opacity: 0;
   transition: all 0.2s ease;
+  background: linear-gradient(to bottom, $common-background-black, transparent);
 
   .container:hover & {
     opacity: 1;
@@ -83,6 +70,7 @@ export default defineComponent({
   z-index: 1;
   opacity: 0;
   transition: all 0.2s ease;
+  background: linear-gradient(to top, $common-background-black, transparent);
 
   .container:hover & {
     opacity: 1;

@@ -1,23 +1,12 @@
 <template>
-  <button :class="$style.item" :style="styles.item">
-    <icon :name="iconName" :mdi="iconMdi" :width="size" :height="size" />
+  <button :class="$style.item" :aria-selected="isSelected">
+    <icon :name="iconName" :mdi="iconMdi" :size="24" />
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = (props: { isSelected: boolean }, size: number) =>
-  reactive({
-    item: makeStyles(theme => ({
-      color: props.isSelected ? theme.accent.primary : theme.ui.secondary,
-      borderColor: props.isSelected ? theme.accent.primary : 'transparent',
-      width: `${size}px`,
-      height: `${size}px`
-    }))
-  })
 
 export default defineComponent({
   name: 'NavigationSelectorItem',
@@ -33,23 +22,25 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context: SetupContext) {
-    const size = 24
-    const styles = useStyles(props, size)
-    return {
-      styles,
-      size
-    }
+  setup() {
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .item {
+  @include color-ui-secondary;
+  display: flex;
   box-sizing: content-box;
   margin: 4px 0;
   padding: 8px;
-  border-left: 4px solid;
+  border-left: 4px solid transparent;
   cursor: pointer;
+
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+    border-color: $theme-accent-primary;
+  }
 }
 </style>

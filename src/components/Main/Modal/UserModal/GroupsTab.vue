@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.groups" :style="styles.groups">
+  <div :class="$style.groups">
     <template v-if="isLoading">Now loading...</template>
     <template v-else>
       <ul :class="$style.list">
@@ -18,24 +18,11 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    groups: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'GroupsTab',
@@ -43,7 +30,6 @@ export default defineComponent({
     detail: Object as PropType<UserDetail>
   },
   setup(props) {
-    const styles = useStyles()
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
@@ -60,7 +46,7 @@ export default defineComponent({
       })
     }
 
-    return { styles, isLoading, groups, onGroupClick }
+    return { isLoading, groups, onGroupClick }
   },
   components: {
     Icon
@@ -70,6 +56,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .groups {
+  @include color-ui-primary;
   height: 100%;
 }
 

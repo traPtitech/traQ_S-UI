@@ -1,10 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-  >
+  <div :class="$style.container" :aria-selected="isSelected">
     <img :src="url" :class="$style.stamp" />
     <div v-if="!isSelected" :class="$style.notSelected">
       <p>:{{ stamp.name }}:</p>
@@ -13,7 +8,7 @@
         mdi
         :size="20"
         @click="onStartEdit"
-        v-if="hoverState.hover"
+        :class="$style.editIcon"
       />
     </div>
     <div v-else :class="$style.selected">
@@ -48,12 +43,10 @@ import {
   defineComponent,
   computed,
   PropType,
-  reactive,
-  SetupContext
+  reactive
 } from '@vue/composition-api'
 import apis, { buildFilePath } from '@/lib/apis'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -61,21 +54,8 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { Stamp, UserAccountState } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
-import useHover from '@/use/hover'
-import { compareStringInsensitive } from '@/lib/util/string'
 
-const useStyles = (
-  props: { isSelected: boolean },
-  hoverState: { hover: boolean }
-) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background:
-        !props.isSelected && hoverState.hover
-          ? theme.background.tertiary
-          : theme.background.primary
-    }))
-  })
+import { compareStringInsensitive } from '@/lib/util/string'
 
 const useName = (stamp: Stamp) => {
   const state = reactive({
@@ -127,9 +107,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
-    const styles = useStyles(props, hoverState)
+  setup(props, context) {
     const url = computed(() => buildFilePath(props.stamp.fileId))
 
     const {
@@ -186,7 +164,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
       url,
       nameState,
       creatorState,
@@ -196,10 +173,7 @@ export default defineComponent({
       onNewDestroyed,
       stampChanged,
       editStamp,
-      onStartEdit,
-      hoverState,
-      onMouseEnter,
-      onMouseLeave
+      onStartEdit
     }
   },
   components: {
@@ -214,6 +188,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   display: flex;
   align-items: center;
   padding: {
@@ -221,7 +196,17 @@ export default defineComponent({
     top: 12px;
     bottom: 12px;
   }
+  &:not([aria-selected='true']):hover {
+    @include background-tertiary;
+  }
 }
+
+.editIcon {
+  .container:not(:hover) & {
+    display: none;
+  }
+}
+
 .stamp {
   height: 40px;
   width: 40px;

@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
+  <section :class="$style.container">
     <div>
       <h2 :class="$style.header">設定</h2>
       <desktop-tab-selector-item
@@ -17,8 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import {
   NavigationItemType,
   useNavigationSelectorItem,
@@ -26,14 +25,6 @@ import {
 } from './use/navigation'
 import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
 import Version from '@/components/UI/Version.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'DesktopTabSelector',
@@ -44,20 +35,17 @@ export default defineComponent({
       default: 'profile' as const
     }
   },
-  setup(props, context) {
-    const styles = useStyles()
+  setup(_, context) {
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
-    return {
-      styles,
-      navigations,
-      onNavigationItemClick
-    }
+    return { navigations, onNavigationItemClick }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-secondary;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

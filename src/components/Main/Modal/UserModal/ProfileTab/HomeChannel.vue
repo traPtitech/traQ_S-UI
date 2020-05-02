@@ -1,11 +1,15 @@
 <template>
   <section>
     <profile-header text="ホームチャンネル" />
-    <p :style="styles.text">
+    <p>
       <icon name="home" mdi :class="$style.icon" />
-      <span v-if="isLoading">[Now loading...]</span>
-      <span v-else-if="isEmpty">[未設定]</span>
-      <span v-else :class="$style.channel" @click="onClick">
+      <span v-if="isLoading" :class="$style.text" aria-busy="true">
+        [Now loading...]
+      </span>
+      <span v-else-if="isEmpty" :class="$style.text" data-is-empty>
+        [未設定]
+      </span>
+      <span v-else :class="[$style.text, $style.channel]" @click="onClick">
         #{{ channelPath }}
       </span>
     </p>
@@ -13,26 +17,12 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  Ref,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
 import { changeChannelByPath } from '@/router/channel'
-
-const useStyles = (lowPriority: Ref<boolean>) =>
-  reactive({
-    text: makeStyles(theme => ({
-      color: lowPriority.value ? theme.ui.tertiary : theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'HomeChannel',
@@ -46,8 +36,6 @@ export default defineComponent({
     const isEmpty = computed(() =>
       props.id === undefined ? false : propst.id === null
     )
-    const lowPriority = computed(() => isLoading.value || isEmpty.value)
-    const styles = useStyles(lowPriority)
 
     const { channelIdToPathString } = useChannelPath()
     const channelPath = computed(() =>
@@ -63,7 +51,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
       isLoading,
       isEmpty,
       channelPath,
@@ -86,5 +73,13 @@ export default defineComponent({
 
 .channel {
   cursor: pointer;
+}
+
+.text {
+  @include color-ui-primary;
+  &[aria-busy='true'],
+  &[data-is-empty] {
+    @include color-ui-tertiary;
+  }
 }
 </style>
