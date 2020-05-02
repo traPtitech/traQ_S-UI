@@ -37,7 +37,7 @@ export default defineComponent({
   height: 2px;
 }
 .label {
-  @include background-secondary;
+  @include color-ui-secondary;
   margin: 0 16px;
   flex-shrink: 0;
   font-weight: bold;
