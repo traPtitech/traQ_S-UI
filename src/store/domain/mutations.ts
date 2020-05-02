@@ -28,8 +28,8 @@ export const mutations = defineMutations<S>()({
       const sameChannelActivity =
         state.activityTimelineChannelMap[activity.channelId]
       if (sameChannelActivity) {
-        const sameChannelActivityIndex = state.activityTimeline.indexOf(
-          sameChannelActivity
+        const sameChannelActivityIndex = state.activityTimeline.findIndex(
+          a => a.id === sameChannelActivity.id
         )
         state.activityTimeline.splice(sameChannelActivityIndex, 1)
       }
