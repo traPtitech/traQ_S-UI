@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    {{ user.name }}
+    {{ user ? user.displayName : 'unknown' }}
     <span :class="$style.numberWrap">
       <spin-number :value="props.count" />
     </span>
