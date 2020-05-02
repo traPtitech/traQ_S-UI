@@ -11,14 +11,17 @@
       mdi
       :size="20"
     />
-    <span :class="$style.content" v-html="renderedContent" />
+    <span
+      :class="[$style.content, 'markdown-inline-body']"
+      v-html="renderedContent"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, computed } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
-import { embeddingExtractor } from '@/lib/embeddingExtractor'
+import { embeddingReplacer } from '@/lib/embeddingExtractor'
 import { renderInline } from '@/lib/markdown'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -41,7 +44,7 @@ export default defineComponent({
       }))
     })
 
-    const extracted = computed(() => embeddingExtractor(props.content))
+    const extracted = computed(() => embeddingReplacer(props.content))
     const hasFile = computed(() =>
       extracted.value.embeddings.some(e => e.type === 'file')
     )

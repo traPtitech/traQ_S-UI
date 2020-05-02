@@ -1065,3 +1065,24 @@ html[data-is-dark-theme] {
     background-color: #FAFFAD;
   }
 }
+
+.markdown-inline-body {
+  .spoiler {
+    color: transparent;
+    background-color: black;
+    user-select: none;
+    cursor: pointer;
+
+    &:not([shown]) {
+      * {
+        visibility: hidden;
+      }
+    }
+  }
+
+  .message-emoji {
+    &.large, &.ex-large {
+      font-size: 24px;
+    }
+  }
+}
