@@ -1,7 +1,7 @@
 <template>
   <button
     :class="$style.container"
-    :style="styles.container"
+    :aria-selected="isActive"
     @click="context.emit('click')"
   >
     <icon name="effect" />
@@ -9,21 +9,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = (props: { isActive: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: props.isActive
-        ? theme.accent.primary
-        : transparentize(theme.ui.secondary, 0.5),
-      borderColor: props.isActive ? theme.accent.primary : 'transparent'
-    }))
-  })
 
 export default defineComponent({
   name: 'StampPickerEffectToggleButton',
@@ -33,15 +20,16 @@ export default defineComponent({
   props: {
     isActive: { type: Boolean, default: false }
   },
-  setup(props, context) {
-    const styles = useStyles(props)
-    return { context, styles }
+  setup(_, context) {
+    return { context }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
+  @include background-secondary;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +39,14 @@ export default defineComponent({
     radius: 4px;
     width: 2px;
     style: solid;
+    color: transparent;
   }
+  opacity: 0.5;
   cursor: pointer;
+
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+    border-color: $theme-accent-primary;
+  }
 }
 </style>

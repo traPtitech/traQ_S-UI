@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    v-click-outside="onClickOutside"
-  >
+  <div :class="$style.container" v-click-outside="onClickOutside">
     <div :class="$style.inputContainer">
       <filter-input
         :text="textFilterState.query"
@@ -41,13 +37,12 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { StampId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
 import useStampSetSelector from './use/stampSetSelector'
-import useEffectSelector, { EffectSelectorState } from './use/effectSelector'
+import useEffectSelector from './use/effectSelector'
 import useStampFilterPlaceholder from './use/stampFilterPlaceholder'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
@@ -75,14 +70,6 @@ const useStampPicker = () => {
   return { stampPickerState: state, onInputStamp }
 }
 
-const useStyles = (effectSelectorState: EffectSelectorState) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      borderColor: theme.background.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'StampPicker',
   components: {
@@ -105,8 +92,6 @@ export default defineComponent({
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
-    const styles = useStyles(effectSelectorState)
-
     const onClickOutside = () =>
       store.dispatch.ui.stampPicker.closeStampPicker()
     return {
@@ -122,8 +107,7 @@ export default defineComponent({
       onHoverStamp,
       onClickOutside,
       toggleShowEffect,
-      changeStampSet,
-      styles
+      changeStampSet
     }
   }
 })
@@ -131,6 +115,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   width: 100%;
   height: 320px;
   max-width: 340px;
@@ -141,6 +126,7 @@ export default defineComponent({
   border: {
     style: solid;
     width: 2px;
+    color: $theme-background-secondary;
   }
 }
 .inputContainer {
