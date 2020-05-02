@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <div
       v-for="state in viewerStates"
       :class="[state.viewing ? '' : $style.notView, $style.member]"
@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
+
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { User } from '@traptitech/traq'
 
@@ -22,14 +22,6 @@ type ViewState = {
   viewing: boolean
 }
 
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'ChannelSidebarMember',
   components: { UserIcon },
@@ -37,14 +29,15 @@ export default defineComponent({
     viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
   },
   setup(props) {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
+  @include color-ui-secondary;
   display: flex;
   flex-direction: column;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <icon
       :class="$style.icon"
       mdi
@@ -13,27 +13,17 @@
       :max="3"
       show-count
       :user-ids="viewerIds"
-      :style="styles.rest"
+      :class="$style.rest"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
+
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import { UserId } from '@/types/entity-ids'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    rest: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelSidebarHidden',
@@ -42,12 +32,10 @@ export default defineComponent({
   },
   components: { Icon, UserIconEllipsisList },
   setup(props, context) {
-    const styles = useStyles()
     const open = () => {
       context.emit('open')
     }
     return {
-      styles,
       open
     }
   }
@@ -56,6 +44,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: flex;
   flex-direction: column;
   width: 56px;
@@ -67,5 +56,8 @@ export default defineComponent({
   margin-bottom: 16px;
   margin-top: 16px;
   cursor: pointer;
+}
+.rest {
+  @include color-ui-secondary;
 }
 </style>

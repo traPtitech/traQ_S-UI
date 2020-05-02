@@ -24,17 +24,9 @@ import {
   PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import ChannelSidebarHeaderName from './ChannelSidebarHeaderName.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelSidebarHeader',
@@ -53,8 +45,7 @@ export default defineComponent({
       ),
       showHash: computed(() => !!props.channelId)
     })
-    const styles = useStyles()
-    return { state, styles }
+    return { state }
   }
 })
 </script>

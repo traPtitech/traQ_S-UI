@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.content" :style="styles.content" @click="onClick">
+    <div
+      :class="$style.content"
+      @click="onClick"
+      :data-is-editing="state.isEditing"
+    >
       <Icon
         mdi
         :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
@@ -14,19 +18,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
 type State = {
   isEditing: boolean
 }
-
-const useStyles = (state: State) =>
-  reactive({
-    content: makeStyles(theme => ({
-      color: state.isEditing ? theme.ui.primary : theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelSidebarEdit',
@@ -38,8 +34,7 @@ export default defineComponent({
     const onClick = () => {
       state.isEditing = !state.isEditing
     }
-    const styles = useStyles(state)
-    return { state, styles, onClick }
+    return { state, onClick }
   }
 })
 </script>
@@ -54,6 +49,7 @@ $editButtonText: 0.8rem;
 }
 
 .content {
+  @include color-ui-secondary;
   bottom: 0;
   display: flex;
   font-size: $editButtonText;
@@ -62,5 +58,8 @@ $editButtonText: 0.8rem;
   cursor: pointer;
   user-select: none;
   width: 100%;
+  &[data-is-editing] {
+    @include color-ui-primary;
+  }
 }
 </style>
