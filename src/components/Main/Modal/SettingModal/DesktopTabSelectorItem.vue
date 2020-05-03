@@ -1,28 +1,14 @@
 <template>
-  <button :class="$style.item" :style="styles.item">
-    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="size" />
+  <button :class="$style.item" :aria-selected="isSelected">
+    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     {{ title }}
   </button>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = (props: { isSelected: boolean }, size: number) =>
-  reactive({
-    item: makeStyles(theme => ({
-      color: props.isSelected ? theme.ui.primary : theme.ui.secondary,
-      background: props.isSelected ? theme.ui.tertiary : 'transparent'
-    }))
-  })
 
 export default defineComponent({
   name: 'DesktopTabSelectorItem',
@@ -43,27 +29,25 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const size = 24
-    const styles = useStyles(props, size)
     const title = computed(() => navigationTypeNameMap[props.type])
-    return {
-      styles,
-      size,
-      title,
-      context
-    }
+    return { title, context }
   }
 })
 </script>
 
 <style lang="scss" module>
 .item {
+  @include color-ui-secondary;
   display: block;
   width: 100%;
   padding: 20px 60px 20px 80px;
   font-weight: bold;
   text-align: left;
   cursor: pointer;
+  &[aria-selected='true'] {
+    @include color-ui-primary;
+    @include background-tertiary;
+  }
 }
 
 .icon {

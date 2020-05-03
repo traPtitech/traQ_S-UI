@@ -1,10 +1,20 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div ref="viewportRef" :class="$style.viewport">
-      <div v-for="(messageId, index) in messageIds" :key="messageId">
-        <messages-scroller-day-separator
-          v-if="dayDiff(index) && !noSepalator"
-          :message-id="messageId"
+        <div
+          v-for="(messageId, index) in messageIds"
+          :key="messageId"
+          :class="$style.messageContainer"
+        >
+        <messages-scroller-separator
+          v-if="index === unreadIndex"
+          title="ここから未読"
+          :class="$style.unreadSeparator"
+        />
+        <messages-scroller-separator
+          v-if="dayDiff(index)"
+          :title="createdDate(messageId)"
+          :class="$style.dateSeparator"
         />
         <component
           :is="messageComponent"
@@ -25,13 +35,13 @@ import {
   defineComponent,
   watch,
   reactive,
+  computed,
   SetupContext,
   ref,
   onMounted,
   PropType,
   Ref,
-  onBeforeUnmount,
-  computed
+  onBeforeUnmount
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
@@ -41,7 +51,8 @@ import useMessageScrollerElementResizeObserver from './use/messageScrollerElemen
 import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
-import MessagesScrollerDaySeparator from './MessagesScrollerDaySeparator.vue'
+import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
+import { getFullDayString } from '@/lib/date'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -80,7 +91,7 @@ export default defineComponent({
   components: {
     MessageElement,
     ClipElement,
-    MessagesScrollerDaySeparator
+    MessagesScrollerSeparator
   },
   props: {
     messageIds: {
@@ -108,6 +119,24 @@ export default defineComponent({
     const state = reactive({
       height: 0,
       scrollTop: 0
+    })
+
+    // DaySeparatorの表示
+    const createdDate = (id: MessageId) => {
+      const message = store.state.entities.messages[id]
+      if (!message) {
+        return ''
+      }
+
+      return getFullDayString(new Date(message.createdAt))
+    }
+
+    const unreadIndex = computed(() => {
+      const unreadSince = store.state.domain.messagesView.unreadSince
+      if (!unreadSince) return -1
+      return props.messageIds.findIndex(
+        id => store.state.entities.messages[id]?.createdAt === unreadSince
+      )
     })
 
     const {
@@ -183,9 +212,11 @@ export default defineComponent({
       rootRef,
       handleScroll,
       onChangeHeight,
+      unreadIndex,
       onEntryMessageLoaded,
       dayDiff,
-      messageComponent
+      messageComponent,
+      createdDate
     }
   }
 })
@@ -195,7 +226,6 @@ export default defineComponent({
 .root {
   height: 100%;
   overflow-y: scroll;
-  overflow-anchor: none;
   padding: 12px 0;
 }
 
@@ -213,5 +243,13 @@ export default defineComponent({
 .bottomSpacer {
   width: 100%;
   height: 12px;
+}
+
+.unreadSeparator {
+  color: $theme-accent-notification;
+}
+
+.dateSeparator {
+  color: $theme-ui-secondary;
 }
 </style>

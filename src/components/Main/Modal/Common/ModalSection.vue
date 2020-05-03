@@ -1,13 +1,9 @@
 <template>
   <section :class="$style.section">
-    <h3 :class="$style.title" :style="styles.title">
+    <h3 :class="$style.title">
       {{ title }}
     </h3>
-    <p
-      v-if="description"
-      :class="$style.description"
-      :style="styles.description"
-    >
+    <p v-if="description" :class="$style.description">
       {{ description }}
     </p>
     <slot />
@@ -15,18 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    title: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    description: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ModalSection',
@@ -35,8 +20,7 @@ export default defineComponent({
     description: String
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
@@ -53,12 +37,14 @@ export default defineComponent({
   }
 }
 .title {
+  @include color-ui-secondary;
   font: {
     size: 1rem;
     weight: bold;
   }
 }
 .description {
+  @include color-ui-secondary;
   margin-top: 4px;
   font: {
     size: 0.875rem;

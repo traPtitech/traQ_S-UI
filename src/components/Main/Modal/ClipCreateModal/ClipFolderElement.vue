@@ -2,26 +2,16 @@
   <div
     @click="$emit('click')"
     :class="$style.container"
-    :style="styles.container"
+    :aria-selected="isSelected"
   >
-    <icon :class="$style.icon" :style="styles.icon" mdi :name="iconName" />
+    <icon :class="$style.icon" mdi :name="iconName" />
     <span>{{ folderName }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = (props: { isSelected: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({ color: theme.ui.primary })),
-    icon: makeStyles(theme => ({
-      color: props.isSelected ? theme.accent.primary : theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ClipFolderElement',
@@ -39,23 +29,27 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles(props)
     const iconName = computed(() =>
       props.isSelected ? 'bookmark-check' : 'bookmark'
     )
-    return { styles, iconName }
+    return { iconName }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: flex;
   align-items: center;
   cursor: pointer;
   padding: 8px 0;
 }
 .icon {
+  @include color-ui-primary;
   margin-right: 8px;
+  .container[aria-selected='true'] & {
+    color: $theme-accent-primary;
+  }
 }
 </style>

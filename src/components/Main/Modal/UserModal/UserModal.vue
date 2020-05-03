@@ -38,7 +38,6 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -49,16 +48,11 @@ import CloseButton from '@/components/UI/CloseButton.vue'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
-    content: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.secondary,
-      borderColor: theme.background.secondary,
+    content: computed(() => ({
       paddingTop: isMobile.value ? 0 : `${iconSize / 2}px`
     })),
-    icon: makeStyles(theme => ({
-      marginTop: `${-iconSize / 2}px`,
-      borderColor: theme.background.secondary,
-      backgroundColor: theme.background.secondary
+    icon: computed(() => ({
+      marginTop: `${-iconSize / 2}px`
     }))
   })
 
@@ -118,12 +112,14 @@ export default defineComponent({
 }
 
 .content {
+  @include color-ui-primary;
+  @include background-secondary;
   position: relative;
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-template-rows: min-content 1fr;
   height: 100%;
-  border: 4px solid;
+  border: 4px solid $theme-background-secondary;
   border-radius: 16px;
   overflow: hidden;
 }
@@ -136,12 +132,13 @@ export default defineComponent({
 }
 
 .icon {
+  background-color: $theme-background-secondary;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1;
   margin: auto;
-  border: 6px solid;
+  border: 6px solid $theme-background-secondary;
 }
 </style>

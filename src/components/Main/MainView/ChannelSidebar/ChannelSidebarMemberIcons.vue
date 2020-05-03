@@ -2,7 +2,7 @@
   <div :class="$style.container" :style="styles.container">
     <div
       v-for="state in viewerStates"
-      :class="[state.viewing ? '' : $style.notView, $style.member]"
+      :class="[state.active ? '' : $style.notView, $style.member]"
       :key="state.user.id"
     >
       <user-icon :size="28" :user-id="state.user.id" />
@@ -19,7 +19,7 @@ import { User } from '@traptitech/traq'
 
 type ViewState = {
   user: User
-  viewing: boolean
+  active: boolean
 }
 
 const useStyles = () =>
@@ -50,10 +50,16 @@ export default defineComponent({
 }
 
 .member {
-  margin-bottom: 8px;
+  margin: 4px 0;
   display: flex;
   font-weight: bold;
   align-items: center;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .notView {

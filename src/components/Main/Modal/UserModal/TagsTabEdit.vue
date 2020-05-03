@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <icon
       name="lock"
       mdi
@@ -28,17 +28,10 @@ import {
   PropType,
   computed
 } from '@vue/composition-api'
-
-import { makeStyles } from '@/lib/styles'
 import { UserId, TagId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'TagsTabEdit',
@@ -56,7 +49,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const state = reactive({
       isMine: computed(() => store.state.domain.me.detail?.id === props.userId),
       isLocked: computed(
@@ -84,7 +76,7 @@ export default defineComponent({
       }
     }
 
-    return { styles, state, removeTag, toggleTagState }
+    return { state, removeTag, toggleTagState }
   }
 })
 </script>

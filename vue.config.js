@@ -31,7 +31,7 @@ module.exports = {
           plugins: [
             { removeDimensions: true },
             { removeViewBox: false },
-            { removeAttrs: { attrs: '(path|rect):fill' } }
+            { convertColors: { currentColor: true } }
           ]
         }
       })

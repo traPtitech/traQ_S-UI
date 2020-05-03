@@ -1,7 +1,7 @@
 <template>
   <section>
-    <profile-header text="ひとこと" :style="{ marginTop: 0 }" />
-    <p :style="styles.bio">
+    <profile-header text="ひとこと" :class="$style.header" />
+    <p :class="$style.bio" :aria-busy="isLoading" :data-is-empty="isEmpty">
       <template v-if="isLoading">[Now loading...]</template>
       <template v-else-if="isEmpty">[No bio]</template>
       <template v-else>{{ bio }}</template>
@@ -10,16 +10,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import ProfileHeader from './ProfileHeader.vue'
-
-const useStyles = (lowPriority: Ref<boolean>) =>
-  reactive({
-    bio: makeStyles(theme => ({
-      color: lowPriority.value ? theme.ui.tertiary : theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'Bio',
@@ -31,17 +23,25 @@ export default defineComponent({
     const isEmpty = computed(() =>
       props.bio === undefined ? false : props.bio === ''
     )
-    const lowPriority = computed(() => isLoading.value || isEmpty.value)
-    const styles = useStyles(lowPriority)
 
-    return {
-      styles,
-      isLoading,
-      isEmpty
-    }
+    return { isLoading, isEmpty }
   },
   components: {
     ProfileHeader
   }
 })
 </script>
+
+<style lang="scss" module>
+.header {
+  margin-top: 0;
+}
+
+.bio {
+  @include color-ui-primary;
+  &[aria-busy='true'],
+  &[data-is-empty] {
+    @include color-ui-tertiary;
+  }
+}
+</style>

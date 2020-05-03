@@ -1,27 +1,12 @@
 <template>
-  <span :class="$style.indicator" :style="styles.indicator" :title="tooltip" />
+  <span :class="$style.indicator" :data-is-online="isOnline" :title="tooltip" />
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  Ref,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import { getFullDayWithTimeString } from '@/lib/date'
-
-const useStyles = (isOnline: Ref<boolean>) =>
-  reactive({
-    indicator: makeStyles(theme => ({
-      background: isOnline.value ? theme.accent.online : theme.ui.tertiary,
-      borderColor: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'OnlineIndicator',
@@ -43,19 +28,21 @@ export default defineComponent({
         : undefined
     )
 
-    const styles = useStyles(isOnline)
-
-    return { styles, tooltip }
+    return { isOnline, tooltip }
   }
 })
 </script>
 
 <style lang="scss" module>
 .indicator {
+  @include background-tertiary;
   display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1px solid;
+  border: 1px solid $theme-background-primary;
+  &[data-is-online] {
+    background: $theme-accent-online;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
+  <section :class="$style.container">
     <div>
       <div :class="$style.header">
         <h2 :class="$style.title">設定</h2>
@@ -20,8 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
 import {
   NavigationItemType,
@@ -33,14 +32,6 @@ import SafariWarning from './SafariWarning.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import Version from '@/components/UI/Version.vue'
 
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'MobileTabSelector',
   components: { MobileTabSelectorItem, SafariWarning, CloseButton, Version },
@@ -51,11 +42,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
     const close = () => store.dispatch.ui.modal.clearModal()
     return {
-      styles,
       navigations,
       onNavigationItemClick,
       close
@@ -66,6 +55,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-secondary;
   width: 100%;
   height: 100%;
   display: flex;
