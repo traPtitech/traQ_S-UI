@@ -16,7 +16,6 @@
     :width="size"
     :height="size"
     view-box="0 0 24 24"
-    class="icon"
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
