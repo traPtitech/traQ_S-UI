@@ -15,7 +15,7 @@
       :is="toolTipComponent"
       :class="$style.tools"
       :message-id="messageId"
-      v-if="hoverState.hover"
+      v-if="isHover"
     />
     <div :class="$style.messageContents">
       <div
@@ -60,37 +60,6 @@ import MessageQuoteList from './MessageQuoteList.vue'
 import useEmbeddings from './use/embeddings'
 import MessageTools from './MessageTools.vue'
 import ClipTools from './ClipTools.vue'
-import useHover from '@/use/hover'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-import { Message } from '@traptitech/traq'
-
-const useStyles = (
-  props: { isEntryMessage: boolean },
-  hoverState: { hover: boolean },
-  state: {
-    message?: Message
-    stampDetailFoldingState: boolean
-    isEditing: boolean
-  }
-) =>
-  reactive({
-    body: makeStyles((theme, common) => ({
-      background: state.message?.pinned
-        ? transparentize(common.ui.pin, 0.2)
-        : props.isEntryMessage
-        ? transparentize(theme.accent.notification, 0.1)
-        : hoverState.hover && !state.isEditing
-        ? transparentize(theme.background.secondary, 0.6)
-        : 'transparent'
-    })),
-    toggleButton: makeStyles(theme => ({
-      transform: state.stampDetailFoldingState
-        ? `rotate(0.5turn)`
-        : `rotate(0turn)`,
-      color: hoverState.hover ? theme.ui.secondary : 'transparent'
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageContent',
@@ -112,14 +81,16 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    toolTipComponent: {
+    messageType: {
       type: String,
+      default: 'defaultMessage'
+    },
+    isHover: {
+      type: Boolean,
       required: true
     }
   },
   setup(props) {
-    // const toolTipComponent = computed(() => )
-    const { hoverState } = useHover()
     const { isMobile } = useIsMobile()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
@@ -138,16 +109,15 @@ export default defineComponent({
       stampDetailFoldingState: false
     })
 
-    const { embeddingsState } = useEmbeddings(props)
+    const toolTipComponent = computed(() => props.messageType === 'clipMessage' ? ClipTools : MessageTools)
 
-    const styles = useStyles(props, hoverState, state)
+    const { embeddingsState } = useEmbeddings(props)
 
     return {
       state,
       embeddingsState,
       isMobile,
-      styles,
-      hoverState
+      toolTipComponent
     }
   }
 })

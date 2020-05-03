@@ -16,7 +16,7 @@
     <message-contents
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
-      tool-tip-component="'MessageTools'"
+      :is-hover="hoverState.hover"
     />
     <div :class="$style.stampWrapper">
       <icon
