@@ -7,10 +7,7 @@ const useRTCSession = (sessionType: SessionType) => (props: {
   channelId: ChannelId
 }) => {
   const sessionId = computed(() =>
-    store.state.app.rtc.channelSessionsMap[props.channelId]?.find(
-      sessionId =>
-        store.state.app.rtc.sessionInfoMap[sessionId]?.type === sessionType
-    )
+    store.getters.app.rtc.channelRTCSessionId(sessionType, props.channelId)
   )
   const sessionUserIds = computed(() =>
     Object.entries(store.state.app.rtc.userStateMap)
