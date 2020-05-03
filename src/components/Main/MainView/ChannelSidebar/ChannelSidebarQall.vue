@@ -12,7 +12,7 @@ import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
-  name: 'ChannelSidebarTopic',
+  name: 'ChannelSidebarQall',
   components: {
     SidebarContentContainerFoldable,
     ChannelSidebarMemberIcons
