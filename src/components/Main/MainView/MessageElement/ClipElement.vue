@@ -11,15 +11,8 @@
     <message-contents
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
-    >
-      <template v-slot:toolTip>
-        <message-tools
-          :class="$style.tools"
-          :message-id="messageId"
-          v-if="hoverState.hover"
-        />
-      </template>
-    </message-contents>
+      tool-tip-component="'ClipTools'"
+    />
   </div>
 </template>
 
@@ -44,7 +37,6 @@ import MessageStampList from './MessageStampList.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
-import MessageTools from './MessageTools.vue'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@traptitech/traq'
@@ -88,7 +80,6 @@ export default defineComponent({
     MessageFileList,
     MessageQuoteList,
     Icon,
-    MessageTools,
     MessagePinned,
     MessageContents
   },

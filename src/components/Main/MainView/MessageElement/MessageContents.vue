@@ -11,7 +11,12 @@
       :created-at="state.message.createdAt"
       :updated-at="state.message.updatedAt"
     />
-    <slot name="toolTip"></slot>
+    <component
+      :is="toolTipComponent"
+      :class="$style.tools"
+      :message-id="messageId"
+      v-if="hoverState.hover"
+    />
     <div :class="$style.messageContents">
       <div
         v-show="!state.isEditing"
@@ -45,18 +50,47 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-
 import { MessageId } from '@/types/entity-ids'
-
 import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageEditor from './MessageEditor.vue'
-
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
-
 import useEmbeddings from './use/embeddings'
+import MessageTools from './MessageTools.vue'
+import ClipTools from './ClipTools.vue'
+import useHover from '@/use/hover'
+import { makeStyles } from '@/lib/styles'
+import { transparentize } from '@/lib/util/color'
+import { Message } from '@traptitech/traq'
+
+const useStyles = (
+  props: { isEntryMessage: boolean },
+  hoverState: { hover: boolean },
+  state: {
+    message?: Message
+    stampDetailFoldingState: boolean
+    isEditing: boolean
+  }
+) =>
+  reactive({
+    body: makeStyles((theme, common) => ({
+      background: state.message?.pinned
+        ? transparentize(common.ui.pin, 0.2)
+        : props.isEntryMessage
+        ? transparentize(theme.accent.notification, 0.1)
+        : hoverState.hover && !state.isEditing
+        ? transparentize(theme.background.secondary, 0.6)
+        : 'transparent'
+    })),
+    toggleButton: makeStyles(theme => ({
+      transform: state.stampDetailFoldingState
+        ? `rotate(0.5turn)`
+        : `rotate(0turn)`,
+      color: hoverState.hover ? theme.ui.secondary : 'transparent'
+    }))
+  })
 
 export default defineComponent({
   name: 'MessageContent',
@@ -65,7 +99,9 @@ export default defineComponent({
     MessageHeader,
     MessageEditor,
     MessageFileList,
-    MessageQuoteList
+    MessageQuoteList,
+    MessageTools,
+    ClipTools
   },
   props: {
     messageId: {
@@ -75,9 +111,15 @@ export default defineComponent({
     isEntryMessage: {
       type: Boolean,
       default: false
+    },
+    toolTipComponent: {
+      type: String,
+      required: true
     }
   },
   setup(props) {
+    // const toolTipComponent = computed(() => )
+    const { hoverState } = useHover()
     const { isMobile } = useIsMobile()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
@@ -98,10 +140,14 @@ export default defineComponent({
 
     const { embeddingsState } = useEmbeddings(props)
 
+    const styles = useStyles(props, hoverState, state)
+
     return {
       state,
       embeddingsState,
-      isMobile
+      isMobile,
+      styles,
+      hoverState
     }
   }
 })
@@ -141,5 +187,12 @@ $messagePaddingMobile: 16px;
 
 .messageEmbeddingsList {
   margin-top: 16px;
+}
+
+.tools {
+  position: absolute;
+  top: 4px;
+  right: 16px;
+  z-index: 1;
 }
 </style>

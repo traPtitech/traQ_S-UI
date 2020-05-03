@@ -3,7 +3,7 @@
     <div ref="viewportRef" :class="$style.viewport">
       <div v-for="(messageId, index) in messageIds" :key="messageId">
         <messages-scroller-day-separator
-          v-if="dayDiff(index)"
+          v-if="dayDiff(index) && !noSepalator"
           :message-id="messageId"
         />
         <component
@@ -97,6 +97,10 @@ export default defineComponent({
     lastLoadingDirection: {
       type: String as PropType<LoadingDirection>,
       required: true
+    },
+    noSepalator: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
