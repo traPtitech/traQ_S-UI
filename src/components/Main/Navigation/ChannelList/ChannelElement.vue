@@ -17,7 +17,12 @@
         @click="onChannelNameClick"
       >
         <span :class="$style.channelNameInner">
-          {{ pathToShow }}
+          <span :class="$style.channelNameInnerString">
+            {{ pathToShow }}
+          </span>
+          <span :class="$style.channelNameInnerIcon">
+            <icon v-if="isQalling" :size="16" mdi name="phone-outline" />
+          </span>
         </span>
       </div>
     </div>
@@ -55,6 +60,7 @@ import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
+import Icon from '@/components/UI/Icon.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -122,6 +128,13 @@ const useTopic = (props: TypedProps) => {
   return { topic }
 }
 
+const useRTCState = (props: TypedProps) => {
+  const isQalling = computed(
+    () => !!store.getters.app.rtc.channelRTCSessionId('qall', props.channel.id)
+  )
+  return { isQalling }
+}
+
 interface Props {
   channel: ChannelTreeNode | Channel
   isOpened: boolean
@@ -148,7 +161,8 @@ export default defineComponent({
     // 型エラー・コンポーネント循環参照の回避
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ChannelList: (() => import('./ChannelList.vue')) as any,
-    ChannelElementHash
+    ChannelElementHash,
+    Icon
   },
   props: {
     /** 対象チャンネル */
@@ -204,6 +218,7 @@ export default defineComponent({
     )
     const notificationState = useNotification(typedProps)
     const { topic } = useTopic(typedProps)
+    const { isQalling } = useRTCState(typedProps)
 
     return {
       state,
@@ -211,6 +226,7 @@ export default defineComponent({
       pathToShow,
       notificationState,
       topic,
+      isQalling,
       onChannelHashClick,
       onChannelNameClick
     }
@@ -251,10 +267,25 @@ $topicLeftPadding: 40px;
   cursor: pointer;
 }
 .channelNameInner {
+  display: flex;
   width: 100%;
+  align-items: center;
+}
+.channelNameInnerString {
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.channelNameInnerIcon {
+  flex-shrink: 0;
+  margin: {
+    left: 8px;
+    bottom: 2px;
+  }
+  height: 16px;
+  width: 16px;
+  opacity: 0.5;
 }
 .children {
   display: block;
