@@ -11,12 +11,6 @@
       :created-at="state.message.createdAt"
       :updated-at="state.message.updatedAt"
     />
-    <component
-      :is="toolTipComponent"
-      :class="$style.tools"
-      :message-id="messageId"
-      v-if="isHover"
-    />
     <div :class="$style.messageContents">
       <div
         v-show="!state.isEditing"
@@ -58,8 +52,6 @@ import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import useEmbeddings from './use/embeddings'
-import MessageTools from './MessageTools.vue'
-import ClipTools from './ClipTools.vue'
 
 export default defineComponent({
   name: 'MessageContent',
@@ -68,9 +60,7 @@ export default defineComponent({
     MessageHeader,
     MessageEditor,
     MessageFileList,
-    MessageQuoteList,
-    MessageTools,
-    ClipTools
+    MessageQuoteList
   },
   props: {
     messageId: {
@@ -80,14 +70,6 @@ export default defineComponent({
     isEntryMessage: {
       type: Boolean,
       default: false
-    },
-    messageType: {
-      type: String,
-      default: 'defaultMessage'
-    },
-    isHover: {
-      type: Boolean,
-      required: true
     }
   },
   setup(props) {
@@ -109,15 +91,12 @@ export default defineComponent({
       stampDetailFoldingState: false
     })
 
-    const toolTipComponent = computed(() => props.messageType === 'clipMessage' ? ClipTools : MessageTools)
-
     const { embeddingsState } = useEmbeddings(props)
 
     return {
       state,
       embeddingsState,
-      isMobile,
-      toolTipComponent
+      isMobile
     }
   }
 })
@@ -157,12 +136,5 @@ $messagePaddingMobile: 16px;
 
 .messageEmbeddingsList {
   margin-top: 16px;
-}
-
-.tools {
-  position: absolute;
-  top: 4px;
-  right: 16px;
-  z-index: 1;
 }
 </style>

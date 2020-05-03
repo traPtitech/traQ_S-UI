@@ -8,11 +8,32 @@
     v-if="state.message"
     :data-is-mobile="isMobile"
   >
+    <clip-tools
+      :class="$style.tools"
+      :message-id="messageId"
+      v-if="hoverState.hover"
+    />
     <message-contents
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
-      message-type="'clipMessage'"
     />
+    <div :class="$style.stampWrapper">
+      <icon
+        name="rounded-triangle"
+        :size="20"
+        v-if="state.message.stamps.length > 0"
+        :class="$style.toggleButton"
+        :style="styles.toggleButton"
+        @click="onStampDetailFoldingToggle"
+      />
+      <message-stamp-list
+        :class="$style.stamps"
+        v-if="state.message.stamps.length > 0"
+        :message-id="messageId"
+        :stamps="state.message.stamps"
+        :is-show-detail="state.stampDetailFoldingState"
+      />
+    </div>
   </div>
 </template>
 
@@ -42,6 +63,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@traptitech/traq'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
+import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -53,10 +75,8 @@ const useStyles = (
   }
 ) =>
   reactive({
-    body: makeStyles((theme, common) => ({
-      background: state.message?.pinned
-        ? transparentize(common.ui.pin, 0.2)
-        : props.isEntryMessage
+    body: makeStyles((theme) => ({
+      background: props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
         : hoverState.hover && !state.isEditing
         ? transparentize(theme.background.secondary, 0.6)
@@ -81,7 +101,8 @@ export default defineComponent({
     MessageQuoteList,
     Icon,
     MessagePinned,
-    MessageContents
+    MessageContents,
+    ClipTools
   },
   props: {
     messageId: {

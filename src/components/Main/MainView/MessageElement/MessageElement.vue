@@ -13,10 +13,14 @@
       v-if="state.message.pinned"
       :class="$style.pinned"
     />
+    <message-tools
+      :class="$style.tools"
+      :message-id="messageId"
+      v-if="hoverState.hover"
+    />
     <message-contents
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
-      :is-hover="hoverState.hover"
     />
     <div :class="$style.stampWrapper">
       <icon
@@ -64,6 +68,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@traptitech/traq'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
+import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -103,7 +108,8 @@ export default defineComponent({
     MessageQuoteList,
     Icon,
     MessagePinned,
-    MessageContents
+    MessageContents,
+    MessageTools
   },
   props: {
     messageId: {
@@ -231,5 +237,12 @@ $messagePaddingMobile: 16px;
 
 .messageEmbeddingsList {
   margin-top: 16px;
+}
+
+.tools {
+  position: absolute;
+  top: 4px;
+  right: 16px;
+  z-index: 1;
 }
 </style>
