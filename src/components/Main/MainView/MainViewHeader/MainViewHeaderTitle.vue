@@ -39,8 +39,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$titleSize: 1.5rem;
-
 .container {
   display: flex;
   align-items: center;
@@ -51,6 +49,6 @@ $titleSize: 1.5rem;
 }
 
 .title {
-  font-size: $titleSize;
+  @include font-size-tremendous-large;
 }
 </style>

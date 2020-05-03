@@ -50,10 +50,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
+  @include font-size-slightly-small;
   display: inline-flex;
   align-items: center;
   font-weight: bold;
-  font-size: 14px;
   border-radius: 4px;
   padding: 0 4px;
 }

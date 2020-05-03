@@ -1,5 +1,32 @@
 @import './variables';
 
+// rotateはWindowsでフォントにジャギーが目立つののを対処
+// https://github.com/traPtitech/traQ_S-UI/issues/311
+@mixin font-size-tremendous-large {
+    font-size: 1.5rem;
+}
+@mixin font-size-extra-large {
+    font-size: 1.25rem;
+}
+@mixin font-size-large {
+    font-size: 1.125rem;
+}
+@mixin font-size-regular {
+    font-size: 1rem;
+}
+@mixin font-size-slightly-small {
+    font-size: 0.875rem;
+    transform: rotate(0.03deg);
+}
+@mixin font-size-small {
+    font-size: 0.8rem;
+    transform: rotate(0.03deg);
+}
+@mixin font-size-extra-small {
+    font-size: 0.75rem;
+    transform: rotate(0.03deg);
+}
+
 @mixin background-accent-primary {
     background: $theme-accent-primary;
 }

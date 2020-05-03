@@ -55,8 +55,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1rem;
-
 .container {
   display: flex;
   flex-direction: column;
@@ -85,7 +83,7 @@ $headerSize: 1rem;
 }
 
 .headerTitle {
+  @include font-size-regular;
   font-weight: bold;
-  font-size: $headerSize;
 }
 </style>

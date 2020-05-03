@@ -58,11 +58,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include font-size-slightly-small;
   display: flex;
   align-items: center;
-  font-size: 0.875rem;
   &[data-is-title] {
-    font-size: 1rem;
+    @include font-size-regular;
     font-weight: bold;
   }
 }

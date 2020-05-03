@@ -30,11 +30,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.25rem;
-
 .container {
+  @include font-size-extra-large;
   height: 100%;
-  font-size: $headerSize;
 }
 
 .channelHash {

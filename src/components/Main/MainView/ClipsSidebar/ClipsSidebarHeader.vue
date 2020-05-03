@@ -41,8 +41,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.25rem;
-
 .container {
   height: 100%;
   width: calc(100% - 32px);
@@ -54,10 +52,10 @@ $headerSize: 1.25rem;
   flex-shrink: 0;
 }
 .header {
+  @include font-size-large;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: $headerSize;
 }
 </style>

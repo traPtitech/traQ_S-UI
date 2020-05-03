@@ -83,8 +83,8 @@ export default defineComponent({
 }
 
 .name {
+  @include font-size-small;
   margin-left: 4px;
-  font-size: 0.8rem;
 
   word-break: keep-all;
   white-space: nowrap;
@@ -93,7 +93,7 @@ export default defineComponent({
 }
 
 .date {
+  @include font-size-extra-small;
   margin-left: 4px;
-  font-size: 0.75rem;
 }
 </style>

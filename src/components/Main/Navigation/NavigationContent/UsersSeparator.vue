@@ -42,9 +42,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include font-size-slightly-small;
   display: flex;
   align-items: center;
-  font-size: 0.875rem;
   justify-content: space-between;
   font-weight: bold;
 }

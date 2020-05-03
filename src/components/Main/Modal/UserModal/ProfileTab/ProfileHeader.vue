@@ -22,7 +22,7 @@ export default defineComponent({
 <style lang="scss" module>
 .header {
   @include color-ui-secondary;
-  font-size: 14px;
+  @include font-size-slightly-small;
   margin-top: 16px;
   margin-bottom: 8px;
 }

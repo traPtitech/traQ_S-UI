@@ -37,9 +37,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .path {
-  font-size: 0.875rem;
+  @include font-size-slightly-small;
   &[data-is-title] {
-    font-size: 1rem;
+    @include font-size-regular;
     font-weight: bold;
   }
   &::before {

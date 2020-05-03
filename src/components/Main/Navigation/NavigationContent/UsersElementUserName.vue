@@ -42,13 +42,13 @@ export default defineComponent({
   min-width: 0;
 }
 .displayName {
-  font-size: 1rem;
+  @include font-size-regular;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 .name {
-  font-size: 0.875rem;
+  @include font-size-slightly-small;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

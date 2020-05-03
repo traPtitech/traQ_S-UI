@@ -60,9 +60,9 @@ export default defineComponent({
 }
 .forgotPassword {
   @include color-ui-secondary;
+  @include font-size-extra-small;
   display: block;
   margin-top: 16px;
-  font-size: 0.75rem;
 }
 .buttons {
   display: flex;

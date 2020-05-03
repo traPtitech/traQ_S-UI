@@ -43,7 +43,7 @@ export default defineComponent({
   justify-content: space-between;
 }
 .subtitle {
-  font-size: 0.875rem;
+  @include font-size-slightly-small;
   margin-bottom: 8px;
   font-weight: bold;
 }

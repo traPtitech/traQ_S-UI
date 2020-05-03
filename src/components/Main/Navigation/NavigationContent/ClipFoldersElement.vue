@@ -53,10 +53,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include font-size-regular;
   display: flex;
   padding: 2px;
   cursor: pointer;
-  font-size: 1rem;
 }
 .icon {
   flex-shrink: 0;

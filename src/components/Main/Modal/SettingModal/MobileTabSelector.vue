@@ -70,9 +70,9 @@ export default defineComponent({
   align-items: center;
 }
 .title {
+  @include font-size-extra-large;
   padding-left: 40px;
   flex: 1 0;
-  font-size: 1.25rem;
 }
 
 .safariWarning {

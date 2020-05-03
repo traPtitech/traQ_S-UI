@@ -45,8 +45,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$editButtonText: 0.8rem;
-
 .container {
   display: flex;
   flex-direction: column;
@@ -54,9 +52,9 @@ $editButtonText: 0.8rem;
 }
 
 .content {
+  @include font-size-small;
   bottom: 0;
   display: flex;
-  font-size: $editButtonText;
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
