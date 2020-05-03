@@ -82,7 +82,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .inputContainer {
-  @include font-size-regular;
+  @include body1-size;
   height: 30px;
   display: flex;
   align-items: center;

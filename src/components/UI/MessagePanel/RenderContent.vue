@@ -63,7 +63,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include font-size-regular;
+  @include body1-size;
   word-break: break-all;
   width: 100%;
 }

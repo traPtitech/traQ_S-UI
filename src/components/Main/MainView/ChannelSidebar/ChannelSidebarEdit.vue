@@ -52,7 +52,7 @@ export default defineComponent({
 }
 
 .content {
-  @include font-size-small;
+  @include body2-size;
   bottom: 0;
   display: flex;
   justify-content: center;

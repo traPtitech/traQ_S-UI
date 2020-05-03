@@ -49,6 +49,6 @@ export default defineComponent({
 }
 
 .title {
-  @include font-size-tremendous-large;
+  @include h1-size;
 }
 </style>

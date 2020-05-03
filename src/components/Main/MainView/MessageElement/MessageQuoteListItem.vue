@@ -116,7 +116,7 @@ export default defineComponent({
 }
 
 .messageContents {
-  @include font-size-slightly-small;
+  @include body2-size;
   grid-area: message-contents;
   padding-top: 4px;
   padding-left: 8px;
@@ -134,7 +134,7 @@ export default defineComponent({
   }
 }
 .footer {
-  @include font-size-slightly-small;
+  @include body2-size;
   grid-area: footer;
   padding-left: 8px;
   align-self: end;

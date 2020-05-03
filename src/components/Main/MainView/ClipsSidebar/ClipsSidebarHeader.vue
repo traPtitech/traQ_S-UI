@@ -52,7 +52,7 @@ export default defineComponent({
   flex-shrink: 0;
 }
 .header {
-  @include font-size-extra-large;
+  @include h2-size;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

@@ -70,7 +70,7 @@ export default defineComponent({
   align-items: center;
 }
 .title {
-  @include font-size-extra-large;
+  @include h2-size;
   padding-left: 40px;
   flex: 1 0;
 }

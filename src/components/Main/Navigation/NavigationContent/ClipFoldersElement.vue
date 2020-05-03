@@ -53,7 +53,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include font-size-regular;
+  @include body1-size;
   display: flex;
   padding: 2px;
   cursor: pointer;

@@ -120,7 +120,7 @@ export default defineComponent({
   white-space: nowrap;
 }
 .ancestor {
-  @include font-size-regular;
+  @include body1-size;
   opacity: 0.5;
   cursor: pointer;
   &:hover {
@@ -128,22 +128,22 @@ export default defineComponent({
   }
 }
 .ancestorSeparator {
-  @include font-size-regular;
+  @include body1-size;
   opacity: 0.5;
   margin: 0 0.125rem;
   user-select: none;
 }
 .current {
-  @include font-size-tremendous-large;
+  @include h1-size;
   margin: 0 0.125rem;
 }
 .currentHash {
-  @include font-size-tremendous-large;
+  @include h1-size;
   user-select: none;
   margin-right: 0.125rem;
 }
 .ancestorHash {
-  @include font-size-tremendous-large;
+  @include h1-size;
   opacity: 0.5;
   margin-right: 0.125rem;
   user-select: none;

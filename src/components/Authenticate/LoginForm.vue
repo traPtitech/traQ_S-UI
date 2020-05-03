@@ -127,7 +127,7 @@ export default defineComponent({
 }
 .forgotPassword {
   @include color-ui-secondary;
-  @include font-size-extra-small;
+  @include caption-size;
   display: block;
   margin-top: 16px;
 }
