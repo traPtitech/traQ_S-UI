@@ -1,22 +1,14 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <file-modal-content-header :file-id="props.fileId" :class="$style.header" />
-    <file-modal-content-footer :file-id="props.fileId" />
+  <div :class="$style.container">
+    <file-modal-content-header :file-id="fileId" :class="$style.header" />
+    <file-modal-content-footer :file-id="fileId" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      backgroundColor: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FileModalFile',
@@ -30,15 +22,15 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
-    const styles = useStyles()
-    return { styles, props }
+  setup() {
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   position: relative;
   width: 100vw;
   max-width: 40rem;

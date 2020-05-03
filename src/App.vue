@@ -66,7 +66,7 @@ const useScrollbarStyle = () =>
   )
 
 const useThemeVariables = () =>
-  makeStyles(theme => ({
+  makeStyles((theme, common) => ({
     '--theme-accent-primary': theme.accent.primary,
     '--theme-accent-notification': theme.accent.notification,
     '--theme-accent-online': theme.accent.online,
@@ -79,7 +79,16 @@ const useThemeVariables = () =>
     '--theme-ui-secondary': theme.ui.secondary,
     '--theme-ui-tertiary': theme.ui.tertiary,
     '--theme-text-primary': theme.text.primary,
-    '--theme-text-secondary': theme.text.secondary
+    '--theme-text-secondary': theme.text.secondary,
+    '--common-text-white-primary': common.text.whitePrimary,
+    '--common-text-white-secondary': common.text.whiteSecondary,
+    '--common-text-black': common.text.black,
+    '--common-ui-qall': common.ui.qall,
+    '--common-ui-muted': common.ui.muted,
+    '--common-ui-pin': common.ui.pin,
+    '--common-background-overlay': common.background.overlay,
+    '--common-background-black': common.background.black,
+    '--common-drop-shadow-default': common.dropShadow.default
   }))
 
 const useStyle = () =>

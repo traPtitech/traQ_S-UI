@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.container" :style="styles.container">
-      <div :class="$style.header" :style="styles.header">
+  <div :class="$style.container">
+    <div :class="$style.container">
+      <div :class="$style.header">
         <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
       </div>
       <video
@@ -10,7 +10,7 @@
         :alt="fileMeta.name"
         :src="fileRawPath"
       />
-      <div :class="$style.footer" :style="styles.footer">
+      <div :class="$style.footer">
         <file-modal-content-footer :file-id="fileMeta.id" :is-white="true" />
       </div>
     </div>
@@ -18,18 +18,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      backgroundColor: common.background.black
-    }))
-  })
 
 export default defineComponent({
   name: 'FileModalVideo',
@@ -44,15 +36,15 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { fileMeta, fileRawPath } = useFileMeta(props, context)
-    return { styles, fileMeta, fileRawPath }
+    return { fileMeta, fileRawPath }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-common-black;
   width: 100vw;
   height: 100vh;
   max-height: 100%;

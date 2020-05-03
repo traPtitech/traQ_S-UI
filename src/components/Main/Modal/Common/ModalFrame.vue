@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    v-click-outside="onClickOutside"
-  >
+  <div :class="$style.container" v-click-outside="onClickOutside">
     <common-modal-header
       :class="$style.header"
       :icon-name="iconName"
@@ -19,18 +15,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import CommonModalHeader from './ModalHeader.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      borderColor: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'ModalFrame',
@@ -45,15 +32,15 @@ export default defineComponent({
     returnButton: { type: Boolean, default: false }
   },
   setup() {
-    const styles = useStyles()
     const onClickOutside = () => store.dispatch.ui.modal.clearModal()
-    return { styles, onClickOutside }
+    return { onClickOutside }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   display: flex;
   flex-flow: column nowrap;
   max-height: 480px;
@@ -64,6 +51,7 @@ export default defineComponent({
   border: {
     style: solid;
     width: 2px;
+    color: $theme-background-secondary;
   }
 }
 .header {

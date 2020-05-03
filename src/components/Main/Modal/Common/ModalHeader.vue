@@ -1,40 +1,19 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <modal-return-button
-      v-if="returnButton"
-      :class="$style.returnButton"
-      :style="styles.returnButton"
-    />
+  <div :class="$style.container">
+    <modal-return-button v-if="returnButton" :class="$style.returnButton" />
     <div :class="$style.content">
-      <h1 :class="$style.title" :style="styles.title">
+      <h1 :class="$style.title">
         <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />{{ title }}
       </h1>
-      <h2 :class="$style.subtitle" :style="styles.subtitle">{{ subtitle }}</h2>
+      <h2 :class="$style.subtitle">{{ subtitle }}</h2>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import ModalReturnButton from './ModalReturnButton.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary
-    })),
-    title: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    subtitle: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    returnButton: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'CommonModalHeader',
@@ -47,14 +26,14 @@ export default defineComponent({
     returnButton: { type: Boolean, default: false }
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   width: 100%;
   padding: 16px;
   display: flex;
@@ -63,10 +42,12 @@ export default defineComponent({
   width: 100%;
 }
 .returnButton {
+  @include color-ui-primary;
   padding-right: 4px;
   margin-left: -8px;
 }
 .title {
+  @include color-ui-primary;
   display: flex;
   align-items: center;
   width: 100%;
@@ -76,6 +57,7 @@ export default defineComponent({
   }
 }
 .subtitle {
+  @include color-ui-secondary;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

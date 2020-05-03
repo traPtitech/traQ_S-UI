@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <div :class="$style.innerContainer">
       <stamp-picker-stamp-set-selector-item
         v-for="set in stampSets"
@@ -14,17 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { StampSet } from './use/stampSetSelector'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'StampPickerStampSetSelector',
@@ -49,14 +41,14 @@ export default defineComponent({
     const onStampSetSelect = (stampSet: StampSet) => {
       context.emit('stamp-set-select', stampSet)
     }
-    const styles = useStyles()
-    return { styles, onStampSetSelect }
+    return { onStampSetSelect }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   position: relative;
   width: 100%;
   height: 36px;

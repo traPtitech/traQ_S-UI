@@ -1,6 +1,6 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
-    <div :class="$style.header" :style="styles.header">
+  <section :class="$style.container">
+    <div :class="$style.header">
       <return-button @click="back" :size="40" />
       <tab-content-title
         :current-navigation="currentNavigation"
@@ -17,26 +17,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
 import TabContent from './TabContent.vue'
 import ReturnButton from '@/components/UI/ReturnButton.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.primary
-    })),
-    header: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MobileTabFrame',
@@ -53,21 +40,21 @@ export default defineComponent({
     }
   },
   setup(_, context) {
-    const styles = useStyles()
-
     const back = () => {
       context.emit('back')
     }
 
     const close = () => store.dispatch.ui.modal.clearModal()
 
-    return { styles, back, close }
+    return { back, close }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-primary;
   height: 100%;
   width: 100%;
   overflow: {
@@ -77,6 +64,8 @@ export default defineComponent({
 }
 
 .header {
+  @include color-ui-primary;
+  @include background-secondary;
   display: flex;
   padding: 20px;
   align-items: center;

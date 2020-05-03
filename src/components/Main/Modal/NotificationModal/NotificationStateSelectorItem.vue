@@ -1,21 +1,13 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :aria-selected="isSelected">
     <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />
     <span :class="$style.title">{{ title }}</span>
-    <span :class="$style.description" :style="styles.description">{{
-      description
-    }}</span>
+    <span :class="$style.description">{{ description }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  reactive,
-  computed
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
@@ -41,17 +33,6 @@ const iconMdiMap: Record<ChannelSubscribeLevel, boolean> = {
   [ChannelSubscribeLevel.none]: true
 }
 
-const useStyles = (props: { isSelected: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: props.isSelected ? theme.accent.primary : theme.ui.primary,
-      opacity: props.isSelected ? '1' : '0.5'
-    })),
-    description: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
-
 export default defineComponent({
   name: 'NotificationSelectorItem',
   components: {
@@ -68,18 +49,18 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles(props)
     const iconName = computed(() => iconNameMap[props.subscriptionLevel])
     const iconMdi = computed(() => iconMdiMap[props.subscriptionLevel])
     const title = computed(() => titleMap[props.subscriptionLevel])
     const description = computed(() => descriptionMap[props.subscriptionLevel])
-    return { styles, iconName, iconMdi, title, description }
+    return { iconName, iconMdi, title, description }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: grid;
   grid-template:
     'icon title' 24px
@@ -89,6 +70,12 @@ export default defineComponent({
   width: 100%;
   user-select: none;
   cursor: pointer;
+  opacity: 0.5;
+
+  &[aria-selected] {
+    color: $theme-accent-primary;
+    opacity: 1;
+  }
 }
 .icon {
   font-size: 1rem;
@@ -102,6 +89,7 @@ export default defineComponent({
   grid-area: title;
 }
 .description {
+  @include color-ui-primary;
   font-size: 0.75rem;
   grid-area: description;
 }

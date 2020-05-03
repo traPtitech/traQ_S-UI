@@ -1,5 +1,5 @@
 <template>
-  <button :class="$style.item" :style="styles.item">
+  <button :class="$style.item">
     <icon :name="iconName" :mdi="iconMdi" :size="size" />
     <span :class="$style.title">{{ title }}</span>
     <icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
@@ -7,24 +7,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    item: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      background: theme.background.primary,
-      borderColor: theme.ui.tertiary
-    }))
-  })
 
 export default defineComponent({
   name: 'MobileTabSelectorItem',
@@ -42,10 +27,8 @@ export default defineComponent({
   },
   setup(props) {
     const size = 24
-    const styles = useStyles()
     const title = computed(() => navigationTypeNameMap[props.type])
     return {
-      styles,
       size,
       title
     }
@@ -55,11 +38,14 @@ export default defineComponent({
 
 <style lang="scss" module>
 .item {
+  @include color-ui-secondary;
+  @include background-primary;
   display: flex;
   width: 100%;
   padding: 12px 40px;
   border-top: solid 2px;
   border-bottom: solid 2px;
+  border-color: $theme-ui-tertiary;
   font-weight: bold;
   cursor: pointer;
 }

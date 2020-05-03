@@ -10,8 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import BrowserTab from './BrowserTab/BrowserTab.vue'
@@ -19,14 +18,6 @@ import QallTab from './QallTab/QallTab.vue'
 import StampTab from './StampTab/StampTab.vue'
 import ThemeTab from './ThemeTab/ThemeTab.vue'
 import SafariWarning from './SafariWarning.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'TabContent',
@@ -49,15 +40,15 @@ export default defineComponent({
     }
   },
   setup() {
-    const styles = useStyles()
-
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-primary;
   flex: 1 1;
   padding: 40px;
   padding-right: 240px;

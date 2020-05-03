@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
+  <section :class="$style.container">
     <navigation-selector-item
       v-for="item in items"
       :key="item.type"
@@ -12,22 +12,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from '@/components/Main/Modal/UserModal/NavigationSelectorItem.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'NavigationSelector',
@@ -38,8 +25,7 @@ export default defineComponent({
       default: 'profile' as const
     }
   },
-  setup(props, context: SetupContext) {
-    const styles = useStyles()
+  setup(props, context) {
     const items: {
       type: NavigationItemType
       iconName: string
@@ -60,17 +46,15 @@ export default defineComponent({
       }
     ]
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
-    return {
-      styles,
-      items,
-      onNavigationItemClick
-    }
+
+    return { items, onNavigationItemClick }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   margin-right: 4px;
   padding-top: 8px;
 }
