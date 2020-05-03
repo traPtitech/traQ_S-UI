@@ -38,14 +38,14 @@ export default defineComponent({
       userIds.value
         .map(id => ({
           user: store.state.entities.users[id],
-          viewing: props.viewerIds.includes(id)
+          active: props.viewerIds.includes(id)
         }))
         .filter(state => state.user?.state === UserAccountState.active)
         .sort((a, b) => {
-          if (a.viewing === b.viewing) {
+          if (a.active === b.active) {
             return 0
           }
-          return a.viewing ? -1 : 1
+          return a.active ? -1 : 1
         })
     )
     return { userIds, isForceNotification, viewStates }

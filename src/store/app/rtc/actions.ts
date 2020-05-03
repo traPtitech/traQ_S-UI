@@ -37,7 +37,7 @@ export const actions = defineActions({
         sessionId: s.sessionId
       })
     )
-    await changeRTCState(state.currentRTCState.channelId, userStateSessions)
+    changeRTCState(state.currentRTCState.channelId, userStateSessions)
   },
 
   async addRTCSession(context, payload: UserSessionState) {
@@ -126,10 +126,10 @@ export const actions = defineActions({
       }
     })
 
-    // mixer.addFileSource('qall_start', '/static/qall_start.mp3')
-    // mixer.addFileSource('qall_end', '/static/qall_end.mp3')
-    // mixer.addFileSource('qall_joined', '/static/qall_joined.mp3')
-    // mixer.addFileSource('qall_left', '/static/qall_left.mp3')
+    mixer.addFileSource('qall_start', '/static/qall_start.mp3')
+    mixer.addFileSource('qall_end', '/static/qall_end.mp3')
+    mixer.addFileSource('qall_joined', '/static/qall_joined.mp3')
+    mixer.addFileSource('qall_left', '/static/qall_left.mp3')
 
     commit.setMixer(mixer)
   },
