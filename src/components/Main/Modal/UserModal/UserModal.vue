@@ -132,7 +132,7 @@ export default defineComponent({
 }
 
 .icon {
-  @include background-secondary;
+  background-color: $theme-background-secondary;
   position: absolute;
   top: 0;
   left: 0;
