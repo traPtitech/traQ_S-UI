@@ -20,7 +20,6 @@ import { User } from '@traptitech/traq'
 type ViewState = {
   user: User
   active: boolean
-  qalling?: boolean
 }
 
 const useStyles = () =>
