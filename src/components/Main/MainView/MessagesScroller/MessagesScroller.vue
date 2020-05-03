@@ -212,7 +212,6 @@ export default defineComponent({
 .root {
   height: 100%;
   overflow-y: scroll;
-  overflow-anchor: none;
   padding: 12px 0;
 }
 
