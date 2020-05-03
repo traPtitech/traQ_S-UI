@@ -9,6 +9,7 @@ import {
   Message
 } from '@traptitech/traq'
 import { detectMentionOfMe } from '@/lib/detector'
+import store from '@/store'
 
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: MyUserDetail) {
@@ -32,23 +33,31 @@ export const mutations = defineMutations<S>()({
       state.detail?.id ?? '',
       state.detail?.groups ?? []
     )
-    if (state.subscriptionMap[message.channelId] > 0 || noticeable) {
-      if (message.channelId in state.unreadChannelsSet) {
-        const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
-        Vue.set(state.unreadChannelsSet, message.channelId, {
-          ...oldUnreadChannel,
-          count: oldUnreadChannel.count + 1,
-          updatedAt: new Date().toISOString()
-        })
-      } else {
-        Vue.set(state.unreadChannelsSet, message.channelId, {
-          channelId: message.channelId,
-          count: 1,
-          noticeable,
-          since: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        })
-      }
+
+    if (
+      !(
+        state.subscriptionMap[message.channelId] > 0 ||
+        store.state.entities.dmChannels[message.channelId] ||
+        noticeable
+      )
+    )
+      return
+
+    if (message.channelId in state.unreadChannelsSet) {
+      const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
+      Vue.set(state.unreadChannelsSet, message.channelId, {
+        ...oldUnreadChannel,
+        count: oldUnreadChannel.count + 1,
+        updatedAt: message.createdAt
+      })
+    } else {
+      Vue.set(state.unreadChannelsSet, message.channelId, {
+        channelId: message.channelId,
+        count: 1,
+        noticeable,
+        since: message.createdAt,
+        updatedAt: message.createdAt
+      })
     }
   },
   // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636

@@ -1,14 +1,29 @@
 import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
-import { changeChannelById } from '@/router/channel'
+import { ChannelId, DMChannelId, UserId } from '@/types/entity-ids'
+import { changeChannelById, changeDMChannelByUsername } from '@/router/channel'
 
 const useChannelSelect = () => {
-  const onChannelSelect = (id: ChannelId) => {
-    // 未読を除去する
+  const setUnreadState = (id: ChannelId | DMChannelId) => {
+    // 未読をの処理
     // TODO: 新着メッセージ基準設定などの処理
+    // TODO: 直リンクではここが叩かれない
+    store.commit.domain.messagesView.unsetUnreadSince()
+    const unreadChannel = store.state.domain.me.unreadChannelsSet[id]
+    if (unreadChannel) {
+      if (
+        store.state.domain.me.subscriptionMap[id] > 0 ||
+        store.state.entities.dmChannels[id]
+      ) {
+        store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
+      }
+    }
     if (id in store.state.domain.me.unreadChannelsSet) {
       store.dispatch.domain.me.readChannel({ channelId: id })
     }
+  }
+
+  const onChannelSelect = (id: ChannelId | DMChannelId) => {
+    setUnreadState(id)
 
     // チャンネル遷移
     if (id === store.state.domain.messagesView.currentChannelId) {
@@ -20,8 +35,27 @@ const useChannelSelect = () => {
       throw 'Invalid Channel'
     }
   }
+
+  const onDMChannelSelect = (username: string, userId: UserId) => {
+    const dmChannelId = Object.values(store.state.entities.dmChannels).find(
+      c => c.userId === userId
+    )?.id
+
+    if (dmChannelId) {
+      setUnreadState(dmChannelId)
+
+      // チャンネル遷移
+      if (dmChannelId === store.state.domain.messagesView.currentChannelId) {
+        return
+      }
+    }
+
+    changeDMChannelByUsername(username)
+  }
+
   return {
-    onChannelSelect
+    onChannelSelect,
+    onDMChannelSelect
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <file-modal-content-header :file-id="fileMeta.id" :class="$style.header" />
     <audio
       controls
@@ -12,19 +12,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      backgroundColor: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FileModalAudio',
@@ -39,15 +30,15 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { fileMeta, fileRawPath } = useFileMeta(props, context)
-    return { styles, fileMeta, fileRawPath }
+    return { fileMeta, fileRawPath }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   position: relative;
   width: 100vw;
   max-width: 40rem;

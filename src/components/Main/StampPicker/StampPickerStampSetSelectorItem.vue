@@ -1,60 +1,39 @@
 <template>
   <div
     :class="$style.container"
-    :style="styles.container"
+    :aria-selected="isActive"
     @click="context.emit('click')"
   >
-    <div
-      v-if="isActive"
-      :class="$style.indicator"
-      :style="styles.indicator"
-    ></div>
+    <div v-if="isActive" :class="$style.indicator"></div>
     <stamp
       v-if="stampSet.type === 'palette'"
       :stamp-id="pickThumbnail(stampSet.id)"
       :size="24"
-      :style="styles.paletteStamp"
+      :class="$style.paletteStamp"
     />
     <icon
       v-else-if="stampSet.type === 'category'"
       :name="`stampCategory/${stampSet.id}`"
       :size="24"
-      :style="styles.icon"
+      :class="$style.icon"
     />
     <icon
       v-else-if="stampSet.type === 'history'"
       mdi
       name="history"
       :size="24"
-      :style="styles.icon"
+      :class="$style.icon"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampSet } from './use/stampSetSelector'
-
-const useStyles = (props: { isActive: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: props.isActive ? theme.accent.primary : theme.ui.secondary
-    })),
-    indicator: makeStyles(theme => ({
-      background: theme.accent.primary
-    })),
-    icon: makeStyles(theme => ({
-      opacity: props.isActive ? '1' : '0.5'
-    })),
-    paletteStamp: makeStyles(theme => ({
-      filter: props.isActive ? '' : 'grayscale()'
-    }))
-  })
 
 const useStampPaletteThumbnail = () => {
   const pickThumbnail = (paletteId: StampPaletteId) => {
@@ -84,27 +63,42 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { pickThumbnail } = useStampPaletteThumbnail()
-    return { context, styles, pickThumbnail }
+    return { context, pickThumbnail }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
   height: 36px;
   cursor: pointer;
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+  }
 }
 .indicator {
+  @include background-accent-primary;
   position: absolute;
   width: 32px;
   height: 2px;
   bottom: 0;
   left: -4px;
+}
+.paletteStamp {
+  .container:not([aria-selected='true']) & {
+    filter: grayscale(1);
+  }
+}
+.icon {
+  opacity: 0.5;
+  .container[aria-selected='true'] & {
+    opacity: 1;
+  }
 }
 </style>

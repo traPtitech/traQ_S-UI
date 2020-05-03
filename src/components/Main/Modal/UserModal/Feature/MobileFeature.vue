@@ -1,16 +1,14 @@
 <template>
   <section :class="$style.feature">
-    <user-icon
-      :user-id="user.id"
-      :prevent-modal="true"
-      :size="48"
-      :class="$style.icon"
-      :style="styles.icon"
-    />
+    <user-icon :user-id="user.id" :prevent-modal="true" :size="48" />
     <div :class="$style.name">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <p>
-        <online-indicator :class="$style.name" :user-id="user.id" />
+        <online-indicator
+          :class="$style.name"
+          :user-id="user.id"
+          :last-online="props.detail ? props.detail.lastOnline : undefined"
+        />
         @{{ user.name }}
       </p>
     </div>
@@ -22,19 +20,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { User, UserDetail } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import OnlineIndicator from './OnlineIndicator.vue'
 import Buttons from './Buttons.vue'
-
-const useStyles = () =>
-  reactive({
-    icon: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MobileFeature',
@@ -46,9 +36,7 @@ export default defineComponent({
     detail: Object as PropType<UserDetail>
   },
   setup(props) {
-    const styles = useStyles()
     return {
-      styles,
       // TODO: https://github.com/vuejs/composition-api/issues/291
       props: props as { detail?: UserDetail }
     }

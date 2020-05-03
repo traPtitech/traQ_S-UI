@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container" :style="styles.container">
+  <section :class="$style.container">
     <tab-content-title
       :current-navigation="currentNavigation"
       :class="$style.title"
@@ -12,19 +12,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
 import TabContent from './TabContent.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'DesktopTabFrame',
@@ -39,15 +30,15 @@ export default defineComponent({
     }
   },
   setup() {
-    const styles = useStyles()
-
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-primary;
   flex: 1 1;
   padding: 40px;
   padding-right: 240px;

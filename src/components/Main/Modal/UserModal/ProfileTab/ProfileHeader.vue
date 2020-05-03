@@ -1,17 +1,9 @@
 <template>
-  <h2 :class="$style.header" :style="styles.header">{{ text }}</h2>
+  <h2 :class="$style.header">{{ text }}</h2>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    header: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ProfileHeader',
@@ -22,16 +14,14 @@ export default defineComponent({
     }
   },
   setup() {
-    const styles = useStyles()
-    return {
-      styles
-    }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .header {
+  @include color-ui-secondary;
   font-size: 14px;
   margin-top: 16px;
   margin-bottom: 8px;

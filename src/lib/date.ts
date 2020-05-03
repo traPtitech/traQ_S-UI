@@ -11,6 +11,9 @@ const getDayString = (date: Date) =>
 export const getFullDayString = (date: Date) =>
   date.getFullYear() + '/' + getDayString(date)
 
+export const getFullDayWithTimeString = (date: Date) =>
+  getFullDayString(date) + ' ' + getTimeString(date)
+
 /**
  * 2つの日時を比べ、差異がない部分については省略したものを出力する
  * @param ofDate 出力する日時

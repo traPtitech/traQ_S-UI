@@ -1,29 +1,15 @@
 <template>
-  <div
-    @click="context.emit('click')"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-    :style="styles.container"
-  >
+  <div @click="context.emit('click')" :class="$style.container">
     <stamp :stamp-id="stampId" :size="size" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
-import useHover, { HoverState } from '@/use/hover'
 import { buildFilePath } from '@/lib/apis'
 import Stamp from '@/components/UI/Stamp.vue'
-
-const useStyles = (hoverState: HoverState) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: hoverState.hover ? theme.background.secondary : ''
-    }))
-  })
 
 export default defineComponent({
   name: 'StampPickerStampListItem',
@@ -40,9 +26,15 @@ export default defineComponent({
   setup(props, context) {
     const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover(context)
-    const styles = useStyles(hoverState)
-    return { context, imageUrl, onMouseEnter, onMouseLeave, styles }
+    return { context, imageUrl }
   }
 })
 </script>
+
+<style lang="scss" module>
+.container {
+  &:hover {
+    @include background-secondary;
+  }
+}
+</style>

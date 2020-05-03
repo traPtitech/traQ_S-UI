@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.tags" :style="styles.tags">
+  <div :class="$style.tags">
     <template v-if="propst.detail === undefined">Now loading...</template>
     <template v-else>
       <ul :class="$style.list">
@@ -23,26 +23,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import { TagId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
 import TagsTabEdit from '@/components/Main/Modal/UserModal/TagsTabEdit.vue'
-
-const useStyles = () =>
-  reactive({
-    tags: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'TagsTab',
@@ -53,7 +40,6 @@ export default defineComponent({
     // TODO: https://github.com/vuejs/composition-api/issues/291
     const propst = props as { detail?: UserDetail }
 
-    const styles = useStyles()
     const tags = computed(() => propst.detail?.tags ?? [])
 
     const onTagClick = (id: TagId) => {
@@ -64,7 +50,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
       tags,
       onTagClick,
       propst
@@ -80,6 +65,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .tags {
+  @include color-ui-primary;
   display: flex;
   flex-direction: column;
   height: 100%;

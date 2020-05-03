@@ -63,8 +63,10 @@ export default defineComponent({
   },
   setup(props) {
     const styles = useStyles(props)
-    const { channelIdToPathString } = useChannelPath()
-    const channelName = computed(() => channelIdToPathString(props.channelId))
+    const { channelIdToShortPathString } = useChannelPath()
+    const channelName = computed(() =>
+      channelIdToShortPathString(props.channelId)
+    )
     const channelLink = computed(() => constructChannelPath(channelName.value))
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'
@@ -102,6 +104,7 @@ export default defineComponent({
   grid-area: info;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .mic {
   grid-area: mic;

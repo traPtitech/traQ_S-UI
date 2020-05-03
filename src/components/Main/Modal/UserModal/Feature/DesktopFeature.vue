@@ -3,7 +3,10 @@
     <div>
       <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator :user-id="user.id" />
+        <online-indicator
+          :user-id="user.id"
+          :last-online="props.detail ? props.detail.lastOnline : undefined"
+        />
         @{{ user.name }}
       </p>
     </div>

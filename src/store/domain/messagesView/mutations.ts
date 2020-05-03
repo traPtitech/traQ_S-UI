@@ -10,6 +10,10 @@ import useCurrentChannelPath from '@/use/currentChannelPath'
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
+
+    // 通常のチャンネルでない場合は最後に開いたチャンネルとして保持しない
+    if (!store.state.entities.channels[currentChannelId]) return
+
     const { currentChannelPathString } = useCurrentChannelPath()
     store.commit.app.browserSettings.setLastOpenChannelName(
       currentChannelPathString.value
@@ -90,5 +94,11 @@ export const mutations = defineMutations<S>()({
   },
   unsetEditingMessageId(state) {
     state.editingMessageId = undefined
+  },
+  setUnreadSince(state, since: string) {
+    state.unreadSince = since
+  },
+  unsetUnreadSince(state) {
+    state.unreadSince = undefined
   }
 })

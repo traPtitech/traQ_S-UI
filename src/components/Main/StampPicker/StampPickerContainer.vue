@@ -11,7 +11,6 @@
 import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import StampPicker from './StampPicker.vue'
-import { makeStyles } from '@/lib/styles'
 import { Place } from '@/store/ui/stampPicker'
 
 const useStampPicker = () => {
@@ -31,7 +30,7 @@ const useStampPicker = () => {
 
 const useStyles = (position: Ref<Place | undefined>) =>
   reactive({
-    stampPicker: makeStyles(theme => {
+    stampPicker: computed(() => {
       const height = 320
       const width = 340
       const margin = 20

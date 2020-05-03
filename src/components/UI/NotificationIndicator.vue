@@ -5,14 +5,15 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '../../lib/styles'
+import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'NotificationIndicator',
   props: {
-    color: {
-      type: String,
-      default: store.getters.app.themeSettings.currentTheme.background.secondary
+    color: String,
+    size: {
+      type: Number,
+      default: 10
     },
     hasBorder: {
       type: Boolean,
@@ -22,8 +23,12 @@ export default defineComponent({
   setup(props) {
     const style = makeStyles(theme => ({
       background: theme.accent.notification,
-      borderColor: props.color,
-      borderWidth: props.hasBorder ? '2px' : '0'
+      borderColor:
+        props.color ??
+        store.getters.app.themeSettings.currentTheme.background.secondary,
+      borderWidth: props.hasBorder ? '2px' : '0',
+      width: `${props.size}px`,
+      height: `${props.size}px`
     }))
     return { style }
   }
@@ -32,8 +37,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  width: 10px;
-  height: 10px;
   border-radius: 100vw;
   border-style: solid;
 }
