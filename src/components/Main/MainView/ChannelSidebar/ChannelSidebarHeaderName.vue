@@ -31,7 +31,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include h2-size;
+  @include size-h2;
   height: 100%;
 }
 

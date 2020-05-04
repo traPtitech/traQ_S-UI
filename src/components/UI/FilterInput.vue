@@ -84,7 +84,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include body1-size;
+  @include size-body1;
   height: 30px;
   display: flex;
   align-items: center;

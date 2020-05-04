@@ -58,11 +58,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include body2-size;
+  @include size-body2;
   display: flex;
   align-items: center;
   &[data-is-title] {
-    @include body1-size;
+    @include size-body1;
     font-weight: bold;
   }
 }

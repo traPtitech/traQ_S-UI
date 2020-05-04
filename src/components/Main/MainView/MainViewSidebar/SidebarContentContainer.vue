@@ -83,7 +83,7 @@ export default defineComponent({
 }
 
 .headerTitle {
-  @include body1-size;
+  @include size-body1;
   font-weight: bold;
 }
 </style>

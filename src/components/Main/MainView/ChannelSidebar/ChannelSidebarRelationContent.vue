@@ -159,7 +159,7 @@ export default defineComponent({
 .text {
   @include color-ui-secondary;
   @include background-secondary;
-  @include body2-size;
+  @include size-body2;
   border-radius: 8px;
   text-align: center;
   cursor: pointer;

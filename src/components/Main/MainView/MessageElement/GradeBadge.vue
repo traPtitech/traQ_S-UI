@@ -50,7 +50,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
-  @include body2-size;
+  @include size-body2;
   display: inline-flex;
   align-items: center;
   font-weight: bold;

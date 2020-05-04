@@ -53,7 +53,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .channelNameContainer {
-  @include h3-size;
+  @include size-h3;
 }
 
 .channelHash {
@@ -62,7 +62,7 @@ export default defineComponent({
 }
 
 .topic {
-  @include body2-size;
+  @include size-body2;
   font-weight: normal;
   display: -webkit-box;
   -webkit-line-clamp: 3;

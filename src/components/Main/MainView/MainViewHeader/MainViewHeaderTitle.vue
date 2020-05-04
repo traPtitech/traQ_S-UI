@@ -49,6 +49,6 @@ export default defineComponent({
 }
 
 .title {
-  @include h1-size;
+  @include size-h1;
 }
 </style>

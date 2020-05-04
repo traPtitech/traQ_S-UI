@@ -59,7 +59,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include body2-size;
+  @include size-body2;
   text-align: center;
   font-weight: bold;
   opacity: 0.5;

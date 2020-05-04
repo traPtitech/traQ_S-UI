@@ -241,7 +241,7 @@ $topicLeftPadding: 40px;
   cursor: pointer;
 }
 .channelName {
-  @include body1-size;
+  @include size-body1;
   display: flex;
   align-items: center;
   width: 100%;
@@ -275,7 +275,7 @@ $topicLeftPadding: 40px;
   pointer-events: none;
 }
 .topic {
-  @include body2-size;
+  @include size-body2;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

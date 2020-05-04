@@ -83,7 +83,7 @@ export default defineComponent({
 }
 
 .name {
-  @include body2-size;
+  @include size-body2;
   margin-left: 4px;
 
   word-break: keep-all;
@@ -93,7 +93,7 @@ export default defineComponent({
 }
 
 .date {
-  @include caption-size;
+  @include size-caption;
   margin-left: 4px;
 }
 </style>

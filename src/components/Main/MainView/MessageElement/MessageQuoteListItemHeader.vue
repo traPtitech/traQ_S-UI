@@ -43,7 +43,7 @@ export default defineComponent({
 }
 
 .displayName {
-  @include body2-size;
+  @include size-body2;
   font-weight: bold;
 }
 </style>

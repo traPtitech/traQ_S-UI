@@ -65,13 +65,13 @@ export default defineComponent({
   }
 }
 .displayName {
-  @include h3-size;
+  @include size-h3;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .name {
-  @include body2-size;
+  @include size-body2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

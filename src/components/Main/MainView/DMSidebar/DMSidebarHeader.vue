@@ -40,7 +40,7 @@ export default defineComponent({
   flex-shrink: 0;
 }
 .header {
-  @include h2-size;
+  @include size-h2;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

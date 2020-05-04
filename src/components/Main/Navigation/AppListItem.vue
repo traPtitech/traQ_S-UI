@@ -64,7 +64,7 @@ export default defineComponent({
   margin: 4px;
 }
 .label {
-  @include body1-size;
+  @include size-body1;
   text-align: center;
 }
 </style>

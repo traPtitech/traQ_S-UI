@@ -60,7 +60,7 @@ export default defineComponent({
   }
 }
 .topic {
-  @include body2-size;
+  @include size-body2;
   width: 100%;
   font-weight: normal;
   overflow: hidden;

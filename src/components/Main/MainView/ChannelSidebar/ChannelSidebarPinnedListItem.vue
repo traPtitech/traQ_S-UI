@@ -49,12 +49,12 @@ export default defineComponent({
 }
 
 .displayName {
-  @include body1-size;
+  @include size-body1;
   font-weight: bold;
   margin-left: 8px;
 }
 
 .text {
-  @include body1-size;
+  @include size-body1;
 }
 </style>
