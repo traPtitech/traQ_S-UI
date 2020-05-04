@@ -88,6 +88,7 @@ const useThemeVariables = () =>
     '--common-ui-pin': common.ui.pin,
     '--common-background-overlay': common.background.overlay,
     '--common-background-black': common.background.black,
+    '--common-background-pin': common.background.pin,
     '--common-drop-shadow-default': common.dropShadow.default
   }))
 

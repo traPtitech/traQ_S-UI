@@ -64,5 +64,6 @@ export interface CSSCommonVariables {
   '--common-ui-pin': string
   '--common-background-overlay': string
   '--common-background-black': string
+  '--common-background-pin': string
   '--common-drop-shadow-default': string
 }
