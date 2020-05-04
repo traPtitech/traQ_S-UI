@@ -29,7 +29,10 @@ export const actions = defineActions({
 
   async syncRTCState(context) {
     const { state } = rtcActionContext(context)
-    if (!state.currentRTCState) return
+    if (!state.currentRTCState) {
+      changeRTCState(null, [])
+      return
+    }
     const sessionStates = state.currentRTCState.sessionStates
     const userStateSessions: WebRTCUserStateSessions[] = sessionStates.map(
       s => ({
@@ -37,7 +40,7 @@ export const actions = defineActions({
         sessionId: s.sessionId
       })
     )
-    await changeRTCState(state.currentRTCState.channelId, userStateSessions)
+    changeRTCState(state.currentRTCState.channelId, userStateSessions)
   },
 
   async addRTCSession(context, payload: UserSessionState) {
@@ -59,10 +62,14 @@ export const actions = defineActions({
       s => s.sessionId === payload.sessionId
     )
     sessionStates.splice(index, 1)
-    commit.setCurrentRTCState({
-      channelId: currentState.channelId,
-      sessionStates: sessionStates
-    })
+    if (sessionStates.length === 0) {
+      commit.unsetCurrentRTCState()
+    } else {
+      commit.setCurrentRTCState({
+        channelId: currentState.channelId,
+        sessionStates: sessionStates
+      })
+    }
     await dispatch.syncRTCState()
   },
   async modifyRTCSession(
@@ -126,10 +133,10 @@ export const actions = defineActions({
       }
     })
 
-    // mixer.addFileSource('qall_start', '/static/qall_start.mp3')
-    // mixer.addFileSource('qall_end', '/static/qall_end.mp3')
-    // mixer.addFileSource('qall_joined', '/static/qall_joined.mp3')
-    // mixer.addFileSource('qall_left', '/static/qall_left.mp3')
+    mixer.addFileSource('qall_start', '/static/qall_start.mp3')
+    mixer.addFileSource('qall_end', '/static/qall_end.mp3')
+    mixer.addFileSource('qall_joined', '/static/qall_joined.mp3')
+    mixer.addFileSource('qall_left', '/static/qall_left.mp3')
 
     commit.setMixer(mixer)
   },
@@ -275,7 +282,7 @@ export const actions = defineActions({
         sessionType: 'qall'
       })
       dispatch.joinVoiceChannel(sessionId)
-    } catch {
+    } catch (e) {
       // TODO: エラー
     }
   },

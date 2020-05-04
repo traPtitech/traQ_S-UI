@@ -122,7 +122,7 @@ export default defineComponent({
   }
 }
 .userName {
-  font-size: 0.875rem;
+  @include size-body2;
   display: flex;
   align-items: center;
 }

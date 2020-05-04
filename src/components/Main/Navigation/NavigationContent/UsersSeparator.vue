@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container" :style="containerStyle">
-    {{ name }}
+    <div :class="$style.name">
+      {{ name }}
+      <div v-if="hasNotification" :class="$style.indicator">
+        <notification-indicator :size="6" />
+      </div>
+    </div>
     <div :class="$style.line"></div>
     <icon
       name="rounded-triangle"
@@ -15,15 +20,21 @@
 import { defineComponent } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
+import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
 export default defineComponent({
   name: 'UsersSeparator',
   components: {
-    Icon
+    Icon,
+    NotificationIndicator
   },
   props: {
     name: { type: String, default: '' },
-    isOpen: { type: Boolean, default: false }
+    isOpen: { type: Boolean, default: false },
+    hasNotification: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props) {
     return {
@@ -42,11 +53,19 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include size-body2;
   display: flex;
   align-items: center;
-  font-size: 0.875rem;
   justify-content: space-between;
   font-weight: bold;
+}
+.name {
+  position: relative;
+}
+.indicator {
+  position: absolute;
+  top: 0;
+  right: -6px;
 }
 .line {
   margin: 0 8px;

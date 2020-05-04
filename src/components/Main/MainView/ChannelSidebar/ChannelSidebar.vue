@@ -23,6 +23,7 @@
         v-else
         :channel-id="channelId"
         :viewer-ids="viewerIds"
+        :qall-user-ids="qallUserIds"
         :pinned-messages-count="state.pinnedMessage.length"
         @pinned-mode-toggle="togglePinnedMode"
       />
@@ -38,6 +39,7 @@ import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainView
 import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import ChannelSidebarPinnedList from './ChannelSidebarPinnedList.vue'
+import { useQallSession } from './use/channelRTCSession'
 
 export default defineComponent({
   name: 'ChannelSidebar',
@@ -48,7 +50,7 @@ export default defineComponent({
     ChannelSidebarContent
   },
   props: {
-    channelId: { type: String as PropType<ChannelId>, requried: true }
+    channelId: { type: String as PropType<ChannelId>, required: true }
   },
   setup(props) {
     const {
@@ -58,10 +60,13 @@ export default defineComponent({
       closeSidebar
     } = useChannelSidebarCommon()
 
+    const { sessionUserIds: qallUserIds } = useQallSession(props)
+
     return {
       state,
       togglePinnedMode,
       viewerIds,
+      qallUserIds,
       closeSidebar
     }
   }

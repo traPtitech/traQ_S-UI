@@ -65,13 +65,13 @@ export default defineComponent({
   }
 }
 .displayName {
-  font-size: 1.125rem;
+  @include size-h3;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .name {
-  font-size: 0.875rem;
+  @include size-body2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

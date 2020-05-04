@@ -27,8 +27,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.25rem;
-
 .container {
   @include color-ui-primary;
   height: 100%;
@@ -41,10 +39,10 @@ $headerSize: 1.25rem;
   flex-shrink: 0;
 }
 .header {
+  @include size-h2;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: $headerSize;
 }
 </style>

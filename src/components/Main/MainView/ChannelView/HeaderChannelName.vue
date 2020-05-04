@@ -32,7 +32,6 @@ import {
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
 import useIsMobile from '@/use/isMobile'
@@ -98,9 +97,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$ancestorSize: 1rem;
-$currentChannelSize: 1.5rem;
-
 .container {
   @include color-ui-primary;
   height: 100%;
@@ -109,7 +105,7 @@ $currentChannelSize: 1.5rem;
 }
 .ancestor {
   @include color-ui-secondary;
-  font-size: $ancestorSize;
+  @include size-body1;
   opacity: 0.5;
   cursor: pointer;
   &:hover {
@@ -121,22 +117,22 @@ $currentChannelSize: 1.5rem;
   &[data-is-primary] {
     @include color-ui-primary;
   }
-  font-size: $ancestorSize;
+  @include size-body1;
   opacity: 0.5;
   margin: 0 0.125rem;
   user-select: none;
 }
 .current {
-  font-size: $currentChannelSize;
+  @include size-h1;
   margin: 0 0.125rem;
 }
 .currentHash {
-  font-size: $currentChannelSize;
+  @include size-h1;
   user-select: none;
   margin-right: 0.125rem;
 }
 .ancestorHash {
-  font-size: $currentChannelSize;
+  @include size-h1;
   opacity: 0.5;
   margin-right: 0.125rem;
   user-select: none;

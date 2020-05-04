@@ -33,9 +33,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$displayNameSize: 1rem;
-$textSize: 1rem;
-
 .container {
   display: block;
   width: 256px;
@@ -52,12 +49,12 @@ $textSize: 1rem;
 }
 
 .displayName {
-  font-size: $displayNameSize;
+  @include size-body1;
   font-weight: bold;
   margin-left: 8px;
 }
 
 .text {
-  font-size: $textSize;
+  @include size-body1;
 }
 </style>

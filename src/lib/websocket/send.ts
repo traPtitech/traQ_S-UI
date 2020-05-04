@@ -26,11 +26,16 @@ export const changeViewState: ChangeViewStateFunction = (
 const RTCSTATE_COMMAND = 'rtcstate'
 
 export const changeRTCState = (
-  channelId: ChannelId,
+  channelId: ChannelId | null,
   states: WebRTCUserStateSessions[]
 ) => {
+  if (!channelId) {
+    ws.sendCommand(RTCSTATE_COMMAND, '')
+    return
+  }
   if (states.length === 0) {
     ws.sendCommand(RTCSTATE_COMMAND, channelId, '')
+    return
   }
   ws.sendCommand(
     RTCSTATE_COMMAND,

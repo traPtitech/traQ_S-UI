@@ -4,6 +4,11 @@
       :viewer-ids="viewerIds"
       :class="$style.sidebarItem"
     />
+    <channel-sidebar-qall
+      v-if="qallUserIds.length > 0"
+      :qall-user-ids="qallUserIds"
+      :class="$style.sidebarItem"
+    />
     <channel-sidebar-topic
       :class="$style.sidebarItem"
       :channel-id="channelId"
@@ -36,6 +41,7 @@ import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 import ChannelSidebarMember from './ChannelSidebarMember.vue'
 import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
@@ -45,6 +51,10 @@ export default defineComponent({
     viewerIds: {
       type: Array as PropType<UserId[]>,
       required: true
+    },
+    qallUserIds: {
+      type: Array as PropType<UserId[]>,
+      default: []
     },
     pinnedMessagesCount: {
       type: Number,
@@ -57,7 +67,8 @@ export default defineComponent({
     ChannelSidebarViewers,
     ChannelSidebarMember,
     ChannelSidebarEdit,
-    ChannelSidebarRelation
+    ChannelSidebarRelation,
+    ChannelSidebarQall
   },
   setup(_, context) {
     return { context }

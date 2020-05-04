@@ -30,7 +30,8 @@
             :class="$style.text"
             @click="toggleChildren"
           >
-            子チャンネルを全て表示(+{{ children.length - 3 }})
+            <div>子チャンネルを全て表示</div>
+            <div>(+{{ children.length - 3 }})</div>
           </div>
         </div>
       </div>
@@ -47,7 +48,8 @@
           :class="$style.text"
           @click="toggleSiblings"
         >
-          兄弟チャンネルを全て表示(+{{ siblings.length - 3 }})
+          <div>兄弟チャンネルを全て表示</div>
+          <div>(+{{ siblings.length - 3 }})</div>
         </div>
       </div>
     </div>
@@ -104,7 +106,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$textSize: 0.95rem;
 .container {
   @include color-ui-primary;
 }
@@ -139,7 +140,11 @@ $textSize: 0.95rem;
 }
 
 .text {
-  font-size: $textSize;
+  @include color-ui-secondary;
+  @include background-secondary;
+  @include size-body2;
+  border-radius: 8px;
+  text-align: center;
   cursor: pointer;
 }
 </style>

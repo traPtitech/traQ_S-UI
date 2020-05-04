@@ -30,14 +30,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$channelNameSize: 1.125rem;
-$topiclSize: 0.875rem;
-
 .channelNameContainer {
-  font-size: $channelNameSize;
   &[data-is-current] {
     @include color-accent-primary;
   }
+  @include size-h3;
 }
 
 .channelHash {
@@ -46,8 +43,8 @@ $topiclSize: 0.875rem;
 }
 
 .topic {
+  @include size-body2;
   font-weight: normal;
-  font-size: $topiclSize;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

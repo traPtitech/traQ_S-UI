@@ -38,6 +38,9 @@ export const getters = defineGetters<S>()({
   userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
     return (id: DMChannelId) => state.users[state.dmChannels[id].userId]?.name
   },
+  DMChannelIdByUserId(state): (id: UserId) => DMChannelId | undefined {
+    return id => Object.values(state.dmChannels).find(c => c.userId === id)?.id
+  },
   userGroupByName(state): (name: string) => UserGroup | undefined {
     return (name: string) => {
       const loweredName = name.toLowerCase()

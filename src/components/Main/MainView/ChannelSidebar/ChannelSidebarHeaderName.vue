@@ -21,12 +21,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$headerSize: 1.25rem;
-
 .container {
   @include color-ui-primary;
+  @include size-h2;
   height: 100%;
-  font-size: $headerSize;
 }
 
 .channelHash {
