@@ -2,8 +2,15 @@
   <div :class="$style.header">
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
-    <span :class="$style.name" :style="styles.name">@{{ state.name }}</span>
-    <span :class="$style.date" :style="styles.date">{{ state.date }}</span>
+    <span :class="$style.name">@{{ state.name }}</span>
+    <span :class="$style.date">{{ state.date }}</span>
+    <icon
+      v-if="createdAt !== updatedAt"
+      :class="$style.editIcon"
+      :size="16"
+      name="pencil"
+      mdi
+    />
   </div>
 </template>
 
@@ -16,19 +23,9 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { getDisplayDate } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
-
-const useStyles = () =>
-  reactive({
-    date: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    name: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -46,7 +43,7 @@ export default defineComponent({
       required: true
     }
   },
-  components: { GradeBadge },
+  components: { GradeBadge, Icon },
   setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.users[props.userId]),
@@ -58,9 +55,7 @@ export default defineComponent({
     if (state.user === undefined) {
       store.dispatch.entities.fetchUser(props.userId)
     }
-
-    const styles = useStyles()
-    return { state, styles }
+    return { state }
   }
 })
 </script>
@@ -83,6 +78,7 @@ export default defineComponent({
 }
 
 .name {
+  @include color-ui-secondary;
   @include size-body2;
   margin-left: 4px;
 
@@ -93,7 +89,13 @@ export default defineComponent({
 }
 
 .date {
+  @include color-ui-secondary;
   @include size-caption;
+  margin-left: 4px;
+}
+
+.editIcon {
+  @include color-ui-secondary;
   margin-left: 4px;
 }
 </style>
