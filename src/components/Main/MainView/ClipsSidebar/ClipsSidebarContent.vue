@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <sidebar-content-container title="名前" :class="$style.item">
       <content-editor
         :value="name"
@@ -19,6 +19,7 @@
         @edit-start="startDesciptionEdit"
       />
     </sidebar-content-container-foldable>
+    <form-button @click="deleteClip" label="削除" />
   </div>
 </template>
 
@@ -36,6 +37,7 @@ import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '@/lib/apis'
+import FormButton from '@/components/UI/FormButton.vue'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -67,7 +69,8 @@ export default defineComponent({
   components: {
     SidebarContentContainer,
     SidebarContentContainerFoldable,
-    ContentEditor
+    ContentEditor,
+    FormButton
   },
   props: {
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
@@ -97,6 +100,10 @@ export default defineComponent({
       startEdit: startDesciptionEdit,
       onEditDone: onDesciptionEditDone
     } = useEdit(props, state, 'description')
+
+    const deleteClip = async () =>
+      await apis.deleteClipFolder(props.clipFolderId)
+
     return {
       name,
       description,
@@ -107,13 +114,18 @@ export default defineComponent({
       isDesciptionEditing,
       onDesciptionInput,
       startDesciptionEdit,
-      onDesciptionEditDone
+      onDesciptionEditDone,
+      deleteClip
     }
   }
 })
 </script>
 
 <style lang="scss" module>
+.container {
+  min-height: 100%;
+}
+
 .item {
   margin: 16px 0;
   &:first-child {
