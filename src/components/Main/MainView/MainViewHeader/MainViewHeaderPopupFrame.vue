@@ -18,7 +18,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-primary;
-  filter: $common-drop-shadow-default;
+  @include drop-shadow-default;
   display: grid;
   row-gap: 16px;
   width: max-content;
