@@ -2,7 +2,6 @@
   <div>
     <message-input-text-area
       :class="$style.inputTextArea"
-      :style="styles.inputTextArea"
       :text="textState.text"
       @input="onInputText"
       @modifier-key-down="onModifierKeyDown"
@@ -17,10 +16,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import apis from '@/lib/apis'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useTextInput, {
   TextState
@@ -40,13 +38,6 @@ const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   return { editMessage, cancel }
 }
 
-const useStyles = () =>
-  reactive({
-    inputTextArea: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'MessageEditor',
   components: {
@@ -64,7 +55,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const {
       textState,
       onInputText,
@@ -73,7 +63,6 @@ export default defineComponent({
     } = useTextInput(props.rawContent)
     const { editMessage, cancel } = useEditMessage(props, textState)
     return {
-      styles,
       editMessage,
       cancel,
       textState,
@@ -87,6 +76,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .inputTextArea {
+  @include background-secondary;
   padding: 8px 12px;
   border-radius: 4px;
   overflow: hidden;

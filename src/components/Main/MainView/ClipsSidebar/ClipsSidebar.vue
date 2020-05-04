@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar :style="styles.container" :class="$style.container">
+  <main-view-sidebar :class="$style.container">
     <template #header>
       <!--TODO: ヘッダのコンポーネント分離-->
       <clips-sidebar-header
@@ -14,21 +14,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ClipFolderId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import ClipsSidebarHeader from './ClipsSidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'ClipsSidebar',
@@ -41,11 +32,9 @@ export default defineComponent({
     clipFolderId: { type: String as PropType<ClipFolderId>, requried: true }
   },
   setup() {
-    const styles = useStyles()
     const { closeSidebar } = useSidebar()
 
     return {
-      styles,
       closeSidebar
     }
   }
@@ -54,6 +43,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
+  @include color-ui-secondary;
   display: flex;
   flex-direction: column;
   width: 320px;

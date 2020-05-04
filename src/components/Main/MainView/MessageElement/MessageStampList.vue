@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.stampList" :style="styles.stampList">
+  <div :class="$style.stampList" :data-show-details="isShowDetail">
     <div
       v-for="(stamps, stampId) in state.stampsById"
       :key="stampId"
@@ -36,14 +36,6 @@ import { StampId } from '@/types/entity-ids'
 import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { isShowDetail: boolean }) =>
-  reactive({
-    stampList: makeStyles(theme => ({
-      flexDirection: props.isShowDetail ? `column` : `row`
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageStampList',
@@ -78,13 +70,11 @@ export default defineComponent({
         stampId
       })
     }
-    const styles = useStyles(props)
     return {
       props,
       state,
       addStamp,
-      removeStamp,
-      styles
+      removeStamp
     }
   }
 })
@@ -97,6 +87,10 @@ export default defineComponent({
 .stampList {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: row;
+  &[data-show-details] {
+    flex-direction: column;
+  }
 }
 .stamp {
   margin: {

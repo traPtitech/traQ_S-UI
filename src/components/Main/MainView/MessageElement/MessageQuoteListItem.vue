@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" :style="styles.body" v-if="state.message">
+  <div :class="$style.body" v-if="state.message">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -13,7 +13,7 @@
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
-    <div :class="$style.footer" :style="styles.footer">
+    <div :class="$style.footer">
       <span :class="$style.description">
         {{ state.channelPath }} - {{ state.date }}
       </span>
@@ -36,18 +36,7 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import { MessageId } from '@/types/entity-ids'
 import { getCreatedDate } from '@/lib/date'
-import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
-
-const useStyles = () =>
-  reactive({
-    body: makeStyles(theme => ({
-      borderColor: theme.ui.tertiary
-    })),
-    footer: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
@@ -76,9 +65,7 @@ export default defineComponent({
         state.message ? getCreatedDate(state.message.createdAt) : ''
       )
     })
-    const styles = useStyles()
-
-    return { state, styles }
+    return { state }
   }
 })
 </script>
@@ -101,6 +88,7 @@ export default defineComponent({
   border: {
     left-width: 4px;
     left-style: solid;
+    color: $theme-ui-tertiary;
   }
   overflow: hidden;
 }
@@ -134,6 +122,7 @@ export default defineComponent({
   }
 }
 .footer {
+  @include color-ui-secondary;
   @include size-body2;
   grid-area: footer;
   padding-left: 8px;

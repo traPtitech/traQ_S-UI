@@ -1,16 +1,16 @@
 <template>
   <div
     :class="$style.container"
-    :style="styles.container"
     @click="onClick"
     :data-is-disabled="disabled"
+    :data-header-style="headerStyle"
   >
     <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useHeaderStyle from '@/components/Main/MainView/MainViewHeader/use/headerStyle'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -35,21 +35,19 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { stylesWithColor } = useHeaderStyle()
-    const styles = reactive({
-      container: stylesWithColor({})
-    })
+    const { headerStyle } = useHeaderStyle()
     const onClick = () => {
       if (props.disabled) return
       context.emit('click')
     }
-    return { onClick, styles }
+    return { onClick, headerStyle }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   padding: 8px;
   cursor: pointer;
   width: 40px;
@@ -57,6 +55,9 @@ export default defineComponent({
   &[data-is-disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  &[data-header-style='dark'] {
+    @include color-common-text-white-primary;
   }
 }
 </style>

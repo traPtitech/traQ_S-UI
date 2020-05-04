@@ -3,7 +3,6 @@
     :data-is-large-padding="largePadding"
     :data-is-clickable="clickable"
     :class="$style.container"
-    :style="styles.container"
     @click.self="onContainerClick"
   >
     <div v-if="title" :class="$style.header" @click="onTitleClick">
@@ -15,16 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'SidebarContentContainer',
@@ -40,7 +30,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const onTitleClick = () => {
       context.emit('click')
     }
@@ -49,13 +38,15 @@ export default defineComponent({
         context.emit('click')
       }
     }
-    return { styles, onTitleClick, onContainerClick }
+    return { onTitleClick, onContainerClick }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
+  @include color-ui-secondary;
   display: flex;
   flex-direction: column;
   width: 100%;

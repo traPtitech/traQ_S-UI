@@ -1,20 +1,14 @@
 <template>
   <div
     :class="$style.body"
-    :style="styles.body"
     :title="state.tooltip"
+    :data-include-me="state.includeMe"
     @click="onClick"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
   >
     <div :class="$style.stampContainer">
       <img loading="lazy" :src="state.src" />
     </div>
-    <spin-number
-      :value="state.count"
-      :class="$style.count"
-      :style="styles.count"
-    />
+    <spin-number :value="state.count" :class="$style.count" />
   </div>
 </template>
 
@@ -28,30 +22,9 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { buildFilePath } from '@/lib/apis'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-import useHover from '@/use/hover'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import { MessageStamp } from '@traptitech/traq'
 import { StampId } from '@/types/entity-ids'
-
-const useStyles = (
-  state: { includeMe: boolean },
-  hoverState: { hover: boolean }
-) =>
-  reactive({
-    body: makeStyles(theme => ({
-      backgroundColor: state.includeMe
-        ? transparentize(theme.accent.primary, 0.3)
-        : theme.background.tertiary
-    })),
-    count: makeStyles(theme => ({
-      color:
-        state.includeMe || hoverState.hover
-          ? theme.ui.primary
-          : transparentize(theme.ui.primary, 0.6)
-    }))
-  })
 
 export default defineComponent({
   name: 'StampElement',
@@ -69,7 +42,6 @@ export default defineComponent({
   setup(props, context) {
     const stamp = computed(() => store.state.entities.stamps[props.stampId])
 
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const state = reactive({
       count: computed(() =>
         props.stamps.reduce((acc, cur) => {
@@ -97,8 +69,6 @@ export default defineComponent({
       isProgress: false
     })
 
-    const styles = useStyles(state, hoverState)
-
     const onClick = () => {
       if (state.isProgress) return
       if (state.includeMe) {
@@ -118,11 +88,7 @@ export default defineComponent({
     return {
       props,
       state,
-      styles,
-      onClick,
-      hoverState,
-      onMouseEnter,
-      onMouseLeave
+      onClick
     }
   }
 })
@@ -130,6 +96,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
+  @include background-tertiary;
+  &[data-include-me] {
+    background: $theme-accent-primary--03;
+  }
   display: inline-flex;
   flex-shrink: 0;
   height: 24px;
@@ -154,6 +124,11 @@ export default defineComponent({
 }
 
 .count {
+  color: $theme-ui-primary--06;
+  .body[data-include-me] &,
+  .body:hover & {
+    @include color-ui-primary;
+  }
   @include size-body2;
   font-weight: bold;
   margin: {

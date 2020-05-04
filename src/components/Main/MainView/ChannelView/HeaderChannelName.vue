@@ -1,10 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <router-link
       v-if="ancestorsPath.length > 0"
       :to="buildChannelLink(ancestorsPath[0].path)"
       :class="$style.ancestorHash"
-      :style="styles.ancestorSeparator"
       >#</router-link
     >
     <span v-else :class="$style.currentHash">#</span>
@@ -12,10 +11,11 @@
       <router-link
         :to="buildChannelLink(ancestor.path)"
         :class="$style.ancestor"
-        :style="styles.ancestor"
         >{{ isMobile ? ancestor.name[0] : ancestor.name }}</router-link
       >
-      <span :class="$style.ancestorSeparator" :style="styles.ancestorSeparator"
+      <span
+        :class="$style.ancestorSeparator"
+        :data-is-primary="pathInfoList.length <= 1"
         >/</span
       >
     </span>
@@ -28,12 +28,10 @@ import {
   defineComponent,
   computed,
   reactive,
-  Ref,
   PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
 import useIsMobile from '@/use/isMobile'
@@ -64,20 +62,6 @@ const usePathInfo = (props: Props) => {
   return { pathInfoList }
 }
 
-const useStyles = (pathInfoList: Ref<readonly ChannelPathInfo[]>) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    ancestor: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    ancestorSeparator: makeStyles(theme => ({
-      color:
-        pathInfoList.value.length <= 1 ? theme.ui.primary : theme.ui.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'ChannelViewHeaderChannelName',
   props: {
@@ -100,12 +84,11 @@ export default defineComponent({
     )
     const buildChannelLink = (path: string[]) =>
       constructChannelPath(path.join('/'))
-    const styles = useStyles(pathInfoList)
     return {
       state,
-      styles,
       ancestorsPath,
       pathInfo,
+      pathInfoList,
       buildChannelLink,
       isMobile
     }
@@ -115,11 +98,13 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   height: 100%;
   word-break: keep-all;
   white-space: nowrap;
 }
 .ancestor {
+  @include color-ui-secondary;
   @include size-body1;
   opacity: 0.5;
   cursor: pointer;
@@ -128,6 +113,10 @@ export default defineComponent({
   }
 }
 .ancestorSeparator {
+  @include color-ui-secondary;
+  &[data-is-primary] {
+    @include color-ui-primary;
+  }
   @include size-body1;
   opacity: 0.5;
   margin: 0 0.125rem;
