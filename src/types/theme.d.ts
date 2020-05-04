@@ -39,20 +39,9 @@ export interface ThemeVariables {
   '--theme-text-secondary': string
 }
 
-export interface ThemeVariables {
-  '--theme-accent-primary': string
-  '--theme-accent-notification': string
-  '--theme-accent-online': string
-  '--theme-accent-error': string
-  '--theme-background-primary': string
-  '--theme-background-secondary': string
-  '--theme-background-tertiary': string
-  '--theme-background-secondarySub': string
-  '--theme-ui-primary': string
-  '--theme-ui-secondary': string
-  '--theme-ui-tertiary': string
-  '--theme-text-primary': string
-  '--theme-text-secondary': string
+export interface TransparentThemeVariables {
+  '--theme-accent-primary--03': string
+  '--theme-ui-primary--06': string
 }
 
 export interface CSSCommonVariables {
