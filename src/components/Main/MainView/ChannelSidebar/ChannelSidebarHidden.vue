@@ -20,7 +20,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
-
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import { UserId } from '@/types/entity-ids'
