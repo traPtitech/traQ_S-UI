@@ -53,9 +53,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include size-body2;
   display: flex;
   align-items: center;
-  font-size: 0.875rem;
   justify-content: space-between;
   font-weight: bold;
 }

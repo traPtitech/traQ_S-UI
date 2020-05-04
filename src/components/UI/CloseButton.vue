@@ -59,9 +59,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include size-body2;
   text-align: center;
   font-weight: bold;
-  font-size: 0.8rem;
   opacity: 0.5;
   &:hover,
   &:not([data-react-hover]) {

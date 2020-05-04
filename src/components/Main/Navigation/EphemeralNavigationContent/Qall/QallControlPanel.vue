@@ -120,7 +120,7 @@ export default defineComponent({
   user-select: none;
 }
 .channelName {
-  font-size: 0.75rem;
+  @include size-caption;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

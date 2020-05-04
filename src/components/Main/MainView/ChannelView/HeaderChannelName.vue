@@ -114,16 +114,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$ancestorSize: 1rem;
-$currentChannelSize: 1.5rem;
-
 .container {
   height: 100%;
   word-break: keep-all;
   white-space: nowrap;
 }
 .ancestor {
-  font-size: $ancestorSize;
+  @include size-body1;
   opacity: 0.5;
   cursor: pointer;
   &:hover {
@@ -131,22 +128,22 @@ $currentChannelSize: 1.5rem;
   }
 }
 .ancestorSeparator {
-  font-size: $ancestorSize;
+  @include size-body1;
   opacity: 0.5;
   margin: 0 0.125rem;
   user-select: none;
 }
 .current {
-  font-size: $currentChannelSize;
+  @include size-h1;
   margin: 0 0.125rem;
 }
 .currentHash {
-  font-size: $currentChannelSize;
+  @include size-h1;
   user-select: none;
   margin-right: 0.125rem;
 }
 .ancestorHash {
-  font-size: $currentChannelSize;
+  @include size-h1;
   opacity: 0.5;
   margin-right: 0.125rem;
   user-select: none;

@@ -60,8 +60,8 @@ export default defineComponent({
   }
 }
 .topic {
+  @include size-body2;
   width: 100%;
-  font-size: 0.875rem;
   font-weight: normal;
   overflow: hidden;
   text-overflow: ellipsis;

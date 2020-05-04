@@ -257,13 +257,13 @@ $topicLeftPadding: 40px;
   cursor: pointer;
 }
 .channelName {
+  @include size-body1;
   display: flex;
   align-items: center;
   width: 100%;
   min-width: 0;
   height: 100%;
   padding: 0 8px;
-  font-size: 1rem;
   cursor: pointer;
 }
 .channelNameInner {
@@ -306,12 +306,11 @@ $topicLeftPadding: 40px;
   pointer-events: none;
 }
 .topic {
+  @include size-body2;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
-  font-size: 0.875rem;
 
   padding: {
     left: $topicLeftPadding;

@@ -154,7 +154,7 @@ export default defineComponent({
 }
 
 .count {
-  font-size: 0.8rem;
+  @include size-body2;
   font-weight: bold;
   margin: {
     left: 6px;
