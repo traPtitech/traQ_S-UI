@@ -7,8 +7,7 @@
     <icon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
-      :width="16"
-      :height="16"
+      :size="16"
       name="pencil"
       mdi
     />
@@ -79,6 +78,7 @@ export default defineComponent({
 }
 
 .name {
+  @include color-ui-secondary;
   @include size-body2;
   margin-left: 4px;
 
@@ -86,18 +86,16 @@ export default defineComponent({
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  color: $theme-ui-secondary;
 }
 
 .date {
+  @include color-ui-secondary;
   @include size-caption;
   margin-left: 4px;
-  font-size: 0.8rem;
-  color: $theme-ui-secondary;
 }
 
 .editIcon {
-  color: $theme-ui-secondary;
+  @include color-ui-secondary;
   margin-left: 4px;
 }
 </style>
