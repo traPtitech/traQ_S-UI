@@ -57,7 +57,7 @@ export default defineComponent({
     cursor: not-allowed;
   }
   &[data-header-style='dark'] {
-    color: $common-text-white-primary;
+    @include color-common-text-white-primary;
   }
 }
 </style>
