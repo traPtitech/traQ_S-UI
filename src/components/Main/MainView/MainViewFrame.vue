@@ -35,7 +35,8 @@ export default defineComponent({
 <style lang="scss" module>
 $paddingSize: 16px;
 .container {
-  opacity: 1 &[hideOuter] {
+  opacity: 1
+  &[data-hide-outer] {
     opacity: 0.5;
     overflow: hidden;
   }
