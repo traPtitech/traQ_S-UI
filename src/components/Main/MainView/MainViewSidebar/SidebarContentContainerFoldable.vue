@@ -9,9 +9,9 @@
       <icon
         width="20"
         height="20"
-        :style="styles.icon"
         name="rounded-triangle"
         :class="$style.icon"
+        :data-is-open="isOpen"
       />
     </template>
     <template v-if="isOpen" #default>
@@ -22,16 +22,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-
-const useStyles = (state: { isOpen: boolean }) =>
-  reactive({
-    icon: makeStyles(theme => ({
-      transform: state.isOpen ? 'rotate(180deg)' : ''
-    }))
-  })
 
 export default defineComponent({
   name: 'SidebarContentContainerFoldable',
@@ -55,8 +47,7 @@ export default defineComponent({
       isOpen: false
     })
     const toggle = () => (state.isOpen = !state.isOpen)
-    const styles = useStyles(state)
-    return { styles, ...toRefs(state), toggle }
+    return { ...toRefs(state), toggle }
   }
 })
 </script>
@@ -64,6 +55,9 @@ export default defineComponent({
 <style lang="scss" module>
 .icon {
   transform: rotate(0deg);
+  &[data-is-open] {
+    transform: rotate(180deg);
+  }
   transition: 0.5s;
 }
 </style>

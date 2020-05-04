@@ -1,20 +1,11 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <h2 :class="$style.header">@{{ name }}</h2>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'DMSidebarHeader',
@@ -22,14 +13,14 @@ export default defineComponent({
     name: { type: String, required: true }
   },
   setup(props) {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   height: 100%;
   width: calc(100% - 32px);
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container" :disabled="disabled">
+  <div :class="$style.container" :disabled="disabled">
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -12,16 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelViewHeaderToolsMenuItem',
@@ -35,14 +27,14 @@ export default defineComponent({
     disabled: { type: Boolean, default: false }
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: flex;
   cursor: pointer;
   &[disabled] {
