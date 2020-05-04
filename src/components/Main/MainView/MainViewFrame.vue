@@ -1,8 +1,8 @@
 <template>
-  <div :class="$style.container" data-hide-outer="hideOuter">
+  <div :class="$style.container" :data-hide-outer="hideOuter">
     <div :class="$style.body">
       <slot></slot>
-      <div :class="$style.overlay" data-dim-inner="dimInner"></div>
+      <div :class="$style.overlay" :data-dim-inner="dimInner"></div>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ export default defineComponent({
 <style lang="scss" module>
 $paddingSize: 16px;
 .container {
-  opacity: 1
+  opacity: 1;
   &[data-hide-outer] {
     opacity: 0.5;
     overflow: hidden;
