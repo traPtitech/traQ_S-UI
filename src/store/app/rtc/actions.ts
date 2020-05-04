@@ -63,14 +63,7 @@ export const actions = defineActions({
     )
     sessionStates.splice(index, 1)
     if (sessionStates.length === 0) {
-      // FIXME: 完全な状態リセット入るまでの対応
-      commit.setCurrentRTCState({
-        channelId: currentState.channelId,
-        sessionStates: []
-      })
-      await dispatch.syncRTCState()
       commit.unsetCurrentRTCState()
-      return
     } else {
       commit.setCurrentRTCState({
         channelId: currentState.channelId,

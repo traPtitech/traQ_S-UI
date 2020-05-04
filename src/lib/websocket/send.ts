@@ -30,7 +30,6 @@ export const changeRTCState = (
   states: WebRTCUserStateSessions[]
 ) => {
   if (!channelId) {
-    // TODO: RTC状態リセット
     ws.sendCommand(RTCSTATE_COMMAND, '')
     return
   }
