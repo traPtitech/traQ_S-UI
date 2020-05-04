@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <stamp-picker-stamp-list-item
       v-for="stamp in recentStamps"
       :key="stamp"
@@ -27,28 +27,14 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import StampPickerStampListItem from '@/components/Main/StampPicker/StampPickerStampListItem.vue'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import { targetPortalName } from '@/views/Main.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.tertiary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageTools',
@@ -59,8 +45,6 @@ export default defineComponent({
   },
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
   setup(props) {
-    const styles = useStyles()
-
     const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
     )
@@ -94,7 +78,6 @@ export default defineComponent({
     }
 
     return {
-      styles,
       recentStamps,
       addStamp,
       onDotsClick,
@@ -106,6 +89,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
+  @include color-ui-tertiary;
   border-radius: 4px;
   border: solid 2px;
   display: flex;
