@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
