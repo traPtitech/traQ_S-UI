@@ -7,12 +7,12 @@ const fs = require('fs').promises
 const path = require('path')
 
 const FONT_CSS_URL =
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=M+PLUS+1p:wght@400;700&display=swap'
+  'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
 
 const MAX_REQUESTS_COUNT = 8
 const INTERVAL_MS = 30
 let PENDING_REQUESTS = 0
-axios.default.interceptors.request.use(function (config) {
+axios.default.interceptors.request.use(config => {
   return new Promise(resolve => {
     const interval = setInterval(() => {
       if (PENDING_REQUESTS < MAX_REQUESTS_COUNT) {
