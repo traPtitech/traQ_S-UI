@@ -61,6 +61,8 @@ export default defineComponent({
   @include size-body2;
   display: flex;
   align-items: center;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   &[data-is-title] {
     @include size-body1;
     font-weight: bold;
