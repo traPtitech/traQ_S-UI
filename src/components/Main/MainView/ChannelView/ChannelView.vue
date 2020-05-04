@@ -2,7 +2,6 @@
   <div
     ref="containerRef"
     :class="$style.container"
-    :style="containerStyle"
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
@@ -35,7 +34,6 @@ import {
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import useSidebar from '@/use/sidebar'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import ChannelViewHeader from './Header.vue'
@@ -93,11 +91,6 @@ export default defineComponent({
       )
     })
 
-    const containerStyle = makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.primary
-    }))
-
     const containerRef = ref<HTMLElement>(null)
 
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
@@ -112,7 +105,6 @@ export default defineComponent({
     return {
       state,
       fileDragDropState,
-      containerStyle,
       containerRef,
       onDrop,
       onDragOver,
@@ -127,6 +119,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
+  @include color-ui-primary;
   display: flex;
   flex-direction: row;
   position: relative;
