@@ -54,7 +54,7 @@ $paddingSize: 16px;
 }
 .overlay {
   opacity: 0;
-  &[dimInner] {
+  &[data-dim-inner] {
     opacity: 1;
   }
   background: $common-background-overlay;
