@@ -122,7 +122,7 @@ export default defineComponent({
   &[data-is-children] {
     border-left: solid $theme-background-secondary;
   }
-  &:first-child {
+  &[data-is-parent]:first-child {
     margin-left: 0px;
     padding-left: 0px;
   }
