@@ -2,7 +2,6 @@
   <textarea-autosize
     ref="textareaAutosizeRef"
     :class="$style.container"
-    :style="styles.container"
     :value="text"
     placeholder="メッセージを送信"
     rows="1"
@@ -21,22 +20,13 @@
 <script lang="ts">
 import {
   defineComponent,
-  reactive,
   ref,
   SetupContext,
   Ref,
   computed
 } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.text.primary
-    }))
-  })
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -95,8 +85,6 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const styles = useStyles()
-
     const onInput = (value: string) => {
       context.emit('input', value)
     }
@@ -122,7 +110,6 @@ export default defineComponent({
     const { onPaste } = usePaste()
 
     return {
-      styles,
       onInput,
       onCompositionUpdate,
       onBeforeInput,
@@ -139,6 +126,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-text-primary;
   width: 100%;
 }
 </style>

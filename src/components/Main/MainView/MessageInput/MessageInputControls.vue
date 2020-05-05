@@ -1,21 +1,20 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <div @click="onClickStampButton" :class="$style.button">
       <icon mdi name="emoticon-outline" />
     </div>
-    <div
+    <button
       @click="onClickSendButton"
+      :disabled="!canPostMessage"
       :class="$style.button"
-      :style="styles.sendButton"
     >
       <icon mdi name="send" />
-    </div>
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 
 type Props = {
@@ -33,19 +32,6 @@ const useClickHandlers = (props: Props, context: SetupContext) => {
   }
   return { onClickSendButton, onClickStampButton }
 }
-
-const useStyles = (props: Props) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    sendButton: makeStyles(theme => ({
-      color: props.canPostMessage ? theme.accent.primary : theme.ui.secondary,
-      opacity: props.canPostMessage ? '1' : '0.5',
-      cursor: props.canPostMessage ? 'pointer' : 'not-allowed'
-    }))
-  })
-
 export default defineComponent({
   name: 'MessageInputControls',
   components: {
@@ -58,13 +44,11 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { onClickSendButton, onClickStampButton } = useClickHandlers(
       props,
       context
     )
     return {
-      styles,
       onClickSendButton,
       onClickStampButton
     }
@@ -74,9 +58,17 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   display: flex;
 }
 .button {
+  @include color-accent-primary;
+  cursor: pointer;
+  &[disabled] {
+    @include color-ui-secondary;
+    opacity: 0.5;
+    cursor: not-arrowed;
+  }
   height: 24px;
   width: 24px;
   cursor: pointer;

@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    :data-is-mobile="isMobile"
-  >
+  <div :class="$style.container" :data-is-mobile="isMobile">
     <portal-target
       :class="$style.stampPickerLocator"
       :name="targetPortalName"
@@ -39,13 +35,11 @@
 <script lang="ts">
 import {
   defineComponent,
-  reactive,
   PropType,
   computed,
   onBeforeUnmount
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useIsMobile from '@/use/isMobile'
@@ -60,13 +54,6 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageInput',
@@ -85,7 +72,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { isMobile } = useIsMobile()
     const {
       textState,
@@ -148,7 +134,6 @@ export default defineComponent({
 
     return {
       targetPortalName,
-      styles,
       isMobile,
       typingUsers,
       textState,
@@ -173,6 +158,7 @@ $inputPadding: 32px;
 $inputPaddingMobile: 16px;
 $radius: 4px;
 .container {
+  @include background-secondary;
   position: relative;
   display: flex;
   flex-direction: column;
