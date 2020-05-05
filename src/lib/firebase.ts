@@ -47,13 +47,14 @@ const notify = async (
       }
     ]
   }
+  if (options.tag) {
+    options.renotify = true
+  }
+  options.badge = '/static/badge.png'
+
   if (navigator.serviceWorker) {
     const regist = await navigator.serviceWorker.ready
     options.data = options
-    if (options.tag) {
-      options.renotify = true
-    }
-    options.badge = '/static/badge.png'
     return regist.showNotification(title, options)
   }
   if (Notification?.permission === 'granted') {
