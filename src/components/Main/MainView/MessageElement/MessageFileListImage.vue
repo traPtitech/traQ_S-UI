@@ -57,6 +57,7 @@ export default defineComponent({
   border: {
     width: 2px;
     style: solid;
+    color: $theme-background-secondary;
   }
   max-width: min(600px, 100%);
   img {

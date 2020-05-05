@@ -62,13 +62,14 @@ const usePostMessage = (
     })
 
     try {
+      isPosting.value = true
+
       const fileUrls = await uploadAttachments(
         store.state.ui.fileInput.attachments,
         props.channelId
       )
       const embededdUrls = fileUrls.join('\n')
 
-      isPosting.value = true
       await apis.postMessage(props.channelId, {
         content: embededText + (embededdUrls ? '\n' + embededdUrls : '')
       })
