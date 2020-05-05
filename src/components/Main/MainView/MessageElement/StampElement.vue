@@ -6,7 +6,7 @@
     @click="onClick"
   >
     <div :class="$style.stampContainer">
-      <img loading="lazy" :src="state.src" />
+      <img loading="lazy" :src="state.src" draggable="false" />
     </div>
     <spin-number :value="state.count" :class="$style.count" />
   </div>
