@@ -4,7 +4,7 @@
       v-for="stamp in recentStamps"
       :key="stamp"
       :stamp-id="stamp"
-      @click="addStamp(stamp)"
+      @click.native="addStamp(stamp)"
       :size="28"
       :class="$style.stampListItem"
     />
