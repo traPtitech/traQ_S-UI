@@ -15,10 +15,6 @@
       v-show="currentNavigation === 'clips'"
       :class="$style.content"
     />
-    <not-implemented
-      v-show="currentNavigation === 'services'"
-      :class="$style.content"
-    />
   </div>
 </template>
 
@@ -35,7 +31,6 @@ import Home from './NavigationContent/Home.vue'
 import Channels from './NavigationContent/Channels.vue'
 import Activity from './NavigationContent/Activity.vue'
 import Users from './NavigationContent/Users.vue'
-import NotImplemented from './NavigationContent/NotImplemented.vue'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 import ClipFolders from './NavigationContent/ClipFolders.vue'
 
@@ -46,7 +41,6 @@ export default defineComponent({
     Channels,
     Activity,
     Users,
-    NotImplemented,
     NavigationContentTitle,
     ClipFolders
   },

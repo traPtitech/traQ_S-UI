@@ -7,6 +7,7 @@
     :src="imageUrl"
     :alt="name"
     :title="name"
+    draggable="false"
   />
   <div v-else :class="$style.container" :style="styles.noImageContainer" />
 </template>
