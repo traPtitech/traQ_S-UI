@@ -24,16 +24,27 @@ export default defineComponent({
 $messagePadding: 32px;
 
 .container {
-  @include color-ui-primary;
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: $common-background-overlay;
   backdrop-filter: blur(5px);
   font-weight: bold;
+  &::before {
+    @include background-primary;
+    top: 0;
+    left: 0;
+    display: block;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    z-index: -1;
+  }
 }
 
 .icon {
