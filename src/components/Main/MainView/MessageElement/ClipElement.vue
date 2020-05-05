@@ -17,6 +17,14 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
+    <div :class="$style.footer" :style="styles.footer">
+      <span :class="$style.description">
+        {{ state.channelPath }} - {{ state.date }}
+      </span>
+      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
+        >メッセージへ</router-link
+      >
+    </div>
   </div>
 </template>
 
@@ -34,14 +42,14 @@ import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
-
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@traptitech/traq'
-
 import MessageContents from './MessageContents.vue'
 import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
+import { getCreatedDate } from '@/lib/date'
+import useChannelPath from '@/use/channelPath'
 
 const useStyles = (
   props: { isEntryMessage: boolean },
@@ -58,6 +66,9 @@ const useStyles = (
         : hoverState.hover && !state.isEditing
         ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
+    })),
+    footer: makeStyles(theme => ({
+      color: theme.ui.secondary
     }))
   })
 
@@ -82,8 +93,17 @@ export default defineComponent({
     const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const bodyRef = ref<HTMLDivElement>(null)
     const { isMobile } = useIsMobile()
+    const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
+      channelPath: computed((): string =>
+        state.message
+          ? channelIdToPathString(state.message.channelId, true)
+          : ''
+      ),
+      date: computed((): string =>
+        state.message ? getCreatedDate(state.message.createdAt) : ''
+      ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
@@ -128,7 +148,8 @@ $messagePaddingMobile: 16px;
   grid-template:
     'user-icon message-header'
     'user-icon message-contents'
-    '... message-contents';
+    '......... message-contents'
+    '......... footer';
   grid-template-rows: auto 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
@@ -194,5 +215,23 @@ $messagePaddingMobile: 16px;
   top: 4px;
   right: 16px;
   z-index: 1;
+}
+
+.footer {
+  grid-area: footer;
+  padding-left: 8px;
+  font-size: 0.875rem;
+  align-self: end;
+  margin-top: 4px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  font-weight: normal;
+  margin-right: 8px;
+}
+.link {
+  font-weight: bold;
 }
 </style>

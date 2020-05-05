@@ -111,7 +111,7 @@ $messagePaddingMobile: 16px;
   grid-template:
     'user-icon message-header'
     'user-icon message-contents'
-    '... message-contents';
+    '......... message-contents';
   grid-template-rows: auto 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
