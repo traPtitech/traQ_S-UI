@@ -1,26 +1,27 @@
 <template>
   <div :class="$style.container">
-    <stamp-picker-stamp-list-item
+    <stamp-element
       v-for="stamp in stamps"
       :key="stamp.id"
       :stamp-id="stamp.id"
+      :size="32"
       :class="$style.stampListItem"
-      @click="onClickStamp(stamp.id)"
-      @hover="onStampHover(stamp.name)"
+      @click.native="onClickStamp(stamp.id)"
+      @hover.native="onStampHover(stamp.name)"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
-import StampPickerStampListItem from './StampPickerStampListItem.vue'
 import { StampId } from '@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
+import StampElement from '@/components/UI/Stamp.vue'
 
 export default defineComponent({
   name: 'StampPickerStampList',
   components: {
-    StampPickerStampListItem
+    StampElement
   },
   props: {
     stamps: {
@@ -50,10 +51,11 @@ export default defineComponent({
 }
 
 .stampListItem {
-  width: 32px;
-  height: 32px;
   padding: 4px;
   cursor: pointer;
   user-select: none;
+  &:hover {
+    @include background-secondary;
+  }
 }
 </style>
