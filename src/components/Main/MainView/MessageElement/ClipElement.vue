@@ -17,23 +17,6 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.stampWrapper">
-      <icon
-        name="rounded-triangle"
-        :size="20"
-        v-if="state.message.stamps.length > 0"
-        :class="$style.toggleButton"
-        :style="styles.toggleButton"
-        @click="onStampDetailFoldingToggle"
-      />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-        :is-show-detail="state.stampDetailFoldingState"
-      />
-    </div>
   </div>
 </template>
 
@@ -51,17 +34,12 @@ import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageEditor from './MessageEditor.vue'
-import MessageStampList from './MessageStampList.vue'
-import MessageFileList from './MessageFileList.vue'
-import MessageQuoteList from './MessageQuoteList.vue'
+
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@traptitech/traq'
-import MessagePinned from './MessagePinned.vue'
+
 import MessageContents from './MessageContents.vue'
 import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
 
@@ -70,37 +48,23 @@ const useStyles = (
   hoverState: { hover: boolean },
   state: {
     message?: Message
-    stampDetailFoldingState: boolean
     isEditing: boolean
   }
 ) =>
   reactive({
-    body: makeStyles((theme) => ({
+    body: makeStyles(theme => ({
       background: props.isEntryMessage
         ? transparentize(theme.accent.notification, 0.1)
         : hoverState.hover && !state.isEditing
         ? transparentize(theme.background.secondary, 0.6)
         : 'transparent'
-    })),
-    toggleButton: makeStyles(theme => ({
-      transform: state.stampDetailFoldingState
-        ? `rotate(0.5turn)`
-        : `rotate(0turn)`,
-      color: hoverState.hover ? theme.ui.secondary : 'transparent'
     }))
   })
 
 export default defineComponent({
   name: 'MessageElement',
   components: {
-    UserIcon,
-    MessageHeader,
-    MessageEditor,
-    MessageStampList,
-    MessageFileList,
-    MessageQuoteList,
     Icon,
-    MessagePinned,
     MessageContents,
     ClipTools
   },
@@ -131,17 +95,12 @@ export default defineComponent({
       isEditing: computed(
         () =>
           props.messageId === store.state.domain.messagesView.editingMessageId
-      ),
-      stampDetailFoldingState: false
+      )
     })
 
     const { embeddingsState } = useEmbeddings(props)
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
-
-    const onStampDetailFoldingToggle = () => {
-      state.stampDetailFoldingState = !state.stampDetailFoldingState
-    }
 
     const styles = useStyles(props, hoverState, state)
 
@@ -153,7 +112,6 @@ export default defineComponent({
       bodyRef,
       embeddingsState,
       isMobile,
-      onStampDetailFoldingToggle,
       hoverState
     }
   }
@@ -168,7 +126,6 @@ $messagePaddingMobile: 16px;
   position: relative;
   display: grid;
   grid-template:
-    'pinned pinned'
     'user-icon message-header'
     'user-icon message-contents'
     '... message-contents';

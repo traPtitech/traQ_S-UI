@@ -19,6 +19,7 @@
       v-if="hoverState.hover"
     />
     <message-contents
+      :class="$style.messageContents"
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
@@ -56,12 +57,7 @@ import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
 import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageEditor from './MessageEditor.vue'
 import MessageStampList from './MessageStampList.vue'
-import MessageFileList from './MessageFileList.vue'
-import MessageQuoteList from './MessageQuoteList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
@@ -100,15 +96,10 @@ const useStyles = (
 export default defineComponent({
   name: 'MessageElement',
   components: {
-    UserIcon,
-    MessageHeader,
-    MessageEditor,
-    MessageStampList,
-    MessageFileList,
-    MessageQuoteList,
-    Icon,
-    MessagePinned,
     MessageContents,
+    Icon,
+    MessageStampList,
+    MessagePinned,
     MessageTools
   },
   props: {
@@ -176,9 +167,10 @@ $messagePaddingMobile: 16px;
   display: grid;
   grid-template:
     'pinned pinned'
-    'user-icon message-header'
-    'user-icon message-contents'
-    '... message-contents';
+    'message-contents message-contents'
+    'message-contents message-contents'
+    'message-contents message-contents'
+    '... stamp-wrapper';
   grid-template-rows: auto 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
@@ -199,33 +191,14 @@ $messagePaddingMobile: 16px;
   }
 }
 
-.userIcon {
-  grid-area: user-icon;
-  margin-top: 2px;
-}
-
-.messageHeader {
-  grid-area: message-header;
-  padding-left: 8px;
-}
-
 .messageContents {
   grid-area: message-contents;
-  padding-top: 4px;
-  padding-left: 8px;
   min-width: 0;
 }
 
-.content {
-  grid-area: message-contents;
-  word-break: break-word;
-  word-wrap: break-word;
-  line-break: loose;
-}
-
 .stampWrapper {
+  grid-area: stamp-wrapper;
   margin-top: 8px;
-  position: relative;
 }
 
 .toggleButton {
@@ -233,10 +206,6 @@ $messagePaddingMobile: 16px;
   left: -26px;
   top: 2px;
   cursor: pointer;
-}
-
-.messageEmbeddingsList {
-  margin-top: 16px;
 }
 
 .tools {

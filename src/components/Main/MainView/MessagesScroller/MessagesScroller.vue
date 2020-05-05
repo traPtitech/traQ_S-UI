@@ -1,11 +1,11 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div ref="viewportRef" :class="$style.viewport">
-        <div
-          v-for="(messageId, index) in messageIds"
-          :key="messageId"
-          :class="$style.messageContainer"
-        >
+      <div
+        v-for="(messageId, index) in messageIds"
+        :key="messageId"
+        :class="$style.messageContainer"
+      >
         <messages-scroller-separator
           v-if="index === unreadIndex"
           title="ここから未読"
