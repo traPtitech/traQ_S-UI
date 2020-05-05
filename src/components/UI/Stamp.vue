@@ -66,5 +66,6 @@ export default defineComponent({
 .container {
   object-fit: contain;
   user-select: none;
+  contain: strict;
 }
 </style>

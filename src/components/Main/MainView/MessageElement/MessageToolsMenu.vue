@@ -126,6 +126,7 @@ export default defineComponent({
   padding: 8px 16px;
   border-radius: 4px;
   position: absolute;
+  contain: content;
 }
 
 .text {

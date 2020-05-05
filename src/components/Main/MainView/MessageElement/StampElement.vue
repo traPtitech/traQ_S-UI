@@ -107,6 +107,7 @@ export default defineComponent({
   cursor: pointer;
   user-select: none;
   overflow: hidden;
+  contain: content;
 }
 
 .count {

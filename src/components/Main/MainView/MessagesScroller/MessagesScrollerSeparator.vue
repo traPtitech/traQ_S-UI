@@ -22,7 +22,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  height: 100%;
+  width: 32px;
   padding: 4px 12px;
+  contain: strict;
 }
 .title {
   display: flex;

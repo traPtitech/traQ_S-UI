@@ -48,6 +48,8 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   align-content: flex-start;
+  backface-visibility: hidden;
+  contain: content;
 }
 
 .stampListItem {
