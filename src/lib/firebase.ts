@@ -50,7 +50,7 @@ const notify = async (
   if (options.tag) {
     options.renotify = true
   }
-  options.badge = '/static/badge.png'
+  options.badge = '/img/icons/badge.png'
 
   if (navigator.serviceWorker) {
     const regist = await navigator.serviceWorker.ready
