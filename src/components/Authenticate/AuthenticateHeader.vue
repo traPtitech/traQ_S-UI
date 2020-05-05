@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.container">
     <span v-if="title" :class="$style.logoWithTitle">
-      <img src="/img/traq-logo.svg" :class="$style.logo" />
+      <img src="@/assets/traq-logo.svg" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
     </span>
-    <img v-else src="/img/traq-logo-full.svg" :class="$style.fullLogo" />
+    <img v-else src="@/assets/traq-logo-full.svg" :class="$style.fullLogo" />
   </div>
 </template>
 
