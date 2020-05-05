@@ -1,5 +1,5 @@
-const MAX_HEIGHT = 360
-const MAX_WIDTH = 480
+const MAX_HEIGHT = 720
+const MAX_WIDTH = 1280
 
 interface Dimensions {
   width: number
