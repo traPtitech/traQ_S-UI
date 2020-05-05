@@ -63,11 +63,18 @@ export default defineComponent({
   },
   setup(props) {
     const styles = useStyles(props)
-    const { channelIdToShortPathString } = useChannelPath()
+
+    const {
+      channelIdToShortPathString,
+      channelIdToPathString
+    } = useChannelPath()
     const channelName = computed(() =>
       channelIdToShortPathString(props.channelId)
     )
-    const channelLink = computed(() => constructChannelPath(channelName.value))
+    const channelLink = computed(() =>
+      constructChannelPath(channelIdToPathString(props.channelId))
+    )
+
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'
     )
