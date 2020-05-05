@@ -5,20 +5,20 @@
       :key="stamp"
       :stamp-id="stamp"
       @click="addStamp(stamp)"
-      :size="20"
+      :size="28"
       :class="$style.stampListItem"
     />
     <span :class="$style.line"></span>
     <icon
       mdi
       name="emoticon-outline"
-      :size="20"
+      :size="28"
       :class="$style.emojiIcon"
       @click="onStampIconClick"
     />
     <icon
       :class="$style.dotIcon"
-      :size="20"
+      :size="28"
       mdi
       name="dots-horizontal"
       @click="onDotsClick"
@@ -94,7 +94,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   box-shadow: 0 1px 3px 0;
-  padding: 4px;
   justify-content: space-between;
   contain: content;
 }
@@ -106,14 +105,18 @@ export default defineComponent({
 }
 
 .emojiIcon,
-.dotIcon,
-.stampListItem {
+.dotIcon {
   display: block;
+  padding: 4px;
   cursor: pointer;
-  margin: 0 4px;
+  &:hover {
+    @include background-secondary;
+  }
 }
 
 .stampListItem {
+  padding: 4px;
+  cursor: pointer;
   user-select: none;
   &:hover {
     @include background-secondary;
