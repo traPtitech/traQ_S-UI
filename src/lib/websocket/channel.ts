@@ -8,6 +8,7 @@ import {
   ChannelUnstaredEvent,
   ChannelViewersChangedEvent
 } from './events'
+import { dmParentUuid } from '@/lib/util/uuid'
 
 const isCurrentChannel = (channelId: string) => {
   const primaryView = store.state.ui.mainView.primaryView
@@ -19,6 +20,15 @@ const isCurrentChannel = (channelId: string) => {
 
 export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
   const res = await apis.getChannel(id)
+  if (res.data.parentId === dmParentUuid) {
+    // dmが既にデータにあるときは何もしない
+    if (store.state.entities.dmChannels[res.data.id]) return
+
+    // channelIdからuserIdが辿れないので全取得
+    store.dispatch.entities.fetchChannels()
+    return
+  }
+
   store.commit.entities.addChannel({ id, entity: res.data })
   if (res.data.parentId) {
     // 親チャンネルの`children`が不整合になるので再取得
