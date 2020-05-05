@@ -4,6 +4,8 @@ import { fileInput } from './index'
 import { mimeToFileType } from '@/lib/util/file'
 import { ActionContext } from 'vuex'
 
+const imageSizeLimit = 20 * 1000 * 1000 // 20MB
+
 export const fileInputActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, fileInput)
@@ -13,6 +15,12 @@ export const actions = defineActions({
     const { commit, state } = fileInputActionContext(context)
     const fileType = mimeToFileType(file.type)
     if (fileType === 'image') {
+      if (file.size > imageSizeLimit) {
+        window.alert(
+          '画像サイズは20MBまでです\n大きい画像の共有にはDriveを使用してください'
+        )
+        return
+      }
       const reader = new FileReader()
       reader.readAsDataURL(file)
       const index = state.attachments.length
