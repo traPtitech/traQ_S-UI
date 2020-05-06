@@ -11,11 +11,12 @@ export const messageContextMenuActionContext = (
 export const actions = defineActions({
   openMessageContextMenu(
     context,
-    payload: { messageId: MessageId; x: number; y: number }
+    payload: { messageId: MessageId; x: number; y: number; isMinimum?: boolean }
   ) {
     const { commit } = messageContextMenuActionContext(context)
     commit.setTarget(payload.messageId)
     commit.setPosition({ x: payload.x, y: payload.y })
+    commit.setIsMinimum(payload.isMinimum)
   },
   closeMessageContextMenu(context) {
     const { commit } = messageContextMenuActionContext(context)

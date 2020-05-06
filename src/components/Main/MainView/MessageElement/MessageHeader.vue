@@ -4,8 +4,6 @@
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
     <div>
       <span :class="$style.name">@{{ state.name }}</span>
-    </div>
-    <div>
       <span :class="$style.date">{{ state.date }}</span>
     </div>
     <icon
