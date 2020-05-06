@@ -17,7 +17,7 @@
     <span :class="$style.text" @click="withClose(showClipCreateModal)"
       >クリップ</span
     >
-    <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine"
+    <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine && isMinimum"
       >編集</span
     >
     <span :class="$style.text" @click="withClose(copyLink)">
@@ -26,7 +26,7 @@
     <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
     </span>
-    <span :class="$style.text" @click="withClose(deleteMessage)" v-if="isMine">
+    <span :class="$style.text" @click="withClose(deleteMessage)" v-if="isMine && isMinimum">
       削除
     </span>
   </div>

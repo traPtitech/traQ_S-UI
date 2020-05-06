@@ -136,7 +136,7 @@ export default defineComponent({
 .content {
   grid-area: message-contents;
   word-break: keep-all;
-  word-wrap: break-word;
+  overflow-wrap: anywhere;
   line-break: loose;
 }
 
