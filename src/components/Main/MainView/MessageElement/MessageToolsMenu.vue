@@ -1,23 +1,26 @@
 <template>
   <div :class="$style.container">
     <span
+      v-if="isPinned && !isMinimum"
       :class="$style.text"
       @click="withClose(removePinned)"
-      v-if="isPinned && !isMinimum"
     >
       ピン留めを外す
     </span>
     <span
+      v-else-if="!isMinimum"
       :class="$style.text"
       @click="withClose(addPinned)"
-      v-else-if="!isMinimum"
     >
       ピン留め
     </span>
     <span :class="$style.text" @click="withClose(showClipCreateModal)"
       >クリップ</span
     >
-    <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine && isMinimum"
+    <span
+      v-if="isMine && !isMinimum"
+      :class="$style.text"
+      @click="withClose(editMessage)"
       >編集</span
     >
     <span :class="$style.text" @click="withClose(copyLink)">
@@ -26,7 +29,11 @@
     <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
     </span>
-    <span :class="$style.text" @click="withClose(deleteMessage)" v-if="isMine && isMinimum">
+    <span
+      v-if="isMine && !isMinimum"
+      :class="$style.text"
+      @click="withClose(deleteMessage)"
+    >
       削除
     </span>
   </div>

@@ -75,7 +75,8 @@ export default defineComponent({
   setup(props) {
     const { isMobile } = useIsMobile()
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      message: computed(() => store.state.entities.messages[props.messageId]!),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
@@ -109,7 +110,7 @@ export default defineComponent({
     'user-icon message-header'
     'user-icon message-contents'
     '......... message-contents';
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: 20px auto 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;

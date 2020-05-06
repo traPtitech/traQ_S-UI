@@ -8,6 +8,6 @@ const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
 
 export const getters = defineGetters<S>()({
   isShow(state) {
-    return state.target ? true : false
+    return !!state.target
   }
 })

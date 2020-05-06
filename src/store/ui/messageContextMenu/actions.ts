@@ -16,12 +16,13 @@ export const actions = defineActions({
     const { commit } = messageContextMenuActionContext(context)
     commit.setTarget(payload.messageId)
     commit.setPosition({ x: payload.x, y: payload.y })
-    commit.setIsMinimum(payload.isMinimum)
+    commit.setIsMinimum(payload.isMinimum ?? false)
   },
   closeMessageContextMenu(context) {
     const { commit } = messageContextMenuActionContext(context)
     commit.initPosition()
     commit.initTarget()
+    commit.initIsMinimum()
   },
   setPosition(context, payload: { x: number; y: number }) {
     const { commit } = messageContextMenuActionContext(context)

@@ -3,7 +3,7 @@ import { MessageId } from '@/types/entity-ids'
 export interface S {
   target?: MessageId
   position: { x: number; y: number }
-  isMinimum?: boolean
+  isMinimum: boolean
 }
 
 export const state: S = {

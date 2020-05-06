@@ -2,10 +2,8 @@
   <div :class="$style.header">
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
-    <div>
-      <span :class="$style.name">@{{ state.name }}</span>
-      <span :class="$style.date">{{ state.date }}</span>
-    </div>
+    <span :class="$style.name">@{{ state.name }}</span>
+    <span :class="$style.date">{{ state.date }}</span>
     <icon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
@@ -65,7 +63,7 @@ export default defineComponent({
 <style lang="scss" module>
 .header {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   min-width: 0;
 }
 

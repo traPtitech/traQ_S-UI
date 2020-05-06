@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <icon
-      :class="$style.btn"
+      :class="$style.button"
       :size="20"
       mdi
       name="dots-horizontal"
@@ -32,17 +32,15 @@ export default defineComponent({
       })
     }
 
-    return {
-      onDotsClick
-    }
+    return { onDotsClick }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  background: $theme-background-primary;
-  color: $theme-ui-tertiary;
+  @include background-primary;
+  @include color-ui-tertiary;
   border-radius: 4px;
   border: solid 2px;
   display: flex;
@@ -52,7 +50,7 @@ export default defineComponent({
   justify-content: space-between;
 }
 
-.btn {
-  curor: pointer;
+.button {
+  cursor: pointer;
 }
 </style>

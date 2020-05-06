@@ -12,10 +12,13 @@ export const mutations = defineMutations<S>()({
   setPosition(state, position: { x: number; y: number }) {
     state.position = position
   },
-  setIsMinimum(state, isMinimum?: boolean) {
-    state.isMinimum = isMinimum
-  },
   initPosition(state) {
     state.position = { x: 0, y: 0 }
+  },
+  setIsMinimum(state, isMinimum: boolean) {
+    state.isMinimum = isMinimum
+  },
+  initIsMinimum(state) {
+    state.isMinimum = false
   }
 })

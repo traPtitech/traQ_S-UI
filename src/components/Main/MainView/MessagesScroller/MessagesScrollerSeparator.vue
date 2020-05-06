@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" v-if="!noSeparator">
+  <div :class="$style.container">
     <div :class="$style.title">
       {{ title }}
     </div>
@@ -12,8 +12,7 @@ import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'MessagesScrollerSeparator',
   props: {
-    title: { type: String, required: true },
-    noSeparator: { type: Boolean, default: false }
+    title: { type: String, required: true }
   },
   setup() {
     return {}

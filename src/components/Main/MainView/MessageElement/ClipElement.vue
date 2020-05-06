@@ -4,9 +4,7 @@
     ref="bodyRef"
     v-if="state.message"
     :data-is-mobile="isMobile"
-    :data-is-pinned="state.isPinned"
     :data-is-entry="isEntryMessage"
-    :data-is-editing="state.isEditing"
   >
     <clip-tools :class="$style.tools" :message-id="messageId" />
     <message-contents
@@ -18,9 +16,9 @@
       <span :class="$style.description">
         {{ state.channelPath }} - {{ state.date }}
       </span>
-      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
-        >メッセージへ</router-link
-      >
+      <router-link :class="$style.link" :to="`/messages/${state.message.id}`">
+        メッセージへ
+      </router-link>
     </div>
   </div>
 </template>
@@ -36,10 +34,8 @@ import {
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
-import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import Icon from '@/components/UI/Icon.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
@@ -50,8 +46,6 @@ export default defineComponent({
   name: 'MessageElement',
   components: {
     MessageContents,
-    Icon,
-    MessageStampList,
     MessagePinned,
     ClipTools
   },
@@ -83,13 +77,6 @@ export default defineComponent({
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      rawContent: computed(
-        () => store.state.entities.messages[props.messageId]?.content ?? ''
-      ),
-      isEditing: computed(
-        () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
       )
     })
 
@@ -130,7 +117,7 @@ $messagePaddingMobile: 16px;
     // TODO: 色を正しくする
     background: $common-background-pin;
   }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
+  &:not([data-is-entry]):hover {
     // TODO: 色を正しくする
     background: $theme-background-secondary;
   }
@@ -152,7 +139,7 @@ $messagePaddingMobile: 16px;
 }
 
 .footer {
-  color: $theme-ui-secondary;
+  @include color-ui-secondary;
   grid-area: footer;
   padding-left: 8px;
   font-size: 0.875rem;
