@@ -6,26 +6,15 @@ import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from '@vue/composition-api'
-import { resizeAll } from '@/lib/resize'
 
 const uploadAttachments = async (
   attachments: Attachment[],
   channelId: ChannelId
 ) => {
-  const imageUrls = attachments
-    .map(a => a.thumbnailDataUrl)
-    .filter((url): url is string => !!url)
-  const thumbnails = imageUrls.length > 0 ? await resizeAll(imageUrls) : []
-
   const responses = []
   for (const attachment of attachments) {
-    const file =
-      attachment.type === 'image'
-        ? thumbnails.shift() ?? attachment.file
-        : attachment.file
-    responses.push(await apis.postFile(file, channelId))
+    responses.push(await apis.postFile(attachment.file, channelId))
   }
-
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
 
