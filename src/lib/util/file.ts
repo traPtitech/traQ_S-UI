@@ -1,3 +1,5 @@
+import { FileInfo } from '@traptitech/traq'
+
 export type AttachmentType = 'image' | 'audio' | 'video' | 'file'
 
 export const mimeToFileType = (mime: string): AttachmentType => {
@@ -16,8 +18,11 @@ export const mimeToFileType = (mime: string): AttachmentType => {
 export const isImage = (mime: string) => mimeToFileType(mime) === 'image'
 export const isVideo = (mime: string) => mimeToFileType(mime) === 'video'
 export const isAudio = (mime: string) => mimeToFileType(mime) === 'audio'
-export const isNonPreviewable = (mime: string) => {
-  const type = mimeToFileType(mime)
+export const isNonPreviewable = (meta: FileInfo) => {
+  if (meta.thumbnail === null && meta.mime !== 'image/svg+xml') {
+    return true
+  }
+  const type = mimeToFileType(meta.mime)
   return type === 'file' || type === 'audio'
 }
 
