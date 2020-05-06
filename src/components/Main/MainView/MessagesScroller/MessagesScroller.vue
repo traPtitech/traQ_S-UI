@@ -7,12 +7,12 @@
         :class="$style.messageContainer"
       >
         <messages-scroller-separator
-          v-if="index === unreadIndex"
+          v-if="!withoutSeparator && index === unreadIndex"
           title="ここから未読"
           :class="$style.unreadSeparator"
         />
         <messages-scroller-separator
-          v-if="dayDiff(index)"
+          v-if="!withoutSeparator && dayDiff(index)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
@@ -109,7 +109,7 @@ export default defineComponent({
       type: String as PropType<LoadingDirection>,
       required: true
     },
-    noSepalator: {
+    withoutSeparator: {
       type: Boolean,
       default: false
     }

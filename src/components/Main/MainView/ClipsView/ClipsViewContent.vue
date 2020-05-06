@@ -6,7 +6,7 @@
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
-      no-sepalator
+      without-separator
       @request-load-former="onLoadFormerMessagesRequest"
     />
   </div>
