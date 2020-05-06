@@ -67,7 +67,7 @@ export default defineComponent({
   &[disabled] {
     @include color-ui-secondary;
     opacity: 0.5;
-    cursor: not-arrowed;
+    cursor: not-allowed;
   }
   height: 24px;
   width: 24px;
