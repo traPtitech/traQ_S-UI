@@ -4,7 +4,7 @@
       :class="$style.icon"
       :name="name"
       :mdi="mdi"
-      :size="innerSize"
+      :size="size"
       :color="color"
     />
   </div>
@@ -40,10 +40,6 @@ export default defineComponent({
       required: true
     },
     mdi: Boolean,
-    innerSize: {
-      type: Number,
-      default: 22
-    },
     size: {
       type: Number,
       default: 24

@@ -20,19 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
-
-const useStyles = (props: { onSecondary: boolean }) =>
-  reactive({
-    inputContainer: makeStyles(theme => ({
-      background: props.onSecondary
-        ? theme.background.primary
-        : theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FormInput',
@@ -58,7 +48,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { onInput: onInputInternal } = useInput(context)
 
     const onInput = (e: InputEvent) => {
@@ -71,7 +60,7 @@ export default defineComponent({
     }
 
     const id = randomString()
-    return { styles, onInput, onChange, id }
+    return { onInput, onChange, id }
   }
 })
 </script>
