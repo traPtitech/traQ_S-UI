@@ -71,7 +71,8 @@ const usePostMessage = (
       const embededdUrls = fileUrls.join('\n')
 
       await apis.postMessage(props.channelId, {
-        content: embededText + (embededdUrls ? '\n' + embededdUrls : '')
+        content:
+          embededText + (embededText && embededdUrls ? '\n' : '') + embededdUrls
       })
     } catch {
       // TODO: エラー処理
