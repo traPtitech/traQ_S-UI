@@ -1,9 +1,9 @@
 <template>
-  <div :style="styles.container">
+  <div>
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :style="styles.inputContainer">
+    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
       <span v-if="prefix" :class="$style.prefix">{{ prefix }}</span>
       <input
         :class="$style.input"
@@ -27,11 +27,7 @@ import useInput from '@/use/input'
 
 const useStyles = (props: { onSecondary: boolean }) =>
   reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
     inputContainer: makeStyles(theme => ({
-      color: theme.ui.primary,
       background: props.onSecondary
         ? theme.background.primary
         : theme.background.secondary
@@ -81,12 +77,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.label {
+  @include color-ui-secondary;
+  display: block;
+  margin-bottom: 8px;
+}
 .inputContainer {
+  @include color-ui-primary;
+  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
   align-items: center;
   border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
+  }
 }
 .prefix {
   margin-left: 8px;
@@ -98,9 +104,5 @@ export default defineComponent({
 }
 .suffix {
   margin-right: 8px;
-}
-.label {
-  margin-bottom: 8px;
-  display: block;
 }
 </style>

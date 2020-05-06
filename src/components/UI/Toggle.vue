@@ -2,26 +2,15 @@
   <div
     @click="$emit('input')"
     :class="$style.container"
-    :style="styles.container"
+    role="switch"
+    :aria-checked="enabled ? 'true' : 'false'"
   >
-    <div :class="$style.knob" :style="styles.knob"></div>
+    <div :class="$style.knob"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { enabled: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: props.enabled ? theme.accent.primary : theme.ui.tertiary
-    })),
-    knob: makeStyles(theme => ({
-      background: theme.background.primary,
-      transform: props.enabled ? 'translateX(16px)' : ''
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Toggle',
@@ -31,23 +20,27 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
-    const styles = useStyles(props)
-    return { styles }
+  setup() {
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-tertiary;
   position: relative;
   width: 44px;
   height: 24px;
   border-radius: 22px;
   transition: all 0.2s ease;
   cursor: pointer;
+  &[aria-checked='true'] {
+    @include background-accent-primary;
+  }
 }
 .knob {
+  @include background-primary;
   position: absolute;
   top: 4px;
   left: 6px;
@@ -55,5 +48,8 @@ export default defineComponent({
   height: 16px;
   border-radius: 8px;
   transition: all 0.2s ease;
+  .container[aria-checked='true'] & {
+    transform: translateX(16px);
+  }
 }
 </style>

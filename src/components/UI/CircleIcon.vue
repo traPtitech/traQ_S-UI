@@ -15,12 +15,10 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { background: string; size: number }) => {
+const useStyles = (props: { background: string }) => {
   return reactive({
     icon: makeStyles(theme => ({
-      background: props.background,
-      width: `${props.size}px`,
-      height: `${props.size}px`
+      background: props.background
     }))
   })
 }
