@@ -1,5 +1,5 @@
-const MAX_HEIGHT = 720
-const MAX_WIDTH = 1280
+const MAX_HEIGHT = 1600
+const MAX_WIDTH = 2560
 
 export interface Dimensions {
   width: number
