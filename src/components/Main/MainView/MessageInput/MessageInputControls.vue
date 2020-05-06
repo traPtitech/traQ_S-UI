@@ -61,17 +61,8 @@ export default defineComponent({
   @include color-ui-secondary;
   display: flex;
 }
-.sendButton {
-  @include color-accent-primary;
-  &[disabled] {
-    @include color-ui-secondary;
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
 .button,
 .sendButton {
-  cursor: pointer;
   @include color-ui-secondary;
   height: 24px;
   width: 24px;
@@ -83,6 +74,14 @@ export default defineComponent({
   }
   &:last-child {
     margin-right: 0;
+  }
+}
+.sendButton {
+  @include color-accent-primary;
+  &[disabled] {
+    @include color-ui-secondary;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 </style>
