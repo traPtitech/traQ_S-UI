@@ -123,13 +123,6 @@ $messagePaddingMobile: 16px;
 
 .body {
   position: relative;
-  display: grid;
-  grid-template:
-    'pinned pinned'
-    'message-contents message-contents'
-    '................ stamp-wrapper';
-  grid-template-rows: auto auto auto;
-  grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
   overflow: hidden;
@@ -168,6 +161,7 @@ $messagePaddingMobile: 16px;
   position: relative;
   grid-area: stamp-wrapper;
   margin-top: 8px;
+  margin-left: 42px;
 }
 
 .toggleButton {
