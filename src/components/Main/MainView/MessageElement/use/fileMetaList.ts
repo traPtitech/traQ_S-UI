@@ -12,13 +12,15 @@ const useFileMetaList = (props: { fileIds: string[] }) => {
   )
   const state = reactive({
     images: computed(() =>
-      fileMetaData.value.filter(meta => isImage(meta.mime))
+      fileMetaData.value.filter(
+        meta => !isNonPreviewable(meta) && isImage(meta.mime)
+      )
     ),
     videos: computed(() =>
       fileMetaData.value.filter(meta => isVideo(meta.mime))
     ),
     files: computed(() =>
-      fileMetaData.value.filter(meta => isNonPreviewable(meta.mime))
+      fileMetaData.value.filter(meta => isNonPreviewable(meta))
     )
   })
   return { fileMetaDataState: state }

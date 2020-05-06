@@ -4,8 +4,11 @@
       {{ label }}
     </label>
     <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
-      <span v-if="prefix" :class="$style.prefix">{{ prefix }}</span>
+      <span v-if="prefix" :class="$style.prefix" @click="focus">
+        {{ prefix }}
+      </span>
       <input
+        ref="inputRef"
         :class="$style.input"
         :id="id"
         :value="value"
@@ -14,13 +17,15 @@
         @change="onChange"
         type="text"
       />
-      <span v-if="suffix" :class="$style.suffix">{{ suffix }}</span>
+      <span v-if="suffix" :class="$style.suffix" @click="focus">
+        {{ suffix }}
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 
@@ -59,8 +64,13 @@ export default defineComponent({
       onInputInternal(e)
     }
 
+    const inputRef = ref<HTMLInputElement>(null)
+    const focus = () => {
+      inputRef.value?.focus()
+    }
+
     const id = randomString()
-    return { onInput, onChange, id }
+    return { onInput, onChange, id, inputRef, focus }
   }
 })
 </script>

@@ -1,11 +1,22 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
+      <file-modal-content-header
+        :file-id="fileMeta ? fileMeta.id : ''"
+        :is-white="true"
+      />
     </div>
-    <img draggable="false" :alt="fileMeta.name" :src="fileRawPath" />
+    <img
+      :class="$style.img"
+      :src="fileRawPath"
+      :alt="fileMeta ? fileMeta.name : 'unknown'"
+      draggable="false"
+    />
     <div :class="$style.footer">
-      <file-modal-content-footer :file-id="fileMeta.id" :is-white="true" />
+      <file-modal-content-footer
+        :file-id="fileMeta ? fileMeta.id : ''"
+        :is-white="true"
+      />
     </div>
   </div>
 </template>
@@ -61,6 +72,10 @@ export default defineComponent({
   .container:hover & {
     opacity: 1;
   }
+}
+.img {
+  max-height: 100%;
+  max-width: 100%;
 }
 .footer {
   position: absolute;

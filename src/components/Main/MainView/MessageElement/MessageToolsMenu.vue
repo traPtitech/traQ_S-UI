@@ -1,15 +1,26 @@
 <template>
   <div :class="$style.container">
-    <span :class="$style.text" @click="withClose(removePinned)" v-if="isPinned">
+    <span
+      v-if="isPinned && !isMinimum"
+      :class="$style.text"
+      @click="withClose(removePinned)"
+    >
       ピン留めを外す
     </span>
-    <span :class="$style.text" @click="withClose(addPinned)" v-else>
+    <span
+      v-else-if="!isMinimum"
+      :class="$style.text"
+      @click="withClose(addPinned)"
+    >
       ピン留め
     </span>
     <span :class="$style.text" @click="withClose(showClipCreateModal)"
       >クリップ</span
     >
-    <span :class="$style.text" @click="withClose(editMessage)" v-if="isMine"
+    <span
+      v-if="isMine && !isMinimum"
+      :class="$style.text"
+      @click="withClose(editMessage)"
       >編集</span
     >
     <span :class="$style.text" @click="withClose(copyLink)">
@@ -18,7 +29,11 @@
     <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
     </span>
-    <span :class="$style.text" @click="withClose(deleteMessage)" v-if="isMine">
+    <span
+      v-if="isMine && !isMinimum"
+      :class="$style.text"
+      @click="withClose(deleteMessage)"
+    >
       削除
     </span>
   </div>
@@ -82,7 +97,12 @@ const useShowClipCreateModal = (props: { messageId: MessageId }) => {
 
 export default defineComponent({
   name: 'MessageToolsMenu',
-  props: { messageId: { type: String as PropType<MessageId>, required: true } },
+  props: {
+    messageId: {
+      type: String as PropType<MessageId>,
+      required: true
+    }
+  },
   setup(props) {
     const isPinned = computed(() =>
       store.getters.domain.messagesView.isPinned(props.messageId)
@@ -91,6 +111,9 @@ export default defineComponent({
       () =>
         store.state.entities.messages[props.messageId]?.userId ===
         store.state.domain.me.detail?.id
+    )
+    const isMinimum = computed(
+      () => store.state.ui.messageContextMenu.isMinimum
     )
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
@@ -102,11 +125,12 @@ export default defineComponent({
     }
     return {
       isPinned,
+      isMine,
+      isMinimum,
       addPinned,
       removePinned,
       copyLink,
       copyMd,
-      isMine,
       editMessage,
       deleteMessage,
       showClipCreateModal,
