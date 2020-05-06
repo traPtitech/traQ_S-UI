@@ -61,7 +61,6 @@ export default defineComponent({
     )
     const styles = reactive({
       container: makeStyles(theme => ({
-        color: theme.ui.secondary,
         width: `${props.size}px`,
         height: `${props.size}px`,
         backgroundImage: userIconFileId.value
@@ -83,6 +82,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   position: relative;
   border-radius: 100vw;
   flex: {

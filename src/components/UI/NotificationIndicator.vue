@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import store from '@/store'
 import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
@@ -22,10 +21,7 @@ export default defineComponent({
   },
   setup(props) {
     const style = makeStyles(theme => ({
-      background: theme.accent.notification,
-      borderColor:
-        props.color ??
-        store.getters.app.themeSettings.currentTheme.background.secondary,
+      borderColor: props.color,
       borderWidth: props.hasBorder ? '2px' : '0',
       width: `${props.size}px`,
       height: `${props.size}px`
@@ -37,7 +33,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  border-radius: 100vw;
-  border-style: solid;
+  background: $theme-accent-notification;
+  border: {
+    style: solid;
+    color: $theme-background-secondary;
+    radius: 100vw;
+  }
 }
 </style>

@@ -1,19 +1,11 @@
 <template>
-  <div :class="$style.path" :style="styles.path" :data-is-title="isTitle">
+  <div :class="$style.path" :data-is-title="isTitle">
     {{ path }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { isTitle: boolean }) =>
-  reactive({
-    path: makeStyles(theme => ({
-      color: props.isTitle ? theme.ui.primary : theme.ui.secondary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ChannelName',
@@ -27,18 +19,18 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const styles = useStyles(props)
-
-    return { styles }
+  setup() {
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .path {
+  @include color-ui-secondary;
   @include size-body2;
   &[data-is-title] {
+    @include color-ui-primary;
     @include size-body1;
     font-weight: bold;
   }

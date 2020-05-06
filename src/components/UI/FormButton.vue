@@ -1,7 +1,6 @@
 <template>
   <button
     :class="$style.container"
-    :style="styles.container"
     :disabled="disabled"
     @click="context.emit('click')"
   >
@@ -10,20 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = (props: { disabled: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: props.disabled
-        ? transparentize(theme.accent.primary, 0.5)
-        : theme.accent.primary,
-      color: 'white',
-      cursor: props.disabled ? 'not-allowed' : ' pointer'
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'FormButton',
@@ -37,17 +23,23 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const styles = useStyles(props)
-    return { context, styles }
+  setup(_, context) {
+    return { context }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-common-text-white-primary;
+  @include background-accent-primary;
   padding: 8px 32px;
   border-radius: 4px;
   font-weight: bold;
+  cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 </style>

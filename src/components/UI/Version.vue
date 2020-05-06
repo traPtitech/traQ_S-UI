@@ -1,34 +1,23 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    traQ {{ version }}
-  </div>
+  <div :class="$style.container">traQ {{ version }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import version from '@/lib/version'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.tertiary
-    }))
-  })
 
 export default defineComponent({
   name: 'Version',
   setup() {
-    const styles = useStyles()
-    return { version, styles }
+    return { version }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-tertiary;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 </style>

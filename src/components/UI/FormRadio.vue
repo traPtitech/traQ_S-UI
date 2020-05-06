@@ -8,30 +8,20 @@
       :checked="checked"
       v-on="listeners"
     />
-    <div :class="$style.pseudoRadio" :style="styles.pseudoRadio">
-      <div :class="$style.pseudoRadioInner" :style="styles.pseudoRadioInner" />
+    <div
+      :class="$style.pseudoRadio"
+      role="radio"
+      :aria-checked="checked ? 'true' : 'false'"
+    >
+      <div :class="$style.pseudoRadioInner" />
     </div>
     {{ label }}
   </label>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import useInput from '@/use/input'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = (props: { onSecondary: boolean }, checked: Ref<boolean>) =>
-  reactive({
-    pseudoRadio: makeStyles(theme => ({
-      borderColor: checked.value
-        ? theme.ui.primary
-        : transparentize(theme.ui.primary, 0.5)
-    })),
-    pseudoRadioInner: makeStyles(theme => ({
-      backgroundColor: checked.value ? theme.ui.primary : 'transparent'
-    }))
-  })
 
 export default defineComponent({
   name: 'FormRadio',
@@ -61,7 +51,6 @@ export default defineComponent({
   },
   setup(props, context) {
     const checked = computed(() => props.inputValue === props.value)
-    const styles = useStyles(props, checked)
     const { onInput } = useInput(context)
 
     const listeners = computed(
@@ -71,7 +60,7 @@ export default defineComponent({
         }) as Record<string, Function>
     )
 
-    return { styles, checked, listeners }
+    return { checked, listeners }
   }
 })
 </script>
@@ -90,8 +79,11 @@ export default defineComponent({
   position: relative;
   height: 13px;
   width: 13px;
-  border: solid 2px;
+  border: solid 2px $theme-ui-primary;
   border-radius: 50%;
+  &[aria-checked='false'] {
+    opacity: 0.5;
+  }
 }
 .pseudoRadioInner {
   display: inline-block;
@@ -104,5 +96,8 @@ export default defineComponent({
   width: 5px;
   margin: auto;
   border-radius: 50%;
+  .pseudoRadio[aria-checked='true'] & {
+    background: $theme-ui-primary;
+  }
 }
 </style>

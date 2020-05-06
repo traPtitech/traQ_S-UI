@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    @click="$emit('click')"
-  >
+  <div :class="$style.container" @click="$emit('click')">
     <user-name
       v-if="titleType === 'user'"
       :class="$style.item"
@@ -16,7 +12,7 @@
       :path="path"
       is-title
     />
-    <div :class="$style.separator" :style="styles.separator" />
+    <div :class="$style.separator" />
     <template v-if="!hideSubtitle">
       <user-name
         v-if="titleType === 'channel'"
@@ -37,32 +33,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary
-    })),
-    path: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    separator: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessagePanel',
@@ -90,8 +67,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
-
     const userState = computed(
       () => store.state.entities.users[props.message.userId]
     )
@@ -105,18 +80,20 @@ export default defineComponent({
       channelIdToShortPathString(props.message.channelId)
     )
 
-    return { styles, userState, path }
+    return { userState, path }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
 }
 .separator {
+  @include background-secondary;
   width: 100%;
   height: 2px;
   margin: 4px 0;

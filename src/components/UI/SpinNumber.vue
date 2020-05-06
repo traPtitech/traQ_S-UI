@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.body">
-    <div :class="$style.dummy">{{ props.value }}</div>
+    <div :class="$style.dummy">{{ value }}</div>
     <transition name="vertical-swap">
       <div :class="$style.number" v-if="state.isB" key="num1">
         {{ state.valueB }}
@@ -46,10 +46,7 @@ export default defineComponent({
       },
       { lazy: true }
     )
-    return {
-      props,
-      state
-    }
+    return { state }
   }
 })
 </script>
