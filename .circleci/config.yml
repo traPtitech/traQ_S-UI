@@ -53,7 +53,7 @@ jobs:
       - restore_npm_cache
       - run:
           name: build
-          command: NODE_ENV=production npm run build
+          command: NODE_ENV=production npm run build:with-font
       - run:
           name: archive dist/
           command: tar -zcvf ./dist.tar.gz ./dist

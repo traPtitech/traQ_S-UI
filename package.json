@@ -5,10 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
+    "build:with-font": "npm run gen-fonts && npm run build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "lint:no-fix": "vue-cli-service lint --no-fix",
-    "gen-unicode_emojis": "node build/gen-unicode_emojis"
+    "gen-unicode_emojis": "node build/gen-unicode_emojis",
+    "gen-fonts": "node build/gen-mplus"
   },
   "dependencies": {
     "@cloudcmd/clipboard": "^2.0.0",
@@ -54,6 +56,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "1.0.0-beta.33",
+    "axios": "^0.19.2",
     "compression-webpack-plugin": "^3.1.0",
     "csstype": "^2.6.10",
     "eslint": "^6.8.0",
@@ -61,6 +64,8 @@
     "eslint-plugin-unused-imports": "^0.1.3",
     "eslint-plugin-vue": "^6.2.2",
     "fibers": "^5.0.0",
+    "fonteditor-core": "^2.1.1",
+    "postcss": "^7.0.28",
     "prettier": "^2.0.5",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
