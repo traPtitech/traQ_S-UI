@@ -33,15 +33,15 @@
   hr {
     height: 0.25em;
     padding: 0;
-    margin: 24px 0;
+    margin: 12px 0;
     border: 0;
     background-color: #e1e4e8;
     overflow: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    margin-top: 24px;
-    margin-bottom: 16px;
+    margin-top: 12px;
+    margin-bottom: 8px;
     font-weight: bold;
     line-height: 1.25;
   }
@@ -72,13 +72,13 @@
 
   p {
     margin-top: 0;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   blockquote {
     margin-top: 0;
-    margin-bottom: 16px;
-    padding: 0 16px;
+    margin-bottom: 8px;
+    padding: 0 8px;
     color: #6a737d;
     border-left: 0.25em solid #dfe2e5;
     > :first-child {
@@ -98,7 +98,7 @@
   ol, ul {
     padding-left: 2em;
     margin-top: 0;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     word-break: break-all;
     ol {
       list-style-type: lower-roman;
@@ -113,7 +113,7 @@
   }
   li {
     > p {
-      margin-top: 16px;
+      margin-top: 8px;
     }
     + li {
       margin-top: 4px;
