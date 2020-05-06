@@ -3,6 +3,7 @@
     <navigation-content-container
       v-if="homeChannel"
       subtitle="ホームチャンネル"
+      :class="$style.item"
     >
       <channel-list
         :channels="[homeChannel]"
@@ -13,6 +14,7 @@
     <navigation-content-container
       v-if="channelsWithNotification.length !== 0"
       subtitle="未読"
+      :class="$style.item"
     >
       <channel-list
         :channels="channelsWithNotification"
@@ -20,7 +22,7 @@
         show-shortened-path
       />
     </navigation-content-container>
-    <navigation-content-container subtitle="チャンネル">
+    <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-list
         v-if="topLevelChannels.length !== 0"
         :channels="topLevelChannels"
@@ -69,4 +71,14 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.item {
+  margin: 16px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+</style>
