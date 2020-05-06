@@ -2,8 +2,12 @@
   <div :class="$style.header">
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
-    <span :class="$style.name">@{{ state.name }}</span>
-    <span :class="$style.date">{{ state.date }}</span>
+    <div>
+      <span :class="$style.name">@{{ state.name }}</span>
+    </div>
+    <div>
+      <span :class="$style.date">{{ state.date }}</span>
+    </div>
     <icon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"

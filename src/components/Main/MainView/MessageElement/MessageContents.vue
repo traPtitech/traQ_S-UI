@@ -1,5 +1,5 @@
 <template>
-  <div class="$style.container">
+  <div :class="$style.container">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -103,24 +103,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 32px;
-$messagePaddingMobile: 16px;
-
 .container {
   display: grid;
   grid-template:
     'user-icon message-header'
     'user-icon message-contents'
     '......... message-contents';
-  grid-template-rows: auto 20px 1fr;
+  grid-template-rows: auto auto 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  padding: 8px $messagePadding;
-  &[data-is-mobile='true'] {
-    padding: 8px $messagePaddingMobile;
-  }
 }
 
 .userIcon {

@@ -13,34 +13,30 @@
       v-if="state.message.pinned"
       :class="$style.pinned"
     />
-    <message-tools
-      :class="$style.tools"
-      :message-id="messageId"
-      v-if="hoverState.hover"
-    />
+    <message-tools :class="$style.tools" :message-id="messageId" />
     <message-contents
       :class="$style.messageContents"
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-      <div :class="$style.stampWrapper">
-        <icon
-          name="rounded-triangle"
-          :size="20"
-          v-if="state.message.stamps.length > 0"
-          :class="$style.toggleButton"
-          :data-is-open="state.stampDetailFoldingState"
-          @click="onStampDetailFoldingToggle"
-        />
-        <message-stamp-list
-          :class="$style.stamps"
-          v-if="state.message.stamps.length > 0"
-          :message-id="messageId"
-          :stamps="state.message.stamps"
-          :is-show-detail="state.stampDetailFoldingState"
-        />
-      </div>
+    <div :class="$style.stampWrapper">
+      <icon
+        name="rounded-triangle"
+        :size="20"
+        v-if="state.message.stamps.length > 0"
+        :class="$style.toggleButton"
+        :data-is-open="state.stampDetailFoldingState"
+        @click="onStampDetailFoldingToggle"
+      />
+      <message-stamp-list
+        :class="$style.stamps"
+        v-if="state.message.stamps.length > 0"
+        :message-id="messageId"
+        :stamps="state.message.stamps"
+        :is-show-detail="state.stampDetailFoldingState"
+      />
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -131,10 +127,8 @@ $messagePaddingMobile: 16px;
   grid-template:
     'pinned pinned'
     'message-contents message-contents'
-    'message-contents message-contents'
-    'message-contents message-contents'
     '................ stamp-wrapper';
-  grid-template-rows: auto 20px 1fr;
+  grid-template-rows: auto auto auto;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
@@ -171,6 +165,7 @@ $messagePaddingMobile: 16px;
 }
 
 .stampWrapper {
+  position: relative;
   grid-area: stamp-wrapper;
   margin-top: 8px;
 }

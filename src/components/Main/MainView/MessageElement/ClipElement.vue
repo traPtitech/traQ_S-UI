@@ -1,23 +1,20 @@
 <template>
   <div
     :class="$style.body"
-    :style="styles.body"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
     ref="bodyRef"
     v-if="state.message"
     :data-is-mobile="isMobile"
+    :data-is-pinned="state.isPinned"
+    :data-is-entry="isEntryMessage"
+    :data-is-editing="state.isEditing"
   >
-    <clip-tools
-      :class="$style.tools"
-      :message-id="messageId"
-      v-if="hoverState.hover"
-    />
+    <clip-tools :class="$style.tools" :message-id="messageId" />
     <message-contents
+      :class="$style.messageContents"
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.footer" :style="styles.footer">
+    <div :class="$style.footer">
       <span :class="$style.description">
         {{ state.channelPath }} - {{ state.date }}
       </span>
@@ -37,46 +34,25 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
-import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
+import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
-import { Message } from '@traptitech/traq'
+import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
 import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
 
-const useStyles = (
-  props: { isEntryMessage: boolean },
-  hoverState: { hover: boolean },
-  state: {
-    message?: Message
-    isEditing: boolean
-  }
-) =>
-  reactive({
-    body: makeStyles(theme => ({
-      background: props.isEntryMessage
-        ? transparentize(theme.accent.notification, 0.1)
-        : hoverState.hover && !state.isEditing
-        ? transparentize(theme.background.secondary, 0.6)
-        : 'transparent'
-    })),
-    footer: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
-
 export default defineComponent({
   name: 'MessageElement',
   components: {
-    Icon,
     MessageContents,
+    Icon,
+    MessageStampList,
+    MessagePinned,
     ClipTools
   },
   props: {
@@ -90,7 +66,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const bodyRef = ref<HTMLDivElement>(null)
     const { isMobile } = useIsMobile()
     const { channelIdToPathString } = useChannelPath()
@@ -122,17 +97,11 @@ export default defineComponent({
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
-    const styles = useStyles(props, hoverState, state)
-
     return {
       state,
-      styles,
-      onMouseEnter,
-      onMouseLeave,
       bodyRef,
       embeddingsState,
-      isMobile,
-      hoverState
+      isMobile
     }
   }
 })
@@ -146,11 +115,9 @@ $messagePaddingMobile: 16px;
   position: relative;
   display: grid;
   grid-template:
-    'user-icon message-header'
-    'user-icon message-contents'
-    '......... message-contents'
-    '......... footer';
-  grid-template-rows: auto 20px 1fr;
+    'message-contents message-contents'
+    '................ footer';
+  grid-template-rows: auto auto auto;
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
@@ -159,58 +126,25 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
   }
-}
-
-.pinned {
-  grid-area: pinned;
-  height: 28px;
-  padding: {
-    top: 4px;
-    bottom: 8px;
+  &[data-is-entry] {
+    // TODO: 色を正しくする
+    background: $common-background-pin;
   }
-}
-
-.userIcon {
-  grid-area: user-icon;
-  margin-top: 2px;
-}
-
-.messageHeader {
-  grid-area: message-header;
-  padding-left: 8px;
+  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
+    // TODO: 色を正しくする
+    background: $theme-background-secondary;
+  }
 }
 
 .messageContents {
   grid-area: message-contents;
-  padding-top: 4px;
-  padding-left: 8px;
   min-width: 0;
 }
 
-.content {
-  grid-area: message-contents;
-  word-break: break-word;
-  word-wrap: break-word;
-  line-break: loose;
-}
-
-.stampWrapper {
-  margin-top: 8px;
-  position: relative;
-}
-
-.toggleButton {
-  position: absolute;
-  left: -26px;
-  top: 2px;
-  cursor: pointer;
-}
-
-.messageEmbeddingsList {
-  margin-top: 16px;
-}
-
 .tools {
+  .body:not(:hover) & {
+    display: none;
+  }
   position: absolute;
   top: 4px;
   right: 16px;
@@ -218,6 +152,7 @@ $messagePaddingMobile: 16px;
 }
 
 .footer {
+  color: $theme-ui-secondary;
   grid-area: footer;
   padding-left: 8px;
   font-size: 0.875rem;
