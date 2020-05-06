@@ -1,26 +1,13 @@
 <template>
-  <div
-    @click="context.emit('click')"
-    :class="$style.container"
-    :style="styles.container"
-  >
-    <icon mdi name="close" :size="12" />
-  </div>
+  <button @click="context.emit('click')" :class="$style.container">
+    <icon mdi name="close" :size="12" :class="$style.icon" />
+    <div role="presentation" :class="$style.bg"></div>
+  </button>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, reactive } from '@vue/composition-api'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.background.primary,
-      background: transparentize(theme.ui.primary, 0.8)
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageInputFileListItem',
@@ -28,20 +15,33 @@ export default defineComponent({
     Icon
   },
   setup(_, context: SetupContext) {
-    const styles = useStyles()
-    return { styles, context }
+    return { context }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  width: 16px;
-  height: 16px;
-  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: $theme-background-primary;
   cursor: pointer;
+}
+.icon {
+  z-index: 1;
+}
+.bg {
+  position: absolute;
+  background: $theme-ui-primary;
+  opacity: 0.5;
+  .container:hover & {
+    opacity: 0.8;
+  }
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
 }
 </style>
