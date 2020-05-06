@@ -4,8 +4,9 @@
       @click="context.emit('click-qall')"
       icon-mdi
       :icon-name="qallIconName"
-      :style="styles.qallIcon"
+      :class="$style.qallIcon"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
+      :data-is-active="isJoinedQallSession || isQallSessionOpened"
       v-if="isQallEnabled && !isMobile"
     />
     <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
@@ -57,33 +58,14 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  computed,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, SetupContext, computed } from '@vue/composition-api'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import useIsMobile from '@/use/isMobile'
 
 export const targetPortalName = 'header-popup'
-
-const useStyles = (props: {
-  isQallSessionOpened: boolean
-  isJoinedQallSession: boolean
-}) =>
-  reactive({
-    qallIcon: makeStyles((_, common) => ({
-      color:
-        props.isJoinedQallSession || props.isQallSessionOpened
-          ? common.ui.qall
-          : ''
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelViewHeaderTools',
@@ -104,7 +86,6 @@ export default defineComponent({
 
     const isQallEnabled = computed(() => store.state.app.rtcSettings.isEnabled)
 
-    const styles = useStyles(props)
     const qallIconName = computed(() =>
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
     )
@@ -112,7 +93,6 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
 
     return {
-      styles,
       qallIconName,
       context,
       currentChannelSubscription,
@@ -141,5 +121,10 @@ export default defineComponent({
   position: absolute;
   right: 0;
   top: 100%;
+}
+.qallIcon {
+  &[data-is-active] {
+    color: $common-ui-qall;
+  }
 }
 </style>

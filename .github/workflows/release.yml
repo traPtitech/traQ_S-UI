@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 13.1.0
       - run: npm install
-      - run: npm run build
+      - run: npm run build:with-font
         env:
           NODE_ENV: production
       - name: Archive dist/

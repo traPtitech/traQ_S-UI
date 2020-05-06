@@ -66,8 +66,8 @@ export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
   store.commit.domain.messagesView.deleteMessageId(id)
 }
 
-export const onMessageRead = (data: MessageReadEvent['body']) => {
-  // TODO
+export const onMessageRead = ({ id }: MessageReadEvent['body']) => {
+  store.commit.domain.me.deleteUnreadChannel(id)
 }
 
 export const onMessageStamped = (data: MessageStampedEvent['body']) => {

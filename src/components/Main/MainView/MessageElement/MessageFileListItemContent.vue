@@ -2,11 +2,11 @@
   <router-link
     :to="fileLink"
     :class="$style.container"
-    :style="styles.container"
+    :data-is-white="isWhite"
   >
     <file-description
-      :file-id="props.fileId"
-      :is-white="props.isWhite"
+      :file-id="fileId"
+      :is-white="isWhite"
       :is-ellipsis="true"
       :class="$style.description"
     />
@@ -14,21 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileDescription from '@/components/UI/FileDescription.vue'
-
-const useStyles = (props: { isWhite: boolean }) =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      borderColor: theme.ui.secondary,
-      color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
-    })),
-    fileSize: makeStyles((theme, common) => ({
-      color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageFileListItemContent',
@@ -44,10 +32,8 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { fileLink } = useFileMeta(props, context)
     return {
-      styles,
       fileLink,
       props
     }
@@ -57,6 +43,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  &[data-is-white] {
+    color: $common-text-white-primary;
+  }
+  border-color: $theme-ui-secondary;
   width: 100%;
 }
 .description {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" :style="styles.body">
+  <div :class="$style.body">
     <span v-if="isBot">Bot</span>
     <span v-else-if="state.grade">{{ state.grade }}</span>
     <span v-else>Admin</span>
@@ -15,7 +15,6 @@ import {
 } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'GradeBadge',
@@ -35,25 +34,19 @@ export default defineComponent({
         store.getters.entities.gradeNameByUserId(props.userId)
       )
     })
-    const styles = reactive({
-      body: makeStyles(theme => {
-        return {
-          color: theme.ui.secondary,
-          backgroundColor: theme.background.secondary
-        }
-      })
-    })
-    return { state, styles }
+    return { state }
   }
 })
 </script>
 
 <style lang="scss" module>
 .body {
+  @include background-secondary;
+  @include color-ui-secondary;
+  @include size-body2;
   display: inline-flex;
   align-items: center;
   font-weight: bold;
-  font-size: 14px;
   border-radius: 4px;
   padding: 0 4px;
 }

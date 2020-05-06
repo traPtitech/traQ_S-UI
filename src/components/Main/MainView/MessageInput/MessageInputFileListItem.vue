@@ -8,7 +8,7 @@
       v-if="state.showThumbnail"
       :attachment="attachment"
     />
-    <div v-else :class="$style.fileContainer" :style="styles.fileContainer">
+    <div v-else :class="$style.fileContainer">
       <icon mdi :name="iconName" />
       <div :class="$style.fileName">{{ attachment.file.name }}</div>
     </div>
@@ -24,7 +24,6 @@ import {
 } from '@vue/composition-api'
 import { Attachment } from '@/store/ui/fileInput/state'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 
@@ -50,13 +49,6 @@ const useFileTypeIcon = (props: Props) => {
   }
 }
 
-const useStyles = () =>
-  reactive({
-    fileContainer: makeStyles(theme => ({
-      background: theme.background.primary
-    }))
-  })
-
 export default defineComponent({
   name: 'MessageInputFileListItem',
   components: {
@@ -79,11 +71,9 @@ export default defineComponent({
       )
     })
     const { iconName } = useFileTypeIcon(props)
-    const styles = useStyles()
     const onClickClose = () => context.emit('item-remove')
     return {
       state,
-      styles,
       iconName,
       onClickClose
     }
@@ -97,10 +87,11 @@ export default defineComponent({
 }
 .closeButton {
   position: absolute;
-  right: 6px;
-  top: 6px;
+  right: 4px;
+  top: 4px;
 }
 .fileContainer {
+  @include background-primary;
   max-width: 128px;
   min-width: 80px;
   height: 88px;

@@ -5,9 +5,10 @@
       @click.native="context.emit('click-qall')"
       icon-name="phone"
       icon-mdi
-      :style="styles.qallIcon"
+      :class="$style.qallIcon"
       :label="qallLabel"
       :disabled="hasActiveQallSession && !isJoinedQallSession"
+      :data-is-active="isJoinedQallSession || isQallSessionOpened"
     />
     <header-tools-menu-item
       @click.native="context.emit('click-create-channel')"
@@ -30,24 +31,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'
-
-const useStyles = (props: {
-  isQallSessionOpened: boolean
-  isJoinedQallSession: boolean
-}) =>
-  reactive({
-    qallIcon: makeStyles((_, common) => ({
-      color:
-        props.isJoinedQallSession || props.isQallSessionOpened
-          ? common.ui.qall
-          : ''
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelViewHeaderToolsMenu',
@@ -62,7 +49,6 @@ export default defineComponent({
     isJoinedQallSession: { type: Boolean, default: false }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { isMobile } = useIsMobile()
     const qallLabel = computed(() => {
       if (props.isJoinedQallSession) {
@@ -76,7 +62,15 @@ export default defineComponent({
       }
       return 'Qallを開始'
     })
-    return { styles, context, isMobile, qallLabel }
+    return { context, isMobile, qallLabel }
   }
 })
 </script>
+
+<style lang="scss" module>
+.qallIcon {
+  &[data-is-active] {
+    color: $common-ui-qall;
+  }
+}
+</style>

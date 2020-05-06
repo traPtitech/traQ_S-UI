@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <span :class="$style.text" @click="withClose(removePinned)" v-if="isPinned">
       ピン留めを外す
     </span>
@@ -25,26 +25,11 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
-import { makeStyles } from '@/lib/styles'
 import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      filter: common.dropShadow.default,
-      background: theme.background.primary,
-      color: theme.ui.secondary
-    }))
-  })
 
 const usePinToggler = (props: { messageId: MessageId }) => {
   const addPinned = () => {
@@ -99,7 +84,6 @@ export default defineComponent({
   name: 'MessageToolsMenu',
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
   setup(props) {
-    const styles = useStyles()
     const isPinned = computed(() =>
       store.getters.domain.messagesView.isPinned(props.messageId)
     )
@@ -117,7 +101,6 @@ export default defineComponent({
       store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
     }
     return {
-      styles,
       isPinned,
       addPinned,
       removePinned,
@@ -135,11 +118,15 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
+  @include color-ui-secondary;
+  @include drop-shadow-default;
   display: grid;
   width: max-content;
   padding: 8px 16px;
   border-radius: 4px;
   position: absolute;
+  contain: content;
 }
 
 .text {

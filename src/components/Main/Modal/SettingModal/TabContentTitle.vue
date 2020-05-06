@@ -30,10 +30,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-primary;
-  font-size: 1.5rem;
+  @include size-h1;
   font-weight: bold;
   &[data-is-mobile] {
-    font-size: 1.25rem;
+    @include size-h2;
   }
 }
 </style>

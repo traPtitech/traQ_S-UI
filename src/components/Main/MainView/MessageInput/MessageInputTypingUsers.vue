@@ -1,6 +1,6 @@
 <template>
   <div v-if="typingUsers.length > 0" :class="$style.container">
-    <div :class="$style.text" :style="styles.text">
+    <div :class="$style.text">
       {{ text }}
     </div>
     <user-icon-ellipsis-list
@@ -15,22 +15,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
-
-const useStyles = () =>
-  reactive({
-    text: makeStyles(theme => ({
-      color: theme.text.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageInputTypingUsers',
@@ -41,8 +28,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
-
     const text = computed(
       () =>
         `${props.typingUsers.length > 3 ? 'and others' : ''} ${
@@ -50,7 +35,7 @@ export default defineComponent({
         } typing`
     )
 
-    return { styles, text }
+    return { text }
   },
   components: {
     UserIconEllipsisList
@@ -69,6 +54,7 @@ export default defineComponent({
 }
 
 .text {
+  @include color-text-secondary;
   margin-left: 4px;
 }
 </style>

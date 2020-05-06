@@ -227,6 +227,7 @@ export default defineComponent({
   height: 100%;
   overflow-y: scroll;
   padding: 12px 0;
+  backface-visibility: hidden;
 }
 
 .viewport {
@@ -238,6 +239,7 @@ export default defineComponent({
 
 .element {
   margin: 4px 0;
+  contain: content;
 }
 
 .bottomSpacer {

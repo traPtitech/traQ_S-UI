@@ -1,33 +1,15 @@
 <template>
-  <router-link
-    :to="fileLink"
-    v-if="isLarge"
-    :class="$style.largeContainer"
-    :style="styles.container"
-  >
+  <router-link :to="fileLink" v-if="isLarge" :class="$style.largeContainer">
     <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
-  <router-link
-    v-else
-    :to="fileLink"
-    :class="$style.container"
-    :style="styles.container"
-  >
+  <router-link v-else :to="fileLink" :class="$style.container">
     <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      borderColor: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageFileListItem',
@@ -42,12 +24,11 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { fileMeta, fileLink, fileThumbnailPath } = useFileMeta(
       props,
       context
     )
-    return { fileThumbnailPath, styles, fileLink, fileMeta }
+    return { fileThumbnailPath, fileLink, fileMeta }
   }
 })
 </script>
@@ -64,6 +45,7 @@ export default defineComponent({
   border: {
     width: 2px;
     style: solid;
+    color: $theme-background-secondary;
   }
   img {
     cursor: pointer;
@@ -75,6 +57,7 @@ export default defineComponent({
   border: {
     width: 2px;
     style: solid;
+    color: $theme-background-secondary;
   }
   max-width: min(600px, 100%);
   img {

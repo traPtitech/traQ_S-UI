@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <icon
       :class="$style.icon"
       v-if="iconName"
@@ -11,14 +11,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'MainViewHeaderTitle',
@@ -32,15 +26,12 @@ export default defineComponent({
     title: { type: String, required: true }
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
-$titleSize: 1.5rem;
-
 .container {
   display: flex;
   align-items: center;
@@ -51,6 +42,6 @@ $titleSize: 1.5rem;
 }
 
 .title {
-  font-size: $titleSize;
+  @include size-h1;
 }
 </style>

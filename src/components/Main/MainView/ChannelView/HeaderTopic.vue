@@ -1,28 +1,13 @@
 <template>
-  <div v-if="topic" :class="$style.container" :style="styles.container">
-    <div :class="$style.topic" :style="styles.topic">{{ topic }}</div>
+  <div v-if="topic" :class="$style.container">
+    <div :class="$style.topic">{{ topic }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
 import store from '@/store'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      borderColor: transparentize(theme.ui.secondary, 0.3)
-    }))
-  })
 
 export default defineComponent({
   name: 'MainViewHeaderTopic',
@@ -33,17 +18,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const topic = computed(
       () => store.state.entities.channels[props.channelId]?.topic
     )
-    return { styles, topic }
+    return { topic }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   width: 100%;
   min-width: 0;
   display: flex;
@@ -53,6 +38,7 @@ export default defineComponent({
   border-left: {
     style: solid;
     width: 2px;
+    color: $theme-ui-tertiary;
   }
   [data-is-mobile] & {
     padding-left: 12px;
@@ -60,8 +46,8 @@ export default defineComponent({
   }
 }
 .topic {
+  @include size-body2;
   width: 100%;
-  font-size: 0.875rem;
   font-weight: normal;
   overflow: hidden;
   text-overflow: ellipsis;

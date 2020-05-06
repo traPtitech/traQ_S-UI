@@ -1,12 +1,12 @@
 <template>
   <div
     :class="$style.body"
-    :style="styles.body"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
     ref="bodyRef"
     v-if="state.message"
     :data-is-mobile="isMobile"
+    :data-is-pinned="state.isPinned"
+    :data-is-entry="isEntryMessage"
+    :data-is-editing="state.isEditing"
   >
     <message-pinned
       :message-id="messageId"
@@ -23,24 +23,24 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.stampWrapper">
-      <icon
-        name="rounded-triangle"
-        :size="20"
-        v-if="state.message.stamps.length > 0"
-        :class="$style.toggleButton"
-        :style="styles.toggleButton"
-        @click="onStampDetailFoldingToggle"
-      />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-        :is-show-detail="state.stampDetailFoldingState"
-      />
+      <div :class="$style.stampWrapper">
+        <icon
+          name="rounded-triangle"
+          :size="20"
+          v-if="state.message.stamps.length > 0"
+          :class="$style.toggleButton"
+          :data-is-open="state.stampDetailFoldingState"
+          @click="onStampDetailFoldingToggle"
+        />
+        <message-stamp-list
+          :class="$style.stamps"
+          v-if="state.message.stamps.length > 0"
+          :message-id="messageId"
+          :stamps="state.message.stamps"
+          :is-show-detail="state.stampDetailFoldingState"
+        />
+      </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -52,46 +52,15 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
 import { MessageId } from '@/types/entity-ids'
-import useHover from '@/use/hover'
 import useIsMobile from '@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import Icon from '@/components/UI/Icon.vue'
-import { Message } from '@traptitech/traq'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
-
-const useStyles = (
-  props: { isEntryMessage: boolean },
-  hoverState: { hover: boolean },
-  state: {
-    message?: Message
-    stampDetailFoldingState: boolean
-    isEditing: boolean
-  }
-) =>
-  reactive({
-    body: makeStyles((theme, common) => ({
-      background: state.message?.pinned
-        ? transparentize(common.ui.pin, 0.2)
-        : props.isEntryMessage
-        ? transparentize(theme.accent.notification, 0.1)
-        : hoverState.hover && !state.isEditing
-        ? transparentize(theme.background.secondary, 0.6)
-        : 'transparent'
-    })),
-    toggleButton: makeStyles(theme => ({
-      transform: state.stampDetailFoldingState
-        ? `rotate(0.5turn)`
-        : `rotate(0turn)`,
-      color: hoverState.hover ? theme.ui.secondary : 'transparent'
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageElement',
@@ -113,7 +82,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
     const bodyRef = ref<HTMLDivElement>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
@@ -130,6 +98,7 @@ export default defineComponent({
         () =>
           props.messageId === store.state.domain.messagesView.editingMessageId
       ),
+      isPinned: computed((): boolean => state.message?.pinned ?? false),
       stampDetailFoldingState: false
     })
 
@@ -141,18 +110,12 @@ export default defineComponent({
       state.stampDetailFoldingState = !state.stampDetailFoldingState
     }
 
-    const styles = useStyles(props, hoverState, state)
-
     return {
       state,
-      styles,
-      onMouseEnter,
-      onMouseLeave,
       bodyRef,
       embeddingsState,
       isMobile,
-      onStampDetailFoldingToggle,
-      hoverState
+      onStampDetailFoldingToggle
     }
   }
 })
@@ -170,7 +133,7 @@ $messagePaddingMobile: 16px;
     'message-contents message-contents'
     'message-contents message-contents'
     'message-contents message-contents'
-    '... stamp-wrapper';
+    '................ stamp-wrapper';
   grid-template-rows: auto 20px 1fr;
   grid-template-columns: 42px 1fr;
   width: 100%;
@@ -179,6 +142,17 @@ $messagePaddingMobile: 16px;
   padding: 8px $messagePadding;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
+  }
+  &[data-is-pinned] {
+    background: $common-background-pin;
+  }
+  &[data-is-entry] {
+    // TODO: 色を正しくする
+    background: $common-background-pin;
+  }
+  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
+    // TODO: 色を正しくする
+    background: $theme-background-secondary;
   }
 }
 
@@ -202,6 +176,14 @@ $messagePaddingMobile: 16px;
 }
 
 .toggleButton {
+  color: transparent;
+  transform: rotate(0turn);
+  &[data-is-open] {
+    transform: rotate(0.5turn);
+  }
+  .body:hover & {
+    @include color-ui-secondary;
+  }
   position: absolute;
   left: -26px;
   top: 2px;
@@ -209,6 +191,9 @@ $messagePaddingMobile: 16px;
 }
 
 .tools {
+  .body:not(:hover) & {
+    display: none;
+  }
   position: absolute;
   top: 4px;
   right: 16px;

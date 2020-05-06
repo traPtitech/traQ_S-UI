@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <img
       :ref="thumbnailRef"
       :class="$style.image"
@@ -20,7 +20,6 @@ import {
 } from '@vue/composition-api'
 import { Attachment } from '@/store/ui/fileInput/state'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
 
 const useImageThumbnail = (
   props: { attachment: Attachment },
@@ -32,13 +31,6 @@ const useImageThumbnail = (
   })
   return { imageThumbnailState: state }
 }
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageInputFileListItemImage',
@@ -54,14 +46,14 @@ export default defineComponent({
   setup(props) {
     const thumbnailRef = ref<HTMLImageElement>(null)
     const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
-    const styles = useStyles()
-    return { thumbnailRef, styles, imageThumbnailState }
+    return { thumbnailRef, imageThumbnailState }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   max-width: 192px;
   min-width: 48px;
   height: 88px;

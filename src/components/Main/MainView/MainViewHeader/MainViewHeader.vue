@@ -1,12 +1,7 @@
 <template>
-  <header :class="$style.container" :style="styles.container">
+  <header :class="$style.container">
     <div :class="$style.headerContainer">
-      <button
-        :class="$style.navigationButton"
-        :style="styles.navigationButton"
-        v-if="isMobile"
-        @click="openNav"
-      >
+      <button :class="$style.navigationButton" v-if="isMobile" @click="openNav">
         <icon name="traQ" />
       </button>
       <h2 :class="$style.headerBody">
@@ -18,23 +13,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.primary,
-      borderBottom: `2px solid ${theme.ui.tertiary}`
-    })),
-    navigationButton: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'MainViewHeader',
@@ -42,11 +24,9 @@ export default defineComponent({
     Icon
   },
   setup(props, context) {
-    const styles = useStyles()
     const { isMobile } = useIsMobile()
     const { openNav } = useNavigationController()
     return {
-      styles,
       isMobile,
       openNav
     }
@@ -58,6 +38,8 @@ export default defineComponent({
 $headerHeight: 80px;
 
 .container {
+  @include background-primary;
+  @include color-ui-primary;
   position: relative;
   display: flex;
   align-items: center;
@@ -66,6 +48,7 @@ $headerHeight: 80px;
   width: 100%;
   flex: 0 0 $headerHeight;
   padding: 16px;
+  border-bottom: 2px solid $theme-ui-tertiary;
 }
 .headerBody {
   width: 100%;
@@ -76,6 +59,7 @@ $headerHeight: 80px;
   min-width: 0;
 }
 .navigationButton {
+  @include color-ui-primary;
   display: flex;
   align-items: center;
   margin-right: 8px;

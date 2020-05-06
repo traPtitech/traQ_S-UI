@@ -70,9 +70,9 @@ export default defineComponent({
   align-items: center;
 }
 .title {
+  @include size-h2;
   padding-left: 40px;
   flex: 1 0;
-  font-size: 1.25rem;
 }
 
 .safariWarning {

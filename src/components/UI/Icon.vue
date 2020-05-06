@@ -7,6 +7,7 @@
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
+    :class="$style.icon"
   >
     <path :d="getMdiPath(name)" fill="currentColor" />
   </svg>
@@ -16,10 +17,10 @@
     :width="size"
     :height="size"
     view-box="0 0 24 24"
-    class="icon"
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
+    :class="$style.icon"
   />
 </template>
 
@@ -48,7 +49,7 @@ export default defineComponent({
   setup(props, context) {
     // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
     const getComponent = (name: string) => () =>
-      import(`@/assets/icons/${name}.svg`)
+      import(`@/assets/icons/${name}.svg?component`)
 
     const svgComponent = computed(() => getComponent(props.name))
     const getMdiPath = (name: string) => {
@@ -63,3 +64,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.icon {
+  contain: strict;
+}
+</style>

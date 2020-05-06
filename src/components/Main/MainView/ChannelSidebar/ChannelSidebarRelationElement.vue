@@ -1,33 +1,19 @@
 <template>
   <div>
-    <div :class="$style.channelNameContainer">
-      <span
-        :style="[propst.isCurrent ? styles.current : '']"
-        :class="$style.channelHash"
-        >#</span
-      >
-      <span :style="[propst.isCurrent ? styles.current : '']">
-        <router-link :to="propst.isCurrent ? '' : propst.link">{{
-          propst.name
-        }}</router-link>
+    <div :class="$style.channelNameContainer" :data-is-current="isCurrent">
+      <span :data-is-current="isCurrent" :class="$style.channelHash">#</span>
+      <span>
+        <router-link :to="isCurrent ? '' : link">{{ name }}</router-link>
       </span>
     </div>
-    <div v-if="propst.topic" :class="$style.topic">
-      {{ propst.topic }}
+    <div v-if="topic" :class="$style.topic">
+      {{ topic }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    current: makeStyles(theme => ({
-      color: theme.accent.primary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ChannelSidebarRelationElement',
@@ -37,26 +23,18 @@ export default defineComponent({
     isCurrent: { type: Boolean, default: false },
     link: { type: String }
   },
-  setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as {
-      name: string
-      topic: string
-      isCurrent: boolean
-      link: string
-    }
-    const styles = useStyles()
-    return { propst, styles }
+  setup() {
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
-$channelNameSize: 1.125rem;
-$topiclSize: 0.875rem;
-
 .channelNameContainer {
-  font-size: $channelNameSize;
+  &[data-is-current] {
+    @include color-accent-primary;
+  }
+  @include size-h3;
 }
 
 .channelHash {
@@ -65,8 +43,8 @@ $topiclSize: 0.875rem;
 }
 
 .topic {
+  @include size-body2;
   font-weight: normal;
-  font-size: $topiclSize;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

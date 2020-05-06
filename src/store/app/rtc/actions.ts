@@ -29,7 +29,10 @@ export const actions = defineActions({
 
   async syncRTCState(context) {
     const { state } = rtcActionContext(context)
-    if (!state.currentRTCState) return
+    if (!state.currentRTCState) {
+      changeRTCState(null, [])
+      return
+    }
     const sessionStates = state.currentRTCState.sessionStates
     const userStateSessions: WebRTCUserStateSessions[] = sessionStates.map(
       s => ({
@@ -59,10 +62,14 @@ export const actions = defineActions({
       s => s.sessionId === payload.sessionId
     )
     sessionStates.splice(index, 1)
-    commit.setCurrentRTCState({
-      channelId: currentState.channelId,
-      sessionStates: sessionStates
-    })
+    if (sessionStates.length === 0) {
+      commit.unsetCurrentRTCState()
+    } else {
+      commit.setCurrentRTCState({
+        channelId: currentState.channelId,
+        sessionStates: sessionStates
+      })
+    }
     await dispatch.syncRTCState()
   },
   async modifyRTCSession(
@@ -275,7 +282,7 @@ export const actions = defineActions({
         sessionType: 'qall'
       })
       dispatch.joinVoiceChannel(sessionId)
-    } catch {
+    } catch (e) {
       // TODO: エラー
     }
   },

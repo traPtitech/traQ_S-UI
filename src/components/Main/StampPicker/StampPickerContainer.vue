@@ -67,5 +67,6 @@ export default defineComponent({
   position: absolute;
   z-index: 999;
   transform: translateX(-100%);
+  contain: strict;
 }
 </style>

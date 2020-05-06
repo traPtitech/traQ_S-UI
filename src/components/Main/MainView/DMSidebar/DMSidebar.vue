@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar :style="styles.container" :class="$style.container">
+  <main-view-sidebar :class="$style.container">
     <template #header>
       <sidebar-header v-if="!state.pinnedMode" :name="userName" />
       <!--TODO: これはチャンネル関係ないので切り出し-->
@@ -28,22 +28,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import ChannelSidebarPinnedList from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinnedList.vue'
 import ChannelSidebarHeader from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHeader.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import SidebarHeader from './DMSidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'DMSidebar',
@@ -58,7 +49,6 @@ export default defineComponent({
     userName: { type: String, requried: true }
   },
   setup() {
-    const styles = useStyles()
     const {
       state,
       viewerIds,
@@ -70,7 +60,6 @@ export default defineComponent({
       state,
       togglePinnedMode,
       viewerIds,
-      styles,
       closeSidebar
     }
   }
@@ -79,6 +68,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
+  @include color-ui-secondary;
   display: flex;
   flex-direction: column;
   width: 320px;

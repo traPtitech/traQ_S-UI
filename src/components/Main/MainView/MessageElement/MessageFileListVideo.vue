@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.overlay" :style="styles.overlay">
+  <div :class="$style.container">
+    <div :class="$style.overlay">
       <message-file-list-item-content :file-id="fileId" is-white />
     </div>
     <video
@@ -14,20 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      borderColor: theme.background.secondary
-    })),
-    overlay: makeStyles((_, common) => ({
-      background: common.background.overlay
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageFileListVideo',
@@ -39,15 +28,15 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
-    return { styles, fileMeta, fileLink, fileRawPath }
+    return { fileMeta, fileLink, fileRawPath }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-secondary;
   position: relative;
   overflow: hidden;
   max-width: min(600px, 100%);
@@ -67,7 +56,7 @@ export default defineComponent({
 .overlay {
   position: absolute;
   width: 100%;
-  background: linear-gradient(to bottom, #000000, transparent);
+  background: $common-background-overlay;
   backdrop-filter: blur(4px);
   cursor: pointer;
   z-index: 1;

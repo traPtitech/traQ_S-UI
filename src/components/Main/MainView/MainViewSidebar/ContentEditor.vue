@@ -1,10 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <textarea-autosize
       v-if="isEditing"
       :value="value"
       :class="$style.editor"
-      :style="styles.textarea"
       :maxlength="maxlength"
       @input="onInput"
     />
@@ -13,7 +12,7 @@
     </div>
     <button
       @click="onButtonClick"
-      :style="styles.button"
+      :data-is-editing="isEditing"
       :class="$style.button"
     >
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
@@ -23,18 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = (props: { isEditing: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({ color: theme.ui.primary })),
-    button: makeStyles(theme => ({
-      color: props.isEditing ? theme.accent.primary : theme.ui.primary
-    })),
-    textarea: makeStyles(theme => ({ color: theme.ui.primary }))
-  })
 
 export default defineComponent({
   name: 'ContentEditor',
@@ -48,7 +37,6 @@ export default defineComponent({
     maxlength: { type: Number, required: false }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue
       if (props.value === undefined) return 'ロード中'
@@ -65,13 +53,14 @@ export default defineComponent({
       }
     }
     const onInput = (payload: string) => context.emit('input', payload)
-    return { styles, content, isEmpty, onButtonClick, onInput }
+    return { content, isEmpty, onButtonClick, onInput }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: grid;
   grid-template-columns: 1fr 20px;
   column-gap: 8px;
@@ -88,10 +77,15 @@ export default defineComponent({
   }
 }
 .editor {
+  @include color-ui-primary;
   width: 100%;
   resize: none;
 }
 .button {
+  @include color-ui-primary;
+  &[data-is-editing] {
+    @include color-accent-primary;
+  }
   cursor: pointer;
   opacity: 0.5;
   &:hover {

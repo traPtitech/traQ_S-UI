@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <span :class="$style.icon" :style="styles.icon">
+  <div :class="$style.container">
+    <span :class="$style.icon">
       <icon mdi name="file-upload" :size="72" />
     </span>
     <p>ドロップしてファイルをアップロード</p>
@@ -8,30 +8,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: transparentize(theme.background.primary, 0.8)
-    })),
-    icon: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelViewFileUploadOverlay',
   components: { Icon },
   setup() {
-    const styles = useStyles()
-    return {
-      styles
-    }
+    return {}
   }
 })
 </script>
@@ -40,6 +24,7 @@ export default defineComponent({
 $messagePadding: 32px;
 
 .container {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -48,9 +33,22 @@ $messagePadding: 32px;
   justify-content: center;
   backdrop-filter: blur(5px);
   font-weight: bold;
+  &::before {
+    @include background-primary;
+    top: 0;
+    left: 0;
+    display: block;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    z-index: -1;
+  }
 }
 
 .icon {
+  @include background-secondary;
   width: 120px;
   height: 120px;
   border-radius: 100vw;

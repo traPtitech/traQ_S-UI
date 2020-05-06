@@ -78,7 +78,7 @@ export default defineComponent({
   }
 }
 .icon {
-  font-size: 1rem;
+  @include size-body1;
   grid-area: icon;
 }
 .title {
@@ -90,7 +90,7 @@ export default defineComponent({
 }
 .description {
   @include color-ui-primary;
-  font-size: 0.75rem;
+  @include size-caption;
   grid-area: description;
 }
 </style>

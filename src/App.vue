@@ -88,12 +88,19 @@ const useThemeVariables = () =>
     '--common-ui-pin': common.ui.pin,
     '--common-background-overlay': common.background.overlay,
     '--common-background-black': common.background.black,
+    '--common-background-pin': common.background.pin,
     '--common-drop-shadow-default': common.dropShadow.default
+  }))
+const useTransparrentThemeVariables = () =>
+  makeStyles((theme, common) => ({
+    '--theme-accent-primary--03': transparentize(theme.accent.primary, 0.3),
+    '--theme-ui-primary--06': transparentize(theme.ui.primary, 0.6)
   }))
 
 const useStyle = () =>
   computed(() => ({
     ...useThemeVariables().value,
+    ...useTransparrentThemeVariables().value,
     ...useScrollbarStyle().value
   }))
 

@@ -63,11 +63,18 @@ export default defineComponent({
   },
   setup(props) {
     const styles = useStyles(props)
-    const { channelIdToShortPathString } = useChannelPath()
+
+    const {
+      channelIdToShortPathString,
+      channelIdToPathString
+    } = useChannelPath()
     const channelName = computed(() =>
       channelIdToShortPathString(props.channelId)
     )
-    const channelLink = computed(() => constructChannelPath(channelName.value))
+    const channelLink = computed(() =>
+      constructChannelPath(channelIdToPathString(props.channelId))
+    )
+
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'
     )
@@ -120,7 +127,7 @@ export default defineComponent({
   user-select: none;
 }
 .channelName {
-  font-size: 0.75rem;
+  @include size-caption;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

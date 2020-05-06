@@ -18,9 +18,9 @@ module.exports = {
   chainWebpack: config => {
     const svgRule = config.module.rule('svg')
 
-    svgRule.uses.clear()
-
     svgRule
+      .oneOf('component')
+      .resourceQuery(/component/)
       .use('babel-loader')
       .loader('babel-loader')
       .end()
@@ -35,6 +35,10 @@ module.exports = {
           ]
         }
       })
+      .end()
+      .end()
+    svgRule.oneOf('normal').uses.merge(svgRule.uses.entries())
+    svgRule.uses.clear()
   },
 
   pwa: {
