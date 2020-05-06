@@ -60,6 +60,6 @@ export default defineComponent({
   justify-content: center;
 }
 .icon {
-  padding: 10%;
+  padding: 16%;
 }
 </style>
