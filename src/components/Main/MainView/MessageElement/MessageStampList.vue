@@ -91,6 +91,7 @@ export default defineComponent({
   &[data-show-details] {
     flex-direction: column;
   }
+  contain: content;
 }
 .stamp {
   margin: {

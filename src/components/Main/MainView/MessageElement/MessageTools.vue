@@ -1,24 +1,24 @@
 <template>
   <div :class="$style.container">
-    <stamp-picker-stamp-list-item
+    <stamp
       v-for="stamp in recentStamps"
       :key="stamp"
       :stamp-id="stamp"
-      @click="addStamp(stamp)"
-      :size="20"
+      @click.native="addStamp(stamp)"
+      :size="28"
       :class="$style.stampListItem"
     />
     <span :class="$style.line"></span>
     <icon
       mdi
       name="emoticon-outline"
-      :size="20"
+      :size="28"
       :class="$style.emojiIcon"
       @click="onStampIconClick"
     />
     <icon
       :class="$style.dotIcon"
-      :size="20"
+      :size="28"
       mdi
       name="dots-horizontal"
       @click="onDotsClick"
@@ -32,7 +32,6 @@ import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
-import StampPickerStampListItem from '@/components/Main/StampPicker/StampPickerStampListItem.vue'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import { targetPortalName } from '@/views/Main.vue'
 
@@ -40,8 +39,7 @@ export default defineComponent({
   name: 'MessageTools',
   components: {
     Icon,
-    Stamp,
-    StampPickerStampListItem
+    Stamp
   },
   props: { messageId: { type: String as PropType<MessageId>, required: true } },
   setup(props) {
@@ -96,8 +94,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   box-shadow: 0 1px 3px 0;
-  padding: 4px;
   justify-content: space-between;
+  contain: content;
 }
 
 .line {
@@ -107,14 +105,21 @@ export default defineComponent({
 }
 
 .emojiIcon,
-.dotIcon,
-.stampListItem {
+.dotIcon {
   display: block;
+  padding: 4px;
   cursor: pointer;
-  margin: 0 4px;
+  &:hover {
+    @include background-secondary;
+  }
 }
 
 .stampListItem {
+  padding: 4px;
+  cursor: pointer;
   user-select: none;
+  &:hover {
+    @include background-secondary;
+  }
 }
 </style>

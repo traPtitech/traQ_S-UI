@@ -7,6 +7,7 @@
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
+    :class="$style.icon"
   >
     <path :d="getMdiPath(name)" fill="currentColor" />
   </svg>
@@ -19,6 +20,7 @@
     v-bind="context.attrs"
     v-on="context.listeners"
     role="img"
+    :class="$style.icon"
   />
 </template>
 
@@ -62,3 +64,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.icon {
+  contain: strict;
+}
+</style>

@@ -227,13 +227,13 @@ $messagePaddingMobile: 16px;
 
 .toggleButton {
   color: transparent;
+  transform: rotate(0turn);
   &[data-is-open] {
     transform: rotate(0.5turn);
   }
   .body:hover & {
     @include color-ui-secondary;
   }
-  opacity: 0;
   position: absolute;
   left: -26px;
   top: 2px;

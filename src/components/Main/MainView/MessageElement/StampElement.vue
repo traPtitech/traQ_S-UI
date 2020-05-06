@@ -5,9 +5,7 @@
     :data-include-me="state.includeMe"
     @click="onClick"
   >
-    <div :class="$style.stampContainer">
-      <img loading="lazy" :src="state.src" draggable="false" />
-    </div>
+    <stamp :stamp-id="stampId" :size="20" />
     <spin-number :value="state.count" :class="$style.count" />
   </div>
 </template>
@@ -21,14 +19,14 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { buildFilePath } from '@/lib/apis'
-import SpinNumber from '@/components/UI/SpinNumber.vue'
 import { MessageStamp } from '@traptitech/traq'
 import { StampId } from '@/types/entity-ids'
+import SpinNumber from '@/components/UI/SpinNumber.vue'
+import Stamp from '@/components/UI/Stamp.vue'
 
 export default defineComponent({
   name: 'StampElement',
-  components: { SpinNumber },
+  components: { Stamp, SpinNumber },
   props: {
     stampId: {
       type: String as PropType<StampId>,
@@ -40,7 +38,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const stamp = computed(() => store.state.entities.stamps[props.stampId])
+    const stampName = computed(
+      () => store.state.entities.stamps[props.stampId]?.name
+    )
 
     const state = reactive({
       count: computed(() =>
@@ -48,8 +48,6 @@ export default defineComponent({
           return acc + cur.count
         }, 0)
       ),
-      stamp,
-      src: computed(() => buildFilePath(stamp.value.fileId)),
       includeMe: computed(() =>
         props.stamps.some(
           stamp => stamp.userId === store.state.domain.me.detail?.id
@@ -57,7 +55,7 @@ export default defineComponent({
       ),
       tooltip: computed(() =>
         [
-          `:${stamp.value.name}:`,
+          `:${stampName.value}:`,
           ...props.stamps.map(
             s =>
               `${store.state.entities.users[s.userId]?.displayName ?? ''}(${
@@ -109,18 +107,7 @@ export default defineComponent({
   cursor: pointer;
   user-select: none;
   overflow: hidden;
-}
-
-.stampContainer {
-  width: 20px;
-  height: 20px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-  }
+  contain: content;
 }
 
 .count {
