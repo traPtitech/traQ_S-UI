@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" @click="focus">
     <icon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
@@ -76,8 +76,11 @@ export default defineComponent({
       if (!props.focusOnMount || isTouchDevice()) return
       inputRef.value?.focus()
     })
+    const focus = () => {
+      inputRef.value?.focus()
+    }
 
-    return { styles, inputRef, onInput }
+    return { styles, focus, inputRef, onInput }
   }
 })
 </script>
