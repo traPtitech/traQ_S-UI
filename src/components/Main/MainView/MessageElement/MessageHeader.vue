@@ -63,7 +63,7 @@ export default defineComponent({
 <style lang="scss" module>
 .header {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   min-width: 0;
 }
 

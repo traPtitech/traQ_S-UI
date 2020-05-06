@@ -7,16 +7,17 @@
         :class="$style.messageContainer"
       >
         <messages-scroller-separator
-          v-if="index === unreadIndex"
+          v-if="!withoutSeparator && index === unreadIndex"
           title="ここから未読"
           :class="$style.unreadSeparator"
         />
         <messages-scroller-separator
-          v-if="dayDiff(index)"
+          v-if="!withoutSeparator && dayDiff(index)"
           :title="createdDate(messageId)"
           :class="$style.dateSeparator"
         />
-        <message-element
+        <component
+          :is="messageComponent"
           :class="$style.element"
           :message-id="messageId"
           :is-entry-message="entryMessageId === messageId"
@@ -45,6 +46,7 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
+import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'lodash-es'
 import { toggleSpoiler } from '@/lib/markdown'
@@ -88,6 +90,7 @@ export default defineComponent({
   name: 'MessagesScroller',
   components: {
     MessageElement,
+    ClipElement,
     MessagesScrollerSeparator
   },
   props: {
@@ -105,6 +108,10 @@ export default defineComponent({
     lastLoadingDirection: {
       type: String as PropType<LoadingDirection>,
       required: true
+    },
+    withoutSeparator: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
@@ -136,6 +143,12 @@ export default defineComponent({
       onChangeHeight,
       onEntryMessageLoaded
     } = useMessageScrollerElementResizeObserver(rootRef, props, state)
+
+    const messageComponent = computed(() =>
+      store.state.ui.mainView.primaryView.type === 'clips'
+        ? ClipElement
+        : MessageElement
+    )
 
     onMounted(() => {
       state.height = rootRef.value?.scrollHeight ?? 0
@@ -202,6 +215,7 @@ export default defineComponent({
       unreadIndex,
       onEntryMessageLoaded,
       dayDiff,
+      messageComponent,
       createdDate
     }
   }
@@ -214,10 +228,6 @@ export default defineComponent({
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
-}
-
-.messageContainer {
-  display: contents;
 }
 
 .viewport {
