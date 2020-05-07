@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="containerRef"
     :class="$style.container"
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
@@ -28,8 +27,6 @@ import {
   defineComponent,
   reactive,
   computed,
-  ref,
-  Ref,
   PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
@@ -41,7 +38,7 @@ import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'lodash-es'
 
-const useFileDragDrop = (dropAreaRef: Ref<HTMLElement | null>) => {
+const useFileDragDrop = () => {
   const state = reactive({
     isDragging: false
   })
@@ -91,11 +88,7 @@ export default defineComponent({
       )
     })
 
-    const containerRef = ref<HTMLElement>(null)
-
-    const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop(
-      containerRef
-    )
+    const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop()
 
     const { shouldShowSidebar, isSidebarOpen, openSidebar } = useSidebar()
     const viewerIds = computed(
@@ -105,7 +98,6 @@ export default defineComponent({
     return {
       state,
       fileDragDropState,
-      containerRef,
       onDrop,
       onDragOver,
       viewerIds,
