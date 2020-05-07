@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    v-click-outside="close"
-  >
+  <div :class="$style.container" v-click-outside="close">
     <div :class="$style.header">
       <span :class="$style.title">サービス</span>
       <close-button
@@ -27,20 +23,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
-import { makeStyles } from '@/lib/styles'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import config from '@/config'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      filter: common.dropShadow.default,
-      color: theme.ui.primary,
-      background: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'AppList',
@@ -52,15 +38,16 @@ export default defineComponent({
       context.emit('close')
     }
 
-    const styles = useStyles()
-
-    return { apps, styles, close }
+    return { apps, close }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-primary;
+  @include drop-shadow-default;
   display: flex;
   flex-direction: column;
   padding: 16px;

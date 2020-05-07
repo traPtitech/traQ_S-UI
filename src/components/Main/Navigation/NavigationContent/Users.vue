@@ -7,9 +7,9 @@
     -->
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
-        :on-secondary="true"
         :text="userListFilterState.query"
         @input="setQuery"
+        on-secondary
       />
       <div v-if="userListFilterState.query.length > 0" :class="$style.list">
         <users-element

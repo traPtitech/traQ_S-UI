@@ -1,5 +1,5 @@
 <template>
-  <h2 :class="$style.container" :style="containerStyle">
+  <h2 :class="$style.container">
     {{ title }}
   </h2>
 </template>
@@ -10,7 +10,6 @@ import {
   NavigationItemType,
   navigationTypeNameMap
 } from '@/components/Main/Navigation/use/navigationConstructor'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'NavigationContentTitle',
@@ -22,19 +21,14 @@ export default defineComponent({
   },
   setup(props) {
     const title = computed(() => navigationTypeNameMap[props.currentNavigation])
-    const containerStyle = makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-    return {
-      title,
-      containerStyle
-    }
+    return { title }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   @include size-h2;
   font-weight: bold;
 }

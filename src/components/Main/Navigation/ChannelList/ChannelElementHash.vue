@@ -1,6 +1,13 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.hash" :style="styles.hash">
+    <div
+      :class="$style.hash"
+      :data-container-type="hasChild ? 'parent' : 'leaf'"
+      :data-is-opened="hasChild && isOpened"
+      :aria-selected="isSelected ? 'true' : 'false'"
+      :data-has-notification-on-child="hasNotificationOnChild"
+      @click="$emit('click')"
+    >
       <icon name="hash" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
@@ -10,41 +17,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  reactive,
-  computed
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
-
-const useLeafContainerStyle = (selected: boolean) =>
-  makeStyles(theme => ({
-    color: selected ? theme.accent.primary : theme.ui.primary
-  }))
-
-const useClosedParentContainerStyle = (
-  selected: boolean,
-  hasNotificationOnChild: boolean
-) =>
-  makeStyles(theme => ({
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    borderColor: selected
-      ? theme.accent.primary
-      : hasNotificationOnChild
-      ? theme.accent.notification
-      : theme.ui.primary,
-    color: selected ? theme.accent.primary : theme.ui.primary
-  }))
-
-const useOpenedParentContainerStyle = (selected: boolean) =>
-  makeStyles(theme => ({
-    background: selected ? theme.accent.primary : theme.ui.primary,
-    color: theme.background.secondary
-  }))
 
 export default defineComponent({
   name: 'ChannelElementHash',
@@ -87,23 +62,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const styles = reactive({
-      hash: computed(() =>
-        !props.hasChild
-          ? useLeafContainerStyle(props.isSelected).value
-          : props.isOpened
-          ? useOpenedParentContainerStyle(props.isSelected).value
-          : useClosedParentContainerStyle(
-              props.isSelected,
-              props.hasNotificationOnChild
-            ).value
-      ),
-      indicator: makeStyles(theme => ({
-        backgroundColor: theme.accent.notification
-      }))
-    })
-    return { styles }
+  setup() {
+    return {}
   }
 })
 </script>
@@ -118,13 +78,43 @@ export default defineComponent({
   height: 32px;
 }
 .hash {
-  border: solid 2px transparent;
+  border: {
+    width: 2px;
+    style: solid;
+    color: transparent;
+  }
   border-radius: 4px;
   width: 22px;
   height: 22px;
   display: flex;
   align-items: center;
   box-sizing: content-box;
+  &[data-container-type='leaf'] {
+    @include color-ui-primary;
+    &[aria-selected='true'] {
+      @include color-accent-primary;
+    }
+  }
+  &[data-container-type='parent'] {
+    &[data-is-opened] {
+      color: $theme-background-secondary;
+      background: $theme-ui-primary;
+      &[aria-selected='true'] {
+        @include background-accent-primary;
+      }
+    }
+    &:not([data-is-opened]) {
+      @include color-ui-primary;
+      border-color: $theme-ui-primary;
+      &[data-has-notification-child] {
+        border-color: $theme-accent-notification;
+      }
+      &[aria-selected='true'] {
+        @include color-accent-primary;
+        border-color: $theme-accent-primary;
+      }
+    }
+  }
 }
 .inactive {
   opacity: 0.5;

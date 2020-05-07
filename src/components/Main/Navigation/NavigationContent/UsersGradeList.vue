@@ -6,14 +6,14 @@
       :has-notification="hasNotification"
       @click.native="toggleFolding"
     />
-    <div v-if="isFolding">
+    <template v-if="isFolding">
       <users-element
         v-for="user in users"
         :key="user.id"
         :user="user"
         :class="$style.element"
       />
-    </div>
+    </template>
   </div>
 </template>
 

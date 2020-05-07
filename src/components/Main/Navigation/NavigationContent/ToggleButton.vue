@@ -1,29 +1,17 @@
 <template>
   <button
     :class="$style.container"
-    :style="styles.container"
     :title="title"
     @click="$emit('click')"
+    :aria-pressed="value ? 'true' : 'false'"
   >
     <Icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = (props: { value: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.primary,
-      color: props.value
-        ? theme.accent.primary
-        : transparentize(theme.ui.secondary, 0.5)
-    }))
-  })
 
 export default defineComponent({
   name: 'ToggleButton',
@@ -42,9 +30,8 @@ export default defineComponent({
     },
     title: String
   },
-  setup(props) {
-    const styles = useStyles(props)
-    return { styles }
+  setup() {
+    return {}
   },
   components: {
     Icon
@@ -54,6 +41,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   padding: 4px 32px;
   border-radius: 4px;
   text-align: center;
@@ -61,6 +49,12 @@ export default defineComponent({
 }
 
 .icon {
+  @include color-ui-secondary;
   vertical-align: middle;
+  opacity: 0.5;
+  .container[aria-pressed='true'] & {
+    @include color-accent-primary;
+    opacity: 1;
+  }
 }
 </style>

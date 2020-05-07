@@ -1,26 +1,15 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.displayName" :style="styles.displayName">
+    <div :class="$style.displayName">
       {{ user.displayName }}
     </div>
-    <div :class="$style.name" :style="styles.name">@{{ user.name }}</div>
+    <div :class="$style.name">@{{ user.name }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
-
-const useStyles = () =>
-  reactive({
-    displayName: makeStyles(theme => ({
-      color: theme.ui.primary
-    })),
-    name: makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'UsersElementUserName',
@@ -31,8 +20,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const styles = useStyles()
-    return { styles }
+    return {}
   }
 })
 </script>
@@ -42,12 +30,14 @@ export default defineComponent({
   min-width: 0;
 }
 .displayName {
+  @include color-ui-primary;
   @include size-body1;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 .name {
+  @include color-ui-secondary;
   @include size-body2;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-if="currentChannel"
-    :class="$style.container"
-    :style="styles.container"
-  >
+  <div v-if="currentChannel" :class="$style.container">
     <qall-details-panel />
     <qall-control-panel
       :class="$style.control"
@@ -17,16 +13,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
 import store from '@/store'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({}))
-  })
 
 export default defineComponent({
   name: 'NavigationContentQall',
@@ -35,7 +25,6 @@ export default defineComponent({
     QallDetailsPanel
   },
   setup() {
-    const styles = useStyles()
     const currentChannel = computed(() =>
       store.getters.app.rtc.qallSession
         ? store.state.app.rtc.currentRTCState?.channelId
@@ -54,7 +43,6 @@ export default defineComponent({
     }
     const status = computed(() => '通話中')
     return {
-      styles,
       currentChannel,
       status,
       isMicMuted,
