@@ -2,6 +2,9 @@ import { start, finish, initVars } from './vars'
 import { loadImage, resetCanvas } from './canvas'
 import { needResize, getThumbnailDimensions } from './size'
 
+export const canResize = (mime: string) =>
+  ['image/png', 'image/jpeg'].includes(mime)
+
 export const resize = async (inputFile: File): Promise<File | null> => {
   start()
   const { pica, $input, $output, $img } = await initVars()

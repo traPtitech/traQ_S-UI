@@ -4,7 +4,7 @@ import { fileInput } from './index'
 import { mimeToFileType } from '@/lib/util/file'
 import { ActionContext } from 'vuex'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
-import { resize } from '@/lib/resize'
+import { resize, canResize } from '@/lib/resize'
 
 const imageSizeLimit = 20 * 1000 * 1000 // 20MB
 
@@ -27,8 +27,13 @@ export const actions = defineActions({
     if (fileType === 'image') {
       // 最後に追加されたもの
       const index = state.attachments.length
+      const resizable = canResize(file.type)
 
-      const resizedFile = (await resize(file)) ?? file
+      let resizedFile = file
+      if (resizable) {
+        resizedFile = (await resize(file)) ?? file
+      }
+
       const thumbnailDataUrl = await convertToDataUrl(resizedFile)
       if (!thumbnailDataUrl) return
 
