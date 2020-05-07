@@ -1,7 +1,7 @@
 <template>
   <div class="channel-list">
     <channel-element
-      v-for="channel in channels"
+      v-for="channel in filteredChannels"
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
@@ -21,7 +21,8 @@ import {
   reactive,
   set,
   toRefs,
-  PropType
+  PropType,
+  computed
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
@@ -55,7 +56,7 @@ export default defineComponent({
   },
   props: {
     channels: {
-      type: Array as PropType<ChannelTreeNode[] | Channel[]>,
+      type: Array as PropType<Array<ChannelTreeNode | Channel>>,
       required: true
     },
     ignoreChildren: {
@@ -74,10 +75,14 @@ export default defineComponent({
   setup(props, context) {
     const { onChannelSelect } = useChannelSelect()
     const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
+    const filteredChannels = computed(() =>
+      props.channels.filter(ch => !ch.archived)
+    )
     return {
       channelFoldingState,
       onChannelSelect,
-      onChannelFoldingToggle
+      onChannelFoldingToggle,
+      filteredChannels
     }
   }
 })
