@@ -38,7 +38,7 @@ export const constructTree = (
 
   if (channel.children.length === 0) {
     // 葉チャンネル
-    if (containArchive && channel.archived) return undefined
+    if (!containArchive && channel.archived) return undefined
     return isSubscribed
       ? {
           id: channel.id,
@@ -97,9 +97,7 @@ export const actions = defineActions({
   },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels
-      .filter(c => !c.archived)
-      .map(c => c.id)
+    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
 
     const tree = {
       children:
@@ -112,7 +110,7 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channels,
-          false
+          true
         )?.children ?? []
     }
     commit.setChannelTree(tree)
@@ -124,13 +122,11 @@ export const actions = defineActions({
       rootState,
       rootGetters
     } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels
-      .filter(c => !c.archived)
-      .map(c => c.id)
+    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
       Object.values(rootState.entities.channels)
-        .filter(c => c.force && !c.archived)
+        .filter(c => c.force)
         .map(c => c.id)
     )
     const tree = {
@@ -144,7 +140,7 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channels,
-          false,
+          true,
           new Set(subscribedOrForceChannels)
         )?.children ?? []
     }

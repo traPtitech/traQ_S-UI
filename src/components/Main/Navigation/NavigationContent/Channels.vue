@@ -104,10 +104,7 @@ export default defineComponent({
   },
   setup() {
     const topLevelChannels = computed(
-      () =>
-        store.state.domain.channelTree.channelTree.children.filter(
-          node => !node.archived
-        ) ?? []
+      () => store.state.domain.channelTree.channelTree.children ?? []
     )
 
     const state = reactive({
