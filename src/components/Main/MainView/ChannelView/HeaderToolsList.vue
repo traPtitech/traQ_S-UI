@@ -1,22 +1,28 @@
 <template>
   <div :class="$style.container">
-    <header-tools-item
-      @click="context.emit('click-qall')"
-      icon-mdi
-      :icon-name="qallIconName"
-      :class="$style.qallIcon"
-      :disabled="hasActiveQallSession && !isJoinedQallSession"
-      :data-is-active="isJoinedQallSession || isQallSessionOpened"
-      v-if="isQallEnabled && !isMobile"
-    />
     <template v-if="!isMobile">
-      <header-tools-item v-if="isForcedChannel" icon-name="notified" disabled />
+      <header-tools-item
+        v-if="isQallEnabled"
+        @click="context.emit('click-qall')"
+        icon-mdi
+        :icon-name="qallIconName"
+        :class="$style.qallIcon"
+        :disabled="hasActiveQallSession && !isJoinedQallSession"
+        :data-is-active="isJoinedQallSession || isQallSessionOpened"
+      />
+      <header-tools-item
+        v-if="isForcedChannel"
+        icon-name="notified"
+        disabled
+        tooltip="強制通知チャンネル"
+      />
       <header-tools-item
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
         @click="changeToNextSubscriptionLevel"
         icon-name="notified"
+        tooltip="通知チャンネル"
       />
       <header-tools-item
         v-else-if="
@@ -24,6 +30,7 @@
         "
         @click="changeToNextSubscriptionLevel"
         icon-name="subscribed"
+        tooltip="未読管理チャンネル"
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
@@ -31,17 +38,20 @@
         :class="$style.icon"
         icon-mdi
         icon-name="bell-outline"
+        tooltip="未購読チャンネル"
       />
     </template>
     <header-tools-item
-      v-show="isStared"
+      v-if="isStared"
       @click="context.emit('unstar-channel')"
       icon-name="star"
+      tooltip="お気に入りから外す"
     />
     <header-tools-item
-      v-show="!isStared"
+      v-else
       @click="context.emit('star-channel')"
       icon-name="star-outline"
+      tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
