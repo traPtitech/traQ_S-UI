@@ -19,7 +19,9 @@
         @edit-start="startDesciptionEdit"
       />
     </sidebar-content-container-foldable>
-    <form-button @click="deleteClip" label="削除" />
+    <div :class="$style.item">
+      <form-button @click="deleteClip" label="削除" />
+    </div>
   </div>
 </template>
 
@@ -64,6 +66,16 @@ const useEdit = (
   return { isEditing, onInput, startEdit, onEditDone }
 }
 
+const useDelete = (props: { clipFolderId: ClipFolderId }) => {
+  const deleteClip = async () => {
+    if (!window.confirm('本当に削除しますか？')) {
+      return
+    }
+    await apis.deleteClipFolder(props.clipFolderId)
+  }
+  return { deleteClip }
+}
+
 export default defineComponent({
   name: 'ClipsSidebarContent',
   components: {
@@ -101,8 +113,7 @@ export default defineComponent({
       onEditDone: onDesciptionEditDone
     } = useEdit(props, state, 'description')
 
-    const deleteClip = async () =>
-      await apis.deleteClipFolder(props.clipFolderId)
+    const { deleteClip } = useDelete(props)
 
     return {
       name,
@@ -123,7 +134,10 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  min-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .item {
@@ -132,7 +146,8 @@ export default defineComponent({
     margin-top: 0;
   }
   &:last-child {
-    margin-bottom: 0;
+    margin: auto;
+    margin-bottom: 32px;
   }
 }
 </style>

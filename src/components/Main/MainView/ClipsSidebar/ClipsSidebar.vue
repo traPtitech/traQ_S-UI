@@ -7,9 +7,11 @@
         :class="$style.sidebarItem"
       />
     </template>
-    <template #content>
-      <clips-sidebar-content :clip-folder-id="clipFolderId" />
-    </template>
+    <div>
+      <template #content>
+        <clips-sidebar-content :clip-folder-id="clipFolderId" />
+      </template>
+    </div>
   </main-view-sidebar>
 </template>
 
@@ -54,5 +56,8 @@ export default defineComponent({
 }
 .sidebarItem {
   margin: 16px 0;
+}
+.content {
+  height: 100%;
 }
 </style>
