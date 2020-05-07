@@ -1,7 +1,7 @@
 <template>
   <div>
     <channel-filter
-      @click="toggleStar"
+      @toggle-star-filter="toggleStar"
       @input="setQuery"
       :text="channelListFilterState.query"
       :is-stared="state.isStar"
