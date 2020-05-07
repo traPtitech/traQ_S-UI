@@ -31,7 +31,7 @@
     </div>
 
     <!-- 子チャンネル表示 -->
-    <div :class="$style.children" v-show="isOpened" v-if="!ignoreChildren">
+    <div :class="$style.children" v-if="!ignoreChildren && isOpened">
       <channel-list :channels="state.children" />
     </div>
 
