@@ -1,6 +1,6 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div ref="viewportRef" :class="$style.viewport">
+    <div :class="$style.viewport">
       <div
         v-for="(messageId, index) in messageIds"
         :key="messageId"

@@ -16,48 +16,50 @@
         :class="$style.element"
       />
       <div :class="$style.channel" data-is-children>
-        <div v-for="(child, index) in children" :key="child.id">
-          <channel-sidebar-relation-element
-            v-if="index < 3 || state.isOpenChildren"
-            :name="child.name"
-            :topic="child.topic"
-            :link="buildChildLink(child.name)"
-            :class="$style.element"
-          />
-
-          <div
-            v-else-if="index === 3"
-            :class="$style.text"
-            @click="toggleChildren"
-          >
-            <div>子チャンネルを全て表示</div>
-            <div>(+{{ children.length - 3 }})</div>
-          </div>
-        </div>
-      </div>
-      <div v-for="(sibling, index) in siblings" :key="sibling.id">
         <channel-sidebar-relation-element
-          v-if="index < 3 || state.isOpenSiblings"
-          :name="sibling.name"
-          :topic="sibling.topic"
-          :link="buildSiblingLink(sibling.name)"
+          v-for="child in filteredChildren"
+          :key="child.id"
+          :name="child.name"
+          :topic="child.topic"
+          :link="buildChildLink(child.name)"
           :class="$style.element"
         />
         <div
-          v-else-if="index === 3"
+          v-if="!state.isOpenChildren"
           :class="$style.text"
-          @click="toggleSiblings"
+          @click="toggleChildren"
         >
-          <div>兄弟チャンネルを全て表示</div>
-          <div>(+{{ siblings.length - 3 }})</div>
+          <div>子チャンネルを全て表示</div>
+          <div>(+{{ children.length - 3 }})</div>
         </div>
+      </div>
+      <channel-sidebar-relation-element
+        v-for="sibling in filteredSiblings"
+        :key="sibling.id"
+        :name="sibling.name"
+        :topic="sibling.topic"
+        :link="buildSiblingLink(sibling.name)"
+        :class="$style.element"
+      />
+      <div
+        v-if="!state.isOpenSiblings"
+        :class="$style.text"
+        @click="toggleSiblings"
+      >
+        <div>兄弟チャンネルを全て表示</div>
+        <div>(+{{ siblings.length - 3 }})</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  PropType,
+  computed
+} from '@vue/composition-api'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
 
@@ -87,16 +89,27 @@ export default defineComponent({
     const toggleSiblings = () => {
       state.isOpenSiblings = !state.isOpenSiblings
     }
+
+    const filteredChildren = computed(() =>
+      state.isOpenChildren ? props.children : props.children.slice(0, 3)
+    )
+    const filteredSiblings = computed(() =>
+      state.isOpenSiblings ? props.siblings : props.siblings.slice(0, 3)
+    )
+
     const buildChildLink = (channel: string) =>
       `${location.pathname}/${channel}`
     const buildParentLink = () =>
       `${location.pathname.split('/').slice(0, -1).join('/')}`
     const buildSiblingLink = (channel: string) =>
       `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
+
     return {
       state,
       toggleChildren,
       toggleSiblings,
+      filteredChildren,
+      filteredSiblings,
       buildChildLink,
       buildParentLink,
       buildSiblingLink

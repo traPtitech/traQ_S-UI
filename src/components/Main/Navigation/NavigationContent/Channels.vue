@@ -15,14 +15,10 @@
         show-topic
       />
     </div>
-    <channel-list
-      v-show="channelListFilterState.query.length <= 0 && state.isStar"
-      :channels="tree"
-    />
-    <channel-list
-      v-show="channelListFilterState.query.length <= 0 && !state.isStar"
-      :channels="topLevelChannels"
-    />
+    <template v-show="channelListFilterState.query.length <= 0">
+      <channel-list v-if="state.isStar" :channels="tree" />
+      <channel-list v-show="!state.isStar" :channels="topLevelChannels" />
+    </template>
   </div>
 </template>
 

@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :data-on-secondary="onSecondary" @click="focus">
+  <div
+    :class="$style.container"
+    :data-on-secondary="onSecondary"
+    @click="focus"
+  >
     <icon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
