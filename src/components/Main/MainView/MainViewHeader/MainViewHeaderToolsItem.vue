@@ -4,6 +4,7 @@
     @click="onClick"
     :data-is-disabled="disabled"
     :data-header-style="headerStyle"
+    :title="tooltip"
   >
     <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </div>
@@ -19,7 +20,6 @@ export default defineComponent({
   components: {
     Icon
   },
-
   props: {
     iconName: {
       type: String,
@@ -32,7 +32,8 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false
-    }
+    },
+    tooltip: String
   },
   setup(props, context) {
     const { headerStyle } = useHeaderStyle()
