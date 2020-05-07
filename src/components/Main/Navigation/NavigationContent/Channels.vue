@@ -1,29 +1,26 @@
 <template>
   <div>
     <channel-filter
-      @click="toggleStar"
+      @toggle-star-filter="toggleStarChannelFilter"
       @input="setQuery"
       :text="channelListFilterState.query"
-      :is-stared="state.isStar"
+      :is-stared="filterStarChannel"
       :class="$style.filter"
     />
-    <div v-if="channelListFilterState.query.length > 0" :class="$style.list">
-      <channel-list
-        :channels="channelListFilterState.filteredItems"
-        ignore-children
-        show-shortened-path
-        show-topic
-      />
-    </div>
-    <template v-show="channelListFilterState.query.length <= 0">
-      <channel-list v-if="state.isStar" :channels="tree" />
-      <channel-list v-show="!state.isStar" :channels="topLevelChannels" />
-    </template>
+    <channel-list
+      v-if="channelListFilterState.query.length > 0"
+      :channels="channelListFilterState.filteredItems"
+      ignore-children
+      show-shortened-path
+      show-topic
+    />
+    <channel-list v-else-if="filterStarChannel" :channels="tree" />
+    <channel-list v-else :channels="topLevelChannels" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import { defineComponent, computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
@@ -44,9 +41,26 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   }
 }
 
-const useChannels = (state: { isStar: boolean }) =>
+const useFilterStarChannel = () => {
+  const filterStarChannel = computed(
+    () => store.state.app.browserSettings.filterStarChannel
+  )
+
+  const toggleStarChannelFilter = () => {
+    store.commit.app.browserSettings.setFilterStarChannel(
+      !filterStarChannel.value
+    )
+  }
+
+  return {
+    filterStarChannel,
+    toggleStarChannelFilter
+  }
+}
+
+const useChannels = (filterStarChannel: Ref<boolean>) =>
   computed(() =>
-    state.isStar
+    filterStarChannel.value
       ? [
           ...new Set(
             Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
@@ -102,15 +116,13 @@ export default defineComponent({
       () => store.state.domain.channelTree.channelTree.children ?? []
     )
 
-    const state = reactive({
-      isStar: false
-    })
-    const toggleStar = () => {
-      state.isStar = !state.isStar
-    }
+    const {
+      filterStarChannel,
+      toggleStarChannelFilter
+    } = useFilterStarChannel()
 
     const { channelListFilterState, setQuery } = useChannelListFilter(
-      useChannels(state)
+      useChannels(filterStarChannel)
     )
     const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
@@ -124,8 +136,8 @@ export default defineComponent({
       setQuery,
       currentChannelId,
       tree,
-      toggleStar,
-      state,
+      filterStarChannel,
+      toggleStarChannelFilter,
       channelIdToShortPathString
     }
   }
@@ -136,9 +148,6 @@ export default defineComponent({
 .element {
   cursor: pointer;
   margin: 8px 0;
-}
-.list {
-  margin: 16px 0px;
 }
 .input {
   margin-bottom: 16px;

@@ -16,5 +16,8 @@ export const mutations = defineMutations<S>()({
   },
   setLastOpenChannelName(state, channelName: string) {
     state.lastOpenChannelName = channelName
+  },
+  setFilterStarChannel(state, filter: boolean) {
+    state.filterStarChannel = filter
   }
 })
