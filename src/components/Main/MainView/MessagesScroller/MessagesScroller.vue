@@ -230,6 +230,10 @@ export default defineComponent({
   backface-visibility: hidden;
 }
 
+.messageContainer {
+  display: contents;
+}
+
 .viewport {
   display: flex;
   flex-flow: column;

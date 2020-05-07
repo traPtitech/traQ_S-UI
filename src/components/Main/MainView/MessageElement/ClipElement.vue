@@ -43,7 +43,7 @@ import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
 
 export default defineComponent({
-  name: 'MessageElement',
+  name: 'ClipElement',
   components: {
     MessageContents,
     MessagePinned,

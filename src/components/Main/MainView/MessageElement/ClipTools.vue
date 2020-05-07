@@ -17,7 +17,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { MessageId } from '@/types/entity-ids'
 
 export default defineComponent({
-  name: 'MessageTools',
+  name: 'ClipTools',
   components: {
     Icon
   },
