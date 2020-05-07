@@ -203,13 +203,11 @@ export default defineComponent({
     })
 
     const styles = useStyles(state)
-    const { path } = typedProps.showShortenedPath
-      ? useShortenedPath(typedProps)
-      : useAncestorPath(typedProps.channel.skippedAncestorNames)
     const pathToShow = computed(() =>
       typedProps.showShortenedPath
-        ? path.value
-        : path.value + typedProps.channel.name
+        ? useShortenedPath(typedProps).path.value
+        : useAncestorPath(typedProps.channel.skippedAncestorNames).path.value +
+          typedProps.channel.name
     )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
