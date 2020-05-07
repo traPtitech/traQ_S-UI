@@ -28,17 +28,14 @@ export type ChannelLike = Pick<
 export const constructTree = (
   channel: ChannelLike,
   channelEntities: Record<ChannelId, ChannelLike>,
-  containArchive: boolean,
   subscribedChannels?: Set<ChannelId>
 ): ChannelTreeNode | undefined => {
-  if (!containArchive && channel.archived) return undefined
   const isRootChannel = channel.id === rootChannelId
   const isSubscribed =
     isRootChannel || (subscribedChannels?.has(channel.id) ?? true)
 
   if (channel.children.length === 0) {
     // 葉チャンネル
-    if (!containArchive && channel.archived) return undefined
     return isSubscribed
       ? {
           id: channel.id,
@@ -54,15 +51,10 @@ export const constructTree = (
   const children = channel.children
     .reduce((acc, id) => {
       const child = channelEntities[id]
-      if (!child || (!containArchive && child.archived)) {
+      if (!child) {
         return acc
       }
-      const result = constructTree(
-        child,
-        channelEntities,
-        containArchive,
-        subscribedChannels
-      )
+      const result = constructTree(child, channelEntities, subscribedChannels)
       return result ? [...acc, result] : acc
     }, [] as ChannelTreeNode[])
     .sort(channelNameSortFunction(channelEntities))
@@ -97,7 +89,9 @@ export const actions = defineActions({
   },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
+    const topLevelChannelIds = getters.topLevelChannels
+      .filter(c => !c.archived)
+      .map(c => c.id)
 
     const tree = {
       children:
@@ -109,8 +103,7 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels,
-          true
+          rootState.entities.channels
         )?.children ?? []
     }
     commit.setChannelTree(tree)
@@ -122,11 +115,13 @@ export const actions = defineActions({
       rootState,
       rootGetters
     } = channelTreeActionContext(context)
-    const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
+    const topLevelChannelIds = getters.topLevelChannels
+      .filter(c => !c.archived)
+      .map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
       Object.values(rootState.entities.channels)
-        .filter(c => c.force)
+        .filter(c => c.force && !c.archived)
         .map(c => c.id)
     )
     const tree = {
@@ -140,7 +135,6 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channels,
-          true,
           new Set(subscribedOrForceChannels)
         )?.children ?? []
     }

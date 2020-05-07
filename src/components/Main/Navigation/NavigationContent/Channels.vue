@@ -81,8 +81,7 @@ const useStaredChannel = () => {
           archived: false,
           children: Object.keys(store.state.domain.me.staredChannelSet)
         },
-        store.state.entities.channels,
-        false
+        store.state.entities.channels
       )
         ?.children?.map(c => ({
           ...c,

@@ -4,11 +4,7 @@ import { ChannelId } from '@/types/entity-ids'
 
 describe('constructTree', () => {
   it('can construct tree from entities', () => {
-    const constructed = constructTree(
-      channelEntities[''],
-      channelEntities,
-      false
-    )
+    const constructed = constructTree(channelEntities[''], channelEntities)
     const tree: ChannelTree = {
       children: constructed?.children ?? []
     }
@@ -18,7 +14,6 @@ describe('constructTree', () => {
     const constructed = constructTree(
       channelEntities[''],
       channelEntities,
-      false,
       subscribedChannels
     )
     const tree: ChannelTree = {
