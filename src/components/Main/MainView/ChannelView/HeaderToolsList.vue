@@ -9,20 +9,24 @@
       :data-is-active="isJoinedQallSession || isQallSessionOpened"
       v-if="isQallEnabled && !isMobile"
     />
-    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <template v-if="!isMobile">
+      <header-tools-item v-if="isForcedChannel" icon-name="notified" disabled />
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
+        v-else-if="
+          currentChannelSubscription === ChannelSubscribeLevel.notified
+        "
         @click="changeToNextSubscriptionLevel"
         icon-name="notified"
       />
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"
+        v-else-if="
+          currentChannelSubscription === ChannelSubscribeLevel.subscribed
+        "
         @click="changeToNextSubscriptionLevel"
         icon-name="subscribed"
       />
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.none"
+        v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
         @click="changeToNextSubscriptionLevel"
         :class="$style.icon"
         icon-mdi
@@ -74,6 +78,7 @@ export default defineComponent({
   },
   props: {
     isStared: { type: Boolean, default: false },
+    isForcedChannel: { type: Boolean, default: false },
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false }
