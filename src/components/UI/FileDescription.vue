@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-white="isWhite">
-    <icon mdi :name="fileIconName" :size="36" :class="$style.icon" />
+    <file-type-icon :type="fileType" :size="36" :class="$style.icon" />
     <div :class="$style.fileName" :data-is-ellipsis="isEllipsis">
       {{ fileMeta ? fileMeta.name : 'unknown' }}
     </div>
@@ -20,12 +20,12 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
-import Icon from '@/components/UI/Icon.vue'
+import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 
 export default defineComponent({
   name: 'FileDescription',
   components: {
-    Icon
+    FileTypeIcon
   },
   props: {
     fileId: {
@@ -44,13 +44,13 @@ export default defineComponent({
   setup(props, context) {
     const {
       fileMeta,
-      fileIconName,
+      fileType,
       fileSize,
       onFileDownloadLinkClick
     } = useFileMeta(props, context)
     return {
       fileMeta,
-      fileIconName,
+      fileType,
       fileSize,
       onFileDownloadLinkClick
     }

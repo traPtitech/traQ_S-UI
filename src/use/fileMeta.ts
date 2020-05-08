@@ -26,16 +26,6 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
   const fileSize = computed(() =>
     fileMeta.value ? prettifyFileSize(fileMeta.value.size) : '0B'
   )
-  const fileIconName = computed(() => {
-    switch (fileType.value) {
-      case 'file':
-        return 'file'
-      case 'audio':
-        return 'file-music'
-      default:
-        return `file-${fileType.value}`
-    }
-  })
   return {
     fileMeta,
     fileLink,
@@ -43,7 +33,6 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     fileThumbnailPath,
     fileType,
     fileSize,
-    fileIconName,
     onFileLinkClick,
     onFileDownloadLinkClick
   }
