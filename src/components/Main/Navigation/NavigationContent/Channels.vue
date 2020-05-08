@@ -32,6 +32,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
+import useChannelArchiveCheck from '@/use/channelArchiveCheck'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -58,26 +59,24 @@ const useFilterStarChannel = () => {
   }
 }
 
-const useChannels = (filterStarChannel: Ref<boolean>) =>
-  computed(() =>
+const useChannels = (filterStarChannel: Ref<boolean>) => {
+  const { filterNotArchive } = useChannelArchiveCheck()
+  return computed(() =>
     filterStarChannel.value
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
-              buildDescendantsChannelArray(v)
-            )
+            Object.keys(store.state.domain.me.staredChannelSet)
+              .filter(filterNotArchive)
+              .flatMap(v => buildDescendantsChannelArray(v, false))
           )
         ]
-      : Object.values(store.state.entities.channels)
+      : Object.values(store.state.entities.channels).filter(ch =>
+          filterNotArchive(ch.id)
+        )
   )
+}
 
 const useStaredChannel = () => {
-  const staredChannel = computed(() =>
-    Object.keys(store.state.domain.me.staredChannelSet).map(
-      v => store.state.entities.channels[v]
-    )
-  )
-
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
 
@@ -89,6 +88,7 @@ const useStaredChannel = () => {
           id: '',
           name: '',
           parentId: null,
+          archived: false,
           children: Object.keys(store.state.domain.me.staredChannelSet)
         },
         store.state.entities.channels

@@ -9,6 +9,9 @@ const useChannelState = (props: { channelId: ChannelId }) => {
     ),
     forced: computed(
       () => store.state.entities.channels[props.channelId]?.force ?? false
+    ),
+    archived: computed(
+      () => store.state.entities.channels[props.channelId]?.archived ?? false
     )
   })
   return { channelState: state }
