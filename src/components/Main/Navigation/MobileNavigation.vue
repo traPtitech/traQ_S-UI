@@ -1,7 +1,6 @@
 <template>
   <nav
     :class="$style.container"
-    :style="styles.container"
     :data-has-ephemeral-content="
       ephemeralNavigationSelectorState.currentNavigation
     "
@@ -10,7 +9,7 @@
       <mobile-tool-box :class="$style.toolBox" />
       <portal-target :name="targetPortalName" />
     </div>
-    <div :class="$style.content" :style="styles.componentWrap">
+    <div :class="$style.content">
       <navigation-content
         :current-navigation="navigationSelectorState.currentNavigation"
       />
@@ -18,7 +17,6 @@
     <div
       v-if="ephemeralNavigationSelectorState.currentNavigation"
       :class="$style.ephemeralContent"
-      :style="styles.componentWrap"
     >
       <ephemeral-navigation-content
         transparent
@@ -28,7 +26,7 @@
         "
       />
     </div>
-    <div :class="$style.selector" :style="styles.componentWrap">
+    <div :class="$style.selector">
       <navigation-selector
         @navigation-change="onNavigationChange"
         @ephemeral-navigation-change="onEphemeralNavigationChange"
@@ -44,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import MobileToolBox, {
@@ -52,17 +50,6 @@ import MobileToolBox, {
 } from '@/components/Main/Navigation/MobileToolBox.vue'
 import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'
 import useNavigation from './use/navigation'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.tertiary
-    })),
-    componentWrap: makeStyles(theme => ({
-      background: theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'MobileNavigation',
@@ -74,7 +61,6 @@ export default defineComponent({
   },
 
   setup() {
-    const styles = useStyles()
     const {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
@@ -85,7 +71,6 @@ export default defineComponent({
     } = useNavigation()
 
     return {
-      styles,
       navigationSelectorState,
       ephemeralNavigationSelectorState,
       onNavigationChange,
@@ -100,6 +85,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-tertiary;
   display: grid;
   grid-template:
     'toolbox' min-content
@@ -128,9 +114,11 @@ export default defineComponent({
   grid-area: toolbox;
 }
 .content {
+  @include background-secondary;
   grid-area: content;
 }
 .ephemeralContent {
+  @include background-secondary;
   grid-area: ephemeral-content;
   padding: {
     top: 4px;
@@ -139,6 +127,7 @@ export default defineComponent({
   }
 }
 .selector {
+  @include background-secondary;
   grid-area: selector;
   display: flex;
   align-items: center;

@@ -1,12 +1,9 @@
 <template>
   <a
     :class="$style.container"
-    :style="styles.container"
     :href="appLink"
     target="_blank"
     rel="noopener noreferrer"
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
   >
     <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="32" />
     <span :class="$style.label">{{ label }}</span>
@@ -14,20 +11,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-import useHover from '@/use/hover'
-
-const useStyles = (hoverState: { hover: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: hoverState.hover ? theme.ui.primary : theme.ui.secondary,
-      background: hoverState.hover
-        ? theme.background.tertiary
-        : theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'AppListItem',
@@ -41,15 +26,15 @@ export default defineComponent({
     appLink: { type: String, default: '' }
   },
   setup() {
-    const { hoverState, onMouseEnter, onMouseLeave } = useHover()
-    const styles = useStyles(hoverState)
-    return { styles, onMouseEnter, onMouseLeave }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
+  @include background-secondary;
   margin: 8px;
   padding: 16px 8px;
   border-radius: 8px;
@@ -59,6 +44,10 @@ export default defineComponent({
   justify-content: space-around;
   align-items: center;
   min-width: 120px;
+  &:hover {
+    @include color-ui-primary;
+    @include background-tertiary;
+  }
 }
 .icon {
   margin: 4px;

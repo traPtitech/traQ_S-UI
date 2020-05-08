@@ -1,29 +1,30 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :aria-selected="state.isSelected ? 'true' : 'false'"
+  >
     <!-- チャンネル表示本体 -->
     <div :class="$style.channel">
-      <div :class="$style.channelHash" @click="onChannelHashClick">
-        <channel-element-hash
-          :has-child="!ignoreChildren && state.hasChild"
-          :is-selected="state.isSelected"
-          :is-opened="isOpened"
-          :has-notification="notificationState.hasNotification"
-          :has-notification-on-child="notificationState.hasNotificationOnChild"
-        />
-      </div>
-      <div
-        :class="$style.channelName"
-        :style="styles.channelName"
-        @click="onChannelNameClick"
-      >
-        <span :class="$style.channelNameInner">
-          <span :class="$style.channelNameInnerString">
-            {{ pathToShow }}
-          </span>
-          <span :class="$style.channelNameInnerIcon">
-            <icon v-if="isQalling" :size="16" mdi name="phone-outline" />
-          </span>
+      <channel-element-hash
+        :class="$style.channelHash"
+        @click="onChannelHashClick"
+        :has-child="!ignoreChildren && state.hasChild"
+        :is-selected="state.isSelected"
+        :is-opened="isOpened"
+        :has-notification="notificationState.hasNotification"
+        :has-notification-on-child="notificationState.hasNotificationOnChild"
+      />
+      <div :class="$style.channelName" @click="onChannelNameClick">
+        <span :class="$style.channelNameString">
+          {{ pathToShow }}
         </span>
+        <icon
+          v-if="isQalling"
+          :size="16"
+          mdi
+          name="phone-outline"
+          :class="$style.channelNameIcon"
+        />
       </div>
     </div>
     <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
@@ -31,16 +32,14 @@
     </div>
 
     <!-- 子チャンネル表示 -->
-    <div :class="$style.children" v-if="!ignoreChildren && isOpened">
-      <channel-list :channels="state.children" />
-    </div>
+    <channel-list
+      v-if="!ignoreChildren && isOpened"
+      :class="$style.children"
+      :channels="state.children"
+    />
 
     <!-- 選択中チャンネルの背景 -->
-    <div
-      :class="$style.selectedBg"
-      :style="styles.selectedBg"
-      v-if="state.isSelected"
-    ></div>
+    <div :class="$style.selectedBg" v-if="state.isSelected" />
   </div>
 </template>
 
@@ -54,7 +53,6 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
-import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
@@ -87,21 +85,6 @@ const useChannelClick = (
     onChannelHashClick,
     onChannelNameClick
   }
-}
-
-const useStyles = (state: { isSelected: boolean }) => {
-  const styles = reactive({
-    container: makeStyles(theme => ({
-      color: state.isSelected ? theme.accent.primary : theme.ui.primary
-    })),
-    selectedBg: makeStyles(theme => ({
-      backgroundColor: theme.accent.primary
-    })),
-    channelName: makeStyles(theme => ({
-      fontWeight: state.isSelected ? 'bold' : 'normal'
-    }))
-  })
-  return styles
 }
 
 const useNotification = (props: TypedProps) => {
@@ -202,7 +185,6 @@ export default defineComponent({
       )
     })
 
-    const styles = useStyles(state)
     const pathToShow = computed(() =>
       typedProps.showShortenedPath
         ? useShortenedPath(typedProps).path.value
@@ -220,7 +202,6 @@ export default defineComponent({
 
     return {
       state,
-      styles,
       pathToShow,
       notificationState,
       topic,
@@ -239,9 +220,13 @@ $bgLeftShift: 4px;
 $topicLeftPadding: 40px;
 
 .container {
+  @include color-ui-primary;
   display: block;
   user-select: none;
   position: relative;
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+  }
 }
 .channel {
   display: flex;
@@ -263,26 +248,23 @@ $topicLeftPadding: 40px;
   height: 100%;
   padding: 0 8px;
   cursor: pointer;
+  // > .channelで絞らないと子チャンネルに影響が出る
+  .container[aria-selected='true'] > .channel & {
+    font-weight: bold;
+  }
 }
-.channelNameInner {
-  display: flex;
-  width: 100%;
-  align-items: center;
-}
-.channelNameInnerString {
+.channelNameString {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.channelNameInnerIcon {
+.channelNameIcon {
   flex-shrink: 0;
   margin: {
     left: 8px;
     bottom: 2px;
   }
-  height: 16px;
-  width: 16px;
   opacity: 0.5;
 }
 .children {
@@ -292,6 +274,7 @@ $topicLeftPadding: 40px;
   margin-left: 24px;
 }
 .selectedBg {
+  @include background-accent-primary;
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;

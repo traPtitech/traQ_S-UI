@@ -1,12 +1,10 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div
-      :class="$style.icon"
-      :style="styles.icon"
-      :data-is-selected="isSelected"
-    >
-      <icon :name="iconName" :mdi="iconMdi" :width="24" :height="24" />
-    </div>
+  <div
+    :class="$style.container"
+    :style="styles.container"
+    :aria-selected="isSelected ? 'true' : 'false'"
+  >
+    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="6" />
     </div>
@@ -16,29 +14,13 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType } from '@vue/composition-api'
 import { makeStyles, ThemeClaim } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
-const useStyles = (props: {
-  isSelected: boolean
-  colorClaim?: ThemeClaim<string>
-}) => {
+const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
   return reactive({
     container: makeStyles((theme, common) => ({
-      background: props.isSelected
-        ? transparentize(
-            props.colorClaim
-              ? props.colorClaim(theme, common)
-              : theme.accent.primary,
-            0.1
-          )
-        : 'none'
-    })),
-    icon: makeStyles((theme, common) => ({
-      color: props.colorClaim
-        ? props.colorClaim(theme, common)
-        : theme.accent.primary
+      color: props.colorClaim ? props.colorClaim(theme, common) : undefined
     }))
   })
 }
@@ -66,7 +48,8 @@ export default defineComponent({
     colorClaim: Function as PropType<ThemeClaim<string>>
   },
   setup(props) {
-    const styles = useStyles(props)
+    // TODO: https://github.com/vuejs/composition-api/issues/291
+    const styles = useStyles(props as { colorClaim?: ThemeClaim<string> })
     return { styles }
   }
 })
@@ -74,6 +57,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-accent-primary;
   position: relative;
   display: flex;
   align-items: center;
@@ -82,6 +66,21 @@ export default defineComponent({
   height: 44px;
   border-radius: 100vw;
   cursor: pointer;
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 100vw;
+    background: currentColor;
+    opacity: 0;
+  }
+  &[aria-selected='true']::after {
+    opacity: 0.1;
+  }
 }
 .icon {
   width: 24px;
@@ -90,7 +89,7 @@ export default defineComponent({
   &:hover {
     opacity: 0.7;
   }
-  &[data-is-selected] {
+  .container[aria-selected='true'] & {
     opacity: 1;
   }
 }

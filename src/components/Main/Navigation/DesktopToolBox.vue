@@ -1,18 +1,15 @@
 <template>
-  <div>
-    <div :class="$style.container">
-      <div v-for="tool in tools" :key="tool.type" :class="$style.item">
-        <tool
-          :icon-name="tool.iconName"
-          :icon-mdi="tool.iconMdi"
-          :disabled="tool.disabled"
-          @click.native="tool.onClick"
-        />
-      </div>
-      <div :class="$style.item">
-        <user-icon :class="$style.userIcon" :size="36" :user-id="myId" />
-      </div>
-    </div>
+  <div :class="$style.container">
+    <tool
+      v-for="tool in tools"
+      :key="tool.type"
+      :class="$style.item"
+      :icon-name="tool.iconName"
+      :icon-mdi="tool.iconMdi"
+      :disabled="tool.disabled"
+      @click.native="tool.onClick"
+    />
+    <user-icon :class="$style.item" :size="36" :user-id="myId" />
     <portal v-if="isServicesShown" :to="targetPortalName">
       <app-list :class="$style.services" @close="closeServices" />
     </portal>
@@ -67,10 +64,6 @@ $header-width: 64px;
 .item {
   margin: 8px 0;
 }
-.userIcon {
-  cursor: pointer;
-}
-
 .services {
   position: fixed;
   bottom: $header-width;

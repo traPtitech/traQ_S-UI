@@ -145,16 +145,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.element {
-  cursor: pointer;
-  margin: 8px 0;
-}
-.input {
-  margin-bottom: 16px;
-}
-.container {
-  display: flex;
-}
 .filter {
   margin-bottom: 16px;
 }

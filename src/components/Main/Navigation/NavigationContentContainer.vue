@@ -2,11 +2,7 @@
   <!-- TODO: 折り畳み -->
   <div>
     <div :class="$style.subtitleContainer">
-      <h3
-        v-if="subtitle && subtitle.length > 0"
-        :class="$style.subtitle"
-        :style="subtitleStyle"
-      >
+      <h3 v-if="subtitle && subtitle.length > 0" :class="$style.subtitle">
         {{ subtitle }}
       </h3>
       <div :class="$style.control">
@@ -19,7 +15,6 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'NavigationContentContainer',
@@ -27,12 +22,7 @@ export default defineComponent({
     subtitle: String
   },
   setup() {
-    const subtitleStyle = makeStyles(theme => ({
-      color: theme.ui.secondary
-    }))
-    return {
-      subtitleStyle
-    }
+    return {}
   }
 })
 </script>
@@ -43,6 +33,7 @@ export default defineComponent({
   justify-content: space-between;
 }
 .subtitle {
+  @include color-ui-secondary;
   @include size-body2;
   margin-bottom: 8px;
   font-weight: bold;
