@@ -8,19 +8,24 @@ import vClickOutside from 'v-click-outside'
 import VueTextareaAutosize from 'vue-textarea-autosize'
 import { setupGlobalFuncs } from './markdown-bridge'
 import { setupFirebase } from './lib/firebase'
+import { loadResizeObserver } from './resizeObserver'
 
-setupGlobalFuncs()
-setupFirebase()
+!(async () => {
+  setupGlobalFuncs()
+  setupFirebase()
 
-Vue.use(VueCompositionApi)
-Vue.use(PortalVue)
-Vue.use(vClickOutside)
-Vue.use(VueTextareaAutosize)
+  await loadResizeObserver()
 
-Vue.config.productionTip = false
+  Vue.use(VueCompositionApi)
+  Vue.use(PortalVue)
+  Vue.use(vClickOutside)
+  Vue.use(VueTextareaAutosize)
 
-new Vue({
-  router,
-  store: store.original,
-  render: h => h(App)
-}).$mount('#app')
+  Vue.config.productionTip = false
+
+  new Vue({
+    router,
+    store: store.original,
+    render: h => h(App)
+  }).$mount('#app')
+})()

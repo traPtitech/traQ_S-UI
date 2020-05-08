@@ -4,37 +4,21 @@
     ref="bodyRef"
     v-if="state.message"
     :data-is-mobile="isMobile"
-    :data-is-pinned="state.isPinned"
     :data-is-entry="isEntryMessage"
-    :data-is-editing="state.isEditing"
   >
-    <message-pinned
-      :message-id="messageId"
-      v-if="state.message.pinned"
-      :class="$style.pinned"
-    />
-    <message-tools :class="$style.tools" :message-id="messageId" />
+    <clip-tools :class="$style.tools" :message-id="messageId" />
     <message-contents
       :class="$style.messageContents"
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.stampWrapper">
-      <icon
-        name="rounded-triangle"
-        :size="20"
-        v-if="state.message.stamps.length > 0"
-        :class="$style.toggleButton"
-        :data-is-open="state.stampDetailFoldingState"
-        @click="onStampDetailFoldingToggle"
-      />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-        :is-show-detail="state.stampDetailFoldingState"
-      />
+    <div :class="$style.footer">
+      <span :class="$style.description">
+        {{ state.channelPath }} - {{ state.date }}
+      </span>
+      <router-link :class="$style.link" :to="`/messages/${state.message.id}`">
+        メッセージへ
+      </router-link>
     </div>
   </div>
 </template>
@@ -50,22 +34,20 @@ import {
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
-import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import Icon from '@/components/UI/Icon.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
-import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
+import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
+import { getCreatedDate } from '@/lib/date'
+import useChannelPath from '@/use/channelPath'
 
 export default defineComponent({
-  name: 'MessageElement',
+  name: 'ClipElement',
   components: {
     MessageContents,
-    Icon,
-    MessageStampList,
     MessagePinned,
-    MessageTools
+    ClipTools
   },
   props: {
     messageId: {
@@ -80,38 +62,33 @@ export default defineComponent({
   setup(props, context) {
     const bodyRef = ref<HTMLDivElement>(null)
     const { isMobile } = useIsMobile()
+    const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
+      channelPath: computed((): string =>
+        state.message
+          ? channelIdToPathString(state.message.channelId, true)
+          : ''
+      ),
+      date: computed((): string =>
+        state.message ? getCreatedDate(state.message.createdAt) : ''
+      ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      rawContent: computed(
-        () => store.state.entities.messages[props.messageId]?.content ?? ''
-      ),
-      isEditing: computed(
-        () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
-      ),
-      isPinned: computed((): boolean => state.message?.pinned ?? false),
-      stampDetailFoldingState: false
+      )
     })
 
     const { embeddingsState } = useEmbeddings(props)
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
-    const onStampDetailFoldingToggle = () => {
-      state.stampDetailFoldingState = !state.stampDetailFoldingState
-    }
-
     return {
       state,
       bodyRef,
       embeddingsState,
-      isMobile,
-      onStampDetailFoldingToggle
+      isMobile
     }
   }
 })
@@ -130,53 +107,19 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
   }
-  &[data-is-pinned] {
-    background: $common-background-pin;
-  }
   &[data-is-entry] {
     // TODO: 色を正しくする
     background: $common-background-pin;
   }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
+  &:not([data-is-entry]):hover {
     // TODO: 色を正しくする
     background: $theme-background-secondary;
-  }
-}
-
-.pinned {
-  grid-area: pinned;
-  height: 28px;
-  padding: {
-    top: 4px;
-    bottom: 8px;
   }
 }
 
 .messageContents {
   grid-area: message-contents;
   min-width: 0;
-}
-
-.stampWrapper {
-  position: relative;
-  grid-area: stamp-wrapper;
-  margin-top: 8px;
-  margin-left: 42px;
-}
-
-.toggleButton {
-  color: transparent;
-  transform: rotate(0turn);
-  &[data-is-open] {
-    transform: rotate(0.5turn);
-  }
-  .body:hover & {
-    @include color-ui-secondary;
-  }
-  position: absolute;
-  left: -26px;
-  top: 2px;
-  cursor: pointer;
 }
 
 .tools {
@@ -187,5 +130,25 @@ $messagePaddingMobile: 16px;
   top: 4px;
   right: 16px;
   z-index: 1;
+}
+
+.footer {
+  @include color-ui-secondary;
+  grid-area: footer;
+  padding-left: 8px;
+  font-size: 0.875rem;
+  align-self: end;
+  margin-top: 4px;
+  margin-left: 42px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  font-weight: normal;
+  margin-right: 8px;
+}
+.link {
+  font-weight: bold;
 }
 </style>

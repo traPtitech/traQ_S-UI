@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.container" :style="sizeStyles.container">
+  <div :class="$style.container" :style="styles.container">
     <span
       v-if="inVisibleCount > 0 && showCount"
       :class="$style.count"
-      :style="sizeStyles.count"
+      :style="styles.count"
     >
       +{{ inVisibleCount }}
     </span>
@@ -13,19 +13,13 @@
       :size="iconSize"
       v-for="userId in visibleIconIds"
       :key="userId"
-      :style="{ ...colorStyles.userIcon, ...sizeStyles.userIcon }"
+      :style="styles.userIcon"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  reactive
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed, PropType } from '@vue/composition-api'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '@/types/entity-ids'
 
@@ -51,14 +45,6 @@ const useSizeStyles = (props: {
     }
   })
 
-const useColorStyles = () =>
-  reactive({
-    userIcon: makeStyles(theme => ({
-      borderColor: theme.background.primary,
-      backgroundColor: theme.background.primary
-    }))
-  })
-
 export default defineComponent({
   name: 'UserIconEllipsisList',
   components: { UserIcon },
@@ -75,15 +61,13 @@ export default defineComponent({
     overlap: { type: Number, default: 12 }
   },
   setup(props) {
-    const colorStyles = useColorStyles()
-    const sizeStyles = useSizeStyles(props)
+    const styles = useSizeStyles(props)
     const visibleIconIds = computed(() =>
       [...props.userIds].reverse().slice(0, props.max)
     )
     const inVisibleCount = computed(() => props.userIds.length - props.max)
     return {
-      colorStyles,
-      sizeStyles,
+      styles,
       visibleIconIds,
       inVisibleCount
     }
@@ -101,7 +85,8 @@ $countSize: 1.15rem;
 }
 
 .userIcon {
-  border: solid;
+  border: solid $theme-background-primary;
+  background-color: $theme-background-primary;
 }
 
 .count {

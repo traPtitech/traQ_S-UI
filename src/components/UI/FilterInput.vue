@@ -1,14 +1,18 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :data-on-secondary="onSecondary"
+    @click="focus"
+  >
     <icon mdi name="search" :size="18" :class="$style.icon" />
     <input
       ref="inputRef"
       :class="$style.input"
-      :style="styles.input"
       :value="text"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
       :inputmode="disableIme ? 'url' : undefined"
+      :data-disable-ime="disableIme"
       @input="onInput"
       type="text"
     />
@@ -16,25 +20,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from '@vue/composition-api'
+import { defineComponent, ref, onMounted } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
 import useInput from '@/use/input'
 import { isTouchDevice } from '@/lib/util/browser'
-
-const useStyles = (props: { onSecondary: boolean; disableIme: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: props.onSecondary
-        ? theme.background.primary
-        : theme.background.secondary,
-      color: theme.ui.secondary
-    })),
-    input: makeStyles(theme => ({
-      color: theme.ui.primary,
-      imeMode: props.disableIme ? 'disabled' : undefined
-    }))
-  })
 
 export default defineComponent({
   name: 'FilterInput',
@@ -68,7 +57,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { onInput } = useInput(context)
 
     const inputRef = ref<HTMLInputElement>(null)
@@ -76,26 +64,38 @@ export default defineComponent({
       if (!props.focusOnMount || isTouchDevice()) return
       inputRef.value?.focus()
     })
+    const focus = () => {
+      inputRef.value?.focus()
+    }
 
-    return { styles, inputRef, onInput }
+    return { focus, inputRef, onInput }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
+  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
   align-items: center;
   border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
+  }
 }
 .icon {
   margin: 0 8px;
   flex-shrink: 0;
 }
 .input {
+  @include color-ui-primary;
   margin: 0 8px;
   width: 100%;
+  &[data-disable-ime] {
+    ime-mode: disabled;
+  }
 }
 </style>

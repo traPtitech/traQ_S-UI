@@ -6,6 +6,7 @@
       :is-reached-latest="isReachedLatest"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
+      without-separator
       @request-load-former="onLoadFormerMessagesRequest"
     />
   </div>
@@ -32,7 +33,6 @@ export default defineComponent({
       isReachedLatest,
       isLoading,
       lastLoadingDirection,
-      renderMessageFromIds,
       onLoadFormerMessagesRequest
     } = useClipsFetcher(props)
 

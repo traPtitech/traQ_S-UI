@@ -1,43 +1,57 @@
 <template>
   <div :class="$style.container">
-    <header-tools-item
-      @click="context.emit('click-qall')"
-      icon-mdi
-      :icon-name="qallIconName"
-      :class="$style.qallIcon"
-      :disabled="hasActiveQallSession && !isJoinedQallSession"
-      :data-is-active="isJoinedQallSession || isQallSessionOpened"
-      v-if="isQallEnabled && !isMobile"
-    />
-    <!-- 遅延ロードをする都合上v-showで切り替える必要がある -->
     <template v-if="!isMobile">
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.notified"
+        v-if="isQallEnabled"
+        @click="context.emit('click-qall')"
+        icon-mdi
+        :icon-name="qallIconName"
+        :class="$style.qallIcon"
+        :disabled="hasActiveQallSession && !isJoinedQallSession"
+        :data-is-active="isJoinedQallSession || isQallSessionOpened"
+      />
+      <header-tools-item
+        v-if="isForcedChannel"
+        icon-name="notified"
+        disabled
+        tooltip="強制通知チャンネル"
+      />
+      <header-tools-item
+        v-else-if="
+          currentChannelSubscription === ChannelSubscribeLevel.notified
+        "
         @click="changeToNextSubscriptionLevel"
         icon-name="notified"
+        tooltip="通知チャンネル"
       />
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.subscribed"
+        v-else-if="
+          currentChannelSubscription === ChannelSubscribeLevel.subscribed
+        "
         @click="changeToNextSubscriptionLevel"
         icon-name="subscribed"
+        tooltip="未読管理チャンネル"
       />
       <header-tools-item
-        v-show="currentChannelSubscription === ChannelSubscribeLevel.none"
+        v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
         @click="changeToNextSubscriptionLevel"
         :class="$style.icon"
         icon-mdi
         icon-name="bell-outline"
+        tooltip="未購読チャンネル"
       />
     </template>
     <header-tools-item
-      v-show="isStared"
+      v-if="isStared"
       @click="context.emit('unstar-channel')"
       icon-name="star"
+      tooltip="お気に入りから外す"
     />
     <header-tools-item
-      v-show="!isStared"
+      v-else
       @click="context.emit('star-channel')"
       icon-name="star-outline"
+      tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
@@ -74,6 +88,7 @@ export default defineComponent({
   },
   props: {
     isStared: { type: Boolean, default: false },
+    isForcedChannel: { type: Boolean, default: false },
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false }

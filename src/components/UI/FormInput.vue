@@ -1,11 +1,14 @@
 <template>
-  <div :style="styles.container">
+  <div>
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :style="styles.inputContainer">
-      <span v-if="prefix" :class="$style.prefix">{{ prefix }}</span>
+    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
+      <span v-if="prefix" :class="$style.prefix" @click="focus">
+        {{ prefix }}
+      </span>
       <input
+        ref="inputRef"
         :class="$style.input"
         :id="id"
         :value="value"
@@ -14,29 +17,17 @@
         @change="onChange"
         type="text"
       />
-      <span v-if="suffix" :class="$style.suffix">{{ suffix }}</span>
+      <span v-if="suffix" :class="$style.suffix" @click="focus">
+        {{ suffix }}
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, ref } from '@vue/composition-api'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
-
-const useStyles = (props: { onSecondary: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    inputContainer: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: props.onSecondary
-        ? theme.background.primary
-        : theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FormInput',
@@ -62,7 +53,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { onInput: onInputInternal } = useInput(context)
 
     const onInput = (e: InputEvent) => {
@@ -74,19 +64,34 @@ export default defineComponent({
       onInputInternal(e)
     }
 
+    const inputRef = ref<HTMLInputElement>(null)
+    const focus = () => {
+      inputRef.value?.focus()
+    }
+
     const id = randomString()
-    return { styles, onInput, onChange, id }
+    return { onInput, onChange, id, inputRef, focus }
   }
 })
 </script>
 
 <style lang="scss" module>
+.label {
+  @include color-ui-secondary;
+  display: block;
+  margin-bottom: 8px;
+}
 .inputContainer {
+  @include color-ui-primary;
+  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
   align-items: center;
   border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
+  }
 }
 .prefix {
   margin-left: 8px;
@@ -98,9 +103,5 @@ export default defineComponent({
 }
 .suffix {
   margin-right: 8px;
-}
-.label {
-  margin-bottom: 8px;
-  display: block;
 }
 </style>

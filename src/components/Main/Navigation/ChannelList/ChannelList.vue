@@ -1,5 +1,5 @@
 <template>
-  <div class="channel-list">
+  <div>
     <channel-element
       v-for="channel in filteredChannels"
       :key="channel.id"

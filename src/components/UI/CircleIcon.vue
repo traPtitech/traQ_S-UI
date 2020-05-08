@@ -4,7 +4,7 @@
       :class="$style.icon"
       :name="name"
       :mdi="mdi"
-      :size="innerSize"
+      :size="size"
       :color="color"
     />
   </div>
@@ -15,12 +15,10 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: { background: string; size: number }) => {
+const useStyles = (props: { background: string }) => {
   return reactive({
     icon: makeStyles(theme => ({
-      background: props.background,
-      width: `${props.size}px`,
-      height: `${props.size}px`
+      background: props.background
     }))
   })
 }
@@ -42,10 +40,6 @@ export default defineComponent({
       required: true
     },
     mdi: Boolean,
-    innerSize: {
-      type: Number,
-      default: 22
-    },
     size: {
       type: Number,
       default: 24
@@ -66,6 +60,6 @@ export default defineComponent({
   justify-content: center;
 }
 .icon {
-  padding: 10%;
+  padding: 16%;
 }
 </style>

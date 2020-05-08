@@ -1,39 +1,26 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
-    <div :class="$style.icon">
-      <icon mdi :name="fileIconName" :size="36" />
+  <div :class="$style.container" :data-is-white="isWhite">
+    <icon mdi :name="fileIconName" :size="36" :class="$style.icon" />
+    <div :class="$style.fileName" :data-is-ellipsis="isEllipsis">
+      {{ fileMeta ? fileMeta.name : 'unknown' }}
     </div>
-    <div
-      :class="$style.fileName"
-      :data-is-ellipsis="props.isEllipsis"
-      :data-is-no-ellipsis="!props.isEllipsis"
-    >
-      {{ fileMeta.name }}
-    </div>
-    <div :class="$style.fileSize" :style="styles.fileSize">
+    <div :class="$style.fileSize">
       {{ fileSize }}
     </div>
-    <div :class="$style.dl" @click="onFileDownloadLinkClick">
-      <icon mdi name="download" :size="24" />
-    </div>
+    <icon
+      mdi
+      name="download"
+      :size="24"
+      :class="$style.dl"
+      @click.native="onFileDownloadLinkClick"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import Icon from '@/components/UI/Icon.vue'
-
-const useStyles = (props: { isWhite: boolean; isEllipsis: boolean }) =>
-  reactive({
-    container: makeStyles((theme, common) => ({
-      color: props.isWhite ? common.text.whitePrimary : theme.ui.primary
-    })),
-    fileSize: makeStyles((theme, common) => ({
-      color: props.isWhite ? common.text.whiteSecondary : theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FileDescription',
@@ -55,7 +42,6 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const {
       fileMeta,
       fileIconName,
@@ -63,8 +49,6 @@ export default defineComponent({
       onFileDownloadLinkClick
     } = useFileMeta(props, context)
     return {
-      props,
-      styles,
       fileMeta,
       fileIconName,
       fileSize,
@@ -76,41 +60,44 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   display: grid;
   width: 100%;
   grid-template:
     'icon ... name ... dl' minmax(min-content, 20px)
     'icon ... size ... dl' minmax(min-content, 16px)
-    / 36px 16px auto 1fr 24px;
-}
-.icon,
-.dl {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    / 36px 16px auto 16px 24px;
+  &[data-is-white] {
+    @include color-common-text-white-primary;
+  }
 }
 .icon {
   grid-area: icon;
+  margin: auto;
 }
 .dl {
   grid-area: dl;
+  margin: auto;
   cursor: pointer;
 }
 .fileName {
   grid-area: name;
   min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
   &[data-is-ellipsis] {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  &[data-is-no-ellipsis] {
-    overflow-wrap: break-word;
-  }
 }
 .fileSize {
+  @include color-ui-secondary;
   grid-area: size;
   display: flex;
   align-items: center;
+  .container[data-is-white] & {
+    @include color-common-text-white-secondary;
+  }
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="[$style.container, lineClampContent ? $style.lineClamp : '']"
-    :style="styles.container"
-  >
+  <div :class="[$style.container, lineClampContent ? $style.lineClamp : '']">
     <icon v-if="hasFile" :class="$style.icon" name="file" mdi :size="20" />
     <icon
       v-if="hasMessage"
@@ -19,8 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import { embeddingReplacer } from '@/lib/embeddingExtractor'
 import { renderInline } from '@/lib/markdown'
 import Icon from '@/components/UI/Icon.vue'
@@ -38,12 +34,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = reactive({
-      container: makeStyles(theme => ({
-        color: theme.ui.primary
-      }))
-    })
-
     const extracted = computed(() => embeddingReplacer(props.content))
     const hasFile = computed(() =>
       extracted.value.embeddings.some(e => e.type === 'file')
@@ -53,7 +43,7 @@ export default defineComponent({
     )
     const renderedContent = computed(() => renderInline(extracted.value.text))
 
-    return { styles, hasFile, hasMessage, renderedContent }
+    return { hasFile, hasMessage, renderedContent }
   },
   components: {
     Icon
@@ -63,6 +53,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   @include size-body1;
   word-break: break-all;
   width: 100%;

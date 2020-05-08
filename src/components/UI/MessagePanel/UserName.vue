@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="styles.container"
-    :data-is-title="isTitle"
-  >
+  <div :class="$style.container" :data-is-title="isTitle">
     <user-icon :class="$style.icon" :user-id="id" :size="isTitle ? 24 : 20" />
     <span>
       {{ displayName }}
@@ -12,22 +8,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
-
-const useStyles = (props: { isTitle: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: props.isTitle ? theme.ui.primary : theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'UserName',
@@ -43,27 +26,25 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const styles = useStyles(props)
+  setup(props) {
     const id = computed(() => props.user?.id ?? 'unknown')
     const displayName = computed(() => props.user?.displayName ?? 'unknown')
-    return {
-      styles,
-      id,
-      displayName
-    }
+
+    return { id, displayName }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   @include size-body2;
   display: flex;
   align-items: center;
   word-break: keep-all;
   overflow-wrap: anywhere;
   &[data-is-title] {
+    @include color-ui-primary;
     @include size-body1;
     font-weight: bold;
   }

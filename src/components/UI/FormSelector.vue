@@ -1,9 +1,9 @@
 <template>
-  <div :style="styles.container">
+  <div>
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :style="styles.inputContainer">
+    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
       <select @input="onInput" :value="value" :id="id" :class="$style.select">
         <option
           v-for="option in options"
@@ -18,23 +18,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType } from '@vue/composition-api'
 import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
-
-const useStyles = (props: { onSecondary: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary
-    })),
-    inputContainer: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: props.onSecondary
-        ? theme.background.primary
-        : theme.background.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'FormSelector',
@@ -54,30 +40,35 @@ export default defineComponent({
     label: String
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const { onInput } = useInput(context)
     const id = randomString()
-    return { styles, onInput, id }
+    return { onInput, id }
   }
 })
 </script>
 
 <style lang="scss" module>
+.label {
+  @include color-ui-secondary;
+  margin-bottom: 8px;
+  display: block;
+}
 .inputContainer {
+  @include color-ui-primary;
+  @include background-secondary;
   @include size-body1;
   height: 30px;
   display: flex;
   align-items: center;
   border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
+  }
 }
 .select {
   margin: 0 8px;
   width: 100%;
   color: inherit;
   background: inherit;
-}
-.label {
-  margin-bottom: 8px;
-  display: block;
 }
 </style>
