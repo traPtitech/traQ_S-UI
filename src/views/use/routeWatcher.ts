@@ -39,6 +39,12 @@ const useRouteWacher = (context: SetupContext) => {
     })
   }
   const onRouteChangedToIndex = async () => {
+    try {
+      await store.dispatch.domain.me.fetchMe()
+    } catch {
+      return
+    }
+
     const openChannelPath = await useOpenChannel()
     try {
       await context.root.$router.replace(
