@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :data-is-title="isTitle">
     <user-icon :class="$style.icon" :user-id="id" :size="isTitle ? 24 : 20" />
-    <span>
+    <span :class="$style.displayName">
       {{ displayName }}
     </span>
   </div>
@@ -42,6 +42,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   word-break: keep-all;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   &[data-is-title] {
     @include color-ui-primary;
@@ -51,5 +52,8 @@ export default defineComponent({
 }
 .icon {
   margin-right: 8px;
+}
+.displayName {
+  min-width: 0;
 }
 </style>

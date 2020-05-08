@@ -137,6 +137,7 @@ export default defineComponent({
 .content {
   grid-area: message-contents;
   word-break: keep-all;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   line-break: loose;
 }
