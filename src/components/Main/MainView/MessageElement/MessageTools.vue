@@ -1,23 +1,41 @@
 <template>
   <div :class="$style.container">
-    <stamp
-      v-for="stamp in recentStamps"
-      :key="stamp"
-      :stamp-id="stamp"
-      @click.native="addStamp(stamp)"
+    <template v-if="showQuickReaction || !isMobile">
+      <stamp
+        v-for="stamp in recentStamps"
+        :key="stamp"
+        :stamp-id="stamp"
+        @click.native="addStamp(stamp)"
+        :size="28"
+        :class="$style.stampListItem"
+      />
+      <span :class="$style.line"></span>
+      <icon
+        v-if="isMobile"
+        mdi
+        name="chevron-right"
+        :size="28"
+        :class="$style.icon"
+        @click="toggleQuickReaction"
+      />
+    </template>
+    <icon
+      v-else
+      mdi
+      name="chevron-left"
       :size="28"
-      :class="$style.stampListItem"
+      :class="$style.icon"
+      @click="toggleQuickReaction"
     />
-    <span :class="$style.line"></span>
     <icon
       mdi
       name="emoticon-outline"
       :size="28"
-      :class="$style.emojiIcon"
+      :class="$style.icon"
       @click="onStampIconClick"
     />
     <icon
-      :class="$style.dotIcon"
+      :class="$style.icon"
       :size="28"
       mdi
       name="dots-horizontal"
@@ -27,13 +45,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref } from '@vue/composition-api'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import { targetPortalName } from '@/views/Main.vue'
+import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -75,11 +94,19 @@ export default defineComponent({
       })
     }
 
+    const { isMobile } = useIsMobile()
+    const showQuickReaction = ref(!isMobile.value)
+    const toggleQuickReaction = () =>
+      (showQuickReaction.value = !showQuickReaction.value)
+
     return {
       recentStamps,
       addStamp,
       onDotsClick,
-      onStampIconClick
+      onStampIconClick,
+      isMobile,
+      showQuickReaction,
+      toggleQuickReaction
     }
   }
 })
@@ -104,8 +131,7 @@ export default defineComponent({
   margin: 0 4px;
 }
 
-.emojiIcon,
-.dotIcon {
+.icon {
   display: block;
   padding: 4px;
   cursor: pointer;
