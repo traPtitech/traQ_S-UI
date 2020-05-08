@@ -9,7 +9,7 @@
       :attachment="attachment"
     />
     <div v-else :class="$style.fileContainer">
-      <icon mdi :name="iconName" />
+      <file-type-icon :type="attachment.type" />
       <div :class="$style.fileName">{{ attachment.file.name }}</div>
     </div>
   </div>
@@ -23,38 +23,16 @@ import {
   PropType
 } from '@vue/composition-api'
 import { Attachment } from '@/store/ui/fileInput/state'
-import Icon from '@/components/UI/Icon.vue'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
-
-interface Props {
-  attachment: Attachment
-}
-
-const useFileTypeIcon = (props: Props) => {
-  const iconName = computed(() => {
-    switch (props.attachment.type) {
-      case 'file':
-        return 'file'
-      case 'image':
-        return 'file-image'
-      case 'video':
-        return 'file-video'
-      case 'audio':
-        return 'file-music'
-    }
-  })
-  return {
-    iconName
-  }
-}
+import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 
 export default defineComponent({
   name: 'MessageInputFileListItem',
   components: {
-    Icon,
     MessageInputFileListItemImage,
-    MessageInputFileListItemCloseButton
+    MessageInputFileListItemCloseButton,
+    FileTypeIcon
   },
   props: {
     attachment: {
@@ -70,13 +48,9 @@ export default defineComponent({
           : false
       )
     })
-    const { iconName } = useFileTypeIcon(props)
     const onClickClose = () => context.emit('item-remove')
-    return {
-      state,
-      iconName,
-      onClickClose
-    }
+
+    return { state, onClickClose }
   }
 })
 </script>
