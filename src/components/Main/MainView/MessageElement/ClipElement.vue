@@ -141,6 +141,7 @@ $messagePaddingMobile: 16px;
   margin-top: 4px;
   margin-left: 42px;
   word-break: keep-all;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
 }
 

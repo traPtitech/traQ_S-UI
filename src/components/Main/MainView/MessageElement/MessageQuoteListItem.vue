@@ -129,7 +129,9 @@ export default defineComponent({
   align-self: end;
   margin-top: 4px;
   word-break: keep-all;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
+  min-width: 0;
 }
 .description {
   font-weight: normal;

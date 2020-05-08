@@ -87,6 +87,8 @@ export default defineComponent({
 }
 .descContent {
   word-break: keep-all;
+  min-width: 0;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   margin: auto 0;
 }
