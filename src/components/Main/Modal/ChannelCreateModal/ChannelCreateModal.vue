@@ -39,7 +39,20 @@ const useCreateChannel = (
   context: SetupContext,
   channelNameRef: Ref<string>
 ) => {
+  const { channelIdToPathString } = useChannelPath()
+
   const createChannel = async () => {
+    const parentChannelPath = props.parentChannelId
+      ? `${channelIdToPathString(props.parentChannelId)}/`
+      : ''
+    if (
+      !confirm(
+        `本当に#${parentChannelPath + channelNameRef.value}を作成しますか？`
+      )
+    ) {
+      return
+    }
+
     try {
       const channel = await store.dispatch.entities.createChannel({
         name: channelNameRef.value,
