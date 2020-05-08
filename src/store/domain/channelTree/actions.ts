@@ -116,7 +116,9 @@ export const actions = defineActions({
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
-      Object.values(rootState.entities.channels).map(c => c.id)
+      Object.values(rootState.entities.channels)
+        .filter(c => c.force)
+        .map(c => c.id)
     )
     const tree = {
       children:

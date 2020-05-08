@@ -49,7 +49,7 @@ const channelEntities: Record<ChannelId, ChannelLike> = {
     id: '4',
     name: '4',
     parentId: null,
-    archived: false,
+    archived: true,
     children: ['10', 'b']
   },
   '1': {
@@ -98,7 +98,7 @@ const channelEntities: Record<ChannelId, ChannelLike> = {
     id: '5',
     name: '5',
     parentId: '10',
-    archived: false,
+    archived: true,
     children: []
   },
   '6': {
@@ -130,7 +130,7 @@ const channelTree: ChannelTree = {
       id: '4',
       name: '4',
       active: true,
-      archived: false,
+      archived: true,
       children: [
         {
           id: '10',
@@ -138,7 +138,7 @@ const channelTree: ChannelTree = {
           active: true,
           archived: false,
           children: [
-            { id: '5', name: '5', active: true, archived: false, children: [] }
+            { id: '5', name: '5', active: true, archived: true, children: [] }
           ]
         },
         {
@@ -197,7 +197,7 @@ const homeChannelTree: ChannelTree = {
       id: '4',
       name: '4',
       active: true,
-      archived: false,
+      archived: true,
       children: [
         {
           id: '5',
@@ -205,7 +205,7 @@ const homeChannelTree: ChannelTree = {
           active: true,
           children: [],
           skippedAncestorNames: ['10'],
-          archived: false
+          archived: true
         },
         {
           id: 'b',
