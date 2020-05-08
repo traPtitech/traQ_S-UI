@@ -40,6 +40,8 @@ import SidebarContentContainerFoldable from '@/components/Main/MainView/MainView
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
+import { ClipFolder } from '@traptitech/traq'
+import router from '@/router'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -72,6 +74,38 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       return
     }
     await apis.deleteClipFolder(props.clipFolderId)
+    const clipFolders = Object.entries(store.state.entities.clipFolders)
+    if (clipFolders.length !== 0) {
+      let firstClip: ClipFolder | undefined = undefined
+      for (const clip of clipFolders) {
+        const date = clip[1]?.createdAt
+          ? new Date(clip[1]?.createdAt)
+          : undefined
+        if (date && (!firstClip || date > new Date(firstClip.createdAt))) {
+          firstClip = clip[1]
+        }
+      }
+      if (firstClip) {
+        router.push(`/clip-folders/${firstClip.id}`)
+        return
+      }
+    }
+    switch (store.state.app.browserSettings.openMode) {
+      case 'lastOpen':
+        router.push(
+          `/channels/${
+            store.state.app.browserSettings.lastOpenChannelName ?? 'general'
+          }`
+        )
+        return
+      case 'particular':
+        router.push(
+          `/channels/${
+            store.state.app.browserSettings.openChannelName ?? 'general'
+          }`
+        )
+        return
+    }
   }
   return { deleteClip }
 }

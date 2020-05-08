@@ -7,11 +7,9 @@
         :class="$style.sidebarItem"
       />
     </template>
-    <div>
-      <template #content>
-        <clips-sidebar-content :clip-folder-id="clipFolderId" />
-      </template>
-    </div>
+    <template #content>
+      <clips-sidebar-content :clip-folder-id="clipFolderId" />
+    </template>
   </main-view-sidebar>
 </template>
 
