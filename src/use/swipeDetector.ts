@@ -22,6 +22,25 @@ export interface SwipeDetectorState {
   isStartingSwipe: boolean
 }
 
+const isHorizontalScrollable = (e: TouchEvent) => {
+  if (!e.target) return false
+
+  let inspectingTarget = e.target as HTMLElement
+
+  while (inspectingTarget.parentElement !== e.currentTarget) {
+    const scrollWidth = inspectingTarget.scrollWidth
+    const clientWidth = inspectingTarget.clientWidth
+    if (scrollWidth > clientWidth) {
+      return true
+    }
+    if (!inspectingTarget.parentElement) {
+      return false
+    }
+    inspectingTarget = inspectingTarget.parentElement
+  }
+  return false
+}
+
 /**
  * x方向のスワイプを検出する
  */
@@ -37,6 +56,7 @@ const useSwipeDetector = () => {
 
   const touchstartHandler = (e: TouchEvent) => {
     if (e.touches.length !== 1) return
+    if (isHorizontalScrollable(e)) return
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
     state.lastTouchPosX = x
