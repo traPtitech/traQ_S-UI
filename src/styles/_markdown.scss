@@ -76,16 +76,36 @@
   }
 
   blockquote {
+    position: relative;
     margin-top: 0;
     margin-bottom: 8px;
-    padding: 0 8px;
+    padding: 0 12px;
     color: #6a737d;
-    border-left: 0.25em solid #dfe2e5;
     > :first-child {
       margin-top: 0;
     }
     > :last-child {
       margin-bottom: 0;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 0.25em;
+      height: 100%;
+      background: #dfe2e5;
+    }
+  }
+  > blockquote,
+  :not(blockquote) > blockquote {
+    $bottom-padding: 4px;
+    padding-bottom: $bottom-padding;
+    overflow: auto;
+    &::before {
+      height: calc(100% - #{$bottom-padding});
     }
   }
 
@@ -119,6 +139,13 @@
       margin-top: 4px;
     }
   }
+  > ul,
+  > ol,
+  :not(li) > ul,
+  :not(li) > ol {
+    padding-bottom: 4px;
+    overflow: auto;
+  }
 
   code, pre {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
@@ -132,10 +159,8 @@
   }
   pre {
     position: relative;
-    padding: 16px;
     margin-top: 0;
     margin-bottom: 16px;
-    overflow: auto;
     overflow-wrap: normal;
     line-height: 1.45;
     cite {
@@ -147,12 +172,12 @@
       background-color: rgba(0, 0, 0, 0.1);
     }
     code {
-      display: inline;
-      padding: 0;
+      display: block;
+      padding: 16px;
       margin: 0;
       border: 0;
       font-size: 1em;
-      overflow: visible;
+      overflow: auto;
       word-break: normal;
       overflow-wrap: normal;
       white-space: pre;
@@ -165,6 +190,7 @@
     width: 100%;
     margin-top: 0;
     margin-bottom: 16px;
+    padding-bottom: 4px;
     overflow: auto;
     border-spacing: 0;
     border-collapse: collapse;
@@ -234,6 +260,11 @@ html[data-is-dark-theme] {
 }
 
 .markdown-body {
+  .katex-block {
+    overflow: auto;
+    margin-bottom: 4px;
+  }
+
   .spoiler {
     color: transparent;
     background-color: black;
