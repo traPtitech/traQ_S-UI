@@ -28,7 +28,7 @@ const storeProvider: Store = {
   }
 }
 
-const md = new MarkdownIt(storeProvider)
+const md = new MarkdownIt(storeProvider, [])
 
 export const render = (text: string) => {
   return md.render(text)
