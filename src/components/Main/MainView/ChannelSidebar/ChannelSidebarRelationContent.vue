@@ -25,7 +25,7 @@
           :class="$style.element"
         />
         <div
-          v-if="!state.isOpenChildren"
+          v-if="!state.isOpenChildren && children.length > 3"
           :class="$style.text"
           @click="toggleChildren"
         >
@@ -42,7 +42,7 @@
         :class="$style.element"
       />
       <div
-        v-if="!state.isOpenSiblings"
+        v-if="!state.isOpenSiblings && siblings.length > 3"
         :class="$style.text"
         @click="toggleSiblings"
       >
