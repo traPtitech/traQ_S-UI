@@ -15,8 +15,8 @@ import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-import useChannelSelect from '@/use/channelSelect'
 import store from '@/store'
+import { changeDMChannelByUsername } from '@/router/channel'
 
 export default defineComponent({
   name: 'UsersElement',
@@ -40,13 +40,11 @@ export default defineComponent({
         : false
     )
 
-    const { onDMChannelSelect } = useChannelSelect()
-
     const onClick = () => {
       if (props.user.bot && props.user.name.startsWith('Webhook#')) {
         return
       }
-      onDMChannelSelect(props.user.name, props.user.id)
+      changeDMChannelByUsername(props.user.name)
     }
 
     return { hasNotification, onClick }

@@ -17,11 +17,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
-import { changeChannelByPath } from '@/router/channel'
-import { constructUserPath, changeRouteByPath } from '@/router'
-import useChannelPath from '@/use/channelPath'
+import { changeChannelById, changeDMChannelByUsername } from '@/router/channel'
 import LinkButton from './LinkButton.vue'
 
 export default defineComponent({
@@ -44,20 +42,15 @@ export default defineComponent({
     const onDMClick = async () => {
       const nameCache = props.userName
       await store.dispatch.ui.modal.clearModal()
-      changeRouteByPath(constructUserPath(nameCache))
+      changeDMChannelByUsername(nameCache)
     }
-
-    const { channelIdToPathString } = useChannelPath()
-    const homeChannelPath = computed(() =>
-      props.homeChannelId ? channelIdToPathString(props.homeChannelId) : ''
-    )
 
     const onHomeChannelClick = async () => {
       if (!props.homeChannelId) return
       // モーダル削除時に消えちゃうため、実体を退避
-      const pathCache = homeChannelPath.value
+      const idCache = props.homeChannelId
       await store.dispatch.ui.modal.clearModal()
-      changeChannelByPath(pathCache)
+      changeChannelById(idCache)
     }
 
     return {
