@@ -14,6 +14,11 @@
       :key="meta.id"
       :file-id="meta.id"
     />
+    <message-file-list-audio
+      v-for="meta in fileMetaDataState.audios"
+      :key="meta.id"
+      :file-id="meta.id"
+    />
     <message-file-list-file
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
@@ -28,16 +33,18 @@ import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { FileId } from '@/types/entity-ids'
 import { mimeToFileType } from '@/lib/util/file'
 import useFileMetaList from './use/fileMetaList'
-import MessageFileListFile from './MessageFileListFile.vue'
 import MessageFileListImage from './MessageFileListImage.vue'
 import MessageFileListVideo from './MessageFileListVideo.vue'
+import MessageFileListAudio from './MessageFileListAudio.vue'
+import MessageFileListFile from './MessageFileListFile.vue'
 
 export default defineComponent({
   name: 'MessageFileList',
   components: {
-    MessageFileListFile,
     MessageFileListImage,
-    MessageFileListVideo
+    MessageFileListVideo,
+    MessageFileListAudio,
+    MessageFileListFile
   },
   props: {
     fileIds: {
