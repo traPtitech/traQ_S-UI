@@ -9,6 +9,7 @@
         :size="28"
         :class="$style.stampListItem"
       />
+      <span :class="$style.line"></span>
       <icon
         v-if="isMobile"
         mdi
@@ -17,7 +18,6 @@
         :class="$style.icon"
         @click="toggleQuickReaction"
       />
-      <span :class="$style.line"></span>
     </template>
     <icon
       v-else
