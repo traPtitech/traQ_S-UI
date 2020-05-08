@@ -5,6 +5,7 @@
     </div>
     <video
       controls
+      controlsList="nodownload"
       preload="none"
       draggable="false"
       :alt="fileMeta.name"
