@@ -3,14 +3,12 @@
     <div :class="$style.input">
       <filter-input on-secondary :text="text" @input="onInput" />
     </div>
-    <button :class="$style.star" :style="styles.star">
-      <icon
-        @click="context.emit('click')"
-        name="star"
-        :width="22"
-        :height="22"
-        mdi
-      />
+    <button
+      :class="$style.star"
+      :style="styles.star"
+      @click="context.emit('toggle-star-filter')"
+    >
+      <icon name="star" :width="22" :height="22" mdi />
     </button>
   </div>
 </template>

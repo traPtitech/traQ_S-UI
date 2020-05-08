@@ -1,29 +1,26 @@
 <template>
   <div>
     <channel-filter
-      @click="toggleStar"
+      @toggle-star-filter="toggleStarChannelFilter"
       @input="setQuery"
       :text="channelListFilterState.query"
-      :is-stared="state.isStar"
+      :is-stared="filterStarChannel"
       :class="$style.filter"
     />
-    <div v-if="channelListFilterState.query.length > 0" :class="$style.list">
-      <channel-list
-        :channels="channelListFilterState.filteredItems"
-        ignore-children
-        show-shortened-path
-        show-topic
-      />
-    </div>
-    <template v-show="channelListFilterState.query.length <= 0">
-      <channel-list v-if="state.isStar" :channels="tree" />
-      <channel-list v-show="!state.isStar" :channels="topLevelChannels" />
-    </template>
+    <channel-list
+      v-if="channelListFilterState.query.length > 0"
+      :channels="channelListFilterState.filteredItems"
+      ignore-children
+      show-shortened-path
+      show-topic
+    />
+    <channel-list v-else-if="filterStarChannel" :channels="tree" />
+    <channel-list v-else :channels="topLevelChannels" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import { defineComponent, computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
@@ -35,6 +32,7 @@ import useChannelPath from '@/use/channelPath'
 import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
+import useChannelArchiveCheck from '@/use/channelArchiveCheck'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -44,26 +42,41 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   }
 }
 
-const useChannels = (state: { isStar: boolean }) =>
-  computed(() =>
-    state.isStar
+const useFilterStarChannel = () => {
+  const filterStarChannel = computed(
+    () => store.state.app.browserSettings.filterStarChannel
+  )
+
+  const toggleStarChannelFilter = () => {
+    store.commit.app.browserSettings.setFilterStarChannel(
+      !filterStarChannel.value
+    )
+  }
+
+  return {
+    filterStarChannel,
+    toggleStarChannelFilter
+  }
+}
+
+const useChannels = (filterStarChannel: Ref<boolean>) => {
+  const { filterNotArchive } = useChannelArchiveCheck()
+  return computed(() =>
+    filterStarChannel.value
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
-              buildDescendantsChannelArray(v)
-            )
+            Object.keys(store.state.domain.me.staredChannelSet)
+              .filter(filterNotArchive)
+              .flatMap(v => buildDescendantsChannelArray(v, false))
           )
         ]
-      : Object.values(store.state.entities.channels)
+      : Object.values(store.state.entities.channels).filter(ch =>
+          filterNotArchive(ch.id)
+        )
   )
+}
 
 const useStaredChannel = () => {
-  const staredChannel = computed(() =>
-    Object.keys(store.state.domain.me.staredChannelSet).map(
-      v => store.state.entities.channels[v]
-    )
-  )
-
   const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
     compareString(a.name.toUpperCase(), b.name.toUpperCase())
 
@@ -75,6 +88,7 @@ const useStaredChannel = () => {
           id: '',
           name: '',
           parentId: null,
+          archived: false,
           children: Object.keys(store.state.domain.me.staredChannelSet)
         },
         store.state.entities.channels
@@ -102,15 +116,13 @@ export default defineComponent({
       () => store.state.domain.channelTree.channelTree.children ?? []
     )
 
-    const state = reactive({
-      isStar: false
-    })
-    const toggleStar = () => {
-      state.isStar = !state.isStar
-    }
+    const {
+      filterStarChannel,
+      toggleStarChannelFilter
+    } = useFilterStarChannel()
 
     const { channelListFilterState, setQuery } = useChannelListFilter(
-      useChannels(state)
+      useChannels(filterStarChannel)
     )
     const currentChannelId = computed(
       () => store.state.domain.messagesView.currentChannelId
@@ -124,8 +136,8 @@ export default defineComponent({
       setQuery,
       currentChannelId,
       tree,
-      toggleStar,
-      state,
+      filterStarChannel,
+      toggleStarChannelFilter,
       channelIdToShortPathString
     }
   }
@@ -136,9 +148,6 @@ export default defineComponent({
 .element {
   cursor: pointer;
   margin: 8px 0;
-}
-.list {
-  margin: 16px 0px;
 }
 .input {
   margin-bottom: 16px;

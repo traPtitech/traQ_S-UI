@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.overlay">
-      <message-file-list-item-content :file-id="fileId" is-white />
+    <div :class="$style.description">
+      <message-file-list-item-content :file-id="fileId" />
     </div>
-    <video
+    <audio
       controls
       preload="none"
       draggable="false"
@@ -47,24 +47,18 @@ export default defineComponent({
     radius: 6px;
     color: $theme-ui-secondary;
   }
-  video {
+  audio {
     display: block;
     max-width: 100%;
     max-height: 450px;
+    &::-webkit-media-controls-enclosure {
+      border-radius: 0;
+    }
   }
 }
-.overlay {
-  position: absolute;
+.description {
   width: 100%;
-  background: $common-background-overlay;
-  backdrop-filter: blur(4px);
+  margin: 6px 0;
   cursor: pointer;
-  z-index: 1;
-  opacity: 0;
-  transition: all 0.2s ease;
-
-  .container:hover & {
-    opacity: 1;
-  }
 }
 </style>

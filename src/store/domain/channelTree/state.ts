@@ -9,6 +9,7 @@ export interface ChannelTreeNode {
   name: string
   children: ChannelTreeNode[]
   active: boolean
+  archived: boolean
   skippedAncestorNames?: string[]
 }
 export interface ChannelTree {

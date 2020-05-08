@@ -8,6 +8,7 @@ export interface S {
   modifierKey: SendKeys
   ecoMode: boolean
   activityMode: ActivityMode
+  filterStarChannel: boolean
 }
 
 export const state: S = {
@@ -17,5 +18,6 @@ export const state: S = {
   sendWithModifierKey: 'modifier',
   modifierKey: { alt: true, ctrl: true, shift: true, macCtrl: true },
   ecoMode: false,
-  activityMode: { all: false, perChannel: false }
+  activityMode: { all: false, perChannel: false },
+  filterStarChannel: false
 }

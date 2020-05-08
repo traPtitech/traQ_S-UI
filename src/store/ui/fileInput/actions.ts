@@ -3,6 +3,8 @@ import { moduleActionContext } from '@/store'
 import { fileInput } from './index'
 import { mimeToFileType } from '@/lib/util/file'
 import { ActionContext } from 'vuex'
+import { convertToDataUrl } from '@/lib/resize/dataurl'
+import { resize, canResize } from '@/lib/resize'
 
 const imageSizeLimit = 20 * 1000 * 1000 // 20MB
 
@@ -11,40 +13,43 @@ export const fileInputActionContext = (
 ) => moduleActionContext(context, fileInput)
 
 export const actions = defineActions({
-  addAttachment(context, file: File) {
+  async addAttachment(context, file: File) {
     const { commit, state } = fileInputActionContext(context)
     const fileType = mimeToFileType(file.type)
-    if (fileType === 'image') {
-      if (file.size > imageSizeLimit) {
-        window.alert(
-          '画像サイズは20MBまでです\n大きい画像の共有にはDriveを使用してください'
-        )
-        return
-      }
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      const index = state.attachments.length
 
-      reader.addEventListener(
-        'load',
-        event => {
-          // `readAsDataURL`を用いるため、結果の型はstring
-          // see: https://developer.mozilla.org/ja/docs/Web/API/FileReader/result
-          const thumbnailDataUrl = event.target?.result as string
-          if (!thumbnailDataUrl) {
-            return
-          }
-          commit.addThumbnailTo({
-            index,
-            thumbnailDataUrl
-          })
-        },
-        { once: true }
+    if (fileType === 'image' && file.size > imageSizeLimit) {
+      window.alert(
+        '画像サイズは20MBまでです\n大きい画像の共有にはDriveを使用してください'
       )
+      return
     }
-    commit.addAttachment({
-      type: fileType,
-      file
-    })
+
+    if (fileType === 'image') {
+      // 最後に追加されたもの
+      const index = state.attachments.length
+      const resizable = canResize(file.type)
+
+      let resizedFile = file
+      if (resizable) {
+        resizedFile = (await resize(file)) ?? file
+      }
+
+      const thumbnailDataUrl = await convertToDataUrl(resizedFile)
+      if (!thumbnailDataUrl) return
+
+      commit.addAttachment({
+        type: fileType,
+        file: resizedFile
+      })
+      commit.addThumbnailTo({
+        index,
+        thumbnailDataUrl
+      })
+    } else {
+      commit.addAttachment({
+        type: fileType,
+        file
+      })
+    }
   }
 })

@@ -11,9 +11,10 @@ const uploadAttachments = async (
   attachments: Attachment[],
   channelId: ChannelId
 ) => {
-  const responses = await Promise.all(
-    attachments.map(attachment => apis.postFile(attachment.file, channelId))
-  )
+  const responses = []
+  for (const attachment of attachments) {
+    responses.push(await apis.postFile(attachment.file, channelId))
+  }
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
 
