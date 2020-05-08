@@ -52,7 +52,7 @@ import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import { targetPortalName } from '@/views/Main.vue'
-import useIsMobile from '../../../../use/isMobile'
+import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
   name: 'MessageTools',
