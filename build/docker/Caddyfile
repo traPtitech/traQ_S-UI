@@ -18,7 +18,6 @@ root * /usr/share/caddy
 }
 handle @brotli {
     header Content-Encoding br
-    header Content-Type text/html
     rewrite {http.matchers.file.relative}
 }
 
@@ -40,6 +39,7 @@ try_files {path} /index.html
     file
     path *.html
 }
+header Content-Type text/html
 header @svg Content-Type image/svg+xml
 header @css Content-Type text/css
 header @js Content-Type text/javascript
