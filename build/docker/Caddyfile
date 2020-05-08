@@ -21,6 +21,8 @@ handle @brotli {
     rewrite {http.matchers.file.relative}
 }
 
+try_files {path} /index.html
+
 @svg {
     file
     path *.svg
@@ -34,9 +36,6 @@ handle @brotli {
     path *.js
 }
 @html {
-    file {
-        try_files {path} /index.html
-    }
     path *.html
 }
 header @svg Content-Type image/svg+xml
