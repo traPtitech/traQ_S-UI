@@ -47,7 +47,6 @@ export default defineComponent({
   &[data-is-white] {
     color: $common-text-white-primary;
   }
-  border-color: $theme-ui-secondary;
   width: 100%;
 }
 .description {

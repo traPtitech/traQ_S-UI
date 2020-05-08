@@ -19,11 +19,14 @@ export const isImage = (mime: string) => mimeToFileType(mime) === 'image'
 export const isVideo = (mime: string) => mimeToFileType(mime) === 'video'
 export const isAudio = (mime: string) => mimeToFileType(mime) === 'audio'
 export const isNonPreviewable = (meta: FileInfo) => {
-  if (meta.thumbnail === null && meta.mime !== 'image/svg+xml') {
+  const type = mimeToFileType(meta.mime)
+  if (type === 'file') {
     return true
   }
-  const type = mimeToFileType(meta.mime)
-  return type === 'file' || type === 'audio'
+  if (type === 'image' && !meta.thumbnail && meta.mime !== 'image/svg+xml') {
+    return true
+  }
+  return false
 }
 
 const sizePrefix = ['', 'K', 'M', 'G']

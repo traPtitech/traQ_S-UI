@@ -1,6 +1,6 @@
 import { computed, reactive } from '@vue/composition-api'
 import store from '@/store'
-import { isImage, isNonPreviewable, isVideo } from '@/lib/util/file'
+import { isImage, isNonPreviewable, isVideo, isAudio } from '@/lib/util/file'
 import { FileInfo } from '@traptitech/traq'
 
 const useFileMetaList = (props: { fileIds: string[] }) => {
@@ -18,6 +18,9 @@ const useFileMetaList = (props: { fileIds: string[] }) => {
     ),
     videos: computed(() =>
       fileMetaData.value.filter(meta => isVideo(meta.mime))
+    ),
+    audios: computed(() =>
+      fileMetaData.value.filter(meta => isAudio(meta.mime))
     ),
     files: computed(() =>
       fileMetaData.value.filter(meta => isNonPreviewable(meta))
