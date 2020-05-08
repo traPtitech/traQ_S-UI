@@ -21,11 +21,13 @@
 import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'FileDescription',
   components: {
-    FileTypeIcon
+    FileTypeIcon,
+    Icon
   },
   props: {
     fileId: {
