@@ -16,7 +16,7 @@
     />
     <channel-list
       v-else-if="filterStarChannel"
-      :channels="tree"
+      :channels="staredChannels"
       show-shortened-path
     />
     <channel-list v-else :channels="topLevelChannels" />
@@ -30,13 +30,9 @@ import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vu
 import useTextFilter from '@/use/textFilter'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
-import useChannelPath from '@/use/channelPath'
-import { compareString } from '@/lib/util/string'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
-import useChannelArchiveCheck from '@/use/channelArchiveCheck'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -64,29 +60,22 @@ const useFilterStarChannel = () => {
 }
 
 const useChannels = (filterStarChannel: Ref<boolean>) => {
-  const { filterNotArchive } = useChannelArchiveCheck()
   return computed(() =>
     filterStarChannel.value
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet)
-              .filter(filterNotArchive)
-              .flatMap(v => buildDescendantsChannelArray(v, false))
+            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
+              buildDescendantsChannelArray(v, false)
+            )
           )
         ]
-      : Object.values(store.state.entities.channels).filter(ch =>
-          filterNotArchive(ch.id)
-        )
+      : Object.values(store.state.entities.channels).filter(ch => !ch.archived)
   )
 }
 
-const useStaredChannel = () => {
-  const sortChannelTreeNode = (a: ChannelTreeNode, b: ChannelTreeNode) =>
-    compareString(a.name.toUpperCase(), b.name.toUpperCase())
-
-  const tree = computed(() => {
-    const { channelIdToShortPathString } = useChannelPath()
-    return (
+const useStaredChannel = () =>
+  computed(
+    () =>
       constructTree(
         {
           id: '',
@@ -97,11 +86,7 @@ const useStaredChannel = () => {
         },
         store.state.entities.channels
       )?.children ?? []
-    )
-  })
-
-  return { tree }
-}
+  )
 
 export default defineComponent({
   name: 'Channels',
@@ -114,30 +99,23 @@ export default defineComponent({
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.channelTree.children ?? []
     )
+    const staredChannels = useStaredChannel()
 
     const {
       filterStarChannel,
       toggleStarChannelFilter
     } = useFilterStarChannel()
-
     const { channelListFilterState, setQuery } = useChannelListFilter(
       useChannels(filterStarChannel)
     )
-    const currentChannelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-    const { tree } = useStaredChannel()
-    const { channelIdToShortPathString } = useChannelPath()
 
     return {
-      topLevelChannels,
+      toggleStarChannelFilter,
+      filterStarChannel,
       channelListFilterState,
       setQuery,
-      currentChannelId,
-      tree,
-      filterStarChannel,
-      toggleStarChannelFilter,
-      channelIdToShortPathString
+      staredChannels,
+      topLevelChannels
     }
   }
 })
