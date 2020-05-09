@@ -7,7 +7,6 @@ const path = require('path')
 module.exports = {
   resolve: {
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
       pica: 'pica/dist/pica.js',
       // vuex-persist
       'lodash.merge': path.resolve('./node_modules/lodash-es/merge.js')
