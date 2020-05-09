@@ -26,6 +26,13 @@
           :class="$style.channelNameIcon"
         />
       </div>
+      <div
+        v-if="unreadCount"
+        :class="$style.unreadBadge"
+        @click="onChannelNameClick"
+      >
+        {{ unreadCount }}
+      </div>
     </div>
     <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
       {{ topic }}
@@ -112,6 +119,15 @@ const useNotification = (props: TypedProps) => {
     )
   })
   return notificationState
+}
+
+const useUnreadCount = (props: TypedProps) => {
+  const unreadCount = computed(() => {
+    const count =
+      store.state.domain.me.unreadChannelsSet[props.channel.id]?.count ?? 0
+    return count === 0 ? undefined : count > 99 ? '99+' : '' + count
+  })
+  return { unreadCount }
 }
 
 const useTopic = (props: TypedProps) => {
@@ -219,6 +235,7 @@ export default defineComponent({
       isChildShown
     )
     const notificationState = useNotification(typedProps)
+    const { unreadCount } = useUnreadCount(typedProps)
     const { topic } = useTopic(typedProps)
     const { isQalling } = useRTCState(typedProps)
 
@@ -227,6 +244,7 @@ export default defineComponent({
       pathToShow,
       pathTooltip,
       notificationState,
+      unreadCount,
       topic,
       isQalling,
       onChannelHashClick,
@@ -256,6 +274,7 @@ $topicLeftPadding: 40px;
   align-items: center;
   position: relative;
   height: $elementHeight;
+  padding-right: 4px;
   z-index: 0;
   &[data-is-inactive] {
     opacity: 0.5;
@@ -292,6 +311,16 @@ $topicLeftPadding: 40px;
     bottom: 2px;
   }
   opacity: 0.5;
+}
+.unreadBadge {
+  color: $theme-background-secondary;
+  background: $theme-ui-secondary;
+  padding: 0 4px;
+  min-width: 24px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
 }
 .children {
   display: block;
