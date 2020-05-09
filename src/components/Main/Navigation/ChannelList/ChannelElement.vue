@@ -15,7 +15,7 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
       />
       <div :class="$style.channelName" @click="onChannelNameClick">
-        <span :class="$style.channelNameString">
+        <span :class="$style.channelNameString" :title="pathTooltip">
           {{ pathToShow }}
         </span>
         <icon
@@ -64,6 +64,13 @@ import Icon from '@/components/UI/Icon.vue'
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
     path: computed(() => skippedAncestorNames?.join('/')?.concat('/') ?? '')
+  }
+}
+
+const useFullPath = (props: TypedProps) => {
+  const { channelIdToPathString } = useChannelPath()
+  return {
+    path: computed(() => channelIdToPathString(props.channel.id))
   }
 }
 
@@ -197,6 +204,11 @@ export default defineComponent({
         : useAncestorPath(typedProps.channel.skippedAncestorNames).path.value +
           typedProps.channel.name
     )
+    const pathTooltip = computed(() =>
+      typedProps.showShortenedPath
+        ? `#${useFullPath(typedProps).path.value}`
+        : undefined
+    )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       typedProps.channel.id,
@@ -209,6 +221,7 @@ export default defineComponent({
     return {
       state,
       pathToShow,
+      pathTooltip,
       notificationState,
       topic,
       isQalling,
