@@ -21,7 +21,10 @@ import { loadResizeObserver } from './resizeObserver'
   Vue.use(vClickOutside)
   Vue.use(VueTextareaAutosize)
 
-  Vue.config.productionTip = false
+  if (process.env.NODE_ENV === 'development') {
+    Vue.config.productionTip = false
+    Vue.config.performance = true
+  }
 
   new Vue({
     router,
