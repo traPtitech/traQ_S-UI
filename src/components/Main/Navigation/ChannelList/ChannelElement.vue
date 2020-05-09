@@ -140,12 +140,13 @@ interface Props {
 
 interface WithChildrenProps extends Props {
   channel: ChannelTreeNode
-  ignoreChildren: true
+  ignoreChildren: false
 }
 
 interface IgnoreChildrenProps extends Props {
-  channel: ChannelTreeNode
-  ignoreChildren: false
+  channel: Channel
+  showShortenedPath: true
+  ignoreChildren: true
 }
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
