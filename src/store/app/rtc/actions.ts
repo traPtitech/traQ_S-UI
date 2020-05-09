@@ -6,8 +6,8 @@ import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-import { getUserAudio } from '@/lib/webrtc/userMedia'
-import { UserSessionState, SessionId } from './state'
+import { getUserAudio, getUserDisplay } from '@/lib/webrtc/userMedia'
+import { UserSessionState, SessionId, SessionType } from './state'
 import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
@@ -93,7 +93,7 @@ export const actions = defineActions({
 
   startOrJoinRTCSession(
     context,
-    payload: { channelId: ChannelId; sessionType: string }
+    payload: { channelId: ChannelId; sessionType: SessionType }
   ): { sessionId: string; isNewSession: boolean } {
     const { state, commit, dispatch } = rtcActionContext(context)
     if (
@@ -164,19 +164,26 @@ export const actions = defineActions({
     await client?.establishConnection()
   },
 
-  closeConnection(context) {
-    const { state, commit } = rtcActionContext(context)
+  leaveRoom(context, roomName: string) {
+    const { dispatch } = rtcActionContext(context)
     if (!client) {
       return
     }
-    if (state.mixer) {
-      state.mixer.playFileSource('qall_end')
-      state.mixer.muteAll()
+    client.leaveRoom(roomName)
+    if (client.roomsCount === 0) {
+      dispatch.closeConnection()
+    }
+  },
+
+  closeConnection(context) {
+    const { commit } = rtcActionContext(context)
+    if (!client) {
+      return
     }
     client.closeConnection()
     destroyClient()
-    commit.unsetMixer()
     commit.unsetLocalStream()
+    commit.unsetLocalVideoStream()
     commit.clearRemoteStream()
   },
 
@@ -288,12 +295,18 @@ export const actions = defineActions({
   },
 
   async endQall(context) {
-    const { getters, dispatch } = rtcActionContext(context)
+    const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!qallSession) {
       throw 'something went wrong'
     }
-    await dispatch.closeConnection()
+    await dispatch.leaveRoom(qallSession.sessionId)
+    if (state.mixer) {
+      state.mixer.playFileSource('qall_end')
+      state.mixer.muteAll()
+    }
+    commit.unsetMixer()
     dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
+  },
   }
 })

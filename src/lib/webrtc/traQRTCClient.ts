@@ -76,7 +76,7 @@ class traQRTCClientBase {
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 class traQRTCClient extends traQRTCClientBase {
   private peer?: Peer
-  private room?: SfuRoom
+  private roomMap: Record<string, SfuRoom | undefined> = {}
 
   constructor(private id: string) {
     super()
@@ -118,7 +118,7 @@ class traQRTCClient extends traQRTCClientBase {
    * Join to the room.
    * @param roomName a name of room to join.
    */
-  public async joinRoom(roomName: string, stream: MediaStream) {
+  public async joinRoom(roomName: string, stream?: MediaStream) {
     if (!this.peer || !this.peer.open) {
       throw 'connection has not been established'
     }
@@ -131,27 +131,41 @@ class traQRTCClient extends traQRTCClientBase {
       throw `failed to join room: ${roomName}.`
     }
 
-    room.on('open', this.handleRoomOpen.bind(this))
+    room.on('open', () => this.handleRoomOpen(room.name))
     room.on('peerJoin', this.handleRoomPeerJoin.bind(this))
     room.on('peerLeave', this.handleRoomPeerLeave.bind(this))
     room.on('stream', this.handleRoomStream.bind(this))
     room.on('data', this.handleRoomData.bind(this))
     room.on('close', this.handleRoomClose.bind(this))
-    this.room = room
+    this.roomMap[roomName] = room
   }
 
-  public async setStream(stream: MediaStream) {
+  public async leaveRoom(roomName: string) {
+    if (!this.peer || !this.peer.open) {
+      throw 'connection has not been established'
+    }
+    const room = this.roomMap[roomName]
+    if (!room) return
+    try {
+      room.close()
+      delete this.roomMap[roomName]
+      // eslint-disable-next-line no-console
+      console.log(`[RTC] Leaved room: ${roomName}`)
+    } catch {
+      // eslint-disable-next-line no-console
+      console.error('[RTC] Failed to leave room')
+    }
+  }
+
+  public async setStream(stream: MediaStream, roomName: string) {
     if (!this.peer) {
       throw 'Connection is not established'
     }
-    if (!this.room) {
+    const room = this.roomMap[roomName]
+    if (!room) {
       throw 'Not joined to any room'
     }
-    this.room.replaceStream(stream)
-  }
-
-  get roomName() {
-    return this.room ? this.room.name : ''
+    room.replaceStream(stream)
   }
 
   private async createPeer(peerId: string) {
@@ -177,6 +191,10 @@ class traQRTCClient extends traQRTCClientBase {
     })
   }
 
+  get roomsCount() {
+    return Object.keys(this.roomMap).length
+  }
+
   private handlePeerClose() {
     this.dispatchEvent(new Event('connectionclose'))
   }
@@ -188,9 +206,9 @@ class traQRTCClient extends traQRTCClientBase {
     console.error(`[RTC] ${err}`)
     this.dispatchEvent(new CustomEvent('connectionerror', { detail: { err } }))
   }
-  private async handleRoomOpen() {
+  private async handleRoomOpen(roomName: string) {
     // eslint-disable-next-line no-console
-    console.log(`[RTC] Room opened, name: ${this.roomName}`)
+    console.log(`[RTC] Room opened, name: ${roomName}`)
     this.dispatchEvent(new Event('roomopen'))
   }
   private async handleRoomClose() {
