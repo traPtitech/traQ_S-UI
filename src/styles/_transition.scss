@@ -1,13 +1,18 @@
 @import './easing';
 
-$name: 'vertical-swap';
-.#{$name}-enter-active,
-.#{$name}-leave-active {
+$vs: 'vertical-swap';
+$vs-reverse: 'vertical-swap-reverse';
+.#{$vs}-enter-active,
+.#{$vs}-leave-active,
+.#{$vs-reverse}-enter-active,
+.#{$vs-reverse}-leave-active {
   transition: transform 0.3s $easeOutBack;
 }
-.#{$name}-enter {
+.#{$vs-reverse}-leave-to,
+.#{$vs}-enter {
   transform: translateY(100%);
 }
-.#{$name}-leave-to {
+.#{$vs-reverse}-enter,
+.#{$vs}-leave-to {
   transform: translateY(-100%);
 }
