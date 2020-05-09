@@ -251,6 +251,28 @@ export const actions = defineActions({
 
     state.mixer.playFileSource('qall_start')
   },
+  async joinVideoChannel(
+    context,
+    payload: { roomName: string; withStream: boolean }
+  ) {
+    const { commit, rootState, dispatch } = rtcActionContext(context)
+
+    if (!rootState.app.rtcSettings.isEnabled) {
+      return
+    }
+    while (!client) {
+      await dispatch.establishConnection()
+    }
+    if (payload.withStream) {
+      const localStream = await getUserDisplay()
+      localStream.getAudioTracks().forEach(track => (track.enabled = false))
+
+      commit.setLocalVideoStream(localStream)
+      await client.joinRoom(payload.roomName, localStream)
+    } else {
+      await client.joinRoom(payload.roomName)
+    }
+  },
   mute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
@@ -308,5 +330,45 @@ export const actions = defineActions({
     commit.unsetMixer()
     dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
   },
+
+  async startVideoCasting(context, channelId: ChannelId) {
+    const { state, dispatch } = rtcActionContext(context)
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
+      channelId,
+      sessionType: 'video'
+    })
+    const castingUser = Object.values(state.userStateMap).find(userState =>
+      userState?.sessionStates.some(
+        sessionState =>
+          sessionState.sessionId === sessionId &&
+          sessionState.states.includes('casting')
+      )
+    )
+    if (castingUser) {
+      throw 'cant cast simultaneously'
+    }
+    dispatch.joinVideoChannel({ roomName: sessionId, withStream: true })
+  },
+  async startVideoStreaming(context, channelId: ChannelId) {
+    const { dispatch } = rtcActionContext(context)
+    try {
+      const { sessionId } = await dispatch.startOrJoinRTCSession({
+        channelId,
+        sessionType: 'video'
+      })
+      dispatch.joinVideoChannel({ roomName: sessionId, withStream: false })
+    } catch (e) {
+      // TODO: エラー
+    }
+  },
+  async endVideoSession(context) {
+    const { getters, dispatch } = rtcActionContext(context)
+    const videoSession = getters.videoSession
+
+    if (!videoSession) {
+      throw 'something went wrong'
+    }
+    await dispatch.leaveRoom(videoSession.sessionId)
+    dispatch.removeRTCSession({ sessionId: videoSession.sessionId })
   }
 })

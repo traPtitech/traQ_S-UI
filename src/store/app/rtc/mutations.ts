@@ -187,6 +187,12 @@ export const mutations = defineMutations<S>()({
     })
     state.isMicMuted = false
   },
+  setLocalVideoStream(state, videoStream: ExtendedMediaStream) {
+    state.localVideoStream = videoStream
+  },
+  unsetLocalVideoStream(state) {
+    state.localVideoStream = undefined
+  },
   addRemoteStream(
     state,
     payload: { userId: UserId; mediaStream: MediaStream }

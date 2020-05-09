@@ -8,6 +8,11 @@ export const getters = defineGetters<S>()({
       s => state.sessionInfoMap[s.sessionId]?.type === 'qall'
     )
   },
+  videoSession(state) {
+    return state.currentRTCState?.sessionStates.find(
+      s => state.sessionInfoMap[s.sessionId]?.type === 'video'
+    )
+  },
   channelRTCSessionId: state => (
     sessionType: SessionType,
     channelId: ChannelId
