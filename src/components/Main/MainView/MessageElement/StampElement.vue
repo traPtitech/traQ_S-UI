@@ -5,7 +5,7 @@
     :data-include-me="state.includeMe"
     @click="onClick"
   >
-    <stamp :stamp-id="stampId" :size="20" />
+    <stamp :stamp-id="stampId" :size="20" without-title />
     <spin-number :value="state.count" :class="$style.count" />
   </div>
 </template>
