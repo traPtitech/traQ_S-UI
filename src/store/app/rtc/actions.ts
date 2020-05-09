@@ -6,13 +6,15 @@ import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-import { getUserAudio } from '@/lib/webrtc/userMedia'
-import { UserSessionState, SessionId } from './state'
+import { getUserAudio, getUserDisplay } from '@/lib/webrtc/userMedia'
+import { UserSessionState, SessionId, SessionType } from './state'
 import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 
-const defaultState = 'joined'
+export const defaultState = 'joined'
+export const videoCastingState = 'casting'
+export const videoStreamingState = 'streaming'
 
 export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
@@ -93,7 +95,11 @@ export const actions = defineActions({
 
   startOrJoinRTCSession(
     context,
-    payload: { channelId: ChannelId; sessionType: string }
+    payload: {
+      channelId: ChannelId
+      sessionType: SessionType
+      initialState?: string[]
+    }
   ): { sessionId: string; isNewSession: boolean } {
     const { state, commit, dispatch } = rtcActionContext(context)
     if (
@@ -115,7 +121,7 @@ export const actions = defineActions({
       currentSession?.sessionId ?? payload.sessionType + '-' + randomString()
     dispatch.addRTCSession({
       sessionId,
-      states: [defaultState]
+      states: payload.initialState ?? [defaultState]
     })
     return { sessionId, isNewSession: !currentSession }
   },
@@ -164,19 +170,26 @@ export const actions = defineActions({
     await client?.establishConnection()
   },
 
-  closeConnection(context) {
-    const { state, commit } = rtcActionContext(context)
+  leaveRoom(context, roomName: string) {
+    const { dispatch } = rtcActionContext(context)
     if (!client) {
       return
     }
-    if (state.mixer) {
-      state.mixer.playFileSource('qall_end')
-      state.mixer.muteAll()
+    client.leaveRoom(roomName)
+    if (client.roomsCount === 0) {
+      dispatch.closeConnection()
+    }
+  },
+
+  closeConnection(context) {
+    const { commit } = rtcActionContext(context)
+    if (!client) {
+      return
     }
     client.closeConnection()
     destroyClient()
-    commit.unsetMixer()
     commit.unsetLocalStream()
+    commit.unsetLocalVideoStream()
     commit.clearRemoteStream()
   },
 
@@ -244,6 +257,50 @@ export const actions = defineActions({
 
     state.mixer.playFileSource('qall_start')
   },
+  async joinVideoChannel(
+    context,
+    payload: { roomName: string; withStream: boolean }
+  ) {
+    const { commit, rootState, dispatch } = rtcActionContext(context)
+
+    if (!rootState.app.rtcSettings.isEnabled) {
+      return
+    }
+    while (!client) {
+      await dispatch.establishConnection()
+    }
+
+    client.addEventListener('userjoin', e => {
+      const userId = e.detail.userId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] User joined, ID: ${userId}`)
+    })
+
+    client.addEventListener('userleave', async e => {
+      const userId = e.detail.userId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] User left, ID: ${userId}`)
+      commit.removeRemoteVideoStream(userId)
+    })
+
+    client.addEventListener('streamchange', async e => {
+      const stream = e.detail.stream
+      const userId = stream.peerId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] Recieved video stream from ${stream.peerId}`)
+      commit.addRemoteVideoStream({ userId, mediaStream: stream })
+    })
+
+    if (payload.withStream) {
+      const localStream = await getUserDisplay()
+      localStream.getAudioTracks().forEach(track => (track.enabled = false))
+
+      commit.setLocalVideoStream(localStream)
+      await client.joinRoom(payload.roomName, localStream)
+    } else {
+      await client.joinRoom(payload.roomName)
+    }
+  },
   mute(context) {
     const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
@@ -288,12 +345,56 @@ export const actions = defineActions({
   },
 
   async endQall(context) {
-    const { getters, dispatch } = rtcActionContext(context)
+    const { state, commit, getters, dispatch } = rtcActionContext(context)
     const qallSession = getters.qallSession
     if (!qallSession) {
       throw 'something went wrong'
     }
-    await dispatch.closeConnection()
+    await dispatch.leaveRoom(qallSession.sessionId)
+    if (state.mixer) {
+      state.mixer.playFileSource('qall_end')
+      state.mixer.muteAll()
+    }
+    commit.unsetMixer()
     dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
+  },
+
+  async startVideoCasting(context, channelId: ChannelId) {
+    const { state, dispatch } = rtcActionContext(context)
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
+      channelId,
+      sessionType: 'video',
+      initialState: [videoCastingState]
+    })
+    const castingUser = Object.values(state.userStateMap).find(userState =>
+      userState?.sessionStates.some(
+        sessionState =>
+          sessionState.sessionId === sessionId &&
+          sessionState.states.includes('casting')
+      )
+    )
+    if (castingUser) {
+      throw 'cant cast simultaneously'
+    }
+    dispatch.joinVideoChannel({ roomName: sessionId, withStream: true })
+  },
+  async startVideoStreaming(context, channelId: ChannelId) {
+    const { dispatch } = rtcActionContext(context)
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
+      channelId,
+      sessionType: 'video',
+      initialState: [videoStreamingState]
+    })
+    dispatch.joinVideoChannel({ roomName: sessionId, withStream: false })
+  },
+  async endVideoSession(context) {
+    const { getters, dispatch } = rtcActionContext(context)
+    const videoSession = getters.videoSession
+
+    if (!videoSession) {
+      throw 'something went wrong'
+    }
+    await dispatch.leaveRoom(videoSession.sessionId)
+    dispatch.removeRTCSession({ sessionId: videoSession.sessionId })
   }
 })
