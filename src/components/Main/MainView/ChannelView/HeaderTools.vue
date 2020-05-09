@@ -3,9 +3,9 @@
     <header-tools-list
       :class="$style.tools"
       :is-forced-channel="channelState.forced"
-      :has-active-qall-session="hasActiveQallSession"
-      :is-qall-session-opened="isQallSessionOpened"
-      :is-joined-qall-session="isJoinedQallSession"
+      :has-active-screen-share-session="hasActiveQallSession"
+      :is-screen-share-session-opened="isQallSessionOpened"
+      :is-joined-screen-share-session="isJoinedQallSession"
       :is-stared="channelState.stared"
       @click-qall="toggleQall"
       @star-channel="starChannel"
@@ -17,13 +17,17 @@
         :class="$style.toolsMenu"
         :show-notification-setting-btn="!channelState.forced"
         :has-active-qall-session="hasActiveQallSession"
-        :is-qall-session-opened="isQallSessionOpened"
+        :is-screen-qalln-opened="isQallSessionOpened"
         :is-joined-qall-session="isJoinedQallSession"
+        :has-active-screen-share-session="hasActiveScreenShareSession"
+        :is-screen-share-session-opened="isScreenShareSessionOpened"
+        :is-joined-screen-share-session="isJoinedScreenShareSession"
         v-click-outside="closePopupMenu"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
         @click-copy-channel-link="copyLink"
         @click-qall="toggleQall"
+        @click-screen-share="toggleScreenSharing"
       />
     </portal>
   </div>
@@ -35,6 +39,7 @@ import { ChannelId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
 import Icon from '@/components/UI/Icon.vue'
 import useQall from './use/qall'
+import useScreenShare from './use/screenShare'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
@@ -79,10 +84,20 @@ export default defineComponent({
       isQallSessionOpened,
       toggleQall
     } = useQall(props)
+    const {
+      hasActiveScreenShareSession,
+      isJoinedScreenShareSession,
+      isScreenShareSessionOpened,
+      toggleScreenSharing
+    } = useScreenShare(props)
     return {
       hasActiveQallSession,
       isQallSessionOpened,
       isJoinedQallSession,
+      hasActiveScreenShareSession,
+      isJoinedScreenShareSession,
+      isScreenShareSessionOpened,
+      toggleScreenSharing,
       isPopupMenuShown,
       channelState,
       toggleQall,
