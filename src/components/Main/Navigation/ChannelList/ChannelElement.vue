@@ -4,7 +4,7 @@
     :aria-selected="state.isSelected ? 'true' : 'false'"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel">
+    <div :class="$style.channel" :data-is-inactive="state.isInactive">
       <channel-element-hash
         :class="$style.channelHash"
         @click.native="onChannelHashClick"
@@ -191,6 +191,9 @@ export default defineComponent({
     const state = reactive({
       children: computed(() => typedProps.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
+      isInactive: computed(
+        () => !typedProps.ignoreChildren && !typedProps.channel.active
+      ),
       isSelected: computed(
         () =>
           store.state.domain.messagesView.currentChannelId ===
@@ -254,6 +257,9 @@ $topicLeftPadding: 40px;
   position: relative;
   height: $elementHeight;
   z-index: 0;
+  &[data-is-inactive] {
+    opacity: 0.5;
+  }
 }
 .channelHash {
   flex-shrink: 0;
