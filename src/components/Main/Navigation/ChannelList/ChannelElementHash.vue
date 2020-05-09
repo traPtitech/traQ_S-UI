@@ -106,7 +106,7 @@ export default defineComponent({
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
-      &[data-has-notification-child] {
+      &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
       }
       &[aria-selected='true'] {
