@@ -7,7 +7,7 @@
     <div :class="$style.channel">
       <channel-element-hash
         :class="$style.channelHash"
-        @click="onChannelHashClick"
+        @click.native="onChannelHashClick"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
@@ -49,7 +49,8 @@ import {
   SetupContext,
   computed,
   reactive,
-  PropType
+  PropType,
+  Ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
@@ -76,11 +77,15 @@ const useShortenedPath = (props: TypedProps) => {
 const useChannelClick = (
   context: SetupContext,
   id: ChannelId,
-  hasChild: boolean
+  isChildShown: Ref<boolean>
 ) => {
   const onChannelNameClick = () => context.emit('channel-select', id)
-  const onChannelHashClick = () =>
-    context.emit(hasChild ? 'channel-folding-toggle' : 'channel-select', id)
+  const onChannelHashClick = () => {
+    context.emit(
+      isChildShown.value ? 'channel-folding-toggle' : 'channel-select',
+      id
+    )
+  }
   return {
     onChannelHashClick,
     onChannelNameClick
@@ -184,6 +189,7 @@ export default defineComponent({
           typedProps.channel.id
       )
     })
+    const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
 
     const pathToShow = computed(() =>
       typedProps.showShortenedPath
@@ -194,7 +200,7 @@ export default defineComponent({
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       typedProps.channel.id,
-      state.hasChild
+      isChildShown
     )
     const notificationState = useNotification(typedProps)
     const { topic } = useTopic(typedProps)

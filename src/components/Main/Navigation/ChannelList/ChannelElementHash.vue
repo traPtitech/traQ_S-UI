@@ -6,7 +6,6 @@
       :data-is-opened="hasChild && isOpened"
       :aria-selected="isSelected ? 'true' : 'false'"
       :data-has-notification-on-child="hasNotificationOnChild"
-      @click="$emit('click')"
     >
       <icon name="hash" :class="$style.icon" />
     </div>
@@ -89,6 +88,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   box-sizing: content-box;
+  cursor: pointer;
   &[data-container-type='leaf'] {
     @include color-ui-primary;
     &[aria-selected='true'] {
@@ -106,7 +106,7 @@ export default defineComponent({
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
-      &[data-has-notification-child] {
+      &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
       }
       &[aria-selected='true'] {
