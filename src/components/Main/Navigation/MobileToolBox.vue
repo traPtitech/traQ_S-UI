@@ -2,14 +2,14 @@
   <div>
     <div :class="$style.container">
       <div :class="$style.searchBar"></div>
-      <div v-for="tool in tools" :key="tool.type">
-        <tool
-          :icon-name="tool.iconName"
-          :icon-mdi="tool.iconMdi"
-          :disabled="tool.disabled"
-          @click.native="tool.onClick"
-        />
-      </div>
+      <tool
+        v-for="tool in tools"
+        :key="tool.type"
+        :icon-name="tool.iconName"
+        :icon-mdi="tool.iconMdi"
+        :disabled="tool.disabled"
+        @click.native="tool.onClick"
+      />
     </div>
     <portal v-if="isServicesShown" :to="targetPortalName">
       <app-list :class="$style.services" @close="closeServices" />

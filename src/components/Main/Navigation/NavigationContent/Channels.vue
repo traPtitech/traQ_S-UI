@@ -14,7 +14,11 @@
       show-shortened-path
       show-topic
     />
-    <channel-list v-else-if="filterStarChannel" :channels="tree" />
+    <channel-list
+      v-else-if="filterStarChannel"
+      :channels="tree"
+      show-shortened-path
+    />
     <channel-list v-else :channels="topLevelChannels" />
   </div>
 </template>
@@ -92,12 +96,7 @@ const useStaredChannel = () => {
           children: Object.keys(store.state.domain.me.staredChannelSet)
         },
         store.state.entities.channels
-      )
-        ?.children?.map(c => ({
-          ...c,
-          name: channelIdToShortPathString(c.id)
-        }))
-        .sort(sortChannelTreeNode) ?? []
+      )?.children ?? []
     )
   })
 
