@@ -4,7 +4,7 @@ import { ChannelId, MessageId } from '@/types/entity-ids'
 import { reactive, Ref, watch } from '@vue/composition-api'
 import { Message } from '@traptitech/traq'
 
-const fetchLimit = 50
+const fetchLimit = 20
 
 type State = {
   loadedMessageLatestDate: Date | undefined
