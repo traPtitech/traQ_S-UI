@@ -263,6 +263,28 @@ export const actions = defineActions({
     while (!client) {
       await dispatch.establishConnection()
     }
+
+    client.addEventListener('userjoin', e => {
+      const userId = e.detail.userId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] User joined, ID: ${userId}`)
+    })
+
+    client.addEventListener('userleave', async e => {
+      const userId = e.detail.userId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] User left, ID: ${userId}`)
+      commit.removeRemoteStream(userId)
+    })
+
+    client.addEventListener('streamchange', async e => {
+      const stream = e.detail.stream
+      const userId = stream.peerId
+      /* eslint-disable-next-line no-console */
+      console.log(`[RTC] Recieved stream from ${stream.peerId}`)
+      commit.addRemoteStream({ userId, mediaStream: stream })
+    })
+
     if (payload.withStream) {
       const localStream = await getUserDisplay()
       localStream.getAudioTracks().forEach(track => (track.enabled = false))
@@ -351,15 +373,11 @@ export const actions = defineActions({
   },
   async startVideoStreaming(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
-    try {
-      const { sessionId } = await dispatch.startOrJoinRTCSession({
-        channelId,
-        sessionType: 'video'
-      })
-      dispatch.joinVideoChannel({ roomName: sessionId, withStream: false })
-    } catch (e) {
-      // TODO: エラー
-    }
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
+      channelId,
+      sessionType: 'video'
+    })
+    dispatch.joinVideoChannel({ roomName: sessionId, withStream: false })
   },
   async endVideoSession(context) {
     const { getters, dispatch } = rtcActionContext(context)

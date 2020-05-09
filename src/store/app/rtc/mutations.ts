@@ -209,6 +209,22 @@ export const mutations = defineMutations<S>()({
     )
     state.remoteAudioStreamMap = {}
   },
+  addVideoRemoteStream(
+    state,
+    payload: { userId: UserId; mediaStream: MediaStream }
+  ) {
+    Vue.set(state.remoteVideoStreamMap, payload.userId, payload.mediaStream)
+  },
+  removeRemoteVideoStream(state, userId: UserId) {
+    state.remoteVideoStreamMap[userId]?.getTracks().forEach(t => t.stop())
+    Vue.delete(state.remoteVideoStreamMap, userId)
+  },
+  clearRemoteVideoStream(state) {
+    Object.values(state.remoteVideoStreamMap).forEach(stream =>
+      stream?.getTracks().forEach(t => t.stop())
+    )
+    state.remoteVideoStreamMap = {}
+  },
   /**
    * @param volume 0-1で指定するボリューム (0がミュート、1がAudioStreamMixer.maxGainに相当するゲイン)
    */
