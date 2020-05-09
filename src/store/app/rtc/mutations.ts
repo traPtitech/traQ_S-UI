@@ -18,7 +18,9 @@ const toSessionInfo = (
   const [sessionType, id] = sessionId.split('-')
   if (
     id &&
-    (sessionType === ('qall' as const) || sessionType === ('draw' as const))
+    (sessionType === ('qall' as const) ||
+      sessionType === ('draw' as const) ||
+      sessionType === ('video' as const))
   ) {
     return {
       sessionId,
@@ -209,7 +211,7 @@ export const mutations = defineMutations<S>()({
     )
     state.remoteAudioStreamMap = {}
   },
-  addVideoRemoteStream(
+  addRemoteVideoStream(
     state,
     payload: { userId: UserId; mediaStream: MediaStream }
   ) {

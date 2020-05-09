@@ -12,7 +12,9 @@ import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 
-const defaultState = 'joined'
+export const defaultState = 'joined'
+export const videoCastingState = 'casting'
+export const videoStreamingState = 'streaming'
 
 export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
@@ -93,7 +95,11 @@ export const actions = defineActions({
 
   startOrJoinRTCSession(
     context,
-    payload: { channelId: ChannelId; sessionType: SessionType }
+    payload: {
+      channelId: ChannelId
+      sessionType: SessionType
+      initialState?: string[]
+    }
   ): { sessionId: string; isNewSession: boolean } {
     const { state, commit, dispatch } = rtcActionContext(context)
     if (
@@ -115,7 +121,7 @@ export const actions = defineActions({
       currentSession?.sessionId ?? payload.sessionType + '-' + randomString()
     dispatch.addRTCSession({
       sessionId,
-      states: [defaultState]
+      states: payload.initialState ?? [defaultState]
     })
     return { sessionId, isNewSession: !currentSession }
   },
@@ -274,15 +280,15 @@ export const actions = defineActions({
       const userId = e.detail.userId
       /* eslint-disable-next-line no-console */
       console.log(`[RTC] User left, ID: ${userId}`)
-      commit.removeRemoteStream(userId)
+      commit.removeRemoteVideoStream(userId)
     })
 
     client.addEventListener('streamchange', async e => {
       const stream = e.detail.stream
       const userId = stream.peerId
       /* eslint-disable-next-line no-console */
-      console.log(`[RTC] Recieved stream from ${stream.peerId}`)
-      commit.addRemoteStream({ userId, mediaStream: stream })
+      console.log(`[RTC] Recieved video stream from ${stream.peerId}`)
+      commit.addRemoteVideoStream({ userId, mediaStream: stream })
     })
 
     if (payload.withStream) {
@@ -357,7 +363,8 @@ export const actions = defineActions({
     const { state, dispatch } = rtcActionContext(context)
     const { sessionId } = await dispatch.startOrJoinRTCSession({
       channelId,
-      sessionType: 'video'
+      sessionType: 'video',
+      initialState: [videoCastingState]
     })
     const castingUser = Object.values(state.userStateMap).find(userState =>
       userState?.sessionStates.some(
@@ -375,7 +382,8 @@ export const actions = defineActions({
     const { dispatch } = rtcActionContext(context)
     const { sessionId } = await dispatch.startOrJoinRTCSession({
       channelId,
-      sessionType: 'video'
+      sessionType: 'video',
+      initialState: [videoStreamingState]
     })
     dispatch.joinVideoChannel({ roomName: sessionId, withStream: false })
   },
