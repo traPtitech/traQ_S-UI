@@ -229,7 +229,9 @@ const postMessage = (channelId, text) =>
   const messaging = firebase.messaging()
 
   messaging.setBackgroundMessageHandler(payload => {
-    updateBadge(payload.data)
-    return showNotification(payload.data)
+    if (payload.data && payload.data.type === 'new_message') {
+      updateBadge(payload.data)
+      return showNotification(payload.data)
+    }
   })
 }
