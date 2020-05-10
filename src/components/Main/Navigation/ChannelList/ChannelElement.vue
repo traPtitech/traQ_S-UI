@@ -27,11 +27,12 @@
         />
       </div>
       <div
-        v-if="unreadCount"
+        v-if="notificationState.unreadCount"
         :class="$style.unreadBadge"
+        :data-is-noticeable="notificationState.isNoticeable"
         @click="onChannelNameClick"
       >
-        {{ unreadCount }}
+        {{ notificationState.unreadCount }}
       </div>
     </div>
     <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
@@ -107,27 +108,27 @@ const useChannelClick = (
 }
 
 const useNotification = (props: TypedProps) => {
-  const isUnread = (channelId: ChannelId) =>
-    channelId in store.state.domain.me.unreadChannelsSet
+  const unreadChannel = computed(
+    () => store.state.domain.me.unreadChannelsSet[props.channel.id]
+  )
 
   const notificationState = reactive({
-    hasNotification: computed(() => isUnread(props.channel.id)),
+    hasNotification: computed(() => !!unreadChannel.value),
     hasNotificationOnChild: computed(() =>
       props.ignoreChildren
         ? false
-        : deepSome(props.channel, channel => isUnread(channel.id))
-    )
+        : deepSome(
+            props.channel,
+            channel => channel.id in store.state.domain.me.unreadChannelsSet
+          )
+    ),
+    unreadCount: computed(() => {
+      const count = unreadChannel.value?.count ?? 0
+      return count === 0 ? undefined : count > 99 ? '99+' : '' + count
+    }),
+    isNoticeable: computed(() => unreadChannel.value?.noticeable)
   })
   return notificationState
-}
-
-const useUnreadCount = (props: TypedProps) => {
-  const unreadCount = computed(() => {
-    const count =
-      store.state.domain.me.unreadChannelsSet[props.channel.id]?.count ?? 0
-    return count === 0 ? undefined : count > 99 ? '99+' : '' + count
-  })
-  return { unreadCount }
 }
 
 const useTopic = (props: TypedProps) => {
@@ -235,7 +236,6 @@ export default defineComponent({
       isChildShown
     )
     const notificationState = useNotification(typedProps)
-    const { unreadCount } = useUnreadCount(typedProps)
     const { topic } = useTopic(typedProps)
     const { isQalling } = useRTCState(typedProps)
 
@@ -244,7 +244,6 @@ export default defineComponent({
       pathToShow,
       pathTooltip,
       notificationState,
-      unreadCount,
       topic,
       isQalling,
       onChannelHashClick,
@@ -321,6 +320,9 @@ $topicLeftPadding: 40px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;
+  &[data-is-noticeable] {
+    background: $theme-accent-notification;
+  }
 }
 .children {
   display: block;
