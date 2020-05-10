@@ -17,16 +17,14 @@ import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
 import { WebRTCUserState } from '@traptitech/traq'
 
 export const onUserJoined = async ({ id }: UserJoinedEvent['body']) => {
-  const res = await apis.getUser(id)
-  store.commit.entities.addUser({ id, entity: res.data })
+  store.dispatch.entities.fetchUser(id)
 }
 
 export const onUserUpdated = async ({ id }: UserUpdatedEvent['body']) => {
-  const res = await apis.getUser(id)
-  store.commit.entities.extendUsers({ [id]: res.data })
+  const user = await store.dispatch.entities.fetchUser(id)
 
   if (store.state.domain.userDetails[id]) {
-    store.commit.domain.setUserDetail(res.data)
+    store.commit.domain.setUserDetail(user)
   }
 
   if (store.state.domain.me.detail?.id === id) {
@@ -48,8 +46,7 @@ export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent['body']) => {
 export const onUserIconUpdated = async ({
   id
 }: UserIconUpdatedEvent['body']) => {
-  const res = await apis.getUser(id)
-  store.commit.entities.extendUsers({ [id]: res.data })
+  const user = await store.dispatch.entities.fetchUser(id)
 
   if (store.state.domain.me.detail?.id === id) {
     const res = await apis.getMe()
