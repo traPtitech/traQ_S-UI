@@ -80,7 +80,6 @@ export default defineComponent({
 .container {
   @include color-ui-primary;
   @include size-body1;
-  word-break: break-all;
   width: 100%;
 }
 .lineClamp {

@@ -31,30 +31,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: block;
-  width: 256px;
-  border-radius: 4px;
-  word-break: break-all;
-  padding: 16px;
-}
-
-.itemHeader {
-  display: flex;
-  padding-bottom: 4px;
-  margin-bottom: 4px;
-  border-bottom: solid 2px;
-}
-
-.displayName {
-  @include size-body1;
-  font-weight: bold;
-  margin-left: 8px;
-}
-
-.text {
-  @include size-body1;
-}
-</style>
