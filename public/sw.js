@@ -196,6 +196,24 @@ const postMessage = (channelId, text) =>
     )
   })
 
+  // refs src/lib/util/browser.ts
+  const checkBadgeAPISupport = () => {
+    return !!navigator.setAppBadge && !!navigator.clearAppBadge
+  }
+  const isBadgeAPISupported = checkBadgeAPISupport()
+
+  const updateBadge = async data => {
+    if (!isBadgeAPISupported) return
+    if (data.unread === undefined) return
+
+    const unread = +data.unread
+    if (unread > 0) {
+      await navigator.setAppBadge(unread)
+    } else {
+      await navigator.clearAppBadge()
+    }
+  }
+
   importScripts('https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js')
   importScripts(
     'https://www.gstatic.com/firebasejs/7.14.3/firebase-messaging.js'
@@ -210,7 +228,10 @@ const postMessage = (channelId, text) =>
 
   const messaging = firebase.messaging()
 
-  messaging.setBackgroundMessageHandler(payload =>
-    showNotification(payload.data)
-  )
+  messaging.setBackgroundMessageHandler(payload => {
+    if (payload.data && payload.data.type === 'new_message') {
+      updateBadge(payload.data)
+      return showNotification(payload.data)
+    }
+  })
 }

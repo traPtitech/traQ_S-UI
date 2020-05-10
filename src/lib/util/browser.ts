@@ -30,3 +30,7 @@ export const checkLevel2InputEventsSupport = () => {
   element.contentEditable = 'true'
   return 'onbeforeinput' in element
 }
+
+export const checkBadgeAPISupport = () => {
+  return !!navigator.setAppBadge && !!navigator.clearAppBadge
+}
