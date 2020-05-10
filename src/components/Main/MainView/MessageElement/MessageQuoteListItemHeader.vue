@@ -40,10 +40,15 @@ export default defineComponent({
 .header {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
 }
 
 .displayName {
   @include size-body2;
   font-weight: bold;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
