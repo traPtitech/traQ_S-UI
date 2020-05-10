@@ -97,5 +97,6 @@ export default defineComponent({
 .editIcon {
   @include color-ui-secondary;
   margin-left: 4px;
+  flex-shrink: 0;
 }
 </style>
