@@ -26,8 +26,24 @@ interface ExtendedWindow extends Window {
 }
 declare const window: ExtendedWindow
 
+const checkUserExistence = async (userId: UserId) => {
+  if (userId in store.state.entities.users) return true
+  try {
+    await store.dispatch.entities.fetchUser(userId)
+    return true
+  } catch {
+    return false
+  }
+}
+
+const checkGroupExistence = async (userGroupId: UserGroupId) => {
+  return userGroupId in store.state.entities.userGroups
+}
+
 export const setupGlobalFuncs = () => {
-  window.openUserModal = (userId: UserId) => {
+  window.openUserModal = async (userId: UserId) => {
+    if (!(await checkUserExistence(userId))) return
+
     store.dispatch.ui.modal.pushModal({
       type: 'user',
       id: userId
@@ -35,6 +51,7 @@ export const setupGlobalFuncs = () => {
   }
 
   window.openGroupModal = (userGroupId: UserGroupId) => {
+    if (!checkGroupExistence(userGroupId)) return
     store.dispatch.ui.modal.pushModal({
       type: 'group',
       id: userGroupId
