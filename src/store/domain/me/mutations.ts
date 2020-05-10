@@ -17,17 +17,11 @@ const updateBadge = async () => {
   if (!isBadgingAPISupported) return
 
   const unreadChannelsSet = store.state.domain.me.unreadChannelsSet
-  const subscriptionMap = store.state.domain.me.subscriptionMap
-  const dmChannels = store.state.entities.dmChannels
 
-  const unreadCount = Object.entries(unreadChannelsSet)
-    .filter(
-      ([channelId, unreadChannel]) =>
-        channelId in dmChannels ||
-        unreadChannel.noticeable ||
-        subscriptionMap[channelId] === ChannelSubscribeLevel.subscribed
-    )
-    .reduce((acc, [, current]) => acc + current.count, 0)
+  const unreadCount = Object.entries(unreadChannelsSet).reduce(
+    (acc, [, current]) => acc + current.count,
+    0
+  )
   if (unreadCount > 0) {
     await navigator.setAppBadge(unreadCount)
   } else {
