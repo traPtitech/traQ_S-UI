@@ -44,6 +44,9 @@ export const setupGlobalFuncs = () => {
   window.openUserModal = async (userId: UserId) => {
     if (!(await checkUserExistence(userId))) return
 
+    const user = store.state.entities.users[userId]
+    if (user?.bot && user.name.startsWith('Webhook#')) return
+
     store.dispatch.ui.modal.pushModal({
       type: 'user',
       id: userId
