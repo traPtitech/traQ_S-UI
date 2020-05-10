@@ -1,12 +1,9 @@
 <template>
   <div :class="$style.body">
     <div :class="$style.dummy">{{ value }}</div>
-    <transition name="vertical-swap">
-      <div :class="$style.number" v-if="state.isB" key="num1">
-        {{ state.valueB }}
-      </div>
-      <div :class="$style.number" v-else key="num2">
-        {{ state.valueA }}
+    <transition :name="name">
+      <div :class="$style.number" :key="state.val">
+        {{ state.val }}
       </div>
     </transition>
   </div>
@@ -17,7 +14,8 @@ import {
   defineComponent,
   watch,
   reactive,
-  PropType
+  PropType,
+  computed
 } from '@vue/composition-api'
 
 export default defineComponent({
@@ -30,23 +28,21 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      valueA: props.value,
-      valueB: 0,
-      isB: false
+      val: props.value,
+      reverse: false
     })
     watch(
       () => props.value,
       (newVal, oldVal) => {
-        if (state.isB) {
-          state.valueA = newVal
-        } else {
-          state.valueB = newVal
-        }
-        state.isB = !state.isB
+        state.val = newVal
+        state.reverse = newVal < oldVal
       },
       { lazy: true }
     )
-    return { state }
+    const name = computed(() =>
+      state.reverse ? 'vertical-swap-reverse' : 'vertical-swap'
+    )
+    return { state, name }
   }
 })
 </script>
