@@ -196,9 +196,9 @@ const postMessage = (channelId, text) =>
     )
   })
 
-  importScripts('https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js')
+  importScripts('https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js')
   importScripts(
-    'https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js'
+    'https://www.gstatic.com/firebasejs/7.14.3/firebase-messaging.js'
   )
 
   firebase.initializeApp({
