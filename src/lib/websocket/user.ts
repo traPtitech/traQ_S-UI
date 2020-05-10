@@ -48,6 +48,10 @@ export const onUserIconUpdated = async ({
 }: UserIconUpdatedEvent['body']) => {
   const user = await store.dispatch.entities.fetchUser(id)
 
+  if (store.state.domain.userDetails[id]) {
+    store.commit.domain.setUserDetail(user)
+  }
+
   if (store.state.domain.me.detail?.id === id) {
     const res = await apis.getMe()
     store.commit.domain.me.setDetail(res.data)
