@@ -6,9 +6,9 @@
     />
     <main-view-sidebar-selector :view-info="state.primary" />
     <div :class="$style.layoutContainer" :data-layout="state.layout">
-      <div :class="$style.primaryContainer">
+      <div :class="$style.primary">
         <main-view-component-selector
-          :class="[$style.componentContainer, $style.primary]"
+          :class="[$style.componentContainer, $style.primaryComponent]"
           :view-info="state.primary"
         />
         <portal-target
@@ -91,6 +91,12 @@ export default defineComponent({
   }
   &[data-layout|='split'] {
     display: flex;
+    .secondary {
+      height: 33%;
+      max-height: 66%;
+      overflow: hidden;
+      resize: vertical;
+    }
   }
   &[data-layout='split'] {
     flex-direction: column;
@@ -105,12 +111,16 @@ export default defineComponent({
   right: 0;
   top: 0;
 }
-.primary {
+.primaryComponent {
   width: 100%;
 }
-.primaryContainer {
-  display: flex;
+.primary {
   height: 100%;
+  min-height: 0;
+}
+.primary {
+  height: 100%;
+  min-height: 0;
 }
 .sidebar {
   height: 100%;
