@@ -12,7 +12,7 @@
     @touchend="touchendHandler"
     @touchcancel="touchendHandler"
   >
-    <div :class="$style.homeContainer" :style="styles.homeContainer">
+    <div :class="$style.homeContainer">
       <navigation v-show="shouldShowNav" :class="$style.navigationWrapper" />
       <main-view-frame
         :is-active="isMainViewActive"
@@ -74,11 +74,7 @@ const useStyles = (
       transform: `translateX(${mainViewPosition.value}px)`
     })),
     sidebarWrapper: makeStyles(theme => ({
-      transform: `translateX(${sidebarPosition.value}px)`,
-      background: theme.background.secondary
-    })),
-    homeContainer: makeStyles(theme => ({
-      background: theme.background.tertiary
+      transform: `translateX(${sidebarPosition.value}px)`
     }))
   })
 
@@ -169,6 +165,7 @@ export default defineComponent({
   height: 100%;
 }
 .homeContainer {
+  @include background-tertiary;
   height: 100%;
   display: flex;
   [data-is-mobile] & {
@@ -186,6 +183,7 @@ export default defineComponent({
   }
 }
 .sidebarWrapper {
+  @include background-secondary;
   position: absolute;
   top: 0;
   left: 100%;

@@ -8,39 +8,13 @@
     :tooltip="tooltip"
     :tooltip-formatter="tooltipFormatter"
     :dot-size="12"
-    :dot-style="styles.dotStyle"
-    :rail-style="styles.railStyle"
-    :process-style="styles.processStyle"
-    :tooltip-style="styles.tooltipStyle"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/default.css'
-
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
 import { TooltipFormatter } from 'vue-slider-component/typings/typings'
-
-const useStyles = () =>
-  reactive({
-    dotStyle: makeStyles(theme => ({
-      background: theme.ui.secondary,
-      boxShadow: 'none'
-    })),
-    railStyle: makeStyles(theme => ({
-      background: transparentize(theme.ui.secondary, 0.5)
-    })),
-    processStyle: makeStyles(theme => ({
-      background: theme.ui.secondary
-    })),
-    tooltipStyle: makeStyles(theme => ({
-      background: theme.ui.secondary,
-      borderColor: theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'Slider',
@@ -73,16 +47,22 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles()
     const onChange = (val: number | string) => {
       context.emit('change', val)
     }
-    return { styles, onChange }
+    return { onChange }
   }
 })
 </script>
 
-<style lang="scss" module>
-.container {
-}
+<style lang="scss">
+$dotBgColor: $theme-ui-secondary;
+$dotShadow: none;
+
+$bgColor: $theme-ui-secondary--05;
+$themeColor: $theme-ui-secondary;
+
+$tooltipBgColor: $theme-ui-secondary;
+
+@import '~vue-slider-component/lib/theme/default.scss';
 </style>
