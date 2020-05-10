@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <video ref="$remoteVideoRef" />
+    <video ref="$remoteVideoRef" muted autoplay :class="$style.video" />
   </div>
 </template>
 
@@ -30,7 +30,11 @@ export default defineComponent({
   @include color-ui-primary;
   display: flex;
   flex-direction: row;
-  position: relative;
+  justify-content: center;
   height: 100%;
+}
+.video {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
