@@ -92,8 +92,8 @@ export default defineComponent({
   &[data-layout|='split'] {
     display: flex;
     .secondary {
-      height: 33%;
-      max-height: 66%;
+      height: 50%;
+      max-height: 75%;
       overflow: hidden;
       resize: vertical;
     }
