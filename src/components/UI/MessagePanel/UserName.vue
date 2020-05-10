@@ -41,7 +41,7 @@ export default defineComponent({
   @include size-body2;
   display: flex;
   align-items: center;
-  word-break: keep-all;
+  word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   &[data-is-title] {
