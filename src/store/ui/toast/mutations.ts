@@ -1,6 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { Toast, DEFAULT_TOAST_TIMEOUT } from '.'
+import { Toast, DEFAULT_TOAST_TIMEOUT, MAX_TOAST_COUNT } from '.'
 
 let nextId = 0
 
@@ -15,6 +15,10 @@ export const mutations = defineMutations<S>()({
       id: nextId
     })
     nextId++
+
+    while (MAX_TOAST_COUNT < state.toasts.length) {
+      state.toasts.pop()
+    }
   },
   deleteToast: (state, id: number) => {
     const index = state.toasts.findIndex(toast => toast.id === id)

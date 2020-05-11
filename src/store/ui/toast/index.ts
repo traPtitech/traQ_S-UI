@@ -5,6 +5,7 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 
 export const DEFAULT_TOAST_TIMEOUT = 1500
+export const MAX_TOAST_COUNT = 5
 
 export interface Toast {
   /**
