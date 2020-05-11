@@ -84,7 +84,6 @@ export default defineComponent({
     )
 
     return {
-      props,
       state,
       onClick
     }

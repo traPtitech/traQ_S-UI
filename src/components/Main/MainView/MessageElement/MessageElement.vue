@@ -7,13 +7,19 @@
     :data-is-pinned="state.isPinned"
     :data-is-entry="isEntryMessage"
     :data-is-editing="state.isEditing"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
     <message-pinned
       :message-id="messageId"
       v-if="state.message.pinned"
       :class="$style.pinned"
     />
-    <message-tools :class="$style.tools" :message-id="messageId" />
+    <message-tools
+      v-if="isHovered"
+      :class="$style.tools"
+      :message-id="messageId"
+    />
     <message-contents
       :class="$style.messageContents"
       :message-id="messageId"
@@ -57,6 +63,7 @@ import Icon from '@/components/UI/Icon.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
+import useHover from '@/use/hover'
 
 export default defineComponent({
   name: 'MessageElement',
@@ -106,12 +113,17 @@ export default defineComponent({
       state.stampDetailFoldingState = !state.stampDetailFoldingState
     }
 
+    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+
     return {
       state,
       bodyRef,
       embeddingsState,
       isMobile,
-      onStampDetailFoldingToggle
+      onStampDetailFoldingToggle,
+      isHovered,
+      onMouseEnter,
+      onMouseLeave
     }
   }
 })
@@ -180,9 +192,6 @@ $messagePaddingMobile: 16px;
 }
 
 .tools {
-  .body:not(:hover) & {
-    display: none;
-  }
   position: absolute;
   top: 4px;
   right: 16px;
