@@ -64,13 +64,11 @@ const useRouteWacher = (context: SetupContext) => {
     }
 
     const openChannelPath = await useOpenChannel()
-    try {
-      await context.root.$router.replace(
-        constructChannelPath(openChannelPath.value)
-      )
-    } catch (e) {
-      if (e) throw e
-    }
+    await context.root.$router
+      .replace(constructChannelPath(openChannelPath.value))
+      // 同じ場所に移動しようとした際のエラーを消す
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .catch(() => {})
     return
   }
 
