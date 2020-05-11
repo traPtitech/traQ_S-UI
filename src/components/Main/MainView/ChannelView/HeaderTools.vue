@@ -3,9 +3,9 @@
     <header-tools-list
       :class="$style.tools"
       :is-forced-channel="channelState.forced"
-      :has-active-screen-share-session="hasActiveQallSession"
-      :is-screen-share-session-opened="isQallSessionOpened"
-      :is-joined-screen-share-session="isJoinedQallSession"
+      :has-active-qall-session="hasActiveQallSession"
+      :is-qall-session-opened="isQallSessionOpened"
+      :is-joined-qall-session="isJoinedQallSession"
       :is-stared="channelState.stared"
       @click-qall="toggleQall"
       @star-channel="starChannel"
@@ -59,7 +59,7 @@ const useCopy = (context: SetupContext) => {
 }
 
 export default defineComponent({
-  name: 'ChannelViewHeader',
+  name: 'ChannelViewHeaderTools',
   components: {
     Icon,
     HeaderToolsList,
