@@ -27,6 +27,7 @@
       :class="$style.sidebarItem"
       :viewer-ids="viewerIds"
     />
+    <channel-sidebar-bots :channel-id="channelId" :class="$style.sidebarItem" />
     <!--
     <channel-sidebar-edit :class="$style.edit" />
     -->
@@ -42,6 +43,7 @@ import ChannelSidebarMember from './ChannelSidebarMember.vue'
 import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
+import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
@@ -68,7 +70,8 @@ export default defineComponent({
     ChannelSidebarMember,
     ChannelSidebarEdit,
     ChannelSidebarRelation,
-    ChannelSidebarQall
+    ChannelSidebarQall,
+    ChannelSidebarBots
   },
   setup(_, context) {
     return { context }

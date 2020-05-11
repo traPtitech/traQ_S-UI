@@ -35,6 +35,8 @@ export interface S {
 
   subscribers: UserId[]
 
+  bots: UserId[]
+
   /** 現在編集中のメッセージID */
   editingMessageId?: MessageId
 
@@ -53,6 +55,7 @@ export const state: S = {
   currentViewers: [],
   topic: '',
   subscribers: [],
+  bots: [],
   editingMessageId: undefined,
   unreadSince: undefined
 }
