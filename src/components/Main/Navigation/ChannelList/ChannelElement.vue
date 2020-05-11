@@ -4,7 +4,7 @@
     :aria-selected="state.isSelected ? 'true' : 'false'"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel">
+    <div :class="$style.channel" :data-is-inactive="state.isInactive">
       <channel-element-hash
         :class="$style.channelHash"
         @click.native="onChannelHashClick"
@@ -25,6 +25,14 @@
           name="phone-outline"
           :class="$style.channelNameIcon"
         />
+      </div>
+      <div
+        v-if="notificationState.unreadCount"
+        :class="$style.unreadBadge"
+        :data-is-noticeable="notificationState.isNoticeable"
+        @click="onChannelNameClick"
+      >
+        {{ notificationState.unreadCount }}
       </div>
     </div>
     <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
@@ -100,16 +108,25 @@ const useChannelClick = (
 }
 
 const useNotification = (props: TypedProps) => {
-  const isUnread = (channelId: ChannelId) =>
-    channelId in store.state.domain.me.unreadChannelsSet
+  const unreadChannel = computed(
+    () => store.state.domain.me.unreadChannelsSet[props.channel.id]
+  )
 
   const notificationState = reactive({
-    hasNotification: computed(() => isUnread(props.channel.id)),
+    hasNotification: computed(() => !!unreadChannel.value),
     hasNotificationOnChild: computed(() =>
       props.ignoreChildren
         ? false
-        : deepSome(props.channel, channel => isUnread(channel.id))
-    )
+        : deepSome(
+            props.channel,
+            channel => channel.id in store.state.domain.me.unreadChannelsSet
+          )
+    ),
+    unreadCount: computed(() => {
+      const count = unreadChannel.value?.count ?? 0
+      return count === 0 ? undefined : count > 99 ? '99+' : '' + count
+    }),
+    isNoticeable: computed(() => unreadChannel.value?.noticeable)
   })
   return notificationState
 }
@@ -140,12 +157,13 @@ interface Props {
 
 interface WithChildrenProps extends Props {
   channel: ChannelTreeNode
-  ignoreChildren: true
+  ignoreChildren: false
 }
 
 interface IgnoreChildrenProps extends Props {
-  channel: ChannelTreeNode
-  ignoreChildren: false
+  channel: Channel
+  showShortenedPath: true
+  ignoreChildren: true
 }
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
@@ -190,6 +208,9 @@ export default defineComponent({
     const state = reactive({
       children: computed(() => typedProps.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
+      isInactive: computed(
+        () => !typedProps.ignoreChildren && !typedProps.channel.active
+      ),
       isSelected: computed(
         () =>
           store.state.domain.messagesView.currentChannelId ===
@@ -252,7 +273,11 @@ $topicLeftPadding: 40px;
   align-items: center;
   position: relative;
   height: $elementHeight;
+  padding-right: 4px;
   z-index: 0;
+  &[data-is-inactive] {
+    opacity: 0.5;
+  }
 }
 .channelHash {
   flex-shrink: 0;
@@ -285,6 +310,19 @@ $topicLeftPadding: 40px;
     bottom: 2px;
   }
   opacity: 0.5;
+}
+.unreadBadge {
+  color: $theme-background-secondary;
+  background: $theme-ui-secondary;
+  padding: 0 4px;
+  min-width: 24px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  &[data-is-noticeable] {
+    background: $theme-accent-notification;
+  }
 }
 .children {
   display: block;
