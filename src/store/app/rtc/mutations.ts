@@ -4,17 +4,17 @@ import {
   UserRTCState,
   SessionInfo,
   SessionId,
-  ExtendedMediaStream
+  ExtendedMediaStream,
+  SessionType
 } from './state'
 import { WebRTCUserState } from '@traptitech/traq'
 import Vue from 'vue'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
 
-const toSessionInfo = (
-  sessionId: SessionId,
-  channelId: ChannelId
-): SessionInfo => {
+const extractSessionTypeFromSessionId = (
+  sessionId: SessionId
+): { sessionId: SessionId; type: SessionType } => {
   const [sessionType, id] = sessionId.split('-')
   if (
     id &&
@@ -24,12 +24,19 @@ const toSessionInfo = (
   ) {
     return {
       sessionId,
-      channelId,
       type: sessionType
     }
   }
   throw 'invalid session id'
 }
+
+const toSessionInfo = (
+  sessionId: SessionId,
+  channelId: ChannelId
+): SessionInfo => ({
+  ...extractSessionTypeFromSessionId(sessionId),
+  channelId
+})
 
 const toUserRTCState = (userState: WebRTCUserState): UserRTCState => ({
   channelId: userState.channelId,
@@ -42,17 +49,24 @@ const toUserRTCState = (userState: WebRTCUserState): UserRTCState => ({
 /** 現在のチャンネルセッションと、新規に追加するユーザー状態が整合性をもつか */
 const isSessionCompatible = (
   channelSessionsMap: Record<ChannelId, SessionId[] | undefined>,
+  sessionIdSessionTypeMap: Record<SessionId, SessionType | undefined>,
   userSessionState: UserRTCState
 ) => {
-  // チャンネルにセッションが立っていないか、既存セッションの部分集合か
-  const currentSessions = channelSessionsMap[userSessionState.channelId]
-  if (!currentSessions) return true
+  // チャンネルにまだセッションがなければOK
+  const targetChannelSessionIds = channelSessionsMap[userSessionState.channelId]
+  if (!targetChannelSessionIds) return true
 
-  const sessionInfoSet = new Set<SessionId>([
-    ...currentSessions,
-    ...userSessionState.sessionStates.map(s => s.sessionId)
-  ])
-  return sessionInfoSet.size <= currentSessions.length
+  // 追加しようとしているセッションの種別が現在のものと矛盾していたらダメ
+  return userSessionState.sessionStates.every(userSessionStateToAdd => {
+    const correspondingSessionType =
+      sessionIdSessionTypeMap[userSessionStateToAdd.sessionId]
+    const sessionTypeToAdd = extractSessionTypeFromSessionId(
+      userSessionStateToAdd.sessionId
+    ).type
+    return (
+      !correspondingSessionType || correspondingSessionType === sessionTypeToAdd
+    )
+  })
 }
 
 export const mutations = defineMutations<S>()({
@@ -61,9 +75,20 @@ export const mutations = defineMutations<S>()({
     const channelSessionsMap: typeof state.channelSessionsMap = {}
     const sessionInfoMap: typeof state.sessionInfoMap = {}
     const sessionUsersMap: typeof state.sessionUsersMap = {}
+    const sessionIdSessionTypeMap = Object.fromEntries(
+      Object.entries(state.sessionInfoMap)
+        .map(([id, info]) => [id, info?.type])
+        .filter((e): e is [SessionId, SessionType] => !!e[1])
+    )
     payload.forEach(rtcState => {
       const userSessionState = toUserRTCState(rtcState)
-      if (!isSessionCompatible(channelSessionsMap, userSessionState)) {
+      if (
+        !isSessionCompatible(
+          channelSessionsMap,
+          sessionIdSessionTypeMap,
+          userSessionState
+        )
+      ) {
         throw 'channel session conflict'
       }
 
@@ -88,7 +113,18 @@ export const mutations = defineMutations<S>()({
   },
   updateRTCState(state, payload: WebRTCUserState) {
     const userSessionState = toUserRTCState(payload)
-    if (!isSessionCompatible(state.channelSessionsMap, userSessionState)) {
+    const sessionIdSessionTypeMap = Object.fromEntries(
+      Object.entries(state.sessionInfoMap)
+        .map(([id, info]) => [id, info?.type])
+        .filter((e): e is [SessionId, SessionType] => !!e[1])
+    )
+    if (
+      !isSessionCompatible(
+        state.channelSessionsMap,
+        sessionIdSessionTypeMap,
+        userSessionState
+      )
+    ) {
       throw 'channel session conflict'
     }
 
