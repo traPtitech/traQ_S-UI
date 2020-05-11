@@ -50,6 +50,9 @@ export const actions = defineActions({
     ) {
       dispatch.fetchSubscribers()
     }
+    if (!payload.isDM) {
+      dispatch.fetchBots()
+    }
   },
 
   /** クリップフォルダに移行 */
@@ -78,6 +81,12 @@ export const actions = defineActions({
     if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelSubscribers(state.currentChannelId)
     commit.setSubscribers(res.data)
+  },
+  async fetchBots(context) {
+    const { state, commit } = messagesViewActionContext(context)
+    if (!state.currentChannelId) throw 'no channel id'
+    const res = await apis.getChannelBots(state.currentChannelId)
+    commit.setBots(res.data.map(bot => bot.botUserId))
   },
   async fetchChannelLatestMessage(context) {
     const { state, commit, dispatch, rootDispatch } = messagesViewActionContext(
