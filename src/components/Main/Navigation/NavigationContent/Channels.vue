@@ -28,7 +28,6 @@ import { defineComponent, computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
-import FilterInput from '@/components/UI/FilterInput.vue'
 import { constructTree } from '@/store/domain/channelTree/actions'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
@@ -92,7 +91,6 @@ export default defineComponent({
   name: 'Channels',
   components: {
     ChannelList,
-    FilterInput,
     ChannelFilter
   },
   setup() {

@@ -16,18 +16,28 @@ const useTextFilter = <T, K extends keyof T>(
       if (state.query.length === 0) {
         return items.value
       }
+      const query = state.query.toLowerCase()
       if (state.query.length === 1) {
-        return oneLetterItems.value.filter(item =>
-          ((item[searchTargetKey] as unknown) as string)
-            .toLowerCase()
-            .startsWith(state.query.toLowerCase())
+        return oneLetterItems.value.filter(
+          item =>
+            ((item[searchTargetKey] as unknown) as string).toLowerCase() ===
+            query
         )
       }
-      return items.value.filter(item =>
-        ((item[searchTargetKey] as unknown) as string)
-          .toLowerCase()
-          .includes(state.query.toLowerCase())
-      )
+
+      let fullMatched: T | undefined
+      const matched: T[] = []
+      for (const item of items.value) {
+        const keyValue = ((item[
+          searchTargetKey
+        ] as unknown) as string).toLowerCase()
+        if (keyValue === query) {
+          fullMatched = item
+        } else if (keyValue.includes(query)) {
+          matched.push(item)
+        }
+      }
+      return fullMatched ? [fullMatched, ...matched] : matched
     })
   })
   const setQuery = (query: string) => {
