@@ -11,6 +11,7 @@ import {
 import { detectMentionOfMe } from '@/lib/detector'
 import store from '@/store'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
+import { removeNotification } from '@/lib/firebase'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 const updateBadge = async () => {
@@ -85,6 +86,7 @@ export const mutations = defineMutations<S>()({
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     Vue.delete(state.unreadChannelsSet, channelId)
     updateBadge()
+    removeNotification(channelId)
   },
 
   setStaredChannels(state: S, channelIds: ChannelId[]) {
