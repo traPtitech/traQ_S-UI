@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-type="toast.type">
+  <div :class="$style.container" :data-type="toast.type" @click="remove">
     <icon :class="$style.icon" :name="iconName" mdi :size="32" />
     <div :class="$style.text">{{ toast.text }}</div>
   </div>
@@ -24,14 +24,21 @@ const iconNameMap: Record<Toast['type'], string> = {
 
 const useAutoHide = (props: { toast: Toast }) => {
   let timer: number | undefined
+
+  const remove = () => {
+    store.commit.ui.toast.deleteToast(props.toast.id)
+  }
+
   onMounted(() => {
     timer = window.setTimeout(() => {
-      store.commit.ui.toast.deleteToast(props.toast.id)
+      remove()
     }, props.toast.timeout)
   })
   onUnmounted(() => {
     window.clearTimeout(timer)
   })
+
+  return { remove }
 }
 
 export default defineComponent({
@@ -46,10 +53,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    useAutoHide(props)
+    const { remove } = useAutoHide(props)
 
     const iconName = computed(() => iconNameMap[props.toast.type])
-    return { iconName }
+    return { remove, iconName }
   }
 })
 </script>
