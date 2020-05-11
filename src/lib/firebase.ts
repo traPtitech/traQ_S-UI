@@ -115,6 +115,7 @@ export const connectFirebase = async () => {
     if (permission !== 'granted') {
       // eslint-disable-next-line no-console
       console.warn(`[Notification] permission ${permission}`)
+      return
     }
 
     messaging.onMessage(async (payload: NotificationPayload) => {
