@@ -17,7 +17,7 @@
         :class="$style.toolsMenu"
         :show-notification-setting-btn="!channelState.forced"
         :has-active-qall-session="hasActiveQallSession"
-        :is-screen-qalln-opened="isQallSessionOpened"
+        :is-qall-session-opened="isQallSessionOpened"
         :is-joined-qall-session="isJoinedQallSession"
         :has-active-screen-share-session="hasActiveScreenShareSession"
         :is-screen-share-session-opened="isScreenShareSessionOpened"
