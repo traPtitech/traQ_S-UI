@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
+    <transition-group name="slide-fade">
+      <toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
+    </transition-group>
   </div>
 </template>
 
@@ -27,7 +29,7 @@ export default defineComponent({
   left: 20px;
   bottom: 20px;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   pointer-events: none;
 }
 </style>

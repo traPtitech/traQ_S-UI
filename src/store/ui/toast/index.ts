@@ -4,7 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export const DEFAULT_TOAST_TIMEOUT = 1000
+export const DEFAULT_TOAST_TIMEOUT = 1500
 
 export interface Toast {
   /**

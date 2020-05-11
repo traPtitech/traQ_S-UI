@@ -9,7 +9,7 @@ export const mutations = defineMutations<S>()({
     state,
     toast: Omit<Toast, 'timeout' | 'id'> & { timeout?: number }
   ) => {
-    state.toasts.push({
+    state.toasts.unshift({
       ...toast,
       timeout: toast.timeout ?? DEFAULT_TOAST_TIMEOUT,
       id: nextId
