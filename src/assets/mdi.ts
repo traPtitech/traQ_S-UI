@@ -112,8 +112,8 @@ const mdi: MdiIconsMapping = {
   tune: mdiTuneVertical,
   'comment-multiple-outline': mdiCommentMultipleOutline,
   star: mdiStar,
-  info: mdiInformationOutline,
   'comment-quote': mdiCommentQuote
+  'info-outline': mdiInformationOutline,
 }
 
 export default mdi

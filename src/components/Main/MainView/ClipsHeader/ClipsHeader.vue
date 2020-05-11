@@ -11,7 +11,7 @@
       <main-view-header-tools-item
         @click="openSidebar"
         icon-mdi
-        icon-name="info"
+        icon-name="info-outline"
       />
     </template>
   </main-view-header>
