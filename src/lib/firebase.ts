@@ -8,6 +8,7 @@ import apis from './apis'
 import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
+import { ChannelId, DMChannelId } from '@/types/entity-ids'
 
 declare const window: NativeAppWindow
 
@@ -152,4 +153,15 @@ export const connectFirebase = async () => {
     const token = await messaging.getToken()
     apis.registerFCMDevice({ token })
   }
+}
+
+export const removeNotification = async (
+  channelId: ChannelId | DMChannelId
+) => {
+  const registration = await navigator.serviceWorker.getRegistration()
+  if (!registration) return
+  const notifications = await registration.getNotifications({
+    tag: `c:${channelId}`
+  })
+  notifications?.forEach(notification => notification.close())
 }
