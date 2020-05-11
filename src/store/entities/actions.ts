@@ -56,6 +56,7 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await apis.getUser(userId)
     commit.addUser({ id: userId, entity: res.data })
+    return res.data
   },
   async fetchUsers(context) {
     const { commit } = entitiesActionContext(context)
