@@ -1,9 +1,13 @@
 <template>
   <div :class="$style.container">
-    <channel-sidebar-pinned-list-item
+    <message-panel
       v-for="message in pinnedMessage"
       :key="message.message.id"
+      title-type="user"
+      hide-subtitle
+      line-clamp-content
       :message="message.message"
+      @click="onMessageSelect(message.message.id)"
       :class="$style.sidebarItem"
     />
   </div>
@@ -12,11 +16,12 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { Pin } from '@traptitech/traq'
-import ChannelSidebarPinnedListItem from './ChannelSidebarPinnedListItem.vue'
+import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
+import { MessageId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarPinnedList',
-  components: { ChannelSidebarPinnedListItem },
+  components: { MessagePanel },
   props: {
     pinnedMessage: { type: Array as PropType<Pin[]>, default: [] }
   },
@@ -24,7 +29,12 @@ export default defineComponent({
     const closeBar = () => {
       context.emit('closeBar')
     }
-    return { closeBar }
+
+    const onMessageSelect = (messageId: MessageId) => {
+      context.root.$router.push(`/messages/${messageId}`)
+    }
+
+    return { closeBar, onMessageSelect }
   }
 })
 </script>
@@ -33,7 +43,6 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   @include background-secondary;
-  padding-bottom: 32px;
 }
 
 .sidebarItem {
