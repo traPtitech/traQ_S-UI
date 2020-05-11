@@ -41,7 +41,7 @@ export default defineComponent({
   @include size-body2;
   display: flex;
   align-items: center;
-  word-break: keep-all;
+  word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   &[data-is-title] {
@@ -55,5 +55,16 @@ export default defineComponent({
 }
 .displayName {
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .container[data-is-title] & {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    word-break: break-all;
+  }
 }
 </style>

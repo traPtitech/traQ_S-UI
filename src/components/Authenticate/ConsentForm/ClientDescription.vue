@@ -86,8 +86,8 @@ export default defineComponent({
   text-align: center;
 }
 .descContent {
-  word-break: keep-all;
   min-width: 0;
+  word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   margin: auto 0;

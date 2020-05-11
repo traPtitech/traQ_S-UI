@@ -71,6 +71,8 @@ export default defineComponent({
   font-weight: bold;
   word-break: keep-all;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .badge {
@@ -84,8 +86,6 @@ export default defineComponent({
 
   word-break: keep-all;
   white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .date {
@@ -97,5 +97,6 @@ export default defineComponent({
 .editIcon {
   @include color-ui-secondary;
   margin-left: 4px;
+  flex-shrink: 0;
 }
 </style>
