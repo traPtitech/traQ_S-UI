@@ -47,11 +47,12 @@ export const mutations = defineMutations<S>()({
     updateBadge()
   },
   upsertUnreadChannel(state: S, message: Message) {
-    const noticeable = detectMentionOfMe(
-      message.content,
-      state.detail?.id ?? '',
-      state.detail?.groups ?? []
-    )
+    const noticeable =
+      detectMentionOfMe(
+        message.content,
+        state.detail?.id ?? '',
+        state.detail?.groups ?? []
+      ) || store.state.entities.channels[message.channelId].force
 
     if (
       !(
