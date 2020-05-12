@@ -53,7 +53,7 @@ const useCopy = (context: SetupContext) => {
       )
       store.commit.ui.toast.addToast({
         type: 'info',
-        text: 'チャンネルリンクを正常にコピーできました'
+        text: 'チャンネルリンクをコピーしました'
       })
     } catch {
       store.commit.ui.toast.addToast({
