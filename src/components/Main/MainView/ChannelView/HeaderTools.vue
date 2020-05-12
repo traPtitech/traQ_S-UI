@@ -58,7 +58,7 @@ const useCopy = (context: SetupContext) => {
     } catch {
       store.commit.ui.toast.addToast({
         type: 'error',
-        text: 'チャンネルリンクをコピーするのに失敗しました'
+        text: 'チャンネルリンクをコピーできませんでした'
       })
     }
   }
