@@ -6,12 +6,13 @@ import {
   needDimentionSwap,
   getOrientation
 } from './orientation'
-import { isIOS } from '../util/browser'
+import { isIOS, isFirefox } from '../util/browser'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
 const isJpeg = (mime: string) => mime === 'image/jpeg'
-const iOSFlag = isIOS()
+
+const needRotation = isIOS() || isFirefox()
 
 export const resize = async (inputFile: File): Promise<File | null> => {
   start()
@@ -30,7 +31,7 @@ export const resize = async (inputFile: File): Promise<File | null> => {
     }
 
     // iOSでは画像の回転を手動適用
-    if (iOSFlag && isJpeg(inputFile.type)) {
+    if (needRotation && isJpeg(inputFile.type)) {
       const orientation = await getOrientation(inputFile)
       resetAndSetRotatedImgToCanvas($input, inputSize, $img, orientation)
       // resetAndSetRotatedImgToCanvas内では入れ替え前の値がほしいため、そのあとで行う
