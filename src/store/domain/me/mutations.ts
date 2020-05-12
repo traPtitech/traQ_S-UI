@@ -53,7 +53,7 @@ export const mutations = defineMutations<S>()({
         message.content,
         state.detail?.id ?? '',
         state.detail?.groups ?? []
-      ) || store.state.entities.channels[message.channelId].force
+      ) || store.state.entities.channels[message.channelId]?.force
 
     if (
       !(
