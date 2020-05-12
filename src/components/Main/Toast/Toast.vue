@@ -67,6 +67,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   width: 320px;
+  max-width: calc(100vw - 40px);
   margin: 12px 0;
   padding: 8px;
   border-radius: 4px;
