@@ -16,3 +16,22 @@ $vs-reverse: 'vertical-swap-reverse';
 .#{$vs}-leave-to {
   transform: translateY(-100%);
 }
+
+$sf: 'slide-fade';
+.#{$sf}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$sf}-leave-active {
+  transition: all 0.8s $easeInExpo;
+}
+.#{$sf}-enter {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.#{$sf}-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+.#{$sf}-move {
+  transition: transform 3s;
+}

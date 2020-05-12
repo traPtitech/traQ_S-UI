@@ -43,12 +43,24 @@ import useChannelCreateModal from './use/channelCreateModal'
 import HeaderToolsList, { targetPortalName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
+import store from '@/store'
 
 const useCopy = (context: SetupContext) => {
   const copyLink = async () => {
-    await clipboard.writeText(
-      `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
-    )
+    try {
+      await clipboard.writeText(
+        `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
+      )
+      store.commit.ui.toast.addToast({
+        type: 'info',
+        text: 'チャンネルリンクをコピーしました'
+      })
+    } catch {
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'チャンネルリンクをコピーできませんでした'
+      })
+    }
   }
   return { copyLink }
 }
