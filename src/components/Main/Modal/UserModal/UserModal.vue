@@ -128,7 +128,7 @@ export default defineComponent({
   position: absolute;
   top: 12px;
   right: 12px;
-  z-index: 1;
+  z-index: $z-index-user-modal-header;
 }
 
 .icon {
@@ -137,7 +137,7 @@ export default defineComponent({
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: $z-index-user-modal-header;
   margin: auto;
   border: 6px solid $theme-background-secondary;
 }

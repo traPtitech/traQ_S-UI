@@ -119,6 +119,6 @@ export default defineComponent({
   position: absolute;
   right: 0;
   top: 100%;
-  z-index: 999;
+  z-index: $z-index-header-tools;
 }
 </style>
