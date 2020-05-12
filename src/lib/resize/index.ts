@@ -50,7 +50,7 @@ export const resize = async (inputFile: File): Promise<File | null> => {
       quality: 2
     })
 
-    const output = await pica.toBlob($output, 'image/png')
+    const output = await pica.toBlob($output, inputFile.type)
     const outputFile = new File([output], inputFile.name, {
       type: inputFile.type,
       lastModified: inputFile.lastModified
