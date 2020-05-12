@@ -5,6 +5,16 @@ export const isSafari = () => {
   return ua.includes('safari') && !ua.includes('chrome') && !ua.includes('edge')
 }
 
+export const isIOS = () => {
+  const ua = navigator.userAgent
+  return (
+    isIOSApp() ||
+    ua.includes('iPhone') ||
+    ua.includes('iPod') ||
+    ua.includes('iPad')
+  )
+}
+
 export const isIOSApp = () => {
   return navigator.userAgent.includes('traQ-iOS')
 }
@@ -14,14 +24,7 @@ export const isPWA = () => {
 }
 
 export const isTouchDevice = () => {
-  const ua = navigator.userAgent
-  return (
-    ua.includes('traQ-iOS') ||
-    ua.includes('iPhone') ||
-    ua.includes('iPod') ||
-    ua.includes('iPad') ||
-    ua.includes('Android')
-  )
+  return isIOS() || navigator.userAgent.includes('Android')
 }
 
 // https://github.com/ianstormtaylor/slate/blob/7377266b43451c4be44a1442aa1076ef3d13227e/packages/slate-dev-environment/src/index.js#L74-L79
