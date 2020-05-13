@@ -100,7 +100,7 @@ export default defineComponent({
     },
     isReachedEnd: { type: Boolean, required: true },
     isReachedLatest: { type: Boolean, required: true },
-    entryMessageId: String as PropType<MessageId>,
+    entryMessageId: { type: String as PropType<MessageId> },
     isLoading: {
       type: Boolean,
       default: false
