@@ -1,6 +1,11 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
     <div :class="$style.viewport">
+      <messages-scroller-separator
+        v-if="isReachedEnd"
+        title="これ以上メッセージはありません"
+        :class="$style.noMoreSeparator"
+      />
       <div
         v-for="(messageId, index) in messageIds"
         :key="messageId"
@@ -255,7 +260,8 @@ export default defineComponent({
   color: $theme-accent-notification;
 }
 
-.dateSeparator {
+.dateSeparator,
+.noMoreSeparator {
   color: $theme-ui-secondary;
 }
 </style>
