@@ -5,8 +5,8 @@
     :data-include-me="state.includeMe"
     @click="onClick"
   >
-    <stamp :stamp-id="stampId" :size="20" without-title />
-    <spin-number :value="state.count" :class="$style.count" />
+    <stamp :stamp-id="stamp.id" :size="20" without-title />
+    <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
 </template>
 
@@ -19,47 +19,37 @@ import {
   PropType
 } from '@vue/composition-api'
 import store from '@/store'
-import { MessageStamp } from '@traptitech/traq'
-import { StampId } from '@/types/entity-ids'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'
+import { MessageStampById } from './MessageStampList.vue'
 
 export default defineComponent({
   name: 'StampElement',
   components: { Stamp, SpinNumber },
   props: {
-    stampId: {
-      type: String as PropType<StampId>,
-      required: true
-    },
-    stamps: {
-      type: Array as PropType<MessageStamp[]>,
+    stamp: {
+      type: Object as PropType<MessageStampById>,
       required: true
     }
   },
   setup(props, context) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stampId]?.name
+      () => store.state.entities.stamps[props.stamp.id]?.name
     )
 
     const state = reactive({
-      count: computed(() =>
-        props.stamps.reduce((acc, cur) => {
-          return acc + cur.count
-        }, 0)
-      ),
       includeMe: computed(() =>
-        props.stamps.some(
-          stamp => stamp.userId === store.state.domain.me.detail?.id
+        props.stamp.users.some(
+          user => user.id === store.state.domain.me.detail?.id
         )
       ),
       tooltip: computed(() =>
         [
           `:${stampName.value}:`,
-          ...props.stamps.map(
-            s =>
-              `${store.state.entities.users[s.userId]?.displayName ?? ''}(${
-                s.count
+          ...props.stamp.users.map(
+            u =>
+              `${store.state.entities.users[u.id]?.displayName ?? ''}(${
+                u.count
               })`
           )
         ].join(' ')
@@ -70,14 +60,14 @@ export default defineComponent({
     const onClick = () => {
       if (state.isProgress) return
       if (state.includeMe) {
-        context.emit('remove-stamp', props.stampId)
+        context.emit('remove-stamp', props.stamp.id)
       } else {
-        context.emit('add-stamp', props.stampId)
+        context.emit('add-stamp', props.stamp.id)
       }
       state.isProgress = true
     }
     watch(
-      () => props.stamps,
+      () => props.stamp,
       () => {
         state.isProgress = false
       }
