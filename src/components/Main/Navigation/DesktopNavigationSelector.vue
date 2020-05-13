@@ -95,10 +95,10 @@ export default defineComponent({
 .logo {
   @include color-accent-primary;
   padding: 8px;
-  margin: 8px 0;
+  margin: 8px;
 }
 .item {
-  margin: 8px 0;
+  margin: 8px;
 }
 .separator {
   @include background-tertiary;

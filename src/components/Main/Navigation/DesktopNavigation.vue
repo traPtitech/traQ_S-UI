@@ -72,9 +72,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$selectorWidth: 64px;
-$ephemeralNavigationLeftMargin: 8px;
-$ephemeralNavigationRightMargin: 16px;
+$ephemeralNavigationSideMargin: 8px;
 $ephemeralNavigationMinHeight: 64px;
 
 .container {
@@ -87,7 +85,6 @@ $ephemeralNavigationMinHeight: 64px;
 .selector {
   display: flex;
   flex-direction: column;
-  width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
   overflow: {
@@ -105,10 +102,8 @@ $ephemeralNavigationMinHeight: 64px;
   width: 100%;
 }
 .ephemeralNavigation {
-  width: #{calc(
-      100% - #{$ephemeralNavigationLeftMargin + $ephemeralNavigationRightMargin}
-    )};
-  margin-left: $ephemeralNavigationLeftMargin;
+  width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};
+  margin: 0 $ephemeralNavigationSideMargin;
   flex: 0 1 $ephemeralNavigationMinHeight;
 }
 </style>
