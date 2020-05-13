@@ -87,10 +87,13 @@ $ephemeralNavigationMinHeight: 64px;
 .selector {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 .navigations {
   display: flex;
