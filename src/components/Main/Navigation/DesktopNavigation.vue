@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="navigationStyle">
+  <div :class="$style.container">
     <div :class="$style.selector">
       <desktop-navigation-selector
         @navigation-change="onNavigationChange"
@@ -39,7 +39,6 @@ import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavig
 import DesktopToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'DesktopNavigation',
@@ -59,11 +58,6 @@ export default defineComponent({
       onEphemeralEntryAdd
     } = useNavigation()
 
-    const navigationStyle = makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.primary
-    }))
-
     return {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
@@ -71,7 +65,6 @@ export default defineComponent({
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
       onEphemeralEntryAdd,
-      navigationStyle,
       targetPortalName
     }
   }
@@ -85,6 +78,8 @@ $ephemeralNavigationRightMargin: 16px;
 $ephemeralNavigationMinHeight: 64px;
 
 .container {
+  @include color-ui-primary;
+  @include background-secondary;
   display: flex;
   width: 100%;
   height: 100%;

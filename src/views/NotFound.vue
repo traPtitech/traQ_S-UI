@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="style.container">
+  <div :class="$style.container">
     <h1>
       Not Found
     </h1>
@@ -12,16 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
-
-const useStyle = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary,
-      background: theme.background.primary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'NotFound',
@@ -30,15 +21,15 @@ export default defineComponent({
     routeParam: String
   },
   setup() {
-    return {
-      style: useStyle()
-    }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-primary;
   height: 100%;
   padding: 1rem;
 }

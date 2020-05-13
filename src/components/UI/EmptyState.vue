@@ -1,27 +1,23 @@
 <template>
-  <div :class="$style.container" :style="containerStyle">
+  <div :class="$style.container">
     <slot></slot>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'EmptyState',
   setup() {
-    return {
-      containerStyle: makeStyles(theme => ({
-        color: theme.ui.tertiary
-      }))
-    }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-tertiary;
   display: flex;
   justify-content: center;
   width: 100%;
