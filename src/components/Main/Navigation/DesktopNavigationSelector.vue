@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <icon :class="$style.logo" name="traQ" :size="44" />
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -90,6 +91,11 @@ export default defineComponent({
   flex: 1 0;
   align-items: center;
   padding: 8px 0;
+}
+.logo {
+  @include color-accent-primary;
+  padding: 8px;
+  margin: 8px 0;
 }
 .item {
   margin: 8px 0;
