@@ -18,8 +18,8 @@ export default defineComponent({
   @include background-primary;
   border-radius: 4px;
   width: 100%;
-  margin: 16px;
   max-width: 480px;
   padding: 48px;
+  margin: auto;
 }
 </style>
