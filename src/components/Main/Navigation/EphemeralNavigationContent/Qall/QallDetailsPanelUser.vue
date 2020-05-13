@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <user-icon :user-id="userId" :size="24" />
-    <div>
+    <div :class="$style.userDesc">
       <slider
         v-if="showVolumeControl"
         :value="volume"
@@ -103,10 +103,17 @@ export default defineComponent({
 .tuneDone {
   @include color-accent-primary;
 }
+.userDesc {
+  min-width: 0;
+}
 .userName {
   @include color-ui-secondary;
   @include size-body2;
-  display: flex;
-  align-items: center;
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
