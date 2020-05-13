@@ -41,5 +41,6 @@ export default defineComponent({
 .pin {
   color: $common-ui-pin;
   margin-right: 8px;
+  flex-shrink: 0;
 }
 </style>
