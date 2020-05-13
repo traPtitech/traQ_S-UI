@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <icon name="pin" mdi :size="16" :class="$style.pin" />
-    {{ username }}さんがピン留めしました
+    {{ userDisplayName }}さんがピン留めしました
   </div>
 </template>
 
@@ -20,14 +20,14 @@ export default defineComponent({
     messageId: String as PropType<MessageId>
   },
   setup(props) {
-    const username = computed(() => {
+    const userDisplayName = computed(() => {
       const pin = store.state.domain.messagesView.pinnedMessages.find(
         v => v.message.id === props.messageId
       )
       const user = store.state.entities.users[pin?.userId ?? '']
-      return user?.name
+      return user?.displayName
     })
-    return { username }
+    return { userDisplayName }
   }
 })
 </script>
