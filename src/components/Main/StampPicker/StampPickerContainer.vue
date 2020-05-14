@@ -65,7 +65,7 @@ export default defineComponent({
 <style lang="scss" module>
 .positionAbsolute {
   position: absolute;
-  z-index: 999;
+  z-index: $z-index-stamp-picker;
   transform: translateX(-100%);
   contain: strict;
 }

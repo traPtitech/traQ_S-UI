@@ -106,5 +106,6 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.15);
+  z-index: $z-index-modal-container;
 }
 </style>

@@ -72,6 +72,6 @@ $margin: 16px;
   margin: auto;
   height: min-content;
   max-height: calc(100% - #{$margin * 2});
-  z-index: 999;
+  z-index: $z-index-services;
 }
 </style>

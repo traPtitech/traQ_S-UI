@@ -63,7 +63,7 @@ export default defineComponent({
 .header {
   width: 100%;
   backdrop-filter: blur(4px);
-  z-index: 1;
+  z-index: $z-index-file-modal-header;
   opacity: 0;
   transition: all 0.2s ease;
   flex-shrink: 0;
@@ -75,7 +75,7 @@ export default defineComponent({
 .footer {
   width: 100%;
   backdrop-filter: blur(4px);
-  z-index: 1;
+  z-index: $z-index-file-modal-footer;
   opacity: 0;
   transition: all 0.2s ease;
   flex-shrink: 0;

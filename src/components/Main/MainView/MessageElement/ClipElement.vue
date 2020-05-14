@@ -129,7 +129,7 @@ $messagePaddingMobile: 16px;
   position: absolute;
   top: 4px;
   right: 16px;
-  z-index: 1;
+  z-index: $z-index-message-element-tools;
 }
 
 .footer {

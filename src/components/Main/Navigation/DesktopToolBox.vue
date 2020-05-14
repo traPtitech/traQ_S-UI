@@ -69,6 +69,6 @@ $header-width: 64px;
   bottom: $header-width;
   left: $header-width;
   max-width: min(calc(100vw - #{$header-width * 2}), 500px);
-  z-index: 999;
+  z-index: $z-index-services;
 }
 </style>

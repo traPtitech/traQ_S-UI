@@ -64,7 +64,7 @@ export default defineComponent({
   top: 0;
   width: 100%;
   backdrop-filter: blur(4px);
-  z-index: 1;
+  z-index: $z-index-file-modal-header;
   opacity: 0;
   transition: all 0.2s ease;
   background: linear-gradient(to bottom, $common-background-black, transparent);
@@ -82,7 +82,7 @@ export default defineComponent({
   bottom: 0;
   width: 100%;
   backdrop-filter: blur(4px);
-  z-index: 1;
+  z-index: $z-index-file-modal-footer;
   opacity: 0;
   transition: all 0.2s ease;
   background: linear-gradient(to top, $common-background-black, transparent);

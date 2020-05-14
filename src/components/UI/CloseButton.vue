@@ -65,6 +65,7 @@ export default defineComponent({
 }
 
 .circle {
+  @include color-ui-secondary;
   display: flex;
   justify-content: center;
   align-items: center;

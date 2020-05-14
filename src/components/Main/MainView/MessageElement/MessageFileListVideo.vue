@@ -59,7 +59,7 @@ export default defineComponent({
   width: 100%;
   background: $common-background-overlay;
   cursor: pointer;
-  z-index: 1;
+  z-index: $z-index-message-attachment-video-overlay;
   backdrop-filter: blur(0px);
   opacity: 0;
   transition: all 0.2s ease;
