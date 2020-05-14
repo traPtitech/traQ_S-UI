@@ -1,7 +1,7 @@
 import { defineGetters } from 'direct-vuex'
 import { S, SessionType } from './state'
 import { ChannelId, UserId } from '@/types/entity-ids'
-import { talkingThreshoulds } from '@/lib/audioStreamMixer'
+import { getTalkingLoundnessLevel } from '@/lib/audioStreamMixer'
 import { rtc } from '.'
 import { moduleGetterContext } from '@/store'
 
@@ -43,6 +43,6 @@ export const getters = defineGetters<S>()({
   },
   getTalkingLoudnessLevel: state => (userId: UserId) => {
     const level = state.mixer?.getLevelOf(userId)
-    return level ? talkingThreshoulds.filter(ts => ts < level).length : 0
+    return getTalkingLoundnessLevel(level)
   }
 })

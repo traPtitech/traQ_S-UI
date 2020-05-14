@@ -58,7 +58,7 @@ export interface S {
   /** 他ユーザーのオーディオ */
   remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
 
-  /** 現在発話しているユーザーを判定するrequestAnimationFrameのID */
+  /** 現在発話しているユーザーを判定するsetIntervalのID */
   talkingStateUpdateId: number
 
   /** 現在発話してるユーザーの声の大きさのレベル */

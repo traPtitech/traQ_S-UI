@@ -4,6 +4,15 @@ export const maxGain = 5
 export const maxMasterGain = 3
 export const talkingThreshoulds = [300, 1000, 3000, 5000]
 
+export const getTalkingLoundnessLevel = (level = 0) => {
+  let ll = 0
+  for (const t of talkingThreshoulds) {
+    if (level < t) return ll
+    ll++
+  }
+  return ll
+}
+
 type WebkitWindow = Window &
   typeof globalThis & {
     webkitAudioContext: AudioContext
@@ -19,6 +28,9 @@ export default class AudioStreamMixer {
   private fileVolume = 0.25
   private previousVolumeMap: Record<string, number> = {}
   readonly analyserFftSize = 128
+  private readonly frequencyUint8Array = new Uint8Array(
+    this.analyserFftSize / 2
+  )
 
   constructor() {
     this.context = new (window.AudioContext ||
@@ -148,20 +160,12 @@ export default class AudioStreamMixer {
     this.fileVolume = volume
   }
 
-  public getByteFrequencyDataOfNode(node?: AnalyserNode) {
-    if (!node) {
-      return new Uint8Array()
-    }
-    const arr = new Uint8Array(this.analyserFftSize / 2)
-    node.getByteFrequencyData(arr)
-    return arr
-  }
+  public getLevelOfNode(node?: AnalyserNode) {
+    if (!node) return 0
 
-  public getLevelOfNode(node: AnalyserNode) {
-    return this.getByteFrequencyDataOfNode(node).reduce(
-      (acc, cur) => acc + cur,
-      0
-    )
+    const arr = this.frequencyUint8Array
+    node.getByteFrequencyData(arr)
+    return arr.reduce((acc, cur) => acc + cur, 0)
   }
 
   public getLevelOf(key: string) {

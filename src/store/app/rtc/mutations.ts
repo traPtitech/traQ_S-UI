@@ -214,14 +214,12 @@ export const mutations = defineMutations<S>()({
       state.mixer.setVolumeOf(userId, volume)
     }
   },
-  setTalkingUsersState(
-    state,
-    {
-      nextId,
-      talkingUsersState
-    }: { nextId: number; talkingUsersState: Record<UserId, number> }
-  ) {
-    state.talkingStateUpdateId = nextId
-    state.talkingUsersState = talkingUsersState
+  setTalkingStateUpdateId(state, id: number) {
+    state.talkingStateUpdateId = id
+  },
+  updateTalkingUserState(state, diffState: Record<UserId, number>) {
+    Object.entries(diffState).forEach(([userId, loudnessLevel]) => {
+      Vue.set(state.talkingUsersState, userId, loudnessLevel)
+    })
   }
 })
