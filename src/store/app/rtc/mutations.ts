@@ -164,12 +164,14 @@ export const mutations = defineMutations<S>()({
   },
   setLocalStream(state, mediaStream: ExtendedMediaStream) {
     state.localStream = mediaStream
+    state.localAnalyzerNode = state.mixer?.createAnalyzer(mediaStream)
   },
   unsetLocalStream(state) {
     if (state.localStream) {
       state.localStream.getTracks().forEach(t => t.stop())
     }
     state.localStream = undefined
+    state.localAnalyzerNode = undefined
   },
   muteLocalStream(state) {
     if (!state.localStream) return

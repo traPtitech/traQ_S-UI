@@ -48,6 +48,15 @@ export default class AudioStreamMixer {
     return { source, gain, analyser }
   }
 
+  createAnalyzer(mediaStream: MediaStream) {
+    const source = this.context.createMediaStreamSource(mediaStream)
+    const analyser = this.context.createAnalyser()
+    analyser.fftSize = this.analyserFftSize
+
+    source.connect(analyser)
+    return analyser
+  }
+
   private disconnectNodeGraph(
     source: MediaStreamAudioSourceNode,
     analyser: AnalyserNode,
@@ -139,17 +148,24 @@ export default class AudioStreamMixer {
     this.fileVolume = volume
   }
 
-  public getByteFrequencyDataOf(key: string) {
-    if (!this.analyserNodeMap[key]) {
+  public getByteFrequencyDataOfNode(node?: AnalyserNode) {
+    if (!node) {
       return new Uint8Array()
     }
     const arr = new Uint8Array(this.analyserFftSize / 2)
-    this.analyserNodeMap[key].getByteFrequencyData(arr)
+    node.getByteFrequencyData(arr)
     return arr
   }
 
+  public getLevelOfNode(node: AnalyserNode) {
+    return this.getByteFrequencyDataOfNode(node).reduce(
+      (acc, cur) => acc + cur,
+      0
+    )
+  }
+
   public getLevelOf(key: string) {
-    return this.getByteFrequencyDataOf(key).reduce((acc, cur) => acc + cur, 0)
+    return this.getLevelOfNode(this.analyserNodeMap[key])
   }
 
   public muteAll() {

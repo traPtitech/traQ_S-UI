@@ -5,7 +5,7 @@ import apis from '@/lib/apis'
 import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer from '@/lib/audioStreamMixer'
+import AudioStreamMixer, { talkingThreshould } from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
@@ -276,11 +276,20 @@ export const actions = defineActions({
   },
 
   updateTalkState(context) {
-    const { commit, getters, dispatch } = rtcActionContext(context)
+    const { rootState, state, commit, getters, dispatch } = rtcActionContext(
+      context
+    )
     const talkingUsers = getters.currentSessionUsers.filter(
       userId =>
         !getters.currentMutedUsers.includes(userId) && getters.isTalking(userId)
     )
+    if (state.localAnalyzerNode && rootState.domain.me.detail?.id) {
+      const level = state.mixer?.getLevelOfNode(state.localAnalyzerNode) ?? 0
+      console.log(level, level > talkingThreshould)
+      if (level > talkingThreshould) {
+        talkingUsers.push(rootState.domain.me.detail.id)
+      }
+    }
     const nextId = requestAnimationFrame(dispatch.updateTalkState)
     commit.setTalkingUsers({ nextId, talkingUsers })
   },

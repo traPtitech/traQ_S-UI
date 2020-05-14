@@ -31,6 +31,9 @@ export interface S {
   /** 送信するMediaStream */
   localStream?: ExtendedMediaStream
 
+  /** 送信するMediaStreamのAnalyzerNode */
+  localAnalyzerNode?: AnalyserNode
+
   /** マイクミュート */
   isMicMuted: boolean
 
@@ -65,6 +68,7 @@ export interface S {
 export const state: S = {
   mixer: undefined,
   localStream: undefined,
+  localAnalyzerNode: undefined,
   isMicMuted: false,
   currentRTCState: undefined,
   userStateMap: {},
