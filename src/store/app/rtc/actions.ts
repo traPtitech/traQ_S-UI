@@ -5,7 +5,7 @@ import apis from '@/lib/apis'
 import { ChannelId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer, { talkingThreshould } from '@/lib/audioStreamMixer'
+import AudioStreamMixer, { talkingThreshoulds } from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
@@ -279,19 +279,27 @@ export const actions = defineActions({
     const { rootState, state, commit, getters, dispatch } = rtcActionContext(
       context
     )
-    const talkingUsers = getters.currentSessionUsers.filter(
-      userId =>
-        !getters.currentMutedUsers.includes(userId) && getters.isTalking(userId)
+    const talkingUsersState = Object.fromEntries(
+      getters.currentSessionUsers.map(userId => [
+        userId,
+        getters.currentMutedUsers.includes(userId)
+          ? 0
+          : getters.getTalkingLoudnessLevel(userId)
+      ])
     )
-    if (state.localAnalyzerNode && rootState.domain.me.detail?.id) {
+
+    const myId = rootState.domain.me.detail?.id
+    if (state.localAnalyzerNode && myId) {
       const level = state.mixer?.getLevelOfNode(state.localAnalyzerNode) ?? 0
-      console.log(level, level > talkingThreshould)
-      if (level > talkingThreshould) {
-        talkingUsers.push(rootState.domain.me.detail.id)
+      const loudness = level
+        ? talkingThreshoulds.filter(ts => ts < level).length
+        : 0
+      if (loudness > 0) {
+        talkingUsersState[myId] = loudness
       }
     }
     const nextId = requestAnimationFrame(dispatch.updateTalkState)
-    commit.setTalkingUsers({ nextId, talkingUsers })
+    commit.setTalkingUsersState({ nextId, talkingUsersState })
   },
   stopTalkStateUpdate(context) {
     const { state } = rtcActionContext(context)

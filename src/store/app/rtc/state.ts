@@ -61,8 +61,8 @@ export interface S {
   /** 現在発話しているユーザーを判定するrequestAnimationFrameのID */
   talkingStateUpdateId: number
 
-  /** 現在発話してるユーザー */
-  talkingUsers: UserId[]
+  /** 現在発話してるユーザーの声の大きさのレベル */
+  talkingUsersState: Record<UserId, number>
 }
 
 export const state: S = {
@@ -78,5 +78,5 @@ export const state: S = {
   userVolumeMap: {},
   remoteAudioStreamMap: {},
   talkingStateUpdateId: 0,
-  talkingUsers: []
+  talkingUsersState: {}
 }

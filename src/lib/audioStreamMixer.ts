@@ -2,7 +2,7 @@ const fileSourcePrefix = '__file-'
 
 export const maxGain = 5
 export const maxMasterGain = 3
-export const talkingThreshould = 300
+export const talkingThreshoulds = [300, 1000, 3000, 5000]
 
 type WebkitWindow = Window &
   typeof globalThis & {

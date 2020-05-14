@@ -214,11 +214,14 @@ export const mutations = defineMutations<S>()({
       state.mixer.setVolumeOf(userId, volume)
     }
   },
-  setTalkingUsers(
+  setTalkingUsersState(
     state,
-    { nextId, talkingUsers }: { nextId: number; talkingUsers: UserId[] }
+    {
+      nextId,
+      talkingUsersState
+    }: { nextId: number; talkingUsersState: Record<UserId, number> }
   ) {
     state.talkingStateUpdateId = nextId
-    state.talkingUsers = talkingUsers
+    state.talkingUsersState = talkingUsersState
   }
 })

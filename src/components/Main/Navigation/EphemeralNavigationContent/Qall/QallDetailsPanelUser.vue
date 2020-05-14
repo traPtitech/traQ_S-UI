@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.userIcon" :data-is-talking="isTalking">
+    <div :class="$style.userIcon" :data-talking-level="talkingLevel">
       <user-icon :user-id="userId" :size="24" />
     </div>
     <div :class="$style.userDesc">
@@ -65,8 +65,8 @@ export default defineComponent({
     const userName = computed(
       () => store.state.entities.users[props.userId]?.displayName ?? ''
     )
-    const isTalking = computed(() =>
-      store.state.app.rtc.talkingUsers.includes(props.userId)
+    const talkingLevel = computed(
+      () => store.state.app.rtc.talkingUsersState[props.userId]
     )
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({
@@ -77,7 +77,7 @@ export default defineComponent({
     return {
       volume,
       userName,
-      isTalking,
+      talkingLevel,
       maxVolumeValue,
       onChange
     }
@@ -88,19 +88,33 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: grid;
-  grid-template-columns: 28px 1fr 16px;
+  grid-template-columns: min-content 1fr 16px;
   column-gap: 12px;
   align-items: center;
 }
 .userIcon {
+  margin: 4px;
   border: {
     style: solid;
-    color: transparent;
-    width: 2px;
+    color: $common-ui-qall;
+    width: 0;
     radius: 50%;
   }
-  &[data-is-talking] {
-    border-color: $common-ui-qall;
+  &[data-talking-level='1'] {
+    margin: 3px;
+    border-width: 1px;
+  }
+  &[data-talking-level='2'] {
+    margin: 2px;
+    border-width: 2px;
+  }
+  &[data-talking-level='3'] {
+    margin: 1px;
+    border-width: 3px;
+  }
+  &[data-talking-level='4'] {
+    margin: 0;
+    border-width: 4px;
   }
 }
 .icon {
