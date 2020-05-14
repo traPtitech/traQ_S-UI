@@ -106,6 +106,7 @@ export default defineComponent({
   top: 0;
 }
 .primary {
+  min-width: 0;
   width: 100%;
 }
 .primaryContainer {

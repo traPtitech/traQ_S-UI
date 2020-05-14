@@ -156,8 +156,6 @@ $messagePaddingMobile: 16px;
 }
 
 .pinned {
-  grid-area: pinned;
-  height: 28px;
   padding: {
     top: 4px;
     bottom: 8px;
@@ -165,13 +163,11 @@ $messagePaddingMobile: 16px;
 }
 
 .messageContents {
-  grid-area: message-contents;
   min-width: 0;
 }
 
 .stampWrapper {
   position: relative;
-  grid-area: stamp-wrapper;
   margin-top: 8px;
   margin-left: 42px;
 }

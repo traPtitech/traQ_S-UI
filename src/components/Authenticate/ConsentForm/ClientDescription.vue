@@ -60,6 +60,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   width: fit-content;
+  max-width: 100%;
   padding: 12px;
   border-radius: 12px;
 }
@@ -67,6 +68,9 @@ export default defineComponent({
   margin-bottom: 12px;
   font-weight: bold;
   text-align: center;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
 }
 .desc {
   display: grid;

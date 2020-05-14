@@ -157,6 +157,9 @@
     padding: 2px 6px;
     margin: 2px 0;
   }
+  s > code {
+    text-decoration: line-through;
+  }
   pre {
     position: relative;
     margin-top: 0;

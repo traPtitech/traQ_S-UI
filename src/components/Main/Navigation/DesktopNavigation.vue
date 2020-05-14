@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="navigationStyle">
+  <div :class="$style.container">
     <div :class="$style.selector">
       <desktop-navigation-selector
         @navigation-change="onNavigationChange"
@@ -39,7 +39,6 @@ import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavig
 import DesktopToolBox, {
   targetPortalName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
-import { makeStyles } from '@/lib/styles'
 
 export default defineComponent({
   name: 'DesktopNavigation',
@@ -59,11 +58,6 @@ export default defineComponent({
       onEphemeralEntryAdd
     } = useNavigation()
 
-    const navigationStyle = makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.primary
-    }))
-
     return {
       navigationSelectorState,
       ephemeralNavigationSelectorState,
@@ -71,7 +65,6 @@ export default defineComponent({
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
       onEphemeralEntryAdd,
-      navigationStyle,
       targetPortalName
     }
   }
@@ -79,12 +72,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$selectorWidth: 64px;
-$ephemeralNavigationLeftMargin: 8px;
-$ephemeralNavigationRightMargin: 16px;
+$ephemeralNavigationSideMargin: 8px;
 $ephemeralNavigationMinHeight: 64px;
 
 .container {
+  @include color-ui-primary;
+  @include background-secondary;
   display: flex;
   width: 100%;
   height: 100%;
@@ -92,10 +85,12 @@ $ephemeralNavigationMinHeight: 64px;
 .selector {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: $selectorWidth;
   height: 100%;
   flex-shrink: 0;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 .navigations {
   display: flex;
@@ -107,10 +102,8 @@ $ephemeralNavigationMinHeight: 64px;
   width: 100%;
 }
 .ephemeralNavigation {
-  width: #{calc(
-      100% - #{$ephemeralNavigationLeftMargin + $ephemeralNavigationRightMargin}
-    )};
-  margin-left: $ephemeralNavigationLeftMargin;
+  width: #{calc(100% - #{$ephemeralNavigationSideMargin * 2})};
+  margin: 0 $ephemeralNavigationSideMargin;
   flex: 0 1 $ephemeralNavigationMinHeight;
 }
 </style>
