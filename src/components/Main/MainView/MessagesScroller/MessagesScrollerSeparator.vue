@@ -21,6 +21,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+$margin: 30px;
+
 .container {
   width: 100%;
   height: 32px;
@@ -35,10 +37,16 @@ export default defineComponent({
   &::after {
     display: block;
     background-color: currentColor;
+    flex: 1 1;
     height: 1px;
-    width: calc(50% - 70px);
     content: '';
     opacity: 0.1;
+  }
+  &::before {
+    margin-right: $margin;
+  }
+  &::after {
+    margin-left: $margin;
   }
 }
 </style>
