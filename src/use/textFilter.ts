@@ -25,19 +25,19 @@ const useTextFilter = <T, K extends keyof T>(
         )
       }
 
-      let fullMatched: T | undefined
+      let fullMatched: T[] | undefined
       const matched: T[] = []
       for (const item of items.value) {
         const keyValue = ((item[
           searchTargetKey
         ] as unknown) as string).toLowerCase()
         if (keyValue === query) {
-          fullMatched = item
+          fullMatched ? fullMatched.push(item) : (fullMatched = [item])
         } else if (keyValue.includes(query)) {
           matched.push(item)
         }
       }
-      return fullMatched ? [fullMatched, ...matched] : matched
+      return fullMatched ? [...fullMatched, ...matched] : matched
     })
   })
   const setQuery = (query: string) => {
