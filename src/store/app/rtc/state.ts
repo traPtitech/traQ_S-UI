@@ -55,8 +55,11 @@ export interface S {
   /** 他ユーザーのオーディオ */
   remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
 
-  /** 現在発話しているユーザーを判定するsetIntervalのID */
-  talkingStateUpdateIntervalId: number
+  /** 現在発話しているユーザーを判定するrequestAnimationFrameのID */
+  talkingStateUpdateId: number
+
+  /** 現在発話してるユーザー */
+  talkingUsers: UserId[]
 }
 
 export const state: S = {
@@ -70,5 +73,6 @@ export const state: S = {
   sessionUsersMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
-  talkingStateUpdateIntervalId: 0
+  talkingStateUpdateId: 0,
+  talkingUsers: []
 }

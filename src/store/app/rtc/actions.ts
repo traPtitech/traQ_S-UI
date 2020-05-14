@@ -165,13 +165,14 @@ export const actions = defineActions({
   },
 
   closeConnection(context) {
-    const { state, commit } = rtcActionContext(context)
+    const { state, commit, dispatch } = rtcActionContext(context)
     if (!client) {
       return
     }
     if (state.mixer) {
       state.mixer.playFileSource('qall_end')
       state.mixer.muteAll()
+      dispatch.stopTalkStateUpdate()
     }
     client.closeConnection()
     destroyClient()
@@ -193,6 +194,7 @@ export const actions = defineActions({
     if (!state.mixer) {
       return
     }
+    dispatch.updateTalkState()
 
     client.addEventListener('userjoin', e => {
       const userId = e.detail.userId
@@ -271,6 +273,20 @@ export const actions = defineActions({
       sessionId: qallSession?.sessionId,
       states
     })
+  },
+
+  updateTalkState(context) {
+    const { commit, getters, dispatch } = rtcActionContext(context)
+    const talkingUsers = getters.currentSessionUsers.filter(
+      userId =>
+        !getters.currentMutedUsers.includes(userId) && getters.isTalking(userId)
+    )
+    const nextId = requestAnimationFrame(dispatch.updateTalkState)
+    commit.setTalkingUsers({ nextId, talkingUsers })
+  },
+  stopTalkStateUpdate(context) {
+    const { state } = rtcActionContext(context)
+    cancelAnimationFrame(state.talkingStateUpdateId)
   },
 
   // ---- Specific RTC Session ---- //

@@ -5,7 +5,7 @@
       :class="$style.slider"
       :key="me"
       :user-id="me"
-      :mic-muted="me in mutedUsersMap"
+      :mic-muted="mutedUsers.includes(me)"
       :show-tune-button="!showVolumeTune"
       :show-tune-done-button="showVolumeTune"
       @tune="toggleVolumeTune(true)"
@@ -17,7 +17,7 @@
       :class="$style.slider"
       :key="id"
       :user-id="id"
-      :mic-muted="id in mutedUsersMap"
+      :mic-muted="mutedUsers.includes(id)"
       :show-volume-control="showVolumeTune"
     />
   </div>
@@ -38,30 +38,12 @@ export default defineComponent({
     const toggleVolumeTune = (show: boolean) => {
       showVolumeTune.value = show
     }
-    const currentSession = computed(() => store.getters.app.rtc.qallSession)
     const me = computed(() => store.state.domain.me.detail?.id)
-    const users = computed(() => {
-      if (!currentSession.value) {
-        return []
-      }
-      return (
-        store.state.app.rtc.sessionUsersMap[
-          currentSession.value.sessionId
-        ]?.filter(id => id !== me.value) ?? []
-      )
-    })
-    const mutedUsersMap = computed(() =>
-      Object.fromEntries(
-        Object.entries(store.state.app.rtc.userStateMap).filter(([_, state]) =>
-          state?.sessionStates.some(
-            s =>
-              s.sessionId === currentSession.value?.sessionId &&
-              s.states.includes('micmuted')
-          )
-        )
-      )
+    const users = computed(() =>
+      store.getters.app.rtc.currentSessionUsers.filter(id => id !== me.value)
     )
-    return { users, me, mutedUsersMap, showVolumeTune, toggleVolumeTune }
+    const mutedUsers = computed(() => store.getters.app.rtc.currentMutedUsers)
+    return { users, me, mutedUsers, showVolumeTune, toggleVolumeTune }
   }
 })
 </script>

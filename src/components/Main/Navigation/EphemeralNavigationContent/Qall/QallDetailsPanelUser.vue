@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <user-icon :user-id="userId" :size="24" />
+    <div :class="$style.userIcon" :data-is-talking="isTalking">
+      <user-icon :user-id="userId" :size="24" />
+    </div>
     <div :class="$style.userDesc">
       <slider
         v-if="showVolumeControl"
@@ -63,6 +65,9 @@ export default defineComponent({
     const userName = computed(
       () => store.state.entities.users[props.userId]?.displayName ?? ''
     )
+    const isTalking = computed(() =>
+      store.state.app.rtc.talkingUsers.includes(props.userId)
+    )
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({
         userId: props.userId,
@@ -72,6 +77,7 @@ export default defineComponent({
     return {
       volume,
       userName,
+      isTalking,
       maxVolumeValue,
       onChange
     }
@@ -82,9 +88,20 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: grid;
-  grid-template-columns: 24px 1fr 16px;
+  grid-template-columns: 28px 1fr 16px;
   column-gap: 12px;
   align-items: center;
+}
+.userIcon {
+  border: {
+    style: solid;
+    color: transparent;
+    width: 2px;
+    radius: 50%;
+  }
+  &[data-is-talking] {
+    border-color: $common-ui-qall;
+  }
 }
 .icon {
   @include color-ui-secondary;
