@@ -69,6 +69,9 @@ export default defineComponent({
 
 .displayName {
   font-weight: bold;
+  flex: 2;
+  max-width: min-content;
+
   word-break: keep-all;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -83,9 +86,13 @@ export default defineComponent({
   @include color-ui-secondary;
   @include size-body2;
   margin-left: 4px;
+  flex: 1;
+  max-width: min-content;
 
   word-break: keep-all;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .date {
