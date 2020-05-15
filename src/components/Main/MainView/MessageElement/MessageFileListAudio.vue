@@ -5,6 +5,7 @@
     </div>
     <audio
       controls
+      controlsList="nodownload"
       preload="none"
       draggable="false"
       :alt="fileMeta.name"
@@ -49,7 +50,8 @@ export default defineComponent({
   }
   audio {
     display: block;
-    max-width: 100%;
+    min-width: 300px;
+    width: 100%;
     max-height: 450px;
     &::-webkit-media-controls-enclosure {
       border-radius: 0;

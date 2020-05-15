@@ -5,6 +5,7 @@
     </div>
     <video
       controls
+      controlsList="nodownload"
       preload="none"
       draggable="false"
       :alt="fileMeta.name"
@@ -57,13 +58,14 @@ export default defineComponent({
   position: absolute;
   width: 100%;
   background: $common-background-overlay;
-  backdrop-filter: blur(4px);
   cursor: pointer;
-  z-index: 1;
+  z-index: $z-index-message-attachment-video-overlay;
+  backdrop-filter: blur(0px);
   opacity: 0;
   transition: all 0.2s ease;
 
   .container:hover & {
+    backdrop-filter: blur(4px);
     opacity: 1;
   }
 }

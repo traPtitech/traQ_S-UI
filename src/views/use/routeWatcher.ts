@@ -5,8 +5,26 @@ import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
+import { ChannelId, DMChannelId } from '@/types/entity-ids'
 
 type Views = 'none' | 'main' | 'not-found'
+
+const setUnreadState = (id: ChannelId | DMChannelId) => {
+  // 未読の処理
+  // TODO: 新着メッセージ基準設定などの処理
+  store.commit.domain.messagesView.unsetUnreadSince()
+  const unreadChannel = store.state.domain.me.unreadChannelsSet[id]
+  if (unreadChannel) {
+    if (
+      store.state.domain.me.subscriptionMap[id] > 0 ||
+      store.state.entities.dmChannels[id]
+    ) {
+      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
+    }
+
+    store.dispatch.domain.me.readChannel({ channelId: id })
+  }
+}
 
 const useRouteWacher = (context: SetupContext) => {
   const { channelPathToId, channelIdToPathString } = useChannelPath()
@@ -27,21 +45,30 @@ const useRouteWacher = (context: SetupContext) => {
 
   const useOpenChannel = async () => {
     await originalStore.restored
-    switch (store.state.app.browserSettings.openMode) {
-      case 'lastOpen':
-        return store.state.app.browserSettings.lastOpenChannelName ?? 'general'
-      case 'particular':
-        return store.state.app.browserSettings.openChannelName ?? 'general'
-    }
+    return computed(() => {
+      switch (store.state.app.browserSettings.openMode) {
+        case 'lastOpen':
+          return (
+            store.state.app.browserSettings.lastOpenChannelName ?? 'general'
+          )
+        case 'particular':
+          return store.state.app.browserSettings.openChannelName ?? 'general'
+      }
+    })
   }
   const onRouteChangedToIndex = async () => {
-    await originalStore.restored
-    const openChannelPath = await useOpenChannel()
     try {
-      await context.root.$router.replace(constructChannelPath(openChannelPath))
-    } catch (e) {
-      if (e) throw e
+      await store.dispatch.domain.me.fetchMe()
+    } catch {
+      return
     }
+
+    const openChannelPath = await useOpenChannel()
+    await context.root.$router
+      .replace(constructChannelPath(openChannelPath.value))
+      // 同じ場所に移動しようとした際のエラーを消す
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .catch(() => {})
     return
   }
 
@@ -55,6 +82,9 @@ const useRouteWacher = (context: SetupContext) => {
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
+
+      setUnreadState(id)
+
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: context.root.$route.query?.message as string
@@ -71,13 +101,23 @@ const useRouteWacher = (context: SetupContext) => {
     const user = store.getters.entities.userByName(state.currentRouteParam)
     try {
       if (!user) throw 'user not found'
-      const res = await apis.getUserDMChannel(user.id)
-      store.commit.entities.addDMChannel({
-        id: res.data.id,
-        entity: res.data
-      })
+
+      let dmChannelId = store.getters.entities.DMChannelIdByUserId(user.id)
+
+      if (!dmChannelId) {
+        const { data } = await apis.getUserDMChannel(user.id)
+        store.commit.entities.addDMChannel({
+          id: data.id,
+          entity: data
+        })
+        dmChannelId = data.id
+      }
+      if (!dmChannelId) throw 'failed to fetch DM channel ID'
+
+      setUnreadState(dmChannelId)
+
       store.dispatch.ui.mainView.changePrimaryViewToDM({
-        channelId: res.data.id,
+        channelId: dmChannelId,
         userName: user.name,
         entryMessageId: context.root.$route.query?.message as string
       })
@@ -128,7 +168,7 @@ const useRouteWacher = (context: SetupContext) => {
       channelPath = channelIdToPathString(file.channelId, true)
       channelId = file.channelId
     } else {
-      channelPath = openChannelPath
+      channelPath = openChannelPath.value
       try {
         channelId = channelPathToId(
           channelPath.split('/'),

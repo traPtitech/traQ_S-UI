@@ -1,29 +1,38 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div
+    :class="$style.container"
+    :aria-selected="state.isSelected ? 'true' : 'false'"
+  >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel">
-      <div :class="$style.channelHash" @click="onChannelHashClick">
-        <channel-element-hash
-          :has-child="!ignoreChildren && state.hasChild"
-          :is-selected="state.isSelected"
-          :is-opened="isOpened"
-          :has-notification="notificationState.hasNotification"
-          :has-notification-on-child="notificationState.hasNotificationOnChild"
+    <div :class="$style.channel" :data-is-inactive="state.isInactive">
+      <channel-element-hash
+        :class="$style.channelHash"
+        @click.native="onChannelHashClick"
+        :has-child="!ignoreChildren && state.hasChild"
+        :is-selected="state.isSelected"
+        :is-opened="isOpened"
+        :has-notification="notificationState.hasNotification"
+        :has-notification-on-child="notificationState.hasNotificationOnChild"
+      />
+      <div :class="$style.channelName" @click="onChannelNameClick">
+        <span :class="$style.channelNameString" :title="pathTooltip">
+          {{ pathToShow }}
+        </span>
+        <icon
+          v-if="isQalling"
+          :size="16"
+          mdi
+          name="phone-outline"
+          :class="$style.channelNameIcon"
         />
       </div>
       <div
-        :class="$style.channelName"
-        :style="styles.channelName"
+        v-if="notificationState.unreadCount"
+        :class="$style.unreadBadge"
+        :data-is-noticeable="notificationState.isNoticeable"
         @click="onChannelNameClick"
       >
-        <span :class="$style.channelNameInner">
-          <span :class="$style.channelNameInnerString">
-            {{ pathToShow }}
-          </span>
-          <span :class="$style.channelNameInnerIcon">
-            <icon v-if="isQalling" :size="16" mdi name="phone-outline" />
-          </span>
-        </span>
+        {{ notificationState.unreadCount }}
       </div>
     </div>
     <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
@@ -31,16 +40,14 @@
     </div>
 
     <!-- 子チャンネル表示 -->
-    <div :class="$style.children" v-if="!ignoreChildren && isOpened">
-      <channel-list :channels="state.children" />
-    </div>
+    <channel-list
+      v-if="!ignoreChildren && isOpened"
+      :class="$style.children"
+      :channels="state.children"
+    />
 
     <!-- 選択中チャンネルの背景 -->
-    <div
-      :class="$style.selectedBg"
-      :style="styles.selectedBg"
-      v-if="state.isSelected"
-    ></div>
+    <div :class="$style.selectedBg" v-if="state.isSelected" />
   </div>
 </template>
 
@@ -50,11 +57,11 @@ import {
   SetupContext,
   computed,
   reactive,
-  PropType
+  PropType,
+  Ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
-import { makeStyles } from '@/lib/styles'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
@@ -68,6 +75,13 @@ const useAncestorPath = (skippedAncestorNames?: string[]) => {
   }
 }
 
+const useFullPath = (props: TypedProps) => {
+  const { channelIdToPathString } = useChannelPath()
+  return {
+    path: computed(() => channelIdToPathString(props.channel.id))
+  }
+}
+
 const useShortenedPath = (props: TypedProps) => {
   const { channelIdToShortPathString } = useChannelPath()
   return {
@@ -78,43 +92,41 @@ const useShortenedPath = (props: TypedProps) => {
 const useChannelClick = (
   context: SetupContext,
   id: ChannelId,
-  hasChild: boolean
+  isChildShown: Ref<boolean>
 ) => {
   const onChannelNameClick = () => context.emit('channel-select', id)
-  const onChannelHashClick = () =>
-    context.emit(hasChild ? 'channel-folding-toggle' : 'channel-select', id)
+  const onChannelHashClick = () => {
+    context.emit(
+      isChildShown.value ? 'channel-folding-toggle' : 'channel-select',
+      id
+    )
+  }
   return {
     onChannelHashClick,
     onChannelNameClick
   }
 }
 
-const useStyles = (state: { isSelected: boolean }) => {
-  const styles = reactive({
-    container: makeStyles(theme => ({
-      color: state.isSelected ? theme.accent.primary : theme.ui.primary
-    })),
-    selectedBg: makeStyles(theme => ({
-      backgroundColor: theme.accent.primary
-    })),
-    channelName: makeStyles(theme => ({
-      fontWeight: state.isSelected ? 'bold' : 'normal'
-    }))
-  })
-  return styles
-}
-
 const useNotification = (props: TypedProps) => {
-  const isUnread = (channelId: ChannelId) =>
-    channelId in store.state.domain.me.unreadChannelsSet
+  const unreadChannel = computed(
+    () => store.state.domain.me.unreadChannelsSet[props.channel.id]
+  )
 
   const notificationState = reactive({
-    hasNotification: computed(() => isUnread(props.channel.id)),
+    hasNotification: computed(() => !!unreadChannel.value),
     hasNotificationOnChild: computed(() =>
       props.ignoreChildren
         ? false
-        : deepSome(props.channel, channel => isUnread(channel.id))
-    )
+        : deepSome(
+            props.channel,
+            channel => channel.id in store.state.domain.me.unreadChannelsSet
+          )
+    ),
+    unreadCount: computed(() => {
+      const count = unreadChannel.value?.count ?? 0
+      return count === 0 ? undefined : count > 99 ? '99+' : '' + count
+    }),
+    isNoticeable: computed(() => unreadChannel.value?.noticeable)
   })
   return notificationState
 }
@@ -145,12 +157,13 @@ interface Props {
 
 interface WithChildrenProps extends Props {
   channel: ChannelTreeNode
-  ignoreChildren: true
+  ignoreChildren: false
 }
 
 interface IgnoreChildrenProps extends Props {
-  channel: ChannelTreeNode
-  ignoreChildren: false
+  channel: Channel
+  showShortenedPath: true
+  ignoreChildren: true
 }
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
@@ -195,24 +208,32 @@ export default defineComponent({
     const state = reactive({
       children: computed(() => typedProps.channel.children ?? []),
       hasChild: computed((): boolean => state.children.length > 0),
+      isInactive: computed(
+        () => !typedProps.ignoreChildren && !typedProps.channel.active
+      ),
       isSelected: computed(
         () =>
           store.state.domain.messagesView.currentChannelId ===
           typedProps.channel.id
       )
     })
+    const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
 
-    const styles = useStyles(state)
     const pathToShow = computed(() =>
       typedProps.showShortenedPath
         ? useShortenedPath(typedProps).path.value
         : useAncestorPath(typedProps.channel.skippedAncestorNames).path.value +
           typedProps.channel.name
     )
+    const pathTooltip = computed(() =>
+      typedProps.showShortenedPath
+        ? `#${useFullPath(typedProps).path.value}`
+        : undefined
+    )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       typedProps.channel.id,
-      state.hasChild
+      isChildShown
     )
     const notificationState = useNotification(typedProps)
     const { topic } = useTopic(typedProps)
@@ -220,8 +241,8 @@ export default defineComponent({
 
     return {
       state,
-      styles,
       pathToShow,
+      pathTooltip,
       notificationState,
       topic,
       isQalling,
@@ -239,16 +260,24 @@ $bgLeftShift: 4px;
 $topicLeftPadding: 40px;
 
 .container {
+  @include color-ui-primary;
   display: block;
   user-select: none;
   position: relative;
+  &[aria-selected='true'] {
+    @include color-accent-primary;
+  }
 }
 .channel {
   display: flex;
   align-items: center;
   position: relative;
   height: $elementHeight;
+  padding-right: 4px;
   z-index: 0;
+  &[data-is-inactive] {
+    opacity: 0.5;
+  }
 }
 .channelHash {
   flex-shrink: 0;
@@ -263,27 +292,37 @@ $topicLeftPadding: 40px;
   height: 100%;
   padding: 0 8px;
   cursor: pointer;
+  // > .channelで絞らないと子チャンネルに影響が出る
+  .container[aria-selected='true'] > .channel & {
+    font-weight: bold;
+  }
 }
-.channelNameInner {
-  display: flex;
-  width: 100%;
-  align-items: center;
-}
-.channelNameInnerString {
+.channelNameString {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.channelNameInnerIcon {
+.channelNameIcon {
   flex-shrink: 0;
   margin: {
     left: 8px;
     bottom: 2px;
   }
-  height: 16px;
-  width: 16px;
   opacity: 0.5;
+}
+.unreadBadge {
+  color: $theme-background-secondary;
+  background: $theme-ui-secondary;
+  padding: 0 4px;
+  min-width: 24px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  &[data-is-noticeable] {
+    background: $theme-accent-notification;
+  }
 }
 .children {
   display: block;
@@ -292,6 +331,7 @@ $topicLeftPadding: 40px;
   margin-left: 24px;
 }
 .selectedBg {
+  @include background-accent-primary;
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;

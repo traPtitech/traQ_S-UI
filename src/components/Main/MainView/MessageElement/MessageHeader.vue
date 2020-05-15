@@ -69,8 +69,13 @@ export default defineComponent({
 
 .displayName {
   font-weight: bold;
+  flex: 2;
+  max-width: min-content;
+
   word-break: keep-all;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .badge {
@@ -81,6 +86,8 @@ export default defineComponent({
   @include color-ui-secondary;
   @include size-body2;
   margin-left: 4px;
+  flex: 1;
+  max-width: min-content;
 
   word-break: keep-all;
   white-space: nowrap;
@@ -97,5 +104,6 @@ export default defineComponent({
 .editIcon {
   @include color-ui-secondary;
   margin-left: 4px;
+  flex-shrink: 0;
 }
 </style>

@@ -10,11 +10,7 @@
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
     />
-    <div
-      v-if="showSeparator"
-      :class="$style.separator"
-      :style="styles.separator"
-    ></div>
+    <div v-if="showSeparator" :class="$style.separator" />
     <navigation-selector-item
       v-for="item in ephemeralEntries"
       :key="item.type"
@@ -32,7 +28,6 @@
 import {
   defineComponent,
   SetupContext,
-  reactive,
   PropType,
   computed,
   watch
@@ -44,20 +39,8 @@ import {
   EphemeralNavigationItemType
 } from '@/components/Main/Navigation/use/navigationConstructor'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: theme.background.secondary,
-      color: theme.ui.primary
-    })),
-    separator: makeStyles(theme => ({
-      background: theme.ui.tertiary
-    }))
-  })
 
 export default defineComponent({
   name: 'MobileNavigationSelector',
@@ -90,10 +73,7 @@ export default defineComponent({
         })
     })
 
-    const styles = useStyles()
-
     return {
-      styles,
       entries,
       ephemeralEntries,
       showSeparator,
@@ -106,11 +86,16 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
+  @include background-secondary;
   display: flex;
   justify-content: space-around;
   width: 100%;
 }
 .item {
   margin: 16px 0;
+}
+.separator {
+  @include background-tertiary;
 }
 </style>

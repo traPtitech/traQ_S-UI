@@ -77,6 +77,7 @@ export default defineComponent({
 
 .buttons {
   display: flex;
+  flex-wrap: wrap-reverse;
   justify-content: space-between;
   align-items: center;
   width: 100%;

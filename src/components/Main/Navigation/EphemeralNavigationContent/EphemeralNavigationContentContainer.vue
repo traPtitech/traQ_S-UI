@@ -1,37 +1,31 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :data-is-transparent="transparent">
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { transparent: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      background: props.transparent ? 'transparent' : theme.background.tertiary
-    }))
-  })
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'EphemeralNavigationContentContainer',
   props: { transparent: { type: Boolean, default: false } },
   setup(props) {
-    const styles = useStyles(props)
-    return { styles }
+    return {}
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include background-tertiary;
   width: 100%;
   border-top: {
     left-radius: 8px;
     right-radius: 8px;
+  }
+  &[data-is-transparent] {
+    background: transparent;
   }
 }
 </style>

@@ -67,9 +67,8 @@ export default defineComponent({
   align-items: start;
 }
 .content {
-  width: 100%;
   white-space: pre-line;
-  word-break: keep-all;
+  word-break: normal;
   overflow-wrap: break-word;
   min-width: 0;
   &[data-is-empty] {

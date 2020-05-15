@@ -5,30 +5,18 @@
     </div>
     <button
       :class="$style.star"
-      :style="styles.star"
+      :aria-selected="isStared ? 'true' : 'false'"
       @click="context.emit('toggle-star-filter')"
     >
-      <icon name="star" :width="22" :height="22" mdi />
+      <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
     </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
-import { transparentize } from '@/lib/util/color'
-
-const useStyles = (props: { isStared: boolean }) =>
-  reactive({
-    star: makeStyles(theme => ({
-      color: props.isStared
-        ? theme.accent.primary
-        : transparentize(theme.ui.secondary, 0.5),
-      backgroundColor: theme.background.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ChannelFilter',
@@ -47,13 +35,11 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const styles = useStyles(props)
     const onInput = (value: string) => {
       context.emit('input', value)
     }
     return {
       context,
-      styles,
       onInput
     }
   }
@@ -69,6 +55,7 @@ export default defineComponent({
   margin-right: 16px;
 }
 .star {
+  @include background-primary;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,5 +65,13 @@ export default defineComponent({
   border-radius: 4px;
   margin-right: 16px;
   cursor: pointer;
+}
+.icon {
+  @include color-ui-secondary;
+  opacity: 0.5;
+  .star[aria-selected='true'] & {
+    @include color-accent-primary;
+    opacity: 1;
+  }
 }
 </style>

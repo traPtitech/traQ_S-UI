@@ -1,8 +1,8 @@
 <template>
   <button
     :class="$style.container"
-    :style="styles.container"
     :data-react-hover="reactHover"
+    :data-is-white="props.isWhite"
   >
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />
@@ -16,21 +16,12 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import { makeStyles } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 
-const useStyles = (props: {
-  borderWidth: number
-  size: number
-  isWhite: boolean
-}) =>
+const useStyles = (props: { borderWidth: number; size: number }) =>
   reactive({
-    container: makeStyles((theme, common) => ({
-      color: props.isWhite ? common.text.black : theme.ui.secondary
-    })),
     circle: makeStyles((theme, common) => ({
       borderWidth: `${props.borderWidth}px`,
-      borderColor: props.isWhite ? 'transparent' : theme.ui.secondary,
       width: `${props.size}px`,
-      height: `${props.size}px`,
-      backgroundColor: props.isWhite ? common.text.whitePrimary : 'transparent'
+      height: `${props.size}px`
     }))
   })
 
@@ -59,6 +50,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   @include size-body2;
   text-align: center;
   font-weight: bold;
@@ -67,15 +59,26 @@ export default defineComponent({
   &:not([data-react-hover]) {
     opacity: 1;
   }
+  &[data-is-white] {
+    @include color-common-text-black;
+  }
 }
 
 .circle {
+  @include color-ui-secondary;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid;
-  border-radius: 50%;
+  border: {
+    style: solid;
+    color: $theme-ui-secondary;
+    radius: 50%;
+  }
   cursor: pointer;
+  &[data-is-white] {
+    border-color: transparent;
+    background-color: $common-text-white-primary;
+  }
 }
 
 .text {

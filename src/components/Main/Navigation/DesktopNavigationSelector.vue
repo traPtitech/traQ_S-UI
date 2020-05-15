@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <icon :class="$style.logo" name="traQ" :size="44" />
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -10,11 +11,7 @@
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
     />
-    <div
-      v-if="showSeparator"
-      :class="$style.separator"
-      :style="styles.separator"
-    ></div>
+    <div v-if="showSeparator" :class="$style.separator" />
     <navigation-selector-item
       v-for="item in ephemeralEntries"
       :key="item.type"
@@ -31,13 +28,10 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   PropType,
   computed,
-  reactive,
   watch
 } from '@vue/composition-api'
-
 import {
   NavigationItemType,
   useNavigationSelectorItem,
@@ -47,14 +41,6 @@ import {
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = () =>
-  reactive({
-    separator: makeStyles(theme => ({
-      background: theme.ui.tertiary
-    }))
-  })
 
 export default defineComponent({
   name: 'NavigationSelector',
@@ -66,15 +52,13 @@ export default defineComponent({
     },
     currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
   },
-  setup(props, context: SetupContext) {
+  setup(props, context) {
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
     const {
       onNavigationItemClick: onEphemeralNavigationItemClick
     } = useEphemeralNavigationSelectorItem(context)
     const { entries, ephemeralEntries } = useNavigationSelectorEntry()
     const showSeparator = computed(() => ephemeralEntries.value.length > 0)
-
-    const styles = useStyles()
 
     watch(ephemeralEntries, (entries, prevEntries) => {
       ;(prevEntries ?? [])
@@ -90,7 +74,6 @@ export default defineComponent({
     })
 
     return {
-      styles,
       entries,
       ephemeralEntries,
       showSeparator,
@@ -109,10 +92,16 @@ export default defineComponent({
   align-items: center;
   padding: 8px 0;
 }
+.logo {
+  @include color-accent-primary;
+  padding: 8px;
+  margin: 8px;
+}
 .item {
-  margin: 8px 0;
+  margin: 8px;
 }
 .separator {
+  @include background-tertiary;
   opacity: 0.5;
   height: 2px;
   width: 24px;

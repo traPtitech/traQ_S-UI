@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container">
     <button @click="$emit('top-toggle-click')" :class="$style.top">
       <icon name="phone" mdi />
     </button>
@@ -14,7 +14,7 @@
     <button
       @click="$emit('mic-click')"
       :class="$style.mic"
-      :style="styles.micIcon"
+      :data-is-mute="isMicMuted"
     >
       <icon :name="micIconName" mdi />
     </button>
@@ -25,22 +25,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
-
-const useStyles = (props: { isMicMuted: boolean }) =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.secondary,
-      borderColor: theme.background.secondary
-    })),
-    micIcon: makeStyles((theme, common) => ({
-      color: props.isMicMuted ? common.ui.muted : theme.ui.secondary
-    }))
-  })
 
 export default defineComponent({
   name: 'QallControlPanel',
@@ -62,8 +50,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles(props)
-
     const {
       channelIdToShortPathString,
       channelIdToPathString
@@ -78,13 +64,14 @@ export default defineComponent({
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'
     )
-    return { styles, channelName, channelLink, micIconName }
+    return { channelName, channelLink, micIconName }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
   display: grid;
   grid-template:
     'top info mic end' 1fr
@@ -96,6 +83,7 @@ export default defineComponent({
   border-top: {
     style: solid;
     width: 2px;
+    color: $theme-background-secondary;
   }
 }
 .top,
@@ -114,7 +102,11 @@ export default defineComponent({
   min-width: 0;
 }
 .mic {
+  @include color-ui-secondary;
   grid-area: mic;
+  &[data-is-mute] {
+    color: $common-ui-muted;
+  }
 }
 .end {
   grid-area: end;

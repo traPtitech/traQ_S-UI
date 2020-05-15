@@ -17,8 +17,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
-
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
@@ -36,11 +34,6 @@ export default defineComponent({
     ChannelViewFileUploadOverlay
   },
   setup(props) {
-    const containerStyle = makeStyles(theme => ({
-      background: theme.background.primary,
-      color: theme.ui.primary
-    }))
-
     const {
       messageIds,
       isReachedEnd,
@@ -57,7 +50,6 @@ export default defineComponent({
       messageIds,
       isReachedEnd,
       isReachedLatest,
-      containerStyle,
       isLoading,
       lastLoadingDirection,
       onLoadFormerMessagesRequest,

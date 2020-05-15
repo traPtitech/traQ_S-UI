@@ -31,7 +31,7 @@ export default defineComponent({
   cursor: pointer;
 }
 .icon {
-  z-index: 1;
+  z-index: $z-index-message-input-file-close-button;
 }
 .bg {
   position: absolute;

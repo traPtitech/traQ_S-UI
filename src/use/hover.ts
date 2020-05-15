@@ -1,27 +1,21 @@
-import { SetupContext, reactive } from '@vue/composition-api'
-
-export type HoverState = {
-  hover: boolean
-}
+import { SetupContext, ref } from '@vue/composition-api'
 
 const useHover = (context?: SetupContext) => {
-  const state: HoverState = reactive({
-    hover: false
-  })
+  const isHovered = ref(false)
   const onMouseEnter = () => {
     if (context) {
       context.emit('hover')
     }
-    state.hover = true
+    isHovered.value = true
   }
   const onMouseLeave = () => {
     if (context) {
       context.emit('hover-end')
     }
-    state.hover = false
+    isHovered.value = false
   }
   return {
-    hoverState: state,
+    isHovered,
     onMouseEnter,
     onMouseLeave
   }

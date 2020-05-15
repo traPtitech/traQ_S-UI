@@ -1,9 +1,5 @@
 <template>
-  <router-link
-    :to="clipFolderPath"
-    :class="$style.container"
-    :style="styles.container"
-  >
+  <router-link :to="clipFolderPath" :class="$style.container">
     <icon name="bookmark" mdi :class="$style.icon" />
     <span :class="$style.name">
       {{ clipFolder.name }}
@@ -12,23 +8,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { ClipFolder } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import { constructClipFoldersPath } from '@/router'
-
-const useStyles = () =>
-  reactive({
-    container: makeStyles(theme => ({
-      color: theme.ui.primary
-    }))
-  })
 
 export default defineComponent({
   name: 'ClipFoldersElement',
@@ -42,17 +25,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const styles = useStyles()
     const clipFolderPath = computed(() =>
       constructClipFoldersPath(props.clipFolder.id)
     )
-    return { styles, clipFolderPath }
+    return { clipFolderPath }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   @include size-body1;
   display: flex;
   padding: 2px;

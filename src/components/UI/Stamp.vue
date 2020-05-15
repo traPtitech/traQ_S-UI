@@ -6,7 +6,7 @@
     :style="styles.container"
     :src="imageUrl"
     :alt="name"
-    :title="name"
+    :title="!withoutTitle ? name : undefined"
     draggable="false"
   />
   <div v-else :class="$style.container" :style="styles.container" />
@@ -42,6 +42,10 @@ export default defineComponent({
     size: {
       type: Number,
       default: 24
+    },
+    withoutTitle: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {

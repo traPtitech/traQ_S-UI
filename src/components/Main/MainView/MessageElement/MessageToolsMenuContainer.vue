@@ -56,7 +56,7 @@ export default defineComponent({
 <style lang="scss" module>
 .toolsMenu {
   position: absolute;
-  z-index: 999;
+  z-index: $z-index-message-element-tools-menu;
   transform: translateX(-100%);
 }
 </style>

@@ -196,9 +196,9 @@ const postMessage = (channelId, text) =>
     )
   })
 
-  importScripts('https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js')
+  importScripts('https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js')
   importScripts(
-    'https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js'
+    'https://www.gstatic.com/firebasejs/7.14.3/firebase-messaging.js'
   )
 
   firebase.initializeApp({
@@ -210,7 +210,9 @@ const postMessage = (channelId, text) =>
 
   const messaging = firebase.messaging()
 
-  messaging.setBackgroundMessageHandler(payload =>
-    showNotification(payload.data)
-  )
+  messaging.setBackgroundMessageHandler(payload => {
+    if (payload.data && payload.data.type === 'new_message') {
+      return showNotification(payload.data)
+    }
+  })
 }

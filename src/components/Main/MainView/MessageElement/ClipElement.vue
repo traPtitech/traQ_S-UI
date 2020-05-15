@@ -129,7 +129,7 @@ $messagePaddingMobile: 16px;
   position: absolute;
   top: 4px;
   right: 16px;
-  z-index: 1;
+  z-index: $z-index-message-element-tools;
 }
 
 .footer {
@@ -141,6 +141,7 @@ $messagePaddingMobile: 16px;
   margin-top: 4px;
   margin-left: 42px;
   word-break: keep-all;
+  overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
 }
 

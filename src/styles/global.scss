@@ -15,4 +15,5 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
   touch-action: manipulation;
+  overscroll-behavior-y: contain;
 }

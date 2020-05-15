@@ -9,15 +9,16 @@ const initialFetch = async () => {
     store.dispatch.entities.fetchUsers(),
     store.dispatch.entities.fetchUserGroups(),
     store.dispatch.entities.fetchChannels(),
-    store.dispatch.entities.fetchStamps()
+    store.dispatch.entities.fetchStamps(),
+    store.dispatch.domain.me.fetchUnreadChannels()
   ])
 
   store.commit.app.setInitialFetchCompleted()
+
   store.dispatch.domain.stampCategory.constructStampCategories()
   store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
   store.dispatch.domain.fetchOnlineUsers()
-  store.dispatch.domain.me.fetchUnreadChannels()
   store.dispatch.domain.me.fetchStaredChannels()
   store.dispatch.domain.me.fetchStampHistory()
   store.dispatch.app.rtc.fetchRTCState()

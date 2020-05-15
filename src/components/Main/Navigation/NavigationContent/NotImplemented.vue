@@ -1,10 +1,9 @@
 <template>
-  <empty-state>Not Implemented</empty-state>
+  <empty-state :class="$style.container">Not Implemented</empty-state>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent } from '@vue/composition-api'
 import EmptyState from '@/components/UI/EmptyState.vue'
 
 export default defineComponent({
@@ -12,12 +11,14 @@ export default defineComponent({
   components: {
     EmptyState
   },
-  setup(_, context: SetupContext) {
-    return {
-      containerStyle: makeStyles(theme => ({
-        color: theme.ui.tertiary
-      }))
-    }
+  setup() {
+    return {}
   }
 })
 </script>
+
+<style lang="scss" module>
+.container {
+  @include color-ui-tertiary;
+}
+</style>

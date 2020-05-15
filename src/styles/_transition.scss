@@ -1,13 +1,37 @@
 @import './easing';
 
-$name: 'vertical-swap';
-.#{$name}-enter-active,
-.#{$name}-leave-active {
+$vs: 'vertical-swap';
+$vs-reverse: 'vertical-swap-reverse';
+.#{$vs}-enter-active,
+.#{$vs}-leave-active,
+.#{$vs-reverse}-enter-active,
+.#{$vs-reverse}-leave-active {
   transition: transform 0.3s $easeOutBack;
 }
-.#{$name}-enter {
+.#{$vs-reverse}-leave-to,
+.#{$vs}-enter {
   transform: translateY(100%);
 }
-.#{$name}-leave-to {
+.#{$vs-reverse}-enter,
+.#{$vs}-leave-to {
   transform: translateY(-100%);
+}
+
+$sf: 'slide-fade';
+.#{$sf}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$sf}-leave-active {
+  transition: all 0.8s $easeInExpo;
+}
+.#{$sf}-enter {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.#{$sf}-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+.#{$sf}-move {
+  transition: transform 3s;
 }

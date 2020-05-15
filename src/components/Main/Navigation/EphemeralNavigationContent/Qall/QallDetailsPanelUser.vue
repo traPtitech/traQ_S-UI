@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <user-icon :user-id="userId" :size="24" />
-    <div>
+    <div :class="$style.userDesc">
       <slider
         v-if="showVolumeControl"
         :value="volume"
@@ -12,54 +12,33 @@
         :disabled="disabled || volume === undefined"
         :tooltip="disabled ? 'none' : 'active'"
       />
-      <span v-else :style="styles.userName" :class="$style.userName">{{
-        userName
-      }}</span>
+      <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
-    <button
-      v-if="showTuneButton"
-      @click="$emit('tune')"
-      :class="$style.button"
-      :style="styles.icon"
-    >
+    <button v-if="showTuneButton" @click="$emit('tune')" :class="$style.button">
       <icon mdi name="tune" :size="16" />
     </button>
     <button
       v-else-if="showTuneDoneButton"
       @click="$emit('tune-done')"
-      :class="$style.button"
-      :style="styles.tuneDone"
+      :class="[$style.button, $style.tuneDone]"
     >
       <icon mdi name="check" :size="16" />
     </button>
-    <div :style="styles.icon" v-else-if="micMuted" :class="$style.icon">
+    <div v-else-if="micMuted" :class="$style.icon">
       <icon mdi name="microphone-off" :size="16" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import Slider from '@/components/UI/Slider.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 
 const maxVolumeValue = 200
-
-const useStyles = () =>
-  reactive({
-    userName: makeStyles(theme => ({ color: theme.ui.secondary })),
-    icon: makeStyles(theme => ({ color: theme.ui.secondary })),
-    tuneDone: makeStyles(theme => ({ color: theme.accent.primary }))
-  })
 
 export default defineComponent({
   name: 'QallDetailsPanelUser',
@@ -90,9 +69,7 @@ export default defineComponent({
         volume: value / maxVolumeValue
       })
     }
-    const styles = useStyles()
     return {
-      styles,
       volume,
       userName,
       maxVolumeValue,
@@ -110,10 +87,12 @@ export default defineComponent({
   align-items: center;
 }
 .icon {
+  @include color-ui-secondary;
   height: 20px;
   opacity: 0.5;
 }
 .button {
+  @include color-ui-secondary;
   height: 20px;
   opacity: 0.5;
   cursor: pointer;
@@ -121,9 +100,20 @@ export default defineComponent({
     opacity: 1;
   }
 }
+.tuneDone {
+  @include color-accent-primary;
+}
+.userDesc {
+  min-width: 0;
+}
 .userName {
+  @include color-ui-secondary;
   @include size-body2;
-  display: flex;
-  align-items: center;
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

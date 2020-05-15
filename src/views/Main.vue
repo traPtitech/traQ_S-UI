@@ -12,7 +12,7 @@
     @touchend="touchendHandler"
     @touchcancel="touchendHandler"
   >
-    <div :class="$style.homeContainer" :style="styles.homeContainer">
+    <div :class="$style.homeContainer">
       <navigation v-show="shouldShowNav" :class="$style.navigationWrapper" />
       <main-view-frame
         :is-active="isMainViewActive"
@@ -40,6 +40,7 @@
     <modal-container />
     <stamp-picker-container />
     <message-tools-menu-container />
+    <toast-container />
     <portal-target :name="targetPortalName" />
   </div>
   <div v-else></div>
@@ -61,6 +62,7 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
+import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 
 export const targetPortalName = 'message-menu-popup'
 import useInitialFetch from './use/initialFetch'
@@ -74,11 +76,7 @@ const useStyles = (
       transform: `translateX(${mainViewPosition.value}px)`
     })),
     sidebarWrapper: makeStyles(theme => ({
-      transform: `translateX(${sidebarPosition.value}px)`,
-      background: theme.background.secondary
-    })),
-    homeContainer: makeStyles(theme => ({
-      background: theme.background.tertiary
+      transform: `translateX(${sidebarPosition.value}px)`
     }))
   })
 
@@ -91,6 +89,7 @@ export default defineComponent({
     ModalContainer,
     StampPickerContainer,
     MessageToolsMenuContainer,
+    ToastContainer,
     NotFound: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   },
@@ -169,6 +168,7 @@ export default defineComponent({
   height: 100%;
 }
 .homeContainer {
+  @include background-tertiary;
   height: 100%;
   display: flex;
   [data-is-mobile] & {
@@ -186,6 +186,7 @@ export default defineComponent({
   }
 }
 .sidebarWrapper {
+  @include background-secondary;
   position: absolute;
   top: 0;
   left: 100%;
