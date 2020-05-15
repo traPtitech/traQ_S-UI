@@ -24,6 +24,9 @@
 @mixin background-accent-primary {
     background: $theme-accent-primary;
 }
+@mixin background-accent-error {
+    background: $theme-accent-error;
+}
 @mixin background-primary {
     background: $theme-background-primary;
 }

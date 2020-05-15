@@ -20,7 +20,7 @@
       />
     </sidebar-content-container-foldable>
     <div :class="$style.item">
-      <form-button @click="deleteClip" label="削除" />
+      <form-button @click="deleteClip" label="削除" :error="true" />
     </div>
   </div>
 </template>
@@ -181,7 +181,7 @@ export default defineComponent({
   }
   &:last-child {
     margin: auto;
-    margin-bottom: 32px;
+    margin-top: 32px;
   }
 }
 </style>
