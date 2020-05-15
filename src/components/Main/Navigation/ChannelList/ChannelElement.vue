@@ -41,7 +41,7 @@
 
     <!-- 子チャンネル表示 -->
     <channel-list
-      v-if="!ignoreChildren && isOpened"
+      :is-shown="!ignoreChildren && isOpened"
       :class="$style.children"
       :channels="state.children"
     />
