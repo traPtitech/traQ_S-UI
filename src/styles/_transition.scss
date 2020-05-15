@@ -56,3 +56,9 @@ $tl: 'timeline';
 .#{$tl}-move {
   transition: transform 0.5s;
 }
+
+$bk: 'background-shadow';
+.#{$bk}-enter,
+.#{$bk}-leave-to {
+  background-color: rgba(0, 0, 0, 0);
+}
