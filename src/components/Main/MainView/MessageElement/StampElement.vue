@@ -3,9 +3,16 @@
     :class="$style.body"
     :title="state.tooltip"
     :data-include-me="state.includeMe"
+    :data-my-count-has-changed="state.myCountHasChanged"
     @click="onClick"
   >
-    <stamp :stamp-id="stamp.id" :size="20" without-title />
+    <stamp
+      :stamp-id="stamp.id"
+      :size="20"
+      without-title
+      :class="$style.icon"
+      @animationend.native="unsetMyCountHasChanged"
+    />
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
 </template>
@@ -38,11 +45,7 @@ export default defineComponent({
     )
 
     const state = reactive({
-      includeMe: computed(() =>
-        props.stamp.users.some(
-          user => user.id === store.state.domain.me.detail?.id
-        )
-      ),
+      includeMe: computed(() => props.stamp.myCount > 0),
       tooltip: computed(() =>
         [
           `:${stampName.value}:`,
@@ -54,7 +57,8 @@ export default defineComponent({
           )
         ].join(' ')
       ),
-      isProgress: false
+      isProgress: false,
+      myCountHasChanged: false
     })
 
     const onClick = () => {
@@ -73,9 +77,20 @@ export default defineComponent({
       }
     )
 
+    watch(
+      () => props.stamp.myCount,
+      async () => {
+        state.myCountHasChanged = true
+      }
+    )
+    const unsetMyCountHasChanged = () => {
+      state.myCountHasChanged = false
+    }
+
     return {
       state,
-      onClick
+      onClick,
+      unsetMyCountHasChanged
     }
   }
 })
@@ -97,6 +112,24 @@ export default defineComponent({
   user-select: none;
   overflow: hidden;
   contain: content;
+}
+
+.icon {
+  .body[data-my-count-has-changed] & {
+    animation: stamp-pressed 0.5s ease;
+  }
+}
+
+@keyframes stamp-pressed {
+  0% {
+    transform: scale(0.7);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .count {

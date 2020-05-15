@@ -8,7 +8,12 @@
       :data-is-open="isDetailShown"
       @click="toggleDetail"
     />
-    <div :class="$style.stampList" :data-show-details="isDetailShown">
+    <transition-group
+      name="stamp"
+      tag="div"
+      :class="$style.stampList"
+      :data-show-details="isDetailShown"
+    >
       <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
         <stamp-element
           :class="$style.element"
@@ -22,12 +27,18 @@
           :stamp="stamp"
         />
       </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  PropType,
+  ref,
+  Ref
+} from '@vue/composition-api'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'
@@ -48,6 +59,10 @@ export interface MessageStampById {
    */
   sum: number
   /**
+   * 自分の押した数
+   */
+  myCount: number
+  /**
    * ユーザーとそのユーザーの押した数
    */
   users: Array<{ id: UserId; count: number }>
@@ -61,7 +76,10 @@ export interface MessageStampById {
   updatedAt: Date
 }
 
-const createStampList = (props: { stamps: MessageStamp[] }) => {
+const createStampList = (
+  props: { stamps: MessageStamp[] },
+  myId: Ref<UserId | undefined>
+) => {
   const map: Record<StampId, MessageStampById> = {}
   props.stamps.forEach(stamp => {
     const { stampId } = stamp
@@ -69,6 +87,7 @@ const createStampList = (props: { stamps: MessageStamp[] }) => {
       map[stampId] = {
         id: stamp.stampId,
         sum: stamp.count,
+        myCount: stamp.userId === myId.value ? stamp.count : 0,
         users: [{ id: stamp.userId, count: stamp.count }],
         createdAt: new Date(stamp.createdAt),
         updatedAt: new Date(stamp.updatedAt)
@@ -76,6 +95,9 @@ const createStampList = (props: { stamps: MessageStamp[] }) => {
     } else {
       map[stampId].sum += stamp.count
       map[stampId].users.push({ id: stamp.userId, count: stamp.count })
+      if (stamp.userId === myId.value) {
+        map[stampId].myCount = stamp.count
+      }
       const createdAt = new Date(stamp.createdAt)
       if (createdAt < map[stampId].createdAt) {
         map[stampId].createdAt = createdAt
@@ -109,7 +131,8 @@ export default defineComponent({
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
-    const stampList = computed(() => createStampList(props))
+    const myId = computed(() => store.state.domain.me.detail?.id)
+    const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)
     const toggleDetail = () => {
