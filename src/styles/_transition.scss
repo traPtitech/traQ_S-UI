@@ -42,3 +42,17 @@ $sv: 'slide-vertical';
   transition: all 0.3s linear;
   height: 0;
 }
+
+$tl: 'timeline';
+.#{$tl}-enter-active,
+.#{$tl}-leave-active {
+  transition: all 0.5s;
+}
+.#{$tl}-enter,
+.#{$tl}-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.#{$tl}-move {
+  transition: transform 0.5s;
+}
