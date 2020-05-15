@@ -12,7 +12,7 @@
       />
       <header-tools-item
         v-if="isForcedChannel"
-        :class="$style.icon"
+        :class="$style.notificationIcon"
         icon-name="notified"
         disabled
         tooltip="強制通知チャンネル"
@@ -22,7 +22,7 @@
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
         @click="changeToNextSubscriptionLevel"
-        :class="$style.icon"
+        :class="$style.notificationIcon"
         icon-name="notified"
         tooltip="通知チャンネル"
       />
@@ -31,14 +31,14 @@
           currentChannelSubscription === ChannelSubscribeLevel.subscribed
         "
         @click="changeToNextSubscriptionLevel"
-        :class="$style.icon"
+        :class="$style.notificationIcon"
         icon-name="subscribed"
         tooltip="未読管理チャンネル"
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
         @click="changeToNextSubscriptionLevel"
-        :class="$style.icon"
+        :class="$style.notificationIcon"
         icon-mdi
         icon-name="bell-outline"
         tooltip="未購読チャンネル"
@@ -153,6 +153,13 @@ export default defineComponent({
     transform: rotate(40deg) scale(1.1);
   }
 }
+.notificationIcon {
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+    animation: shake 0.2s 2;
+  }
+}
 .starIcon {
   transition: transform 0.1s;
   &:hover {
@@ -167,6 +174,20 @@ export default defineComponent({
   }
 }
 
+@keyframes shake {
+  0% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(20deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(-20deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(0deg);
+  }
+}
 @keyframes spin {
   0% {
     transform: scale(1.1) rotate(0deg);
