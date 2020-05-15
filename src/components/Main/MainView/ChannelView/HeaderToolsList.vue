@@ -12,6 +12,7 @@
       />
       <header-tools-item
         v-if="isForcedChannel"
+        :class="$style.icon"
         icon-name="notified"
         disabled
         tooltip="強制通知チャンネル"
@@ -21,6 +22,7 @@
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
         @click="changeToNextSubscriptionLevel"
+        :class="$style.icon"
         icon-name="notified"
         tooltip="通知チャンネル"
       />
@@ -29,6 +31,7 @@
           currentChannelSubscription === ChannelSubscribeLevel.subscribed
         "
         @click="changeToNextSubscriptionLevel"
+        :class="$style.icon"
         icon-name="subscribed"
         tooltip="未読管理チャンネル"
       />
@@ -44,18 +47,21 @@
     <header-tools-item
       v-if="isStared"
       @click="context.emit('unstar-channel')"
+      :class="$style.starIcon"
       icon-name="star"
       tooltip="お気に入りから外す"
     />
     <header-tools-item
       v-else
       @click="context.emit('star-channel')"
+      :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
       @click="context.emit('click-pin')"
+      :class="$style.icon"
       icon-mdi
       icon-name="pin"
     />
@@ -64,6 +70,7 @@
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
       <header-tools-item
         @click="context.emit('click-more')"
+        :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
       />
@@ -138,8 +145,34 @@ export default defineComponent({
   top: 100%;
 }
 .qallIcon {
+  transition: transform 0.1s;
   &[data-is-active] {
     color: $common-ui-qall;
+  }
+  &:hover {
+    transform: rotate(40deg) scale(1.1);
+  }
+}
+.starIcon {
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+    animation: spin 0.5s;
+  }
+}
+.icon {
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(360deg);
   }
 }
 </style>
