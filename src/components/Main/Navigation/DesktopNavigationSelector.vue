@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <icon :class="$style.logo" name="traQ" :size="44" />
+    <div :class="$style.logo" :title="`traQ ${version}`">
+      <icon name="traQ" :size="28" />
+    </div>
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -41,6 +43,7 @@ import {
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
+import version from '@/lib/version'
 
 export default defineComponent({
   name: 'NavigationSelector',
@@ -74,6 +77,7 @@ export default defineComponent({
     })
 
     return {
+      version,
       entries,
       ephemeralEntries,
       showSeparator,
@@ -94,6 +98,7 @@ export default defineComponent({
 }
 .logo {
   @include color-accent-primary;
+  display: flex;
   padding: 8px;
   margin: 8px;
 }
