@@ -62,3 +62,51 @@ $bk: 'background-shadow';
 .#{$bk}-leave-to {
   background-color: rgba(0, 0, 0, 0);
 }
+
+$tu: 'typing-users';
+.#{$tu}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$tu}-leave-active {
+  transition: all 0.3s $easeInCirc;
+}
+.#{$tu}-enter,
+.#{$tu}-leave-to {
+  transform: translateY(0%) !important;
+  opacity: 0;
+}
+
+$fl: 'fade-left';
+$fr: 'fade-right';
+$fb: 'fade-bottom';
+.#{$fl}-enter-active,
+.#{$fr}-enter-active,
+.#{$fb}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$fl}-leave-active,
+.#{$fr}-leave-active,
+.#{$fb}-leave-active {
+  transition: all 0.3s $easeInCirc;
+}
+.#{$fl}-move,
+.#{$fr}-move,
+.#{$fb}-move {
+  transition: transform 0.3s;
+}
+
+.#{$fl}-enter,
+.#{$fl}-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.#{$fr}-enter,
+.#{$fr}-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.#{$fb}-enter,
+.#{$fb}-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}

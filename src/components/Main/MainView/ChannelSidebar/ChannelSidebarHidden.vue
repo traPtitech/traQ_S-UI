@@ -10,6 +10,7 @@
     />
     <user-icon-ellipsis-list
       direction="col"
+      transition="fade-bottom"
       :max="3"
       show-count
       :user-ids="viewerIds"
