@@ -14,22 +14,26 @@
         :data-is-open="isOpen"
       />
     </template>
-    <template v-if="isOpen" #default>
-      <slot></slot>
+    <template #default>
+      <slide-down :is-open="isOpen">
+        <slot />
+      </slide-down>
     </template>
   </sidebar-content-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from '@vue/composition-api'
-import Icon from '@/components/UI/Icon.vue'
+import { defineComponent, ref } from '@vue/composition-api'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import Icon from '@/components/UI/Icon.vue'
+import SlideDown from '@/components/UI/SlideDown.vue'
 
 export default defineComponent({
   name: 'SidebarContentContainerFoldable',
   components: {
     SidebarContentContainer,
-    Icon
+    Icon,
+    SlideDown
   },
   props: {
     title: String,
@@ -43,11 +47,10 @@ export default defineComponent({
     }
   },
   setup() {
-    const state = reactive({
-      isOpen: false
-    })
-    const toggle = () => (state.isOpen = !state.isOpen)
-    return { ...toRefs(state), toggle }
+    const isOpen = ref(false)
+    const toggle = () => (isOpen.value = !isOpen.value)
+
+    return { isOpen, toggle }
   }
 })
 </script>

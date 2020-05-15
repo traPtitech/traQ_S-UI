@@ -35,3 +35,10 @@ $sf: 'slide-fade';
 .#{$sf}-move {
   transition: transform 3s;
 }
+
+$sv: 'slide-vertical';
+.#{$sv}-enter-active,
+.#{$sv}-leave-active {
+  transition: all 0.3s linear;
+  height: 0;
+}
