@@ -1,23 +1,33 @@
 <template>
-  <div :class="$style.stampList" :data-show-details="isShowDetail">
-    <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
-      <stamp-element
-        :class="$style.element"
-        :stamp="stamp"
-        @add-stamp="addStamp"
-        @remove-stamp="removeStamp"
-      />
-      <stamp-detail-element
-        v-if="props.isShowDetail"
-        :class="$style.detail"
-        :stamp="stamp"
-      />
+  <div v-if="stamps.length > 0" :class="$style.stampWrapper">
+    <icon
+      v-if="showDetailButton"
+      name="rounded-triangle"
+      :size="20"
+      :class="$style.toggleButton"
+      :data-is-open="isDetailShown"
+      @click="toggleDetail"
+    />
+    <div :class="$style.stampList" :data-show-details="isDetailShown">
+      <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
+        <stamp-element
+          :class="$style.element"
+          :stamp="stamp"
+          @add-stamp="addStamp"
+          @remove-stamp="removeStamp"
+        />
+        <stamp-detail-element
+          v-if="isDetailShown"
+          :class="$style.detail"
+          :stamp="stamp"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref } from '@vue/composition-api'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'
@@ -92,14 +102,20 @@ export default defineComponent({
       type: String,
       required: true
     },
-    isShowDetail: {
+    showDetailButton: {
       type: Boolean,
-      required: true
+      default: false
     }
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
     const stampList = computed(() => createStampList(props))
+
+    const isDetailShown = ref(false)
+    const toggleDetail = () => {
+      isDetailShown.value = !isDetailShown.value
+    }
+
     const addStamp = (stampId: StampId) => {
       store.dispatch.domain.messagesView.addStamp({
         messageId: props.messageId,
@@ -112,9 +128,11 @@ export default defineComponent({
         stampId
       })
     }
+
     return {
-      props,
       stampList,
+      isDetailShown,
+      toggleDetail,
       addStamp,
       removeStamp
     }
@@ -123,9 +141,26 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.toggle {
-  margin-right: 4px;
+.stampWrapper {
+  position: relative;
+  margin-top: 8px;
+  margin-left: 42px;
 }
+
+.toggleButton {
+  @include color-ui-secondary;
+  position: absolute;
+  left: -26px;
+  top: 2px;
+  cursor: pointer;
+
+  transform: rotate(0turn);
+  &[data-is-open] {
+    transform: rotate(-0.5turn);
+  }
+  transition: transform 0.5s;
+}
+
 .stampList {
   display: flex;
   flex-wrap: wrap;
