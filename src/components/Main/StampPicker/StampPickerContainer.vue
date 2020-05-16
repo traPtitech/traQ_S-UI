@@ -31,19 +31,16 @@ const useStampPicker = () => {
 const useStyles = (position: Ref<Place | undefined>) =>
   reactive({
     stampPicker: computed(() => {
+      if (!position.value) return {}
       const height = 320
       const width = 340
       const margin = 20
       return {
-        top: position.value
-          ? `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`
-          : '',
-        left: position.value
-          ? `min(${Math.max(
-              position.value.x,
-              width + margin
-            )}px, calc(100vw - ${margin}px))`
-          : ''
+        top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
+        left: `min(${Math.max(
+          position.value.x,
+          width + margin
+        )}px, calc(100vw - ${margin}px))`
       }
     })
   })

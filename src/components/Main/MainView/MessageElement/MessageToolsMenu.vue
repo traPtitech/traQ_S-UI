@@ -100,7 +100,7 @@ export default defineComponent({
   props: {
     messageId: {
       type: String as PropType<MessageId>,
-      required: true
+      default: ''
     }
   },
   setup(props) {
