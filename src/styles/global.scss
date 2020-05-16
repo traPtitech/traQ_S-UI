@@ -17,3 +17,7 @@ body {
   touch-action: manipulation;
   overscroll-behavior-y: contain;
 }
+
+img {
+  image-orientation: from-image;
+}
