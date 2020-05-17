@@ -58,8 +58,40 @@ import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
+import { embeddingOrigin } from '@/lib/apis'
 
 const LOAD_MORE_THRESHOLD = 10
+
+const useInternalLink = (
+  rootRef: Ref<HTMLElement | null>,
+  context: SetupContext
+) => {
+  const hostname = new URL(embeddingOrigin).hostname
+
+  const onClick = (event: MouseEvent) => {
+    if (!event.target) return
+    const target = event.target as HTMLElement
+    const $a = target.closest('a[href]') as HTMLAnchorElement | null
+    if (!$a || !$a.href.includes(`://${hostname}`)) return
+
+    const href = new URL($a.href)
+    const linkPath = href.pathname + href.search + href.hash
+
+    if (confirm(`${linkPath}への内部リンクを別タブで開きますか？`)) {
+      return
+    }
+
+    event.preventDefault()
+    context.root.$router.push(linkPath)
+  }
+
+  onMounted(() => {
+    rootRef.value?.addEventListener('click', onClick)
+  })
+  onBeforeUnmount(() => {
+    rootRef.value?.removeEventListener('click', onClick)
+  })
+}
 
 const useSpoilerToggler = (rootRef: Ref<HTMLElement | null>) => {
   const toggleSpoilerHandler = (event: MouseEvent) => {
@@ -208,6 +240,7 @@ export default defineComponent({
       }
     }, 17)
 
+    useInternalLink(rootRef, context)
     useSpoilerToggler(rootRef)
 
     const dayDiff = useCompareDate(props)
