@@ -40,7 +40,6 @@ import SidebarContentContainerFoldable from '@/components/Main/MainView/MainView
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
-import { ClipFolder } from '@traptitech/traq'
 import router from '@/router'
 
 const useEdit = (
@@ -75,20 +74,17 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
     }
     await apis.deleteClipFolder(props.clipFolderId)
     const clipFolders = Object.entries(store.state.entities.clipFolders)
-    if (clipFolders.length !== 0) {
-      let firstClip: ClipFolder | undefined = undefined
-      for (const clip of clipFolders) {
-        const date = clip[1]?.createdAt
-          ? new Date(clip[1]?.createdAt)
-          : undefined
-        if (date && (!firstClip || date > new Date(firstClip.createdAt))) {
-          firstClip = clip[1]
-        }
-      }
-      if (firstClip) {
-        router.push(`/clip-folders/${firstClip.id}`)
-        return
-      }
+      .filter(v => v[1]?.id !== props.clipFolderId)
+      .sort(function (a, b) {
+        const aDate = new Date(a[1]?.createdAt ?? 0)
+        const bDate = new Date(b[1]?.createdAt ?? 0)
+        if (aDate < bDate) return -1
+        else if (aDate > bDate) return 1
+        else return 0
+      })
+    if (clipFolders.length !== 0 && clipFolders[0][1]?.id) {
+      router.push(`/clip-folders/${clipFolders[0][1].id}`)
+      return
     }
     switch (store.state.app.browserSettings.openMode) {
       case 'lastOpen':
