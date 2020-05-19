@@ -37,7 +37,7 @@ const useTextFilter = <T, K extends keyof T>(
           matched.push(item)
         }
       }
-      return fullMatched ? [...fullMatched, ...matched] : matched
+      return [...fullMatched, ...matched]
     })
   })
   const setQuery = (query: string) => {

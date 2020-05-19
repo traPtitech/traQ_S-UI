@@ -26,6 +26,17 @@ const useWindowResizeObserver = () => {
   resizeHandler()
 }
 
+const useQallConfirmer = () => {
+  window.addEventListener('beforeunload', event => {
+    if (store.state.app.rtc.mixer) {
+      const unloadMessage = 'Qall中ですが本当に終了しますか？'
+      event.preventDefault()
+      event.returnValue = unloadMessage
+      return unloadMessage
+    }
+  })
+}
+
 const useThemeObserver = () => {
   const themeColor = computed(
     () => store.getters.app.themeSettings.currentTheme.accent.primary
@@ -111,6 +122,8 @@ export default defineComponent({
   setup() {
     useWindowResizeObserver()
     const isMobile = computed(() => store.getters.ui.isMobile)
+
+    useQallConfirmer()
 
     useThemeObserver()
     useEcoModeObserver()

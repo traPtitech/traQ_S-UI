@@ -114,7 +114,6 @@ export default defineComponent({
   grid-template-columns: 42px 1fr;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
 }
 
 .userIcon {
