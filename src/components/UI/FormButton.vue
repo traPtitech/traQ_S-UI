@@ -3,6 +3,7 @@
     :class="$style.container"
     :disabled="disabled"
     @click="context.emit('click')"
+    :data-is-error="error"
   >
     {{ label }}
   </button>
@@ -19,6 +20,10 @@ export default defineComponent({
       default: ''
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    error: {
       type: Boolean,
       default: false
     }
@@ -40,6 +45,9 @@ export default defineComponent({
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  &[data-is-error] {
+    @include background-accent-error;
   }
 }
 </style>

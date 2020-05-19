@@ -45,16 +45,7 @@ const useRouteWacher = (context: SetupContext) => {
 
   const useOpenChannel = async () => {
     await originalStore.restored
-    return computed(() => {
-      switch (store.state.app.browserSettings.openMode) {
-        case 'lastOpen':
-          return (
-            store.state.app.browserSettings.lastOpenChannelName ?? 'general'
-          )
-        case 'particular':
-          return store.state.app.browserSettings.openChannelName ?? 'general'
-      }
-    })
+    return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
   const onRouteChangedToIndex = async () => {
     try {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.container">
     <sidebar-content-container title="名前" :class="$style.item">
       <content-editor
         :value="name"
@@ -19,6 +19,9 @@
         @edit-start="startDesciptionEdit"
       />
     </sidebar-content-container-foldable>
+    <div :class="$style.item">
+      <form-button @click="deleteClip" label="削除" :error="true" />
+    </div>
   </div>
 </template>
 
@@ -36,6 +39,9 @@ import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '@/lib/apis'
+import FormButton from '@/components/UI/FormButton.vue'
+import router, { constructChannelPath } from '@/router'
+import { ClipFolderMap } from '@/store/entities'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -62,12 +68,41 @@ const useEdit = (
   return { isEditing, onInput, startEdit, onEditDone }
 }
 
+const useDelete = (props: { clipFolderId: ClipFolderId }) => {
+  const deleteClip = async () => {
+    if (!window.confirm('本当に削除しますか？')) {
+      return
+    }
+    await apis.deleteClipFolder(props.clipFolderId)
+    const clipFolders = Object.values(
+      store.state.entities.clipFolders as ClipFolderMap
+    )
+      .filter(v => v.id !== props.clipFolderId)
+      .sort((a, b) => {
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
+        if (aDate < bDate) return -1
+        else if (aDate > bDate) return 1
+        else return 0
+      })
+    if (clipFolders.length > 0) {
+      router.push(`/clip-folders/${clipFolders[0].id}`)
+      return
+    }
+    router.push(
+      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
+    )
+  }
+  return { deleteClip }
+}
+
 export default defineComponent({
   name: 'ClipsSidebarContent',
   components: {
     SidebarContentContainer,
     SidebarContentContainerFoldable,
-    ContentEditor
+    ContentEditor,
+    FormButton
   },
   props: {
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
@@ -97,6 +132,9 @@ export default defineComponent({
       startEdit: startDesciptionEdit,
       onEditDone: onDesciptionEditDone
     } = useEdit(props, state, 'description')
+
+    const { deleteClip } = useDelete(props)
+
     return {
       name,
       description,
@@ -107,20 +145,29 @@ export default defineComponent({
       isDesciptionEditing,
       onDesciptionInput,
       startDesciptionEdit,
-      onDesciptionEditDone
+      onDesciptionEditDone,
+      deleteClip
     }
   }
 })
 </script>
 
 <style lang="scss" module>
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .item {
   margin: 16px 0;
   &:first-child {
     margin-top: 0;
   }
   &:last-child {
-    margin-bottom: 0;
+    margin: auto;
+    margin-top: 32px;
   }
 }
 </style>

@@ -55,4 +55,7 @@ export default defineComponent({
 .sidebarItem {
   margin: 16px 0;
 }
+.content {
+  height: 100%;
+}
 </style>
