@@ -13,6 +13,7 @@
       <header-tools-item
         v-if="isForcedChannel"
         :class="$style.notificationIcon"
+        data-state="notified"
         icon-name="notified"
         disabled
         tooltip="強制通知チャンネル"
@@ -23,6 +24,7 @@
         "
         @click="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
+        data-state="notified"
         icon-name="notified"
         tooltip="通知チャンネル"
       />
@@ -32,6 +34,7 @@
         "
         @click="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
+        data-state="subscribed"
         icon-name="subscribed"
         tooltip="未読管理チャンネル"
       />
@@ -39,6 +42,7 @@
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
         @click="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
+        data-state="none"
         icon-mdi
         icon-name="bell-outline"
         tooltip="未購読チャンネル"
@@ -48,6 +52,7 @@
       v-if="isStared"
       @click="context.emit('unstar-channel')"
       :class="$style.starIcon"
+      data-is-stared
       icon-name="star"
       tooltip="お気に入りから外す"
     />
@@ -148,23 +153,28 @@ export default defineComponent({
   transition: transform 0.1s;
   &[data-is-active] {
     color: $common-ui-qall;
+    animation: shake 0.2s 2;
   }
   &:hover {
-    transform: rotate(40deg) scale(1.1);
+    transform: scale(1.1);
   }
 }
 .notificationIcon {
   transition: transform 0.1s;
+  &[data-state='notified'] {
+    animation: shake 0.2s 2;
+  }
   &:hover {
     transform: scale(1.1);
-    animation: shake 0.2s 2;
   }
 }
 .starIcon {
   transition: transform 0.1s;
+  &[data-is-stared] {
+    animation: spinAndPress 0.5s;
+  }
   &:hover {
     transform: scale(1.1);
-    animation: spin 0.5s;
   }
 }
 .icon {
@@ -179,18 +189,25 @@ export default defineComponent({
     transform: scale(1.1) rotate(0deg);
   }
   25% {
-    transform: scale(1.1) rotate(20deg);
+    transform: scale(1.1) rotate(-10deg);
   }
   75% {
-    transform: scale(1.1) rotate(-20deg);
+    transform: scale(1.1) rotate(10deg);
   }
   100% {
     transform: scale(1.1) rotate(0deg);
   }
 }
-@keyframes spin {
+
+@keyframes spinAndPress {
   0% {
     transform: scale(1.1) rotate(0deg);
+  }
+  60% {
+    transform: scale(1.1) rotate(360deg);
+  }
+  80% {
+    transform: scale(1.3) rotate(360deg);
   }
   100% {
     transform: scale(1.1) rotate(360deg);
