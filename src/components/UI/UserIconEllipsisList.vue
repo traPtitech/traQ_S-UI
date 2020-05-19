@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <transition-group
+    :name="transition"
+    :class="$style.container"
+    :style="styles.container"
+  >
     <span
       v-if="inVisibleCount > 0 && showCount"
       :class="$style.count"
@@ -15,7 +19,7 @@
       :key="userId"
       :style="styles.userIcon"
     />
-  </div>
+  </transition-group>
 </template>
 
 <script lang="ts">
@@ -58,7 +62,8 @@ export default defineComponent({
     userIds: { type: Array as PropType<UserId[]>, default: [] },
     borderWidth: { type: Number, default: 4 },
     iconSize: { type: Number, default: 40 },
-    overlap: { type: Number, default: 12 }
+    overlap: { type: Number, default: 12 },
+    transition: String
   },
   setup(props) {
     const styles = useSizeStyles(props)

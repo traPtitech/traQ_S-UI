@@ -6,14 +6,14 @@
       :has-notification="hasNotification"
       @click.native="toggleFolding"
     />
-    <template v-if="isFolding">
+    <slide-down :is-open="!isFolding">
       <users-element
         v-for="user in users"
         :key="user.id"
         :user="user"
         :class="$style.element"
       />
-    </template>
+    </slide-down>
   </div>
 </template>
 
@@ -22,10 +22,11 @@ import { defineComponent, ref, PropType, computed } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
+import SlideDown from '@/components/UI/SlideDown.vue'
 import store from '@/store'
 
 const useFolding = () => {
-  const isFolding = ref(false)
+  const isFolding = ref(true)
   const toggleFolding = () => {
     isFolding.value = !isFolding.value
   }
@@ -37,7 +38,8 @@ export default defineComponent({
   name: 'UsersGradeList',
   components: {
     UsersSeparator,
-    UsersElement
+    UsersElement,
+    SlideDown
   },
   props: {
     name: {

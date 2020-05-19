@@ -1,38 +1,40 @@
 <template>
-  <div v-if="modalState.shouldShowModal" :class="$style.container">
-    <setting-modal v-if="modalState.current.type === 'setting'" />
-    <user-modal
-      v-else-if="modalState.current.type === 'user'"
-      :id="modalState.current.id"
-    />
-    <notification-modal
-      v-else-if="modalState.current.type === 'notification'"
-    />
-    <group-modal
-      v-else-if="modalState.current.type === 'group'"
-      :group-id="modalState.current.id"
-    />
-    <tag-modal
-      v-else-if="modalState.current.type === 'tag'"
-      :tag-id="modalState.current.id"
-    />
-    <channel-create-modal
-      v-else-if="modalState.current.type === 'channel-create'"
-      :parent-channel-id="modalState.current.parentChannelId"
-    />
-    <file-modal
-      v-else-if="modalState.current.type === 'file'"
-      :file-id="modalState.current.id"
-    />
-    <qr-code-modal v-else-if="modalState.current.type === 'qrcode'" />
-    <clip-create-modal
-      v-else-if="modalState.current.type === 'clip-create'"
-      :message-id="modalState.current.messageId"
-    />
-    <clip-folder-create-modal
-      v-else-if="modalState.current.type === 'clip-folder-create'"
-    />
-  </div>
+  <transition name="background-shadow">
+    <div v-if="modalState.shouldShowModal" :class="$style.container">
+      <setting-modal v-if="modalState.current.type === 'setting'" />
+      <user-modal
+        v-else-if="modalState.current.type === 'user'"
+        :id="modalState.current.id"
+      />
+      <notification-modal
+        v-else-if="modalState.current.type === 'notification'"
+      />
+      <group-modal
+        v-else-if="modalState.current.type === 'group'"
+        :group-id="modalState.current.id"
+      />
+      <tag-modal
+        v-else-if="modalState.current.type === 'tag'"
+        :tag-id="modalState.current.id"
+      />
+      <channel-create-modal
+        v-else-if="modalState.current.type === 'channel-create'"
+        :parent-channel-id="modalState.current.parentChannelId"
+      />
+      <file-modal
+        v-else-if="modalState.current.type === 'file'"
+        :file-id="modalState.current.id"
+      />
+      <qr-code-modal v-else-if="modalState.current.type === 'qrcode'" />
+      <clip-create-modal
+        v-else-if="modalState.current.type === 'clip-create'"
+        :message-id="modalState.current.messageId"
+      />
+      <clip-folder-create-modal
+        v-else-if="modalState.current.type === 'clip-folder-create'"
+      />
+    </div>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -105,7 +107,8 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.15);
+  transition: background-color 0.1s;
   z-index: $z-index-modal-container;
 }
 </style>

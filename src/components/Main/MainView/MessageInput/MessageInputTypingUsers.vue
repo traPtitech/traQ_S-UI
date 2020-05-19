@@ -1,17 +1,20 @@
 <template>
-  <div v-if="typingUsers.length > 0" :class="$style.container">
-    <div :class="$style.text">
-      {{ text }}
+  <transition name="typing-users">
+    <div v-if="typingUsers.length > 0" :class="$style.container">
+      <div :class="$style.text">
+        {{ text }}
+      </div>
+      <user-icon-ellipsis-list
+        direction="row"
+        transition="fade-left"
+        :show-count="false"
+        :user-ids="typingUsers"
+        :border-width="1"
+        :icon-size="24"
+        :overlap="8"
+      />
     </div>
-    <user-icon-ellipsis-list
-      direction="row"
-      :show-count="false"
-      :user-ids="typingUsers"
-      :border-width="1"
-      :icon-size="24"
-      :overlap="8"
-    />
-  </div>
+  </transition>
 </template>
 
 <script lang="ts">

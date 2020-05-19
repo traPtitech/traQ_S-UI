@@ -7,6 +7,7 @@
   >
     <user-icon-ellipsis-list
       direction="row"
+      transition="fade-right"
       :user-ids="viewerIds"
       @click.native="toggle"
     />

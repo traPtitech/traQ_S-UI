@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <slide-down :is-open="isShown">
     <channel-element
       v-for="channel in filteredChannels"
       :key="channel.id"
@@ -12,7 +12,7 @@
       @channel-select="onChannelSelect"
       @channel-folding-toggle="onChannelFoldingToggle"
     />
-  </div>
+  </slide-down>
 </template>
 
 <script lang="ts">
@@ -28,6 +28,7 @@ import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
 import { Channel } from '@traptitech/traq'
+import SlideDown from '@/components/UI/SlideDown.vue'
 
 const useChannelFolding = () => {
   const state = reactive({
@@ -52,9 +53,14 @@ export default defineComponent({
     // 型エラー・コンポーネント循環参照の回避
     ChannelElement: (() =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      import('./ChannelElement.vue')) as any
+      import('./ChannelElement.vue')) as any,
+    SlideDown
   },
   props: {
+    isShown: {
+      type: Boolean,
+      default: true
+    },
     channels: {
       type: Array as PropType<Array<ChannelTreeNode | Channel>>,
       required: true

@@ -35,3 +35,78 @@ $sf: 'slide-fade';
 .#{$sf}-move {
   transition: transform 3s;
 }
+
+$sv: 'slide-vertical';
+.#{$sv}-enter-active,
+.#{$sv}-leave-active {
+  transition: all 0.15s $easeOutQuad;
+  height: 0;
+}
+
+$tl: 'timeline';
+.#{$tl}-enter-active,
+.#{$tl}-leave-active {
+  transition: all 0.5s;
+}
+.#{$tl}-enter,
+.#{$tl}-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.#{$tl}-move {
+  transition: transform 0.5s;
+}
+
+$bk: 'background-shadow';
+.#{$bk}-enter,
+.#{$bk}-leave-to {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+$tu: 'typing-users';
+.#{$tu}-enter-active {
+  transition: all 0.5s $easeOutCirc;
+}
+.#{$tu}-leave-active {
+  transition: all 0.5s $easeOutCubic;
+}
+.#{$tu}-enter,
+.#{$tu}-leave-to {
+  transform: translateY(0%) !important;
+  opacity: 0;
+}
+
+$fl: 'fade-left';
+$fr: 'fade-right';
+$fb: 'fade-bottom';
+.#{$fl}-enter-active,
+.#{$fr}-enter-active,
+.#{$fb}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$fl}-leave-active,
+.#{$fr}-leave-active,
+.#{$fb}-leave-active {
+  transition: all 0.3s $easeInCirc;
+}
+.#{$fl}-move,
+.#{$fr}-move,
+.#{$fb}-move {
+  transition: transform 0.3s;
+}
+
+.#{$fl}-enter,
+.#{$fl}-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.#{$fr}-enter,
+.#{$fr}-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.#{$fb}-enter,
+.#{$fb}-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}

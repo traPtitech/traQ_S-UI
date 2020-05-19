@@ -17,13 +17,15 @@
         @click="togglePerChannel"
       />
     </div>
-    <activity-element
-      v-for="message in state.messages"
-      :key="message.id"
-      :class="$style.element"
-      :type="isPerChannel ? 'channel' : 'message'"
-      :message="message"
-    />
+    <transition-group name="timeline" tag="div">
+      <activity-element
+        v-for="message in state.messages"
+        :key="message.id"
+        :class="$style.element"
+        :type="isPerChannel ? 'channel' : 'message'"
+        :message="message"
+      />
+    </transition-group>
   </div>
 </template>
 

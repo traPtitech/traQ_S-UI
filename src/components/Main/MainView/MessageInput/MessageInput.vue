@@ -4,7 +4,7 @@
       :class="$style.stampPickerLocator"
       :name="targetPortalName"
     />
-    <message-input-file-list :class="$style.inputFileList" />
+    <message-input-file-list />
     <message-input-typing-users :typing-users="typingUsers" />
     <message-input-key-guide :show="showKeyGuide" />
     <div :class="$style.inputContainer">
@@ -13,7 +13,6 @@
         @click="addAttachment"
       />
       <message-input-text-area
-        :class="$style.inputTextArea"
         :text="textState.text"
         @focus="onFocus"
         @blur="onBlur"
