@@ -39,7 +39,7 @@ $sf: 'slide-fade';
 $sv: 'slide-vertical';
 .#{$sv}-enter-active,
 .#{$sv}-leave-active {
-  transition: all 0.1s linear;
+  transition: all 0.15s $easeOutQuad;
   height: 0;
 }
 
