@@ -42,7 +42,10 @@ import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 
-const useDevicesInfo = (state: { isEnabled: boolean }) => {
+const useDevicesInfo = (state: {
+  isEnabled: boolean
+  audioInputDeviceId: string
+}) => {
   const devices = ref<MediaDeviceInfo[]>([])
   const fetchFailed = ref(false)
 
@@ -65,7 +68,15 @@ const useDevicesInfo = (state: { isEnabled: boolean }) => {
     if (state.isEnabled) {
       // offからonになったときは許可を求める
       await navigator.mediaDevices.getUserMedia({ audio: true })
-      fetchDeviceList()
+      await fetchDeviceList()
+
+      const isAlreadySet = audioInputDevices.value.some(
+        d => d.deviceId === state.audioInputDeviceId
+      )
+      if (isAlreadySet) return
+
+      // デフォルトをセットする
+      state.audioInputDeviceId = audioInputDevices.value[0].deviceId
     }
   })
 
