@@ -76,7 +76,9 @@ const useDevicesInfo = (state: {
       if (isAlreadySet) return
 
       // デフォルトをセットする
-      state.audioInputDeviceId = audioInputDevices.value[0].deviceId
+      if (audioInputDevices.value.length > 0) {
+        state.audioInputDeviceId = audioInputDevices.value[0]?.deviceId
+      }
     }
   })
 
