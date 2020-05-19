@@ -40,7 +40,7 @@ import SidebarContentContainerFoldable from '@/components/Main/MainView/MainView
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
-import router from '@/router'
+import router, { constructChannelPath } from '@/router'
 import { ClipFolderMap } from '@/store/entities'
 
 const useEdit = (
@@ -89,22 +89,9 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       router.push(`/clip-folders/${clipFolders[0].id}`)
       return
     }
-    switch (store.state.app.browserSettings.openMode) {
-      case 'lastOpen':
-        router.push(
-          `/channels/${
-            store.state.app.browserSettings.lastOpenChannelName ?? 'general'
-          }`
-        )
-        return
-      case 'particular':
-        router.push(
-          `/channels/${
-            store.state.app.browserSettings.openChannelName ?? 'general'
-          }`
-        )
-        return
-    }
+    router.push(
+      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
+    )
   }
   return { deleteClip }
 }
