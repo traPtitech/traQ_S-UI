@@ -1,30 +1,23 @@
 <template>
   <div :class="$style.container">
     <div>
-      {{ ':' + state.stamp.name + ': from' }}
+      {{ ':' + stampName + ': from' }}
     </div>
     <stamp-detail-element-content
-      v-for="(stamp, userId) in state.stampByUserId"
-      :key="userId"
-      :user-id="userId"
-      :count="stamp.count"
+      v-for="user in stamp.users"
+      :key="user.id"
+      :user-id="user.id"
+      :count="user.count"
       :class="$style.content"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import store from '@/store'
-import { StampId } from '@/types/entity-ids'
-import { MessageStamp } from '@traptitech/traq'
 import StampDetailElementContent from './StampDetailElementContent.vue'
-import { reduceToRecord } from '@/lib/util/record'
+import { MessageStampById } from './MessageStampList.vue'
 
 export default defineComponent({
   name: 'StampDetailListElement',
@@ -32,21 +25,16 @@ export default defineComponent({
     StampDetailElementContent
   },
   props: {
-    stampId: {
-      type: String as PropType<StampId>,
-      required: true
-    },
-    stamps: {
-      type: Array as PropType<MessageStamp[]>,
+    stamp: {
+      type: Object as PropType<MessageStampById>,
       required: true
     }
   },
   setup(props) {
-    const state = reactive({
-      stampByUserId: computed(() => reduceToRecord(props.stamps, 'userId')),
-      stamp: computed(() => store.state.entities.stamps[props.stampId])
-    })
-    return { state }
+    const stampName = computed(
+      () => store.state.entities.stamps[props.stamp.id].name
+    )
+    return { stampName }
   }
 })
 </script>
