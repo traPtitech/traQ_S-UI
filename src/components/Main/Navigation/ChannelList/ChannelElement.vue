@@ -274,6 +274,7 @@ $topicLeftPadding: 40px;
   position: relative;
   height: $elementHeight;
   padding-right: 4px;
+  margin-left: $bgLeftShift;
   z-index: 0;
   &[data-is-inactive] {
     opacity: 0.5;
@@ -328,7 +329,7 @@ $topicLeftPadding: 40px;
   display: block;
   position: relative;
   z-index: 0;
-  margin-left: 24px;
+  margin-left: 20px;
 }
 .selectedBg {
   @include background-accent-primary;
@@ -336,7 +337,7 @@ $topicLeftPadding: 40px;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
   top: -($bgHeight - $elementHeight)/2;
-  left: -$bgLeftShift;
+  left: 0;
   z-index: 0;
   border-top-left-radius: 100vw;
   border-bottom-left-radius: 100vw;
@@ -351,7 +352,7 @@ $topicLeftPadding: 40px;
   overflow: hidden;
 
   padding: {
-    left: $topicLeftPadding;
+    left: $topicLeftPadding + $bgLeftShift;
     right: 8px;
   }
   cursor: pointer;

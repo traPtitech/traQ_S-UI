@@ -9,6 +9,7 @@
         :class="$style.qallIcon"
         :disabled="hasActiveQallSession && !isJoinedQallSession"
         :data-is-active="isJoinedQallSession || isQallSessionOpened"
+        :data-is-joined="isJoinedQallSession"
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -153,6 +154,8 @@ export default defineComponent({
   transition: transform 0.1s;
   &[data-is-active] {
     color: $common-ui-qall;
+  }
+  &[data-is-joined] {
     animation: shake 0.2s 2;
   }
   &:hover {
