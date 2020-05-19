@@ -8,6 +8,7 @@
       v-if="inVisibleCount > 0 && showCount"
       :class="$style.count"
       :style="styles.count"
+      key="count"
     >
       +{{ inVisibleCount }}
     </span>
