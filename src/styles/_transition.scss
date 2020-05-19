@@ -65,10 +65,10 @@ $bk: 'background-shadow';
 
 $tu: 'typing-users';
 .#{$tu}-enter-active {
-  transition: all 0.3s $easeOutCirc;
+  transition: all 0.5s $easeOutCirc;
 }
 .#{$tu}-leave-active {
-  transition: all 0.3s $easeInCirc;
+  transition: all 0.5s $easeOutCubic;
 }
 .#{$tu}-enter,
 .#{$tu}-leave-to {
