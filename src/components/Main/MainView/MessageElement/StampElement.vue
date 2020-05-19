@@ -3,7 +3,7 @@
     :class="$style.body"
     :title="state.tooltip"
     :data-include-me="state.includeMe"
-    :data-my-count-has-changed="state.myCountHasChanged"
+    :data-my-count-has-incremented="state.myCountHasIncremented"
     @click="onClick"
   >
     <stamp
@@ -11,7 +11,7 @@
       :size="20"
       without-title
       :class="$style.icon"
-      @animationend.native="unsetMyCountHasChanged"
+      @animationend.native="unsetMyCountHasIncremented"
     />
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
@@ -58,7 +58,7 @@ export default defineComponent({
         ].join(' ')
       ),
       isProgress: false,
-      myCountHasChanged: false
+      myCountHasIncremented: false
     })
 
     const onClick = () => {
@@ -79,18 +79,20 @@ export default defineComponent({
 
     watch(
       () => props.stamp.myCount,
-      async () => {
-        state.myCountHasChanged = true
+      async (newVal, oldVal) => {
+        if (oldVal === undefined || newVal > oldVal) {
+          state.myCountHasIncremented = true
+        }
       }
     )
-    const unsetMyCountHasChanged = () => {
-      state.myCountHasChanged = false
+    const unsetMyCountHasIncremented = () => {
+      state.myCountHasIncremented = false
     }
 
     return {
       state,
       onClick,
-      unsetMyCountHasChanged
+      unsetMyCountHasIncremented
     }
   }
 })
@@ -115,7 +117,7 @@ export default defineComponent({
 }
 
 .icon {
-  .body[data-my-count-has-changed] & {
+  .body[data-my-count-has-incremented] & {
     animation: stamp-pressed 0.5s ease;
   }
 }
