@@ -41,6 +41,7 @@ import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEdi
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 import router from '@/router'
+import { ClipFolderMap } from '@/store/entities'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -73,17 +74,19 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       return
     }
     await apis.deleteClipFolder(props.clipFolderId)
-    const clipFolders = Object.entries(store.state.entities.clipFolders)
-      .filter(v => v[1]?.id !== props.clipFolderId)
-      .sort(function (a, b) {
-        const aDate = new Date(a[1]?.createdAt ?? 0)
-        const bDate = new Date(b[1]?.createdAt ?? 0)
+    const clipFolders = Object.values(
+      store.state.entities.clipFolders as ClipFolderMap
+    )
+      .filter(v => v.id !== props.clipFolderId)
+      .sort((a, b) => {
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
         if (aDate < bDate) return -1
         else if (aDate > bDate) return 1
         else return 0
       })
-    if (clipFolders.length !== 0 && clipFolders[0][1]?.id) {
-      router.push(`/clip-folders/${clipFolders[0][1].id}`)
+    if (clipFolders.length > 0) {
+      router.push(`/clip-folders/${clipFolders[0].id}`)
       return
     }
     switch (store.state.app.browserSettings.openMode) {
