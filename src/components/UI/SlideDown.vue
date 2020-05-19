@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
+import { rAF } from '@/lib/util/timer'
 
 export default defineComponent({
   name: 'SlideDown',
@@ -27,11 +28,11 @@ export default defineComponent({
     const setHeight = ($el: HTMLElement) => {
       $el.style.height = `${$el.scrollHeight}px`
     }
-    const unsetHeight = ($el: HTMLElement) => {
+    const unsetHeight = async ($el: HTMLElement) => {
       // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
-      requestAnimationFrame(() => {
-        $el.style.height = (null as unknown) as string
-      })
+      await rAF()
+      await rAF()
+      $el.style.height = (null as unknown) as string
     }
     return { setHeight, unsetHeight }
   }
