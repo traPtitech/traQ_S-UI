@@ -18,8 +18,9 @@ import Icon from '@/components/UI/Icon.vue'
 import store from '@/store'
 
 const iconNameMap: Record<Toast['type'], string> = {
-  info: 'info',
-  error: 'alert'
+  success: 'info',
+  error: 'alert',
+  info: 'info'
 }
 
 const useAutoHide = (props: { toast: Toast }) => {
@@ -72,13 +73,15 @@ export default defineComponent({
   padding: 8px;
   border-radius: 4px;
   pointer-events: auto;
-  &[data-type='info'] {
-    @include color-ui-primary;
-    @include background-tertiary;
+  color: $theme-background-primary;
+  &[data-type='success'] {
+    @include background-accent-primary;
   }
   &[data-type='error'] {
-    @include color-common-text-white-primary;
     background: $theme-accent-error;
+  }
+  &[data-type='info'] {
+    background: $theme-ui-secondary;
   }
 }
 .icon {

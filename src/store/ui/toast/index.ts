@@ -11,7 +11,7 @@ export interface Toast {
   /**
    * 表示タイプ
    */
-  type: 'info' | 'error'
+  type: 'success' | 'error' | 'info'
   /**
    * 表示する文字
    */
