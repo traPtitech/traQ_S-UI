@@ -175,10 +175,16 @@ export default defineComponent({
           }
           // XXX: 追加時にここは0になる
           if (ids.length - prevIds.length === 0) {
+            const scrollBottom =
+              rootRef.value.scrollTop + rootRef.value.clientHeight
+
+            // 一番下のメッセージあたりを見ているときに、
             // 新規に一つ追加された場合は一番下までスクロール
-            rootRef.value.scrollTo({
-              top: newHeight
-            })
+            if (state.height - 50 <= scrollBottom) {
+              rootRef.value.scrollTo({
+                top: newHeight
+              })
+            }
             return
           }
           rootRef.value.scrollTo({
