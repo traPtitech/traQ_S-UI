@@ -9,6 +9,7 @@ import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
+import store from '@/store'
 
 declare const window: NativeAppWindow
 
@@ -75,6 +76,42 @@ interface NotificationPayload {
   priority: string
 }
 
+const showUpdateToast = () => {
+  store.commit.ui.toast.addToast({
+    type: 'success',
+    text: 'クリックでアップデートできます',
+    timeout: 10000,
+    onClick: async () => {
+      const registration = await navigator.serviceWorker.getRegistration()
+      registration?.waiting?.postMessage({ type: 'SKIP_WAITING' })
+    }
+  })
+}
+
+const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
+  if (registration.waiting) {
+    showUpdateToast()
+    return
+  }
+
+  const newWorker = registration.installing
+  if (newWorker) {
+    newWorker.addEventListener('statechange', () => {
+      if (newWorker.state !== 'installed') return
+      showUpdateToast()
+    })
+    return
+  }
+
+  registration.addEventListener('updatefound', () => {
+    const newWorker = registration.installing
+    newWorker?.addEventListener('statechange', () => {
+      if (newWorker.state !== 'installed') return
+      showUpdateToast()
+    })
+  })
+}
+
 export const connectFirebase = async () => {
   if (isIOSApp()) {
     // iOSはNotificationがないため、先にFCMトークンを登録する
@@ -104,6 +141,8 @@ export const connectFirebase = async () => {
       scope: '/'
     })
     registration.update()
+
+    setupUpdateToast(registration)
 
     const messaging = firebase.messaging()
     messaging.useServiceWorker(registration)

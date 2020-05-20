@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-type="toast.type" @click="remove">
+  <div :class="$style.container" :data-type="toast.type" @click="onClick">
     <icon :class="$style.icon" :name="iconName" mdi :size="32" />
     <div :class="$style.text">{{ toast.text }}</div>
   </div>
@@ -56,8 +56,16 @@ export default defineComponent({
   setup(props) {
     const { remove } = useAutoHide(props)
 
+    const onClick = () => {
+      if (props.toast.onClick) {
+        props.toast.onClick()
+      } else {
+        remove()
+      }
+    }
+
     const iconName = computed(() => iconNameMap[props.toast.type])
-    return { remove, iconName }
+    return { onClick, iconName }
   }
 })
 </script>

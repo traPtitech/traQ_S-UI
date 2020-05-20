@@ -21,6 +21,12 @@ export interface Toast {
    */
   timeout: number
   /**
+   * クリック時の挙動
+   *
+   * デフォルトはトーストの削除
+   */
+  onClick?: () => unknown
+  /**
    * 自動付与されるid
    */
   id: number
