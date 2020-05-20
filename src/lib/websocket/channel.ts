@@ -6,7 +6,8 @@ import {
   ChannelUpdatedEvent,
   ChannelStaredEvent,
   ChannelUnstaredEvent,
-  ChannelViewersChangedEvent
+  ChannelViewersChangedEvent,
+  ChannelSubscribersChangedEvent
 } from './events'
 import { dmParentUuid } from '@/lib/util/uuid'
 
@@ -65,4 +66,13 @@ export const onChannelViewersChanged = (
   data: ChannelViewersChangedEvent['body']
 ) => {
   store.commit.domain.messagesView.setCurrentViewer(data.viewers)
+}
+
+export const onChannelSubscribersChanged = async ({
+  id
+}: ChannelSubscribersChangedEvent['body']) => {
+  if (isCurrentChannel(id)) {
+    const subscribers = (await apis.getChannelSubscribers(id)).data
+    store.commit.domain.messagesView.setSubscribers(subscribers)
+  }
 }

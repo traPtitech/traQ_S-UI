@@ -109,6 +109,7 @@ type ChannelEvent =
   | ChannelStaredEvent
   | ChannelUnstaredEvent
   | ChannelViewersChangedEvent
+  | ChannelSubscribersChangedEvent
 
 interface ChannelIdBody {
   id: ChannelId
@@ -145,6 +146,11 @@ export interface ChannelViewersChangedEvent {
     id: ChannelId
     viewers: ChannelViewer[]
   }
+}
+
+export interface ChannelSubscribersChangedEvent {
+  type: 'CHANNEL_SUBSCRIBERS_CHANGED'
+  body: ChannelIdBody
 }
 
 /*
