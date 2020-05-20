@@ -165,10 +165,10 @@ export const actions = defineActions({
   removeStamp(_, payload: { messageId: MessageId; stampId: StampId }) {
     apis.removeMessageStamp(payload.messageId, payload.stampId)
   },
-  addPinned(_, payload: { messageId: MessageId }) {
-    apis.createPin(payload.messageId)
+  async addPinned(_, payload: { messageId: MessageId }) {
+    await apis.createPin(payload.messageId)
   },
-  removePinned(_, payload: { messageId: MessageId }) {
-    apis.removePin(payload.messageId)
+  async removePinned(_, payload: { messageId: MessageId }) {
+    await apis.removePin(payload.messageId)
   }
 })

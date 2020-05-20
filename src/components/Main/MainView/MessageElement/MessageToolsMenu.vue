@@ -14,15 +14,16 @@
     >
       ピン留め
     </span>
-    <span :class="$style.text" @click="withClose(showClipCreateModal)"
-      >クリップ</span
-    >
+    <span :class="$style.text" @click="withClose(showClipCreateModal)">
+      クリップ
+    </span>
     <span
       v-if="isMine && !isMinimum"
       :class="$style.text"
       @click="withClose(editMessage)"
-      >編集</span
     >
+      編集
+    </span>
     <span :class="$style.text" @click="withClose(copyLink)">
       リンクをコピー
     </span>
@@ -46,16 +47,45 @@ import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
 
-const usePinToggler = (props: { messageId: MessageId }) => {
-  const addPinned = () => {
-    store.dispatch.domain.messagesView.addPinned({
-      messageId: props.messageId
+const execWithToast = async (
+  successText: string,
+  errorText: string,
+  func: () => void | Promise<void>
+) => {
+  try {
+    await func()
+    store.commit.ui.toast.addToast({
+      type: 'info',
+      text: successText
+    })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(errorText, e)
+
+    store.commit.ui.toast.addToast({
+      type: 'error',
+      text: errorText
     })
   }
-  const removePinned = () => {
-    store.dispatch.domain.messagesView.removePinned({
-      messageId: props.messageId
-    })
+}
+
+const usePinToggler = (props: { messageId: MessageId }) => {
+  const addPinned = async () => {
+    execWithToast('ピン留めしました', 'ピン留めに失敗しました', () =>
+      store.dispatch.domain.messagesView.addPinned({
+        messageId: props.messageId
+      })
+    )
+  }
+  const removePinned = async () => {
+    execWithToast(
+      'ピン留めを解除しました',
+      'ピン留めの解除に失敗しました',
+      () =>
+        store.dispatch.domain.messagesView.removePinned({
+          messageId: props.messageId
+        })
+    )
   }
   return { addPinned, removePinned }
 }
@@ -65,9 +95,15 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
     store.commit.domain.messagesView.setEditingMessageId(props.messageId)
   }
   const deleteMessage = () => {
-    if (confirm('本当にメッセージを削除しますか？')) {
-      apis.deleteMessage(props.messageId)
-    }
+    if (!confirm('本当にメッセージを削除しますか？')) return
+
+    execWithToast(
+      'メッセージを削除しました',
+      'メッセージの削除に失敗しました',
+      async () => {
+        await apis.deleteMessage(props.messageId)
+      }
+    )
   }
   return { editMessage, deleteMessage }
 }
@@ -75,11 +111,15 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
 const useCopy = (props: { messageId: MessageId }) => {
   const copyLink = async () => {
     const link = `${embeddingOrigin}/messages/${props.messageId}`
-    await clipboard.writeText(link)
+    execWithToast('コピーしました', 'コピーに失敗しました', () =>
+      clipboard.writeText(link)
+    )
   }
   const copyMd = async () => {
-    await clipboard.writeText(
+    const content =
       store.state.entities.messages[props.messageId]?.content ?? ''
+    execWithToast('コピーしました', 'コピーに失敗しました', () =>
+      clipboard.writeText(content)
     )
   }
   return { copyLink, copyMd }
@@ -115,6 +155,7 @@ export default defineComponent({
     const isMinimum = computed(
       () => store.state.ui.messageContextMenu.isMinimum
     )
+
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
@@ -123,6 +164,7 @@ export default defineComponent({
       await func()
       store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
     }
+
     return {
       isPinned,
       isMine,
