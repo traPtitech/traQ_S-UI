@@ -75,12 +75,18 @@ const usePostMessage = (
         content:
           embededText + (embededText && embededdUrls ? '\n' : '') + embededdUrls
       })
-    } catch {
-      // TODO: エラー処理
-    } finally {
+
       textState.text = ''
       store.commit.ui.fileInput.clearAttachments()
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('メッセージ送信に失敗しました', e)
 
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'メッセージ送信に失敗しました'
+      })
+    } finally {
       isPosting.value = false
     }
   }

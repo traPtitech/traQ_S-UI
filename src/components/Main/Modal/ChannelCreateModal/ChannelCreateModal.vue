@@ -64,8 +64,14 @@ const useCreateChannel = (
 
       await store.dispatch.ui.modal.popModal()
       changeChannelById(channel.id)
-    } catch {
-      // TODO: エラー処理
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('チャンネル作成に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'チャンネル作成に失敗しました'
+      })
     }
   }
   return { createChannel }

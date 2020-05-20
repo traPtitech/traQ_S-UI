@@ -275,7 +275,7 @@ export const actions = defineActions({
 
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
-    const { dispatch } = rtcActionContext(context)
+    const { dispatch, rootCommit } = rtcActionContext(context)
     try {
       const { sessionId } = await dispatch.startOrJoinRTCSession({
         channelId,
@@ -283,7 +283,13 @@ export const actions = defineActions({
       })
       dispatch.joinVoiceChannel(sessionId)
     } catch (e) {
-      // TODO: エラー
+      // eslint-disable-next-line no-console
+      console.error('Qallの開始に失敗しました', e)
+
+      rootCommit.ui.toast.addToast({
+        type: 'error',
+        text: 'Qallの開始に失敗しました'
+      })
     }
   },
 

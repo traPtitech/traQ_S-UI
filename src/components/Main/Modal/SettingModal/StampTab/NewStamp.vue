@@ -32,6 +32,7 @@ import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
+import store from '@/store'
 
 export default defineComponent({
   name: 'NewStamp',
@@ -56,7 +57,13 @@ export default defineComponent({
         newStampName.value = ''
         destroyImageUploadState()
       } catch (e) {
-        // TODO: error
+        // eslint-disable-next-line no-console
+        console.error('スタンプの作成に失敗しました', e)
+
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'スタンプの作成に失敗しました'
+        })
       }
     }
 
