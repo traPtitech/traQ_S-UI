@@ -197,6 +197,10 @@ $radius: 4px;
   padding: 8px 16px;
   justify-content: space-between;
   align-items: flex-end;
+
+  .container[data-is-mobile='true'] & {
+    padding: 4px 0;
+  }
 }
 .controls {
   flex: {
@@ -204,12 +208,15 @@ $radius: 4px;
     shrink: 0;
   }
   margin: 0 16px;
+  .container[data-is-mobile='true'] & {
+    margin: 0 8px;
+  }
 
-  &:first-child {
+  &:first-child:first-child {
     margin-left: 0;
   }
 
-  &:last-child {
+  &:last-child:last-child {
     margin-right: 0;
   }
 }
