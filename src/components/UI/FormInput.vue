@@ -11,11 +11,12 @@
         ref="inputRef"
         :class="$style.input"
         :id="id"
+        :type="type"
         :value="value"
         :placeholder="placeholder"
+        :step="step"
         @input="onInput"
         @change="onChange"
-        type="text"
       />
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
@@ -32,8 +33,12 @@ import useInput from '@/use/input'
 export default defineComponent({
   name: 'FormInput',
   props: {
-    value: {
+    type: {
       type: String,
+      default: 'text'
+    },
+    value: {
+      type: [String, Number],
       default: ''
     },
     onSecondary: {
@@ -47,6 +52,7 @@ export default defineComponent({
     label: String,
     prefix: String,
     suffix: String,
+    step: String,
     useChangeEvent: {
       type: Boolean,
       default: false
