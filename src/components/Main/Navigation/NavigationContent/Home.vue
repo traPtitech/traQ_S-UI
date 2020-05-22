@@ -29,6 +29,17 @@
       />
       <empty-state v-else>購読していません</empty-state>
     </navigation-content-container>
+    <navigation-content-container
+      v-if="channelsWithRtc.length !== 0"
+      subtitle="Qall中チャンネル"
+      :class="$style.item"
+    >
+      <channel-list
+        :channels="channelsWithRtc"
+        ignore-children
+        show-shortened-path
+      />
+    </navigation-content-container>
   </div>
 </template>
 
@@ -61,11 +72,17 @@ export default defineComponent({
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.homeChannelTree.children ?? []
     )
+    const channelsWithRtc = computed(() =>
+      Object.entries(store.state.app.rtc.channelSessionsMap)
+        .filter(([, sessionIds]) => sessionIds && sessionIds.length > 0)
+        .map(([channelId]) => store.state.entities.channels[channelId])
+    )
 
     return {
       homeChannel,
       topLevelChannels,
-      channelsWithNotification
+      channelsWithNotification,
+      channelsWithRtc
     }
   }
 })
