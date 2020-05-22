@@ -2,10 +2,10 @@ import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
-import { Embedding } from '@/lib/embeddingExtractor'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import store from '@/store'
 import useCurrentChannelPath from '@/use/currentChannelPath'
+import { Embedding } from '@traptitech/traq-markdown-it'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {

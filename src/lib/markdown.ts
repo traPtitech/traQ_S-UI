@@ -1,6 +1,7 @@
 import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
+import { embeddingOrigin } from './apis'
 
 const { channelIdToPathString } = useChannelPath()
 
@@ -28,7 +29,7 @@ const storeProvider: Store = {
   }
 }
 
-const md = new MarkdownIt(storeProvider, [])
+const md = new MarkdownIt(storeProvider, [], embeddingOrigin)
 
 export const render = (text: string) => {
   return md.render(text)

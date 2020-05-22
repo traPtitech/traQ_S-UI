@@ -6,7 +6,6 @@ import { ChannelViewState, Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import apis from '@/lib/apis'
 import { changeViewState } from '@/lib/websocket'
-import { embeddingExtractor } from '@/lib/embeddingExtractor'
 import { ActionContext } from 'vuex'
 
 export const messagesViewActionContext = (
@@ -111,10 +110,10 @@ export const actions = defineActions({
     )
     const content = rootState.entities.messages[messageId]?.content ?? ''
 
-    const extracted = embeddingExtractor(content)
+    const rendered = render(content)
 
     await Promise.all(
-      extracted.embeddings.map(async e => {
+      rendered.embeddings.map(async e => {
         try {
           if (e.type === 'file') {
             await rootDispatch.entities.fetchFileMetaByFileId(e.id)
@@ -123,11 +122,10 @@ export const actions = defineActions({
             const message = await rootDispatch.entities.fetchMessage(e.id)
 
             // テキスト部分のみレンダリング
-            const extracted = embeddingExtractor(message.content)
-            const renderedContent = render(extracted.text)
+            const rendered = render(message.content)
             commit.addRenderedContent({
               messageId: message.id,
-              renderedContent
+              renderedContent: rendered.renderedText
             })
           }
         } catch (e) {
@@ -136,11 +134,13 @@ export const actions = defineActions({
       })
     )
 
-    const renderedContent = render(extracted.text)
-    commit.addRenderedContent({ messageId, renderedContent })
+    commit.addRenderedContent({
+      messageId,
+      renderedContent: rendered.renderedText
+    })
     commit.addEmbedding({
       messageId,
-      embeddings: extracted.embeddings
+      embeddings: rendered.embeddings
     })
   },
   async addAndRenderMessage(context, payload: { message: Message }) {

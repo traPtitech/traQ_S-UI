@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, watchEffect } from '@vue/composition-api'
-import { embeddingReplacer } from '@/lib/embeddingExtractor'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'
@@ -43,9 +42,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const extracted = computed(() => embeddingReplacer(props.content))
+    const rendered = computed(() => renderInline(props.content))
+
     const files = computed(() =>
-      extracted.value.embeddings.filter(e => e.type === 'file')
+      rendered.value.embeddings.filter(e => e.type === 'file')
     )
 
     watchEffect(() => {
@@ -63,9 +63,9 @@ export default defineComponent({
       )
     ])
     const hasMessage = computed(() =>
-      extracted.value.embeddings.some(e => e.type === 'message')
+      rendered.value.embeddings.some(e => e.type === 'message')
     )
-    const renderedContent = computed(() => renderInline(extracted.value.text))
+    const renderedContent = computed(() => rendered.value.renderedText)
 
     return { fileTypes, hasMessage, renderedContent }
   },
