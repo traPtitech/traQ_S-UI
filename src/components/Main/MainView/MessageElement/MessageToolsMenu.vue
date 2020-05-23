@@ -48,16 +48,18 @@ import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
 
 const execWithToast = async (
-  successText: string,
+  successText: string | undefined,
   errorText: string,
   func: () => void | Promise<void>
 ) => {
   try {
     await func()
-    store.commit.ui.toast.addToast({
-      type: 'info',
-      text: successText
-    })
+    if (successText) {
+      store.commit.ui.toast.addToast({
+        type: 'info',
+        text: successText
+      })
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(errorText, e)
@@ -71,20 +73,17 @@ const execWithToast = async (
 
 const usePinToggler = (props: { messageId: MessageId }) => {
   const addPinned = async () => {
-    execWithToast('ピン留めしました', 'ピン留めに失敗しました', () =>
+    execWithToast(undefined, 'ピン留めに失敗しました', () =>
       store.dispatch.domain.messagesView.addPinned({
         messageId: props.messageId
       })
     )
   }
   const removePinned = async () => {
-    execWithToast(
-      'ピン留めを解除しました',
-      'ピン留めの解除に失敗しました',
-      () =>
-        store.dispatch.domain.messagesView.removePinned({
-          messageId: props.messageId
-        })
+    execWithToast(undefined, 'ピン留めの解除に失敗しました', () =>
+      store.dispatch.domain.messagesView.removePinned({
+        messageId: props.messageId
+      })
     )
   }
   return { addPinned, removePinned }
