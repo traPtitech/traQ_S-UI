@@ -4,7 +4,7 @@ $table-tr-border-color: var(--table-tr-border-color);
 $table-tr-background-color: var(--table-tr-background-color);
 $table-tr-background-color2: var(--table-tr-background-color2);
 
-@import '~@traptitech/traq-markdown-it/src/css/index';
+@import '~@traptitech/traq-markdown-it/src/css/markdown';
 
 html:not([data-is-dark-theme]) {
   @import '~highlight.js/styles/atom-one-light';

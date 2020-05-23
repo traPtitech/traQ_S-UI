@@ -1,1 +1,5 @@
-@import '~@traptitech/traq-markdown-it/src/css/index';
+@import '~@traptitech/traq-markdown-it/src/css/stamp';
+
+html:not([data-eco-mode]) {
+  @import '~@traptitech/traq-markdown-it/src/css/stampEffect';
+}
