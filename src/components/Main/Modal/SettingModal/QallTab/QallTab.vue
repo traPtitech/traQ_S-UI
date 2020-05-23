@@ -148,7 +148,7 @@ const useDevicesInfo = (state: {
 
 const useVoices = (state: { voiceName: string }) => {
   const getVoicesAndSetDefault = () => {
-    const voices = speechSynthesis.getVoices()
+    const voices = speechSynthesis.getVoices().filter(v => v.lang === 'ja-JP')
 
     const isAlreadySet = voices.some(v => v.name === state.voiceName)
     if (!isAlreadySet) {
