@@ -11,7 +11,7 @@ export interface Toast {
   /**
    * 表示タイプ
    */
-  type: 'info' | 'error'
+  type: 'success' | 'error' | 'info'
   /**
    * 表示する文字
    */
@@ -20,6 +20,12 @@ export interface Toast {
    * 表示する時間 (ms)
    */
   timeout: number
+  /**
+   * クリック時の挙動
+   *
+   * デフォルトはトーストの削除
+   */
+  onClick?: () => unknown
   /**
    * 自動付与されるid
    */

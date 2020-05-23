@@ -159,7 +159,13 @@ export default defineComponent({
         applyCreatorChange()
         onEndEdit()
       } catch (e) {
-        // TODO: error
+        // eslint-disable-next-line no-console
+        console.error('スタンプの編集に失敗しました', e)
+
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'スタンプの編集に失敗しました'
+        })
       }
     }
 

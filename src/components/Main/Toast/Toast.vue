@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-type="toast.type" @click="remove">
+  <div :class="$style.container" :data-type="toast.type" @click="onClick">
     <icon :class="$style.icon" :name="iconName" mdi :size="32" />
     <div :class="$style.text">{{ toast.text }}</div>
   </div>
@@ -18,8 +18,9 @@ import Icon from '@/components/UI/Icon.vue'
 import store from '@/store'
 
 const iconNameMap: Record<Toast['type'], string> = {
-  info: 'info',
-  error: 'alert'
+  success: 'info',
+  error: 'alert',
+  info: 'info'
 }
 
 const useAutoHide = (props: { toast: Toast }) => {
@@ -55,8 +56,16 @@ export default defineComponent({
   setup(props) {
     const { remove } = useAutoHide(props)
 
+    const onClick = () => {
+      if (props.toast.onClick) {
+        props.toast.onClick()
+      } else {
+        remove()
+      }
+    }
+
     const iconName = computed(() => iconNameMap[props.toast.type])
-    return { remove, iconName }
+    return { onClick, iconName }
   }
 })
 </script>
@@ -72,13 +81,15 @@ export default defineComponent({
   padding: 8px;
   border-radius: 4px;
   pointer-events: auto;
-  &[data-type='info'] {
-    @include color-ui-primary;
-    @include background-tertiary;
+  color: $theme-background-primary;
+  &[data-type='success'] {
+    @include background-accent-primary;
   }
   &[data-type='error'] {
-    @include color-common-text-white-primary;
     background: $theme-accent-error;
+  }
+  &[data-type='info'] {
+    background: $theme-ui-secondary;
   }
 }
 .icon {

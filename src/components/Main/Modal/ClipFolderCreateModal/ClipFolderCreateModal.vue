@@ -30,8 +30,14 @@ const useCreateClipFolder = () => {
     try {
       await apis.createClipFolder({ name, description })
       store.dispatch.ui.modal.clearModal()
-    } catch {
-      // TODO: エラー処理
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('クリップフォルダの作成に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'クリップフォルダの作成に失敗しました'
+      })
     }
   }
   return { createClipFolder }
