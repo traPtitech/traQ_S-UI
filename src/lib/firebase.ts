@@ -89,11 +89,24 @@ const showUpdateToast = () => {
 }
 
 const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
+  // 新しいsw
+  if (!navigator.serviceWorker.controller) return
+
+  // swが更新完了したときにリロード
+  let reloading = false
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloading) return
+    reloading = true
+    window.location.reload()
+  })
+
+  // ほかのタブでswが更新されたとき
   if (registration.waiting) {
     showUpdateToast()
     return
   }
 
+  // swが更新できるときにトースト表示
   const newWorker = registration.installing
   if (newWorker) {
     newWorker.addEventListener('statechange', () => {
@@ -103,6 +116,7 @@ const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
     return
   }
 
+  // swが更新できるときにトースト表示
   registration.addEventListener('updatefound', () => {
     const newWorker = registration.installing
     newWorker?.addEventListener('statechange', () => {
