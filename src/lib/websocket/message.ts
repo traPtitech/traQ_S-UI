@@ -11,6 +11,7 @@ import {
   MessageUnpinnedEvent
 } from './events'
 import { MessageId } from '@/types/entity-ids'
+import { tts } from '../tts'
 
 const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
   const currentView = store.state.ui.mainView.primaryView
@@ -26,6 +27,12 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
 
   if (res.data.channelId in store.state.entities.channels) {
     store.commit.domain.addActivity(res.data)
+  }
+
+  if (res.data.userId !== store.state.domain.me.detail?.id) {
+    const userDisplayName =
+      store.state.entities.users[res.data.userId]?.displayName ?? 'はてな'
+    tts(res.data.channelId, `${userDisplayName}さん: ${res.data.content}`)
   }
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {

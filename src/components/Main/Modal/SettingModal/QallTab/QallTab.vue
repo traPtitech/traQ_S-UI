@@ -27,6 +27,50 @@
         </p>
       </div>
     </div>
+    <div v-if="rtcSettings.isEnabled" :class="$style.element">
+      <div :class="$style.enable">
+        <h3>メッセージの読み上げ</h3>
+        <toggle
+          @input="state.isTtsEnabled = !state.isTtsEnabled"
+          :enabled="state.isTtsEnabled"
+          :class="$style.toggle"
+        />
+      </div>
+      <p :class="$style.content">
+        Qallしているチャンネルに投稿されたメッセージを読み上げます
+      </p>
+    </div>
+    <div v-if="rtcSettings.isTtsEnabled" :class="$style.element">
+      <h3>メッセージ読み上げの声</h3>
+      <div :class="$style.content">
+        <form-selector
+          v-if="voiceOptions.length > 0"
+          v-model="state.voiceName"
+          :options="voiceOptions"
+        />
+        <p v-else>
+          読み上げ音声の声の種類が取得できませんでした
+        </p>
+        <form-input
+          label="ピッチ"
+          type="number"
+          step="0.1"
+          v-model.number="state.voicePitch"
+        />
+        <form-input
+          label="速度"
+          type="number"
+          step="0.1"
+          v-model.number="state.voiceRate"
+        />
+        <form-input
+          label="音量"
+          type="number"
+          step="0.1"
+          v-model.number="state.voiceVolume"
+        />
+      </div>
+    </div>
   </section>
 </template>
 
@@ -41,6 +85,7 @@ import store from '@/store'
 import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
+import FormInput from '@/components/UI/FormInput.vue'
 
 const useDevicesInfo = (state: {
   isEnabled: boolean
@@ -101,6 +146,37 @@ const useDevicesInfo = (state: {
   }
 }
 
+const useVoices = (state: { voiceName: string }) => {
+  const getVoicesAndSetDefault = () => {
+    const voices = speechSynthesis.getVoices()
+
+    const isAlreadySet = voices.some(v => v.name === state.voiceName)
+    if (!isAlreadySet) {
+      // デフォルトをセットする
+      const defaultVoice = voices.find(v => v.default) || voices[0]
+      if (defaultVoice) {
+        state.voiceName = defaultVoice.name
+      }
+    }
+
+    return voices
+  }
+
+  const voices = ref(getVoicesAndSetDefault())
+  const voiceOptions = computed(() =>
+    voices.value.map(v => ({
+      key: `${v.name} (${v.lang})`,
+      value: v.name
+    }))
+  )
+
+  speechSynthesis.addEventListener('voiceschanged', () => {
+    voices.value = getVoicesAndSetDefault()
+  })
+
+  return voiceOptions
+}
+
 export default defineComponent({
   name: 'QallTab',
   setup() {
@@ -119,11 +195,20 @@ export default defineComponent({
       }))
     )
 
-    return { rtcSettings, state, ...devicesInfo, audioInputDeviceOptions }
+    const voiceOptions = useVoices(state)
+
+    return {
+      rtcSettings,
+      state,
+      ...devicesInfo,
+      audioInputDeviceOptions,
+      voiceOptions
+    }
   },
   components: {
     Toggle,
-    FormSelector
+    FormSelector,
+    FormInput
   }
 })
 </script>
