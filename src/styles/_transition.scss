@@ -17,22 +17,22 @@ $vs-reverse: 'vertical-swap-reverse';
   transform: translateY(-100%);
 }
 
-$sf: 'slide-fade';
-.#{$sf}-enter-active {
+$ts: 'toast-slide';
+.#{$ts}-enter-active {
   transition: all 0.3s $easeOutCirc;
 }
-.#{$sf}-leave-active {
+.#{$ts}-leave-active {
   transition: all 0.8s $easeInExpo;
 }
-.#{$sf}-enter {
+.#{$ts}-enter {
   transform: translateX(-20px);
   opacity: 0;
 }
-.#{$sf}-leave-to {
+.#{$ts}-leave-to {
   transform: translateY(20px);
   opacity: 0;
 }
-.#{$sf}-move {
+.#{$ts}-move {
   transition: transform 3s;
 }
 
@@ -64,9 +64,7 @@ $bk: 'background-shadow';
 }
 
 $tu: 'typing-users';
-.#{$tu}-enter-active {
-  transition: all 0.5s $easeOutCirc;
-}
+.#{$tu}-enter-active,
 .#{$tu}-leave-active {
   transition: all 0.5s $easeOutCubic;
 }
@@ -94,7 +92,6 @@ $fb: 'fade-bottom';
 .#{$fb}-move {
   transition: transform 0.3s;
 }
-
 .#{$fl}-enter,
 .#{$fl}-leave-to {
   transform: translateX(-20px);
@@ -107,6 +104,17 @@ $fb: 'fade-bottom';
 }
 .#{$fb}-enter,
 .#{$fb}-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+$s: 'stamp';
+.#{$s}-enter-active,
+.#{$s}-leave-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$s}-enter,
+.#{$s}-leave-to {
   transform: translateY(20px);
   opacity: 0;
 }

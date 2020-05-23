@@ -19,13 +19,15 @@
         :class="$style.navigation"
         :current-navigation="navigationSelectorState.currentNavigation"
       />
-      <ephemeral-navigation-content
-        :class="$style.ephemeralNavigation"
-        v-if="ephemeralNavigationSelectorState.currentNavigation"
-        :current-ephemeral-navigation="
-          ephemeralNavigationSelectorState.currentNavigation
-        "
-      />
+      <transition name="fade-bottom">
+        <ephemeral-navigation-content
+          :class="$style.ephemeralNavigation"
+          v-if="ephemeralNavigationSelectorState.currentNavigation"
+          :current-ephemeral-navigation="
+            ephemeralNavigationSelectorState.currentNavigation
+          "
+        />
+      </transition>
     </div>
   </div>
 </template>

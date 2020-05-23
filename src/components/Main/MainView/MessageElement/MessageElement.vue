@@ -25,23 +25,11 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.stampWrapper">
-      <icon
-        name="rounded-triangle"
-        :size="20"
-        v-if="state.message.stamps.length > 0"
-        :class="$style.toggleButton"
-        :data-is-open="state.stampDetailFoldingState"
-        @click="onStampDetailFoldingToggle"
-      />
-      <message-stamp-list
-        :class="$style.stamps"
-        v-if="state.message.stamps.length > 0"
-        :message-id="messageId"
-        :stamps="state.message.stamps"
-        :is-show-detail="state.stampDetailFoldingState"
-      />
-    </div>
+    <message-stamp-list
+      :show-detail-button="isHovered"
+      :message-id="messageId"
+      :stamps="state.message.stamps"
+    />
   </div>
 </template>
 
@@ -101,17 +89,12 @@ export default defineComponent({
         () =>
           props.messageId === store.state.domain.messagesView.editingMessageId
       ),
-      isPinned: computed((): boolean => state.message?.pinned ?? false),
-      stampDetailFoldingState: false
+      isPinned: computed((): boolean => state.message?.pinned ?? false)
     })
 
     const { embeddingsState } = useEmbeddings(props)
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
-
-    const onStampDetailFoldingToggle = () => {
-      state.stampDetailFoldingState = !state.stampDetailFoldingState
-    }
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 
@@ -120,7 +103,6 @@ export default defineComponent({
       bodyRef,
       embeddingsState,
       isMobile,
-      onStampDetailFoldingToggle,
       isHovered,
       onMouseEnter,
       onMouseLeave
@@ -164,27 +146,6 @@ $messagePaddingMobile: 16px;
 
 .messageContents {
   min-width: 0;
-}
-
-.stampWrapper {
-  position: relative;
-  margin-top: 8px;
-  margin-left: 42px;
-}
-
-.toggleButton {
-  color: transparent;
-  transform: rotate(0turn);
-  &[data-is-open] {
-    transform: rotate(0.5turn);
-  }
-  .body:hover & {
-    @include color-ui-secondary;
-  }
-  position: absolute;
-  left: -26px;
-  top: 2px;
-  cursor: pointer;
 }
 
 .tools {

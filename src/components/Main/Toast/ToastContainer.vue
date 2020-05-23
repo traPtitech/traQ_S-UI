@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <transition-group name="slide-fade">
+    <transition-group name="toast-slide">
       <toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
     </transition-group>
   </div>
