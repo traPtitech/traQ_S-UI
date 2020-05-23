@@ -2,7 +2,16 @@ const fileSourcePrefix = '__file-'
 
 export const maxGain = 5
 export const maxMasterGain = 3
-export const talkingThreshould = 300
+export const talkingThreshoulds = [300, 1000, 3000, 5000]
+
+export const getTalkingLoundnessLevel = (level = 0) => {
+  let ll = 0
+  for (const t of talkingThreshoulds) {
+    if (level < t) return ll
+    ll++
+  }
+  return ll
+}
 
 type WebkitWindow = Window &
   typeof globalThis & {
@@ -19,6 +28,9 @@ export default class AudioStreamMixer {
   private fileVolume = 0.25
   private previousVolumeMap: Record<string, number> = {}
   readonly analyserFftSize = 128
+  private readonly frequencyUint8Array = new Uint8Array(
+    this.analyserFftSize / 2
+  )
 
   constructor() {
     this.context = new (window.AudioContext ||
@@ -46,6 +58,15 @@ export default class AudioStreamMixer {
     analyser.connect(gain)
     source.connect(analyser)
     return { source, gain, analyser }
+  }
+
+  createAnalyzer(mediaStream: MediaStream) {
+    const source = this.context.createMediaStreamSource(mediaStream)
+    const analyser = this.context.createAnalyser()
+    analyser.fftSize = this.analyserFftSize
+
+    source.connect(analyser)
+    return analyser
   }
 
   private disconnectNodeGraph(
@@ -139,17 +160,16 @@ export default class AudioStreamMixer {
     this.fileVolume = volume
   }
 
-  public getByteFrequencyDataOf(key: string) {
-    if (!this.analyserNodeMap[key]) {
-      return new Uint8Array()
-    }
-    const arr = new Uint8Array(this.analyserFftSize / 2)
-    this.analyserNodeMap[key].getByteFrequencyData(arr)
-    return arr
+  public getLevelOfNode(node?: AnalyserNode) {
+    if (!node) return 0
+
+    const arr = this.frequencyUint8Array
+    node.getByteFrequencyData(arr)
+    return arr.reduce((acc, cur) => acc + cur, 0)
   }
 
   public getLevelOf(key: string) {
-    return this.getByteFrequencyDataOf(key).reduce((acc, cur) => acc + cur, 0)
+    return this.getLevelOfNode(this.analyserNodeMap[key])
   }
 
   public muteAll() {

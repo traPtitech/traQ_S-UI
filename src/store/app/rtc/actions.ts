@@ -2,10 +2,12 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { rtc } from './index'
 import apis from '@/lib/apis'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, UserId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer from '@/lib/audioStreamMixer'
+import AudioStreamMixer, {
+  getTalkingLoundnessLevel
+} from '@/lib/audioStreamMixer'
 import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
@@ -13,9 +15,41 @@ import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 
 const defaultState = 'joined'
+const talkingStateUpdateFPS = 30
 
 export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
+
+const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
+  const { rootState, state, commit, getters } = rtcActionContext(context)
+  const update = () => {
+    const myId = rootState.domain.me.detail?.id
+    const userStateDiff: Record<UserId, number> = {}
+
+    getters.currentSessionUsers.forEach(userId => {
+      if (userId === myId) return
+
+      const loudness = getters.currentMutedUsers.includes(userId)
+        ? 0
+        : getters.getTalkingLoudnessLevel(userId)
+      if (state.talkingUsersState[userId] !== loudness) {
+        userStateDiff[userId] = loudness
+      }
+    })
+
+    if (state.localAnalyzerNode && myId) {
+      const level = state.mixer?.getLevelOfNode(state.localAnalyzerNode) ?? 0
+      const loudness = getTalkingLoundnessLevel(level)
+      if (state.talkingUsersState[myId] !== loudness) {
+        userStateDiff[myId] = loudness
+      }
+    }
+
+    commit.updateTalkingUserState(userStateDiff)
+  }
+  const id = window.setInterval(update, 1000 / talkingStateUpdateFPS)
+  commit.setTalkingStateUpdateId(id)
+}
 
 export const actions = defineActions({
   // ---- RTC Session ---- //
@@ -165,13 +199,14 @@ export const actions = defineActions({
   },
 
   closeConnection(context) {
-    const { state, commit } = rtcActionContext(context)
+    const { state, commit, dispatch } = rtcActionContext(context)
     if (!client) {
       return
     }
     if (state.mixer) {
       state.mixer.playFileSource('qall_end')
       state.mixer.muteAll()
+      dispatch.stopTalkStateUpdate()
     }
     client.closeConnection()
     destroyClient()
@@ -193,6 +228,7 @@ export const actions = defineActions({
     if (!state.mixer) {
       return
     }
+    dispatch.startTalkStateUpdate()
 
     client.addEventListener('userjoin', e => {
       const userId = e.detail.userId
@@ -271,6 +307,14 @@ export const actions = defineActions({
       sessionId: qallSession?.sessionId,
       states
     })
+  },
+
+  startTalkStateUpdate(context) {
+    updateTalkingUserState(context)
+  },
+  stopTalkStateUpdate(context) {
+    const { state } = rtcActionContext(context)
+    clearInterval(state.talkingStateUpdateId)
   },
 
   // ---- Specific RTC Session ---- //

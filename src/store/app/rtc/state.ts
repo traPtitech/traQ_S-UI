@@ -31,6 +31,9 @@ export interface S {
   /** 送信するMediaStream */
   localStream?: ExtendedMediaStream
 
+  /** 送信するMediaStreamのAnalyzerNode */
+  localAnalyzerNode?: AnalyserNode
+
   /** マイクミュート */
   isMicMuted: boolean
 
@@ -56,12 +59,16 @@ export interface S {
   remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
 
   /** 現在発話しているユーザーを判定するsetIntervalのID */
-  talkingStateUpdateIntervalId: number
+  talkingStateUpdateId: number
+
+  /** 現在発話してるユーザーの声の大きさのレベル */
+  talkingUsersState: Record<UserId, number>
 }
 
 export const state: S = {
   mixer: undefined,
   localStream: undefined,
+  localAnalyzerNode: undefined,
   isMicMuted: false,
   currentRTCState: undefined,
   userStateMap: {},
@@ -70,5 +77,6 @@ export const state: S = {
   sessionUsersMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
-  talkingStateUpdateIntervalId: 0
+  talkingStateUpdateId: 0,
+  talkingUsersState: {}
 }

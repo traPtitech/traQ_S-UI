@@ -164,12 +164,14 @@ export const mutations = defineMutations<S>()({
   },
   setLocalStream(state, mediaStream: ExtendedMediaStream) {
     state.localStream = mediaStream
+    state.localAnalyzerNode = state.mixer?.createAnalyzer(mediaStream)
   },
   unsetLocalStream(state) {
     if (state.localStream) {
       state.localStream.getTracks().forEach(t => t.stop())
     }
     state.localStream = undefined
+    state.localAnalyzerNode = undefined
   },
   muteLocalStream(state) {
     if (!state.localStream) return
@@ -211,5 +213,13 @@ export const mutations = defineMutations<S>()({
     if (state.mixer) {
       state.mixer.setVolumeOf(userId, volume)
     }
+  },
+  setTalkingStateUpdateId(state, id: number) {
+    state.talkingStateUpdateId = id
+  },
+  updateTalkingUserState(state, diffState: Record<UserId, number>) {
+    Object.entries(diffState).forEach(([userId, loudnessLevel]) => {
+      Vue.set(state.talkingUsersState, userId, loudnessLevel)
+    })
   }
 })

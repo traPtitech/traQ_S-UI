@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container">
-    <user-icon :user-id="userId" :size="24" />
+    <div :class="$style.userIcon" :data-talking-level="talkingLevel">
+      <user-icon :user-id="userId" :size="24" />
+    </div>
     <div :class="$style.userDesc">
       <slider
         v-if="showVolumeControl"
@@ -63,6 +65,9 @@ export default defineComponent({
     const userName = computed(
       () => store.state.entities.users[props.userId]?.displayName ?? ''
     )
+    const talkingLevel = computed(
+      () => store.state.app.rtc.talkingUsersState[props.userId]
+    )
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({
         userId: props.userId,
@@ -72,6 +77,7 @@ export default defineComponent({
     return {
       volume,
       userName,
+      talkingLevel,
       maxVolumeValue,
       onChange
     }
@@ -82,9 +88,34 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: grid;
-  grid-template-columns: 24px 1fr 16px;
+  grid-template-columns: min-content 1fr 16px;
   column-gap: 12px;
   align-items: center;
+}
+.userIcon {
+  margin: 4px;
+  border: {
+    style: solid;
+    color: $common-ui-qall;
+    width: 0;
+    radius: 50%;
+  }
+  &[data-talking-level='1'] {
+    margin: 3px;
+    border-width: 1px;
+  }
+  &[data-talking-level='2'] {
+    margin: 2px;
+    border-width: 2px;
+  }
+  &[data-talking-level='3'] {
+    margin: 1px;
+    border-width: 3px;
+  }
+  &[data-talking-level='4'] {
+    margin: 0;
+    border-width: 4px;
+  }
 }
 .icon {
   @include color-ui-secondary;
