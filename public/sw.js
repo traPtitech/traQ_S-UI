@@ -32,7 +32,11 @@
         new RegExp('/messages/'),
         new RegExp('/files/')
       ],
-      blacklist: [new RegExp('/pipeline'), new RegExp('/api/')]
+      blacklist: [
+        new RegExp('/pipeline'),
+        new RegExp('/widget/'),
+        new RegExp('/api/')
+      ]
     }
   )
 
