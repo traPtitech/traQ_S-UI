@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" :data-is-mobile="isMobile">
     <div @click="onClickStampButton" :class="$style.button">
       <icon mdi name="emoticon-outline" />
     </div>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext } from '@vue/composition-api'
+import useIsMobile from '@/use/isMobile'
 import Icon from '@/components/UI/Icon.vue'
 
 type Props = {
@@ -44,11 +45,13 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const { isMobile } = useIsMobile()
     const { onClickSendButton, onClickStampButton } = useClickHandlers(
       props,
       context
     )
     return {
+      isMobile,
       onClickSendButton,
       onClickStampButton
     }
@@ -69,10 +72,14 @@ export default defineComponent({
   cursor: pointer;
 
   margin: 0 8px;
-  &:first-child {
+  .container[data-is-mobile='true'] & {
+    margin: 0 8px;
+  }
+
+  &:first-child:first-child {
     margin-left: 0;
   }
-  &:last-child {
+  &:last-child:last-child {
     margin-right: 0;
   }
 }
