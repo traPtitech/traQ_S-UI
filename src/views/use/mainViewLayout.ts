@@ -95,6 +95,15 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     }
   })
 
+  watch(
+    () => store.getters.ui.isMobile,
+    newState => {
+      if (newState) return
+      closeNav()
+      closeSidebar()
+    }
+  )
+
   // state machine transitions
   const buildStateMachineTransitions = (
     states: {
@@ -153,19 +162,19 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
           )
         }
       }
-    }),
-      watch(
-        () => swipeDetectorState.swipeDirection,
-        newVal => {
-          if (!store.getters.ui.isMobile || newVal !== 'none') return
-          if (
-            mState.value === states.appearingWaitingTouchEnd ||
-            mState.value === states.disappearingWaitingTouchEnd
-          ) {
-            store.commit.ui.mainView.setMainViewComponentState(states.hidden)
-          }
+    })
+    watch(
+      () => swipeDetectorState.swipeDirection,
+      newVal => {
+        if (!store.getters.ui.isMobile || newVal !== 'none') return
+        if (
+          mState.value === states.appearingWaitingTouchEnd ||
+          mState.value === states.disappearingWaitingTouchEnd
+        ) {
+          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
         }
-      )
+      }
+    )
   }
 
   buildStateMachineTransitions(
