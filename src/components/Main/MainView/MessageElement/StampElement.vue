@@ -80,7 +80,7 @@ export default defineComponent({
     watch(
       () => props.stamp.myCount,
       async (newVal, oldVal) => {
-        if (oldVal === undefined || newVal > oldVal) {
+        if (oldVal < newVal || (oldVal === undefined && 0 < newVal)) {
           state.myCountHasIncremented = true
         }
       }
