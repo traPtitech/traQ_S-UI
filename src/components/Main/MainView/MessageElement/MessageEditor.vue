@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div :class="$style.container">
+    <message-input-key-guide :show="textState.isModifierKeyPressed" />
     <div :class="$style.inputContainer">
       <message-input-text-area
         :class="$style.inputTextArea"
@@ -27,6 +28,7 @@
 import { defineComponent } from '@vue/composition-api'
 import apis from '@/lib/apis'
 import store from '@/store'
+import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useTextInput, {
   TextState
@@ -52,6 +54,7 @@ const useEditMessage = (props: { messageId: string }, textState: TextState) => {
 export default defineComponent({
   name: 'MessageEditor',
   components: {
+    MessageInputKeyGuide,
     MessageInputTextArea,
     FormButton,
     Icon
@@ -103,6 +106,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.container {
+  position: relative;
+}
 .inputContainer {
   @include background-secondary;
   width: 100%;
