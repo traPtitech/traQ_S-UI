@@ -20,7 +20,7 @@
       />
     </sidebar-content-container-foldable>
     <div :class="$style.item">
-      <form-button @click="deleteClip" label="削除" :error="true" />
+      <form-button @click="deleteClip" label="削除" color="error" />
     </div>
   </div>
 </template>
