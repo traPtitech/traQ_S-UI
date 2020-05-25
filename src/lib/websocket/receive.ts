@@ -17,7 +17,8 @@ import {
   onChannelUpdated,
   onChannelStared,
   onChannelUnstared,
-  onChannelViewersChanged
+  onChannelViewersChanged,
+  onChannelSubscribersChanged
 } from './channel'
 import {
   onMessageCreated,
@@ -106,6 +107,9 @@ export const onReceive = (data: string) => {
       break
     case 'CHANNEL_VIEWERS_CHANGED':
       onChannelViewersChanged(event.body)
+      break
+    case 'CHANNEL_SUBSCRIBERS_CHANGED':
+      onChannelSubscribersChanged(event.body)
       break
     case 'MESSAGE_CREATED':
       onMessageCreated(event.body)
