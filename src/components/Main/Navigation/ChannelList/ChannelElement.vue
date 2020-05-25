@@ -13,6 +13,7 @@
         :is-opened="isOpened"
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
+        :is-inactive="state.isInactive"
       />
       <div :class="$style.channelName" @click="onChannelNameClick">
         <span :class="$style.channelNameString" :title="pathTooltip">
@@ -276,8 +277,8 @@ $topicLeftPadding: 40px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
-  &[data-is-inactive] {
-    opacity: 0.5;
+  &[data-is-inactive='true'] {
+    @include color-ui-secondary;
   }
 }
 .channelHash {
