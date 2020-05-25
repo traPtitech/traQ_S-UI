@@ -3,6 +3,7 @@
     <message-input-key-guide :show="textState.isModifierKeyPressed" />
     <div :class="$style.inputContainer">
       <message-input-text-area
+        ref="textareaRef"
         :class="$style.inputTextArea"
         :text="textState.text"
         @input="onInputText"
@@ -25,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import apis from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
@@ -69,7 +70,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, context) {
     const {
       textState,
       onInputText,
@@ -78,9 +79,12 @@ export default defineComponent({
     } = useTextInput(props.rawContent)
     const { editMessage, cancel } = useEditMessage(props, textState)
 
+    const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const { invokeStampPicker } = useTextStampPickerInvoker(
       targetPortalName,
-      textState
+      textState,
+      textareaRef,
+      context
     )
 
     const onStampClick = (e: MouseEvent) => {
@@ -92,6 +96,7 @@ export default defineComponent({
     }
 
     return {
+      textareaRef,
       editMessage,
       cancel,
       textState,

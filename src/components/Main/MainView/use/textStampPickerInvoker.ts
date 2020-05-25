@@ -1,10 +1,15 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import store from '@/store'
+import { Ref, computed, SetupContext } from '@vue/composition-api'
 
 const useTextStampPickerInvoker = (
   targetPortalName: string,
-  textState: { text: string }
+  textState: { text: string },
+  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
+  context: SetupContext
 ) => {
+  const elementRef = computed(() => textareaRef.value?.$el)
+
   const { invokeStampPicker } = useStampPickerInvoker(
     targetPortalName,
     stampData => {
@@ -15,7 +20,22 @@ const useTextStampPickerInvoker = (
         stampData.effects && stampData.effects.length > 0
           ? `.${stampData.effects.join('.')}`
           : ''
-      textState.text += `:${stampName}${size}${effects}:`
+      const stampText = `:${stampName}${size}${effects}:`
+
+      if (!elementRef.value) {
+        textState.text += stampText
+        return
+      }
+
+      const pre = textState.text.slice(0, elementRef.value.selectionStart)
+      const suf = textState.text.slice(elementRef.value.selectionEnd)
+      const selectionIndex = pre.length + stampText.length
+      textState.text = `${pre}${stampText}${suf}`
+
+      context.root.$nextTick(() => {
+        if (!textareaRef.value) return
+        textareaRef.value.$el.selectionStart = textareaRef.value.$el.selectionEnd = selectionIndex
+      })
     }
   )
 

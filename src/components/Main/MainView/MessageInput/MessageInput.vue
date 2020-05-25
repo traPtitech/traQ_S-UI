@@ -13,6 +13,7 @@
         @click="addAttachment"
       />
       <message-input-text-area
+        ref="textareaRef"
         :text="textState.text"
         @focus="onFocus"
         @blur="onBlur"
@@ -36,7 +37,8 @@ import {
   defineComponent,
   PropType,
   computed,
-  onBeforeUnmount
+  onBeforeUnmount,
+  ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
@@ -107,10 +109,13 @@ export default defineComponent({
           canPostMessage.value)
     )
 
+    const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const targetPortalName = 'message-input-stamp-picker'
     const { invokeStampPicker } = useTextStampPickerInvoker(
       targetPortalName,
-      textState
+      textState,
+      textareaRef,
+      context
     )
 
     const onStampClick = () => {
@@ -122,6 +127,7 @@ export default defineComponent({
     }
 
     return {
+      textareaRef,
       targetPortalName,
       isMobile,
       typingUsers,
