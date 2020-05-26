@@ -22,9 +22,7 @@ Promise.all([
 
     categories.forEach(c => {
       categoryMap[c.category] = {
-        order: c.order,
         category: c.category,
-        category_label: c.category_label,
         emojis: []
       }
     })
@@ -48,11 +46,7 @@ Promise.all([
       }
 
       const name = e.shortname.replace(/:/g, '')
-      categoryMap[e.category].emojis.push({
-        name,
-        order: e.order,
-        code: key
-      })
+      categoryMap[e.category].emojis.push({ name, order: e.order })
 
       const unicodeString = key
         .split('-')
@@ -73,6 +67,7 @@ Promise.all([
       } else {
         category.emojis.sort((a, b) => (a.order < b.order ? -1 : 1))
       }
+      category.emojis = category.emojis.map(({ name }) => name)
       result.push(category)
     })
 

@@ -47,15 +47,15 @@ export const constructStampNameIdMap = (
 export const categorizeUnicodeStamps = async (
   unicodeStampNameIdMap: Record<StampName, StampId>
 ) => {
-  const unicodeEmojis = await import('@/assets/unicode_emojis.json')
+  const unicodeEmojis = (await import('@/assets/unicode_emojis.json')).default
 
   const numCategories = unicodeEmojis.length
   const unicodeStampCategories = new Array(numCategories) as StampCategory[]
 
-  unicodeEmojis.default.forEach((emojiCategory, i) => {
+  unicodeEmojis.forEach((emojiCategory, i) => {
     const name = emojiCategory.category
     const stampIds = emojiCategory.emojis
-      .map(emoji => unicodeStampNameIdMap[emoji.name])
+      .map(emojiName => unicodeStampNameIdMap[emojiName])
       .filter(id => !!id)
     unicodeStampCategories[i] = { name, stampIds }
   })
