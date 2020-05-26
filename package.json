@@ -27,7 +27,7 @@
     "highlight.js": "^10.0.3",
     "idb-keyval": "^3.2.0",
     "lodash-es": "^4.17.15",
-    "pica": "^5.1.1",
+    "pica": "^5.2.0",
     "portal-vue": "^2.1.7",
     "shvl": "^2.0.0",
     "skyway-js": "^2.0.5",
