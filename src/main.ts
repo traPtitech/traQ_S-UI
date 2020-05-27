@@ -10,6 +10,8 @@ import { setupGlobalFuncs } from './markdown-bridge'
 import { setupFirebase } from './lib/firebase'
 import { loadResizeObserver } from './resizeObserver'
 
+import('katex/dist/katex.css')
+
 !(async () => {
   setupGlobalFuncs()
   setupFirebase()
