@@ -1,7 +1,5 @@
 @import './variables';
 
-// rotateはWindowsでフォントにジャギーが目立つののを対処
-// https://github.com/traPtitech/traQ_S-UI/issues/311
 @mixin size-h1 {
     font-size: 1.5rem;
 }
