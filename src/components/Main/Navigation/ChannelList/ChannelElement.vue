@@ -277,7 +277,7 @@ $topicLeftPadding: 40px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
-  &[data-is-inactive='true'] {
+  &[data-is-inactive] {
     @include color-ui-secondary;
   }
 }

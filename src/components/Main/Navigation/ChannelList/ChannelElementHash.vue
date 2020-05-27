@@ -93,7 +93,7 @@ export default defineComponent({
 
   &[data-container-type='leaf'] {
     @include color-ui-primary;
-    &[data-is-inactive='true'] {
+    &[data-is-inactive] {
       @include color-ui-secondary;
       border-color: $theme-ui-secondary;
     }
@@ -105,7 +105,7 @@ export default defineComponent({
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
-      &[data-is-inactive='true'] {
+      &[data-is-inactive] {
         background: $theme-ui-secondary;
       }
       &[aria-selected='true'] {
@@ -115,7 +115,7 @@ export default defineComponent({
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
-      &[data-is-inactive='true'] {
+      &[data-is-inactive] {
         @include color-ui-secondary;
         border-color: $theme-ui-secondary;
       }
@@ -128,9 +128,6 @@ export default defineComponent({
       }
     }
   }
-}
-.inactive {
-  opacity: 0.5;
 }
 .indicator {
   position: absolute;
