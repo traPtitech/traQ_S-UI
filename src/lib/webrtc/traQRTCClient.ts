@@ -1,4 +1,5 @@
-import Peer, { SfuRoom, RoomData } from 'skyway-js'
+import type Peer from 'skyway-js'
+import { SfuRoom, RoomData } from 'skyway-js'
 import apis from '@/lib/apis'
 
 const skywayApiKey = '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
@@ -83,6 +84,19 @@ class traQRTCClient extends traQRTCClientBase {
   }
 
   /**
+   * 必要なタイミングでのみskywayを読み込むようにする
+   */
+  private _Peer?: typeof Peer
+  private get PeerPromise(): Promise<typeof Peer> {
+    if (this._Peer) return Promise.resolve(this._Peer)
+    return new Promise(resolve => {
+      import('skyway-js').then(skyway => {
+        resolve(skyway.default)
+      })
+    })
+  }
+
+  /**
    * @returns a Promise instance to be resolved when a connection has been established.
    */
   public async establishConnection() {
@@ -160,6 +174,7 @@ class traQRTCClient extends traQRTCClientBase {
       throw "Couldn't get credential"
     }
 
+    const Peer = await this.PeerPromise
     const peer = new Peer(peerId, {
       key: skywayApiKey,
       credential: res.data
