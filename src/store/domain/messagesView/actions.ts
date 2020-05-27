@@ -110,7 +110,7 @@ export const actions = defineActions({
     )
     const content = rootState.entities.messages[messageId]?.content ?? ''
 
-    const rendered = render(content)
+    const rendered = await render(content)
 
     await Promise.all(
       rendered.embeddings.map(async e => {
@@ -122,7 +122,7 @@ export const actions = defineActions({
             const message = await rootDispatch.entities.fetchMessage(e.id)
 
             // テキスト部分のみレンダリング
-            const rendered = render(message.content)
+            const rendered = await render(message.content)
             commit.addRenderedContent({
               messageId: message.id,
               renderedContent: rendered.renderedText

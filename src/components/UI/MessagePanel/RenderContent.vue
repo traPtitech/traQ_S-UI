@@ -22,12 +22,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  watchEffect,
+  ref
+} from '@vue/composition-api'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
+import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 
 export default defineComponent({
   name: 'RenderContent',
@@ -42,30 +48,33 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const rendered = computed(() => renderInline(props.content))
+    const rendered = ref<MarkdownRenderResult>()
+    watchEffect(async () => {
+      rendered.value = await renderInline(props.content)
+    })
 
     const files = computed(() =>
-      rendered.value.embeddings.filter(e => e.type === 'file')
+      rendered.value?.embeddings.filter(e => e.type === 'file')
     )
 
     watchEffect(() => {
-      files.value.forEach(file =>
+      files.value?.forEach(file =>
         store.dispatch.entities.fetchFileMetaByFileId(file.id)
       )
     })
 
     const fileTypes = computed(() => [
       ...new Set(
-        files.value.map(file => {
+        files.value?.map(file => {
           const mime = store.state.entities.fileMetaData[file.id]?.mime
           return mime ? mimeToFileType(mime) : 'file'
         })
       )
     ])
     const hasMessage = computed(() =>
-      rendered.value.embeddings.some(e => e.type === 'message')
+      rendered.value?.embeddings.some(e => e.type === 'message')
     )
-    const renderedContent = computed(() => rendered.value.renderedText)
+    const renderedContent = computed(() => rendered.value?.renderedText)
 
     return { fileTypes, hasMessage, renderedContent }
   },
