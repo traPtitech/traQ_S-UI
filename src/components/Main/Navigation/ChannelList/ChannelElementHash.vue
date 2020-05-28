@@ -6,6 +6,7 @@
       :data-is-opened="hasChild && isOpened"
       :aria-selected="isSelected ? 'true' : 'false'"
       :data-has-notification-on-child="hasNotificationOnChild"
+      :data-is-inactive="isInactive"
     >
       <icon name="hash" :class="$style.icon" />
     </div>
@@ -38,10 +39,10 @@ export default defineComponent({
       default: false
     },
     /**
-     * チャンネルリストでアクティブ表示か
+     * チャンネルリストで非アクティブ表示か
      * e.g. ホームの非購読チャンネルはアクティブでない
      */
-    isActive: {
+    isInactive: {
       type: Boolean,
       default: false
     },
@@ -89,8 +90,13 @@ export default defineComponent({
   align-items: center;
   box-sizing: content-box;
   cursor: pointer;
+
   &[data-container-type='leaf'] {
     @include color-ui-primary;
+    &[data-is-inactive] {
+      @include color-ui-secondary;
+      border-color: $theme-ui-secondary;
+    }
     &[aria-selected='true'] {
       @include color-accent-primary;
     }
@@ -99,6 +105,9 @@ export default defineComponent({
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
+      &[data-is-inactive] {
+        background: $theme-ui-secondary;
+      }
       &[aria-selected='true'] {
         @include background-accent-primary;
       }
@@ -106,6 +115,10 @@ export default defineComponent({
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
+      &[data-is-inactive] {
+        @include color-ui-secondary;
+        border-color: $theme-ui-secondary;
+      }
       &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
       }
@@ -115,9 +128,6 @@ export default defineComponent({
       }
     }
   }
-}
-.inactive {
-  opacity: 0.5;
 }
 .indicator {
   position: absolute;
