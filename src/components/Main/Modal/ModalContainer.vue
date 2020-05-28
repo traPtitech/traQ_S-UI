@@ -33,6 +33,10 @@
       <clip-folder-create-modal
         v-else-if="modalState.current.type === 'clip-folder-create'"
       />
+      <channel-manage-modal
+        v-else-if="modalState.current.type === 'channel-manage'"
+        :id="modalState.current.id"
+      />
     </div>
   </transition>
 </template>
@@ -50,6 +54,7 @@ import FileModal from '@/components/Main/Modal/FileModal/FileModal.vue'
 import QrCodeModal from '@/components/Main/Modal/QRCodeModal/QRCodeModal.vue'
 import ClipCreateModal from '@/components/Main/Modal/ClipCreateModal/ClipCreateModal.vue'
 import ClipFolderCreateModal from '@/components/Main/Modal/ClipFolderCreateModal/ClipFolderCreateModal.vue'
+import ChannelManageModal from '@/components/Main/Modal/ChannelManageModal/ChannelManageModal.vue'
 
 const useModal = () => {
   const state = reactive({
@@ -91,7 +96,8 @@ export default defineComponent({
     FileModal,
     QrCodeModal,
     ClipCreateModal,
-    ClipFolderCreateModal
+    ClipFolderCreateModal,
+    ChannelManageModal
   }
 })
 </script>

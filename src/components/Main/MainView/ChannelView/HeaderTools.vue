@@ -24,6 +24,7 @@
         @click-create-channel="openChannelCreateModal"
         @click-copy-channel-link="copyLink"
         @click-qall="toggleQall"
+        @click-manage-channel="openChannelManageModal"
       />
     </portal>
   </div>
@@ -40,6 +41,7 @@ import useChannelState from './use/channelState'
 import useStarChannel from './use/starChannel'
 import useNotificationModal from './use/notificationModal'
 import useChannelCreateModal from './use/channelCreateModal'
+import useChannelManageModal from './use/channelManageModal'
 import HeaderToolsList, { targetPortalName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
@@ -91,6 +93,7 @@ export default defineComponent({
       isQallSessionOpened,
       toggleQall
     } = useQall(props)
+    const { openChannelManageModal } = useChannelManageModal(props)
     return {
       hasActiveQallSession,
       isQallSessionOpened,
@@ -102,6 +105,7 @@ export default defineComponent({
       unstarChannel,
       openNotificationModal,
       openChannelCreateModal,
+      openChannelManageModal,
       copyLink,
       togglePopupMenu,
       closePopupMenu,
