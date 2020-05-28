@@ -54,7 +54,8 @@ import {
   mdiInformationOutline,
   mdiCommentQuote,
   mdiInformation,
-  mdiAlert
+  mdiAlert,
+  mdiChevronUp
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -102,6 +103,7 @@ const mdi: MdiIconsMapping = {
   'chevron-double': mdiChevronDoubleLeft,
   'chevron-left': mdiChevronLeft,
   'chevron-right': mdiChevronRight,
+  'chevron-up': mdiChevronUp,
   bookmark: mdiBookmark,
   'bookmark-multiple': mdiBookmarkMultiple,
   'bookmark-check': mdiBookmarkCheck,

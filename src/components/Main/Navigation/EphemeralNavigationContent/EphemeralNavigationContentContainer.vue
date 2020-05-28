@@ -20,6 +20,7 @@ export default defineComponent({
 .container {
   @include background-tertiary;
   width: 100%;
+  height: 100%;
   border-top: {
     left-radius: 8px;
     right-radius: 8px;
