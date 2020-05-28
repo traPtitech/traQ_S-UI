@@ -9,7 +9,7 @@
       @post-message="editMessage"
     />
     <div :class="$style.controls">
-      <form-button @click="cancel" label="キャンセル" />
+      <form-button @click="cancel" label="キャンセル" color="secondary" />
       <form-button @click="editMessage" label="OK" />
     </div>
   </div>

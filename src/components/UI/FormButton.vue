@@ -3,14 +3,14 @@
     :class="$style.container"
     :disabled="disabled"
     @click="context.emit('click')"
-    :data-is-error="error"
+    :data-color="color"
   >
     {{ label }}
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'FormButton',
@@ -23,9 +23,9 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    error: {
-      type: Boolean,
-      default: false
+    color: {
+      type: String as PropType<'primary' | 'secondary' | 'error'>,
+      default: 'primary' as const
     }
   },
   setup(_, context) {
@@ -36,9 +36,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include color-common-text-white-primary;
-  @include background-accent-primary;
   padding: 8px 32px;
+  border: solid 2px;
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
@@ -46,8 +45,18 @@ export default defineComponent({
     opacity: 0.5;
     cursor: not-allowed;
   }
-  &[data-is-error] {
-    @include background-accent-error;
+  &[data-color='primary'] {
+    @include color-common-text-white-primary;
+    @include background-accent-primary;
+    border-color: $theme-accent-primary;
+  }
+  &[data-color='secondary'] {
+    @include color-ui-secondary;
+    border-color: $theme-ui-secondary;
+  }
+  &[data-color='error'] {
+    color: $theme-accent-error;
+    border-color: $theme-accent-error;
   }
 }
 </style>
