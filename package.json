@@ -18,7 +18,7 @@
     "@mdi/js": "^5.3.45",
     "@traptitech/traq": "3.0.0-29",
     "@traptitech/traq-markdown-it": "^2.3.3",
-    "@types/pica": "^5.1.0",
+    "@types/pica": "^5.1.1",
     "@vue/composition-api": "^0.5.0",
     "core-js": "^3.6.5",
     "cropperjs": "^1.5.7",
