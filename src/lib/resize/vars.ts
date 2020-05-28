@@ -1,4 +1,4 @@
-import type Pica from 'pica'
+import { Pica } from 'pica'
 
 interface ResizeVars {
   pica: Pica
