@@ -179,6 +179,7 @@ $radius: 4px;
 
   border-radius: $radius;
   transform: translateY(-$radius);
+  z-index: $z-index-message-input;
 }
 .stampPickerLocator {
   width: 100%;
