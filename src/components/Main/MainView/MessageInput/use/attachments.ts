@@ -15,7 +15,8 @@ const useAttachments = () => {
     for (const file of input.files ?? []) {
       store.dispatch.ui.fileInput.addAttachment(file)
     }
-    input.files = null
+    // `input.files = null`ではリセットできない
+    input.value = ''
   }
 
   input.addEventListener('change', onChange)
