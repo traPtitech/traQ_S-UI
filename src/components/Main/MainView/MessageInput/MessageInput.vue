@@ -13,6 +13,7 @@
         @click="addAttachment"
       />
       <message-input-text-area
+        ref="textareaRef"
         :text="textState.text"
         @focus="onFocus"
         @blur="onBlur"
@@ -36,12 +37,13 @@ import {
   defineComponent,
   PropType,
   computed,
-  onBeforeUnmount
+  onBeforeUnmount,
+  ref
 } from '@vue/composition-api'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useIsMobile from '@/use/isMobile'
+import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
 import useTextInput from './use/textInput'
 import usePostMessage from './use/postMessage'
@@ -107,20 +109,13 @@ export default defineComponent({
           canPostMessage.value)
     )
 
+    const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const targetPortalName = 'message-input-stamp-picker'
-    const { invokeStampPicker } = useStampPickerInvoker(
+    const { invokeStampPicker } = useTextStampPickerInvoker(
       targetPortalName,
-      stampData => {
-        // TODO: 編集でも使うのでロジックを分離
-        const stampName = store.state.entities.stamps[stampData.id]?.name
-        if (!stampName) return
-        const size = stampData.size ? `.${stampData.size}` : ''
-        const effects =
-          stampData.effects && stampData.effects.length > 0
-            ? `.${stampData.effects.join('.')}`
-            : ''
-        textState.text += `:${stampName}${size}${effects}:`
-      }
+      textState,
+      textareaRef,
+      context
     )
 
     const onStampClick = () => {
@@ -132,6 +127,7 @@ export default defineComponent({
     }
 
     return {
+      textareaRef,
       targetPortalName,
       isMobile,
       typingUsers,
