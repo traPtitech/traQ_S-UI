@@ -8,7 +8,7 @@
     <form-input label="チャンネル名" v-model="manageState.name" />
     <form-selector
       label="親チャンネル"
-      v-model="manageState.parentId"
+      v-model="manageState.parent"
       :options="channelOptions"
     />
     <label>
@@ -39,7 +39,8 @@ import {
   defineComponent,
   computed,
   SetupContext,
-  reactive
+  reactive,
+  Ref
 } from '@vue/composition-api'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
@@ -50,28 +51,31 @@ import Toggle from '@/components/UI/Toggle.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import apis from '@/lib/apis'
-import { PatchChannelRequest } from '@traptitech/traq'
+import { PatchChannelRequest, Channel } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 
 const useChannelOptions = (props: { id: ChannelId }) => {
   const { channelIdToPathString } = useChannelPath()
   return computed(() =>
-    Object.values(store.state.entities.channels)
-      .filter(channel => channel.id !== props.id)
-      .map(channel => {
-        return {
-          key: channelIdToPathString(channel.id, true),
-          value: channel.id
-        }
-      })
-      .sort((a, b) => compareStringInsensitive(a.key, b.key))
+    [
+      ...Object.values(store.state.entities.channels)
+        .filter(channel => channel.id !== props.id)
+        .map(channel => {
+          return {
+            key: channelIdToPathString(channel.id, true),
+            value: channel.id
+          }
+        }),
+      { key: '(root)', value: '' }
+    ].sort((a, b) => compareStringInsensitive(a.key, b.key))
   )
 }
 
 const useManageChannel = (
   props: { id: string },
   context: SetupContext,
-  state: Partial<PatchChannelRequest>
+  state: Partial<PatchChannelRequest>,
+  oldState: Ref<Channel>
 ) => {
   const { channelIdToPathString } = useChannelPath()
 
@@ -82,7 +86,14 @@ const useManageChannel = (
     }
 
     try {
-      await apis.editChannel(props.id, state)
+      const reqJson = { ...state }
+      if (state.name === oldState.value.name) {
+        reqJson.name = undefined
+      }
+      if (state.parent === oldState.value.parentId) {
+        reqJson.parent = undefined
+      }
+      await apis.editChannel(props.id, reqJson)
 
       await store.dispatch.ui.modal.popModal()
     } catch (e) {
@@ -117,15 +128,20 @@ export default defineComponent({
 
     const manageState = reactive({
       name: channel.value.name,
-      parentId: channel.value.parentId,
+      parent: channel.value.parentId ?? '',
       archived: channel.value.archived,
       force: channel.value.force
     })
-    const { manageChannel } = useManageChannel(props, context, manageState)
+    const { manageChannel } = useManageChannel(
+      props,
+      context,
+      manageState,
+      channel
+    )
     const isManageEnabled = computed(
       () =>
         channel.value.name !== manageState.name ||
-        channel.value.parentId !== manageState.parentId ||
+        channel.value.parentId !== manageState.parent ||
         channel.value.archived !== manageState.archived ||
         channel.value.force !== manageState.force
     )

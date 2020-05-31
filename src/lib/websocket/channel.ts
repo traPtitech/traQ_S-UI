@@ -52,10 +52,25 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   const res = await apis.getChannel(id)
 
   const old = store.state.entities.channels[id]
-  const isPathChanged =
-    old.name !== res.data.name || old.parentId !== res.data.parentId
+  const isNameChanged = old.name !== res.data.name
+  const isParentChanged = old.parentId !== res.data.parentId
+  const isPathChanged = isNameChanged || isParentChanged
 
-  store.commit.entities.extendChannels({ [id]: res.data })
+  const diffChannels = { [id]: res.data }
+
+  if (isParentChanged) {
+    // 親チャンネルの`children`が不整合になるので再取得
+    if (old.parentId) {
+      const oldParentRes = await apis.getChannel(old.parentId)
+      diffChannels[old.parentId] = oldParentRes.data
+    }
+    if (res.data.parentId) {
+      const newParentRes = await apis.getChannel(res.data.parentId)
+      diffChannels[res.data.parentId] = newParentRes.data
+    }
+  }
+
+  store.commit.entities.extendChannels(diffChannels)
 
   if (isPathChanged) {
     await store.dispatch.domain.channelTree.constructAllTrees()
