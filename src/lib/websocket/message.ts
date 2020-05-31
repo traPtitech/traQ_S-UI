@@ -32,7 +32,7 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   if (res.data.userId !== store.state.domain.me.detail?.id) {
     const userDisplayName =
       store.state.entities.users[res.data.userId]?.displayName ?? 'はてな'
-    tts(res.data.channelId, `${userDisplayName}さん: ${res.data.content}`)
+    tts(res.data.channelId, userDisplayName, res.data.content)
   }
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {
