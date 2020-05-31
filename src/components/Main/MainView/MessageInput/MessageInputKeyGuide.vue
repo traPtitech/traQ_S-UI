@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" :class="$style.container">
-    + Enterを押して{{ sendWithModifierKey === 'modifier' ? '送信' : '改行' }}
+    + Enterを押して{{ sendWithModifierKey === 'modifier' ? sendText : '改行' }}
   </div>
 </template>
 
@@ -14,14 +14,19 @@ export default defineComponent({
     show: {
       type: Boolean,
       required: true
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
-  setup() {
+  setup(props) {
     const sendWithModifierKey = computed(
       () => store.state.app.browserSettings.sendWithModifierKey
     )
+    const sendText = computed(() => (props.isEdit ? '保存' : '送信'))
 
-    return { sendWithModifierKey }
+    return { sendWithModifierKey, sendText }
   }
 })
 </script>

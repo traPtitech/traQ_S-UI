@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <message-input-key-guide :show="textState.isModifierKeyPressed" />
+    <message-input-key-guide :show="textState.isModifierKeyPressed" is-edit />
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
@@ -134,6 +134,7 @@ export default defineComponent({
 }
 .stampButton {
   @include color-ui-secondary;
+  margin: 0 4px;
   cursor: pointer;
 }
 .controls {
