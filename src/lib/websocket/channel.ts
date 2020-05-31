@@ -10,6 +10,8 @@ import {
   ChannelSubscribersChangedEvent
 } from './events'
 import { dmParentUuid } from '@/lib/util/uuid'
+import router, { constructChannelPath } from '@/router'
+import useChannelPath from '@/use/channelPath'
 
 const isCurrentChannel = (channelId: string) => {
   const primaryView = store.state.ui.mainView.primaryView
@@ -48,9 +50,24 @@ export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
 
 export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   const res = await apis.getChannel(id)
+
+  const old = store.state.entities.channels[id]
+  const isPathChanged =
+    old.name !== res.data.name || old.parentId !== res.data.parentId
+
   store.commit.entities.extendChannels({ [id]: res.data })
+
+  if (isPathChanged) {
+    await store.dispatch.domain.channelTree.constructAllTrees()
+  }
   if (isCurrentChannel(id)) {
     store.commit.domain.messagesView.setTopic(res.data.topic)
+    if (isPathChanged) {
+      const { channelIdToPathString } = useChannelPath()
+      const path = constructChannelPath(channelIdToPathString(id))
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      router.replace(path).catch(() => {})
+    }
   }
 }
 

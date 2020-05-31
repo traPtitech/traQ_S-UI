@@ -51,6 +51,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import apis from '@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
+import { changeChannelByPath } from '@/router/channel'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -74,13 +75,15 @@ const useManageChannel = (
   const { channelIdToPathString } = useChannelPath()
 
   const manageChannel = async () => {
-    const channelPath = channelIdToPathString(props.id, true)
-    if (!confirm(`本当に${channelPath}を変更しますか？`)) {
+    const channelPath = channelIdToPathString(props.id)
+    if (!confirm(`本当に#${channelPath}を変更しますか？`)) {
       return
     }
 
     try {
       await apis.editChannel(props.id, state)
+
+      await store.dispatch.ui.modal.popModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)
@@ -120,6 +123,7 @@ export default defineComponent({
     const { manageChannel } = useManageChannel(props, context, manageState)
     const isManageEnabled = computed(
       () =>
+        channel.value.name !== manageState.name ||
         channel.value.parentId !== manageState.parentId ||
         channel.value.archived !== manageState.archived ||
         channel.value.force !== manageState.force
