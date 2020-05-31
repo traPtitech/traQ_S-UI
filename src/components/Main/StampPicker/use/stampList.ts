@@ -2,7 +2,7 @@ import { computed, Ref } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
-import useTextFilter from '@/use/textFilter'
+import useStampFilter from './stampFilter'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const stampIds = computed((): StampId[] => {
@@ -31,17 +31,16 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     return []
   })
-  const allStamps = computed(() => Object.values(store.state.entities.stamps))
-  const { textFilterState, setQuery } = useTextFilter(allStamps, 'name')
+  const { filterState, setQuery } = useStampFilter()
 
   const stamps = computed(() => {
-    if (textFilterState.query === '') {
+    if (filterState.query === '') {
       return stampIds.value.map(id => store.state.entities.stamps[id])
     }
-    return textFilterState.filteredItems
+    return filterState.filteredItems
   })
 
-  return { stamps, textFilterState, setQuery }
+  return { stamps, filterState, setQuery }
 }
 
 export default useStampList
