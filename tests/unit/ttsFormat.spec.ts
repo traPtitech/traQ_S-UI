@@ -40,8 +40,8 @@ $$
 const output = ` 添付メッセージ
 @temma
 www.google.co.jpドメインのURL
-
-
+ traqスタンプ
+ traq.ex-largeスタンプ
  数式
  添付ファイル
 数式
