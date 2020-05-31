@@ -106,14 +106,14 @@ export const format = (inputTokens: Token[], embeddingOrigin: string) => {
   return rendered.join('')
 }
 
-export const tts = (
+export const tts = async (
   channelId: ChannelId,
   userDisplayName: string,
   text: string
 ) => {
   if (!needTts(channelId)) return
 
-  const tokens = parse(text)
+  const tokens = await parse(text)
   const formatedText = format(tokens, embeddingOrigin)
 
   const utterThis = new SpeechSynthesisUtterance(

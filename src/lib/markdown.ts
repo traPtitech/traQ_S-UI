@@ -42,8 +42,8 @@ export const renderInline = async (text: string) => {
   return (await md).renderInline(text)
 }
 
-export const parse = (text: string) => {
-  return md.md.parse(text, {})
+export const parse = async (text: string) => {
+  return (await md).md.parse(text, {})
 }
 
 export const toggleSpoiler = (element: HTMLElement) => {
