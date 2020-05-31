@@ -54,6 +54,11 @@ export default {
       label: 'BOT Console',
       iconName: 'services/bot-console',
       appLink: 'https://bot-console.trap.jp/'
+    },
+    {
+      label: 'knoQ',
+      iconName: 'services/knoq',
+      appLink: 'https://knoq.trap.jp/'
     }
   ]
 } as const
