@@ -1,5 +1,4 @@
-import firebase from 'firebase/app'
-import 'firebase/messaging'
+import type firebase from 'firebase/app'
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
@@ -13,7 +12,13 @@ import store from '@/store'
 
 declare const window: NativeAppWindow
 
-export const setupFirebase = () => {
+const loadFirebase = async () => {
+  const firebase = (await import('firebase/app')).default
+  await import('firebase/messaging')
+  return firebase
+}
+
+const setupFirebase = (fb: typeof firebase) => {
   try {
     const config = {
       apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
@@ -24,7 +29,7 @@ export const setupFirebase = () => {
       messagingSenderId: '993645413001',
       appId: '1:993645413001:web:b253ea3776d6cf85163c58'
     }
-    firebase.initializeApp(config)
+    fb.initializeApp(config)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[Firebase] failed to initialize', e)
@@ -141,6 +146,9 @@ export const connectFirebase = async () => {
       notify('ようこそtraQへ！！')
     }
   }
+
+  const firebase = await loadFirebase()
+  setupFirebase(firebase)
 
   if (process.env.NODE_ENV === 'production' && navigator?.serviceWorker) {
     navigator.serviceWorker.addEventListener('message', data => {

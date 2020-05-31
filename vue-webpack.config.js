@@ -48,7 +48,7 @@ module.exports = {
         framework: {
           chunks: 'all',
           name: 'framework',
-          test: /[\\/]node_modules[\\/](@vue\/composition-api|direct-vuex|vue|vue-router|vuex|vuex-persist|@traptitech\/traq|@traptitech\/traq-markdown-it|core-js|highlight.js|markdown-it)[\\/]/,
+          test: /[\\/]node_modules[\\/](@vue\/composition-api|direct-vuex|vue|vue-router|vuex|vuex-persist|core-js)[\\/]/,
           priority: 40,
           enforce: true
         },

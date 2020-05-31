@@ -7,12 +7,12 @@ import PortalVue from 'portal-vue'
 import vClickOutside from 'v-click-outside'
 import VueTextareaAutosize from 'vue-textarea-autosize'
 import { setupGlobalFuncs } from './markdown-bridge'
-import { setupFirebase } from './lib/firebase'
 import { loadResizeObserver } from './resizeObserver'
+
+import('katex/dist/katex.css')
 
 !(async () => {
   setupGlobalFuncs()
-  setupFirebase()
 
   await loadResizeObserver()
 

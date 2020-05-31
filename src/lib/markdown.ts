@@ -1,4 +1,4 @@
-import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
+import { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
@@ -29,14 +29,17 @@ const storeProvider: Store = {
   }
 }
 
-const md = new MarkdownIt(storeProvider, [], embeddingOrigin)
+const md = (async () => {
+  const MarkdownIt = (await import('@traptitech/traq-markdown-it')).default
+  return new MarkdownIt(storeProvider, [], embeddingOrigin)
+})()
 
-export const render = (text: string) => {
-  return md.render(text)
+export const render = async (text: string) => {
+  return (await md).render(text)
 }
 
-export const renderInline = (text: string) => {
-  return md.renderInline(text)
+export const renderInline = async (text: string) => {
+  return (await md).renderInline(text)
 }
 
 export const toggleSpoiler = (element: HTMLElement) => {
