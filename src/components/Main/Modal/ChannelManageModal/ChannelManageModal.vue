@@ -51,12 +51,13 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import apis from '@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
-import { changeChannelByPath } from '@/router/channel'
+import { ChannelId } from '@/types/entity-ids'
 
-const useChannelOptions = () => {
+const useChannelOptions = (props: { id: ChannelId }) => {
   const { channelIdToPathString } = useChannelPath()
   return computed(() =>
     Object.values(store.state.entities.channels)
+      .filter(channel => channel.id !== props.id)
       .map(channel => {
         return {
           key: channelIdToPathString(channel.id, true),
@@ -129,7 +130,7 @@ export default defineComponent({
         channel.value.force !== manageState.force
     )
 
-    const channelOptions = useChannelOptions()
+    const channelOptions = useChannelOptions(props)
 
     return {
       manageState,
