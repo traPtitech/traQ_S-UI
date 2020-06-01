@@ -74,6 +74,10 @@ const useInternalLink = (
     const $a = target.closest('a[href]') as HTMLAnchorElement | null
     if (!$a || !$a.href.includes(`://${hostname}`)) return
 
+    // markdown内でない場合(添付ファイルなど)は無視
+    const $body = $a.closest('.markdown-body')
+    if (!$body) return
+
     const href = new URL($a.href)
     const linkPath = href.pathname + href.search + href.hash
 
