@@ -1,6 +1,6 @@
 <template>
   <modal-frame
-    title="チャンネル作成"
+    :title="title"
     :subtitle="subtitle"
     icon-name="hash"
     :class="$style.container"
@@ -47,7 +47,9 @@ const useCreateChannel = (
       : ''
     if (
       !confirm(
-        `本当に#${parentChannelPath + channelNameRef.value}を作成しますか？`
+        `本当に#${
+          parentChannelPath + channelNameRef.value
+        }を作成しますか？ (チャンネルの削除や移動、チャンネル名の変更はできません。)`
       )
     ) {
       return
@@ -91,13 +93,22 @@ export default defineComponent({
     const channelName = ref('')
     const { createChannel } = useCreateChannel(props, context, channelName)
     const { channelIdToPathString } = useChannelPath()
+    const title = computed(
+      () => (props.parentChannelId ? '子' : '') + 'チャンネルを作成'
+    )
     const subtitle = computed(() =>
       props.parentChannelId
         ? channelIdToPathString(props.parentChannelId, true)
         : 'ルートチャンネル作成'
     )
     const isCreateEnabled = computed(() => channelName.value !== '')
-    return { channelName, createChannel, subtitle, isCreateEnabled }
+    return {
+      channelName,
+      createChannel,
+      title,
+      subtitle,
+      isCreateEnabled
+    }
   }
 })
 </script>
