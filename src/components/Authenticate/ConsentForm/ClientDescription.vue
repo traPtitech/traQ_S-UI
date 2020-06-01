@@ -90,7 +90,6 @@ export default defineComponent({
   text-align: center;
 }
 .descContent {
-  min-width: 0;
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
