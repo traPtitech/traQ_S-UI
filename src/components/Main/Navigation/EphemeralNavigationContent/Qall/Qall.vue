@@ -57,6 +57,7 @@ export default defineComponent({
 .container {
   display: flex;
   flex-direction: column;
+  height: 100%;
   transition: all 0.3s ease;
 }
 .control {
