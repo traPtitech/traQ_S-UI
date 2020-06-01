@@ -162,7 +162,6 @@ export const connectFirebase = async () => {
     const registration = await navigator.serviceWorker.register('/sw.js', {
       scope: '/'
     })
-    registration.update()
 
     setupUpdateToast(registration)
 
