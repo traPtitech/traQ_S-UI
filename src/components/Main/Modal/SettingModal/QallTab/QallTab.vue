@@ -146,7 +146,7 @@ const useDevicesInfo = (state: {
   }
 }
 
-const useVoices = (state: { voiceName: string }) => {
+const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
   const getVoicesAndSetDefault = () => {
     const voices = speechSynthesis.getVoices().filter(v => v.lang === 'ja-JP')
 
@@ -172,6 +172,12 @@ const useVoices = (state: { voiceName: string }) => {
 
   speechSynthesis.addEventListener('voiceschanged', () => {
     voices.value = getVoicesAndSetDefault()
+  })
+
+  watchEffect(() => {
+    if (!state.isTtsEnabled) {
+      speechSynthesis.cancel()
+    }
   })
 
   return voiceOptions
