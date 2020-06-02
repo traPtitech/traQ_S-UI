@@ -295,6 +295,10 @@ export const actions = defineActions({
       const localStream = await getUserDisplay()
       localStream.getAudioTracks().forEach(track => (track.enabled = false))
 
+      localStream.getVideoTracks()[0]?.addEventListener('ended', () => {
+        dispatch.endVideoSession()
+      })
+
       commit.setLocalVideoStream(localStream)
       await client.joinRoom(payload.roomName, localStream)
     } else {
