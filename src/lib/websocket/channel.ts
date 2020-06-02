@@ -49,6 +49,9 @@ export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
 }
 
 export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
+  const { channelIdToPathString } = useChannelPath()
+  const oldPath = channelIdToPathString(id)
+
   const res = await apis.getChannel(id)
 
   const old = store.state.entities.channels[id]
@@ -76,14 +79,22 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   if (isPathChanged || isArchivedChanged) {
     await store.dispatch.domain.channelTree.constructAllTrees()
   }
+
+  if (isPathChanged) {
+    const newPath = channelIdToPathString(id)
+    store.dispatch.app.browserSettings.updateOpenChannelNames({
+      oldName: oldPath,
+      newName: newPath
+    })
+
+    if (isCurrentChannel(id)) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      router.replace(constructChannelPath(newPath)).catch(() => {})
+    }
+  }
+
   if (isCurrentChannel(id)) {
     store.commit.domain.messagesView.setTopic(res.data.topic)
-    if (isPathChanged) {
-      const { channelIdToPathString } = useChannelPath()
-      const path = constructChannelPath(channelIdToPathString(id))
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      router.replace(path).catch(() => {})
-    }
   }
 }
 
