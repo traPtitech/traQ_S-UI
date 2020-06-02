@@ -23,7 +23,13 @@ export const actions = defineActions({
   // ---- RTC Session ---- //
 
   updateRTCState(context, payload: WebRTCUserState) {
-    const { state, commit, dispatch } = rtcActionContext(context)
+    const {
+      state,
+      commit,
+      dispatch,
+      rootDispatch,
+      rootState
+    } = rtcActionContext(context)
 
     /** 画面共有のホストが消えた */
     const hasScreenSharingHostExit =
@@ -33,7 +39,10 @@ export const actions = defineActions({
 
     commit.updateRTCState(payload)
 
-    if (hasScreenSharingHostExit) {
+    if (
+      hasScreenSharingHostExit &&
+      payload.userId !== rootState.domain.me.detail?.id
+    ) {
       dispatch.endVideoSession()
     }
   },
