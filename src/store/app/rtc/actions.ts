@@ -44,6 +44,7 @@ export const actions = defineActions({
       payload.userId !== rootState.domain.me.detail?.id
     ) {
       dispatch.endVideoSession()
+      rootDispatch.ui.mainView.resetSecondaryView()
     }
   },
 
