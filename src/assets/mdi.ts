@@ -55,7 +55,8 @@ import {
   mdiCommentQuote,
   mdiInformation,
   mdiAlert,
-  mdiChevronUp
+  mdiChevronUp,
+  mdiArchive
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -119,7 +120,8 @@ const mdi: MdiIconsMapping = {
   'info-outline': mdiInformationOutline,
   'comment-quote': mdiCommentQuote,
   info: mdiInformation,
-  alert: mdiAlert
+  alert: mdiAlert,
+  archive: mdiArchive
 }
 
 export default mdi
