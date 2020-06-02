@@ -55,6 +55,7 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   const isNameChanged = old.name !== res.data.name
   const isParentChanged = old.parentId !== res.data.parentId
   const isPathChanged = isNameChanged || isParentChanged
+  const isArchivedChanged = old.archived !== res.data.archived
 
   const diffChannels = { [id]: res.data }
 
@@ -72,7 +73,7 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
 
   store.commit.entities.extendChannels(diffChannels)
 
-  if (isPathChanged) {
+  if (isPathChanged || isArchivedChanged) {
     await store.dispatch.domain.channelTree.constructAllTrees()
   }
   if (isCurrentChannel(id)) {
