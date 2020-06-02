@@ -9,7 +9,7 @@ import AudioStreamMixer from '@/lib/audioStreamMixer'
 import { getUserAudio, getUserDisplay } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId, SessionType } from './state'
 import { changeRTCState } from '@/lib/websocket'
-import { WebRTCUserStateSessions } from '@traptitech/traq'
+import { WebRTCUserStateSessions, WebRTCUserState } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 
 export const defaultState = 'joined'
@@ -21,6 +21,23 @@ export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
 
 export const actions = defineActions({
   // ---- RTC Session ---- //
+
+  updateRTCState(context, payload: WebRTCUserState) {
+    const { state, commit, dispatch } = rtcActionContext(context)
+
+    /** 画面共有のホストが消えた */
+    const hasScreenSharingHostExit =
+      state.userStateMap[payload.userId]?.sessionStates.find(s =>
+        s.states.includes('casting')
+      ) && !payload.sessions.find(s => s.state.includes('casting'))
+
+    commit.updateRTCState(payload)
+
+    if (hasScreenSharingHostExit) {
+      dispatch.endVideoSession()
+    }
+  },
+
   async fetchRTCState(context) {
     const { commit } = rtcActionContext(context)
     const { data } = await apis.getWebRTCState()

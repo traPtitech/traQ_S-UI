@@ -5,7 +5,8 @@ import {
   SessionInfo,
   SessionId,
   ExtendedMediaStream,
-  SessionType
+  SessionType,
+  UserSessionState
 } from './state'
 import { WebRTCUserState } from '@traptitech/traq'
 import Vue from 'vue'
@@ -69,6 +70,9 @@ const isSessionCompatible = (
   })
 }
 
+const sessionStatesIncludeCasting = (ss: UserSessionState[] | undefined) =>
+  ss?.find(s => s.states.includes('casting')) ?? false
+
 export const mutations = defineMutations<S>()({
   setRTCState(state, payload: WebRTCUserState[]) {
     const userStateMap: typeof state.userStateMap = {}
@@ -128,6 +132,12 @@ export const mutations = defineMutations<S>()({
       throw 'channel session conflict'
     }
 
+    /** 画面共有のホストが消えた */
+    const hasScreenSharingHostExit =
+      sessionStatesIncludeCasting(
+        state.userStateMap[payload.userId]?.sessionStates
+      ) && !sessionStatesIncludeCasting(userSessionState.sessionStates)
+
     const currentSessionIds =
       state.userStateMap[payload.userId]?.sessionStates?.map(
         s => s.sessionId
@@ -169,7 +179,8 @@ export const mutations = defineMutations<S>()({
         throw 'something went wrong'
       }
       state.sessionUsersMap[sessionId]?.splice(index, 1)
-      // セッションの最後の一人が消えた
+
+      /** セッションの最後の一人が消えた */
       const isLastUserforSession =
         (state.sessionUsersMap[sessionId]?.length ?? 0) === 0
       if (isLastUserforSession) {

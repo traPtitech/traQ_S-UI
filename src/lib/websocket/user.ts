@@ -71,7 +71,7 @@ export const onUserWebRTCStateChanged = (
   const data = (formatSnakeKeysToCamelShallow(
     dataSnake
   ) as unknown) as WebRTCUserState
-  store.commit.app.rtc.updateRTCState(data)
+  store.dispatch.app.rtc.updateRTCState(data)
 }
 
 export const onUserGroupCreated = async ({
