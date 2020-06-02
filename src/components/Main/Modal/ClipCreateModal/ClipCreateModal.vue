@@ -34,11 +34,23 @@ const useCreateClip = (
         messageId: props.messageId
       })
       selectedState[clipFolderId] = true
+      store.commit.ui.toast.addToast({
+        type: 'success',
+        text: 'クリップフォルダに追加しました'
+      })
     } catch (e) {
       if (e.response.status === 409) {
-        window.alert('すでに追加されています')
         selectedState[clipFolderId] = true
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'すでに追加されています'
+        })
         return
+      } else {
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: '追加に失敗しました'
+        })
       }
       throw e
     }
@@ -46,6 +58,10 @@ const useCreateClip = (
   const deleteClip = async (clipFolderId: ClipFolderId) => {
     await apis.unclipMessage(clipFolderId, props.messageId)
     selectedState[clipFolderId] = false
+    store.commit.ui.toast.addToast({
+      type: 'success',
+      text: 'クリップフォルダから削除しました'
+    })
   }
   const toggleClip = async (clipFolderId: ClipFolderId) => {
     if (selectedState[clipFolderId]) {
