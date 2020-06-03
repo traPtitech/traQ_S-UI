@@ -1,5 +1,6 @@
 import { Apis } from '@traptitech/traq'
 import { FileId } from '@/types/entity-ids'
+import DEV_SERVER from '@/lib/env/devServer'
 
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'
@@ -17,8 +18,9 @@ export const buildFileThumbnailPath = (fileId: FileId) =>
   `${BASE_PATH}/files/${fileId}/thumbnail`
 
 export const embeddingOrigin =
-  location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-    ? 'https://traq-s-dev.tokyotech.org'
+  DEV_SERVER !== '' &&
+  (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? DEV_SERVER
     : `${location.protocol}//${location.host}`
 export const buildFilePathForPost = (fileId: FileId) =>
   `${embeddingOrigin}/files/${fileId}`

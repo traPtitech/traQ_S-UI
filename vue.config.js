@@ -3,6 +3,7 @@
 const https = require('https')
 const keepAliveAgent = new https.Agent({ keepAlive: true })
 const configureWebpack = require('./vue-webpack.config')
+const { DEV_SERVER_PROXY_HOST } = require('./dev.config')
 
 module.exports = {
   css: {
@@ -97,7 +98,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api/v3/*': {
-        target: 'https://traq-s-dev.tokyotech.org/',
+        target: DEV_SERVER_PROXY_HOST,
         ws: true,
         changeOrigin: true,
         agent: keepAliveAgent

@@ -3,6 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const webpack = require('webpack')
 const crypto = require('crypto')
 const path = require('path')
+const { DEV_SERVER_PROXY_HOST } = require('./dev.config')
 
 module.exports = {
   resolve: {
@@ -28,12 +29,14 @@ module.exports = {
             deleteOriginalAssets: false
           }),
           new webpack.DefinePlugin({
-            __VERSION__: JSON.stringify(require('./package.json').version)
+            __VERSION__: JSON.stringify(require('./package.json').version),
+            __DEV_SERVER__: JSON.stringify('')
           })
         ]
       : [
           new webpack.DefinePlugin({
-            __VERSION__: JSON.stringify('dev')
+            __VERSION__: JSON.stringify('dev'),
+            __DEV_SERVER__: JSON.stringify(DEV_SERVER_PROXY_HOST)
           })
         ],
   optimization: {

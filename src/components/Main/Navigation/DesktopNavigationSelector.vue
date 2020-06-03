@@ -43,7 +43,7 @@ import {
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 import Icon from '@/components/UI/Icon.vue'
-import version from '@/lib/version'
+import version from '@/lib/env/version'
 
 export default defineComponent({
   name: 'NavigationSelector',
