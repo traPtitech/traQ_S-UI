@@ -70,7 +70,7 @@ const useStampFilter = () => {
         ...matched
       ])
 
-      return [...fullMatchedStamps, ...matchedStamps]
+      return [...new Set([...fullMatchedStamps, ...matchedStamps])]
     })
   })
   const setQuery = (query: string) => {
