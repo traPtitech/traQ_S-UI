@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import version from '@/lib/version'
+import version from '@/lib/env/version'
 
 export default defineComponent({
   name: 'Version',
