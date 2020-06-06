@@ -32,8 +32,10 @@ const useScreenShare = (props: { channelId: ChannelId }) => {
   const toggleScreenSharing = async () => {
     if (isJoinedScreenShareSession.value) {
       endScreenShareSession()
+      store.dispatch.ui.mainView.resetSecondaryView()
     } else if (isScreenShareSessionOpened.value) {
       startScreenStreaming()
+      store.dispatch.ui.mainView.changeSecondaryViewToQall()
     } else if (hasActiveScreenShareSession.value) {
       return
     } else {

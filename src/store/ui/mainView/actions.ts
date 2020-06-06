@@ -77,5 +77,17 @@ export const actions = defineActions({
       clipFolderId
     })
     rootDispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+  },
+  resetSecondaryView(context) {
+    const { commit } = mainViewActionContext(context)
+    commit.setLayout('single')
+    commit.unsetSecondaryView()
+  },
+  changeSecondaryViewToQall(context) {
+    const { commit } = mainViewActionContext(context)
+    commit.setSecondaryView({
+      type: 'qall'
+    })
+    commit.setLayout('split-reverse')
   }
 })

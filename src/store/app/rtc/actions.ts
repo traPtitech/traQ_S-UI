@@ -9,7 +9,7 @@ import AudioStreamMixer from '@/lib/audioStreamMixer'
 import { getUserAudio, getUserDisplay } from '@/lib/webrtc/userMedia'
 import { UserSessionState, SessionId, SessionType } from './state'
 import { changeRTCState } from '@/lib/websocket'
-import { WebRTCUserStateSessions } from '@traptitech/traq'
+import { WebRTCUserStateSessions, WebRTCUserState } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 
 export const defaultState = 'joined'
@@ -21,6 +21,33 @@ export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
 
 export const actions = defineActions({
   // ---- RTC Session ---- //
+
+  updateRTCState(context, payload: WebRTCUserState) {
+    const {
+      state,
+      commit,
+      dispatch,
+      rootDispatch,
+      rootState
+    } = rtcActionContext(context)
+
+    /** 画面共有のホストが消えた */
+    const hasScreenSharingHostExit =
+      state.userStateMap[payload.userId]?.sessionStates.find(s =>
+        s.states.includes('casting')
+      ) && !payload.sessions.find(s => s.state.includes('casting'))
+
+    commit.updateRTCState(payload)
+
+    if (
+      hasScreenSharingHostExit &&
+      payload.userId !== rootState.domain.me.detail?.id
+    ) {
+      dispatch.endVideoSession()
+      rootDispatch.ui.mainView.resetSecondaryView()
+    }
+  },
+
   async fetchRTCState(context) {
     const { commit } = rtcActionContext(context)
     const { data } = await apis.getWebRTCState()
@@ -294,6 +321,10 @@ export const actions = defineActions({
     if (payload.withStream) {
       const localStream = await getUserDisplay()
       localStream.getAudioTracks().forEach(track => (track.enabled = false))
+
+      localStream.getVideoTracks()[0]?.addEventListener('ended', () => {
+        dispatch.endVideoSession()
+      })
 
       commit.setLocalVideoStream(localStream)
       await client.joinRoom(payload.roomName, localStream)
