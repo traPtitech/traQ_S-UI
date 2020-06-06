@@ -41,7 +41,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stamp.id]?.name
+      () => store.state.entities.stamps[props.stamp.id]?.name ?? ''
     )
 
     const state = reactive({

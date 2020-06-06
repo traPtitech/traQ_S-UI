@@ -1,6 +1,6 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import { entities } from './index'
+import { entities, StampMap } from './index'
 import { moduleGetterContext } from '@/store'
 import { User, Stamp, UserGroup } from '@traptitech/traq'
 import { UserId, DMChannelId } from '@/types/entity-ids'
@@ -24,7 +24,9 @@ export const getters = defineGetters<S>()({
   },
   stampByName(state): (name: string) => Stamp | undefined {
     return (name: string) => {
-      return Object.values(state.stamps).find(stamp => stamp.name === name)
+      return Object.values(state.stamps as StampMap).find(
+        stamp => stamp.name === name
+      )
     }
   },
   userByName(state): (name: string) => User | undefined {

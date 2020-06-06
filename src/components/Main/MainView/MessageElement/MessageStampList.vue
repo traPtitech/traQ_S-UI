@@ -83,6 +83,8 @@ const createStampList = (
   const map: Record<StampId, MessageStampById> = {}
   props.stamps.forEach(stamp => {
     const { stampId } = stamp
+    if (!store.state.entities.stamps[stampId]) return
+
     if (!map[stamp.stampId]) {
       map[stampId] = {
         id: stamp.stampId,

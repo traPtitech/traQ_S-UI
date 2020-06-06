@@ -19,6 +19,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import Stamp from './Stamp.vue'
+import { StampMap } from '@/store/entities'
 
 export default defineComponent({
   name: 'EditStamp',
@@ -27,7 +28,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const myUserId = computed(() => store.state.domain.me.detail!.id)
     const myStamps = computed(() =>
-      Object.values(store.state.entities.stamps).filter(
+      Object.values(store.state.entities.stamps as StampMap).filter(
         stamp => stamp.creatorId === myUserId.value
       )
     )
