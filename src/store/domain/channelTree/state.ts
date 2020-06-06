@@ -10,6 +10,9 @@ export interface ChannelTreeNode {
   children: ChannelTreeNode[]
   active: boolean
   archived: boolean
+  /**
+   * スキップされた子孫 (子から親への順番)
+   */
   skippedAncestorNames?: string[]
 }
 export interface ChannelTree {
