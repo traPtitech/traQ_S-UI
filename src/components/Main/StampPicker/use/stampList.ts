@@ -35,7 +35,8 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
 
   const stamps = computed(() => {
     if (filterState.query === '') {
-      return stampIds.value.map(id => store.state.entities.stamps[id])
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return stampIds.value.map(id => store.state.entities.stamps[id]!)
     }
     return filterState.filteredItems
   })

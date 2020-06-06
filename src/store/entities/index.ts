@@ -10,7 +10,8 @@ import {
   WebhookId,
   FileId,
   TagId,
-  ClipFolderId
+  ClipFolderId,
+  StampId
 } from '@/types/entity-ids'
 import {
   User,
@@ -19,12 +20,14 @@ import {
   Webhook,
   FileInfo,
   Tag,
-  ClipFolder
+  ClipFolder,
+  Stamp
 } from '@traptitech/traq'
 
 export type UserMap = Record<UserId, User>
 export type MessageMap = Record<MessageId, Message>
 export type DMChannelMap = Record<DMChannelId, DMChannel>
+export type StampMap = Record<StampId, Stamp>
 export type WebhookMap = Record<WebhookId, Webhook>
 export type FileMetaDataMap = Record<FileId, FileInfo>
 export type TagMap = Record<TagId, Tag>

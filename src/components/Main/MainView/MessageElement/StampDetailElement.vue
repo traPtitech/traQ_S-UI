@@ -32,7 +32,7 @@ export default defineComponent({
   },
   setup(props) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stamp.id].name
+      () => store.state.entities.stamps[props.stamp.id]?.name ?? ''
     )
     return { stampName }
   }

@@ -1,10 +1,5 @@
-import { UserGroup, Stamp, StampPalette, Channel } from '@traptitech/traq'
-import {
-  UserGroupId,
-  StampId,
-  StampPaletteId,
-  ChannelId
-} from '@/types/entity-ids'
+import { UserGroup, StampPalette, Channel } from '@traptitech/traq'
+import { UserGroupId, StampPaletteId, ChannelId } from '@/types/entity-ids'
 import {
   UserMap,
   MessageMap,
@@ -13,7 +8,8 @@ import {
   WebhookMap,
   FileMetaDataMap,
   TagMap,
-  ClipFolderMap
+  ClipFolderMap,
+  StampMap
 } from '.'
 
 export type S = {
@@ -22,7 +18,7 @@ export type S = {
   channels: Record<ChannelId, Channel>
   dmChannels: DMChannelMap
   userGroups: Record<UserGroupId, UserGroup>
-  stamps: Record<StampId, Stamp>
+  stamps: Undefinedable<StampMap>
   stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Undefinedable<WebhookMap>
   fileMetaData: Undefinedable<FileMetaDataMap>

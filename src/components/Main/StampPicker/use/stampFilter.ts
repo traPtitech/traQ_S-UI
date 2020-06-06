@@ -7,9 +7,12 @@ import {
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import { getFullMatchedAndMatched } from '@/lib/util/array'
+import { StampMap } from '@/store/entities'
 
 const useStampFilter = () => {
-  const stamps = computed(() => Object.values(store.state.entities.stamps))
+  const stamps = computed(() =>
+    Object.values(store.state.entities.stamps as StampMap)
+  )
   const stampNames = computed(() => stamps.value.map(stamp => stamp.name))
   const stampsTable = computed(() =>
     Object.fromEntries(stamps.value.map(stamp => [stamp.name, stamp]))
