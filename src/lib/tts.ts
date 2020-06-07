@@ -122,3 +122,8 @@ export const tts = async (
   setUtter(utterThis)
   speechSynthesis.speak(utterThis)
 }
+
+// タブ閉じたときには止める
+window.addEventListener('unload', () => {
+  speechSynthesis.cancel()
+})
