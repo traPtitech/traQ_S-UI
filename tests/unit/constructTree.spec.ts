@@ -29,7 +29,7 @@ const channelEntities: Record<ChannelId, ChannelLike> = {
     name: '',
     parentId: null,
     archived: false,
-    children: ['a', '8', '4']
+    children: ['a', '8', '4', 'aa']
   },
   a: {
     id: 'a',
@@ -121,6 +121,27 @@ const channelEntities: Record<ChannelId, ChannelLike> = {
     parentId: 'b',
     archived: false,
     children: []
+  },
+  aa: {
+    id: 'aa',
+    name: 'aa',
+    parentId: null,
+    archived: false,
+    children: ['aa1']
+  },
+  aa1: {
+    id: 'aa1',
+    name: 'aa1',
+    parentId: 'aa',
+    archived: false,
+    children: ['aa11']
+  },
+  aa11: {
+    id: 'aa11',
+    name: 'aa11',
+    parentId: 'aa1',
+    archived: false,
+    children: []
   }
 }
 
@@ -179,6 +200,29 @@ const channelTree: ChannelTree = {
         { id: '1', name: '1', active: true, archived: false, children: [] },
         { id: '2', name: '2', active: true, archived: false, children: [] }
       ]
+    },
+    {
+      id: 'aa',
+      name: 'aa',
+      active: true,
+      archived: false,
+      children: [
+        {
+          id: 'aa1',
+          name: 'aa1',
+          active: true,
+          archived: false,
+          children: [
+            {
+              id: 'aa11',
+              name: 'aa11',
+              active: true,
+              archived: false,
+              children: []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -228,6 +272,14 @@ const homeChannelTree: ChannelTree = {
         { id: '2', name: '2', active: true, children: [], archived: false }
       ],
       archived: false
+    },
+    {
+      id: 'aa11',
+      name: 'aa11',
+      active: true,
+      children: [],
+      skippedAncestorNames: ['aa1', 'aa'],
+      archived: false
     }
   ]
 }
@@ -239,5 +291,6 @@ const subscribedChannels: Set<ChannelId> = new Set([
   '4',
   '5',
   '6',
-  '7'
+  '7',
+  'aa11'
 ])

@@ -72,7 +72,11 @@ import Icon from '@/components/UI/Icon.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
-    path: computed(() => skippedAncestorNames?.join('/')?.concat('/') ?? '')
+    path: computed(() =>
+      skippedAncestorNames
+        ? [...skippedAncestorNames].reverse().join('/').concat('/')
+        : ''
+    )
   }
 }
 
