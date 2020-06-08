@@ -1,34 +1,42 @@
 <template>
   <div :class="$style.container" :data-is-mobile="isMobile">
-    <portal-target
-      :class="$style.stampPickerLocator"
-      :name="targetPortalName"
-    />
-    <message-input-file-list />
-    <message-input-typing-users :typing-users="typingUsers" />
-    <message-input-key-guide :show="showKeyGuide" />
-    <div :class="$style.inputContainer">
-      <message-input-upload-button
-        :class="$style.controls"
-        @click="addAttachment"
-      />
-      <message-input-text-area
-        ref="textareaRef"
-        :text="textState.text"
-        @focus="onFocus"
-        @blur="onBlur"
-        @input="onInputText"
-        @modifier-key-down="onModifierKeyDown"
-        @modifier-key-up="onModifierKeyUp"
-        @post-message="postMessage"
-      />
-      <message-input-controls
-        :class="$style.controls"
-        :can-post-message="canPostMessage"
-        @click-send="postMessage"
-        @click-stamp="onStampClick"
-      />
+    <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
+      <icon :class="$style.controls" name="archive" mdi />
+      <div>
+        アーカイブチャンネルのため、投稿できません
+      </div>
     </div>
+    <template v-else>
+      <portal-target
+        :class="$style.stampPickerLocator"
+        :name="targetPortalName"
+      />
+      <message-input-file-list />
+      <message-input-typing-users :typing-users="typingUsers" />
+      <message-input-key-guide :show="showKeyGuide" />
+      <div :class="$style.inputContainer">
+        <message-input-upload-button
+          :class="$style.controls"
+          @click="addAttachment"
+        />
+        <message-input-text-area
+          ref="textareaRef"
+          :text="textState.text"
+          @focus="onFocus"
+          @blur="onBlur"
+          @input="onInputText"
+          @modifier-key-down="onModifierKeyDown"
+          @modifier-key-up="onModifierKeyUp"
+          @post-message="postMessage"
+        />
+        <message-input-controls
+          :class="$style.controls"
+          :can-post-message="canPostMessage"
+          @click-send="postMessage"
+          @click-stamp="onStampClick"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -55,6 +63,7 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -64,7 +73,8 @@ export default defineComponent({
     MessageInputTextArea,
     MessageInputControls,
     MessageInputFileList,
-    MessageInputUploadButton
+    MessageInputUploadButton,
+    Icon
   },
   props: {
     channelId: {
@@ -85,6 +95,10 @@ export default defineComponent({
     onBeforeUnmount(() => {
       destroy()
     })
+
+    const isArchived = computed(
+      () => store.state.entities.channels[props.channelId]?.archived ?? false
+    )
 
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(
@@ -128,6 +142,7 @@ export default defineComponent({
 
     return {
       textareaRef,
+      isArchived,
       targetPortalName,
       isMobile,
       typingUsers,
@@ -197,6 +212,14 @@ $radius: 4px;
 
   .container[data-is-mobile='true'] & {
     padding: 4px 0;
+  }
+
+  &[data-is-archived] {
+    @include color-ui-secondary;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 .controls {
