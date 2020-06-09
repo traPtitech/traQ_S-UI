@@ -40,7 +40,7 @@ const useMenuHeight = (
   state: { isPopupMenuShown: boolean }
 ) => {
   const height = ref(0)
-  const menuContainerRef = ref<HTMLDivElement>(null)
+  const menuContainerRef = ref<HTMLDivElement | null>(null)
   watch(
     () => state.isPopupMenuShown,
     async newVal => {

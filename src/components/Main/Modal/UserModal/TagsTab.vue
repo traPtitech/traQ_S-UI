@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.tags">
-    <template v-if="propst.detail === undefined">Now loading...</template>
+    <template v-if="detail === undefined">Now loading...</template>
     <template v-else>
       <ul :class="$style.list">
         <li v-for="tag in tags" :key="tag.tagId" :class="$style.tag">
@@ -12,12 +12,12 @@
           </div>
           <tags-tab-edit
             :tag-id="tag.tagId"
-            :user-id="propst.detail.id"
+            :user-id="userId"
             :class="$style.edit"
           />
         </li>
       </ul>
-      <tags-tab-add :user-id="propst.detail.id" />
+      <tags-tab-add :user-id="userId" />
     </template>
   </div>
 </template>
@@ -37,10 +37,8 @@ export default defineComponent({
     detail: Object as PropType<UserDetail>
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { detail?: UserDetail }
-
-    const tags = computed(() => propst.detail?.tags ?? [])
+    const userId = computed(() => props.detail?.id)
+    const tags = computed(() => props.detail?.tags ?? [])
 
     const onTagClick = (id: TagId) => {
       store.dispatch.ui.modal.pushModal({
@@ -50,9 +48,9 @@ export default defineComponent({
     }
 
     return {
+      userId,
       tags,
-      onTagClick,
-      propst
+      onTagClick
     }
   },
   components: {

@@ -5,13 +5,13 @@
       <p>
         <online-indicator
           :user-id="user.id"
-          :last-online="props.detail ? props.detail.lastOnline : undefined"
+          :last-online="detail ? detail.lastOnline : undefined"
         />
         @{{ user.name }}
       </p>
     </div>
     <buttons
-      :home-channel-id="props.detail ? props.detail.homeChannel : undefined"
+      :home-channel-id="detail ? detail.homeChannel : undefined"
       :user-name="user.name"
       show-title
     />
@@ -33,11 +33,8 @@ export default defineComponent({
     },
     detail: Object as PropType<UserDetail>
   },
-  setup(props) {
-    return {
-      // TODO: https://github.com/vuejs/composition-api/issues/291
-      props: props as { detail?: UserDetail }
-    }
+  setup() {
+    return {}
   },
   components: {
     OnlineIndicator,

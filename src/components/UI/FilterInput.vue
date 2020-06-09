@@ -59,7 +59,7 @@ export default defineComponent({
   setup(props, context) {
     const { onInput } = useInput(context)
 
-    const inputRef = ref<HTMLInputElement>(null)
+    const inputRef = ref<HTMLInputElement | null>(null)
     onMounted(() => {
       if (!props.focusOnMount || isTouchDevice()) return
       inputRef.value?.focus()

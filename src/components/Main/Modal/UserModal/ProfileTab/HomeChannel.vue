@@ -30,20 +30,18 @@ export default defineComponent({
     id: String as PropType<string | null>
   },
   setup(props, context) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { id?: string | null }
-    const isLoading = computed(() => propst.id === undefined)
+    const isLoading = computed(() => props.id === undefined)
     const isEmpty = computed(() =>
-      props.id === undefined ? false : propst.id === null
+      props.id === undefined ? false : props.id === null
     )
 
     const { channelIdToPathString } = useChannelPath()
     const channelPath = computed(() =>
-      propst.id ? channelIdToPathString(propst.id) : ''
+      props.id ? channelIdToPathString(props.id) : ''
     )
 
     const onClick = async () => {
-      if (!propst.id) return
+      if (!props.id) return
       // モーダル削除時に消えちゃうため、実体を退避
       const pathCache = channelPath.value
       await store.dispatch.ui.modal.clearModal()

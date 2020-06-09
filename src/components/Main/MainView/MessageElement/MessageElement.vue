@@ -73,7 +73,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const bodyRef = ref<HTMLDivElement>(null)
+    const bodyRef = ref<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
