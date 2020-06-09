@@ -37,7 +37,8 @@ import {
   computed,
   onBeforeUnmount,
   watch,
-  ref
+  ref,
+  onMounted
 } from '@vue/composition-api'
 import store from '@/store'
 import { ws, setTimelineStreamingState } from '@/lib/websocket'
@@ -48,21 +49,25 @@ const useActivityStream = () => {
   const mode = computed(() => store.state.app.browserSettings.activityMode)
 
   const fetch = (payload: { all?: boolean; perChannel?: boolean }) => {
-    return store.dispatch.domain.fetchActivityTimeline(payload)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return store.dispatch.domain.fetchActivityTimeline(payload).catch(() => {})
   }
   const handler = () => {
     fetch(mode.value)
   }
 
-  // mountedの際に`oldMode`が`undefined`なものが発火する
+  onMounted(async () => {
+    setTimelineStreamingState(mode.value.all)
+    await fetch(mode.value)
+  })
+
   watch(
     () => mode.value,
     async (newMode, oldMode) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      await fetch(mode.value).catch(() => {})
-      if (newMode.all !== oldMode?.all) {
+      if (newMode.all !== oldMode.all) {
         setTimelineStreamingState(newMode.all)
       }
+      await fetch(mode.value)
     }
   )
   ws.addEventListener('reconnect', handler)

@@ -1,7 +1,7 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '@/store'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { reactive, Ref, watch } from '@vue/composition-api'
+import { reactive, Ref, watch, onMounted } from '@vue/composition-api'
 import { Message } from '@traptitech/traq'
 
 const fetchLimit = 20
@@ -118,7 +118,10 @@ const useChannelMessageFetcher = (
     fetchAroundMessages
   )
 
-  // TODO: エントリーメッセージからチャンネル読み込む時に2回走る
+  onMounted(() => {
+    reset()
+    messagesFetcher.init()
+  })
   watch(
     () => props.entryMessageId,
     (newVal, oldVal) => {

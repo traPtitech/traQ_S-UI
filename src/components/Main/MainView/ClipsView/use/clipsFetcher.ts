@@ -1,7 +1,7 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '@/store'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
-import { reactive, Ref, watch } from '@vue/composition-api'
+import { reactive, Ref, watch, onMounted } from '@vue/composition-api'
 
 const fetchLimit = 50
 
@@ -43,6 +43,10 @@ const useClipsFetcher = (props: {
     undefined
   )
 
+  onMounted(() => {
+    reset()
+    messagesFetcher.init()
+  })
   watch(
     () => props.clipFolderId,
     (newVal, oldVal) => {
