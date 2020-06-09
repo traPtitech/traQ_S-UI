@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 13.1.0
-      - run: npm install
+      - run: npm ci
       - run: npm run build:with-font
         env:
           NODE_ENV: production
