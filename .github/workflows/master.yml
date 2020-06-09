@@ -47,4 +47,4 @@ jobs:
           name: dist
           path: ./dist
       - name: Deploy
-        run: rsync -e "ssh --rsync-path='sudo rsync' -o LogLevel=QUIET -t ${{ secrets.STAGING_DEPLOY_USER }}@${{ secrets.STAGING_DEPLOY_HOST }}" -rltpzhv --delete ./dist ${{ secrets.STAGING_DEPLOY_RSYNC_DESTINATION }}
+        run: rsync -e "ssh -o LogLevel=QUIET -t ${{ secrets.STAGING_DEPLOY_USER }}@${{ secrets.STAGING_DEPLOY_HOST }}" --rsync-path='sudo rsync' -rltpzhv --delete ./dist ${{ secrets.STAGING_DEPLOY_RSYNC_DESTINATION }}
