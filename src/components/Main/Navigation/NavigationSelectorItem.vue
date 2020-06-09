@@ -48,8 +48,7 @@ export default defineComponent({
     colorClaim: Function as PropType<ThemeClaim<string>>
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const styles = useStyles(props as { colorClaim?: ThemeClaim<string> })
+    const styles = useStyles(props)
     return { styles }
   }
 })

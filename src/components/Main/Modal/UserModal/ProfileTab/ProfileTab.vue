@@ -1,11 +1,11 @@
 <template>
   <div>
-    <bio :bio="props.detail ? props.detail.bio : undefined" />
-    <home-channel :id="props.detail ? props.detail.homeChannel : undefined" />
+    <bio :bio="detail ? detail.bio : undefined" />
+    <home-channel :id="detail ? detail.homeChannel : undefined" />
     <accounts
       :bot="user.bot"
       :name="user.name"
-      :twitter-id="props.detail ? props.detail.twitterId : undefined"
+      :twitter-id="detail ? detail.twitterId : undefined"
     />
   </div>
 </template>
@@ -26,11 +26,8 @@ export default defineComponent({
     },
     detail: Object as PropType<UserDetail>
   },
-  setup(props) {
-    return {
-      // TODO: https://github.com/vuejs/composition-api/issues/291
-      props: props as { detail?: UserDetail }
-    }
+  setup() {
+    return {}
   },
   components: {
     Bio,

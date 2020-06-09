@@ -150,8 +150,8 @@ export default defineComponent({
       })
     })
 
-    const rootRef = ref<HTMLElement>(null)
-    const spacerRef = ref<HTMLElement>(null)
+    const rootRef = ref<HTMLElement | null>(null)
+    const spacerRef = ref<HTMLElement | null>(null)
 
     const handleScroll = throttle((e: Event) => {
       if (!rootRef.value) return

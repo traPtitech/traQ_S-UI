@@ -33,8 +33,7 @@ export default defineComponent({
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
-        // TODO: https://github.com/vuejs/composition-api/issues/291
-        (props.detail as UserDetail | undefined)?.groups.map(
+        props.detail?.groups.map(
           groupId => store.state.entities.userGroups[groupId]
         ) ?? []
     )

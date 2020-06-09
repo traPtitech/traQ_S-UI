@@ -70,7 +70,7 @@ export default defineComponent({
       onInputInternal(e)
     }
 
-    const inputRef = ref<HTMLInputElement>(null)
+    const inputRef = ref<HTMLInputElement | null>(null)
     const focus = () => {
       inputRef.value?.focus()
     }

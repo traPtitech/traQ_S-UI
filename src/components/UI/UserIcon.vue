@@ -52,12 +52,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // TODO: https://github.com/vuejs/composition-api/issues/291
-    const propst = props as { fallbackIconFileId?: FileId }
-
     const user = computed(() => store.state.entities.users[props.userId])
     const userIconFileId = computed(
-      () => user.value?.iconFileId ?? propst.fallbackIconFileId ?? ''
+      () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
     )
     const styles = reactive({
       container: makeStyles(theme => ({

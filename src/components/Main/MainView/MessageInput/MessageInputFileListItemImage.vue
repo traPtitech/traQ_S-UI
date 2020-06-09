@@ -44,7 +44,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const thumbnailRef = ref<HTMLImageElement>(null)
+    const thumbnailRef = ref<HTMLImageElement | null>(null)
     const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
     return { thumbnailRef, imageThumbnailState }
   }

@@ -156,7 +156,7 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const rootRef = ref<HTMLElement>(null)
+    const rootRef = ref<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
       scrollTop: 0

@@ -36,8 +36,7 @@ export default defineComponent({
       (newVal, oldVal) => {
         state.val = newVal
         state.reverse = newVal < oldVal
-      },
-      { lazy: true }
+      }
     )
     const name = computed(() =>
       state.reverse ? 'vertical-swap-reverse' : 'vertical-swap'
