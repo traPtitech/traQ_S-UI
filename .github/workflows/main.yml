@@ -1,0 +1,104 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  packages:
+    name: check npm install
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.1.0
+          registry-url: 'https://registry.npmjs.org'
+      - name: check npm ci
+        run: npm ci
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+  lint:
+    name: run lint
+    runs-on: ubuntu-latest
+    needs: [packages]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.1.0
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: npm ci
+        run: npm ci
+      - name: run lint
+        run: npm run lint:no-fix
+  build:
+    name: run build
+    runs-on: ubuntu-latest
+    needs: [packages]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.1.0
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: npm ci
+        run: npm ci
+      - name: run build
+        run: npm run build:with-font
+  test:
+    name: run test
+    runs-on: ubuntu-latest
+    needs: [packages]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.1.0
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: npm ci
+        run: npm ci
+      - name: run test
+        run: npm run test:unit
+      - uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: ./coverage
+  codecov:
+    name: Upload coverage to Codecov
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - uses: actions/download-artifact@v1
+        with:
+          name: coverage
+          path: ./coverage
+      - uses: codecov/codecov-action@v1

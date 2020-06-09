@@ -1,0 +1,43 @@
+name: master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: run build
+    runs-on: ubuntu-latest
+    needs: [packages]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.1.0
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: npm ci
+        run: npm ci
+      - name: run build
+        run: npm run build:with-font
+  deploy-staging:
+    name: Deploy staging
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v1
+        with:
+          private-key: ${{ secrets.STAGING_SSH_KEY }}
+          public-key: ${{ secrets.STAGING_SSH_KEY_PUBLIC }}
+          known-hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
+      - name: Deploy
+        run: rsync -e "ssh -o LogLevel=QUIET -t ${{ secrets.STAGING_DEPLOY_USER }}@${{ secrets.STAGING_DEPLOY_HOST }}" -rltpzhv --delete ./dist ${{ secrets.STAGING_DEPLOY_RSYNC_DESTINATION }}
