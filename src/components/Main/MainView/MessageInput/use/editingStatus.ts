@@ -1,4 +1,4 @@
-import { watch, Ref } from '@vue/composition-api'
+import { watch, Ref, onMounted, computed } from '@vue/composition-api'
 import { changeViewState } from '@/lib/websocket'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
@@ -8,14 +8,23 @@ const useEditingStatus = (
   textStatus: { text: string },
   isFocused: Ref<boolean>
 ) => {
+  const isEditing = computed(() => textStatus.text !== '' && isFocused.value)
+
+  const change = (isEditing: boolean) => {
+    changeViewState(
+      channelId.value,
+      isEditing ? ChannelViewState.Editing : ChannelViewState.Monitoring
+    )
+  }
+
+  onMounted(() => {
+    change(isEditing.value)
+  })
   watch(
-    () => textStatus.text !== '' && isFocused.value,
+    () => isEditing.value,
     (isEditing, wasEditing) => {
       if (isEditing === wasEditing) return
-      changeViewState(
-        channelId.value,
-        isEditing ? ChannelViewState.Editing : ChannelViewState.Monitoring
-      )
+      change(isEditing)
     }
   )
 }

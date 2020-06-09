@@ -23,7 +23,8 @@ import {
   reactive,
   computed,
   watch,
-  PropType
+  PropType,
+  onMounted
 } from '@vue/composition-api'
 import store from '@/store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
@@ -77,10 +78,15 @@ export default defineComponent({
       }
     )
 
+    onMounted(() => {
+      if (props.stamp.myCount > 0) {
+        state.myCountHasIncremented = true
+      }
+    })
     watch(
       () => props.stamp.myCount,
-      async (newVal, oldVal) => {
-        if (oldVal < newVal || (oldVal === undefined && 0 < newVal)) {
+      (newVal, oldVal) => {
+        if (oldVal < newVal) {
           state.myCountHasIncremented = true
         }
       }

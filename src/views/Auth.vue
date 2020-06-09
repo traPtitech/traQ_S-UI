@@ -27,48 +27,53 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
 
   const isConsent = computed(() => props.type === 'consent')
 
-  onMounted(() => {
-    watch(
-      () => props.type,
-      async () => {
-        let isLoggedIn = false
-        try {
-          await store.dispatch.domain.me.fetchMe()
-          isLoggedIn = true
-        } catch {}
+  const updateState = async () => {
+    let isLoggedIn = false
+    try {
+      await store.dispatch.domain.me.fetchMe()
+      isLoggedIn = true
+    } catch {}
 
-        if (isConsent.value) {
-          if (isLoggedIn) {
-            state.show = true
-            return
-          }
-
-          // OAuth認可画面に入る前にログインさせる
-          // ログインしたら戻ってくる
-          context.root.$router.replace({
-            name: RouteName.Login,
-            query: { redirect: `${location.pathname}${location.search}` }
-          })
-          return
-        }
-
-        if (isLoggedIn) {
-          // ログインしている場合でredirパラメータがついてる場合は
-          // pipelineへのリダイレクトをする
-          // pipelineへのリダイレクトをしなくていい環境では
-          // トップへリダイレクトする
-          const redirect = getStringParam(context.root.$route.query.redirect)
-          const redirected = redirect && redirectToPipelineIfNeeded()
-          if (!redirected) {
-            context.root.$router.replace('/')
-          }
-          return
-        }
-
+    if (isConsent.value) {
+      if (isLoggedIn) {
         state.show = true
+        return
       }
-    )
+
+      // OAuth認可画面に入る前にログインさせる
+      // ログインしたら戻ってくる
+      context.root.$router.replace({
+        name: RouteName.Login,
+        query: { redirect: `${location.pathname}${location.search}` }
+      })
+      return
+    }
+
+    if (isLoggedIn) {
+      // ログインしている場合でredirパラメータがついてる場合は
+      // pipelineへのリダイレクトをする
+      // pipelineへのリダイレクトをしなくていい環境では
+      // トップへリダイレクトする
+      const redirect = getStringParam(context.root.$route.query.redirect)
+      const redirected = redirect && redirectToPipelineIfNeeded()
+      if (!redirected) {
+        context.root.$router.replace('/')
+      }
+      return
+    }
+
+    state.show = true
+  }
+
+  onMounted(() => {
+    updateState()
   })
+  watch(
+    () => props.type,
+    () => {
+      updateState()
+    }
+  )
   return state
 }
 
