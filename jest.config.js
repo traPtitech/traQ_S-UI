@@ -8,5 +8,7 @@ module.exports = {
     },
     __VERSION__: JSON.stringify('test'),
     __DEV_SERVER__: JSON.stringify('https://example.com')
-  }
+  },
+  coverageDirectory: './coverage/',
+  collectCoverage: true
 }
