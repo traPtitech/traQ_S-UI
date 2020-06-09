@@ -9,8 +9,10 @@ const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
 
 export const getters = defineGetters<S>()({
-  recentStampIds(state): StampId[] {
+  recentStampIds(...args): StampId[] {
+    const { state, rootState } = meGetterContext(args)
     const history = Object.entries(state.stampHistory)
+      .filter(([stampId]) => rootState.entities.stamps[stampId] !== undefined)
       .sort((e1, e2) => {
         // 日付の降順
         if (e1[1] > e2[1]) return -1
