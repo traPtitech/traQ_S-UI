@@ -27,6 +27,13 @@
       icon-mdi
       label="チャンネルリンクをコピー"
     />
+    <header-tools-menu-item
+      v-if="hasChannelEditPermission"
+      @click.native="context.emit('click-manage-channel')"
+      icon-name="hash"
+      :class="$style.manageChannel"
+      label="チャンネル管理"
+    />
   </main-view-header-popup-frame>
 </template>
 
@@ -35,6 +42,8 @@ import { defineComponent, computed } from '@vue/composition-api'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'
+import store from '@/store'
+import { UserPermission } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'ChannelViewHeaderToolsMenu',
@@ -62,7 +71,12 @@ export default defineComponent({
       }
       return 'Qallを開始'
     })
-    return { context, isMobile, qallLabel }
+    const hasChannelEditPermission = computed(() =>
+      store.state.domain.me.detail?.permissions.includes(
+        UserPermission.EditChannel
+      )
+    )
+    return { context, isMobile, qallLabel, hasChannelEditPermission }
   }
 })
 </script>
@@ -72,5 +86,8 @@ export default defineComponent({
   &[data-is-active] {
     color: $common-ui-qall;
   }
+}
+.manageChannel {
+  color: $theme-accent-error;
 }
 </style>

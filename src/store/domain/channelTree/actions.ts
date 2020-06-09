@@ -82,10 +82,12 @@ export const constructTree = (
 }
 
 export const actions = defineActions({
-  constructAllTrees(context) {
+  async constructAllTrees(context) {
     const { dispatch } = channelTreeActionContext(context)
-    dispatch.constructChannelTree()
-    dispatch.constructHomeChannelTree()
+    await Promise.all([
+      dispatch.constructChannelTree(),
+      dispatch.constructHomeChannelTree()
+    ])
   },
   constructChannelTree(context) {
     const { getters, commit, rootState } = channelTreeActionContext(context)

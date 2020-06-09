@@ -140,6 +140,7 @@ export const actions = defineActions({
       case 'qrcode':
       case 'clip-create':
       case 'clip-folder-create':
+      case 'channel-manage':
         break
       default: {
         const invalid: never = modalState

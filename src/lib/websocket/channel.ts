@@ -10,6 +10,8 @@ import {
   ChannelSubscribersChangedEvent
 } from './events'
 import { dmParentUuid } from '@/lib/util/uuid'
+import router, { constructChannelPath } from '@/router'
+import useChannelPath from '@/use/channelPath'
 
 const isCurrentChannel = (channelId: string) => {
   const primaryView = store.state.ui.mainView.primaryView
@@ -47,8 +49,50 @@ export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
 }
 
 export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
+  const { channelIdToPathString } = useChannelPath()
+  const oldPath = channelIdToPathString(id)
+
   const res = await apis.getChannel(id)
-  store.commit.entities.extendChannels({ [id]: res.data })
+
+  const old = store.state.entities.channels[id]
+  const isNameChanged = old.name !== res.data.name
+  const isParentChanged = old.parentId !== res.data.parentId
+  const isPathChanged = isNameChanged || isParentChanged
+  const isArchivedChanged = old.archived !== res.data.archived
+
+  const diffChannels = { [id]: res.data }
+
+  if (isParentChanged) {
+    // 親チャンネルの`children`が不整合になるので再取得
+    if (old.parentId) {
+      const oldParentRes = await apis.getChannel(old.parentId)
+      diffChannels[old.parentId] = oldParentRes.data
+    }
+    if (res.data.parentId) {
+      const newParentRes = await apis.getChannel(res.data.parentId)
+      diffChannels[res.data.parentId] = newParentRes.data
+    }
+  }
+
+  store.commit.entities.extendChannels(diffChannels)
+
+  if (isPathChanged || isArchivedChanged) {
+    await store.dispatch.domain.channelTree.constructAllTrees()
+  }
+
+  if (isPathChanged) {
+    const newPath = channelIdToPathString(id)
+    store.dispatch.app.browserSettings.updateOpenChannelNames({
+      oldName: oldPath,
+      newName: newPath
+    })
+
+    if (isCurrentChannel(id)) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      router.replace(constructChannelPath(newPath)).catch(() => {})
+    }
+  }
+
   if (isCurrentChannel(id)) {
     store.commit.domain.messagesView.setTopic(res.data.topic)
   }
