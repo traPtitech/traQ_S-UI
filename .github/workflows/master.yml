@@ -27,6 +27,10 @@ jobs:
         run: npm ci
       - name: run build
         run: npm run build:with-font
+      - uses: actions/upload-artifact@v1
+        with:
+          name: dist
+          path: ./dist
   deploy-staging:
     name: Deploy staging
     runs-on: ubuntu-latest
@@ -38,5 +42,9 @@ jobs:
           private-key: ${{ secrets.STAGING_SSH_KEY }}
           public-key: ${{ secrets.STAGING_SSH_KEY_PUBLIC }}
           known-hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
+      - uses: actions/download-artifact@v1
+        with:
+          name: dist
+          path: ./dist
       - name: Deploy
         run: rsync -e "ssh -o LogLevel=QUIET -t ${{ secrets.STAGING_DEPLOY_USER }}@${{ secrets.STAGING_DEPLOY_HOST }}" -rltpzhv --delete ./dist ${{ secrets.STAGING_DEPLOY_RSYNC_DESTINATION }}
