@@ -19,7 +19,7 @@
     "@traptitech/traq": "3.0.0-29",
     "@traptitech/traq-markdown-it": "^2.5.1",
     "@types/pica": "^5.1.1",
-    "@vue/composition-api": "^0.5.0",
+    "@vue/composition-api": "^0.6.1",
     "core-js": "^3.6.5",
     "cropperjs": "^1.5.7",
     "direct-vuex": "^0.11.0",
