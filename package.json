@@ -7,10 +7,11 @@
     "build": "vue-cli-service build --modern",
     "build:with-font": "npm run gen-fonts && npm run build",
     "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "lint:no-fix": "vue-cli-service lint --no-fix",
-    "gen-unicode_emojis": "node build/gen-unicode_emojis",
-    "gen-fonts": "node build/gen-mplus"
+    "gen-fonts": "node build/gen-mplus",
+    "gen-unicode_emojis": "node build/gen-unicode_emojis"
   },
   "dependencies": {
     "@cloudcmd/clipboard": "^2.0.0",
@@ -50,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "@vue/cli-plugin-babel": "^4.4.1",
+    "@vue/cli-plugin-e2e-cypress": "^4.4.1",
     "@vue/cli-plugin-eslint": "^4.4.1",
     "@vue/cli-plugin-pwa": "^4.4.1",
     "@vue/cli-plugin-router": "^4.4.1",

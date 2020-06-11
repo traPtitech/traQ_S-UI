@@ -22,3 +22,7 @@ yarn-error.log*
 
 /public/fonts/*
 /coverage
+
+/tests/e2e/screenshots
+/tests/e2e/videos
+/cypress.env.json
