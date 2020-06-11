@@ -56,6 +56,11 @@ export default defineComponent({
         await apis.createStamp(newStampName.value, imageUploadState.imgData)
         newStampName.value = ''
         destroyImageUploadState()
+
+        store.commit.ui.toast.addToast({
+          type: 'success',
+          text: 'スタンプを登録しました'
+        })
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('スタンプの作成に失敗しました', e)
