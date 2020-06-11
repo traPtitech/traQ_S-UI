@@ -106,8 +106,5 @@ module.exports = {
     }
   },
 
-  productionSourceMap: false,
-
-  // CI上ではthread数を制限
-  parallel: process.env.CIRCLECI ? +process.env.CIRCLE_NODE_TOTAL : true
+  productionSourceMap: false
 }
