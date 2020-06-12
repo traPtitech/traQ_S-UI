@@ -15,7 +15,7 @@
     <div :class="$style.footer">
       <span :class="$style.description">
         <router-link :to="`/channels/${state.channelPath}`">
-          {{ state.channelPath }}
+          #{{ state.channelPath }}
         </router-link>
         - {{ state.date }}
       </span>
