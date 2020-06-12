@@ -16,9 +16,9 @@
     <div :class="$style.footer">
       <span :class="$style.description">
         <router-link :to="`/channels/${state.channelPath}`">
-          {{ state.channelPath }}
+          #{{ state.channelPath }}
         </router-link>
-          - {{ state.date }}
+        - {{ state.date }}
       </span>
       <router-link :class="$style.link" :to="`/messages/${state.message.id}`">メッセージへ
       </router-link>
