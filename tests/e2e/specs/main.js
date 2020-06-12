@@ -16,9 +16,9 @@ describe('Main', () => {
   it('can show user modal', () => {
     cy.visit('/channels/general')
 
-    cy.get('[class^=DesktopToolBox_container]')
-      .get('[class^=UserIcon_container]')
-      .click()
+    cy.get(
+      '[class^=DesktopToolBox_container] [class^=UserIcon_container]'
+    ).click()
 
     cy.get('[class^=UserModal_content]').get(
       '[class^=Bio]:not(data-is-loading)'
