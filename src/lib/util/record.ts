@@ -27,7 +27,9 @@ export const reduceToRecordOfArray = <T>(array: T[], key: keyof T) =>
     return Object.assign(acc, { [ck]: [cur] })
   }, {} as Record<string, T[]>)
 
-export const formatSnakeKeysToCamelShallow = (obj: {}) => {
+export const formatSnakeKeysToCamelShallow = (
+  obj: Record<string, unknown>
+): unknown => {
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => [
       k.replace(/_([a-zA-Z])/g, (_, char: string) => char.toUpperCase()),

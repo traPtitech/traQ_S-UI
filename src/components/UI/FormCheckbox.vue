@@ -41,11 +41,10 @@ export default defineComponent({
     const onInput = (event: InputEvent) =>
       context.emit('input', (event.target as HTMLInputElement).checked)
 
-    const listeners = computed(
-      () =>
-        Object.assign({}, context.listeners, {
-          input: onInput
-        }) as Record<string, Function>
+    const listeners = computed(() =>
+      Object.assign({}, context.listeners, {
+        input: onInput
+      })
     )
 
     return { listeners }

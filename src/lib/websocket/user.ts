@@ -69,9 +69,7 @@ export const onUserOffline = ({ id }: UserOfflineEvent['body']) => {
 export const onUserWebRTCStateChanged = (
   dataSnake: UserWebRTCStateChangedEvent['body']
 ) => {
-  const data = (formatSnakeKeysToCamelShallow(
-    dataSnake
-  ) as unknown) as WebRTCUserState
+  const data = formatSnakeKeysToCamelShallow(dataSnake) as WebRTCUserState
   store.commit.app.rtc.updateRTCState(data)
 }
 
