@@ -23,7 +23,7 @@ module.exports = {
     'no-debugger': isStrict ? 'error' : 'warn',
     'no-empty': ['error', { allowEmptyCatch: true }],
     eqeqeq: 'error',
-    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/member-delimiter-style': [
       'error',
       {
@@ -37,6 +37,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-extra-semi': 'off',
     'unused-imports/no-unused-imports-ts': isStrict ? 'error' : 'warn',
     'unused-imports/no-unused-vars-ts': 'off'
   },

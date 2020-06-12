@@ -37,8 +37,6 @@ interface QRTCEventMap {
   datarecieve: QRTCDataRecieveEvent
   connectionerror: QRTCConnectionErrorEvent
 }
-
-// eslint-disable-next-line @typescript-eslint/class-name-casing
 class traQRTCClientBase {
   private eventTargetDeligator: EventTarget = document.createDocumentFragment()
 
@@ -74,7 +72,6 @@ class traQRTCClientBase {
 /**
  * @class リアルタイム系機能を提供するクラス
  */
-// eslint-disable-next-line @typescript-eslint/class-name-casing
 class traQRTCClient extends traQRTCClientBase {
   private peer?: Peer
   private room?: SfuRoom

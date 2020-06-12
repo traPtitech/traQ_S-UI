@@ -53,11 +53,10 @@ export default defineComponent({
     const checked = computed(() => props.inputValue === props.value)
     const { onInput } = useInput(context)
 
-    const listeners = computed(
-      () =>
-        Object.assign({}, context.listeners, {
-          input: onInput
-        }) as Record<string, Function>
+    const listeners = computed(() =>
+      Object.assign({}, context.listeners, {
+        input: onInput
+      })
     )
 
     return { checked, listeners }
