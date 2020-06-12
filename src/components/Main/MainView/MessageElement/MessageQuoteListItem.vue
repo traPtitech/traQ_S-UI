@@ -20,7 +20,8 @@
         </router-link>
         - {{ state.date }}
       </span>
-      <router-link :class="$style.link" :to="`/messages/${state.message.id}`">メッセージへ
+      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
+        >メッセージへ
       </router-link>
     </div>
   </div>
