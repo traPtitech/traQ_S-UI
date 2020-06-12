@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/camelcase */
 const https = require('https')
 const keepAliveAgent = new https.Agent({ keepAlive: true })
 const configureWebpack = require('./vue-webpack.config')

@@ -158,6 +158,11 @@ export default defineComponent({
         applyNameChange()
         applyCreatorChange()
         onEndEdit()
+
+        store.commit.ui.toast.addToast({
+          type: 'success',
+          text: 'スタンプを更新しました'
+        })
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('スタンプの編集に失敗しました', e)

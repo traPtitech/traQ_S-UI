@@ -2,6 +2,7 @@ import { Ref, reactive, watchEffect } from '@vue/composition-api'
 import { cloneDeep } from 'lodash-es'
 import useStateDiff from './stateDiff'
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const useSyncedState = <T extends object>(
   storeState: Ref<T>,
   setFunc: (payload: [keyof T, T[keyof T]]) => void

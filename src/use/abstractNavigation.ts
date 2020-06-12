@@ -1,4 +1,4 @@
-import { reactive, SetupContext } from '@vue/composition-api'
+import { reactive, SetupContext, UnwrapRef } from '@vue/composition-api'
 
 const createNavigation = <NavigationItemType extends string | undefined>(
   defaultItem: NavigationItemType,
@@ -9,7 +9,9 @@ const createNavigation = <NavigationItemType extends string | undefined>(
       currentNavigation: defaultItem
     })
     const onNavigationChange = (type: NavigationItemType) => {
-      ;(navigationSelectorState.currentNavigation as NavigationItemType) = type
+      navigationSelectorState.currentNavigation = type as UnwrapRef<
+        NavigationItemType
+      >
     }
     return {
       navigationSelectorState,

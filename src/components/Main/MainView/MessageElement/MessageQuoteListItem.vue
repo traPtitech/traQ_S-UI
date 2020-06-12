@@ -15,11 +15,14 @@
     </div>
     <div :class="$style.footer">
       <span :class="$style.description">
-        {{ state.channelPath }} - {{ state.date }}
+        <router-link :to="`/channels/${state.channelPath}`">
+          #{{ state.channelPath }}
+        </router-link>
+        - {{ state.date }}
       </span>
       <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
-        >メッセージへ</router-link
-      >
+        >メッセージへ
+      </router-link>
     </div>
   </div>
 </template>
@@ -53,7 +56,7 @@ export default defineComponent({
       message: computed(() => store.state.entities.messages[props.messageId]),
       channelPath: computed((): string =>
         state.message
-          ? channelIdToPathString(state.message.channelId, true)
+          ? channelIdToPathString(state.message.channelId, false)
           : ''
       ),
       content: computed(

@@ -150,6 +150,11 @@ export default defineComponent({
         // TODO: loading
         await Promise.all(promises)
         destroyImageUploadState()
+
+        store.commit.ui.toast.addToast({
+          type: 'success',
+          text: 'プロフィールを更新しました'
+        })
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('プロフィールの更新に失敗しました', e)
