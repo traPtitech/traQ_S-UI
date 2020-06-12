@@ -44,7 +44,19 @@ $ npm run gen-fonts
 ```shell
 $ npm run test:unit
 ```
-テスト実行
+ユニットテスト実行
+
+```shell
+$ npm run test:e2e
+```
+e2eテスト実行  
+`cypress.env.json`を以下の通りに作成する必要があります
+```json
+{
+  "username": "ユーザー名",
+  "password": "パスワード"
+}
+```
 
 ```shell
 $ npm run lint
