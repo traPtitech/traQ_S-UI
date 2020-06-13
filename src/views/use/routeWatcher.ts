@@ -6,7 +6,6 @@ import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import { use } from 'vue/types/umd'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -74,6 +73,8 @@ const useRouteWacher = (context: SetupContext) => {
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
+      const { channelIdToShortPathString } = useChannelPath()
+      changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
       setUnreadState(id)
 
@@ -85,12 +86,6 @@ const useRouteWacher = (context: SetupContext) => {
       state.view = 'not-found'
       return
     }
-    const id = channelPathToId(
-      state.channelParam.split('/'),
-      store.state.domain.channelTree.channelTree
-    )
-    const { channelIdToShortPathString } = useChannelPath()
-    changeViewTitle(`#${channelIdToShortPathString(id)}`)
     state.view = 'main'
   }
 
