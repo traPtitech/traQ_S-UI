@@ -6,6 +6,7 @@ import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
+import { use } from 'vue/types/umd'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -88,11 +89,8 @@ const useRouteWacher = (context: SetupContext) => {
       state.channelParam.split('/'),
       store.state.domain.channelTree.channelTree
     )
-    const useShortenedPath = (props: any) => {
-      const { channelIdToShortPathString } = useChannelPath()
-      return channelIdToShortPathString(id)
-    }
-    changeViewTitle(`#${useShortenedPath(state.channelParam)}`)
+    const { channelIdToShortPathString } = useChannelPath()
+    changeViewTitle(`#${channelIdToShortPathString(id)}`)
     state.view = 'main'
   }
 
