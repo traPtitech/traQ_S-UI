@@ -7,6 +7,14 @@
 
 traQ-S Frontend 
 
+## 開発環境構築
+実行にはNode.jsが必要です
+
+```shell
+$ npm i
+$ npm run gen-fonts
+```
+
 ## コマンド
 ### ホットリロード環境
 ```shell
