@@ -73,6 +73,8 @@ const useRouteWacher = (context: SetupContext) => {
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
+      const { channelIdToShortPathString } = useChannelPath()
+      changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
       setUnreadState(id)
 
@@ -84,7 +86,6 @@ const useRouteWacher = (context: SetupContext) => {
       state.view = 'not-found'
       return
     }
-    changeViewTitle(`#${state.channelParam}`)
     state.view = 'main'
   }
 
