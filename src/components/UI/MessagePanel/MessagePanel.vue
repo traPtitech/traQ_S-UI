@@ -14,7 +14,7 @@
     />
     <div :class="$style.separator" />
     <template v-if="!hideSubtitle">
-      <div :class="$style.subTitleWrap">
+      <div :class="$style.subTitleContainer">
         <user-name
           v-if="titleType === 'channel'"
           :user="userState"
@@ -117,7 +117,7 @@ export default defineComponent({
   margin-left: 2px;
   flex-shrink: 0;
 }
-.subTitleWrap{
+.subTitleContainer{
   display: flex;
   align-items: center;
   min-width: 0;
