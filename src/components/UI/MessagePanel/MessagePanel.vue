@@ -13,27 +13,25 @@
       is-title
     />
     <div :class="$style.separator" />
-    <template v-if="!hideSubtitle">
-      <div :class="$style.subTitleContainer">
-        <user-name
-          v-if="titleType === 'channel'"
-          :user="userState"
-          :class="$style.item"
-        />
-        <channel-name
-          v-if="titleType === 'user'"
-          :path="path"
-          :class="$style.item"
-        />
-        <icon
-          v-if="message.createdAt !== message.updatedAt"
-          :class="$style.editIcon"
-          :size="16"
-          name="pencil"
-          mdi
-        />
-      </div>
-    </template>
+    <div v-if="!hideSubtitle" :class="$style.subTitleContainer">
+      <user-name
+        v-if="titleType === 'channel'"
+        :user="userState"
+        :class="$style.item"
+      />
+      <channel-name
+        v-if="titleType === 'user'"
+        :path="path"
+        :class="$style.item"
+      />
+      <icon
+        v-if="message.createdAt !== message.updatedAt"
+        :class="$style.editIcon"
+        :size="16"
+        name="pencil"
+        mdi
+      />
+    </div>
     <render-content
       :content="message.content"
       :line-clamp-content="lineClampContent"
@@ -57,7 +55,7 @@ export default defineComponent({
     UserName,
     ChannelName,
     RenderContent,
-    Icon 
+    Icon
   },
   props: {
     titleType: {
@@ -114,12 +112,11 @@ export default defineComponent({
 }
 .editIcon {
   @include color-ui-secondary;
-  margin-left: 2px;
+  margin-left: 4px;
   flex-shrink: 0;
 }
-.subTitleContainer{
+.subTitleContainer {
   display: flex;
   align-items: center;
-  min-width: 0;
 }
 </style>
