@@ -14,16 +14,25 @@
     />
     <div :class="$style.separator" />
     <template v-if="!hideSubtitle">
-      <user-name
-        v-if="titleType === 'channel'"
-        :user="userState"
-        :class="$style.item"
-      />
-      <channel-name
-        v-if="titleType === 'user'"
-        :path="path"
-        :class="$style.item"
-      />
+      <div :class="$style.subTitleContainer">
+        <user-name
+          v-if="titleType === 'channel'"
+          :user="userState"
+          :class="$style.item"
+        />
+        <channel-name
+          v-if="titleType === 'user'"
+          :path="path"
+          :class="$style.item"
+        />
+        <icon
+          v-if="message.createdAt !== message.updatedAt"
+          :class="$style.editIcon"
+          :size="16"
+          name="pencil"
+          mdi
+        />
+      </div>
     </template>
     <render-content
       :content="message.content"
@@ -40,13 +49,15 @@ import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessagePanel',
   components: {
     UserName,
     ChannelName,
-    RenderContent
+    RenderContent,
+    Icon 
   },
   props: {
     titleType: {
@@ -100,5 +111,15 @@ export default defineComponent({
 }
 .item {
   margin: 4px 0;
+}
+.editIcon {
+  @include color-ui-secondary;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+.subTitleContainer{
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 </style>
