@@ -41,7 +41,7 @@ jobs:
       - name: npm ci
         run: npm ci
       - name: run lint
-        run: npm run lint:no-fix
+        run: npm run lint:no-fix -- --max-warnings=0
   build:
     name: run build
     runs-on: ubuntu-latest

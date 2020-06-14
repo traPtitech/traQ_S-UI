@@ -1,6 +1,3 @@
-const isStrict =
-  process.env.CI === 'true' || process.env.NODE_ENV === 'production'
-
 module.exports = {
   root: true,
   env: {
@@ -19,8 +16,8 @@ module.exports = {
   ],
   plugins: ['unused-imports'],
   rules: {
-    'no-console': isStrict ? 'error' : 'warn',
-    'no-debugger': isStrict ? 'error' : 'warn',
+    'no-console': 'warn',
+    'no-debugger': 'warn',
     'no-empty': ['error', { allowEmptyCatch: true }],
     eqeqeq: 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -38,7 +35,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-extra-semi': 'off',
-    'unused-imports/no-unused-imports-ts': isStrict ? 'error' : 'warn',
+    'unused-imports/no-unused-imports-ts': 'warn',
     'unused-imports/no-unused-vars-ts': 'off'
   },
   overrides: [
