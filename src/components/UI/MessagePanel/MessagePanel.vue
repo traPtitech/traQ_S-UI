@@ -25,6 +25,13 @@
         :class="$style.item"
       />
     </template>
+    <icon
+      v-if="message.createdAt !== message.updatedAt"
+      :class="$style.editIcon"
+      :size="16"
+      name="pencil"
+      mdi
+    />
     <render-content
       :content="message.content"
       :line-clamp-content="lineClampContent"
@@ -40,13 +47,15 @@ import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessagePanel',
   components: {
     UserName,
     ChannelName,
-    RenderContent
+    RenderContent,
+    Icon 
   },
   props: {
     titleType: {
@@ -91,6 +100,7 @@ export default defineComponent({
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
+  overflow: hidden;
 }
 .separator {
   @include background-secondary;
@@ -100,5 +110,9 @@ export default defineComponent({
 }
 .item {
   margin: 4px 0;
+}
+.editIcon {
+  @include color-ui-secondary;
+  margin-left: 2px;
 }
 </style>

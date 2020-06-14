@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.path" :data-is-title="isTitle">
+  <span :class="$style.path" :data-is-title="isTitle">
     {{ path }}
-  </div>
+  </span>
 </template>
 
 <script lang="ts">

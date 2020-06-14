@@ -39,7 +39,7 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   @include size-body2;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   word-break: normal;
   overflow-wrap: break-word; // for Safari
