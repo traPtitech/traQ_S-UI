@@ -14,24 +14,26 @@
     />
     <div :class="$style.separator" />
     <template v-if="!hideSubtitle">
-      <user-name
-        v-if="titleType === 'channel'"
-        :user="userState"
-        :class="$style.item"
-      />
-      <channel-name
-        v-if="titleType === 'user'"
-        :path="path"
-        :class="$style.item"
-      />
+      <div :class="$style.subTitleWrap">
+        <user-name
+          v-if="titleType === 'channel'"
+          :user="userState"
+          :class="$style.item"
+        />
+        <channel-name
+          v-if="titleType === 'user'"
+          :path="path"
+          :class="$style.item"
+        />
+        <icon
+          v-if="message.createdAt !== message.updatedAt"
+          :class="$style.editIcon"
+          :size="16"
+          name="pencil"
+          mdi
+        />
+      </div>
     </template>
-    <icon
-      v-if="message.createdAt !== message.updatedAt"
-      :class="$style.editIcon"
-      :size="16"
-      name="pencil"
-      mdi
-    />
     <render-content
       :content="message.content"
       :line-clamp-content="lineClampContent"
@@ -100,7 +102,6 @@ export default defineComponent({
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
-  overflow: hidden;
 }
 .separator {
   @include background-secondary;
@@ -114,5 +115,11 @@ export default defineComponent({
 .editIcon {
   @include color-ui-secondary;
   margin-left: 2px;
+  flex-shrink: 0;
+}
+.subTitleWrap{
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 </style>
