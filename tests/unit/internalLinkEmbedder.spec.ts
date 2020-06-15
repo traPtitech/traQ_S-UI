@@ -60,7 +60,11 @@ const specs: Spec[] = [
   ],
   ['`okあok`', '`okあok`'],
   ['$okあok$', '$okあok$'],
-  ['`$okあok$`', '`$okあok$`']
+  ['`$okあok$`', '`$okあok$`'],
+  [
+    '````\n```\n@takashi_trap\n```\n````\n\n```\n@takashi_trap\n```',
+    '````\n```\n@takashi_trap\n```\n````\n\n```\n@takashi_trap\n```'
+  ]
 ]
 
 describe('internalLinkEmbedder', () => {

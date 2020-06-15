@@ -7,6 +7,7 @@ const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
 const backQuote = '`'
 const dollar = '$'
+const defaultCodeTokenLength = 3
 
 export type ReplaceGetters = UserAndGroupGetters & ChannelGetter
 
@@ -38,9 +39,18 @@ export interface Entity {
 export const replace = (m: string, getters: ReplaceGetters) => {
   let inCodeBlock = false
   let inLatexBlock = false
+  let codeTokenLength = defaultCodeTokenLength
+
   const lines = m.split('\n')
   const newLines = lines.map(line => {
-    if (!inLatexBlock && line.startsWith('```')) {
+    if (!inLatexBlock && line.startsWith('`'.repeat(codeTokenLength))) {
+      // `の数が一致するものと組み合うようにする
+      if (!inCodeBlock) {
+        codeTokenLength = countPrefix(line, backQuote)
+      } else {
+        codeTokenLength = defaultCodeTokenLength
+      }
+
       inCodeBlock = !inCodeBlock
     }
     if (!inCodeBlock && line.startsWith('$$')) {
@@ -129,4 +139,13 @@ const replaceChannel = (m: string, getter: ChannelGetter) => {
     }
     return s
   })
+}
+
+const countPrefix = (line: string, letter: string) => {
+  let count = 0
+  for (const ch of line) {
+    if (ch !== letter) break
+    count++
+  }
+  return count
 }
