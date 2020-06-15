@@ -3,6 +3,7 @@
     ref="textareaAutosizeRef"
     :class="$style.container"
     :value="text"
+    :is-posting="isPosting"
     placeholder="メッセージを送信"
     rows="1"
     :max-height="160"
@@ -128,5 +129,9 @@ export default defineComponent({
 .container {
   @include color-text-primary;
   width: 100%;
+  &[is-posting]{
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 </style>
