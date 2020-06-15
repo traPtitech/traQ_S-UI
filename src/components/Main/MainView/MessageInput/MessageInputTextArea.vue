@@ -129,7 +129,7 @@ export default defineComponent({
 .container {
   @include color-text-primary;
   width: 100%;
-  &[is-posting]{
+  &[is-posting] {
     @include color-ui-secondary;
     opacity: 0.5;
     pointer-events: none;
