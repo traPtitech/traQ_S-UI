@@ -4,6 +4,7 @@
     :class="$style.container"
     :value="text"
     :is-posting="isPosting"
+    :read-only="isPosting"
     placeholder="メッセージを送信"
     rows="1"
     :max-height="160"
@@ -83,6 +84,10 @@ export default defineComponent({
     text: {
       type: String,
       default: ''
+    },
+    isPosting: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context: SetupContext) {
@@ -132,7 +137,7 @@ export default defineComponent({
   &[is-posting] {
     @include color-ui-secondary;
     opacity: 0.5;
-    pointer-events: none;
+    cursor: wait;
   }
 }
 </style>
