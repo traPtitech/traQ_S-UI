@@ -127,7 +127,7 @@ export default defineComponent({
         border-color: $theme-accent-primary;
       }
       &:hover {
-        @include background-accent-secondary;
+        @include color-accent-secondary;
       }
     }
   }
