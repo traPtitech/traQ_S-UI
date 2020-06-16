@@ -6,10 +6,6 @@ export const isSafari = () => {
   return ua.includes('safari') && !ua.includes('chrome') && !ua.includes('edge')
 }
 
-export const isFirefox = () => {
-  return ua.includes('firefox')
-}
-
 export const isIOS = () => {
   return (
     isIOSApp() ||
