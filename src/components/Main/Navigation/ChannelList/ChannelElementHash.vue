@@ -129,6 +129,8 @@ export default defineComponent({
       &:hover {
         @include background-accent-primary;
         opacity: 0.1;
+        border-color: $theme-ui-primary;
+        color: $theme-background-secondary;
       }
     }
   }
