@@ -127,7 +127,7 @@ export default defineComponent({
         border-color: $theme-accent-primary;
       }
       &:hover {
-        background: $theme-background-secondary;
+        background: $theme-background-primary;
         border-color: $theme-ui-primary;
         color: $theme-ui-primary;
       }
