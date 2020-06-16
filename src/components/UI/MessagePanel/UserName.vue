@@ -44,6 +44,7 @@ export default defineComponent({
   word-break: normal;
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
+  overflow: hidden;
   &[data-is-title] {
     @include color-ui-primary;
     @include size-body1;
