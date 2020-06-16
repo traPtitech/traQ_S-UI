@@ -22,6 +22,7 @@
         <message-input-text-area
           ref="textareaRef"
           :text="textState.text"
+          :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
           @input="onInputText"
@@ -157,7 +158,8 @@ export default defineComponent({
       postMessage,
       addAttachment,
       showKeyGuide,
-      canPostMessage
+      canPostMessage,
+      isPosting
     }
   }
 })
