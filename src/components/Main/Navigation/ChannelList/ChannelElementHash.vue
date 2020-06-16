@@ -128,8 +128,8 @@ export default defineComponent({
       }
       &:hover {
         background: $theme-background-primary;
-        border-color: $theme-ui-primary;
-        color: $theme-ui-primary;
+        border-color: $theme-accent-primary;
+        color: $theme-accent-primary;
       }
     }
   }
