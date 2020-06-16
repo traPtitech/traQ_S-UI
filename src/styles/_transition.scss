@@ -44,9 +44,11 @@ $sv: 'slide-vertical';
 }
 
 $tl: 'timeline';
-.#{$tl}-enter-active,
-.#{$tl}-leave-active {
+.#{$tl}-enter-active {
   transition: all 0.5s;
+}
+.#{$tl}-leave-active {
+  display: none;
 }
 .#{$tl}-enter,
 .#{$tl}-leave-to {
