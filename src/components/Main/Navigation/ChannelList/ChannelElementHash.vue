@@ -111,6 +111,9 @@ export default defineComponent({
       &[aria-selected='true'] {
         @include background-accent-primary;
       }
+      &[data-container-type='parent']:not([data-is-opened]):hover {
+        background: $theme-background-primary;
+      }
     }
     &:not([data-is-opened]) {
       @include color-ui-primary;

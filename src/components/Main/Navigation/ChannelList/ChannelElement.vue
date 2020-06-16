@@ -284,9 +284,6 @@ $topicLeftPadding: 40px;
   &[data-is-inactive] {
     @include color-ui-secondary;
   }
-  &[data-container-type='parent']:not([data-is-opened]):hover {
-    background: $theme-background-primary;
-  }
 }
 .channelHash {
   flex-shrink: 0;
