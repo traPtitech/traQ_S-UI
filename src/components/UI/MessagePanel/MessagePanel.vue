@@ -13,17 +13,9 @@
       is-title
     />
     <div :class="$style.separator" />
-    <div v-if="!hideSubtitle" :class="$style.subTitleContainer">
-      <user-name
-        v-if="titleType === 'channel'"
-        :user="userState"
-        :class="$style.item"
-      />
-      <channel-name
-        v-if="titleType === 'user'"
-        :path="path"
-        :class="$style.item"
-      />
+    <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
+      <user-name v-if="titleType === 'channel'" :user="userState" />
+      <channel-name v-if="titleType === 'user'" :path="path" />
       <icon
         v-if="message.createdAt !== message.updatedAt"
         :class="$style.editIcon"
