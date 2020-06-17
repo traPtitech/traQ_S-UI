@@ -102,7 +102,7 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  var users = computed(
+  const users = computed(
     () => (Object.values(store.state.entities.users) as User[])
     .filter(user => user.state === 1)
   )
