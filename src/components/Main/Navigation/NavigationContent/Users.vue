@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserAccountState } from '@traptitech/traq'
 import { compareStringInsensitive } from '@/lib/util/string'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
@@ -67,7 +67,9 @@ const useListByGradeName = () => {
     for (const group of userGroups.value) {
       const member = (group.members
         .map(member => users.value[member.id])
-        .filter(user => !!user && user.state === 1) as User[]).sort((u1, u2) =>
+        .filter(
+          user => !!user && user.state === UserAccountState.active
+        ) as User[]).sort((u1, u2) =>
         compareStringInsensitive(u1.name, u2.name)
       )
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
@@ -79,13 +81,18 @@ const useListByGradeName = () => {
 
     // BOTグループ
     const bots = Object.values(users.value as UserMap)
-      .filter(user => user.bot && user.state === 1)
+      .filter(user => user.bot && user.state === UserAccountState.active)
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
     const others = Object.values(users.value as UserMap)
-      .filter(user => user && user.state === 1 && !categorized.has(user.id))
+      .filter(
+        user =>
+          user &&
+          user.state === UserAccountState.active &&
+          !categorized.has(user.id)
+      )
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
     const result = [
@@ -104,7 +111,7 @@ const useListByGradeName = () => {
 const useUserListFilter = () => {
   const users = computed(() =>
     (Object.values(store.state.entities.users) as User[]).filter(
-      user => user.state === 1
+      user => user.state === UserAccountState.active
     )
   )
   const { textFilterState, setQuery } = useTextFilter(users, 'name')
