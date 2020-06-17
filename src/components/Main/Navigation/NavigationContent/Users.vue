@@ -67,7 +67,7 @@ const useListByGradeName = () => {
     for (const group of userGroups.value) {
       const member = (group.members
         .map(member => users.value[member.id])
-        .filter(user => !!user) as User[]).sort((u1, u2) =>
+        .filter(user => !!user && user.state === 1) as User[]).sort((u1, u2) =>
         compareStringInsensitive(u1.name, u2.name)
       )
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
@@ -79,13 +79,13 @@ const useListByGradeName = () => {
 
     // BOTグループ
     const bots = Object.values(users.value as UserMap)
-      .filter(user => user.bot)
+      .filter(user => user.bot && user.state === 1)
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
     const others = Object.values(users.value as UserMap)
-      .filter(user => user && !categorized.has(user.id))
+      .filter(user => user && user.state === 1 && !categorized.has(user.id))
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
     const result = [
@@ -102,8 +102,9 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const users = computed(
-    () => Object.values(store.state.entities.users) as User[]
+  var users = computed(
+    () => (Object.values(store.state.entities.users) as User[])
+    .filter(user => user.state === 1)
   )
   const { textFilterState, setQuery } = useTextFilter(users, 'name')
   return {
