@@ -1,4 +1,4 @@
-import { getFullMatchedAndMatched } from '@/lib/util/array'
+import { getFullMatchedAndMatched, isDefined } from '@/lib/util/array'
 
 describe('getFullMatchedAndMatched', () => {
   it('can get fullMatched', () => {
@@ -22,6 +22,24 @@ describe('getFullMatchedAndMatched', () => {
     const expected = { fullMatched: ['aaa'], matched: ['aaaaa', 'AAAAb'] }
     const actual = getFullMatchedAndMatched(arr, 'aaa')
     expect(actual).toEqual(expected)
+  })
+})
+
+describe('isDefined', () => {
+  it('can check undefined', () => {
+    expect(isDefined(undefined)).toEqual(false)
+  })
+  it('can check null', () => {
+    expect(isDefined(null)).toEqual(true)
+  })
+  it('can check object', () => {
+    expect(isDefined({})).toEqual(true)
+  })
+  it('can check empty string', () => {
+    expect(isDefined('')).toEqual(true)
+  })
+  it('can check string', () => {
+    expect(isDefined('str')).toEqual(true)
   })
 })
 

@@ -49,6 +49,7 @@ import store from '@/store'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
+import { isDefined } from '@/lib/util/array'
 
 export default defineComponent({
   name: 'Home',
@@ -67,7 +68,7 @@ export default defineComponent({
     const channelsWithNotification = computed(() =>
       Object.values(store.state.domain.me.unreadChannelsSet)
         .map(unread => store.state.entities.channels[unread.channelId ?? ''])
-        .filter(c => !!c)
+        .filter(isDefined)
     )
     const topLevelChannels = computed(
       () => store.state.domain.channelTree.homeChannelTree.children ?? []

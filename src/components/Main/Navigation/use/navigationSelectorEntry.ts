@@ -5,6 +5,7 @@ import {
   EphemeralNavigationItemType
 } from './navigationConstructor'
 import { ThemeClaim } from '@/lib/styles'
+import { isDefined } from '@/lib/util/array'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -82,11 +83,10 @@ const useNavigationSelectorEntry = () => {
   const hasActiveQallSession = computed(() => {
     return !!store.getters.app.rtc.qallSession
   })
-  const ephemeralEntries = computed(
-    () =>
-      [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(
-        e => !!e
-      ) as EphemeralNavigationSelectorEntry[]
+  const ephemeralEntries = computed(() =>
+    [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(
+      isDefined
+    )
   )
 
   return {

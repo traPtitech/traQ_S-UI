@@ -13,7 +13,7 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import store from '@/store'
-import { User } from '@traptitech/traq'
+import { isDefined } from '@/lib/util/array'
 
 export default defineComponent({
   name: 'ChannelSidebarViewerDetail',
@@ -23,11 +23,10 @@ export default defineComponent({
     const closeDetail = () => {
       context.emit('close')
     }
-    const users = computed(
-      () =>
-        props.viewerIds
-          .map(id => store.state.entities.users[id])
-          .filter(u => !!u) as User[]
+    const users = computed(() =>
+      props.viewerIds
+        .map(id => store.state.entities.users[id])
+        .filter(isDefined)
     )
     return { closeDetail, users }
   }

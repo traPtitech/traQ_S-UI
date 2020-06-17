@@ -24,6 +24,7 @@ import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '@/components/UI/SlideDown.vue'
 import store from '@/store'
+import { isDefined } from '@/lib/util/array'
 
 const useFolding = () => {
   const isFolding = ref(true)
@@ -57,7 +58,7 @@ export default defineComponent({
     const dmChannelIds = computed(() =>
       props.users
         .map(user => store.getters.entities.DMChannelIdByUserId(user.id))
-        .filter((id): id is string => !!id)
+        .filter(isDefined)
     )
     const hasNotification = computed(() =>
       dmChannelIds.value.some(
