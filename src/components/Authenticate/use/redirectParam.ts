@@ -15,10 +15,9 @@ export interface RedirectState {
 
 const useRedirectParam = (context: SetupContext) => {
   const state: RedirectState = reactive({
-    redirectUrl: computed(() => {
-      const redirect = getStringParam(context.root.$route.query.redirect)
-      return redirect ? redirect : undefined
-    }),
+    redirectUrl: computed(() =>
+      getStringParam(context.root.$route.query.redirect)
+    ),
     isInternal: computed(() => state.redirectUrl?.startsWith('/') ?? false)
   })
 

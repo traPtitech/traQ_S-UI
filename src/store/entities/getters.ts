@@ -16,21 +16,17 @@ export const getters = defineGetters<S>()({
   },
   gradeNameByUserId(...args): (userId: UserId) => string | undefined {
     const { getters } = entitiesGetterContext(args)
-    return (userId: UserId) => {
-      return getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
+    return userId =>
+      getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
         userGroup.members?.some(member => member.id === userId)
       )?.name
-    }
   },
   stampByName(state): (name: string) => Stamp | undefined {
-    return (name: string) => {
-      return Object.values(state.stamps as StampMap).find(
-        stamp => stamp.name === name
-      )
-    }
+    return name =>
+      Object.values(state.stamps as StampMap).find(stamp => stamp.name === name)
   },
   userByName(state): (name: string) => User | undefined {
-    return (name: string) => {
+    return name => {
       const loweredName = name.toLowerCase()
       return Object.values(state.users).find(
         user => user?.name.toLowerCase() === loweredName
@@ -38,13 +34,13 @@ export const getters = defineGetters<S>()({
     }
   },
   userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
-    return (id: DMChannelId) => state.users[state.dmChannels[id].userId]?.name
+    return id => state.users[state.dmChannels[id].userId]?.name
   },
   DMChannelIdByUserId(state): (id: UserId) => DMChannelId | undefined {
     return id => Object.values(state.dmChannels).find(c => c.userId === id)?.id
   },
   userGroupByName(state): (name: string) => UserGroup | undefined {
-    return (name: string) => {
+    return name => {
       const loweredName = name.toLowerCase()
       return Object.values(state.userGroups).find(
         userGroup => userGroup?.name.toLowerCase() === loweredName
