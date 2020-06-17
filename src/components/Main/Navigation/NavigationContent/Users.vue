@@ -44,6 +44,7 @@ import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
 import { UserMap } from '@/store/entities'
+import { isDefined } from '@/lib/util/array'
 
 interface UsersGradeList {
   gradeName: string
@@ -65,13 +66,11 @@ const useListByGradeName = () => {
 
     // 学年グループ
     for (const group of userGroups.value) {
-      const member = (group.members
+      const member = group.members
         .map(member => users.value[member.id])
-        .filter(
-          user => !!user && user.state === UserAccountState.active
-        ) as User[]).sort((u1, u2) =>
-        compareStringInsensitive(u1.name, u2.name)
-      )
+        .filter(isDefined)
+        .filter(user => user.state === UserAccountState.active)
+        .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
 
       userGrades.push({ gradeName: group.name, users: member })
@@ -89,9 +88,7 @@ const useListByGradeName = () => {
     const others = Object.values(users.value as UserMap)
       .filter(
         user =>
-          user &&
-          user.state === UserAccountState.active &&
-          !categorized.has(user.id)
+          user.state === UserAccountState.active && !categorized.has(user.id)
       )
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
@@ -110,7 +107,7 @@ const useListByGradeName = () => {
 
 const useUserListFilter = () => {
   const users = computed(() =>
-    (Object.values(store.state.entities.users) as User[]).filter(
+    Object.values(store.state.entities.users as UserMap).filter(
       user => user.state === UserAccountState.active
     )
   )
