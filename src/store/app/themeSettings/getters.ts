@@ -6,6 +6,8 @@ import { lightTheme, darkTheme } from './default'
 export const getters = defineGetters<S>()({
   currentTheme(state): Theme {
     switch (state.type) {
+      case 'auto':
+        return state.isOsDarkTheme ? darkTheme : lightTheme
       case 'light':
         return lightTheme
       case 'dark':

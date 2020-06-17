@@ -67,6 +67,17 @@ const useEcoModeObserver = () => {
   useHtmlDatasetBoolean('ecoMode', ecoMode)
 }
 
+const useOsDarkTheme = () => {
+  const queryList = window.matchMedia('(prefers-color-scheme: dark)')
+
+  store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
+
+  // safariではaddEventListener('change', func)が未対応なため
+  queryList.addListener((event: MediaQueryListEvent) => {
+    store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
+  })
+}
+
 const useScrollbarStyle = () =>
   makeStyles(
     theme =>
@@ -127,6 +138,7 @@ export default defineComponent({
 
     useThemeObserver()
     useEcoModeObserver()
+    useOsDarkTheme()
 
     const style = useStyle()
 

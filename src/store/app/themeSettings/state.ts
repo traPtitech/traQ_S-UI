@@ -4,10 +4,12 @@ import { ThemeType } from '@/store/app/themeSettings/index'
 
 export interface S {
   type: ThemeType
+  isOsDarkTheme: boolean
   custom: Theme
 }
 
 export const state: S = {
-  type: 'light',
+  type: 'auto',
+  isOsDarkTheme: false,
   custom: lightTheme
 }

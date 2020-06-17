@@ -4,6 +4,12 @@
       <h3>テーマ切り替え</h3>
       <div :class="$style.content">
         <form-radio
+          label="自動切替 (OSのテーマに合わせる)"
+          v-model="state.type"
+          input-value="auto"
+          :class="$style.form"
+        />
+        <form-radio
           label="ライトテーマ"
           v-model="state.type"
           input-value="light"

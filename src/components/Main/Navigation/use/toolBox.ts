@@ -12,6 +12,7 @@ const useToolBox = () => {
         return 'crescent-outline'
       case 'dark':
         return 'crescent'
+      case 'auto':
       case 'custom':
         return 'brightness-6'
       default: {
@@ -24,11 +25,13 @@ const useToolBox = () => {
     }
   })
   const isMdi = computed(() => {
-    return store.state.app.themeSettings.type === 'custom' ? true : undefined
+    return ['auto', 'custom'].includes(store.state.app.themeSettings.type)
+      ? true
+      : undefined
   })
 
-  const isThemeClickDisabled = computed(
-    () => store.state.app.themeSettings.type === 'custom'
+  const isThemeClickDisabled = computed(() =>
+    ['auto', 'custom'].includes(store.state.app.themeSettings.type)
   )
 
   const toggleTheme = () => store.dispatch.app.themeSettings.toggleTheme()
