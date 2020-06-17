@@ -102,9 +102,10 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const users = computed(
-    () => (Object.values(store.state.entities.users) as User[])
-    .filter(user => user.state === 1)
+  const users = computed(() =>
+    (Object.values(store.state.entities.users) as User[]).filter(
+      user => user.state === 1
+    )
   )
   const { textFilterState, setQuery } = useTextFilter(users, 'name')
   return {
