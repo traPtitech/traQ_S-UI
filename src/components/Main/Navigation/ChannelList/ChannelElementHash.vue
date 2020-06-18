@@ -131,6 +131,7 @@ export default defineComponent({
         border-color: $theme-accent-primary;
         color: $theme-accent-primary;
         &::before {
+          content: '';
           border: {
             width: 2px;
             style: solid;
@@ -144,8 +145,8 @@ export default defineComponent({
           box-sizing: content-box;
           cursor: pointer;
           position: absolute;
-          left: 0px;
-          top: 0px;
+          left: 2px;
+          top: 2px;
           background: $theme-accent-primary;
           opacity: 0.1;
         }
