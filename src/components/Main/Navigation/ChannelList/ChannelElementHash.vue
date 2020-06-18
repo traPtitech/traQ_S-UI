@@ -130,33 +130,25 @@ export default defineComponent({
         background: transparent;
         border-color: $theme-accent-primary;
         color: $theme-accent-primary;
-      }
-    }
-  }
-}
-.hash::before {
-  border: {
-    width: 2px;
-    style: solid;
-    color: transparent;
-  }
-  border-radius: 4px;
-  width: 22px;
-  height: 22px;
-  display: none;
-  align-items: center;
-  box-sizing: content-box;
-  cursor: pointer;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  
-  &[data-container-type='parent'] {
-    &:not([data-is-opened]) {
-      &:hover {
-        display: flex;
-        background: $theme-accent-primary;
-        opacity: 0.1;
+        &::before {
+          border: {
+            width: 2px;
+            style: solid;
+            color: transparent;
+          }
+          border-radius: 4px;
+          width: 22px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          box-sizing: content-box;
+          cursor: pointer;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+          background: $theme-accent-primary;
+          opacity: 0.1;
+        }
       }
     }
   }
