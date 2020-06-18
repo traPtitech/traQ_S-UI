@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <icon v-if="isLocked" name="lock" mdi :size="20" @click="toggleTagState" />
     <div v-else :class="$style.element">
+      <icon name="close" mdi :size="20" @click="removeTag" />
       <icon
         v-if="isMine"
         name="lock-open"
@@ -10,7 +11,6 @@
         @click="toggleTagState"
         :class="$style.open"
       />
-      <icon name="close" mdi :size="20" @click="removeTag" />
     </div>
   </div>
 </template>
@@ -67,6 +67,6 @@ export default defineComponent({
   display: flex;
 }
 .open {
-  margin-right: 4px;
+  margin-left: 4px;
 }
 </style>
