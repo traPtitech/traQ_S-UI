@@ -105,6 +105,10 @@ export default defineComponent({
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
+      &:hover {
+        background: $theme-ui-secondary;
+        opacity: 0.7;
+      }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
       }
