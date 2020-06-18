@@ -46,6 +46,7 @@ export default defineComponent({
     const myId = computed(() => store.state.domain.me.detail!.id)
 
     const removeTag = async () => {
+      if (!confirm(`本当にこのタグを削除しますか？`)) return
       await apis.removeMyUserTag(props.tagId)
     }
 
