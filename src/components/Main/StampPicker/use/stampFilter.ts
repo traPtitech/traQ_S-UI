@@ -1,13 +1,11 @@
-import { reactive, computed } from '@vue/composition-api'
+import { reactive, computed, ref } from '@vue/composition-api'
 import { Stamp } from '@traptitech/traq'
-import {
-  altNameTable as strictAltNameTable,
-  unicodeTable as strictUnicodeTable
-} from '@/assets/emoji_altname_table.json'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import { getFullMatchedAndMatched } from '@/lib/util/array'
 import { StampMap } from '@/store/entities'
+
+const emojiAltnameTable = import('@/assets/emoji_altname_table.json')
 
 const useStampFilter = () => {
   const stamps = computed(() =>
@@ -18,18 +16,27 @@ const useStampFilter = () => {
     Object.fromEntries(stamps.value.map(stamp => [stamp.name, stamp]))
   )
 
-  const altNameTable: Record<string, string> = {
-    ...strictAltNameTable,
-    ...strictUnicodeTable
-  }
-  const altNames = [...Object.keys(altNameTable)]
+  const altNameTable = ref<Record<string, string>>({})
+  const altNames = ref<string[]>([])
   const altNamesToNames = (altNames: string[]) =>
-    altNames.map(altName => altNameTable[altName])
+    altNames.map(altName => altNameTable.value[altName])
+  emojiAltnameTable.then(
+    ({
+      altNameTable: strictAltNameTable,
+      unicodeTable: strictUnicodeTable
+    }) => {
+      altNameTable.value = {
+        ...strictAltNameTable,
+        ...strictUnicodeTable
+      }
+      altNames.value = [...Object.keys(altNameTable.value)]
+    }
+  )
 
   const oneLetterNames = computed(() =>
     stampNames.value.filter(name => name.length === 1)
   )
-  const oneLetterAltNames = altNames.filter(name => name.length === 1)
+  const oneLetterAltNames = altNames.value.filter(name => name.length === 1)
 
   const getSortedStamps = (stampNames: Iterable<string>) => {
     return [...new Set(stampNames)]
@@ -58,7 +65,7 @@ const useStampFilter = () => {
       const {
         fullMatched: altNameFullMatched,
         matched: altNameMatched
-      } = getFullMatchedAndMatched(altNames, query)
+      } = getFullMatchedAndMatched(altNames.value, query)
       const { fullMatched, matched } = getFullMatchedAndMatched(
         stampNames.value,
         query
