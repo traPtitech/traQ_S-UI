@@ -126,10 +126,49 @@ export default defineComponent({
       }
       &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
+        &:hover {
+          color: $theme-accent-notification;
+          &::before {
+            content: '';
+            border: {
+              width: 2px;
+              style: solid;
+              color: transparent;
+            }
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: $theme-accent-notification;
+            opacity: 0.1;
+          }
+        }
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
         border-color: $theme-accent-primary;
+        &:hover {
+          color: #ffffff;
+          &::before {
+            content: '';
+            border: {
+              width: 2px;
+              style: solid;
+              color: transparent;
+            }
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: $theme-accent-primary;
+          }
+        }
       }
       &:hover {
         @include color-accent-primary;
@@ -165,3 +204,4 @@ export default defineComponent({
   margin-left: 0.5px;
 }
 </style>
+
