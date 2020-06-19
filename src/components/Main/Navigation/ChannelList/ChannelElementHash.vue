@@ -132,9 +132,9 @@ export default defineComponent({
         border-color: $theme-accent-primary;
       }
       &:hover {
+        @include color-accent-primary;
         background: transparent;
         border-color: $theme-accent-primary;
-        color: $theme-accent-primary;
         &::before {
           content: '';
           border: {
