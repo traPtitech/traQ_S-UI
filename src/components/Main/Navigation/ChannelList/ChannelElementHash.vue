@@ -90,6 +90,7 @@ export default defineComponent({
   align-items: center;
   box-sizing: content-box;
   cursor: pointer;
+  position: relative;
 
   &[data-container-type='leaf'] {
     @include color-ui-primary;
