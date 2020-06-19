@@ -107,27 +107,30 @@ export default defineComponent({
       color: $theme-background-secondary;
       background: $theme-ui-primary;
       &:hover {
-        background: $theme-ui-secondary;
-        opacity: 0.7;
+        &::before {
+          content: '';
+          border: {
+            width: 2px;
+            style: solid;
+            color: transparent;
+          }
+          border-radius: 4px;
+          width: 120%;
+          height: 120%;
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: $theme-ui-secondary;
+          opacity: 0.7;
+        }
       }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
-      }
-    }
-    &:not([data-is-opened]) {
-      @include color-ui-primary;
-      border-color: $theme-ui-primary;
-      &[data-is-inactive] {
-        @include color-ui-secondary;
-        border-color: $theme-ui-secondary;
-      }
-      &[data-has-notification-on-child] {
-        border-color: $theme-accent-notification;
         &:hover {
-          color: $theme-accent-notification;
           &::before {
             content: '';
             border: {
@@ -136,14 +139,49 @@ export default defineComponent({
               color: transparent;
             }
             border-radius: 4px;
-            width: 100%;
-            height: 100%;
+            width: 120%;
+            height: 120%;
             display: block;
             position: absolute;
             top: 0;
             left: 0;
-            background: $theme-accent-notification;
-            opacity: 0.1;
+            @include background-accent-primary;
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+    &:not([data-is-opened]) {
+      @include color-ui-primary;
+      border-color: $theme-ui-primary;
+      &:not([area-selected]) {
+        &:hover {
+          background: $theme-ui-primary;
+        }
+        &[data-is-inactive] {
+          @include color-ui-secondary;
+          border-color: $theme-ui-secondary;
+        }
+        &[data-has-notification-on-child] {
+          border-color: $theme-accent-notification;
+          &:hover {
+            &::before {
+              content: '';
+              border: {
+                width: 2px;
+                style: solid;
+                color: transparent;
+              }
+              border-radius: 4px;
+              width: 120%;
+              height: 120%;
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              background: $theme-accent-notification;
+              opacity: 0.1;
+            }
           }
         }
       }
@@ -151,7 +189,6 @@ export default defineComponent({
         @include color-accent-primary;
         border-color: $theme-accent-primary;
         &:hover {
-          color: #ffffff;
           &::before {
             content: '';
             border: {
@@ -160,37 +197,14 @@ export default defineComponent({
               color: transparent;
             }
             border-radius: 4px;
-            width: 100%;
-            height: 100%;
+            width: 120%;
+            height: 120%;
             display: block;
             position: absolute;
             top: 0;
             left: 0;
             @include background-accent-primary;
-          }
-        }
-      }
-      &:not([area-selected='true']) {
-        &:hover {
-          @include color-accent-primary;
-          background: transparent;
-          border-color: $theme-accent-primary;
-          &::before {
-            content: '';
-            border: {
-              width: 2px;
-              style: solid;
-              color: transparent;
-            }
-            border-radius: 4px;
-            width: 100%;
-            height: 100%;
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: $theme-accent-primary;
-            opacity: 0.1;
+            opacity: 0.3;
           }
         }
       }
