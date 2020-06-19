@@ -103,24 +103,28 @@ export default defineComponent({
     }
   }
   &[data-container-type='parent'] {
+    &:hover {
+      &::before {
+        content: '';
+        border: {
+          width: 2px;
+          style: solid;
+          color: transparent;
+        }
+        border-radius: 4px;
+        width: 140%;
+        height: 140%;
+        display: block;
+        position: absolute;
+        top: -4px;
+        left: -4px;
+      }
+    }
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
       &:hover {
         &::before {
-          content: '';
-          border: {
-            width: 2px;
-            style: solid;
-            color: transparent;
-          }
-          border-radius: 4px;
-          width: 140%;
-          height: 140%;
-          display: block;
-          position: absolute;
-          top: -4px;
-          left: -4px;
           background: $theme-ui-secondary;
           opacity: 0.5;
         }
@@ -132,19 +136,6 @@ export default defineComponent({
         @include background-accent-primary;
         &:hover {
           &::before {
-            content: '';
-            border: {
-              width: 2px;
-              style: solid;
-              color: transparent;
-            }
-            border-radius: 4px;
-            width: 140%;
-            height: 140%;
-            display: block;
-            position: absolute;
-            top: -4px;
-            left: -4px;
             background: $theme-accent-primary;
             opacity: 0.7;
           }
@@ -157,19 +148,6 @@ export default defineComponent({
       &:not([area-selected]) {
         &:hover {
           &::before {
-            content: '';
-            border: {
-              width: 2px;
-              style: solid;
-              color: transparent;
-            }
-            border-radius: 4px;
-            width: 140%;
-            height: 140%;
-            display: block;
-            position: absolute;
-            top: -4px;
-            left: -4px;
             background: $theme-ui-primary;
             opacity: 0.2;
           }
@@ -182,19 +160,6 @@ export default defineComponent({
           border-color: $theme-accent-notification;
           &:hover {
             &::before {
-              content: '';
-              border: {
-                width: 2px;
-                style: solid;
-                color: transparent;
-              }
-              border-radius: 4px;
-              width: 140%;
-              height: 140%;
-              display: block;
-              position: absolute;
-              top: -4px;
-              left: -4px;
               background: $theme-accent-notification;
               opacity: 0.1;
             }
@@ -206,19 +171,6 @@ export default defineComponent({
         border-color: $theme-accent-primary;
         &:hover {
           &::before {
-            content: '';
-            border: {
-              width: 2px;
-              style: solid;
-              color: transparent;
-            }
-            border-radius: 4px;
-            width: 140%;
-            height: 140%;
-            display: block;
-            position: absolute;
-            top: -4px;
-            left: -4px;
             background: $theme-accent-primary;
             opacity: 0.3;
           }
