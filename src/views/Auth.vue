@@ -14,9 +14,8 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
-import { redirectToPipelineIfNeeded } from '@/router/pipeline'
 import { RouteName } from '@/router'
-import { getStringParam } from '@/lib/util/params'
+import useRedirectParam from '@/components/Authenticate/use/redirectParam'
 
 export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
 
@@ -50,15 +49,8 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
     }
 
     if (isLoggedIn) {
-      // ログインしている場合でredirパラメータがついてる場合は
-      // pipelineへのリダイレクトをする
-      // pipelineへのリダイレクトをしなくていい環境では
-      // トップへリダイレクトする
-      const redirect = getStringParam(context.root.$route.query.redirect)
-      const redirected = redirect && redirectToPipelineIfNeeded()
-      if (!redirected) {
-        context.root.$router.replace('/')
-      }
+      const { redirect } = useRedirectParam(context)
+      redirect()
       return
     }
 

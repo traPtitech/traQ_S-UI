@@ -73,7 +73,6 @@ import { computed, defineComponent, reactive } from '@vue/composition-api'
 import useLogin from './use/login'
 import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'
-import useRedirectParam from './use/redirectParam'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
@@ -90,9 +89,8 @@ export default defineComponent({
     AuthenticateSeparator
   },
   setup(_, context) {
-    const redirectState = useRedirectParam(context)
     const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      redirectState
+      context
     )
     const isIOS = isIOSApp()
     const state = reactive({
