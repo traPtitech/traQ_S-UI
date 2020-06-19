@@ -166,30 +166,32 @@ export default defineComponent({
             position: absolute;
             top: 0;
             left: 0;
-            background: $theme-accent-primary;
+            @include background-accent-primary;
           }
         }
       }
-      &:hover {
-        @include color-accent-primary;
-        background: transparent;
-        border-color: $theme-accent-primary;
-        &::before {
-          content: '';
-          border: {
-            width: 2px;
-            style: solid;
-            color: transparent;
+      &:not([area-selected='true']) {
+        &:hover {
+          @include color-accent-primary;
+          background: transparent;
+          border-color: $theme-accent-primary;
+          &::before {
+            content: '';
+            border: {
+              width: 2px;
+              style: solid;
+              color: transparent;
+            }
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: $theme-accent-primary;
+            opacity: 0.1;
           }
-          border-radius: 4px;
-          width: 100%;
-          height: 100%;
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          background: $theme-accent-primary;
-          opacity: 0.1;
         }
       }
     }
@@ -204,4 +206,3 @@ export default defineComponent({
   margin-left: 0.5px;
 }
 </style>
-
