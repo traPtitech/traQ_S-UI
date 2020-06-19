@@ -115,14 +115,14 @@ export default defineComponent({
             color: transparent;
           }
           border-radius: 4px;
-          width: 120%;
-          height: 120%;
+          width: 140%;
+          height: 140%;
           display: block;
           position: absolute;
-          top: 0;
-          left: 0;
+          top: -4px;
+          left: -4px;
           background: $theme-ui-secondary;
-          opacity: 0.7;
+          opacity: 0.5;
         }
       }
       &[data-is-inactive] {
@@ -139,13 +139,13 @@ export default defineComponent({
               color: transparent;
             }
             border-radius: 4px;
-            width: 120%;
-            height: 120%;
+            width: 140%;
+            height: 140%;
             display: block;
             position: absolute;
-            top: 0;
-            left: 0;
-            @include background-accent-primary;
+            top: -4px;
+            left: -4px;
+            background: $theme-accent-primary;
             opacity: 0.7;
           }
         }
@@ -156,7 +156,23 @@ export default defineComponent({
       border-color: $theme-ui-primary;
       &:not([area-selected]) {
         &:hover {
-          background: $theme-ui-primary;
+          &::before {
+            content: '';
+            border: {
+              width: 2px;
+              style: solid;
+              color: transparent;
+            }
+            border-radius: 4px;
+            width: 140%;
+            height: 140%;
+            display: block;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: $theme-ui-primary;
+            opacity: 0.2;
+          }
         }
         &[data-is-inactive] {
           @include color-ui-secondary;
@@ -173,12 +189,12 @@ export default defineComponent({
                 color: transparent;
               }
               border-radius: 4px;
-              width: 120%;
-              height: 120%;
+              width: 140%;
+              height: 140%;
               display: block;
               position: absolute;
-              top: 0;
-              left: 0;
+              top: -4px;
+              left: -4px;
               background: $theme-accent-notification;
               opacity: 0.1;
             }
@@ -197,13 +213,13 @@ export default defineComponent({
               color: transparent;
             }
             border-radius: 4px;
-            width: 120%;
-            height: 120%;
+            width: 140%;
+            height: 140%;
             display: block;
             position: absolute;
-            top: 0;
-            left: 0;
-            @include background-accent-primary;
+            top: -4px;
+            left: -4px;
+            background: $theme-accent-primary;
             opacity: 0.3;
           }
         }
