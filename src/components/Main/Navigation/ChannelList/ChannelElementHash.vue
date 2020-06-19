@@ -143,15 +143,12 @@ export default defineComponent({
             color: transparent;
           }
           border-radius: 4px;
-          width: 22px;
-          height: 22px;
-          display: flex;
-          align-items: center;
-          box-sizing: content-box;
-          cursor: pointer;
+          width: 100%;
+          height: 100%;
+          display: block;
           position: absolute;
-          left: 2px;
-          top: 2px;
+          top: 0;
+          left: 0;
           background: $theme-accent-primary;
           opacity: 0.1;
         }
