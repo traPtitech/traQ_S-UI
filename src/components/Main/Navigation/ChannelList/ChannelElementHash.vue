@@ -116,8 +116,8 @@ export default defineComponent({
         height: 140%;
         display: block;
         position: absolute;
-        top: -4px;
-        left: -4px;
+        top: -4.5px;
+        left: -4.5px;
       }
     }
     &[data-is-opened] {
