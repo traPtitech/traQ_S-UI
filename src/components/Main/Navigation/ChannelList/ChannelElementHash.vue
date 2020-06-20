@@ -147,6 +147,10 @@ export default defineComponent({
       &[data-is-inactive] {
         @include color-ui-secondary;
         border-color: $theme-ui-secondary;
+        &:hover::before {
+          background: $theme-ui-secondary;
+          opacity: 0.2;
+        }
       }
       &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
