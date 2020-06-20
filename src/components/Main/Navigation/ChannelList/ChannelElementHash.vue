@@ -118,23 +118,19 @@ export default defineComponent({
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
-      &:hover {
-        &::before {
+      &:hover::before {
           background: $theme-ui-secondary;
           opacity: 0.5;
         }
-      }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
-        &:hover {
-          &::before {
+        &:hover::before {
             background: $theme-accent-primary;
             opacity: 0.7;
           }
-        }
       }
     }
     &:not([data-is-opened]) {
@@ -145,29 +141,24 @@ export default defineComponent({
             background: $theme-ui-primary;
             opacity: 0.2;
           }
-        }
         &[data-is-inactive] {
           @include color-ui-secondary;
           border-color: $theme-ui-secondary;
         }
         &[data-has-notification-on-child] {
           border-color: $theme-accent-notification;
-          &:hover {
-            &::before {
+          &:hover::before {
               background: $theme-accent-notification;
               opacity: 0.1;
-            }
           }
         }
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
         border-color: $theme-accent-primary;
-        &:hover {
-          &::before {
+        &:hover::before {
             background: $theme-accent-primary;
             opacity: 0.3;
-          }
         }
       }
     }
