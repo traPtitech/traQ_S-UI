@@ -1,9 +1,9 @@
 <template>
   <div
     @click.stop="openModal"
-    :role="isClickable ? 'button' : 'img'"
+    :role="isClickable ? 'button' : 'listitem'"
     :class="$style.container"
-    >
+  >
     <user-icon :class="$style.icon" :user-id="userId" :size="36" />
     <span>{{ name }}</span>
   </div>
@@ -41,6 +41,9 @@ export default defineComponent({
   @include color-ui-primary;
   display: flex;
   align-items: center;
+  &[role='button'] {
+    cursor: pointer;
+  }
 }
 .icon {
   margin-right: 16px;
