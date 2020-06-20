@@ -106,18 +106,13 @@ export default defineComponent({
     &:hover {
       &::before {
         content: '';
-        border: {
-          width: 2px;
-          style: solid;
-          color: transparent;
-        }
         border-radius: 4px;
-        width: 140%;
-        height: 140%;
         display: block;
         position: absolute;
         top: -4px;
+        bottom: -4px;
         left: -4px;
+        right: -4px;
       }
     }
     &[data-is-opened] {
@@ -146,8 +141,7 @@ export default defineComponent({
       @include color-ui-primary;
       border-color: $theme-ui-primary;
       &:not([area-selected]) {
-        &:hover {
-          &::before {
+        &:hover::before {
             background: $theme-ui-primary;
             opacity: 0.2;
           }
