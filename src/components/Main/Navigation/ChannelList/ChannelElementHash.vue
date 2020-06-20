@@ -140,21 +140,19 @@ export default defineComponent({
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
-      &:not([area-selected]) {
+      &:hover::before {
+        background: $theme-ui-primary;
+        opacity: 0.2;
+      }
+      &[data-is-inactive] {
+        @include color-ui-secondary;
+        border-color: $theme-ui-secondary;
+      }
+      &[data-has-notification-on-child] {
+        border-color: $theme-accent-notification;
         &:hover::before {
-          background: $theme-ui-primary;
-          opacity: 0.2;
-        }
-        &[data-is-inactive] {
-          @include color-ui-secondary;
-          border-color: $theme-ui-secondary;
-        }
-        &[data-has-notification-on-child] {
-          border-color: $theme-accent-notification;
-          &:hover::before {
-            background: $theme-accent-notification;
-            opacity: 0.1;
-          }
+          background: $theme-accent-notification;
+          opacity: 0.1;
         }
       }
       &[aria-selected='true'] {
