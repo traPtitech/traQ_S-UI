@@ -106,11 +106,6 @@ export default defineComponent({
     &:hover {
       &::before {
         content: '';
-        border: {
-          width: 2px;
-          style: solid;
-          color: transparent;
-        }
         border-radius: 4px;
         display: block;
         position: absolute;
