@@ -146,8 +146,7 @@ export default defineComponent({
       @include color-ui-primary;
       border-color: $theme-ui-primary;
       &:not([area-selected]) {
-        &:hover {
-          &::before {
+        &:hover::before {
             background: $theme-ui-primary;
             opacity: 0.2;
           }
