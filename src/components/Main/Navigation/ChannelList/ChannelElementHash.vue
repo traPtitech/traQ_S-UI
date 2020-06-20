@@ -119,11 +119,15 @@ export default defineComponent({
       color: $theme-background-secondary;
       background: $theme-ui-primary;
       &:hover::before {
-        background: $theme-ui-secondary;
+        background: $theme-ui-primary;
         opacity: 0.5;
       }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
+        &:hover::before {
+          background: $theme-ui-secondary;
+          opacity: 0.5;
+        }
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
