@@ -119,18 +119,18 @@ export default defineComponent({
       color: $theme-background-secondary;
       background: $theme-ui-primary;
       &:hover::before {
-          background: $theme-ui-secondary;
-          opacity: 0.5;
-        }
+        background: $theme-ui-secondary;
+        opacity: 0.5;
+      }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
         &:hover::before {
-            background: $theme-accent-primary;
-            opacity: 0.7;
-          }
+          background: $theme-accent-primary;
+          opacity: 0.7;
+        }
       }
     }
     &:not([data-is-opened]) {
@@ -138,9 +138,9 @@ export default defineComponent({
       border-color: $theme-ui-primary;
       &:not([area-selected]) {
         &:hover::before {
-            background: $theme-ui-primary;
-            opacity: 0.2;
-          }
+          background: $theme-ui-primary;
+          opacity: 0.2;
+        }
         &[data-is-inactive] {
           @include color-ui-secondary;
           border-color: $theme-ui-secondary;
@@ -148,8 +148,8 @@ export default defineComponent({
         &[data-has-notification-on-child] {
           border-color: $theme-accent-notification;
           &:hover::before {
-              background: $theme-accent-notification;
-              opacity: 0.1;
+            background: $theme-accent-notification;
+            opacity: 0.1;
           }
         }
       }
@@ -157,8 +157,8 @@ export default defineComponent({
         @include color-accent-primary;
         border-color: $theme-accent-primary;
         &:hover::before {
-            background: $theme-accent-primary;
-            opacity: 0.3;
+          background: $theme-accent-primary;
+          opacity: 0.3;
         }
       }
     }
