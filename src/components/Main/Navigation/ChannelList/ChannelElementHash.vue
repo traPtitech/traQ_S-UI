@@ -112,12 +112,12 @@ export default defineComponent({
           color: transparent;
         }
         border-radius: 4px;
-        width: 140%;
-        height: 140%;
         display: block;
         position: absolute;
         top: -4px;
+        bottom: -4px;
         left: -4px;
+        right: -4px;
       }
     }
     &[data-is-opened] {
