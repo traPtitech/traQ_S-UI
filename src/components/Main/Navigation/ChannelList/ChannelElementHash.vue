@@ -126,7 +126,6 @@ export default defineComponent({
         background: $theme-ui-secondary;
         &:hover::before {
           background: $theme-ui-secondary;
-          opacity: 0.5;
         }
       }
       &[aria-selected='true'] {
