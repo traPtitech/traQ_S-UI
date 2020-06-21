@@ -132,7 +132,6 @@ export default defineComponent({
         @include background-accent-primary;
         &:hover::before {
           background: $theme-accent-primary;
-          opacity: 0.5;
         }
       }
     }
