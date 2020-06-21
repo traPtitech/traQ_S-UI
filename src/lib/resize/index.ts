@@ -10,7 +10,7 @@ import { isIOS } from '../util/browser'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
-const isJpeg = (mime: string) => mime === 'image/jpeg'
+export const isJpeg = (mime: string) => mime === 'image/jpeg'
 
 const needRotation = isIOS()
 
