@@ -133,7 +133,7 @@ export default defineComponent({
         @include background-accent-primary;
         &:hover::before {
           background: $theme-accent-primary;
-          opacity: 0.7;
+          opacity: 0.5;
         }
       }
     }
@@ -156,7 +156,7 @@ export default defineComponent({
         border-color: $theme-accent-notification;
         &:hover::before {
           background: $theme-accent-notification;
-          opacity: 0.1;
+          opacity: 0.2;
         }
       }
       &[aria-selected='true'] {
@@ -164,7 +164,7 @@ export default defineComponent({
         border-color: $theme-accent-primary;
         &:hover::before {
           background: $theme-accent-primary;
-          opacity: 0.3;
+          opacity: 0.2;
         }
       }
     }
