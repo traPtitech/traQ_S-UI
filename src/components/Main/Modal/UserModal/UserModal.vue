@@ -9,7 +9,6 @@
       v-if="!isMobile"
       :user-id="id"
       prevent-modal
-      :size="iconSize"
       :class="$style.icon"
       :style="styles.icon"
     />
@@ -49,10 +48,12 @@ import CloseButton from '@/components/UI/CloseButton.vue'
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
     content: computed(() => ({
-      paddingTop: isMobile.value ? 0 : `${iconSize / 2}px`
+      paddingTop: isMobile.value ? 0 : `min(${iconSize / 2}px, 10vh)`
     })),
     icon: computed(() => ({
-      marginTop: `${-iconSize / 2}px`
+      marginTop: `max(-${iconSize / 2}px, -10vh)`,
+      width: `min(${iconSize}px, 20vh)`,
+      height: `min(${iconSize}px, 20vh)`
     }))
   })
 
