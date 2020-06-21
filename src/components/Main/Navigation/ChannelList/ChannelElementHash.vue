@@ -160,7 +160,6 @@ export default defineComponent({
         border-color: $theme-accent-primary;
         &:hover::before {
           background: $theme-accent-primary;
-          opacity: 0.2;
         }
       }
     }
