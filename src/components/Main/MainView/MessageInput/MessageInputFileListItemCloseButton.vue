@@ -1,12 +1,12 @@
 <template>
-  <button @click="context.emit('click')" :class="$style.container">
+  <button @click="emit('click')" :class="$style.container">
     <icon mdi name="close" :size="12" :class="$style.icon" />
     <div role="presentation" :class="$style.bg"></div>
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
@@ -14,8 +14,8 @@ export default defineComponent({
   components: {
     Icon
   },
-  setup(_, context: SetupContext) {
-    return { context }
+  setup(_, { emit }) {
+    return { emit }
   }
 })
 </script>

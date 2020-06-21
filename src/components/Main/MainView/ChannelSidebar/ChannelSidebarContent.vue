@@ -15,7 +15,7 @@
     />
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
-      @open="context.emit('pinned-mode-toggle')"
+      @open="emit('pinned-mode-toggle')"
       :class="$style.sidebarItem"
     />
     <channel-sidebar-relation
@@ -73,8 +73,8 @@ export default defineComponent({
     ChannelSidebarQall,
     ChannelSidebarBots
   },
-  setup(_, context) {
-    return { context }
+  setup(_, { emit }) {
+    return { emit }
   }
 })
 </script>

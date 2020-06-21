@@ -4,8 +4,8 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    v-bind="context.attrs"
-    v-on="context.listeners"
+    v-bind="attrs"
+    v-on="listeners"
     role="img"
     :class="$style.icon"
   >
@@ -17,8 +17,8 @@
     :width="size"
     :height="size"
     view-box="0 0 24 24"
-    v-bind="context.attrs"
-    v-on="context.listeners"
+    v-bind="attrs"
+    v-on="listeners"
     role="img"
     :class="$style.icon"
   />
@@ -46,7 +46,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props, { attrs, listeners }) {
     // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
     const getComponent = (name: string) => () =>
       import(`@/assets/icons/${name}.svg?component`)
@@ -56,11 +56,7 @@ export default defineComponent({
       return mdi[name]
     }
 
-    return {
-      context,
-      svgComponent,
-      getMdiPath
-    }
+    return { svgComponent, getMdiPath, attrs, listeners }
   }
 })
 </script>

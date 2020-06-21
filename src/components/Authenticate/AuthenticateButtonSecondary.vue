@@ -1,5 +1,5 @@
 <template>
-  <button :class="$style.container" @click="context.emit('click')">
+  <button :class="$style.container" @click="emit('click')">
     <icon
       v-if="iconName"
       :class="$style.icon"
@@ -24,8 +24,8 @@ export default defineComponent({
     iconName: String,
     iconMdi: { type: Boolean, default: false }
   },
-  setup(props, context) {
-    return { context }
+  setup(props, { emit }) {
+    return { emit }
   }
 })
 </script>
