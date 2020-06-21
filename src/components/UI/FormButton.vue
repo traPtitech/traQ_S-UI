@@ -2,7 +2,7 @@
   <button
     :class="$style.container"
     :disabled="disabled"
-    @click="context.emit('click')"
+    @click="emit('click')"
     :data-color="color"
   >
     {{ label }}
@@ -28,8 +28,8 @@ export default defineComponent({
       default: 'primary' as const
     }
   },
-  setup(_, context) {
-    return { context }
+  setup(_, { emit }) {
+    return { emit }
   }
 })
 </script>

@@ -2,7 +2,7 @@
   <button
     :class="$style.container"
     :aria-selected="isActive"
-    @click="context.emit('click')"
+    @click="emit('click')"
   >
     <icon name="effect" />
   </button>
@@ -20,8 +20,8 @@ export default defineComponent({
   props: {
     isActive: { type: Boolean, default: false }
   },
-  setup(_, context) {
-    return { context }
+  setup(_, { emit }) {
+    return { emit }
   }
 })
 </script>

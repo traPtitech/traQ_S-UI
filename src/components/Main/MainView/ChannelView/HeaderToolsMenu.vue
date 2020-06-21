@@ -2,7 +2,7 @@
   <main-view-header-popup-frame>
     <header-tools-menu-item
       v-if="isMobile"
-      @click.native="context.emit('click-qall')"
+      @click.native="emit('click-qall')"
       icon-name="phone"
       icon-mdi
       :class="$style.qallIcon"
@@ -11,25 +11,25 @@
       :data-is-active="isJoinedQallSession || isQallSessionOpened"
     />
     <header-tools-menu-item
-      @click.native="context.emit('click-create-channel')"
+      @click.native="emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
-      @click.native="context.emit('click-notification')"
+      @click.native="emit('click-notification')"
       icon-name="notified"
       label="通知設定"
     />
     <header-tools-menu-item
-      @click.native="context.emit('click-copy-channel-link')"
+      @click.native="emit('click-copy-channel-link')"
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
-      @click.native="context.emit('click-manage-channel')"
+      @click.native="emit('click-manage-channel')"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
@@ -57,7 +57,7 @@ export default defineComponent({
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false }
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const { isMobile } = useIsMobile()
     const qallLabel = computed(() => {
       if (props.isJoinedQallSession) {
@@ -76,7 +76,7 @@ export default defineComponent({
         UserPermission.EditChannel
       )
     )
-    return { context, isMobile, qallLabel, hasChannelEditPermission }
+    return { emit, isMobile, qallLabel, hasChannelEditPermission }
   }
 })
 </script>

@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="$style.container"
-    :disabled="disabled"
-    @click="context.emit('click')"
-  >
+  <button :class="$style.container" :disabled="disabled" @click="emit('click')">
     {{ label }}
   </button>
 </template>
@@ -23,8 +19,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    return { context }
+  setup(props, { emit }) {
+    return { emit }
   }
 })
 </script>

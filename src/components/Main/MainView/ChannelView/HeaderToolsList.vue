@@ -3,7 +3,7 @@
     <template v-if="!isMobile">
       <header-tools-item
         v-if="isQallEnabled"
-        @click="context.emit('click-qall')"
+        @click="emit('click-qall')"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
@@ -51,7 +51,7 @@
     </template>
     <header-tools-item
       v-if="isStared"
-      @click="context.emit('unstar-channel')"
+      @click="emit('unstar-channel')"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
@@ -59,14 +59,14 @@
     />
     <header-tools-item
       v-else
-      @click="context.emit('star-channel')"
+      @click="emit('star-channel')"
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
-      @click="context.emit('click-pin')"
+      @click="emit('click-pin')"
       :class="$style.icon"
       icon-mdi
       icon-name="pin"
@@ -75,7 +75,7 @@
     <div :class="$style.moreButton">
       <portal-target :class="$style.popupLocator" :name="targetPortalName" />
       <header-tools-item
-        @click="context.emit('click-more')"
+        @click="emit('click-more')"
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, computed } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import store from '@/store'
@@ -106,7 +106,7 @@ export default defineComponent({
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false }
   },
-  setup(props, context: SetupContext) {
+  setup(props, { emit }) {
     const {
       changeToNextSubscriptionLevel,
       currentChannelSubscription
@@ -122,7 +122,7 @@ export default defineComponent({
 
     return {
       qallIconName,
-      context,
+      emit,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
       targetPortalName,
