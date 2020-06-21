@@ -103,17 +103,15 @@ export default defineComponent({
     }
   }
   &[data-container-type='parent'] {
-    &:hover {
-      &::before {
-        content: '';
-        border-radius: 4px;
-        display: block;
-        position: absolute;
-        top: -4px;
-        bottom: -4px;
-        left: -4px;
-        right: -4px;
-      }
+    &:hover::before {
+      content: '';
+      border-radius: 4px;
+      display: block;
+      position: absolute;
+      top: -4px;
+      bottom: -4px;
+      left: -4px;
+      right: -4px;
     }
     &[data-is-opened] {
       color: $theme-background-secondary;
