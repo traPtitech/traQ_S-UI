@@ -153,7 +153,6 @@ export default defineComponent({
         border-color: $theme-accent-notification;
         &:hover::before {
           background: $theme-accent-notification;
-          opacity: 0.2;
         }
       }
       &[aria-selected='true'] {
