@@ -30,14 +30,13 @@ export const constructStampNameIdMap = (
 
   /** traQスタンプのIDリスト */
   const traQStampMap: Record<StampName, StampId> = {}
-  for (const id in stampEntities) {
-    const stamp = stampEntities[id]
+  Object.values(stampEntities).forEach(stamp => {
     if (stamp.isUnicode) {
       unicodeStampMap[stamp.name] = stamp.id
     } else {
       traQStampMap[stamp.name] = stamp.id
     }
-  }
+  })
   return { unicodeStampMap, traQStampMap }
 }
 
@@ -69,18 +68,10 @@ export const categorizeUnicodeStamps = async (
  */
 export const traQStampsToStampCategory = (
   traQStampNameIdMap: Record<StampName, StampId>
-) => {
-  const traQStampCategory: StampCategory = {
-    name: 'traq',
-    stampIds: []
-  }
-  traQStampCategory.stampIds = Object.entries(traQStampNameIdMap)
-    .sort((entry1, entry2) => {
-      const name1 = entry1[0]
-      const name2 = entry2[0]
-      return compareStringInsensitive(name1, name2)
-    })
-    .map(entry => entry[1])
+): StampCategory => {
+  const stampIds = Object.entries(traQStampNameIdMap)
+    .sort(([name1], [name2]) => compareStringInsensitive(name1, name2))
+    .map(([, value]) => value)
 
-  return traQStampCategory
+  return { name: 'traq', stampIds }
 }
