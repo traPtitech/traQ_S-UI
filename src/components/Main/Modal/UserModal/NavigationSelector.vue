@@ -55,7 +55,12 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-primary;
+  min-height: 0;
   margin-right: 4px;
   padding-top: 8px;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 </style>

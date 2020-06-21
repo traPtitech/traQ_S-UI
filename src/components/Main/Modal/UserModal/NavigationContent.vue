@@ -56,6 +56,9 @@ export default defineComponent({
   @include color-ui-primary;
   @include background-primary;
   padding: 12px 16px;
-  overflow: hidden;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 </style>
