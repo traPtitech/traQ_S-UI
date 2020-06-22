@@ -77,9 +77,13 @@ export default defineComponent({
 
     const { channelIdToShortPathString } = useChannelPath()
 
-    const path = computed(() =>
-      channelIdToShortPathString(props.message.channelId)
-    )
+    const path = computed(() => {
+      try {
+        return channelIdToShortPathString(props.message.channelId)
+      } catch {
+        return 'unknown'
+      }
+    })
 
     return { userState, path }
   }
