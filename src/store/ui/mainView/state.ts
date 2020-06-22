@@ -5,11 +5,16 @@ import {
   DMChannelId
 } from '@/types/entity-ids'
 
-export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
+export type ViewType = 'channel' | 'qall' | 'clips' | 'dm' | 'null'
 export interface ViewInformationBase {
   type: ViewType
 }
-export type ViewInformation = ChannelView | QallView | ClipsView | DMView
+export type ViewInformation =
+  | ChannelView
+  | QallView
+  | ClipsView
+  | DMView
+  | NullView
 
 export type LayoutType = 'single' | 'split' | 'split-reverse'
 
@@ -31,6 +36,10 @@ export interface DMView extends ViewInformationBase {
   channelId: DMChannelId
   userName: string
   entryMessageId?: MessageId
+}
+
+export interface NullView extends ViewInformationBase {
+  type: 'null'
 }
 
 /**

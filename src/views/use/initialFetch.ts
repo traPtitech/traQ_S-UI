@@ -6,15 +6,16 @@ import { ws } from '@/lib/websocket'
 const initialFetch = async () => {
   // 初回fetch
   await Promise.all([
-    store.dispatch.entities.fetchUsers(),
-    store.dispatch.entities.fetchUserGroups(),
     store.dispatch.entities.fetchChannels(),
-    store.dispatch.entities.fetchStamps(),
-    store.dispatch.domain.me.fetchUnreadChannels()
+    store.dispatch.domain.me.fetchUnreadChannels(),
+    store.dispatch.entities.fetchUsers(),
+    // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
+    store.dispatch.entities.fetchStamps()
   ])
 
   store.commit.app.setInitialFetchCompleted()
 
+  store.dispatch.entities.fetchUserGroups()
   store.dispatch.domain.stampCategory.constructStampCategories()
   store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
