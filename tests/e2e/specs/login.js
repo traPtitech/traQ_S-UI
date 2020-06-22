@@ -1,4 +1,8 @@
 describe('Login', () => {
+  beforeEach(() => {
+    cy.disableSW()
+  })
+
   it('will show login page', () => {
     cy.visit('/')
 
