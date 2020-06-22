@@ -33,3 +33,10 @@ Cypress.Commands.add('login', () => {
 Cypress.Commands.add('logout', () => {
   cy.request('POST', '/api/v3/logout')
 })
+
+// disable service workers
+Cypress.Commands.add('disableSW', () => {
+  Cypress.on('window:before:load', win => {
+    delete win.navigator.__proto__.serviceWorker
+  })
+})
