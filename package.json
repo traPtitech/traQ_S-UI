@@ -48,7 +48,7 @@
     "@types/node": "^13.11.1",
     "@types/punycode": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
-    "@typescript-eslint/parser": "^3.3.0",
+    "@typescript-eslint/parser": "^3.4.0",
     "@vue/cli-plugin-babel": "^4.4.5",
     "@vue/cli-plugin-e2e-cypress": "^4.4.5",
     "@vue/cli-plugin-eslint": "^4.4.5",
