@@ -79,7 +79,7 @@
     "vue-template-compiler": "^2.6.11"
   },
   "engines": {
-    "node": "^13.1.0",
-    "npm": "^6.12.1"
+    "node": "^14.4.0",
+    "npm": "^6.14.5"
   }
 }
