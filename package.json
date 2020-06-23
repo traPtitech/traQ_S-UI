@@ -72,7 +72,7 @@
     "fonteditor-core": "^2.1.1",
     "postcss": "^7.0.32",
     "prettier": "^2.0.5",
-    "sass": "^1.26.8",
+    "sass": "^1.26.9",
     "sass-loader": "^8.0.2",
     "typescript": "^3.9.5",
     "vue-svg-loader": "^0.16.0",
