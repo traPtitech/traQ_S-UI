@@ -21,9 +21,14 @@ export const getters = defineGetters<S>()({
         userGroup.members?.some(member => member.id === userId)
       )?.name
   },
-  stampByName(state): (name: string) => Stamp | undefined {
-    return name =>
-      Object.values(state.stamps as StampMap).find(stamp => stamp.name === name)
+  stampNameTable(state) {
+    return Object.fromEntries(
+      Object.values(state.stamps as StampMap).map(stamp => [stamp.name, stamp])
+    )
+  },
+  stampByName(...args): (name: string) => Stamp | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return name => getters.stampNameTable[name]
   },
   userByName(state): (name: string) => User | undefined {
     return name => {
@@ -36,8 +41,14 @@ export const getters = defineGetters<S>()({
   userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
     return id => state.users[state.dmChannels[id].userId]?.name
   },
-  DMChannelIdByUserId(state): (id: UserId) => DMChannelId | undefined {
-    return id => Object.values(state.dmChannels).find(c => c.userId === id)?.id
+  DMChannelUserIdTable(state) {
+    return Object.fromEntries(
+      Object.values(state.dmChannels).map(c => [c.userId, c.id])
+    )
+  },
+  DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return id => getters.DMChannelUserIdTable[id]
   },
   userGroupByName(state): (name: string) => UserGroup | undefined {
     return name => {

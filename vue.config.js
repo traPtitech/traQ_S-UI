@@ -10,7 +10,13 @@ module.exports = {
       scss: {
         prependData: '@import "src/styles/common.scss";'
       }
-    }
+    },
+    extract:
+      process.env.NODE_ENV === 'production'
+        ? {
+            ignoreOrder: true
+          }
+        : false
   },
 
   configureWebpack,
