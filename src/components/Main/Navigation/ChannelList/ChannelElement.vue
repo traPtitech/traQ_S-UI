@@ -2,9 +2,10 @@
   <div
     :class="$style.container"
     :aria-selected="state.isSelected ? 'true' : 'false'"
+    :data-is-inactive="state.isInactive"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel" :data-is-inactive="state.isInactive">
+    <div :class="$style.channel">
       <channel-element-hash
         :class="$style.channelHash"
         @click.native="onChannelHashClick"
@@ -269,6 +270,9 @@ $topicLeftPadding: 40px;
   display: block;
   user-select: none;
   position: relative;
+  &[data-is-inactive] {
+    @include color-ui-secondary;
+  }
   &[aria-selected='true'] {
     @include color-accent-primary;
   }
@@ -281,9 +285,6 @@ $topicLeftPadding: 40px;
   padding-right: 4px;
   margin-left: $bgLeftShift;
   z-index: 0;
-  &[data-is-inactive] {
-    @include color-ui-secondary;
-  }
 }
 .channelHash {
   flex-shrink: 0;
