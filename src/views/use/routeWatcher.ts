@@ -48,12 +48,6 @@ const useRouteWatcher = (context: SetupContext) => {
     return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
   const onRouteChangedToIndex = async () => {
-    try {
-      await store.dispatch.domain.me.fetchMe()
-    } catch {
-      return
-    }
-
     const openChannelPath = await useOpenChannel()
     await context.root.$router
       .replace(constructChannelPath(openChannelPath.value))
@@ -282,14 +276,14 @@ const useRouteWatcher = (context: SetupContext) => {
     ),
     onRouteParamChange
   )
-  onRouteParamChange(state.channelParam, '')
+
+  const triggerRouteParamChange = () => {
+    onRouteParamChange(state.channelParam, '')
+  }
 
   return {
     routeWatcherState: state,
-    routeWatcher,
-    onRouteChangedToIndex,
-    onRouteChangedToChannel,
-    onRouteChangedToFile
+    triggerRouteParamChange
   }
 }
 
