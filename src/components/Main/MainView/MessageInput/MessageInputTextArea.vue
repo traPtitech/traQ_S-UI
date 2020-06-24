@@ -24,7 +24,8 @@ import {
   ref,
   SetupContext,
   Ref,
-  computed
+  computed,
+  nextTick
 } from '@vue/composition-api'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
@@ -45,7 +46,7 @@ const useLineBreak = (
   textareaRef: Ref<HTMLTextAreaElement | undefined>,
   context: SetupContext
 ) => {
-  const insertLineBreak = () => {
+  const insertLineBreak = async () => {
     if (!textareaRef.value) return
     const pre = props.text.slice(0, textareaRef.value.selectionStart)
     const suf = props.text.slice(textareaRef.value.selectionEnd)
@@ -53,10 +54,9 @@ const useLineBreak = (
     // inputイベントを発火することでテキストを変更
     context.emit('input', `${pre}\n${suf}`)
 
-    context.root.$nextTick(() => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      textareaRef.value!.selectionStart = textareaRef.value!.selectionEnd = selectionIndex
-    })
+    await nextTick()
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    textareaRef.value!.selectionStart = textareaRef.value!.selectionEnd = selectionIndex
   }
 
   return { insertLineBreak }

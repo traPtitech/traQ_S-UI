@@ -20,7 +20,8 @@ import {
   ref,
   Ref,
   watch,
-  SetupContext
+  SetupContext,
+  nextTick
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -45,7 +46,7 @@ const useMenuHeight = (
     () => state.isPopupMenuShown,
     async newVal => {
       if (!newVal) return
-      await context.root.$nextTick()
+      await nextTick()
       const $menu = menuContainerRef.value?.firstElementChild
       height.value = $menu?.clientHeight ?? 0
     }

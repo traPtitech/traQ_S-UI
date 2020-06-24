@@ -24,7 +24,8 @@ import {
   ref,
   onMounted,
   onUnmounted,
-  watch
+  watch,
+  nextTick
 } from '@vue/composition-api'
 // import { ResizeObserver } from '@juggle/resize-observer'
 import { throttle } from 'lodash-es'
@@ -232,7 +233,7 @@ export default defineComponent({
 
     onMounted(() => {
       state.isMounted = true
-      context.root.$nextTick(() => {
+      nextTick(() => {
         update()
       })
       // const ro = new ResizeObserver(entries => {
@@ -294,7 +295,7 @@ export default defineComponent({
         state.endIndex =
           Math.floor(props.items.length / PAGE_SIZE) * PAGE_SIZE + PAGE_SIZE
 
-        context.root.$nextTick(() => {
+        nextTick(() => {
           update()
           updateIndex(state.scrollTop)
           state.isLoading = false

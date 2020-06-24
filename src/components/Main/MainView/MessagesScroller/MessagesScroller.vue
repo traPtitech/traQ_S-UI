@@ -46,7 +46,8 @@ import {
   onMounted,
   PropType,
   Ref,
-  onBeforeUnmount
+  onBeforeUnmount,
+  nextTick
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
@@ -199,7 +200,7 @@ export default defineComponent({
       () => props.messageIds,
       async (ids, prevIds) => {
         if (!rootRef.value) return
-        await context.root.$nextTick()
+        await nextTick()
         const newHeight = rootRef.value.scrollHeight
         if (
           props.lastLoadingDirection === 'latest' ||
