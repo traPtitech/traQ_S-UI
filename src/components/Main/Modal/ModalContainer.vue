@@ -5,25 +5,17 @@
         :is="component"
         :id="
           modalState.current.type === 'user' ||
+          modalState.current.type === 'tag' ||
+          modalState.current.type === 'group' ||
+          modalState.current.type === 'file' ||
           modalState.current.type === 'channel-manage'
             ? modalState.current.id
             : undefined
-        "
-        :group-id="
-          modalState.current.type === 'group'
-            ? modalState.current.id
-            : undefined
-        "
-        :tag-id="
-          modalState.current.type === 'tag' ? modalState.current.id : undefined
         "
         :parent-channel-id="
           modalState.current.type === 'channel-create'
             ? modalState.current.parentChannelId
             : undefined
-        "
-        :file-id="
-          modalState.current.type === 'file' ? modalState.current.id : undefined
         "
         :message-id="
           modalState.current.type === 'clip-create'

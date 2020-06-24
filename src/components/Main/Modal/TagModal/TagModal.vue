@@ -29,14 +29,14 @@ export default defineComponent({
     UserListItem
   },
   props: {
-    tagId: {
+    id: {
       type: String,
       required: true
     }
   },
   setup(props) {
-    store.dispatch.entities.fetchTag(props.tagId)
-    const tag = computed(() => store.state.entities.tags[props.tagId])
+    store.dispatch.entities.fetchTag(props.id)
+    const tag = computed(() => store.state.entities.tags[props.id])
     const tagName = computed(() => tag.value?.tag)
     const taggedUsers = computed(
       () =>

@@ -28,13 +28,13 @@ export default defineComponent({
     UserListItem
   },
   props: {
-    groupId: {
+    id: {
       type: String,
       required: true
     }
   },
   setup(props) {
-    const group = computed(() => store.state.entities.userGroups[props.groupId])
+    const group = computed(() => store.state.entities.userGroups[props.id])
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
       () =>
