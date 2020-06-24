@@ -21,9 +21,14 @@ export const getters = defineGetters<S>()({
         userGroup.members?.some(member => member.id === userId)
       )?.name
   },
-  stampByName(state): (name: string) => Stamp | undefined {
-    return name =>
-      Object.values(state.stamps as StampMap).find(stamp => stamp.name === name)
+  stampNameTable(state) {
+    return Object.fromEntries(
+      Object.values(state.stamps as StampMap).map(stamp => [stamp.name, stamp])
+    )
+  },
+  stampByName(...args): (name: string) => Stamp | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return name => getters.stampNameTable[name]
   },
   userByName(state): (name: string) => User | undefined {
     return name => {
