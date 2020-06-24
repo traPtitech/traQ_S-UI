@@ -212,7 +212,11 @@ export default defineComponent({
     const typedProps = props as TypedProps
 
     const state = reactive({
-      children: computed(() => typedProps.channel.children ?? []),
+      children: computed(() =>
+        typedProps.ignoreChildren
+          ? []
+          : typedProps.channel.children.filter(ch => !ch.archived)
+      ),
       hasChild: computed((): boolean => state.children.length > 0),
       isInactive: computed(
         () => !typedProps.ignoreChildren && !typedProps.channel.active

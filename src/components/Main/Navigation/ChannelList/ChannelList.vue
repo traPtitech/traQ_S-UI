@@ -1,7 +1,7 @@
 <template>
   <slide-down :is-open="isShown">
     <channel-element
-      v-for="channel in filteredChannels"
+      v-for="channel in channels"
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
@@ -21,8 +21,7 @@ import {
   reactive,
   set,
   toRefs,
-  PropType,
-  computed
+  PropType
 } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
@@ -81,14 +80,10 @@ export default defineComponent({
   setup(props, context) {
     const { onChannelSelect } = useChannelSelect()
     const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
-    const filteredChannels = computed(() =>
-      props.channels.filter(ch => !ch.archived)
-    )
     return {
       channelFoldingState,
       onChannelSelect,
-      onChannelFoldingToggle,
-      filteredChannels
+      onChannelFoldingToggle
     }
   }
 })
