@@ -44,20 +44,31 @@
       から可能です
     </p>
     <div :class="$style.updater">
-      <form-button label="更新" :disabled="!isChanged" @click="onUpdateClick" />
+      <form-button
+        label="更新"
+        :disabled="!isChanged"
+        :loading="isUpdating"
+        @click="onUpdateClick"
+      />
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  reactive,
+  Ref,
+  ref
+} from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
-import useImageUpload from '../use/imageUpload'
+import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
@@ -99,6 +110,50 @@ const useState = (detail: Ref<UserDetail>) => {
   return { state, isStateChanged }
 }
 
+type Profile = Pick<
+  UserDetail,
+  'displayName' | 'bio' | 'twitterId' | 'homeChannel'
+> & { homeChannel: string }
+
+const useProfileUpdate = (
+  state: Profile,
+  imageUploadState: ImageUploadState,
+  isStateChanged: Ref<boolean>,
+  destroyImageUploadState: () => void
+) => {
+  const isUpdating = ref(false)
+
+  const onUpdateClick = async () => {
+    const promises = []
+    if (imageUploadState.imgData !== undefined) {
+      promises.push(apis.changeMyIcon(imageUploadState.imgData))
+    }
+    if (isStateChanged.value) {
+      promises.push(apis.editMe(state))
+    }
+    try {
+      isUpdating.value = true
+      await Promise.all(promises)
+      destroyImageUploadState()
+
+      store.commit.ui.toast.addToast({
+        type: 'success',
+        text: 'プロフィールを更新しました'
+      })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('プロフィールの更新に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'プロフィールの更新に失敗しました'
+      })
+    }
+    isUpdating.value = false
+  }
+  return { isUpdating, onUpdateClick }
+}
+
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
@@ -113,39 +168,17 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed
     } = useImageUpload()
-
     const { state, isStateChanged } = useState(detail)
-
     const isChanged = computed(
       () => isStateChanged.value || imageUploadState.imgData !== undefined
     )
-    const onUpdateClick = async () => {
-      const promises = []
-      if (imageUploadState.imgData !== undefined) {
-        promises.push(apis.changeMyIcon(imageUploadState.imgData))
-      }
-      if (isStateChanged.value) {
-        promises.push(apis.editMe(state))
-      }
-      try {
-        // TODO: loading
-        await Promise.all(promises)
-        destroyImageUploadState()
 
-        store.commit.ui.toast.addToast({
-          type: 'success',
-          text: 'プロフィールを更新しました'
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('プロフィールの更新に失敗しました', e)
-
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'プロフィールの更新に失敗しました'
-        })
-      }
-    }
+    const { isUpdating, onUpdateClick } = useProfileUpdate(
+      state,
+      imageUploadState,
+      isChanged,
+      destroyImageUploadState
+    )
 
     return {
       detail,
@@ -155,6 +188,7 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed,
       isChanged,
+      isUpdating,
       onUpdateClick
     }
   },
