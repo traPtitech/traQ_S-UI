@@ -1,23 +1,33 @@
 <template>
   <button
     :class="$style.container"
-    :disabled="disabled"
+    :disabled="loading || disabled"
+    :data-is-loading="loading"
     @click="emit('click')"
     :data-color="color"
   >
-    {{ label }}
+    <div :class="$style.label">{{ label }}</div>
+    <loading-spinner v-if="loading" :class="$style.spinner" />
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
+import LoadingSpinner from '@/components/UI/LoadingSpinner.vue'
 
 export default defineComponent({
   name: 'FormButton',
+  components: {
+    LoadingSpinner
+  },
   props: {
     label: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     },
     disabled: {
       type: Boolean,
@@ -36,14 +46,17 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  padding: 8px 32px;
+  position: relative;
   border: solid 2px;
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
-  &:disabled {
+  &:disabled:not([data-is-loading]) {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  &[data-is-loading] {
+    cursor: wait;
   }
   &[data-color='primary'] {
     @include color-common-text-white-primary;
@@ -58,5 +71,19 @@ export default defineComponent({
     color: $theme-accent-error;
     border-color: $theme-accent-error;
   }
+}
+.label {
+  margin: 8px 32px;
+  .container[data-is-loading] & {
+    visibility: hidden;
+  }
+}
+
+.spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>
