@@ -27,7 +27,7 @@
     <div :class="$style.element">
       <h3>ホームチャンネル</h3>
       <form-selector
-        v-model="homeChannelState"
+        v-model="state.homeChannel"
         :options="channelOptions"
         :class="$style.form"
       />
@@ -50,13 +50,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  Ref,
-  ref
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, Ref } from '@vue/composition-api'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
@@ -91,26 +85,18 @@ const useChannelOptions = () => {
 }
 
 const useState = (detail: Ref<UserDetail>) => {
-  const state = reactive({
+  const profile = computed(() => ({
     displayName: detail.value.displayName,
     bio: detail.value.bio,
-    twitterId: detail.value.twitterId
-  })
-  const homeChannelState = ref(detail.value.homeChannel ?? nullUuid)
-  const isHomeChannelChanged = computed(
-    () =>
-      homeChannelState.value !== detail.value.homeChannel &&
-      !(
-        homeChannelState.value === nullUuid && detail.value.homeChannel === null
-      )
-  )
+    twitterId: detail.value.twitterId,
+    homeChannel: detail.value.homeChannel ?? nullUuid
+  }))
+  const state = reactive({ ...profile.value })
 
   const { hasDiff } = useStateDiff<UserDetail>()
-  const isStateChanged = computed(
-    () => hasDiff(state, detail) || isHomeChannelChanged.value
-  )
+  const isStateChanged = computed(() => hasDiff(state, detail))
 
-  return { state, homeChannelState, isStateChanged }
+  return { state, isStateChanged }
 }
 
 export default defineComponent({
@@ -128,7 +114,7 @@ export default defineComponent({
       onNewDestroyed
     } = useImageUpload()
 
-    const { state, homeChannelState, isStateChanged } = useState(detail)
+    const { state, isStateChanged } = useState(detail)
 
     const isChanged = computed(
       () => isStateChanged.value || imageUploadState.imgData !== undefined
@@ -139,12 +125,7 @@ export default defineComponent({
         promises.push(apis.changeMyIcon(imageUploadState.imgData))
       }
       if (isStateChanged.value) {
-        promises.push(
-          apis.editMe({
-            ...state,
-            homeChannel: homeChannelState.value
-          })
-        )
+        promises.push(apis.editMe(state))
       }
       try {
         // TODO: loading
@@ -170,7 +151,6 @@ export default defineComponent({
       detail,
       channelOptions,
       state,
-      homeChannelState,
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
