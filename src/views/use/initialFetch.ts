@@ -10,6 +10,7 @@ const initialFetch = async () => {
     store.dispatch.domain.me.fetchUnreadChannels(),
     store.dispatch.entities.fetchUsers(),
     // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
+    // メッセージのレンダリングにも必要なので待つ必要がある
     store.dispatch.entities.fetchStamps()
   ])
 
