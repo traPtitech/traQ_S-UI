@@ -18,6 +18,7 @@
       <form-button
         label="新規登録"
         :disabled="!isCreateEnabled"
+        :loading="isCreating"
         @click="createStamp"
         :class="$style.form"
       />
@@ -26,13 +27,46 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from '@vue/composition-api'
+import { defineComponent, ref, computed, Ref } from '@vue/composition-api'
 import ImageUpload from '../ImageUpload.vue'
-import useImageUpload from '../use/imageUpload'
+import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
 import store from '@/store'
+
+const useStampCreate = (
+  newStampName: Ref<string>,
+  imageUploadState: ImageUploadState,
+  destroyImageUploadState: () => void
+) => {
+  const isCreating = ref(false)
+
+  const createStamp = async () => {
+    try {
+      isCreating.value = true
+      await apis.createStamp(newStampName.value, imageUploadState.imgData)
+      newStampName.value = ''
+      destroyImageUploadState()
+
+      store.commit.ui.toast.addToast({
+        type: 'success',
+        text: 'スタンプを登録しました'
+      })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('スタンプの作成に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'スタンプの作成に失敗しました'
+      })
+    }
+    isCreating.value = false
+  }
+
+  return { isCreating, createStamp }
+}
 
 export default defineComponent({
   name: 'NewStamp',
@@ -45,38 +79,22 @@ export default defineComponent({
     } = useImageUpload()
 
     const newStampName = ref('')
-
     const isCreateEnabled = computed(
       () => newStampName.value !== '' && imageUploadState.imgData !== undefined
     )
 
-    const createStamp = async () => {
-      try {
-        // TODO: loading
-        await apis.createStamp(newStampName.value, imageUploadState.imgData)
-        newStampName.value = ''
-        destroyImageUploadState()
-
-        store.commit.ui.toast.addToast({
-          type: 'success',
-          text: 'スタンプを登録しました'
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('スタンプの作成に失敗しました', e)
-
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'スタンプの作成に失敗しました'
-        })
-      }
-    }
+    const { isCreating, createStamp } = useStampCreate(
+      newStampName,
+      imageUploadState,
+      destroyImageUploadState
+    )
 
     return {
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
       newStampName,
+      isCreating,
       createStamp,
       isCreateEnabled
     }
