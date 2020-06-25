@@ -120,3 +120,19 @@ $s: 'stamp';
   transform: translateY(20px);
   opacity: 0;
 }
+
+$p: 'post';
+.#{$p}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$p}-leave-active {
+  transition: all 0.3s $easeInCirc;
+}
+.#{$p}-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.#{$p}-enter {
+  transform: translateX(-20px);
+  opacity: 0;
+}
