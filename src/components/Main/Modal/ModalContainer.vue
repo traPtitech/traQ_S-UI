@@ -35,7 +35,7 @@ import { ModalState } from '@/store/ui/modal/state'
 const modalComponentMap: Record<ModalState['type'], string> = {
   setting: 'SettingModal/SettingModal',
   user: 'UserModal/UserModal',
-  notification: 'Notification/NotificationModal',
+  notification: 'NotificationModal/NotificationModal',
   tag: 'TagModal/TagModal',
   group: 'GroupModal/GroupModal',
   'channel-create': 'ChannelCreateModal/ChannelCreateModal',
