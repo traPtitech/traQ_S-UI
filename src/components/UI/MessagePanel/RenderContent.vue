@@ -26,7 +26,8 @@ import {
   defineComponent,
   computed,
   watchEffect,
-  ref
+  ref,
+  watch
 } from '@vue/composition-api'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
@@ -52,6 +53,12 @@ export default defineComponent({
     watchEffect(async () => {
       rendered.value = await renderInline(props.content)
     })
+    watch(
+      () => store.state.app.initialFetchCompleted,
+      async () => {
+        rendered.value = await renderInline(props.content)
+      }
+    )
 
     const files = computed(() =>
       rendered.value?.embeddings.filter(e => e.type === 'file')
