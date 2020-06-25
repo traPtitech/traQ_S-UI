@@ -17,13 +17,13 @@
           label="スタンプ名"
           prefix=":"
           suffix=":"
-          v-model="nameState.new"
+          v-model="state.name"
           :class="$style.form"
         />
         <form-selector
           label="所有者"
           :options="creatorOptions"
-          v-model="creatorState.new"
+          v-model="state.creatorId"
           :class="$style.form"
         />
         <image-upload
@@ -55,41 +55,32 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { Stamp } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
+import useStateDiff from '../use/stateDiff'
 import { ActiveUserMap } from '@/store/entities'
-
-const useName = (stamp: Stamp) => {
-  const state = reactive({
-    old: stamp.name,
-    new: stamp.name,
-    changed: computed((): boolean => state.old !== state.new)
-  })
-  const applyChange = () => {
-    state.old = state.new
-  }
-  return { nameState: state, applyNameChange: applyChange }
-}
 
 const creatorOptions = computed(() =>
   Object.values(store.getters.entities.activeUsers as ActiveUserMap)
     .filter(u => !u.bot)
-    .map(u => ({ key: u.name, value: u.id }))
+    .map(u => ({ key: `@${u.name}`, value: u.id }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
 )
 
-const useCreator = (stamp: Stamp) => {
-  const state = reactive({
-    old: stamp.creatorId,
-    new: stamp.creatorId,
-    changed: computed((): boolean => state.old !== state.new)
-  })
-  const applyChange = () => {
-    state.old = state.new
-  }
-  return {
-    creatorState: state,
-    applyCreatorChange: applyChange,
-    creatorOptions
-  }
+type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
+
+const useState = (props: { stamp: Stamp }) => {
+  const oldState = computed(
+    (): StampEditState => ({
+      name: props.stamp.name,
+      creatorId: props.stamp.creatorId
+    })
+  )
+  const newState = reactive({ ...oldState.value })
+
+  const { hasDiff, getDiffKeys } = useStateDiff<StampEditState>()
+  const isStateChanged = computed(() => hasDiff(newState, oldState))
+  const diffKeys = computed(() => getDiffKeys(newState, oldState))
+
+  return { state: newState, isStateChanged, diffKeys }
 }
 
 export default defineComponent({
@@ -114,16 +105,9 @@ export default defineComponent({
       onNewDestroyed
     } = useImageUpload()
 
-    const { nameState, applyNameChange } = useName(props.stamp)
-    const { creatorState, applyCreatorChange, creatorOptions } = useCreator(
-      props.stamp
-    )
-
+    const { state, isStateChanged, diffKeys } = useState(props)
     const stampChanged = computed(
-      () =>
-        nameState.changed ||
-        creatorState.changed ||
-        imageUploadState.imgData !== undefined
+      () => isStateChanged.value || imageUploadState.imgData !== undefined
     )
 
     const onStartEdit = () => {
@@ -137,11 +121,13 @@ export default defineComponent({
       try {
         // TODO: loading
         const promises = []
-        if (nameState.changed || creatorState.changed) {
+        if (isStateChanged.value) {
           promises.push(
             apis.editStamp(props.stamp.id, {
-              name: nameState.changed ? nameState.new : undefined,
-              creatorId: creatorState.changed ? creatorState.new : undefined
+              name: diffKeys.value.includes('name') ? state.name : undefined,
+              creatorId: diffKeys.value.includes('creatorId')
+                ? state.creatorId
+                : undefined
             })
           )
         }
@@ -152,8 +138,6 @@ export default defineComponent({
         }
         await Promise.all(promises)
         destroyImageUploadState()
-        applyNameChange()
-        applyCreatorChange()
         onEndEdit()
 
         store.commit.ui.toast.addToast({
@@ -173,8 +157,7 @@ export default defineComponent({
 
     return {
       url,
-      nameState,
-      creatorState,
+      state,
       creatorOptions,
       imageUploadState,
       onNewImgSet,
