@@ -33,7 +33,12 @@
           @destroyed="onNewDestroyed"
         />
       </div>
-      <form-button label="変更" :disabled="!stampChanged" @click="editStamp" />
+      <form-button
+        label="変更"
+        :disabled="!stampChanged"
+        :loading="isEditing"
+        @click="editStamp"
+      />
     </div>
   </div>
 </template>
@@ -43,12 +48,14 @@ import {
   defineComponent,
   computed,
   PropType,
-  reactive
+  reactive,
+  Ref,
+  ref
 } from '@vue/composition-api'
 import apis, { buildFilePath } from '@/lib/apis'
 import store from '@/store'
 import ImageUpload from '../ImageUpload.vue'
-import useImageUpload from '../use/imageUpload'
+import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
@@ -81,6 +88,57 @@ const useState = (props: { stamp: Stamp }) => {
   const diffKeys = computed(() => getDiffKeys(newState, oldState))
 
   return { state: newState, isStateChanged, diffKeys }
+}
+
+const useStampEdit = (
+  props: { stamp: Stamp },
+  state: StampEditState,
+  imageUploadState: ImageUploadState,
+  isStateChanged: Ref<boolean>,
+  diffKeys: Ref<Array<keyof StampEditState>>,
+  afterSuccess: () => void
+) => {
+  const isEditing = ref(false)
+
+  const editStamp = async () => {
+    try {
+      isEditing.value = true
+      const promises = []
+      if (isStateChanged.value) {
+        promises.push(
+          apis.editStamp(props.stamp.id, {
+            name: diffKeys.value.includes('name') ? state.name : undefined,
+            creatorId: diffKeys.value.includes('creatorId')
+              ? state.creatorId
+              : undefined
+          })
+        )
+      }
+      if (imageUploadState.imgData !== undefined) {
+        promises.push(
+          apis.changeStampImage(props.stamp.id, imageUploadState.imgData)
+        )
+      }
+      await Promise.all(promises)
+      afterSuccess()
+
+      store.commit.ui.toast.addToast({
+        type: 'success',
+        text: 'スタンプを更新しました'
+      })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('スタンプの編集に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'スタンプの編集に失敗しました'
+      })
+    }
+    isEditing.value = false
+  }
+
+  return { isEditing, editStamp }
 }
 
 export default defineComponent({
@@ -117,43 +175,17 @@ export default defineComponent({
       context.emit('end-edit')
     }
 
-    const editStamp = async () => {
-      try {
-        // TODO: loading
-        const promises = []
-        if (isStateChanged.value) {
-          promises.push(
-            apis.editStamp(props.stamp.id, {
-              name: diffKeys.value.includes('name') ? state.name : undefined,
-              creatorId: diffKeys.value.includes('creatorId')
-                ? state.creatorId
-                : undefined
-            })
-          )
-        }
-        if (imageUploadState.imgData !== undefined) {
-          promises.push(
-            apis.changeStampImage(props.stamp.id, imageUploadState.imgData)
-          )
-        }
-        await Promise.all(promises)
+    const { isEditing, editStamp } = useStampEdit(
+      props,
+      state,
+      imageUploadState,
+      isStateChanged,
+      diffKeys,
+      () => {
         destroyImageUploadState()
         onEndEdit()
-
-        store.commit.ui.toast.addToast({
-          type: 'success',
-          text: 'スタンプを更新しました'
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('スタンプの編集に失敗しました', e)
-
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'スタンプの編集に失敗しました'
-        })
       }
-    }
+    )
 
     return {
       url,
@@ -163,6 +195,7 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed,
       stampChanged,
+      isEditing,
       editStamp,
       onStartEdit
     }
