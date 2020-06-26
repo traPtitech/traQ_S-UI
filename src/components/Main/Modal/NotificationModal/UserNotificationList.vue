@@ -23,13 +23,15 @@ import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareString } from '@/lib/util/string'
-import { User } from '@traptitech/traq'
+import { ActiveUserMap } from '@/store/entities'
 
 // TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
-  const allUsers = computed(
-    () =>
-      (Object.values(store.state.entities.users) as User[]).filter(u => !u.bot) // BOT除外
+  const allUsers = computed(() =>
+    Object.values(store.getters.entities.activeUsers as ActiveUserMap).filter(
+      // BOT除外
+      u => !u.bot
+    )
   )
   const state = reactive({
     initialSubscribers: new Set<string>(),
