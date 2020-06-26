@@ -16,7 +16,6 @@ import { ChannelId, UserId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'ChannelSidebarMember',
@@ -37,10 +36,10 @@ export default defineComponent({
     const viewStates = computed(() =>
       userIds.value
         .map(id => ({
-          user: store.state.entities.users[id],
+          user: store.getters.entities.activeUsers[id],
           active: props.viewerIds.includes(id)
         }))
-        .filter(state => state.user?.state === UserAccountState.active)
+        .filter(state => state.user !== undefined)
         .sort((a, b) => {
           if (a.active === b.active) {
             return 0
