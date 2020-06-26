@@ -36,7 +36,7 @@ const checkUserExistence = async (userId: UserId) => {
   }
 }
 
-const checkGroupExistence = async (userGroupId: UserGroupId) => {
+const checkGroupExistence = (userGroupId: UserGroupId) => {
   return userGroupId in store.state.entities.userGroups
 }
 
