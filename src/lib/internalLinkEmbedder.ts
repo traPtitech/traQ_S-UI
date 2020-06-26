@@ -3,7 +3,7 @@
  */
 
 const mentionRegex = /[@＠]([\S]{1,32})/g
-const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
+const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})^(?!.*:)/g
 const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
 const backQuote = '`'
