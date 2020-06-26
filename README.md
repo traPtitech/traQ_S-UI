@@ -4,8 +4,6 @@
 ![release](https://github.com/traPtitech/traQ_S-UI/workflows/release/badge.svg)
 [![codecov](https://codecov.io/gh/traPtitech/traQ_S-UI/branch/master/graph/badge.svg)](https://codecov.io/gh/traPtitech/traQ_S-UI)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=traPtitech/traQ_S-UI)](https://dependabot.com)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/traPtitech/traQ_S-UI.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/traPtitech/traQ_S-UI/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/traPtitech/traQ_S-UI.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/traPtitech/traQ_S-UI/context:javascript)
 
 traQ-S Frontend 
 
