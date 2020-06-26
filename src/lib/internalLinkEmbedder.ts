@@ -2,7 +2,8 @@
  * https://github.com/traPtitech/traQ/blob/master/utils/message/replacer.goと同様
  */
 
-const mentionRegex = /[@＠]([\S]+)/g
+const mentionRegex = /[@＠]([\S]{1,32})/g
+const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
 const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
 const backQuote = '`'
@@ -115,16 +116,26 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
   return m.replace(mentionRegex, s => {
     // .slice(1)は先頭の@を消すため
     // 小文字化はgetter内で行う
-    const t = s.slice(1)
-    const uid = getters.getUser(t)?.id
+    const name = s.slice(1)
+    const uid = getters.getUser(name)?.id
     if (uid) {
       return `!{"type":"user","raw":"${s}","id":"${uid}"}`
     }
-    const gid = getters.getGroup(t)?.id
+    const gid = getters.getGroup(name)?.id
     if (gid) {
       return `!{"type":"group","raw":"${s}","id":"${gid}"}`
     }
-    return s
+    return s.replace(userStartsRegex, s => {
+      // .slice(1)は先頭の@を消すため
+      // 小文字化はgetter内で行う
+      const name = s.slice(1)
+
+      const uid = getters.getUser(name)?.id
+      if (uid) {
+        return `!{"type":"user","raw":"${s}","id":"${uid}"}`
+      }
+      return s
+    })
   })
 }
 
