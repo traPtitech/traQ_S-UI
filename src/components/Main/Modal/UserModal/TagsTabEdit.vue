@@ -1,37 +1,26 @@
 <template>
   <div :class="$style.container">
-    <icon
-      name="lock"
-      mdi
-      :size="20"
-      v-if="state.isLocked"
-      @click="toggleTagState"
-    />
+    <icon v-if="isLocked" name="lock" mdi :size="20" @click="toggleTagState" />
     <div v-else :class="$style.element">
+      <icon name="close" mdi :size="20" @click="removeTag" />
       <icon
+        v-if="isMine"
         name="lock-open"
         mdi
         :size="20"
-        v-if="state.isMine"
         @click="toggleTagState"
         :class="$style.open"
       />
-      <icon name="close" mdi @click="removeTag" :size="20" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
-import { UserId, TagId } from '@/types/entity-ids'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { TagId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
-import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
+import store from '@/store'
 
 export default defineComponent({
   name: 'TagsTabEdit',
@@ -39,44 +28,33 @@ export default defineComponent({
     Icon
   },
   props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
     tagId: {
       type: String as PropType<TagId>,
       required: true
+    },
+    isMine: {
+      type: Boolean,
+      default: false
+    },
+    isLocked: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
-    const state = reactive({
-      isMine: computed(() => store.state.domain.me.detail?.id === props.userId),
-      isLocked: computed(
-        () =>
-          store.state.domain.userDetails[props.userId]?.tags.find(
-            tag => tag.tagId === props.tagId
-          )?.isLocked ?? false
-      )
-    })
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const myId = computed(() => store.state.domain.me.detail!.id)
 
     const removeTag = async () => {
-      if (state.isMine) {
-        await apis.removeMyUserTag(props.tagId)
-      } else {
-        await apis.removeUserTag(props.userId, props.tagId)
-      }
+      if (!confirm(`本当にこのタグを削除しますか？`)) return
+      await apis.removeMyUserTag(props.tagId)
     }
 
     const toggleTagState = async () => {
-      if (state.isMine) {
-        await apis.editUserTag(props.userId, props.tagId, {
-          isLocked: !state.isLocked
-        })
-        store.dispatch.domain.fetchUserDetail(props.userId)
-      }
+      await apis.editMyUserTag(props.tagId, { isLocked: !props.isLocked })
     }
 
-    return { state, removeTag, toggleTagState }
+    return { removeTag, toggleTagState }
   }
 })
 </script>
@@ -90,6 +68,6 @@ export default defineComponent({
   display: flex;
 }
 .open {
-  margin-right: 4px;
+  margin-left: 4px;
 }
 </style>
