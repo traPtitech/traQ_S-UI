@@ -114,7 +114,6 @@ const replaceAll = (m: string, getters: ReplaceGetters) => {
 
 const replaceMention = (m: string, getters: UserAndGroupGetters) => {
   return m.replace(mentionRegex, s => {
-    console.log(s)
     // .slice(1)は先頭の@を消すため
     // 小文字化はgetter内で行う
     const name = s.slice(1)
@@ -127,7 +126,6 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
       return `!{"type":"group","raw":"${s}","id":"${gid}"}`
     }
     return s.replace(userStartsRegex, s => {
-      console.log(s)
       // .slice(1)は先頭の@を消すため
       // 小文字化はgetter内で行う
       const name = s.slice(1)
