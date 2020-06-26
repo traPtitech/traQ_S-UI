@@ -270,7 +270,7 @@ const useRouteWatcher = (context: SetupContext) => {
     closeNav()
   }
 
-  const routeWatcher = watch(
+  watch(
     computed(() =>
       store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
     ),
