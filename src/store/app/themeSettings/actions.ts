@@ -17,7 +17,8 @@ export const actions = defineActions({
       case 'dark':
         commit.setCurrentTheme('light')
         break
-      case 'custom': // ボタンをちゃんと無効化したら外す？
+      case 'auto':
+      case 'custom':
         break
       default: {
         const invalid: never = state.type
