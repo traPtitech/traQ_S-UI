@@ -68,6 +68,10 @@ const specs: Spec[] = [
   [
     '@takashi_trapああ a@takashi_trap',
     '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}ああ a!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+  ],
+  [
+    ':@takashi_trap:ああ a@takashi_trap',
+    ':@takashi_trap:ああ a!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
   ]
 ]
 
