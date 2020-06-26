@@ -39,6 +39,11 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   display: flex;
+  transform: scale(1);
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 .button {
   cursor: pointer;

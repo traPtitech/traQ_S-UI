@@ -87,6 +87,12 @@ export default defineComponent({
   &:last-child:last-child {
     margin-right: 0;
   }
+
+  transform: scale(1);
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 .sendButton {
   @include color-accent-primary;
