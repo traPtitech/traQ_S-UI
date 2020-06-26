@@ -52,10 +52,10 @@ import useImageUpload from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import { Stamp, UserAccountState } from '@traptitech/traq'
+import { Stamp } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
-
 import { compareStringInsensitive } from '@/lib/util/string'
+import { ActiveUserMap } from '@/store/entities'
 
 const useName = (stamp: Stamp) => {
   const state = reactive({
@@ -70,12 +70,9 @@ const useName = (stamp: Stamp) => {
 }
 
 const creatorOptions = computed(() =>
-  Object.values(store.state.entities.users)
-    .filter(u => !u?.bot && u?.state === UserAccountState.active)
-    .map(u => ({
-      key: u?.name ?? '',
-      value: u?.id ?? null
-    }))
+  Object.values(store.getters.entities.activeUsers as ActiveUserMap)
+    .filter(u => !u.bot)
+    .map(u => ({ key: u.name, value: u.id }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
 )
 

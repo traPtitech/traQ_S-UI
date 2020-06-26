@@ -19,7 +19,7 @@ const storeProvider: Store = {
     return store.state.entities.userGroups[id]
   },
   getMe() {
-    return store.state.entities.users[store.state.domain.me.detail?.id ?? '']
+    return store.state.domain.me.detail
   },
   getStampByName(name) {
     return store.getters.entities.stampByName(name)

@@ -19,7 +19,6 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
-import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'GroupModal',
@@ -41,8 +40,7 @@ export default defineComponent({
         group.value?.members
           .filter(
             member =>
-              store.state.entities.users[member.id]?.state ===
-              UserAccountState.active
+              store.getters.entities.activeUsers[member.id] !== undefined
           )
           .map(member => member.id) ?? []
     )

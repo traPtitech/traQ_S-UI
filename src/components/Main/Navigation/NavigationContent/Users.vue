@@ -35,7 +35,6 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { User, UserAccountState } from '@traptitech/traq'
 import { compareStringInsensitive } from '@/lib/util/string'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
@@ -43,21 +42,22 @@ import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
-import { UserMap } from '@/store/entities'
 import { isDefined } from '@/lib/util/array'
+import { ActiveUser } from '@/lib/user'
+import { ActiveUserMap } from '@/store/entities'
 
 interface UsersGradeList {
   gradeName: string
-  users: User[]
+  users: ActiveUser[]
 }
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
-  const users = computed(() => store.state.entities.users)
+  const activeUsers = computed(() => store.getters.entities.activeUsers)
   const listByGradeName = computed((): UsersGradeList[] => {
     if (
       userGroups.value.length === 0 ||
-      Object.keys(users.value).length === 0
+      Object.keys(activeUsers.value).length === 0
     ) {
       return []
     }
@@ -67,9 +67,8 @@ const useListByGradeName = () => {
     // 学年グループ
     for (const group of userGroups.value) {
       const member = group.members
-        .map(member => users.value[member.id])
+        .map(member => activeUsers.value[member.id])
         .filter(isDefined)
-        .filter(user => user.state === UserAccountState.active)
         .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
 
@@ -79,17 +78,14 @@ const useListByGradeName = () => {
     }
 
     // BOTグループ
-    const bots = Object.values(users.value as UserMap)
-      .filter(user => user.bot && user.state === UserAccountState.active)
+    const bots = Object.values(activeUsers.value as ActiveUserMap)
+      .filter(user => user.bot)
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
-    const others = Object.values(users.value as UserMap)
-      .filter(
-        user =>
-          user.state === UserAccountState.active && !categorized.has(user.id)
-      )
+    const others = Object.values(activeUsers.value as ActiveUserMap)
+      .filter(user => !categorized.has(user.id))
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
     const result = [
@@ -106,12 +102,10 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const users = computed(() =>
-    Object.values(store.state.entities.users as UserMap).filter(
-      user => user.state === UserAccountState.active
-    )
+  const activeUsers = computed(() =>
+    Object.values(store.getters.entities.activeUsers as ActiveUserMap)
   )
-  const { textFilterState, setQuery } = useTextFilter(users, 'name')
+  const { textFilterState, setQuery } = useTextFilter(activeUsers, 'name')
   return {
     userListFilterState: textFilterState,
     setQuery
