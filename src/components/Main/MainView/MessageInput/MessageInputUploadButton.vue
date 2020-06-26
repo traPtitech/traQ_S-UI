@@ -1,8 +1,11 @@
 <template>
-  <div :class="$style.container">
-    <div @click="onClick" :class="$style.button">
-      <icon mdi name="plus-circle-outline" />
-    </div>
+  <div :class="$style.container" title="ファイルを添付する">
+    <icon
+      :class="$style.button"
+      mdi
+      name="plus-circle-outline"
+      @click="onClick"
+    />
   </div>
 </template>
 
@@ -36,10 +39,13 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   display: flex;
+  transform: scale(1);
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 .button {
-  height: 24px;
-  width: 24px;
   cursor: pointer;
 }
 </style>

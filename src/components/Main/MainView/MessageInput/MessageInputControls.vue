@@ -1,12 +1,17 @@
 <template>
   <div :class="$style.container" :data-is-mobile="isMobile">
-    <div @click="onClickStampButton" :class="$style.button">
+    <div
+      :class="$style.button"
+      title="スタンプを挿入"
+      @click="onClickStampButton"
+    >
       <icon mdi name="emoticon-outline" />
     </div>
     <button
-      @click="onClickSendButton"
-      :disabled="!canPostMessage"
       :class="$style.sendButton"
+      title="送信する"
+      :disabled="!canPostMessage"
+      @click="onClickSendButton"
     >
       <icon mdi name="send" />
     </button>
@@ -81,6 +86,12 @@ export default defineComponent({
   }
   &:last-child:last-child {
     margin-right: 0;
+  }
+
+  transform: scale(1);
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
   }
 }
 .sendButton {
