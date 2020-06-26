@@ -33,6 +33,7 @@
         <message-input-controls
           :class="$style.controls"
           :can-post-message="canPostMessage"
+          :is-posting="isPosting"
           @click-send="postMessage"
           @click-stamp="onStampClick"
         />

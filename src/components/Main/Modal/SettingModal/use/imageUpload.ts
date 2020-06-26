@@ -42,9 +42,14 @@ export const useImageUploadInternal = (onImageSelect: () => void) => {
   return { image, addImage, destroy }
 }
 
+export interface ImageUploadState {
+  imgData: Blob | undefined
+  destroyFlag: boolean
+}
+
 const useImageUpload = () => {
-  const state = reactive({
-    imgData: undefined as Blob | undefined,
+  const state: ImageUploadState = reactive({
+    imgData: undefined,
     destroyFlag: false
   })
 
