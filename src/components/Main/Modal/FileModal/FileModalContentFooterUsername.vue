@@ -1,5 +1,7 @@
 <template>
-  <div :class="$style.container" @click="openModal">{{ user ? user.displayName : 'unknown' }}</div>
+  <div :class="$style.container" @click="openModal">
+    {{ user ? user.displayName : 'unknown' }}
+  </div>
 </template>
 
 <script lang="ts">
