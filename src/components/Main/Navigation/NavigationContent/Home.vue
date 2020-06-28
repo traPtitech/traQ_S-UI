@@ -71,7 +71,10 @@ export default defineComponent({
         .filter(isDefined)
     )
     const topLevelChannels = computed(
-      () => store.state.domain.channelTree.homeChannelTree.children ?? []
+      () =>
+        store.state.domain.channelTree.homeChannelTree.children.filter(
+          channel => !channel.archived
+        ) ?? []
     )
     const channelsWithRtc = computed(() =>
       Object.entries(store.state.app.rtc.channelSessionsMap)
