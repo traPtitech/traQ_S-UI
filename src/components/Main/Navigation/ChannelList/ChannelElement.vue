@@ -20,13 +20,19 @@
         <span :class="$style.channelNameString" :title="pathTooltip">
           {{ pathToShow }}
         </span>
-        <icon
-          v-if="isQalling"
-          :size="16"
-          mdi
-          name="phone-outline"
-          :class="$style.channelNameIcon"
-        />
+        <template v-if="qallUserIds.length > 0">
+          <icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
+          <user-icon-ellipsis-list
+            direction="row"
+            transition="fade-right"
+            :user-ids="qallUserIds"
+            :border-width="2"
+            :icon-size="24"
+            :overlap="8"
+            :show-count="false"
+            prevent-modal
+          />
+        </template>
       </div>
       <div
         v-if="notificationState.unreadCount"
@@ -70,6 +76,8 @@ import ChannelElementHash from './ChannelElementHash.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
+import { useQallSession } from '@/components/Main/MainView/ChannelSidebar/use/channelRTCSession'
+import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -147,10 +155,11 @@ const useTopic = (props: TypedProps) => {
 }
 
 const useRTCState = (props: TypedProps) => {
-  const isQalling = computed(
-    () => !!store.getters.app.rtc.channelRTCSessionId('qall', props.channel.id)
+  const { sessionUserIds: qallUserIds } = useQallSession(
+    reactive({ channelId: computed(() => props.channel.id) })
   )
-  return { isQalling }
+
+  return { qallUserIds }
 }
 
 interface Props {
@@ -181,7 +190,8 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ChannelList: (() => import('./ChannelList.vue')) as any,
     ChannelElementHash,
-    Icon
+    Icon,
+    UserIconEllipsisList
   },
   props: {
     /** 対象チャンネル */
@@ -247,7 +257,7 @@ export default defineComponent({
     )
     const notificationState = useNotification(typedProps)
     const { topic } = useTopic(typedProps)
-    const { isQalling } = useRTCState(typedProps)
+    const { qallUserIds } = useRTCState(typedProps)
 
     return {
       state,
@@ -255,7 +265,7 @@ export default defineComponent({
       pathTooltip,
       notificationState,
       topic,
-      isQalling,
+      qallUserIds,
       onChannelHashClick,
       onChannelNameClick
     }
@@ -314,12 +324,9 @@ $topicLeftPadding: 40px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.channelNameIcon {
+.qallIcon {
   flex-shrink: 0;
-  margin: {
-    left: 8px;
-    bottom: 2px;
-  }
+  margin: 2px 8px;
   opacity: 0.5;
 }
 .unreadBadge {

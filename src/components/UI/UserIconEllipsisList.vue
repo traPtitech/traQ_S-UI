@@ -16,6 +16,7 @@
       :class="$style.userIcon"
       :user-id="userId"
       :size="iconSize"
+      :prevent-modal="preventModal"
       v-for="userId in visibleIconIds"
       :key="userId"
       :style="styles.userIcon"
@@ -64,7 +65,8 @@ export default defineComponent({
     borderWidth: { type: Number, default: 4 },
     iconSize: { type: Number, default: 40 },
     overlap: { type: Number, default: 12 },
-    transition: String
+    transition: String,
+    preventModal: Boolean
   },
   setup(props) {
     const styles = useSizeStyles(props)
