@@ -78,6 +78,7 @@ $tu: 'typing-users';
 
 $fl: 'fade-left';
 $fr: 'fade-right';
+$ft: 'fade-top';
 $fb: 'fade-bottom';
 @each $c in $fl, $fr, $ft, $fb {
   .#{$c}-enter-active {
@@ -101,6 +102,10 @@ $fb: 'fade-bottom';
 .#{$fr}-enter,
 .#{$fr}-leave-to {
   transform: translateX(20px);
+}
+.#{$ft}-enter,
+.#{$ft}-leave-to {
+  transform: translateY(-20px);
 }
 .#{$fb}-enter,
 .#{$fb}-leave-to {
