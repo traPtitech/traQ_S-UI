@@ -58,7 +58,7 @@ const useFilterStarChannel = () => {
   }
 }
 
-const useChannels = (filterStarChannel: Ref<boolean>) => {
+const useChannelList = (filterStarChannel: Ref<boolean>) => {
   return computed(() =>
     filterStarChannel.value
       ? [
@@ -72,7 +72,15 @@ const useChannels = (filterStarChannel: Ref<boolean>) => {
   )
 }
 
-const useStaredChannel = () =>
+const useTopLevelChannels = () =>
+  computed(
+    () =>
+      store.state.domain.channelTree.channelTree.children.filter(
+        channel => !channel.archived
+      ) ?? []
+  )
+
+const useStaredChannels = () =>
   computed(
     () =>
       constructTree(
@@ -84,7 +92,7 @@ const useStaredChannel = () =>
           children: Object.keys(store.state.domain.me.staredChannelSet)
         },
         store.state.entities.channels
-      )?.children ?? []
+      )?.children.filter(channel => !channel.archived) ?? []
   )
 
 export default defineComponent({
@@ -94,17 +102,15 @@ export default defineComponent({
     ChannelFilter
   },
   setup() {
-    const topLevelChannels = computed(
-      () => store.state.domain.channelTree.channelTree.children ?? []
-    )
-    const staredChannels = useStaredChannel()
+    const topLevelChannels = useTopLevelChannels()
+    const staredChannels = useStaredChannels()
 
     const {
       filterStarChannel,
       toggleStarChannelFilter
     } = useFilterStarChannel()
     const { channelListFilterState, setQuery } = useChannelListFilter(
-      useChannels(filterStarChannel)
+      useChannelList(filterStarChannel)
     )
 
     return {
