@@ -129,6 +129,7 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
     if (gid) {
       return `!{"type":"group","raw":"${s}","id":"${gid}"}`
     }
+
     return s.replace(userStartsRegex, s => {
       // .slice(1)は先頭の@を消すため
       // 小文字化はgetter内で行う
