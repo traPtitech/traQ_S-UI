@@ -89,6 +89,7 @@ export default defineComponent({
   border-radius: 4px;
   pointer-events: auto;
   color: $theme-background-primary;
+  user-select: none;
   &[data-type='success'] {
     @include background-accent-primary;
   }
