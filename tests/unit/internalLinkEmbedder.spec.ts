@@ -8,7 +8,11 @@ const users = {
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d46': {
     name: 'takashi_trape',
     id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d46'
-  }
+  },
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d47': {
+    name: 'very_long_long_long_long_lo_name',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d47'
+  },
 }
 const groups = {
   'dfabf0c9-5de0-46ee-9721-2525e8bb3d45': {
@@ -55,8 +59,8 @@ const specs: Spec[] = [
   ['$$\\text{@takashi_trap}$$', '$$\\text{@takashi_trap}$$'],
   ['$$\n```\n@takashi_trap\n```\n$$', '$$\n```\n@takashi_trap\n```\n$$'],
   [
-    '`$@takashi_trap$` @takashi_trap',
-    '`$@takashi_trap$` !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+    '`$@takashi_trap$` @takashi_trap @very_long_long_long_long_lo_name',
+    '`$@takashi_trap$` !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} !{"type":"user","raw":"@very_long_long_long_long_lo_name","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d47"}'
   ],
   [
     '`@takashi_trap` $@takashi_trap$ $$ $ `$@takashi_trap$$@takashi_trap$`$@takashi_trap$`$`',
@@ -86,8 +90,8 @@ const specs: Spec[] = [
     '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}ああ:'
   ],
   [
-    '@takashi_trap:@takashi_trap:',
-    '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}:@takashi_trap:'
+    '@takashi_trap:@takashi_trap: :@takashi_trap: :takashi_trap',
+    '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}:@takashi_trap: :@takashi_trap: :takashi_trap'
   ],
   [
     '@takashi_trapo @takashi_trape',
