@@ -4,7 +4,7 @@
       v-if="isEditing"
       :value="value"
       :class="$style.editor"
-      :maxlength="maxlength"
+      :maxlength="200"
       @input="onInput"
     />
     <div v-else :class="$style.content" :data-is-empty="isEmpty">
