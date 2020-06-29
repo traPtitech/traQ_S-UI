@@ -118,6 +118,7 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
     if (s.startsWith(':')) {
       return s
     }
+
     // .slice(1)は先頭の@を消すため
     // 小文字化はgetter内で行う
     const name = s.slice(1)
