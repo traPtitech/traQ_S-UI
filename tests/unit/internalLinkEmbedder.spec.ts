@@ -4,12 +4,24 @@ const users = {
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d45': {
     name: 'takashi_trap',
     id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d45'
+  },
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d46': {
+    name: 'takashi_trape',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d46'
+  },
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d47': {
+    name: 'very_long_long_long_long_lo_name',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d47'
   }
 }
 const groups = {
   'dfabf0c9-5de0-46ee-9721-2525e8bb3d45': {
     name: 'okあok',
     id: 'dfabf0c9-5de0-46ee-9721-2525e8bb3d45'
+  },
+  'dfabf0c9-5de0-46ee-9721-2525e8bb3d46': {
+    name: 'takashi_trapo',
+    id: 'dfabf0c9-5de0-46ee-9721-2525e8bb3d46'
   }
 }
 const channels = {
@@ -47,8 +59,8 @@ const specs: Spec[] = [
   ['$$\\text{@takashi_trap}$$', '$$\\text{@takashi_trap}$$'],
   ['$$\n```\n@takashi_trap\n```\n$$', '$$\n```\n@takashi_trap\n```\n$$'],
   [
-    '`$@takashi_trap$` @takashi_trap',
-    '`$@takashi_trap$` !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+    '`$@takashi_trap$` @takashi_trap @very_long_long_long_long_lo_name',
+    '`$@takashi_trap$` !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} !{"type":"user","raw":"@very_long_long_long_long_lo_name","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d47"}'
   ],
   [
     '`@takashi_trap` $@takashi_trap$ $$ $ `$@takashi_trap$$@takashi_trap$`$@takashi_trap$`$`',
@@ -68,6 +80,22 @@ const specs: Spec[] = [
   [
     '@takashi_trapああ a@takashi_trap',
     '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}ああ a!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+  ],
+  [
+    ':@takashi_trap:ああ a@takashi_trap',
+    ':@takashi_trap:ああ a!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}'
+  ],
+  [
+    '@takashi_trapああ:',
+    '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}ああ:'
+  ],
+  [
+    '@takashi_trap:@takashi_trap: :@takashi_trap: :takashi_trap',
+    '!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"}:@takashi_trap: :@takashi_trap: :takashi_trap'
+  ],
+  [
+    '@takashi_trapo @takashi_trape',
+    '!{"type":"group","raw":"@takashi_trapo","id":"dfabf0c9-5de0-46ee-9721-2525e8bb3d46"} !{"type":"user","raw":"@takashi_trape","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d46"}'
   ]
 ]
 

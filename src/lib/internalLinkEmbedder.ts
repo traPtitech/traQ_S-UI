@@ -2,7 +2,7 @@
  * https://github.com/traPtitech/traQ/blob/master/utils/message/replacer.goと同様
  */
 
-const mentionRegex = /[@＠]([\S]{1,32})/g
+const mentionRegex = /:?[@＠]([\S]{1,32})/g
 const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
 const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
@@ -114,6 +114,11 @@ const replaceAll = (m: string, getters: ReplaceGetters) => {
 
 const replaceMention = (m: string, getters: UserAndGroupGetters) => {
   return m.replace(mentionRegex, s => {
+    // 始まりが:なものを除外
+    if (s.startsWith(':')) {
+      return s
+    }
+
     // .slice(1)は先頭の@を消すため
     // 小文字化はgetter内で行う
     const name = s.slice(1)
@@ -125,6 +130,7 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
     if (gid) {
       return `!{"type":"group","raw":"${s}","id":"${gid}"}`
     }
+
     return s.replace(userStartsRegex, s => {
       // .slice(1)は先頭の@を消すため
       // 小文字化はgetter内で行う
