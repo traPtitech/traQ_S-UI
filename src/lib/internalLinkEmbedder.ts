@@ -115,7 +115,7 @@ const replaceAll = (m: string, getters: ReplaceGetters) => {
 const replaceMention = (m: string, getters: UserAndGroupGetters) => {
   return m.replace(mentionRegex, s => {
     // 始まりが:なものを除外
-    if (s.slice(0, 1) === ':') {
+    if (s.startsWith(':')) {
       return s
     }
     // .slice(1)は先頭の@を消すため
