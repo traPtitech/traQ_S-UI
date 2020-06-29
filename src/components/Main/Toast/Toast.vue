@@ -1,5 +1,10 @@
 <template>
-  <div :class="$style.container" :data-type="toast.type" @click="onClick">
+  <div
+    :class="$style.container"
+    :data-type="toast.type"
+    :role="role"
+    @click="onClick"
+  >
     <icon :class="$style.icon" :name="iconName" mdi :size="32" />
     <div :class="$style.text">{{ toast.text }}</div>
   </div>
@@ -64,8 +69,10 @@ export default defineComponent({
       }
     }
 
+    const role = computed(() => (props.toast.onClick ? 'button' : false))
+
     const iconName = computed(() => iconNameMap[props.toast.type])
-    return { onClick, iconName }
+    return { onClick, iconName, role }
   }
 })
 </script>
@@ -90,6 +97,9 @@ export default defineComponent({
   }
   &[data-type='info'] {
     background: $theme-ui-secondary;
+  }
+  &[role='button'] {
+    cursor: pointer;
   }
 }
 .icon {
