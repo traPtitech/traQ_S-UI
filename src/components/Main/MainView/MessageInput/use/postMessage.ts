@@ -7,13 +7,28 @@ import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from '@vue/composition-api'
 
+/**
+ * @param progress アップロード進行状況 0～1
+ */
+type ProgressCallback = (progress: number) => void
+
 const uploadAttachments = async (
   attachments: Attachment[],
-  channelId: ChannelId
+  channelId: ChannelId,
+  onProgress: ProgressCallback
 ) => {
   const responses = []
-  for (const attachment of attachments) {
-    responses.push(await apis.postFile(attachment.file, channelId))
+  for (const [i, attachment] of attachments.entries()) {
+    responses.push(
+      await apis.postFile(attachment.file, channelId, {
+        /**
+         * https://github.com/axios/axios#request-config
+         */
+        onUploadProgress(e: ProgressEvent) {
+          onProgress((i + e.loaded / e.total) / attachments.length)
+        }
+      })
+    )
   }
   return responses.map(res => buildFilePathForPost(res.data.id))
 }
@@ -36,6 +51,7 @@ const usePostMessage = (
   )
 
   const isPosting = ref(false)
+  const progress = ref(0)
 
   const postMessage = async () => {
     if (isPosting.value) return
@@ -67,7 +83,10 @@ const usePostMessage = (
 
       const fileUrls = await uploadAttachments(
         store.state.ui.fileInput.attachments,
-        props.channelId
+        props.channelId,
+        p => {
+          progress.value = p
+        }
       )
       const embededdUrls = fileUrls.join('\n')
 
@@ -88,9 +107,10 @@ const usePostMessage = (
       })
     } finally {
       isPosting.value = false
+      progress.value = 0
     }
   }
-  return { postMessage, isPosting }
+  return { postMessage, isPosting, progress }
 }
 
 export default usePostMessage
