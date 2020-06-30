@@ -16,13 +16,15 @@
 import { defineComponent } from '@vue/composition-api'
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
+import { deleteToken } from '@/lib/firebase'
 
 export default defineComponent({
   name: 'Account',
   setup(props, context) {
     const onLogoutClick = async () => {
       await apis.logout()
-      context.root.$router.push('/')
+      await deleteToken()
+      context.root.$router.push('/login')
     }
 
     const onSessionDelete = async () => {
@@ -33,7 +35,8 @@ export default defineComponent({
         )
       ) {
         await apis.logout(undefined, true)
-        context.root.$router.push('/')
+        await deleteToken()
+        context.root.$router.push('/login')
       }
     }
     return { onLogoutClick, onSessionDelete }
