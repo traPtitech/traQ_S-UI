@@ -276,7 +276,7 @@ export default defineComponent({
 <style lang="scss" module>
 $elementHeight: 32px;
 $bgHeight: 36px;
-$bgLeftShift: 4px;
+$bgLeftShift: 8px;
 $topicLeftPadding: 40px;
 
 .container {
