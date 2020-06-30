@@ -49,9 +49,11 @@
         {{ notificationState.unreadCount }}
       </div>
     </div>
-    <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
-      {{ topic }}
-    </div>
+    <channel-element-topic
+      v-if="showTopic"
+      :class="$style.topic"
+      @click.native="onChannelNameClick"
+    />
 
     <!-- 子チャンネル表示 -->
     <channel-list
@@ -83,6 +85,7 @@ import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
@@ -156,15 +159,6 @@ const useNotification = (props: TypedProps) => {
   return notificationState
 }
 
-const useTopic = (props: TypedProps) => {
-  const topic = computed(() =>
-    props.showTopic
-      ? store.state.entities.channels[props.channel.id]?.topic ?? ''
-      : ''
-  )
-  return { topic }
-}
-
 const useRTCState = (props: TypedProps) => {
   const { sessionUserIds: qallUserIds } = useQallSession(
     reactive({ channelId: computed(() => props.channel.id) })
@@ -201,6 +195,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ChannelList: (() => import('./ChannelList.vue')) as any,
     ChannelElementHash,
+    ChannelElementTopic,
     Icon,
     UserIconEllipsisList
   },
@@ -267,7 +262,6 @@ export default defineComponent({
       isChildShown
     )
     const notificationState = useNotification(typedProps)
-    const { topic } = useTopic(typedProps)
     const { qallUserIds } = useRTCState(typedProps)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
@@ -285,7 +279,6 @@ export default defineComponent({
       pathToShow,
       pathTooltip,
       notificationState,
-      topic,
       qallUserIds,
       onChannelHashClick,
       onChannelNameClick,
@@ -397,16 +390,9 @@ $topicLeftPadding: 40px;
   }
 }
 .topic {
-  @include size-body2;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
   padding: {
     left: $topicLeftPadding + $bgLeftShift;
     right: 8px;
   }
-  cursor: pointer;
 }
 </style>
