@@ -5,10 +5,16 @@
     :data-is-inactive="state.isInactive"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel">
+    <div
+      :class="$style.channel"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
+    >
       <channel-element-hash
         :class="$style.channelHash"
         @click.native="onChannelHashClick"
+        @mouseenter.native="onHashMouseEnter"
+        @mouseleave.native="onHashMouseLeave"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
@@ -54,8 +60,12 @@
       :channels="state.children"
     />
 
-    <!-- 選択中チャンネルの背景 -->
-    <div :class="$style.selectedBg" v-if="state.isSelected" />
+    <!-- チャンネルの背景 -->
+    <div
+      v-if="state.isSelected || isChannelBgHovered"
+      :class="$style.selectedBg"
+      :data-is-hovered="isChannelBgHovered"
+    />
   </div>
 </template>
 
@@ -78,6 +88,7 @@ import { Channel } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import { useQallSession } from '@/components/Main/MainView/ChannelSidebar/use/channelRTCSession'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
+import useHover from '@/use/hover'
 
 const useAncestorPath = (skippedAncestorNames?: string[]) => {
   return {
@@ -259,6 +270,16 @@ export default defineComponent({
     const { topic } = useTopic(typedProps)
     const { qallUserIds } = useRTCState(typedProps)
 
+    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+    const {
+      isHovered: isHashHovered,
+      onMouseEnter: onHashMouseEnter,
+      onMouseLeave: onHashMouseLeave
+    } = useHover()
+    const isChannelBgHovered = computed(
+      () => isHovered.value && !isHashHovered.value
+    )
+
     return {
       state,
       pathToShow,
@@ -267,7 +288,12 @@ export default defineComponent({
       topic,
       qallUserIds,
       onChannelHashClick,
-      onChannelNameClick
+      onChannelNameClick,
+      onMouseEnter,
+      onMouseLeave,
+      onHashMouseEnter,
+      onHashMouseLeave,
+      isChannelBgHovered
     }
   }
 })
@@ -349,7 +375,6 @@ $topicLeftPadding: 40px;
   margin-left: 20px;
 }
 .selectedBg {
-  @include background-accent-primary;
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
@@ -360,6 +385,16 @@ $topicLeftPadding: 40px;
   border-bottom-left-radius: 100vw;
   opacity: 0.1;
   pointer-events: none;
+
+  display: none;
+  .container[aria-selected='true'] > & {
+    @include background-accent-primary;
+    display: block;
+  }
+  &[data-is-hovered] {
+    display: block;
+    background: $theme-ui-primary;
+  }
 }
 .topic {
   @include size-body2;
