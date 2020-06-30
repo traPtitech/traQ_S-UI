@@ -208,7 +208,7 @@ export default defineComponent({
       onMouseLeave: onHashMouseLeave
     } = useHover()
     const isChannelBgHovered = computed(
-      () => isHovered.value && !isHashHovered.value
+      () => isHovered.value && !(state.hasChild && isHashHovered.value)
     )
 
     return {
