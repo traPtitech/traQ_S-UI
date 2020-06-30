@@ -40,14 +40,11 @@
           />
         </template>
       </div>
-      <div
-        v-if="notificationState.unreadCount"
-        :class="$style.unreadBadge"
-        :data-is-noticeable="notificationState.isNoticeable"
-        @click="onChannelNameClick"
-      >
-        {{ notificationState.unreadCount }}
-      </div>
+      <channel-element-unread-badge
+        :is-noticeable="notificationState.isNoticeable"
+        :unread-count="notificationState.unreadCount"
+        @click.native="onChannelNameClick"
+      />
     </div>
     <channel-element-topic
       v-if="showTopic"
@@ -86,6 +83,7 @@ import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
+import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
@@ -150,10 +148,7 @@ const useNotification = (props: TypedProps) => {
             channel => channel.id in store.state.domain.me.unreadChannelsSet
           )
     ),
-    unreadCount: computed(() => {
-      const count = unreadChannel.value?.count ?? 0
-      return count === 0 ? undefined : count > 99 ? '99+' : '' + count
-    }),
+    unreadCount: computed(() => unreadChannel.value?.count),
     isNoticeable: computed(() => unreadChannel.value?.noticeable)
   })
   return notificationState
@@ -196,6 +191,7 @@ export default defineComponent({
     ChannelList: (() => import('./ChannelList.vue')) as any,
     ChannelElementHash,
     ChannelElementTopic,
+    ChannelElementUnreadBadge,
     Icon,
     UserIconEllipsisList
   },
@@ -347,19 +343,6 @@ $topicLeftPadding: 40px;
   flex-shrink: 0;
   margin: 2px 8px;
   opacity: 0.5;
-}
-.unreadBadge {
-  color: $theme-background-secondary;
-  background: $theme-ui-secondary;
-  padding: 0 4px;
-  min-width: 24px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  text-align: center;
-  cursor: pointer;
-  &[data-is-noticeable] {
-    background: $theme-accent-notification;
-  }
 }
 .children {
   display: block;
