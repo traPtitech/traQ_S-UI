@@ -7,7 +7,7 @@
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
-        :disabled="hasActiveQallSession && !isJoinedQallSession"
+        :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
         :data-is-active="isJoinedQallSession || isQallSessionOpened"
         :data-is-joined="isJoinedQallSession"
       />
@@ -104,7 +104,8 @@ export default defineComponent({
     isForcedChannel: { type: Boolean, default: false },
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
-    isJoinedQallSession: { type: Boolean, default: false }
+    isJoinedQallSession: { type: Boolean, default: false },
+    isArchived: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
     const {

@@ -7,7 +7,7 @@
       icon-mdi
       :class="$style.qallIcon"
       :label="qallLabel"
-      :disabled="hasActiveQallSession && !isJoinedQallSession"
+      :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
       :data-is-active="isJoinedQallSession || isQallSessionOpened"
     />
     <header-tools-menu-item
@@ -57,7 +57,8 @@ export default defineComponent({
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false },
-    canCreateChildChannel: { type: Boolean, default: false }
+    canCreateChildChannel: { type: Boolean, default: false },
+    isArchived: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
