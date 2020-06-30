@@ -22,24 +22,12 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="state.isInactive"
       />
-      <div :class="$style.channelName" @click="onChannelNameClick">
-        <span :class="$style.channelNameString" :title="pathTooltip">
-          {{ pathToShow }}
-        </span>
-        <template v-if="qallUserIds.length > 0">
-          <icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
-          <user-icon-ellipsis-list
-            direction="row"
-            transition="fade-right"
-            :user-ids="qallUserIds"
-            :border-width="2"
-            :icon-size="24"
-            :overlap="8"
-            :show-count="false"
-            prevent-modal
-          />
-        </template>
-      </div>
+      <channel-element-name
+        :channel="channel"
+        :show-shortened-path="showShortenedPath"
+        :is-selected="state.isSelected"
+        @click.native="onChannelNameClick"
+      />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
@@ -80,40 +68,13 @@ import {
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
+import ChannelElementName from './ChannelElementName.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
-import Icon from '@/components/UI/Icon.vue'
-import { useQallSession } from '@/components/Main/MainView/ChannelSidebar/use/channelRTCSession'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import useHover from '@/use/hover'
-
-const useAncestorPath = (skippedAncestorNames?: string[]) => {
-  return {
-    path: computed(() =>
-      skippedAncestorNames
-        ? [...skippedAncestorNames].reverse().join('/').concat('/')
-        : ''
-    )
-  }
-}
-
-const useFullPath = (props: TypedProps) => {
-  const { channelIdToPathString } = useChannelPath()
-  return {
-    path: computed(() => channelIdToPathString(props.channel.id))
-  }
-}
-
-const useShortenedPath = (props: TypedProps) => {
-  const { channelIdToShortPathString } = useChannelPath()
-  return {
-    path: computed(() => channelIdToShortPathString(props.channel.id))
-  }
-}
 
 const useChannelClick = (
   context: SetupContext,
@@ -154,14 +115,6 @@ const useNotification = (props: TypedProps) => {
   return notificationState
 }
 
-const useRTCState = (props: TypedProps) => {
-  const { sessionUserIds: qallUserIds } = useQallSession(
-    reactive({ channelId: computed(() => props.channel.id) })
-  )
-
-  return { qallUserIds }
-}
-
 interface Props {
   channel: ChannelTreeNode | Channel
   isOpened: boolean
@@ -172,6 +125,7 @@ interface Props {
 
 interface WithChildrenProps extends Props {
   channel: ChannelTreeNode
+  showShortenedPath: false
   ignoreChildren: false
 }
 
@@ -192,8 +146,7 @@ export default defineComponent({
     ChannelElementHash,
     ChannelElementTopic,
     ChannelElementUnreadBadge,
-    Icon,
-    UserIconEllipsisList
+    ChannelElementName
   },
   props: {
     /** 対象チャンネル */
@@ -241,24 +194,12 @@ export default defineComponent({
     })
     const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
 
-    const pathToShow = computed(() =>
-      typedProps.showShortenedPath
-        ? useShortenedPath(typedProps).path.value
-        : useAncestorPath(typedProps.channel.skippedAncestorNames).path.value +
-          typedProps.channel.name
-    )
-    const pathTooltip = computed(() =>
-      typedProps.showShortenedPath
-        ? `#${useFullPath(typedProps).path.value}`
-        : undefined
-    )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       typedProps.channel.id,
       isChildShown
     )
     const notificationState = useNotification(typedProps)
-    const { qallUserIds } = useRTCState(typedProps)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
     const {
@@ -272,10 +213,7 @@ export default defineComponent({
 
     return {
       state,
-      pathToShow,
-      pathTooltip,
       notificationState,
-      qallUserIds,
       onChannelHashClick,
       onChannelNameClick,
       onMouseEnter,
@@ -318,31 +256,6 @@ $topicLeftPadding: 40px;
 .channelHash {
   flex-shrink: 0;
   cursor: pointer;
-}
-.channelName {
-  @include size-body1;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  padding: 0 8px;
-  cursor: pointer;
-  // > .channelで絞らないと子チャンネルに影響が出る
-  .container[aria-selected='true'] > .channel & {
-    font-weight: bold;
-  }
-}
-.channelNameString {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.qallIcon {
-  flex-shrink: 0;
-  margin: 2px 8px;
-  opacity: 0.5;
 }
 .children {
   display: block;
