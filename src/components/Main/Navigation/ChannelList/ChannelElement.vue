@@ -5,10 +5,16 @@
     :data-is-inactive="state.isInactive"
   >
     <!-- チャンネル表示本体 -->
-    <div :class="$style.channel">
+    <div
+      :class="$style.channel"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
+    >
       <channel-element-hash
         :class="$style.channelHash"
         @click.native="onChannelHashClick"
+        @mouseenter.native="onHashMouseEnter"
+        @mouseleave.native="onHashMouseLeave"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
@@ -16,36 +22,23 @@
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="state.isInactive"
       />
-      <div :class="$style.channelName" @click="onChannelNameClick">
-        <span :class="$style.channelNameString" :title="pathTooltip">
-          {{ pathToShow }}
-        </span>
-        <template v-if="qallUserIds.length > 0">
-          <icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
-          <user-icon-ellipsis-list
-            direction="row"
-            transition="fade-right"
-            :user-ids="qallUserIds"
-            :border-width="2"
-            :icon-size="24"
-            :overlap="8"
-            :show-count="false"
-            prevent-modal
-          />
-        </template>
-      </div>
-      <div
-        v-if="notificationState.unreadCount"
-        :class="$style.unreadBadge"
-        :data-is-noticeable="notificationState.isNoticeable"
-        @click="onChannelNameClick"
-      >
-        {{ notificationState.unreadCount }}
-      </div>
+      <channel-element-name
+        :channel="channel"
+        :show-shortened-path="showShortenedPath"
+        :is-selected="state.isSelected"
+        @click.native="onChannelNameClick"
+      />
+      <channel-element-unread-badge
+        :is-noticeable="notificationState.isNoticeable"
+        :unread-count="notificationState.unreadCount"
+        @click.native="onChannelNameClick"
+      />
     </div>
-    <div v-if="showTopic" :class="$style.topic" @click="onChannelNameClick">
-      {{ topic }}
-    </div>
+    <channel-element-topic
+      v-if="showTopic"
+      :class="$style.topic"
+      @click.native="onChannelNameClick"
+    />
 
     <!-- 子チャンネル表示 -->
     <channel-list
@@ -54,8 +47,12 @@
       :channels="state.children"
     />
 
-    <!-- 選択中チャンネルの背景 -->
-    <div :class="$style.selectedBg" v-if="state.isSelected" />
+    <!-- チャンネルの背景 -->
+    <div
+      v-if="state.isSelected || isChannelBgHovered"
+      :class="$style.selectedBg"
+      :data-is-hovered="isChannelBgHovered"
+    />
   </div>
 </template>
 
@@ -71,37 +68,13 @@ import {
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
 import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
+import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
+import ChannelElementName from './ChannelElementName.vue'
 import { deepSome } from '@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
-import Icon from '@/components/UI/Icon.vue'
-import { useQallSession } from '@/components/Main/MainView/ChannelSidebar/use/channelRTCSession'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
-
-const useAncestorPath = (skippedAncestorNames?: string[]) => {
-  return {
-    path: computed(() =>
-      skippedAncestorNames
-        ? [...skippedAncestorNames].reverse().join('/').concat('/')
-        : ''
-    )
-  }
-}
-
-const useFullPath = (props: TypedProps) => {
-  const { channelIdToPathString } = useChannelPath()
-  return {
-    path: computed(() => channelIdToPathString(props.channel.id))
-  }
-}
-
-const useShortenedPath = (props: TypedProps) => {
-  const { channelIdToShortPathString } = useChannelPath()
-  return {
-    path: computed(() => channelIdToShortPathString(props.channel.id))
-  }
-}
+import useHover from '@/use/hover'
 
 const useChannelClick = (
   context: SetupContext,
@@ -136,30 +109,10 @@ const useNotification = (props: TypedProps) => {
             channel => channel.id in store.state.domain.me.unreadChannelsSet
           )
     ),
-    unreadCount: computed(() => {
-      const count = unreadChannel.value?.count ?? 0
-      return count === 0 ? undefined : count > 99 ? '99+' : '' + count
-    }),
+    unreadCount: computed(() => unreadChannel.value?.count),
     isNoticeable: computed(() => unreadChannel.value?.noticeable)
   })
   return notificationState
-}
-
-const useTopic = (props: TypedProps) => {
-  const topic = computed(() =>
-    props.showTopic
-      ? store.state.entities.channels[props.channel.id]?.topic ?? ''
-      : ''
-  )
-  return { topic }
-}
-
-const useRTCState = (props: TypedProps) => {
-  const { sessionUserIds: qallUserIds } = useQallSession(
-    reactive({ channelId: computed(() => props.channel.id) })
-  )
-
-  return { qallUserIds }
 }
 
 interface Props {
@@ -172,6 +125,7 @@ interface Props {
 
 interface WithChildrenProps extends Props {
   channel: ChannelTreeNode
+  showShortenedPath: false
   ignoreChildren: false
 }
 
@@ -190,8 +144,9 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ChannelList: (() => import('./ChannelList.vue')) as any,
     ChannelElementHash,
-    Icon,
-    UserIconEllipsisList
+    ChannelElementTopic,
+    ChannelElementUnreadBadge,
+    ChannelElementName
   },
   props: {
     /** 対象チャンネル */
@@ -239,35 +194,33 @@ export default defineComponent({
     })
     const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
 
-    const pathToShow = computed(() =>
-      typedProps.showShortenedPath
-        ? useShortenedPath(typedProps).path.value
-        : useAncestorPath(typedProps.channel.skippedAncestorNames).path.value +
-          typedProps.channel.name
-    )
-    const pathTooltip = computed(() =>
-      typedProps.showShortenedPath
-        ? `#${useFullPath(typedProps).path.value}`
-        : undefined
-    )
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
       context,
       typedProps.channel.id,
       isChildShown
     )
     const notificationState = useNotification(typedProps)
-    const { topic } = useTopic(typedProps)
-    const { qallUserIds } = useRTCState(typedProps)
+
+    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+    const {
+      isHovered: isHashHovered,
+      onMouseEnter: onHashMouseEnter,
+      onMouseLeave: onHashMouseLeave
+    } = useHover()
+    const isChannelBgHovered = computed(
+      () => isHovered.value && !(state.hasChild && isHashHovered.value)
+    )
 
     return {
       state,
-      pathToShow,
-      pathTooltip,
       notificationState,
-      topic,
-      qallUserIds,
       onChannelHashClick,
-      onChannelNameClick
+      onChannelNameClick,
+      onMouseEnter,
+      onMouseLeave,
+      onHashMouseEnter,
+      onHashMouseLeave,
+      isChannelBgHovered
     }
   }
 })
@@ -276,7 +229,7 @@ export default defineComponent({
 <style lang="scss" module>
 $elementHeight: 32px;
 $bgHeight: 36px;
-$bgLeftShift: 4px;
+$bgLeftShift: 8px;
 $topicLeftPadding: 40px;
 
 .container {
@@ -304,44 +257,6 @@ $topicLeftPadding: 40px;
   flex-shrink: 0;
   cursor: pointer;
 }
-.channelName {
-  @include size-body1;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  padding: 0 8px;
-  cursor: pointer;
-  // > .channelで絞らないと子チャンネルに影響が出る
-  .container[aria-selected='true'] > .channel & {
-    font-weight: bold;
-  }
-}
-.channelNameString {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.qallIcon {
-  flex-shrink: 0;
-  margin: 2px 8px;
-  opacity: 0.5;
-}
-.unreadBadge {
-  color: $theme-background-secondary;
-  background: $theme-ui-secondary;
-  padding: 0 4px;
-  min-width: 24px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  text-align: center;
-  cursor: pointer;
-  &[data-is-noticeable] {
-    background: $theme-accent-notification;
-  }
-}
 .children {
   display: block;
   position: relative;
@@ -349,7 +264,6 @@ $topicLeftPadding: 40px;
   margin-left: 20px;
 }
 .selectedBg {
-  @include background-accent-primary;
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
@@ -360,18 +274,21 @@ $topicLeftPadding: 40px;
   border-bottom-left-radius: 100vw;
   opacity: 0.1;
   pointer-events: none;
+
+  display: none;
+  .container[aria-selected='true'] > & {
+    @include background-accent-primary;
+    display: block;
+  }
+  &[data-is-hovered] {
+    display: block;
+    background: $theme-ui-primary;
+  }
 }
 .topic {
-  @include size-body2;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
   padding: {
     left: $topicLeftPadding + $bgLeftShift;
     right: 8px;
   }
-  cursor: pointer;
 }
 </style>
