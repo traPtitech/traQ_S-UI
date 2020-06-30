@@ -11,6 +11,7 @@
       :data-is-active="isJoinedQallSession || isQallSessionOpened"
     />
     <header-tools-menu-item
+      v-if="canCreateChildChannel"
       @click.native="emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
@@ -55,7 +56,8 @@ export default defineComponent({
     showNotificationSettingBtn: { type: Boolean, default: true },
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
-    isJoinedQallSession: { type: Boolean, default: false }
+    isJoinedQallSession: { type: Boolean, default: false },
+    canCreateChildChannel: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
