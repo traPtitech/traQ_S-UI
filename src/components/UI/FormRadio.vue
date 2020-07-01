@@ -67,10 +67,16 @@ export default defineComponent({
 <style lang="scss" module>
 .label {
   cursor: pointer;
+
+  border: solid 1px transparent;
+  &:focus-within {
+    border-color: $theme-accent-primary;
+  }
 }
 
 .radio {
-  display: none;
+  position: absolute;
+  z-index: $z-index-hidden;
 }
 
 .pseudoRadio {
