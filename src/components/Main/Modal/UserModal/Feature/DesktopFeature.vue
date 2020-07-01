@@ -3,7 +3,7 @@
     <div>
       <h1>{{ user.displayName }}</h1>
       <p>
-        <online-indicator
+        <online-indicator-with-tooltip
           :user-id="user.id"
           :last-online="detail ? detail.lastOnline : undefined"
         />
@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { User, UserDetail } from '@traptitech/traq'
-import OnlineIndicator from './OnlineIndicator.vue'
+import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
 import Buttons from './Buttons.vue'
 
 export default defineComponent({
@@ -37,7 +37,7 @@ export default defineComponent({
     return {}
   },
   components: {
-    OnlineIndicator,
+    OnlineIndicatorWithTooltip,
     Buttons
   }
 })
