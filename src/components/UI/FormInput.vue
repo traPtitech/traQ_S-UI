@@ -98,6 +98,11 @@ export default defineComponent({
   &[data-on-secondary] {
     @include background-primary;
   }
+
+  border: solid 1px transparent;
+  &:focus-within {
+    border-color: $theme-accent-primary;
+  }
 }
 .prefix {
   margin-left: 8px;
