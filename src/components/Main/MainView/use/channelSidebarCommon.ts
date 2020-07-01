@@ -5,7 +5,7 @@ import useSidebar from '@/use/sidebar'
 const useChannelSidebarCommon = () => {
   const state = reactive({
     pinnedMode: false,
-    pinnedMessage: computed(
+    pinnedMessages: computed(
       () => store.state.domain.messagesView.pinnedMessages
     )
   })
