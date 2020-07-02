@@ -110,14 +110,6 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
   }
-  &[data-is-entry] {
-    // TODO: 色を正しくする
-    background: $common-background-pin;
-  }
-  &:not([data-is-entry]):hover {
-    // TODO: 色を正しくする
-    background: $theme-background-secondary;
-  }
 }
 
 .messageContents {
