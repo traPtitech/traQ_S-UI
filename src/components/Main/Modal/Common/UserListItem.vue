@@ -39,10 +39,24 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-primary;
+  position: relative;
   display: flex;
   align-items: center;
+  padding: 4px;
   &[role='button'] {
     cursor: pointer;
+  }
+
+  &:hover::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: $theme-ui-primary;
+    opacity: 0.1;
   }
 }
 .icon {
