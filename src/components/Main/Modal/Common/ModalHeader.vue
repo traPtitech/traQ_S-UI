@@ -45,6 +45,7 @@ export default defineComponent({
   @include color-ui-primary;
   padding-right: 4px;
   margin-left: -8px;
+  flex-shrink: 0;
 }
 .title {
   @include color-ui-primary;
