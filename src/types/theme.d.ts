@@ -40,7 +40,6 @@ export interface ThemeVariables {
 }
 
 export interface TransparentThemeVariables {
-  '--theme-accent-primary--03': string
   '--theme-ui-primary--06': string
 }
 

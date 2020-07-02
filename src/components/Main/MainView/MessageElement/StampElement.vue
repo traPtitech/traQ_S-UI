@@ -106,10 +106,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
-  @include background-tertiary;
-  &[data-include-me] {
-    background: $theme-accent-primary--03;
-  }
+  position: relative;
   display: inline-flex;
   flex-shrink: 0;
   height: 24px;
@@ -120,6 +117,22 @@ export default defineComponent({
   user-select: none;
   overflow: hidden;
   contain: content;
+
+  &::before {
+    @include background-tertiary;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
+  &[data-include-me]::before {
+    background: $theme-accent-primary;
+    opacity: 0.3;
+  }
 }
 
 .icon {

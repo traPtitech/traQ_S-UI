@@ -115,7 +115,6 @@ const useThemeVariables = () =>
   }))
 const useTransparrentThemeVariables = () =>
   makeStyles((theme, common) => ({
-    '--theme-accent-primary--03': transparentize(theme.accent.primary, 0.3),
     '--theme-ui-primary--06': transparentize(theme.ui.primary, 0.6),
     '--theme-ui-secondary--05': transparentize(theme.ui.secondary, 0.5)
   }))
