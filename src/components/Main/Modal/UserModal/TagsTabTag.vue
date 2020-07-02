@@ -9,6 +9,7 @@
     <tags-tab-edit
       :tag-id="tag.tagId"
       :is-mine="isMine"
+      :user-id="userId"
       :is-locked="tag.isLocked"
       :class="$style.edit"
     />
@@ -21,12 +22,14 @@ import store from '@/store'
 import { UserTag } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import TagsTabEdit from '@/components/Main/Modal/UserModal/TagsTabEdit.vue'
+import { UserId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'TagsTab',
   props: {
     tag: { type: Object as PropType<UserTag>, required: true },
-    isMine: { type: Boolean, default: false }
+    isMine: { type: Boolean, default: false },
+    userId: String as PropType<UserId>
   },
   setup(props) {
     const onTagClick = () => {

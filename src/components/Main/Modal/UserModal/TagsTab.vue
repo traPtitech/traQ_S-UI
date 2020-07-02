@@ -8,6 +8,7 @@
           :class="$style.tag"
           :key="tag.tagId"
           :tag="tag"
+          :user-id="userId"
           :is-mine="isMine"
         />
       </ul>

@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from '@vue/composition-api'
-import { TagId } from '@/types/entity-ids'
+import { TagId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import Icon from '@/components/UI/Icon.vue'
 import store from '@/store'
@@ -36,6 +36,7 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    userId: String as PropType<UserId>,
     isLocked: {
       type: Boolean,
       default: false
@@ -46,8 +47,10 @@ export default defineComponent({
     const myId = computed(() => store.state.domain.me.detail!.id)
 
     const removeTag = async () => {
+      if (!props.userId) return
+
       if (!confirm(`本当にこのタグを削除しますか？`)) return
-      await apis.removeMyUserTag(props.tagId)
+      await apis.removeUserTag(props.userId, props.tagId)
     }
 
     const toggleTagState = async () => {
