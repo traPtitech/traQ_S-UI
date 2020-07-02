@@ -1,14 +1,20 @@
 <template>
   <div :class="$style.container">
-    <icon v-if="isLocked" name="lock" mdi :size="20" @click="toggleTagState" />
+    <icon
+      v-if="isLocked"
+      name="lock"
+      mdi
+      :size="20"
+      @click.stop="toggleTagState"
+    />
     <div v-else :class="$style.element">
-      <icon name="close" mdi :size="20" @click="removeTag" />
+      <icon name="close" mdi :size="20" @click.stop="removeTag" />
       <icon
         v-if="isMine"
         name="lock-open"
         mdi
         :size="20"
-        @click="toggleTagState"
+        @click.stop="toggleTagState"
         :class="$style.open"
       />
     </div>
