@@ -1,6 +1,6 @@
 <template>
-  <li :class="$style.tag">
-    <div @click="onTagClick" :class="$style.content">
+  <li :class="$style.tag" @click="onTagClick">
+    <div :class="$style.content">
       <icon name="tag" mdi :class="$style.icon" :size="20" />
       <div :class="$style.text">
         {{ tag.tag }}
@@ -50,10 +50,24 @@ export default defineComponent({
 
 <style lang="scss" module>
 .tag {
+  position: relative;
   cursor: pointer;
   display: flex;
+  padding: 4px;
   justify-content: space-between;
   align-items: center;
+
+  &:hover::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: $theme-ui-primary;
+    opacity: 0.1;
+  }
 }
 
 .content {

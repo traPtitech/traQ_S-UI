@@ -63,10 +63,10 @@ export default defineComponent({
 }
 
 .tag {
-  margin: 16px 8px;
+  margin: 8px 4px;
   &:first-child {
     // ナビゲーションと頭を揃える
-    margin-top: 8px;
+    margin-top: 0;
   }
 }
 </style>
