@@ -39,10 +39,6 @@ export interface ThemeVariables {
   '--theme-text-secondary': string
 }
 
-export interface TransparentThemeVariables {
-  '--theme-ui-primary--06': string
-}
-
 export interface CSSCommonVariables {
   '--common-text-white-primary': string
   '--common-text-white-secondary': string

@@ -154,16 +154,18 @@ export default defineComponent({
 }
 
 .count {
-  color: $theme-ui-primary--06;
-  .body[data-include-me] &,
-  .body:hover & {
-    @include color-ui-primary;
-  }
+  @include color-ui-primary;
   @include size-body2;
   font-weight: bold;
   margin: {
     left: 6px;
     right: 4px;
+  }
+
+  opacity: 0.6;
+  .body[data-include-me] &,
+  .body:hover & {
+    opacity: 1;
   }
 }
 </style>
