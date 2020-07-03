@@ -17,14 +17,14 @@
     <template #content>
       <channel-sidebar-pinned-list
         v-if="state.pinnedMode"
-        :pinned-message="state.pinnedMessage"
+        :pinned-messages="state.pinnedMessages"
       />
       <channel-sidebar-content
         v-else
         :channel-id="channelId"
         :viewer-ids="viewerIds"
         :qall-user-ids="qallUserIds"
-        :pinned-messages-count="state.pinnedMessage.length"
+        :pinned-messages-count="state.pinnedMessages.length"
         @pinned-mode-toggle="togglePinnedMode"
       />
     </template>
