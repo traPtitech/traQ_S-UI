@@ -25,11 +25,11 @@ export default defineComponent({
     },
     size: {
       type: Number,
-      default: 10
+      default: 14
     },
     borderWidth: {
       type: Number,
-      default: 0
+      default: 2
     }
   },
   setup(props) {
@@ -45,7 +45,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-tertiary;
+  display: inline-block;
   border-color: $theme-background-primary;
+  vertical-align: middle;
+
   &[data-is-online] {
     background: $theme-accent-online;
   }

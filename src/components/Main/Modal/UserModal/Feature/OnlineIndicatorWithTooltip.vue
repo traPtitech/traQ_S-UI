@@ -1,11 +1,5 @@
 <template>
-  <online-indicator
-    :class="$style.container"
-    :user-id="userId"
-    :size="12"
-    :border-width="1"
-    :title="tooltip"
-  />
+  <online-indicator :user-id="userId" :title="tooltip" />
 </template>
 
 <script lang="ts">
@@ -37,9 +31,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: inline-block;
-}
-</style>

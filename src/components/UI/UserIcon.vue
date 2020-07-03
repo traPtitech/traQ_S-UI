@@ -97,7 +97,7 @@ export default defineComponent({
 }
 .indicator {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: 0;
+  right: 0;
 }
 </style>

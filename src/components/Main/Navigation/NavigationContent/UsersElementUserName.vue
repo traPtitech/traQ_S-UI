@@ -3,16 +3,23 @@
     <div :class="$style.displayName">
       {{ user.displayName }}
     </div>
-    <div :class="$style.name">@{{ user.name }}</div>
+    <div :class="$style.name">
+      <online-indicator :user-id="user.id" />
+      @{{ user.name }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import { User } from '@traptitech/traq'
+import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
 
 export default defineComponent({
   name: 'UsersElementUserName',
+  components: {
+    OnlineIndicator
+  },
   props: {
     user: {
       type: Object as PropType<User>,
