@@ -33,7 +33,7 @@ export default defineComponent({
 .container {
   border: {
     style: solid;
-    radius: 100vw;
+    radius: 50%;
   }
 }
 </style>

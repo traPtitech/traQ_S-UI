@@ -4,7 +4,7 @@
       {{ user.displayName }}
     </div>
     <div :class="$style.name">
-      <online-indicator :user-id="user.id" />
+      <online-indicator :user-id="user.id" :size="10" />
       @{{ user.name }}
     </div>
   </div>

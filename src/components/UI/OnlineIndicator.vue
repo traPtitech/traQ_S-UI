@@ -3,7 +3,7 @@
     :class="$style.container"
     :data-is-online="isOnline"
     :size="size"
-    :border-width="borderWidth"
+    :border-width="isOnline ? 0 : borderWidth"
   />
 </template>
 
@@ -25,7 +25,7 @@ export default defineComponent({
     },
     size: {
       type: Number,
-      default: 14
+      default: 12
     },
     borderWidth: {
       type: Number,
@@ -44,13 +44,15 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-tertiary;
   display: inline-block;
-  border-color: $theme-background-primary;
+  border-color: $theme-ui-secondary;
+  opacity: 0.5;
   vertical-align: middle;
 
   &[data-is-online] {
     background: $theme-accent-online;
+    border-color: transparent;
+    opacity: 1;
   }
 }
 </style>
