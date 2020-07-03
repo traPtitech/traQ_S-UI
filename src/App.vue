@@ -57,7 +57,9 @@ const useThemeObserver = () => {
   const isDark = computed(() =>
     themeType.value === 'custom'
       ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
-      : themeType.value === 'dark'
+      : themeType.value === 'dark' ||
+        (themeType.value === 'auto' &&
+          store.state.app.themeSettings.isOsDarkTheme)
   )
   useHtmlDatasetBoolean('isDarkTheme', isDark)
 }
