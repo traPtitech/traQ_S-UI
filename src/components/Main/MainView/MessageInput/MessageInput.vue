@@ -201,6 +201,11 @@ $radius: 4px;
   border-radius: $radius;
   transform: translateY(-$radius);
   z-index: $z-index-message-input;
+
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus;
+  }
 }
 .stampPickerLocator {
   width: 100%;

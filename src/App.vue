@@ -93,6 +93,7 @@ const useThemeVariables = () =>
     '--theme-accent-notification': theme.accent.notification,
     '--theme-accent-online': theme.accent.online,
     '--theme-accent-error': theme.accent.error,
+    '--theme-accent-focus': theme.accent.focus,
     '--theme-background-primary': theme.background.primary,
     '--theme-background-secondary': theme.background.secondary,
     '--theme-background-tertiary': theme.background.tertiary,

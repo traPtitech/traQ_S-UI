@@ -5,6 +5,7 @@ export interface Theme {
     notification: string
     online: string
     error: string
+    focus: string
   }
   background: {
     primary: string
@@ -28,6 +29,7 @@ export interface ThemeVariables {
   '--theme-accent-notification': string
   '--theme-accent-online': string
   '--theme-accent-error': string
+  '--theme-accent-focus': string
   '--theme-background-primary': string
   '--theme-background-secondary': string
   '--theme-background-tertiary': string
