@@ -73,7 +73,7 @@
     "postcss": "^7.0.32",
     "prettier": "^2.0.5",
     "sass": "^1.26.9",
-    "sass-loader": "^8.0.2",
+    "sass-loader": "^9.0.0",
     "typescript": "^3.9.6",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.11"
