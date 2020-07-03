@@ -65,9 +65,9 @@ export default defineComponent({
     @include background-primary;
   }
 
-  border: solid 1px transparent;
+  border: solid 2px transparent;
   &:focus-within {
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-focus;
   }
 }
 .select {

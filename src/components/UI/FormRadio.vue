@@ -68,9 +68,10 @@ export default defineComponent({
 .label {
   cursor: pointer;
 
-  border: solid 1px transparent;
+  border: solid 2px transparent;
+  border-radius: 4px;
   &:focus-within {
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-focus;
   }
 }
 
