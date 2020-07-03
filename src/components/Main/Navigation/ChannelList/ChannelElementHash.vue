@@ -11,7 +11,7 @@
       <icon name="hash" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator has-border />
+      <notification-indicator :border-width="2" />
     </div>
   </div>
 </template>

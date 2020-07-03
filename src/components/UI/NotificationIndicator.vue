@@ -1,32 +1,32 @@
 <template>
-  <div :class="$style.container" :style="style"></div>
+  <indicator
+    :class="$style.container"
+    :size="size"
+    :border-width="borderWidth"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import Indicator from './Indicator.vue'
 
 export default defineComponent({
   name: 'NotificationIndicator',
+  components: {
+    Indicator
+  },
   props: {
-    color: String,
     size: {
       type: Number,
       default: 10
     },
-    hasBorder: {
-      type: Boolean,
-      default: false
+    borderWidth: {
+      type: Number,
+      default: 0
     }
   },
-  setup(props) {
-    const style = makeStyles(theme => ({
-      borderColor: props.color,
-      borderWidth: props.hasBorder ? '2px' : '0',
-      width: `${props.size}px`,
-      height: `${props.size}px`
-    }))
-    return { style }
+  setup() {
+    return {}
   }
 })
 </script>
@@ -34,10 +34,6 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   background: $theme-accent-notification;
-  border: {
-    style: solid;
-    color: $theme-background-secondary;
-    radius: 100vw;
-  }
+  border-color: $theme-background-secondary;
 }
 </style>

@@ -1,15 +1,18 @@
 <template>
-  <span :class="$style.indicator" :data-is-online="isOnline" :title="tooltip" />
+  <online-indicator :user-id="userId" :title="tooltip" />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api'
-import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import { getFullDayWithTimeString } from '@/lib/date'
+import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
 
 export default defineComponent({
-  name: 'OnlineIndicator',
+  name: 'OnlineIndicatorWithTooltip',
+  components: {
+    OnlineIndicator
+  },
   props: {
     userId: {
       type: String as PropType<UserId>,
@@ -18,31 +21,13 @@ export default defineComponent({
     lastOnline: String
   },
   setup(props) {
-    const isOnline = computed(() =>
-      store.getters.domain.isUserOnline(props.userId)
-    )
-
     const tooltip = computed(() =>
       props.lastOnline
         ? `Last Online: ${getFullDayWithTimeString(new Date(props.lastOnline))}`
         : undefined
     )
 
-    return { isOnline, tooltip }
+    return { tooltip }
   }
 })
 </script>
-
-<style lang="scss" module>
-.indicator {
-  @include background-tertiary;
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1px solid $theme-background-primary;
-  &[data-is-online] {
-    background: $theme-accent-online;
-  }
-}
-</style>
