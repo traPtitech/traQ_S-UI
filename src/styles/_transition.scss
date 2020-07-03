@@ -138,3 +138,14 @@ $p: 'post';
   transform: translateX(-20px);
   opacity: 0;
 }
+
+$qr: 'quick-reaction';
+.#{$qr}-enter-active,
+.#{$qr}-leave-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$qr}-enter,
+.#{$qr}-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
