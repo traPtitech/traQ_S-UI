@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" :data-is-mobile="isMobile">
     <transition name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <stamp
@@ -128,6 +128,9 @@ export default defineComponent({
   align-items: center;
   border-radius: 4px;
   contain: content;
+  &:not([data-is-mobile]) {
+    box-shadow: 0 1px 3px 0;
+  }
 }
 
 .quickReaction {
@@ -135,7 +138,6 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
-  box-shadow: 0 1px 3px 0;
 
   border: solid 2px $theme-ui-tertiary;
   border-radius: 4px;
@@ -149,7 +151,6 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
-  box-shadow: 0 1px 3px 0;
 
   border: solid 2px $theme-ui-tertiary;
   border-radius: 4px;
