@@ -25,12 +25,9 @@ export default defineComponent({
   components: {
     Icon
   },
-  setup(_, context: SetupContext) {
+  setup(_, context) {
     const { onClick } = useClickHandlers(context)
-    return {
-      context,
-      onClick
-    }
+    return { onClick }
   }
 })
 </script>
