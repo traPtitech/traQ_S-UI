@@ -9,6 +9,9 @@ export default {
     messagingSenderId: '993645413001',
     appId: '1:993645413001:web:b253ea3776d6cf85163c58'
   },
+  skyway: {
+    apiKey: '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
+  },
   services: [
     {
       label: 'Portal',
