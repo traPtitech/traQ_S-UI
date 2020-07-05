@@ -203,6 +203,7 @@ const postMessage = (channelId, text) =>
     'https://www.gstatic.com/firebasejs/7.14.3/firebase-messaging.js'
   )
 
+  // TODO: use config.ts
   firebase.initializeApp({
     apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
     projectId: 'traq-r',
