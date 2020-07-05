@@ -27,7 +27,7 @@ export const changeRouteByPath = (path: string) => {
   router.push(path).catch(() => {})
 }
 
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: '/',
     name: RouteName.Index,
@@ -87,7 +87,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: routes as RouteConfig[]
+  routes
 })
 router.beforeEach((to, from, next) => {
   // trailing slashを消す
