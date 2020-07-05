@@ -1,17 +1,17 @@
-export const getTimeString = (date: Date) =>
+export const getTimeString = (date: Readonly<Date>) =>
   date.getHours().toString().padStart(2, '0') +
   ':' +
   date.getMinutes().toString().padStart(2, '0')
 
-export const getDayString = (date: Date) =>
+export const getDayString = (date: Readonly<Date>) =>
   (date.getMonth() + 1).toString().padStart(2, '0') +
   '/' +
   date.getDate().toString().padStart(2, '0')
 
-export const getFullDayString = (date: Date) =>
+export const getFullDayString = (date: Readonly<Date>) =>
   date.getFullYear() + '/' + getDayString(date)
 
-export const getFullDayWithTimeString = (date: Date) =>
+export const getFullDayWithTimeString = (date: Readonly<Date>) =>
   getFullDayString(date) + ' ' + getTimeString(date)
 
 /**
@@ -20,8 +20,8 @@ export const getFullDayWithTimeString = (date: Date) =>
  * @param fromDate 比較する日時
  */
 export const getDateRepresentationWithoutSameDate = (
-  ofDate: Date,
-  fromDate: Date
+  ofDate: Readonly<Date>,
+  fromDate: Readonly<Date>
 ) => {
   const timeString = getTimeString(ofDate)
   if (fromDate.getFullYear() !== ofDate.getFullYear()) {

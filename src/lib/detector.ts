@@ -6,11 +6,15 @@ interface StructData {
   id: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isStructData = (data: any): data is StructData =>
-  typeof data['type'] === 'string' &&
-  typeof data['raw'] === 'string' &&
-  typeof data['id'] === 'string'
+const isStructData = (data: Readonly<unknown>): data is StructData => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const anyData = data as any
+  return (
+    typeof anyData['type'] === 'string' &&
+    typeof anyData['raw'] === 'string' &&
+    typeof anyData['id'] === 'string'
+  )
+}
 
 const parse = (str: string): StructData | null => {
   try {
@@ -26,7 +30,7 @@ const parse = (str: string): StructData | null => {
 
 const detect = (
   text: string,
-  checker: (data: StructData | null) => boolean
+  checker: (data: Readonly<StructData> | null) => boolean
 ) => {
   let isInside = false
   let startIndex = -1
@@ -58,8 +62,8 @@ const detect = (
 
 const isMentionOfMe = (
   myId: UserId,
-  myGroupIds: UserGroupId[],
-  data: StructData | null
+  myGroupIds: readonly UserGroupId[],
+  data: Readonly<StructData> | null
 ) => {
   if (data === null) return false
   if (data.type === 'user' && data.id === myId) return true
@@ -70,5 +74,5 @@ const isMentionOfMe = (
 export const detectMentionOfMe = (
   text: string,
   myId: UserId,
-  myGroupIds: UserGroupId[]
+  myGroupIds: readonly UserGroupId[]
 ) => detect(text, data => isMentionOfMe(myId, myGroupIds, data))

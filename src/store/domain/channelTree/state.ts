@@ -20,8 +20,8 @@ export interface ChannelTree {
 }
 
 export interface S {
-  channelTree: ChannelTree
-  homeChannelTree: ChannelTree
+  channelTree: Readonly<ChannelTree>
+  homeChannelTree: Readonly<ChannelTree>
 }
 
 export const state: S = {

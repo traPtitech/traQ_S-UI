@@ -7,7 +7,7 @@ let nextId = 0
 export const mutations = defineMutations<S>()({
   addToast: (
     state,
-    toast: Omit<Toast, 'timeout' | 'id'> & { timeout?: number }
+    toast: Readonly<Omit<Toast, 'timeout' | 'id'> & { timeout?: number }>
   ) => {
     state.toasts.unshift({
       ...toast,

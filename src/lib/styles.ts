@@ -8,7 +8,10 @@ import {
 import { computed } from '@vue/composition-api'
 import * as CSS from 'csstype'
 
-export type ThemeClaim<T> = (theme: Theme, common: typeof commonStyles) => T
+export type ThemeClaim<T> = (
+  theme: Readonly<Theme>,
+  common: typeof commonStyles
+) => T
 
 export type ThemeVariablesOrProperties =
   | CSS.Properties

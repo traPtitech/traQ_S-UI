@@ -28,13 +28,14 @@ const wait = (ms: number) => {
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
-  eventTarget: EventTarget
+  // SafariでEventTargetのコンストラクタ使えないのでDocumentFragmentで代用
+  readonly eventTarget: EventTarget = document.createDocumentFragment()
 
   readonly url: string
   readonly protocols: string | string[] | undefined
-  readonly options: Options
+  readonly options: Readonly<Options>
 
-  sendQueue = new Map<WebSocketCommand, string[]>()
+  sendQueue = new Map<WebSocketCommand, readonly string[]>()
   isInitialized = false
   reconnecting = false
 
@@ -46,9 +47,6 @@ export default class AutoReconnectWebSocket {
     this.url = url
     this.protocols = protocols
     this.options = { ...options, ...defaultOptions }
-
-    // SafariでEventTargetのコンストラクタ使えないので`<span>`で代用
-    this.eventTarget = document.createElement('span')
   }
 
   get isOpen() {

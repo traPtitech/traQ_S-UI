@@ -14,7 +14,9 @@ export const isJpeg = (mime: string) => mime === 'image/jpeg'
 
 const needRotation = isIOS()
 
-export const resize = async (inputFile: File): Promise<File | null> => {
+export const resize = async (
+  inputFile: Readonly<File>
+): Promise<File | null> => {
   start()
   const { pica, $input, $output, $img } = await initVars()
 

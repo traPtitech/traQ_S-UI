@@ -1,6 +1,6 @@
 import { Theme } from '@/types/theme'
 
-export const lightTheme: Theme = {
+export const lightTheme: Readonly<Theme> = {
   accent: {
     primary: '#005BAC',
     notification: '#F2994A',
@@ -25,7 +25,7 @@ export const lightTheme: Theme = {
   }
 }
 
-export const darkTheme: Theme = {
+export const darkTheme: Readonly<Theme> = {
   accent: {
     primary: '#4899F9',
     notification: '#F2994A',

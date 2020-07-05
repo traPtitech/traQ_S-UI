@@ -4,5 +4,5 @@ export interface ActiveUser extends User {
   state: UserAccountState.active
 }
 
-export const isActive = (user: User): user is ActiveUser =>
+export const isActive = (user: Readonly<User>): user is ActiveUser =>
   user.state === UserAccountState.active
