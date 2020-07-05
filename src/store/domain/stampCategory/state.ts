@@ -1,8 +1,8 @@
 import { StampCategory } from '@/lib/stampCategorizer'
 
 export interface S {
-  traQStampCategory: StampCategory
-  unicodeStampCategories: StampCategory[]
+  traQStampCategory: Readonly<StampCategory>
+  unicodeStampCategories: readonly StampCategory[]
 }
 
 export const state: S = {

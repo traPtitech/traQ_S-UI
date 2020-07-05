@@ -10,8 +10,8 @@ type SimpleChannel = {
 
 const useChannelPath = () => {
   const channelPathToId = (
-    separatedPath: string[],
-    channelTree: ChannelTree | ChannelTreeNode
+    separatedPath: readonly string[],
+    channelTree: Readonly<ChannelTree | ChannelTreeNode>
   ): string => {
     if (separatedPath.length === 0) {
       throw 'channelPathToId: Empty path'

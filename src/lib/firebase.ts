@@ -179,7 +179,7 @@ export const connectFirebase = async () => {
       return
     }
 
-    messaging.onMessage(async (payload: NotificationPayload) => {
+    messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
       const notification = await notify(
         payload.data.title || 'traQ',
         payload.data

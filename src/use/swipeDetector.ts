@@ -22,7 +22,7 @@ export interface SwipeDetectorState {
   isStartingSwipe: boolean
 }
 
-const isHorizontalScrollable = (e: TouchEvent) => {
+const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
   if (!e.target) return false
 
   let inspectingTarget = e.target as HTMLElement
@@ -54,7 +54,7 @@ const useSwipeDetector = () => {
     isStartingSwipe: false
   })
 
-  const touchstartHandler = (e: TouchEvent) => {
+  const touchstartHandler = (e: Readonly<TouchEvent>) => {
     if (e.touches.length !== 1) return
     if (isHorizontalScrollable(e)) return
     const x = e.touches[0].clientX
@@ -66,7 +66,7 @@ const useSwipeDetector = () => {
     state.isStartingSwipe = true
   }
 
-  const touchendHandler = (_: TouchEvent) => {
+  const touchendHandler = (_: Readonly<TouchEvent>) => {
     state.lastTouchPosX = -1
     state.lastTouchPosY = -1
     state.isStartingSwipe = false
@@ -74,7 +74,7 @@ const useSwipeDetector = () => {
   }
 
   /** 横方向へのスワイプを開始するか判定する */
-  const checkSwipeStarted = (e: TouchEvent) => {
+  const checkSwipeStarted = (e: Readonly<TouchEvent>) => {
     if (
       e.touches.length !== 1 ||
       state.lastTouchPosX < 0 ||
@@ -97,7 +97,7 @@ const useSwipeDetector = () => {
       : 'left'
   }
 
-  const touchmoveHandler = (e: TouchEvent) => {
+  const touchmoveHandler = (e: Readonly<TouchEvent>) => {
     if (state.isStartingSwipe) {
       checkSwipeStarted(e)
       return

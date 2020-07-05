@@ -6,13 +6,13 @@ export interface Dimensions {
   height: number
 }
 
-export const needResize = ({ width, height }: Dimensions) =>
+export const needResize = ({ width, height }: Readonly<Dimensions>) =>
   MAX_WIDTH < width || MAX_HEIGHT < height
 
 export const getThumbnailDimensions = ({
   width,
   height
-}: Dimensions): Dimensions => {
+}: Readonly<Dimensions>): Dimensions => {
   const widthRatio = width / MAX_WIDTH
   const heightRatio = height / MAX_HEIGHT
   const ratio = Math.max(widthRatio, heightRatio)

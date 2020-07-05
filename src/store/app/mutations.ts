@@ -12,7 +12,7 @@ export const mutations = defineMutations<S>()({
   setInitialFetchCompleted(state: S) {
     state.initialFetchCompleted = true
   },
-  setVersion(state: S, version: Version) {
+  setVersion(state: S, version: Readonly<Version>) {
     state.version = version
   }
   // TODO: テーマの変更

@@ -1,4 +1,6 @@
-export const convertToDataUrl = (file: File): Promise<string | null> => {
+export const convertToDataUrl = (
+  file: Readonly<File>
+): Promise<string | null> => {
   const reader = new FileReader()
   reader.readAsDataURL(file)
   return new Promise(resolve => {

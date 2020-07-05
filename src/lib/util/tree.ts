@@ -9,7 +9,7 @@ interface Tree<T> {
  * @param f 条件を満たすかの関数
  * @param includeParent 親が条件を満たしてもよいかどうか
  */
-export const deepSome = <T extends Tree<T>>(
+export const deepSome = <T extends Readonly<Tree<T>>>(
   tree: T,
   f: (tree: T) => boolean,
   includeParent = false

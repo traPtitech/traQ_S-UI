@@ -4,7 +4,9 @@ import { blobAsArrayBuffer } from './blob'
 
 type Orientaion = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
-export const getOrientation = async (file: File): Promise<Orientaion> => {
+export const getOrientation = async (
+  file: Readonly<File>
+): Promise<Orientaion> => {
   const buffer = await blobAsArrayBuffer(file)
   const dv = new DataView(buffer)
   let app1MarkerStart = 2
@@ -36,7 +38,7 @@ export const needDimentionSwap = (orientation: Orientaion) =>
 export const resetAndSetRotatedImgToCanvas = (
   $canvas: HTMLCanvasElement,
   { width, height }: Dimensions,
-  $img: HTMLImageElement,
+  $img: Readonly<HTMLImageElement>,
   orientation: Orientaion
 ) => {
   if (needDimentionSwap(orientation)) {

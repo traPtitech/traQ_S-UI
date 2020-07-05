@@ -1,4 +1,6 @@
-export const blobAsArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
+export const blobAsArrayBuffer = (
+  blob: Readonly<Blob>
+): Promise<ArrayBuffer> => {
   if (blob.arrayBuffer) {
     return blob.arrayBuffer()
   }

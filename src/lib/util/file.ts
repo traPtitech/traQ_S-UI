@@ -19,7 +19,7 @@ export const isImage = (mime: string) => mimeToFileType(mime) === 'image'
 export const isVideo = (mime: string) => mimeToFileType(mime) === 'video'
 export const isAudio = (mime: string) => mimeToFileType(mime) === 'audio'
 export const isNonPreviewable = (
-  meta: Pick<FileInfo, 'mime' | 'thumbnail'>
+  meta: Readonly<Pick<FileInfo, 'mime' | 'thumbnail'>>
 ) => {
   const type = mimeToFileType(meta.mime)
   if (type === 'file') {

@@ -162,7 +162,7 @@ class traQRTCClient extends traQRTCClientBase {
   }
 
   get roomName() {
-    return this.room ? this.room.name : ''
+    return this.room?.name ?? ''
   }
 
   private async createPeer(peerId: string) {

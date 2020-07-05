@@ -8,12 +8,19 @@ import { PersistOptions } from 'vuex-persist'
 import { get as shvlGet, set as shvlSet } from 'shvl'
 import { AppStore } from '.'
 
+// https://github.com/microsoft/TypeScript/issues/17002
+declare global {
+  interface ArrayConstructor {
+    isArray(arg: unknown): arg is unknown[] | readonly unknown[]
+  }
+}
+
 interface DBPath {
   /**
    * `.`区切りのそのモジュールへのパス (ex. `app.browserSettings`)
    * あるいは`.`区切りのその値へのパスの配列 (ex. `domain.me.details`)
    */
-  path: string | string[]
+  path: string | ReadonlyArray<string>
 }
 
 const dbModulePaths: string[] = []

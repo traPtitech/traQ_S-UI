@@ -50,7 +50,10 @@ export const formatUrl = (text: string, embeddingOrigin: string) => {
   }
 }
 
-export const format = (inputTokens: Token[], embeddingOrigin: string) => {
+export const format = (
+  inputTokens: readonly Token[],
+  embeddingOrigin: string
+) => {
   const tokens = inputTokens.flatMap(token => {
     if (token.type === 'inline') return token.children || []
     return token

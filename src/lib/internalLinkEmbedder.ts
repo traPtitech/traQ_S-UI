@@ -16,17 +16,17 @@ interface UserAndGroupGetters {
   /**
    * nameは大文字小文字を無視する
    */
-  getUser: (userName: string) => Entity | undefined
+  getUser: (userName: string) => Readonly<Entity> | undefined
   /**
    * nameは大文字小文字を無視する
    */
-  getGroup: (groupName: string) => Entity | undefined
+  getGroup: (groupName: string) => Readonly<Entity> | undefined
 }
 interface ChannelGetter {
   /**
    * nameは大文字小文字を無視する
    */
-  getChannel: (channelPath: string) => Entity | undefined
+  getChannel: (channelPath: string) => Readonly<Entity> | undefined
 }
 
 export interface Entity {
@@ -37,7 +37,7 @@ export interface Entity {
  * コードブロックとLaTeXブロック内でない箇所の内部リンク埋め込みを行う
  * replacer.goのReplaceと同様のコード
  */
-export const replace = (m: string, getters: ReplaceGetters) => {
+export const replace = (m: string, getters: Readonly<ReplaceGetters>) => {
   let inCodeBlock = false
   let inLatexBlock = false
   let codeTokenLength = defaultCodeTokenLength
@@ -108,11 +108,11 @@ export const replace = (m: string, getters: ReplaceGetters) => {
   return newLines.join('\n')
 }
 
-const replaceAll = (m: string, getters: ReplaceGetters) => {
+const replaceAll = (m: string, getters: Readonly<ReplaceGetters>) => {
   return replaceMention(replaceChannel(m, getters), getters)
 }
 
-const replaceMention = (m: string, getters: UserAndGroupGetters) => {
+const replaceMention = (m: string, getters: Readonly<UserAndGroupGetters>) => {
   return m.replace(mentionRegex, s => {
     // 始まりが:なものを除外
     if (s.startsWith(':')) {
@@ -145,7 +145,7 @@ const replaceMention = (m: string, getters: UserAndGroupGetters) => {
   })
 }
 
-const replaceChannel = (m: string, getter: ChannelGetter) => {
+const replaceChannel = (m: string, getter: Readonly<ChannelGetter>) => {
   return m.replace(channelRegex, s => {
     // .slice(1)は先頭の#を消すため
     // 小文字化はgetter内で行う
