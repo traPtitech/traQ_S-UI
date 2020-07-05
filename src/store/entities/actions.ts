@@ -8,7 +8,8 @@ import {
   TagId,
   MessageId,
   ChannelId,
-  ClipFolderId
+  ClipFolderId,
+  ExternalUrl
 } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 
@@ -180,5 +181,15 @@ export const actions = defineActions({
     const res = await apis.getClipFolder(id)
     commit.addClipFolder({ id, entity: res.data })
     return res.data
+  },
+  async fetchOgpData(context, url: ExternalUrl) {
+    const { commit } = entitiesActionContext(context)
+    const res = await apis.getOgp(url)
+
+    try {
+      // 比較的例外起こしやすいのでここで取る
+      commit.addOgpData({ id: url, entity: res.data })
+      return res.data
+    } catch {}
   }
 })

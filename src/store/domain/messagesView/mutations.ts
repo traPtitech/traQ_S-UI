@@ -5,7 +5,8 @@ import { S } from './state'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import store from '@/store'
 import useCurrentChannelPath from '@/use/currentChannelPath'
-import { Embedding } from '@traptitech/traq-markdown-it'
+
+import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it/dist/embeddingExtractor'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
@@ -76,7 +77,7 @@ export const mutations = defineMutations<S>()({
   },
   addEmbedding(
     state,
-    payload: { messageId: MessageId; embeddings: Embedding[] }
+    payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
   ) {
     Vue.set(state.embeddingsMap, payload.messageId, payload.embeddings)
   },
