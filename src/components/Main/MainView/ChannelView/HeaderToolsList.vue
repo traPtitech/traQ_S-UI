@@ -14,8 +14,8 @@
       <header-tools-item
         v-if="isForcedChannel"
         :class="$style.notificationIcon"
-        data-state="notified"
-        icon-name="notified"
+        data-state="forced"
+        icon-name="forced"
         disabled
         tooltip="強制通知チャンネル"
       />
