@@ -44,8 +44,7 @@
         @click="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="none"
-        icon-mdi
-        icon-name="bell-outline"
+        icon-name="not-subscribed"
         tooltip="未購読チャンネル"
       />
     </template>
