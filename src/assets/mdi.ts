@@ -56,7 +56,8 @@ import {
   mdiInformation,
   mdiAlert,
   mdiChevronUp,
-  mdiArchive
+  mdiArchive,
+  mdiPlay
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -121,7 +122,8 @@ const mdi: MdiIconsMapping = {
   'comment-quote': mdiCommentQuote,
   info: mdiInformation,
   alert: mdiAlert,
-  archive: mdiArchive
+  archive: mdiArchive,
+  play: mdiPlay
 }
 
 export default mdi
