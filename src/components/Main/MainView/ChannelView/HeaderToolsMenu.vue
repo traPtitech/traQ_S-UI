@@ -19,7 +19,7 @@
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
       @click.native="emit('click-notification')"
-      icon-name="notified"
+      icon-name="notified-or-subscribed"
       label="通知設定"
     />
     <header-tools-menu-item

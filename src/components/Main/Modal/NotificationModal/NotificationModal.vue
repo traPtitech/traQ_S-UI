@@ -2,7 +2,7 @@
   <modal-frame
     title="通知設定"
     :subtitle="`#${currentChannelPathString}`"
-    icon-name="notified"
+    icon-name="notified-or-subscribed"
   >
     <modal-section title="自分の通知設定">
       <notification-state-selector />
