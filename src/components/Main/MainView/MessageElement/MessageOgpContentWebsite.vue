@@ -30,9 +30,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    imageUrl: {
-      type: String
-    },
+    imageUrl: String,
     title: {
       type: String,
       default: ''
