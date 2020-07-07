@@ -1,6 +1,7 @@
 <template>
   <transition name="typing-users">
     <div v-if="typingUsers.length > 0" :class="$style.container">
+      <message-input-typing-animation />
       <div :class="$style.text">
         {{ text }}
       </div>
@@ -21,6 +22,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api'
 import { UserId } from '@/types/entity-ids'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
+import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
 
 export default defineComponent({
   name: 'MessageInputTypingUsers',
@@ -41,6 +43,7 @@ export default defineComponent({
     return { text }
   },
   components: {
+    MessageInputTypingAnimation,
     UserIconEllipsisList
   }
 })
@@ -54,10 +57,11 @@ export default defineComponent({
   transform: translateY(-100%);
   display: flex;
   flex-direction: row-reverse;
+  align-items: center;
 }
 
 .text {
   @include color-text-secondary;
-  margin-left: 4px;
+  margin: 0 4px;
 }
 </style>
