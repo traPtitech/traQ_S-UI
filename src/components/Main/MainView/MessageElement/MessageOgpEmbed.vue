@@ -38,9 +38,7 @@ export default defineComponent({
   name: 'MessageOgpContentEmbed',
   components: { Icon },
   props: {
-    previewUrl: {
-      type: String
-    },
+    previewUrl: String,
     embeddedUrl: {
       type: String,
       required: true
