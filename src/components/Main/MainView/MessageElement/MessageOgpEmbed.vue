@@ -49,7 +49,7 @@ export default defineComponent({
     },
     aspectRatio: {
       type: Number,
-      default: 0.5625
+      default: 9 / 16
     }
   },
   setup(props, context) {
