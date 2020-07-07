@@ -93,8 +93,6 @@ export default defineComponent({
   .container:hover & {
     opacity: 1;
   }
-  position: relative;
-  cursor: pointer;
   &::before {
     content: '';
     display: block;
@@ -117,5 +115,6 @@ export default defineComponent({
   justify-content: center;
   width: 3rem;
   height: 3rem;
+  cursor: pointer;
 }
 </style>
