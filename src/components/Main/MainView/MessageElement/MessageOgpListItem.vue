@@ -65,7 +65,6 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-secondary;
-  padding: 1rem;
   border-radius: 4px;
   overflow: hidden;
   width: max-content;

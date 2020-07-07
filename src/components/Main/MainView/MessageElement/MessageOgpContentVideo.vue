@@ -4,10 +4,10 @@
       :preview-url="previewUrl"
       :embedded-url="embeddedUrl"
       :class="$style.video"
-      @click.prevent
+      @click.prevent.stop
       show-play-icon
     />
-    <a :href="url" target="_blank">
+    <a :href="url" target="_blank" :class="$style.description">
       <message-ogp-description
         :url="url"
         :title="title"
@@ -55,10 +55,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  width: 400px;
+  width: 27rem;
   max-width: 100%;
 }
-.video {
-  margin-bottom: 1rem;
+.description {
+  display: block;
+  padding: 1rem;
 }
 </style>

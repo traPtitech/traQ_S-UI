@@ -2,6 +2,7 @@
   <a :href="url" :class="$style.container" target="_blank">
     <div :class="$style.image" :style="styles.image" v-if="imageUrl"></div>
     <message-ogp-description
+      :class="$style.description"
       :url="url"
       :title="title"
       :description="description"
@@ -51,23 +52,20 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
-  width: 500px;
+  width: 35rem;
   max-width: 100%;
 }
 .image {
   width: 10rem;
   flex-shrink: 0;
   flex-grow: 0;
-  margin: {
-    top: -1rem;
-    bottom: -1rem;
-    left: -1rem;
-    right: 1rem;
-  }
   background: {
     size: cover;
     repeat: no-repeat;
     position: center;
   }
+}
+.description {
+  padding: 1rem;
 }
 </style>
