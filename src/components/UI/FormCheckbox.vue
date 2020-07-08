@@ -65,7 +65,8 @@ export default defineComponent({
 
 .checkbox {
   position: absolute;
-  z-index: $z-index-hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pseudoCheckbox {
