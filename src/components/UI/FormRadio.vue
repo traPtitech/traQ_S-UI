@@ -77,7 +77,8 @@ export default defineComponent({
 
 .radio {
   position: absolute;
-  z-index: $z-index-hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pseudoRadio {
