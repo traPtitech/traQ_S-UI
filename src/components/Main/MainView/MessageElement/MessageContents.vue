@@ -34,7 +34,6 @@
       />
       <message-ogp-list
         v-if="embeddingsState.externalUrls.length > 0"
-        :class="$style.messageEmbeddingsList"
         :external-urls="embeddingsState.externalUrls"
       />
     </div>
