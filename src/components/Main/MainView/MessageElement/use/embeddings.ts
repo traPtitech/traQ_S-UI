@@ -18,8 +18,12 @@ const useEmbeddings = (props: { messageId: MessageId }) => {
     quoteMessageIds: computed(
       () => embeddingsMap.value?.filter(isMessage).map(e => e.id) ?? []
     ),
-    externalUrls: computed(
-      () => embeddingsMap.value?.filter(isExternalUrl).map(e => e.url) ?? []
+    externalUrls: computed(() =>
+      Array.from(
+        new Set(
+          embeddingsMap.value?.filter(isExternalUrl).map(e => e.url) ?? []
+        )
+      )
     )
   })
   return { embeddingsState: state }
