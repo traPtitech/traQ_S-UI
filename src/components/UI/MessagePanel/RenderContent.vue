@@ -34,11 +34,11 @@ import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
-import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import {
+  MarkdownRenderResult,
   EmbeddingOrUrl,
   EmbeddingFile
-} from '@traptitech/traq-markdown-it/dist/embeddingExtractor'
+} from '@traptitech/traq-markdown-it'
 
 const isFile = (e: EmbeddingOrUrl): e is EmbeddingFile => e.type === 'file'
 

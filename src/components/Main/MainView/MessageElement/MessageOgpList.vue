@@ -12,13 +12,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
 import MessageOgpListItem from './MessageOgpListItem.vue'
-import { Ogp } from '@traptitech/traq'
 import store from '@/store'
+import { isDefined } from '@/lib/util/array'
 
 const useOgpData = (props: { externalUrls: string[] }) => {
   const ogpData = props.externalUrls
     .map(url => store.state.entities.ogpData[url])
-    .filter((o): o is Ogp => !!o)
+    .filter(isDefined)
   return { ogpData }
 }
 

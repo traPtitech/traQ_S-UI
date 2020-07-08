@@ -5,8 +5,7 @@ import { S } from './state'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import store from '@/store'
 import useCurrentChannelPath from '@/use/currentChannelPath'
-
-import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it/dist/embeddingExtractor'
+import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
