@@ -55,6 +55,7 @@ export default defineComponent({
 }
 .image {
   width: 10rem;
+  max-width: 25vw;
   flex-shrink: 0;
   flex-grow: 0;
   background: {

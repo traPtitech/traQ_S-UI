@@ -34,13 +34,8 @@ import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
-import {
-  MarkdownRenderResult,
-  EmbeddingOrUrl,
-  EmbeddingFile
-} from '@traptitech/traq-markdown-it'
-
-const isFile = (e: EmbeddingOrUrl): e is EmbeddingFile => e.type === 'file'
+import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import { isFile } from '@/lib/util/guard/embeddingOrUrl'
 
 export default defineComponent({
   name: 'RenderContent',
