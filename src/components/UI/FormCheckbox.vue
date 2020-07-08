@@ -65,6 +65,8 @@ export default defineComponent({
 
 .checkbox {
   position: absolute;
+  bottom: 0;
+  right: 0;
   opacity: 0;
   pointer-events: none;
 }
