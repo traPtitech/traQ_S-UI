@@ -1,6 +1,6 @@
 import { MessageId, ChannelId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
-import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it/dist/embeddingExtractor'
+import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
