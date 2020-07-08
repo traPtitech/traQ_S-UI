@@ -57,6 +57,7 @@ export default defineComponent({
   cursor: pointer;
   user-select: none;
   &:hover {
+    // TODO
     @include background-secondary;
   }
 }

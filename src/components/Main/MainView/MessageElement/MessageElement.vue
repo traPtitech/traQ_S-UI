@@ -124,16 +124,37 @@ $messagePaddingMobile: 16px;
   &[data-is-mobile='true'] {
     padding: 8px $messagePaddingMobile;
   }
-  &[data-is-pinned] {
-    background: $common-background-pin;
-  }
-  &[data-is-entry] {
-    // TODO: 色を正しくする
-    background: $common-background-pin;
-  }
-  &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
-    // TODO: 色を正しくする
-    background: $theme-background-secondary;
+
+  &:not([data-is-editing]) {
+    &:hover,
+    &[data-is-pinned],
+    &[data-is-entry] {
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        opacity: 0.1;
+        z-index: -1;
+      }
+    }
+
+    &:hover::before {
+      background: $theme-ui-primary;
+    }
+    &[data-is-pinned],
+    &[data-is-entry] {
+      &::before {
+        background: $common-background-pin;
+        opacity: 1;
+      }
+      &:hover::before {
+        opacity: 0.7;
+      }
+    }
   }
 }
 

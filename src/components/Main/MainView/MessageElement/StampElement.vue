@@ -106,10 +106,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
-  @include background-tertiary;
-  &[data-include-me] {
-    background: $theme-accent-primary--03;
-  }
+  position: relative;
   display: inline-flex;
   flex-shrink: 0;
   height: 24px;
@@ -120,6 +117,22 @@ export default defineComponent({
   user-select: none;
   overflow: hidden;
   contain: content;
+
+  &::before {
+    @include background-tertiary;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
+  &[data-include-me]::before {
+    background: $theme-accent-primary;
+    opacity: 0.3;
+  }
 }
 
 .icon {
@@ -141,16 +154,18 @@ export default defineComponent({
 }
 
 .count {
-  color: $theme-ui-primary--06;
-  .body[data-include-me] &,
-  .body:hover & {
-    @include color-ui-primary;
-  }
+  @include color-ui-primary;
   @include size-body2;
   font-weight: bold;
   margin: {
     left: 6px;
     right: 4px;
+  }
+
+  opacity: 0.6;
+  .body[data-include-me] &,
+  .body:hover & {
+    opacity: 1;
   }
 }
 </style>

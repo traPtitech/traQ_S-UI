@@ -221,6 +221,7 @@ export default defineComponent({
     bottom: 12px;
   }
   &:not([aria-selected='true']):hover {
+    // TODO
     @include background-tertiary;
   }
 }

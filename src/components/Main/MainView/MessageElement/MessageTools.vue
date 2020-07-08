@@ -173,6 +173,7 @@ export default defineComponent({
   cursor: pointer;
   &:hover {
     @include background-secondary;
+    // TODO
   }
 }
 
@@ -182,6 +183,7 @@ export default defineComponent({
   user-select: none;
   &:hover {
     @include background-secondary;
+    // TODO
   }
 }
 </style>
