@@ -10,3 +10,4 @@ export type FileId = string
 export type ClipFolderId = string
 export type TagId = string
 export type OAuthClientId = string
+export type ExternalUrl = string

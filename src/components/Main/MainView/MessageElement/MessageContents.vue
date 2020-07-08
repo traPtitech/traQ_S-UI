@@ -32,6 +32,10 @@
         :class="$style.messageEmbeddingsList"
         :file-ids="embeddingsState.fileIds"
       />
+      <message-ogp-list
+        v-if="embeddingsState.externalUrls.length > 0"
+        :external-urls="embeddingsState.externalUrls"
+      />
     </div>
   </div>
 </template>
@@ -51,6 +55,7 @@ import MessageHeader from './MessageHeader.vue'
 import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
+import MessageOgpList from './MessageOgpList.vue'
 import useEmbeddings from './use/embeddings'
 
 export default defineComponent({
@@ -60,7 +65,8 @@ export default defineComponent({
     MessageHeader,
     MessageEditor,
     MessageFileList,
-    MessageQuoteList
+    MessageQuoteList,
+    MessageOgpList
   },
   props: {
     messageId: {
