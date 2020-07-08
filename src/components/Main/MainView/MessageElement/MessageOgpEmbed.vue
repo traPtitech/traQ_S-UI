@@ -52,7 +52,7 @@ export default defineComponent({
       default: 9 / 16
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { isContentShown, showContent } = usePreviewState()
     const styles = useStyles(props)
     return {
