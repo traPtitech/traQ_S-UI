@@ -6,6 +6,19 @@ import {
   isMessage,
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
+import config from '@/config'
+import { ExternalUrl } from '@traptitech/traq-markdown-it'
+
+const ignoredHostNamesSet = new Set<string>(config.ogpIgnoreHostNames)
+
+const isIncludedHost = (url: ExternalUrl) => {
+  try {
+    const hostName = new URL(url.url).hostname
+    return !ignoredHostNamesSet.has(hostName)
+  } catch {
+    return false // 不正なURL
+  }
+}
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
   const embeddingsMap = computed(
@@ -21,7 +34,10 @@ const useEmbeddings = (props: { messageId: MessageId }) => {
     externalUrls: computed(() =>
       Array.from(
         new Set(
-          embeddingsMap.value?.filter(isExternalUrl).map(e => e.url) ?? []
+          embeddingsMap.value
+            ?.filter(isExternalUrl)
+            .filter(isIncludedHost)
+            .map(e => e.url) ?? []
         )
       )
     )
