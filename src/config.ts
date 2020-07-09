@@ -73,5 +73,19 @@ export default {
       iconName: 'services/bot-console',
       appLink: 'https://bot-console.trap.jp/'
     }
+  ],
+  ogpIgnoreHostNames: [
+    'wiki.trap.jp',
+    'git.trap.jp',
+    'md.trap.jp',
+    'drive.trap.jp',
+    'anke-to.trap.jp',
+    'booq.trap.jp',
+    'knoq.trap.jp',
+    'wiki.trapti.tech',
+    'git.trapti.tech',
+    'md.trapti.tech',
+    'drive.trapti.tech',
+    'showcase.trapti.tech'
   ]
 } as const
