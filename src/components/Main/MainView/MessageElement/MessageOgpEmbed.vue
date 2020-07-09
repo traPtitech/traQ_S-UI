@@ -4,6 +4,8 @@
       v-if="!previewUrl || isContentShown"
       :src="embeddedUrl"
       :class="$style.content"
+      allowfullscreen
+      allow="fullscreen; autoplay; encrypted-media; picture-in-picture"
     />
     <template v-else>
       <img :src="previewUrl" :class="$style.image" />
