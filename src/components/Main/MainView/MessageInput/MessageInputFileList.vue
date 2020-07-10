@@ -39,7 +39,6 @@ export default defineComponent({
   display: flex;
   padding-top: 4px;
   padding-bottom: 6px;
-  margin-bottom: 8px;
   overflow-x: scroll;
 }
 .element {

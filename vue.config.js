@@ -83,6 +83,15 @@ module.exports = {
           purpose: 'maskable'
         }
       ],
+      share_target: {
+        action: '/share-target',
+        method: 'GET',
+        params: {
+          title: 'title',
+          text: 'text',
+          url: 'url'
+        }
+      },
       gcm_sender_id: '103953800507'
     },
     iconPaths: {

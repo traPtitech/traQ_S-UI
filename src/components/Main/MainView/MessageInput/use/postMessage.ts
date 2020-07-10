@@ -34,7 +34,7 @@ const uploadAttachments = async (
 }
 
 const usePostMessage = (
-  textState: TextState,
+  textState: Pick<TextState, 'text' | 'isEmpty'>,
   props: { channelId: ChannelId }
 ) => {
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
@@ -54,12 +54,12 @@ const usePostMessage = (
   const progress = ref(0)
 
   const postMessage = async () => {
-    if (isPosting.value) return
-    if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return
+    if (isPosting.value) return false
+    if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
-      return
+      return false
     }
 
     const embededText = embedInternalLink(textState.text, {
@@ -78,6 +78,7 @@ const usePostMessage = (
       }
     })
 
+    let posted = false
     try {
       isPosting.value = true
 
@@ -97,6 +98,7 @@ const usePostMessage = (
 
       textState.text = ''
       store.commit.ui.fileInput.clearAttachments()
+      posted = true
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('メッセージ送信に失敗しました', e)
@@ -109,6 +111,7 @@ const usePostMessage = (
       isPosting.value = false
       progress.value = 0
     }
+    return posted
   }
   return { postMessage, isPosting, progress }
 }
