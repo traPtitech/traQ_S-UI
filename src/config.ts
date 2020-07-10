@@ -97,5 +97,10 @@ export default {
    * ログイン画面での「パスワードを忘れた」のリンク
    * undefinedにするとリンクが表示されない
    */
-  passwordResetLink: 'https://portal.trap.jp/reset-password'
+  passwordResetLink: 'https://portal.trap.jp/reset-password',
+  /**
+   * 内部用認証機構へのリダイレクト
+   * 通常は`false`
+   */
+  pipelineEnabled: true
 } as const
