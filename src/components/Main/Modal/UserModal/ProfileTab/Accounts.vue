@@ -36,6 +36,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
+import config from '@/config'
 
 export default defineComponent({
   name: 'Accounts',
@@ -58,7 +59,8 @@ export default defineComponent({
       () => store.getters.app.themeSettings.currentTheme.background.primary
     )
 
-    const showWikiPageLink = computed(() => location.host === 'q.trap.jp') // 簡易的にhost名で分岐させてる
+    const { wikiPageOrigin } = config
+    const showWikiPageLink = wikiPageOrigin !== undefined
     const wikiPageName = computed(() => {
       if (props.bot) {
         return `bot/${props.name.replace(/^BOT_/, '')}`
@@ -66,7 +68,7 @@ export default defineComponent({
       return `user/${props.name}`
     })
     const wikiPageLink = computed(
-      () => `https://wiki.trap.jp/${wikiPageName.value}`
+      () => `${wikiPageOrigin}/${wikiPageName.value}`
     )
     const twitterLink = computed(
       () => `https://twitter.com/${props.twitterId ?? ''}`

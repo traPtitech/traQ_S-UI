@@ -87,5 +87,10 @@ export default {
     'md.trapti.tech',
     'drive.trapti.tech',
     'showcase.trapti.tech'
-  ]
+  ],
+  /**
+   * Wikiのユーザーページへのリンク
+   * undefinedにするとリンクが表示されない
+   */
+  wikiPageOrigin: 'https://wiki.trap.jp'
 } as const
