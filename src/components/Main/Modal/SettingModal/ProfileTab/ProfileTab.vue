@@ -36,11 +36,6 @@
       <h3>Twitter</h3>
       <form-input v-model="state.twitterId" prefix="@" :class="$style.form" />
     </div>
-    <p v-if="showChangeLink">
-      パスワードの変更は
-      <a :href="changeLink" target="_blank">{{ changeName }}</a>
-      から可能です
-    </p>
     <div :class="$style.updater">
       <form-button
         label="更新"
@@ -49,6 +44,7 @@
         @click="onUpdateClick"
       />
     </div>
+    <password :class="$style.element" />
   </section>
 </template>
 
@@ -73,7 +69,7 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { compareStringInsensitive } from '@/lib/util/string'
-import config from '@/config'
+import Password from './Password.vue'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -179,9 +175,6 @@ export default defineComponent({
       destroyImageUploadState
     )
 
-    const { changeLink, changeName } = config.auth
-    const showChangeLink = changeLink !== undefined && changeName !== undefined
-
     return {
       detail,
       channelOptions,
@@ -191,9 +184,6 @@ export default defineComponent({
       onNewDestroyed,
       isChanged,
       isUpdating,
-      changeLink,
-      changeName,
-      showChangeLink,
       onUpdateClick
     }
   },
@@ -202,7 +192,8 @@ export default defineComponent({
     ImageUpload,
     FormInput,
     FormSelector,
-    FormButton
+    FormButton,
+    Password
   }
 })
 </script>
