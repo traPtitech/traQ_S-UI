@@ -36,13 +36,6 @@
       <h3>Twitter</h3>
       <form-input v-model="state.twitterId" prefix="@" :class="$style.form" />
     </div>
-    <p>
-      パスワードの変更は
-      <a href="https://portal.trap.jp/" target="_blank">
-        traPortal
-      </a>
-      から可能です
-    </p>
     <div :class="$style.updater">
       <form-button
         label="更新"
@@ -51,6 +44,7 @@
         @click="onUpdateClick"
       />
     </div>
+    <password :class="$style.element" />
   </section>
 </template>
 
@@ -75,6 +69,7 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { compareStringInsensitive } from '@/lib/util/string'
+import Password from './Password.vue'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -197,7 +192,8 @@ export default defineComponent({
     ImageUpload,
     FormInput,
     FormSelector,
-    FormButton
+    FormButton,
+    Password
   }
 })
 </script>

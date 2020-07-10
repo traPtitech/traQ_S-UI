@@ -1,10 +1,11 @@
+import config from '@/config'
+
 /**
  * pipelineにリダイレクトが必要な場合リダイレクトする
  * リダイレクトした場合はtrueを返す
  */
 export const redirectToPipelineIfNeeded = () => {
-  // 簡易的にhost名で分岐させてる
-  if (location.host !== 'q.trap.jp') {
+  if (!config.pipelineEnabled) {
     return false
   }
 

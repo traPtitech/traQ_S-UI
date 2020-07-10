@@ -13,6 +13,8 @@
         :id="id"
         :type="type"
         :value="value"
+        :name="name"
+        :autocomplete="autocomplete"
         :placeholder="placeholder"
         :step="step"
         @input="onInput"
@@ -49,6 +51,8 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    name: String,
+    autocomplete: String,
     label: String,
     prefix: String,
     suffix: String,
