@@ -16,8 +16,8 @@
         @input="setPass"
       />
       <a
-        v-if="passwordResetLink !== undefined"
-        :href="passwordResetLink"
+        v-if="resetLink !== undefined"
+        :href="resetLink"
         :class="$style.forgotPassword"
       >
         パスワードを忘れた
@@ -94,13 +94,13 @@ export default defineComponent({
       context
     )
     const isIOS = isIOSApp()
-    const { passwordResetLink } = config
+    const { resetLink } = config.auth
     const externalLogin = computed(
       () => store.state.app.version.flags.externalLogin
     )
 
     return {
-      passwordResetLink,
+      resetLink,
       loginState,
       setName,
       setPass,

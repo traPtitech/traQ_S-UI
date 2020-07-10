@@ -93,11 +93,23 @@ export default {
    * undefinedにするとリンクが表示されない
    */
   wikiPageOrigin: 'https://wiki.trap.jp',
-  /**
-   * ログイン画面での「パスワードを忘れた」のリンク
-   * undefinedにするとリンクが表示されない
-   */
-  passwordResetLink: 'https://portal.trap.jp/reset-password',
+  auth: {
+    /**
+     * ログイン画面での「パスワードを忘れた」のリンク
+     * undefinedにするとリンクが表示されない
+     */
+    resetLink: 'https://portal.trap.jp/reset-password',
+    /**
+     * 設定画面での「パスワードは～から可能です」のリンク
+     * undefinedにするとリンクが表示されない
+     */
+    changeLink: 'https://portal.trap.jp',
+    /**
+     * 設定画面での「パスワードは～から可能です」の「～」の表示
+     * undefinedにするとリンクが表示されない
+     */
+    changeName: 'traPortal'
+  },
   /**
    * 内部用認証機構へのリダイレクト
    * 通常は`false`
