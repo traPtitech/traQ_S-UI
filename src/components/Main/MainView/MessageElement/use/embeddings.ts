@@ -31,15 +31,16 @@ const useEmbeddings = (props: { messageId: MessageId }) => {
     quoteMessageIds: computed(
       () => embeddingsMap.value?.filter(isMessage).map(e => e.id) ?? []
     ),
-    externalUrls: computed(() =>
-      Array.from(
-        new Set(
-          embeddingsMap.value
-            ?.filter(isExternalUrl)
-            .filter(isIncludedHost)
-            .map(e => e.url) ?? []
-        )
-      )
+    externalUrls: computed(
+      () =>
+        Array.from(
+          new Set(
+            embeddingsMap.value
+              ?.filter(isExternalUrl)
+              .filter(isIncludedHost)
+              .map(e => e.url) ?? []
+          )
+        ).slice(0, 2) // OGPが得られるかにかかわらず2個に制限
     )
   })
   return { embeddingsState: state }
