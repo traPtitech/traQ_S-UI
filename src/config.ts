@@ -92,5 +92,10 @@ export default {
    * Wikiのユーザーページへのリンク
    * undefinedにするとリンクが表示されない
    */
-  wikiPageOrigin: 'https://wiki.trap.jp'
+  wikiPageOrigin: 'https://wiki.trap.jp',
+  /**
+   * ログイン画面での「パスワードを忘れた」のリンク
+   * undefinedにするとリンクが表示されない
+   */
+  passwordResetLink: 'https://portal.trap.jp/reset-password'
 } as const
