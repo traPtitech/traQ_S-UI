@@ -10,16 +10,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import MessageOgpListItem from './MessageOgpListItem.vue'
 import store from '@/store'
 import { isDefined } from '@/lib/util/array'
 
 const useOgpData = (props: { externalUrls: string[] }) => {
-  const ogpData = props.externalUrls
-    .map(url => store.state.entities.ogpData[url])
-    .filter(isDefined)
-    .filter(o => o.title)
+  const ogpData = computed(() =>
+    props.externalUrls
+      .map(url => store.state.entities.ogpData[url])
+      .filter(isDefined)
+      .filter(o => o.title)
+  )
   return { ogpData }
 }
 
