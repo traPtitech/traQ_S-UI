@@ -1,10 +1,18 @@
 <template>
   <div :class="$style.container">
-    <!-- TODO: DMタイムライン
-    <navigation-content-container subtitle="ダイレクトメッセージ">
-      <empty-state>Not Implemented</empty-state>
+    <navigation-content-container
+      subtitle="未読ダイレクトメッセージ"
+      v-if="usersWithNotification.length > 0"
+    >
+      <div :class="$style.dmActivity">
+        <d-m-activity-element
+          v-for="user in usersWithNotification"
+          :key="user.id"
+          :user-id="user"
+          :class="$style.dmActivityElement"
+        />
+      </div>
     </navigation-content-container>
-    -->
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
         :text="userListFilterState.query"
@@ -36,7 +44,6 @@
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
-import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
@@ -45,6 +52,20 @@ import useTextFilter from '@/use/textFilter'
 import { isDefined } from '@/lib/util/array'
 import { ActiveUser } from '@/lib/user'
 import { ActiveUserMap } from '@/store/entities'
+import DMActivityElement from './DMActivityElement.vue'
+
+const useUsersWithNotification = () => {
+  const usersWithNotification = computed(() =>
+    Object.values(store.state.domain.me.unreadChannelsSet)
+      .sort((a, b) =>
+        Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
+      )
+      .map(unread => store.state.entities.dmChannels[unread.channelId ?? ''])
+      .filter(isDefined)
+      .map(({ userId }) => userId)
+  )
+  return usersWithNotification
+}
 
 interface UsersGradeList {
   gradeName: string
@@ -115,16 +136,18 @@ const useUserListFilter = () => {
 export default defineComponent({
   name: 'Users',
   components: {
-    EmptyState,
+    DMActivityElement,
     NavigationContentContainer,
     UsersElement,
     UsersGradeList,
     FilterInput
   },
   setup() {
+    const usersWithNotification = useUsersWithNotification()
     const userLists = useListByGradeName()
     const { userListFilterState, setQuery } = useUserListFilter()
     return {
+      usersWithNotification,
       userLists,
       userListFilterState,
       setQuery
@@ -136,6 +159,18 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 0 16px 0 0;
+}
+.dmActivity {
+  margin-bottom: 8px;
+}
+.dmActivityElement {
+  margin: 8px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .element {
   margin: 8px 0;
