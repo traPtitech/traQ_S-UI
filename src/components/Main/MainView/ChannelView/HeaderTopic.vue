@@ -1,6 +1,6 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <div :class="$style.topic">{{ topic }}</div>
+    <div :class="$style.topic" :title="tooltip">{{ topic }}</div>
   </div>
 </template>
 
@@ -21,7 +21,13 @@ export default defineComponent({
     const topic = computed(
       () => store.state.entities.channels[props.channelId]?.topic
     )
-    return { topic }
+    const tooltip = computed(
+      () => store.state.entities.channels[props.channelId]?.topic
+    )
+    return {
+      topic,
+      tooltip
+    }
   }
 })
 </script>
