@@ -14,8 +14,8 @@
       <header-tools-item
         v-if="isForcedChannel"
         :class="$style.notificationIcon"
-        data-state="notified"
-        icon-name="notified"
+        data-state="forced"
+        icon-name="forced"
         disabled
         tooltip="強制通知チャンネル"
       />
@@ -44,8 +44,7 @@
         @click="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="none"
-        icon-mdi
-        icon-name="bell-outline"
+        icon-name="not-subscribed"
         tooltip="未購読チャンネル"
       />
     </template>

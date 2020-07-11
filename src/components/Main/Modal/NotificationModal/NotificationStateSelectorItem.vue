@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+    <icon :class="$style.icon" :name="iconName" />
     <span :class="$style.title">{{ title }}</span>
     <span :class="$style.description">{{ description }}</span>
   </div>
@@ -25,12 +25,7 @@ const descriptionMap: Record<ChannelSubscribeLevel, string> = {
 const iconNameMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.notified]: 'notified',
   [ChannelSubscribeLevel.subscribed]: 'subscribed',
-  [ChannelSubscribeLevel.none]: 'bell-outline'
-}
-const iconMdiMap: Record<ChannelSubscribeLevel, boolean> = {
-  [ChannelSubscribeLevel.notified]: false,
-  [ChannelSubscribeLevel.subscribed]: false,
-  [ChannelSubscribeLevel.none]: true
+  [ChannelSubscribeLevel.none]: 'not-subscribed'
 }
 
 export default defineComponent({
@@ -50,10 +45,9 @@ export default defineComponent({
   },
   setup(props) {
     const iconName = computed(() => iconNameMap[props.subscriptionLevel])
-    const iconMdi = computed(() => iconMdiMap[props.subscriptionLevel])
     const title = computed(() => titleMap[props.subscriptionLevel])
     const description = computed(() => descriptionMap[props.subscriptionLevel])
-    return { iconName, iconMdi, title, description }
+    return { iconName, title, description }
   }
 })
 </script>
