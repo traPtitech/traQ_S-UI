@@ -3,7 +3,7 @@
     <div :class="$style.buttons">
       <toggle-button
         :class="$style.button"
-        title="通知チャンネルのみ表示"
+        title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
         :value="!isAll"
         @click="toggleAll"
