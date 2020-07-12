@@ -4,17 +4,10 @@
       v-if="isEditing"
       :value="value"
       :class="$style.editor"
-      :maxlength="200"
       @input="onInput"
     />
-    <div v-else :class="$style.content" :data-is-empty="isEmpty">
-      {{ content }}
-    </div>
-    <button
-      @click="onButtonClick"
-      :data-is-editing="isEditing"
-      :class="$style.button"
-    >
+    <div v-else :class="$style.content" :data-is-empty="isEmpty">{{ content }}</div>
+    <button @click="onButtonClick" :data-is-editing="isEditing" :disabled="isExceeded" :data-is-exceeded="isExceeded" :class="$style.button">
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
       <icon v-else width="20" height="20" name="pencil" mdi />
     </button>
@@ -22,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
@@ -37,6 +30,7 @@ export default defineComponent({
     maxlength: { type: Number, required: false }
   },
   setup(props, context) {
+    const isExceeded = ref(false)
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue
       if (props.value === undefined) return 'ロード中'
@@ -52,8 +46,11 @@ export default defineComponent({
         context.emit('edit-start')
       }
     }
-    const onInput = (payload: string) => context.emit('input', payload)
-    return { content, isEmpty, onButtonClick, onInput }
+    const onInput = (payload: string) => {
+      isExceeded.value = (Array.from(payload).length > props.maxlength)
+      context.emit('input', payload)
+    }
+    return { content, isEmpty, onButtonClick, isExceeded, onInput }
   }
 })
 </script>
@@ -88,6 +85,11 @@ export default defineComponent({
   cursor: pointer;
   opacity: 0.5;
   &:hover {
+    opacity: 1;
+  }
+  &[data-is-exceeded] {
+    color: $theme-accent-error;
+    cursor: default;
     opacity: 1;
   }
 }
