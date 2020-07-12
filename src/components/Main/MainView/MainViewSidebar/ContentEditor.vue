@@ -55,7 +55,11 @@ export default defineComponent({
       }
     }
     const onInput = (payload: string) => {
-      isExceeded.value = Array.from(payload).length > props.maxlength
+      if (props.maxlength === undefined) {
+        isExceeded.value = false
+      } else {
+        isExceeded.value = Array.from(payload).length > props.maxlength
+      }
       context.emit('input', payload)
     }
     return { content, isEmpty, onButtonClick, isExceeded, onInput }
