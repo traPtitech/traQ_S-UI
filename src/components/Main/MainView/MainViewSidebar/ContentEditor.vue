@@ -6,8 +6,16 @@
       :class="$style.editor"
       @input="onInput"
     />
-    <div v-else :class="$style.content" :data-is-empty="isEmpty">{{ content }}</div>
-    <button @click="onButtonClick" :data-is-editing="isEditing" :disabled="isExceeded" :data-is-exceeded="isExceeded" :class="$style.button">
+    <div v-else :class="$style.content" :data-is-empty="isEmpty">
+      {{ content }}
+    </div>
+    <button
+      @click="onButtonClick"
+      :data-is-editing="isEditing"
+      :disabled="isExceeded"
+      :data-is-exceeded="isExceeded"
+      :class="$style.button"
+    >
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
       <icon v-else width="20" height="20" name="pencil" mdi />
     </button>
@@ -47,7 +55,7 @@ export default defineComponent({
       }
     }
     const onInput = (payload: string) => {
-      isExceeded.value = (Array.from(payload).length > props.maxlength)
+      isExceeded.value = Array.from(payload).length > props.maxlength
       context.emit('input', payload)
     }
     return { content, isEmpty, onButtonClick, isExceeded, onInput }
