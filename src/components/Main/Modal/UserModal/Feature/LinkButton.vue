@@ -46,7 +46,6 @@ export default defineComponent({
   @include color-ui-secondary;
   @include background-primary;
   padding: 4px 12px;
-  margin: 8px 4px;
   border-radius: 1em;
   cursor: pointer;
   display: inline-flex;
