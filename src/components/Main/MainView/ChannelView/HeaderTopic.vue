@@ -1,6 +1,6 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <div :class="$style.topic">{{ topic }}</div>
+    <div :class="$style.topic" :title="topic">{{ topic }}</div>
   </div>
 </template>
 
