@@ -13,6 +13,7 @@
       </p>
     </div>
     <buttons
+      :class="$style.buttons"
       :home-channel-id="detail ? detail.homeChannel : undefined"
       :user-name="user.name"
     />
@@ -78,5 +79,8 @@ export default defineComponent({
 }
 .indicator {
   margin-right: 4px;
+}
+.buttons {
+  margin-right: 8px;
 }
 </style>
