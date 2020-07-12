@@ -1,15 +1,15 @@
 <template>
   <section :class="$style.feature">
     <user-icon :user-id="user.id" :prevent-modal="true" :size="48" />
-    <div :class="$style.name">
+    <div :class="$style.names">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
-      <p>
+      <p :class="$style.name">
         <online-indicator-with-tooltip
-          :class="$style.name"
+          :class="$style.indicator"
           :user-id="user.id"
           :last-online="detail ? detail.lastOnline : undefined"
         />
-        @{{ user.name }}
+        <span>@{{ user.name }}</span>
       </p>
     </div>
     <buttons
@@ -61,6 +61,10 @@ export default defineComponent({
     bottom: 16px;
   }
 }
+.names {
+  @include size-body2;
+  min-width: 0;
+}
 .displayName {
   @include size-h3;
   overflow: hidden;
@@ -68,9 +72,11 @@ export default defineComponent({
   text-overflow: ellipsis;
 }
 .name {
-  @include size-body2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.indicator {
+  margin-right: 4px;
 }
 </style>
