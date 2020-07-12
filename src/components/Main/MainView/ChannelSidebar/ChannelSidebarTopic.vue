@@ -6,7 +6,7 @@
       @input="onInput"
       @edit-done="onEditDone"
       @edit-start="startEdit"
-      :maxlength="maxlength"
+      :maxlength="200"
     />
   </sidebar-content-container-foldable>
 </template>
@@ -54,7 +54,6 @@ export default defineComponent({
   },
   setup(props) {
     const topic = ref(store.state.domain.messagesView.topic)
-    const maxlength = 200
     const state = reactive({
       topic: store.state.domain.messagesView.topic
     })
@@ -64,7 +63,6 @@ export default defineComponent({
     const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, state)
     return {
       topic,
-      maxlength,
       isEditing,
       startEdit,
       onEditDone,
