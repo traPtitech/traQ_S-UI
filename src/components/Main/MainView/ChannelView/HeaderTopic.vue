@@ -21,9 +21,7 @@ export default defineComponent({
     const topic = computed(
       () => store.state.entities.channels[props.channelId]?.topic
     )
-    const tooltip = computed(
-      () => store.state.entities.channels[props.channelId]?.topic
-    )
+    const tooltip = topic
     return {
       topic,
       tooltip
