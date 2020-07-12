@@ -6,6 +6,7 @@
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
       :entry-message-id="entryMessageId"
+      :is-archived="isArchived"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
       @request-load-former="onLoadFormerMessagesRequest"
@@ -16,12 +17,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
+import store from '@/store'
 
 export default defineComponent({
   name: 'ChannelViewContent',
@@ -47,6 +49,10 @@ export default defineComponent({
       onLoadAroundMessagesRequest
     } = useChannelMessageFetcher(props)
 
+    const isArchived = computed(
+      () => store.state.entities.channels[props.channelId]?.archived ?? false
+    )
+
     return {
       messageIds,
       isReachedEnd,
@@ -55,7 +61,8 @@ export default defineComponent({
       lastLoadingDirection,
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
-      onLoadAroundMessagesRequest
+      onLoadAroundMessagesRequest,
+      isArchived
     }
   }
 })
