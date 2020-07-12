@@ -1,11 +1,19 @@
 <template>
   <div :class="$style.container">
-    <textarea-autosize
-      v-if="isEditing"
-      :value="value"
-      :class="$style.editor"
-      @input="onInput"
-    />
+    <div v-if="isEditing">
+      <textarea-autosize
+        :value="value"
+        :class="$style.editor"
+        @input="onInput"
+      />
+      <div
+        v-if="maxlength"
+        :class="$style.count"
+        :data-is-exceeded="isExceeded"
+      >
+        {{ length }}/{{ maxlength }}
+      </div>
+    </div>
     <div v-else :class="$style.content" :data-is-empty="isEmpty">
       {{ content }}
     </div>
@@ -38,7 +46,6 @@ export default defineComponent({
     maxlength: { type: Number, required: false }
   },
   setup(props, context) {
-    const isExceeded = ref(false)
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue
       if (props.value === undefined) return 'ロード中'
@@ -54,15 +61,17 @@ export default defineComponent({
         context.emit('edit-start')
       }
     }
+
+    const length = ref(0)
+    const isExceeded = computed(
+      () => props.maxlength && props.maxlength < length.value
+    )
+
     const onInput = (payload: string) => {
-      if (props.maxlength === undefined) {
-        isExceeded.value = false
-      } else {
-        isExceeded.value = Array.from(payload).length > props.maxlength
-      }
+      length.value = Array.from(payload).length
       context.emit('input', payload)
     }
-    return { content, isEmpty, onButtonClick, isExceeded, onInput }
+    return { content, isEmpty, onButtonClick, length, isExceeded, onInput }
   }
 })
 </script>
@@ -88,6 +97,14 @@ export default defineComponent({
   @include color-ui-primary;
   width: 100%;
   resize: none;
+}
+.count {
+  @include color-ui-secondary;
+  @include size-caption;
+  text-align: right;
+  &[data-is-exceeded] {
+    color: $theme-accent-error;
+  }
 }
 .button {
   @include color-ui-primary;
