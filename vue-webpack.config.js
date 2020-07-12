@@ -8,7 +8,6 @@ const { DEV_SERVER_PROXY_HOST } = require('./dev.config')
 module.exports = {
   resolve: {
     alias: {
-      pica: 'pica/dist/pica.js',
       // vuex-persist
       'lodash.merge': path.resolve('./node_modules/lodash-es/merge.js')
     }

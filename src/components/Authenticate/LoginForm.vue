@@ -16,8 +16,8 @@
         @input="setPass"
       />
       <a
-        href="https://portal.trap.jp/reset-password"
-        v-show="state.showPasswordResetLink"
+        v-if="resetLink !== undefined"
+        :href="resetLink"
         :class="$style.forgotPassword"
       >
         パスワードを忘れた
@@ -69,16 +69,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import useLogin from './use/login'
 import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'
-import useRedirectParam from './use/redirectParam'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
 import AuthenticateButtonSecondary from './AuthenticateButtonSecondary.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
+import config from '@/config'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -90,21 +90,17 @@ export default defineComponent({
     AuthenticateSeparator
   },
   setup(_, context) {
-    const redirectState = useRedirectParam(context)
     const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      redirectState
+      context
     )
     const isIOS = isIOSApp()
-    const state = reactive({
-      // 簡易的にhost名で分岐させてる
-      showPasswordResetLink: location.host === 'q.trap.jp'
-    })
+    const { resetLink } = config.auth
     const externalLogin = computed(
       () => store.state.app.version.flags.externalLogin
     )
 
     return {
-      state,
+      resetLink,
       loginState,
       setName,
       setPass,

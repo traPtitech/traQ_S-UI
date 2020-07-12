@@ -1,6 +1,6 @@
 import { MessageId, ChannelId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
-import { Embedding } from '@traptitech/traq-markdown-it'
+import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -27,7 +27,7 @@ export interface S {
 
   renderedContentMap: Record<MessageId, string>
 
-  embeddingsMap: Record<MessageId, Embedding[] | undefined>
+  embeddingsMap: Record<MessageId, EmbeddingOrUrl[] | undefined>
 
   currentViewers: ChannelViewer[]
 

@@ -7,6 +7,7 @@
       :is-qall-session-opened="isQallSessionOpened"
       :is-joined-qall-session="isJoinedQallSession"
       :is-stared="channelState.stared"
+      :is-archived="channelState.archived"
       @click-qall="toggleQall"
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
@@ -19,6 +20,8 @@
         :has-active-qall-session="hasActiveQallSession"
         :is-qall-session-opened="isQallSessionOpened"
         :is-joined-qall-session="isJoinedQallSession"
+        :can-create-child-channel="canCreateChildChannel"
+        :is-archived="channelState.archived"
         v-click-outside="closePopupMenu"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
@@ -85,7 +88,10 @@ export default defineComponent({
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
-    const { openChannelCreateModal } = useChannelCreateModal(props)
+    const {
+      canCreateChildChannel,
+      openChannelCreateModal
+    } = useChannelCreateModal(props)
     const { copyLink } = useCopy(context)
     const {
       hasActiveQallSession,
@@ -104,6 +110,7 @@ export default defineComponent({
       starChannel,
       unstarChannel,
       openNotificationModal,
+      canCreateChildChannel,
       openChannelCreateModal,
       openChannelManageModal,
       copyLink,

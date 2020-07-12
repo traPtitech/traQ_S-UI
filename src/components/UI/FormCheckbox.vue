@@ -55,10 +55,20 @@ export default defineComponent({
 <style lang="scss" module>
 .label {
   cursor: pointer;
+
+  border: solid 2px transparent;
+  border-radius: 4px;
+  &:focus-within {
+    border-color: $theme-accent-focus;
+  }
 }
 
 .checkbox {
-  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pseudoCheckbox {

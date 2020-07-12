@@ -63,6 +63,7 @@ export default defineComponent({
 .input {
   @include color-ui-secondary;
   @include background-secondary;
+  min-width: 0;
   flex: 1 1;
   padding: 4px;
   padding-left: 16px;

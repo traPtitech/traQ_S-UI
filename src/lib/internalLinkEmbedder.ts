@@ -2,11 +2,13 @@
  * https://github.com/traPtitech/traQ/blob/master/utils/message/replacer.goと同様
  */
 
-const mentionRegex = /[@＠]([\S]+)/g
+const mentionRegex = /:?[@＠]([\S]{1,32})/g
+const userStartsRegex = /^[@＠]([a-zA-Z0-9_-]{1,32})/g
 const channelRegex = /[#＃]([a-zA-Z0-9_/-]+)/g
 
 const backQuote = '`'
 const dollar = '$'
+const defaultCodeTokenLength = 3
 
 export type ReplaceGetters = UserAndGroupGetters & ChannelGetter
 
@@ -14,17 +16,17 @@ interface UserAndGroupGetters {
   /**
    * nameは大文字小文字を無視する
    */
-  getUser: (userName: string) => Entity | undefined
+  getUser: (userName: string) => Readonly<Entity> | undefined
   /**
    * nameは大文字小文字を無視する
    */
-  getGroup: (groupName: string) => Entity | undefined
+  getGroup: (groupName: string) => Readonly<Entity> | undefined
 }
 interface ChannelGetter {
   /**
    * nameは大文字小文字を無視する
    */
-  getChannel: (channelPath: string) => Entity | undefined
+  getChannel: (channelPath: string) => Readonly<Entity> | undefined
 }
 
 export interface Entity {
@@ -35,12 +37,21 @@ export interface Entity {
  * コードブロックとLaTeXブロック内でない箇所の内部リンク埋め込みを行う
  * replacer.goのReplaceと同様のコード
  */
-export const replace = (m: string, getters: ReplaceGetters) => {
+export const replace = (m: string, getters: Readonly<ReplaceGetters>) => {
   let inCodeBlock = false
   let inLatexBlock = false
+  let codeTokenLength = defaultCodeTokenLength
+
   const lines = m.split('\n')
   const newLines = lines.map(line => {
-    if (!inLatexBlock && line.startsWith('```')) {
+    if (!inLatexBlock && line.startsWith('`'.repeat(codeTokenLength))) {
+      // `の数が一致するものと組み合うようにする
+      if (!inCodeBlock) {
+        codeTokenLength = countPrefix(line, backQuote)
+      } else {
+        codeTokenLength = defaultCodeTokenLength
+      }
+
       inCodeBlock = !inCodeBlock
     }
     if (!inCodeBlock && line.startsWith('$$')) {
@@ -97,28 +108,44 @@ export const replace = (m: string, getters: ReplaceGetters) => {
   return newLines.join('\n')
 }
 
-const replaceAll = (m: string, getters: ReplaceGetters) => {
+const replaceAll = (m: string, getters: Readonly<ReplaceGetters>) => {
   return replaceMention(replaceChannel(m, getters), getters)
 }
 
-const replaceMention = (m: string, getters: UserAndGroupGetters) => {
+const replaceMention = (m: string, getters: Readonly<UserAndGroupGetters>) => {
   return m.replace(mentionRegex, s => {
+    // 始まりが:なものを除外
+    if (s.startsWith(':')) {
+      return s
+    }
+
     // .slice(1)は先頭の@を消すため
     // 小文字化はgetter内で行う
-    const t = s.slice(1)
-    const uid = getters.getUser(t)?.id
+    const name = s.slice(1)
+    const uid = getters.getUser(name)?.id
     if (uid) {
       return `!{"type":"user","raw":"${s}","id":"${uid}"}`
     }
-    const gid = getters.getGroup(t)?.id
+    const gid = getters.getGroup(name)?.id
     if (gid) {
       return `!{"type":"group","raw":"${s}","id":"${gid}"}`
     }
-    return s
+
+    return s.replace(userStartsRegex, s => {
+      // .slice(1)は先頭の@を消すため
+      // 小文字化はgetter内で行う
+      const name = s.slice(1)
+
+      const uid = getters.getUser(name)?.id
+      if (uid) {
+        return `!{"type":"user","raw":"${s}","id":"${uid}"}`
+      }
+      return s
+    })
   })
 }
 
-const replaceChannel = (m: string, getter: ChannelGetter) => {
+const replaceChannel = (m: string, getter: Readonly<ChannelGetter>) => {
   return m.replace(channelRegex, s => {
     // .slice(1)は先頭の#を消すため
     // 小文字化はgetter内で行う
@@ -129,4 +156,13 @@ const replaceChannel = (m: string, getter: ChannelGetter) => {
     }
     return s
   })
+}
+
+const countPrefix = (line: string, letter: string) => {
+  let count = 0
+  for (const ch of line) {
+    if (ch !== letter) break
+    count++
+  }
+  return count
 }

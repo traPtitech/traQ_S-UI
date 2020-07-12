@@ -128,6 +128,9 @@ export const actions = defineActions({
               renderedContent: rendered.renderedText
             })
           }
+          if (e.type === 'url') {
+            await rootDispatch.entities.fetchOgpData(e.url)
+          }
         } catch (e) {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }

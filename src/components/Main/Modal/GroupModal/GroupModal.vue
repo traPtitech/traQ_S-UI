@@ -19,7 +19,6 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
-import { UserAccountState } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'GroupModal',
@@ -28,21 +27,20 @@ export default defineComponent({
     UserListItem
   },
   props: {
-    groupId: {
+    id: {
       type: String,
       required: true
     }
   },
   setup(props) {
-    const group = computed(() => store.state.entities.userGroups[props.groupId])
+    const group = computed(() => store.state.entities.userGroups[props.id])
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
       () =>
         group.value?.members
           .filter(
             member =>
-              store.state.entities.users[member.id]?.state ===
-              UserAccountState.active
+              store.getters.entities.activeUsers[member.id] !== undefined
           )
           .map(member => member.id) ?? []
     )
@@ -53,7 +51,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .item {
-  margin: 16px 0;
+  margin: 8px 0;
   &:first-child {
     margin-top: 0;
   }

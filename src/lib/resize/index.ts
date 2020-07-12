@@ -6,15 +6,17 @@ import {
   needDimentionSwap,
   getOrientation
 } from './orientation'
-import { isIOS, isFirefox } from '../util/browser'
+import { isIOS } from '../util/browser'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
-const isJpeg = (mime: string) => mime === 'image/jpeg'
+export const isJpeg = (mime: string) => mime === 'image/jpeg'
 
-const needRotation = isIOS() || isFirefox()
+const needRotation = isIOS()
 
-export const resize = async (inputFile: File): Promise<File | null> => {
+export const resize = async (
+  inputFile: Readonly<File>
+): Promise<File | null> => {
   start()
   const { pica, $input, $output, $img } = await initVars()
 

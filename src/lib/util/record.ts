@@ -3,7 +3,7 @@
  * @param array 対象オブジェクトの配列
  * @param key Recordのキーにしたいオブジェクトのキー
  */
-export const reduceToRecord = <T>(array: T[], key: keyof T) =>
+export const reduceToRecord = <T>(array: readonly T[], key: keyof T) =>
   array.reduce((acc, cur) => {
     const ck = cur[key]
     if (typeof ck !== 'string') return acc
@@ -15,7 +15,7 @@ export const reduceToRecord = <T>(array: T[], key: keyof T) =>
  * @param array 対象オブジェクトの配列
  * @param key Recordのキーにしたいオブジェクトのキー
  */
-export const reduceToRecordOfArray = <T>(array: T[], key: keyof T) =>
+export const reduceToRecordOfArray = <T>(array: readonly T[], key: keyof T) =>
   array.reduce((acc, cur) => {
     const ck = cur[key]
     if (typeof ck !== 'string') return acc

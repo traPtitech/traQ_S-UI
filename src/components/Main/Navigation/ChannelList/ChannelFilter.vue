@@ -6,7 +6,7 @@
     <button
       :class="$style.star"
       :aria-selected="isStared ? 'true' : 'false'"
-      @click="context.emit('toggle-star-filter')"
+      @click="emit('toggle-star-filter')"
     >
       <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
     </button>
@@ -34,12 +34,12 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const onInput = (value: string) => {
-      context.emit('input', value)
+      emit('input', value)
     }
     return {
-      context,
+      emit,
       onInput
     }
   }

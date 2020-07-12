@@ -1,4 +1,4 @@
-import type firebase from 'firebase/app'
+import firebase from 'firebase/app'
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
@@ -9,6 +9,7 @@ import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
+import config from '@/config'
 
 declare const window: NativeAppWindow
 
@@ -20,16 +21,7 @@ const loadFirebase = async () => {
 
 const setupFirebase = (fb: typeof firebase) => {
   try {
-    const config = {
-      apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
-      authDomain: 'traq-r.firebaseapp.com',
-      databaseURL: 'https://traq-r.firebaseio.com',
-      projectId: 'traq-r',
-      storageBucket: 'traq-r.appspot.com',
-      messagingSenderId: '993645413001',
-      appId: '1:993645413001:web:b253ea3776d6cf85163c58'
-    }
-    fb.initializeApp(config)
+    fb.initializeApp(config.firebase)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[Firebase] failed to initialize', e)
@@ -179,7 +171,7 @@ export const connectFirebase = async () => {
       return
     }
 
-    messaging.onMessage(async (payload: NotificationPayload) => {
+    messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
       const notification = await notify(
         payload.data.title || 'traQ',
         payload.data
@@ -213,6 +205,14 @@ export const connectFirebase = async () => {
     const token = await messaging.getToken()
     apis.registerFCMDevice({ token })
   }
+}
+
+export const deleteToken = async () => {
+  if (Notification.permission !== 'granted') return
+
+  const messaging = firebase.messaging()
+  const token = await messaging.getToken()
+  messaging.deleteToken(token)
 }
 
 export const removeNotification = async (

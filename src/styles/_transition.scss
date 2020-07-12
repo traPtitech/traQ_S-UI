@@ -44,9 +44,11 @@ $sv: 'slide-vertical';
 }
 
 $tl: 'timeline';
-.#{$tl}-enter-active,
-.#{$tl}-leave-active {
+.#{$tl}-enter-active {
   transition: all 0.5s;
+}
+.#{$tl}-leave-active {
+  display: none;
 }
 .#{$tl}-enter,
 .#{$tl}-leave-to {
@@ -76,36 +78,38 @@ $tu: 'typing-users';
 
 $fl: 'fade-left';
 $fr: 'fade-right';
+$ft: 'fade-top';
 $fb: 'fade-bottom';
-.#{$fl}-enter-active,
-.#{$fr}-enter-active,
-.#{$fb}-enter-active {
-  transition: all 0.3s $easeOutCirc;
-}
-.#{$fl}-leave-active,
-.#{$fr}-leave-active,
-.#{$fb}-leave-active {
-  transition: all 0.3s $easeInCirc;
-}
-.#{$fl}-move,
-.#{$fr}-move,
-.#{$fb}-move {
-  transition: transform 0.3s;
+@each $c in $fl, $fr, $ft, $fb {
+  .#{$c}-enter-active {
+    transition: all 0.3s $easeOutCirc;
+  }
+  .#{$c}-leave-active {
+    transition: all 0.3s $easeInCirc;
+  }
+  .#{$c}-move {
+    transition: transform 0.3s;
+  }
+  .#{$c}-enter,
+  .#{$c}-leave-to {
+    opacity: 0;
+  }
 }
 .#{$fl}-enter,
 .#{$fl}-leave-to {
   transform: translateX(-20px);
-  opacity: 0;
 }
 .#{$fr}-enter,
 .#{$fr}-leave-to {
   transform: translateX(20px);
-  opacity: 0;
+}
+.#{$ft}-enter,
+.#{$ft}-leave-to {
+  transform: translateY(-20px);
 }
 .#{$fb}-enter,
 .#{$fb}-leave-to {
   transform: translateY(20px);
-  opacity: 0;
 }
 
 $s: 'stamp';
@@ -116,5 +120,32 @@ $s: 'stamp';
 .#{$s}-enter,
 .#{$s}-leave-to {
   transform: translateY(20px);
+  opacity: 0;
+}
+
+$p: 'post';
+.#{$p}-enter-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$p}-leave-active {
+  transition: all 0.3s $easeInCirc;
+}
+.#{$p}-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.#{$p}-enter {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+$qr: 'quick-reaction';
+.#{$qr}-enter-active,
+.#{$qr}-leave-active {
+  transition: all 0.3s $easeOutCirc;
+}
+.#{$qr}-enter,
+.#{$qr}-leave-to {
+  transform: translateX(20px);
   opacity: 0;
 }

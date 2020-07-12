@@ -1,46 +1,55 @@
 <template>
-  <div :class="$style.container">
-    <template v-if="showQuickReaction || !isMobile">
-      <stamp
-        v-for="stamp in recentStamps"
-        :key="stamp"
-        :stamp-id="stamp"
-        @click.native="addStamp(stamp)"
-        :size="28"
-        :class="$style.stampListItem"
-      />
-      <span :class="$style.line"></span>
+  <div :class="$style.container" :data-is-mobile="isMobile">
+    <transition name="quick-reaction">
+      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
+        <stamp
+          v-for="stamp in recentStamps"
+          :key="stamp"
+          :stamp-id="stamp"
+          @click.native="addStamp(stamp)"
+          :size="28"
+          :class="$style.stampListItem"
+        />
+        <span :class="$style.line" />
+      </div>
+    </transition>
+    <div
+      :class="$style.tools"
+      :data-hide-left-border="showQuickReaction || !isMobile"
+    >
+      <template v-if="isMobile">
+        <icon
+          v-if="showQuickReaction"
+          mdi
+          name="chevron-right"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+        <icon
+          v-else
+          mdi
+          name="chevron-left"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleQuickReaction"
+        />
+      </template>
       <icon
-        v-if="isMobile"
         mdi
-        name="chevron-right"
+        name="emoticon-outline"
         :size="28"
         :class="$style.icon"
-        @click="toggleQuickReaction"
+        @click="onStampIconClick"
       />
-    </template>
-    <icon
-      v-else
-      mdi
-      name="chevron-left"
-      :size="28"
-      :class="$style.icon"
-      @click="toggleQuickReaction"
-    />
-    <icon
-      mdi
-      name="emoticon-outline"
-      :size="28"
-      :class="$style.icon"
-      @click="onStampIconClick"
-    />
-    <icon
-      :class="$style.icon"
-      :size="28"
-      mdi
-      name="dots-horizontal"
-      @click="onDotsClick"
-    />
+      <icon
+        :class="$style.icon"
+        :size="28"
+        mdi
+        name="dots-horizontal"
+        @click="onDotsClick"
+      />
+    </div>
   </div>
 </template>
 
@@ -114,15 +123,42 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
   @include color-ui-tertiary;
-  border-radius: 4px;
-  border: solid 2px;
   display: flex;
   align-items: center;
-  box-shadow: 0 1px 3px 0;
-  justify-content: space-between;
+  border-radius: 4px;
   contain: content;
+  &:not([data-is-mobile]) {
+    box-shadow: 0 1px 3px 0;
+  }
+}
+
+.quickReaction {
+  @include background-primary;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border: solid 2px $theme-ui-tertiary;
+  border-radius: 4px;
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tools {
+  @include background-primary;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border: solid 2px $theme-ui-tertiary;
+  border-radius: 4px;
+  &[data-hide-left-border] {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 .line {

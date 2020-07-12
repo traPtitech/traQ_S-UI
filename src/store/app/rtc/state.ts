@@ -32,13 +32,13 @@ export interface S {
   localStream?: ExtendedMediaStream
 
   /** 送信するMediaStreamのAnalyzerNode */
-  localAnalyzerNode?: AnalyserNode
+  localAnalyzerNode?: Readonly<AnalyserNode>
 
   /** マイクミュート */
   isMicMuted: boolean
 
   /** 自分のRTC状態 */
-  currentRTCState?: UserRTCState
+  currentRTCState?: Readonly<UserRTCState>
 
   /** ユーザーのRTC状態のマップ */
   userStateMap: Record<UserId, UserRTCState | undefined>

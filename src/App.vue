@@ -57,7 +57,9 @@ const useThemeObserver = () => {
   const isDark = computed(() =>
     themeType.value === 'custom'
       ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
-      : themeType.value === 'dark'
+      : themeType.value === 'dark' ||
+        (themeType.value === 'auto' &&
+          store.state.app.themeSettings.isOsDarkTheme)
   )
   useHtmlDatasetBoolean('isDarkTheme', isDark)
 }
@@ -65,6 +67,17 @@ const useThemeObserver = () => {
 const useEcoModeObserver = () => {
   const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
   useHtmlDatasetBoolean('ecoMode', ecoMode)
+}
+
+const useOsDarkTheme = () => {
+  const queryList = window.matchMedia('(prefers-color-scheme: dark)')
+
+  store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
+
+  // safariではaddEventListener('change', func)が未対応なため
+  queryList.addListener((event: MediaQueryListEvent) => {
+    store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
+  })
 }
 
 const useScrollbarStyle = () =>
@@ -82,6 +95,7 @@ const useThemeVariables = () =>
     '--theme-accent-notification': theme.accent.notification,
     '--theme-accent-online': theme.accent.online,
     '--theme-accent-error': theme.accent.error,
+    '--theme-accent-focus': theme.accent.focus,
     '--theme-background-primary': theme.background.primary,
     '--theme-background-secondary': theme.background.secondary,
     '--theme-background-tertiary': theme.background.tertiary,
@@ -106,7 +120,11 @@ const useTransparrentThemeVariables = () =>
   makeStyles((theme, common) => ({
     '--theme-accent-primary--03': transparentize(theme.accent.primary, 0.3),
     '--theme-ui-primary--06': transparentize(theme.ui.primary, 0.6),
-    '--theme-ui-secondary--05': transparentize(theme.ui.secondary, 0.5)
+    '--theme-ui-secondary--05': transparentize(theme.ui.secondary, 0.5),
+    '--theme-background-secondary--05': transparentize(
+      theme.background.secondary,
+      0.5
+    )
   }))
 
 const useStyle = () =>
@@ -127,6 +145,7 @@ export default defineComponent({
 
     useThemeObserver()
     useEcoModeObserver()
+    useOsDarkTheme()
 
     const style = useStyle()
 

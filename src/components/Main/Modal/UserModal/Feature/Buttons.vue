@@ -1,6 +1,7 @@
 <template>
   <div>
     <link-button
+      :class="$style.button"
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
@@ -8,6 +9,7 @@
     />
     <link-button
       v-if="homeChannelId"
+      :class="$style.button"
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
@@ -63,3 +65,15 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.button {
+  margin: 8px 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
+</style>

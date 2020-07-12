@@ -31,7 +31,7 @@ const updateBadge = async () => {
 }
 
 export const mutations = defineMutations<S>()({
-  setDetail(state: S, detail: MyUserDetail) {
+  setDetail(state: S, detail: Readonly<MyUserDetail>) {
     state.detail = detail
   },
   setWebhooks(state: S, webhooks: WebhookId[]) {
@@ -41,13 +41,13 @@ export const mutations = defineMutations<S>()({
     state.stampHistory = stampHistory
   },
 
-  setUnreadChannelsSet(state: S, unreadChannels: UnreadChannel[]) {
+  setUnreadChannelsSet(state: S, unreadChannels: readonly UnreadChannel[]) {
     state.unreadChannelsSet = Object.fromEntries(
       unreadChannels.map(unread => [unread.channelId, unread])
     )
     updateBadge()
   },
-  upsertUnreadChannel(state: S, message: Message) {
+  upsertUnreadChannel(state: S, message: Readonly<Message>) {
     const noticeable =
       detectMentionOfMe(
         message.content,
@@ -90,7 +90,7 @@ export const mutations = defineMutations<S>()({
     removeNotification(channelId)
   },
 
-  setStaredChannels(state: S, channelIds: ChannelId[]) {
+  setStaredChannels(state: S, channelIds: readonly ChannelId[]) {
     state.staredChannelSet = Object.fromEntries(
       channelIds.map(id => [id, true])
     )

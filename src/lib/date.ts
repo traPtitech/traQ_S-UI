@@ -1,17 +1,17 @@
-const getTimeString = (date: Date) =>
+export const getTimeString = (date: Readonly<Date>) =>
   date.getHours().toString().padStart(2, '0') +
   ':' +
   date.getMinutes().toString().padStart(2, '0')
 
-const getDayString = (date: Date) =>
+export const getDayString = (date: Readonly<Date>) =>
   (date.getMonth() + 1).toString().padStart(2, '0') +
   '/' +
   date.getDate().toString().padStart(2, '0')
 
-export const getFullDayString = (date: Date) =>
+export const getFullDayString = (date: Readonly<Date>) =>
   date.getFullYear() + '/' + getDayString(date)
 
-export const getFullDayWithTimeString = (date: Date) =>
+export const getFullDayWithTimeString = (date: Readonly<Date>) =>
   getFullDayString(date) + ' ' + getTimeString(date)
 
 /**
@@ -19,18 +19,21 @@ export const getFullDayWithTimeString = (date: Date) =>
  * @param ofDate 出力する日時
  * @param fromDate 比較する日時
  */
-const getDateRepresentationWithoutSameDate = (ofDate: Date, fromDate: Date) => {
-  let result = getTimeString(ofDate)
+export const getDateRepresentationWithoutSameDate = (
+  ofDate: Readonly<Date>,
+  fromDate: Readonly<Date>
+) => {
+  const timeString = getTimeString(ofDate)
+  if (fromDate.getFullYear() !== ofDate.getFullYear()) {
+    return getFullDayString(ofDate) + ' ' + timeString
+  }
   if (
     fromDate.getDate() !== ofDate.getDate() ||
     fromDate.getMonth() !== ofDate.getMonth()
   ) {
-    result = getDayString(ofDate) + ' ' + result
+    return getDayString(ofDate) + ' ' + timeString
   }
-  if (fromDate.getFullYear() !== ofDate.getFullYear()) {
-    result = ofDate.getFullYear().toString() + '/' + result
-  }
-  return result
+  return timeString
 }
 
 export const getDisplayDate = (createdAt: string, updatedAt: string) => {

@@ -64,6 +64,11 @@ export default defineComponent({
   &[data-on-secondary] {
     @include background-primary;
   }
+
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus;
+  }
 }
 .select {
   margin: 0 8px;

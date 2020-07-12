@@ -12,5 +12,8 @@ export const mutations = defineMutations<S>()({
 
   setCurrentTheme(state, type: ThemeType) {
     state.type = type
+  },
+  setIsOsDarkTheme(state, isOsDarkTheme: boolean) {
+    state.isOsDarkTheme = isOsDarkTheme
   }
 })

@@ -1,6 +1,8 @@
 describe('Main', () => {
   beforeEach(() => {
     cy.login()
+
+    cy.disableSW()
   })
 
   afterEach(() => {
@@ -15,6 +17,8 @@ describe('Main', () => {
 
   it('can show user modal', () => {
     cy.visit('/channels/general')
+
+    cy.get('.markdown-body')
 
     cy.get(
       '[class^=DesktopToolBox_container] [class^=UserIcon_container]'

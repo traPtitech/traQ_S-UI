@@ -22,3 +22,7 @@ export const getFullMatchedAndMatched = (
 
   return { fullMatched, matched }
 }
+
+export const isDefined = <T>(o: T): o is Exclude<T, undefined> => {
+  return o !== undefined
+}

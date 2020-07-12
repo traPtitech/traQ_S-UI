@@ -13,6 +13,8 @@
         :id="id"
         :type="type"
         :value="value"
+        :name="name"
+        :autocomplete="autocomplete"
         :placeholder="placeholder"
         :step="step"
         @input="onInput"
@@ -49,6 +51,8 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    name: String,
+    autocomplete: String,
     label: String,
     prefix: String,
     suffix: String,
@@ -97,6 +101,11 @@ export default defineComponent({
   border-radius: 4px;
   &[data-on-secondary] {
     @include background-primary;
+  }
+
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus;
   }
 }
 .prefix {

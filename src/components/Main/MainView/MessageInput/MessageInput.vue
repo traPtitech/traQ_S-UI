@@ -14,6 +14,7 @@
       <message-input-file-list />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
+      <message-input-upload-progress v-if="isPosting" :progress="progress" />
       <div :class="$style.inputContainer">
         <message-input-upload-button
           :class="$style.controls"
@@ -22,6 +23,7 @@
         <message-input-text-area
           ref="textareaRef"
           :text="textState.text"
+          :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
           @input="onInputText"
@@ -32,6 +34,7 @@
         <message-input-controls
           :class="$style.controls"
           :can-post-message="canPostMessage"
+          :is-posting="isPosting"
           @click-send="postMessage"
           @click-stamp="onStampClick"
         />
@@ -63,6 +66,7 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
+import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
@@ -74,6 +78,7 @@ export default defineComponent({
     MessageInputControls,
     MessageInputFileList,
     MessageInputUploadButton,
+    MessageInputUploadProgress,
     Icon
   },
   props: {
@@ -107,7 +112,10 @@ export default defineComponent({
       isFocused
     )
 
-    const { postMessage, isPosting } = usePostMessage(textState, props)
+    const { postMessage, isPosting, progress } = usePostMessage(
+      textState,
+      props
+    )
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers
@@ -157,7 +165,9 @@ export default defineComponent({
       postMessage,
       addAttachment,
       showKeyGuide,
-      canPostMessage
+      canPostMessage,
+      isPosting,
+      progress
     }
   }
 })
@@ -191,6 +201,11 @@ $radius: 4px;
   border-radius: $radius;
   transform: translateY(-$radius);
   z-index: $z-index-message-input;
+
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus;
+  }
 }
 .stampPickerLocator {
   width: 100%;

@@ -136,5 +136,8 @@ export default defineComponent({
   opacity: 0.5;
   margin-right: 0.125rem;
   user-select: none;
+  &:hover {
+    opacity: 1;
+  }
 }
 </style>

@@ -51,8 +51,10 @@ import Toggle from '@/components/UI/Toggle.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import apis from '@/lib/apis'
-import { PatchChannelRequest, Channel } from '@traptitech/traq'
+import { PatchChannelRequest } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
+import { nullUuid } from '@/lib/util/uuid'
+import useStateDiff from '@/components/Main/Modal/SettingModal/use/stateDiff'
 
 const useChannelOptions = (props: { id: ChannelId }) => {
   const { channelIdToPathString } = useChannelPath()
@@ -66,7 +68,7 @@ const useChannelOptions = (props: { id: ChannelId }) => {
             value: channel.id
           }
         }),
-      { key: '(root)', value: '' }
+      { key: '(root)', value: nullUuid }
     ].sort((a, b) => compareStringInsensitive(a.key, b.key))
   )
 }
@@ -74,8 +76,8 @@ const useChannelOptions = (props: { id: ChannelId }) => {
 const useManageChannel = (
   props: { id: string },
   context: SetupContext,
-  state: Partial<PatchChannelRequest>,
-  oldState: Ref<Channel>
+  state: PatchChannelRequest,
+  oldState: Ref<Required<PatchChannelRequest>>
 ) => {
   const { channelIdToPathString } = useChannelPath()
 
@@ -90,7 +92,7 @@ const useManageChannel = (
       if (state.name === oldState.value.name) {
         reqJson.name = undefined
       }
-      if (state.parent === oldState.value.parentId) {
+      if (state.parent === oldState.value.parent) {
         reqJson.parent = undefined
       }
       await apis.editChannel(props.id, reqJson)
@@ -122,29 +124,30 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props, context) {
-    const channel = computed(() => store.state.entities.channels[props.id])
+    const channel = computed(
+      (): Required<PatchChannelRequest> => {
+        const c = store.state.entities.channels[props.id]
+        return {
+          name: c.name,
+          parent: c.parentId ?? nullUuid,
+          archived: c.archived,
+          force: c.force
+        }
+      }
+    )
     const { channelIdToPathString } = useChannelPath()
     const subtitle = computed(() => channelIdToPathString(props.id, true))
 
-    const manageState = reactive({
-      name: channel.value.name,
-      parent: channel.value.parentId ?? '',
-      archived: channel.value.archived,
-      force: channel.value.force
-    })
+    const manageState = reactive({ ...channel.value })
     const { manageChannel } = useManageChannel(
       props,
       context,
       manageState,
       channel
     )
-    const isManageEnabled = computed(
-      () =>
-        channel.value.name !== manageState.name ||
-        channel.value.parentId !== manageState.parent ||
-        channel.value.archived !== manageState.archived ||
-        channel.value.force !== manageState.force
-    )
+
+    const { hasDiff } = useStateDiff<PatchChannelRequest>()
+    const isManageEnabled = computed(() => hasDiff(manageState, channel))
 
     const channelOptions = useChannelOptions(props)
 

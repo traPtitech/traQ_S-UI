@@ -18,8 +18,8 @@ export const loadImage = (
 
 export const resetCanvas = (
   $canvas: HTMLCanvasElement,
-  { width, height }: Dimensions,
-  $img?: HTMLImageElement
+  { width, height }: Readonly<Dimensions>,
+  $img?: Readonly<HTMLImageElement>
 ) => {
   $canvas.getContext('2d')?.clearRect(0, 0, $canvas.width, $canvas.height)
   $canvas.width = width

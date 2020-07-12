@@ -30,10 +30,14 @@ class Color {
     readonly a: number
   ) {
     if (
-      (r < 0 && 255 < r) ||
-      (g < 0 && 255 < g) ||
-      (b < 0 && 255 < b) ||
-      (a < 0 && 1 < a)
+      r < 0 ||
+      255 < r ||
+      g < 0 ||
+      255 < g ||
+      b < 0 ||
+      255 < b ||
+      a < 0 ||
+      1 < a
     ) {
       throw 'Invalid color'
     }

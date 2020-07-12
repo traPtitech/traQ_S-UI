@@ -15,7 +15,7 @@ const inverse = (d: Direction) => (d === 'left' ? 'right' : 'left')
  * @param hideThreshould 非表示状態に移行するx変位の閾値
  */
 const useSwipeDrawer = (
-  swipeDetectorState: SwipeDetectorState,
+  swipeDetectorState: Readonly<SwipeDetectorState>,
   direction: Direction,
   destination: number,
   showThreshould: number,

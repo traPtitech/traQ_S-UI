@@ -117,12 +117,15 @@ export default defineComponent({
       () => isMobile.value && isNavCompletelyAppeared.value
     )
 
-    const { routeWatcherState } = useRouteWatcher(context)
+    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher(
+      context
+    )
 
     useInitialFetch(context).then(
       () => {
         setupWebSocket()
         connectFirebase()
+        triggerRouteParamChange()
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => {}

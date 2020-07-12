@@ -11,7 +11,7 @@
       <icon name="hash" :class="$style.icon" />
     </div>
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator has-border />
+      <notification-indicator :border-width="2" />
     </div>
   </div>
 </template>
@@ -90,6 +90,7 @@ export default defineComponent({
   align-items: center;
   box-sizing: content-box;
   cursor: pointer;
+  position: relative;
 
   &[data-container-type='leaf'] {
     @include color-ui-primary;
@@ -102,29 +103,62 @@ export default defineComponent({
     }
   }
   &[data-container-type='parent'] {
+    &:hover::before {
+      content: '';
+      border-radius: 4px;
+      display: block;
+      position: absolute;
+      top: -4px;
+      bottom: -4px;
+      left: -4px;
+      right: -4px;
+    }
     &[data-is-opened] {
       color: $theme-background-secondary;
       background: $theme-ui-primary;
+      &:hover::before {
+        background: $theme-ui-primary;
+        opacity: 0.5;
+      }
       &[data-is-inactive] {
         background: $theme-ui-secondary;
+        &:hover::before {
+          background: $theme-ui-secondary;
+        }
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
+        &:hover::before {
+          background: $theme-accent-primary;
+        }
       }
     }
     &:not([data-is-opened]) {
       @include color-ui-primary;
       border-color: $theme-ui-primary;
+      &:hover::before {
+        background: $theme-ui-primary;
+        opacity: 0.2;
+      }
       &[data-is-inactive] {
         @include color-ui-secondary;
         border-color: $theme-ui-secondary;
+        &:hover::before {
+          background: $theme-ui-secondary;
+        }
       }
       &[data-has-notification-on-child] {
         border-color: $theme-accent-notification;
+        &:hover::before {
+          background: $theme-accent-notification;
+        }
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
         border-color: $theme-accent-primary;
+        &:hover::before {
+          background: $theme-accent-primary;
+        }
       }
     }
   }

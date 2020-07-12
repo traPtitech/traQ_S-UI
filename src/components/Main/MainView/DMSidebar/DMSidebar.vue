@@ -15,12 +15,12 @@
       <!--TODO: チャンネルと共通のコンポーネントを1つ上に持っていく-->
       <channel-sidebar-pinned-list
         v-if="state.pinnedMode"
-        :pinned-message="state.pinnedMessage"
+        :pinned-messages="state.pinnedMessages"
       />
       <sidebar-content
         v-else
         :viewer-ids="viewerIds"
-        :pinned-messages-count="state.pinnedMessage.length"
+        :pinned-messages-count="state.pinnedMessages.length"
         @pinned-mode-toggle="togglePinnedMode"
       />
     </template>

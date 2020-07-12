@@ -9,7 +9,8 @@ import {
   FileMetaDataMap,
   TagMap,
   ClipFolderMap,
-  StampMap
+  StampMap,
+  OgpDataMap
 } from '.'
 
 export type S = {
@@ -24,6 +25,7 @@ export type S = {
   fileMetaData: Undefinedable<FileMetaDataMap>
   tags: Undefinedable<TagMap>
   clipFolders: Undefinedable<ClipFolderMap>
+  ogpData: Undefinedable<OgpDataMap>
 }
 
 export const state: S = {
@@ -37,5 +39,6 @@ export const state: S = {
   webhooks: {},
   fileMetaData: {},
   tags: {},
-  clipFolders: {}
+  clipFolders: {},
+  ogpData: {}
 }

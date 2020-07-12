@@ -1,4 +1,29 @@
 export default {
+  /**
+   * Firebase用設定
+   *
+   * sw.jsの変更も必要です
+   */
+  firebase: {
+    apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
+    authDomain: 'traq-r.firebaseapp.com',
+    databaseURL: 'https://traq-r.firebaseio.com',
+    projectId: 'traq-r',
+    storageBucket: 'traq-r.appspot.com',
+    messagingSenderId: '993645413001',
+    appId: '1:993645413001:web:b253ea3776d6cf85163c58'
+  },
+  /**
+   * skyway用設定
+   */
+  skyway: {
+    apiKey: '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
+  },
+  /**
+   * 表示されるサービス
+   *
+   * iconNameは`src/assets/icons`からのパス
+   */
   services: [
     {
       label: 'Portal',
@@ -60,5 +85,49 @@ export default {
       iconName: 'services/bot-console',
       appLink: 'https://bot-console.trap.jp/'
     }
-  ]
+  ],
+  /**
+   * OGPが表示されないようにするホスト
+   */
+  ogpIgnoreHostNames: [
+    'wiki.trap.jp',
+    'git.trap.jp',
+    'md.trap.jp',
+    'drive.trap.jp',
+    'anke-to.trap.jp',
+    'booq.trap.jp',
+    'knoq.trap.jp',
+    'wiki.trapti.tech',
+    'git.trapti.tech',
+    'md.trapti.tech',
+    'drive.trapti.tech',
+    'showcase.trapti.tech'
+  ],
+  /**
+   * Wikiのユーザーページへのリンク
+   * undefinedにするとリンクが表示されない
+   */
+  wikiPageOrigin: 'https://wiki.trap.jp',
+  auth: {
+    /**
+     * ログイン画面での「パスワードを忘れた」のリンク
+     * undefinedにするとリンクが表示されない
+     */
+    resetLink: 'https://portal.trap.jp/reset-password',
+    /**
+     * 設定画面での「パスワードは～から可能です」のリンク
+     * undefinedにするとリンクが表示されない
+     */
+    changeLink: 'https://portal.trap.jp',
+    /**
+     * 設定画面での「パスワードは～から可能です」の「～」の表示
+     * undefinedにするとリンクが表示されない
+     */
+    changeName: 'traPortal'
+  },
+  /**
+   * 内部用認証機構へのリダイレクト
+   * 通常は`false`
+   */
+  pipelineEnabled: true
 } as const

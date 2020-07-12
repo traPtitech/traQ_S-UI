@@ -59,6 +59,7 @@ export const mutations = defineMutations<S>()({
   setFileMetaData: setMutation('fileMetaData'),
   setTags: setMutation('tags'),
   setClipFolders: setMutation('clipFolders'),
+  setOgpData: setMutation('ogpData'),
 
   extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
@@ -71,6 +72,7 @@ export const mutations = defineMutations<S>()({
   extendFileMetaData: extendMutation('fileMetaData'),
   extendUserTags: extendMutation('tags'),
   extendClipFolder: extendMutation('clipFolders'),
+  extendOgpData: extendMutation('ogpData'),
 
   addUser: addMutation('users'),
   addMessage: addMutation('messages'),
@@ -83,6 +85,7 @@ export const mutations = defineMutations<S>()({
   addFileMetaData: addMutation('fileMetaData'),
   addTags: addMutation('tags'),
   addClipFolder: addMutation('clipFolders'),
+  addOgpData: addMutation('ogpData'),
 
   deleteUser: deleteMutation('users'),
   deleteMessage: deleteMutation('messages'),
@@ -95,6 +98,7 @@ export const mutations = defineMutations<S>()({
   deleteFileMetaData: deleteMutation('fileMetaData'),
   deleteTag: deleteMutation('tags'),
   deleteClipFolder: deleteMutation('clipFolders'),
+  deleteOgpData: deleteMutation('ogpData'),
 
   onMessageStamped(state, e: MessageStampedEvent['body']) {
     const message = state.messages[e.message_id]

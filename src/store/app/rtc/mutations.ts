@@ -29,7 +29,9 @@ const toSessionInfo = (
   throw 'invalid session id'
 }
 
-const toUserRTCState = (userState: WebRTCUserState): UserRTCState => ({
+const toUserRTCState = (
+  userState: Readonly<WebRTCUserState>
+): UserRTCState => ({
   channelId: userState.channelId,
   sessionStates: userState.sessions.map(session => ({
     sessionId: session.sessionId,
@@ -39,8 +41,8 @@ const toUserRTCState = (userState: WebRTCUserState): UserRTCState => ({
 
 /** 現在のチャンネルセッションと、新規に追加するユーザー状態が整合性をもつか */
 const isSessionCompatible = (
-  channelSessionsMap: Record<ChannelId, SessionId[] | undefined>,
-  userSessionState: UserRTCState
+  channelSessionsMap: Readonly<Record<ChannelId, SessionId[] | undefined>>,
+  userSessionState: Readonly<UserRTCState>
 ) => {
   // チャンネルにセッションが立っていないか、既存セッションの部分集合か
   const currentSessions = channelSessionsMap[userSessionState.channelId]
@@ -54,7 +56,7 @@ const isSessionCompatible = (
 }
 
 export const mutations = defineMutations<S>()({
-  setRTCState(state, payload: WebRTCUserState[]) {
+  setRTCState(state, payload: readonly WebRTCUserState[]) {
     const userStateMap: typeof state.userStateMap = {}
     const channelSessionsMap: typeof state.channelSessionsMap = {}
     const sessionInfoMap: typeof state.sessionInfoMap = {}
@@ -84,7 +86,7 @@ export const mutations = defineMutations<S>()({
     state.sessionInfoMap = sessionInfoMap
     state.sessionUsersMap = sessionUsersMap
   },
-  updateRTCState(state, payload: WebRTCUserState) {
+  updateRTCState(state, payload: Readonly<WebRTCUserState>) {
     const userSessionState = toUserRTCState(payload)
     if (!isSessionCompatible(state.channelSessionsMap, userSessionState)) {
       throw 'channel session conflict'
@@ -150,7 +152,7 @@ export const mutations = defineMutations<S>()({
       }
     })
   },
-  setCurrentRTCState(state, payload: UserRTCState) {
+  setCurrentRTCState(state, payload: Readonly<UserRTCState>) {
     state.currentRTCState = payload
   },
   unsetCurrentRTCState(state) {
@@ -217,7 +219,7 @@ export const mutations = defineMutations<S>()({
   setTalkingStateUpdateId(state, id: number) {
     state.talkingStateUpdateId = id
   },
-  updateTalkingUserState(state, diffState: Record<UserId, number>) {
+  updateTalkingUserState(state, diffState: Readonly<Record<UserId, number>>) {
     Object.entries(diffState).forEach(([userId, loudnessLevel]) => {
       Vue.set(state.talkingUsersState, userId, loudnessLevel)
     })

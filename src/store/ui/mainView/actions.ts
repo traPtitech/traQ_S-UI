@@ -77,5 +77,9 @@ export const actions = defineActions({
       clipFolderId
     })
     rootDispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+  },
+  changePrimaryViewToNull(context) {
+    const { commit } = mainViewActionContext(context)
+    commit.setPrimaryView({ type: 'null' })
   }
 })

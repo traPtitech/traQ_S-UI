@@ -65,11 +65,25 @@ export default defineComponent({
 }
 
 .group {
-  margin: 16px 8px;
+  position: relative;
+  margin: 8px 4px;
+  padding: 4px;
   cursor: pointer;
   &:first-child {
     // ナビゲーションと頭を揃える
-    margin-top: 8px;
+    margin-top: 0;
+  }
+
+  &:hover::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: $theme-ui-primary;
+    opacity: 0.1;
   }
 }
 

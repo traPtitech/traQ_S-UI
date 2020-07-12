@@ -26,7 +26,7 @@ const setUnreadState = (id: ChannelId | DMChannelId) => {
   }
 }
 
-const useRouteWacher = (context: SetupContext) => {
+const useRouteWatcher = (context: SetupContext) => {
   const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
@@ -48,12 +48,6 @@ const useRouteWacher = (context: SetupContext) => {
     return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
   const onRouteChangedToIndex = async () => {
-    try {
-      await store.dispatch.domain.me.fetchMe()
-    } catch {
-      return
-    }
-
     const openChannelPath = await useOpenChannel()
     await context.root.$router
       .replace(constructChannelPath(openChannelPath.value))
@@ -61,6 +55,11 @@ const useRouteWacher = (context: SetupContext) => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {})
     return
+  }
+
+  const onRouteChangedToNull = () => {
+    store.dispatch.ui.mainView.changePrimaryViewToNull()
+    state.view = 'main'
   }
 
   const onRouteChangedToChannel = () => {
@@ -231,12 +230,15 @@ const useRouteWacher = (context: SetupContext) => {
       await onRouteChangedToIndex()
       return
     }
-    if (
-      !store.state.app.initialFetchCompleted ||
-      routeParam === prevRouteParam
-    ) {
+
+    if (routeParam === prevRouteParam) {
       return
     }
+    if (!store.state.app.initialFetchCompleted) {
+      onRouteChangedToNull()
+      return
+    }
+
     if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.User) {
@@ -248,6 +250,7 @@ const useRouteWacher = (context: SetupContext) => {
     } else if (routeName === RouteName.Message) {
       await onRouteChangedToMessage()
     }
+
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
     const isOnInitialModalRoute =
       state.isInitialView &&
@@ -267,21 +270,21 @@ const useRouteWacher = (context: SetupContext) => {
     closeNav()
   }
 
-  const routeWatcher = watch(
+  watch(
     computed(() =>
       store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
     ),
     onRouteParamChange
   )
-  onRouteParamChange(state.channelParam, '')
+
+  const triggerRouteParamChange = () => {
+    onRouteParamChange(state.channelParam, '')
+  }
 
   return {
     routeWatcherState: state,
-    routeWatcher,
-    onRouteChangedToIndex,
-    onRouteChangedToChannel,
-    onRouteChangedToFile
+    triggerRouteParamChange
   }
 }
 
-export default useRouteWacher
+export default useRouteWatcher

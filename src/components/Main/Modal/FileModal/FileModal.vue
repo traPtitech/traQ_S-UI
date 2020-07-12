@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import store from '@/store'
 import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'
@@ -25,13 +25,16 @@ export default defineComponent({
     FileModalAudio
   },
   props: {
-    fileId: {
+    id: {
       type: String,
       required: true
     }
   },
   setup(props, context) {
-    const { fileMeta, fileType } = useFileMeta(props, context)
+    const fileIdState = reactive({
+      fileId: computed(() => props.id)
+    })
+    const { fileMeta, fileType } = useFileMeta(fileIdState, context)
     const onClickOutSide = () => store.dispatch.ui.modal.clearModal()
     return { fileMeta, fileType, onClickOutSide }
   }

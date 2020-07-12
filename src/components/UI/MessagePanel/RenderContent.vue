@@ -26,7 +26,8 @@ import {
   defineComponent,
   computed,
   watchEffect,
-  ref
+  ref,
+  watch
 } from '@vue/composition-api'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
@@ -34,6 +35,7 @@ import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import { isFile } from '@/lib/util/guard/embeddingOrUrl'
 
 export default defineComponent({
   name: 'RenderContent',
@@ -52,10 +54,14 @@ export default defineComponent({
     watchEffect(async () => {
       rendered.value = await renderInline(props.content)
     })
-
-    const files = computed(() =>
-      rendered.value?.embeddings.filter(e => e.type === 'file')
+    watch(
+      () => store.state.app.initialFetchCompleted,
+      async () => {
+        rendered.value = await renderInline(props.content)
+      }
     )
+
+    const files = computed(() => rendered.value?.embeddings.filter(isFile))
 
     watchEffect(() => {
       files.value?.forEach(file =>

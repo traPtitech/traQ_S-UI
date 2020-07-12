@@ -27,7 +27,7 @@
     <div :class="$style.element">
       <h3>ホームチャンネル</h3>
       <form-selector
-        v-model="homeChannelState"
+        v-model="state.homeChannel"
         :options="channelOptions"
         :class="$style.form"
       />
@@ -36,16 +36,15 @@
       <h3>Twitter</h3>
       <form-input v-model="state.twitterId" prefix="@" :class="$style.form" />
     </div>
-    <p>
-      パスワードの変更は
-      <a href="https://portal.trap.jp/" target="_blank">
-        traPortal
-      </a>
-      から可能です
-    </p>
     <div :class="$style.updater">
-      <form-button label="更新" :disabled="!isChanged" @click="onUpdateClick" />
+      <form-button
+        label="更新"
+        :disabled="!isChanged"
+        :loading="isUpdating"
+        @click="onUpdateClick"
+      />
     </div>
+    <password :class="$style.element" />
   </section>
 </template>
 
@@ -63,13 +62,14 @@ import apis from '@/lib/apis'
 import useStateDiff from '../use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '../ImageUpload.vue'
-import useImageUpload from '../use/imageUpload'
+import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { compareStringInsensitive } from '@/lib/util/string'
+import Password from './Password.vue'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()
@@ -91,26 +91,62 @@ const useChannelOptions = () => {
 }
 
 const useState = (detail: Ref<UserDetail>) => {
-  const state = reactive({
+  const profile = computed(() => ({
     displayName: detail.value.displayName,
     bio: detail.value.bio,
-    twitterId: detail.value.twitterId
-  })
-  const homeChannelState = ref(detail.value.homeChannel ?? nullUuid)
-  const isHomeChannelChanged = computed(
-    () =>
-      homeChannelState.value !== detail.value.homeChannel &&
-      !(
-        homeChannelState.value === nullUuid && detail.value.homeChannel === null
-      )
-  )
+    twitterId: detail.value.twitterId,
+    homeChannel: detail.value.homeChannel ?? nullUuid
+  }))
+  const state = reactive({ ...profile.value })
 
   const { hasDiff } = useStateDiff<UserDetail>()
-  const isStateChanged = computed(
-    () => hasDiff(state, detail) || isHomeChannelChanged.value
-  )
+  const isStateChanged = computed(() => hasDiff(state, detail))
 
-  return { state, homeChannelState, isStateChanged }
+  return { state, isStateChanged }
+}
+
+type Profile = Pick<
+  UserDetail,
+  'displayName' | 'bio' | 'twitterId' | 'homeChannel'
+> & { homeChannel: string }
+
+const useProfileUpdate = (
+  state: Profile,
+  imageUploadState: ImageUploadState,
+  isStateChanged: Ref<boolean>,
+  destroyImageUploadState: () => void
+) => {
+  const isUpdating = ref(false)
+
+  const onUpdateClick = async () => {
+    const promises = []
+    if (imageUploadState.imgData !== undefined) {
+      promises.push(apis.changeMyIcon(imageUploadState.imgData))
+    }
+    if (isStateChanged.value) {
+      promises.push(apis.editMe(state))
+    }
+    try {
+      isUpdating.value = true
+      await Promise.all(promises)
+      destroyImageUploadState()
+
+      store.commit.ui.toast.addToast({
+        type: 'success',
+        text: 'プロフィールを更新しました'
+      })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('プロフィールの更新に失敗しました', e)
+
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'プロフィールの更新に失敗しました'
+      })
+    }
+    isUpdating.value = false
+  }
+  return { isUpdating, onUpdateClick }
 }
 
 export default defineComponent({
@@ -127,54 +163,27 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed
     } = useImageUpload()
-
-    const { state, homeChannelState, isStateChanged } = useState(detail)
-
+    const { state, isStateChanged } = useState(detail)
     const isChanged = computed(
       () => isStateChanged.value || imageUploadState.imgData !== undefined
     )
-    const onUpdateClick = async () => {
-      const promises = []
-      if (imageUploadState.imgData !== undefined) {
-        promises.push(apis.changeMyIcon(imageUploadState.imgData))
-      }
-      if (isStateChanged.value) {
-        promises.push(
-          apis.editMe({
-            ...state,
-            homeChannel: homeChannelState.value
-          })
-        )
-      }
-      try {
-        // TODO: loading
-        await Promise.all(promises)
-        destroyImageUploadState()
 
-        store.commit.ui.toast.addToast({
-          type: 'success',
-          text: 'プロフィールを更新しました'
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('プロフィールの更新に失敗しました', e)
-
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'プロフィールの更新に失敗しました'
-        })
-      }
-    }
+    const { isUpdating, onUpdateClick } = useProfileUpdate(
+      state,
+      imageUploadState,
+      isChanged,
+      destroyImageUploadState
+    )
 
     return {
       detail,
       channelOptions,
       state,
-      homeChannelState,
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
       isChanged,
+      isUpdating,
       onUpdateClick
     }
   },
@@ -183,7 +192,8 @@ export default defineComponent({
     ImageUpload,
     FormInput,
     FormSelector,
-    FormButton
+    FormButton,
+    Password
   }
 })
 </script>

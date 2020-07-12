@@ -1,6 +1,6 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import store from '@/store'
-import { Ref, computed, SetupContext } from '@vue/composition-api'
+import { Ref, computed, SetupContext, nextTick } from '@vue/composition-api'
 
 const useTextStampPickerInvoker = (
   targetPortalName: string,
@@ -12,7 +12,7 @@ const useTextStampPickerInvoker = (
 
   const { invokeStampPicker } = useStampPickerInvoker(
     targetPortalName,
-    stampData => {
+    async stampData => {
       const stampName = store.state.entities.stamps[stampData.id]?.name
       if (!stampName) return
       const size = stampData.size ? `.${stampData.size}` : ''
@@ -32,10 +32,9 @@ const useTextStampPickerInvoker = (
       const selectionIndex = pre.length + stampText.length
       textState.text = `${pre}${stampText}${suf}`
 
-      context.root.$nextTick(() => {
-        if (!textareaRef.value) return
-        textareaRef.value.$el.selectionStart = textareaRef.value.$el.selectionEnd = selectionIndex
-      })
+      await nextTick()
+      if (!textareaRef.value) return
+      textareaRef.value.$el.selectionStart = textareaRef.value.$el.selectionEnd = selectionIndex
     }
   )
 

@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     :aria-selected="isActive"
-    @click="context.emit('click')"
+    @click="emit('click')"
   >
     <div v-if="isActive" :class="$style.indicator"></div>
     <stamp
@@ -62,9 +62,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const { pickThumbnail } = useStampPaletteThumbnail()
-    return { context, pickThumbnail }
+    return { pickThumbnail, emit }
   }
 })
 </script>

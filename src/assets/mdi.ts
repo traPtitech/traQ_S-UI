@@ -17,7 +17,6 @@ import {
   mdiMicrophone,
   mdiMicrophoneOff,
   mdiPin,
-  mdiBellOutline,
   mdiDotsHorizontal,
   mdiBook,
   mdiTwitter,
@@ -56,7 +55,8 @@ import {
   mdiInformation,
   mdiAlert,
   mdiChevronUp,
-  mdiArchive
+  mdiArchive,
+  mdiPlay
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -77,7 +77,6 @@ const mdi: MdiIconsMapping = {
   microphone: mdiMicrophone,
   'microphone-off': mdiMicrophoneOff,
   pin: mdiPin,
-  'bell-outline': mdiBellOutline,
   search: mdiMagnify,
   history: mdiHistory,
   'file-upload': mdiFileUpload,
@@ -121,7 +120,8 @@ const mdi: MdiIconsMapping = {
   'comment-quote': mdiCommentQuote,
   info: mdiInformation,
   alert: mdiAlert,
-  archive: mdiArchive
+  archive: mdiArchive,
+  play: mdiPlay
 }
 
 export default mdi

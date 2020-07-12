@@ -1,41 +1,27 @@
 <template>
   <transition name="background-shadow">
     <div v-if="modalState.shouldShowModal" :class="$style.container">
-      <setting-modal v-if="modalState.current.type === 'setting'" />
-      <user-modal
-        v-else-if="modalState.current.type === 'user'"
-        :id="modalState.current.id"
-      />
-      <notification-modal
-        v-else-if="modalState.current.type === 'notification'"
-      />
-      <group-modal
-        v-else-if="modalState.current.type === 'group'"
-        :group-id="modalState.current.id"
-      />
-      <tag-modal
-        v-else-if="modalState.current.type === 'tag'"
-        :tag-id="modalState.current.id"
-      />
-      <channel-create-modal
-        v-else-if="modalState.current.type === 'channel-create'"
-        :parent-channel-id="modalState.current.parentChannelId"
-      />
-      <file-modal
-        v-else-if="modalState.current.type === 'file'"
-        :file-id="modalState.current.id"
-      />
-      <qr-code-modal v-else-if="modalState.current.type === 'qrcode'" />
-      <clip-create-modal
-        v-else-if="modalState.current.type === 'clip-create'"
-        :message-id="modalState.current.messageId"
-      />
-      <clip-folder-create-modal
-        v-else-if="modalState.current.type === 'clip-folder-create'"
-      />
-      <channel-manage-modal
-        v-else-if="modalState.current.type === 'channel-manage'"
-        :id="modalState.current.id"
+      <component
+        :is="component"
+        :id="
+          modalState.current.type === 'user' ||
+          modalState.current.type === 'tag' ||
+          modalState.current.type === 'group' ||
+          modalState.current.type === 'file' ||
+          modalState.current.type === 'channel-manage'
+            ? modalState.current.id
+            : undefined
+        "
+        :parent-channel-id="
+          modalState.current.type === 'channel-create'
+            ? modalState.current.parentChannelId
+            : undefined
+        "
+        :message-id="
+          modalState.current.type === 'clip-create'
+            ? modalState.current.messageId
+            : undefined
+        "
       />
     </div>
   </transition>
@@ -44,17 +30,21 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
-import SettingModal from '@/components/Main/Modal/SettingModal/SettingModal.vue'
-import UserModal from '@/components/Main/Modal/UserModal/UserModal.vue'
-import NotificationModal from '@/components/Main/Modal/NotificationModal/NotificationModal.vue'
-import TagModal from '@/components/Main/Modal/TagModal/TagModal.vue'
-import GroupModal from '@/components/Main/Modal/GroupModal/GroupModal.vue'
-import ChannelCreateModal from '@/components/Main/Modal/ChannelCreateModal/ChannelCreateModal.vue'
-import FileModal from '@/components/Main/Modal/FileModal/FileModal.vue'
-import QrCodeModal from '@/components/Main/Modal/QRCodeModal/QRCodeModal.vue'
-import ClipCreateModal from '@/components/Main/Modal/ClipCreateModal/ClipCreateModal.vue'
-import ClipFolderCreateModal from '@/components/Main/Modal/ClipFolderCreateModal/ClipFolderCreateModal.vue'
-import ChannelManageModal from '@/components/Main/Modal/ChannelManageModal/ChannelManageModal.vue'
+import { ModalState } from '@/store/ui/modal/state'
+
+const modalComponentMap: Record<ModalState['type'], string> = {
+  setting: 'SettingModal/SettingModal',
+  user: 'UserModal/UserModal',
+  notification: 'NotificationModal/NotificationModal',
+  tag: 'TagModal/TagModal',
+  group: 'GroupModal/GroupModal',
+  'channel-create': 'ChannelCreateModal/ChannelCreateModal',
+  file: 'FileModal/FileModal',
+  qrcode: 'QRCodeModal/QRCodeModal',
+  'clip-create': 'ClipCreateModal/ClipCreateModal',
+  'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
+  'channel-manage': 'ChannelManageModal/ChannelManageModal'
+}
 
 const useModal = () => {
   const state = reactive({
@@ -82,22 +72,19 @@ export default defineComponent({
   name: 'ModalContainer',
   setup() {
     const { modalState } = useModal()
+
+    // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
+    const getComponent = (path: string) => () =>
+      import(`@/components/Main/Modal/${path}.vue`)
+
+    const component = computed(() =>
+      getComponent(modalComponentMap[modalState.current.type])
+    )
+
     return {
-      modalState
+      modalState,
+      component
     }
-  },
-  components: {
-    SettingModal,
-    UserModal,
-    NotificationModal,
-    GroupModal,
-    TagModal,
-    ChannelCreateModal,
-    FileModal,
-    QrCodeModal,
-    ClipCreateModal,
-    ClipFolderCreateModal,
-    ChannelManageModal
   }
 })
 </script>

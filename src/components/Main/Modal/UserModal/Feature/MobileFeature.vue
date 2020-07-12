@@ -1,18 +1,19 @@
 <template>
   <section :class="$style.feature">
     <user-icon :user-id="user.id" :prevent-modal="true" :size="48" />
-    <div :class="$style.name">
+    <div :class="$style.names">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
-      <p>
-        <online-indicator
-          :class="$style.name"
+      <p :class="$style.name">
+        <online-indicator-with-tooltip
+          :class="$style.indicator"
           :user-id="user.id"
           :last-online="detail ? detail.lastOnline : undefined"
         />
-        @{{ user.name }}
+        <span>@{{ user.name }}</span>
       </p>
     </div>
     <buttons
+      :class="$style.buttons"
       :home-channel-id="detail ? detail.homeChannel : undefined"
       :user-name="user.name"
     />
@@ -23,7 +24,7 @@
 import { defineComponent, PropType } from '@vue/composition-api'
 import { User, UserDetail } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import OnlineIndicator from './OnlineIndicator.vue'
+import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
 import Buttons from './Buttons.vue'
 
 export default defineComponent({
@@ -40,7 +41,7 @@ export default defineComponent({
   },
   components: {
     UserIcon,
-    OnlineIndicator,
+    OnlineIndicatorWithTooltip,
     Buttons
   }
 })
@@ -61,6 +62,10 @@ export default defineComponent({
     bottom: 16px;
   }
 }
+.names {
+  @include size-body2;
+  min-width: 0;
+}
 .displayName {
   @include size-h3;
   overflow: hidden;
@@ -68,9 +73,14 @@ export default defineComponent({
   text-overflow: ellipsis;
 }
 .name {
-  @include size-body2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.indicator {
+  margin-right: 4px;
+}
+.buttons {
+  margin-right: 8px;
 }
 </style>

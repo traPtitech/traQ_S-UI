@@ -1,20 +1,20 @@
 <template>
   <div :class="$style.container">
     <message-panel
-      v-for="message in pinnedMessage"
-      :key="message.message.id"
+      v-for="message in sortedMessages"
+      :key="message.id"
       title-type="user"
       hide-subtitle
       line-clamp-content
-      :message="message.message"
-      @click="onMessageSelect(message.message.id)"
+      :message="message"
+      @click="onMessageSelect(message.id)"
       :class="$style.sidebarItem"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from '@vue/composition-api'
 import { Pin } from '@traptitech/traq'
 import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
 import { MessageId } from '@/types/entity-ids'
@@ -23,9 +23,15 @@ export default defineComponent({
   name: 'ChannelSidebarPinnedList',
   components: { MessagePanel },
   props: {
-    pinnedMessage: { type: Array as PropType<Pin[]>, default: [] }
+    pinnedMessages: { type: Array as PropType<Pin[]>, default: [] }
   },
   setup(props, context) {
+    const sortedMessages = computed(() =>
+      [...props.pinnedMessages]
+        .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
+        .map(pinnedMessage => pinnedMessage.message)
+    )
+
     const closeBar = () => {
       context.emit('closeBar')
     }
@@ -34,7 +40,7 @@ export default defineComponent({
       context.root.$router.push(`/messages/${messageId}`)
     }
 
-    return { closeBar, onMessageSelect }
+    return { sortedMessages, closeBar, onMessageSelect }
   }
 })
 </script>

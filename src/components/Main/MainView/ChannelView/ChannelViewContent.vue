@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
     <messages-scroller
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
@@ -19,8 +20,8 @@ import { defineComponent, PropType } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
-import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
+import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 
 export default defineComponent({
   name: 'ChannelViewContent',
@@ -29,9 +30,9 @@ export default defineComponent({
     entryMessageId: String
   },
   components: {
+    ScrollLoadingBar,
     MessagesScroller,
-    MessageInput,
-    ChannelViewFileUploadOverlay
+    MessageInput
   },
   setup(props) {
     const {
@@ -68,5 +69,14 @@ export default defineComponent({
   position: relative;
   height: 100%;
   width: 100%;
+}
+
+.loadingBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  z-index: $z-index-message-loading;
 }
 </style>

@@ -18,7 +18,6 @@ import {
   computed,
   PropType
 } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
 import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
@@ -57,12 +56,13 @@ export default defineComponent({
       () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
     )
     const styles = reactive({
-      container: makeStyles(theme => ({
+      container: computed(() => ({
         width: `${props.size}px`,
         height: `${props.size}px`,
         backgroundImage: userIconFileId.value
           ? `url(${buildUserIconPath(userIconFileId.value)})`
-          : undefined
+          : undefined,
+        pointerEvents: props.preventModal ? 'none' : undefined
       }))
     })
 
@@ -97,7 +97,7 @@ export default defineComponent({
 }
 .indicator {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: 0;
+  right: 0;
 }
 </style>

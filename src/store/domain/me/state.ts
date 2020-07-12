@@ -6,7 +6,7 @@ import {
 } from '@traptitech/traq'
 
 export interface S {
-  detail?: MyUserDetail
+  detail?: Readonly<MyUserDetail>
   webhooks: WebhookId[]
   stampHistory: Record<StampId, Date>
 

@@ -1,10 +1,18 @@
 <template>
   <div :class="$style.container">
-    <!-- TODO: DMタイムライン
-    <navigation-content-container subtitle="ダイレクトメッセージ">
-      <empty-state>Not Implemented</empty-state>
+    <navigation-content-container
+      subtitle="未読ダイレクトメッセージ"
+      v-if="usersWithNotification.length > 0"
+    >
+      <div :class="$style.dmActivity">
+        <d-m-activity-element
+          v-for="user in usersWithNotification"
+          :key="user.id"
+          :user-id="user"
+          :class="$style.dmActivityElement"
+        />
+      </div>
     </navigation-content-container>
-    -->
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
         :text="userListFilterState.query"
@@ -35,28 +43,42 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
-import { User } from '@traptitech/traq'
 import { compareStringInsensitive } from '@/lib/util/string'
-import EmptyState from '@/components/UI/EmptyState.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
-import { UserMap } from '@/store/entities'
+import { isDefined } from '@/lib/util/array'
+import { ActiveUser } from '@/lib/user'
+import { ActiveUserMap } from '@/store/entities'
+import DMActivityElement from './DMActivityElement.vue'
+
+const useUsersWithNotification = () => {
+  const usersWithNotification = computed(() =>
+    Object.values(store.state.domain.me.unreadChannelsSet)
+      .sort((a, b) =>
+        Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
+      )
+      .map(unread => store.state.entities.dmChannels[unread.channelId ?? ''])
+      .filter(isDefined)
+      .map(({ userId }) => userId)
+  )
+  return usersWithNotification
+}
 
 interface UsersGradeList {
   gradeName: string
-  users: User[]
+  users: ActiveUser[]
 }
 
 const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
-  const users = computed(() => store.state.entities.users)
+  const activeUsers = computed(() => store.getters.entities.activeUsers)
   const listByGradeName = computed((): UsersGradeList[] => {
     if (
       userGroups.value.length === 0 ||
-      Object.keys(users.value).length === 0
+      Object.keys(activeUsers.value).length === 0
     ) {
       return []
     }
@@ -65,11 +87,10 @@ const useListByGradeName = () => {
 
     // 学年グループ
     for (const group of userGroups.value) {
-      const member = (group.members
-        .map(member => users.value[member.id])
-        .filter(user => !!user) as User[]).sort((u1, u2) =>
-        compareStringInsensitive(u1.name, u2.name)
-      )
+      const member = group.members
+        .map(member => activeUsers.value[member.id])
+        .filter(isDefined)
+        .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
 
       userGrades.push({ gradeName: group.name, users: member })
@@ -78,14 +99,14 @@ const useListByGradeName = () => {
     }
 
     // BOTグループ
-    const bots = Object.values(users.value as UserMap)
+    const bots = Object.values(activeUsers.value as ActiveUserMap)
       .filter(user => user.bot)
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
-    const others = Object.values(users.value as UserMap)
-      .filter(user => user && !categorized.has(user.id))
+    const others = Object.values(activeUsers.value as ActiveUserMap)
+      .filter(user => !categorized.has(user.id))
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
     const result = [
@@ -102,10 +123,10 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const users = computed(
-    () => Object.values(store.state.entities.users) as User[]
+  const activeUsers = computed(() =>
+    Object.values(store.getters.entities.activeUsers as ActiveUserMap)
   )
-  const { textFilterState, setQuery } = useTextFilter(users, 'name')
+  const { textFilterState, setQuery } = useTextFilter(activeUsers, 'name')
   return {
     userListFilterState: textFilterState,
     setQuery
@@ -115,16 +136,18 @@ const useUserListFilter = () => {
 export default defineComponent({
   name: 'Users',
   components: {
-    EmptyState,
+    DMActivityElement,
     NavigationContentContainer,
     UsersElement,
     UsersGradeList,
     FilterInput
   },
   setup() {
+    const usersWithNotification = useUsersWithNotification()
     const userLists = useListByGradeName()
     const { userListFilterState, setQuery } = useUserListFilter()
     return {
+      usersWithNotification,
       userLists,
       userListFilterState,
       setQuery
@@ -136,6 +159,18 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 0 16px 0 0;
+}
+.dmActivity {
+  margin-bottom: 8px;
+}
+.dmActivityElement {
+  margin: 8px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .element {
   margin: 8px 0;

@@ -1,14 +1,21 @@
 <template>
   <div :class="$style.container" :data-is-mobile="isMobile">
-    <div @click="onClickStampButton" :class="$style.button">
+    <div
+      :class="$style.button"
+      title="スタンプを挿入"
+      @click="onClickStampButton"
+    >
       <icon mdi name="emoticon-outline" />
     </div>
     <button
-      @click="onClickSendButton"
-      :disabled="!canPostMessage"
       :class="$style.sendButton"
+      title="送信する"
+      :disabled="!canPostMessage"
+      @click="onClickSendButton"
     >
-      <icon mdi name="send" />
+      <transition name="post">
+        <icon v-if="!isPosting" mdi name="send" />
+      </transition>
     </button>
   </div>
 </template>
@@ -18,11 +25,10 @@ import { defineComponent, SetupContext } from '@vue/composition-api'
 import useIsMobile from '@/use/isMobile'
 import Icon from '@/components/UI/Icon.vue'
 
-type Props = {
-  canPostMessage: boolean
-}
-
-const useClickHandlers = (props: Props, context: SetupContext) => {
+const useClickHandlers = (
+  props: { canPostMessage: boolean },
+  context: SetupContext
+) => {
   const onClickSendButton = () => {
     if (props.canPostMessage) {
       context.emit('click-send')
@@ -33,6 +39,7 @@ const useClickHandlers = (props: Props, context: SetupContext) => {
   }
   return { onClickSendButton, onClickStampButton }
 }
+
 export default defineComponent({
   name: 'MessageInputControls',
   components: {
@@ -40,6 +47,10 @@ export default defineComponent({
   },
   props: {
     canPostMessage: {
+      type: Boolean,
+      default: false
+    },
+    isPosting: {
       type: Boolean,
       default: false
     }
@@ -81,6 +92,12 @@ export default defineComponent({
   }
   &:last-child:last-child {
     margin-right: 0;
+  }
+
+  transform: scale(1);
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
   }
 }
 .sendButton {

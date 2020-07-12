@@ -12,7 +12,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.1.0
+          node-version: 14.4.0
           registry-url: 'https://registry.npmjs.org'
       - name: check npm ci
         run: npm ci
@@ -30,7 +30,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.1.0
+          node-version: 14.4.0
           registry-url: 'https://registry.npmjs.org'
       - uses: actions/cache@v1
         with:
@@ -52,7 +52,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.1.0
+          node-version: 14.4.0
           registry-url: 'https://registry.npmjs.org'
       - uses: actions/cache@v1
         with:
@@ -74,7 +74,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.1.0
+          node-version: 14.4.0
           registry-url: 'https://registry.npmjs.org'
       - uses: actions/cache@v1
         with:
@@ -113,7 +113,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.1.0
+          node-version: 14.4.0
           registry-url: 'https://registry.npmjs.org'
       - uses: actions/cache@v1
         with:

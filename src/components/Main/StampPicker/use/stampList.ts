@@ -5,7 +5,7 @@ import { StampSet } from './stampSetSelector'
 import useStampFilter from './stampFilter'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
-  const stampIds = computed((): StampId[] => {
+  const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
       return store.getters.domain.me.recentStampIds
     }

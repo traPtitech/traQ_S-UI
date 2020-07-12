@@ -11,7 +11,8 @@ import {
   FileId,
   TagId,
   ClipFolderId,
-  StampId
+  StampId,
+  ExternalUrl
 } from '@/types/entity-ids'
 import {
   User,
@@ -21,8 +22,10 @@ import {
   FileInfo,
   Tag,
   ClipFolder,
-  Stamp
+  Stamp,
+  Ogp
 } from '@traptitech/traq'
+import { ActiveUser } from '@/lib/user'
 
 export type UserMap = Record<UserId, User>
 export type MessageMap = Record<MessageId, Message>
@@ -32,6 +35,9 @@ export type WebhookMap = Record<WebhookId, Webhook>
 export type FileMetaDataMap = Record<FileId, FileInfo>
 export type TagMap = Record<TagId, Tag>
 export type ClipFolderMap = Record<ClipFolderId, ClipFolder>
+export type OgpDataMap = Record<ExternalUrl, Ogp>
+
+export type ActiveUserMap = Record<UserId, ActiveUser>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Undefinedable<T extends Record<string, any>> = Partial<T>

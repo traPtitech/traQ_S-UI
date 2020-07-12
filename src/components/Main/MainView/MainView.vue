@@ -65,6 +65,7 @@ export default defineComponent({
 <style lang="scss" module>
 .headerContainer {
   width: 100%;
+  z-index: $z-index-header;
 }
 .container {
   height: 100%;

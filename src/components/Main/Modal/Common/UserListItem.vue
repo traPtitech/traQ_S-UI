@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container">
+  <div
+    @click.stop="openModal"
+    :role="isClickable ? 'button' : 'listitem'"
+    :class="$style.container"
+  >
     <user-icon :class="$style.icon" :user-id="userId" :size="36" />
     <span>{{ name }}</span>
   </div>
@@ -9,6 +13,7 @@
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import { useUserModalOpener } from '@/use/modalOpener'
 
 export default defineComponent({
   name: 'UserListItem',
@@ -19,7 +24,14 @@ export default defineComponent({
   setup(props) {
     const user = computed(() => store.state.entities.users[props.userId])
     const name = computed(() => user.value?.displayName)
-    return { name }
+
+    const { isClickable, openModal } = useUserModalOpener(props, user)
+
+    return {
+      name,
+      isClickable,
+      openModal
+    }
   }
 })
 </script>
@@ -27,8 +39,25 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-primary;
+  position: relative;
   display: flex;
   align-items: center;
+  padding: 4px;
+  &[role='button'] {
+    cursor: pointer;
+  }
+
+  &:hover::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: $theme-ui-primary;
+    opacity: 0.1;
+  }
 }
 .icon {
   margin-right: 16px;
