@@ -5,36 +5,6 @@ import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
 
-  const themeIcon = computed(() => {
-    const { type } = store.state.app.themeSettings
-    switch (type) {
-      case 'light':
-        return 'crescent-outline'
-      case 'dark':
-        return 'crescent'
-      case 'auto':
-      case 'custom':
-        return 'brightness-6'
-      default: {
-        const invalid: never = type
-        // eslint-disable-next-line no-console
-        console.warn(`Invalid theme type: ${invalid}`)
-
-        return 'crescent'
-      }
-    }
-  })
-  const isMdi = computed(() => {
-    return ['auto', 'custom'].includes(store.state.app.themeSettings.type)
-      ? true
-      : undefined
-  })
-
-  const isThemeClickDisabled = computed(() =>
-    ['auto', 'custom'].includes(store.state.app.themeSettings.type)
-  )
-
-  const toggleTheme = () => store.dispatch.app.themeSettings.toggleTheme()
   const openQrCodeModal = () =>
     store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
   const openSettingsModal = () =>
@@ -52,13 +22,6 @@ const useToolBox = () => {
         iconName: 'apps',
         iconMdi: true,
         onClick: togglePopupMenu
-      },
-      // theme
-      {
-        iconName: themeIcon.value,
-        iconMdi: isMdi.value,
-        disabled: isThemeClickDisabled.value,
-        onClick: toggleTheme
       },
       // qr
       {
