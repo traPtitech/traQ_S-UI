@@ -9,45 +9,46 @@
       />
     </div>
     <div v-if="current" :class="$style.channel">
-      <channel-sidebar-relation-element
-        is-current
-        :name="current.name"
-        :topic="current.topic"
-        :class="$style.element"
-      />
-      <div :class="$style.channel" data-is-children>
+      <template v-for="sibling in filteredSiblings">
         <channel-sidebar-relation-element
-          v-for="child in filteredChildren"
-          :key="child.id"
-          :name="child.name"
-          :topic="child.topic"
-          :link="buildChildLink(child.name)"
+          :key="sibling.id"
+          :name="sibling.name"
+          :topic="sibling.topic"
+          :link="buildSiblingLink(sibling.name)"
           :class="$style.element"
+          :is-current="sibling.id === current.id"
         />
         <div
-          v-if="!state.isOpenChildren && children.length > 3"
-          :class="$style.text"
-          @click="toggleChildren"
+          v-if="sibling.id === current.id"
+          :class="$style.channel"
+          data-is-children
+          :key="`${sibling.id}children`"
         >
-          <div>子チャンネルを全て表示</div>
-          <div>(+{{ children.length - 3 }})</div>
+          <channel-sidebar-relation-element
+            v-for="child in filteredChildren"
+            :key="child.id"
+            :name="child.name"
+            :topic="child.topic"
+            :link="buildChildLink(child.name)"
+            :class="$style.element"
+          />
+          <div
+            v-if="!state.isOpenChildren && childrenRemainCount > 0"
+            :class="$style.text"
+            @click="toggleChildren"
+          >
+            <div>子チャンネルを全て表示</div>
+            <div>(+{{ childrenRemainCount }})</div>
+          </div>
         </div>
-      </div>
-      <channel-sidebar-relation-element
-        v-for="sibling in filteredSiblings"
-        :key="sibling.id"
-        :name="sibling.name"
-        :topic="sibling.topic"
-        :link="buildSiblingLink(sibling.name)"
-        :class="$style.element"
-      />
+      </template>
       <div
-        v-if="!state.isOpenSiblings && siblings.length > 3"
+        v-if="!state.isOpenSiblings && siblingsRemainCount > 0"
         :class="$style.text"
         @click="toggleSiblings"
       >
         <div>兄弟チャンネルを全て表示</div>
-        <div>(+{{ siblings.length - 3 }})</div>
+        <div>(+{{ siblingsRemainCount }})</div>
       </div>
     </div>
   </div>
@@ -62,6 +63,10 @@ import {
 } from '@vue/composition-api'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
+
+const SIBLINGS_DEFAULT_COUNT = 5
+const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
+const CHILDREN_DEFAULT_COUNT = 3
 
 export default defineComponent({
   name: 'ChannelSidebarRelationContent',
@@ -91,10 +96,37 @@ export default defineComponent({
     }
 
     const filteredChildren = computed(() =>
-      state.isOpenChildren ? props.children : props.children.slice(0, 3)
+      state.isOpenChildren
+        ? props.children
+        : props.children.slice(0, CHILDREN_DEFAULT_COUNT)
     )
-    const filteredSiblings = computed(() =>
-      state.isOpenSiblings ? props.siblings : props.siblings.slice(0, 3)
+    const filteredSiblings = computed(() => {
+      if (state.isOpenSiblings) return props.siblings
+      const currentId = props.current?.id
+      if (!currentId) return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
+
+      const index = props.siblings.findIndex(s => s.id === currentId)
+      if (index <= SIBLINGS_DEFAULT_HALF - 1) {
+        return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
+      }
+      const siblingsLen = props.siblings.length
+      if (siblingsLen - SIBLINGS_DEFAULT_HALF <= index) {
+        return props.siblings.slice(
+          siblingsLen - SIBLINGS_DEFAULT_COUNT,
+          siblingsLen
+        )
+      }
+      return props.siblings.slice(
+        index - SIBLINGS_DEFAULT_HALF,
+        index + SIBLINGS_DEFAULT_HALF + 1
+      )
+    })
+
+    const childrenRemainCount = computed(
+      () => props.children.length - CHILDREN_DEFAULT_COUNT
+    )
+    const siblingsRemainCount = computed(
+      () => props.siblings.length - SIBLINGS_DEFAULT_COUNT
     )
 
     const buildChildLink = (channel: string) =>
@@ -110,6 +142,8 @@ export default defineComponent({
       toggleSiblings,
       filteredChildren,
       filteredSiblings,
+      childrenRemainCount,
+      siblingsRemainCount,
       buildChildLink,
       buildParentLink,
       buildSiblingLink
