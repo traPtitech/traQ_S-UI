@@ -13,13 +13,17 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
       return store.state.domain.channelTree.channelTree.children
         .map(v => store.state.entities.channels[v.id])
         .filter(el => el.id !== current.value.id)
+        .filter(el => !el.archived)
     }
     return parent.value.children
       .map(v => store.state.entities.channels[v])
       .filter(el => el.id !== current.value.id)
+      .filter(el => !el.archived)
   })
   const children = computed(() =>
-    current.value.children.map(id => store.state.entities.channels[id])
+    current.value.children
+      .map(id => store.state.entities.channels[id])
+      .filter(el => !el.archived)
   )
 
   return { current, parent, siblings, children }
