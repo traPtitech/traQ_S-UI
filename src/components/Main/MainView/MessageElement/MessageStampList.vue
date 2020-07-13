@@ -63,9 +63,9 @@ export interface MessageStampById {
    */
   myCount: number
   /**
-   * ユーザーとそのユーザーの押した数
+   * ユーザー、そのユーザーの押した数と最初に押した時間
    */
-  users: Array<{ id: UserId; count: number }>
+  users: Array<{ id: UserId; count: number; createdAt: Date }>
   /**
    * 一番最初に押された時間
    */
@@ -90,13 +90,23 @@ const createStampList = (
         id: stamp.stampId,
         sum: stamp.count,
         myCount: stamp.userId === myId.value ? stamp.count : 0,
-        users: [{ id: stamp.userId, count: stamp.count }],
+        users: [
+          {
+            id: stamp.userId,
+            count: stamp.count,
+            createdAt: new Date(stamp.createdAt)
+          }
+        ],
         createdAt: new Date(stamp.createdAt),
         updatedAt: new Date(stamp.updatedAt)
       }
     } else {
       map[stampId].sum += stamp.count
-      map[stampId].users.push({ id: stamp.userId, count: stamp.count })
+      map[stampId].users.push({
+        id: stamp.userId,
+        count: stamp.count,
+        createdAt: new Date(stamp.createdAt)
+      })
       if (stamp.userId === myId.value) {
         map[stampId].myCount = stamp.count
       }
@@ -110,6 +120,9 @@ const createStampList = (
       }
     }
   })
+  Object.values(map).forEach(stamp =>
+    stamp.users.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+  )
   return Object.values(map).sort(
     (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
   )
