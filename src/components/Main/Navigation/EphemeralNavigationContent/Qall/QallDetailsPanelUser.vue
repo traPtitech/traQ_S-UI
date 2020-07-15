@@ -71,7 +71,7 @@ export default defineComponent({
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({
         userId: props.userId,
-        volume: value / maxVolumeValue
+        volume: Math.round(value / maxVolumeValue)
       })
     }
     return {
