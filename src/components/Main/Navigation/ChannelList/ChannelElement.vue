@@ -37,6 +37,7 @@
     <channel-element-topic
       v-if="showTopic"
       :class="$style.topic"
+      :channel-id="channel.id"
       @click.native="onChannelNameClick"
     />
 
