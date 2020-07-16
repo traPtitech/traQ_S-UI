@@ -40,7 +40,7 @@ export interface S {
   /** 現在編集中のメッセージID */
   editingMessageId?: MessageId
 
-  /** 現在のチャンネルの未読メッセージの数 */
+  /** 現在のチャンネルの最古の未読メッセージの投稿日時 */
   unreadSince: string | undefined
 }
 

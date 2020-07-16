@@ -6,7 +6,7 @@
     :data-is-mobile="isMobile"
     :data-is-entry="isEntryMessage"
   >
-    <clip-tools :class="$style.tools" :message-id="messageId" />
+    <message-tools :class="$style.tools" :message-id="messageId" is-minimum />
     <message-contents
       :class="$style.messageContents"
       :message-id="messageId"
@@ -41,7 +41,7 @@ import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
-import ClipTools from '@/components/Main/MainView/MessageElement/ClipTools.vue'
+import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
 
@@ -50,7 +50,7 @@ export default defineComponent({
   components: {
     MessageContents,
     MessagePinned,
-    ClipTools
+    MessageTools
   },
   props: {
     messageId: {

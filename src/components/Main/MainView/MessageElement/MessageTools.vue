@@ -1,5 +1,14 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div v-if="isMinimum" :class="$style.container" data-is-minimum>
+    <icon
+      :class="$style.icon"
+      :size="28"
+      mdi
+      name="dots-horizontal"
+      @click="onDotsClick"
+    />
+  </div>
+  <div v-else :class="$style.container" :data-is-mobile="isMobile">
     <transition name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <stamp
@@ -69,7 +78,10 @@ export default defineComponent({
     Icon,
     Stamp
   },
-  props: { messageId: { type: String as PropType<MessageId>, required: true } },
+  props: {
+    messageId: { type: String as PropType<MessageId>, required: true },
+    isMinimum: { type: Boolean, default: false }
+  },
   setup(props) {
     const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
@@ -99,7 +111,8 @@ export default defineComponent({
       store.dispatch.ui.messageContextMenu.openMessageContextMenu({
         messageId: props.messageId,
         x: e.pageX,
-        y: e.pageY
+        y: e.pageY,
+        isMinimum: props.isMinimum
       })
     }
 
@@ -130,6 +143,9 @@ export default defineComponent({
   contain: content;
   &:not([data-is-mobile]) {
     box-shadow: 0 1px 3px 0;
+  }
+  &[data-is-minimum] {
+    border: solid 2px $theme-ui-tertiary;
   }
 }
 

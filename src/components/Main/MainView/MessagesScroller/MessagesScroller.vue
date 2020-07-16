@@ -26,6 +26,7 @@
           :class="$style.element"
           :message-id="messageId"
           :is-entry-message="entryMessageId === messageId"
+          :is-archived="isArchived"
           @change-height="onChangeHeight"
           @entry-message-loaded="onEntryMessageLoaded"
         />
@@ -143,6 +144,10 @@ export default defineComponent({
     isReachedEnd: { type: Boolean, required: true },
     isReachedLatest: { type: Boolean, required: true },
     entryMessageId: { type: String as PropType<MessageId> },
+    isArchived: {
+      type: Boolean,
+      default: false
+    },
     isLoading: {
       type: Boolean,
       default: false

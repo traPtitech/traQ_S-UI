@@ -19,6 +19,7 @@
       v-if="isHovered && !state.isEditing"
       :class="$style.tools"
       :message-id="messageId"
+      :is-minimum="isArchived"
     />
     <message-contents
       :class="$style.messageContents"
@@ -68,6 +69,10 @@ export default defineComponent({
       required: true
     },
     isEntryMessage: {
+      type: Boolean,
+      default: false
+    },
+    isArchived: {
       type: Boolean,
       default: false
     }
