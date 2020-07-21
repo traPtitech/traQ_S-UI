@@ -28,6 +28,7 @@
     "firebase": "^7.16.0",
     "highlight.js": "^10.1.1",
     "idb-keyval": "^3.2.0",
+    "klona": "^1.1.2",
     "lodash-es": "^4.17.15",
     "pica": "^6.1.0",
     "portal-vue": "^2.1.7",
