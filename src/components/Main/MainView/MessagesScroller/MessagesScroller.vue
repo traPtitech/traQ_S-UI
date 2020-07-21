@@ -55,7 +55,7 @@ import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
-import { throttle } from 'lodash-es'
+import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '@/lib/markdown'
 import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
@@ -237,7 +237,7 @@ export default defineComponent({
       }
     )
 
-    const handleScroll = throttle(() => {
+    const handleScroll = throttle(17, () => {
       if (!rootRef.value) return
       const clientHeight = rootRef.value.clientHeight
       const scrollHeight = rootRef.value.scrollHeight
@@ -254,7 +254,7 @@ export default defineComponent({
       ) {
         context.emit('request-load-latter')
       }
-    }, 17)
+    })
 
     useInternalLink(rootRef, context)
     useSpoilerToggler(rootRef)

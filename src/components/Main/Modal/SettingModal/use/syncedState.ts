@@ -1,5 +1,5 @@
 import { Ref, reactive, watchEffect } from '@vue/composition-api'
-import { cloneDeep } from 'lodash-es'
+import klona from 'klona'
 import useStateDiff from './stateDiff'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -9,12 +9,12 @@ const useSyncedState = <T extends object>(
 ) => {
   const { getDiffKeys } = useStateDiff<T>()
 
-  const state = reactive(cloneDeep(storeState.value)) as T
+  const state = reactive(klona(storeState.value)) as T
 
   watchEffect(() => {
     const diffKeys = getDiffKeys(state, storeState)
     diffKeys.forEach(key => {
-      setFunc([key, cloneDeep(state[key])])
+      setFunc([key, klona(state[key])])
     })
   })
 

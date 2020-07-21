@@ -28,7 +28,7 @@ import {
   nextTick
 } from '@vue/composition-api'
 // import { ResizeObserver } from '@juggle/resize-observer'
-import { throttle } from 'lodash-es'
+import { throttle } from 'throttle-debounce'
 
 const binarySearch = (arr: number[], x: number) => {
   let low = 0
@@ -154,12 +154,12 @@ export default defineComponent({
     const rootRef = ref<HTMLElement | null>(null)
     const spacerRef = ref<HTMLElement | null>(null)
 
-    const handleScroll = throttle((e: Event) => {
+    const handleScroll = throttle(17, (e: Event) => {
       if (!rootRef.value) return
       const el = rootRef.value
       state.scrollTop = el.scrollTop
       //TODO: load more
-    }, 17)
+    })
     const scrollTo = (index: number) => {
       if (!rootRef.value) return
       const pageStartIndex = Math.floor(index / PAGE_SIZE)

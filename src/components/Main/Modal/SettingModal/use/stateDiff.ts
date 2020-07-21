@@ -1,5 +1,5 @@
 import { Ref } from '@vue/composition-api'
-import { isEqual } from 'lodash-es'
+import dequal from 'dequal'
 
 const useStateDiff = <T>() => {
   const getDiffKeys = (
@@ -8,7 +8,7 @@ const useStateDiff = <T>() => {
   ) => {
     return (Object.keys(state) as Array<keyof T>).filter(key => {
       const k = key as keyof T
-      return !isEqual(state[k], storeState.value[k])
+      return !dequal(state[k], storeState.value[k])
     })
   }
 

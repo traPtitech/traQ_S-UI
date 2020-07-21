@@ -36,7 +36,7 @@ import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/Chan
 import ChannelViewHeader from './Header.vue'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
-import { debounce } from 'lodash-es'
+import { debounce } from 'throttle-debounce'
 
 const useFileDragDrop = () => {
   const state = reactive({
@@ -52,9 +52,9 @@ const useFileDragDrop = () => {
 
   /** ドラッグ終了判定するまでにdragoverが何ms開けばいいか */
   const dragoverResetDurationMs = 100
-  const resetDraggingState = debounce(() => {
+  const resetDraggingState = debounce(dragoverResetDurationMs, () => {
     state.isDragging = false
-  }, dragoverResetDurationMs)
+  })
   const onDragOver = (event: DragEvent) => {
     state.isDragging = true
     resetDraggingState()
