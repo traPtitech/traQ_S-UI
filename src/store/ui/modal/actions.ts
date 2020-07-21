@@ -1,6 +1,6 @@
 import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
-import { isEqual } from 'lodash-es'
+import dequal from 'dequal'
 import { ModalState } from './state'
 import { modal } from './index'
 import router, { constructChannelPath, constructUserPath } from '@/router'
@@ -120,7 +120,7 @@ export const actions = defineActions({
   collectGarbage(context, modalState: ModalState) {
     const { state } = modalActionContext(context)
 
-    const isUsed = state.modalState.some(ms => isEqual(ms, modalState))
+    const isUsed = state.modalState.some(ms => dequal(ms, modalState))
     if (isUsed) {
       return
     }
