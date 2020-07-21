@@ -12,7 +12,7 @@ import {
   watchEffect
 } from '@vue/composition-api'
 import store from './store'
-import { throttle } from 'lodash-es'
+import { throttle } from 'throttle-debounce'
 import { makeStyles } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
@@ -22,7 +22,7 @@ const useWindowResizeObserver = () => {
   const resizeHandler = () => {
     store.commit.ui.setViewportWidth(window.innerWidth)
   }
-  window.addEventListener('resize', throttle(resizeHandler, 100))
+  window.addEventListener('resize', throttle(100, resizeHandler))
   resizeHandler()
 }
 
