@@ -1,4 +1,8 @@
-import { getFullMatchedAndMatched, isDefined } from '@/lib/util/array'
+import {
+  getFullMatchedAndMatched,
+  pickSomeAroundIndex,
+  isDefined
+} from '@/lib/util/array'
 
 describe('getFullMatchedAndMatched', () => {
   it('can get fullMatched', () => {
@@ -22,6 +26,26 @@ describe('getFullMatchedAndMatched', () => {
     const expected = { fullMatched: ['aaa'], matched: ['aaaaa', 'AAAAb'] }
     const actual = getFullMatchedAndMatched(arr, 'aaa')
     expect(actual).toEqual(expected)
+  })
+})
+
+describe('pickSomeAroundIndex', () => {
+  const arr1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  it('can pick', () => {
+    expect(pickSomeAroundIndex(arr1, 3, 2)).toEqual([1, 2, 3, 4, 5])
+  })
+  it('can pick head', () => {
+    expect(pickSomeAroundIndex(arr1, 0, 2)).toEqual([0, 1, 2, 3, 4])
+  })
+  it('can pick near head', () => {
+    expect(pickSomeAroundIndex(arr1, 3, 3)).toEqual([0, 1, 2, 3, 4, 5, 6])
+  })
+  it('can pick tail', () => {
+    expect(pickSomeAroundIndex(arr1, 9, 2)).toEqual([5, 6, 7, 8, 9])
+  })
+  it('can pick near tail', () => {
+    expect(pickSomeAroundIndex(arr1, 6, 3)).toEqual([3, 4, 5, 6, 7, 8, 9])
   })
 })
 

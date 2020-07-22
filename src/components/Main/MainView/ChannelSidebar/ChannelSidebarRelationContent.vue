@@ -63,6 +63,7 @@ import {
 } from '@vue/composition-api'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
+import { pickSomeAroundIndex } from '@/lib/util/array'
 
 const SIBLINGS_DEFAULT_COUNT = 5
 const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
@@ -106,20 +107,7 @@ export default defineComponent({
       if (!currentId) return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
 
       const index = props.siblings.findIndex(s => s.id === currentId)
-      if (index <= SIBLINGS_DEFAULT_HALF - 1) {
-        return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
-      }
-      const siblingsLen = props.siblings.length
-      if (siblingsLen - SIBLINGS_DEFAULT_HALF <= index) {
-        return props.siblings.slice(
-          siblingsLen - SIBLINGS_DEFAULT_COUNT,
-          siblingsLen
-        )
-      }
-      return props.siblings.slice(
-        index - SIBLINGS_DEFAULT_HALF,
-        index + SIBLINGS_DEFAULT_HALF + 1
-      )
+      return pickSomeAroundIndex(props.siblings, index, SIBLINGS_DEFAULT_HALF)
     })
 
     const childrenRemainCount = computed(
