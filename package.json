@@ -26,7 +26,7 @@
     "deepmerge": "^4.2.2",
     "dequal": "^1.0.1",
     "direct-vuex": "^0.12.0",
-    "firebase": "^7.16.0",
+    "firebase": "^7.17.1",
     "highlight.js": "^10.1.1",
     "idb-keyval": "^3.2.0",
     "klona": "^1.1.2",
