@@ -63,6 +63,7 @@ $paddingSize: 16px;
   width: 100%;
   top: -$paddingSize;
   left: 0;
+  z-index: $z-index-sidebar-overlay;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
