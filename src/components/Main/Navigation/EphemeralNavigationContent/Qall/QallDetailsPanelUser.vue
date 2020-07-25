@@ -58,9 +58,10 @@ export default defineComponent({
     micMuted: { type: Boolean, default: false }
   },
   setup(props) {
-    const volume = computed(
-      () =>
+    const volume = computed(() =>
+      Math.round(
         (store.state.app.rtc.userVolumeMap[props.userId] ?? 0) * maxVolumeValue
+      )
     )
     const userName = computed(
       () => store.state.entities.users[props.userId]?.displayName ?? ''
@@ -71,7 +72,7 @@ export default defineComponent({
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({
         userId: props.userId,
-        volume: Math.round(value / maxVolumeValue)
+        volume: value / maxVolumeValue
       })
     }
     return {
