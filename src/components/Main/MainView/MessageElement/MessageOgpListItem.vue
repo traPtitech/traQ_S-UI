@@ -24,14 +24,26 @@ import { Ogp } from '@traptitech/traq'
 import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
 
+const ifIsHttps = (url: string | undefined) => {
+  if (url === undefined) return undefined
+
+  let urlObj: URL
+  try {
+    urlObj = new URL(url)
+  } catch {
+    return undefined
+  }
+  return urlObj.protocol === 'https:' ? url : undefined
+}
+
 const useOgpData = (props: { ogpData: Ogp }) => {
   const imageUrl = computed(() => {
     const item = props.ogpData.images?.[0]
-    return item?.secureUrl ?? item?.url
+    return ifIsHttps(item?.secureUrl ?? item?.url)
   })
   const videoUrl = computed(() => {
     const item = props.ogpData.videos?.[0]
-    return item?.secureUrl ?? item?.url
+    return ifIsHttps(item?.secureUrl ?? item?.url)
   })
   const shouldShowVideo = computed(() => {
     if (props.ogpData?.type?.startsWith('video')) {
