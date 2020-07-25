@@ -54,6 +54,7 @@ export default defineComponent({
 
 .icon {
   @include color-ui-secondary;
+  margin-right: 4px;
   vertical-align: bottom;
 }
 </style>
