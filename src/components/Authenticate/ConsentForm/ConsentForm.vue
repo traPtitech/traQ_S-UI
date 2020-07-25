@@ -15,9 +15,15 @@
       <span v-if="state.error">{{ state.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button type="secondary" label="キャンセル" @click="deny" />
+      <authenticate-button
+        type="secondary"
+        :class="$style.button"
+        label="キャンセル"
+        @click="deny"
+      />
       <authenticate-button
         type="primary"
+        :class="$style.button"
         label="許可"
         :disabled="state.disableButton"
         @click="approve"
@@ -81,6 +87,16 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   margin-top: 48px;
+}
+.button {
+  width: calc(50% - 16px);
+  margin: 0 16px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 .error {
   font-weight: bold;
