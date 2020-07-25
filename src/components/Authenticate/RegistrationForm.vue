@@ -24,7 +24,11 @@
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button-primary label="アカウント作成" @click="login" />
+      <authenticate-button
+        type="primary"
+        label="アカウント作成"
+        @click="login"
+      />
     </div>
   </div>
 </template>
@@ -34,14 +38,14 @@ import { defineComponent } from '@vue/composition-api'
 import useLogin from './use/login'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
-import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
+import AuthenticateButton from './AuthenticateButton.vue'
 
 export default defineComponent({
   name: 'RegistrationForm',
   components: {
     AuthenticateInput,
     AuthenticateHeader,
-    AuthenticateButtonPrimary
+    AuthenticateButton
   },
   setup(_, context) {
     const { loginState, login, loginExternal, setName, setPass } = useLogin(

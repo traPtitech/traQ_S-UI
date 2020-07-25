@@ -15,8 +15,9 @@
       <span v-if="state.error">{{ state.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button-secondary label="キャンセル" @click="deny" />
-      <authenticate-button-primary
+      <authenticate-button type="secondary" label="キャンセル" @click="deny" />
+      <authenticate-button
+        type="primary"
         label="許可"
         :disabled="state.disableButton"
         @click="approve"
@@ -31,8 +32,7 @@ import useConsent from './use/consent'
 import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
-import AuthenticateButtonPrimary from '../AuthenticateButtonPrimary.vue'
-import AuthenticateButtonSecondary from '../AuthenticateButtonSecondary.vue'
+import AuthenticateButton from '../AuthenticateButton.vue'
 
 export default defineComponent({
   name: 'ConsentForm',
@@ -40,8 +40,7 @@ export default defineComponent({
     AuthenticateHeader,
     ClientDescription,
     ClientScopes,
-    AuthenticateButtonPrimary,
-    AuthenticateButtonSecondary
+    AuthenticateButton
   },
   setup(_, context) {
     const {

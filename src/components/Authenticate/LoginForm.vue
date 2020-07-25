@@ -27,19 +27,21 @@
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button-primary label="ログイン" />
+      <authenticate-button type="primary" label="ログイン" />
     </div>
     <template v-if="!isIOS && externalLogin.length > 0">
       <authenticate-separator label="または" :class="$style.separator" />
       <div :class="$style.exLoginButtons">
-        <authenticate-button-secondary
+        <authenticate-button
+          type="secondary"
           :class="$style.exLoginButton"
           v-show="externalLogin.includes('traQ')"
           label="traP"
           icon-name="traQ"
           @click="loginExternal('traq')"
         />
-        <authenticate-button-secondary
+        <authenticate-button
+          type="secondary"
           :class="$style.exLoginButton"
           v-show="externalLogin.includes('google')"
           label="Google"
@@ -47,7 +49,8 @@
           icon-name="google"
           @click="loginExternal('google')"
         />
-        <authenticate-button-secondary
+        <authenticate-button
+          type="secondary"
           :class="$style.exLoginButton"
           v-show="externalLogin.includes('github')"
           label="GitHub"
@@ -55,7 +58,8 @@
           icon-name="github"
           @click="loginExternal('github')"
         />
-        <authenticate-button-secondary
+        <authenticate-button
+          type="secondary"
           :class="$style.exLoginButton"
           v-show="externalLogin.includes('oidc')"
           label="OpenID Connect"
@@ -75,8 +79,7 @@ import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
-import AuthenticateButtonPrimary from './AuthenticateButtonPrimary.vue'
-import AuthenticateButtonSecondary from './AuthenticateButtonSecondary.vue'
+import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import config from '@/config'
 
@@ -85,8 +88,7 @@ export default defineComponent({
   components: {
     AuthenticateInput,
     AuthenticateHeader,
-    AuthenticateButtonPrimary,
-    AuthenticateButtonSecondary,
+    AuthenticateButton,
     AuthenticateSeparator
   },
   setup(_, context) {
