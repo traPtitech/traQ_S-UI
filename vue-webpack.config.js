@@ -9,7 +9,7 @@ module.exports = {
   resolve: {
     alias: {
       // vuex-persist
-      'lodash.merge': path.resolve('./node_modules/deepmerge')
+      'lodash.merge$': path.resolve('./patch/merge')
     }
   },
   context: __dirname,
