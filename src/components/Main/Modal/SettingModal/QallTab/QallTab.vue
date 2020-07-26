@@ -2,7 +2,7 @@
   <section>
     <div :class="$style.element">
       <div :class="$style.enable">
-        <h3>RTC機能を有効にする (β)</h3>
+        <h3>RTC機能を有効にする</h3>
         <toggle
           @input="state.isEnabled = !state.isEnabled"
           :enabled="state.isEnabled"
@@ -109,21 +109,9 @@ const useDevicesInfo = (state: {
     fetchDeviceList()
   }
 
-  watchEffect(async () => {
+  watchEffect(() => {
     if (state.isEnabled) {
-      // offからonになったときは許可を求める
-      await navigator.mediaDevices.getUserMedia({ audio: true })
-      await fetchDeviceList()
-
-      const isAlreadySet = audioInputDevices.value.some(
-        d => d.deviceId === state.audioInputDeviceId
-      )
-      if (isAlreadySet) return
-
-      // デフォルトをセットする
-      if (audioInputDevices.value.length > 0) {
-        state.audioInputDeviceId = audioInputDevices.value[0]?.deviceId
-      }
+      store.dispatch.app.rtcSettings.ensureDeviceIds()
     }
   })
 

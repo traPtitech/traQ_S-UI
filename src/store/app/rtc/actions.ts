@@ -216,10 +216,21 @@ export const actions = defineActions({
   },
 
   async joinVoiceChannel(context, room: string) {
-    const { state, commit, rootState, dispatch } = rtcActionContext(context)
+    const {
+      state,
+      commit,
+      rootState,
+      dispatch,
+      rootDispatch
+    } = rtcActionContext(context)
     if (!rootState.app.rtcSettings.isEnabled) {
       return
     }
+    if (await rootDispatch.app.rtcSettings.ensureDeviceIds()) {
+      window.alert('マイクの設定に失敗しました')
+      return
+    }
+
     while (!client) {
       await dispatch.establishConnection()
     }
