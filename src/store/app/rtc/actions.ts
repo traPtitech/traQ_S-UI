@@ -157,8 +157,8 @@ export const actions = defineActions({
   // ---- RTC Connection ---- //
 
   initializeMixer(context) {
-    const { state, commit } = rtcActionContext(context)
-    const mixer = new AudioStreamMixer()
+    const { state, commit, rootState } = rtcActionContext(context)
+    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
 
     Object.keys(state.remoteAudioStreamMap).forEach(userId => {
       const stream = state.remoteAudioStreamMap[userId]

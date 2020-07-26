@@ -16,6 +16,8 @@
         :name="name"
         :autocomplete="autocomplete"
         :placeholder="placeholder"
+        :max="max"
+        :min="min"
         :step="step"
         @input="onInput"
         @change="onChange"
@@ -56,6 +58,8 @@ export default defineComponent({
     label: String,
     prefix: String,
     suffix: String,
+    min: String,
+    max: String,
     step: String,
     useChangeEvent: {
       type: Boolean,

@@ -1,5 +1,6 @@
 export interface S {
   isEnabled: boolean
+  masterVolume: number
   audioInputDeviceId: string
   audioOutputDeviceId: string
   isTtsEnabled: boolean
@@ -11,6 +12,7 @@ export interface S {
 
 export const state: S = {
   isEnabled: true,
+  masterVolume: 1,
   audioInputDeviceId: '',
   audioOutputDeviceId: '',
   isTtsEnabled: false,

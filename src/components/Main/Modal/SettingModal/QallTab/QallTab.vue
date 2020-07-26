@@ -15,6 +15,22 @@
       </p>
     </div>
     <div v-if="rtcSettings.isEnabled" :class="$style.element">
+      <h3>マスターボリューム</h3>
+      <div :class="[$style.content, $style.masterVolume]">
+        <form-input
+          :class="$style.masterVolumeRange"
+          type="range"
+          v-model.number="state.masterVolume"
+          min="0"
+          step="0.01"
+          max="1"
+        />
+        <div :class="$style.masterVolumeValue">
+          {{ state.masterVolume * 100 }}%
+        </div>
+      </div>
+    </div>
+    <div v-if="rtcSettings.isEnabled" :class="$style.element">
       <h3>入力デバイス</h3>
       <div :class="$style.content">
         <form-selector
@@ -177,7 +193,7 @@ export default defineComponent({
     const rtcSettings = computed(() => store.state.app.rtcSettings)
     const { state } = useSyncedState(
       rtcSettings,
-      store.commit.app.rtcSettings.set
+      store.dispatch.app.rtcSettings.set
     )
 
     const devicesInfo = useDevicesInfo(state)
@@ -227,5 +243,16 @@ h3 {
   .toggle {
     margin-left: 12px;
   }
+}
+.masterVolume {
+  display: flex;
+  align-items: center;
+}
+.masterVolumeRange {
+  flex: 1 1;
+}
+.masterVolumeValue {
+  width: 5ch;
+  text-align: right;
 }
 </style>

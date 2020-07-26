@@ -2,6 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { rtcSettings } from './index'
 import { ActionContext } from 'vuex'
+import { S } from './state'
 
 export const rtcSettingsActionContext = (
   context: ActionContext<unknown, unknown>
@@ -50,5 +51,19 @@ export const actions = defineActions({
       return true
     }
     return false
+  },
+  /**
+   * keyに一致しないvalueを入れることができるので注意
+   */
+  set<K extends keyof S>(
+    context: ActionContext<unknown, unknown>,
+    [key, val]: [K, S[K]]
+  ) {
+    const { commit, rootCommit } = rtcSettingsActionContext(context)
+    commit.set([key, val])
+
+    if (key === 'masterVolume') {
+      rootCommit.app.rtc.setMasterVolume(val as S['masterVolume'])
+    }
   }
 })

@@ -26,15 +26,20 @@ export default class AudioStreamMixer {
   private context: AudioContext
   private masterVolume = 1
   private fileVolume = 0.25
-  private previousVolumeMap: Record<string, number> = {}
+  /**
+   * それぞれのstreamのボリューム
+   * ミュート時はミュートされる前の値を保持
+   */
+  private volumeMap: Record<string, number> = {}
   readonly analyserFftSize = 128
   private readonly frequencyUint8Array = new Uint8Array(
     this.analyserFftSize / 2
   )
 
-  constructor() {
+  constructor(volume: number) {
     this.context = new (window.AudioContext ||
       (window as WebkitWindow).webkitAudioContext)()
+    this.volume = volume
   }
 
   private async createAudioSourceNodeGraph(buffer: AudioBuffer) {
@@ -141,6 +146,7 @@ export default class AudioStreamMixer {
 
     delete this.gainNodeMap[key]
     delete this.streamSourceNodeMap[key]
+    delete this.volumeMap[key]
     if (Object.keys(this.gainNodeMap).length === 0) {
       await this.context.suspend()
     }
@@ -148,6 +154,12 @@ export default class AudioStreamMixer {
 
   public getVolumeOf(key: string) {
     return this.gainNodeMap[key].gain.value
+  }
+
+  public setAndSaveVolumeOf(key: string, volume: number) {
+    const v = Math.max(0, Math.min(1, volume))
+    this.setVolumeOf(key, v)
+    this.volumeMap[key] = v
   }
 
   public setVolumeOf(key: string, volume: number) {
@@ -174,28 +186,28 @@ export default class AudioStreamMixer {
 
   public muteAll() {
     Object.keys(this.gainNodeMap).forEach(key => {
-      this.previousVolumeMap[key] = this.getVolumeOf(key)
       this.setVolumeOf(key, 0)
     })
   }
 
   public unmuteAll() {
-    Object.keys(this.previousVolumeMap).forEach(key => {
-      if (!(key in this.gainNodeMap)) {
-        return
-      }
-      this.setVolumeOf(key, this.previousVolumeMap[key])
+    Object.entries(this.volumeMap).forEach(([key, volume]) => {
+      if (!(key in this.gainNodeMap)) return
+      this.setVolumeOf(key, volume)
     })
-    this.previousVolumeMap = {}
   }
 
   set volume(v: number) {
     const newMasterVolume = Math.max(0, Math.min(1, v)) * maxMasterGain
-    Object.values(this.gainNodeMap).forEach(
-      gainNode =>
-        (gainNode.gain.value =
-          (gainNode.gain.value / this.masterVolume) * newMasterVolume)
-    )
+    if (this.masterVolume === newMasterVolume) return
+
+    const masterSquare = newMasterVolume * newMasterVolume
+    Object.entries(this.gainNodeMap).forEach(([key, gainNode]) => {
+      const userVolumeSquare = this.volumeMap[key] * this.volumeMap[key]
+
+      gainNode.gain.value =
+        gainNode.gain.defaultValue * userVolumeSquare * masterSquare
+    })
     this.masterVolume = newMasterVolume
   }
   get volume() {
