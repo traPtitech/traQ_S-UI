@@ -164,6 +164,14 @@ export const mutations = defineMutations<S>()({
   unsetMixer(state) {
     state.mixer = undefined
   },
+  /**
+   * 0～1の値
+   */
+  setMasterVolume(state, volume: number) {
+    if (state.mixer) {
+      state.mixer.volume = volume
+    }
+  },
   setLocalStream(state, mediaStream: ExtendedMediaStream) {
     state.localStream = mediaStream
     state.localAnalyzerNode = state.mixer?.createAnalyzer(mediaStream)
@@ -213,7 +221,7 @@ export const mutations = defineMutations<S>()({
   setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
     Vue.set(state.userVolumeMap, userId, volume)
     if (state.mixer) {
-      state.mixer.setVolumeOf(userId, volume)
+      state.mixer.setAndSaveVolumeOf(userId, volume)
     }
   },
   setTalkingStateUpdateId(state, id: number) {
