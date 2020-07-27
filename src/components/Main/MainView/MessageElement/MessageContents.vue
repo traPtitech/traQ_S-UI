@@ -25,6 +25,7 @@
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
+        :parent-message-channel-id="state.message.channelId"
         :message-ids="embeddingsState.quoteMessageIds"
       />
       <message-file-list

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" v-if="state.message">
+  <div :class="$style.body" v-if="state.shouldShow">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -37,7 +37,7 @@ import {
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
-import { MessageId } from '@/types/entity-ids'
+import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
 
@@ -45,6 +45,10 @@ export default defineComponent({
   name: 'MessageQuoteListItem',
   components: { UserIcon, MessageQuoteListItemHeader },
   props: {
+    parentMessageChannelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     messageId: {
       type: String as PropType<MessageId>,
       required: true
@@ -54,6 +58,13 @@ export default defineComponent({
     const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
+      shouldShow: computed(
+        (): boolean =>
+          !!state.message &&
+          // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
+          (!store.state.entities.dmChannels[state.message.channelId] ||
+            state.message.channelId === props.parentMessageChannelId)
+      ),
       channelPath: computed((): string =>
         state.message
           ? channelIdToPathString(state.message.channelId, false)
