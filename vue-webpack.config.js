@@ -11,7 +11,10 @@ module.exports = {
       // vuex-persist
       'lodash.merge$': path.resolve('./patch/merge'),
       // https://github.com/LinusBorg/portal-vue/issues/264
-      'portal-vue': path.join(path.dirname(require.resolve('portal-vue')), 'portal-vue.esm.js')
+      'portal-vue': path.join(
+        path.dirname(require.resolve('portal-vue')),
+        'portal-vue.esm.js'
+      )
     }
   },
   context: __dirname,
