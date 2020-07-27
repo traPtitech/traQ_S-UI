@@ -171,9 +171,13 @@ const useRouteWatcher = (context: SetupContext) => {
       }
     }
 
-    store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
-      channelId: channelId
-    })
+    // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
+    if (store.state.ui.mainView.primaryView.type === 'null') {
+      store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
+        channelId: channelId
+      })
+    }
+
     const modalPayload = {
       type: 'file' as const,
       id: fileId,
