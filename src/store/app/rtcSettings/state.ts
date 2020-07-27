@@ -10,7 +10,7 @@ export interface S {
 }
 
 export const state: S = {
-  isEnabled: false,
+  isEnabled: true,
   audioInputDeviceId: '',
   audioOutputDeviceId: '',
   isTtsEnabled: false,
