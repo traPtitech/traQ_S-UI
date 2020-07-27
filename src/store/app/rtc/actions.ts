@@ -226,7 +226,7 @@ export const actions = defineActions({
     if (!rootState.app.rtcSettings.isEnabled) {
       return
     }
-    if (await rootDispatch.app.rtcSettings.ensureDeviceIds()) {
+    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
       window.alert('マイクの設定に失敗しました')
       return
     }
