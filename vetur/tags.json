@@ -1,0 +1,18 @@
+{
+  "portal": {
+    "attributes": ["to", "disabled", "name", "order", "slim", "slot-props", "tag"],
+    "description": "This slot content will be rendered in <portal-target />."
+  },
+  "portal-target": {
+    "attributes": ["name", "multiple", "slim", "slot-props", "tag", "transition"],
+    "description": "This will show content inside <portal />."
+  },
+  "mounting-portal": {
+    "attributes": ["append", "bail", "mountTo", "to", "disabled", "name", "order", "slim", "slot-props", "targetTag", "multiple", "slim", "target-slot-props", "tag", "transition"],
+    "description": "This slot content will be rendered in <portal-target />."
+  },
+  "textarea-autosize": {
+    "attributes": ["v-model", "value", "autosize", "minHeight", "maxHeight", "important"],
+    "description": "<textarea> with auto-size"
+  }
+}
