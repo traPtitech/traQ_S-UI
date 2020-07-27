@@ -54,7 +54,7 @@ export const mutations = defineMutations<S>()({
   addPinnedMessages(state, message: Pin) {
     state.pinnedMessages.push(message)
   },
-  removePinnedMessageIds(state, messageId: MessageId) {
+  removePinnedMessage(state, messageId: MessageId) {
     const index = state.pinnedMessages.findIndex(
       element => element.message.id === messageId
     )

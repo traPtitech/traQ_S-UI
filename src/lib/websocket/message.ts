@@ -71,6 +71,7 @@ export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
   store.commit.domain.deleteActivity(id)
 
   store.commit.domain.messagesView.deleteMessageId(id)
+  store.commit.domain.messagesView.removePinnedMessage(id)
 }
 
 export const onMessageRead = ({ id }: MessageReadEvent['body']) => {
@@ -110,5 +111,5 @@ export const onMessageUnpinned = async (data: MessageUnpinnedEvent['body']) => {
       [data.message_id]: { ...message, pinned: false }
     })
   }
-  store.commit.domain.messagesView.removePinnedMessageIds(data.message_id)
+  store.commit.domain.messagesView.removePinnedMessage(data.message_id)
 }
