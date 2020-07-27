@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" v-if="state.message">
+  <div :class="$style.body" data-is-shown v-if="state.shouldShow">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -13,17 +13,13 @@
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
-    <div :class="$style.footer">
-      <span :class="$style.description">
-        <router-link :to="`/channels/${state.channelPath}`">
-          #{{ state.channelPath }}
-        </router-link>
-        - {{ state.date }}
-      </span>
-      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
-        >メッセージへ
-      </router-link>
-    </div>
+    <message-quote-list-item-footer
+      :class="$style.footer"
+      :message="state.message"
+    />
+  </div>
+  <div :class="$style.body" v-else>
+    存在しないか表示できないメッセージの引用です
   </div>
 </template>
 
@@ -36,36 +32,41 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
-import { MessageId } from '@/types/entity-ids'
-import { getCreatedDate } from '@/lib/date'
-import useChannelPath from '@/use/channelPath'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
-  components: { UserIcon, MessageQuoteListItemHeader },
+  components: {
+    UserIcon,
+    MessageQuoteListItemHeader,
+    MessageQuoteListItemFooter
+  },
   props: {
+    parentMessageChannelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     messageId: {
       type: String as PropType<MessageId>,
       required: true
     }
   },
   setup(props) {
-    const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
-      channelPath: computed((): string =>
-        state.message
-          ? channelIdToPathString(state.message.channelId, false)
-          : ''
+      shouldShow: computed(
+        (): boolean =>
+          !!state.message &&
+          // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
+          (!store.state.entities.dmChannels[state.message.channelId] ||
+            state.message.channelId === props.parentMessageChannelId)
       ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      date: computed((): string =>
-        state.message ? getCreatedDate(state.message.createdAt) : ''
       )
     })
     return { state }
@@ -75,14 +76,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
-  display: grid;
-  grid-template-areas:
-    'user-icon message-header'
-    'user-icon message-contents'
-    '......... message-contents'
-    '......... footer';
-  grid-template-rows: 24px 1fr 1fr auto;
-  grid-template-columns: 24px 1fr;
   width: 100%;
   min-width: 0;
   padding: {
@@ -94,6 +87,19 @@ export default defineComponent({
     color: $theme-ui-tertiary;
   }
   overflow: hidden;
+  &[data-is-shown] {
+    display: grid;
+    grid-template-areas:
+      'user-icon message-header'
+      'user-icon message-contents'
+      '......... message-contents'
+      '......... footer';
+    grid-template-rows: 24px 1fr 1fr auto;
+    grid-template-columns: 24px 1fr;
+  }
+  &:not([data-is-shown]) {
+    @include color-text-secondary;
+  }
 }
 
 .userIcon {
@@ -124,23 +130,9 @@ export default defineComponent({
     white-space: pre-wrap;
   }
 }
+
 .footer {
-  @include color-ui-secondary;
-  @include size-body2;
   grid-area: footer;
-  padding-left: 8px;
-  align-self: end;
   margin-top: 4px;
-  word-break: keep-all;
-  overflow-wrap: break-word; // for Safari
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-.description {
-  font-weight: normal;
-  margin-right: 8px;
-}
-.link {
-  font-weight: bold;
 }
 </style>

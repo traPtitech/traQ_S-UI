@@ -2,6 +2,7 @@ import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { dmParentUuid } from '@/lib/util/uuid'
+import { constructUserPath, constructChannelPath } from '@/router'
 
 type SimpleChannel = {
   id: ChannelId
@@ -81,12 +82,20 @@ const useChannelPath = () => {
     return (hashed ? '#' : '') + formattedChannels.join('/')
   }
 
+  const channelIdToLink = (id: ChannelId | DMChannelId) => {
+    const pathString = channelIdToPathString(id, false)
+    if (id in store.state.entities.dmChannels)
+      return constructUserPath(pathString)
+    return constructChannelPath(pathString)
+  }
+
   return {
     channelPathToId,
     channelIdToPath,
     channelIdToSimpleChannelPath,
     channelIdToPathString,
-    channelIdToShortPathString
+    channelIdToShortPathString,
+    channelIdToLink
   }
 }
 
