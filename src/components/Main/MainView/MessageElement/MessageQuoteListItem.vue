@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" v-if="state.shouldShow">
+  <div :class="$style.body" data-is-shown v-if="state.shouldShow">
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -17,6 +17,9 @@
       :class="$style.footer"
       :message="state.message"
     />
+  </div>
+  <div :class="$style.body" v-else>
+    存在しないか表示できないメッセージの引用です
   </div>
 </template>
 
@@ -73,14 +76,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .body {
-  display: grid;
-  grid-template-areas:
-    'user-icon message-header'
-    'user-icon message-contents'
-    '......... message-contents'
-    '......... footer';
-  grid-template-rows: 24px 1fr 1fr auto;
-  grid-template-columns: 24px 1fr;
   width: 100%;
   min-width: 0;
   padding: {
@@ -92,6 +87,19 @@ export default defineComponent({
     color: $theme-ui-tertiary;
   }
   overflow: hidden;
+  &[data-is-shown] {
+    display: grid;
+    grid-template-areas:
+      'user-icon message-header'
+      'user-icon message-contents'
+      '......... message-contents'
+      '......... footer';
+    grid-template-rows: 24px 1fr 1fr auto;
+    grid-template-columns: 24px 1fr;
+  }
+  &:not([data-is-shown]) {
+    @include color-text-secondary;
+  }
 }
 
 .userIcon {
