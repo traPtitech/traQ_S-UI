@@ -20,13 +20,13 @@
         <form-input
           :class="$style.masterVolumeRange"
           type="range"
-          v-model.number="state.masterVolume"
+          v-model.number.lazy="state.masterVolume"
           min="0"
           step="0.01"
           max="1"
         />
         <div :class="$style.masterVolumeValue">
-          {{ state.masterVolume * 100 }}%
+          {{ Math.round(state.masterVolume * 100) }}%
         </div>
       </div>
     </div>
