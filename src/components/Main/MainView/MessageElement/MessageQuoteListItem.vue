@@ -13,17 +13,10 @@
     <div :class="$style.messageContents">
       <div :class="['markdown-body', $style.content]" v-html="state.content" />
     </div>
-    <div :class="$style.footer">
-      <span :class="$style.description">
-        <router-link :to="`/channels/${state.channelPath}`">
-          #{{ state.channelPath }}
-        </router-link>
-        - {{ state.date }}
-      </span>
-      <router-link :class="$style.link" :to="`/messages/${state.message.id}`"
-        >メッセージへ
-      </router-link>
-    </div>
+    <message-quote-list-item-footer
+      :class="$style.footer"
+      :message="state.message"
+    />
   </div>
 </template>
 
@@ -36,14 +29,17 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
-import { getCreatedDate } from '@/lib/date'
-import useChannelPath from '@/use/channelPath'
+import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
-  components: { UserIcon, MessageQuoteListItemHeader },
+  components: {
+    UserIcon,
+    MessageQuoteListItemHeader,
+    MessageQuoteListItemFooter
+  },
   props: {
     parentMessageChannelId: {
       type: String as PropType<ChannelId | DMChannelId>,
@@ -55,7 +51,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { channelIdToPathString } = useChannelPath()
     const state = reactive({
       message: computed(() => store.state.entities.messages[props.messageId]),
       shouldShow: computed(
@@ -65,18 +60,10 @@ export default defineComponent({
           (!store.state.entities.dmChannels[state.message.channelId] ||
             state.message.channelId === props.parentMessageChannelId)
       ),
-      channelPath: computed((): string =>
-        state.message
-          ? channelIdToPathString(state.message.channelId, false)
-          : ''
-      ),
       content: computed(
         () =>
           store.state.domain.messagesView.renderedContentMap[props.messageId] ??
           ''
-      ),
-      date: computed((): string =>
-        state.message ? getCreatedDate(state.message.createdAt) : ''
       )
     })
     return { state }
@@ -135,23 +122,9 @@ export default defineComponent({
     white-space: pre-wrap;
   }
 }
+
 .footer {
-  @include color-ui-secondary;
-  @include size-body2;
   grid-area: footer;
-  padding-left: 8px;
-  align-self: end;
   margin-top: 4px;
-  word-break: keep-all;
-  overflow-wrap: break-word; // for Safari
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-.description {
-  font-weight: normal;
-  margin-right: 8px;
-}
-.link {
-  font-weight: bold;
 }
 </style>

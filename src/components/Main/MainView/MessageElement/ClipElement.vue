@@ -12,17 +12,10 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <div :class="$style.footer">
-      <span :class="$style.description">
-        <router-link :to="`/channels/${state.channelPath}`">
-          #{{ state.channelPath }}
-        </router-link>
-        - {{ state.date }}
-      </span>
-      <router-link :class="$style.link" :to="`/messages/${state.message.id}`">
-        メッセージへ
-      </router-link>
-    </div>
+    <message-quote-list-item-footer
+      :class="$style.footer"
+      :message="state.message"
+    />
   </div>
 </template>
 
@@ -41,16 +34,18 @@ import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
-import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
+import MessageTools from './MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 
 export default defineComponent({
   name: 'ClipElement',
   components: {
     MessageContents,
     MessagePinned,
-    MessageTools
+    MessageTools,
+    MessageQuoteListItemFooter
   },
   props: {
     messageId: {
@@ -136,23 +131,7 @@ $messagePaddingMobile: 16px;
 }
 
 .footer {
-  @include color-ui-secondary;
-  grid-area: footer;
-  padding-left: 8px;
-  font-size: 0.875rem;
-  align-self: end;
   margin-top: 4px;
   margin-left: 42px;
-  word-break: keep-all;
-  overflow-wrap: break-word; // for Safari
-  overflow-wrap: anywhere;
-}
-
-.description {
-  font-weight: normal;
-  margin-right: 8px;
-}
-.link {
-  font-weight: bold;
 }
 </style>
