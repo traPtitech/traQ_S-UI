@@ -18,7 +18,7 @@
     "@juggle/resize-observer": "^3.2.0",
     "@mdi/js": "^5.3.45",
     "@traptitech/traq": "3.3.1-0",
-    "@traptitech/traq-markdown-it": "^3.0.0",
+    "@traptitech/traq-markdown-it": "^3.0.1",
     "@types/pica": "^5.1.1",
     "@vue/composition-api": "^1.0.0-beta.6",
     "core-js": "^3.6.5",
