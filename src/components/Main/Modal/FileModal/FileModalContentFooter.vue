@@ -3,7 +3,7 @@
     <div :class="$style.channelPath" @click="onClick">#{{ channelPath }}</div>
     <file-modal-content-footer-username
       :class="$style.userName"
-      :user-id="user.id"
+      :user-id="user ? user.id : undefined"
     />
     <div :class="$style.createdAt">{{ createdAt }}</div>
   </div>
@@ -49,7 +49,7 @@ export default defineComponent({
     })
 
     const onClick = async () => {
-      if (!fileMeta.value?.channelId) return
+      if (channelPath.value === '') return
       const pathCache = channelPath.value
       await store.dispatch.ui.modal.clearModal()
       changeChannelByPath(pathCache)
