@@ -4,7 +4,7 @@ import { User } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'
 
 export const useUserModalOpener = (
-  props: { userId: UserId; preventModal?: boolean },
+  props: { userId?: UserId; preventModal?: boolean },
   user: Ref<User | undefined>
 ) => {
   const isClickable = computed(
@@ -15,6 +15,9 @@ export const useUserModalOpener = (
   )
   const openModal = () => {
     if (!isClickable.value) {
+      return
+    }
+    if (!props.userId) {
       return
     }
     store.dispatch.ui.modal.pushModal({

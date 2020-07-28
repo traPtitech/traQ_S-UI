@@ -1,26 +1,28 @@
 <template>
   <div :class="$style.container" :data-is-white="isWhite">
-    <div :class="$style.channelPath">
-      {{ channelPath }}
-    </div>
-    <div :class="$style.userName">
-      {{ userName }}
-    </div>
-    <div :class="$style.createdAt">
-      {{ createdAt }}
-    </div>
+    <div :class="$style.channelPath" @click="onClick">#{{ channelPath }}</div>
+    <file-modal-content-footer-username
+      :class="$style.userName"
+      :user-id="user ? user.id : undefined"
+    />
+    <div :class="$style.createdAt">{{ createdAt }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
+import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { getCreatedDate } from '@/lib/date'
+import { changeChannelByPath } from '@/router/channel'
 
 export default defineComponent({
   name: 'FileModalContentFooter',
+  components: {
+    FileModalContentFooterUsername
+  },
   props: {
     fileId: {
       type: String,
@@ -33,18 +35,27 @@ export default defineComponent({
   },
   setup(props, context) {
     const { fileMeta } = useFileMeta(props, context)
-
-    let channelPath = ''
-    try {
-      channelPath = useChannelPath().channelIdToPathString(
-        fileMeta.value?.channelId ?? '',
-        true
-      )
-    } catch {}
     const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
-    const userName = '@' + user?.name
     const createdAt = getCreatedDate(fileMeta.value?.createdAt ?? '')
-    return { channelPath, userName, createdAt }
+    const { channelIdToPathString } = useChannelPath()
+    const channelPath = computed(() => {
+      try {
+        return fileMeta.value?.channelId
+          ? channelIdToPathString(fileMeta.value?.channelId)
+          : ''
+      } catch {
+        return ''
+      }
+    })
+
+    const onClick = async () => {
+      if (channelPath.value === '') return
+      const pathCache = channelPath.value
+      await store.dispatch.ui.modal.clearModal()
+      changeChannelByPath(pathCache)
+    }
+
+    return { channelPath, createdAt, user, onClick }
   }
 })
 </script>
@@ -68,6 +79,7 @@ export default defineComponent({
   grid-area: channelPath;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .userName {
   @include color-ui-secondary;
