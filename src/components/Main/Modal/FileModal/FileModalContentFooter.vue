@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.container" :data-is-white="isWhite">
-    <div :class="[$style.channelPath]" @click="onClick">#{{ channelPath }}</div>
-    <div :class="$style.userName">
-      <file-modal-content-footer-username :user-id="user.id" />
-    </div>
+    <div :class="$style.channelPath" @click="onClick">{{ channelPath }}</div>
+    <file-modal-content-footer-username
+      :class="$style.userName"
+      :user-id="user.id"
+    />
     <div :class="$style.createdAt">{{ createdAt }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-
+import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
@@ -38,16 +38,18 @@ export default defineComponent({
     const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
     const createdAt = getCreatedDate(fileMeta.value?.createdAt ?? '')
     const { channelIdToPathString } = useChannelPath()
-    const channelPath = computed(() =>
-      fileMeta.value?.channelId
-        ? channelIdToPathString(fileMeta.value?.channelId)
-        : ''
-    )
+    let channelPath = ''
+    try {
+      channelPath = useChannelPath().channelIdToPathString(
+        fileMeta.value?.channelId ?? '',
+        true
+      )
+    } catch {}
+
     const onClick = async () => {
       if (!fileMeta.value?.channelId) return
-      const pathCache = channelPath.value
-      await store.dispatch.ui.modal.clearModal()
-      changeChannelByPath(pathCache)
+      changeChannelByPath(channelPath)
+      store.dispatch.ui.modal.clearModal()
     }
 
     return { channelPath, createdAt, user, onClick }

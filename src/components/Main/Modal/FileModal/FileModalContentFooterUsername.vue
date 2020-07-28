@@ -14,12 +14,11 @@ export default defineComponent({
   name: 'FileModalContentFooterUsername',
   props: {
     userId: {
-      type: String as PropType<UserId>,
-      required: true
+      type: String as PropType<UserId>
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.users[props.userId])
+    const user = computed(() => store.state.entities.users[props.userId ?? ''])
 
     const { openModal } = useUserModalOpener(props, user)
 
