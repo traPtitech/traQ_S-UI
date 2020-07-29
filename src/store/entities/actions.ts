@@ -9,9 +9,11 @@ import {
   MessageId,
   ChannelId,
   ClipFolderId,
-  ExternalUrl
+  ExternalUrl,
+  UserId
 } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
+import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 
 // TODO: リクエストパラメータの型置き場
 interface BaseGetMessagesParams {
@@ -48,6 +50,9 @@ interface GetDirectMessagesParams extends BaseGetMessagesParams {
   userId: string
 }
 
+// 重複して取得が走らないようにする
+const fetchingUser = new Set<UserId>()
+
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, entities)
@@ -55,7 +60,9 @@ export const entitiesActionContext = (
 export const actions = defineActions({
   async fetchUser(context, userId: string) {
     const { commit } = entitiesActionContext(context)
+    fetchingUser.add(userId)
     const res = await apis.getUser(userId)
+    fetchingUser.delete(userId)
     commit.addUser({ id: userId, entity: res.data })
     return res.data
   },
@@ -77,8 +84,15 @@ export const actions = defineActions({
   },
   async fetchStamps(context) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getStamps()
-    commit.setStamps(reduceToRecord(res.data, 'id'))
+
+    const unicodeStamps = await getUnicodeStamps()
+    const res = await apis.getStamps(!unicodeStamps)
+    if (!unicodeStamps) {
+      setUnicodeStamps(res.data.filter(stamp => stamp.isUnicode))
+    }
+
+    const stamps = unicodeStamps ? [...unicodeStamps, ...res.data] : res.data
+    commit.setStamps(reduceToRecord(stamps, 'id'))
   },
   async fetchStampPalettes(context) {
     const { commit } = entitiesActionContext(context)
