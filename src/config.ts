@@ -133,5 +133,5 @@ export default {
   /**
    * QRコード表示ボタンの有効化
    */
-  showQrCodeButton: false
+  showQrCodeButton: true
 } as const
