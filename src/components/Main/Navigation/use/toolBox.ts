@@ -1,6 +1,14 @@
 import store from '@/store'
 import { computed } from '@vue/composition-api'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
+import config from '@/config'
+
+interface Tool {
+  iconName: string
+  iconMdi?: true
+  disabled?: boolean
+  onClick: () => void
+}
 
 const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
@@ -10,33 +18,27 @@ const useToolBox = () => {
   const openSettingsModal = () =>
     store.dispatch.ui.modal.pushModal({ type: 'setting' })
 
-  const tools = computed(
-    (): Array<{
-      iconName: string
-      iconMdi?: true
-      disabled?: boolean
-      onClick: () => void
-    }> => [
-      // Apps
-      {
-        iconName: 'apps',
-        iconMdi: true,
-        onClick: togglePopupMenu
-      },
-      // qr
-      {
+  const tools = computed(() => {
+    const tools: Tool[] = []
+    tools.push({
+      iconName: 'apps',
+      iconMdi: true,
+      onClick: togglePopupMenu
+    })
+    if (config.showQrCodeButton) {
+      tools.push({
         iconName: 'qrcode',
         iconMdi: true,
         onClick: openQrCodeModal
-      },
-      // settings
-      {
-        iconName: 'cog',
-        iconMdi: true,
-        onClick: openSettingsModal
-      }
-    ]
-  )
+      })
+    }
+    tools.push({
+      iconName: 'cog',
+      iconMdi: true,
+      onClick: openSettingsModal
+    })
+    return tools
+  })
 
   return {
     isServicesShown: isPopupMenuShown,

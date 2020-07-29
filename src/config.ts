@@ -129,5 +129,9 @@ export default {
    * 内部用認証機構へのリダイレクト
    * 通常は`false`
    */
-  pipelineEnabled: true
+  pipelineEnabled: true,
+  /**
+   * QRコード表示ボタンの有効化
+   */
+  showQrCodeButton: false
 } as const
