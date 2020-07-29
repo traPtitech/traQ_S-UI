@@ -14,6 +14,8 @@ import {
 } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
+import { AxiosResponse } from 'axios'
+import { UserDetail } from '@traptitech/traq'
 
 // TODO: リクエストパラメータの型置き場
 interface BaseGetMessagesParams {
@@ -51,7 +53,7 @@ interface GetDirectMessagesParams extends BaseGetMessagesParams {
 }
 
 // 重複して取得が走らないようにする
-const fetchingUser = new Set<UserId>()
+const fetchingUser = new Map<UserId, Promise<AxiosResponse<UserDetail>>>()
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -60,10 +62,18 @@ export const entitiesActionContext = (
 export const actions = defineActions({
   async fetchUser(context, userId: string) {
     const { commit } = entitiesActionContext(context)
-    fetchingUser.add(userId)
-    const res = await apis.getUser(userId)
-    fetchingUser.delete(userId)
+    if (fetchingUser.has(userId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const res = await fetchingUser.get(userId)!
+      return res.data
+    }
+
+    const promise = apis.getUser(userId)
+    fetchingUser.set(userId, promise)
+    const res = await promise
+
     commit.addUser({ id: userId, entity: res.data })
+    fetchingUser.delete(userId)
     return res.data
   },
   async fetchUsers(context) {
