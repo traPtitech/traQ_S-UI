@@ -16,7 +16,7 @@
   "dependencies": {
     "@cloudcmd/clipboard": "^2.0.0",
     "@juggle/resize-observer": "^3.2.0",
-    "@mdi/js": "^5.4.45",
+    "@mdi/js": "^5.4.55",
     "@traptitech/traq": "3.3.1-0",
     "@traptitech/traq-markdown-it": "^3.0.1",
     "@types/pica": "^5.1.1",
