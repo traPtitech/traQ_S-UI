@@ -35,8 +35,13 @@ export default defineComponent({
   },
   setup(props, context) {
     const { fileMeta } = useFileMeta(props, context)
-    const user = store.state.entities.users[fileMeta.value?.uploaderId ?? '']
-    const createdAt = getCreatedDate(fileMeta.value?.createdAt ?? '')
+    const user = computed(
+      () => store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+    )
+    const createdAt = computed(() =>
+      getCreatedDate(fileMeta.value?.createdAt ?? '')
+    )
+
     const { channelIdToPathString } = useChannelPath()
     const channelPath = computed(() => {
       try {
