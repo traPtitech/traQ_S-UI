@@ -56,7 +56,9 @@ export const actions = defineActions({
 
   /** クリップフォルダに移行 */
   async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch } = messagesViewActionContext(context)
+    if (state.currentClipFolderId === clipFolderId) return
+
     commit.unsetCurrentChannelId()
     changeViewState(null)
     dispatch.resetViewState()
