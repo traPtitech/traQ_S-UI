@@ -18,7 +18,7 @@
       <div :class="$style.inputContainer">
         <message-input-upload-button
           :class="$style.controls"
-          @click="addAttachment"
+          @click.native="addAttachment"
         />
         <message-input-text-area
           ref="textareaRef"

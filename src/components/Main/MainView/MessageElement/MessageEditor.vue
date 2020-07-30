@@ -11,12 +11,7 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
       />
-      <icon
-        :class="$style.stampButton"
-        name="emoticon-outline"
-        mdi
-        @click="onStampClick"
-      />
+      <message-input-insert-stamp-button @click.native="onStampClick" />
     </div>
     <div :class="$style.controls">
       <form-button @click="cancel" label="キャンセル" color="secondary" />
@@ -37,7 +32,7 @@ import useTextInput, {
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
 import { targetPortalName } from '@/views/Main.vue'
-import Icon from '@/components/UI/Icon.vue'
+import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {
@@ -58,7 +53,7 @@ export default defineComponent({
     MessageInputKeyGuide,
     MessageInputTextArea,
     FormButton,
-    Icon
+    MessageInputInsertStampButton
   },
   props: {
     rawContent: {
