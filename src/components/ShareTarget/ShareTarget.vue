@@ -88,6 +88,7 @@ export default defineComponent({
 $padding: 48px;
 
 .container {
+  @include color-text-primary;
   @include background-primary;
   position: relative;
   display: flex;
