@@ -1,12 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-mobile="isMobile">
-    <div
-      :class="$style.button"
-      title="スタンプを挿入"
-      @click="onClickStampButton"
-    >
-      <icon mdi name="emoticon-outline" />
-    </div>
+    <message-input-insert-stamp-button @click.native="onClickStampButton" />
     <button
       :class="$style.sendButton"
       title="送信する"
@@ -23,6 +17,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext } from '@vue/composition-api'
 import useIsMobile from '@/use/isMobile'
+import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import Icon from '@/components/UI/Icon.vue'
 
 const useClickHandlers = (
@@ -43,6 +38,7 @@ const useClickHandlers = (
 export default defineComponent({
   name: 'MessageInputControls',
   components: {
+    MessageInputInsertStampButton,
     Icon
   },
   props: {

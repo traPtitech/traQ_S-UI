@@ -11,14 +11,14 @@
         :class="$style.stampPickerLocator"
         :name="targetPortalName"
       />
-      <message-input-file-list />
+      <message-input-file-list :class="$style.fileList" />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
       <message-input-upload-progress v-if="isPosting" :progress="progress" />
       <div :class="$style.inputContainer">
         <message-input-upload-button
           :class="$style.controls"
-          @click="addAttachment"
+          @click.native="addAttachment"
         />
         <message-input-text-area
           ref="textareaRef"
@@ -216,6 +216,9 @@ $radius: 4px;
   right: 0;
   top: -8px;
   transform: translateY(-100%);
+}
+.fileList {
+  margin-bottom: 8px;
 }
 .inputContainer {
   width: 100%;

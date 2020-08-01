@@ -10,6 +10,7 @@ export enum RouteName {
   Message = 'message',
   File = 'File',
   ClipFolders = 'clip-folders',
+  ShareTarget = 'share-target',
   Login = 'login',
   Registration = 'registration',
   ResetPassword = 'reset-password',
@@ -57,6 +58,12 @@ const routes: RouteConfig[] = [
     path: '/clip-folders/:id',
     name: RouteName.ClipFolders,
     component: () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+  },
+  {
+    path: '/share-target',
+    name: RouteName.ShareTarget,
+    component: () =>
+      import(/* webpackChunkname: "ShareTarget" */ '@/views/ShareTarget.vue')
   },
   {
     path: '/login',

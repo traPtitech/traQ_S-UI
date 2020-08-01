@@ -1,9 +1,9 @@
 <template>
   <icon-button
     :class="$style.container"
-    title="ファイルを添付する"
+    title="スタンプを挿入"
     icon-mdi
-    icon-name="plus-circle-outline"
+    icon-name="emoticon-outline"
   />
 </template>
 
@@ -12,7 +12,7 @@ import { defineComponent } from '@vue/composition-api'
 import IconButton from '@/components/UI/IconButton.vue'
 
 export default defineComponent({
-  name: 'MessageInputUploadButton',
+  name: 'MessageInputInsertStampButton',
   components: {
     IconButton
   },
