@@ -62,6 +62,6 @@ export default defineComponent({
   height: 100vh;
   display: flex;
   overflow: auto;
-  padding: 48px 24px;
+  padding: 48px 16px;
 }
 </style>

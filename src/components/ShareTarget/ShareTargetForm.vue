@@ -24,7 +24,7 @@ import {
   defineComponent,
   computed,
   reactive,
-  watchEffect
+  watch
 } from '@vue/composition-api'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import useChannelPath from '@/use/channelPath'
@@ -75,10 +75,20 @@ export default defineComponent({
       text: '',
       isEmpty: computed((): boolean => state.text === '')
     })
-    watchEffect(() => {
-      state.channelId = homeChannelId.value
-      state.text = props.defaultText
-    })
+    watch(
+      () => homeChannelId.value,
+      newVal => {
+        state.channelId = newVal
+      },
+      { immediate: true }
+    )
+    watch(
+      () => props.defaultText,
+      newVal => {
+        state.text = newVal
+      },
+      { immediate: true }
+    )
 
     const { postMessage, isPosting } = usePostMessage(state, state)
     const post = async () => {

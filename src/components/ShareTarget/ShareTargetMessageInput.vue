@@ -170,6 +170,7 @@ export default defineComponent({
   align-items: stretch;
 }
 .inputWrapper {
+  @include color-text-primary;
   min-height: 160px;
   width: 100%;
 }
