@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, shallowRef } from '@vue/composition-api'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 
@@ -78,7 +78,7 @@ export default defineComponent({
       onInputInternal(e)
     }
 
-    const inputRef = ref<HTMLInputElement | null>(null)
+    const inputRef = shallowRef<HTMLInputElement | null>(null)
     const focus = () => {
       inputRef.value?.focus()
     }

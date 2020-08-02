@@ -16,7 +16,8 @@ import {
   defineComponent,
   ref,
   watchEffect,
-  SetupContext
+  SetupContext,
+  shallowRef
 } from '@vue/composition-api'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
@@ -63,7 +64,7 @@ export default defineComponent({
     )
 
     let cropper: Cropper | undefined
-    const $img = ref<HTMLImageElement>()
+    const $img = shallowRef<HTMLImageElement>()
     const cropperNote = ref('')
 
     watchEffect(() => {

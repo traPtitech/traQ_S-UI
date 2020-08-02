@@ -14,9 +14,9 @@ import {
   defineComponent,
   computed,
   reactive,
-  ref,
   Ref,
-  PropType
+  PropType,
+  shallowRef
 } from '@vue/composition-api'
 import { Attachment } from '@/store/ui/fileInput/state'
 import Icon from '@/components/UI/Icon.vue'
@@ -44,7 +44,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const thumbnailRef = ref<HTMLImageElement | null>(null)
+    const thumbnailRef = shallowRef<HTMLImageElement | null>(null)
     const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
     return { thumbnailRef, imageThumbnailState }
   }

@@ -21,7 +21,8 @@ import {
   Ref,
   watch,
   SetupContext,
-  nextTick
+  nextTick,
+  shallowRef
 } from '@vue/composition-api'
 import store from '@/store'
 import { makeStyles } from '@/lib/styles'
@@ -41,7 +42,7 @@ const useMenuHeight = (
   state: { isPopupMenuShown: boolean }
 ) => {
   const height = ref(0)
-  const menuContainerRef = ref<HTMLDivElement | null>(null)
+  const menuContainerRef = shallowRef<HTMLDivElement | null>(null)
   watch(
     () => state.isPopupMenuShown,
     async newVal => {

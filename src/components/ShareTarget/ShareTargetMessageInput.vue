@@ -34,11 +34,11 @@
 <script lang="ts">
 import {
   defineComponent,
-  ref,
   computed,
   onBeforeUnmount,
   watch,
-  onMounted
+  onMounted,
+  shallowRef
 } from '@vue/composition-api'
 import { randomString } from '@/lib/util/randomString'
 import store from '@/store'
@@ -93,7 +93,7 @@ export default defineComponent({
       () => !props.isPosting && !(textState.isEmpty && attachmentsState.isEmpty)
     )
 
-    const textareaRef = ref<HTMLTextAreaElement | null>(null)
+    const textareaRef = shallowRef<HTMLTextAreaElement | null>(null)
     const focus = () => {
       textareaRef.value?.focus()
     }
