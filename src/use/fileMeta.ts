@@ -20,6 +20,16 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
       ? buildFileThumbnailPath(fileMeta.value.id)
       : fileRawPath.value
   )
+  const fileThumbnailSize = computed(() => {
+    const thumbnail =
+      fileMeta.value && fileMeta.value.thumbnail !== null
+        ? fileMeta.value.thumbnail
+        : undefined
+    return {
+      height: thumbnail?.height,
+      width: thumbnail?.width
+    }
+  })
   const fileType = computed(() =>
     fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
   )
@@ -31,6 +41,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     fileLink,
     fileRawPath,
     fileThumbnailPath,
+    fileThumbnailSize,
     fileType,
     fileSize,
     onFileLinkClick,
