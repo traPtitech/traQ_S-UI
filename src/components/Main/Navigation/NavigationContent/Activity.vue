@@ -61,15 +61,12 @@ const useActivityStream = () => {
     await fetch(mode.value)
   })
 
-  watch(
-    () => mode.value,
-    async (newMode, oldMode) => {
-      if (newMode.all !== oldMode.all) {
-        setTimelineStreamingState(newMode.all)
-      }
-      await fetch(mode.value)
+  watch(mode, async (newMode, oldMode) => {
+    if (newMode.all !== oldMode.all) {
+      setTimelineStreamingState(newMode.all)
     }
-  )
+    await fetch(mode.value)
+  })
   ws.addEventListener('reconnect', handler)
 
   onBeforeUnmount(() => {

@@ -20,13 +20,10 @@ const useEditingStatus = (
   onMounted(() => {
     change(isEditing.value)
   })
-  watch(
-    () => isEditing.value,
-    (isEditing, wasEditing) => {
-      if (isEditing === wasEditing) return
-      change(isEditing)
-    }
-  )
+  watch(isEditing, (isEditing, wasEditing) => {
+    if (isEditing === wasEditing) return
+    change(isEditing)
+  })
 }
 
 export default useEditingStatus

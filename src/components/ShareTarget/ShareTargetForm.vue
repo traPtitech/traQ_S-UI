@@ -76,7 +76,7 @@ export default defineComponent({
       isEmpty: computed((): boolean => state.text === '')
     })
     watch(
-      () => homeChannelId.value,
+      homeChannelId,
       newVal => {
         state.channelId = newVal
       },
