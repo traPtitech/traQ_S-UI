@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { UserId, MessageId } from '@/types/entity-ids'
 import { ActivityTimelineMessage, UserDetail } from '@traptitech/traq'
@@ -35,7 +34,7 @@ export const mutations = defineMutations<S>()({
       }
     }
     state.activityTimeline.unshift(activity)
-    Vue.set(state.activityTimelineChannelMap, activity.channelId, activity)
+    state.activityTimelineChannelMap[activity.channelId] = activity
 
     // ガーベッジコレクタ
     if (state.activityTimeline.length > ACTIVITY_LENGTH * 2) {
@@ -55,7 +54,7 @@ export const mutations = defineMutations<S>()({
     )
     if (sameMessageIndex < 0) return
 
-    Vue.set(state.activityTimeline, sameMessageIndex, activity)
+    state.activityTimeline[sameMessageIndex] = activity
   },
   deleteActivity(state: S, messageId: MessageId) {
     const sameMessageIndex = state.activityTimeline.findIndex(
@@ -82,9 +81,9 @@ export const mutations = defineMutations<S>()({
     state.onlineUsers.splice(state.onlineUsers.indexOf(userId), 1)
   },
   setUserDetail: (state, userDetail: UserDetail) => {
-    Vue.set(state.userDetails, userDetail.id, userDetail)
+    state.userDetails[userDetail.id] = userDetail
   },
   deleteUserDetail: (state, userId: UserId) => {
-    Vue.delete(state.userDetails, userId)
+    delete state.userDetails[userId]
   }
 })

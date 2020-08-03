@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
@@ -66,26 +65,26 @@ export const mutations = defineMutations<S>()({
 
     if (message.channelId in state.unreadChannelsSet) {
       const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
-      Vue.set(state.unreadChannelsSet, message.channelId, {
+      state.unreadChannelsSet[message.channelId] = {
         ...oldUnreadChannel,
         count: oldUnreadChannel.count + 1,
         noticeable: oldUnreadChannel.noticeable || noticeable,
         updatedAt: message.createdAt
-      })
+      }
     } else {
-      Vue.set(state.unreadChannelsSet, message.channelId, {
+      state.unreadChannelsSet[message.channelId] = {
         channelId: message.channelId,
         count: 1,
         noticeable,
         since: message.createdAt,
         updatedAt: message.createdAt
-      })
+      }
     }
     updateBadge()
   },
   // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
-    Vue.delete(state.unreadChannelsSet, channelId)
+    delete state.unreadChannelsSet[channelId]
     updateBadge()
     removeNotification(channelId)
   },
@@ -96,17 +95,17 @@ export const mutations = defineMutations<S>()({
     )
   },
   addStaredChannel(state: S, channelId: ChannelId) {
-    Vue.set(state.staredChannelSet, channelId, true)
+    state.staredChannelSet[channelId] = true
   },
   deleteStaredChannel(state: S, channelId: ChannelId) {
-    Vue.delete(state.staredChannelSet, channelId)
+    delete state.staredChannelSet[channelId]
   },
 
   upsertLocalStampHistory(
     state: S,
     { stampId, datetime }: { stampId: StampId; datetime: Date }
   ) {
-    Vue.set(state.stampHistory, stampId, datetime)
+    state.stampHistory[stampId] = datetime
   },
 
   setSubscriptionMap(
@@ -122,6 +121,6 @@ export const mutations = defineMutations<S>()({
       subscriptionLevel: ChannelSubscribeLevel
     }
   ) {
-    Vue.set(state.subscriptionMap, payload.channelId, payload.subscriptionLevel)
+    state.subscriptionMap[payload.channelId] = payload.subscriptionLevel
   }
 })

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, set, toRefs, PropType } from 'vue'
+import { defineComponent, reactive, toRefs, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
@@ -31,7 +31,7 @@ const useChannelFolding = () => {
     if (state.channelFoldingState[id]) {
       state.channelFoldingState[id] = false
     } else {
-      set(state.channelFoldingState, id, true)
+      state.channelFoldingState[id] = true
     }
   }
   return {

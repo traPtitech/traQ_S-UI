@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { S, Attachment } from './state'
 
@@ -16,11 +15,8 @@ export const mutations = defineMutations<S>()({
   },
   addThumbnailTo(state, payload: { index: number; thumbnailDataUrl: string }) {
     if (0 <= payload.index && payload.index < state.attachments.length) {
-      Vue.set(
-        state.attachments[payload.index],
-        'thumbnailDataUrl',
+      state.attachments[payload.index].thumbnailDataUrl =
         payload.thumbnailDataUrl
-      )
     }
   }
 })
