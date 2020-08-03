@@ -6,7 +6,7 @@
       v-bind="$attrs"
       :value="inputValue"
       :checked="checked"
-      v-on="listeners"
+      @input="onInput"
     />
     <div
       :class="$style.pseudoRadio"
@@ -53,13 +53,7 @@ export default defineComponent({
     const checked = computed(() => props.inputValue === props.modelValue)
     const { onInput } = useInput(context, 'update:modelValue')
 
-    const listeners = computed(() =>
-      Object.assign({}, context.listeners, {
-        input: onInput
-      })
-    )
-
-    return { checked, listeners }
+    return { checked, onInput }
   }
 })
 </script>

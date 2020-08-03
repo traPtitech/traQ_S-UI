@@ -5,7 +5,7 @@
       :class="$style.checkbox"
       v-bind="$attrs"
       :checked="modelValue"
-      v-on="listeners"
+      @input="onInput"
     />
     <div
       :class="$style.pseudoCheckbox"
@@ -44,13 +44,7 @@ export default defineComponent({
         (event.target as HTMLInputElement).checked
       )
 
-    const listeners = computed(() =>
-      Object.assign({}, context.listeners, {
-        input: onInput
-      })
-    )
-
-    return { listeners }
+    return { onInput }
   }
 })
 </script>

@@ -5,7 +5,6 @@
     :height="size"
     viewBox="0 0 24 24"
     v-bind="attrs"
-    v-on="listeners"
     role="img"
     :class="$style.icon"
   >
@@ -18,7 +17,6 @@
     :height="size"
     view-box="0 0 24 24"
     v-bind="attrs"
-    v-on="listeners"
     role="img"
     :class="$style.icon"
   />
@@ -46,7 +44,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { attrs, listeners }) {
+  setup(props, { attrs }) {
     // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
     const getComponent = (name: string) => () =>
       import(`@/assets/icons/${name}.svg?component`)
@@ -56,7 +54,7 @@ export default defineComponent({
       return mdi[name]
     }
 
-    return { svgComponent, getMdiPath, attrs, listeners }
+    return { svgComponent, getMdiPath, attrs }
   }
 })
 </script>
