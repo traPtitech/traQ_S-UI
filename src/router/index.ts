@@ -1,7 +1,4 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 export enum RouteName {
   Index = 'index',
@@ -28,7 +25,7 @@ export const changeRouteByPath = (path: string) => {
   router.push(path).catch(() => {})
 }
 
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: RouteName.Index,
@@ -84,16 +81,17 @@ const routes: RouteConfig[] = [
     props: { type: 'consent' }
   },
   {
-    path: '*',
+    path: '/:catchAll(.*)',
     name: RouteName.NotFound,
     component: () =>
       import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const routerHistory = createWebHistory(process.env.BASE_URL)
+
+const router = createRouter({
+  history: routerHistory,
   routes
 })
 router.beforeEach((to, from, next) => {
