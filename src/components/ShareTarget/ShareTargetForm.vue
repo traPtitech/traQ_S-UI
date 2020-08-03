@@ -6,7 +6,7 @@
       v-model="state.channelId"
       :options="channelOptions"
     />
-    <ShareTargetMessageInput
+    <share-target-message-input
       :class="[$style.item, $style.input]"
       v-model="state.text"
     />

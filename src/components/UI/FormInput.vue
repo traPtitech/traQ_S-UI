@@ -12,7 +12,7 @@
         :class="$style.input"
         :id="id"
         :type="type"
-        :value="value"
+        :value="modelValue"
         :name="name"
         :autocomplete="autocomplete"
         :placeholder="placeholder"
@@ -41,7 +41,7 @@ export default defineComponent({
       type: String,
       default: 'text'
     },
-    value: {
+    modelValue: {
       type: [String, Number],
       default: ''
     },
@@ -67,7 +67,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { onInput: onInputInternal } = useInput(context)
+    const { onInput: onInputInternal } = useInput(context, 'update:modelValue')
 
     const onInput = (e: InputEvent) => {
       if (props.useChangeEvent) return

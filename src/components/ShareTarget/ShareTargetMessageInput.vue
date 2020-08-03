@@ -57,7 +57,7 @@ export default defineComponent({
     MessageInputInsertStampButton
   },
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -74,11 +74,11 @@ export default defineComponent({
     watch(
       () => textState.text,
       val => {
-        context.emit('input', val)
+        context.emit('update:modelValue', val)
       }
     )
     onMounted(() => {
-      textState.text = props.value
+      textState.text = props.modelValue
     })
 
     const { attachmentsState, addAttachment, destroy } = useAttachments()

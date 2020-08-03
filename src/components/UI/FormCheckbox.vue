@@ -4,13 +4,13 @@
       type="checkbox"
       :class="$style.checkbox"
       v-bind="$attrs"
-      :checked="value"
+      :checked="modelValue"
       v-on="listeners"
     />
     <div
       :class="$style.pseudoCheckbox"
       role="checkbox"
-      :aria-checked="value ? 'true' : 'false'"
+      :aria-checked="modelValue ? 'true' : 'false'"
     >
       <div :class="$style.pseudoCheckboxInner" />
     </div>
@@ -24,7 +24,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'FormCheckbox',
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false
     },
@@ -39,7 +39,10 @@ export default defineComponent({
   },
   setup(props, context) {
     const onInput = (event: InputEvent) =>
-      context.emit('input', (event.target as HTMLInputElement).checked)
+      context.emit(
+        'update:modelValue',
+        (event.target as HTMLInputElement).checked
+      )
 
     const listeners = computed(() =>
       Object.assign({}, context.listeners, {

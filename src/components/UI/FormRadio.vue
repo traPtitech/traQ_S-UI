@@ -29,7 +29,7 @@ export default defineComponent({
     /**
      * v-model用なので基本的には直接触らない
      */
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -50,8 +50,8 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const checked = computed(() => props.inputValue === props.value)
-    const { onInput } = useInput(context)
+    const checked = computed(() => props.inputValue === props.modelValue)
+    const { onInput } = useInput(context, 'update:modelValue')
 
     const listeners = computed(() =>
       Object.assign({}, context.listeners, {

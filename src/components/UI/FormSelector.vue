@@ -4,7 +4,12 @@
       {{ label }}
     </label>
     <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
-      <select @input="onInput" :value="value" :id="id" :class="$style.select">
+      <select
+        @input="onInput"
+        :value="modelValue"
+        :id="id"
+        :class="$style.select"
+      >
         <option
           v-for="option in options"
           :key="option.value"
@@ -25,7 +30,7 @@ import { randomString } from '@/lib/util/randomString'
 export default defineComponent({
   name: 'FormSelector',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -40,7 +45,7 @@ export default defineComponent({
     label: String
   },
   setup(props, context) {
-    const { onInput } = useInput(context)
+    const { onInput } = useInput(context, 'update:modelValue')
     const id = randomString()
     return { onInput, id }
   }
