@@ -16,10 +16,12 @@ import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '@/router'
 import useRedirectParam from '@/components/Authenticate/use/redirectParam'
+import { useRouter } from 'vue-router'
 
 export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
 
 const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
+  const router = useRouter()
   const state = reactive({
     show: false
   })
@@ -41,7 +43,7 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
 
       // OAuth認可画面に入る前にログインさせる
       // ログインしたら戻ってくる
-      context.root.$router.replace({
+      router.replace({
         name: RouteName.Login,
         query: { redirect: `${location.pathname}${location.search}` }
       })

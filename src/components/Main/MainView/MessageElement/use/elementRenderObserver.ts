@@ -2,6 +2,7 @@ import { SetupContext, Ref, watchEffect, watch } from 'vue'
 import { FileId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { ResizeObserverWindow } from '@/types/ResizeObserver'
+import { useRoute } from 'vue-router'
 
 declare const window: ResizeObserverWindow
 
@@ -17,6 +18,8 @@ const useElementRenderObserver = (
   }>,
   context: SetupContext
 ) => {
+  const route = useRoute()
+
   let lastHeight = 0
   let lastBottom = 0
   let lastTop = 0
@@ -59,7 +62,7 @@ const useElementRenderObserver = (
     }
   })
   watch(
-    () => context.root.$route.path,
+    () => route.path,
     () =>
       // パス変更でunobserve
       // vue-routerのインスタンス再利用対策

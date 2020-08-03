@@ -14,6 +14,7 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 import { RouteName } from '@/router'
 import store from '@/store'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Share',
@@ -23,10 +24,13 @@ export default defineComponent({
     ToastContainer
   },
   setup(props, context) {
-    const query = computed(() => context.root.$route.query)
+    const route = useRoute()
+    const query = computed(() => route.query)
     const title = computed(() => getStringParam(query.value.title))
     const text = computed(() => getStringParam(query.value.text))
     const url = computed(() => getStringParam(query.value.url))
+
+    const router = useRouter()
 
     const show = ref(false)
 
@@ -44,7 +48,7 @@ export default defineComponent({
 
       // シェア画面に入る前にログインさせる
       // ログインしたら戻ってくる
-      context.root.$router.replace({
+      router.replace({
         name: RouteName.Login,
         query: { redirect: `${location.pathname}${location.search}` }
       })

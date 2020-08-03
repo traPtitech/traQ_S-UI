@@ -39,6 +39,7 @@ import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
 import AuthenticateButton from '../AuthenticateButton.vue'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'ConsentForm',
@@ -49,14 +50,14 @@ export default defineComponent({
     AuthenticateButton
   },
   setup(_, context) {
-    const {
-      scopes: rawScopes,
-      client_id: rawClientId
-    } = context.root.$route.query
+    const route = useRoute()
+    const { scopes: rawScopes, client_id: rawClientId } = route.query
 
     const { state, approve, deny } = useConsent({
       scopes: !Array.isArray(rawScopes) ? rawScopes?.split(' ') : undefined,
-      clientId: !Array.isArray(rawClientId) ? rawClientId : undefined
+      clientId: !Array.isArray(rawClientId)
+        ? rawClientId ?? undefined
+        : undefined
     })
 
     return { state, approve, deny }

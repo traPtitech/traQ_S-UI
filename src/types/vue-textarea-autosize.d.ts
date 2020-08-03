@@ -1,7 +1,7 @@
 declare module 'vue-textarea-autosize' {
-  import { PluginObject } from 'vue'
+  import { Plugin } from 'vue'
 
-  const plugin: PluginObject<unknown>
+  const plugin: Plugin
 
   export default plugin
 }

@@ -9,8 +9,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     () => store.state.entities.fileMetaData[props.fileId]
   )
   const { fileLink, onFileDownloadLinkClick, onFileLinkClick } = useFileLink(
-    props,
-    context
+    props
   )
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''

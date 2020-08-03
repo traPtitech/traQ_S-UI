@@ -112,9 +112,7 @@ export default defineComponent({
       () => isMobile.value && isNavCompletelyAppeared.value
     )
 
-    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher(
-      context
-    )
+    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 
     useInitialFetch(context).then(
       () => {

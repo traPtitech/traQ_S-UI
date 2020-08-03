@@ -4,13 +4,14 @@
     <div v-if="routeName && routeParam">
       {{ routeName }} {{ routeParam }} is not found on traQ!
     </div>
-    <div v-else>Path {{ $route.path }} is not found on traQ!</div>
+    <div v-else>Path {{ route.path }} is not found on traQ!</div>
     <router-link to="/">back</router-link>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'NotFound',
@@ -19,7 +20,8 @@ export default defineComponent({
     routeParam: String
   },
   setup() {
-    return {}
+    const route = useRoute()
+    return { route }
   }
 })
 </script>

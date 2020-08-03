@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, SetupContext } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
 import useQall from './use/qall'
@@ -48,12 +48,14 @@ import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
 import store from '@/store'
+import { useRoute } from 'vue-router'
 
-const useCopy = (context: SetupContext) => {
+const useCopy = () => {
+  const route = useRoute()
   const copyLink = async () => {
     try {
       await clipboard.writeText(
-        `[#${context.root.$route.params['channel']}](${embeddingOrigin}${context.root.$route.path})`
+        `[#${route.params['channel']}](${embeddingOrigin}${route.path})`
       )
       store.commit.ui.toast.addToast({
         type: 'info',
@@ -81,7 +83,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
@@ -90,7 +92,7 @@ export default defineComponent({
       canCreateChildChannel,
       openChannelCreateModal
     } = useChannelCreateModal(props)
-    const { copyLink } = useCopy(context)
+    const { copyLink } = useCopy()
     const {
       hasActiveQallSession,
       isJoinedQallSession,
