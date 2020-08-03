@@ -43,10 +43,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  Ref,
+  defineAsyncComponent
+} from 'vue'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
-
 import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
 import MainView from '@/components/Main/MainView/MainView.vue'
@@ -75,6 +80,10 @@ const useStyles = (
     }))
   })
 
+const NotFound = defineAsyncComponent(
+  () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+)
+
 export default defineComponent({
   name: 'Main',
   components: {
@@ -85,8 +94,7 @@ export default defineComponent({
     StampPickerContainer,
     MessageToolsMenuContainer,
     ToastContainer,
-    NotFound: () =>
-      import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+    NotFound
   },
   setup(_, context) {
     const navWidth = 320

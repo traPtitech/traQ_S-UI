@@ -64,7 +64,8 @@ import {
   computed,
   reactive,
   PropType,
-  Ref
+  Ref,
+  defineAsyncComponent
 } from 'vue'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
@@ -138,12 +139,13 @@ interface IgnoreChildrenProps extends Props {
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
 
+// 型エラー・コンポーネント循環参照の回避
+const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
-    // 型エラー・コンポーネント循環参照の回避
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ChannelList: (() => import('./ChannelList.vue')) as any,
+    ChannelList,
     ChannelElementHash,
     ChannelElementTopic,
     ChannelElementUnreadBadge,

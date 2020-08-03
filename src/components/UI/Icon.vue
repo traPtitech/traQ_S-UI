@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, defineAsyncComponent } from 'vue'
 import mdi from '@/assets/mdi'
 
 export default defineComponent({
@@ -46,8 +46,8 @@ export default defineComponent({
   },
   setup(props, { attrs }) {
     // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
-    const getComponent = (name: string) => () =>
-      import(`@/assets/icons/${name}.svg?component`)
+    const getComponent = (name: string) =>
+      defineAsyncComponent(() => import(`@/assets/icons/${name}.svg?component`))
 
     const svgComponent = computed(() => getComponent(props.name))
     const getMdiPath = (name: string) => {
