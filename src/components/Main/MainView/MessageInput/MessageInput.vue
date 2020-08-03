@@ -5,10 +5,7 @@
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
-      <portal-target
-        :class="$style.stampPickerLocator"
-        :name="targetPortalName"
-      />
+      <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
       <message-input-file-list :class="$style.fileList" />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
@@ -124,9 +121,9 @@ export default defineComponent({
     )
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const targetPortalName = 'message-input-stamp-picker'
+    const teleportTargetName = 'message-input-stamp-picker'
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       textState,
       textareaRef
     )
@@ -142,7 +139,7 @@ export default defineComponent({
     return {
       textareaRef,
       isArchived,
-      targetPortalName,
+      teleportTargetName,
       isMobile,
       typingUsers,
       textState,

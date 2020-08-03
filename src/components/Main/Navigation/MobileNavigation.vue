@@ -7,7 +7,7 @@
   >
     <div>
       <mobile-tool-box :class="$style.toolBox" />
-      <portal-target :name="targetPortalName" />
+      <div :id="teleportTargetName" />
     </div>
     <div :class="$style.content">
       <navigation-content
@@ -46,7 +46,7 @@ import { defineComponent } from 'vue'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import MobileToolBox, {
-  targetPortalName
+  teleportTargetName
 } from '@/components/Main/Navigation/MobileToolBox.vue'
 import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'
 import useNavigation from './use/navigation'
@@ -77,7 +77,7 @@ export default defineComponent({
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
       onEphemeralEntryAdd,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

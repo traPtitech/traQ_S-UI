@@ -11,9 +11,9 @@
         @click.native="tool.onClick"
       />
     </div>
-    <portal v-if="isServicesShown" :to="targetPortalName">
+    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
       <app-list :class="$style.services" @close="closeServices" />
-    </portal>
+    </teleport>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ import Tool from '@/components/Main/Navigation/Tool.vue'
 import useToolBox from '@/components/Main/Navigation/use/toolBox'
 import AppList from '@/components/Main/Navigation/AppList.vue'
 
-export const targetPortalName = 'app-list'
+export const teleportTargetName = 'app-list'
 
 export default defineComponent({
   name: 'MobileToolBox',
@@ -41,7 +41,7 @@ export default defineComponent({
       isServicesShown,
       closeServices,
       toggleServices,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

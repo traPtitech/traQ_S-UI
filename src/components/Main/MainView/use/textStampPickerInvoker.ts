@@ -3,14 +3,14 @@ import store from '@/store'
 import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (
-  targetPortalName: string,
+  teleportTargetName: string,
   textState: { text: string },
   textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>
 ) => {
   const elementRef = computed(() => textareaRef.value?.$el)
 
   const { invokeStampPicker } = useStampPickerInvoker(
-    targetPortalName,
+    teleportTargetName,
     async stampData => {
       const stampName = store.state.entities.stamps[stampData.id]?.name
       if (!stampName) return

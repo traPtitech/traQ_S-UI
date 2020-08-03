@@ -1,5 +1,5 @@
 <template>
-  <portal v-if="shouldShowSidebar" to="sidebar">
+  <teleport v-if="shouldShowSidebar" to="#sidebar">
     <div :class="$style.container">
       <div :class="$style.header">
         <slot name="header" />
@@ -9,7 +9,7 @@
         <slot name="content" />
       </div>
     </div>
-  </portal>
+  </teleport>
 </template>
 
 <script lang="ts">

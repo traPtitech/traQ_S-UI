@@ -30,18 +30,14 @@
         v-show="isSidebarAppeared"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
-        <portal-target
-          name="sidebar"
-          v-if="isMobile"
-          :class="$style.sidebarPortal"
-        />
+        <div id="sidebar" v-if="isMobile" :class="$style.sidebarPortal" />
       </div>
     </div>
     <modal-container />
     <stamp-picker-container />
     <message-tools-menu-container />
     <toast-container />
-    <portal-target :name="targetPortalName" />
+    <div :id="teleportTargetName" />
   </div>
   <div v-else></div>
 </template>
@@ -63,7 +59,7 @@ import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 
-export const targetPortalName = 'message-menu-popup'
+export const teleportTargetName = 'message-menu-popup'
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -157,7 +153,7 @@ export default defineComponent({
 
       onClickMainViewFrame,
 
-      targetPortalName,
+      teleportTargetName,
       styles,
       currentActiveDrawer
     }

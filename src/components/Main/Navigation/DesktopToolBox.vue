@@ -10,9 +10,9 @@
       @click.native="tool.onClick"
     />
     <user-icon :class="$style.item" :size="36" :user-id="myId" />
-    <portal v-if="isServicesShown" :to="targetPortalName">
+    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
       <app-list :class="$style.services" @close="closeServices" />
-    </portal>
+    </teleport>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 import useToolBox from '@/components/Main/Navigation/use/toolBox'
 import AppList from '@/components/Main/Navigation/AppList.vue'
 
-export const targetPortalName = 'app-list'
+export const teleportTargetName = 'app-list'
 
 export default defineComponent({
   name: 'DesktopToolBox',
@@ -45,7 +45,7 @@ export default defineComponent({
       closeServices,
       toggleServices,
       myId,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

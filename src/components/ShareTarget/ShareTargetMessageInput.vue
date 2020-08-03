@@ -47,7 +47,7 @@ import MessageInputFileList from '@/components/Main/MainView/MessageInput/Messag
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 
-export const targetPortalName = 'share-target-stamp-picker'
+export const teleportTargetName = 'share-target-stamp-picker'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -100,7 +100,7 @@ export default defineComponent({
     })
 
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       textState,
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
@@ -127,7 +127,7 @@ export default defineComponent({
       attachmentsState,
       addAttachment,
       canPostMessage,
-      targetPortalName,
+      teleportTargetName,
       id,
       textareaRef,
       onStampClick

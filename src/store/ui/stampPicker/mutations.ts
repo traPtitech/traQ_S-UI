@@ -4,8 +4,8 @@ import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 import { Place } from '.'
 
 export const mutations = defineMutations<S>()({
-  setTargetPortalName(state, name: string) {
-    state.targetPortalName = name
+  setTeleportTargetName(state, name: string) {
+    state.teleportTargetName = name
   },
   setSelectHandler(state, handler: StampSelectHandler) {
     state.selectHandler = handler
@@ -20,8 +20,8 @@ export const mutations = defineMutations<S>()({
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     state.selectHandler = (_: SelectedStampData) => {}
   },
-  clearTargetPortalName(state) {
-    state.targetPortalName = ''
+  clearTeleportTargetName(state) {
+    state.teleportTargetName = ''
   },
   clearCurrentStampPaletteId(state) {
     state.currentStampSet = {

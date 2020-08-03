@@ -52,8 +52,8 @@ import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 
 const useStampPicker = () => {
   const state = reactive({
-    targetPortalName: computed(
-      () => store.state.ui.stampPicker.targetPortalName
+    teleportTargetName: computed(
+      () => store.state.ui.stampPicker.teleportTargetName
     ),
     shouldShowStampPicker: computed(
       () => store.getters.ui.stampPicker.isStampPickerShown

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import PortalVue from 'portal-vue'
 import vClickOutside from 'v-click-outside'
 import VueTextareaAutosize from 'vue-textarea-autosize'
 import { setupGlobalFuncs } from './markdown-bridge'
@@ -19,7 +18,6 @@ import('katex/dist/katex.css')
   app.use(router)
   app.use(store.original)
 
-  app.use(PortalVue)
   app.use(vClickOutside)
   app.use(VueTextareaAutosize)
 

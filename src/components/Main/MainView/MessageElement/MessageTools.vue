@@ -69,7 +69,7 @@ import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import { targetPortalName } from '@/views/Main.vue'
+import { teleportTargetName } from '@/views/Main.vue'
 import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
@@ -94,7 +94,7 @@ export default defineComponent({
     }
 
     const { invokeStampPicker } = useStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       stampData => {
         addStamp(stampData.id)
       }

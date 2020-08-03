@@ -72,7 +72,7 @@
     />
     -->
     <div :class="$style.moreButton">
-      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+      <div :class="$style.popupLocator" :id="teleportTargetName" />
       <header-tools-item
         @click="emit('click-more')"
         :class="$style.icon"
@@ -91,7 +91,7 @@ import store from '@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import useIsMobile from '@/use/isMobile'
 
-export const targetPortalName = 'header-popup'
+export const teleportTargetName = 'header-popup'
 
 export default defineComponent({
   name: 'ChannelViewHeaderTools',
@@ -125,7 +125,7 @@ export default defineComponent({
       emit,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
-      targetPortalName,
+      teleportTargetName,
       isQallEnabled,
       ChannelSubscribeLevel,
       isMobile

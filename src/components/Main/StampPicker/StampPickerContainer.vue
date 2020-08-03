@@ -1,10 +1,13 @@
 <template>
-  <portal v-show="state.isStampPickerShown" :to="state.targetPortalName">
+  <teleport
+    v-show="state.isStampPickerShown"
+    :to="`#${state.teleportTargetName}`"
+  >
     <stamp-picker
       :style="styles.stampPicker"
       :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
     />
-  </portal>
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -15,8 +18,8 @@ import { Place } from '@/store/ui/stampPicker'
 
 const useStampPicker = () => {
   const state = reactive({
-    targetPortalName: computed(
-      () => store.state.ui.stampPicker.targetPortalName
+    teleportTargetName: computed(
+      () => store.state.ui.stampPicker.teleportTargetName
     ),
     isStampPickerShown: computed(
       () => store.getters.ui.stampPicker.isStampPickerShown

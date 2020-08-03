@@ -13,7 +13,7 @@
       @unstar-channel="unstarChannel"
       @click-more="togglePopupMenu"
     />
-    <portal v-if="isPopupMenuShown" :to="targetPortalName">
+    <teleport v-if="isPopupMenuShown" :to="`#${teleportTargetName}`">
       <header-tools-menu
         :class="$style.toolsMenu"
         :show-notification-setting-btn="!channelState.forced"
@@ -29,7 +29,7 @@
         @click-qall="toggleQall"
         @click-manage-channel="openChannelManageModal"
       />
-    </portal>
+    </teleport>
   </div>
 </template>
 
@@ -44,7 +44,7 @@ import useStarChannel from './use/starChannel'
 import useNotificationModal from './use/notificationModal'
 import useChannelCreateModal from './use/channelCreateModal'
 import useChannelManageModal from './use/channelManageModal'
-import HeaderToolsList, { targetPortalName } from './HeaderToolsList.vue'
+import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
 import store from '@/store'
@@ -114,7 +114,7 @@ export default defineComponent({
       copyLink,
       togglePopupMenu,
       closePopupMenu,
-      targetPortalName
+      teleportTargetName
     }
   }
 })
