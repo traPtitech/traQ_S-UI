@@ -33,7 +33,6 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import useSidebar from '@/use/sidebar'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
-import ChannelViewHeader from './Header.vue'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
@@ -73,7 +72,6 @@ export default defineComponent({
     entryMessageId: String as PropType<ChannelId>
   },
   components: {
-    ChannelViewHeader,
     ChannelViewContent,
     ChannelViewFileUploadOverlay,
     ChannelSidebarHidden

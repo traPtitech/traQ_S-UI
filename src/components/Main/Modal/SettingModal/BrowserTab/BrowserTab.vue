@@ -95,7 +95,6 @@ import { isMac } from '@/lib/util/browser'
 import { SendKeys } from '@/store/app/browserSettings'
 import useSyncedState from '../use/syncedState'
 import FormSelector from '@/components/UI/FormSelector.vue'
-import FormInput from '@/components/UI/FormInput.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
@@ -160,7 +159,6 @@ export default defineComponent({
     Notification,
     FormRadio,
     FormSelector,
-    FormInput,
     FormCheckbox,
     Toggle
   }

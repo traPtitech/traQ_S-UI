@@ -48,7 +48,6 @@ import useIsMobile from '@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import Icon from '@/components/UI/Icon.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
@@ -58,7 +57,6 @@ export default defineComponent({
   name: 'MessageElement',
   components: {
     MessageContents,
-    Icon,
     MessageStampList,
     MessagePinned,
     MessageTools

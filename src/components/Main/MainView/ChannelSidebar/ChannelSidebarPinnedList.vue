@@ -32,15 +32,11 @@ export default defineComponent({
         .map(pinnedMessage => pinnedMessage.message)
     )
 
-    const closeBar = () => {
-      context.emit('closeBar')
-    }
-
     const onMessageSelect = (messageId: MessageId) => {
       context.root.$router.push(`/messages/${messageId}`)
     }
 
-    return { sortedMessages, closeBar, onMessageSelect }
+    return { sortedMessages, onMessageSelect }
   }
 })
 </script>

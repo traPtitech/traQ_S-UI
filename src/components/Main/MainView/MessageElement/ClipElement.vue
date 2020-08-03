@@ -32,7 +32,6 @@ import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
@@ -43,7 +42,6 @@ export default defineComponent({
   name: 'ClipElement',
   components: {
     MessageContents,
-    MessagePinned,
     MessageTools,
     MessageQuoteListItemFooter
   },

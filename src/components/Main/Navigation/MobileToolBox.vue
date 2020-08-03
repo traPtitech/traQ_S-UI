@@ -20,8 +20,6 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import Tool from '@/components/Main/Navigation/Tool.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import Icon from '@/components/UI/Icon.vue'
 import useToolBox from '@/components/Main/Navigation/use/toolBox'
 import AppList from '@/components/Main/Navigation/AppList.vue'
 
@@ -29,7 +27,7 @@ export const targetPortalName = 'app-list'
 
 export default defineComponent({
   name: 'MobileToolBox',
-  components: { Tool, UserIcon, Icon, AppList },
+  components: { Tool, AppList },
   setup() {
     const {
       tools,

@@ -7,9 +7,9 @@
     return-button
   >
     <user-list-item
-      v-for="id in taggedUsers"
-      :key="id"
-      :user-id="id"
+      v-for="userId in taggedUsers"
+      :key="userId"
+      :user-id="userId"
       :class="$style.item"
     />
   </modal-frame>

@@ -6,9 +6,9 @@
     return-button
   >
     <user-list-item
-      v-for="id in groupMember"
-      :key="id"
-      :user-id="id"
+      v-for="memberId in groupMember"
+      :key="memberId"
+      :user-id="memberId"
       :class="$style.item"
     />
   </modal-frame>

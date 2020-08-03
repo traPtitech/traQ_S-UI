@@ -38,13 +38,12 @@ import {
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
 } from '@/components/Main/Navigation/use/navigationConstructor'
-import Icon from '@/components/UI/Icon.vue'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 
 export default defineComponent({
   name: 'MobileNavigationSelector',
-  components: { NavigationSelectorItem, Icon },
+  components: { NavigationSelectorItem },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,

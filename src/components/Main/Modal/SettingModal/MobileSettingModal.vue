@@ -18,7 +18,6 @@ import { defineComponent, toRefs, ref } from '@vue/composition-api'
 import { useNavigation, NavigationItemType } from './use/navigation'
 import MobileTabSelector from './MobileTabSelector.vue'
 import MobileTabFrame from './MobileTabFrame.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'MobileSettingModal',
@@ -45,8 +44,7 @@ export default defineComponent({
   },
   components: {
     MobileTabSelector,
-    MobileTabFrame,
-    CloseButton
+    MobileTabFrame
   }
 })
 </script>

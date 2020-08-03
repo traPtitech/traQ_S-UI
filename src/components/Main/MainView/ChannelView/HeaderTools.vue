@@ -37,7 +37,6 @@
 import { defineComponent, PropType, SetupContext } from '@vue/composition-api'
 import { ChannelId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
-import Icon from '@/components/UI/Icon.vue'
 import useQall from './use/qall'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
@@ -73,7 +72,6 @@ const useCopy = (context: SetupContext) => {
 export default defineComponent({
   name: 'ChannelViewHeader',
   components: {
-    Icon,
     HeaderToolsList,
     HeaderToolsMenu
   },
