@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { borderWidth: number; size: number }) =>

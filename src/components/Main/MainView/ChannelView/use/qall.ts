@@ -1,5 +1,5 @@
 import store from '@/store'
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 
 const useQall = (props: { channelId: ChannelId }) => {

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import store from '@/store'
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { MessageStampById } from './MessageStampList.vue'

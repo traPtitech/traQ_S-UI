@@ -26,13 +26,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  ref,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref, reactive } from 'vue'
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'

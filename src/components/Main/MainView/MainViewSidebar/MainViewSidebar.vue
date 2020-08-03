@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useSidebar from '@/use/sidebar'
 import CloseButton from '@/components/UI/CloseButton.vue'
 

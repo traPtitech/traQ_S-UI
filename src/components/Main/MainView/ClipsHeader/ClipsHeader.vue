@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import useSidebar from '@/use/sidebar'

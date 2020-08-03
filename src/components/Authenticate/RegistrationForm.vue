@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useLogin from './use/login'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'

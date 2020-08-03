@@ -1,4 +1,4 @@
-import { reactive, SetupContext } from '@vue/composition-api'
+import { reactive, SetupContext } from 'vue'
 import apis from '@/lib/apis'
 import useRedirectParam from './redirectParam'
 

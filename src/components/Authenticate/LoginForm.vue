@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from 'vue'
 import useLogin from './use/login'
 import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'

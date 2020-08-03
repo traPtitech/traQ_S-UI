@@ -42,13 +42,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  onBeforeUnmount,
-  ref
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'

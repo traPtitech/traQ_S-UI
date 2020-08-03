@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import MessageOgpListItem from './MessageOgpListItem.vue'
 import store from '@/store'
 import { isDefined } from '@/lib/util/array'

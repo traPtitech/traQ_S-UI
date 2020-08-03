@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'

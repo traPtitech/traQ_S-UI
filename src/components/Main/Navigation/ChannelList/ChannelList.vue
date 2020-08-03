@@ -16,13 +16,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  set,
-  toRefs,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, set, toRefs, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'

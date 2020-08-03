@@ -87,12 +87,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  ref,
-  watchEffect
-} from '@vue/composition-api'
+import { defineComponent, computed, ref, watchEffect } from 'vue'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'

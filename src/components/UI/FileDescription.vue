@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 import Icon from '@/components/UI/Icon.vue'

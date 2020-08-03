@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { OAuth2Client, User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 

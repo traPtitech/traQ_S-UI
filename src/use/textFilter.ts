@@ -1,4 +1,4 @@
-import { reactive, computed, Ref } from '@vue/composition-api'
+import { reactive, computed, Ref } from 'vue'
 
 const useTextFilter = <T, K extends keyof T>(
   items: Ref<readonly T[]>,

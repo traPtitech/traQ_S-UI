@@ -37,7 +37,7 @@ import {
   watch,
   onMounted,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'

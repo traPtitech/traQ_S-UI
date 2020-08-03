@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { NavigationItemType } from './use/navigation'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import BrowserTab from './BrowserTab/BrowserTab.vue'

@@ -23,7 +23,7 @@ import {
   SetupContext,
   nextTick,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 import { targetPortalName } from '@/views/Main.vue'

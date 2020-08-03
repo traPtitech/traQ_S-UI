@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useConsent from './use/consent'
 import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'

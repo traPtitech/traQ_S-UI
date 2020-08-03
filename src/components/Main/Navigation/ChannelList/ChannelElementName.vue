@@ -20,12 +20,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, PropType } from 'vue'
 import useChannelPath from '@/use/channelPath'
 import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
 import Icon from '@/components/UI/Icon.vue'

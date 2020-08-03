@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import { SendKeys } from '@/store/app/browserSettings'

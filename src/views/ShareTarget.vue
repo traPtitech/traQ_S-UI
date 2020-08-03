@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref } from '@vue/composition-api'
+import { defineComponent, computed, onMounted, ref } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import ShareTarget from '@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'

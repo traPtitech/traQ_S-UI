@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
 import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
 import { MessageId } from '@/types/entity-ids'

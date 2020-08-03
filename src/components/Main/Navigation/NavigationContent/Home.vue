@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'

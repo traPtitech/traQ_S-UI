@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 

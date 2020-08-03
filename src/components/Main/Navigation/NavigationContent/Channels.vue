@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, Ref } from '@vue/composition-api'
+import { defineComponent, computed, Ref } from 'vue'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'

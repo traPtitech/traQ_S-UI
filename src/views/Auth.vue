@@ -11,7 +11,7 @@ import {
   computed,
   watch,
   SetupContext
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '@/router'

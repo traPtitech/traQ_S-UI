@@ -1,4 +1,4 @@
-import { computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from 'vue'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 

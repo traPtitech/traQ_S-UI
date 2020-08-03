@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'

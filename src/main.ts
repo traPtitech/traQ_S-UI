@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueCompositionApi from '@vue/composition-api'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -16,7 +15,6 @@ import('katex/dist/katex.css')
 
   await loadResizeObserver()
 
-  Vue.use(VueCompositionApi)
   Vue.use(PortalVue)
   Vue.use(vClickOutside)
   Vue.use(VueTextareaAutosize)

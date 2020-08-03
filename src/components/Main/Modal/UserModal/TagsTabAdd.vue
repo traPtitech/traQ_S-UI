@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from '@vue/composition-api'
+import { defineComponent, ref, PropType } from 'vue'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'

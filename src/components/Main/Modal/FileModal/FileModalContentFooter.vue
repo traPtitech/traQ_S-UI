@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'

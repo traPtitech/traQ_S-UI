@@ -32,13 +32,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  ref,
-  Ref
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref, Ref } from 'vue'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'

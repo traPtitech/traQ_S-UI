@@ -16,12 +16,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  ref,
-  watchEffect
-} from '@vue/composition-api'
+import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
 import store from '@/store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'

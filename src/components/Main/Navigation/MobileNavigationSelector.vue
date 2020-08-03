@@ -25,13 +25,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  PropType,
-  computed,
-  watch
-} from '@vue/composition-api'
+import { defineComponent, SetupContext, PropType, computed, watch } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,

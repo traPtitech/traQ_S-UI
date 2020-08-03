@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from '@/components/Main/Modal/UserModal/NavigationSelectorItem.vue'
 

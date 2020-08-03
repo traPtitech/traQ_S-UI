@@ -1,4 +1,4 @@
-import { ref } from '@vue/composition-api'
+import { ref } from 'vue'
 
 const useStampFilterPlaceholder = () => {
   const placeholder = ref('スタンプを検索')

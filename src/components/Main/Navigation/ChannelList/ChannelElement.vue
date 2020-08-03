@@ -65,7 +65,7 @@ import {
   reactive,
   PropType,
   Ref
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'

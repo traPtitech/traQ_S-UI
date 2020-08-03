@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelSidebar from '@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue'
 import ClipsSidebar from '@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue'

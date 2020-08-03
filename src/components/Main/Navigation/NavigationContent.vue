@@ -19,12 +19,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, computed, PropType } from 'vue'
 import store from '@/store'
 import { NavigationItemType } from '@/components/Main/Navigation/use/navigationConstructor'
 import Home from './NavigationContent/Home.vue'

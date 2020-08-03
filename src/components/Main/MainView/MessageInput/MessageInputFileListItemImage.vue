@@ -17,7 +17,7 @@ import {
   Ref,
   PropType,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { Attachment } from '@/store/ui/fileInput/state'
 
 const useImageThumbnail = (

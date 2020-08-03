@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { User, UserDetail } from '@traptitech/traq'
 import Bio from './Bio.vue'
 import HomeChannel from './HomeChannel.vue'

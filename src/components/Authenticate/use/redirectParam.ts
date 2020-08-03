@@ -1,4 +1,4 @@
-import { SetupContext, computed, reactive } from '@vue/composition-api'
+import { SetupContext, computed, reactive } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import { redirectToPipelineIfNeeded } from '@/router/pipeline'
 import router, { RouteName } from '@/router'

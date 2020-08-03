@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import VueSlider from 'vue-slider-component'
 import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 

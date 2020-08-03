@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from '@vue/composition-api'
+import { defineComponent, ref, computed } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
 
 const statusTable: Record<NotificationPermission | '', string> = {

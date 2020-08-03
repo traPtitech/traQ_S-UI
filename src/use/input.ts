@@ -1,4 +1,4 @@
-import { SetupContext } from '@vue/composition-api'
+import { SetupContext } from 'vue'
 
 type InputElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
 

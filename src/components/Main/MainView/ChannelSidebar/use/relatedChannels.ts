@@ -1,4 +1,4 @@
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { Channel } from '@traptitech/traq'

@@ -5,7 +5,7 @@ import {
   TransparentThemeVariables,
   CSSCommonVariables
 } from '@/types/theme'
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import * as CSS from 'csstype'
 
 export type ThemeClaim<T> = (

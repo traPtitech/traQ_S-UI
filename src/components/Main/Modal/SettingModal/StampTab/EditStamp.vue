@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import Stamp from './Stamp.vue'

@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, SetupContext } from '@vue/composition-api'
+import { defineComponent, PropType, SetupContext } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
 import useQall from './use/qall'

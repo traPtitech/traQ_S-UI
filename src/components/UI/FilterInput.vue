@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, shallowRef } from '@vue/composition-api'
+import { defineComponent, shallowRef, onMounted } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import useInput from '@/use/input'
 import { isTouchDevice } from '@/lib/util/browser'

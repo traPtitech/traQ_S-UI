@@ -49,7 +49,7 @@ import {
   onBeforeUnmount,
   nextTick,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'

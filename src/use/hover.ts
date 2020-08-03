@@ -1,4 +1,4 @@
-import { SetupContext, ref } from '@vue/composition-api'
+import { SetupContext, ref } from 'vue'
 
 const useHover = (context?: SetupContext) => {
   const isHovered = ref(false)

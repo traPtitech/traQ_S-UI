@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { User, UserDetail } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'

@@ -26,7 +26,7 @@ import {
   Ref,
   computed,
   nextTick
-} from '@vue/composition-api'
+} from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
 

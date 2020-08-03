@@ -12,13 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  PropType,
-  watchEffect,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, ref, PropType, watchEffect, reactive } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'

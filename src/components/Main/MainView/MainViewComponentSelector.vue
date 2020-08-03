@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
 import ClipsView from '@/components/Main/MainView/ClipsView/ClipsView.vue'

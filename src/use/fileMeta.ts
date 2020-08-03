@@ -1,4 +1,4 @@
-import { computed, SetupContext } from '@vue/composition-api'
+import { computed, SetupContext } from 'vue'
 import store from '@/store'
 import { buildFilePath, buildFileThumbnailPath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'

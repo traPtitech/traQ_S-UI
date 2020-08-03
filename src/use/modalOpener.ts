@@ -1,4 +1,4 @@
-import { computed, Ref } from '@vue/composition-api'
+import { computed, Ref } from 'vue'
 import store from '@/store'
 import { User } from '@traptitech/traq'
 import { UserId } from '@/types/entity-ids'

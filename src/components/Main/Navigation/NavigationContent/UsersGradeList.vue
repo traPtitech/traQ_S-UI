@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, computed } from '@vue/composition-api'
+import { defineComponent, ref, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'

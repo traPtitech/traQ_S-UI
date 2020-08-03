@@ -5,12 +5,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  watchEffect
-} from '@vue/composition-api'
+import { computed, defineComponent, onBeforeMount, watchEffect } from 'vue'
 import store from './store'
 import { throttle } from 'throttle-debounce'
 import { makeStyles } from '@/lib/styles'

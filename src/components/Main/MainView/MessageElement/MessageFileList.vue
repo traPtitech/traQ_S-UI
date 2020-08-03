@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import { FileId } from '@/types/entity-ids'
 import useFileMetaList from './use/fileMetaList'
 import MessageFileListImage from './MessageFileListImage.vue'

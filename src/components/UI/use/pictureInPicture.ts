@@ -1,4 +1,4 @@
-import { ref } from '@vue/composition-api'
+import { ref } from 'vue'
 import { checkMediaSessionSupport } from '@/lib/util/browser'
 
 const usePictureInPicture = () => {

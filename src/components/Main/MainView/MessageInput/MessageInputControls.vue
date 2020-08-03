@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent, SetupContext } from 'vue'
 import useIsMobile from '@/use/isMobile'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import Icon from '@/components/UI/Icon.vue'

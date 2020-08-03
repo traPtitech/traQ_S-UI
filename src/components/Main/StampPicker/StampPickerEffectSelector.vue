@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { buildFilePath } from '@/lib/apis'

@@ -1,4 +1,4 @@
-import { reactive } from '@vue/composition-api'
+import { reactive } from 'vue'
 
 type SwipeDirection = 'left' | 'right' | 'none'
 

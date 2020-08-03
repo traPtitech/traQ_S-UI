@@ -24,12 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'

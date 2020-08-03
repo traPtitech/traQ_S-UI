@@ -25,7 +25,7 @@ import {
   watch,
   PropType,
   onMounted
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'

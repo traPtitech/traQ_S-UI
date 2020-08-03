@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, Ref } from 'vue'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
 

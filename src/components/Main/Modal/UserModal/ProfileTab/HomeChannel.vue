@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '@/components/UI/Icon.vue'

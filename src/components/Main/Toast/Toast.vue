@@ -17,7 +17,7 @@ import {
   computed,
   onMounted,
   onUnmounted
-} from '@vue/composition-api'
+} from 'vue'
 import { Toast } from '@/store/ui/toast'
 import Icon from '@/components/UI/Icon.vue'
 import store from '@/store'

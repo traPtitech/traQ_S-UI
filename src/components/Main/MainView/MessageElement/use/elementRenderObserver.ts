@@ -1,4 +1,4 @@
-import { SetupContext, Ref, watchEffect, watch } from '@vue/composition-api'
+import { SetupContext, Ref, watchEffect, watch } from 'vue'
 import { FileId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { ResizeObserverWindow } from '@/types/ResizeObserver'

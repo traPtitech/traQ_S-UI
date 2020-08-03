@@ -1,4 +1,4 @@
-import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
+import { SetupContext, computed, reactive, watch } from 'vue'
 import store, { originalStore } from '@/store'
 import { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'

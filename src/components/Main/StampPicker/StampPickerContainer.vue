@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, Ref } from 'vue'
 import store from '@/store'
 import StampPicker from './StampPicker.vue'
 import { Place } from '@/store/ui/stampPicker'

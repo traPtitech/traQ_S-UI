@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
 import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'

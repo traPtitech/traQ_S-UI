@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 import { deleteToken } from '@/lib/firebase'

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, Ref } from '@vue/composition-api'
+import { defineComponent, ref, computed, Ref } from 'vue'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'

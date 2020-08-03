@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import MobileToolBox, {

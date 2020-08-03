@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from 'vue'
 import store from '@/store'
 import useIsMobile from '@/use/isMobile'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'

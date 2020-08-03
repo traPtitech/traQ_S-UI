@@ -1,4 +1,4 @@
-import { reactive, computed, ref } from '@vue/composition-api'
+import { reactive, computed, ref } from 'vue'
 import { Stamp } from '@traptitech/traq'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'

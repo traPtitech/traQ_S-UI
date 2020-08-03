@@ -20,13 +20,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType,
-  shallowRef
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'

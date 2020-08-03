@@ -26,7 +26,7 @@ import {
   onUnmounted,
   watch,
   nextTick
-} from '@vue/composition-api'
+} from 'vue'
 // import { ResizeObserver } from '@juggle/resize-observer'
 import { throttle } from 'throttle-debounce'
 

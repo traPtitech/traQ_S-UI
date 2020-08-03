@@ -18,7 +18,7 @@ import {
   watchEffect,
   SetupContext,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import FormButton from '@/components/UI/FormButton.vue'

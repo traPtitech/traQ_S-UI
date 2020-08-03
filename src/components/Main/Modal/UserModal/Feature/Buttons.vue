@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import store from '@/store'
 import { changeChannelById, changeDMChannelByUsername } from '@/router/channel'
 import LinkButton from './LinkButton.vue'

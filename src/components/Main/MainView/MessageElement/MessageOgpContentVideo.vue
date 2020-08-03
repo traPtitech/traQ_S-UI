@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import MessageOgpEmbed from './MessageOgpEmbed.vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
 

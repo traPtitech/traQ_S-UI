@@ -1,4 +1,4 @@
-import { Ref, reactive, watchEffect } from '@vue/composition-api'
+import { Ref, reactive, watchEffect } from 'vue'
 import { klona } from 'klona'
 import useStateDiff from './stateDiff'
 

@@ -1,5 +1,5 @@
 import store from '@/store'
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import config from '@/config'
 

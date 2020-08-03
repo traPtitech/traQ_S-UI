@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'

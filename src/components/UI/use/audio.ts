@@ -1,4 +1,4 @@
-import { Ref, ref, computed, watch } from '@vue/composition-api'
+import { Ref, ref, computed, watch } from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 

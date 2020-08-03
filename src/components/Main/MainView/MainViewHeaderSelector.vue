@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelViewHeader from '@/components/Main/MainView/ChannelView/Header.vue'

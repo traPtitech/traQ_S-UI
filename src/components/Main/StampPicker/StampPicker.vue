@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, ref } from 'vue'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import FilterInput from '@/components/UI/FilterInput.vue'

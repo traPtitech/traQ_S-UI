@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { User } from '@traptitech/traq'
 import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
 

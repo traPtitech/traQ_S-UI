@@ -23,12 +23,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import useSidebar from '@/use/sidebar'

@@ -1,6 +1,6 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import store from '@/store'
-import { Ref, computed, nextTick } from '@vue/composition-api'
+import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (
   targetPortalName: string,

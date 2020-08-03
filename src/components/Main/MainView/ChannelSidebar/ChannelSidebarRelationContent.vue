@@ -55,12 +55,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType, computed } from 'vue'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '@/lib/util/array'

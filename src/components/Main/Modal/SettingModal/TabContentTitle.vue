@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 
 export default defineComponent({

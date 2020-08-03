@@ -1,5 +1,5 @@
 import { FileId } from '@/types/entity-ids'
-import { computed, SetupContext } from '@vue/composition-api'
+import { computed, SetupContext } from 'vue'
 import { buildFilePath } from '@/lib/apis'
 
 const useFileLink = (props: { fileId: FileId }, context: SetupContext) => {

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'

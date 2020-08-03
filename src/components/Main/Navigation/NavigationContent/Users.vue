@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'

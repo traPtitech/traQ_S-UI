@@ -5,7 +5,7 @@ import apis, { buildFilePathForPost } from '@/lib/apis'
 import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
-import { computed, ref } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 
 /**
  * @param progress アップロード進行状況 0～1

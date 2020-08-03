@@ -28,12 +28,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  watch
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed, watch } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,

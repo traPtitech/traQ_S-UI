@@ -1,6 +1,6 @@
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import { SessionType } from '@/store/app/rtc/state'
 
 const useRTCSession = (sessionType: SessionType) => (props: {

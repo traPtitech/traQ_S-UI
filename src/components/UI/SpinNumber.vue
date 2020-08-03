@@ -10,13 +10,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  watch,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, watch, reactive, PropType, computed } from 'vue'
 
 export default defineComponent({
   name: 'SpinNumber',

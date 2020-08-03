@@ -1,4 +1,4 @@
-import { onBeforeMount, SetupContext } from '@vue/composition-api'
+import { onBeforeMount, SetupContext } from 'vue'
 import store from '@/store'
 import { RouteName } from '@/router'
 import { ws } from '@/lib/websocket'
