@@ -32,5 +32,6 @@ export default defineComponent({
   flex-direction: column;
   pointer-events: none;
   z-index: $z-index-toast-container;
+  contain: layout;
 }
 </style>

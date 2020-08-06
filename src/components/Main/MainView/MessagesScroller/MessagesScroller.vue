@@ -282,6 +282,7 @@ export default defineComponent({
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
+  contain: strict;
 }
 
 .messageContainer {

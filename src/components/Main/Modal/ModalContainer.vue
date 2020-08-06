@@ -103,5 +103,6 @@ export default defineComponent({
   background-color: rgba(0, 0, 0, 0.15);
   transition: background-color 0.1s;
   z-index: $z-index-modal-container;
+  contain: strict;
 }
 </style>
