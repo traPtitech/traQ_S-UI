@@ -7,6 +7,11 @@ import { render } from '@/lib/markdown'
 import apis from '@/lib/apis'
 import { changeViewState } from '@/lib/websocket'
 import { ActionContext } from 'vuex'
+import {
+  isFile,
+  isMessage,
+  isExternalUrl
+} from '@/lib/util/guard/embeddingOrUrl'
 
 export const messagesViewActionContext = (
   context: ActionContext<unknown, unknown>
@@ -114,30 +119,41 @@ export const actions = defineActions({
 
     const rendered = await render(content)
 
-    await Promise.all(
-      rendered.embeddings.map(async e => {
+    const filePromises = rendered.embeddings.filter(isFile).map(async e => {
+      try {
+        await rootDispatch.entities.fetchFileMetaByFileId(e.id)
+      } catch {
+        // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
+      }
+    })
+    const messagePromises = rendered.embeddings
+      .filter(isMessage)
+      .map(async e => {
         try {
-          if (e.type === 'file') {
-            await rootDispatch.entities.fetchFileMetaByFileId(e.id)
-          }
-          if (e.type === 'message') {
-            const message = await rootDispatch.entities.fetchMessage(e.id)
+          const message = await rootDispatch.entities.fetchMessage(e.id)
 
-            // テキスト部分のみレンダリング
-            const rendered = await render(message.content)
-            commit.addRenderedContent({
-              messageId: message.id,
-              renderedContent: rendered.renderedText
-            })
-          }
-          if (e.type === 'url') {
-            await rootDispatch.entities.fetchOgpData(e.url)
-          }
-        } catch (e) {
+          // テキスト部分のみレンダリング
+          const rendered = await render(message.content)
+          commit.addRenderedContent({
+            messageId: message.id,
+            renderedContent: rendered.renderedText
+          })
+        } catch {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }
       })
-    )
+    const urlPromises = rendered.embeddings
+      .filter(isExternalUrl)
+      .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
+      .map(async e => {
+        try {
+          await rootDispatch.entities.fetchOgpData(e.url)
+        } catch {
+          // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
+        }
+      })
+
+    await Promise.all([...filePromises, ...messagePromises, ...urlPromises])
 
     commit.addRenderedContent({
       messageId,
