@@ -6,7 +6,7 @@
       :has-notification="hasNotification"
       @click.native="toggleFolding"
     />
-    <slide-down :is-open="!isFolding">
+    <slide-down :class="$style.users" :is-open="!isFolding">
       <users-element
         v-for="user in users"
         :key="user.id"
@@ -74,5 +74,8 @@ export default defineComponent({
 <style lang="scss" module>
 .list {
   cursor: pointer;
+}
+.users {
+  contain: content;
 }
 </style>

@@ -73,6 +73,7 @@ export default defineComponent({
     left: 16px;
   }
   backface-visibility: hidden;
+  contain: strict;
 }
 .content {
   margin: 24px 0;

@@ -24,8 +24,8 @@ import {
   defineComponent,
   computed,
   reactive,
-  ref,
-  PropType
+  PropType,
+  shallowRef
 } from '@vue/composition-api'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
@@ -58,7 +58,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const bodyRef = ref<HTMLDivElement | null>(null)
+    const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const { channelIdToPathString } = useChannelPath()
     const state = reactive({

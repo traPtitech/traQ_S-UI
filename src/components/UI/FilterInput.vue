@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from '@vue/composition-api'
+import { defineComponent, onMounted, shallowRef } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 import useInput from '@/use/input'
 import { isTouchDevice } from '@/lib/util/browser'
@@ -59,7 +59,7 @@ export default defineComponent({
   setup(props, context) {
     const { onInput } = useInput(context)
 
-    const inputRef = ref<HTMLInputElement | null>(null)
+    const inputRef = shallowRef<HTMLInputElement | null>(null)
     onMounted(() => {
       if (!props.focusOnMount || isTouchDevice()) return
       inputRef.value?.focus()

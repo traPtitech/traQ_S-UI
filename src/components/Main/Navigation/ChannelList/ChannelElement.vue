@@ -238,6 +238,7 @@ $topicLeftPadding: 40px;
   display: block;
   user-select: none;
   position: relative;
+  contain: layout;
   &[data-is-inactive] {
     @include color-ui-secondary;
   }

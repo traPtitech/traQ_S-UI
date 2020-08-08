@@ -43,12 +43,12 @@ import {
   reactive,
   computed,
   SetupContext,
-  ref,
   onMounted,
   PropType,
   Ref,
   onBeforeUnmount,
-  nextTick
+  nextTick,
+  shallowRef
 } from '@vue/composition-api'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
@@ -162,7 +162,7 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
-    const rootRef = ref<HTMLElement | null>(null)
+    const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
       scrollTop: 0
@@ -282,6 +282,7 @@ export default defineComponent({
   overflow-y: scroll;
   padding: 12px 0;
   backface-visibility: hidden;
+  contain: strict;
 }
 
 .messageContainer {

@@ -1,6 +1,12 @@
 <template>
   <router-link :to="fileLink" v-if="isLarge" :class="$style.largeContainer">
-    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
+    <img
+      draggable="false"
+      :alt="fileMeta.name"
+      :src="fileThumbnailPath"
+      :height="fileThumbnailSize.height"
+      :width="fileThumbnailSize.width"
+    />
   </router-link>
   <router-link v-else :to="fileLink" :class="$style.container">
     <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
@@ -24,11 +30,13 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { fileMeta, fileLink, fileThumbnailPath } = useFileMeta(
-      props,
-      context
-    )
-    return { fileThumbnailPath, fileLink, fileMeta }
+    const {
+      fileMeta,
+      fileLink,
+      fileThumbnailPath,
+      fileThumbnailSize
+    } = useFileMeta(props, context)
+    return { fileThumbnailPath, fileThumbnailSize, fileLink, fileMeta }
   }
 })
 </script>
