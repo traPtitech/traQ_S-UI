@@ -89,11 +89,11 @@ const usePostMessage = (
           progress.value = p
         }
       )
-      const embededdUrls = fileUrls.join('\n')
+      const embededUrls = fileUrls.join('\n')
 
       await apis.postMessage(props.channelId, {
         content:
-          embededText + (embededText && embededdUrls ? '\n' : '') + embededdUrls
+          embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
       })
 
       textState.text = ''
