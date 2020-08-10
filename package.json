@@ -37,7 +37,7 @@
     "throttle-debounce": "^2.2.1",
     "v-click-outside": "^3.0.1",
     "vue": "^2.6.11",
-    "vue-router": "^3.4.1",
+    "vue-router": "^3.4.2",
     "vue-slider-component": "^3.2.3",
     "vue-textarea-autosize": "^1.1.1",
     "vuex": "^3.5.1",
