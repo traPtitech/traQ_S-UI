@@ -1,5 +1,5 @@
 import { format } from '@/lib/tts'
-import MarkdownIt, { Store } from '@traptitech/traq-markdown-it'
+import { traQMarkdownIt, Store } from '@traptitech/traq-markdown-it'
 
 const embeddingOrigin = 'https://example.com'
 const storeProvider: Store = {
@@ -11,7 +11,7 @@ const storeProvider: Store = {
   getUserByName: name => ({ iconFileId: '' }),
   getUserGroup: id => ({ members: [] })
 }
-const md = new MarkdownIt(storeProvider, [], embeddingOrigin)
+const md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 const parse = (text: string) => {
   return md.md.parse(text, {})
 }

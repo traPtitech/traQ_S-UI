@@ -30,8 +30,8 @@ const storeProvider: Store = {
 }
 
 const md = (async () => {
-  const MarkdownIt = (await import('@traptitech/traq-markdown-it')).default
-  return new MarkdownIt(storeProvider, [], embeddingOrigin)
+  const { traQMarkdownIt } = await import('@traptitech/traq-markdown-it')
+  return new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 })()
 
 export const render = async (text: string) => {
