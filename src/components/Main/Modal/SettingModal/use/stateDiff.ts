@@ -1,5 +1,5 @@
 import { Ref } from '@vue/composition-api'
-import dequal from 'dequal'
+import { dequal } from 'dequal'
 
 const useStateDiff = <T>() => {
   const getDiffKeys = (

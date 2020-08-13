@@ -1,6 +1,6 @@
 import { defineActions } from 'direct-vuex'
 import store, { moduleActionContext } from '@/store'
-import dequal from 'dequal'
+import { dequal } from 'dequal'
 import { ModalState } from './state'
 import { modal } from './index'
 import router, { constructChannelPath, constructUserPath } from '@/router'
