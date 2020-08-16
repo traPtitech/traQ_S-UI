@@ -198,9 +198,9 @@ const postMessage = (channelId, text) =>
     )
   })
 
-  importScripts('https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js')
+  importScripts('https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js')
   importScripts(
-    'https://www.gstatic.com/firebasejs/7.16.0/firebase-messaging.js'
+    'https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js'
   )
 
   // TODO: use config.ts
@@ -213,7 +213,7 @@ const postMessage = (channelId, text) =>
 
   const messaging = firebase.messaging()
 
-  messaging.setBackgroundMessageHandler(payload => {
+  messaging.onBackgroundMessage(payload => {
     if (payload.data && payload.data.type === 'new_message') {
       return showNotification(payload.data)
     }
