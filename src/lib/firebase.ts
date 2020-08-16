@@ -158,11 +158,6 @@ export const connectFirebase = async () => {
     setupUpdateToast(registration)
 
     const messaging = firebase.messaging()
-    messaging.useServiceWorker(registration)
-    messaging.onTokenRefresh(async () => {
-      const token = await messaging.getToken()
-      apis.registerFCMDevice({ token })
-    })
 
     const permission = await Notification.requestPermission()
     if (permission !== 'granted') {
@@ -202,7 +197,9 @@ export const connectFirebase = async () => {
       }
     })
 
-    const token = await messaging.getToken()
+    const token = await messaging.getToken({
+      serviceWorkerRegistration: registration
+    })
     apis.registerFCMDevice({ token })
   }
 }
@@ -211,8 +208,7 @@ export const deleteToken = async () => {
   if (Notification.permission !== 'granted') return
 
   const messaging = firebase.messaging()
-  const token = await messaging.getToken()
-  messaging.deleteToken(token)
+  messaging.deleteToken()
 }
 
 export const removeNotification = async (
