@@ -1,5 +1,5 @@
 import { Ref, reactive, watchEffect } from '@vue/composition-api'
-import klona from 'klona'
+import { klona } from 'klona'
 import useStateDiff from './stateDiff'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
