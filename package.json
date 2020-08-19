@@ -63,7 +63,7 @@
     "@vue/cli-service": "^4.5.4",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "@vue/test-utils": "1.0.3",
+    "@vue/test-utils": "1.0.4",
     "axios": "^0.19.2",
     "compression-webpack-plugin": "^5.0.0",
     "csstype": "^3.0.2",
