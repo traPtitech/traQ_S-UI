@@ -96,6 +96,7 @@ interface Speach {
 const START_SPEED_UP_COUNT = 3
 const END_SPEED_UP_COUNT = 10
 const MAX_SPEED_RATIO = 2
+const MAX_CHAR_COUNT = 140
 
 class Tts {
   private lastSpeachPromise = Promise.resolve()
@@ -154,7 +155,11 @@ class Tts {
     if (!this.isNeeded(channelId)) return
 
     const tokens = await parse(text)
-    const formatedText = format(tokens, embeddingOrigin)
+    let formatedText = format(tokens, embeddingOrigin)
+
+    if (formatedText.length > MAX_CHAR_COUNT) {
+      formatedText = `${formatedText.slice(0, MAX_CHAR_COUNT)} 。以下略`
+    }
 
     const utter = this.createUtter(`${userDisplayName}さん: ${formatedText}`)
     speechSynthesis.speak(utter)
