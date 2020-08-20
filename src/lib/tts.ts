@@ -87,7 +87,20 @@ export const format = (
   return rendered.join('')
 }
 
+interface Speach {
+  channelId: ChannelId
+  userDisplayName: string
+  text: string
+}
+
+const START_SPEED_UP_COUNT = 3
+const END_SPEED_UP_COUNT = 10
+const MAX_SPEED_RATIO = 2
+
 class Tts {
+  private lastSpeachPromise = Promise.resolve()
+  private queueSet = new Set<Speach>()
+
   constructor() {
     // タブ閉じたときには止める
     window.addEventListener('unload', () => {
@@ -102,6 +115,15 @@ class Tts {
     }, 5000)
   }
 
+  private getVoiceRate() {
+    const defaultRate = store.state.app.rtcSettings.voiceRate
+    const size = this.queueSet.size
+    const ratio =
+      1 +
+      (size - START_SPEED_UP_COUNT) /
+        (END_SPEED_UP_COUNT - START_SPEED_UP_COUNT)
+    return defaultRate * Math.min(Math.max(ratio, 1), MAX_SPEED_RATIO)
+  }
 
   private isNeeded(channelId: ChannelId): boolean {
     if (!store.state.app.rtcSettings.isTtsEnabled) return false
@@ -119,12 +141,16 @@ class Tts {
       utter.lang = voice.lang
     }
     utter.pitch = store.state.app.rtcSettings.voicePitch
-    utter.rate = store.state.app.rtcSettings.voiceRate
+    utter.rate = this.getVoiceRate()
     utter.volume = store.state.app.rtcSettings.voiceVolume
     return utter
   }
 
-  async speak(channelId: ChannelId, userDisplayName: string, text: string) {
+  private async speak({
+    channelId,
+    userDisplayName,
+    text
+  }: Speach): Promise<void> {
     if (!this.isNeeded(channelId)) return
 
     const tokens = await parse(text)
@@ -132,6 +158,25 @@ class Tts {
 
     const utter = this.createUtter(`${userDisplayName}さん: ${formatedText}`)
     speechSynthesis.speak(utter)
+
+    return new Promise(resolve => {
+      const endFunc = (e: SpeechSynthesisEvent) => {
+        utter.removeEventListener('end', endFunc)
+        utter.removeEventListener('error', endFunc)
+        resolve()
+      }
+
+      utter.addEventListener('end', endFunc)
+      utter.addEventListener('error', endFunc)
+    })
+  }
+
+  addQueue(speach: Speach) {
+    this.queueSet.add(speach)
+    this.lastSpeachPromise = this.lastSpeachPromise.then(() => {
+      this.queueSet.delete(speach)
+      return this.speak(speach)
+    })
   }
 
   stop() {
