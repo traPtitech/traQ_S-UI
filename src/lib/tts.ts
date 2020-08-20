@@ -4,28 +4,6 @@ import { parse } from './markdown'
 import { embeddingOrigin } from './apis'
 import Token from 'markdown-it/lib/token'
 
-const needTts = (channelId: ChannelId) => {
-  if (!store.getters.app.rtc.qallSession) return
-  return (
-    store.state.app.rtc.currentRTCState?.channelId === channelId &&
-    store.state.app.rtcSettings.isTtsEnabled
-  )
-}
-
-const setUtter = (utterThis: SpeechSynthesisUtterance) => {
-  const voice = speechSynthesis
-    .getVoices()
-    .find(v => v.name === store.state.app.rtcSettings.voiceName)
-
-  if (voice) {
-    utterThis.lang = voice.lang
-    utterThis.voice = voice
-  }
-  utterThis.pitch = store.state.app.rtcSettings.voicePitch
-  utterThis.rate = store.state.app.rtcSettings.voiceRate
-  utterThis.volume = store.state.app.rtcSettings.voiceVolume
-}
-
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {
     const url = new URL(text)
@@ -109,24 +87,49 @@ export const format = (
   return rendered.join('')
 }
 
-export const tts = async (
-  channelId: ChannelId,
-  userDisplayName: string,
-  text: string
-) => {
-  if (!needTts(channelId)) return
+class Tts {
+  constructor() {
+    // タブ閉じたときには止める
+    window.addEventListener('unload', () => {
+      this.stop()
+    })
+  }
 
-  const tokens = await parse(text)
-  const formatedText = format(tokens, embeddingOrigin)
 
-  const utterThis = new SpeechSynthesisUtterance(
-    `${userDisplayName}さん: ${formatedText}`
-  )
-  setUtter(utterThis)
-  speechSynthesis.speak(utterThis)
+  private isNeeded(channelId: ChannelId): boolean {
+    if (!store.state.app.rtcSettings.isTtsEnabled) return false
+    if (!store.getters.app.rtc.qallSession) return false
+    return store.state.app.rtc.currentRTCState?.channelId === channelId
+  }
+
+  private createUtter(text: string): SpeechSynthesisUtterance {
+    const utter = new SpeechSynthesisUtterance(text)
+    const voice = speechSynthesis
+      .getVoices()
+      .find(v => v.name === store.state.app.rtcSettings.voiceName)
+    if (voice) {
+      utter.voice = voice
+      utter.lang = voice.lang
+    }
+    utter.pitch = store.state.app.rtcSettings.voicePitch
+    utter.rate = store.state.app.rtcSettings.voiceRate
+    utter.volume = store.state.app.rtcSettings.voiceVolume
+    return utter
+  }
+
+  async speak(channelId: ChannelId, userDisplayName: string, text: string) {
+    if (!this.isNeeded(channelId)) return
+
+    const tokens = await parse(text)
+    const formatedText = format(tokens, embeddingOrigin)
+
+    const utter = this.createUtter(`${userDisplayName}さん: ${formatedText}`)
+    speechSynthesis.speak(utter)
+  }
+
+  stop() {
+    speechSynthesis.cancel()
+  }
 }
 
-// タブ閉じたときには止める
-window.addEventListener('unload', () => {
-  speechSynthesis.cancel()
-})
+export const tts = new Tts()
