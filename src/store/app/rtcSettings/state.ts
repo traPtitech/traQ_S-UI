@@ -12,7 +12,7 @@ export interface S {
 
 export const state: S = {
   isEnabled: true,
-  masterVolume: 1,
+  masterVolume: 0.5,
   audioInputDeviceId: '',
   audioOutputDeviceId: '',
   isTtsEnabled: false,
