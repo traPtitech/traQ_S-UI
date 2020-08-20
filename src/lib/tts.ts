@@ -93,6 +93,13 @@ class Tts {
     window.addEventListener('unload', () => {
       this.stop()
     })
+
+    // ttsが突然死ぬのを回避
+    // https://github.com/traPtitech/traQ_S-UI/issues/1017
+    setInterval(() => {
+      speechSynthesis.pause()
+      speechSynthesis.resume()
+    }, 5000)
   }
 
 
