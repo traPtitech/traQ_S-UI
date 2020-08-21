@@ -36,7 +36,7 @@
     "skyway-js": "^3.0.2",
     "throttle-debounce": "^2.3.0",
     "v-click-outside": "^3.0.1",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vue-router": "^3.4.3",
     "vue-slider-component": "^3.2.5",
     "vue-textarea-autosize": "^1.1.1",
@@ -79,7 +79,7 @@
     "sass-loader": "^9.0.3",
     "typescript": "^3.9.7",
     "vue-svg-loader": "^0.16.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   },
   "engines": {
     "node": "^14.7.0",
