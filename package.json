@@ -64,7 +64,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "1.0.4",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "compression-webpack-plugin": "^5.0.0",
     "csstype": "^3.0.2",
     "eslint": "^7.7.0",
