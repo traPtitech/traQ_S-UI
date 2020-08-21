@@ -100,7 +100,7 @@ const MAX_CHAR_COUNT = 140
 
 class Tts {
   private lastSpeachPromise = Promise.resolve()
-  private queueSet = new Set<Speach>()
+  private queue: Speach[] = []
 
   constructor() {
     // タブ閉じたときには止める
@@ -118,7 +118,7 @@ class Tts {
 
   private getVoiceRate() {
     const defaultRate = store.state.app.rtcSettings.voiceRate
-    const size = this.queueSet.size
+    const size = this.queue.length
     const ratio =
       1 +
       (size - START_SPEED_UP_COUNT) /
@@ -177,14 +177,15 @@ class Tts {
   }
 
   addQueue(speach: Speach) {
-    this.queueSet.add(speach)
+    this.queue.push(speach)
     this.lastSpeachPromise = this.lastSpeachPromise.then(() => {
-      this.queueSet.delete(speach)
-      return this.speak(speach)
+      const next = this.queue.shift()
+      return next ? this.speak(next) : Promise.resolve()
     })
   }
 
   stop() {
+    this.queue.splice(0, this.queue.length)
     speechSynthesis.cancel()
   }
 }
