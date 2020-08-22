@@ -56,7 +56,11 @@ import {
   mdiAlert,
   mdiChevronUp,
   mdiArchive,
-  mdiPlay
+  mdiPlay,
+  mdiPause,
+  mdiVolumeHigh,
+  mdiVolumeOff,
+  mdiPictureInPictureBottomRight
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -121,7 +125,11 @@ const mdi: MdiIconsMapping = {
   info: mdiInformation,
   alert: mdiAlert,
   archive: mdiArchive,
-  play: mdiPlay
+  play: mdiPlay,
+  pause: mdiPause,
+  'volume-high': mdiVolumeHigh,
+  'volume-off': mdiVolumeOff,
+  'picture-in-picture-bottom-right': mdiPictureInPictureBottomRight
 }
 
 export default mdi
