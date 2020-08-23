@@ -22,28 +22,36 @@ const usePictureInPicture = () => {
     const $video = document.createElement('video')
     $video.srcObject = videoStream
     $video.muted = true
+    $video.style.display = 'none'
     $video.addEventListener('play', () => {
       audio.play()
     })
     $video.addEventListener('pause', () => {
       audio.pause()
     })
-    $video.addEventListener('leavepictureinpicture', function () {
+    $video.addEventListener('leavepictureinpicture', () => {
       $video.remove()
+      audio.pause()
+      audio.src = ''
+      navigator.mediaSession.setActionHandler('play', null)
+      navigator.mediaSession.setActionHandler('pause', null)
     })
 
+    $video.addEventListener('enterpictureinpicture', () => {
+      navigator.mediaSession.setActionHandler('play', () => {
+        document.pictureInPictureElement.play()
+        navigator.mediaSession.playbackState = 'playing'
+      })
+      navigator.mediaSession.setActionHandler('pause', () => {
+        document.pictureInPictureElement.pause()
+        navigator.mediaSession.playbackState = 'paused'
+      })
+    })
     $video.addEventListener('loadedmetadata', async () => {
       await $video.play()
       await $video.requestPictureInPicture()
     })
     document.body.append($video)
-
-    navigator.mediaSession.setActionHandler('play', () => {
-      document.pictureInPictureElement.play()
-    })
-    navigator.mediaSession.setActionHandler('pause', () => {
-      document.pictureInPictureElement.pause()
-    })
   }
   return { showPictureInPictureWindow }
 }

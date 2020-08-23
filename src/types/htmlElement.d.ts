@@ -23,5 +23,9 @@ interface Navigator {
 }
 
 interface MediaSession {
-  setActionHandler: (action: 'play' | 'pause', callback: () => void) => void
+  setActionHandler: (
+    action: 'play' | 'pause',
+    callback: (() => void) | null
+  ) => void
+  playbackState: 'playing' | 'paused' | 'none'
 }
