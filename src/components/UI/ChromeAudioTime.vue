@@ -1,16 +1,31 @@
 <template>
   <div :class="$style.container">
-    <span>{{ displayCurrentTime }}</span>
-    <span :class="$style.slash">/</span>
-    <span>{{ displayDuration }}</span>
+    <semi-fixed-size-text
+      :class="$style.time"
+      :actual="displayCurrentTime"
+      :placeholder="displayTimeMaxText"
+    />
+    <div :class="$style.slash">/</div>
+    <semi-fixed-size-text
+      :class="$style.time"
+      :actual="displayDuration"
+      :placeholder="displayTimeMaxText"
+      align="left"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+import SemiFixedSizeText from '@/components/UI/SemiFixedSizeText.vue'
+
+const getDisplayTimeMaxText = (duration: string) => duration.replace(/\d/g, '0')
 
 export default defineComponent({
   name: 'ChromeAudioTime',
+  components: {
+    SemiFixedSizeText
+  },
   props: {
     displayCurrentTime: {
       type: String,
@@ -21,8 +36,11 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
-    return {}
+  setup(props) {
+    const displayTimeMaxText = computed(() =>
+      getDisplayTimeMaxText(props.displayDuration)
+    )
+    return { displayTimeMaxText }
   }
 })
 </script>
@@ -35,5 +53,16 @@ export default defineComponent({
 }
 .slash {
   margin: 0 4px;
+}
+.time {
+  position: relative;
+}
+.placeholder {
+  visibility: hidden;
+}
+.actual {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
