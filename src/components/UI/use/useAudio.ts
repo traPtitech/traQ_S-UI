@@ -55,7 +55,7 @@ const useAudio = (audioRef: Ref<HTMLAudioElement | null>) => {
     maxWidthEle.appendChild(document.createTextNode(d.replace(/[0-9]/g, '0')))
     maxWidthEle.style.fontSize = '0.8rem'
     document.body.append(maxWidthEle)
-    timeWidth.value = maxWidthEle.getClientRects().item(0)?.width ?? 0
+    timeWidth.value = maxWidthEle.getClientRects()[0].width ?? 0
     maxWidthEle.remove()
   }
   const setDisplayTime = (time: Ref<number>) => {
@@ -68,7 +68,10 @@ const useAudio = (audioRef: Ref<HTMLAudioElement | null>) => {
   }
   const startPinP = async (iconId: string) => {
     const { showPictureInPictureWindow } = usePictureInPicture()
-    showPictureInPictureWindow(audioRef, iconId)
+    showPictureInPictureWindow(audioRef, iconId, duration, ct => {
+      changeTime(Math.floor(ct))
+      currentTime.value = Math.floor(ct)
+    })
   }
   return {
     isPlay,
