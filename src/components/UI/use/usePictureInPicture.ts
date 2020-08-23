@@ -25,7 +25,7 @@ const usePictureInPicture = () => {
     }
     audio.addEventListener('timeupdate', onTimeUpdate)
     audio.addEventListener('loadedmetadata', () => {
-      duration.value = Math.floor(audio.duration)
+      duration.value = audio.duration
     })
 
     const $video = document.createElement('video')

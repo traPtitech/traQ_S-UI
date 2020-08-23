@@ -2,11 +2,11 @@
   <div :class="$style.container">
     <div :class="$style.timeSlider">
       <slider
-        :value="currentTime"
+        :value="roundedCurrentTime"
         @change="changeTime"
-        :disabled="duration === 0"
+        :disabled="roundedDuration === 0"
         :min="0"
-        :max="duration"
+        :max="roundedDuration"
         tooltip="none"
       />
     </div>
@@ -15,7 +15,7 @@
         <slider
           :value="volume * 100"
           @change="changeVolume"
-          :disabled="duration === 0"
+          :disabled="roundedDuration === 0"
           tooltip="none"
         />
       </div>
@@ -30,10 +30,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-
+import { defineComponent, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
-
 import Slider from '@/components/UI/Slider.vue'
 
 export default defineComponent({
@@ -57,13 +55,16 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
+    const roundedDuration = computed(() => Math.floor(props.duration))
+
     const changeVolume = (vol: number) => {
       context.emit('changeVolume', vol)
     }
     const changeTime = (time: number) => {
       context.emit('changeTime', time)
     }
-    return { changeVolume, changeTime }
+    return { roundedCurrentTime, roundedDuration, changeVolume, changeTime }
   }
 })
 </script>
@@ -72,20 +73,17 @@ export default defineComponent({
 $afterVolumeSliderWidth: 48px;
 
 .container {
-  pointer-events: none;
   display: flex;
 }
 .timeSlider {
-  pointer-events: auto;
   flex: 1;
+  padding: 16px;
   transition: width 0.3s linear;
-  margin: auto 16px auto 0;
 }
 .volume {
-  padding: 4px;
-  pointer-events: auto;
   display: flex;
   align-items: center;
+  padding: 4px;
   border-radius: 40px;
   &:hover {
     background-color: rgb(229, 231, 232);

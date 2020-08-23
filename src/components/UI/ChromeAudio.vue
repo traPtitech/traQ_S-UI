@@ -14,7 +14,6 @@
         :class="$style.time"
         :display-current-time="displayCurrentTime"
         :display-duration="displayDuration"
-        :time-width="timeWidth"
       />
       <chrome-audio-slider
         :class="$style.sliderContainer"
@@ -67,7 +66,6 @@ export default defineComponent({
       displayCurrentTime,
       duration,
       displayDuration,
-      timeWidth,
       volume,
       togglePlay,
       changeVolume,
@@ -90,7 +88,6 @@ export default defineComponent({
       displayCurrentTime,
       duration,
       displayDuration,
-      timeWidth,
       volume,
       togglePlay,
       changeVolume,
@@ -115,11 +112,7 @@ export default defineComponent({
   padding: 18px 14px;
   cursor: pointer;
 }
-.time {
-  width: 84px;
-}
 .sliderContainer {
-  width: calc(100% - 180px); // 48(icon) * 2 + 84(time)
-  min-width: 112px;
+  flex: 1;
 }
 </style>
