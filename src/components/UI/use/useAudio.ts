@@ -68,7 +68,7 @@ const useAudio = (audioRef: Ref<HTMLAudioElement | null>) => {
   }
   const startPinP = async (iconId: string) => {
     const { showPictureInPictureWindow } = usePictureInPicture()
-    showPictureInPictureWindow(audioRef, iconId, start, stop)
+    showPictureInPictureWindow(audioRef, iconId)
   }
   return {
     isPlay,
