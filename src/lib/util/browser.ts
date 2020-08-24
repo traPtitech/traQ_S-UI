@@ -37,3 +37,11 @@ export const checkLevel2InputEventsSupport = () => {
 export const checkBadgeAPISupport = () => {
   return !!navigator.setAppBadge && !!navigator.clearAppBadge
 }
+
+export const checkPinPSupport = () => {
+  return document.pictureInPictureEnabled
+}
+
+export const checkMediaSessionSupport = () => {
+  return !!navigator.mediaSession
+}
