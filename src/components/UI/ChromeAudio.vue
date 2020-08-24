@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
-import useAudio from './use/useAudio'
+import useAudio from './use/audio'
 import Icon from '@/components/UI/Icon.vue'
 import ChromeAudioTime from './ChromeAudioTime.vue'
 import ChromeAudioSlider from './ChromeAudioSlider.vue'

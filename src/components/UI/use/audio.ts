@@ -1,5 +1,5 @@
 import { Ref, ref, computed, watch } from '@vue/composition-api'
-import usePictureInPicture from './usePictureInPicture'
+import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 
 const getDisplayTime = (time: number) => {
