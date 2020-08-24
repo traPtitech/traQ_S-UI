@@ -16,7 +16,7 @@
       :duration="duration"
       :volume="volume"
     />
-    <div :class="$style.icon" @click="startPictureInPicture">
+    <div v-if="canUsePinP" :class="$style.icon" @click="startPictureInPicture">
       <icon
         mdi
         name="picture-in-picture-bottom-right"
@@ -35,6 +35,9 @@ import Icon from '@/components/UI/Icon.vue'
 import ChromeAudioTime from './ChromeAudioTime.vue'
 import ChromeAudioSlider from './ChromeAudioSlider.vue'
 import store from '@/store'
+import { checkPinPSupport } from '@/lib/util/browser'
+
+const canUsePinP = checkPinPSupport()
 
 export default defineComponent({
   name: 'ChromeAudio',
@@ -69,6 +72,7 @@ export default defineComponent({
           ?.iconFileId ?? ''
       await startPinP(iconId)
     }
+
     return {
       isPlaying,
       currentTime,
@@ -79,6 +83,7 @@ export default defineComponent({
       togglePlay,
       changeVolume,
       changeTime,
+      canUsePinP,
       startPictureInPicture
     }
   }

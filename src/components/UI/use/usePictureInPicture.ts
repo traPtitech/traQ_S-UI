@@ -1,4 +1,8 @@
+import { checkMediaSessionSupport } from '@/lib/util/browser'
+
 const usePictureInPicture = () => {
+  const isMediaSessionSupported = checkMediaSessionSupport()
+
   const showPictureInPictureWindow = async (
     audio: HTMLAudioElement,
     iconId: string
@@ -27,30 +31,35 @@ const usePictureInPicture = () => {
       // $videoはPinPにしたときに毎回生成されるのでremove
       $video.remove()
 
-      // mediaSessionを削除しないと次mediaSessionを使うときにバグるのでここで削除
-      audio.pause()
-      const src = audio.src
-      const currentTime = audio.currentTime
-      audio.src = '' // srcを空にすることでmediaSessionの解放が行える
-      navigator.mediaSession.setActionHandler('play', null)
-      navigator.mediaSession.setActionHandler('pause', null)
+      if (isMediaSessionSupported) {
+        // mediaSessionを削除しないと次mediaSessionを使うときにバグるのでここで削除
+        audio.pause()
+        const src = audio.src
+        const currentTime = audio.currentTime
+        audio.src = '' // srcを空にすることでmediaSessionの解放が行える
+        navigator.mediaSession.setActionHandler('play', null)
+        navigator.mediaSession.setActionHandler('pause', null)
 
-      // メッセージ内のaudioの表示や位置の復元
-      audio.src = src
-      audio.currentTime = currentTime
+        // メッセージ内のaudioの表示や位置の復元
+        audio.src = src
+        audio.currentTime = currentTime
+      }
     })
 
-    // MediaStreamを利用しているときはMediaSessionAPIを利用しないとPinPの再生/停止ボタンが表示されないため
-    $video.addEventListener('enterpictureinpicture', () => {
-      navigator.mediaSession.setActionHandler('play', () => {
-        ;(document.pictureInPictureElement as HTMLVideoElement).play()
-        navigator.mediaSession.playbackState = 'playing'
+    if (isMediaSessionSupported) {
+      // MediaStreamを利用しているときはMediaSessionAPIを利用しないとPinPの再生/停止ボタンが表示されないため
+      $video.addEventListener('enterpictureinpicture', () => {
+        navigator.mediaSession.setActionHandler('play', () => {
+          ;(document.pictureInPictureElement as HTMLVideoElement).play()
+          navigator.mediaSession.playbackState = 'playing'
+        })
+        navigator.mediaSession.setActionHandler('pause', () => {
+          ;(document.pictureInPictureElement as HTMLVideoElement).pause()
+          navigator.mediaSession.playbackState = 'paused'
+        })
       })
-      navigator.mediaSession.setActionHandler('pause', () => {
-        ;(document.pictureInPictureElement as HTMLVideoElement).pause()
-        navigator.mediaSession.playbackState = 'paused'
-      })
-    })
+    }
+
     $video.addEventListener('loadedmetadata', async () => {
       await $video.play()
       await $video.requestPictureInPicture()
