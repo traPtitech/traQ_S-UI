@@ -43,11 +43,11 @@ const usePictureInPicture = () => {
     // MediaStreamを利用しているときはMediaSessionAPIを利用しないとPinPの再生/停止ボタンが表示されないため
     $video.addEventListener('enterpictureinpicture', () => {
       navigator.mediaSession.setActionHandler('play', () => {
-        document.pictureInPictureElement.play()
+        ;(document.pictureInPictureElement as HTMLVideoElement).play()
         navigator.mediaSession.playbackState = 'playing'
       })
       navigator.mediaSession.setActionHandler('pause', () => {
-        document.pictureInPictureElement.pause()
+        ;(document.pictureInPictureElement as HTMLVideoElement).pause()
         navigator.mediaSession.playbackState = 'paused'
       })
     })
