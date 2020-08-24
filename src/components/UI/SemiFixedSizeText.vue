@@ -28,7 +28,7 @@ export default defineComponent({
     },
     align: {
       type: String as PropType<Align>,
-      default: 'right' as const
+      default: 'left' as const
     }
   },
   setup(props) {

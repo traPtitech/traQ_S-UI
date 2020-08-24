@@ -81,60 +81,56 @@ $afterVolumeSliderWidth: 48px;
 
 .container {
   display: flex;
+
+  :global {
+    $dotBgColor: #1e1e1e;
+
+    $bgColor: #b7b9ba;
+    $themeColor: #585859;
+
+    @import '~vue-slider-component/lib/theme/default.scss';
+  }
 }
 .timeSlider {
   flex: 1;
   padding: 16px;
-  transition: width 0.3s linear;
+
+  :global(.vue-slider-dot-handle) {
+    opacity: 1;
+    transition: opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  &:not(:hover) :global(.vue-slider-dot-handle) {
+    opacity: 0;
+  }
 }
 .volume {
   display: flex;
   align-items: center;
   padding: 4px;
+  margin: auto;
   border-radius: 40px;
   &:hover {
     background-color: rgb(229, 231, 232);
-    .volumeSlider {
-      animation: volumeSlideIn linear 0.3s;
-      width: $afterVolumeSliderWidth;
-      opacity: 1;
-      margin: auto 8px;
-    }
   }
 }
 .volumeSlider {
-  animation: volumeSlideOut linear 0.3s;
+  transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
+  width: 0;
   opacity: 0;
-}
-@keyframes volumeSlideIn {
-  0% {
-    width: 0;
-    margin: auto 0;
-  }
-  100% {
-    width: $afterVolumeSliderWidth;
-    margin: auto 8px;
-  }
-}
-@keyframes volumeSlideOut {
-  0% {
+  margin: auto 0;
+  .volume:hover & {
+    transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
     width: $afterVolumeSliderWidth;
     opacity: 1;
     margin: auto 8px;
   }
-  100% {
-    width: 0;
+
+  :global(.vue-slider-dot-handle) {
     opacity: 1;
-    margin: auto 0;
+    transition: opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  &:not(:hover) :global(.vue-slider-dot-handle) {
+    opacity: 0;
   }
 }
-</style>
-
-<style lang="scss">
-$dotBgColor: #1e1e1e;
-
-$bgColor: #b7b9ba;
-$themeColor: #585859;
-
-@import '~vue-slider-component/lib/theme/default.scss';
 </style>

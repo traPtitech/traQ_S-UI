@@ -10,7 +10,6 @@
       :class="$style.time"
       :actual="displayDuration"
       :placeholder="displayTimeMaxText"
-      align="left"
     />
   </div>
 </template>
