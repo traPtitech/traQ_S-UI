@@ -43,9 +43,7 @@
           :class="$style.sendWithModifierKey"
         />
         <div :class="$style.key">
-          <p>
-            修飾キーとして利用するキー
-          </p>
+          <p>修飾キーとして利用するキー</p>
           <div>
             <form-checkbox
               :label="getModifierKeyName('shift')"

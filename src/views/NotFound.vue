@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.container">
-    <h1>
-      Not Found
-    </h1>
+    <h1>Not Found</h1>
     <div v-if="routeName && routeParam">
       {{ routeName }} {{ routeParam }} is not found on traQ!
     </div>

@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.Block">
-    <h1 :class="$style.Header">
-      Qall View
-    </h1>
+    <h1 :class="$style.Header">Qall View</h1>
   </div>
 </template>
 

@@ -2,9 +2,7 @@
   <div :class="$style.container" :data-is-mobile="isMobile">
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />
-      <div>
-        アーカイブチャンネルのため、投稿できません
-      </div>
+      <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
       <portal-target

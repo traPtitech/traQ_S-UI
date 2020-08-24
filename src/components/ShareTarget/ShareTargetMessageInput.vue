@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.container">
-    <label :for="id" :class="$style.label">
-      メッセージ
-    </label>
+    <label :for="id" :class="$style.label">メッセージ</label>
     <div :class="$style.wrapper">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
