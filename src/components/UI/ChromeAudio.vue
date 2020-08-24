@@ -35,9 +35,10 @@ import Icon from '@/components/UI/Icon.vue'
 import ChromeAudioTime from './ChromeAudioTime.vue'
 import ChromeAudioSlider from './ChromeAudioSlider.vue'
 import store from '@/store'
-import { checkPinPSupport } from '@/lib/util/browser'
+import { checkPinPSupport, isSafari } from '@/lib/util/browser'
 
-const canUsePinP = checkPinPSupport()
+const safariFlag = isSafari()
+const canUsePinP = checkPinPSupport() && !safariFlag
 
 export default defineComponent({
   name: 'ChromeAudio',
