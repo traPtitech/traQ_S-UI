@@ -17,6 +17,8 @@ const useAudio = (
   fileMeta: Ref<FileInfo | undefined>,
   fileRawPath: Ref<string>
 ) => {
+  const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
+
   const audio = new Audio()
 
   watch(
@@ -80,7 +82,6 @@ const useAudio = (
   }
 
   const startPinP = (iconId: string) => {
-    const { showPictureInPictureWindow } = usePictureInPicture()
     showPictureInPictureWindow(audio, iconId)
   }
   return {
@@ -93,6 +94,7 @@ const useAudio = (
     changeVolume,
     changeTime,
     togglePlay,
+    isPinPShown,
     startPinP
   }
 }

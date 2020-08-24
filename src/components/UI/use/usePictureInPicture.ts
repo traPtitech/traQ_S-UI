@@ -1,12 +1,18 @@
+import { ref } from '@vue/composition-api'
 import { checkMediaSessionSupport } from '@/lib/util/browser'
 
 const usePictureInPicture = () => {
   const isMediaSessionSupported = checkMediaSessionSupport()
+  const isPinPShown = ref(false)
 
   const showPictureInPictureWindow = async (
     audio: HTMLAudioElement,
     iconId: string
   ) => {
+    // 同じaudioで開くとバグる
+    if (isPinPShown.value) return
+    isPinPShown.value = true
+
     const $img = new Image()
     $img.src = `/api/v3/files/${iconId}`
     await $img.decode()
@@ -44,6 +50,7 @@ const usePictureInPicture = () => {
         audio.src = src
         audio.currentTime = currentTime
       }
+      isPinPShown.value = false
     })
 
     if (isMediaSessionSupported) {
@@ -66,7 +73,7 @@ const usePictureInPicture = () => {
     })
     document.body.append($video)
   }
-  return { showPictureInPictureWindow }
+  return { isPinPShown, showPictureInPictureWindow }
 }
 
 export default usePictureInPicture

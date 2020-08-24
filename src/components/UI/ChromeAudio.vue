@@ -16,13 +16,13 @@
       :duration="duration"
       :volume="volume"
     />
-    <div v-if="canUsePinP" :class="$style.icon" @click="startPictureInPicture">
-      <icon
-        mdi
-        name="picture-in-picture-bottom-right"
-        :class="$style.PInPButton"
-        :size="20"
-      />
+    <div
+      v-if="canUsePinP"
+      :class="$style.icon"
+      :aria-disabled="isPinPShown ? 'true' : 'false'"
+      @click="startPictureInPicture"
+    >
+      <icon mdi name="picture-in-picture-bottom-right" :size="20" />
     </div>
   </div>
 </template>
@@ -64,6 +64,7 @@ export default defineComponent({
       togglePlay,
       changeVolume,
       changeTime,
+      isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = async () => {
@@ -84,6 +85,7 @@ export default defineComponent({
       changeVolume,
       changeTime,
       canUsePinP,
+      isPinPShown,
       startPictureInPicture
     }
   }
@@ -109,8 +111,11 @@ export default defineComponent({
   margin: auto 4px;
   border-radius: 50%;
   cursor: pointer;
-  &:hover {
+  &:not([aria-disabled='true']):hover {
     background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
   }
 }
 .sliderContainer {
