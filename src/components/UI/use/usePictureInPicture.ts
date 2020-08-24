@@ -1,13 +1,8 @@
-import { Ref } from '@vue/composition-api'
-
 const usePictureInPicture = () => {
   const showPictureInPictureWindow = async (
-    audioRef: Ref<HTMLAudioElement | null>,
-    iconId: string,
-    duration: Ref<number>,
-    onTimeUpdateCallback: (currentTime: number) => void
+    audio: HTMLAudioElement,
+    iconId: string
   ) => {
-    if (!audioRef.value) return
     const $img = new Image()
     $img.src = `/api/v3/files/${iconId}`
     await $img.decode()
@@ -16,17 +11,6 @@ const usePictureInPicture = () => {
     $canvas.width = $canvas.height = 512
     $canvas.getContext('2d')?.drawImage($img, 0, 0, 512, 512)
     const videoStream = $canvas.captureStream()
-
-    const audio = new Audio(audioRef.value.src)
-    audio.volume = audioRef.value.volume
-    audio.currentTime = audioRef.value.currentTime
-    const onTimeUpdate = () => {
-      onTimeUpdateCallback(audio.currentTime)
-    }
-    audio.addEventListener('timeupdate', onTimeUpdate)
-    audio.addEventListener('loadedmetadata', () => {
-      duration.value = audio.duration
-    })
 
     const $video = document.createElement('video')
     $video.srcObject = videoStream
@@ -40,11 +24,15 @@ const usePictureInPicture = () => {
     })
     $video.addEventListener('leavepictureinpicture', () => {
       $video.remove()
-      audio.removeEventListener('timeupdate', onTimeUpdate)
       audio.pause()
+      const src = audio.src
+      const currentTime = audio.currentTime
       audio.src = ''
       navigator.mediaSession.setActionHandler('play', null)
       navigator.mediaSession.setActionHandler('pause', null)
+
+      audio.src = src
+      audio.currentTime = currentTime
     })
 
     $video.addEventListener('enterpictureinpicture', () => {

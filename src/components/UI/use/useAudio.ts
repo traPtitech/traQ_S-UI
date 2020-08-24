@@ -1,69 +1,90 @@
-import { Ref, ref, computed } from '@vue/composition-api'
+import { Ref, ref, computed, watch } from '@vue/composition-api'
 import usePictureInPicture from './usePictureInPicture'
+import { FileInfo } from '@traptitech/traq'
 
-const useAudio = (audioRef: Ref<HTMLAudioElement | null>) => {
-  const isPlay = ref(false)
-  const currentTime = ref(0)
-  const displayCurrentTime = computed(() => setDisplayTime(currentTime))
-  const duration = ref(0)
-  const displayDuration = computed(() => setDisplayTime(duration))
-  let isAddedEvent = false
-  const volume = ref(1.0)
+const getDisplayTime = (time: number) => {
+  if (!Number.isFinite(time)) {
+    return '0:00'
+  }
+  const min = Math.floor(time / 60)
+  const sec = ('' + Math.floor(time % 60)).padStart(2, '0')
+  return `${min}:${sec}`
+}
 
-  const togglePlay = () => {
-    // 更新処理を追加してないなら追加(refはreactiveでないため)
-    if (!isAddedEvent && audioRef.value) {
-      audioRef.value?.addEventListener('timeupdate', e => {
-        currentTime.value = audioRef.value?.currentTime ?? 0
-        if (duration.value === 0) {
-          duration.value = audioRef.value?.duration ?? 0
-        }
-      })
-      isAddedEvent = true
-    }
-    if (isPlay.value) {
-      stop()
+const toFinite = (n: number, def: number) => (Number.isFinite(n) ? n : def)
+
+const useAudio = (
+  fileMeta: Ref<FileInfo | undefined>,
+  fileRawPath: Ref<string>
+) => {
+  const audio = new Audio()
+
+  watch(
+    () => fileMeta.value?.mime + fileRawPath.value,
+    () => {
+      if (audio.canPlayType(fileMeta.value?.mime ?? '')) {
+        audio.src = fileRawPath.value
+      }
+    },
+    { immediate: true }
+  )
+
+  const isPlaying = ref(false)
+  audio.addEventListener('play', () => {
+    isPlaying.value = true
+  })
+  audio.addEventListener('pause', () => {
+    isPlaying.value = false
+  })
+  audio.addEventListener('ended', () => {
+    isPlaying.value = false
+  })
+  audio.addEventListener('emptied', () => {
+    isPlaying.value = false
+  })
+  const togglePlay = async () => {
+    if (isPlaying.value) {
+      pause()
     } else {
-      start()
+      await start()
     }
   }
-  const start = () => {
-    audioRef.value?.play()
-    isPlay.value = true
+  const start = async () => {
+    await audio.play()
   }
-  const stop = () => {
-    audioRef.value?.pause()
-    isPlay.value = false
+  const pause = () => {
+    audio.pause()
   }
-  const changeVolume = (vol: number) => {
-    if (audioRef.value) {
-      audioRef.value.volume = vol / 100
-      volume.value = vol / 100
-    }
-  }
+
+  const currentTime = ref(toFinite(audio.currentTime, 0))
+  audio.addEventListener('timeupdate', () => {
+    currentTime.value = toFinite(audio.currentTime, 0)
+  })
+  const displayCurrentTime = computed(() => getDisplayTime(currentTime.value))
   const changeTime = (time: number) => {
-    if (audioRef.value && duration.value) {
-      if (duration.value < time) return
-      audioRef.value.currentTime = time
-    }
+    audio.currentTime = time
   }
-  const setDisplayTime = (time: Ref<number>) => {
-    if (!Number.isFinite(time.value)) {
-      return '0:00'
-    }
-    return `${Math.floor(time.value / 60)}:${(
-      '' + Math.floor(time.value % 60)
-    ).padStart(2, '0')}`
+
+  const duration = ref(toFinite(audio.duration, 0))
+  audio.addEventListener('loadedmetadata', () => {
+    duration.value = toFinite(audio.duration, 0)
+  })
+  const displayDuration = computed(() => getDisplayTime(duration.value))
+
+  const volume = ref(toFinite(audio.volume, 1))
+  audio.addEventListener('volumechange', () => {
+    volume.value = toFinite(audio.volume, 1)
+  })
+  const changeVolume = (vol: number) => {
+    audio.volume = vol / 100
   }
-  const startPinP = async (iconId: string) => {
+
+  const startPinP = (iconId: string) => {
     const { showPictureInPictureWindow } = usePictureInPicture()
-    showPictureInPictureWindow(audioRef, iconId, duration, ct => {
-      changeTime(ct)
-      currentTime.value = ct
-    })
+    showPictureInPictureWindow(audio, iconId)
   }
   return {
-    isPlay,
+    isPlaying,
     currentTime,
     displayCurrentTime,
     duration,

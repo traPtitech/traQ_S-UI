@@ -13,7 +13,7 @@
     <div :class="$style.volume">
       <div :class="$style.volumeSlider">
         <slider
-          :value="volume * 100"
+          :value="roundedVolume"
           @change="changeVolume"
           :disabled="roundedDuration === 0"
           tooltip="none"
@@ -55,6 +55,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const roundedVolume = computed(() => Math.floor(props.volume * 100))
     const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
     const roundedDuration = computed(() => Math.floor(props.duration))
 
@@ -64,7 +65,13 @@ export default defineComponent({
     const changeTime = (time: number) => {
       context.emit('changeTime', time)
     }
-    return { roundedCurrentTime, roundedDuration, changeVolume, changeTime }
+    return {
+      roundedVolume,
+      roundedCurrentTime,
+      roundedDuration,
+      changeVolume,
+      changeTime
+    }
   }
 })
 </script>

@@ -1,14 +1,8 @@
 <template>
   <div>
-    <audio
-      preload="none"
-      :alt="fileMeta.name"
-      :src="fileRawPath"
-      ref="audioRef"
-    />
     <div :class="$style.container">
       <div :class="$style.icon" @click="togglePlay">
-        <icon mdi :name="isPlay ? 'pause' : 'play'" :size="20" />
+        <icon mdi :name="isPlaying ? 'pause' : 'play'" :size="20" />
       </div>
       <chrome-audio-time
         :class="$style.time"
@@ -36,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useFileMeta from '@/use/fileMeta'
 import useAudio from './use/useAudio'
 import Icon from '@/components/UI/Icon.vue'
@@ -58,10 +52,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
-    const audioRef = shallowRef<HTMLAudioElement | null>(null)
+    const { fileMeta, fileRawPath } = useFileMeta(props, context)
     const {
-      isPlay,
+      isPlaying,
       currentTime,
       displayCurrentTime,
       duration,
@@ -71,7 +64,7 @@ export default defineComponent({
       changeVolume,
       changeTime,
       startPinP
-    } = useAudio(audioRef)
+    } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = async () => {
       const iconId =
         store.state.entities.users[fileMeta.value?.uploaderId ?? '']
@@ -79,11 +72,7 @@ export default defineComponent({
       await startPinP(iconId)
     }
     return {
-      fileMeta,
-      fileLink,
-      fileRawPath,
-      audioRef,
-      isPlay,
+      isPlaying,
       currentTime,
       displayCurrentTime,
       duration,
