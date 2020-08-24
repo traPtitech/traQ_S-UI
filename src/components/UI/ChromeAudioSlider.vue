@@ -93,7 +93,7 @@ $afterVolumeSliderWidth: 48px;
 }
 .timeSlider {
   flex: 1;
-  padding: 16px;
+  padding: 16px 8px;
 
   :global(.vue-slider-dot-handle) {
     opacity: 1;

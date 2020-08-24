@@ -36,8 +36,7 @@ export default defineComponent({
 .container {
   position: relative;
   overflow: hidden;
-  max-width: min(600px, 100%);
-  width: max-content;
+  max-width: min(400px, 100%);
   height: max-content;
   border: {
     width: 2px;
@@ -52,7 +51,6 @@ export default defineComponent({
   cursor: pointer;
 }
 .audio {
-  min-width: 300px;
   width: 100%;
 }
 </style>
