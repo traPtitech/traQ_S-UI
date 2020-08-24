@@ -12,6 +12,7 @@ const usePictureInPicture = () => {
     $canvas.getContext('2d')?.drawImage($img, 0, 0, 512, 512)
     const videoStream = $canvas.captureStream()
 
+    // PinPは動画しか行えないのでvideoを作る
     const $video = document.createElement('video')
     $video.srcObject = videoStream
     $video.muted = true
@@ -23,18 +24,23 @@ const usePictureInPicture = () => {
       audio.pause()
     })
     $video.addEventListener('leavepictureinpicture', () => {
+      // $videoはPinPにしたときに毎回生成されるのでremove
       $video.remove()
+
+      // mediaSessionを削除しないと次mediaSessionを使うときにバグるのでここで削除
       audio.pause()
       const src = audio.src
       const currentTime = audio.currentTime
-      audio.src = ''
+      audio.src = '' // srcを空にすることでmediaSessionの解放が行える
       navigator.mediaSession.setActionHandler('play', null)
       navigator.mediaSession.setActionHandler('pause', null)
 
+      // メッセージ内のaudioの表示や位置の復元
       audio.src = src
       audio.currentTime = currentTime
     })
 
+    // MediaStreamを利用しているときはMediaSessionAPIを利用しないとPinPの再生/停止ボタンが表示されないため
     $video.addEventListener('enterpictureinpicture', () => {
       navigator.mediaSession.setActionHandler('play', () => {
         document.pictureInPictureElement.play()
