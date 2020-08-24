@@ -38,9 +38,7 @@
           v-model="state.audioInputDeviceId"
           :options="audioInputDeviceOptions"
         />
-        <p v-else>
-          デバイスが取得できませんでした
-        </p>
+        <p v-else>デバイスが取得できませんでした</p>
       </div>
     </div>
     <div v-if="rtcSettings.isEnabled" :class="$style.element">
@@ -64,9 +62,7 @@
           v-model="state.voiceName"
           :options="voiceOptions"
         />
-        <p v-else>
-          読み上げ音声の声の種類が取得できませんでした
-        </p>
+        <p v-else>読み上げ音声の声の種類が取得できませんでした</p>
         <form-input
           label="ピッチ"
           type="number"

@@ -2,9 +2,7 @@
   <div :class="$style.container">
     <div :class="$style.name">{{ client.name }}</div>
     <div :class="$style.desc">
-      <div :class="$style.descTitle">
-        開発者
-      </div>
+      <div :class="$style.descTitle">開発者</div>
       <div :class="$style.descContent">
         <template v-if="developer">
           <user-icon
@@ -19,9 +17,7 @@
           <div>=====</div>
         </template>
       </div>
-      <div :class="$style.descTitle">
-        説明
-      </div>
+      <div :class="$style.descTitle">説明</div>
       <div :class="$style.descContent">
         {{ client.description }}
       </div>
