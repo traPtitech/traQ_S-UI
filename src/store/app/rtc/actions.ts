@@ -13,6 +13,7 @@ import { UserSessionState, SessionId } from './state'
 import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
+import { tts } from '@/lib/tts'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -356,5 +357,7 @@ export const actions = defineActions({
     }
     await dispatch.closeConnection()
     dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
+
+    tts.stop()
   }
 })
