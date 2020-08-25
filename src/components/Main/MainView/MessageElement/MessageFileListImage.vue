@@ -44,6 +44,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 240px;
+  max-width: 100%;
   height: 160px;
   border-radius: 6px;
   overflow: hidden;
@@ -69,6 +70,8 @@ export default defineComponent({
   }
   max-width: min(600px, 100%);
   img {
+    height: 100%;
+    width: 100%;
     max-width: 100%;
     max-height: 450px;
     cursor: pointer;

@@ -11,14 +11,14 @@
       v-model="manageState.parent"
       :options="channelOptions"
     />
-    <label>
+    <label :class="$style.toggle">
       アーカイブ
       <toggle
         :enabled="manageState.archived"
         @input="manageState.archived = !manageState.archived"
       />
     </label>
-    <label>
+    <label :class="$style.toggle">
       強制通知
       <toggle
         :enabled="manageState.force"
@@ -170,5 +170,8 @@ export default defineComponent({
 .button {
   display: block;
   margin-left: auto;
+}
+.toggle {
+  @include color-ui-primary;
 }
 </style>

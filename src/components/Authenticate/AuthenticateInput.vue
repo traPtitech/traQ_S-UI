@@ -7,6 +7,7 @@
       :value="text"
       :type="type"
       :autocapitalize="autocapitalize"
+      :enterkeyhint="enterkeyhint"
       @input="onInput"
     />
   </div>
@@ -29,7 +30,8 @@ export default defineComponent({
     autocapitalize: {
       type: String,
       default: 'off'
-    }
+    },
+    enterkeyhint: String
   },
   setup(props, context: SetupContext) {
     const { onInput } = useInput(context)
