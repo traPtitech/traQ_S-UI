@@ -98,6 +98,7 @@ import useSyncedState from '../use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import { tts } from '@/lib/tts'
 
 const useDevicesInfo = (state: {
   isEnabled: boolean
@@ -176,7 +177,7 @@ const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
 
   watchEffect(() => {
     if (!state.isTtsEnabled) {
-      speechSynthesis.cancel()
+      tts.stop()
     }
   })
 
