@@ -13,6 +13,7 @@
         label="パスワード"
         type="password"
         :text="loginState.pass"
+        enterkeyhint="done"
         @input="setPass"
       />
       <a

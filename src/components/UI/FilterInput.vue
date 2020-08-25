@@ -13,6 +13,7 @@
       :autocapitalize="autocapitalize"
       :inputmode="disableIme ? 'url' : undefined"
       :data-disable-ime="disableIme"
+      :enterkeyhint="enterkeyhint"
       @input="onInput"
       type="text"
     />
@@ -54,6 +55,10 @@ export default defineComponent({
     focusOnMount: {
       type: Boolean,
       default: false
+    },
+    enterkeyhint: {
+      type: String,
+      default: 'search'
     }
   },
   setup(props, context) {

@@ -18,6 +18,7 @@
       type="password"
       :text="loginState.name"
       :class="$style.item"
+      enterkeyhint="done"
       @input="setName"
     />
     <div :class="$style.error">
