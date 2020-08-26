@@ -26,7 +26,7 @@
           max="1"
         />
         <div :class="$style.masterVolumeValue">
-          {{ Math.round(state.masterVolume * 100) }}%
+          {{ Math.round(state.masterVolume * 200) }}%
         </div>
       </div>
     </div>

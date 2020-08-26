@@ -42,6 +42,13 @@ export default class AudioStreamMixer {
     this.volume = volume
   }
 
+  private calcVolumeValue(gainNode: GainNode, userVolume: number): number {
+    const { defaultValue } = gainNode.gain
+    const userVolumeSquare = userVolume ** 2 * maxGain
+    const masterVolumeSquare = this.masterVolume ** 2 * maxMasterGain
+    return defaultValue * userVolumeSquare * masterVolumeSquare
+  }
+
   private async createAudioSourceNodeGraph(buffer: AudioBuffer) {
     const source = this.context.createBufferSource()
     const gain = this.context.createGain()
@@ -56,7 +63,7 @@ export default class AudioStreamMixer {
     const source = this.context.createMediaStreamSource(mediaStream)
     const analyser = this.context.createAnalyser()
     const gain = this.context.createGain()
-    gain.gain.value = 1 / maxGain
+    gain.gain.value = this.calcVolumeValue(gain, 1)
     analyser.fftSize = this.analyserFftSize
 
     gain.connect(this.context.destination)
@@ -162,10 +169,10 @@ export default class AudioStreamMixer {
     this.volumeMap[key] = v
   }
 
-  public setVolumeOf(key: string, volume: number) {
-    const v = Math.max(0, Math.min(1, volume))
-    const value = v * v * maxGain
-    this.gainNodeMap[key].gain.setValueAtTime(value, this.context.currentTime)
+  public setVolumeOf(key: string, userVolume: number) {
+    const gainNode = this.gainNodeMap[key]
+    const value = this.calcVolumeValue(gainNode, userVolume)
+    gainNode.gain.setValueAtTime(value, this.context.currentTime)
   }
 
   public setfileVolume(volume: number) {
@@ -198,17 +205,13 @@ export default class AudioStreamMixer {
   }
 
   set volume(v: number) {
-    const newMasterVolume = Math.max(0, Math.min(1, v)) * maxMasterGain
+    const newMasterVolume = Math.max(0, Math.min(1, v))
     if (this.masterVolume === newMasterVolume) return
 
-    const masterSquare = newMasterVolume * newMasterVolume
-    Object.entries(this.gainNodeMap).forEach(([key, gainNode]) => {
-      const userVolumeSquare = this.volumeMap[key] * this.volumeMap[key]
-
-      gainNode.gain.value =
-        gainNode.gain.defaultValue * userVolumeSquare * masterSquare
-    })
     this.masterVolume = newMasterVolume
+    Object.keys(this.gainNodeMap).forEach(key => {
+      this.setVolumeOf(key, this.volumeMap[key])
+    })
   }
   get volume() {
     return this.masterVolume
