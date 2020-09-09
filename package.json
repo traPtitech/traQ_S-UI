@@ -35,7 +35,7 @@
     "shvl": "^2.0.1",
     "skyway-js": "^3.0.2",
     "throttle-debounce": "^2.3.0",
-    "v-click-outside": "^3.1.0",
+    "v-click-outside": "^3.1.1",
     "vue": "^2.6.12",
     "vue-router": "^3.4.3",
     "vue-slider-component": "^3.2.5",
