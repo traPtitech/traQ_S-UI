@@ -38,7 +38,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const onClickClear = () => store.dispatch.ui.modal.clearModal()
     return {
       props,

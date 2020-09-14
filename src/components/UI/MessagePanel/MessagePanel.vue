@@ -67,7 +67,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const userState = computed(
       () => store.state.entities.users[props.message.userId]
     )

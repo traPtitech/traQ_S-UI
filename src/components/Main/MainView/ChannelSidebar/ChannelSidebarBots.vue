@@ -20,7 +20,7 @@ export default defineComponent({
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true }
   },
-  setup(props) {
+  setup() {
     const botUserIds = computed(() => store.state.domain.messagesView.bots)
     const viewStates = computed(() =>
       botUserIds.value.map(id => ({

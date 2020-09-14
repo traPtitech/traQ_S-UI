@@ -31,7 +31,7 @@ export default defineComponent({
   props: {
     viewInfo: { type: Object as PropType<ViewInformation>, required: true }
   },
-  setup(props) {
+  setup() {
     return {}
   }
 })

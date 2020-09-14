@@ -12,13 +12,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { borderWidth: number; size: number }) =>
   reactive({
-    circle: makeStyles((theme, common) => ({
+    circle: computed(() => ({
       borderWidth: `${props.borderWidth}px`,
       width: `${props.size}px`,
       height: `${props.size}px`

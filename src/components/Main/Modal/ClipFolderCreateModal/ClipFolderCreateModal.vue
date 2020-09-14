@@ -50,7 +50,7 @@ export default defineComponent({
     FormInput,
     FormButton
   },
-  setup(props, context) {
+  setup() {
     const name = ref('')
     const description = ref('')
     const { createClipFolder } = useCreateClipFolder()

@@ -43,7 +43,6 @@ export default defineComponent({
       isReachedLatest,
       isLoading,
       lastLoadingDirection,
-      renderMessageFromIds,
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
       onLoadAroundMessagesRequest

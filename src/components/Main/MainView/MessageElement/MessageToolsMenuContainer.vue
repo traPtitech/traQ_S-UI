@@ -25,7 +25,6 @@ import {
   shallowRef
 } from '@vue/composition-api'
 import store from '@/store'
-import { makeStyles } from '@/lib/styles'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 import { targetPortalName } from '@/views/Main.vue'
 
@@ -57,7 +56,7 @@ const useMenuHeight = (
 
 const useStyles = (state: { isPopupMenuShown: boolean }, height: Ref<number>) =>
   reactive({
-    toolsMenu: makeStyles(theme => {
+    toolsMenu: computed(() => {
       if (!state.isPopupMenuShown) return {}
       const margin = 20
       return {

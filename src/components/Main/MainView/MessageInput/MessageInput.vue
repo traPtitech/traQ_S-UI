@@ -85,7 +85,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { isMobile } = useIsMobile()
     const {
       textState,
@@ -134,8 +134,7 @@ export default defineComponent({
     const { invokeStampPicker } = useTextStampPickerInvoker(
       targetPortalName,
       textState,
-      textareaRef,
-      context
+      textareaRef
     )
 
     const onStampClick = () => {

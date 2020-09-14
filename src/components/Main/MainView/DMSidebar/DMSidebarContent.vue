@@ -31,7 +31,7 @@ export default defineComponent({
       default: 0
     }
   },
-  setup(props) {
+  setup() {
     return {}
   }
 })

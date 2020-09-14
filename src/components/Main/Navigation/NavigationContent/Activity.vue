@@ -32,7 +32,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   reactive,
   computed,
   onBeforeUnmount,
@@ -108,7 +107,7 @@ export default defineComponent({
     ToggleButton,
     ActivityElement
   },
-  setup(_, context: SetupContext) {
+  setup() {
     useActivityStream()
     const {
       isAll,
