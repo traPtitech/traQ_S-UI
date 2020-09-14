@@ -30,9 +30,7 @@ module.exports = {
         }
       }
     ],
-    '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-extra-semi': 'off',
     'unused-imports/no-unused-imports-ts': 'warn',
     'unused-imports/no-unused-vars-ts': 'off'
   },
