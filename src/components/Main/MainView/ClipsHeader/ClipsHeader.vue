@@ -41,7 +41,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const clipFolderName = computed(
       () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
     )

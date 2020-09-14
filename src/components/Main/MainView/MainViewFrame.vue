@@ -26,7 +26,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
+  setup() {
     return {}
   }
 })

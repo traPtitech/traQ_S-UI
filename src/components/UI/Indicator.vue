@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Indicator',
@@ -19,7 +18,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const style = makeStyles(theme => ({
+    const style = computed(() => ({
       borderWidth: `${props.borderWidth}px`,
       width: `${props.size}px`,
       height: `${props.size}px`

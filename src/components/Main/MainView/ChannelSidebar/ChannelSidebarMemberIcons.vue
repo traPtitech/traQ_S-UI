@@ -27,7 +27,7 @@ export default defineComponent({
   props: {
     viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
   },
-  setup(props) {
+  setup() {
     return {}
   }
 })

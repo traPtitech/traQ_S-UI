@@ -34,7 +34,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup() {
     return {}
   }
 })

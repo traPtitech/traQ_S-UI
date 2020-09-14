@@ -29,7 +29,7 @@ export default defineComponent({
   props: {
     id: String as PropType<string | null>
   },
-  setup(props, context) {
+  setup(props) {
     const isLoading = computed(() => props.id === undefined)
     const isEmpty = computed(() =>
       props.id === undefined ? false : props.id === null

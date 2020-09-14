@@ -7,12 +7,10 @@ module.exports = {
     parser: '@typescript-eslint/parser'
   },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
     'plugin:vue/strongly-recommended',
+    '@vue/typescript/recommended',
     '@vue/prettier',
-    '@vue/typescript'
+    '@vue/prettier/@typescript-eslint'
   ],
   plugins: ['unused-imports'],
   rules: {
@@ -32,9 +30,7 @@ module.exports = {
         }
       }
     ],
-    '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-extra-semi': 'off',
     'unused-imports/no-unused-imports-ts': 'warn',
     'unused-imports/no-unused-vars-ts': 'off'
   },

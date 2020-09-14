@@ -93,7 +93,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const state = reactive({
       isMounted: false,
       isLoading: false,

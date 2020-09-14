@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     name: { type: String, required: true }
   },
-  setup(props) {
+  setup() {
     return {}
   }
 })

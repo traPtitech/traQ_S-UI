@@ -11,13 +11,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
-import { makeStyles } from '@/lib/styles'
+import { defineComponent, reactive, computed } from '@vue/composition-api'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { background: string }) => {
   return reactive({
-    icon: makeStyles(theme => ({
+    icon: computed(() => ({
       background: props.background
     }))
   })

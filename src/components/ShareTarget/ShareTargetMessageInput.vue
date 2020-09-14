@@ -104,8 +104,7 @@ export default defineComponent({
       textState,
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
-      ),
-      context
+      )
     )
 
     const onStampClick = (e: MouseEvent) => {

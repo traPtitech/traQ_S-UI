@@ -22,11 +22,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { TagId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import Icon from '@/components/UI/Icon.vue'
-import store from '@/store'
 
 export default defineComponent({
   name: 'TagsTabEdit',
@@ -49,9 +48,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myId = computed(() => store.state.domain.me.detail!.id)
-
     const removeTag = async () => {
       if (!props.userId) return
 

@@ -21,12 +21,11 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
-import { makeStyles } from '@/lib/styles'
 import { buildFilePath } from '@/lib/apis'
 
 const useStyles = (props: { size: number }) =>
   reactive({
-    container: makeStyles(theme => ({
+    container: computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))

@@ -50,7 +50,6 @@
 import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
-import { makeStyles } from '@/lib/styles'
 
 import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
@@ -72,10 +71,10 @@ const useStyles = (
   sidebarPosition: Readonly<Ref<number>>
 ) =>
   reactive({
-    mainViewWrapper: makeStyles(_ => ({
+    mainViewWrapper: computed(() => ({
       transform: `translateX(${mainViewPosition.value}px)`
     })),
-    sidebarWrapper: makeStyles(theme => ({
+    sidebarWrapper: computed(() => ({
       transform: `translateX(${sidebarPosition.value}px)`
     }))
   })

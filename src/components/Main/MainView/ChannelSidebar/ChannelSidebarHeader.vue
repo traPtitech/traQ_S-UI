@@ -36,7 +36,7 @@ export default defineComponent({
     showBackButton: { type: Boolean, default: false }
   },
   components: { ChannelSidebarHeaderName, Icon },
-  setup(props, context) {
+  setup(props) {
     const state = reactive({
       channelName: computed(
         () =>

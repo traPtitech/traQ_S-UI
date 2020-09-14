@@ -10,7 +10,7 @@ import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'EphemeralNavigationContentContainer',
   props: { transparent: { type: Boolean, default: false } },
-  setup(props) {
+  setup() {
     return {}
   }
 })

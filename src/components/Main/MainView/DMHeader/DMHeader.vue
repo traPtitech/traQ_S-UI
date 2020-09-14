@@ -33,7 +33,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { openSidebar } = useSidebar()
     const title = computed(() => `@ ${props.userName}`)
     return { openSidebar, title }

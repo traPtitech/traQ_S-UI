@@ -23,7 +23,7 @@ export default defineComponent({
   components: {
     Icon
   },
-  setup(props, context) {
+  setup() {
     const { isMobile } = useIsMobile()
     const { openNav } = useNavigationController()
     return {

@@ -40,7 +40,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const onDMClick = async () => {
       const nameCache = props.userName
       await store.dispatch.ui.modal.clearModal()

@@ -30,7 +30,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const dmChannelId = computed(() =>
       store.getters.entities.DMChannelIdByUserId(props.user.id)
     )

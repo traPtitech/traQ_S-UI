@@ -1,12 +1,11 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import store from '@/store'
-import { Ref, computed, SetupContext, nextTick } from '@vue/composition-api'
+import { Ref, computed, nextTick } from '@vue/composition-api'
 
 const useTextStampPickerInvoker = (
   targetPortalName: string,
   textState: { text: string },
-  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
-  context: SetupContext
+  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>
 ) => {
   const elementRef = computed(() => textareaRef.value?.$el)
 
