@@ -105,6 +105,7 @@ export default defineComponent({
   position: absolute;
   right: 0;
   top: 0;
+  pointer-events: none;
 }
 .primary {
   min-width: 0;

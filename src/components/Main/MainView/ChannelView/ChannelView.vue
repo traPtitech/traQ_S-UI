@@ -12,7 +12,7 @@
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
     />
-    <portal v-if="!isSidebarOpen" to="sidebar-opener">
+    <portal v-if="!isSidebarOpen" to="sidebar-opener" :class="$style.opener">
       <channel-sidebar-hidden
         @open="openSidebar"
         :viewer-ids="viewerIds"

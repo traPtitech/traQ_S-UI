@@ -55,8 +55,10 @@ export default defineComponent({
   margin-bottom: 16px;
   margin-top: 16px;
   cursor: pointer;
+  pointer-events: all;
 }
 .rest {
   @include color-ui-secondary;
+  pointer-events: all;
 }
 </style>
