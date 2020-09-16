@@ -74,7 +74,7 @@
     "fibers": "^5.0.0",
     "fonteditor-core": "^2.1.1",
     "postcss": "^8.0.3",
-    "prettier": "^2.1.1",
+    "prettier": "^2.1.2",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
     "typescript": "^4.0.2",
