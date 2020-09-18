@@ -10,8 +10,8 @@
     />
     <chrome-audio-slider
       :class="$style.sliderContainer"
-      @changeVolume="changeVolume"
-      @changeTime="changeTime"
+      @change-volume="changeVolume"
+      @change-time="changeTime"
       :current-time="currentTime"
       :duration="duration"
       :volume="volume"
