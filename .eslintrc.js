@@ -34,7 +34,8 @@ module.exports = {
     'unused-imports/no-unused-imports-ts': 'warn',
     'unused-imports/no-unused-vars-ts': 'off',
     // TODO: 消す
-    'vue/require-default-prop': 'off'
+    'vue/require-default-prop': 'off',
+    'vue/no-v-for-template-key': 'off'
   },
   overrides: [
     {

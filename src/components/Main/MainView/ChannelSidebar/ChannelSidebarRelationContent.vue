@@ -9,9 +9,8 @@
       />
     </div>
     <div v-if="current" :class="$style.channel">
-      <template v-for="sibling in filteredSiblings">
+      <template v-for="sibling in filteredSiblings" :key="sibling.id">
         <channel-sidebar-relation-element
-          :key="sibling.id"
           :name="sibling.name"
           :topic="sibling.topic"
           :link="buildSiblingLink(sibling.name)"
@@ -22,7 +21,6 @@
           v-if="sibling.id === current.id"
           :class="$style.channel"
           data-is-children
-          :key="`${sibling.id}children`"
         >
           <channel-sidebar-relation-element
             v-for="child in filteredChildren"
