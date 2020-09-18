@@ -27,8 +27,8 @@ module.exports = {
     svgRule
       .oneOf('component')
       .resourceQuery(/component/)
-      .use('babel-loader')
-      .loader('babel-loader')
+      .use('vue-loader-v16')
+      .loader('vue-loader-v16')
       .end()
       .use('vue-svg-loader')
       .loader('vue-svg-loader')

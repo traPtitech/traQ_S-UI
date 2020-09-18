@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, defineAsyncComponent } from 'vue'
+import { defineComponent, shallowRef, watch } from 'vue'
 import mdi from '@/assets/mdi'
 
 export default defineComponent({
@@ -45,11 +45,22 @@ export default defineComponent({
     }
   },
   setup(props, { attrs }) {
-    // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
-    const getComponent = (name: string) =>
-      defineAsyncComponent(() => import(`@/assets/icons/${name}.svg?component`))
+    const getComponent = async (name: string) => {
+      const module = await import(`@/assets/icons/${name}.svg?component`)
+      return module.default
+    }
 
-    const svgComponent = computed(() => getComponent(props.name))
+    const svgComponent = shallowRef()
+    watch(
+      () => props.name,
+      async () => {
+        if (props.mdi) return
+        const com = await getComponent(props.name)
+        svgComponent.value = com
+      },
+      { immediate: true }
+    )
+
     const getMdiPath = (name: string) => {
       return mdi[name]
     }
