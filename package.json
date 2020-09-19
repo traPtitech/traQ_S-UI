@@ -29,7 +29,7 @@
     "firebase": "^7.18.0",
     "highlight.js": "^10.2.0",
     "idb-keyval": "^3.2.0",
-    "klona": "^2.0.3",
+    "klona": "^2.0.4",
     "pica": "^6.1.1",
     "portal-vue": "^2.1.7",
     "shvl": "^2.0.1",
