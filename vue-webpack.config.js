@@ -23,7 +23,7 @@ module.exports = {
     process.env.NODE_ENV === 'production'
       ? [
           new CompressionPlugin({
-            filename: '[path].br[query]',
+            filename: '[path][base].br[query]',
             algorithm: 'brotliCompress',
             test: /\.(js|css|html|svg|json)$/,
             compressionOptions: { level: 11 },
