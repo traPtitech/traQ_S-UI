@@ -3,7 +3,10 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
+    <div
+      :class="$style.inputContainer"
+      :data-on-secondary="$boolAttr(onSecondary)"
+    >
       <span v-if="prefix" :class="$style.prefix" @click="focus">
         {{ prefix }}
       </span>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.app" :style="style" :data-is-mobile="isMobile">
+  <div :class="$style.app" :style="style" :data-is-mobile="$boolAttr(isMobile)">
     <router-view />
   </div>
 </template>

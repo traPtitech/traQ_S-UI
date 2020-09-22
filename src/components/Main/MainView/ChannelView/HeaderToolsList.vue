@@ -8,8 +8,8 @@
         :icon-name="qallIconName"
         :class="$style.qallIcon"
         :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-        :data-is-active="isJoinedQallSession || isQallSessionOpened"
-        :data-is-joined="isJoinedQallSession"
+        :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
+        :data-is-joined="$boolAttr(isJoinedQallSession)"
       />
       <header-tools-item
         v-if="isForcedChannel"

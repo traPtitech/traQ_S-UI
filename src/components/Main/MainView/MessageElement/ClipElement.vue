@@ -3,8 +3,8 @@
     :class="$style.body"
     ref="bodyRef"
     v-if="state.message"
-    :data-is-mobile="isMobile"
-    :data-is-entry="isEntryMessage"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-entry="$boolAttr(isEntryMessage)"
   >
     <message-tools :class="$style.tools" :message-id="messageId" is-minimum />
     <message-contents
@@ -94,7 +94,7 @@ $messagePaddingMobile: 16px;
   min-width: 0;
   overflow: hidden;
   padding: 8px $messagePadding;
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
   &[data-is-entry] {

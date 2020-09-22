@@ -1,7 +1,11 @@
 <template>
   <section>
     <profile-header text="ひとこと" :class="$style.header" />
-    <p :class="$style.bio" :aria-busy="isLoading" :data-is-empty="isEmpty">
+    <p
+      :class="$style.bio"
+      :aria-busy="isLoading"
+      :data-is-empty="$boolAttr(isEmpty)"
+    >
       <template v-if="isLoading">[Now loading...]</template>
       <template v-else-if="isEmpty">[No bio]</template>
       <template v-else>{{ bio }}</template>

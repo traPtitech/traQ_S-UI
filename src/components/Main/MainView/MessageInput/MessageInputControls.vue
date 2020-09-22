@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <message-input-insert-stamp-button @click.native="onClickStampButton" />
     <button
       :class="$style.sendButton"
@@ -79,7 +79,7 @@ export default defineComponent({
   cursor: pointer;
 
   margin: 0 8px;
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     margin: 0 8px;
   }
 

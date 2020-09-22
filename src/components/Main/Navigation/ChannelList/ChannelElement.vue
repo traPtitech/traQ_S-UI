@@ -1,8 +1,8 @@
 <template>
   <div
     :class="$style.container"
-    :aria-selected="state.isSelected ? 'true' : 'false'"
-    :data-is-inactive="state.isInactive"
+    :aria-selected="state.isSelected"
+    :data-is-inactive="$boolAttr(state.isInactive)"
   >
     <!-- チャンネル表示本体 -->
     <div
@@ -52,7 +52,7 @@
     <div
       v-if="state.isSelected || isChannelBgHovered"
       :class="$style.selectedBg"
-      :data-is-hovered="isChannelBgHovered"
+      :data-is-hovered="$boolAttr(isChannelBgHovered)"
     />
   </div>
 </template>

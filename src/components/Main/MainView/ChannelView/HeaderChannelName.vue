@@ -15,7 +15,7 @@
       >
       <span
         :class="$style.ancestorSeparator"
-        :data-is-primary="pathInfoList.length <= 1"
+        :data-is-primary="$boolAttr(pathInfoList.length <= 1)"
         >/</span
       >
     </span>

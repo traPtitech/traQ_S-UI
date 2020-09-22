@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     @click="onClick"
-    :data-is-disabled="disabled"
+    :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
     :title="tooltip"
   >

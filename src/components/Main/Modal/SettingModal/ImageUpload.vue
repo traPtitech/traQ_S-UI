@@ -2,7 +2,7 @@
   <div>
     <form-button label="ファイルを選択" @click="addImage" />
     <div v-if="image.url !== ''">
-      <div :class="$style.cropper" :is-rounded="rounded">
+      <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
         <img :src="image.url" ref="$img" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
@@ -117,7 +117,7 @@ export default defineComponent({
   width: 400px;
   height: 400px;
   margin: 12px;
-  &[is-rounded] {
+  &[data-is-rounded] {
     :global(.cropper-view-box),
     :global(.cropper-face) {
       border-radius: 50%;

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <authenticate-header :class="$style.header" title="シェア" />
     <share-target-form
       v-if="!donePost"

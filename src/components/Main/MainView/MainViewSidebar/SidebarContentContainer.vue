@@ -1,7 +1,7 @@
 <template>
   <div
-    :data-is-large-padding="largePadding"
-    :data-is-clickable="clickable"
+    :data-is-large-padding="$boolAttr(largePadding)"
+    :data-is-clickable="$boolAttr(clickable)"
     :class="$style.container"
     @click.self="onContainerClick"
   >

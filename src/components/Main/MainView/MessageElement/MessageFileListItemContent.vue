@@ -2,7 +2,7 @@
   <router-link
     :to="fileLink"
     :class="$style.container"
-    :data-is-white="isWhite"
+    :data-is-white="$boolAttr(isWhite)"
   >
     <file-description
       :file-id="fileId"

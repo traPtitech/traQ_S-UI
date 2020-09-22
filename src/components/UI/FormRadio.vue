@@ -8,11 +8,7 @@
       :checked="checked"
       @input="onInput"
     />
-    <div
-      :class="$style.pseudoRadio"
-      role="radio"
-      :aria-checked="checked ? 'true' : 'false'"
-    >
+    <div :class="$style.pseudoRadio" role="radio" :aria-checked="checked">
       <div :class="$style.pseudoRadioInner" />
     </div>
     {{ label }}

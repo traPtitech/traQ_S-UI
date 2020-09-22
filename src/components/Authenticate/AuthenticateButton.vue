@@ -1,7 +1,7 @@
 <template>
   <button
     :class="$style.container"
-    :disabled="disabled"
+    :disabled="$boolAttr(disabled)"
     @click="$emit('click')"
     :data-type="type"
   >

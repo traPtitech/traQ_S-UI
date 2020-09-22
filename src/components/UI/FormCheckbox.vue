@@ -10,7 +10,7 @@
     <div
       :class="$style.pseudoCheckbox"
       role="checkbox"
-      :aria-checked="modelValue ? 'true' : 'false'"
+      :aria-checked="modelValue"
     >
       <div :class="$style.pseudoCheckboxInner" />
     </div>

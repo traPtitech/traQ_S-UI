@@ -2,7 +2,7 @@
   <nav
     :class="$style.container"
     :data-has-ephemeral-content="
-      ephemeralNavigationSelectorState.currentNavigation
+      $boolAttr(!!ephemeralNavigationSelectorState.currentNavigation)
     "
   >
     <div>

@@ -8,7 +8,7 @@
       @click="onDotsClick"
     />
   </div>
-  <div v-else :class="$style.container" :data-is-mobile="isMobile">
+  <div v-else :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <transition name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <stamp
@@ -24,7 +24,7 @@
     </transition>
     <div
       :class="$style.tools"
-      :data-hide-left-border="showQuickReaction || !isMobile"
+      :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
     >
       <template v-if="isMobile">
         <icon

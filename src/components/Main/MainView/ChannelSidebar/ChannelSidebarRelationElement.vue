@@ -1,7 +1,9 @@
 <template>
   <div>
     <div :class="$style.channelNameContainer" :data-is-current="isCurrent">
-      <span :data-is-current="isCurrent" :class="$style.channelHash">#</span>
+      <span :data-is-current="$boolAttr(isCurrent)" :class="$style.channelHash">
+        #
+      </span>
       <span>
         <router-link :to="isCurrent ? '' : link">{{ name }}</router-link>
       </span>

@@ -118,7 +118,7 @@ export default defineComponent({
   border-radius: 4px;
   justify-content: space-between;
 
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     padding: 4px 0;
   }
 }

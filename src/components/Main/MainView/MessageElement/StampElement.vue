@@ -2,8 +2,8 @@
   <div
     :class="$style.body"
     :title="state.tooltip"
-    :data-include-me="state.includeMe"
-    :data-my-count-has-incremented="state.myCountHasIncremented"
+    :data-include-me="$boolAttr(state.includeMe)"
+    :data-my-count-has-incremented="$boolAttr(state.myCountHasIncremented)"
     @click="onClick"
   >
     <stamp

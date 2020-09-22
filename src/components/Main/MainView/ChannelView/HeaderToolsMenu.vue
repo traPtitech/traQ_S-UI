@@ -8,7 +8,7 @@
       :class="$style.qallIcon"
       :label="qallLabel"
       :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-      :data-is-active="isJoinedQallSession || isQallSessionOpened"
+      :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
     />
     <header-tools-menu-item
       v-if="canCreateChildChannel"

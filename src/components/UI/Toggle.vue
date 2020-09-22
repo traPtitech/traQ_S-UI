@@ -3,7 +3,7 @@
     @click="$emit('input')"
     :class="$style.container"
     role="switch"
-    :aria-checked="enabled ? 'true' : 'false'"
+    :aria-checked="enabled"
   >
     <div :class="$style.knob"></div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :disabled="disabled">
+  <div :class="$style.container" :data-is-disabled="$boolAttr(disabled)">
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -37,7 +37,7 @@ export default defineComponent({
   @include color-ui-primary;
   display: flex;
   cursor: pointer;
-  &[disabled] {
+  &[data-is-disabled] {
     opacity: 0.5;
     cursor: pointer;
   }

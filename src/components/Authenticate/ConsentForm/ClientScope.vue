@@ -1,5 +1,5 @@
 <template>
-  <li :class="$style.container" :data-is-open="isOpen">
+  <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
       {{ name }}
       <icon :class="$style.icon" name="rounded-triangle" />

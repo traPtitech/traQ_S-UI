@@ -1,8 +1,8 @@
 <template>
   <button
     :class="$style.container"
-    :data-react-hover="reactHover"
-    :data-is-white="props.isWhite"
+    :data-react-hover="$boolAttr(reactHover)"
+    :data-is-white="$boolAttr(props.isWhite)"
   >
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />

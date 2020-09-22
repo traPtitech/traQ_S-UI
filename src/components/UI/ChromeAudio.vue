@@ -19,7 +19,7 @@
     <div
       v-if="canUsePinP"
       :class="$style.icon"
-      :aria-disabled="isPinPShown ? 'true' : 'false'"
+      :aria-disabled="isPinPShown"
       @click="startPictureInPicture"
     >
       <icon mdi name="picture-in-picture-bottom-right" :size="20" />

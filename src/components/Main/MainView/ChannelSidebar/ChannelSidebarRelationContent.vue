@@ -162,9 +162,6 @@ export default defineComponent({
 .element {
   // FIXME: 例外的に6px、あとでデザイン修正
   margin: 6px 0;
-  &[data-has-parent] {
-    margin-left: 8px;
-  }
 }
 
 .text {

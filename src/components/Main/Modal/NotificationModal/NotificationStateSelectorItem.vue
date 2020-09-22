@@ -66,7 +66,7 @@ export default defineComponent({
   cursor: pointer;
   opacity: 0.5;
 
-  &[aria-selected] {
+  &[aria-selected='true'] {
     color: $theme-accent-primary;
     opacity: 1;
   }

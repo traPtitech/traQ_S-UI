@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-selected="isSelected">
+  <div :class="$style.container" :data-is-selected="$boolAttr(isSelected)">
     <span :class="$style.name" :title="pathTooltip">
       {{ pathToShow }}
     </span>

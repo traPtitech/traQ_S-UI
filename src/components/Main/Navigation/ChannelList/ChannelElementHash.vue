@@ -3,10 +3,10 @@
     <div
       :class="$style.hash"
       :data-container-type="hasChild ? 'parent' : 'leaf'"
-      :data-is-opened="hasChild && isOpened"
-      :aria-selected="isSelected ? 'true' : 'false'"
-      :data-has-notification-on-child="hasNotificationOnChild"
-      :data-is-inactive="isInactive"
+      :data-is-opened="$boolAttr(hasChild && isOpened)"
+      :aria-selected="isSelected"
+      :data-has-notification-on-child="$boolAttr(hasNotificationOnChild)"
+      :data-is-inactive="$boolAttr(isInactive)"
     >
       <icon name="hash" :class="$style.icon" />
     </div>

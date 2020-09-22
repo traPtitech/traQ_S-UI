@@ -11,7 +11,7 @@
         height="20"
         name="rounded-triangle"
         :class="$style.icon"
-        :data-is-open="isOpen"
+        :data-is-open="$boolAttr(isOpen)"
       />
     </template>
     <template #default>

@@ -2,7 +2,7 @@
   <div
     v-if="unreadCount > 0"
     :class="$style.container"
-    :data-is-noticeable="isNoticeable"
+    :data-is-noticeable="$boolAttr(isNoticeable)"
   >
     {{ unreadCountString }}
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
@@ -179,7 +179,7 @@ $radius: 4px;
     bottom: 24px - $radius;
   }
 
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     margin: {
       left: $inputPaddingMobile;
       right: $inputPaddingMobile;
@@ -216,7 +216,7 @@ $radius: 4px;
   justify-content: space-between;
   align-items: flex-end;
 
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     padding: 4px 0;
   }
 
@@ -234,7 +234,7 @@ $radius: 4px;
     shrink: 0;
   }
   margin: 0 16px;
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     margin: 0 8px;
   }
 

@@ -3,7 +3,7 @@
     :class="$style.container"
     :title="title"
     @click="$emit('click')"
-    :aria-pressed="value ? 'true' : 'false'"
+    :aria-pressed="value"
   >
     <Icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>

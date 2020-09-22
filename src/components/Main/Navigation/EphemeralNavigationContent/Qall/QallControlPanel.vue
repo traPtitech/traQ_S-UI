@@ -14,7 +14,7 @@
     <button
       @click="$emit('mic-click')"
       :class="$style.mic"
-      :data-is-mute="isMicMuted"
+      :data-is-mute="$boolAttr(isMicMuted)"
     >
       <icon :name="micIconName" mdi />
     </button>

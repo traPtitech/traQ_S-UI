@@ -3,7 +3,7 @@
     <div
       :class="$style.content"
       @click="onClick"
-      :data-is-editing="state.isEditing"
+      :data-is-editing="$boolAttr(state.isEditing)"
     >
       <Icon
         mdi

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-open="isOpen">
+  <div :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name">
       {{ name }}
       <div v-if="hasNotification" :class="$style.indicator">

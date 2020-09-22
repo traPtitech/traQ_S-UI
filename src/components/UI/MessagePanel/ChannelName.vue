@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.path" :data-is-title="isTitle">
+  <div :class="$style.path" :data-is-title="$boolAttr(isTitle)">
     {{ path }}
   </div>
 </template>

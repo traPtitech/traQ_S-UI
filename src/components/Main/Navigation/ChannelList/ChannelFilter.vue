@@ -5,7 +5,7 @@
     </div>
     <button
       :class="$style.star"
-      :aria-selected="isStared ? 'true' : 'false'"
+      :aria-selected="isStared"
       @click="emit('toggle-star-filter')"
     >
       <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />

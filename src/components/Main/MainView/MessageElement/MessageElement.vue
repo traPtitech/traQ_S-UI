@@ -3,10 +3,10 @@
     :class="$style.body"
     ref="bodyRef"
     v-if="state.message"
-    :data-is-mobile="isMobile"
-    :data-is-pinned="state.isPinned"
-    :data-is-entry="isEntryMessage"
-    :data-is-editing="state.isEditing"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-pinned="$boolAttr(state.isPinned)"
+    :data-is-entry="$boolAttr(isEntryMessage)"
+    :data-is-editing="$boolAttr(state.isEditing)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -118,7 +118,7 @@ $messagePaddingMobile: 16px;
   min-width: 0;
   overflow: hidden;
   padding: 8px $messagePadding;
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
   &[data-is-pinned] {

@@ -2,12 +2,12 @@
   <div :class="$style.container">
     <div
       :class="$style.expandButton"
-      :data-is-expanded="isExpanded"
+      :data-is-expanded="$boolAttr(isExpanded)"
       @click="toggleExpanded"
     >
       <icon :class="$style.expandIcon" name="chevron-up" mdi />
     </div>
-    <div :class="$style.list" :data-is-expanded="isExpanded">
+    <div :class="$style.list" :data-is-expanded="$boolAttr(isExpanded)">
       <qall-details-panel-user
         v-if="me"
         :class="$style.slider"

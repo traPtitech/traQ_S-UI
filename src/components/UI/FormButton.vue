@@ -2,7 +2,7 @@
   <button
     :class="$style.container"
     :disabled="loading || disabled"
-    :data-is-loading="loading"
+    :data-is-loading="$boolAttr(loading)"
     @click="emit('click')"
     :data-color="color"
   >

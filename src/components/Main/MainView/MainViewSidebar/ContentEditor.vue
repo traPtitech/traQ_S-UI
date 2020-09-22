@@ -9,19 +9,19 @@
       <div
         v-if="maxlength"
         :class="$style.count"
-        :data-is-exceeded="isExceeded"
+        :data-is-exceeded="$boolAttr(isExceeded)"
       >
         {{ length }}/{{ maxlength }}
       </div>
     </div>
-    <div v-else :class="$style.content" :data-is-empty="isEmpty">
+    <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       {{ content }}
     </div>
     <button
       @click="onButtonClick"
-      :data-is-editing="isEditing"
+      :data-is-editing="$boolAttr(isEditing)"
       :disabled="isExceeded"
-      :data-is-exceeded="isExceeded"
+      :data-is-exceeded="$boolAttr(isExceeded)"
       :class="$style.button"
     >
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
@@ -64,7 +64,7 @@ export default defineComponent({
 
     const length = ref(0)
     const isExceeded = computed(
-      () => props.maxlength && props.maxlength < length.value
+      () => !!(props.maxlength && props.maxlength < length.value)
     )
 
     const onInput = (payload: string) => {
