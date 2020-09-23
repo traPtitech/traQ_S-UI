@@ -25,8 +25,6 @@ export const actions = defineActions({
     }
 
     if (fileType === 'image') {
-      // 最後に追加されたもの
-      const index = state.attachments.length
       const resizable = canResize(file.type)
 
       let resizedFile = file
@@ -36,6 +34,9 @@ export const actions = defineActions({
 
       const thumbnailDataUrl = await convertToDataUrl(resizedFile)
       if (!thumbnailDataUrl) return
+
+      // 最後に追加されたもの(awaitよりあとで行わないと上書きしてしまう)
+      const index = state.attachments.length
 
       commit.addAttachment({
         type: fileType,
