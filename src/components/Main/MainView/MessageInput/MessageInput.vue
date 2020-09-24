@@ -21,7 +21,7 @@
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
-          @input="onInputText"
+          @input-value="onInputText"
           @modifier-key-down="onModifierKeyDown"
           @modifier-key-up="onModifierKeyUp"
           @post-message="postMessage"

@@ -3,7 +3,7 @@
     <content-editor
       :value="topic"
       :is-editing="isEditing"
-      @input="onInput"
+      @input-value="onInput"
       @edit-done="onEditDone"
       @edit-start="startEdit"
       :maxlength="200"

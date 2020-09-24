@@ -7,7 +7,7 @@
     placeholder="メッセージを送信"
     rows="1"
     :max-height="160"
-    @input="onInput"
+    @input-value="onInput"
     @compositionupdate.native="onCompositionUpdate"
     @before-input.native="onBeforeInput"
     @keydown.native="onKeyDown"
@@ -91,7 +91,7 @@ export default defineComponent({
   },
   setup(props, context: SetupContext) {
     const onInput = (value: string) => {
-      context.emit('input', value)
+      context.emit('input-value', value)
     }
 
     const textareaAutosizeRef = ref<{

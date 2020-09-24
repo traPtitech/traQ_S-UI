@@ -4,7 +4,7 @@
       <textarea-autosize
         :value="value"
         :class="$style.editor"
-        @input="onInput"
+        @input-value="onInput"
       />
       <div
         v-if="maxlength"
@@ -69,7 +69,7 @@ export default defineComponent({
 
     const onInput = (payload: string) => {
       length.value = Array.from(payload).length
-      context.emit('input', payload)
+      context.emit('input-value', payload)
     }
     return { content, isEmpty, onButtonClick, length, isExceeded, onInput }
   }
