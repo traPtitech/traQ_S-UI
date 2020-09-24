@@ -1,12 +1,14 @@
 <template>
   <teleport
-    v-show="state.isStampPickerShown"
+    v-if="state.isStampPickerShown"
     :to="`#${state.teleportTargetName}`"
   >
-    <stamp-picker
-      :style="styles.stampPicker"
-      :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
-    />
+    <keep-alive>
+      <stamp-picker
+        :style="styles.stampPicker"
+        :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
+      />
+    </keep-alive>
   </teleport>
 </template>
 
