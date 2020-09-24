@@ -12,7 +12,12 @@
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
     />
-    <teleport v-if="!isSidebarOpen" to="sidebar-opener" :class="$style.opener">
+    <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
+    <teleport
+      v-if="isSidebarOpenerReady && !isSidebarOpen"
+      to="#sidebar-opener"
+      :class="$style.opener"
+    >
       <channel-sidebar-hidden
         @open="openSidebar"
         :viewer-ids="viewerIds"
@@ -64,7 +69,11 @@ export default defineComponent({
   name: 'ChannelView',
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String as PropType<ChannelId>
+    entryMessageId: String as PropType<ChannelId>,
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   components: {
     ChannelViewContent,

@@ -10,6 +10,7 @@
         <main-view-component-selector
           :class="[$style.componentContainer, $style.primary]"
           :view-info="state.primary"
+          :is-sidebar-opener-ready="isMounted"
         />
         <div id="sidebar" v-if="!isMobile" :class="$style.sidebar" />
       </div>
@@ -24,7 +25,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  ref,
+  onMounted,
+  onBeforeUnmount
+} from 'vue'
 import store from '@/store'
 import useIsMobile from '@/use/isMobile'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
@@ -49,10 +57,19 @@ export default defineComponent({
     )
     const { isMobile } = useIsMobile()
 
+    const isMounted = ref(false)
+    onMounted(() => {
+      isMounted.value = true
+    })
+    onBeforeUnmount(() => {
+      isMounted.value = false
+    })
+
     return {
       state,
       channelId,
-      isMobile
+      isMobile,
+      isMounted
     }
   }
 })
