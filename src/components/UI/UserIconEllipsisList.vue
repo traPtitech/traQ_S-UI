@@ -1,27 +1,25 @@
 <template>
-  <transition-group
-    :name="transition"
-    :class="$style.container"
-    :style="styles.container"
-  >
-    <span
-      v-if="inVisibleCount > 0 && showCount"
-      :class="$style.count"
-      :style="styles.count"
-      key="count"
-    >
-      +{{ inVisibleCount }}
-    </span>
-    <user-icon
-      :class="$style.userIcon"
-      :user-id="userId"
-      :size="iconSize"
-      :prevent-modal="preventModal"
-      v-for="userId in visibleIconIds"
-      :key="userId"
-      :style="styles.userIcon"
-    />
-  </transition-group>
+  <div :class="$style.container" :style="styles.container">
+    <transition-group :name="transition">
+      <span
+        v-if="inVisibleCount > 0 && showCount"
+        :class="$style.count"
+        :style="styles.count"
+        key="count"
+      >
+        +{{ inVisibleCount }}
+      </span>
+      <user-icon
+        :class="$style.userIcon"
+        :user-id="userId"
+        :size="iconSize"
+        :prevent-modal="preventModal"
+        v-for="userId in visibleIconIds"
+        :key="userId"
+        :style="styles.userIcon"
+      />
+    </transition-group>
+  </div>
 </template>
 
 <script lang="ts">

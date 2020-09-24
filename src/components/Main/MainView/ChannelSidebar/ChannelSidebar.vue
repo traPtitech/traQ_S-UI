@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar :class="$style.container">
+  <main-view-sidebar>
     <template #header>
       <channel-sidebar-header
         v-if="!state.pinnedMode"
@@ -74,16 +74,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
-  @include background-secondary;
-  @include color-ui-secondary;
-  display: flex;
-  flex-direction: column;
-  width: 320px;
-  height: 100%;
-  padding: 0 32px;
-  overflow: auto;
-}
 .sidebarItem {
   margin: 16px 0;
 }
