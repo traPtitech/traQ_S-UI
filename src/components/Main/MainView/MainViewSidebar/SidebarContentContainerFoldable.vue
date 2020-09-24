@@ -3,7 +3,7 @@
     :title="title"
     :clickable="clickable || !isOpen"
     :large-padding="largePadding"
-    @click="toggle"
+    @toggle="toggle"
   >
     <template #header-control>
       <icon
@@ -48,7 +48,9 @@ export default defineComponent({
   },
   setup() {
     const isOpen = ref(false)
-    const toggle = () => (isOpen.value = !isOpen.value)
+    const toggle = () => {
+      isOpen.value = !isOpen.value
+    }
 
     return { isOpen, toggle }
   }

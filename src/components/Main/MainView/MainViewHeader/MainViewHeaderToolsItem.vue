@@ -39,7 +39,7 @@ export default defineComponent({
     const { headerStyle } = useHeaderStyle()
     const onClick = () => {
       if (props.disabled) return
-      context.emit('click')
+      context.emit('toggle')
     }
     return { onClick, headerStyle }
   }

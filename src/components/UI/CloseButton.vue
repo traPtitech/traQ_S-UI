@@ -37,7 +37,7 @@ export default defineComponent({
     const styles = useStyles(props)
 
     const onClick = () => {
-      context.emit('click')
+      context.emit('close')
     }
     return { styles, onClick, props }
   },

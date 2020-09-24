@@ -31,11 +31,11 @@ export default defineComponent({
   },
   setup(props, context) {
     const onTitleClick = () => {
-      context.emit('click')
+      context.emit('toggle')
     }
     const onContainerClick = () => {
       if (props.clickable) {
-        context.emit('click')
+        context.emit('toggle')
       }
     }
     return { onTitleClick, onContainerClick }

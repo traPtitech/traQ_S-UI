@@ -6,7 +6,7 @@
         :class="$style.close"
         :size="20"
         :border-width="2"
-        @click="close"
+        @close="close"
       />
     </div>
     <div :class="$style.list">

@@ -5,7 +5,7 @@
       :current-navigation="currentNavigation"
     />
     <desktop-tab-frame :current-navigation="currentNavigation" />
-    <close-button :class="$style.close" with-text @click="close" :size="56" />
+    <close-button :class="$style.close" with-text @close="close" :size="56" />
   </div>
 </template>
 

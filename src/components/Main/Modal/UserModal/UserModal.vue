@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.wrapper" v-click-outside="onClickOutside">
     <close-button
-      @click="onClickClear"
+      @close="onClickClear"
       :size="isMobile ? 24 : 32"
       :class="$style.close"
     />

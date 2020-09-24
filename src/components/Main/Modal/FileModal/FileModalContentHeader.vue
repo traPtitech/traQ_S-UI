@@ -7,7 +7,7 @@
     />
     <div :class="$style.close">
       <close-button
-        @click="onClickClear"
+        @close="onClickClear"
         :size="24"
         :is-white="props.isWhite"
         :react-hover="!props.isWhite"

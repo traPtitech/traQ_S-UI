@@ -3,7 +3,7 @@
     <div :class="$style.container">
       <div :class="$style.header">
         <slot name="header" />
-        <close-button @click="closeSidebar" :size="28" />
+        <close-button @close="closeSidebar" :size="28" />
       </div>
       <div :class="$style.content">
         <slot name="content" />

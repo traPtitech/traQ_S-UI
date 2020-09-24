@@ -3,7 +3,7 @@
     <template v-if="!isMobile">
       <header-tools-item
         v-if="isQallEnabled"
-        @click="emit('click-qall')"
+        @toggle="emit('click-qall')"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
@@ -23,7 +23,7 @@
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="notified"
         icon-name="notified"
@@ -33,7 +33,7 @@
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.subscribed
         "
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="subscribed"
         icon-name="subscribed"
@@ -41,7 +41,7 @@
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="none"
         icon-name="not-subscribed"
@@ -50,7 +50,7 @@
     </template>
     <header-tools-item
       v-if="isStared"
-      @click="emit('unstar-channel')"
+      @toggle="emit('unstar-channel')"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
@@ -58,14 +58,14 @@
     />
     <header-tools-item
       v-else
-      @click="emit('star-channel')"
+      @toggle="emit('star-channel')"
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
-      @click="emit('click-pin')"
+      @toggle="emit('click-pin')"
       :class="$style.icon"
       icon-mdi
       icon-name="pin"
@@ -74,7 +74,7 @@
     <div :class="$style.moreButton">
       <div :class="$style.popupLocator" :id="teleportTargetName" />
       <header-tools-item
-        @click="emit('click-more')"
+        @toggle="emit('click-more')"
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"

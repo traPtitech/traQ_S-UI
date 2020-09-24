@@ -3,7 +3,7 @@
     clickable
     :title="title"
     :large-padding="largePadding"
-    @click="onClick"
+    @toggle="onClick"
   >
     <template #header-control v-if="count !== undefined">
       <span :class="$style.count">{{ count }}</span>

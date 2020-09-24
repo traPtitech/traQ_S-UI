@@ -7,7 +7,7 @@
         :class="$style.title"
         is-mobile
       />
-      <close-button @click="close" :size="36" />
+      <close-button @close="close" :size="36" />
     </div>
     <tab-content
       :class="$style.content"

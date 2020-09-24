@@ -3,7 +3,7 @@
     large-padding
     clickable
     v-if="!state.isOpenDetail"
-    @click="toggle"
+    @toggle="toggle"
   >
     <user-icon-ellipsis-list
       direction="row"
