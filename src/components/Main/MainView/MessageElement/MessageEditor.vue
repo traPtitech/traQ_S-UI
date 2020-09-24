@@ -31,8 +31,9 @@ import useTextInput, {
 } from '@/components/Main/MainView/MessageInput/use/textInput'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
-import { teleportTargetName } from '@/views/Main.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+
+const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {

@@ -37,7 +37,6 @@
     <stamp-picker-container />
     <message-tools-menu-container />
     <toast-container />
-    <div :id="teleportTargetName" />
   </div>
   <div v-else></div>
 </template>
@@ -64,7 +63,6 @@ import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 
-export const teleportTargetName = 'message-menu-popup'
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -159,7 +157,6 @@ export default defineComponent({
 
       onClickMainViewFrame,
 
-      teleportTargetName,
       styles,
       currentActiveDrawer
     }

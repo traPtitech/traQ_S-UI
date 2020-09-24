@@ -1,5 +1,5 @@
 <template>
-  <teleport v-show="state.isPopupMenuShown" :to="`#${teleportTargetName}`">
+  <teleport v-show="state.isPopupMenuShown" to="#message-menu-popup">
     <div ref="menuContainerRef">
       <message-tools-menu
         v-if="state.isPopupMenuShown"
@@ -26,7 +26,6 @@ import {
 } from 'vue'
 import store from '@/store'
 import MessageToolsMenu from './MessageToolsMenu.vue'
-import { teleportTargetName } from '@/views/Main.vue'
 
 const useMenu = () => {
   const state = reactive({
@@ -86,7 +85,6 @@ export default defineComponent({
       height,
       menuContainerRef,
       styles,
-      teleportTargetName,
       closePopupMenu
     }
   }

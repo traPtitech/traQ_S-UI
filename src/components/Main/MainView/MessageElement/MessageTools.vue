@@ -69,8 +69,9 @@ import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import { teleportTargetName } from '@/views/Main.vue'
 import useIsMobile from '@/use/isMobile'
+
+const teleportTargetName = 'message-menu-popup'
 
 export default defineComponent({
   name: 'MessageTools',
