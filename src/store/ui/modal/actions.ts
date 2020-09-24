@@ -6,6 +6,7 @@ import { modal } from './index'
 import router, { constructChannelPath, constructUserPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
+import { toRaw } from 'vue'
 
 export const modalActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, modal)
@@ -14,11 +15,13 @@ export const actions = defineActions({
   /**
    * モーダルを開き、`history.state`に状態を追加する
    */
-  pushModal: (context, modalState: ModalState) => {
+  pushModal: async (context, modalState: ModalState) => {
     const { commit, state } = modalActionContext(context)
     history.pushState(
       {
-        modalState: [...state.modalState, modalState]
+        ...history.state,
+        // historyのstateにはproxyされたobjectは入らないのでtoRawする
+        modalState: [...toRaw(state.modalState), modalState]
       },
       ''
     )
@@ -31,7 +34,9 @@ export const actions = defineActions({
     const { commit, state } = modalActionContext(context)
     history.replaceState(
       {
-        modalState: [...state.modalState, modalState]
+        ...history.state,
+        // historyのstateにはproxyされたobjectは入らないのでtoRawする
+        modalState: [...toRaw(state.modalState), modalState]
       },
       ''
     )
@@ -80,7 +85,11 @@ export const actions = defineActions({
     const { currentState } = getters
     history.replaceState(
       {
-        modalState: [...state.modalState.slice(0, state.modalState.length - 2)]
+        ...history.state,
+        // historyのstateにはproxyされたobjectは入らないのでtoRawする
+        modalState: [
+          ...toRaw(state.modalState).slice(0, state.modalState.length - 2)
+        ]
       },
       ''
     )

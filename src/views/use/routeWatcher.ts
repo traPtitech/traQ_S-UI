@@ -274,7 +274,7 @@ const useRouteWatcher = () => {
       if (store.state.ui.modal.modalState.length !== 0) {
         store.commit.ui.modal.setState([])
       }
-      history.replaceState(null, '')
+      history.replaceState({ ...history.state, modalState: [] }, '')
     }
 
     state.isInitialView = false
