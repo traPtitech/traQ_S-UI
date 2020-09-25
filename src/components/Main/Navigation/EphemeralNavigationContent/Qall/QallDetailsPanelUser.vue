@@ -7,7 +7,7 @@
       <slider
         v-if="showVolumeControl"
         :value="volume"
-        @change="onChange"
+        @change-value="onChange"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
