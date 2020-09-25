@@ -3,7 +3,7 @@
     <div :class="$style.inputContainer">
       <filter-input
         :text="filterState.query"
-        @input="setQuery"
+        @input-value="setQuery"
         :placeholder="placeholder"
         disable-ime
         focus-on-mount

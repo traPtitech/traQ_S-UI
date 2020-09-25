@@ -1,7 +1,12 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input on-secondary :text="text" @input="onInput" disable-ime />
+      <filter-input
+        on-secondary
+        :text="text"
+        @input-value="onInput"
+        disable-ime
+      />
     </div>
     <button
       :class="$style.star"

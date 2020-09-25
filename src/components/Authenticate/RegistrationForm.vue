@@ -5,13 +5,13 @@
       label="traQ ID"
       :text="loginState.name"
       :class="$style.item"
-      @input="setName"
+      @input-value="setName"
     />
     <authenticate-input
       label="表示名"
       :text="loginState.name"
       :class="$style.item"
-      @input="setName"
+      @input-value="setName"
     />
     <authenticate-input
       label="パスワード"
@@ -19,7 +19,7 @@
       :text="loginState.name"
       :class="$style.item"
       enterkeyhint="done"
-      @input="setName"
+      @input-value="setName"
     />
     <div :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>

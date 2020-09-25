@@ -16,7 +16,7 @@
     <navigation-content-container subtitle="ユーザーリスト">
       <filter-input
         :text="userListFilterState.query"
-        @input="setQuery"
+        @input-value="setQuery"
         on-secondary
       />
       <div v-if="userListFilterState.query.length > 0" :class="$style.list">

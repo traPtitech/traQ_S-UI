@@ -2,7 +2,7 @@ import { SetupContext } from 'vue'
 
 type InputElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
 
-const useInput = (context: SetupContext, eventName = 'input') => {
+const useInput = (context: SetupContext, eventName = 'input-value') => {
   const onInput = (event: InputEvent) =>
     context.emit(eventName, (event.target as InputElement).value)
   return {

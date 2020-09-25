@@ -5,7 +5,7 @@
     <authenticate-input
       label="traQ ID"
       :text="loginState.name"
-      @input="setName"
+      @input-value="setName"
       :class="$style.item"
     />
     <span :class="$style.item">
@@ -14,7 +14,7 @@
         type="password"
         :text="loginState.pass"
         enterkeyhint="done"
-        @input="setPass"
+        @input-value="setPass"
       />
       <a
         v-if="resetLink !== undefined"
