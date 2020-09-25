@@ -49,9 +49,7 @@ export default defineComponent({
     AuthenticateButton
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      context
-    )
+    const { loginState, login, loginExternal, setName, setPass } = useLogin()
     return { loginState, setName, setPass, login, loginExternal }
   }
 })

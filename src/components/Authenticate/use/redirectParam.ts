@@ -1,4 +1,4 @@
-import { SetupContext, computed, reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import { redirectToPipelineIfNeeded } from '@/router/pipeline'
 import router, { RouteName } from '@/router'
@@ -16,7 +16,7 @@ export interface RedirectState {
   isInternal?: boolean
 }
 
-const useRedirectParam = (context: SetupContext) => {
+const useRedirectParam = () => {
   const route = useRoute()
 
   const state: RedirectState = reactive({

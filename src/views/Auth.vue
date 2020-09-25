@@ -22,6 +22,7 @@ export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
 
 const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
   const router = useRouter()
+  const { redirect } = useRedirectParam()
   const state = reactive({
     show: false
   })
@@ -51,7 +52,6 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
     }
 
     if (isLoggedIn) {
-      const { redirect } = useRedirectParam(context)
       redirect()
       return
     }

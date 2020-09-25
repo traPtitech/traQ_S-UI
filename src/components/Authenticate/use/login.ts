@@ -1,8 +1,9 @@
-import { reactive, SetupContext } from 'vue'
+import { reactive } from 'vue'
 import apis from '@/lib/apis'
 import useRedirectParam from './redirectParam'
 
-const useLogin = (context: SetupContext) => {
+const useLogin = () => {
+  const { redirect } = useRedirectParam()
   const state = reactive({
     name: '',
     pass: '',
@@ -17,7 +18,6 @@ const useLogin = (context: SetupContext) => {
     state.pass = pass
   }
   const login = async () => {
-    const { redirect } = useRedirectParam(context)
     try {
       await apis.login('/', { name: state.name, password: state.pass })
 

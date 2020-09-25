@@ -93,9 +93,7 @@ export default defineComponent({
     AuthenticateSeparator
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      context
-    )
+    const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
     const externalLogin = computed(
