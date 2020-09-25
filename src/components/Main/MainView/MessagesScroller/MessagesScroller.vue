@@ -236,7 +236,8 @@ export default defineComponent({
           })
         }
         state.height = newHeight
-      }
+      },
+      { deep: true }
     )
 
     const handleScroll = throttle(17, () => {
