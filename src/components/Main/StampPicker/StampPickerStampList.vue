@@ -6,8 +6,8 @@
       :stamp-id="stamp.id"
       :size="32"
       :class="$style.stampListItem"
-      @click.native="onClickStamp(stamp.id)"
-      @hover.native="onStampHover(stamp.name)"
+      @click="onClickStamp(stamp.id)"
+      @hover="onStampHover(stamp.name)"
     />
   </div>
 </template>

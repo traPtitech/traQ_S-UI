@@ -13,7 +13,7 @@
       <div :class="$style.inputContainer">
         <message-input-upload-button
           :class="$style.controls"
-          @click.native="addAttachment"
+          @click="addAttachment"
         />
         <message-input-text-area
           ref="textareaRef"

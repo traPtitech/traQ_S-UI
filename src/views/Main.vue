@@ -19,7 +19,7 @@
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
-        @click.native.capture="onClickMainViewFrame"
+        @click.capture="onClickMainViewFrame"
       >
         <main-view :class="$style.mainViewWrapper" />
       </main-view-frame>

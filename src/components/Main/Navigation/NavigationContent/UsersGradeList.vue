@@ -4,7 +4,7 @@
       :name="name"
       :is-open="!isFolding"
       :has-notification="hasNotification"
-      @click.native="toggleFolding"
+      @click="toggleFolding"
     />
     <slide-down :class="$style.users" :is-open="!isFolding">
       <users-element

@@ -9,7 +9,7 @@
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
         :is-selected="currentNavigation === navigation.type"
-        @click.native="onNavigationItemClick(navigation.type)"
+        @click="onNavigationItemClick(navigation.type)"
       />
     </div>
     <version :class="$style.version" />

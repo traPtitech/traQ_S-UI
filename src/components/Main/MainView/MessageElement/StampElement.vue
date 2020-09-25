@@ -11,7 +11,7 @@
       :size="20"
       without-title
       :class="$style.icon"
-      @animationend.native="unsetMyCountHasIncremented"
+      @animationend="unsetMyCountHasIncremented"
     />
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>

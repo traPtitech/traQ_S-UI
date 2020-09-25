@@ -12,9 +12,9 @@
     >
       <channel-element-hash
         :class="$style.channelHash"
-        @click.native="onChannelHashClick"
-        @mouseenter.native="onHashMouseEnter"
-        @mouseleave.native="onHashMouseLeave"
+        @click="onChannelHashClick"
+        @mouseenter="onHashMouseEnter"
+        @mouseleave="onHashMouseLeave"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
@@ -26,19 +26,19 @@
         :channel="channel"
         :show-shortened-path="showShortenedPath"
         :is-selected="state.isSelected"
-        @click.native="onChannelNameClick"
+        @click="onChannelNameClick"
       />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
-        @click.native="onChannelNameClick"
+        @click="onChannelNameClick"
       />
     </div>
     <channel-element-topic
       v-if="showTopic"
       :class="$style.topic"
       :channel-id="channel.id"
-      @click.native="onChannelNameClick"
+      @click="onChannelNameClick"
     />
 
     <!-- 子チャンネル表示 -->

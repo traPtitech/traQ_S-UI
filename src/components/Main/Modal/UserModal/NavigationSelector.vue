@@ -6,7 +6,7 @@
       :icon-name="item.iconName"
       :icon-mdi="item.iconMdi"
       :is-selected="currentNavigation === item.type"
-      @click.native="onNavigationItemClick(item.type)"
+      @click="onNavigationItemClick(item.type)"
     />
   </section>
 </template>

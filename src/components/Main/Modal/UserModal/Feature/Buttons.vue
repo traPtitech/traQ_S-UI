@@ -5,7 +5,7 @@
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
-      @click.native="onDMClick"
+      @click="onDMClick"
     />
     <link-button
       v-if="homeChannelId"
@@ -13,7 +13,7 @@
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
-      @click.native="onHomeChannelClick"
+      @click="onHomeChannelClick"
     />
   </div>
 </template>

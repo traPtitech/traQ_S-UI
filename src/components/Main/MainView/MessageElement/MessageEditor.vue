@@ -11,7 +11,7 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
       />
-      <message-input-insert-stamp-button @click.native="onStampClick" />
+      <message-input-insert-stamp-button @click="onStampClick" />
     </div>
     <div :class="$style.controls">
       <form-button @click="cancel" label="キャンセル" color="secondary" />

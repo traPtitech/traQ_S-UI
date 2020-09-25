@@ -12,7 +12,7 @@
       name="download"
       :size="24"
       :class="$style.dl"
-      @click.native="onFileDownloadLinkClick"
+      @click="onFileDownloadLinkClick"
     />
   </div>
 </template>

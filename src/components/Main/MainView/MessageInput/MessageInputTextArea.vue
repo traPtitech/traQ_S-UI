@@ -8,13 +8,13 @@
     rows="1"
     :max-height="160"
     @input-value="onInput"
-    @compositionupdate.native="onCompositionUpdate"
-    @before-input.native="onBeforeInput"
-    @keydown.native="onKeyDown"
-    @keyup.native="onKeyUp"
-    @focus.native="onFocus"
-    @blur.native="onBlur"
-    @paste.native="onPaste"
+    @compositionupdate="onCompositionUpdate"
+    @before-input="onBeforeInput"
+    @keydown="onKeyDown"
+    @keyup="onKeyUp"
+    @focus="onFocus"
+    @blur="onBlur"
+    @paste="onPaste"
   />
 </template>
 

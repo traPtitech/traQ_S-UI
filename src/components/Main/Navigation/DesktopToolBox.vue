@@ -7,7 +7,7 @@
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       :disabled="tool.disabled"
-      @click.native="tool.onClick"
+      @click="tool.onClick"
     />
     <user-icon :class="$style.item" :size="36" :user-id="myId" />
     <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">

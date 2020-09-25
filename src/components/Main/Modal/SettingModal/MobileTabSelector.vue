@@ -11,7 +11,7 @@
         :type="navigation.type"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
-        @click.native="onNavigationItemClick(navigation.type)"
+        @click="onNavigationItemClick(navigation.type)"
       />
       <safari-warning :class="$style.safariWarning" />
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <message-input-insert-stamp-button @click.native="onClickStampButton" />
+    <message-input-insert-stamp-button @click="onClickStampButton" />
     <button
       :class="$style.sendButton"
       title="送信する"

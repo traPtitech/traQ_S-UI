@@ -16,11 +16,11 @@
         <div :class="$style.controls">
           <message-input-insert-stamp-button
             :class="$style.button"
-            @click.native="onStampClick"
+            @click="onStampClick"
           />
           <message-input-upload-button
             :class="$style.button"
-            @click.native="addAttachment"
+            @click="addAttachment"
           />
         </div>
       </div>

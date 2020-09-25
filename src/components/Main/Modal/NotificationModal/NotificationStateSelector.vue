@@ -6,7 +6,7 @@
       :class="$style.item"
       :subscription-level="level"
       :is-selected="level === currentChannelSubscription"
-      @click.native="changeSubscriptionLevel(level)"
+      @click="changeSubscriptionLevel(level)"
     />
   </div>
 </template>
