@@ -1,5 +1,5 @@
 <template>
-  <button @click="emit('click')" :class="$style.container">
+  <button @click="$emit('close')" :class="$style.container">
     <icon mdi name="close" :size="12" :class="$style.icon" />
     <div role="presentation" :class="$style.bg"></div>
   </button>
@@ -13,9 +13,6 @@ export default defineComponent({
   name: 'MessageInputFileListItem',
   components: {
     Icon
-  },
-  setup(_, { emit }) {
-    return { emit }
   }
 })
 </script>
