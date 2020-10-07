@@ -1,7 +1,7 @@
 <template>
   <sidebar-content-container-link
     title="ピン留め"
-    @toggle="onClick"
+    @click-link="onClick"
     :count="pinnedMessageLength"
   />
 </template>

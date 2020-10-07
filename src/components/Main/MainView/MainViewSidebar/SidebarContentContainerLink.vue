@@ -3,7 +3,7 @@
     clickable
     :title="title"
     :large-padding="largePadding"
-    @toggle="onClick"
+    @toggle="onClickLink"
   >
     <template #header-control v-if="count !== undefined">
       <span :class="$style.count">{{ count }}</span>
@@ -30,8 +30,8 @@ export default defineComponent({
     }
   },
   setup(_, context) {
-    const onClick = () => context.emit('click')
-    return { onClick }
+    const onClickLink = () => context.emit('click-link')
+    return { onClickLink }
   }
 })
 </script>
