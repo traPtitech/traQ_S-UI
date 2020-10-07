@@ -193,8 +193,8 @@ export default defineComponent({
         const startIndex = pageStartIndex * PAGE_SIZE
         const endIndex = (pageStartIndex + 1) * PAGE_SIZE
         const heightsSlice = state.itemHeights.slice(startIndex, endIndex)
-        rollingPageHeights[pageStartIndex] =
-          (rollingPageHeights[pageStartIndex - 1] || 0) +
+        state.rollingPageHeights[pageStartIndex] =
+          (state.rollingPageHeights[pageStartIndex - 1] || 0) +
           heightsSlice.reduce((a, b) => a + b)
       }
     }
