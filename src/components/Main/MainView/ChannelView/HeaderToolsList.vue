@@ -3,13 +3,13 @@
     <template v-if="!isMobile">
       <header-tools-item
         v-if="isQallEnabled"
-        @click="emit('click-qall')"
+        @toggle="emit('click-qall')"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
         :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-        :data-is-active="isJoinedQallSession || isQallSessionOpened"
-        :data-is-joined="isJoinedQallSession"
+        :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
+        :data-is-joined="$boolAttr(isJoinedQallSession)"
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -23,7 +23,7 @@
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="notified"
         icon-name="notified"
@@ -33,7 +33,7 @@
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.subscribed
         "
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="subscribed"
         icon-name="subscribed"
@@ -41,7 +41,7 @@
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
-        @click="changeToNextSubscriptionLevel"
+        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="none"
         icon-name="not-subscribed"
@@ -50,7 +50,7 @@
     </template>
     <header-tools-item
       v-if="isStared"
-      @click="emit('unstar-channel')"
+      @toggle="emit('unstar-channel')"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
@@ -58,23 +58,23 @@
     />
     <header-tools-item
       v-else
-      @click="emit('star-channel')"
+      @toggle="emit('star-channel')"
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
     />
     <!--
     <header-tools-item
-      @click="emit('click-pin')"
+      @toggle="emit('click-pin')"
       :class="$style.icon"
       icon-mdi
       icon-name="pin"
     />
     -->
     <div :class="$style.moreButton">
-      <portal-target :class="$style.popupLocator" :name="targetPortalName" />
+      <div :class="$style.popupLocator" :id="teleportTargetName" />
       <header-tools-item
-        @click="emit('click-more')"
+        @toggle="emit('click-more')"
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
@@ -84,14 +84,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import useChannelSubscriptionState from '@/use/channelSubscriptionState'
 import HeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import store from '@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import useIsMobile from '@/use/isMobile'
 
-export const targetPortalName = 'header-popup'
+export const teleportTargetName = 'header-popup'
 
 export default defineComponent({
   name: 'ChannelViewHeaderTools',
@@ -125,7 +125,7 @@ export default defineComponent({
       emit,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
-      targetPortalName,
+      teleportTargetName,
       isQallEnabled,
       ChannelSubscribeLevel,
       isMobile

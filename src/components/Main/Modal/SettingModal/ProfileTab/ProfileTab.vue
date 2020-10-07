@@ -49,13 +49,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  Ref,
-  ref
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, Ref, ref } from 'vue'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'

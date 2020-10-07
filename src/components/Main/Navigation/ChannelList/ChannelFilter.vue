@@ -1,11 +1,16 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input on-secondary :text="text" @input="onInput" disable-ime />
+      <filter-input
+        on-secondary
+        :text="text"
+        @input-value="onInput"
+        disable-ime
+      />
     </div>
     <button
       :class="$style.star"
-      :aria-selected="isStared ? 'true' : 'false'"
+      :aria-selected="isStared"
       @click="emit('toggle-star-filter')"
     >
       <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
@@ -14,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
 

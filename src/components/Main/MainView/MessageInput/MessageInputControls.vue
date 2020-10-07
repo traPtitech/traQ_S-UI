@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
-    <message-input-insert-stamp-button @click.native="onClickStampButton" />
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+    <message-input-insert-stamp-button @click="onClickStampButton" />
     <button
       :class="$style.sendButton"
       title="送信する"
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@vue/composition-api'
+import { defineComponent, SetupContext } from 'vue'
 import useIsMobile from '@/use/isMobile'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import Icon from '@/components/UI/Icon.vue'
@@ -79,7 +79,7 @@ export default defineComponent({
   cursor: pointer;
 
   margin: 0 8px;
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     margin: 0 8px;
   }
 

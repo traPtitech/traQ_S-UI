@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
 import store from '@/store'

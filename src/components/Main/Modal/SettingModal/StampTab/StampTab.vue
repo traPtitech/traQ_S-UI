@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import NewStamp from './NewStamp.vue'
 import EditStamp from './EditStamp.vue'
 

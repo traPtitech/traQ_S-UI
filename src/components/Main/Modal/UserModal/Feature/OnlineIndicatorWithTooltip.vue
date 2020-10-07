@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import { getFullDayWithTimeString } from '@/lib/date'
 import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'

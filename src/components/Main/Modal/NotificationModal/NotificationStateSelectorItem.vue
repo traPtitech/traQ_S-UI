@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
@@ -66,7 +66,7 @@ export default defineComponent({
   cursor: pointer;
   opacity: 0.5;
 
-  &[aria-selected] {
+  &[aria-selected='true'] {
     color: $theme-accent-primary;
     opacity: 1;
   }

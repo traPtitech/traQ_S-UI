@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from 'vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
 import { makeStyles } from '@/lib/styles'
 

@@ -3,7 +3,7 @@
     :title="title"
     :clickable="clickable || !isOpen"
     :large-padding="largePadding"
-    @click="toggle"
+    @toggle="toggle"
   >
     <template #header-control>
       <icon
@@ -11,7 +11,7 @@
         height="20"
         name="rounded-triangle"
         :class="$style.icon"
-        :data-is-open="isOpen"
+        :data-is-open="$boolAttr(isOpen)"
       />
     </template>
     <template #default>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref } from 'vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import Icon from '@/components/UI/Icon.vue'
 import SlideDown from '@/components/UI/SlideDown.vue'
@@ -48,7 +48,9 @@ export default defineComponent({
   },
   setup() {
     const isOpen = ref(false)
-    const toggle = () => (isOpen.value = !isOpen.value)
+    const toggle = () => {
+      isOpen.value = !isOpen.value
+    }
 
     return { isOpen, toggle }
   }

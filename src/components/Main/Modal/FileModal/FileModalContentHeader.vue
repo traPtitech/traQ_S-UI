@@ -7,7 +7,7 @@
     />
     <div :class="$style.close">
       <close-button
-        @click="onClickClear"
+        @close="onClickClear"
         :size="24"
         :is-white="props.isWhite"
         :react-hover="!props.isWhite"
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import store from '@/store'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import FileDescription from '@/components/UI/FileDescription.vue'

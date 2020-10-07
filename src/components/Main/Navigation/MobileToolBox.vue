@@ -8,28 +8,26 @@
         :icon-name="tool.iconName"
         :icon-mdi="tool.iconMdi"
         :disabled="tool.disabled"
-        @click.native="tool.onClick"
+        @click="tool.onClick"
       />
     </div>
-    <portal v-if="isServicesShown" :to="targetPortalName">
+    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
       <app-list :class="$style.services" @close="closeServices" />
-    </portal>
+    </teleport>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import Tool from '@/components/Main/Navigation/Tool.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import Icon from '@/components/UI/Icon.vue'
 import useToolBox from '@/components/Main/Navigation/use/toolBox'
 import AppList from '@/components/Main/Navigation/AppList.vue'
 
-export const targetPortalName = 'app-list'
+export const teleportTargetName = 'app-list'
 
 export default defineComponent({
   name: 'MobileToolBox',
-  components: { Tool, UserIcon, Icon, AppList },
+  components: { Tool, AppList },
   setup() {
     const {
       tools,
@@ -43,7 +41,7 @@ export default defineComponent({
       isServicesShown,
       closeServices,
       toggleServices,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

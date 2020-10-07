@@ -17,12 +17,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'

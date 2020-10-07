@@ -5,7 +5,7 @@
     <authenticate-input
       label="traQ ID"
       :text="loginState.name"
-      @input="setName"
+      @input-value="setName"
       :class="$style.item"
     />
     <span :class="$style.item">
@@ -14,7 +14,7 @@
         type="password"
         :text="loginState.pass"
         enterkeyhint="done"
-        @input="setPass"
+        @input-value="setPass"
       />
       <a
         v-if="resetLink !== undefined"
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from 'vue'
 import useLogin from './use/login'
 import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'
@@ -93,9 +93,7 @@ export default defineComponent({
     AuthenticateSeparator
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      context
-    )
+    const { loginState, login, loginExternal, setName, setPass } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
     const externalLogin = computed(

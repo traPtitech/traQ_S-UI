@@ -2,19 +2,9 @@
 const CompressionPlugin = require('compression-webpack-plugin')
 const webpack = require('webpack')
 const crypto = require('crypto')
-const path = require('path')
 const { DEV_SERVER_PROXY_HOST } = require('./dev.config')
 
 module.exports = {
-  resolve: {
-    alias: {
-      // https://github.com/LinusBorg/portal-vue/issues/264
-      'portal-vue': path.join(
-        path.dirname(require.resolve('portal-vue')),
-        'portal-vue.esm.js'
-      )
-    }
-  },
   context: __dirname,
   module: {
     rules: []
@@ -53,7 +43,7 @@ module.exports = {
         framework: {
           chunks: 'all',
           name: 'framework',
-          test: /[\\/]node_modules[\\/](@vue\/composition-api|direct-vuex|vue|vue-router|vuex|vuex-persist|core-js)[\\/]/,
+          test: /[\\/]node_modules[\\/](direct-vuex|vue|vue-router|vuex|vuex-persist|core-js)[\\/]/,
           priority: 40,
           enforce: true
         },

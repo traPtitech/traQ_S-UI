@@ -22,13 +22,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  watchEffect,
-  ref,
-  watch
-} from '@vue/composition-api'
+import { defineComponent, computed, watchEffect, ref, watch } from 'vue'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'

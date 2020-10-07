@@ -1,11 +1,12 @@
-import { SetupContext, computed, reactive, watch } from '@vue/composition-api'
+import { computed, reactive, watch } from 'vue'
 import store, { originalStore } from '@/store'
-import { RouteName, constructChannelPath } from '@/router'
+import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
+import { useRoute } from 'vue-router'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -26,19 +27,25 @@ const setUnreadState = (id: ChannelId | DMChannelId) => {
   }
 }
 
-const useRouteWatcher = (context: SetupContext) => {
+const getHeadIfArray = (param: string[] | string) => {
+  if (Array.isArray(param)) return param[0]
+  return param
+}
+
+const useRouteWatcher = () => {
+  const route = useRoute()
   const { channelPathToId, channelIdToPathString } = useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
 
   const state = reactive({
-    currentRouteName: computed(() => context.root.$route.name ?? ''),
+    currentRouteName: computed(() => route.name ?? ''),
     currentRouteParam: computed(
       (): string => state.idParam ?? state.channelParam ?? state.userParam ?? ''
     ),
-    idParam: computed(() => context.root.$route.params['id']),
-    channelParam: computed(() => context.root.$route.params['channel']),
-    userParam: computed(() => context.root.$route.params['user']),
+    idParam: computed(() => getHeadIfArray(route.params['id'])),
+    channelParam: computed(() => getHeadIfArray(route.params['channel'])),
+    userParam: computed(() => getHeadIfArray(route.params['user'])),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -49,7 +56,7 @@ const useRouteWatcher = (context: SetupContext) => {
   }
   const onRouteChangedToIndex = async () => {
     const openChannelPath = await useOpenChannel()
-    await context.root.$router
+    await router
       .replace(constructChannelPath(openChannelPath.value))
       // 同じ場所に移動しようとした際のエラーを消す
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -79,7 +86,7 @@ const useRouteWatcher = (context: SetupContext) => {
 
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: context.root.$route.query?.message as string
+        entryMessageId: route.query?.message as string
       })
     } catch (e) {
       state.view = 'not-found'
@@ -110,7 +117,7 @@ const useRouteWatcher = (context: SetupContext) => {
       store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: context.root.$route.query?.message as string
+        entryMessageId: route.query?.message as string
       })
       changeViewTitle('@' + user.name)
       state.view = 'main'
@@ -205,7 +212,7 @@ const useRouteWatcher = (context: SetupContext) => {
     const channelId = message.channelId
 
     if (channelId in store.state.entities.channels) {
-      context.root.$router.replace({
+      router.replace({
         name: RouteName.Channel,
         params: { channel: channelIdToPathString(message.channelId) },
         query: { message: message.id }
@@ -213,7 +220,7 @@ const useRouteWatcher = (context: SetupContext) => {
     } else if (channelId in store.state.entities.dmChannels) {
       const dmChannel = store.state.entities.dmChannels[channelId]
       const user = store.state.entities.users[dmChannel.userId]
-      context.root.$router.replace({
+      router.replace({
         name: RouteName.User,
         params: { user: user?.name ?? '' },
         query: { message: message.id }
@@ -267,7 +274,7 @@ const useRouteWatcher = (context: SetupContext) => {
       if (store.state.ui.modal.modalState.length !== 0) {
         store.commit.ui.modal.setState([])
       }
-      history.replaceState(null, '')
+      history.replaceState({ ...history.state, modalState: [] }, '')
     }
 
     state.isInitialView = false

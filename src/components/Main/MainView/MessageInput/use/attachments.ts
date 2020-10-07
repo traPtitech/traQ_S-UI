@@ -1,5 +1,5 @@
 import store from '@/store'
-import { computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from 'vue'
 
 const useAttachments = () => {
   const state = reactive({

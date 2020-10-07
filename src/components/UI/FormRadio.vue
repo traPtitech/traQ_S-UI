@@ -6,13 +6,9 @@
       v-bind="$attrs"
       :value="inputValue"
       :checked="checked"
-      v-on="listeners"
+      @input="onInput"
     />
-    <div
-      :class="$style.pseudoRadio"
-      role="radio"
-      :aria-checked="checked ? 'true' : 'false'"
-    >
+    <div :class="$style.pseudoRadio" role="radio" :aria-checked="checked">
       <div :class="$style.pseudoRadioInner" />
     </div>
     {{ label }}
@@ -20,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import useInput from '@/use/input'
 
 export default defineComponent({
@@ -29,7 +25,7 @@ export default defineComponent({
     /**
      * v-model用なので基本的には直接触らない
      */
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -50,16 +46,10 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const checked = computed(() => props.inputValue === props.value)
-    const { onInput } = useInput(context)
+    const checked = computed(() => props.inputValue === props.modelValue)
+    const { onInput } = useInput(context, 'update:modelValue')
 
-    const listeners = computed(() =>
-      Object.assign({}, context.listeners, {
-        input: onInput
-      })
-    )
-
-    return { checked, listeners }
+    return { checked, onInput }
   }
 })
 </script>

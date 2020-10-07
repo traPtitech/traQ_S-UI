@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-white="isWhite">
+  <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
     <div :class="$style.channelPath" @click="onClick">#{{ channelPath }}</div>
     <file-modal-content-footer-username
       :class="$style.userName"
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'

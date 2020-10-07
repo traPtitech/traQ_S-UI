@@ -1,14 +1,14 @@
 <template>
   <indicator
     :class="$style.container"
-    :data-is-online="isOnline"
+    :data-is-online="$boolAttr(isOnline)"
     :size="size"
     :border-width="isOnline ? 0 : borderWidth"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import Indicator from './Indicator.vue'

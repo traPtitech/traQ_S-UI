@@ -4,7 +4,7 @@
       :name="name"
       :is-open="!isFolding"
       :has-notification="hasNotification"
-      @click.native="toggleFolding"
+      @click="toggleFolding"
     />
     <slide-down :class="$style.users" :is-open="!isFolding">
       <users-element
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, computed } from '@vue/composition-api'
+import { defineComponent, ref, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'

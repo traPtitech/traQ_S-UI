@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
 import ClientScope from './ClientScope.vue'
 

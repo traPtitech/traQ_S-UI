@@ -1,4 +1,4 @@
-import { computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from 'vue'
 import store from '@/store'
 import { isImage, isNonPreviewable, isVideo, isAudio } from '@/lib/util/file'
 import { isDefined } from '@/lib/util/array'

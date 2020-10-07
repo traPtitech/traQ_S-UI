@@ -4,7 +4,7 @@
       <content-editor
         :value="name"
         :is-editing="isNameEditing"
-        @input="onNameInput"
+        @input-value="onNameInput"
         @edit-done="onNameEditDone"
         @edit-start="startNameEdit"
         :maxlength="30"
@@ -14,7 +14,7 @@
       <content-editor
         :value="description"
         :is-editing="isDesciptionEditing"
-        @input="onDesciptionInput"
+        @input-value="onDesciptionInput"
         @edit-done="onDesciptionEditDone"
         @edit-start="startDesciptionEdit"
       />
@@ -26,13 +26,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  ref,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref, reactive } from 'vue'
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'

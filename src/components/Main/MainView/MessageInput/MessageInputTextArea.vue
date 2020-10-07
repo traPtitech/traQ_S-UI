@@ -7,14 +7,14 @@
     placeholder="メッセージを送信"
     rows="1"
     :max-height="160"
-    @input="onInput"
-    @compositionupdate.native="onCompositionUpdate"
-    @before-input.native="onBeforeInput"
-    @keydown.native="onKeyDown"
-    @keyup.native="onKeyUp"
-    @focus.native="onFocus"
-    @blur.native="onBlur"
-    @paste.native="onPaste"
+    @input-value="onInput"
+    @compositionupdate="onCompositionUpdate"
+    @before-input="onBeforeInput"
+    @keydown="onKeyDown"
+    @keyup="onKeyUp"
+    @focus="onFocus"
+    @blur="onBlur"
+    @paste="onPaste"
   />
 </template>
 
@@ -26,7 +26,7 @@ import {
   Ref,
   computed,
   nextTick
-} from '@vue/composition-api'
+} from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
 
@@ -91,7 +91,7 @@ export default defineComponent({
   },
   setup(props, context: SetupContext) {
     const onInput = (value: string) => {
-      context.emit('input', value)
+      context.emit('input-value', value)
     }
 
     const textareaAutosizeRef = ref<{

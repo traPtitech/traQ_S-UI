@@ -7,16 +7,16 @@
     return-button
   >
     <user-list-item
-      v-for="id in taggedUsers"
-      :key="id"
-      :user-id="id"
+      v-for="userId in taggedUsers"
+      :key="userId"
+      :user-id="userId"
       :class="$style.item"
     />
   </modal-frame>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'

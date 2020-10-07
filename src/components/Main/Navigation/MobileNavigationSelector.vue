@@ -4,7 +4,7 @@
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      @click.native="onNavigationItemClick(item.type)"
+      @click="onNavigationItemClick(item.type)"
       :is-selected="currentNavigation === item.type"
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
@@ -15,7 +15,7 @@
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
-      @click.native="onEphemeralNavigationItemClick(item.type)"
+      @click="onEphemeralNavigationItemClick(item.type)"
       :is-selected="currentEphemeralNavigation === item.type"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
@@ -25,26 +25,19 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  SetupContext,
-  PropType,
-  computed,
-  watch
-} from '@vue/composition-api'
+import { defineComponent, SetupContext, PropType, computed, watch } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
 } from '@/components/Main/Navigation/use/navigationConstructor'
-import Icon from '@/components/UI/Icon.vue'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
 
 export default defineComponent({
   name: 'MobileNavigationSelector',
-  components: { NavigationSelectorItem, Icon },
+  components: { NavigationSelectorItem },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,

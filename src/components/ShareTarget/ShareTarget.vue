@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <authenticate-header :class="$style.header" title="シェア" />
     <share-target-form
       v-if="!donePost"
@@ -8,25 +8,17 @@
       @post="onPost"
     />
     <div v-else>投稿しました。1秒後にウィンドウを閉じます。</div>
-    <portal-target
-      :class="$style.stampPickerLocator"
-      :name="targetPortalName"
-    />
+    <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  ref,
-  watchEffect
-} from '@vue/composition-api'
+import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
 import store from '@/store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
-import { targetPortalName } from './ShareTargetMessageInput.vue'
+import { teleportTargetName } from './ShareTargetMessageInput.vue'
 
 export default defineComponent({
   name: 'ShareTarget',
@@ -79,7 +71,7 @@ export default defineComponent({
       store.dispatch.domain.me.fetchStampHistory()
     ])
 
-    return { defaultText, isMobile, donePost, onPost, targetPortalName }
+    return { defaultText, isMobile, donePost, onPost, teleportTargetName }
   }
 })
 </script>

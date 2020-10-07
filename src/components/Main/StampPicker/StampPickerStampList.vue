@@ -6,14 +6,14 @@
       :stamp-id="stamp.id"
       :size="32"
       :class="$style.stampListItem"
-      @click.native="onClickStamp(stamp.id)"
-      @hover.native="onStampHover(stamp.name)"
+      @click="onClickStamp(stamp.id)"
+      @hover="onStampHover(stamp.name)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { StampId } from '@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
 import StampElement from '@/components/UI/Stamp.vue'

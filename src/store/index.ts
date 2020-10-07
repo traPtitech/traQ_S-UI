@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import { createDirectStore } from 'direct-vuex'
 import VuexPersistence from 'vuex-persist'
 import indexedDBStorage from './indexedDBStorage'
@@ -8,8 +6,6 @@ import { entities } from './entities'
 import { domain } from './domain'
 import { app } from './app'
 import { ui } from './ui'
-
-Vue.use(Vuex)
 
 const vuexStrict = process.env.NODE_ENV !== 'production'
 

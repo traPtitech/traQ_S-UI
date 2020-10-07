@@ -24,12 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, PropType } from 'vue'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'

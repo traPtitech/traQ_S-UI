@@ -19,10 +19,10 @@
 import {
   defineComponent,
   reactive,
-  set,
   toRefs,
-  PropType
-} from '@vue/composition-api'
+  PropType,
+  defineAsyncComponent
+} from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import useChannelSelect from '@/use/channelSelect'
@@ -37,7 +37,7 @@ const useChannelFolding = () => {
     if (state.channelFoldingState[id]) {
       state.channelFoldingState[id] = false
     } else {
-      set(state.channelFoldingState, id, true)
+      state.channelFoldingState[id] = true
     }
   }
   return {
@@ -46,13 +46,16 @@ const useChannelFolding = () => {
   }
 }
 
+// 型エラー・コンポーネント循環参照の回避
+const ChannelElement = defineAsyncComponent(
+  () => import('./ChannelElement.vue')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+) as any
+
 export default defineComponent({
   name: 'ChannelList',
   components: {
-    // 型エラー・コンポーネント循環参照の回避
-    ChannelElement: (() =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      import('./ChannelElement.vue')) as any,
+    ChannelElement,
     SlideDown
   },
   props: {

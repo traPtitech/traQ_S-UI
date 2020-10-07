@@ -5,13 +5,13 @@
       label="traQ ID"
       :text="loginState.name"
       :class="$style.item"
-      @input="setName"
+      @input-value="setName"
     />
     <authenticate-input
       label="表示名"
       :text="loginState.name"
       :class="$style.item"
-      @input="setName"
+      @input-value="setName"
     />
     <authenticate-input
       label="パスワード"
@@ -19,7 +19,7 @@
       :text="loginState.name"
       :class="$style.item"
       enterkeyhint="done"
-      @input="setName"
+      @input-value="setName"
     />
     <div :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useLogin from './use/login'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
@@ -49,9 +49,7 @@ export default defineComponent({
     AuthenticateButton
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin(
-      context
-    )
+    const { loginState, login, loginExternal, setName, setPass } = useLogin()
     return { loginState, setName, setPass, login, loginExternal }
   }
 })

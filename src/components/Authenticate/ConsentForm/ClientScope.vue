@@ -1,5 +1,5 @@
 <template>
-  <li :class="$style.container" :data-is-open="isOpen">
+  <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
       {{ name }}
       <icon :class="$style.icon" name="rounded-triangle" />
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, ref } from '@vue/composition-api'
+import { defineComponent, PropType, computed, ref } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
 import SlideDown from '@/components/UI/SlideDown.vue'
 import Icon from '@/components/UI/Icon.vue'

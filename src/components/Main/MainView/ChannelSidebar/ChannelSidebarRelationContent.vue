@@ -9,9 +9,8 @@
       />
     </div>
     <div v-if="current" :class="$style.channel">
-      <template v-for="sibling in filteredSiblings">
+      <template v-for="sibling in filteredSiblings" :key="sibling.id">
         <channel-sidebar-relation-element
-          :key="sibling.id"
           :name="sibling.name"
           :topic="sibling.topic"
           :link="buildSiblingLink(sibling.name)"
@@ -22,7 +21,6 @@
           v-if="sibling.id === current.id"
           :class="$style.channel"
           data-is-children
-          :key="`${sibling.id}children`"
         >
           <channel-sidebar-relation-element
             v-for="child in filteredChildren"
@@ -55,12 +53,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  PropType,
-  computed
-} from '@vue/composition-api'
+import { defineComponent, reactive, PropType, computed } from 'vue'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '@/lib/util/array'
@@ -169,9 +162,6 @@ export default defineComponent({
 .element {
   // FIXME: 例外的に6px、あとでデザイン修正
   margin: 6px 0;
-  &[data-has-parent] {
-    margin-left: 8px;
-  }
 }
 
 .text {

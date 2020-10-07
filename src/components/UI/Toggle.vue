@@ -3,14 +3,14 @@
     @click="$emit('input')"
     :class="$style.container"
     role="switch"
-    :aria-checked="enabled ? 'true' : 'false'"
+    :aria-checked="enabled"
   >
     <div :class="$style.knob"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Toggle',

@@ -9,17 +9,19 @@ import {
   reactive,
   PropType,
   computed,
-  watch,
-  SetupContext
-} from '@vue/composition-api'
+  watch
+} from 'vue'
 import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '@/router'
 import useRedirectParam from '@/components/Authenticate/use/redirectParam'
+import { useRouter } from 'vue-router'
 
 export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
 
-const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
+const usePageSwitch = (props: { type: PageType }) => {
+  const router = useRouter()
+  const { redirect } = useRedirectParam()
   const state = reactive({
     show: false
   })
@@ -41,7 +43,7 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
 
       // OAuth認可画面に入る前にログインさせる
       // ログインしたら戻ってくる
-      context.root.$router.replace({
+      router.replace({
         name: RouteName.Login,
         query: { redirect: `${location.pathname}${location.search}` }
       })
@@ -49,7 +51,6 @@ const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
     }
 
     if (isLoggedIn) {
-      const { redirect } = useRedirectParam(context)
       redirect()
       return
     }
@@ -80,8 +81,8 @@ export default defineComponent({
   components: {
     AuthenticateMainView
   },
-  setup(props, context) {
-    const state = usePageSwitch(props, context)
+  setup(props) {
+    const state = usePageSwitch(props)
 
     return { state }
   }

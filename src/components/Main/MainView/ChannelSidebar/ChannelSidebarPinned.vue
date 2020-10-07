@@ -1,13 +1,13 @@
 <template>
   <sidebar-content-container-link
     title="ピン留め"
-    @click="onClick"
+    @click-link="onClick"
     :count="pinnedMessageLength"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import SidebarContentContainerLink from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
 export default defineComponent({

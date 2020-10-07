@@ -1,4 +1,4 @@
-import { computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from 'vue'
 
 export type TextState = {
   text: string

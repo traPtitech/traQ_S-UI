@@ -14,7 +14,7 @@
     <button
       @click="$emit('mic-click')"
       :class="$style.mic"
-      :data-is-mute="isMicMuted"
+      :data-is-mute="$boolAttr(isMicMuted)"
     >
       <icon :name="micIconName" mdi />
     </button>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'

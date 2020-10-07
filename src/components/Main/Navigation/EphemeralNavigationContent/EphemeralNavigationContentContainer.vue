@@ -1,11 +1,11 @@
 <template>
-  <div :class="$style.container" :data-is-transparent="transparent">
+  <div :class="$style.container" :data-is-transparent="$boolAttr(transparent)">
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'EphemeralNavigationContentContainer',

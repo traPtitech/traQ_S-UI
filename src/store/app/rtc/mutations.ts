@@ -7,7 +7,7 @@ import {
   ExtendedMediaStream
 } from './state'
 import { WebRTCUserState } from '@traptitech/traq'
-import Vue from 'vue'
+
 import { ChannelId, UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
 
@@ -104,9 +104,9 @@ export const mutations = defineMutations<S>()({
       id => !currentSessionIds.includes(id)
     )
     if (userSessionState.sessionStates.length === 0) {
-      Vue.delete(state.userStateMap, payload.userId)
+      delete state.userStateMap[payload.userId]
     } else {
-      Vue.set(state.userStateMap, payload.userId, userSessionState)
+      state.userStateMap[payload.userId] = userSessionState
     }
 
     addedSessionIds.forEach(sessionId => {
@@ -118,9 +118,9 @@ export const mutations = defineMutations<S>()({
           ...(state.channelSessionsMap[payload.channelId] ?? []),
           sessionId
         ]
-        Vue.set(state.channelSessionsMap, payload.channelId, newChannelSessions)
-        Vue.set(state.sessionInfoMap, sessionId, newSessionInfo)
-        Vue.set(state.sessionUsersMap, sessionId, [payload.userId])
+        state.channelSessionsMap[payload.channelId] = newChannelSessions
+        state.sessionInfoMap[sessionId] = newSessionInfo
+        state.sessionUsersMap[sessionId] = [payload.userId]
       }
     })
 
@@ -143,11 +143,11 @@ export const mutations = defineMutations<S>()({
         const newSessionIds = [...sessionIds]
         const index = newSessionIds.findIndex(sid => sid === sessionId)
         newSessionIds.splice(index, 1)
-        Vue.delete(state.sessionInfoMap, sessionId)
+        delete state.sessionInfoMap[sessionId]
         if (newSessionIds.length === 0) {
-          Vue.delete(state.channelSessionsMap, channelId)
+          delete state.channelSessionsMap[channelId]
         } else {
-          Vue.set(state.channelSessionsMap, channelId, newSessionIds)
+          state.channelSessionsMap[channelId] = newSessionIds
         }
       }
     })
@@ -203,11 +203,11 @@ export const mutations = defineMutations<S>()({
     state,
     payload: { userId: UserId; mediaStream: MediaStream }
   ) {
-    Vue.set(state.remoteAudioStreamMap, payload.userId, payload.mediaStream)
+    state.remoteAudioStreamMap[payload.userId] = payload.mediaStream
   },
   removeRemoteStream(state, userId: UserId) {
     state.remoteAudioStreamMap[userId]?.getTracks().forEach(t => t.stop())
-    Vue.delete(state.remoteAudioStreamMap, userId)
+    delete state.remoteAudioStreamMap[userId]
   },
   clearRemoteStream(state) {
     Object.values(state.remoteAudioStreamMap).forEach(stream =>
@@ -219,7 +219,7 @@ export const mutations = defineMutations<S>()({
    * @param volume 0-1で指定するボリューム (0がミュート、1がAudioStreamMixer.maxGainに相当するゲイン)
    */
   setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
-    Vue.set(state.userVolumeMap, userId, volume)
+    state.userVolumeMap[userId] = volume
     if (state.mixer) {
       state.mixer.setAndSaveVolumeOf(userId, volume)
     }
@@ -229,7 +229,7 @@ export const mutations = defineMutations<S>()({
   },
   updateTalkingUserState(state, diffState: Readonly<Record<UserId, number>>) {
     Object.entries(diffState).forEach(([userId, loudnessLevel]) => {
-      Vue.set(state.talkingUsersState, userId, loudnessLevel)
+      state.talkingUsersState[userId] = loudnessLevel
     })
   }
 })

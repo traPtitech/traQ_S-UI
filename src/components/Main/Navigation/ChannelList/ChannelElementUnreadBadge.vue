@@ -2,14 +2,14 @@
   <div
     v-if="unreadCount > 0"
     :class="$style.container"
-    :data-is-noticeable="isNoticeable"
+    :data-is-noticeable="$boolAttr(isNoticeable)"
   >
     {{ unreadCountString }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   name: 'ChannelElementUnreadBadge',

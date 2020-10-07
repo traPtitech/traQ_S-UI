@@ -5,7 +5,7 @@ import apis, { buildFilePathForPost } from '@/lib/apis'
 import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
-import { computed, ref } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -42,12 +42,11 @@ const usePostMessage = (
   const isForce = computed(
     () => store.state.entities.channels[props.channelId]?.force
   )
-  const confirmString = computed(() =>
-    isForce
-      ? `#${channelIdToShortPathString(
-          props.channelId
-        )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
-      : ''
+  const confirmString = computed(
+    () =>
+      `#${channelIdToShortPathString(
+        props.channelId
+      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
   )
 
   const isPosting = ref(false)

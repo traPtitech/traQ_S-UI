@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     @click="onClick"
-    :data-is-disabled="disabled"
+    :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
     :title="tooltip"
   >
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useHeaderStyle from '@/components/Main/MainView/MainViewHeader/use/headerStyle'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -39,7 +39,7 @@ export default defineComponent({
     const { headerStyle } = useHeaderStyle()
     const onClick = () => {
       if (props.disabled) return
-      context.emit('click')
+      context.emit('toggle')
     }
     return { onClick, headerStyle }
   }

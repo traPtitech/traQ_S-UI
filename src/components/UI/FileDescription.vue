@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" :data-is-white="isWhite">
+  <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
     <file-type-icon :type="fileType" :size="36" :class="$style.icon" />
-    <div :class="$style.fileName" :data-is-ellipsis="isEllipsis">
+    <div :class="$style.fileName" :data-is-ellipsis="$boolAttr(isEllipsis)">
       {{ fileMeta ? fileMeta.name : 'unknown' }}
     </div>
     <div :class="$style.fileSize">
@@ -12,13 +12,13 @@
       name="download"
       :size="24"
       :class="$style.dl"
-      @click.native="onFileDownloadLinkClick"
+      @click="onFileDownloadLinkClick"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 import Icon from '@/components/UI/Icon.vue'

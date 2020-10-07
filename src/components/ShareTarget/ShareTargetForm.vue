@@ -6,7 +6,7 @@
       v-model="state.channelId"
       :options="channelOptions"
     />
-    <ShareTargetMessageInput
+    <share-target-message-input
       :class="[$style.item, $style.input]"
       v-model="state.text"
     />
@@ -20,12 +20,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  watch
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, watch } from 'vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import useChannelPath from '@/use/channelPath'
 import store from '@/store'

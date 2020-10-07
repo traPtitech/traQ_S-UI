@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from './DesktopSettingModal.vue'
 import MobileSettingModal from './MobileSettingModal.vue'

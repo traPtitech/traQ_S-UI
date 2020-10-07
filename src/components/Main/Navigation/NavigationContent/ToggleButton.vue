@@ -1,16 +1,11 @@
 <template>
-  <button
-    :class="$style.container"
-    :title="title"
-    @click="$emit('click')"
-    :aria-pressed="value ? 'true' : 'false'"
-  >
+  <button :class="$style.container" :title="title" :aria-pressed="value">
     <Icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({

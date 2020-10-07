@@ -1,4 +1,4 @@
-import { reactive, SetupContext, UnwrapRef } from '@vue/composition-api'
+import { reactive, SetupContext, UnwrapRef } from 'vue'
 
 const createNavigation = <NavigationItemType extends string | undefined>(
   defaultItem: NavigationItemType,

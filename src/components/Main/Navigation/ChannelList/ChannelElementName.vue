@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-selected="isSelected">
+  <div :class="$style.container" :data-is-selected="$boolAttr(isSelected)">
     <span :class="$style.name" :title="pathTooltip">
       {{ pathToShow }}
     </span>
@@ -20,12 +20,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, PropType } from 'vue'
 import useChannelPath from '@/use/channelPath'
 import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
 import Icon from '@/components/UI/Icon.vue'

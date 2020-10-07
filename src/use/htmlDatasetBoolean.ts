@@ -1,4 +1,4 @@
-import { Ref, watchEffect } from '@vue/composition-api'
+import { Ref, watchEffect } from 'vue'
 
 const useHtmlDatasetBoolean = (datasetName: string, value: Ref<boolean>) => {
   const $html = document.documentElement

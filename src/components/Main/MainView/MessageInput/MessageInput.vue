@@ -1,14 +1,11 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="isMobile">
+  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
-      <portal-target
-        :class="$style.stampPickerLocator"
-        :name="targetPortalName"
-      />
+      <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
       <message-input-file-list :class="$style.fileList" />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
@@ -16,7 +13,7 @@
       <div :class="$style.inputContainer">
         <message-input-upload-button
           :class="$style.controls"
-          @click.native="addAttachment"
+          @click="addAttachment"
         />
         <message-input-text-area
           ref="textareaRef"
@@ -24,7 +21,7 @@
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
-          @input="onInputText"
+          @input-value="onInputText"
           @modifier-key-down="onModifierKeyDown"
           @modifier-key-up="onModifierKeyUp"
           @post-message="postMessage"
@@ -42,13 +39,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  onBeforeUnmount,
-  ref
-} from '@vue/composition-api'
+import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
@@ -130,9 +121,9 @@ export default defineComponent({
     )
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const targetPortalName = 'message-input-stamp-picker'
+    const teleportTargetName = 'message-input-stamp-picker'
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       textState,
       textareaRef
     )
@@ -148,7 +139,7 @@ export default defineComponent({
     return {
       textareaRef,
       isArchived,
-      targetPortalName,
+      teleportTargetName,
       isMobile,
       typingUsers,
       textState,
@@ -188,7 +179,7 @@ $radius: 4px;
     bottom: 24px - $radius;
   }
 
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     margin: {
       left: $inputPaddingMobile;
       right: $inputPaddingMobile;
@@ -225,7 +216,7 @@ $radius: 4px;
   justify-content: space-between;
   align-items: flex-end;
 
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     padding: 4px 0;
   }
 
@@ -243,7 +234,7 @@ $radius: 4px;
     shrink: 0;
   }
   margin: 0 16px;
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     margin: 0 8px;
   }
 

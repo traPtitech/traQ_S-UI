@@ -1,7 +1,7 @@
 <template>
   <button
     :class="$style.container"
-    :disabled="disabled"
+    :disabled="$boolAttr(disabled)"
     @click="$emit('click')"
     :data-type="type"
   >
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 type Type = 'primary' | 'secondary'

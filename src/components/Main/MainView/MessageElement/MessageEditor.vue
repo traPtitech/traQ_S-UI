@@ -11,7 +11,7 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
       />
-      <message-input-insert-stamp-button @click.native="onStampClick" />
+      <message-input-insert-stamp-button @click="onStampClick" />
     </div>
     <div :class="$style.controls">
       <form-button @click="cancel" label="キャンセル" color="secondary" />
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
@@ -31,8 +31,9 @@ import useTextInput, {
 } from '@/components/Main/MainView/MessageInput/use/textInput'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
-import { targetPortalName } from '@/views/Main.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+
+const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {
@@ -76,7 +77,7 @@ export default defineComponent({
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       textState,
       textareaRef
     )
@@ -97,7 +98,7 @@ export default defineComponent({
       onInputText,
       onModifierKeyDown,
       onModifierKeyUp,
-      targetPortalName,
+      teleportTargetName,
       onStampClick
     }
   }
@@ -118,7 +119,7 @@ export default defineComponent({
   border-radius: 4px;
   justify-content: space-between;
 
-  .container[data-is-mobile='true'] & {
+  .container[data-is-mobile] & {
     padding: 4px 0;
   }
 }

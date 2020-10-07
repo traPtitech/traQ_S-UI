@@ -38,7 +38,7 @@ import {
   watch,
   ref,
   onMounted
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import { ws, setTimelineStreamingState } from '@/lib/websocket'
 import ActivityElement from './ActivityElement.vue'

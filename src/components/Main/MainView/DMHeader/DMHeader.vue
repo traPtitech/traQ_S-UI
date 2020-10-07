@@ -5,7 +5,7 @@
     </template>
     <template #tools>
       <main-view-header-tools-item
-        @click="openSidebar"
+        @toggle="openSidebar"
         icon-mdi
         icon-name="info-outline"
       />
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import useSidebar from '@/use/sidebar'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from 'vue'
 import store from '@/store'
 import apis from '@/lib/apis'
 import { compareString } from '@/lib/util/string'

@@ -1,4 +1,4 @@
-import { computed, reactive, watch, Ref } from '@vue/composition-api'
+import { computed, reactive, watch, Ref } from 'vue'
 import { SwipeDetectorState } from '@/use/swipeDetector'
 
 type Direction = 'left' | 'right'

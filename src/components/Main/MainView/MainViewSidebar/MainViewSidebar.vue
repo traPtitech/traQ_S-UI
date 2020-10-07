@@ -1,19 +1,19 @@
 <template>
-  <portal v-if="shouldShowSidebar" to="sidebar">
+  <teleport v-if="shouldShowSidebar" to="#sidebar">
     <div :class="$style.container">
       <div :class="$style.header">
         <slot name="header" />
-        <close-button @click="closeSidebar" :size="28" />
+        <close-button @close="closeSidebar" :size="28" />
       </div>
       <div :class="$style.content">
         <slot name="content" />
       </div>
     </div>
-  </portal>
+  </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useSidebar from '@/use/sidebar'
 import CloseButton from '@/components/UI/CloseButton.vue'
 

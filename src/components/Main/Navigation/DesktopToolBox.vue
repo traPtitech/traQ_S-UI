@@ -7,29 +7,28 @@
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       :disabled="tool.disabled"
-      @click.native="tool.onClick"
+      @click="tool.onClick"
     />
     <user-icon :class="$style.item" :size="36" :user-id="myId" />
-    <portal v-if="isServicesShown" :to="targetPortalName">
+    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
       <app-list :class="$style.services" @close="closeServices" />
-    </portal>
+    </teleport>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import Tool from '@/components/Main/Navigation/Tool.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import Icon from '@/components/UI/Icon.vue'
 import useToolBox from '@/components/Main/Navigation/use/toolBox'
 import AppList from '@/components/Main/Navigation/AppList.vue'
 
-export const targetPortalName = 'app-list'
+export const teleportTargetName = 'app-list'
 
 export default defineComponent({
   name: 'DesktopToolBox',
-  components: { Tool, UserIcon, Icon, AppList },
+  components: { Tool, UserIcon, AppList },
   setup() {
     const {
       tools,
@@ -46,7 +45,7 @@ export default defineComponent({
       closeServices,
       toggleServices,
       myId,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

@@ -1,4 +1,4 @@
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import store from '@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 

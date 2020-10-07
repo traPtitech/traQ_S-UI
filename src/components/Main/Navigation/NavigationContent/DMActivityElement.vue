@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import UserName from '@/components/UI/MessagePanel/UserName.vue'

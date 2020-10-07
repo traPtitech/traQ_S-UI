@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import store from '@/store'
 import FileModalImage from '@/components/Main/Modal/FileModal/FileModalImage.vue'

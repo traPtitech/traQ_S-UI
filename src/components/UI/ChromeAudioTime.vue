@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import SemiFixedSizeText from '@/components/UI/SemiFixedSizeText.vue'
 
 const getDisplayTimeMaxText = (duration: string) => duration.replace(/\d/g, '0')

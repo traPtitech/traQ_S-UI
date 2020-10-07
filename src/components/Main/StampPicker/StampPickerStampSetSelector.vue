@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { StampSet } from './use/stampSetSelector'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 

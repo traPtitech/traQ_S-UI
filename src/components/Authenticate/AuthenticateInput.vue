@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@vue/composition-api'
+import { defineComponent, SetupContext, PropType } from 'vue'
 import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
 

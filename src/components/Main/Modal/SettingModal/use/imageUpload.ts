@@ -1,4 +1,4 @@
-import { reactive } from '@vue/composition-api'
+import { reactive } from 'vue'
 
 const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join()
 

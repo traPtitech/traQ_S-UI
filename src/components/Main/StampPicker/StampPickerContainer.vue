@@ -1,22 +1,27 @@
 <template>
-  <portal v-show="state.isStampPickerShown" :to="state.targetPortalName">
-    <stamp-picker
-      :style="styles.stampPicker"
-      :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
-    />
-  </portal>
+  <teleport
+    v-if="state.isStampPickerShown"
+    :to="`#${state.teleportTargetName}`"
+  >
+    <keep-alive>
+      <stamp-picker
+        :style="styles.stampPicker"
+        :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
+      />
+    </keep-alive>
+  </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, Ref } from 'vue'
 import store from '@/store'
 import StampPicker from './StampPicker.vue'
 import { Place } from '@/store/ui/stampPicker'
 
 const useStampPicker = () => {
   const state = reactive({
-    targetPortalName: computed(
-      () => store.state.ui.stampPicker.targetPortalName
+    teleportTargetName: computed(
+      () => store.state.ui.stampPicker.teleportTargetName
     ),
     isStampPickerShown: computed(
       () => store.getters.ui.stampPicker.isStampPickerShown

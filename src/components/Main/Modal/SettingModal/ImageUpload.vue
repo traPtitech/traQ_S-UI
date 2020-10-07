@@ -2,8 +2,8 @@
   <div>
     <form-button label="ファイルを選択" @click="addImage" />
     <div v-if="image.url !== ''">
-      <div :class="$style.cropper" :is-rounded="rounded">
-        <img :src="image.url" ref="$img" />
+      <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
+        <img :src="image.url" ref="imgEle" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
       <form-button label="キャンセル" @click="destroy" />
@@ -18,7 +18,7 @@ import {
   watchEffect,
   SetupContext,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import FormButton from '@/components/UI/FormButton.vue'
@@ -64,11 +64,11 @@ export default defineComponent({
     )
 
     let cropper: Cropper | undefined
-    const $img = shallowRef<HTMLImageElement>()
+    const imgEle = shallowRef<HTMLImageElement>()
     const cropperNote = ref('')
 
     watchEffect(() => {
-      if (!image.data || !$img.value) return
+      if (!image.data || !imgEle.value) return
 
       const isGif = image.data.type === 'image/gif'
       const options = isGif
@@ -88,7 +88,7 @@ export default defineComponent({
         : '画像の位置・サイズを編集できます'
 
       if (cropper) cropper.destroy()
-      cropper = new Cropper($img.value, options)
+      cropper = new Cropper(imgEle.value, options)
       cropper.replace(image.url)
     })
 
@@ -104,7 +104,7 @@ export default defineComponent({
       }
     })
 
-    return { $img, image, addImage, cropperNote, destroy }
+    return { imgEle, image, addImage, cropperNote, destroy }
   },
   components: {
     FormButton
@@ -117,7 +117,7 @@ export default defineComponent({
   width: 400px;
   height: 400px;
   margin: 12px;
-  &[is-rounded] {
+  &[data-is-rounded] {
     :global(.cropper-view-box),
     :global(.cropper-face) {
       border-radius: 50%;

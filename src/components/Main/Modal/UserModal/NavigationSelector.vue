@@ -6,13 +6,13 @@
       :icon-name="item.iconName"
       :icon-mdi="item.iconMdi"
       :is-selected="currentNavigation === item.type"
-      @click.native="onNavigationItemClick(item.type)"
+      @click="onNavigationItemClick(item.type)"
     />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
 import NavigationSelectorItem from '@/components/Main/Modal/UserModal/NavigationSelectorItem.vue'
 

@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'

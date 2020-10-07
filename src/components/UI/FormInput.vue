@@ -3,7 +3,10 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
+    <div
+      :class="$style.inputContainer"
+      :data-on-secondary="$boolAttr(onSecondary)"
+    >
       <span v-if="prefix" :class="$style.prefix" @click="focus">
         {{ prefix }}
       </span>
@@ -12,7 +15,7 @@
         :class="$style.input"
         :id="id"
         :type="type"
-        :value="value"
+        :value="modelValue"
         :name="name"
         :autocomplete="autocomplete"
         :placeholder="placeholder"
@@ -30,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef } from '@vue/composition-api'
+import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 
@@ -41,7 +44,7 @@ export default defineComponent({
       type: String,
       default: 'text'
     },
-    value: {
+    modelValue: {
       type: [String, Number],
       default: ''
     },
@@ -67,7 +70,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { onInput: onInputInternal } = useInput(context)
+    const { onInput: onInputInternal } = useInput(context, 'update:modelValue')
 
     const onInput = (e: InputEvent) => {
       if (props.useChangeEvent) return

@@ -3,8 +3,8 @@
     :class="$style.body"
     ref="bodyRef"
     v-if="state.message"
-    :data-is-mobile="isMobile"
-    :data-is-entry="isEntryMessage"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-entry="$boolAttr(isEntryMessage)"
   >
     <message-tools :class="$style.tools" :message-id="messageId" is-minimum />
     <message-contents
@@ -20,19 +20,12 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType,
-  shallowRef
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
@@ -43,7 +36,6 @@ export default defineComponent({
   name: 'ClipElement',
   components: {
     MessageContents,
-    MessagePinned,
     MessageTools,
     MessageQuoteListItemFooter
   },
@@ -102,7 +94,7 @@ $messagePaddingMobile: 16px;
   min-width: 0;
   overflow: hidden;
   padding: 8px $messagePadding;
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
   &[data-is-entry] {

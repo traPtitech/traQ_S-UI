@@ -5,7 +5,6 @@
     :height="size"
     viewBox="0 0 24 24"
     v-bind="attrs"
-    v-on="listeners"
     role="img"
     :class="$style.icon"
   >
@@ -18,14 +17,13 @@
     :height="size"
     view-box="0 0 24 24"
     v-bind="attrs"
-    v-on="listeners"
     role="img"
     :class="$style.icon"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, shallowRef, watch } from 'vue'
 import mdi from '@/assets/mdi'
 
 export default defineComponent({
@@ -46,17 +44,28 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { attrs, listeners }) {
-    // ここでnameを束縛することでcomputed内で戻り値の関数がprops.nameに依存していることが伝わる？
-    const getComponent = (name: string) => () =>
-      import(`@/assets/icons/${name}.svg?component`)
+  setup(props, { attrs }) {
+    const getComponent = async (name: string) => {
+      const module = await import(`@/assets/icons/${name}.svg?component`)
+      return module.default
+    }
 
-    const svgComponent = computed(() => getComponent(props.name))
+    const svgComponent = shallowRef()
+    watch(
+      () => props.name,
+      async () => {
+        if (props.mdi) return
+        const com = await getComponent(props.name)
+        svgComponent.value = com
+      },
+      { immediate: true }
+    )
+
     const getMdiPath = (name: string) => {
       return mdi[name]
     }
 
-    return { svgComponent, getMdiPath, attrs, listeners }
+    return { svgComponent, getMdiPath, attrs }
   }
 })
 </script>

@@ -3,7 +3,7 @@
     clickable
     :title="title"
     :large-padding="largePadding"
-    @click="onClick"
+    @toggle="onClickLink"
   >
     <template #header-control v-if="count !== undefined">
       <span :class="$style.count">{{ count }}</span>
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 
 export default defineComponent({
@@ -30,8 +30,8 @@ export default defineComponent({
     }
   },
   setup(_, context) {
-    const onClick = () => context.emit('click')
-    return { onClick }
+    const onClickLink = () => context.emit('click-link')
+    return { onClickLink }
   }
 })
 </script>

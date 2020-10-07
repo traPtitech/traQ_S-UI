@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
@@ -69,7 +68,7 @@ export const mutations = defineMutations<S>()({
       renderedContent
     }: { messageId: MessageId; renderedContent: string }
   ) {
-    Vue.set(state.renderedContentMap, messageId, renderedContent)
+    state.renderedContentMap[messageId] = renderedContent
   },
   setRenderedContent(state, renderedContentMap: Record<string, string>) {
     state.renderedContentMap = renderedContentMap
@@ -78,7 +77,7 @@ export const mutations = defineMutations<S>()({
     state,
     payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
   ) {
-    Vue.set(state.embeddingsMap, payload.messageId, payload.embeddings)
+    state.embeddingsMap[payload.messageId] = payload.embeddings
   },
   setCurrentViewer(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers

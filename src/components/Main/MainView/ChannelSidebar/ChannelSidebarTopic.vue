@@ -3,7 +3,7 @@
     <content-editor
       :value="topic"
       :is-editing="isEditing"
-      @input="onInput"
+      @input-value="onInput"
       @edit-done="onEditDone"
       @edit-start="startEdit"
       :maxlength="200"
@@ -12,13 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  PropType,
-  watchEffect,
-  reactive
-} from '@vue/composition-api'
+import { defineComponent, ref, PropType, watchEffect, reactive } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'

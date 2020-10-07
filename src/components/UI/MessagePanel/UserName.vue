@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :data-is-title="isTitle">
+  <div :class="$style.container" :data-is-title="$boolAttr(isTitle)">
     <user-icon :class="$style.icon" :user-id="id" :size="isTitle ? 24 : 20" />
     <span :class="$style.displayName">
       {{ displayName }}
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 

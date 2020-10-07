@@ -3,7 +3,7 @@
     <div>
       <div :class="$style.header">
         <h2 :class="$style.title">設定</h2>
-        <close-button :class="$style.close" @click="close" :size="36" />
+        <close-button :class="$style.close" @close="close" :size="36" />
       </div>
       <mobile-tab-selector-item
         v-for="navigation in navigations"
@@ -11,7 +11,7 @@
         :type="navigation.type"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
-        @click.native="onNavigationItemClick(navigation.type)"
+        @click="onNavigationItemClick(navigation.type)"
       />
       <safari-warning :class="$style.safariWarning" />
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import store from '@/store'
 import {
   NavigationItemType,

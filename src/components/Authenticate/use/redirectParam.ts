@@ -1,7 +1,8 @@
-import { SetupContext, computed, reactive } from '@vue/composition-api'
+import { computed, reactive } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import { redirectToPipelineIfNeeded } from '@/router/pipeline'
 import router, { RouteName } from '@/router'
+import { useRoute } from 'vue-router'
 
 export interface RedirectState {
   /**
@@ -15,9 +16,11 @@ export interface RedirectState {
   isInternal?: boolean
 }
 
-const useRedirectParam = (context: SetupContext) => {
+const useRedirectParam = () => {
+  const route = useRoute()
+
   const state: RedirectState = reactive({
-    url: computed(() => getStringParam(context.root.$route.query.redirect)),
+    url: computed(() => getStringParam(route.query.redirect)),
     isInternal: computed(() => state.url?.startsWith('/') ?? false)
   })
 

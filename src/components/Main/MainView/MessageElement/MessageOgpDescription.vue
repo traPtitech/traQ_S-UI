@@ -15,8 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
-import MessageOgpEmbed from './MessageOgpEmbed.vue'
+import { defineComponent, computed, reactive } from 'vue'
 import { makeStyles } from '@/lib/styles'
 import * as CSS from 'csstype'
 
@@ -32,7 +31,6 @@ const useStyles = (props: { lineClamp: number }) =>
 
 export default defineComponent({
   name: 'MessageOgpContentWebSite',
-  components: { MessageOgpEmbed },
   props: {
     url: {
       type: String,

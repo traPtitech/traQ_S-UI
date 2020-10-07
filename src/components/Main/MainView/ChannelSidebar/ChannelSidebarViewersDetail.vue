@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container clickable title="閲覧者" @click="closeDetail">
+  <sidebar-content-container clickable title="閲覧者" @toggle="closeDetail">
     <div v-for="user in users" :key="user.id" :class="$style.item">
       <user-icon :user-id="user.id" :size="32" />
       <div :class="$style.userName">{{ user.displayName }}</div>
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { UserId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'

@@ -1,4 +1,4 @@
-import { SetupContext, reactive } from '@vue/composition-api'
+import { SetupContext, reactive } from 'vue'
 import {
   checkLevel2InputEventsSupport,
   isMac,

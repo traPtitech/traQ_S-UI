@@ -1,7 +1,7 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '@/store'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { reactive, Ref, watch, onMounted } from '@vue/composition-api'
+import { reactive, Ref, watch, onMounted } from 'vue'
 import { Message } from '@traptitech/traq'
 
 const fetchLimit = 20

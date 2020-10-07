@@ -1,7 +1,9 @@
 <template>
   <div>
     <div :class="$style.channelNameContainer" :data-is-current="isCurrent">
-      <span :data-is-current="isCurrent" :class="$style.channelHash">#</span>
+      <span :data-is-current="$boolAttr(isCurrent)" :class="$style.channelHash">
+        #
+      </span>
       <span>
         <router-link :to="isCurrent ? '' : link">{{ name }}</router-link>
       </span>
@@ -13,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ChannelSidebarRelationElement',

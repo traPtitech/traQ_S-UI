@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { isSafari, isIOSApp, isPWA } from '@/lib/util/browser'
 
 export default defineComponent({

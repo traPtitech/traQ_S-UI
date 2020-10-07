@@ -5,7 +5,7 @@
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
-      @click.native="onDMClick"
+      @click="onDMClick"
     />
     <link-button
       v-if="homeChannelId"
@@ -13,13 +13,13 @@
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
-      @click.native="onHomeChannelClick"
+      @click="onHomeChannelClick"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import store from '@/store'
 import { changeChannelById, changeDMChannelByUsername } from '@/router/channel'
 import LinkButton from './LinkButton.vue'

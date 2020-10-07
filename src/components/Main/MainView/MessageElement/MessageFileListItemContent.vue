@@ -2,7 +2,7 @@
   <router-link
     :to="fileLink"
     :class="$style.container"
-    :data-is-white="isWhite"
+    :data-is-white="$boolAttr(isWhite)"
   >
     <file-description
       :file-id="fileId"
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileDescription from '@/components/UI/FileDescription.vue'
 

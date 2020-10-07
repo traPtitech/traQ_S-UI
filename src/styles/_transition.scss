@@ -9,10 +9,10 @@ $vs-reverse: 'vertical-swap-reverse';
   transition: transform 0.3s $easeOutBack;
 }
 .#{$vs-reverse}-leave-to,
-.#{$vs}-enter {
+.#{$vs}-enter-from {
   transform: translateY(100%);
 }
-.#{$vs-reverse}-enter,
+.#{$vs-reverse}-enter-from,
 .#{$vs}-leave-to {
   transform: translateY(-100%);
 }
@@ -24,7 +24,7 @@ $ts: 'toast-slide';
 .#{$ts}-leave-active {
   transition: all 0.8s $easeInExpo;
 }
-.#{$ts}-enter {
+.#{$ts}-enter-from {
   transform: translateX(-20px);
   opacity: 0;
 }
@@ -50,7 +50,7 @@ $tl: 'timeline';
 .#{$tl}-leave-active {
   display: none;
 }
-.#{$tl}-enter,
+.#{$tl}-enter-from,
 .#{$tl}-leave-to {
   opacity: 0;
   transform: translateY(-30px);
@@ -60,7 +60,7 @@ $tl: 'timeline';
 }
 
 $bk: 'background-shadow';
-.#{$bk}-enter,
+.#{$bk}-enter-from,
 .#{$bk}-leave-to {
   background-color: rgba(0, 0, 0, 0);
 }
@@ -70,7 +70,7 @@ $tu: 'typing-users';
 .#{$tu}-leave-active {
   transition: all 0.5s $easeOutCubic;
 }
-.#{$tu}-enter,
+.#{$tu}-enter-from,
 .#{$tu}-leave-to {
   transform: translateY(0%) !important;
   opacity: 0;
@@ -90,24 +90,24 @@ $fb: 'fade-bottom';
   .#{$c}-move {
     transition: transform 0.3s;
   }
-  .#{$c}-enter,
+  .#{$c}-enter-from,
   .#{$c}-leave-to {
     opacity: 0;
   }
 }
-.#{$fl}-enter,
+.#{$fl}-enter-from,
 .#{$fl}-leave-to {
   transform: translateX(-20px);
 }
-.#{$fr}-enter,
+.#{$fr}-enter-from,
 .#{$fr}-leave-to {
   transform: translateX(20px);
 }
-.#{$ft}-enter,
+.#{$ft}-enter-from,
 .#{$ft}-leave-to {
   transform: translateY(-20px);
 }
-.#{$fb}-enter,
+.#{$fb}-enter-from,
 .#{$fb}-leave-to {
   transform: translateY(20px);
 }
@@ -117,7 +117,7 @@ $s: 'stamp';
 .#{$s}-leave-active {
   transition: all 0.3s $easeOutCirc;
 }
-.#{$s}-enter,
+.#{$s}-enter-from,
 .#{$s}-leave-to {
   transform: translateY(20px);
   opacity: 0;
@@ -134,7 +134,7 @@ $p: 'post';
   transform: translateX(20px);
   opacity: 0;
 }
-.#{$p}-enter {
+.#{$p}-enter-from {
   transform: translateX(-20px);
   opacity: 0;
 }
@@ -144,7 +144,7 @@ $qr: 'quick-reaction';
 .#{$qr}-leave-active {
   transition: all 0.3s $easeOutCirc;
 }
-.#{$qr}-enter,
+.#{$qr}-enter-from,
 .#{$qr}-leave-to {
   transform: translateX(20px);
   opacity: 0;

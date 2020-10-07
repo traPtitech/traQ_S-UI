@@ -11,12 +11,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  onMounted,
-  onUnmounted
-} from '@vue/composition-api'
+import { defineComponent, reactive, onMounted, onUnmounted } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import apis from '@/lib/apis'

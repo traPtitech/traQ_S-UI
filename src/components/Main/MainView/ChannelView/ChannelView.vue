@@ -12,28 +12,27 @@
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
     />
-    <portal v-if="!isSidebarOpen" to="sidebar-opener" :class="$style.opener">
+    <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
+    <teleport
+      v-if="isSidebarOpenerReady && !isSidebarOpen"
+      to="#sidebar-opener"
+      :class="$style.opener"
+    >
       <channel-sidebar-hidden
         @open="openSidebar"
         :viewer-ids="viewerIds"
         :class="$style.hidden"
       />
-    </portal>
+    </teleport>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, reactive, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import useSidebar from '@/use/sidebar'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
-import ChannelViewHeader from './Header.vue'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
@@ -70,10 +69,13 @@ export default defineComponent({
   name: 'ChannelView',
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String as PropType<ChannelId>
+    entryMessageId: String as PropType<ChannelId>,
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   components: {
-    ChannelViewHeader,
     ChannelViewContent,
     ChannelViewFileUploadOverlay,
     ChannelSidebarHidden

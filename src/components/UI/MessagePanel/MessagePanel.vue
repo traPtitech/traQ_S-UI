@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'

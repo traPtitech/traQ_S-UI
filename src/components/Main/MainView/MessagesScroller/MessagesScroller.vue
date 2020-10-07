@@ -49,7 +49,7 @@ import {
   onBeforeUnmount,
   nextTick,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { MessageId } from '@/types/entity-ids'
 import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -61,6 +61,7 @@ import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
 import { embeddingOrigin } from '@/lib/apis'
+import { useRouter } from 'vue-router'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -70,6 +71,7 @@ const useInternalLink = (
 ) => {
   const hostname = new URL(embeddingOrigin).hostname
 
+  const router = useRouter()
   const onClick = (event: MouseEvent) => {
     if (!event.target) return
     const target = event.target as HTMLElement
@@ -88,7 +90,7 @@ const useInternalLink = (
     }
 
     event.preventDefault()
-    context.root.$router.push(linkPath)
+    router.push(linkPath)
   }
 
   onMounted(() => {
@@ -234,7 +236,8 @@ export default defineComponent({
           })
         }
         state.height = newHeight
-      }
+      },
+      { deep: true }
     )
 
     const handleScroll = throttle(17, () => {

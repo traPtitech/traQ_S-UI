@@ -1,8 +1,8 @@
 <template>
   <button
     :class="$style.container"
-    :data-react-hover="reactHover"
-    :data-is-white="props.isWhite"
+    :data-react-hover="$boolAttr(reactHover)"
+    :data-is-white="$boolAttr(props.isWhite)"
   >
     <div @click="onClick" :class="$style.circle" :style="styles.circle">
       <icon name="close" mdi />
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from '@vue/composition-api'
+import { defineComponent, reactive, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 const useStyles = (props: { borderWidth: number; size: number }) =>
@@ -37,7 +37,7 @@ export default defineComponent({
     const styles = useStyles(props)
 
     const onClick = () => {
-      context.emit('click')
+      context.emit('close')
     }
     return { styles, onClick, props }
   },

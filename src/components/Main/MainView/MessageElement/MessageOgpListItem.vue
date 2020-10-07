@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api'
+import { defineComponent, computed, PropType } from 'vue'
 import { Ogp } from '@traptitech/traq'
 import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'

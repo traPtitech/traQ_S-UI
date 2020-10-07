@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'

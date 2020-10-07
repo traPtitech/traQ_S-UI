@@ -7,7 +7,7 @@
       <slider
         v-if="showVolumeControl"
         :value="volume"
-        @change="onChange"
+        @change-value="onChange"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import Slider from '@/components/UI/Slider.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import Icon from '@/components/UI/Icon.vue'

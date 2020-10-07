@@ -2,7 +2,7 @@
   <div
     :class="$style.container"
     :style="styles.container"
-    :aria-selected="isSelected ? 'true' : 'false'"
+    :aria-selected="isSelected"
   >
     <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     <div v-if="hasNotification" :class="$style.indicator">
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from 'vue'
 import { makeStyles, ThemeClaim } from '@/lib/styles'
 import Icon from '@/components/UI/Icon.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'

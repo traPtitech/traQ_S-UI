@@ -13,7 +13,7 @@
       />
       <desktop-tool-box />
     </div>
-    <portal-target :name="targetPortalName" />
+    <div :id="teleportTargetName" />
     <div :class="$style.navigations">
       <navigation-content
         :class="$style.navigation"
@@ -33,13 +33,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import useNavigation from './use/navigation'
 import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import DesktopToolBox, {
-  targetPortalName
+  teleportTargetName
 } from '@/components/Main/Navigation/DesktopToolBox.vue'
 
 export default defineComponent({
@@ -67,7 +67,7 @@ export default defineComponent({
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
       onEphemeralEntryAdd,
-      targetPortalName
+      teleportTargetName
     }
   }
 })

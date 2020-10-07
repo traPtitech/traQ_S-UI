@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelSelect from '@/use/channelSelect'
 import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'

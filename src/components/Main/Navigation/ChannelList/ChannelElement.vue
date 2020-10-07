@@ -1,8 +1,8 @@
 <template>
   <div
     :class="$style.container"
-    :aria-selected="state.isSelected ? 'true' : 'false'"
-    :data-is-inactive="state.isInactive"
+    :aria-selected="state.isSelected"
+    :data-is-inactive="$boolAttr(state.isInactive)"
   >
     <!-- チャンネル表示本体 -->
     <div
@@ -12,9 +12,9 @@
     >
       <channel-element-hash
         :class="$style.channelHash"
-        @click.native="onChannelHashClick"
-        @mouseenter.native="onHashMouseEnter"
-        @mouseleave.native="onHashMouseLeave"
+        @click="onChannelHashClick"
+        @mouseenter="onHashMouseEnter"
+        @mouseleave="onHashMouseLeave"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
@@ -26,19 +26,19 @@
         :channel="channel"
         :show-shortened-path="showShortenedPath"
         :is-selected="state.isSelected"
-        @click.native="onChannelNameClick"
+        @click="onChannelNameClick"
       />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
-        @click.native="onChannelNameClick"
+        @click="onChannelNameClick"
       />
     </div>
     <channel-element-topic
       v-if="showTopic"
       :class="$style.topic"
       :channel-id="channel.id"
-      @click.native="onChannelNameClick"
+      @click="onChannelNameClick"
     />
 
     <!-- 子チャンネル表示 -->
@@ -52,7 +52,7 @@
     <div
       v-if="state.isSelected || isChannelBgHovered"
       :class="$style.selectedBg"
-      :data-is-hovered="isChannelBgHovered"
+      :data-is-hovered="$boolAttr(isChannelBgHovered)"
     />
   </div>
 </template>
@@ -64,8 +64,9 @@ import {
   computed,
   reactive,
   PropType,
-  Ref
-} from '@vue/composition-api'
+  Ref,
+  defineAsyncComponent
+} from 'vue'
 import store from '@/store'
 import { ChannelTreeNode } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
@@ -138,12 +139,13 @@ interface IgnoreChildrenProps extends Props {
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
 
+// 型エラー・コンポーネント循環参照の回避
+const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
+
 export default defineComponent({
   name: 'ChannelElement',
   components: {
-    // 型エラー・コンポーネント循環参照の回避
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ChannelList: (() => import('./ChannelList.vue')) as any,
+    ChannelList,
     ChannelElementHash,
     ChannelElementTopic,
     ChannelElementUnreadBadge,

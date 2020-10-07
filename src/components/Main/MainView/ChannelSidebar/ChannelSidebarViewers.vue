@@ -3,13 +3,13 @@
     large-padding
     clickable
     v-if="!state.isOpenDetail"
-    @click="toggle"
+    @toggle="toggle"
   >
     <user-icon-ellipsis-list
       direction="row"
       transition="fade-right"
       :user-ids="viewerIds"
-      @click.native="toggle"
+      @click="toggle"
     />
   </sidebar-content-container>
   <channel-sidebar-viewers-detail
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from '@vue/composition-api'
+import { defineComponent, reactive, PropType } from 'vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'

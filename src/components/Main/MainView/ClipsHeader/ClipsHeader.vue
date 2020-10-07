@@ -9,7 +9,7 @@
     </template>
     <template #tools>
       <main-view-header-tools-item
-        @click="openSidebar"
+        @toggle="openSidebar"
         icon-mdi
         icon-name="info-outline"
       />
@@ -18,11 +18,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from '@vue/composition-api'
+import { defineComponent, PropType, computed } from 'vue'
 import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import useSidebar from '@/use/sidebar'
-import Icon from '@/components/UI/Icon.vue'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
 import MainViewHeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
@@ -30,7 +29,6 @@ import MainViewHeaderToolsItem from '@/components/Main/MainView/MainViewHeader/M
 export default defineComponent({
   name: 'ChannelViewHeader',
   components: {
-    Icon,
     MainViewHeader,
     MainViewHeaderTitle,
     MainViewHeaderToolsItem

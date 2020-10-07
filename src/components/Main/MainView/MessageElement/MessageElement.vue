@@ -3,10 +3,10 @@
     :class="$style.body"
     ref="bodyRef"
     v-if="state.message"
-    :data-is-mobile="isMobile"
-    :data-is-pinned="state.isPinned"
-    :data-is-entry="isEntryMessage"
-    :data-is-editing="state.isEditing"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-pinned="$boolAttr(state.isPinned)"
+    :data-is-entry="$boolAttr(isEntryMessage)"
+    :data-is-editing="$boolAttr(state.isEditing)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -35,20 +35,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  PropType,
-  shallowRef
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
-import Icon from '@/components/UI/Icon.vue'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
@@ -58,7 +51,6 @@ export default defineComponent({
   name: 'MessageElement',
   components: {
     MessageContents,
-    Icon,
     MessageStampList,
     MessagePinned,
     MessageTools
@@ -126,7 +118,7 @@ $messagePaddingMobile: 16px;
   min-width: 0;
   overflow: hidden;
   padding: 8px $messagePadding;
-  &[data-is-mobile='true'] {
+  &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
   &[data-is-pinned] {

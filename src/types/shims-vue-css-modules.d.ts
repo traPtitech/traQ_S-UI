@@ -1,8 +1,8 @@
 // eslint-disable-next-line unused-imports/no-unused-imports-ts
-import Vue from 'vue'
+import { ComponentCustomProperties } from 'vue'
 
-declare module 'vue/types/vue' {
-  interface Vue {
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
     $style: { [className: string]: string }
   }
 }

@@ -9,7 +9,7 @@
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
         :is-selected="currentNavigation === navigation.type"
-        @click.native="onNavigationItemClick(navigation.type)"
+        @click="onNavigationItemClick(navigation.type)"
       />
     </div>
     <version :class="$style.version" />
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,

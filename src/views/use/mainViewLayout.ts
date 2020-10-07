@@ -1,4 +1,4 @@
-import { computed, watch, Ref } from '@vue/composition-api'
+import { computed, watch, Ref } from 'vue'
 import store from '@/store'
 import useSwipeDetector from '@/use/swipeDetector'
 import useSwipeDrawer from '@/use/swipeDrawer'

@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from '@vue/composition-api'
+import { defineComponent, computed, reactive, defineAsyncComponent } from 'vue'
 import store from '@/store'
 import { ModalState } from '@/store/ui/modal/state'
 
@@ -74,8 +74,8 @@ export default defineComponent({
     const { modalState } = useModal()
 
     // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
-    const getComponent = (path: string) => () =>
-      import(`@/components/Main/Modal/${path}.vue`)
+    const getComponent = (path: string) =>
+      defineAsyncComponent(() => import(`@/components/Main/Modal/${path}.vue`))
 
     const component = computed(() =>
       getComponent(modalComponentMap[modalState.current.type])

@@ -1,6 +1,6 @@
-import { onBeforeMount, SetupContext } from '@vue/composition-api'
+import { onBeforeMount, SetupContext } from 'vue'
 import store from '@/store'
-import { RouteName } from '@/router'
+import router, { RouteName } from '@/router'
 import { ws } from '@/lib/websocket'
 
 const initialFetch = async () => {
@@ -38,7 +38,7 @@ const useInitialFetch = (context: SetupContext) => {
       try {
         await store.dispatch.domain.me.fetchMe()
       } catch {
-        context.root.$router.replace({
+        router.replace({
           name: RouteName.Login,
           query: { redirect: `${location.pathname}${location.search}` }
         })

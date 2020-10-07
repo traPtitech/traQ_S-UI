@@ -8,14 +8,14 @@
       @click="onDotsClick"
     />
   </div>
-  <div v-else :class="$style.container" :data-is-mobile="isMobile">
+  <div v-else :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <transition name="quick-reaction">
       <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
         <stamp
           v-for="stamp in recentStamps"
           :key="stamp"
           :stamp-id="stamp"
-          @click.native="addStamp(stamp)"
+          @click="addStamp(stamp)"
           :size="28"
           :class="$style.stampListItem"
         />
@@ -24,7 +24,7 @@
     </transition>
     <div
       :class="$style.tools"
-      :data-hide-left-border="showQuickReaction || !isMobile"
+      :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
     >
       <template v-if="isMobile">
         <icon
@@ -63,14 +63,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref } from 'vue'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import { targetPortalName } from '@/views/Main.vue'
 import useIsMobile from '@/use/isMobile'
+
+const teleportTargetName = 'message-menu-popup'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -94,7 +95,7 @@ export default defineComponent({
     }
 
     const { invokeStampPicker } = useStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       stampData => {
         addStamp(stampData.id)
       }

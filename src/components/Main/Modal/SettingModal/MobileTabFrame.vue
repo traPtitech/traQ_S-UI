@@ -7,7 +7,7 @@
         :class="$style.title"
         is-mobile
       />
-      <close-button @click="close" :size="36" />
+      <close-button @close="close" :size="36" />
     </div>
     <tab-content
       :class="$style.content"
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import store from '@/store'
 import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'

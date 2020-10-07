@@ -1,7 +1,7 @@
 <template>
   <div
-    :data-is-large-padding="largePadding"
-    :data-is-clickable="clickable"
+    :data-is-large-padding="$boolAttr(largePadding)"
+    :data-is-clickable="$boolAttr(clickable)"
     :class="$style.container"
     @click.self="onContainerClick"
   >
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SidebarContentContainer',
@@ -31,11 +31,11 @@ export default defineComponent({
   },
   setup(props, context) {
     const onTitleClick = () => {
-      context.emit('click')
+      context.emit('toggle')
     }
     const onContainerClick = () => {
       if (props.clickable) {
-        context.emit('click')
+        context.emit('toggle')
       }
     }
     return { onTitleClick, onContainerClick }

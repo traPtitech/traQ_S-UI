@@ -3,7 +3,7 @@
     <div :class="$style.timeSlider">
       <slider
         :value="roundedCurrentTime"
-        @change="changeTime"
+        @change-value="changeTime"
         :disabled="roundedDuration === 0"
         :min="0"
         :max="roundedDuration"
@@ -14,7 +14,7 @@
       <div :class="$style.volumeSlider">
         <slider
           :value="roundedVolume"
-          @change="changeVolume"
+          @change-value="changeVolume"
           :disabled="roundedDuration === 0"
           tooltip="none"
         />
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import Slider from '@/components/UI/Slider.vue'
 
@@ -60,10 +60,10 @@ export default defineComponent({
     const roundedDuration = computed(() => Math.floor(props.duration))
 
     const changeVolume = (vol: number) => {
-      context.emit('changeVolume', vol)
+      context.emit('change-volume', vol)
     }
     const changeTime = (time: number) => {
-      context.emit('changeTime', time)
+      context.emit('change-time', time)
     }
     return {
       roundedVolume,

@@ -16,11 +16,11 @@
         <div :class="$style.controls">
           <message-input-insert-stamp-button
             :class="$style.button"
-            @click.native="onStampClick"
+            @click="onStampClick"
           />
           <message-input-upload-button
             :class="$style.button"
-            @click.native="addAttachment"
+            @click="addAttachment"
           />
         </div>
       </div>
@@ -37,7 +37,7 @@ import {
   watch,
   onMounted,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
@@ -47,7 +47,7 @@ import MessageInputFileList from '@/components/Main/MainView/MessageInput/Messag
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 
-export const targetPortalName = 'share-target-stamp-picker'
+export const teleportTargetName = 'share-target-stamp-picker'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -57,7 +57,7 @@ export default defineComponent({
     MessageInputInsertStampButton
   },
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -74,11 +74,11 @@ export default defineComponent({
     watch(
       () => textState.text,
       val => {
-        context.emit('input', val)
+        context.emit('update:modelValue', val)
       }
     )
     onMounted(() => {
-      textState.text = props.value
+      textState.text = props.modelValue
     })
 
     const { attachmentsState, addAttachment, destroy } = useAttachments()
@@ -100,7 +100,7 @@ export default defineComponent({
     })
 
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      targetPortalName,
+      teleportTargetName,
       textState,
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
@@ -127,7 +127,7 @@ export default defineComponent({
       attachmentsState,
       addAttachment,
       canPostMessage,
-      targetPortalName,
+      teleportTargetName,
       id,
       textareaRef,
       onStampClick

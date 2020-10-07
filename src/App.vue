@@ -1,19 +1,14 @@
 <template>
-  <div :class="$style.app" :style="style" :data-is-mobile="isMobile">
+  <div :class="$style.app" :data-is-mobile="$boolAttr(isMobile)">
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  watchEffect
-} from '@vue/composition-api'
+import { computed, defineComponent, onBeforeMount, watchEffect, Ref } from 'vue'
 import store from './store'
 import { throttle } from 'throttle-debounce'
-import { makeStyles } from '@/lib/styles'
+import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
@@ -134,6 +129,18 @@ const useStyle = () =>
     ...useScrollbarStyle().value
   }))
 
+const useStyleBody = (style: Ref<ThemeVariablesOrProperties>) => {
+  const styleText = computed(() =>
+    Object.entries(style.value)
+      .map(([key, value]) => `${key}:${value}`)
+      .join(';')
+  )
+
+  watchEffect(() => {
+    document.body.style.cssText = styleText.value
+  })
+}
+
 export default defineComponent({
   name: 'App',
   components: {},
@@ -148,15 +155,13 @@ export default defineComponent({
     useOsDarkTheme()
 
     const style = useStyle()
+    useStyleBody(style)
 
     onBeforeMount(async () => {
       await store.dispatch.app.fetchVersionInfo()
     })
 
-    return {
-      isMobile,
-      style
-    }
+    return { isMobile }
   }
 })
 </script>

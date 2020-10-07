@@ -3,8 +3,16 @@
     <label v-if="label" :for="id" :class="$style.label">
       {{ label }}
     </label>
-    <div :class="$style.inputContainer" :data-on-secondary="onSecondary">
-      <select @input="onInput" :value="value" :id="id" :class="$style.select">
+    <div
+      :class="$style.inputContainer"
+      :data-on-secondary="$boolAttr(onSecondary)"
+    >
+      <select
+        @input="onInput"
+        :value="modelValue"
+        :id="id"
+        :class="$style.select"
+      >
         <option
           v-for="option in options"
           :key="option.value"
@@ -18,14 +26,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
 
 export default defineComponent({
   name: 'FormSelector',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -40,7 +48,7 @@ export default defineComponent({
     label: String
   },
   setup(props, context) {
-    const { onInput } = useInput(context)
+    const { onInput } = useInput(context, 'update:modelValue')
     const id = randomString()
     return { onInput, id }
   }

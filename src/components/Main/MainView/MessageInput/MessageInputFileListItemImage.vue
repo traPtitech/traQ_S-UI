@@ -17,9 +17,8 @@ import {
   Ref,
   PropType,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { Attachment } from '@/store/ui/fileInput/state'
-import Icon from '@/components/UI/Icon.vue'
 
 const useImageThumbnail = (
   props: { attachment: Attachment },
@@ -34,9 +33,6 @@ const useImageThumbnail = (
 
 export default defineComponent({
   name: 'MessageInputFileListItemImage',
-  components: {
-    Icon
-  },
   props: {
     attachment: {
       type: Object as PropType<Attachment>,

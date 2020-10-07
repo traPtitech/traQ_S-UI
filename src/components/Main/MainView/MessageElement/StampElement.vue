@@ -2,8 +2,8 @@
   <div
     :class="$style.body"
     :title="state.tooltip"
-    :data-include-me="state.includeMe"
-    :data-my-count-has-incremented="state.myCountHasIncremented"
+    :data-include-me="$boolAttr(state.includeMe)"
+    :data-my-count-has-incremented="$boolAttr(state.myCountHasIncremented)"
     @click="onClick"
   >
     <stamp
@@ -11,7 +11,7 @@
       :size="20"
       without-title
       :class="$style.icon"
-      @animationend.native="unsetMyCountHasIncremented"
+      @animationend="unsetMyCountHasIncremented"
     />
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
@@ -25,7 +25,7 @@ import {
   watch,
   PropType,
   onMounted
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'

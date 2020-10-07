@@ -1,7 +1,7 @@
 import { OAuth2Scope, OAuth2Client, User } from '@traptitech/traq'
 import { OAuthClientId } from '@/types/entity-ids'
 import apis, { OAuthDecidePath } from '@/lib/apis'
-import { reactive } from '@vue/composition-api'
+import { reactive } from 'vue'
 
 const validScopes = new Set<string>(Object.values(OAuth2Scope))
 

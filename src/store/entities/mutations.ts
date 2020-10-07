@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { Channel, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
@@ -33,7 +32,8 @@ const addMutation = <
   state: O,
   payload: { id: RecordKeyOf<O[K]>; entity: RecordValueOf<O[K]> }
 ) => {
-  Vue.set(state[key], payload.id, payload.entity)
+  const record = state[key] as Record<string, unknown>
+  record[payload.id] = payload.entity
 }
 const deleteMutation = <
   O extends Record<string, Record<string, unknown>>,
@@ -41,7 +41,7 @@ const deleteMutation = <
 >(
   key: K
 ) => (state: O, entityId: RecordKeyOf<O[K]>) => {
-  Vue.delete(state[key], entityId)
+  delete state[key][entityId]
 }
 
 export const mutations = defineMutations<S>()({

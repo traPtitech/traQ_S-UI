@@ -3,7 +3,7 @@
     <div :class="$style.inputContainer">
       <filter-input
         :text="filterState.query"
-        @input="setQuery"
+        @input-value="setQuery"
         :placeholder="placeholder"
         disable-ime
         focus-on-mount
@@ -37,10 +37,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from '@vue/composition-api'
+import { defineComponent, reactive, computed, ref } from 'vue'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
-import Icon from '@/components/UI/Icon.vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
 import useStampSetSelector from './use/stampSetSelector'
@@ -48,13 +47,13 @@ import useEffectSelector from './use/effectSelector'
 import useStampFilterPlaceholder from './use/stampFilterPlaceholder'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
-import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
-import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
+//import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
+//import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 
 const useStampPicker = () => {
   const state = reactive({
-    targetPortalName: computed(
-      () => store.state.ui.stampPicker.targetPortalName
+    teleportTargetName: computed(
+      () => store.state.ui.stampPicker.teleportTargetName
     ),
     shouldShowStampPicker: computed(
       () => store.getters.ui.stampPicker.isStampPickerShown
@@ -75,12 +74,11 @@ const useStampPicker = () => {
 export default defineComponent({
   name: 'StampPicker',
   components: {
-    Icon,
     FilterInput,
     StampPickerStampList,
-    StampPickerStampSetSelector,
-    StampPickerEffectSelector,
-    StampPickerEffectToggleButton
+    StampPickerStampSetSelector
+    //StampPickerEffectSelector,
+    //StampPickerEffectToggleButton
   },
   setup() {
     const currentStampSet = computed(

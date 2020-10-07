@@ -22,7 +22,7 @@ export type StampSelectHandler = (stamp: SelectedStampData) => void
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
 export interface S {
-  targetPortalName: string
+  teleportTargetName: string
 
   selectHandler: StampSelectHandler
   currentStampSet: StampSet
@@ -30,7 +30,7 @@ export interface S {
 }
 
 export const state: S = {
-  targetPortalName: '',
+  teleportTargetName: '',
   selectHandler: defaultSelectHandler,
   currentStampSet: {
     type: 'history',

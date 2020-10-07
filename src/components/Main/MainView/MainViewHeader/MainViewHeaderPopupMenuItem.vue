@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :disabled="disabled">
+  <div :class="$style.container" :data-is-disabled="$boolAttr(disabled)">
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
@@ -37,7 +37,7 @@ export default defineComponent({
   @include color-ui-primary;
   display: flex;
   cursor: pointer;
-  &[disabled] {
+  &[data-is-disabled] {
     opacity: 0.5;
     cursor: pointer;
   }

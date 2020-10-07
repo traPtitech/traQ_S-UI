@@ -5,12 +5,12 @@
       :current-navigation="currentNavigation"
     />
     <desktop-tab-frame :current-navigation="currentNavigation" />
-    <close-button :class="$style.close" with-text @click="close" :size="56" />
+    <close-button :class="$style.close" with-text @close="close" :size="56" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from '@vue/composition-api'
+import { defineComponent, toRefs } from 'vue'
 import store from '@/store'
 import { useNavigation } from './use/navigation'
 import DesktopTabSelector from './DesktopTabSelector.vue'

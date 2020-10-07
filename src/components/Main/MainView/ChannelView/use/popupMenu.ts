@@ -1,4 +1,4 @@
-import { ref } from '@vue/composition-api'
+import { ref } from 'vue'
 
 const usePopupMenu = () => {
   const isPopupMenuShown = ref(false)

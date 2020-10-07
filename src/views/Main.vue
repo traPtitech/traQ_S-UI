@@ -19,7 +19,7 @@
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
-        @click.native.capture="onClickMainViewFrame"
+        @click.capture="onClickMainViewFrame"
       >
         <main-view :class="$style.mainViewWrapper" />
       </main-view-frame>
@@ -30,27 +30,27 @@
         v-show="isSidebarAppeared"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
-        <portal-target
-          name="sidebar"
-          v-if="isMobile"
-          :class="$style.sidebarPortal"
-        />
+        <div id="sidebar" v-if="isMobile" :class="$style.sidebarPortal" />
       </div>
     </div>
     <modal-container />
     <stamp-picker-container />
     <message-tools-menu-container />
     <toast-container />
-    <portal-target :name="targetPortalName" />
   </div>
   <div v-else></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  computed,
+  Ref,
+  defineAsyncComponent
+} from 'vue'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
-
 import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
 import MainView from '@/components/Main/MainView/MainView.vue'
@@ -63,7 +63,6 @@ import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 
-export const targetPortalName = 'message-menu-popup'
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -79,6 +78,10 @@ const useStyles = (
     }))
   })
 
+const NotFound = defineAsyncComponent(
+  () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+)
+
 export default defineComponent({
   name: 'Main',
   components: {
@@ -89,8 +92,7 @@ export default defineComponent({
     StampPickerContainer,
     MessageToolsMenuContainer,
     ToastContainer,
-    NotFound: () =>
-      import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+    NotFound
   },
   setup(_, context) {
     const navWidth = 320
@@ -116,9 +118,7 @@ export default defineComponent({
       () => isMobile.value && isNavCompletelyAppeared.value
     )
 
-    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher(
-      context
-    )
+    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
 
     useInitialFetch(context).then(
       () => {
@@ -157,7 +157,6 @@ export default defineComponent({
 
       onClickMainViewFrame,
 
-      targetPortalName,
       styles,
       currentActiveDrawer
     }

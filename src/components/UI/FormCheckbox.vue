@@ -4,13 +4,13 @@
       type="checkbox"
       :class="$style.checkbox"
       v-bind="$attrs"
-      :checked="value"
-      v-on="listeners"
+      :checked="modelValue"
+      @input="onInput"
     />
     <div
       :class="$style.pseudoCheckbox"
       role="checkbox"
-      :aria-checked="value ? 'true' : 'false'"
+      :aria-checked="modelValue"
     >
       <div :class="$style.pseudoCheckboxInner" />
     </div>
@@ -19,12 +19,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'FormCheckbox',
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false
     },
@@ -39,15 +39,12 @@ export default defineComponent({
   },
   setup(props, context) {
     const onInput = (event: InputEvent) =>
-      context.emit('input', (event.target as HTMLInputElement).checked)
+      context.emit(
+        'update:modelValue',
+        (event.target as HTMLInputElement).checked
+      )
 
-    const listeners = computed(() =>
-      Object.assign({}, context.listeners, {
-        input: onInput
-      })
-    )
-
-    return { listeners }
+    return { onInput }
   }
 })
 </script>

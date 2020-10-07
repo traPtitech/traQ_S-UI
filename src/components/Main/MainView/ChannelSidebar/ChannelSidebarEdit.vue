@@ -3,7 +3,7 @@
     <div
       :class="$style.content"
       @click="onClick"
-      :data-is-editing="state.isEditing"
+      :data-is-editing="$boolAttr(state.isEditing)"
     >
       <Icon
         mdi
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
 type State = {

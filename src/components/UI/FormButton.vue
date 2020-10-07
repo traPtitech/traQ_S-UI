@@ -2,7 +2,7 @@
   <button
     :class="$style.container"
     :disabled="loading || disabled"
-    :data-is-loading="loading"
+    :data-is-loading="$boolAttr(loading)"
     @click="emit('click')"
     :data-color="color"
   >
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import LoadingSpinner from '@/components/UI/LoadingSpinner.vue'
 
 export default defineComponent({

@@ -1,5 +1,5 @@
 <template>
-  <portal v-show="state.isPopupMenuShown" :to="targetPortalName">
+  <teleport v-show="state.isPopupMenuShown" to="#message-menu-popup">
     <div ref="menuContainerRef">
       <message-tools-menu
         v-if="state.isPopupMenuShown"
@@ -9,7 +9,7 @@
         v-click-outside="closePopupMenu"
       />
     </div>
-  </portal>
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -23,10 +23,9 @@ import {
   SetupContext,
   nextTick,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import store from '@/store'
 import MessageToolsMenu from './MessageToolsMenu.vue'
-import { targetPortalName } from '@/views/Main.vue'
 
 const useMenu = () => {
   const state = reactive({
@@ -86,7 +85,6 @@ export default defineComponent({
       height,
       menuContainerRef,
       styles,
-      targetPortalName,
       closePopupMenu
     }
   }

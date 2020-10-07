@@ -6,16 +6,16 @@
     return-button
   >
     <user-list-item
-      v-for="id in groupMember"
-      :key="id"
-      :user-id="id"
+      v-for="memberId in groupMember"
+      :key="memberId"
+      :user-id="memberId"
       :class="$style.item"
     />
   </modal-frame>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'

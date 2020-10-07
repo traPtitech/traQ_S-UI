@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.wrapper" v-click-outside="onClickOutside">
     <close-button
-      @click="onClickClear"
+      @close="onClickClear"
       :size="isMobile ? 24 : 32"
       :class="$style.close"
     />
@@ -28,14 +28,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  Ref,
-  toRefs,
-  PropType
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
 import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'

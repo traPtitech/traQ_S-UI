@@ -1,7 +1,7 @@
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
-import { computed } from '@vue/composition-api'
+import { computed } from 'vue'
 import { MAX_CHILD_LEVEL } from '@/lib/validator'
 
 const useChannelCreateModal = (props: { channelId: ChannelId }) => {

@@ -1,11 +1,11 @@
 <template>
-  <div :class="$style.path" :data-is-title="isTitle">
+  <div :class="$style.path" :data-is-title="$boolAttr(isTitle)">
     {{ path }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ChannelName',

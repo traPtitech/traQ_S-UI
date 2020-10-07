@@ -1,4 +1,4 @@
-import { computed, SetupContext } from '@vue/composition-api'
+import { computed, SetupContext } from 'vue'
 import store from '@/store'
 import { buildFilePath, buildFileThumbnailPath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
@@ -9,8 +9,7 @@ const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
     () => store.state.entities.fileMetaData[props.fileId]
   )
   const { fileLink, onFileDownloadLinkClick, onFileLinkClick } = useFileLink(
-    props,
-    context
+    props
   )
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''

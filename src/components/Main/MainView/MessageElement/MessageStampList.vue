@@ -5,14 +5,14 @@
       name="rounded-triangle"
       :size="20"
       :class="$style.toggleButton"
-      :data-is-open="isDetailShown"
+      :data-is-open="$boolAttr(isDetailShown)"
       @click="toggleDetail"
     />
     <transition-group
       name="stamp"
       tag="div"
       :class="$style.stampList"
-      :data-show-details="isDetailShown"
+      :data-show-details="$boolAttr(isDetailShown)"
     >
       <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
         <stamp-element
@@ -32,13 +32,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  ref,
-  Ref
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType, ref, Ref } from 'vue'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'

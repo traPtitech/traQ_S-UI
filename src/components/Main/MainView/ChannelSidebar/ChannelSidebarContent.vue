@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
 import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 import ChannelSidebarMember from './ChannelSidebarMember.vue'
-import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
+//import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
@@ -68,7 +68,7 @@ export default defineComponent({
     ChannelSidebarPinned,
     ChannelSidebarViewers,
     ChannelSidebarMember,
-    ChannelSidebarEdit,
+    //ChannelSidebarEdit,
     ChannelSidebarRelation,
     ChannelSidebarQall,
     ChannelSidebarBots

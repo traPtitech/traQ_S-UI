@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import {
   defineComponent,
   computed,
@@ -26,7 +25,7 @@ import {
   onUnmounted,
   watch,
   nextTick
-} from '@vue/composition-api'
+} from 'vue'
 // import { ResizeObserver } from '@juggle/resize-observer'
 import { throttle } from 'throttle-debounce'
 
@@ -194,13 +193,9 @@ export default defineComponent({
         const startIndex = pageStartIndex * PAGE_SIZE
         const endIndex = (pageStartIndex + 1) * PAGE_SIZE
         const heightsSlice = state.itemHeights.slice(startIndex, endIndex)
-        // rollingPageHeights[pageStartIndex] = (rollingPageHeights[pageStartIndex - 1] || 0) + (heightsSlice.reduce((a,b) => a + b));
-        Vue.set(
-          state.rollingPageHeights,
-          pageStartIndex,
+        state.rollingPageHeights[pageStartIndex] =
           (state.rollingPageHeights[pageStartIndex - 1] || 0) +
-            heightsSlice.reduce((a, b) => a + b)
-        )
+          heightsSlice.reduce((a, b) => a + b)
       }
     }
     const update = () => {
@@ -212,7 +207,7 @@ export default defineComponent({
         const { scrollHeight } = child
         const index = Number(child.getAttribute('data-index'))
         if (!index) continue
-        Vue.set(state.itemHeights, index, scrollHeight)
+        state.itemHeights[index] = scrollHeight
         // Update the largest and smallest row heights
         state.largestRowHeight =
           scrollHeight > state.largestRowHeight
@@ -250,7 +245,7 @@ export default defineComponent({
       //         height > this.largestRowHeight ? height : this.largestRowHeight
       //       this.smallestRowHeight =
       //         height < this.smallestRowHeight ? height : this.smallestRowHeight
-      //       Vue.set(this.heights, index, height)
+      //       this.heights[index] = height
       //       const pageIndex = Math.floor(index / PAGE_SIZE)
       //       pageIndices.add(pageIndex)
 

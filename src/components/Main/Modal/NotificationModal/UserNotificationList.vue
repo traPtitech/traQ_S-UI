@@ -12,12 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  toRefs
-} from '@vue/composition-api'
+import { defineComponent, computed, reactive, toRefs } from 'vue'
 import store from '@/store'
 import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'

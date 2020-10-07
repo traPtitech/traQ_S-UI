@@ -10,8 +10,8 @@
     />
     <chrome-audio-slider
       :class="$style.sliderContainer"
-      @changeVolume="changeVolume"
-      @changeTime="changeTime"
+      @change-volume="changeVolume"
+      @change-time="changeTime"
       :current-time="currentTime"
       :duration="duration"
       :volume="volume"
@@ -19,7 +19,7 @@
     <div
       v-if="canUsePinP"
       :class="$style.icon"
-      :aria-disabled="isPinPShown ? 'true' : 'false'"
+      :aria-disabled="isPinPShown"
       @click="startPictureInPicture"
     >
       <icon mdi name="picture-in-picture-bottom-right" :size="20" />
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import useAudio from './use/audio'
 import Icon from '@/components/UI/Icon.vue'

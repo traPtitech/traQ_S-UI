@@ -44,14 +44,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  PropType,
-  reactive,
-  Ref,
-  ref
-} from '@vue/composition-api'
+import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath } from '@/lib/apis'
 import store from '@/store'
 import ImageUpload from '../ImageUpload.vue'

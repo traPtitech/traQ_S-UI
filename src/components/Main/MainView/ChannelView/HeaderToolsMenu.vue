@@ -2,35 +2,35 @@
   <main-view-header-popup-frame>
     <header-tools-menu-item
       v-if="isMobile"
-      @click.native="emit('click-qall')"
+      @click="emit('click-qall')"
       icon-name="phone"
       icon-mdi
       :class="$style.qallIcon"
       :label="qallLabel"
       :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-      :data-is-active="isJoinedQallSession || isQallSessionOpened"
+      :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
     />
     <header-tools-menu-item
       v-if="canCreateChildChannel"
-      @click.native="emit('click-create-channel')"
+      @click="emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
-      @click.native="emit('click-notification')"
+      @click="emit('click-notification')"
       icon-name="notified-or-subscribed"
       label="通知設定"
     />
     <header-tools-menu-item
-      @click.native="emit('click-copy-channel-link')"
+      @click="emit('click-copy-channel-link')"
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
-      @click.native="emit('click-manage-channel')"
+      @click="emit('click-manage-channel')"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed } from 'vue'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'
