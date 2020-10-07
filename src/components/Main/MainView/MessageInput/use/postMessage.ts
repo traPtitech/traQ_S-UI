@@ -42,12 +42,11 @@ const usePostMessage = (
   const isForce = computed(
     () => store.state.entities.channels[props.channelId]?.force
   )
-  const confirmString = computed(() =>
-    isForce
-      ? `#${channelIdToShortPathString(
-          props.channelId
-        )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
-      : ''
+  const confirmString = computed(
+    () =>
+      `#${channelIdToShortPathString(
+        props.channelId
+      )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
   )
 
   const isPosting = ref(false)

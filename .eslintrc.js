@@ -7,7 +7,7 @@ module.exports = {
     parser: '@typescript-eslint/parser'
   },
   extends: [
-    'plugin:vue/strongly-recommended',
+    'plugin:vue/vue3-strongly-recommended',
     '@vue/typescript/recommended',
     '@vue/prettier',
     '@vue/prettier/@typescript-eslint'
@@ -35,7 +35,7 @@ module.exports = {
     'unused-imports/no-unused-vars-ts': 'off',
     // TODO: 消す
     'vue/require-default-prop': 'off',
-    'vue/no-v-for-template-key': 'off'
+    'vue/require-explicit-emits': 'off'
   },
   overrides: [
     {
