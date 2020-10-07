@@ -55,9 +55,7 @@ export default defineComponent({
 
     const { state, approve, deny } = useConsent({
       scopes: !Array.isArray(rawScopes) ? rawScopes?.split(' ') : undefined,
-      clientId: !Array.isArray(rawClientId)
-        ? rawClientId ?? undefined
-        : undefined
+      clientId: typeof rawClientId === 'string' ? rawClientId : undefined
     })
 
     return { state, approve, deny }

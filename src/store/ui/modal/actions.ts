@@ -15,7 +15,7 @@ export const actions = defineActions({
   /**
    * モーダルを開き、`history.state`に状態を追加する
    */
-  pushModal: async (context, modalState: ModalState) => {
+  pushModal: (context, modalState: ModalState) => {
     const { commit, state } = modalActionContext(context)
     history.pushState(
       {

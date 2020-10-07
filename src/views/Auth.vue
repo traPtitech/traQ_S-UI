@@ -9,8 +9,7 @@ import {
   reactive,
   PropType,
   computed,
-  watch,
-  SetupContext
+  watch
 } from 'vue'
 import store from '@/store'
 import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
@@ -20,7 +19,7 @@ import { useRouter } from 'vue-router'
 
 export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
 
-const usePageSwitch = (props: { type: PageType }, context: SetupContext) => {
+const usePageSwitch = (props: { type: PageType }) => {
   const router = useRouter()
   const { redirect } = useRedirectParam()
   const state = reactive({
@@ -82,8 +81,8 @@ export default defineComponent({
   components: {
     AuthenticateMainView
   },
-  setup(props, context) {
-    const state = usePageSwitch(props, context)
+  setup(props) {
+    const state = usePageSwitch(props)
 
     return { state }
   }
