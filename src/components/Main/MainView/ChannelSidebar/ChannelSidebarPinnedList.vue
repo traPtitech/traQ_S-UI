@@ -26,7 +26,7 @@ export default defineComponent({
   props: {
     pinnedMessages: { type: Array as PropType<Pin[]>, default: [] }
   },
-  setup(props, context) {
+  setup(props) {
     const sortedMessages = computed(() =>
       [...props.pinnedMessages]
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))

@@ -13,6 +13,9 @@ export default defineComponent({
   name: 'MessageInputFileListItem',
   components: {
     Icon
+  },
+  emits: {
+    close: () => true
   }
 })
 </script>

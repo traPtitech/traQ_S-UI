@@ -21,6 +21,9 @@ export default defineComponent({
     ChannelSidebarPinned,
     ChannelSidebarViewers
   },
+  emits: {
+    'pinned-mode-toggle': () => true
+  },
   props: {
     viewerIds: {
       type: Array as PropType<UserId[]>,
@@ -30,9 +33,6 @@ export default defineComponent({
       type: Number,
       default: 0
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

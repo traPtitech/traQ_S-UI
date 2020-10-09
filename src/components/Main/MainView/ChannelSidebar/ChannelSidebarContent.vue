@@ -15,7 +15,7 @@
     />
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
-      @open="emit('pinned-mode-toggle')"
+      @open="$emit('pinned-mode-toggle')"
       :class="$style.sidebarItem"
     />
     <channel-sidebar-relation
@@ -48,6 +48,9 @@ import { UserId, ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarContent',
+  emits: {
+    pinnedModeToggle: () => true
+  },
   props: {
     channelId: { type: String as PropType<ChannelId>, requried: true },
     viewerIds: {
@@ -72,9 +75,6 @@ export default defineComponent({
     ChannelSidebarRelation,
     ChannelSidebarQall,
     ChannelSidebarBots
-  },
-  setup(_, { emit }) {
-    return { emit }
   }
 })
 </script>

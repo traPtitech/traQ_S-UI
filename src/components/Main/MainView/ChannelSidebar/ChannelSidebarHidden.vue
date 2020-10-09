@@ -26,6 +26,9 @@ import { UserId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarHidden',
+  emits: {
+    open: () => true
+  },
   props: {
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },

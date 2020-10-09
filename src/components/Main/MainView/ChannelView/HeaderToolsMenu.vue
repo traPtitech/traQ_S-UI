@@ -2,7 +2,7 @@
   <main-view-header-popup-frame>
     <header-tools-menu-item
       v-if="isMobile"
-      @click="emit('click-qall')"
+      @click="$emit('click-qall')"
       icon-name="phone"
       icon-mdi
       :class="$style.qallIcon"
@@ -12,25 +12,25 @@
     />
     <header-tools-menu-item
       v-if="canCreateChildChannel"
-      @click="emit('click-create-channel')"
+      @click="$emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
-      @click="emit('click-notification')"
+      @click="$emit('click-notification')"
       icon-name="notified-or-subscribed"
       label="通知設定"
     />
     <header-tools-menu-item
-      @click="emit('click-copy-channel-link')"
+      @click="$emit('click-copy-channel-link')"
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
-      @click="emit('click-manage-channel')"
+      @click="$emit('click-manage-channel')"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
@@ -52,6 +52,13 @@ export default defineComponent({
     MainViewHeaderPopupFrame,
     HeaderToolsMenuItem
   },
+  emits: {
+    'click-qall': () => true,
+    'click-create-channel': () => true,
+    'click-notification': () => true,
+    'click-copy-channel-link': () => true,
+    'click-manage-channel': () => true
+  },
   props: {
     showNotificationSettingBtn: { type: Boolean, default: true },
     hasActiveQallSession: { type: Boolean, default: false },
@@ -60,7 +67,7 @@ export default defineComponent({
     canCreateChildChannel: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const { isMobile } = useIsMobile()
     const qallLabel = computed(() => {
       if (props.isJoinedQallSession) {
@@ -79,7 +86,7 @@ export default defineComponent({
         UserPermission.EditChannel
       )
     )
-    return { emit, isMobile, qallLabel, hasChannelEditPermission }
+    return { isMobile, qallLabel, hasChannelEditPermission }
   }
 })
 </script>

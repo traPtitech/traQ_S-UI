@@ -25,9 +25,6 @@ export default defineComponent({
     iconMdi: { type: Boolean, default: false },
     label: { type: String, default: '' },
     disabled: { type: Boolean, default: false }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

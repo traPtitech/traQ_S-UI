@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -8,10 +8,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'MainViewHeaderPopupFrame',
-  setup() {
-    return {}
-  }
+  name: 'MainViewHeaderPopupFrame'
 })
 </script>
 

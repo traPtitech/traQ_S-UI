@@ -12,8 +12,6 @@
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
-    @focus="onFocus"
-    @blur="onBlur"
     @paste="onPaste"
   />
 </template>
@@ -30,29 +28,18 @@ import {
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
 
-const useFocus = (context: SetupContext) => {
-  const onFocus = () => {
-    context.emit('focus')
-  }
-  const onBlur = () => {
-    context.emit('blur')
-  }
-
-  return { onFocus, onBlur }
-}
-
 const useLineBreak = (
   props: { text: string },
   textareaRef: Ref<HTMLTextAreaElement | undefined>,
-  context: SetupContext
+  context: SetupContext<{ 'input-value': (value: string) => true }>
 ) => {
   const insertLineBreak = async () => {
     if (!textareaRef.value) return
     const pre = props.text.slice(0, textareaRef.value.selectionStart)
     const suf = props.text.slice(textareaRef.value.selectionEnd)
     const selectionIndex = pre.length + 1
-    // inputイベントを発火することでテキストを変更
-    context.emit('input', `${pre}\n${suf}`)
+    // input-valueイベントを発火することでテキストを変更
+    context.emit('input-value', `${pre}\n${suf}`)
 
     await nextTick()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -79,6 +66,14 @@ const usePaste = () => {
 
 export default defineComponent({
   name: 'MessageInputTextArea',
+  emits: {
+    'input-value': (value: string) => true,
+    'post-message': () => true,
+    'modifier-key-down': () => true,
+    'modifier-key-up': () => true,
+    focus: () => true,
+    blur: () => true
+  },
   props: {
     text: {
       type: String,
@@ -89,7 +84,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
+  setup(props, context) {
     const onInput = (value: string) => {
       context.emit('input-value', value)
     }
@@ -111,7 +106,6 @@ export default defineComponent({
       insertLineBreak
     )
 
-    const { onFocus, onBlur } = useFocus(context)
     const { onPaste } = usePaste()
 
     return {
@@ -121,8 +115,6 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       textareaAutosizeRef,
-      onFocus,
-      onBlur,
       onPaste
     }
   }

@@ -12,6 +12,7 @@ import SidebarContentContainerLink from '@/components/Main/MainView/MainViewSide
 
 export default defineComponent({
   name: 'ChannelSidebarPinned',
+  emits: { open: () => true },
   props: { pinnedMessageLength: { type: Number, default: 0 } },
   components: { SidebarContentContainerLink },
   setup(_, context) {

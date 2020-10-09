@@ -24,9 +24,6 @@ export default defineComponent({
     },
     iconName: String,
     title: { type: String, required: true }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

@@ -25,6 +25,9 @@ import ChannelSidebarHeaderName from './ChannelSidebarHeaderName.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarHeader',
+  emits: {
+    back: () => true
+  },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: false },
     title: { type: String, default: 'チャンネル' },

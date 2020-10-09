@@ -22,7 +22,7 @@ import Icon from '@/components/UI/Icon.vue'
 
 const useClickHandlers = (
   props: { canPostMessage: boolean },
-  context: SetupContext
+  context: SetupContext<{ 'click-send': () => true; 'click-stamp': () => true }>
 ) => {
   const onClickSendButton = () => {
     if (props.canPostMessage) {
@@ -40,6 +40,10 @@ export default defineComponent({
   components: {
     MessageInputInsertStampButton,
     Icon
+  },
+  emits: {
+    'click-send': () => true,
+    'click-stamp': () => true
   },
   props: {
     canPostMessage: {

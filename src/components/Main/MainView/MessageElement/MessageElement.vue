@@ -40,7 +40,9 @@ import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
-import useElementRenderObserver from './use/elementRenderObserver'
+import useElementRenderObserver, {
+  emitsOption
+} from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
@@ -55,6 +57,7 @@ export default defineComponent({
     MessagePinned,
     MessageTools
   },
+  emits: emitsOption,
   props: {
     messageId: {
       type: String as PropType<MessageId>,

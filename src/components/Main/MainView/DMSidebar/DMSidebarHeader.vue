@@ -11,9 +11,6 @@ export default defineComponent({
   name: 'DMSidebarHeader',
   props: {
     name: { type: String, required: true }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

@@ -29,13 +29,13 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
+  setup(props) {
     const {
       fileMeta,
       fileLink,
       fileThumbnailPath,
       fileThumbnailSize
-    } = useFileMeta(props, context)
+    } = useFileMeta(props)
     return { fileThumbnailPath, fileThumbnailSize, fileLink, fileMeta }
   }
 })

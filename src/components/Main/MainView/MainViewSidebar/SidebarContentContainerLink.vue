@@ -3,7 +3,7 @@
     clickable
     :title="title"
     :large-padding="largePadding"
-    @toggle="onClickLink"
+    @toggle="$emit('click-link')"
   >
     <template #header-control v-if="count !== undefined">
       <span :class="$style.count">{{ count }}</span>
@@ -21,6 +21,9 @@ export default defineComponent({
   components: {
     SidebarContentContainer
   },
+  emits: {
+    'click-link': () => true
+  },
   props: {
     title: String,
     count: Number,
@@ -28,10 +31,6 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
-  },
-  setup(_, context) {
-    const onClickLink = () => context.emit('click-link')
-    return { onClickLink }
   }
 })
 </script>

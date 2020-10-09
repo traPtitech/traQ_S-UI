@@ -20,6 +20,9 @@ export default defineComponent({
   components: {
     Icon
   },
+  emits: {
+    toggle: () => true
+  },
   props: {
     iconName: {
       type: String,

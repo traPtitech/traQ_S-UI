@@ -17,9 +17,6 @@ export default defineComponent({
       type: String as PropType<FileId>,
       default: ''
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>
