@@ -43,13 +43,13 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const {
       fileMeta,
       fileType,
       fileSize,
       onFileDownloadLinkClick
-    } = useFileMeta(props, context)
+    } = useFileMeta(props)
     return {
       fileMeta,
       fileType,

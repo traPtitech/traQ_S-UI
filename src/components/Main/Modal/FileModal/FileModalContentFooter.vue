@@ -33,8 +33,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const { fileMeta } = useFileMeta(props, context)
+  setup(props) {
+    const { fileMeta } = useFileMeta(props)
     const user = computed(
       () => store.state.entities.users[fileMeta.value?.uploaderId ?? '']
     )

@@ -32,6 +32,9 @@ import { randomString } from '@/lib/util/randomString'
 
 export default defineComponent({
   name: 'FormSelector',
+  emits: {
+    'update:modelValue': (value: string) => true
+  },
   props: {
     modelValue: {
       type: String,

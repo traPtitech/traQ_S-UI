@@ -21,6 +21,9 @@ import useInput from '@/use/input'
 
 export default defineComponent({
   name: 'FormRadio',
+  emits: {
+    'update:modelValue': (value: string) => true
+  },
   props: {
     /**
      * v-model用なので基本的には直接触らない
