@@ -1,15 +1,12 @@
 <template>
-  <div :class="$style.container"><slot></slot></div>
+  <div :class="$style.container"><slot /></div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'AuthenticateModal',
-  setup() {
-    return {}
-  }
+  name: 'AuthenticateModal'
 })
 </script>
 

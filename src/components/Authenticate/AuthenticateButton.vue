@@ -2,7 +2,6 @@
   <button
     :class="$style.container"
     :disabled="$boolAttr(disabled)"
-    @click="$emit('click')"
     :data-type="type"
   >
     <icon
@@ -26,6 +25,9 @@ export default defineComponent({
   components: {
     Icon
   },
+  emits: {
+    click: () => true
+  },
   props: {
     type: {
       type: String as PropType<Type>,
@@ -41,9 +43,6 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.container">
-    <span :class="$style.hr"></span>
+    <span :class="$style.hr" />
     <span :class="$style.label">
       {{ label }}
     </span>
-    <span :class="$style.hr"></span>
+    <span :class="$style.hr" />
   </div>
 </template>
 
@@ -19,9 +19,6 @@ export default defineComponent({
       type: String,
       default: ''
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

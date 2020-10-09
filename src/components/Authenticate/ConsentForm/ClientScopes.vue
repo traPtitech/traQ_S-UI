@@ -27,9 +27,6 @@ export default defineComponent({
       type: Array as PropType<OAuth2Scope[]>,
       default: []
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>
