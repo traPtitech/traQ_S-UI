@@ -33,21 +33,44 @@
       <h3>カスタムテーマ設定</h3>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
-          <div
-            v-for="(val, category) in state.custom"
-            :key="category"
-            :class="$style.category"
-          >
-            <h4>{{ category }}</h4>
-            <form-input
-              v-for="(color, name) in val"
-              :key="name"
-              :label="name"
-              v-model="val[name]"
-              use-change-event
-              :class="$style.input"
+          <div :class="$style.content">
+            <form-radio
+              label="フォーム入力"
+              v-model="customForm"
+              input-value="form"
+              :class="$style.form"
+            />
+            <form-radio
+              label="json形式"
+              v-model="customForm"
+              input-value="json"
+              :class="$style.form"
             />
           </div>
+          <template v-if="customForm === 'form'">
+            <div
+              v-for="(val, category) in state.custom"
+              :key="category"
+              :class="$style.category"
+            >
+              <h4>{{ category }}</h4>
+              <form-input
+                v-for="(color, name) in val"
+                :key="name"
+                :label="name"
+                v-model="val[name]"
+                use-change-event
+                :class="$style.input"
+              />
+            </div>
+          </template>
+          <p v-else>
+            <textarea-autosize
+              @input="val => (state.custom = jsonUpdate(val.target.value))"
+              :value="JSON.stringify(state.custom, null, '\t')"
+              :class="$style.jsonarea"
+            />
+          </p>
         </template>
         <p v-else>カスタムテーマが選択されていません</p>
       </div>
@@ -64,6 +87,11 @@ import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'ThemeTab',
+  data() {
+    return {
+      customForm: 'form'
+    }
+  },
   setup() {
     const browserSettings = computed(() => store.state.app.themeSettings)
     const { state } = useSyncedState(
@@ -71,10 +99,17 @@ export default defineComponent({
       store.commit.app.themeSettings.set
     )
 
-    // TODO: 色のバリデーション
     // TODO: カラーピッカー
-
     return { state }
+  },
+  methods: {
+    jsonUpdate(data: string) {
+      try {
+        return JSON.parse(data)
+      } catch (err) {
+        return this.state.custom
+      }
+    }
   },
   components: {
     FormRadio,
@@ -103,6 +138,24 @@ h3 {
       left: 12px;
       bottom: 8px;
     }
+  }
+}
+
+.jsonarea {
+  @include color-ui-primary;
+  @include background-secondary;
+  @include size-body1;
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  &[data-on-secondary] {
+    @include background-primary;
+  }
+  border: solid 2px transparent;
+  &:focus-within {
+    border-color: $theme-accent-focus;
   }
 }
 </style>
