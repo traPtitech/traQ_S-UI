@@ -1,6 +1,6 @@
 <template>
   <vue-slider
-    :value="value"
+    :model-value="value"
     @change="onChange"
     :min="min"
     :max="max"
