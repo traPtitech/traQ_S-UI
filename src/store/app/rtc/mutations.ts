@@ -1,4 +1,5 @@
 import { defineMutations } from 'direct-vuex'
+import { shallowReactive } from 'vue'
 import {
   S,
   UserRTCState,
@@ -7,7 +8,6 @@ import {
   ExtendedMediaStream
 } from './state'
 import { WebRTCUserState } from '@traptitech/traq'
-
 import { ChannelId, UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
 
@@ -159,7 +159,7 @@ export const mutations = defineMutations<S>()({
     state.currentRTCState = undefined
   },
   setMixer(state, mixer: AudioStreamMixer) {
-    state.mixer = mixer
+    state.mixer = shallowReactive(mixer)
   },
   unsetMixer(state) {
     state.mixer = undefined
