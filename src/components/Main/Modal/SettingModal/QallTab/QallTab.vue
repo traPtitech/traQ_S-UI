@@ -22,7 +22,7 @@
           type="range"
           v-model.number.lazy="state.masterVolume"
           min="0"
-          step="0.01"
+          step="0.005"
           max="1"
         />
         <div :class="$style.masterVolumeValue">
