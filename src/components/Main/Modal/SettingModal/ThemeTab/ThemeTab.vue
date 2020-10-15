@@ -55,10 +55,7 @@
               </div>
             </div>
           </div>
-          <edit-theme
-            :custom="state.custom"
-            @change-theme="val => (state.custom = val)"
-          />
+          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
         </template>
         <p v-else>カスタムテーマが選択されていません</p>
       </div>
@@ -71,6 +68,7 @@ import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
 import EditTheme from './EditTheme.vue'
+import { Theme } from '@/types/theme'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 
@@ -82,13 +80,14 @@ export default defineComponent({
       browserSettings,
       store.commit.app.themeSettings.set
     )
+    const changeTheme = (theme: Theme) => {
+      state.custom = theme
+    }
 
     // TODO: 色のバリデーション
     // TODO: カラーピッカー
 
-    return {
-      state
-    }
+    return { state, changeTheme }
   },
   components: {
     FormRadio,

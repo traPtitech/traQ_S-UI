@@ -4,16 +4,16 @@
     <form-button
       label="エクスポート"
       @click="onImportClick"
-      :disabled="isUpdated"
-      color="secondaly"
+      :disabled="isImporterOpen"
+      color="secondary"
       :class="$style.element"
     />
     -->
     <form-button
       label="インポート/エクスポート"
       @click="onImportClick"
-      :disabled="isUpdated"
-      color="secondaly"
+      :disabled="isImporterOpen"
+      color="secondary"
       :class="$style.element"
     />
     <!--
@@ -25,13 +25,13 @@
     />
     -->
   </div>
-  <template v-if="isUpdated">
+  <template v-if="isImporterOpen">
     <textarea-autosize
       @input="val => (editedTheme = val.target.value)"
       :value="editedTheme"
       :class="$style.jsonarea"
     />
-    <div :class="$style.updater">
+    <div :class="$style.import">
       <form-button
         label="保存"
         @click="onUpdateClick"
@@ -46,33 +46,19 @@
 import { defineComponent, computed, ref, PropType, SetupContext } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { Theme } from '@/types/theme'
+import { dequal } from 'dequal'
 import { lightTheme } from '@/store/app/themeSettings/default'
 
-const hasKeyTheme = (theme: Theme): boolean => {
-  const keys = ['accent', 'background', 'text', 'ui']
-  const keysAccent = ['error', 'focus', 'notification', 'online', 'primary']
-  const keysBackground = ['primary', 'secondary', 'secondarySub', 'tertiary']
-  const keysUi = ['primary', 'secondary', 'tertiary']
-  const keysText = ['primary', 'secondary']
-  if (Object.keys(theme).sort().toString() !== keys.toString()) {
-    return false
-  }
-  if (Object.keys(theme.accent).sort().toString() !== keysAccent.toString()) {
-    return false
-  }
-  if (
-    Object.keys(theme.background).sort().toString() !==
-    keysBackground.toString()
-  ) {
-    return false
-  }
-  if (Object.keys(theme.ui).sort().toString() !== keysUi.toString()) {
-    return false
-  }
-  if (Object.keys(theme.text).sort().toString() !== keysText.toString()) {
-    return false
-  }
-  return true
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isValidThemeJSON = (theme: any): boolean => {
+  return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
+    Object.keys(lightTheme[category]).every(
+      colorName =>
+        theme[category] &&
+        theme[category][colorName] &&
+        typeof theme[category][colorName] === 'string'
+    )
+  )
 }
 
 export default defineComponent({
@@ -80,23 +66,32 @@ export default defineComponent({
   props: {
     custom: {
       type: Object as PropType<Theme>,
-      default: lightTheme
+      required: true
     }
   },
-  emits: ['change-theme'],
+  emits: {
+    'change-theme': (theme: Theme) => true
+  },
   setup(props, context: SetupContext) {
-    const isChanged = computed(
-      () => editedTheme.value === JSON.stringify(props.custom, null, '\t')
-    )
-    const isUpdated = ref(false)
+    const isChanged = computed(() => {
+      try {
+        return dequal(JSON.parse(editedTheme.value), props.custom)
+      } catch (err) {
+        return false
+      }
+    })
+    const isImporterOpen = ref(false)
     const editedTheme = ref(JSON.stringify(props.custom, null, '\t'))
+    const appliedThemeStringified = computed(() =>
+      JSON.stringify(props.custom, null, '\t')
+    )
     const onImportClick = () => {
-      isUpdated.value = true
+      isImporterOpen.value = true
     }
     const onUpdateClick = () => {
       try {
         const themeObj = JSON.parse(editedTheme.value) as Theme
-        if (hasKeyTheme(themeObj)) {
+        if (isValidThemeJSON(themeObj)) {
           context.emit('change-theme', themeObj)
         } else {
           editedTheme.value = JSON.stringify(props.custom, null, '\t')
@@ -113,7 +108,7 @@ export default defineComponent({
       onImportClick,
       editedTheme,
       isChanged,
-      isUpdated
+      isImporterOpen
     }
   },
   components: {
@@ -125,11 +120,14 @@ export default defineComponent({
 <style lang="scss" module>
 .content {
   margin-left: 12px;
-  float: right;
+  display: flex;
+  flex-direction: column;
 }
 .element {
   margin-right: 8px;
   margin-bottom: 8px;
+  padding: 5px;
+  align-self: flex-end;
 }
 .jsonarea {
   @include color-ui-primary;
@@ -143,9 +141,9 @@ export default defineComponent({
     border-color: $theme-accent-focus;
   }
 }
-.updater {
+.import {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
+  margin: 12px auto;
 }
 </style>
