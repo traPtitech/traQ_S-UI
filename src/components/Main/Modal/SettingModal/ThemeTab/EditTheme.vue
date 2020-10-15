@@ -27,9 +27,9 @@
   </div>
   <template v-if="isImporterOpen">
     <textarea-autosize
-      @input="val => (editedTheme = val.target.value)"
+      @input="updateEditedTheme($event.target.value)"
       :value="editedTheme"
-      :class="$style.jsonarea"
+      :class="$style.jsonField"
     />
     <div :class="$style.import">
       <form-button
@@ -45,12 +45,13 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType, SetupContext } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import store from '@/store'
 import { Theme } from '@/types/theme'
 import { dequal } from 'dequal'
 import { lightTheme } from '@/store/app/themeSettings/default'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isValidThemeJSON = (theme: any): boolean => {
+const isValidThemeJSON = (theme: any): theme is Theme => {
   return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
     Object.keys(lightTheme[category]).every(
       colorName =>
@@ -59,6 +60,13 @@ const isValidThemeJSON = (theme: any): boolean => {
         typeof theme[category][colorName] === 'string'
     )
   )
+}
+
+const failedUpdateTheme = () => {
+  store.commit.ui.toast.addToast({
+    type: 'error',
+    text: 'テーマの更新に失敗しました'
+  })
 }
 
 export default defineComponent({
@@ -81,25 +89,28 @@ export default defineComponent({
       }
     })
     const isImporterOpen = ref(false)
-    const editedTheme = ref(JSON.stringify(props.custom, null, '\t'))
     const appliedThemeStringified = computed(() =>
       JSON.stringify(props.custom, null, '\t')
     )
+    const editedTheme = ref(appliedThemeStringified.value)
+    const updateEditedTheme = (theme: string) => {
+      editedTheme.value = theme
+    }
     const onImportClick = () => {
       isImporterOpen.value = true
     }
     const onUpdateClick = () => {
       try {
-        const themeObj = JSON.parse(editedTheme.value) as Theme
+        const themeObj = JSON.parse(editedTheme.value)
         if (isValidThemeJSON(themeObj)) {
           context.emit('change-theme', themeObj)
         } else {
-          editedTheme.value = JSON.stringify(props.custom, null, '\t')
-          context.emit('change-theme', props.custom)
+          editedTheme.value = appliedThemeStringified.value
+          failedUpdateTheme()
         }
       } catch (err) {
-        editedTheme.value = JSON.stringify(props.custom, null, '\t')
-        context.emit('change-theme', props.custom)
+        editedTheme.value = appliedThemeStringified.value
+        failedUpdateTheme()
       }
     }
 
@@ -108,7 +119,8 @@ export default defineComponent({
       onImportClick,
       editedTheme,
       isChanged,
-      isImporterOpen
+      isImporterOpen,
+      updateEditedTheme
     }
   },
   components: {
@@ -124,19 +136,16 @@ export default defineComponent({
   flex-direction: column;
 }
 .element {
-  margin-right: 8px;
-  margin-bottom: 8px;
-  padding: 5px;
   align-self: flex-end;
 }
-.jsonarea {
+.jsonField {
   @include color-ui-primary;
   @include background-secondary;
   width: 100%;
   margin-top: 12px;
-  align-items: center;
   border-radius: 4px;
   border: solid 2px transparent;
+  padding: 4px;
   &:focus-within {
     border-color: $theme-accent-focus;
   }
@@ -144,6 +153,6 @@ export default defineComponent({
 .import {
   display: flex;
   justify-content: center;
-  margin: 12px auto;
+  margin: 12px;
 }
 </style>

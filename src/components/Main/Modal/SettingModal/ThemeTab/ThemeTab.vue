@@ -113,23 +113,22 @@ h3 {
 .setting {
   @include background-secondary;
   border-radius: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  padding: 12px;
+  grid-gap: 16px;
 }
 .category {
-  padding: 10px;
   .color {
     display: flex;
-    padding: 3px;
+    margin: 4px 0;
   }
   .name {
     @include color-ui-secondary;
-    width: 40%;
+    margin-right: 8px;
   }
   .input {
-    width: 40%;
+    margin-left: auto;
   }
 }
 </style>
