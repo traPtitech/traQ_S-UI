@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div :class="$style.channelNameContainer" :data-is-current="isCurrent">
+    <div
+      :class="$style.channelNameContainer"
+      :data-is-current="$boolAttr(isCurrent)"
+    >
       <span :data-is-current="$boolAttr(isCurrent)" :class="$style.channelHash">
         #
       </span>
