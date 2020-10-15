@@ -28,8 +28,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
+  setup(props) {
+    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
     return { fileMeta, fileLink, fileRawPath }
   }
 })

@@ -13,10 +13,7 @@ import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'ChannelViewFileUploadOverlay',
-  components: { Icon },
-  setup() {
-    return {}
-  }
+  components: { Icon }
 })
 </script>
 

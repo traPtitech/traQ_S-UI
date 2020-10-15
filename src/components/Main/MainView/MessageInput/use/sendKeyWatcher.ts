@@ -86,14 +86,12 @@ const needBreakLineInsert = (keyEvent: KeyboardEvent) => {
   )
 }
 
-/**
- * contextに対して発火されるイベント
- * - `post-message`: 投稿トリガー時
- * - `modifier-key-down`: 修飾キーが押された
- * - `modifier-key-up`: 修飾キーが離された
- */
 const useSendKeyWatcher = (
-  context: SetupContext,
+  context: SetupContext<{
+    'post-message': () => true // 投稿トリガー時
+    'modifier-key-down': () => true // 修飾キーが押された
+    'modifier-key-up': () => true // 修飾キーが離された
+  }>,
   insertLineBreak: () => void
 ) => {
   const state = reactive({

@@ -33,9 +33,6 @@ export default defineComponent({
       type: String as PropType<ChannelId>,
       required: true
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

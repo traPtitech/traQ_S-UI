@@ -29,6 +29,9 @@ export default defineComponent({
     MessageInputFileListItemCloseButton,
     FileTypeIcon
   },
+  emits: {
+    'item-remove': () => true
+  },
   props: {
     attachment: {
       type: Object as PropType<Attachment>,

@@ -18,6 +18,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SidebarContentContainer',
+  emits: {
+    toggle: () => true
+  },
   props: {
     title: String,
     largePadding: {

@@ -6,6 +6,18 @@ import { useRoute } from 'vue-router'
 
 declare const window: ResizeObserverWindow
 
+export const emitsOption = {
+  'entry-message-loaded': (height: number) => true,
+  'change-height': (changed: {
+    heightDiff: number
+    top: number
+    bottom: number
+    lastTop: number
+    lastBottom: number
+    date?: string
+  }) => true
+}
+
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
   props: { isEntryMessage: boolean },
@@ -16,7 +28,7 @@ const useElementRenderObserver = (
   embeddingsState: Readonly<{
     fileIds: Readonly<FileId[]>
   }>,
-  context: SetupContext
+  context: SetupContext<typeof emitsOption>
 ) => {
   const route = useRoute()
 

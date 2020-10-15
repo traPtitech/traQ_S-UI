@@ -34,9 +34,7 @@ export default defineComponent({
   setup() {
     const { closeSidebar } = useSidebar()
 
-    return {
-      closeSidebar
-    }
+    return { closeSidebar }
   }
 })
 </script>

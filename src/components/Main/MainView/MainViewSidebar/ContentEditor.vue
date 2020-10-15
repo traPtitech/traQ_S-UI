@@ -39,6 +39,11 @@ export default defineComponent({
   components: {
     Icon
   },
+  emits: {
+    'edit-start': () => true,
+    'edit-done': () => true,
+    'input-value': (value: string) => true
+  },
   props: {
     value: { type: String, required: false },
     isEditing: { type: Boolean, default: false },

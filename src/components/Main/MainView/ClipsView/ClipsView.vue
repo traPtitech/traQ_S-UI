@@ -11,12 +11,9 @@ import ClipsViewContent from './ClipsViewContent.vue'
 
 export default defineComponent({
   name: 'ClipsView',
+  components: { ClipsViewContent },
   props: {
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
-  },
-  components: { ClipsViewContent },
-  setup() {
-    return {}
   }
 })
 </script>

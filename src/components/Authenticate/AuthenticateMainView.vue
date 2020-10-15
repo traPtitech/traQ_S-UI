@@ -29,9 +29,6 @@ export default defineComponent({
       type: String as PropType<PageType>,
       default: 'login' as const
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

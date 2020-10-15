@@ -31,16 +31,12 @@ import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
 import useIsMobile from '@/use/isMobile'
 
-type Props = {
-  channelId: ChannelId
-}
-
 type ChannelPathInfo = {
   name: string
   path: string[]
 }
 
-const usePathInfo = (props: Props) => {
+const usePathInfo = (props: { channelId: ChannelId }) => {
   const { channelIdToPath } = useChannelPath()
 
   /** 現在のチャンネルに至るまでのフルパスたち */

@@ -14,12 +14,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
 
 export default defineComponent({
   name: 'AuthenticateInput',
+  emits: {
+    inputValue: (value: string) => true
+  },
   props: {
     text: { type: String, default: '' },
     label: { type: String, default: '' },
@@ -33,7 +36,7 @@ export default defineComponent({
     },
     enterkeyhint: String
   },
-  setup(props, context: SetupContext) {
+  setup(props, context) {
     const { onInput } = useInput(context)
     const id = randomString()
     return { onInput, id }

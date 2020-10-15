@@ -39,9 +39,6 @@ export default defineComponent({
     },
     developer: Object as PropType<User>
   },
-  setup() {
-    return {}
-  },
   components: {
     UserIcon
   }

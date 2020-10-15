@@ -15,9 +15,6 @@ export default defineComponent({
   name: 'MessageInputUploadButton',
   components: {
     IconButton
-  },
-  setup() {
-    return {}
   }
 })
 </script>

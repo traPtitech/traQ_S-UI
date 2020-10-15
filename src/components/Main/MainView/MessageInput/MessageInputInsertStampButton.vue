@@ -15,9 +15,6 @@ export default defineComponent({
   name: 'MessageInputInsertStampButton',
   components: {
     IconButton
-  },
-  setup() {
-    return {}
   }
 })
 </script>

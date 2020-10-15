@@ -30,10 +30,15 @@ import store from '@/store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { MessageStampById } from './MessageStampList.vue'
+import { StampId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'StampElement',
   components: { Stamp, SpinNumber },
+  emits: {
+    'add-stamp': (id: StampId) => true,
+    'remove-stamp': (id: StampId) => true
+  },
   props: {
     stamp: {
       type: Object as PropType<MessageStampById>,

@@ -53,8 +53,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
-    const { fileMeta, fileRawPath } = useFileMeta(props, context)
+  setup(props) {
+    const { fileMeta, fileRawPath } = useFileMeta(props)
     const {
       isPlaying,
       currentTime,

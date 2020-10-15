@@ -46,9 +46,6 @@ export default defineComponent({
       type: String,
       default: ''
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

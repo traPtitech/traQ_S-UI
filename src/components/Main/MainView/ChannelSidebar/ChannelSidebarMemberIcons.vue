@@ -26,9 +26,6 @@ export default defineComponent({
   components: { UserIcon },
   props: {
     viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

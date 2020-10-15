@@ -3,7 +3,7 @@
     <template v-if="!isMobile">
       <header-tools-item
         v-if="isQallEnabled"
-        @toggle="emit('click-qall')"
+        @toggle="$emit('click-qall')"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
@@ -50,7 +50,7 @@
     </template>
     <header-tools-item
       v-if="isStared"
-      @toggle="emit('unstar-channel')"
+      @toggle="$emit('unstar-channel')"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
@@ -58,7 +58,7 @@
     />
     <header-tools-item
       v-else
-      @toggle="emit('star-channel')"
+      @toggle="$emit('star-channel')"
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
@@ -74,7 +74,7 @@
     <div :class="$style.moreButton">
       <div :class="$style.popupLocator" :id="teleportTargetName" />
       <header-tools-item
-        @toggle="emit('click-more')"
+        @toggle="$emit('click-more')"
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
@@ -98,6 +98,12 @@ export default defineComponent({
   components: {
     HeaderToolsItem
   },
+  emits: {
+    'click-qall': () => true,
+    'unstar-channel': () => true,
+    'star-channel': () => true,
+    'click-more': () => true
+  },
   props: {
     isStared: { type: Boolean, default: false },
     isForcedChannel: { type: Boolean, default: false },
@@ -106,7 +112,7 @@ export default defineComponent({
     isJoinedQallSession: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const {
       changeToNextSubscriptionLevel,
       currentChannelSubscription
@@ -122,7 +128,6 @@ export default defineComponent({
 
     return {
       qallIconName,
-      emit,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
       teleportTargetName,

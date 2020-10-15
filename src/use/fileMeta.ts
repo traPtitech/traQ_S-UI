@@ -1,10 +1,10 @@
-import { computed, SetupContext } from 'vue'
+import { computed } from 'vue'
 import store from '@/store'
 import { buildFilePath, buildFileThumbnailPath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
 import useFileLink from '@/use/fileLink'
 
-const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
+const useFileMeta = (props: { fileId: string }) => {
   const fileMeta = computed(
     () => store.state.entities.fileMetaData[props.fileId]
   )

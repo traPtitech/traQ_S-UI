@@ -13,9 +13,6 @@ export default defineComponent({
   props: {
     channelName: { type: String, required: true },
     showHash: { type: Boolean, default: false }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

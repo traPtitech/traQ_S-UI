@@ -20,7 +20,6 @@ import {
   ref,
   Ref,
   watch,
-  SetupContext,
   nextTick,
   shallowRef
 } from 'vue'
@@ -35,10 +34,7 @@ const useMenu = () => {
   return { state }
 }
 
-const useMenuHeight = (
-  context: SetupContext,
-  state: { isPopupMenuShown: boolean }
-) => {
+const useMenuHeight = (state: { isPopupMenuShown: boolean }) => {
   const height = ref(0)
   const menuContainerRef = shallowRef<HTMLDivElement | null>(null)
   watch(
@@ -72,9 +68,9 @@ export default defineComponent({
   components: {
     MessageToolsMenu
   },
-  setup(_, context) {
+  setup() {
     const { state } = useMenu()
-    const { height, menuContainerRef } = useMenuHeight(context, state)
+    const { height, menuContainerRef } = useMenuHeight(state)
 
     const styles = useStyles(state, height)
     const closePopupMenu = () => {

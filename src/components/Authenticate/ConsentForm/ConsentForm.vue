@@ -49,7 +49,7 @@ export default defineComponent({
     ClientScopes,
     AuthenticateButton
   },
-  setup(_, context) {
+  setup() {
     const route = useRoute()
     const { scopes: rawScopes, client_id: rawClientId } = route.query
 

@@ -18,6 +18,7 @@ import { isDefined } from '@/lib/util/array'
 export default defineComponent({
   name: 'ChannelSidebarViewerDetail',
   components: { UserIcon, SidebarContentContainer },
+  emits: { close: () => true },
   props: { viewerIds: { type: Array as PropType<UserId[]>, default: [] } },
   setup(props, context) {
     const closeDetail = () => {

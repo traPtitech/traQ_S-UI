@@ -24,9 +24,6 @@ export default defineComponent({
     topic: { type: String, default: '' },
     isCurrent: { type: Boolean, default: false },
     link: { type: String }
-  },
-  setup() {
-    return {}
   }
 })
 </script>

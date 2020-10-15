@@ -15,9 +15,6 @@ export default defineComponent({
   name: 'AuthenticateHeader',
   props: {
     title: String
-  },
-  setup() {
-    return {}
   }
 })
 </script>

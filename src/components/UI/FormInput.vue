@@ -39,13 +39,16 @@ import useInput from '@/use/input'
 
 export default defineComponent({
   name: 'FormInput',
+  emits: {
+    'update:modelValue': (value: string) => true
+  },
   props: {
     type: {
       type: String,
       default: 'text'
     },
     modelValue: {
-      type: [String, Number],
+      type: String,
       default: ''
     },
     onSecondary: {

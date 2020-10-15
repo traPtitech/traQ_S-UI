@@ -24,7 +24,9 @@ import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
-import useElementRenderObserver from './use/elementRenderObserver'
+import useElementRenderObserver, {
+  emitsOption
+} from './use/elementRenderObserver'
 import useEmbeddings from './use/embeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
@@ -39,6 +41,7 @@ export default defineComponent({
     MessageTools,
     MessageQuoteListItemFooter
   },
+  emits: emitsOption,
   props: {
     messageId: {
       type: String as PropType<MessageId>,
