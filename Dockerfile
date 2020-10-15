@@ -1,5 +1,5 @@
 # alpineにするとnode-gypで死ぬ
-FROM node:14.11.0 as build
+FROM node:14.13.1 as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
