@@ -27,7 +27,7 @@
   </div>
   <template v-if="isImporterOpen">
     <textarea-autosize
-      @input="updateEditedTheme($event.target.value)"
+      @input-value="updateEditedTheme($event)"
       :value="editedTheme"
       :class="$style.jsonField"
     />
