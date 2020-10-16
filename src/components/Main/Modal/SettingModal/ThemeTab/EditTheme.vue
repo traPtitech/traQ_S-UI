@@ -27,7 +27,7 @@
   </div>
   <template v-if="isImporterOpen">
     <textarea-autosize
-      @input-value="updateEditedTheme($event)"
+      @input-value="updateEditedTheme"
       :value="editedTheme"
       :class="$style.jsonField"
     />
@@ -62,10 +62,10 @@ const isValidThemeJSON = (theme: any): theme is Theme => {
   )
 }
 
-const failedUpdateTheme = () => {
+const failedUpdateTheme = (text?: string) => {
   store.commit.ui.toast.addToast({
     type: 'error',
-    text: 'テーマの更新に失敗しました'
+    text: 'テーマの更新に失敗しました' + (text === undefined ? '' : ': ' + text)
   })
 }
 
@@ -106,11 +106,10 @@ export default defineComponent({
           context.emit('change-theme', themeObj)
         } else {
           editedTheme.value = appliedThemeStringified.value
-          failedUpdateTheme()
+          failedUpdateTheme('構文エラー')
         }
       } catch (err) {
-        editedTheme.value = appliedThemeStringified.value
-        failedUpdateTheme()
+        failedUpdateTheme('無効なJSON')
       }
     }
 
@@ -131,7 +130,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .content {
-  margin-left: 12px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
 }
