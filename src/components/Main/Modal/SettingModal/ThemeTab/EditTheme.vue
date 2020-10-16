@@ -34,7 +34,7 @@
     <div :class="$style.import">
       <form-button
         label="保存"
-        @click="onUpdateClick"
+        @click="applyTheme"
         :disabled="isChanged"
         color="primary"
       />
@@ -46,7 +46,6 @@
 import {
   defineComponent,
   computed,
-  Ref,
   ref,
   SetupContext,
   PropType,
@@ -77,31 +76,28 @@ const failedUpdateTheme = (text?: string) => {
   })
 }
 
-const useEditedThemes = (custom: Theme) => {
+const useEditedThemes = (
+  props: { custom: Theme },
+  context: SetupContext<{ 'change-theme': (theme: Theme) => boolean }>
+) => {
   const appliedThemeStringified = computed(() =>
-    JSON.stringify(custom, null, '\t')
+    JSON.stringify(props.custom, null, '\t')
   )
   const editedTheme = ref(appliedThemeStringified.value)
-
+  watchEffect(() => {
+    editedTheme.value = appliedThemeStringified.value
+  })
   const updateEditedTheme = (theme: string) => {
     editedTheme.value = theme
   }
   const isChanged = computed(() => {
     try {
-      return dequal(JSON.parse(editedTheme.value), custom)
-    } catch (err) {
+      return dequal(JSON.parse(editedTheme.value), props.custom)
+    } catch {
       return true
     }
   })
-  return { appliedThemeStringified, editedTheme, updateEditedTheme, isChanged }
-}
-
-const onButtonClick = (editedTheme: Ref<string>, context: SetupContext) => {
-  const isImporterOpen = ref(false)
-  const onImportClick = () => {
-    isImporterOpen.value = true
-  }
-  const onUpdateClick = () => {
+  const applyTheme = () => {
     try {
       const themeObj = JSON.parse(editedTheme.value)
       if (isValidThemeJSON(themeObj)) {
@@ -109,11 +105,19 @@ const onButtonClick = (editedTheme: Ref<string>, context: SetupContext) => {
       } else {
         failedUpdateTheme('構文エラー')
       }
-    } catch (err) {
+    } catch {
       failedUpdateTheme('無効なJSON')
     }
   }
-  return { isImporterOpen, onImportClick, onUpdateClick }
+  return { editedTheme, updateEditedTheme, isChanged, applyTheme }
+}
+
+const useImporter = () => {
+  const isImporterOpen = ref(false)
+  const onImportClick = () => {
+    isImporterOpen.value = true
+  }
+  return { isImporterOpen, onImportClick }
 }
 
 export default defineComponent({
@@ -127,29 +131,25 @@ export default defineComponent({
   emits: {
     'change-theme': (theme: Theme) => true
   },
-  setup(props, context: SetupContext) {
+  setup(
+    props,
+    context: SetupContext<{ 'change-theme': (theme: Theme) => boolean }>
+  ) {
     const {
-      appliedThemeStringified,
       editedTheme,
       updateEditedTheme,
-      isChanged
-    } = useEditedThemes(props.custom)
+      isChanged,
+      applyTheme
+    } = useEditedThemes(props, context)
 
-    const { isImporterOpen, onImportClick, onUpdateClick } = onButtonClick(
-      editedTheme,
-      context
-    )
-
-    watchEffect(() => {
-      editedTheme.value = appliedThemeStringified.value
-    })
+    const { isImporterOpen, onImportClick } = useImporter()
 
     return {
-      onUpdateClick,
-      onImportClick,
+      applyTheme,
       editedTheme,
       isChanged,
       isImporterOpen,
+      onImportClick,
       updateEditedTheme
     }
   },
