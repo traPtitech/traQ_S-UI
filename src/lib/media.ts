@@ -21,4 +21,4 @@ export const maxBreakpoints = {
   large: minBreakpoints.exLarge - 0.02
 }
 
-export const mobileMaxBreakpoint = maxBreakpoints.small
+export const mobileMinBreakpoint = minBreakpoints.small

@@ -15,7 +15,7 @@ export default defineComponent({
   name: 'Navigation',
   components: { DesktopNavigation, MobileNavigation },
   setup() {
-    const isMobile = computed(() => store.getters.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
     return { isMobile }
   }
 })

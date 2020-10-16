@@ -7,18 +7,21 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeMount, watchEffect, Ref } from 'vue'
 import store from './store'
-import { throttle } from 'throttle-debounce'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
+import { mobileMinBreakpoint } from '@/lib/media'
 
 const useWindowResizeObserver = () => {
-  const resizeHandler = () => {
-    store.commit.ui.setViewportWidth(window.innerWidth)
-  }
-  window.addEventListener('resize', throttle(100, resizeHandler))
-  resizeHandler()
+  const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
+
+  store.commit.ui.setIsMobile(queryList.matches)
+
+  // safariではaddEventListener('change', func)が未対応なため
+  queryList.addListener((event: MediaQueryListEvent) => {
+    store.commit.ui.setIsMobile(event.matches)
+  })
 }
 
 const useQallConfirmer = () => {
@@ -146,7 +149,7 @@ export default defineComponent({
   components: {},
   setup() {
     useWindowResizeObserver()
-    const isMobile = computed(() => store.getters.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
 
     useQallConfirmer()
 

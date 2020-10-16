@@ -83,7 +83,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
 
   // state machine hooks
   watch(mState, newState => {
-    if (!store.getters.ui.isMobile) return
+    if (!store.state.ui.isMobile) return
     if (newState === MainViewComponentState.NavAppearingAuto) {
       openNav()
     } else if (newState === MainViewComponentState.NavDisappearingAuto) {
@@ -96,7 +96,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   })
 
   watch(
-    () => store.getters.ui.isMobile,
+    () => store.state.ui.isMobile,
     newState => {
       if (newState) return
       closeNav()
@@ -120,7 +120,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     completelyAppeared: Readonly<Ref<boolean>>
   ) => {
     watch(completelyAppeared, newVal => {
-      if (!store.getters.ui.isMobile) return
+      if (!store.state.ui.isMobile) return
       if (
         newVal &&
         (mState.value === states.appearingAuto ||
@@ -134,7 +134,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
       }
     })
     watch(appeared, newVal => {
-      if (!store.getters.ui.isMobile) return
+      if (!store.state.ui.isMobile) return
       if (newVal && mState.value === states.appearingWaitingTouchEnd) {
         store.commit.ui.mainView.setMainViewComponentState(states.appearing)
       }
@@ -166,7 +166,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     watch(
       () => swipeDetectorState.swipeDirection,
       newVal => {
-        if (!store.getters.ui.isMobile || newVal !== 'none') return
+        if (!store.state.ui.isMobile || newVal !== 'none') return
         if (
           mState.value === states.appearingWaitingTouchEnd ||
           mState.value === states.disappearingWaitingTouchEnd
