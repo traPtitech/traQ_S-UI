@@ -12,6 +12,10 @@
       :name="user.name"
       :twitter-id="detail ? detail.twitterId : undefined"
     />
+    <last-online
+      :class="$style.section"
+      :last-online="detail ? detail.lastOnline : undefined"
+    />
   </div>
 </template>
 
@@ -22,6 +26,7 @@ import AccountState from './AccountState.vue'
 import Bio from './Bio.vue'
 import HomeChannel from './HomeChannel.vue'
 import Accounts from './Accounts.vue'
+import LastOnline from './LastOnline.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
@@ -39,7 +44,8 @@ export default defineComponent({
     AccountState,
     Bio,
     HomeChannel,
-    Accounts
+    Accounts,
+    LastOnline
   }
 })
 </script>
