@@ -33,21 +33,29 @@
       <h3>カスタムテーマ設定</h3>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
-          <div
-            v-for="(val, category) in state.custom"
-            :key="category"
-            :class="$style.category"
-          >
-            <h4>{{ category }}</h4>
-            <form-input
-              v-for="(color, name) in val"
-              :key="name"
-              :label="name"
-              v-model="val[name]"
-              use-change-event
-              :class="$style.input"
-            />
+          <div :class="$style.setting">
+            <div
+              v-for="(val, category) in state.custom"
+              :key="category"
+              :class="$style.category"
+            >
+              <h4 class>{{ category }}</h4>
+              <div
+                v-for="(color, name) in val"
+                :key="name"
+                :class="$style.color"
+              >
+                <p :class="$style.name">{{ name }}</p>
+                <form-input
+                  v-model="val[name]"
+                  use-change-event
+                  on-secondary
+                  :class="$style.input"
+                />
+              </div>
+            </div>
           </div>
+          <edit-theme :custom="state.custom" @change-theme="changeTheme" />
         </template>
         <p v-else>カスタムテーマが選択されていません</p>
       </div>
@@ -59,6 +67,8 @@
 import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import useSyncedState from '../use/syncedState'
+import EditTheme from './EditTheme.vue'
+import { Theme } from '@/types/theme'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 
@@ -70,14 +80,18 @@ export default defineComponent({
       browserSettings,
       store.commit.app.themeSettings.set
     )
+    const changeTheme = (theme: Theme) => {
+      state.custom = theme
+    }
 
     // TODO: 色のバリデーション
     // TODO: カラーピッカー
 
-    return { state }
+    return { state, changeTheme }
   },
   components: {
     FormRadio,
+    EditTheme,
     FormInput
   }
 })
@@ -96,13 +110,25 @@ h3 {
 .form {
   margin-right: 12px;
 }
+.setting {
+  @include background-secondary;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  padding: 12px;
+  grid-gap: 16px;
+}
 .category {
-  margin-bottom: 24px;
+  .color {
+    display: flex;
+    margin: 4px 0;
+  }
+  .name {
+    @include color-ui-secondary;
+    margin-right: 8px;
+  }
   .input {
-    margin : {
-      left: 12px;
-      bottom: 8px;
-    }
+    margin-left: auto;
   }
 }
 </style>
