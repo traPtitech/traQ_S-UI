@@ -60,7 +60,9 @@ import {
   mdiPause,
   mdiVolumeHigh,
   mdiVolumeOff,
-  mdiPictureInPictureBottomRight
+  mdiPictureInPictureBottomRight,
+  mdiSnowflake,
+  mdiCancel
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -129,7 +131,9 @@ const mdi: MdiIconsMapping = {
   pause: mdiPause,
   'volume-high': mdiVolumeHigh,
   'volume-off': mdiVolumeOff,
-  'picture-in-picture-bottom-right': mdiPictureInPictureBottomRight
+  'picture-in-picture-bottom-right': mdiPictureInPictureBottomRight,
+  snowflake: mdiSnowflake,
+  cancel: mdiCancel
 }
 
 export default mdi
