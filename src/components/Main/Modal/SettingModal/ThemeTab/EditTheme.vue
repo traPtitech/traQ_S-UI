@@ -78,7 +78,7 @@ const failedUpdateTheme = (text?: string) => {
 
 const useEditedThemes = (
   props: { custom: Theme },
-  context: SetupContext<{ 'change-theme': (theme: Theme) => boolean }>
+  context: SetupContext<{ 'change-theme': (theme: Theme) => true }>
 ) => {
   const appliedThemeStringified = computed(() =>
     JSON.stringify(props.custom, null, '\t')
@@ -131,10 +131,7 @@ export default defineComponent({
   emits: {
     'change-theme': (theme: Theme) => true
   },
-  setup(
-    props,
-    context: SetupContext<{ 'change-theme': (theme: Theme) => boolean }>
-  ) {
+  setup(props, context) {
     const {
       editedTheme,
       updateEditedTheme,
