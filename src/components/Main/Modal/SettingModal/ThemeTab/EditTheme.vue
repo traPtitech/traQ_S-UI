@@ -43,7 +43,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, PropType, SetupContext } from 'vue'
+import {
+  defineComponent,
+  computed,
+  Ref,
+  ref,
+  SetupContext,
+  PropType,
+  watchEffect
+} from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import store from '@/store'
 import { Theme } from '@/types/theme'
@@ -65,8 +73,47 @@ const isValidThemeJSON = (theme: any): theme is Theme => {
 const failedUpdateTheme = (text?: string) => {
   store.commit.ui.toast.addToast({
     type: 'error',
-    text: 'テーマの更新に失敗しました' + (text === undefined ? '' : ': ' + text)
+    text: 'テーマの更新に失敗しました' + (text === undefined ? '' : `: ${text}`)
   })
+}
+
+const useEditedThemes = (custom: Theme) => {
+  const appliedThemeStringified = computed(() =>
+    JSON.stringify(custom, null, '\t')
+  )
+  const editedTheme = ref(appliedThemeStringified.value)
+
+  const updateEditedTheme = (theme: string) => {
+    editedTheme.value = theme
+  }
+  const isChanged = computed(() => {
+    try {
+      return dequal(JSON.parse(editedTheme.value), custom)
+    } catch (err) {
+      return true
+    }
+  })
+  return { appliedThemeStringified, editedTheme, updateEditedTheme, isChanged }
+}
+
+const onButtonClick = (editedTheme: Ref<string>, context: SetupContext) => {
+  const isImporterOpen = ref(false)
+  const onImportClick = () => {
+    isImporterOpen.value = true
+  }
+  const onUpdateClick = () => {
+    try {
+      const themeObj = JSON.parse(editedTheme.value)
+      if (isValidThemeJSON(themeObj)) {
+        context.emit('change-theme', themeObj)
+      } else {
+        failedUpdateTheme('構文エラー')
+      }
+    } catch (err) {
+      failedUpdateTheme('無効なJSON')
+    }
+  }
+  return { isImporterOpen, onImportClick, onUpdateClick }
 }
 
 export default defineComponent({
@@ -81,37 +128,21 @@ export default defineComponent({
     'change-theme': (theme: Theme) => true
   },
   setup(props, context: SetupContext) {
-    const isChanged = computed(() => {
-      try {
-        return dequal(JSON.parse(editedTheme.value), props.custom)
-      } catch (err) {
-        return false
-      }
-    })
-    const isImporterOpen = ref(false)
-    const appliedThemeStringified = computed(() =>
-      JSON.stringify(props.custom, null, '\t')
+    const {
+      appliedThemeStringified,
+      editedTheme,
+      updateEditedTheme,
+      isChanged
+    } = useEditedThemes(props.custom)
+
+    const { isImporterOpen, onImportClick, onUpdateClick } = onButtonClick(
+      editedTheme,
+      context
     )
-    const editedTheme = ref(appliedThemeStringified.value)
-    const updateEditedTheme = (theme: string) => {
-      editedTheme.value = theme
-    }
-    const onImportClick = () => {
-      isImporterOpen.value = true
-    }
-    const onUpdateClick = () => {
-      try {
-        const themeObj = JSON.parse(editedTheme.value)
-        if (isValidThemeJSON(themeObj)) {
-          context.emit('change-theme', themeObj)
-        } else {
-          editedTheme.value = appliedThemeStringified.value
-          failedUpdateTheme('構文エラー')
-        }
-      } catch (err) {
-        failedUpdateTheme('無効なJSON')
-      }
-    }
+
+    watchEffect(() => {
+      editedTheme.value = appliedThemeStringified.value
+    })
 
     return {
       onUpdateClick,
