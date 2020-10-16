@@ -3,7 +3,6 @@
     :class="$style.container"
     :disabled="loading || disabled"
     :data-is-loading="$boolAttr(loading)"
-    @click="emit('click')"
     :data-color="color"
   >
     <div :class="$style.label">{{ label }}</div>
@@ -37,9 +36,6 @@ export default defineComponent({
       type: String as PropType<'primary' | 'secondary' | 'error'>,
       default: 'primary' as const
     }
-  },
-  setup(_, { emit }) {
-    return { emit }
   }
 })
 </script>
