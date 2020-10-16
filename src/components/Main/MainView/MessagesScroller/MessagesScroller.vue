@@ -295,7 +295,6 @@ export default defineComponent({
 .viewport {
   display: flex;
   flex-flow: column;
-  justify-content: flex-end;
   min-height: 100%;
 }
 

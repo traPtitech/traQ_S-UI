@@ -20,7 +20,7 @@ export default defineComponent({
     detail: Object as PropType<UserDetail>
   },
   setup() {
-    const isMobile = computed(() => store.getters.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
 
     return {
       isMobile

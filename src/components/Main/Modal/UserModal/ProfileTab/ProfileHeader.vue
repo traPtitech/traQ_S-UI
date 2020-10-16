@@ -23,7 +23,6 @@ export default defineComponent({
 .header {
   @include color-ui-secondary;
   @include size-body2;
-  margin-top: 16px;
   margin-bottom: 8px;
 }
 </style>

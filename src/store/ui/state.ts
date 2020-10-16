@@ -1,7 +1,7 @@
 export interface S {
-  viewportWidth: number
+  isMobile: boolean
 }
 
 export const state: S = {
-  viewportWidth: 0
+  isMobile: false
 }

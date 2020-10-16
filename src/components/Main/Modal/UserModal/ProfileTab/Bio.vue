@@ -37,10 +37,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.header {
-  margin-top: 0;
-}
-
 .bio {
   @include color-ui-primary;
   &[aria-busy='true'],
