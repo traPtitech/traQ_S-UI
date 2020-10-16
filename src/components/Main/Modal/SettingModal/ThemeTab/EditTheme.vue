@@ -35,7 +35,7 @@
       <form-button
         label="保存"
         @click="applyTheme"
-        :disabled="isChanged"
+        :disabled="!isChanged"
         color="primary"
       />
     </div>
@@ -92,7 +92,7 @@ const useEditedThemes = (
   }
   const isChanged = computed(() => {
     try {
-      return dequal(JSON.parse(editedTheme.value), props.custom)
+      return !dequal(JSON.parse(editedTheme.value), props.custom)
     } catch {
       return true
     }
