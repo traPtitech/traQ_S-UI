@@ -3,7 +3,7 @@ FROM node:14.11.0 as build
 WORKDIR /app
 COPY package*.json ./
 COPY patches/* ./
-RUN npm ci
+RUN npm ci --unsafe-perm
 COPY . .
 RUN NODE_ENV=production npm run build:with-font
 
