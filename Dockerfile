@@ -1,6 +1,9 @@
 # alpineにするとnode-gypで死ぬ
 FROM node:14.11.0 as build
 WORKDIR /app
+
+ENV CYPRESS_INSTALL_BINARY=0
+
 COPY package*.json ./
 COPY patches/ ./patches/
 RUN npm ci --unsafe-perm

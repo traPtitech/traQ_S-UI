@@ -44,6 +44,8 @@ jobs:
             ${{ runner.os }}-npm-
       - name: npm ci
         run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
       - name: run lint
         run: npm run lint:no-fix -- --max-warnings=0
   build:
@@ -66,6 +68,8 @@ jobs:
             ${{ runner.os }}-npm-
       - name: npm ci
         run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
       - name: run build
         run: npm run build:with-font
   test-unit:
@@ -88,6 +92,8 @@ jobs:
             ${{ runner.os }}-npm-
       - name: npm ci
         run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
       - name: run test:unit
         run: npm run test:unit
       - uses: actions/upload-artifact@v1

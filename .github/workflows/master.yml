@@ -25,6 +25,8 @@ jobs:
             ${{ runner.os }}-npm-
       - name: npm ci
         run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
       - name: run build
         run: npm run build:with-font
       - uses: actions/upload-artifact@v1
