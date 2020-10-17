@@ -22,7 +22,7 @@
     "@traptitech/traq-markdown-it": "^4.0.3",
     "@types/pica": "^5.1.1",
     "core-js": "^3.6.5",
-    "cropperjs": "^1.5.8",
+    "cropperjs": "^1.5.9",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.2",
     "direct-vuex": "^0.12.0",
