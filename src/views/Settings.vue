@@ -24,13 +24,16 @@ import store from '@/store'
 const useSettingsRootPathWathcer = (isMobile: Ref<boolean>) => {
   const route = useRoute()
   const router = useRouter()
-  const redirectIfNeeded = () => {
+  const redirectOrMarkRootIfNeeded = () => {
     if (!isMobile.value && route.name === RouteName.Settings) {
       router.replace({ name: defaultSettingsName })
     }
+    if (isMobile.value && route.name === RouteName.Settings) {
+      store.commit.ui.settings.setSettingsRootShown(true)
+    }
   }
-  onMounted(redirectIfNeeded)
-  watch([computed(() => route.name), isMobile], redirectIfNeeded)
+  onMounted(redirectOrMarkRootIfNeeded)
+  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded)
 }
 
 export default defineComponent({
@@ -40,7 +43,7 @@ export default defineComponent({
     useSettingsRootPathWathcer(isMobile)
 
     onBeforeRouteLeave(() => {
-      store.commit.ui.settings.resetSettingsRootShown()
+      store.commit.ui.settings.setSettingsRootShown(false)
       return true
     })
 
