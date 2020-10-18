@@ -13,5 +13,8 @@ export const mutations = defineMutations<S>()({
   },
   setSecondaryView(state: S, view: ViewInformation) {
     state.primaryView = view
+  },
+  setLastScrollPosition(state: S, position: number) {
+    state.lastScrollPosition = position
   }
 })

@@ -28,6 +28,18 @@ export const changeRouteByPath = (path: string) => {
   router.push(path).catch(() => {})
 }
 
+export const isMessageScrollerRoute = (
+  routeName: string | symbol | null | undefined
+) => {
+  if (typeof routeName !== 'string') return false
+  return (
+    routeName === RouteName.Channel ||
+    routeName === RouteName.User ||
+    routeName === RouteName.Message ||
+    routeName === RouteName.ClipFolders
+  )
+}
+
 const Main = defineAsyncComponent(
   () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
 )
