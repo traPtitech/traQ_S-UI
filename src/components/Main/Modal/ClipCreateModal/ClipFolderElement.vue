@@ -1,9 +1,5 @@
 <template>
-  <div
-    @click="$emit('click')"
-    :class="$style.container"
-    :aria-selected="isSelected"
-  >
+  <div :class="$style.container" :aria-selected="isSelected">
     <icon :class="$style.icon" mdi :name="iconName" />
     <span>{{ folderName }}</span>
   </div>

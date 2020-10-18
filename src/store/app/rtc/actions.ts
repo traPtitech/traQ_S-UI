@@ -177,7 +177,7 @@ export const actions = defineActions({
   },
 
   async establishConnection(context) {
-    const { rootState, dispatch } = rtcActionContext(context)
+    const { rootState, getters, dispatch } = rtcActionContext(context)
     if (!rootState.domain.me.detail) {
       throw 'application not initialized'
     }
@@ -186,7 +186,7 @@ export const actions = defineActions({
     }
     const id = rootState.domain.me.detail.id
     initClient(id)
-    client?.addEventListener('connectionerror', e => {
+    client?.addEventListener('connectionerror', async e => {
       /* eslint-disable-next-line no-console */
       console.error(`[RTC] Failed to establish connection`)
       if (e.detail.err.type === 'unavailable-id') {
@@ -194,7 +194,14 @@ export const actions = defineActions({
         console.error(`[RTC] Peer Id already in use!`)
       }
       window.alert('接続に失敗しました')
-      dispatch.closeConnection()
+
+      await dispatch.closeConnection()
+      // session接続後にCredential expiredで切れる場合は退出しないといけない
+      const qallSession = getters.qallSession
+      if (qallSession) {
+        dispatch.removeRTCSession({ sessionId: qallSession.sessionId })
+        tts.stop()
+      }
     })
     await client?.establishConnection()
   },

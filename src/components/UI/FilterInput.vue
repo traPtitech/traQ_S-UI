@@ -15,6 +15,7 @@
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
       @input="onInput"
+      @keydown.esc="reset"
       type="text"
     />
   </div>
@@ -64,6 +65,11 @@ export default defineComponent({
   setup(props, context) {
     const { onInput } = useInput(context)
 
+    const reset = () => {
+      // input-valueイベントを発火することで値を変更する
+      context.emit('input-value', '')
+    }
+
     const inputRef = shallowRef<HTMLInputElement | null>(null)
     onMounted(() => {
       if (!props.focusOnMount || isTouchDevice()) return
@@ -73,7 +79,7 @@ export default defineComponent({
       inputRef.value?.focus()
     }
 
-    return { focus, inputRef, onInput }
+    return { focus, inputRef, onInput, reset }
   }
 })
 </script>

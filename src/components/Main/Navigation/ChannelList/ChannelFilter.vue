@@ -41,7 +41,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const onInput = (value: string) => {
-      emit('input', value)
+      emit('input-filter', value)
     }
     return {
       emit,

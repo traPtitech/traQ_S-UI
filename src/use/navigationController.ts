@@ -7,7 +7,7 @@ import { MainViewComponentState } from '@/store/ui/mainView/state'
 const useNavigation = () => {
   const openNav = () => {
     if (
-      !store.getters.ui.isMobile ||
+      !store.state.ui.isMobile ||
       !store.getters.ui.mainView.isNoComponentOpen
     ) {
       return
@@ -17,7 +17,7 @@ const useNavigation = () => {
     )
   }
   const closeNav = () => {
-    if (!store.getters.ui.isMobile || !store.getters.ui.mainView.isNavOpen) {
+    if (!store.state.ui.isMobile || !store.getters.ui.mainView.isNavOpen) {
       return
     }
     store.commit.ui.mainView.setMainViewComponentState(

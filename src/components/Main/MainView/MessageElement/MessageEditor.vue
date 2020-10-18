@@ -6,7 +6,7 @@
         ref="textareaRef"
         :class="$style.inputTextArea"
         :text="textState.text"
-        @input="onInputText"
+        @input-value="onInputText"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"

@@ -1,11 +1,5 @@
 <template>
-  <icon
-    :size="size"
-    mdi
-    name="chevron-left"
-    :class="$style.button"
-    @click="onClick"
-  />
+  <icon :size="size" mdi name="chevron-left" :class="$style.button" />
 </template>
 
 <script lang="ts">
@@ -22,12 +16,6 @@ export default defineComponent({
       type: Number,
       default: 24
     }
-  },
-  setup(_, context) {
-    const onClick = () => {
-      context.emit('click')
-    }
-    return { onClick }
   }
 })
 </script>

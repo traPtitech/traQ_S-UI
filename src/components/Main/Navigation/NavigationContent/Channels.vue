@@ -2,7 +2,7 @@
   <div>
     <channel-filter
       @toggle-star-filter="toggleStarChannelFilter"
-      @input="setQuery"
+      @input-filter="setQuery"
       :text="channelListFilterState.query"
       :is-stared="filterStarChannel"
       :class="$style.filter"

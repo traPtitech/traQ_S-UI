@@ -145,15 +145,24 @@ export default class AudioStreamMixer {
   }
 
   public async removeStream(key: string) {
+    if (!this.streamSourceNodeMap[key]) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'audioStreamMixer::removeStream: 同じstreamを重複して取り除こうとした可能性があります'
+      )
+      return
+    }
+
     this.disconnectNodeGraph(
       this.streamSourceNodeMap[key],
       this.analyserNodeMap[key],
       this.gainNodeMap[key]
     )
 
-    delete this.gainNodeMap[key]
     delete this.streamSourceNodeMap[key]
+    delete this.gainNodeMap[key]
     delete this.volumeMap[key]
+
     if (Object.keys(this.gainNodeMap).length === 0) {
       await this.context.suspend()
     }

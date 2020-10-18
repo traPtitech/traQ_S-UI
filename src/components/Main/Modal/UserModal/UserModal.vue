@@ -59,7 +59,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isMobile = computed(() => store.getters.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))

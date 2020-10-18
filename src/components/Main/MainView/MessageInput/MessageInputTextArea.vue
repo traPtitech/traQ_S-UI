@@ -52,7 +52,7 @@ const useLineBreak = (
     const suf = props.text.slice(textareaRef.value.selectionEnd)
     const selectionIndex = pre.length + 1
     // inputイベントを発火することでテキストを変更
-    context.emit('input', `${pre}\n${suf}`)
+    context.emit('input-value', `${pre}\n${suf}`)
 
     await nextTick()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
