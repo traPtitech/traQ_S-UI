@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import store from '@/store'
-import useSyncedState from '../use/syncedState'
+import useSyncedState from '../../components/Settings/use/syncedState'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 

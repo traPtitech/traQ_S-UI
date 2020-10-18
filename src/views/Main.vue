@@ -1,4 +1,5 @@
 <template>
+  <settings v-if="routeWatcherState.view === 'settings'" />
   <not-found
     v-if="routeWatcherState.view === 'not-found'"
     :route-param="routeWatcherState.currentRouteParam"
@@ -78,6 +79,9 @@ const useStyles = (
     }))
   })
 
+const Settings = defineAsyncComponent(
+  () => import(/* webpackChunkName: "Settings" */ '@/views/Settings.vue')
+)
 const NotFound = defineAsyncComponent(
   () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
 )
@@ -92,6 +96,7 @@ export default defineComponent({
     StampPickerContainer,
     MessageToolsMenuContainer,
     ToastContainer,
+    Settings,
     NotFound
   },
   setup(_, context) {

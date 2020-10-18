@@ -2,34 +2,25 @@
   <section :class="$style.container">
     <div :class="$style.header">
       <return-button @click="back" :size="40" />
-      <tab-content-title
-        :current-navigation="currentNavigation"
-        :class="$style.title"
-        is-mobile
-      />
+      <tab-content-title :class="$style.title" is-mobile />
       <close-button @close="close" :size="36" />
     </div>
-    <tab-content
-      :class="$style.content"
-      :current-navigation="currentNavigation"
-    />
+    <slot />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '@/store'
 import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
-import TabContent from './TabContent.vue'
 import ReturnButton from '@/components/UI/ReturnButton.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
+import useSettingsNavigation from './use/settingsNavigation'
 
 export default defineComponent({
   name: 'MobileTabFrame',
   components: {
     TabContentTitle,
-    TabContent,
     ReturnButton,
     CloseButton
   },
@@ -40,12 +31,7 @@ export default defineComponent({
     }
   },
   setup(_, context) {
-    const back = () => {
-      context.emit('back')
-    }
-
-    const close = () => store.dispatch.ui.modal.clearModal()
-
+    const { close, back } = useSettingsNavigation()
     return { back, close }
   }
 })

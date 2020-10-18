@@ -1,4 +1,5 @@
 import createNavigation from '@/use/abstractNavigation'
+import { SettingsRouteName } from '@/router/settings'
 
 export type NavigationItemType =
   | 'profile'
@@ -8,12 +9,12 @@ export type NavigationItemType =
   | 'theme'
 
 // TODO: 言語系リソースの置き場所
-export const navigationTypeNameMap: Record<NavigationItemType, string> = {
-  profile: 'プロフィール',
-  browser: 'ブラウザ',
-  qall: '通話 (Qall)',
-  stamp: 'スタンプ',
-  theme: 'テーマ'
+export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
+  [SettingsRouteName.Profile]: 'プロフィール',
+  [SettingsRouteName.Browser]: 'ブラウザ',
+  [SettingsRouteName.Qall]: '通話 (Qall)',
+  [SettingsRouteName.Stamp]: 'スタンプ',
+  [SettingsRouteName.Theme]: 'テーマ'
 }
 
 export const { useNavigation, useNavigationSelectorItem } = createNavigation<
@@ -21,31 +22,31 @@ export const { useNavigation, useNavigationSelectorItem } = createNavigation<
 >('profile')
 
 export const navigations: {
-  type: NavigationItemType
+  routeName: SettingsRouteName
   iconName: string
   iconMdi?: true
 }[] = [
   {
-    type: 'profile',
+    routeName: SettingsRouteName.Profile,
     iconName: 'user'
   },
   {
-    type: 'browser',
+    routeName: SettingsRouteName.Browser,
     iconName: 'cogs',
     iconMdi: true
   },
   {
-    type: 'qall',
+    routeName: SettingsRouteName.Qall,
     iconName: 'phone',
     iconMdi: true
   },
   {
-    type: 'stamp',
+    routeName: SettingsRouteName.Stamp,
     iconName: 'emoticon-outline',
     iconMdi: true
   },
   {
-    type: 'theme',
+    routeName: SettingsRouteName.Theme,
     iconName: 'brightness-6',
     iconMdi: true
   }

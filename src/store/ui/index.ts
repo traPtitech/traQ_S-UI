@@ -9,6 +9,7 @@ import { stampPicker } from './stampPicker'
 import { modal } from './modal'
 import { fileInput } from './fileInput'
 import { toast } from './toast'
+import { settings } from './settings'
 
 export const ui = defineModule({
   namespaced: true,
@@ -22,6 +23,7 @@ export const ui = defineModule({
     messageContextMenu,
     modal,
     fileInput,
-    toast
+    toast,
+    settings
   }
 })

@@ -7,11 +7,11 @@
       </div>
       <mobile-tab-selector-item
         v-for="navigation in navigations"
-        :key="navigation.type"
-        :type="navigation.type"
+        :key="navigation.routeName"
+        :route-name="navigation.routeName"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
-        @click="onNavigationItemClick(navigation.type)"
+        :is-selected="currentRouteName === navigation.routeName"
       />
       <safari-warning :class="$style.safariWarning" />
     </div>
@@ -20,35 +20,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import store from '@/store'
-import {
-  NavigationItemType,
-  useNavigationSelectorItem,
-  navigations
-} from './use/navigation'
-import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
-import SafariWarning from './SafariWarning.vue'
+import { computed, defineComponent } from 'vue'
+import { useRoute } from 'vue-router'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import Version from '@/components/UI/Version.vue'
+import { navigations } from './use/navigation'
+import useSettingsNavigation from './use/settingsNavigation'
+import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
+import SafariWarning from './SafariWarning.vue'
 
 export default defineComponent({
   name: 'MobileTabSelector',
   components: { MobileTabSelectorItem, SafariWarning, CloseButton, Version },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    }
-  },
   setup(props, context) {
-    const { onNavigationItemClick } = useNavigationSelectorItem(context)
-    const close = () => store.dispatch.ui.modal.clearModal()
-    return {
-      navigations,
-      onNavigationItemClick,
-      close
-    }
+    const route = useRoute()
+    const currentRouteName = computed(() => route.name)
+    const { close } = useSettingsNavigation()
+    return { currentRouteName, navigations, close }
   }
 })
 </script>

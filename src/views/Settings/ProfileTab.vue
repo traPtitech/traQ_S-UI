@@ -53,17 +53,19 @@ import { defineComponent, computed, reactive, Ref, ref } from 'vue'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
-import useStateDiff from '../use/stateDiff'
+import useStateDiff from '../../components/Settings/use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
-import ImageUpload from '../ImageUpload.vue'
-import useImageUpload, { ImageUploadState } from '../use/imageUpload'
+import ImageUpload from '../../components/Settings/ImageUpload.vue'
+import useImageUpload, {
+  ImageUploadState
+} from '../../components/Settings/use/imageUpload'
 import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { compareStringInsensitive } from '@/lib/util/string'
-import Password from './Password.vue'
+import Password from '../../components/Settings/ProfileTab/Password.vue'
 
 const useChannelOptions = () => {
   const { channelIdToPathString } = useChannelPath()

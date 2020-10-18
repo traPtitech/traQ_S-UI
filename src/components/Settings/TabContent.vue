@@ -10,14 +10,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import { NavigationItemType } from './use/navigation'
-import ProfileTab from './ProfileTab/ProfileTab.vue'
-import BrowserTab from './BrowserTab/BrowserTab.vue'
-import QallTab from './QallTab/QallTab.vue'
-import StampTab from './StampTab/StampTab.vue'
-import ThemeTab from './ThemeTab/ThemeTab.vue'
+import ProfileTab from '../../views/Settings/ProfileTab.vue'
+import BrowserTab from '../../views/Settings/BrowserTab.vue'
+import QallTab from '../../views/Settings/QallTab.vue'
+import StampTab from '../../views/Settings/StampTab.vue'
+import ThemeTab from '../../views/Settings/ThemeTab.vue'
 import SafariWarning from './SafariWarning.vue'
+import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
   name: 'TabContent',
@@ -33,14 +34,12 @@ export default defineComponent({
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
       default: 'profile' as const
-    },
-    mayShowSafariWarning: {
-      type: Boolean,
-      default: false
     }
   },
   setup() {
-    return {}
+    const { isMobile } = useIsMobile()
+    const mayShowSafariWarning = computed(() => !isMobile.value)
+    return { mayShowSafariWarning }
   }
 })
 </script>
