@@ -25,7 +25,7 @@ import { useRoute } from 'vue-router'
 export default defineComponent({
   name: 'DesktopTabSelector',
   components: { DesktopTabSelectorItem, Version },
-  setup(_, context) {
+  setup() {
     const route = useRoute()
     const currentRouteName = computed(() => route.name)
     return { currentRouteName, navigations }

@@ -10,12 +10,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { NavigationItemType } from './use/navigation'
+import { defineComponent } from 'vue'
+import useSettingsNavigation from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
 import ReturnButton from '@/components/UI/ReturnButton.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
-import useSettingsNavigation from './use/settingsNavigation'
 
 export default defineComponent({
   name: 'MobileTabFrame',
@@ -24,13 +23,7 @@ export default defineComponent({
     ReturnButton,
     CloseButton
   },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    }
-  },
-  setup(_, context) {
+  setup() {
     const { close, back } = useSettingsNavigation()
     return { back, close }
   }

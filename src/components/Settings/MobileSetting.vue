@@ -1,15 +1,7 @@
 <template>
   <div :class="$style.container">
-    <mobile-tab-selector
-      v-show="isSettingsRoot"
-      @navigation-change="onNavigationChange"
-      :current-navigation="currentNavigation"
-    />
-    <mobile-tab-frame
-      v-show="!isSettingsRoot"
-      :current-navigation="currentNavigation"
-      @back="onBack"
-    >
+    <mobile-tab-selector v-show="isSettingsRoot" />
+    <mobile-tab-frame v-show="!isSettingsRoot">
       <slot />
     </mobile-tab-frame>
   </div>

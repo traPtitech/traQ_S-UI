@@ -127,13 +127,6 @@ const routerHistory = createWebHistory(process.env.BASE_URL)
 
 const router = createRouter({
   history: routerHistory,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { top: 0 }
-    }
-  },
   routes
 })
 router.beforeEach((to, from, next) => {

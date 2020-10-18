@@ -24,15 +24,14 @@ import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import Version from '@/components/UI/Version.vue'
-import { navigations } from './use/navigation'
-import useSettingsNavigation from './use/settingsNavigation'
+import useSettingsNavigation, { navigations } from './use/navigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
 
 export default defineComponent({
   name: 'MobileTabSelector',
   components: { MobileTabSelectorItem, SafariWarning, CloseButton, Version },
-  setup(props, context) {
+  setup() {
     const route = useRoute()
     const currentRouteName = computed(() => route.name)
     const { close } = useSettingsNavigation()

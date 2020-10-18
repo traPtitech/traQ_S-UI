@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { SettingsRouteName } from '@/router/settings'
+import { isSettingsRouteName, SettingsRouteName } from '@/router/settings'
 import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { navigationRouteNameTitleMap } from './use/navigation'
@@ -14,9 +14,7 @@ const useSettingsTitle = () => {
   const route = useRoute()
   const name = computed<SettingsRouteName | undefined>(() => {
     const name = typeof route.name === 'string' ? route.name : ''
-    return Object.keys(navigationRouteNameTitleMap).includes(name)
-      ? (name as SettingsRouteName)
-      : undefined
+    return isSettingsRouteName(name) ? name : undefined
   })
   const title = computed(() =>
     name.value ? navigationRouteNameTitleMap[name.value] ?? '' : ''
@@ -32,7 +30,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
+  setup() {
     const { title } = useSettingsTitle()
     return { title }
   }

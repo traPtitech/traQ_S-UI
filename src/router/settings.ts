@@ -1,20 +1,25 @@
 import { Component, defineAsyncComponent } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
 
-export enum SettingsRouteName {
-  Profile = 'profileSettings',
-  Browser = 'browserSettings',
-  Qall = 'qallSettings',
-  Stamp = 'stampSettings',
-  Theme = 'themeSettings'
-}
+export type SettingsRouteName =
+  | 'settingsProfile'
+  | 'settingsBrowser'
+  | 'settingsQall'
+  | 'settingsStamp'
+  | 'settingsTheme'
 
 export const settingsRouteNamePathMap: Record<SettingsRouteName, string> = {
-  [SettingsRouteName.Profile]: 'profile',
-  [SettingsRouteName.Browser]: 'browser',
-  [SettingsRouteName.Qall]: 'qall',
-  [SettingsRouteName.Stamp]: 'stamp',
-  [SettingsRouteName.Theme]: 'theme'
+  settingsProfile: 'profile',
+  settingsBrowser: 'browser',
+  settingsQall: 'qall',
+  settingsStamp: 'stamp',
+  settingsTheme: 'theme'
+}
+
+export const isSettingsRouteName = (
+  name: string
+): name is SettingsRouteName => {
+  return Object.keys(settingsRouteNamePathMap).includes(name)
 }
 
 const Profile = defineAsyncComponent(
@@ -55,13 +60,13 @@ const createRoute = (name: SettingsRouteName, component: Component) => ({
 })
 
 export const settingsRoutes: RouteRecordRaw[] = [
-  createRoute(SettingsRouteName.Profile, Profile),
-  createRoute(SettingsRouteName.Browser, Browser),
-  createRoute(SettingsRouteName.Qall, Qall),
-  createRoute(SettingsRouteName.Stamp, Stamp),
-  createRoute(SettingsRouteName.Theme, Theme)
+  createRoute('settingsProfile', Profile),
+  createRoute('settingsBrowser', Browser),
+  createRoute('settingsQall', Qall),
+  createRoute('settingsStamp', Stamp),
+  createRoute('settingsTheme', Theme)
 ]
 
-export const defaultSettingsName = SettingsRouteName.Profile
+export const defaultSettingsName: SettingsRouteName = 'settingsProfile'
 export const constructSettingsPath = (routeName: SettingsRouteName) =>
   `/settings/${settingsRouteNamePathMap[routeName]}`

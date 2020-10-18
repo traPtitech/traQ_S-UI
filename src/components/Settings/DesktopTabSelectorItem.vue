@@ -29,7 +29,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const title = computed(() => navigationRouteNameTitleMap[props.routeName])
     const path = computed(() => constructSettingsPath(props.routeName))
     return { title, path }
