@@ -48,7 +48,7 @@ export default defineComponent({
   @include color-ui-primary;
   @include background-secondary;
   display: flex;
-  padding: 20px 12px 20px 12px;
+  padding: 20px 12px;
   align-items: center;
 }
 .title {
