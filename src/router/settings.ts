@@ -1,6 +1,7 @@
 import { Component, defineAsyncComponent } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
 
+const settingsRouteNamePrefix = 'settings'
 export type SettingsRouteName =
   | 'settingsProfile'
   | 'settingsBrowser'
@@ -8,18 +9,21 @@ export type SettingsRouteName =
   | 'settingsStamp'
   | 'settingsTheme'
 
+export const isSettingsRouteName = (
+  name: string
+): name is SettingsRouteName => {
+  return (
+    name.startsWith(settingsRouteNamePrefix) &&
+    name.slice(settingsRouteNamePrefix.length) !== ''
+  )
+}
+
 export const settingsRouteNamePathMap: Record<SettingsRouteName, string> = {
   settingsProfile: 'profile',
   settingsBrowser: 'browser',
   settingsQall: 'qall',
   settingsStamp: 'stamp',
   settingsTheme: 'theme'
-}
-
-export const isSettingsRouteName = (
-  name: string
-): name is SettingsRouteName => {
-  return Object.keys(settingsRouteNamePathMap).includes(name)
 }
 
 const Profile = defineAsyncComponent(
