@@ -32,8 +32,7 @@ const useSettingsRootPathWathcer = (isMobile: Ref<boolean>) => {
       store.commit.ui.settings.setSettingsRootShown(true)
     }
   }
-  onMounted(redirectOrMarkRootIfNeeded)
-  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded)
+  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded, { immediate: true })
 }
 
 export default defineComponent({
