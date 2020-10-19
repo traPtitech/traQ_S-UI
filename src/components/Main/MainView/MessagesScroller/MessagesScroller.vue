@@ -140,7 +140,7 @@ const useScrollRestoration = (
   const route = useRoute()
   watch(
     computed(() => route.name),
-    (to, from) => {
+    async (to, from) => {
       if (isMessageScrollerRoute(from)) {
         store.commit.ui.mainView.setLastScrollPosition(
           rootRef.value?.scrollTop ?? 0
@@ -148,7 +148,8 @@ const useScrollRestoration = (
       }
       if (isMessageScrollerRoute(to)) {
         state.scrollTop = store.state.ui.mainView.lastScrollPosition
-        rootRef.value?.scrollTo(0, state.scrollTop)
+        await nextTick()
+        rootRef.value?.scrollTo({ top: state.scrollTop })
         store.commit.ui.mainView.setLastScrollPosition(0)
       }
     }

@@ -11,8 +11,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NewStamp from '../../components/Settings/StampTab/NewStamp.vue'
-import EditStamp from '../../components/Settings/StampTab/EditStamp.vue'
+import NewStamp from '@/components/Settings/StampTab/NewStamp.vue'
+import EditStamp from '@/components/Settings/StampTab/EditStamp.vue'
 
 export default defineComponent({
   name: 'StampTab',

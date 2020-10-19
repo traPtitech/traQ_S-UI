@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watch, computed, onMounted } from 'vue'
+import { defineComponent, Ref, ref, watch, computed } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { RouteName } from '@/router'
 import { defaultSettingsName } from '@/router/settings'
@@ -25,14 +25,18 @@ const useSettingsRootPathWathcer = (isMobile: Ref<boolean>) => {
   const route = useRoute()
   const router = useRouter()
   const redirectOrMarkRootIfNeeded = () => {
-    if (!isMobile.value && route.name === RouteName.Settings) {
+    if (route.name !== RouteName.Settings) {
+      return
+    }
+    if (isMobile.value) {
+      store.commit.ui.settings.setSettingsRootShown(true)
+    } else {
       router.replace({ name: defaultSettingsName })
     }
-    if (isMobile.value && route.name === RouteName.Settings) {
-      store.commit.ui.settings.setSettingsRootShown(true)
-    }
   }
-  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded, { immediate: true })
+  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded, {
+    immediate: true
+  })
 }
 
 export default defineComponent({

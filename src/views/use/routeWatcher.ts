@@ -50,18 +50,12 @@ const useRouteWatcher = () => {
     isInitialView: true
   })
 
-  const useOpenChannel = async (forceLastOpen = false) => {
+  const useOpenChannel = async () => {
     await originalStore.restored
-    return computed(() =>
-      forceLastOpen
-        ? store.state.app.browserSettings.lastOpenChannelName
-        : store.getters.app.browserSettings.defaultChannelName
-    )
+    return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
   const onRouteChangedToIndex = async () => {
-    const openChannelPath = await useOpenChannel(
-      route.query['lastOpen'] === 'true'
-    )
+    const openChannelPath = await useOpenChannel()
     await router
       .replace(constructChannelPath(openChannelPath.value))
       // 同じ場所に移動しようとした際のエラーを消す

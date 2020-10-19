@@ -1,6 +1,6 @@
 import { SettingsRouteName } from '@/router/settings'
 import { useRouter } from 'vue-router'
-import { RouteName } from '@/router'
+import { constructChannelPath, RouteName } from '@/router'
 import store from '@/store'
 
 export type NavigationItemType =
@@ -53,7 +53,9 @@ export const navigations: {
 const useSettingsNavigation = () => {
   const router = useRouter()
   const close = () =>
-    router.push({ name: RouteName.Index, query: { lastOpen: 'true' } })
+    router.push(
+      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
+    )
   const back = () => {
     if (store.state.ui.settings.settingsRootShown) {
       router.back()
