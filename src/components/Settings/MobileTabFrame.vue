@@ -5,7 +5,9 @@
       <tab-content-title :class="$style.title" is-mobile />
       <close-button @close="close" :size="36" />
     </div>
-    <slot />
+    <div :class="$style.content">
+      <slot />
+    </div>
   </section>
 </template>
 
@@ -46,7 +48,7 @@ export default defineComponent({
   @include color-ui-primary;
   @include background-secondary;
   display: flex;
-  padding: 20px;
+  padding: 20px 12px 20px 12px;
   align-items: center;
 }
 .title {
@@ -54,7 +56,9 @@ export default defineComponent({
 }
 
 .content {
-  padding: 40px;
+  padding: 24px;
   padding-top: 0;
+  overflow-y: scroll;
+  height: calc(100vh - 80px);
 }
 </style>

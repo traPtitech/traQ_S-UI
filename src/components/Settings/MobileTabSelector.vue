@@ -53,12 +53,15 @@ export default defineComponent({
 
 .header {
   display: flex;
-  padding: 20px;
+  padding: 20px 12px;
   align-items: center;
 }
 .title {
   @include size-h2;
-  padding-left: 40px;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  height: 40px;
   flex: 1 0;
 }
 
