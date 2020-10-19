@@ -18,12 +18,19 @@ export const isSettingsRouteName = (
   )
 }
 
-export const settingsRouteNamePathMap: Record<SettingsRouteName, string> = {
-  settingsProfile: 'profile',
-  settingsBrowser: 'browser',
-  settingsQall: 'qall',
-  settingsStamp: 'stamp',
-  settingsTheme: 'theme'
+const pathByRouteName = (routeName: SettingsRouteName) => {
+  switch (routeName) {
+    case 'settingsProfile':
+      return 'profile'
+    case 'settingsBrowser':
+      return 'browser'
+    case 'settingsQall':
+      return 'qall'
+    case 'settingsStamp':
+      return 'stamp'
+    case 'settingsTheme':
+      return 'theme'
+  }
 }
 
 const Profile = defineAsyncComponent(
@@ -59,7 +66,7 @@ const Theme = defineAsyncComponent(
 
 const createRoute = (name: SettingsRouteName, component: Component) => ({
   name,
-  path: settingsRouteNamePathMap[name],
+  path: pathByRouteName(name),
   component: component
 })
 
@@ -73,4 +80,4 @@ export const settingsRoutes: RouteRecordRaw[] = [
 
 export const defaultSettingsName: SettingsRouteName = 'settingsProfile'
 export const constructSettingsPath = (routeName: SettingsRouteName) =>
-  `/settings/${settingsRouteNamePathMap[routeName]}`
+  `/settings/${pathByRouteName(routeName)}`

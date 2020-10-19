@@ -59,6 +59,8 @@ export default defineComponent({
   padding: 24px;
   padding-top: 0;
   overflow-y: scroll;
+
+  // ヘッダー分の80px抜いた高さ
   height: calc(100vh - 80px);
 }
 </style>

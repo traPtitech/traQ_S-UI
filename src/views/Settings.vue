@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watch, computed } from 'vue'
+import { defineComponent, Ref, ref, watch, toRef } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { RouteName } from '@/router'
 import { defaultSettingsName } from '@/router/settings'
@@ -34,7 +34,7 @@ const useSettingsRootPathWathcer = (isMobile: Ref<boolean>) => {
       router.replace({ name: defaultSettingsName })
     }
   }
-  watch([computed(() => route.name), isMobile], redirectOrMarkRootIfNeeded, {
+  watch([toRef(route, 'name'), isMobile], redirectOrMarkRootIfNeeded, {
     immediate: true
   })
 }
