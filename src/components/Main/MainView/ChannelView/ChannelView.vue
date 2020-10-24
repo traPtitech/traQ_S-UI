@@ -12,18 +12,6 @@
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
     />
-    <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
-    <teleport
-      v-if="isSidebarOpenerReady && !isSidebarOpen"
-      to="#sidebar-opener"
-      :class="$style.opener"
-    >
-      <channel-sidebar-hidden
-        @open="openSidebar"
-        :viewer-ids="viewerIds"
-        :class="$style.hidden"
-      />
-    </teleport>
   </div>
 </template>
 
@@ -31,8 +19,6 @@
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import useSidebar from '@/use/sidebar'
-import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
@@ -69,16 +55,11 @@ export default defineComponent({
   name: 'ChannelView',
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String as PropType<ChannelId>,
-    isSidebarOpenerReady: {
-      type: Boolean,
-      required: true
-    }
+    entryMessageId: String as PropType<ChannelId>
   },
   components: {
     ChannelViewContent,
-    ChannelViewFileUploadOverlay,
-    ChannelSidebarHidden
+    ChannelViewFileUploadOverlay
   },
   setup() {
     const state = reactive({
@@ -92,20 +73,11 @@ export default defineComponent({
 
     const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop()
 
-    const { shouldShowSidebar, isSidebarOpen, openSidebar } = useSidebar()
-    const viewerIds = computed(
-      () => store.getters.domain.messagesView.viewingUsers
-    )
-
     return {
       state,
       fileDragDropState,
       onDrop,
-      onDragOver,
-      viewerIds,
-      shouldShowSidebar,
-      isSidebarOpen,
-      openSidebar
+      onDragOver
     }
   }
 })

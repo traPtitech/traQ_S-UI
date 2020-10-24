@@ -15,8 +15,8 @@ const useChannelSidebarCommon = () => {
   const togglePinnedMode = () => {
     state.pinnedMode = !state.pinnedMode
   }
-  const { closeSidebar } = useSidebar()
-  return { state, viewerIds, togglePinnedMode, closeSidebar }
+  const { openSidebar, closeSidebar } = useSidebar()
+  return { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar }
 }
 
 export default useChannelSidebarCommon

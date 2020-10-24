@@ -1,11 +1,8 @@
 <template>
-  <main-view-sidebar :class="$style.container">
+  <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #header>
       <!--TODO: ヘッダのコンポーネント分離-->
-      <clips-sidebar-header
-        :clip-folder-id="clipFolderId"
-        :class="$style.sidebarItem"
-      />
+      <clips-sidebar-header :clip-folder-id="clipFolderId" />
     </template>
     <template #content>
       <clips-sidebar-content :clip-folder-id="clipFolderId" />
@@ -29,7 +26,14 @@ export default defineComponent({
     ClipsSidebarContent
   },
   props: {
-    clipFolderId: { type: String as PropType<ClipFolderId>, requried: true }
+    clipFolderId: {
+      type: String as PropType<ClipFolderId>,
+      requried: true
+    },
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   setup() {
     const { closeSidebar } = useSidebar()
@@ -40,22 +44,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  @include background-secondary;
-  @include color-ui-secondary;
-  display: flex;
-  flex-direction: column;
-  width: 320px;
-  height: 100%;
-  padding: 0 32px;
-  overflow: auto;
-}
-.sidebarItem {
-  margin: 16px 0;
-}
-.content {
-  height: 100%;
-}
-</style>

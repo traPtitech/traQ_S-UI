@@ -10,6 +10,10 @@
       </div>
     </div>
   </teleport>
+  <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
+  <teleport v-else-if="isSidebarOpenerReady" to="#sidebar-opener">
+    <slot name="opener" />
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -18,8 +22,14 @@ import useSidebar from '@/use/sidebar'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
 export default defineComponent({
-  name: 'ChannelSidebar',
+  name: 'MainViewSidebar',
   components: { CloseButton },
+  props: {
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
+  },
   setup() {
     const { closeSidebar } = useSidebar()
 

@@ -1,17 +1,15 @@
 <template>
-  <main-view-sidebar>
+  <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #header>
       <channel-sidebar-header
         v-if="!state.pinnedMode"
         :channel-id="channelId"
-        :class="$style.sidebarItem"
       />
       <channel-sidebar-header
         v-else
         show-back-button
         @back="togglePinnedMode"
         title="ピン留め"
-        :class="$style.sidebarItem"
       />
     </template>
     <template #content>
@@ -28,6 +26,9 @@
         @pinned-mode-toggle="togglePinnedMode"
       />
     </template>
+    <template #opener>
+      <channel-sidebar-hidden @open="openSidebar" :viewer-ids="viewerIds" />
+    </template>
   </main-view-sidebar>
 </template>
 
@@ -39,6 +40,7 @@ import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainView
 import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import ChannelSidebarPinnedList from './ChannelSidebarPinnedList.vue'
+import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import { useQallSession } from './use/channelRTCSession'
 
 export default defineComponent({
@@ -47,16 +49,25 @@ export default defineComponent({
     MainViewSidebar,
     ChannelSidebarPinnedList,
     ChannelSidebarHeader,
-    ChannelSidebarContent
+    ChannelSidebarContent,
+    ChannelSidebarHidden
   },
   props: {
-    channelId: { type: String as PropType<ChannelId>, required: true }
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    },
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   setup(props) {
     const {
       state,
       viewerIds,
       togglePinnedMode,
+      openSidebar,
       closeSidebar
     } = useChannelSidebarCommon()
 
@@ -67,14 +78,9 @@ export default defineComponent({
       togglePinnedMode,
       viewerIds,
       qallUserIds,
+      openSidebar,
       closeSidebar
     }
   }
 })
 </script>
-
-<style lang="scss" module>
-.sidebarItem {
-  margin: 16px 0;
-}
-</style>

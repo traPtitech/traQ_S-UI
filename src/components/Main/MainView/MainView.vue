@@ -4,13 +4,15 @@
       :class="$style.headerContainer"
       :view-info="state.primary"
     />
-    <main-view-sidebar-selector :view-info="state.primary" />
+    <main-view-sidebar-selector
+      :view-info="state.primary"
+      :is-sidebar-opener-ready="isMounted"
+    />
     <div :class="$style.layoutContainer" :data-layout="state.layout">
       <div :class="$style.primaryContainer">
         <main-view-component-selector
           :class="[$style.componentContainer, $style.primary]"
           :view-info="state.primary"
-          :is-sidebar-opener-ready="isMounted"
         />
         <div id="sidebar" v-if="!isMobile" :class="$style.sidebar" />
       </div>

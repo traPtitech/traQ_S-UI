@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar :class="$style.container">
+  <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #header>
       <sidebar-header v-if="!state.pinnedMode" :name="userName" />
       <!--TODO: これはチャンネル関係ないので切り出し-->
@@ -8,7 +8,6 @@
         show-back-button
         @back="togglePinnedMode"
         title="ピン留め"
-        :class="$style.sidebarItem"
       />
     </template>
     <template #content>
@@ -24,6 +23,9 @@
         @pinned-mode-toggle="togglePinnedMode"
       />
     </template>
+    <template #opener>
+      <channel-sidebar-hidden @open="openSidebar" :viewer-ids="viewerIds" />
+    </template>
   </main-view-sidebar>
 </template>
 
@@ -32,6 +34,7 @@ import { defineComponent } from 'vue'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import ChannelSidebarPinnedList from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinnedList.vue'
 import ChannelSidebarHeader from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHeader.vue'
+import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import SidebarHeader from './DMSidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
@@ -42,17 +45,26 @@ export default defineComponent({
     MainViewSidebar,
     ChannelSidebarPinnedList,
     ChannelSidebarHeader,
+    ChannelSidebarHidden,
     SidebarHeader,
     SidebarContent
   },
   props: {
-    userName: { type: String, requried: true }
+    userName: {
+      type: String,
+      requried: true
+    },
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   setup() {
     const {
       state,
       viewerIds,
       togglePinnedMode,
+      openSidebar,
       closeSidebar
     } = useChannelSidebarCommon()
 
@@ -60,24 +72,9 @@ export default defineComponent({
       state,
       togglePinnedMode,
       viewerIds,
+      openSidebar,
       closeSidebar
     }
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  @include background-secondary;
-  @include color-ui-secondary;
-  display: flex;
-  flex-direction: column;
-  width: 320px;
-  height: 100%;
-  padding: 0 32px;
-  overflow: auto;
-}
-.sidebarItem {
-  margin: 16px 0;
-}
-</style>
