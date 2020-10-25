@@ -4,6 +4,7 @@
     :disabled="$boolAttr(disabled)"
     @click="$emit('click')"
     :data-type="type"
+    :type="isSubmit ? 'submit' : 'button'"
   >
     <icon
       v-if="iconName"
@@ -38,6 +39,10 @@ export default defineComponent({
     iconName: String,
     iconMdi: { type: Boolean, default: false },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    isSubmit: {
       type: Boolean,
       default: false
     }

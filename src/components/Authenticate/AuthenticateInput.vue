@@ -15,6 +15,7 @@
       />
       <button
         v-if="type === 'password'"
+        type="button"
         :title="`パスワードを${isPasswordShown ? '非表示' : '表示'}`"
         :class="$style.toggle"
         @click.prevent="togglePassword"
