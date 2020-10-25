@@ -1,27 +1,15 @@
 <template>
-  <div :class="$style.container">
-    <icon
-      v-if="showBackButton"
-      :height="28"
-      :width="28"
-      mdi
-      name="chevron-left"
-      @click="$emit('back')"
-      :class="$style.backButton"
-    />
-    <channel-sidebar-header-name
-      :channel-name="state.channelName"
-      :show-hash="state.showHash"
-    />
-  </div>
+  <sidebar-header :show-back-button="showBackButton">
+    <span v-if="showHash" :class="$style.channelHash">#</span>
+    <span :class="$style.text">{{ channelName }}</span>
+  </sidebar-header>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import Icon from '@/components/UI/Icon.vue'
-import ChannelSidebarHeaderName from './ChannelSidebarHeaderName.vue'
+import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarHeader',
@@ -30,28 +18,28 @@ export default defineComponent({
     title: { type: String, default: 'チャンネル' },
     showBackButton: { type: Boolean, default: false }
   },
-  components: { ChannelSidebarHeaderName, Icon },
+  components: { SidebarHeader },
   setup(props) {
-    const state = reactive({
-      channelName: computed(
-        () =>
-          store.state.entities.channels[props.channelId ?? '']?.name ??
-          props.title
-      ),
-      showHash: computed(() => !!props.channelId)
-    })
-    return { state }
+    const channelName = computed(
+      () =>
+        store.state.entities.channels[props.channelId ?? '']?.name ??
+        props.title
+    )
+    const showHash = computed(() => !!props.channelId)
+
+    return { channelName, showHash }
   }
 })
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
+.channelHash {
+  margin-right: 0.125rem;
+  user-select: none;
 }
-.backButton {
-  flex-shrink: 0;
-  margin-right: 8px;
-  cursor: pointer;
+.text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
