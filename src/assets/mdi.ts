@@ -62,7 +62,9 @@ import {
   mdiVolumeOff,
   mdiPictureInPictureBottomRight,
   mdiSnowflake,
-  mdiCancel
+  mdiCancel,
+  mdiEyeOutline,
+  mdiEyeOffOutline
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -133,7 +135,9 @@ const mdi: MdiIconsMapping = {
   'volume-off': mdiVolumeOff,
   'picture-in-picture-bottom-right': mdiPictureInPictureBottomRight,
   snowflake: mdiSnowflake,
-  cancel: mdiCancel
+  cancel: mdiCancel,
+  'eye-outline': mdiEyeOutline,
+  'eye-off-outline': mdiEyeOffOutline
 }
 
 export default mdi

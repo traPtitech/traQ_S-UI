@@ -21,13 +21,6 @@
       name="new-password"
       :class="$style.form"
     />
-    <form-input
-      v-model="state.new2"
-      label="新しいパスワード(再入力)"
-      type="password"
-      name="new-password"
-      :class="$style.form"
-    />
     <div :class="$style.changeButton">
       <form-button
         label="変更"
@@ -50,7 +43,6 @@ import store from '@/store'
 interface State {
   old: string
   new: string
-  new2: string
 }
 
 const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
@@ -90,13 +82,9 @@ export default defineComponent({
     const { changeLink, changeName } = config.auth
     const showChangeLink = changeLink !== undefined && changeName !== undefined
 
-    const state = reactive<State>({ old: '', new: '', new2: '' })
+    const state = reactive<State>({ old: '', new: '' })
     const isValid = computed(
-      () =>
-        state.old !== '' &&
-        state.new !== '' &&
-        state.new2 !== '' &&
-        state.new === state.new2
+      () => state.old !== '' && state.new !== '' && state.old !== state.new
     )
     const { isChanging, onChangeClick } = usePasswordChange(state, isValid)
 
