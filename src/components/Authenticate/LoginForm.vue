@@ -6,13 +6,16 @@
       label="traQ ID"
       :text="loginState.name"
       @input-value="setName"
+      autocomplete="username"
       :class="$style.item"
+      autofocus
     />
     <span :class="$style.item">
       <authenticate-input
         label="パスワード"
         type="password"
         :text="loginState.pass"
+        autocomplete="current-password"
         enterkeyhint="done"
         @input-value="setPass"
       />

@@ -14,7 +14,7 @@
         ref="inputRef"
         :class="$style.input"
         :id="id"
-        :type="type"
+        :type="typeWithShown"
         :value="modelValue"
         :name="name"
         :autocomplete="autocomplete"
@@ -28,6 +28,18 @@
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
       </span>
+      <button
+        v-if="type === 'password'"
+        :title="`パスワードを${isPasswordShown ? '非表示' : '表示'}`"
+        :class="$style.toggle"
+        @click.prevent="togglePassword"
+      >
+        <icon
+          :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
+          mdi
+          :class="$style.toggleIcon"
+        />
+      </button>
     </div>
   </div>
 </template>
@@ -36,9 +48,12 @@
 import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
+import Icon from '@/components/UI/Icon.vue'
+import useShowPassword from '@/use/showPassword'
 
 export default defineComponent({
   name: 'FormInput',
+  components: { Icon },
   props: {
     type: {
       type: String,
@@ -87,7 +102,21 @@ export default defineComponent({
     }
 
     const id = randomString()
-    return { onInput, onChange, id, inputRef, focus }
+
+    const { isPasswordShown, togglePassword, typeWithShown } = useShowPassword(
+      props
+    )
+
+    return {
+      onInput,
+      onChange,
+      id,
+      inputRef,
+      focus,
+      isPasswordShown,
+      togglePassword,
+      typeWithShown
+    }
   }
 })
 </script>
@@ -125,5 +154,14 @@ export default defineComponent({
 }
 .suffix {
   margin-right: 8px;
+}
+.toggle {
+  @include color-ui-primary;
+  height: 100%;
+  margin-right: 4px;
+  cursor: pointer;
+}
+.toggleIcon {
+  vertical-align: middle;
 }
 </style>
