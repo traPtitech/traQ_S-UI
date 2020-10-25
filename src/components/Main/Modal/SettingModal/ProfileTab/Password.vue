@@ -19,6 +19,7 @@
       label="新しいパスワード"
       type="password"
       name="new-password"
+      autocomplete="new-password"
       :class="$style.form"
     />
     <div :class="$style.changeButton">

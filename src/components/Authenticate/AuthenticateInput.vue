@@ -8,6 +8,7 @@
         :value="text"
         :type="typeWithShown"
         :autofocus="autofocus"
+        :autocomplete="autocomplete"
         :autocapitalize="autocapitalize"
         :enterkeyhint="enterkeyhint"
         @input="onInput"
@@ -44,6 +45,10 @@ export default defineComponent({
     type: {
       type: String as PropType<'text' | 'password'>,
       default: 'text' as const
+    },
+    autocomplete: {
+      type: String as PropType<string | undefined>,
+      default: undefined
     },
     autofocus: {
       type: Boolean,

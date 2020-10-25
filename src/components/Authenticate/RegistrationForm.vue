@@ -5,6 +5,7 @@
       label="traQ ID"
       :text="loginState.name"
       :class="$style.item"
+      autocomplete="username"
       @input-value="setName"
       autofocus
     />
@@ -12,6 +13,7 @@
       label="表示名"
       :text="loginState.name"
       :class="$style.item"
+      autocomplete="nickname"
       @input-value="setName"
     />
     <authenticate-input
@@ -19,6 +21,7 @@
       type="password"
       :text="loginState.name"
       :class="$style.item"
+      autocomplete="new-password"
       enterkeyhint="done"
       @input-value="setName"
     />
