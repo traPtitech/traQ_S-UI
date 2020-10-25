@@ -1,6 +1,14 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
+      <icon
+        v-if="showBackButton"
+        :size="28"
+        mdi
+        name="chevron-left"
+        @click="$emit('back')"
+        :class="$style.backButton"
+      />
       <slot name="header" />
       <close-button @close="closeSidebar" :size="28" />
     </div>
@@ -13,11 +21,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useSidebar from '@/use/sidebar'
+import Icon from '@/components/UI/Icon.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'MainViewSidebarPage',
-  components: { CloseButton },
+  components: { Icon, CloseButton },
+  props: {
+    showBackButton: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const { closeSidebar } = useSidebar()
 
@@ -46,6 +61,12 @@ export default defineComponent({
   flex-shrink: 0;
   height: 64px;
   padding: 0 32px;
+}
+
+.backButton {
+  flex-shrink: 0;
+  margin-right: 8px;
+  cursor: pointer;
 }
 
 .content {

@@ -1,6 +1,6 @@
 <template>
-  <sidebar-header :show-back-button="showBackButton">
-    <span v-if="showHash" :class="$style.channelHash">#</span>
+  <sidebar-header>
+    <span :class="$style.channelHash">#</span>
     <span :class="$style.text">{{ channelName }}</span>
   </sidebar-header>
 </template>
@@ -14,20 +14,14 @@ import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHea
 export default defineComponent({
   name: 'ChannelSidebarHeader',
   props: {
-    channelId: { type: String as PropType<ChannelId>, required: false },
-    title: { type: String, default: 'チャンネル' },
-    showBackButton: { type: Boolean, default: false }
+    channelId: { type: String as PropType<ChannelId>, required: false }
   },
   components: { SidebarHeader },
   setup(props) {
     const channelName = computed(
-      () =>
-        store.state.entities.channels[props.channelId ?? '']?.name ??
-        props.title
+      () => store.state.entities.channels[props.channelId ?? '']?.name ?? ''
     )
-    const showHash = computed(() => !!props.channelId)
-
-    return { channelName, showHash }
+    return { channelName }
   }
 })
 </script>
