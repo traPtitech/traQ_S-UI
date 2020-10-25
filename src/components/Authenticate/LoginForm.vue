@@ -31,7 +31,7 @@
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button type="primary" label="ログイン" />
+      <authenticate-button type="primary" label="ログイン" is-submit />
     </div>
     <template v-if="!isIOS && externalLogin.length > 0">
       <authenticate-separator label="または" :class="$style.separator" />

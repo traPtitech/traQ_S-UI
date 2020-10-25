@@ -32,6 +32,7 @@
       <authenticate-button
         type="primary"
         label="アカウント作成"
+        is-submit
         @click="login"
       />
     </div>
