@@ -3,7 +3,7 @@
     <template #page>
       <main-view-sidebar-page v-if="!state.pinnedMode">
         <template #header>
-          <sidebar-header v-if="!state.pinnedMode" :name="userName" />
+          <sidebar-header :name="userName" />
         </template>
         <template #content>
           <sidebar-content
@@ -13,22 +13,11 @@
           />
         </template>
       </main-view-sidebar-page>
-      <main-view-sidebar-page v-else>
-        <template #header>
-          <channel-sidebar-header
-            show-back-button
-            @back="togglePinnedMode"
-            title="ピン留め"
-          />
-        </template>
-        <template #content>
-          <!--TODO: チャンネルと共通のコンポーネントを1つ上に持っていく-->
-          <channel-sidebar-pinned-list
-            v-if="state.pinnedMode"
-            :pinned-messages="state.pinnedMessages"
-          />
-        </template>
-      </main-view-sidebar-page>
+      <sidebar-pinned-page
+        v-else
+        :pinned-messages="state.pinnedMessages"
+        @toggle="togglePinnedMode"
+      />
     </template>
     <template #opener>
       <channel-sidebar-hidden @open="openSidebar" :viewer-ids="viewerIds" />
@@ -39,11 +28,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
-import ChannelSidebarPinnedList from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinnedList.vue'
-import ChannelSidebarHeader from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHeader.vue'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import SidebarHeader from './DMSidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
 
@@ -52,8 +40,7 @@ export default defineComponent({
   components: {
     MainViewSidebar,
     MainViewSidebarPage,
-    ChannelSidebarPinnedList,
-    ChannelSidebarHeader,
+    SidebarPinnedPage,
     ChannelSidebarHidden,
     SidebarHeader,
     SidebarContent

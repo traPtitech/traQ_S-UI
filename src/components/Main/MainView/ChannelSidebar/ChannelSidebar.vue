@@ -15,20 +15,11 @@
           />
         </template>
       </main-view-sidebar-page>
-      <main-view-sidebar-page v-else>
-        <template #header>
-          <channel-sidebar-header
-            show-back-button
-            @back="togglePinnedMode"
-            title="ピン留め"
-          />
-        </template>
-        <template #content>
-          <channel-sidebar-pinned-list
-            :pinned-messages="state.pinnedMessages"
-          />
-        </template>
-      </main-view-sidebar-page>
+      <sidebar-pinned-page
+        v-else
+        :pinned-messages="state.pinnedMessages"
+        @toggle="togglePinnedMode"
+      />
     </template>
     <template #opener>
       <channel-sidebar-hidden @open="openSidebar" :viewer-ids="viewerIds" />
@@ -44,7 +35,7 @@ import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainView
 import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import ChannelSidebarHeader from './ChannelSidebarHeader.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
-import ChannelSidebarPinnedList from './ChannelSidebarPinnedList.vue'
+import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import { useQallSession } from './use/channelRTCSession'
 
@@ -53,7 +44,7 @@ export default defineComponent({
   components: {
     MainViewSidebar,
     MainViewSidebarPage,
-    ChannelSidebarPinnedList,
+    SidebarPinnedPage,
     ChannelSidebarHeader,
     ChannelSidebarContent,
     ChannelSidebarHidden
