@@ -7,6 +7,7 @@
       :text="loginState.name"
       @input-value="setName"
       :class="$style.item"
+      autofocus
     />
     <span :class="$style.item">
       <authenticate-input
