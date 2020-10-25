@@ -1,15 +1,30 @@
 <template>
   <div>
     <label :for="id" :class="$style.title">{{ label }}</label>
-    <input
-      :class="$style.input"
-      :id="id"
-      :value="text"
-      :type="type"
-      :autocapitalize="autocapitalize"
-      :enterkeyhint="enterkeyhint"
-      @input="onInput"
-    />
+    <div :class="$style.container">
+      <input
+        :class="$style.input"
+        :id="id"
+        :value="text"
+        :type="typeWithShown"
+        :autofocus="autofocus"
+        :autocapitalize="autocapitalize"
+        :enterkeyhint="enterkeyhint"
+        @input="onInput"
+      />
+      <button
+        v-if="type === 'password'"
+        :title="`パスワードを${isPasswordShown ? '非表示' : '表示'}`"
+        :class="$style.toggle"
+        @click.prevent="togglePassword"
+      >
+        <icon
+          :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
+          mdi
+          :class="$style.toggleIcon"
+        />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -17,15 +32,22 @@
 import { defineComponent, SetupContext, PropType } from 'vue'
 import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
+import Icon from '@/components/UI/Icon.vue'
+import useShowPassword from '@/use/showPassword'
 
 export default defineComponent({
   name: 'AuthenticateInput',
+  components: { Icon },
   props: {
     text: { type: String, default: '' },
     label: { type: String, default: '' },
     type: {
       type: String as PropType<'text' | 'password'>,
       default: 'text' as const
+    },
+    autofocus: {
+      type: Boolean,
+      default: false
     },
     autocapitalize: {
       type: String,
@@ -36,7 +58,12 @@ export default defineComponent({
   setup(props, context: SetupContext) {
     const { onInput } = useInput(context)
     const id = randomString()
-    return { onInput, id }
+
+    const { isPasswordShown, togglePassword, typeWithShown } = useShowPassword(
+      props
+    )
+
+    return { onInput, id, isPasswordShown, togglePassword, typeWithShown }
   }
 })
 </script>
@@ -50,12 +77,25 @@ export default defineComponent({
     weight: bold;
   }
 }
-.input {
+.container {
   @include background-secondary;
+  display: flex;
+  border-radius: 4px;
+}
+.input {
   @include color-text-primary;
   width: 100%;
   height: 2rem;
   padding: 0.5rem;
-  border-radius: 4px;
+}
+.toggle {
+  @include color-ui-secondary;
+  height: 100%;
+  padding: 0.25rem;
+  padding-left: 0;
+  cursor: pointer;
+}
+.toggleIcon {
+  vertical-align: middle;
 }
 </style>
