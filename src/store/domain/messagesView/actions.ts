@@ -36,14 +36,11 @@ export const actions = defineActions({
     const { state, commit, dispatch, rootState } = messagesViewActionContext(
       context
     )
-
-    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
-    changeViewState(payload.channelId, ChannelViewState.Monitoring)
-
     if (state.currentChannelId === payload.channelId) return
 
     commit.unsetCurrentClipFolderId()
 
+    changeViewState(payload.channelId, ChannelViewState.Monitoring)
     commit.setCurrentChannelId(payload.channelId)
     dispatch.resetViewState()
 

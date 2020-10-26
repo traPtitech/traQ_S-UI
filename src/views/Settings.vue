@@ -12,12 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, Ref, ref, watch, toRef } from 'vue'
-import {
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-  useRoute,
-  useRouter
-} from 'vue-router'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { RouteName } from '@/router'
 import { defaultSettingsName } from '@/router/settings'
 import useIsMobile from '@/use/isMobile'
@@ -25,7 +20,6 @@ import useInitialFetch from './use/initialFetch'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
 import store from '@/store'
-import { changeViewState } from '@/lib/websocket'
 
 const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
   const route = useRoute()
@@ -54,11 +48,6 @@ export default defineComponent({
     onBeforeRouteLeave(() => {
       store.commit.ui.settings.setSettingsRootShown(false)
       return true
-    })
-
-    onBeforeRouteUpdate(() => {
-      // 設定画面を開いたときは閲覧チャンネルを消す
-      changeViewState(null)
     })
 
     const hasInitialFetchDone = ref(false)
