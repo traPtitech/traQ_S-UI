@@ -61,8 +61,7 @@ import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
 import { embeddingOrigin } from '@/lib/apis'
-import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute } from '@/router'
+import { useRouter } from 'vue-router'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -132,30 +131,6 @@ const useCompareDate = (props: { messageIds: MessageId[] }) => {
   return dayDiff
 }
 
-/** 設定などから戻ってきた際のスクロール位置リストア */
-const useScrollRestoration = (
-  rootRef: Ref<HTMLElement | null>,
-  state: { scrollTop: number }
-) => {
-  const route = useRoute()
-  watch(
-    computed(() => route.name),
-    async (to, from) => {
-      if (isMessageScrollerRoute(from)) {
-        store.commit.ui.mainView.setLastScrollPosition(
-          rootRef.value?.scrollTop ?? 0
-        )
-      }
-      if (isMessageScrollerRoute(to)) {
-        state.scrollTop = store.state.ui.mainView.lastScrollPosition
-        await nextTick()
-        rootRef.value?.scrollTo({ top: state.scrollTop })
-        store.commit.ui.mainView.setLastScrollPosition(0)
-      }
-    }
-  )
-}
-
 export default defineComponent({
   name: 'MessagesScroller',
   components: {
@@ -192,7 +167,7 @@ export default defineComponent({
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition
+      scrollTop: 0
     })
 
     // DaySeparatorの表示
@@ -286,7 +261,6 @@ export default defineComponent({
 
     useInternalLink(rootRef, context)
     useSpoilerToggler(rootRef)
-    useScrollRestoration(rootRef, state)
 
     const dayDiff = useCompareDate(props)
 

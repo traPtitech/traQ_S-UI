@@ -1,6 +1,5 @@
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { settingsRoutes } from './settings'
 
 export enum RouteName {
   Index = 'index',
@@ -14,7 +13,6 @@ export enum RouteName {
   Registration = 'registration',
   ResetPassword = 'reset-password',
   Consent = 'consent',
-  Settings = 'settings',
   NotFound = 'not-found'
 }
 
@@ -28,23 +26,8 @@ export const changeRouteByPath = (path: string) => {
   router.push(path).catch(() => {})
 }
 
-export const isMessageScrollerRoute = (
-  routeName: string | symbol | null | undefined
-) => {
-  if (typeof routeName !== 'string') return false
-  return (
-    routeName === RouteName.Channel ||
-    routeName === RouteName.User ||
-    routeName === RouteName.Message ||
-    routeName === RouteName.ClipFolders
-  )
-}
-
 const Main = defineAsyncComponent(
   () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
-)
-const Settings = defineAsyncComponent(
-  () => import(/* webpackChunkName: "NotFound" */ '@/views/Settings.vue')
 )
 const ShareTarget = defineAsyncComponent(
   () => import(/* webpackChunkname: "ShareTarget" */ '@/views/ShareTarget.vue')
@@ -86,12 +69,6 @@ const routes: RouteRecordRaw[] = [
     path: '/clip-folders/:id',
     name: RouteName.ClipFolders,
     component: Main
-  },
-  {
-    path: '/settings/:setting?',
-    name: RouteName.Settings,
-    component: Settings,
-    children: settingsRoutes
   },
   {
     path: '/share-target',

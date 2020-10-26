@@ -2,19 +2,26 @@
   <section :class="$style.container">
     <div :class="$style.header">
       <return-button @click="back" :size="40" />
-      <tab-content-title :class="$style.title" is-mobile />
+      <tab-content-title
+        :current-navigation="currentNavigation"
+        :class="$style.title"
+        is-mobile
+      />
       <close-button @close="close" :size="36" />
     </div>
-    <div :class="$style.content">
-      <slot />
-    </div>
+    <tab-content
+      :class="$style.content"
+      :current-navigation="currentNavigation"
+    />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import useSettingsNavigation from './use/navigation'
+import { defineComponent, PropType } from 'vue'
+import store from '@/store'
+import { NavigationItemType } from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
+import TabContent from './TabContent.vue'
 import ReturnButton from '@/components/UI/ReturnButton.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 
@@ -22,11 +29,23 @@ export default defineComponent({
   name: 'MobileTabFrame',
   components: {
     TabContentTitle,
+    TabContent,
     ReturnButton,
     CloseButton
   },
-  setup() {
-    const { close, back } = useSettingsNavigation()
+  props: {
+    currentNavigation: {
+      type: String as PropType<NavigationItemType>,
+      default: 'profile' as const
+    }
+  },
+  setup(_, context) {
+    const back = () => {
+      context.emit('back')
+    }
+
+    const close = () => store.dispatch.ui.modal.clearModal()
+
     return { back, close }
   }
 })
@@ -48,7 +67,7 @@ export default defineComponent({
   @include color-ui-primary;
   @include background-secondary;
   display: flex;
-  padding: 20px 12px;
+  padding: 20px;
   align-items: center;
 }
 .title {
@@ -56,11 +75,7 @@ export default defineComponent({
 }
 
 .content {
-  padding: 24px;
+  padding: 40px;
   padding-top: 0;
-  overflow-y: scroll;
-
-  // ヘッダー分の80px抜いた高さ
-  height: calc(100vh - 80px);
 }
 </style>

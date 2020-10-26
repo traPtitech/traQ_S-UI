@@ -13,6 +13,7 @@ type ModalStateType =
   | 'group'
   | 'notification'
   | 'file'
+  | 'setting'
   | 'tag'
   | 'group'
   | 'channel-create'
@@ -25,6 +26,7 @@ export type ModalState =
   | UserModalState
   | NotificationModalState
   | FileModalState
+  | SettingModalState
   | GroupModalState
   | TagModalState
   | ChannelCreateModalState
@@ -55,6 +57,10 @@ interface FileModalState extends BaseModalState {
   type: 'file'
   id: FileId
   relatedRoute: RouteName.File
+}
+
+interface SettingModalState extends BaseModalState {
+  type: 'setting'
 }
 
 interface GroupModalState extends BaseModalState {

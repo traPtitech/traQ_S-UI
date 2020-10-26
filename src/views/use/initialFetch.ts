@@ -1,4 +1,4 @@
-import { onBeforeMount, onActivated } from 'vue'
+import { onBeforeMount, SetupContext } from 'vue'
 import store from '@/store'
 import router, { RouteName } from '@/router'
 import { ws } from '@/lib/websocket'
@@ -29,42 +29,32 @@ const initialFetch = async () => {
   store.dispatch.domain.channelTree.constructHomeChannelTree()
 }
 
-const initialFetchIfPossible = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      await store.dispatch.domain.me.fetchMe()
-    } catch {
-      router.replace({
-        name: RouteName.Login,
-        query: { redirect: `${location.pathname}${location.search}` }
-      })
-      reject()
-      return
-    }
+/**
+ * ログインチェック後にpromiseがsettledになる
+ */
+const useInitialFetch = (context: SetupContext) => {
+  return new Promise((resolve, reject) => {
+    onBeforeMount(async () => {
+      try {
+        await store.dispatch.domain.me.fetchMe()
+      } catch {
+        router.replace({
+          name: RouteName.Login,
+          query: { redirect: `${location.pathname}${location.search}` }
+        })
+        reject()
+        return
+      }
 
-    resolve()
+      resolve()
 
-    initialFetch()
-
-    ws.addEventListener('reconnect', () => {
       initialFetch()
+
+      ws.addEventListener('reconnect', () => {
+        initialFetch()
+      })
     })
   })
-
-/**
- * ログインチェック成功後にafterLoginCheckが呼び出される
- */
-const useInitialFetch = (afterLoginCheck: () => void) => {
-  const hook = async () => {
-    if (store.state.app.initialFetchCompleted) return
-    try {
-      await initialFetchIfPossible()
-      afterLoginCheck()
-    } catch {}
-  }
-
-  onBeforeMount(hook)
-  onActivated(hook)
 }
 
 export default useInitialFetch

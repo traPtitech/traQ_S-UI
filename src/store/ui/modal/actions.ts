@@ -143,6 +143,7 @@ export const actions = defineActions({
         break
       case 'notification':
       case 'file':
+      case 'setting':
       case 'group':
       case 'channel-create':
       case 'qrcode':

@@ -1,25 +1,34 @@
 <template>
   <div :class="$style.container">
-    <desktop-tab-selector />
-    <desktop-tab-frame>
-      <slot />
-    </desktop-tab-frame>
+    <desktop-tab-selector
+      @navigation-change="onNavigationChange"
+      :current-navigation="currentNavigation"
+    />
+    <desktop-tab-frame :current-navigation="currentNavigation" />
     <close-button :class="$style.close" with-text @close="close" :size="56" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import { defineComponent, toRefs } from 'vue'
+import store from '@/store'
+import { useNavigation } from './use/navigation'
 import DesktopTabSelector from './DesktopTabSelector.vue'
 import DesktopTabFrame from './DesktopTabFrame.vue'
-import useSettingsNavigation from '@/components/Settings/use/navigation'
+import CloseButton from '@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'DesktopSettingModal',
   setup() {
-    const { close } = useSettingsNavigation()
-    return { close }
+    const { navigationSelectorState, onNavigationChange } = useNavigation()
+
+    const close = () => store.dispatch.ui.modal.clearModal()
+
+    return {
+      ...toRefs(navigationSelectorState),
+      onNavigationChange,
+      close
+    }
   },
   components: {
     DesktopTabSelector,

@@ -1,23 +1,22 @@
 <template>
-  <router-link :to="path" :class="$style.item">
+  <button :class="$style.item">
     <icon :name="iconName" :mdi="iconMdi" :size="size" />
     <span :class="$style.title">{{ title }}</span>
     <icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
-  </router-link>
+  </button>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { navigationRouteNameTitleMap } from './use/navigation'
+import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
-import { constructSettingsPath, SettingsRouteName } from '@/router/settings'
 
 export default defineComponent({
   name: 'MobileTabSelectorItem',
   components: { Icon },
   props: {
-    routeName: {
-      type: String as PropType<SettingsRouteName>,
+    type: {
+      type: String as PropType<NavigationItemType>,
       required: true
     },
     iconName: {
@@ -28,9 +27,11 @@ export default defineComponent({
   },
   setup(props) {
     const size = 24
-    const title = computed(() => navigationRouteNameTitleMap[props.routeName])
-    const path = computed(() => constructSettingsPath(props.routeName))
-    return { size, title, path }
+    const title = computed(() => navigationTypeNameMap[props.type])
+    return {
+      size,
+      title
+    }
   }
 })
 </script>

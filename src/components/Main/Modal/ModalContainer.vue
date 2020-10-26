@@ -33,6 +33,7 @@ import store from '@/store'
 import { ModalState } from '@/store/ui/modal/state'
 
 const modalComponentMap: Record<ModalState['type'], string> = {
+  setting: 'SettingModal/SettingModal',
   user: 'UserModal/UserModal',
   notification: 'NotificationModal/NotificationModal',
   tag: 'TagModal/TagModal',

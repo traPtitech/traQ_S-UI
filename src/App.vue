@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.app" :data-is-mobile="$boolAttr(isMobile)">
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+    <router-view />
   </div>
 </template>
 

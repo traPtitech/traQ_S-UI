@@ -69,7 +69,6 @@ export interface S {
   layout: LayoutType
   isSidebarOpen: boolean
   currentMainViewComponentState: MainViewComponentState
-  lastScrollPosition: number
   primaryView: ViewInformation
   secondaryView?: ViewInformation
 }
@@ -78,7 +77,6 @@ export const state: S = {
   layout: 'single',
   isSidebarOpen: false,
   currentMainViewComponentState: MainViewComponentState.Hidden,
-  lastScrollPosition: 0,
   primaryView: {
     type: 'channel',
     channelId: '',
