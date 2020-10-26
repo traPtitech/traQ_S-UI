@@ -2,6 +2,8 @@ import store from '@/store'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import config from '@/config'
+import { useRouter } from 'vue-router'
+import { RouteName } from '@/router'
 
 interface Tool {
   iconName: string
@@ -12,11 +14,11 @@ interface Tool {
 
 const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
+  const router = useRouter()
 
   const openQrCodeModal = () =>
     store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
-  const openSettingsModal = () =>
-    store.dispatch.ui.modal.pushModal({ type: 'setting' })
+  const openSettings = () => router.push({ name: RouteName.Settings })
 
   const tools = computed(() => {
     const tools: Tool[] = []
@@ -35,7 +37,7 @@ const useToolBox = () => {
     tools.push({
       iconName: 'cog',
       iconMdi: true,
-      onClick: openSettingsModal
+      onClick: openSettings
     })
     return tools
   })

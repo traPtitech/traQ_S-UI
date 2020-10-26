@@ -48,7 +48,7 @@ import apis from '@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 import { nullUuid } from '@/lib/util/uuid'
-import useStateDiff from '@/components/Main/Modal/SettingModal/use/stateDiff'
+import useStateDiff from '@/components/Settings/use/stateDiff'
 
 const useChannelOptions = (props: { id: ChannelId }) => {
   const { channelIdToPathString } = useChannelPath()

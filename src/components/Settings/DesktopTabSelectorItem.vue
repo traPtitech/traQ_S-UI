@@ -1,21 +1,22 @@
 <template>
-  <button :class="$style.item" :aria-selected="isSelected">
+  <router-link :to="path" :class="$style.item" :aria-selected="isSelected">
     <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     {{ title }}
-  </button>
+  </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { NavigationItemType, navigationTypeNameMap } from './use/navigation'
+import { navigationRouteNameTitleMap } from './use/navigation'
 import Icon from '@/components/UI/Icon.vue'
+import { constructSettingsPath, SettingsRouteName } from '@/router/settings'
 
 export default defineComponent({
   name: 'DesktopTabSelectorItem',
   components: { Icon },
   props: {
-    type: {
-      type: String as PropType<NavigationItemType>,
+    routeName: {
+      type: String as PropType<SettingsRouteName>,
       required: true
     },
     iconName: {
@@ -28,9 +29,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
-    const title = computed(() => navigationTypeNameMap[props.type])
-    return { title, context }
+  setup(props) {
+    const title = computed(() => navigationRouteNameTitleMap[props.routeName])
+    const path = computed(() => constructSettingsPath(props.routeName))
+    return { title, path }
   }
 })
 </script>

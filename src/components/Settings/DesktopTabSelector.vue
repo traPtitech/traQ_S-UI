@@ -4,12 +4,11 @@
       <h2 :class="$style.header">設定</h2>
       <desktop-tab-selector-item
         v-for="navigation in navigations"
-        :key="navigation.type"
-        :type="navigation.type"
+        :key="navigation.routeName"
+        :route-name="navigation.routeName"
         :icon-name="navigation.iconName"
         :icon-mdi="navigation.iconMdi"
-        :is-selected="currentNavigation === navigation.type"
-        @click="onNavigationItemClick(navigation.type)"
+        :is-selected="currentRouteName === navigation.routeName"
       />
     </div>
     <version :class="$style.version" />
@@ -17,27 +16,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import {
-  NavigationItemType,
-  useNavigationSelectorItem,
-  navigations
-} from './use/navigation'
+import { computed, defineComponent } from 'vue'
+import { navigations } from './use/navigation'
 import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
 import Version from '@/components/UI/Version.vue'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'DesktopTabSelector',
   components: { DesktopTabSelectorItem, Version },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    }
-  },
-  setup(_, context) {
-    const { onNavigationItemClick } = useNavigationSelectorItem(context)
-    return { navigations, onNavigationItemClick }
+  setup() {
+    const route = useRoute()
+    const currentRouteName = computed(() => route.name)
+    return { currentRouteName, navigations }
   }
 })
 </script>

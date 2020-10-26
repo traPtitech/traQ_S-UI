@@ -1,33 +1,18 @@
 <template>
   <section :class="$style.container">
-    <tab-content-title
-      :current-navigation="currentNavigation"
-      :class="$style.title"
-    />
-    <tab-content
-      :current-navigation="currentNavigation"
-      may-show-safari-warning
-    />
+    <tab-content-title :class="$style.title" />
+    <slot />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { NavigationItemType } from './use/navigation'
+import { defineComponent } from 'vue'
 import TabContentTitle from './TabContentTitle.vue'
-import TabContent from './TabContent.vue'
 
 export default defineComponent({
   name: 'DesktopTabFrame',
   components: {
-    TabContentTitle,
-    TabContent
-  },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    }
+    TabContentTitle
   },
   setup() {
     return {}
