@@ -41,7 +41,7 @@ const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
 
 export default defineComponent({
   name: 'Settings',
-  setup(_, context) {
+  setup() {
     const { isMobile } = useIsMobile()
     useSettingsRootPathWatcher(isMobile)
 
@@ -51,7 +51,7 @@ export default defineComponent({
     })
 
     const hasInitialFetchDone = ref(false)
-    useInitialFetch(context).then(() => {
+    useInitialFetch(() => {
       hasInitialFetchDone.value = true
     })
 
