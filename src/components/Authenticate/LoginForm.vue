@@ -6,13 +6,16 @@
       label="traQ ID"
       :text="loginState.name"
       @input-value="setName"
+      autocomplete="username"
       :class="$style.item"
+      autofocus
     />
     <span :class="$style.item">
       <authenticate-input
         label="パスワード"
         type="password"
         :text="loginState.pass"
+        autocomplete="current-password"
         enterkeyhint="done"
         @input-value="setPass"
       />
@@ -28,7 +31,7 @@
       <span v-if="loginState.error">{{ loginState.error }}</span>
     </div>
     <div :class="$style.buttons">
-      <authenticate-button type="primary" label="ログイン" />
+      <authenticate-button type="primary" label="ログイン" is-submit />
     </div>
     <template v-if="!isIOS && externalLogin.length > 0">
       <authenticate-separator label="または" :class="$style.separator" />

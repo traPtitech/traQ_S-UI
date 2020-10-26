@@ -1,11 +1,11 @@
 <template>
   <section v-if="isSuspended" :class="$style.container">
-    <icon name="snowflake" mdi :class="$style.icon" />
-    <p>このユーザーは凍結されています</p>
-  </section>
-  <section v-else-if="isDeactivated" :class="$style.container">
     <icon name="cancel" mdi :class="$style.icon" />
     <p>このユーザーは一時的に無効になっています</p>
+  </section>
+  <section v-else-if="isDeactivated" :class="$style.container">
+    <icon name="snowflake" mdi :class="$style.icon" />
+    <p>このユーザーは凍結されています</p>
   </section>
 </template>
 
