@@ -54,7 +54,7 @@ const useSettingsNavigation = () => {
   const router = useRouter()
   const close = () =>
     router.push(
-      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
+      constructChannelPath(store.state.app.browserSettings.lastOpenChannelName)
     )
   const back = () => {
     if (store.state.ui.settings.settingsRootShown) {
