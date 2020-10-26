@@ -21,7 +21,7 @@ import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
 import store from '@/store'
 
-const useSettingsRootPathWathcer = (isMobile: Ref<boolean>) => {
+const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
   const route = useRoute()
   const router = useRouter()
   const redirectOrMarkRootIfNeeded = () => {
@@ -43,7 +43,7 @@ export default defineComponent({
   name: 'Settings',
   setup(_, context) {
     const { isMobile } = useIsMobile()
-    useSettingsRootPathWathcer(isMobile)
+    useSettingsRootPathWatcher(isMobile)
 
     onBeforeRouteLeave(() => {
       store.commit.ui.settings.setSettingsRootShown(false)
