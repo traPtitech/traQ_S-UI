@@ -68,8 +68,8 @@ export default defineComponent({
 }
 
 .list {
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   overflow: {
     x: hidden;
     y: auto;
