@@ -48,6 +48,7 @@ export default defineComponent({
     @include color-ui-primary;
     @include background-tertiary;
   }
+  max-width: calc(100% / 3 - 16px);
 }
 .icon {
   margin: 4px;
