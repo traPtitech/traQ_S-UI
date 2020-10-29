@@ -37,7 +37,7 @@
     "v-click-outside": "^3.1.2",
     "vue": "^3.0.2",
     "vue-router": "^4.0.0-rc.1",
-    "vue-slider-component": "^4.0.0-beta.2",
+    "vue-slider-component": "^4.0.0-beta.3",
     "vue-textarea-autosize": "^1.1.1",
     "vuex": "^4.0.0-beta.4",
     "vuex-persist": "^3.1.3"
