@@ -33,7 +33,7 @@
     "pica": "^6.1.1",
     "shvl": "^2.0.1",
     "skyway-js": "^3.1.0",
-    "throttle-debounce": "^2.3.0",
+    "throttle-debounce": "^3.0.0",
     "v-click-outside": "^3.1.2",
     "vue": "^3.0.2",
     "vue-router": "^4.0.0-rc.1",
