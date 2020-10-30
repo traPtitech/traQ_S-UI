@@ -20,7 +20,7 @@
     "@mdi/js": "^5.8.55",
     "@traptitech/traq": "^3.5.0-2",
     "@traptitech/traq-markdown-it": "^4.0.3",
-    "@types/pica": "^5.1.1",
+    "@types/pica": "^5.1.2",
     "core-js": "^3.6.5",
     "cropperjs": "^1.5.9",
     "deepmerge": "^4.2.2",
