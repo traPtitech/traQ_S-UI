@@ -84,6 +84,11 @@ export default {
       label: 'BOT Console',
       iconName: 'services/bot-console',
       appLink: 'https://bot-console.trap.jp/'
+    },
+    {
+      label: 'Jomon',
+      iconName: 'services/jomon',
+      appLink: 'https://jomon.trap.jp/'
     }
   ],
   /**
@@ -101,7 +106,8 @@ export default {
     'git.trapti.tech',
     'md.trapti.tech',
     'drive.trapti.tech',
-    'showcase.trapti.tech'
+    'showcase.trapti.tech',
+    'jomon.trap.jp'
   ],
   /**
    * Wikiのユーザーページへのリンク
