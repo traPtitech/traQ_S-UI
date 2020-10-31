@@ -57,6 +57,7 @@ export default defineComponent({
 .header {
   display: flex;
   flex-direction: row;
+  margin-bottom: 8px;
 }
 
 .title {
