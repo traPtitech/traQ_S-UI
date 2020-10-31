@@ -35,7 +35,6 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   @include background-secondary;
-  margin: 8px;
   padding: 16px 8px;
   border-radius: 8px;
   flex: 1 0;
@@ -43,7 +42,6 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  min-width: 120px;
   &:hover {
     @include color-ui-primary;
     @include background-tertiary;
