@@ -20,7 +20,7 @@ import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
   return reactive({
     container: makeStyles((theme, common) => ({
-      color: props.colorClaim ? props.colorClaim(theme, common) : undefined
+      color: props.colorClaim?.(theme, common)
     }))
   })
 }

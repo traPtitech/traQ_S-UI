@@ -2,7 +2,7 @@
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
     <file-type-icon :type="fileType" :size="36" :class="$style.icon" />
     <div :class="$style.fileName" :data-is-ellipsis="$boolAttr(isEllipsis)">
-      {{ fileMeta ? fileMeta.name : 'unknown' }}
+      {{ fileMeta?.name ?? 'unknown' }}
     </div>
     <div :class="$style.fileSize">
       {{ fileSize }}
