@@ -2,19 +2,19 @@
   <div :class="$style.container">
     <div :class="$style.header">
       <file-modal-content-header
-        :file-id="fileMeta ? fileMeta.id : ''"
+        :file-id="fileMeta?.id ?? ''"
         :is-white="true"
       />
     </div>
     <img
       :class="$style.img"
       :src="fileRawPath"
-      :alt="fileMeta ? fileMeta.name : 'unknown'"
+      :alt="fileMeta?.name ?? 'unknown'"
       draggable="false"
     />
     <div :class="$style.footer">
       <file-modal-content-footer
-        :file-id="fileMeta ? fileMeta.id : ''"
+        :file-id="fileMeta?.id ?? ''"
         :is-white="true"
       />
     </div>

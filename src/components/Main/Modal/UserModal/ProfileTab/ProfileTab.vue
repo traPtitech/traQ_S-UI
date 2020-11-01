@@ -1,21 +1,15 @@
 <template>
   <div>
     <account-state :class="$style.section" :state="user.state" />
-    <bio :class="$style.section" :bio="detail ? detail.bio : undefined" />
-    <home-channel
-      :class="$style.section"
-      :id="detail ? detail.homeChannel : undefined"
-    />
+    <bio :class="$style.section" :bio="detail?.bio" />
+    <home-channel :class="$style.section" :id="detail?.homeChannel" />
     <accounts
       :class="$style.section"
       :bot="user.bot"
       :name="user.name"
-      :twitter-id="detail ? detail.twitterId : undefined"
+      :twitter-id="detail?.twitterId"
     />
-    <last-online
-      :class="$style.section"
-      :last-online="detail ? detail.lastOnline : undefined"
-    />
+    <last-online :class="$style.section" :last-online="detail?.lastOnline" />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" @click="openModal">
-    {{ user ? user.displayName : 'unknown' }}
+    {{ user?.displayName ?? 'unknown' }}
   </div>
 </template>
 

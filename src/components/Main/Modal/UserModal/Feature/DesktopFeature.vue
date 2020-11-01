@@ -5,13 +5,13 @@
       <p>
         <online-indicator-with-tooltip
           :user-id="user.id"
-          :last-online="detail ? detail.lastOnline : undefined"
+          :last-online="detail?.lastOnline"
         />
         @{{ user.name }}
       </p>
     </div>
     <buttons
-      :home-channel-id="detail ? detail.homeChannel : undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
       show-title
     />

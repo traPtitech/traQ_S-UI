@@ -3,7 +3,7 @@
     <div :class="$style.channelPath" @click="onClick">#{{ channelPath }}</div>
     <file-modal-content-footer-username
       :class="$style.userName"
-      :user-id="user ? user.id : undefined"
+      :user-id="user?.id"
     />
     <div :class="$style.createdAt">{{ createdAt }}</div>
   </div>

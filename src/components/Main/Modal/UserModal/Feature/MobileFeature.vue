@@ -7,14 +7,14 @@
         <online-indicator-with-tooltip
           :class="$style.indicator"
           :user-id="user.id"
-          :last-online="detail ? detail.lastOnline : undefined"
+          :last-online="detail?.lastOnline"
         />
         <span>@{{ user.name }}</span>
       </p>
     </div>
     <buttons
       :class="$style.buttons"
-      :home-channel-id="detail ? detail.homeChannel : undefined"
+      :home-channel-id="detail?.homeChannel"
       :user-name="user.name"
     />
   </section>
