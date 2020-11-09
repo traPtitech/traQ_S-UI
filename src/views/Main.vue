@@ -94,7 +94,7 @@ export default defineComponent({
     ToastContainer,
     NotFound
   },
-  setup(_, context) {
+  setup() {
     const navWidth = 320
     const sidebarWidth = 256 + 64
     const {
@@ -119,16 +119,11 @@ export default defineComponent({
     )
 
     const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
-
-    useInitialFetch(context).then(
-      () => {
-        setupWebSocket()
-        connectFirebase()
-        triggerRouteParamChange()
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      () => {}
-    )
+    useInitialFetch(() => {
+      setupWebSocket()
+      connectFirebase()
+      triggerRouteParamChange()
+    })
 
     const styles = useStyles(mainViewPosition, sidebarPosition)
 
