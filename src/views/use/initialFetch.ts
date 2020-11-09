@@ -1,7 +1,8 @@
 import { onBeforeMount, onActivated } from 'vue'
 import store from '@/store'
-import router, { RouteName } from '@/router'
+
 import { ws } from '@/lib/websocket'
+import { performLoginCheck } from './loginCheck'
 
 const initialFetch = async () => {
   // 初回fetch
@@ -29,27 +30,14 @@ const initialFetch = async () => {
   store.dispatch.domain.channelTree.constructHomeChannelTree()
 }
 
-const initialFetchIfPossible = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      await store.dispatch.domain.me.fetchMe()
-    } catch {
-      router.replace({
-        name: RouteName.Login,
-        query: { redirect: `${location.pathname}${location.search}` }
-      })
-      reject()
-      return
-    }
+const initialFetchIfPossible = async () => {
+  await performLoginCheck()
+  initialFetch()
 
-    resolve()
-
+  ws.addEventListener('reconnect', () => {
     initialFetch()
-
-    ws.addEventListener('reconnect', () => {
-      initialFetch()
-    })
   })
+}
 
 /**
  * ログインチェック成功後にafterLoginCheckが呼び出される
