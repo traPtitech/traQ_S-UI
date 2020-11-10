@@ -72,7 +72,7 @@
     "eslint-plugin-unused-imports": "^1.0.0",
     "eslint-plugin-vue": "^7.1.0",
     "fibers": "^5.0.0",
-    "fonteditor-core": "^2.1.4",
+    "fonteditor-core": "^2.1.5",
     "patch-package": "^6.2.2",
     "postcss": "^8.1.6",
     "prettier": "^2.1.2",
