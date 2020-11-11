@@ -62,7 +62,6 @@ import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
-
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -94,7 +93,7 @@ export default defineComponent({
     ToastContainer,
     NotFound
   },
-  setup(_, context) {
+  setup() {
     const navWidth = 320
     const sidebarWidth = 256 + 64
     const {
@@ -119,16 +118,11 @@ export default defineComponent({
     )
 
     const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
-
-    useInitialFetch(context).then(
-      () => {
-        setupWebSocket()
-        connectFirebase()
-        triggerRouteParamChange()
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      () => {}
-    )
+    useInitialFetch(() => {
+      setupWebSocket()
+      connectFirebase()
+      triggerRouteParamChange()
+    })
 
     const styles = useStyles(mainViewPosition, sidebarPosition)
 

@@ -9,6 +9,9 @@ export const mutations = defineMutations<S>()({
   setComponentLoaded(state: S, componentLoaded: boolean) {
     state.componentLoaded = componentLoaded
   },
+  setLoginCheckSucceeded(state: S) {
+    state.loginCheckSucceeded = true
+  },
   setInitialFetchCompleted(state: S) {
     state.initialFetchCompleted = true
   },

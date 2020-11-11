@@ -46,7 +46,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.users[props.userId])
+    const user = computed(() =>
+      props.userId === store.state.domain.me.detail?.id
+        ? store.state.domain.me.detail
+        : store.state.entities.users[props.userId]
+    )
     const userIconFileId = computed(
       () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
     )
