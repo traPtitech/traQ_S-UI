@@ -1,4 +1,4 @@
-import firebase from 'firebase/app'
+import type firebase from 'firebase/app'
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
@@ -207,6 +207,7 @@ export const connectFirebase = async () => {
 export const deleteToken = async () => {
   if (Notification.permission !== 'granted') return
 
+  const firebase = await loadFirebase()
   const messaging = firebase.messaging()
   messaging.deleteToken()
 }
