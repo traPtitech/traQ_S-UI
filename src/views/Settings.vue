@@ -78,7 +78,9 @@ export default defineComponent({
           store.dispatch.entities.fetchStampPalettes()
         ),
         // ホームチャンネルの選択などに必要
-        execIfEmpty('channels', store.dispatch.entities.fetchChannels())
+        execIfEmpty('channels', store.dispatch.entities.fetchChannels()),
+        // スタンプの所有者変更に必要
+        execIfEmpty('users', store.dispatch.entities.fetchUsers())
       ])
 
       hasInitialFetchForSettingsDone.value = true
