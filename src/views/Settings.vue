@@ -63,23 +63,25 @@ export default defineComponent({
 
     const execIfEmpty = <T extends keyof typeof store.state.entities>(
       key: T,
-      promise: Promise<void>
+      exector: () => Promise<void>
     ) =>
-      Object.entries(store.state.entities[key]).length > 0 ? undefined : promise
+      Object.entries(store.state.entities[key]).length > 0
+        ? undefined
+        : exector()
 
     // ログイン必要ルート
     const hasInitialFetchForSettingsDone = ref(false)
     useLoginCheck(async () => {
       await Promise.all([
-        execIfEmpty('stamps', store.dispatch.entities.fetchStamps()),
+        execIfEmpty('stamps', store.dispatch.entities.fetchStamps),
         execIfEmpty(
           'stampPalettes',
-          store.dispatch.entities.fetchStampPalettes()
+          store.dispatch.entities.fetchStampPalettes
         ),
         // ホームチャンネルの選択などに必要
-        execIfEmpty('channels', store.dispatch.entities.fetchChannels()),
+        execIfEmpty('channels', store.dispatch.entities.fetchChannels),
         // スタンプの所有者変更に必要
-        execIfEmpty('users', store.dispatch.entities.fetchUsers())
+        execIfEmpty('users', store.dispatch.entities.fetchUsers)
       ])
 
       hasInitialFetchForSettingsDone.value = true

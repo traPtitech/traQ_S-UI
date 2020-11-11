@@ -3,6 +3,8 @@ import store from '@/store'
 import { ws } from '@/lib/websocket'
 import { performLoginCheck } from './loginCheck'
 
+// Main以外(Settingsなど)からMainに飛んだ場合は二重にfetchが走るが、
+// レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
   await Promise.all([
