@@ -18,7 +18,7 @@ export const performLoginCheck = async () => {
   store.commit.app.setLoginCheckSucceeded()
 }
 
-const useLoginCheck = (afterCheck: (() => void) | undefined = undefined) => {
+const useLoginCheck = (afterCheck?: () => void) => {
   const hook = async () => {
     if (!store.state.app.loginCheckSucceeded) {
       try {
