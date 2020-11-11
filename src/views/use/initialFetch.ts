@@ -1,6 +1,5 @@
 import { onBeforeMount, onActivated } from 'vue'
 import store from '@/store'
-
 import { ws } from '@/lib/websocket'
 import { performLoginCheck } from './loginCheck'
 
