@@ -3,7 +3,7 @@
     <template #page>
       <main-view-sidebar-page v-if="!state.pinnedMode">
         <template #header>
-          <sidebar-header :name="userName" />
+          <sidebar-header icon-string="@" :text="userName" />
         </template>
         <template #content>
           <sidebar-content
@@ -32,7 +32,7 @@ import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/Chan
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
-import SidebarHeader from './DMSidebarHeader.vue'
+import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
 
 export default defineComponent({
