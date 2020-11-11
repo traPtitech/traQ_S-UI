@@ -3,7 +3,6 @@
     v-if="viewInfo.type === 'channel' || viewInfo.type === 'dm'"
     :channel-id="viewInfo.channelId"
     :entry-message-id="viewInfo.entryMessageId"
-    :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <clips-view
     v-else-if="viewInfo.type === 'clips'"
@@ -25,10 +24,6 @@ export default defineComponent({
   props: {
     viewInfo: {
       type: Object as PropType<ViewInformation>,
-      required: true
-    },
-    isSidebarOpenerReady: {
-      type: Boolean,
       required: true
     }
   },

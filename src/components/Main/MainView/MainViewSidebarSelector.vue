@@ -3,17 +3,19 @@
     :class="$style.messagesView"
     v-if="viewInfo.type === 'channel'"
     :channel-id="viewInfo.channelId"
+    :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <clips-sidebar
     :class="$style.messagesView"
     v-else-if="viewInfo.type === 'clips'"
     :clip-folder-id="viewInfo.clipFolderId"
+    :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <d-m-sidebar
     :class="$style.messagesView"
     v-else-if="viewInfo.type === 'dm'"
-    :channel-id="viewInfo.channelId"
     :user-name="viewInfo.userName"
+    :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <div :class="$style.none" v-else></div>
 </template>
@@ -29,7 +31,14 @@ export default defineComponent({
   name: 'MainViewSidebarSelector',
   components: { ChannelSidebar, ClipsSidebar, DMSidebar },
   props: {
-    viewInfo: { type: Object as PropType<ViewInformation>, required: true }
+    viewInfo: {
+      type: Object as PropType<ViewInformation>,
+      required: true
+    },
+    isSidebarOpenerReady: {
+      type: Boolean,
+      required: true
+    }
   },
   setup() {
     return {}
