@@ -25,9 +25,7 @@ const useLoginCheck = (afterCheck?: () => void) => {
         await performLoginCheck()
       } catch {}
     }
-    if (afterCheck) {
-      afterCheck()
-    }
+    afterCheck?.()
   }
   onBeforeMount(hook)
   onActivated(hook)
