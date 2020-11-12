@@ -1,13 +1,13 @@
 <template>
-  <div :class="$style.body">
+  <div :class="$style.body" @click="onClick" :data-is-grade="isGrade">
     <span v-if="isBot">Bot</span>
-    <span v-else-if="state.grade">{{ state.grade }}</span>
+    <span v-else-if="gradeGroup">{{ gradeGroup.name }}</span>
     <span v-else>Admin</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
 
@@ -24,12 +24,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const state = reactive({
-      grade: computed(() =>
-        store.getters.entities.gradeNameByUserId(props.userId)
-      )
-    })
-    return { state }
+    const gradeGroup = computed(() =>
+      store.getters.entities.gradeGroupByUserId(props.userId)
+    )
+    const isGrade = computed(() => !!gradeGroup.value)
+
+    const onClick = () => {
+      if (!gradeGroup.value) return
+      store.dispatch.ui.modal.pushModal({
+        type: 'group',
+        id: gradeGroup.value.id
+      })
+    }
+
+    return { gradeGroup, isGrade, onClick }
   }
 })
 </script>
@@ -44,5 +52,8 @@ export default defineComponent({
   font-weight: bold;
   border-radius: 4px;
   padding: 0 4px;
+  &[data-is-grade='true'] {
+    cursor: pointer;
+  }
 }
 </style>
