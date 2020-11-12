@@ -74,7 +74,7 @@ export default defineComponent({
 
     // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
     const getComponent = (path: string) =>
-      defineAsyncComponent(() => import(`@/components/Main/Modal/${path}.vue`))
+      defineAsyncComponent(() => import(`@/components/Modal/${path}.vue`))
 
     const component = computed(() =>
       getComponent(modalComponentMap[modalState.current.type])
