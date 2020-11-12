@@ -5,10 +5,16 @@
     icon-name="hash"
     :class="$style.container"
   >
+    <form-selector
+      v-if="parentChannelId === undefined"
+      label="親チャンネル"
+      v-model="state.parentChannelId"
+      :options="channelOptions"
+    />
     <form-input
       label="チャンネル名"
       :class="$style.input"
-      v-model="channelName"
+      v-model="state.channelName"
     />
     <form-button
       label="作成"
@@ -20,29 +26,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, Ref, SetupContext } from 'vue'
+import { defineComponent, computed, reactive, watch, toRef } from 'vue'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { changeChannelById } from '@/router/channel'
+import { rootChannelId } from '@/store/domain/channelTree/state'
+import { ChannelId } from '@/types/entity-ids'
+import useChannelOptions from '@/use/channelOptions'
+import FormSelector from '@/components/UI/FormSelector.vue'
 
-const useCreateChannel = (
-  props: { parentChannelId?: string },
-  context: SetupContext,
-  channelNameRef: Ref<string>
-) => {
+interface State {
+  channelName: string
+  parentChannelId: ChannelId
+}
+
+const useCreateChannel = (state: State) => {
   const { channelIdToPathString } = useChannelPath()
 
   const createChannel = async () => {
-    const parentChannelPath = props.parentChannelId
-      ? `${channelIdToPathString(props.parentChannelId)}/`
-      : ''
+    const parentChannelPath =
+      state.parentChannelId !== rootChannelId
+        ? channelIdToPathString(state.parentChannelId)
+        : ''
     if (
       !confirm(
         `本当に#${
-          parentChannelPath + channelNameRef.value
+          parentChannelPath + state.channelName
         }を作成しますか？ (チャンネルの削除や移動、チャンネル名の変更はできません。)`
       )
     ) {
@@ -51,8 +63,8 @@ const useCreateChannel = (
 
     try {
       const channel = await store.dispatch.entities.createChannel({
-        name: channelNameRef.value,
-        parent: props.parentChannelId ?? null
+        name: state.channelName,
+        parent: state.parentChannelId
       })
 
       // 新規作成なのでホームチャンネルにならないため、全体のみ再構築
@@ -78,14 +90,34 @@ export default defineComponent({
   components: {
     ModalFrame,
     FormInput,
-    FormButton
+    FormButton,
+    FormSelector
   },
   props: {
-    parentChannelId: String
+    /**
+     * 指定しなかったときは親チャンネルを画面で指定可能
+     */
+    parentChannelId: {
+      type: String,
+      default: undefined
+    }
   },
-  setup(props, context) {
-    const channelName = ref('')
-    const { createChannel } = useCreateChannel(props, context, channelName)
+  setup(props) {
+    const state = reactive<State>({
+      channelName: '',
+      parentChannelId: props.parentChannelId ?? rootChannelId
+    })
+    watch(
+      toRef(props, 'parentChannelId'),
+      newParentChannelId => {
+        state.parentChannelId = newParentChannelId ?? rootChannelId
+      },
+      { immediate: true }
+    )
+
+    const { channelOptions } = useChannelOptions('(root)')
+    const { createChannel } = useCreateChannel(state)
+
     const { channelIdToPathString } = useChannelPath()
     const title = computed(
       () => (props.parentChannelId ? '子' : '') + 'チャンネルを作成'
@@ -93,11 +125,13 @@ export default defineComponent({
     const subtitle = computed(() =>
       props.parentChannelId
         ? channelIdToPathString(props.parentChannelId, true)
-        : 'ルートチャンネル作成'
+        : ''
     )
-    const isCreateEnabled = computed(() => channelName.value !== '')
+    const isCreateEnabled = computed(() => state.channelName !== '')
+
     return {
-      channelName,
+      state,
+      channelOptions,
       createChannel,
       title,
       subtitle,
