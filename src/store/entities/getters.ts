@@ -21,12 +21,12 @@ export const getters = defineGetters<S>()({
       group => group.type === 'grade'
     )
   },
-  gradeNameByUserId(...args): (userId: UserId) => string | undefined {
+  gradeGroupByUserId(...args): (userId: UserId) => UserGroup | undefined {
     const { getters } = entitiesGetterContext(args)
     return userId =>
       getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
         userGroup.members?.some(member => member.id === userId)
-      )?.name
+      )
   },
   stampNameTable(state) {
     return Object.fromEntries(
