@@ -14,8 +14,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
-import FileModalContentHeader from '@/components/Main/Modal/FileModal/FileModalContentHeader.vue'
-import FileModalContentFooter from '@/components/Main/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '@/components/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '@/components/Modal/FileModal/FileModalContentFooter.vue'
 
 export default defineComponent({
   name: 'FileModalAudio',

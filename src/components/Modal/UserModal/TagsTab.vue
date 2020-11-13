@@ -21,8 +21,8 @@
 import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
-import TagsTabTag from '@/components/Main/Modal/UserModal/TagsTabTag.vue'
-import TagsTabAdd from '@/components/Main/Modal/UserModal/TagsTabAdd.vue'
+import TagsTabTag from '@/components/Modal/UserModal/TagsTabTag.vue'
+import TagsTabAdd from '@/components/Modal/UserModal/TagsTabAdd.vue'
 
 export default defineComponent({
   name: 'TagsTab',

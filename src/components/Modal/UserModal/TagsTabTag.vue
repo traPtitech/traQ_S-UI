@@ -21,7 +21,7 @@ import { defineComponent, PropType } from 'vue'
 import store from '@/store'
 import { UserTag } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
-import TagsTabEdit from '@/components/Main/Modal/UserModal/TagsTabEdit.vue'
+import TagsTabEdit from '@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserId } from '@/types/entity-ids'
 
 export default defineComponent({
