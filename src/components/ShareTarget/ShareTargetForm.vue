@@ -22,29 +22,12 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, watch } from 'vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
-import useChannelPath from '@/use/channelPath'
 import store from '@/store'
-import { compareStringInsensitive } from '@/lib/util/string'
 import { nullUuid } from '@/lib/util/uuid'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import usePostMessage from '@/components/Main/MainView/MessageInput/use/postMessage'
-
-const useChannelOptions = () => {
-  const { channelIdToPathString } = useChannelPath()
-
-  store.dispatch.entities.fetchChannels()
-
-  return computed(() =>
-    [
-      ...Object.values(store.state.entities.channels).map(channel => ({
-        key: channelIdToPathString(channel.id, true),
-        value: channel.id
-      })),
-      { key: '-----', value: nullUuid }
-    ].sort((a, b) => compareStringInsensitive(a.key, b.key))
-  )
-}
+import useChannelOptions from '@/use/channelOptions'
 
 export default defineComponent({
   name: 'ShareTargetForm',
@@ -63,7 +46,9 @@ export default defineComponent({
     const homeChannelId = computed(
       () => store.state.domain.me.detail?.homeChannel ?? nullUuid
     )
-    const channelOptions = useChannelOptions()
+
+    store.dispatch.entities.fetchChannels()
+    const { channelOptions } = useChannelOptions('-----')
 
     const state = reactive({
       channelId: nullUuid,

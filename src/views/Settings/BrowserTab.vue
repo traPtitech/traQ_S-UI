@@ -101,22 +101,7 @@ import Toggle from '@/components/UI/Toggle.vue'
 import Account from '@/components/Settings/BrowserTab/Account.vue'
 import Notification from '@/components/Settings/BrowserTab/Notification.vue'
 import useChannelPath from '@/use/channelPath'
-import { compareStringInsensitive } from '@/lib/util/string'
-
-const useChannelOptions = () => {
-  const { channelIdToPathString } = useChannelPath()
-  return computed(() =>
-    Object.values(store.state.entities.channels)
-      .map(channel => {
-        const pathString = channelIdToPathString(channel.id)
-        return {
-          key: `#${pathString}`,
-          value: pathString
-        }
-      })
-      .sort((a, b) => compareStringInsensitive(a.key, b.key))
-  )
-}
+import useChannelOptions from '@/use/channelOptions'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -134,13 +119,16 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
 export default defineComponent({
   name: 'BrowserTab',
   setup() {
+    const { channelIdToPathString } = useChannelPath()
     const browserSettings = computed(() => store.state.app.browserSettings)
     const { state } = useSyncedState(
       browserSettings,
       store.commit.app.browserSettings.set
     )
 
-    const channelOptions = useChannelOptions()
+    const { channelOptions } = useChannelOptions(undefined, channel =>
+      channel ? channelIdToPathString(channel.id) : '(unknown)'
+    )
 
     const macFlag = isMac()
     const getModifierKeyName = (key: keyof SendKeys) => {

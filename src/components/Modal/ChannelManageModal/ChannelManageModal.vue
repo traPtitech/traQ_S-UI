@@ -43,29 +43,11 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import { compareStringInsensitive } from '@/lib/util/string'
 import apis from '@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
-import { ChannelId } from '@/types/entity-ids'
 import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
-
-const useChannelOptions = (props: { id: ChannelId }) => {
-  const { channelIdToPathString } = useChannelPath()
-  return computed(() =>
-    [
-      ...Object.values(store.state.entities.channels)
-        .filter(channel => channel.id !== props.id)
-        .map(channel => {
-          return {
-            key: channelIdToPathString(channel.id, true),
-            value: channel.id
-          }
-        }),
-      { key: '(root)', value: nullUuid }
-    ].sort((a, b) => compareStringInsensitive(a.key, b.key))
-  )
-}
+import useChannelOptions from '@/use/channelOptions'
 
 const useManageChannel = (
   props: { id: string },
@@ -143,7 +125,10 @@ export default defineComponent({
     const { hasDiff } = useStateDiff<PatchChannelRequest>()
     const isManageEnabled = computed(() => hasDiff(manageState, channel))
 
-    const channelOptions = useChannelOptions(props)
+    const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
+    const channelOptions = computed(() =>
+      rawChannelOptions.value.filter(({ value }) => value !== props.id)
+    )
 
     return {
       manageState,
