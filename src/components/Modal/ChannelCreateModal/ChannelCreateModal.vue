@@ -16,6 +16,11 @@
       :class="$style.input"
       v-model="state.channelName"
     />
+    <p :class="$style.desc">
+      実行すると
+      <span :class="$style.newChannelPath">{{ newChannelPath }}</span>
+      が新たに作成されます。(作成後のチャンネルの削除や移動、チャンネル名の変更はできません。)
+    </p>
     <form-button
       label="作成"
       :disabled="!isCreateEnabled"
@@ -44,18 +49,10 @@ interface State {
 }
 
 const useCreateChannel = (state: State) => {
-  const { channelIdToPathString } = useChannelPath()
-
   const createChannel = async () => {
-    const parentChannelPath =
-      state.parentChannelId !== rootChannelId
-        ? channelIdToPathString(state.parentChannelId)
-        : ''
     if (
       !confirm(
-        `本当に#${
-          parentChannelPath + state.channelName
-        }を作成しますか？ (チャンネルの削除や移動、チャンネル名の変更はできません。)`
+        `本当に作成しますか？ (チャンネルの削除や移動、チャンネル名の変更はできません。)`
       )
     ) {
       return
@@ -124,9 +121,16 @@ export default defineComponent({
     )
     const subtitle = computed(() =>
       props.parentChannelId
-        ? channelIdToPathString(props.parentChannelId, true)
+        ? `${channelIdToPathString(props.parentChannelId, true)}/`
         : ''
     )
+    const newChannelPath = computed(() => {
+      if (state.parentChannelId === rootChannelId) {
+        return `#${state.channelName}`
+      }
+      const parentChannelPath = channelIdToPathString(state.parentChannelId)
+      return `#${parentChannelPath}/${state.channelName}`
+    })
     const isCreateEnabled = computed(() => state.channelName !== '')
 
     return {
@@ -135,6 +139,7 @@ export default defineComponent({
       createChannel,
       title,
       subtitle,
+      newChannelPath,
       isCreateEnabled
     }
   }
@@ -145,6 +150,15 @@ export default defineComponent({
 .input {
   margin-bottom: 16px;
   width: 100%;
+}
+.desc {
+  @include color-ui-secondary;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
+}
+.newChannelPath {
+  font-weight: bold;
 }
 .button {
   display: block;
