@@ -45,11 +45,12 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 
 interface State {
   channelName: string
-  parentChannelId: ChannelId
+  parentChannelId: ChannelId | null
 }
 
 const useCreateChannel = (state: State) => {
   const createChannel = async () => {
+    if (state.parentChannelId === null) return
     if (
       !confirm(
         `本当に作成しますか？ (チャンネルの削除や移動、チャンネル名の変更はできません。)`
@@ -102,17 +103,22 @@ export default defineComponent({
   setup(props) {
     const state = reactive<State>({
       channelName: '',
-      parentChannelId: props.parentChannelId ?? rootChannelId
+      parentChannelId: props.parentChannelId ?? null
     })
     watch(
       toRef(props, 'parentChannelId'),
       newParentChannelId => {
-        state.parentChannelId = newParentChannelId ?? rootChannelId
+        state.parentChannelId = newParentChannelId ?? null
       },
       { immediate: true }
     )
 
-    const { channelOptions } = useChannelOptions('(root)')
+    const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
+    const channelOptions = computed(() => [
+      { key: '-----', value: null },
+      ...rawChannelOptions.value
+    ])
+
     const { createChannel } = useCreateChannel(state)
 
     const { channelIdToPathString } = useChannelPath()
@@ -125,13 +131,18 @@ export default defineComponent({
         : ''
     )
     const newChannelPath = computed(() => {
-      if (state.parentChannelId === rootChannelId) {
+      if (
+        state.parentChannelId === null ||
+        state.parentChannelId === rootChannelId
+      ) {
         return `#${state.channelName}`
       }
       const parentChannelPath = channelIdToPathString(state.parentChannelId)
       return `#${parentChannelPath}/${state.channelName}`
     })
-    const isCreateEnabled = computed(() => state.channelName !== '')
+    const isCreateEnabled = computed(
+      () => state.channelName !== '' && state.parentChannelId !== null
+    )
 
     return {
       state,

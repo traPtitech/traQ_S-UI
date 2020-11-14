@@ -17,6 +17,7 @@
           v-for="option in options"
           :key="option.value"
           :value="option.value"
+          :disabled="option.value === null"
         >
           {{ option.key }}
         </option>
@@ -41,6 +42,9 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    /**
+     * valueがnullのものはdisabled
+     */
     options: {
       type: Array as PropType<Array<{ key: string; value: string | null }>>,
       required: true
