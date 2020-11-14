@@ -42,6 +42,8 @@ import { rootChannelId } from '@/store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelOptions from '@/use/channelOptions'
 import FormSelector from '@/components/UI/FormSelector.vue'
+import { UserPermission } from '@traptitech/traq'
+import config from '@/config'
 
 interface State {
   channelName: string
@@ -83,6 +85,27 @@ const useCreateChannel = (state: State) => {
   return { createChannel }
 }
 
+const useChannelOptionsForSelector = () => {
+  const hasChannelEditPermission = computed(() =>
+    store.state.domain.me.detail?.permissions.includes(
+      UserPermission.EditChannel
+    )
+  )
+  const rootChannel = computed(() =>
+    config.isRootChannelSelectableAsParentChannel ||
+    hasChannelEditPermission.value
+      ? '(root)'
+      : undefined
+  )
+
+  const { channelOptions: rawChannelOptions } = useChannelOptions(rootChannel)
+  const channelOptions = computed(() => [
+    { key: '-----', value: null },
+    ...rawChannelOptions.value
+  ])
+  return { channelOptions }
+}
+
 export default defineComponent({
   name: 'ChannelCreateModal',
   components: {
@@ -113,12 +136,7 @@ export default defineComponent({
       { immediate: true }
     )
 
-    const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
-    const channelOptions = computed(() => [
-      { key: '-----', value: null },
-      ...rawChannelOptions.value
-    ])
-
+    const { channelOptions } = useChannelOptionsForSelector()
     const { createChannel } = useCreateChannel(state)
 
     const { channelIdToPathString } = useChannelPath()

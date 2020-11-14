@@ -137,6 +137,12 @@ export default {
    */
   pipelineEnabled: true,
   /**
+   * チャンネル変更権限をもっていないユーザーでも
+   * チャンネル作成時に親チャンネルとしてrootを選択可能にする
+   * サーバーでははじいていないので、APIをたたけば誰でも可能
+   */
+  isRootChannelSelectableAsParentChannel: false,
+  /**
    * QRコード表示ボタンの有効化
    */
   showQrCodeButton: true

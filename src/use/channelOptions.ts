@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, Ref, unref } from 'vue'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import { compareStringInsensitive } from '@/lib/util/string'
@@ -12,17 +12,20 @@ const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid
  * @param channelToVal 引数のchannelはnullChannelのときはundefined
  */
 const useChannelOptions = (
-  nullKeyName: string | undefined,
+  nullKeyName: Ref<string | undefined> | string | undefined,
   channelToVal: (channel?: Channel) => string = channelToChannelId
 ) => {
   const { channelIdToPathString } = useChannelPath()
 
-  const nullVal = nullKeyName
-    ? {
-        key: nullKeyName,
-        value: channelToVal()
-      }
-    : undefined
+  const nullVal = computed(() => {
+    const nullKeyNameUnref = unref(nullKeyName)
+    return nullKeyNameUnref
+      ? {
+          key: nullKeyNameUnref,
+          value: channelToVal()
+        }
+      : undefined
+  })
 
   const channelOptions = computed(() => {
     const channels = Object.values(store.state.entities.channels)
@@ -32,7 +35,7 @@ const useChannelOptions = (
       }))
       .sort((a, b) => compareStringInsensitive(a.key, b.key))
 
-    return nullVal ? [nullVal, ...channels] : channels
+    return nullVal.value ? [nullVal.value, ...channels] : channels
   })
   return { channelOptions }
 }
