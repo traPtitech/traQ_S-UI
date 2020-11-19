@@ -1,11 +1,7 @@
 import { computed, reactive, Ref, onMounted, onBeforeUnmount } from 'vue'
+import { Point, diff } from '@/lib/point'
 
 const ZOOM_STEP = 1.2
-
-interface Point {
-  x: number
-  y: number
-}
 
 export interface State {
   /**
@@ -69,8 +65,9 @@ const useImageViewer = (
   })
 
   const rewriteCenterDiff = (oldPoint: Point, newPoint: Point) => {
-    state.centerDiff.x -= newPoint.x - oldPoint.x
-    state.centerDiff.y -= newPoint.y - oldPoint.y
+    const d = diff(newPoint, oldPoint)
+    state.centerDiff.x -= d.x
+    state.centerDiff.y -= d.y
   }
   const rewriteZoomLevel = (isZoomIn: boolean, point: Point) => {
     const oldZoomLevel = state.zoomLevel
@@ -80,16 +77,16 @@ const useImageViewer = (
     state.zoomLevel = newZoomLevel
     const newZoomRatio = zoomRatio.value
 
+    // 左上を原点としたときのviewerの中心点
+    const viewerCenterPoint = {
+      x: (containerEle.value?.offsetWidth ?? 0) / 2,
+      y: (containerEle.value?.offsetHeight ?? 0) / 2
+    }
+
     // 拡大縮小の中心点のviewerの中心点からのずれ
-    const zoomCenterDiff = {
-      x: point.x - (containerEle.value?.offsetWidth ?? 0) / 2,
-      y: point.y - (containerEle.value?.offsetHeight ?? 0) / 2
-    }
+    const zoomCenterDiff = diff(point, viewerCenterPoint)
     // 拡大縮小の中心点の画像の中心点からのずれ
-    const zoomCenterDiffFromImg = {
-      x: zoomCenterDiff.x - state.centerDiff.x,
-      y: zoomCenterDiff.y - state.centerDiff.y
-    }
+    const zoomCenterDiffFromImg = diff(zoomCenterDiff, state.centerDiff)
 
     state.centerDiff.x -=
       (zoomCenterDiffFromImg.x * (newZoomRatio - oldZoomRatio)) / oldZoomRatio
