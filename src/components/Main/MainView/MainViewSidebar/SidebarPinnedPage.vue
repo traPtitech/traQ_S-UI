@@ -1,7 +1,7 @@
 <template>
   <main-view-sidebar-page show-back-button @back="$emit('toggle')">
     <template #header>
-      <sidebar-header>ピン留め</sidebar-header>
+      <sidebar-header text="ピン留め" />
     </template>
     <template #content>
       <sidebar-pinned-list :pinned-messages="pinnedMessages" />
