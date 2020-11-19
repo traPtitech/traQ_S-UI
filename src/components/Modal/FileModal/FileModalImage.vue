@@ -6,11 +6,10 @@
         :is-white="true"
       />
     </div>
-    <img
+    <image-viewer
       :class="$style.img"
       :src="fileRawPath"
       :alt="fileMeta?.name ?? 'unknown'"
-      draggable="false"
     />
     <div :class="$style.footer">
       <file-modal-content-footer
@@ -26,12 +25,14 @@ import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileModalContentHeader from '@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Modal/FileModal/FileModalContentFooter.vue'
+import ImageViewer from '@/components/UI/ImageViewer.vue'
 
 export default defineComponent({
   name: 'FileModalImage',
   components: {
     FileModalContentHeader,
-    FileModalContentFooter
+    FileModalContentFooter,
+    ImageViewer
   },
   props: {
     fileId: {
@@ -54,10 +55,6 @@ export default defineComponent({
   height: 100vh;
   max-height: 100%;
   max-width: 60rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 .header {
   position: absolute;
@@ -74,8 +71,8 @@ export default defineComponent({
   }
 }
 .img {
-  max-height: 100%;
-  max-width: 100%;
+  height: 100%;
+  width: 100%;
 }
 .footer {
   position: absolute;
