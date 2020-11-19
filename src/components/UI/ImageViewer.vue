@@ -1,6 +1,13 @@
 <template>
   <div :class="$style.container" ref="containerEle">
-    <img :src="src" :class="$style.img" :style="style" draggable="false" />
+    <div :class="$style.imgContainer" :style="styles.imgContainer">
+      <img
+        :src="src"
+        :class="$style.img"
+        :style="styles.img"
+        draggable="false"
+      />
+    </div>
   </div>
 </template>
 
@@ -35,23 +42,32 @@ interface State {
    * 拡大率 (1.0で等倍)
    */
   zoomRatio: number
+  /**
+   * 回転 (deg、-180～180)
+   */
+  rotate: number
 }
 
 const useStyle = (state: State) => {
-  const style = computed(() => ({
-    /*
-     * - translate(-50%, -50%)は中心にもってくるために必要
-     *   (`position: relative; top: 50%; left: 50%`)
-     * - translate(x, y)をscale(ratio)の前に持ってくると画像の位置のずれも拡大されてしまうので、
-     *   scale(ratio)のあとにおく
-     * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
-     *   座標軸が拡大されているため
-     */
-    transform: `translate(-50%, -50%) scale(${state.zoomRatio}) translate(${
-      state.centerDiff.x / state.zoomRatio
-    }px, ${state.centerDiff.y / state.zoomRatio}px)`
-  }))
-  return { style }
+  const styles = reactive({
+    imgContainer: computed(() => ({
+      /*
+       * - translate(-50%, -50%)は中心にもってくるために必要
+       *   (`position: relative; top: 50%; left: 50%`)
+       * - translate(x, y)をscale(ratio)の前に持ってくると画像の位置のずれも拡大されてしまうので、
+       *   scale(ratio)のあとにおく
+       * - translate(x,y)のx,yがzoomRatioで割られているのはscale(ratio)のあとに持ってきているので、
+       *   座標軸が拡大されているため
+       */
+      transform: `translate(-50%, -50%) scale(${state.zoomRatio}) translate(${
+        state.centerDiff.x / state.zoomRatio
+      }px, ${state.centerDiff.y / state.zoomRatio}px)`
+    })),
+    img: computed(() => ({
+      transform: `rotate(${state.rotate}deg)`
+    }))
+  })
+  return { styles }
 }
 
 const useMove = (containerEle: Ref<HTMLElement | undefined>, state: State) => {
@@ -110,6 +126,9 @@ const useZoom = (containerEle: Ref<HTMLElement | undefined>, state: State) => {
   }
 
   const zoomRatioUpdate = (e: WheelEvent) => {
+    // 押されているときはrotate
+    if (e.altKey || e.metaKey) return
+
     const oldZoomLevel = state.zoomLevel
     const oldZoomRatio = state.zoomRatio
 
@@ -144,6 +163,33 @@ const useZoom = (containerEle: Ref<HTMLElement | undefined>, state: State) => {
   })
 }
 
+const useRotate = (
+  containerEle: Ref<HTMLElement | undefined>,
+  state: State
+) => {
+  const rotateUpdate = (e: WheelEvent) => {
+    // 押されていないときはzoom
+    if (!(e.altKey || e.metaKey)) return
+
+    let r = state.rotate
+    if (e.deltaY > 0) {
+      r += 2
+    } else {
+      r -= 2
+    }
+    state.rotate = r % 180
+  }
+
+  onMounted(() => {
+    if (!containerEle.value) return
+    containerEle.value.addEventListener('wheel', rotateUpdate)
+  })
+  onBeforeUnmount(() => {
+    if (!containerEle.value) return
+    containerEle.value.removeEventListener('wheel', rotateUpdate)
+  })
+}
+
 export default defineComponent({
   name: 'ImageViewer',
   props: {
@@ -161,13 +207,15 @@ export default defineComponent({
         y: 0
       },
       zoomLevel: 0,
-      zoomRatio: computed(() => ZOOM_STEP ** state.zoomLevel)
+      zoomRatio: computed(() => ZOOM_STEP ** state.zoomLevel),
+      rotate: 0
     })
     useZoom(containerEle, state)
     useMove(containerEle, state)
+    useRotate(containerEle, state)
 
-    const { style } = useStyle(state)
-    return { containerEle, style }
+    const { styles } = useStyle(state)
+    return { containerEle, styles }
   }
 })
 </script>
@@ -177,12 +225,22 @@ export default defineComponent({
   position: relative;
   overflow: hidden;
 }
-.img {
-  max-height: 100%;
-  max-width: 100%;
+.imgContainer {
   position: absolute;
   top: 50%;
   left: 50%;
+  height: 100%;
+  width: 100%;
   user-select: none;
+}
+.img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
 }
 </style>
