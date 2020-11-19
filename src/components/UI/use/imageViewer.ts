@@ -1,7 +1,14 @@
 import { computed, reactive, Ref, onMounted, onBeforeUnmount } from 'vue'
-import { Point, diff } from '@/lib/point'
+import {
+  Point,
+  diff,
+  getDistance,
+  getMidpoint,
+  getAngleBetweenLines
+} from '@/lib/point'
 
 const ZOOM_STEP = 1.2
+const MIN_PINCH_DISTANCE = 30
 
 export interface State {
   /**
@@ -18,10 +25,25 @@ export interface State {
   rotate: number
 }
 
-const eventClientXYToPoint = (e: MouseEvent) => ({
+const clientXYToPoint = (e: { clientX: number; clientY: number }) => ({
   x: e.clientX,
   y: e.clientY
 })
+
+const touches2ToPoints2 = ([a, b]: readonly [Touch, Touch]) =>
+  [clientXYToPoint(a), clientXYToPoint(b)] as const
+
+const touchesToDistance = (touches: readonly [Touch, Touch]) =>
+  getDistance(touches2ToPoints2(touches))
+
+const getTouchesMidpoint = (touches: readonly Touch[]) =>
+  getMidpoint(touches.map(touch => clientXYToPoint(touch)))
+
+const getAngleBetweenLinesFromTouches = (
+  touchesA: readonly [Touch, Touch],
+  touchesB: readonly [Touch, Touch]
+) =>
+  getAngleBetweenLines(touches2ToPoints2(touchesA), touches2ToPoints2(touchesB))
 
 const getNewZoomLevel = (isZoomIn: boolean, oldZoomRatio: number) => {
   let r = oldZoomRatio
@@ -31,6 +53,140 @@ const getNewZoomLevel = (isZoomIn: boolean, oldZoomRatio: number) => {
     r--
   }
   return r
+}
+
+const useMouseMove = (
+  containerEle: Ref<HTMLElement | undefined>,
+  handler: (newPoint: Point, oldPoint: Point) => void
+) => {
+  const onDown = (downEvent: MouseEvent) => {
+    let lastPoint = clientXYToPoint(downEvent)
+    const moveUpdate = (moveEvent: MouseEvent) => {
+      const newPoint = clientXYToPoint(moveEvent)
+      handler(newPoint, lastPoint)
+      lastPoint = newPoint
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    containerEle.value!.addEventListener('mousemove', moveUpdate)
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    containerEle.value!.addEventListener(
+      'mouseup',
+      _upEvent => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        containerEle.value!.removeEventListener('mousemove', moveUpdate)
+      },
+      { once: true }
+    )
+  }
+
+  onMounted(() => {
+    containerEle.value?.addEventListener('mousedown', onDown)
+  })
+  onBeforeUnmount(() => {
+    containerEle.value?.removeEventListener('mousedown', onDown)
+  })
+}
+
+const useMouseWheel = (
+  containerEle: Ref<HTMLElement | undefined>,
+  handler: (wheelEvent: WheelEvent) => void
+) => {
+  onMounted(() => {
+    containerEle.value?.addEventListener('wheel', handler)
+  })
+  onBeforeUnmount(() => {
+    containerEle.value?.removeEventListener('wheel', handler)
+  })
+}
+
+const useTouch = (
+  containerEle: Ref<HTMLElement | undefined>,
+  moveHandler: (newPoint: Point, oldPoint: Point) => void,
+  pinchHandler: (
+    newDistance: number,
+    oldDistance: number,
+    midpoint: Point,
+    rotateAngle: number
+  ) => void
+) => {
+  let handlingTouch = false
+  const onTouchStart = (_startEvent: TouchEvent) => {
+    if (handlingTouch) return
+    handlingTouch = true
+
+    let lastMoveTouch: Touch | null = null
+    let lastPinchTouches: readonly [Touch, Touch] | null = null
+
+    const onMove = (moveEvent: TouchEvent) => {
+      const touches = moveEvent.targetTouches
+
+      if (touches.length >= 2) {
+        lastMoveTouch = null
+        lastPinchTouches = pinch(touches, lastPinchTouches)
+      } else if (touches.length >= 1) {
+        lastMoveTouch = move(touches, lastMoveTouch)
+        lastPinchTouches = null
+      }
+    }
+
+    const move = (targetTouches: TouchList, lastMoveTouch: Touch | null) => {
+      const newMoveTouch = targetTouches[0]
+      if (lastMoveTouch === null) return newMoveTouch
+
+      moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(lastMoveTouch))
+
+      return newMoveTouch
+    }
+    const pinch = (
+      targetTouches: TouchList,
+      lastPinchTouches: readonly [Touch, Touch] | null
+    ) => {
+      let newPinchTouches = [targetTouches[0], targetTouches[1]] as const
+      if (lastPinchTouches === null) return newPinchTouches
+
+      let newDistance = touchesToDistance(newPinchTouches)
+      const oldDistance = touchesToDistance(lastPinchTouches)
+
+      // 変化が一定距離以下の場合は拡大率の変化はなしにする
+      if (Math.abs(newDistance - oldDistance) < MIN_PINCH_DISTANCE) {
+        newDistance = oldDistance
+        newPinchTouches = lastPinchTouches
+      }
+
+      pinchHandler(
+        newDistance,
+        oldDistance,
+        getTouchesMidpoint([...newPinchTouches, ...lastPinchTouches]),
+        getAngleBetweenLinesFromTouches(newPinchTouches, lastPinchTouches)
+      )
+
+      return newPinchTouches
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    containerEle.value!.addEventListener('touchmove', onMove)
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    containerEle.value!.addEventListener(
+      'touchend',
+      _endEvent => {
+        handlingTouch = false
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        containerEle.value!.removeEventListener('touchmove', onMove)
+      },
+      { once: true }
+    )
+  }
+
+  onMounted(() => {
+    containerEle.value?.addEventListener('touchstart', onTouchStart)
+  })
+  onBeforeUnmount(() => {
+    containerEle.value?.removeEventListener('touchstart', onTouchStart)
+  })
 }
 
 const useImageViewer = (
@@ -100,50 +256,12 @@ const useImageViewer = (
     state.rotate = newRotate
   }
 
-  const useMouseMove = () => {
-    const centerDiffUpdate = (downEvent: MouseEvent) => {
-      let lastPoint = eventClientXYToPoint(downEvent)
-      const moveUpdate = (moveEvent: MouseEvent) => {
-        const newPoint = eventClientXYToPoint(moveEvent)
-        rewriteCenterDiff(newPoint, lastPoint)
-        lastPoint = newPoint
-      }
+  useMouseMove(containerEle, (newPoint, oldPoint) => {
+    rewriteCenterDiff(newPoint, oldPoint)
+  })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      containerEle.value!.addEventListener('mousemove', moveUpdate)
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      containerEle.value!.addEventListener(
-        'mouseup',
-        _upEvent => {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          containerEle.value!.removeEventListener('mousemove', moveUpdate)
-        },
-        { once: true }
-      )
-    }
-
-    onMounted(() => {
-      containerEle.value?.addEventListener('mousedown', centerDiffUpdate)
-    })
-    onBeforeUnmount(() => {
-      containerEle.value?.removeEventListener('mousedown', centerDiffUpdate)
-    })
-  }
-
-  const useMouseWheel = () => {
-    const onWheel = (e: WheelEvent) => {
-      if (e.altKey || e.metaKey) {
-        rotateUpdate(e)
-      } else {
-        zoomRatioUpdate(e)
-      }
-    }
-
-    const zoomRatioUpdate = (e: WheelEvent) => {
-      rewriteZoomLevel(e.deltaY < 0, eventClientXYToPoint(e))
-    }
-    const rotateUpdate = (e: WheelEvent) => {
+  useMouseWheel(containerEle, e => {
+    if (e.altKey || e.metaKey) {
       let r = state.rotate
       if (e.deltaY > 0) {
         r += 4
@@ -151,18 +269,24 @@ const useImageViewer = (
         r -= 4
       }
       rewriteRotate(r)
+    } else {
+      rewriteZoomLevel(e.deltaY < 0, clientXYToPoint(e))
     }
+  })
 
-    onMounted(() => {
-      containerEle.value?.addEventListener('wheel', onWheel)
-    })
-    onBeforeUnmount(() => {
-      containerEle.value?.removeEventListener('wheel', onWheel)
-    })
-  }
+  useTouch(
+    containerEle,
+    (newPoint, oldPoint) => {
+      rewriteCenterDiff(newPoint, oldPoint)
+    },
+    (newDistance, oldDistance, centerPoint, rotateAngle) => {
+      rewriteRotate(state.rotate + rotateAngle)
 
-  useMouseMove()
-  useMouseWheel()
+      // 変化がないときは処理しない(oldDistanceを変更しないのはuseTouch内で実装)
+      if (newDistance === oldDistance) return
+      rewriteZoomLevel(newDistance - oldDistance >= 0, centerPoint)
+    }
+  )
 
   return { styles }
 }
