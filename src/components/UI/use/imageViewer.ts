@@ -127,8 +127,6 @@ const useMouseWheel = (
   handler: WheelHandler
 ) => {
   const onWheel = (e: WheelEvent) => {
-    e.preventDefault()
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { top, left } = containerEle.value!.getBoundingClientRect()
     handler(e, {
