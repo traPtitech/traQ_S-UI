@@ -1,6 +1,7 @@
+import { nullUuid } from '@/lib/util/uuid'
 import { ChannelId } from '@/types/entity-ids'
 
-export const rootChannelId = ''
+export const rootChannelId = nullUuid
 
 export type RootChannelId = typeof rootChannelId
 

@@ -1,25 +1,34 @@
 <template>
   <div>
-    <channel-filter
-      @toggle-star-filter="toggleStarChannelFilter"
-      @input-filter="setQuery"
-      :text="channelListFilterState.query"
-      :is-stared="filterStarChannel"
-      :class="$style.filter"
-    />
-    <channel-list
-      v-if="channelListFilterState.query.length > 0"
-      :channels="channelListFilterState.filteredItems"
-      ignore-children
-      show-shortened-path
-      show-topic
-    />
-    <channel-list
-      v-else-if="filterStarChannel"
-      :channels="staredChannels"
-      show-shortened-path
-    />
-    <channel-list v-else :channels="topLevelChannels" />
+    <navigation-content-container subtitle="チャンネルリスト">
+      <template #control>
+        <button @click="onClickButton" :class="$style.button">
+          <icon :size="20" mdi name="plus-circle-outline" />
+        </button>
+      </template>
+      <template #default>
+        <channel-filter
+          @toggle-star-filter="toggleStarChannelFilter"
+          @input-filter="setQuery"
+          :text="channelListFilterState.query"
+          :is-stared="filterStarChannel"
+          :class="$style.filter"
+        />
+        <channel-list
+          v-if="channelListFilterState.query.length > 0"
+          :channels="channelListFilterState.filteredItems"
+          ignore-children
+          show-shortened-path
+          show-topic
+        />
+        <channel-list
+          v-else-if="filterStarChannel"
+          :channels="staredChannels"
+          show-shortened-path
+        />
+        <channel-list v-else :channels="topLevelChannels" />
+      </template>
+    </navigation-content-container>
   </div>
 </template>
 
@@ -32,6 +41,8 @@ import { constructTree } from '@/store/domain/channelTree/actions'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
+import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState, setQuery } = useTextFilter(channels, 'name')
@@ -98,8 +109,10 @@ const useStaredChannels = () =>
 export default defineComponent({
   name: 'Channels',
   components: {
+    NavigationContentContainer,
     ChannelList,
-    ChannelFilter
+    ChannelFilter,
+    Icon
   },
   setup() {
     const topLevelChannels = useTopLevelChannels()
@@ -113,7 +126,14 @@ export default defineComponent({
       useChannelList(filterStarChannel)
     )
 
+    const onClickButton = () => {
+      store.dispatch.ui.modal.pushModal({
+        type: 'channel-create'
+      })
+    }
+
     return {
+      onClickButton,
       toggleStarChannelFilter,
       filterStarChannel,
       channelListFilterState,
@@ -128,5 +148,14 @@ export default defineComponent({
 <style lang="scss" module>
 .filter {
   margin-bottom: 16px;
+}
+.button {
+  @include color-ui-secondary;
+  padding-right: 16px;
+  opacity: 0.5;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
 }
 </style>

@@ -73,7 +73,7 @@ interface ChannelCreateModalState extends BaseModalState {
   /**
    * 親チャンネルのID
    *
-   * 指定しない場合はルートチャンネル作成
+   * 指定しない場合は親チャンネルが指定可能な作成画面になる
    */
   parentChannelId?: ChannelId
 }

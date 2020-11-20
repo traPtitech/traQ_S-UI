@@ -59,32 +59,12 @@ import ImageUpload from '@/components/Settings/ImageUpload.vue'
 import useImageUpload, {
   ImageUploadState
 } from '@/components/Settings/use/imageUpload'
-import useChannelPath from '@/use/channelPath'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
-import { compareStringInsensitive } from '@/lib/util/string'
 import Password from '@/components/Settings/ProfileTab/Password.vue'
-
-const useChannelOptions = () => {
-  const { channelIdToPathString } = useChannelPath()
-  return computed(() =>
-    [
-      {
-        key: '--未設定--',
-        value: nullUuid
-      }
-    ].concat(
-      Object.values(store.state.entities.channels)
-        .map(channel => ({
-          key: channelIdToPathString(channel.id, true),
-          value: channel.id
-        }))
-        .sort((a, b) => compareStringInsensitive(a.key, b.key))
-    )
-  )
-}
+import useChannelOptions from '@/use/channelOptions'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -151,7 +131,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const detail = computed(() => store.state.domain.me.detail!)
 
-    const channelOptions = useChannelOptions()
+    const { channelOptions } = useChannelOptions('--未設定--')
 
     const {
       imageUploadState,
