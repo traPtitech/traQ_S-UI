@@ -2,13 +2,13 @@ import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
 import { computed } from 'vue'
-import { MAX_CHILD_LEVEL } from '@/lib/validator'
+import { canCreateChildChannel as canCreateChildChannel_ } from '@/lib/channel'
 
 const useChannelCreateModal = (props: { channelId: ChannelId }) => {
-  const { channelIdToPath } = useChannelPath()
+  const { channelIdToPathString } = useChannelPath()
 
-  const canCreateChildChannel = computed(
-    () => channelIdToPath(props.channelId).length < MAX_CHILD_LEVEL
+  const canCreateChildChannel = computed(() =>
+    canCreateChildChannel_(channelIdToPathString(props.channelId))
   )
 
   const openChannelCreateModal = () => {

@@ -18,3 +18,9 @@ export const compareStringInsensitive = (
   str2?: string,
   inverse?: boolean
 ) => compareString(str1?.toLowerCase(), str2?.toLowerCase(), inverse)
+
+/**
+ * 文字列に特定の文字が含まれている数をカウントする
+ */
+export const count = (str: string, char: string) =>
+  [...str].reduce((acc, c) => (c === char ? acc + 1 : acc), 0)
