@@ -30,9 +30,10 @@ export const ephemeralNavigationTypeNameMap: Record<
   qall: 'Qall'
 }
 
-export const { useNavigation, useNavigationSelectorItem } = createNavigation<
-  NavigationItemType
->('home')
+export const {
+  useNavigation,
+  useNavigationSelectorItem
+} = createNavigation<NavigationItemType>('home')
 
 export const {
   useNavigation: useEphemeralNavigation,
