@@ -18,13 +18,12 @@ interface EventMap {
 }
 type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
 
-const wait = (ms: number) => {
-  return new Promise(resolve => {
+const wait = (ms: number) =>
+  new Promise<void>(resolve => {
     setTimeout(() => {
       resolve()
     }, ms)
   })
-}
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
@@ -71,7 +70,7 @@ export default class AutoReconnectWebSocket {
   }
 
   _setupWs() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       this._ws = new WebSocket(this.url, this.protocols)
 
       this._ws.addEventListener(

@@ -1,10 +1,7 @@
 import { Dimensions } from './size'
 
-export const loadImage = (
-  url: string,
-  $img: HTMLImageElement
-): Promise<string> => {
-  return new Promise(resolve => {
+export const loadImage = (url: string, $img: HTMLImageElement) =>
+  new Promise<void>(resolve => {
     $img.addEventListener(
       'load',
       () => {
@@ -14,7 +11,6 @@ export const loadImage = (
     )
     $img.src = url
   })
-}
 
 export const resetCanvas = (
   $canvas: HTMLCanvasElement,
