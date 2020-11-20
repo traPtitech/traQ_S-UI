@@ -1,6 +1,6 @@
 {
   "name": "traq_s-ui",
-  "version": "3.3.5000",
+  "version": "3.4.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
