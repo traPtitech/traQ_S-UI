@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import useImageViewer, { State } from './use/imageViewer'
+import { defineComponent, ref } from 'vue'
+import useImageViewer from './use/imageViewer'
 
 export default defineComponent({
   name: 'ImageViewer',
@@ -26,15 +26,7 @@ export default defineComponent({
   setup(props) {
     const containerEle = ref<HTMLDivElement>()
 
-    const state: State = reactive({
-      centerDiff: {
-        x: 0,
-        y: 0
-      },
-      zoomLevel: 0,
-      rotate: 0
-    })
-    const { styles } = useImageViewer(containerEle, state)
+    const { styles } = useImageViewer(containerEle)
 
     return { containerEle, styles }
   }

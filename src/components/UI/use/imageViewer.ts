@@ -11,6 +11,7 @@ const ZOOM_STEP = 1.2
 const MIN_ZOOM_LEVEL = -15
 const MAX_ZOOM_LEVEL = 30
 const MIN_PINCH_DISTANCE = 30
+const ROTATE_STEP = 4
 
 export interface State {
   /**
@@ -32,23 +33,28 @@ const clientXYToPoint = (e: { clientX: number; clientY: number }) => ({
   y: e.clientY
 })
 
-const touches2ToPoints2 = ([a, b]: readonly [Touch, Touch]) =>
-  [clientXYToPoint(a), clientXYToPoint(b)] as const
+type TwoTouch = readonly [Touch, Touch]
 
-const touchesToDistance = (touches: readonly [Touch, Touch]) =>
-  getDistance(touches2ToPoints2(touches))
+const touchesToPoints = <T extends readonly Touch[]>(touches: T) =>
+  (touches.map(touch => clientXYToPoint(touch)) as unknown) as {
+    readonly [K in keyof T]: Point
+  }
 
-const getTouchesMidpoint = (touches: readonly Touch[]) =>
-  getMidpoint(touches.map(touch => clientXYToPoint(touch)))
+const touchesToDistance = (touches: TwoTouch) => {
+  const [p, q] = touchesToPoints(touches)
+  return getDistance(p, q)
+}
+
+const getTouchesMidpoint = (...touches: readonly Touch[]) =>
+  getMidpoint(...touchesToPoints(touches))
 
 const getAngleBetweenLinesFromTouches = (
-  touchesA: readonly [Touch, Touch],
-  touchesB: readonly [Touch, Touch]
-) =>
-  getAngleBetweenLines(touches2ToPoints2(touchesA), touches2ToPoints2(touchesB))
+  touchesA: TwoTouch,
+  touchesB: TwoTouch
+) => getAngleBetweenLines(touchesToPoints(touchesA), touchesToPoints(touchesB))
 
-const getNewZoomLevel = (isZoomIn: boolean, oldZoomRatio: number) => {
-  let r = oldZoomRatio
+const getNewZoomLevel = (isZoomIn: boolean, oldZoomLevel: number) => {
+  let r = oldZoomLevel
   if (isZoomIn) {
     r++
   } else {
@@ -57,9 +63,34 @@ const getNewZoomLevel = (isZoomIn: boolean, oldZoomRatio: number) => {
   return Math.max(Math.min(r, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL)
 }
 
+/**
+ * 座標軸は合わせていないので相対的な情報のみ使える
+ * @param newPoint 移動前の点
+ * @param oldPoint 移動後の点
+ */
+type MoveHandler = (newPoint: Point, oldPoint: Point) => void
+
+/**
+ * @param point スクロールをした点
+ */
+type WheelHandler = (wheelEvent: WheelEvent, point: Point) => void
+
+/**
+ * @param newDistance 新しい指二本の間の距離
+ * @param oldDistance 元の指二本の間の距離
+ * @param midpoint 元と新しい指四本の中点
+ * @param rotateAngle 変化した角度
+ */
+type PinchHandler = (
+  newDistance: number,
+  oldDistance: number,
+  midpoint: Point,
+  rotateAngle: number
+) => void
+
 const useMouseMove = (
   containerEle: Ref<HTMLElement | undefined>,
-  handler: (newPoint: Point, oldPoint: Point) => void
+  handler: MoveHandler
 ) => {
   const onDown = (downEvent: MouseEvent) => {
     let lastPoint = clientXYToPoint(downEvent)
@@ -93,7 +124,7 @@ const useMouseMove = (
 
 const useMouseWheel = (
   containerEle: Ref<HTMLElement | undefined>,
-  handler: (wheelEvent: WheelEvent, point: Point) => void
+  handler: WheelHandler
 ) => {
   const onWheel = (e: WheelEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -114,13 +145,8 @@ const useMouseWheel = (
 
 const useTouch = (
   containerEle: Ref<HTMLElement | undefined>,
-  moveHandler: (newPoint: Point, oldPoint: Point) => void,
-  pinchHandler: (
-    newDistance: number,
-    oldDistance: number,
-    midpoint: Point,
-    rotateAngle: number
-  ) => void
+  moveHandler: MoveHandler,
+  pinchHandler: PinchHandler
 ) => {
   let handlingTouch = false
   const onTouchStart = (_startEvent: TouchEvent) => {
@@ -128,7 +154,7 @@ const useTouch = (
     handlingTouch = true
 
     let lastMoveTouch: Touch | null = null
-    let lastPinchTouches: readonly [Touch, Touch] | null = null
+    let lastPinchTouches: TwoTouch | null = null
 
     const onMove = (moveEvent: TouchEvent) => {
       const touches = moveEvent.targetTouches
@@ -152,7 +178,7 @@ const useTouch = (
     }
     const pinch = (
       targetTouches: TouchList,
-      lastPinchTouches: readonly [Touch, Touch] | null
+      lastPinchTouches: TwoTouch | null
     ) => {
       let newPinchTouches = [targetTouches[0], targetTouches[1]] as const
       if (lastPinchTouches === null) return newPinchTouches
@@ -169,7 +195,7 @@ const useTouch = (
       pinchHandler(
         newDistance,
         oldDistance,
-        getTouchesMidpoint([...newPinchTouches, ...lastPinchTouches]),
+        getTouchesMidpoint(...newPinchTouches, ...lastPinchTouches),
         getAngleBetweenLinesFromTouches(newPinchTouches, lastPinchTouches)
       )
 
@@ -200,10 +226,16 @@ const useTouch = (
   })
 }
 
-const useImageViewer = (
-  containerEle: Ref<HTMLElement | undefined>,
-  state: State
-) => {
+const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
+  const state: State = reactive({
+    centerDiff: {
+      x: 0,
+      y: 0
+    },
+    zoomLevel: 0,
+    rotate: 0
+  })
+
   /**
    * 拡大率 (1.0で等倍)
    */
@@ -236,6 +268,9 @@ const useImageViewer = (
     state.centerDiff.x -= d.x
     state.centerDiff.y -= d.y
   }
+  /**
+   * @see https://github.com/traPtitech/traQ_S-UI/pull/1603#discussion_r526882122
+   */
   const rewriteZoomLevel = (isZoomIn: boolean, point: Point) => {
     const oldZoomLevel = state.zoomLevel
     const oldZoomRatio = zoomRatio.value
@@ -275,9 +310,9 @@ const useImageViewer = (
     if (e.altKey || e.metaKey) {
       let r = state.rotate
       if (e.deltaY > 0) {
-        r += 4
+        r += ROTATE_STEP
       } else {
-        r -= 4
+        r -= ROTATE_STEP
       }
       rewriteRotate(r)
     } else {
