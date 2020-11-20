@@ -91,13 +91,22 @@ const useMouseMove = (
 
 const useMouseWheel = (
   containerEle: Ref<HTMLElement | undefined>,
-  handler: (wheelEvent: WheelEvent) => void
+  handler: (wheelEvent: WheelEvent, point: Point) => void
 ) => {
+  const onWheel = (e: WheelEvent) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { top, left } = containerEle.value!.getBoundingClientRect()
+    handler(e, {
+      x: e.clientX - left,
+      y: e.clientY - top
+    })
+  }
+
   onMounted(() => {
-    containerEle.value?.addEventListener('wheel', handler)
+    containerEle.value?.addEventListener('wheel', onWheel)
   })
   onBeforeUnmount(() => {
-    containerEle.value?.removeEventListener('wheel', handler)
+    containerEle.value?.removeEventListener('wheel', onWheel)
   })
 }
 
@@ -260,7 +269,7 @@ const useImageViewer = (
     rewriteCenterDiff(newPoint, oldPoint)
   })
 
-  useMouseWheel(containerEle, e => {
+  useMouseWheel(containerEle, (e, point) => {
     if (e.altKey || e.metaKey) {
       let r = state.rotate
       if (e.deltaY > 0) {
@@ -270,7 +279,7 @@ const useImageViewer = (
       }
       rewriteRotate(r)
     } else {
-      rewriteZoomLevel(e.deltaY < 0, clientXYToPoint(e))
+      rewriteZoomLevel(e.deltaY < 0, point)
     }
   })
 
