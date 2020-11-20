@@ -44,6 +44,7 @@ import useChannelOptions from '@/use/channelOptions'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import { UserPermission } from '@traptitech/traq'
 import config from '@/config'
+import { canCreateChildChannel } from '@/lib/channel'
 
 interface State {
   channelName: string
@@ -99,10 +100,12 @@ const useChannelOptionsForSelector = () => {
   )
 
   const { channelOptions: rawChannelOptions } = useChannelOptions(rootChannel)
-  const channelOptions = computed(() => [
-    { key: '-----', value: null },
-    ...rawChannelOptions.value
-  ])
+  const channelOptions = computed(() =>
+    [
+      { key: '-----', value: null },
+      ...rawChannelOptions.value
+    ].filter(({ key }) => canCreateChildChannel(key))
+  )
   return { channelOptions }
 }
 

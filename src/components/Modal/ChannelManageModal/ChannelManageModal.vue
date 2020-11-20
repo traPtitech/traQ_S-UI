@@ -48,6 +48,7 @@ import { PatchChannelRequest } from '@traptitech/traq'
 import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
+import { canCreateChildChannel } from '@/lib/channel'
 
 const useManageChannel = (
   props: { id: string },
@@ -127,7 +128,9 @@ export default defineComponent({
 
     const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
     const channelOptions = computed(() =>
-      rawChannelOptions.value.filter(({ value }) => value !== props.id)
+      rawChannelOptions.value
+        .filter(({ value }) => value !== props.id)
+        .filter(({ key }) => canCreateChildChannel(key))
     )
 
     return {
