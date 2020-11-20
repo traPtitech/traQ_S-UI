@@ -8,6 +8,8 @@ import {
 } from '@/lib/point'
 
 const ZOOM_STEP = 1.2
+const MIN_ZOOM_LEVEL = -15
+const MAX_ZOOM_LEVEL = 30
 const MIN_PINCH_DISTANCE = 30
 
 export interface State {
@@ -52,7 +54,7 @@ const getNewZoomLevel = (isZoomIn: boolean, oldZoomRatio: number) => {
   } else {
     r--
   }
-  return r
+  return Math.max(Math.min(r, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL)
 }
 
 const useMouseMove = (
