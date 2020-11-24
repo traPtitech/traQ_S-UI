@@ -41,6 +41,6 @@ export default defineComponent({
 .close {
   position: absolute;
   top: 30px;
-  right: 120px;
+  right: 60px;
 }
 </style>

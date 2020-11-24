@@ -1,7 +1,9 @@
 <template>
   <section :class="$style.container">
-    <tab-content-title :class="$style.title" />
-    <slot />
+    <div :class="$style.content">
+      <tab-content-title :class="$style.title" />
+      <slot />
+    </div>
   </section>
 </template>
 
@@ -26,11 +28,16 @@ export default defineComponent({
   @include background-primary;
   flex: 1 1;
   padding: 40px;
-  padding-right: 240px;
+  padding-right: 160px;
   overflow: {
     x: hidden;
     y: auto;
   }
+}
+
+.content {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .title {
