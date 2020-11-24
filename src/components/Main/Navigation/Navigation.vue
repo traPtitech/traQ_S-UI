@@ -23,8 +23,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  // TODO 上に移す
-  width: 320px;
   height: 100%;
 }
 </style>

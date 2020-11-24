@@ -116,6 +116,7 @@ export default defineComponent({
 .content {
   @include background-secondary;
   grid-area: content;
+  padding-left: 8px;
 }
 .ephemeralContent {
   @include background-secondary;

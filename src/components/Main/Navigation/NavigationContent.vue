@@ -65,7 +65,7 @@ export default defineComponent({
   overflow-y: scroll;
   padding: {
     top: 24px;
-    left: 16px;
+    left: 8px;
   }
   backface-visibility: hidden;
   contain: strict;
