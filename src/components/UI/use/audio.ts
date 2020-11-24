@@ -21,6 +21,10 @@ const useAudio = (
 
   const audio = new Audio()
 
+  const cantPlay = computed(
+    () => fileMeta.value && audio.canPlayType(fileMeta.value.mime) === ''
+  )
+
   watch(
     () => fileMeta.value?.mime + fileRawPath.value,
     () => {
@@ -85,6 +89,7 @@ const useAudio = (
     showPictureInPictureWindow(audio, iconId)
   }
   return {
+    cantPlay,
     isPlaying,
     currentTime,
     displayCurrentTime,

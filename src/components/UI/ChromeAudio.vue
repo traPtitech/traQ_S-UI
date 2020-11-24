@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="!cantPlay" :class="$style.container">
     <div :class="$style.icon" @click="togglePlay">
       <icon mdi :name="isPlaying ? 'pause' : 'play'" :size="20" />
     </div>
@@ -56,6 +56,7 @@ export default defineComponent({
   setup(props, context) {
     const { fileMeta, fileRawPath } = useFileMeta(props, context)
     const {
+      cantPlay,
       isPlaying,
       currentTime,
       displayCurrentTime,
@@ -76,6 +77,7 @@ export default defineComponent({
     }
 
     return {
+      cantPlay,
       isPlaying,
       currentTime,
       displayCurrentTime,
