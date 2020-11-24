@@ -1,6 +1,20 @@
 import { FileInfo } from '@traptitech/traq'
 
-export type AttachmentType = 'image' | 'audio' | 'video' | 'file'
+export type AttachmentType =
+  | 'image'
+  | 'audio'
+  | 'video'
+  | 'pdf'
+  | 'slide'
+  | 'file'
+
+const PDF_MIME = 'application/pdf'
+const SLIDE_MIMES = [
+  /* microsoft powerpoint */ 'application/vnd.ms-powerpoint',
+  /* microsoft powerpoint */ 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  /* libreoffice impress */ 'application/vnd.sun.xml.impress',
+  /* apple keynote */ 'application/vnd.apple.keynote'
+] as const
 
 export const mimeToFileType = (mime: string): AttachmentType => {
   if (mime.startsWith('image/')) {
@@ -12,6 +26,12 @@ export const mimeToFileType = (mime: string): AttachmentType => {
   if (mime.startsWith('video/')) {
     return 'video'
   }
+  if (mime === PDF_MIME) {
+    return 'pdf'
+  }
+  if ((SLIDE_MIMES as ReadonlyArray<string>).includes(mime)) {
+    return 'slide'
+  }
   return 'file'
 }
 
@@ -22,7 +42,7 @@ export const isNonPreviewable = (
   meta: Readonly<Pick<FileInfo, 'mime' | 'thumbnail'>>
 ) => {
   const type = mimeToFileType(meta.mime)
-  if (type === 'file') {
+  if (type === 'file' || type === 'pdf' || type === 'slide') {
     return true
   }
   if (type === 'image' && !meta.thumbnail && meta.mime !== 'image/svg+xml') {

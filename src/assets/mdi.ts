@@ -64,7 +64,9 @@ import {
   mdiSnowflake,
   mdiCancel,
   mdiEyeOutline,
-  mdiEyeOffOutline
+  mdiEyeOffOutline,
+  mdiFilePdf,
+  mdiFileChart
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -137,7 +139,9 @@ const mdi: MdiIconsMapping = {
   snowflake: mdiSnowflake,
   cancel: mdiCancel,
   'eye-outline': mdiEyeOutline,
-  'eye-off-outline': mdiEyeOffOutline
+  'eye-off-outline': mdiEyeOffOutline,
+  'file-pdf': mdiFilePdf,
+  'file-chart': mdiFileChart
 }
 
 export default mdi
