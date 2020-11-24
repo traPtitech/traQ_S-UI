@@ -23,6 +23,15 @@ describe('mimeToFileType', () => {
   it('can get filetype (5)', () => {
     expect(mimeToFileType('')).toEqual('file')
   })
+  it('can get filetype (6)', () => {
+    expect(mimeToFileType('application/pdf')).toEqual('pdf')
+  })
+  it('can get filetype (7)', () => {
+    expect(mimeToFileType('application/vnd.ms-powerpoint')).toEqual('slide')
+  })
+  it('can get filetype (8)', () => {
+    expect(mimeToFileType('application/vnd.sun.xml.impress')).toEqual('slide')
+  })
 })
 
 describe('isFileType', () => {
@@ -47,10 +56,23 @@ describe('isFileType', () => {
 })
 
 describe('isNonPreviewable', () => {
-  it('can detect file', () => {
+  it('can detect file (1)', () => {
     expect(isNonPreviewable({ mime: 'text/plain', thumbnail: null })).toEqual(
       true
     )
+  })
+  it('can detect file (2)', () => {
+    expect(
+      isNonPreviewable({ mime: 'application/pdf', thumbnail: null })
+    ).toEqual(true)
+  })
+  it('can detect file (3)', () => {
+    expect(
+      isNonPreviewable({
+        mime: 'application/vnd.ms-powerpoint',
+        thumbnail: null
+      })
+    ).toEqual(true)
   })
 
   it('can detect image file (not svg) (1)', () => {

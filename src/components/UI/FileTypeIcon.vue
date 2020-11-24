@@ -24,6 +24,10 @@ export default defineComponent({
       switch (prop.type) {
         case 'file':
           return 'file'
+        case 'pdf':
+          return 'file-pdf'
+        case 'slide':
+          return 'file-chart'
         case 'image':
           return 'file-image'
         case 'video':
