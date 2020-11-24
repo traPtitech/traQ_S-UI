@@ -21,6 +21,11 @@ const useAudio = (
 
   const audio = new Audio()
 
+  const cantPlay = computed(
+    () => fileMeta.value && audio.canPlayType(fileMeta.value.mime) === ''
+  )
+  const wasUnsupportedType = ref(false)
+
   watch(
     () => fileMeta.value?.mime + fileRawPath.value,
     () => {
@@ -52,7 +57,14 @@ const useAudio = (
     }
   }
   const start = async () => {
-    await audio.play()
+    try {
+      await audio.play()
+    } catch (e: unknown) {
+      const err = e as Error
+      if (err.name === 'NotSupportedError') {
+        wasUnsupportedType.value = true
+      }
+    }
   }
   const pause = () => {
     audio.pause()
@@ -85,6 +97,8 @@ const useAudio = (
     showPictureInPictureWindow(audio, iconId)
   }
   return {
+    cantPlay,
+    wasUnsupportedType,
     isPlaying,
     currentTime,
     displayCurrentTime,

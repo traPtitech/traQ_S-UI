@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="!cantPlay" :class="$style.container">
     <div :class="$style.icon" @click="togglePlay">
       <icon mdi :name="isPlaying ? 'pause' : 'play'" :size="20" />
     </div>
@@ -24,7 +24,11 @@
     >
       <icon mdi name="picture-in-picture-bottom-right" :size="20" />
     </div>
+    <div v-if="wasUnsupportedType" :class="$style.unsupportedError">
+      対応していないファイル形式でした
+    </div>
   </div>
+  <div></div>
 </template>
 
 <script lang="ts">
@@ -56,6 +60,8 @@ export default defineComponent({
   setup(props, context) {
     const { fileMeta, fileRawPath } = useFileMeta(props, context)
     const {
+      cantPlay,
+      wasUnsupportedType,
       isPlaying,
       currentTime,
       displayCurrentTime,
@@ -76,6 +82,8 @@ export default defineComponent({
     }
 
     return {
+      cantPlay,
+      wasUnsupportedType,
       isPlaying,
       currentTime,
       displayCurrentTime,
@@ -94,9 +102,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+$background-color: rgb(241, 243, 244);
+
 .container {
+  position: relative;
   color: black;
-  background-color: rgb(241, 243, 244);
+  background-color: $background-color;
   align-items: center;
   display: flex;
   flex: 0;
@@ -122,5 +133,16 @@ export default defineComponent({
 .sliderContainer {
   margin: 0 4px;
   flex: 1;
+}
+.unsupportedError {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $background-color;
 }
 </style>
