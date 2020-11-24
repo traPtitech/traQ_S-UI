@@ -212,9 +212,10 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     if (channelId in store.state.entities.channels) {
+      // paramsでchannelPathを指定すると/がエンコードされてバグる
+      // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        name: RouteName.Channel,
-        params: { channel: channelIdToPathString(message.channelId) },
+        path: constructChannelPath(channelIdToPathString(message.channelId)),
         query: { message: message.id }
       })
     } else if (channelId in store.state.entities.dmChannels) {
