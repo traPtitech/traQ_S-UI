@@ -1,8 +1,12 @@
 <template>
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
     <file-type-icon :type="fileType" :size="36" :class="$style.icon" />
-    <div :class="$style.fileName" :data-is-ellipsis="$boolAttr(isEllipsis)">
-      {{ fileMeta?.name ?? 'unknown' }}
+    <div
+      :class="$style.fileName"
+      :data-is-ellipsis="$boolAttr(isEllipsis)"
+      :title="name"
+    >
+      {{ name }}
     </div>
     <div :class="$style.fileSize">
       {{ fileSize }}
@@ -18,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 import Icon from '@/components/UI/Icon.vue'
@@ -50,11 +54,14 @@ export default defineComponent({
       fileSize,
       onFileDownloadLinkClick
     } = useFileMeta(props, context)
+    const name = computed(() => fileMeta.value?.name ?? 'unknown')
+
     return {
       fileMeta,
       fileType,
       fileSize,
-      onFileDownloadLinkClick
+      onFileDownloadLinkClick,
+      name
     }
   }
 })
