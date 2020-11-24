@@ -3,7 +3,7 @@
     <div :class="$style.description">
       <message-file-list-item-content :file-id="fileId" />
     </div>
-    <chrome-audio :file-id="fileId" :class="$style.audio" />
+    <chrome-audio :file-id="fileId" />
   </div>
 </template>
 
@@ -49,8 +49,5 @@ export default defineComponent({
   width: 100%;
   margin: 6px 0;
   cursor: pointer;
-}
-.audio {
-  width: 100%;
 }
 </style>
