@@ -83,7 +83,6 @@ export default defineComponent({
   z-index: $z-index-header;
 }
 .container {
-  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -133,5 +132,6 @@ export default defineComponent({
 .sidebar {
   height: 100%;
   flex-shrink: 0;
+  z-index: $z-index-sidebar;
 }
 </style>

@@ -37,7 +37,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-primary;
-  padding: 4px 32px;
+  padding: 4px 28px;
   border-radius: 4px;
   text-align: center;
   cursor: pointer;

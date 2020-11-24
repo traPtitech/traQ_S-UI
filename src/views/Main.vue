@@ -19,9 +19,10 @@
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
+        :class="$style.mainViewWrapper"
         @click.capture="onClickMainViewFrame"
       >
-        <main-view :class="$style.mainViewWrapper" />
+        <main-view :class="$style.mainView" />
       </main-view-frame>
       <div
         :class="$style.sidebarWrapper"
@@ -172,13 +173,17 @@ export default defineComponent({
 }
 .navigationWrapper {
   height: 100%;
-  flex-grow: 0;
-  flex-shrink: 0;
+  max-width: 360px;
+  flex: 1 0 260px; // .mainViewWrapperのflexと調節する
   [data-is-mobile] & {
     position: absolute;
     top: 0;
     left: 0;
+    width: 320px;
   }
+}
+.mainViewWrapper {
+  flex: 12 1 320px; // .navigationViewWrapperのflexと調節する
 }
 .sidebarWrapper {
   @include background-secondary;
@@ -197,7 +202,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
-.mainViewWrapper {
+.mainView {
   width: 100%;
   height: 100%;
 }
