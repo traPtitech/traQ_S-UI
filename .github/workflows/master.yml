@@ -39,11 +39,10 @@ jobs:
     needs: [build]
     steps:
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v1
+        uses: shimataro/ssh-key-action@v2
         with:
-          private-key: ${{ secrets.STAGING_SSH_KEY }}
-          public-key: ${{ secrets.STAGING_SSH_KEY_PUBLIC }}
-          known-hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          known_hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
       - uses: actions/download-artifact@v2
         with:
           name: dist
