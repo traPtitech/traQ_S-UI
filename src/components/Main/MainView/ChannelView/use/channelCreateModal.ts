@@ -1,14 +1,13 @@
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
 import { computed } from 'vue'
-import { canCreateChildChannel as canCreateChildChannel_ } from '@/lib/channel'
+import useCanCreateChildChannel from '@/use/canCreateChildChannel'
 
 const useChannelCreateModal = (props: { channelId: ChannelId }) => {
-  const { channelIdToPathString } = useChannelPath()
+  const { canCreateChildChannel } = useCanCreateChildChannel()
 
-  const canCreateChildChannel = computed(() =>
-    canCreateChildChannel_(channelIdToPathString(props.channelId))
+  const isChildChannelCreatable = computed(() =>
+    canCreateChildChannel(props.channelId)
   )
 
   const openChannelCreateModal = () => {
@@ -17,7 +16,7 @@ const useChannelCreateModal = (props: { channelId: ChannelId }) => {
       parentChannelId: props.channelId
     })
   }
-  return { canCreateChildChannel, openChannelCreateModal }
+  return { isChildChannelCreatable, openChannelCreateModal }
 }
 
 export default useChannelCreateModal

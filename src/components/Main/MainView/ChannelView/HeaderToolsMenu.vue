@@ -11,7 +11,7 @@
       :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
     />
     <header-tools-menu-item
-      v-if="canCreateChildChannel"
+      v-if="isChildChannelCreatable"
       @click="emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
@@ -57,7 +57,7 @@ export default defineComponent({
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false },
-    canCreateChildChannel: { type: Boolean, default: false },
+    isChildChannelCreatable: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
