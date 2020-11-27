@@ -1,5 +1,9 @@
 <template>
   <router-link :to="fileLink" v-if="isLarge" :class="$style.largeContainer">
+    <!--
+      height, widthはlayout shift対策
+      https://www.mizdra.net/entry/2020/05/31/192613
+    -->
     <img
       draggable="false"
       :alt="fileMeta.name"
@@ -9,6 +13,9 @@
     />
   </router-link>
   <router-link v-else :to="fileLink" :class="$style.container">
+    <!--
+      CSSで固定値指定なのでheight, widthはつけない
+    -->
     <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
   </router-link>
 </template>
