@@ -13,6 +13,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "dom-screen-wake-lock",
       "webpack-env",
       "jest"
     ],
