@@ -157,6 +157,9 @@ const useTouch = (
     let lastPinchTouches: TwoTouch | null = null
 
     const onMove = (moveEvent: TouchEvent) => {
+      // タッチによるスクロールの無効化
+      moveEvent.preventDefault()
+
       const touches = moveEvent.targetTouches
 
       if (touches.length >= 2) {
