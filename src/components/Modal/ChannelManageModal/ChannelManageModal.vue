@@ -1,10 +1,5 @@
 <template>
-  <modal-frame
-    title="チャンネル管理"
-    :subtitle="subtitle"
-    icon-name="hash"
-    :class="$style.container"
-  >
+  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <form-input label="チャンネル名" v-model="manageState.name" />
     <form-selector
       label="親チャンネル"
@@ -16,8 +11,12 @@
       <toggle
         :value="manageState.archived"
         @input="manageState.archived = !manageState.archived"
+        :disabled="!canToggleArchive"
       />
     </label>
+    <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
+      このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
+    </p>
     <label :class="$style.toggle">
       強制通知
       <toggle
@@ -135,13 +134,17 @@ export default defineComponent({
             !store.state.entities.channels[value]?.archived)
       )
     )
+    const canToggleArchive = computed(
+      () => !store.state.entities.channels[channel.value.parent]?.archived
+    )
 
     return {
       manageState,
       manageChannel,
       subtitle,
       isManageEnabled,
-      channelOptions
+      channelOptions,
+      canToggleArchive
     }
   }
 })
@@ -151,6 +154,9 @@ export default defineComponent({
 .input {
   margin-bottom: 16px;
   width: 100%;
+}
+.cantToggleArchiveMessage {
+  color: $theme-accent-error;
 }
 .button {
   display: block;

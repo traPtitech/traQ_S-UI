@@ -1,9 +1,10 @@
 <template>
   <div
-    @click="$emit('input')"
+    @click="toggle"
     :class="$style.container"
     role="switch"
     :aria-checked="value"
+    :aria-disabled="disabled"
   >
     <div :class="$style.knob"></div>
   </div>
@@ -18,10 +19,20 @@ export default defineComponent({
     value: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
-  setup() {
-    return {}
+  setup(props, context) {
+    const toggle = () => {
+      if (props.disabled) return
+
+      context.emit('input')
+    }
+
+    return { toggle }
   }
 })
 </script>
@@ -37,6 +48,10 @@ export default defineComponent({
   cursor: pointer;
   &[aria-checked='true'] {
     @include background-accent-primary;
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 .knob {
