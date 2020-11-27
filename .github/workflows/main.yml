@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
@@ -30,7 +30,7 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
@@ -54,7 +54,7 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
@@ -78,7 +78,7 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
@@ -106,7 +106,7 @@ jobs:
     needs: [test-unit]
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
         with:
           name: coverage
@@ -119,7 +119,7 @@ jobs:
     if: ${{ github.repository_owner == 'traPtitech' }}
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
