@@ -70,7 +70,7 @@ export default defineComponent({
   }
   max-width: min(600px, 100%);
   img {
-    height: 100%;
+    height: auto;
     width: 100%;
     max-width: 100%;
     max-height: 450px;
