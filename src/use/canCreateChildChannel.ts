@@ -8,7 +8,8 @@ const useCanCreateChildChannel = () => {
 
   const canCreateChildChannel = (channelId: ChannelId) => {
     const path = channelIdToPathString(channelId)
-    const isArchived = store.state.entities.channels[channelId]?.archived ?? false
+    const isArchived =
+      store.state.entities.channels[channelId]?.archived ?? false
     return canCreateChildChannel_(path, isArchived)
   }
 
