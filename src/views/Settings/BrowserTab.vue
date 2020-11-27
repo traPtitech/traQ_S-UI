@@ -75,7 +75,7 @@
         <h3>省エネモード</h3>
         <toggle
           @input="state.ecoMode = !state.ecoMode"
-          :enabled="state.ecoMode"
+          :value="state.ecoMode"
           :class="$style.toggle"
         />
       </div>

@@ -1,10 +1,5 @@
 <template>
-  <modal-frame
-    title="チャンネル管理"
-    :subtitle="subtitle"
-    icon-name="hash"
-    :class="$style.container"
-  >
+  <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <form-input label="チャンネル名" v-model="manageState.name" />
     <form-selector
       label="親チャンネル"
@@ -14,14 +9,18 @@
     <label :class="$style.toggle">
       アーカイブ
       <toggle
-        :enabled="manageState.archived"
+        :value="manageState.archived"
         @input="manageState.archived = !manageState.archived"
+        :disabled="!canToggleArchive"
       />
     </label>
+    <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
+      このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
+    </p>
     <label :class="$style.toggle">
       強制通知
       <toggle
-        :enabled="manageState.force"
+        :value="manageState.force"
         @input="manageState.force = !manageState.force"
       />
     </label>
@@ -48,7 +47,6 @@ import { PatchChannelRequest } from '@traptitech/traq'
 import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
-import { canCreateChildChannel } from '@/lib/channel'
 
 const useManageChannel = (
   props: { id: string },
@@ -128,9 +126,16 @@ export default defineComponent({
 
     const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
     const channelOptions = computed(() =>
-      rawChannelOptions.value
-        .filter(({ value }) => value !== props.id)
-        .filter(({ key }) => canCreateChildChannel(key))
+      rawChannelOptions.value.filter(
+        ({ value }) =>
+          value !== props.id &&
+          // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
+          (channel.value.archived ||
+            !store.state.entities.channels[value]?.archived)
+      )
+    )
+    const canToggleArchive = computed(
+      () => !store.state.entities.channels[channel.value.parent]?.archived
     )
 
     return {
@@ -138,7 +143,8 @@ export default defineComponent({
       manageChannel,
       subtitle,
       isManageEnabled,
-      channelOptions
+      channelOptions,
+      canToggleArchive
     }
   }
 })
@@ -148,6 +154,9 @@ export default defineComponent({
 .input {
   margin-bottom: 16px;
   width: 100%;
+}
+.cantToggleArchiveMessage {
+  color: $theme-accent-error;
 }
 .button {
   display: block;
