@@ -20,7 +20,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: check npm ci
         run: npm ci
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: 14.11.0
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: 14.11.0
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -84,7 +84,7 @@ jobs:
         with:
           node-version: 14.11.0
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -125,7 +125,7 @@ jobs:
         with:
           node-version: 14.11.0
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
