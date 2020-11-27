@@ -60,6 +60,6 @@ export default defineComponent({
 .container {
   object-fit: contain;
   user-select: none;
-  contain: strict;
+  contain: content; // strictだと縦横比がうまくいかない
 }
 </style>
