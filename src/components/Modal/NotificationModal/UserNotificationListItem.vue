@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <user-icon :user-id="userId" />
     <span :class="$style.name">{{ name }}</span>
-    <toggle @input="onClick" :enabled="subscribed" />
+    <toggle @input="onClick" :value="subscribed" />
   </div>
 </template>
 

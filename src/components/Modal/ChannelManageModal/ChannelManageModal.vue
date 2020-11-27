@@ -14,14 +14,14 @@
     <label :class="$style.toggle">
       アーカイブ
       <toggle
-        :enabled="manageState.archived"
+        :value="manageState.archived"
         @input="manageState.archived = !manageState.archived"
       />
     </label>
     <label :class="$style.toggle">
       強制通知
       <toggle
-        :enabled="manageState.force"
+        :value="manageState.force"
         @input="manageState.force = !manageState.force"
       />
     </label>

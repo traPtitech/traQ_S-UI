@@ -5,7 +5,7 @@
         <h3>RTC機能を有効にする</h3>
         <toggle
           @input="state.isEnabled = !state.isEnabled"
-          :enabled="state.isEnabled"
+          :value="state.isEnabled"
           :class="$style.toggle"
         />
       </div>
@@ -46,7 +46,7 @@
         <h3>メッセージの読み上げ</h3>
         <toggle
           @input="state.isTtsEnabled = !state.isTtsEnabled"
-          :enabled="state.isTtsEnabled"
+          :value="state.isTtsEnabled"
           :class="$style.toggle"
         />
       </div>
