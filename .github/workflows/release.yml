@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.11.0
+          node-version: 14.15.1
       - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
