@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: setup Node
         uses: actions/setup-node@v1
         with:
           node-version: 14.11.0
           registry-url: 'https://registry.npmjs.org'
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -29,7 +29,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - name: run build
         run: npm run build:with-font
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: dist
           path: ./dist
@@ -39,12 +39,11 @@ jobs:
     needs: [build]
     steps:
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v1
+        uses: shimataro/ssh-key-action@v2
         with:
-          private-key: ${{ secrets.STAGING_SSH_KEY }}
-          public-key: ${{ secrets.STAGING_SSH_KEY_PUBLIC }}
-          known-hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
-      - uses: actions/download-artifact@v1
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          known_hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
+      - uses: actions/download-artifact@v2
         with:
           name: dist
           path: ./dist
