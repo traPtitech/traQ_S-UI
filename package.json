@@ -19,7 +19,7 @@
     "@juggle/resize-observer": "^3.2.0",
     "@mdi/js": "^5.8.55",
     "@traptitech/traq": "^3.5.0-4",
-    "@traptitech/traq-markdown-it": "^4.0.3",
+    "@traptitech/traq-markdown-it": "^4.0.4",
     "@types/pica": "^5.1.2",
     "core-js": "^3.8.0",
     "cropperjs": "^1.5.9",
