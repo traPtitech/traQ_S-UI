@@ -14,6 +14,7 @@ import { changeRTCState } from '@/lib/websocket'
 import { WebRTCUserStateSessions } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import { tts } from '@/lib/tts'
+import { wait } from '@/lib/util/timer'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -278,7 +279,7 @@ export const actions = defineActions({
       commit.addRemoteStream({ userId, mediaStream: stream })
 
       if (state.mixer) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await wait(1000)
         await state.mixer.addStream(stream.peerId, stream)
       }
       commit.setUserVolume({ userId, volume: 0.5 })

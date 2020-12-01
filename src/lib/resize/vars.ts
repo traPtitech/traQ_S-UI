@@ -1,4 +1,5 @@
 import { Pica } from 'pica'
+import { wait } from '../util/timer'
 
 interface ResizeVars {
   pica: Pica
@@ -28,14 +29,19 @@ export const initVars = async (): Promise<ResizeVars> => {
     $img: new Image()
   }
 
-  setTimeout(deinitVars, persistTime)
+  // 使っているかの初回チェック
+  ;(async () => {
+    await wait(persistTime)
+    deinitVars()
+  })()
 
   return resizeVars
 }
 // 使っていないときに消す
-export const deinitVars = () => {
+export const deinitVars = async () => {
   if (resizing) {
-    setTimeout(deinitVars, persistTime)
+    await wait(persistTime)
+    deinitVars()
     return
   }
   resizeVars = null

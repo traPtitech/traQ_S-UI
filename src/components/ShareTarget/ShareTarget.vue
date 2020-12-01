@@ -19,6 +19,7 @@ import store from '@/store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
 import { teleportTargetName } from './ShareTargetMessageInput.vue'
+import { wait } from '@/lib/util/timer'
 
 export default defineComponent({
   name: 'ShareTarget',
@@ -52,11 +53,10 @@ export default defineComponent({
     const onPost = () => {
       donePost.value = true
     }
-    watchEffect(() => {
+    watchEffect(async () => {
       if (donePost.value) {
-        setTimeout(() => {
-          window.close()
-        }, 1000)
+        await wait(1000)
+        window.close()
       }
     })
 

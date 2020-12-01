@@ -1,4 +1,5 @@
 import { WebSocketCommand } from '.'
+import { wait } from '@/lib/util/timer'
 
 export interface Options {
   maxReconnectionDelay: number
@@ -17,13 +18,6 @@ interface EventMap {
   reconnect: Event
 }
 type TypedEventListener<T extends keyof EventMap> = (ev: EventMap[T]) => void
-
-const wait = (ms: number) =>
-  new Promise<void>(resolve => {
-    setTimeout(() => {
-      resolve()
-    }, ms)
-  })
 
 export default class AutoReconnectWebSocket {
   _ws?: WebSocket
