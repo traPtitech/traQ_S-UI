@@ -7,6 +7,7 @@ import router, { constructChannelPath, constructUserPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
 import { toRaw } from 'vue'
+import { wait } from '@/lib/util/timer'
 
 export const modalActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, modal)
@@ -67,9 +68,7 @@ export const actions = defineActions({
       window.addEventListener('popstate', resolve, { once: true })
     })
     // どのハンドラーが最後に発火するか保証されていないので一応待つ
-    await new Promise(resolve => {
-      setTimeout(resolve, 0)
-    })
+    await wait(0)
 
     await dispatch.collectGarbage(currentState)
   },
