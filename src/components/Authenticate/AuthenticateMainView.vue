@@ -1,11 +1,14 @@
 <template>
-  <div :class="$style.container">
-    <authenticate-modal>
-      <login-form v-if="type === 'login'" />
-      <registration-form v-if="type === 'registration'" />
-      <consent-form v-if="type === 'consent'" />
-    </authenticate-modal>
-  </div>
+  <transition name="zoom" appear>
+    <!-- https://github.com/vuejs/rfcs/blob/master/active-rfcs/0017-transition-as-root.md -->
+    <div v-if="show" :class="$style.container">
+      <authenticate-modal>
+        <login-form v-if="type === 'login'" />
+        <registration-form v-if="type === 'registration'" />
+        <consent-form v-if="type === 'consent'" />
+      </authenticate-modal>
+    </div>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -28,6 +31,10 @@ export default defineComponent({
     type: {
       type: String as PropType<PageType>,
       default: 'login' as const
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
@@ -38,7 +45,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-secondary;
   width: 100vw;
   height: 100vh;
   display: flex;

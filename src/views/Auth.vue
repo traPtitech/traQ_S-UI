@@ -1,5 +1,5 @@
 <template>
-  <authenticate-main-view v-if="state.show" :type="type" />
+  <authenticate-main-view :show="state.show" :type="type" />
 </template>
 
 <script lang="ts">

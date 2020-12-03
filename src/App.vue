@@ -179,7 +179,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .app {
-  @include background-primary;
+  @include background-secondary;
   position: fixed;
   top: 0;
   right: 0;
