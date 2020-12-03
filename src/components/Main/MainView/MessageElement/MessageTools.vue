@@ -138,6 +138,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-tertiary;
+  @include background-primary;
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -151,7 +152,6 @@ export default defineComponent({
 }
 
 .quickReaction {
-  @include background-primary;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -164,7 +164,6 @@ export default defineComponent({
 }
 
 .tools {
-  @include background-primary;
   display: flex;
   flex-direction: row;
   align-items: center;
