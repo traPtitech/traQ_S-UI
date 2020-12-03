@@ -27,11 +27,10 @@
       <div
         :class="$style.sidebarWrapper"
         :style="styles.sidebarWrapper"
-        v-if="isMobile"
-        v-show="isSidebarAppeared"
+        v-show="isMobile && isSidebarAppeared"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
-        <div id="sidebar" v-if="isMobile" :class="$style.sidebarPortal" />
+        <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
     <modal-container />

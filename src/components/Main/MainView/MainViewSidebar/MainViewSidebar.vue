@@ -1,5 +1,5 @@
 <template>
-  <teleport v-if="shouldShowSidebar" to="#sidebar">
+  <teleport v-if="shouldShowSidebar" :to="portalTarget">
     <slot name="page" />
   </teleport>
   <!-- #sidebar-openerが存在する前にはマウントできないのでisSidebarOpenerReadyをチェック -->
@@ -9,8 +9,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import useSidebar from '@/use/sidebar'
+import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
   name: 'MainViewSidebar',
@@ -22,7 +23,13 @@ export default defineComponent({
   },
   setup() {
     const { shouldShowSidebar } = useSidebar()
-    return { shouldShowSidebar }
+    const { isMobile } = useIsMobile()
+
+    const portalTarget = computed(() =>
+      isMobile.value ? '#sidebar-mobile' : '#sidebar'
+    )
+
+    return { shouldShowSidebar, portalTarget }
   }
 })
 </script>

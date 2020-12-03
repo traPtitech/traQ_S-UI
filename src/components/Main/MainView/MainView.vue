@@ -14,7 +14,7 @@
           :class="[$style.componentContainer, $style.primary]"
           :view-info="state.primary"
         />
-        <div id="sidebar" v-if="!isMobile" :class="$style.sidebar" />
+        <div id="sidebar" :class="$style.sidebar" />
       </div>
       <div id="sidebar-opener" :class="$style.hidden" />
       <main-view-component-selector
