@@ -98,7 +98,12 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
   watch(
     () => store.state.ui.isMobile,
     newState => {
-      if (newState) return
+      if (newState) {
+        store.commit.ui.mainView.setMainViewComponentState(
+          MainViewComponentState.Hidden
+        )
+        return
+      }
       closeNav()
       closeSidebar()
     }
