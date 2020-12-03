@@ -4,15 +4,22 @@
       <img src="@/assets/traq-logo.svg" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
     </span>
-    <img v-else src="@/assets/traq-logo-full.svg" :class="$style.fullLogo" />
+    <div v-else :class="$style.fullLogo">
+      <img src="@/assets/traq-logo.svg" />
+      <logo-text :class="$style.fullLogoText" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import LogoText from '@/assets/traq-logo-text.svg?component'
 
 export default defineComponent({
   name: 'AuthenticateHeader',
+  components: {
+    LogoText
+  },
   props: {
     title: String
   },
@@ -32,9 +39,12 @@ export default defineComponent({
   width: auto;
 }
 .fullLogo {
+  display: flex;
+  justify-content: center;
   height: 48px;
-  width: auto;
-  margin: 0 auto;
+}
+.fullLogoText {
+  margin-left: 10px;
 }
 .logoWithTitle {
   display: flex;
