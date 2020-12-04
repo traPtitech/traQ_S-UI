@@ -149,3 +149,17 @@ $qr: 'quick-reaction';
   transform: translateX(20px);
   opacity: 0;
 }
+
+$z: 'zoom';
+.#{$z}-enter-active,
+.#{$z}-leave-active {
+  transition: all 0.15s $easeOutCirc;
+}
+.#{$z}-enter-from,
+.#{$z}-leave-to {
+  transform: scale(0);
+}
+.#{$z}-enter-to,
+.#{$z}-leave-from {
+  transform: scale(1);
+}
