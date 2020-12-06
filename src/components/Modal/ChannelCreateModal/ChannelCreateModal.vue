@@ -15,6 +15,7 @@
       label="チャンネル名"
       :class="$style.input"
       v-model="state.channelName"
+      :max-length="20"
     />
     <p :class="$style.desc">
       実行すると
@@ -45,6 +46,7 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 import { UserPermission } from '@traptitech/traq'
 import config from '@/config'
 import useCanCreateChildChannel from '@/use/canCreateChildChannel'
+import { isValidChannelName } from '@/lib/validate'
 
 interface State {
   channelName: string
@@ -161,8 +163,10 @@ export default defineComponent({
       const parentChannelPath = channelIdToPathString(state.parentChannelId)
       return `#${parentChannelPath}/${state.channelName}`
     })
+
     const isCreateEnabled = computed(
-      () => state.channelName !== '' && state.parentChannelId !== null
+      () =>
+        isValidChannelName(state.channelName) && state.parentChannelId !== null
     )
 
     return {
