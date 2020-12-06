@@ -17,6 +17,7 @@
         @input-value="onDesciptionInput"
         @edit-done="onDesciptionEditDone"
         @edit-start="startDesciptionEdit"
+        :max-length="1000"
       />
     </sidebar-content-container-foldable>
     <div :class="$style.item">
