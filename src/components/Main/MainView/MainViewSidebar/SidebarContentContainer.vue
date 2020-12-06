@@ -5,7 +5,12 @@
     :class="$style.container"
     @click.self="onContainerClick"
   >
-    <div v-if="title" :class="$style.header" @click="onTitleClick">
+    <div
+      v-if="title"
+      :class="$style.header"
+      :data-is-clickable="$boolAttr(titleClickable)"
+      @click="onTitleClick"
+    >
       <h2 :class="$style.headerTitle">{{ title }}</h2>
       <slot name="header-control"></slot>
     </div>
@@ -25,6 +30,10 @@ export default defineComponent({
       default: false
     },
     clickable: {
+      type: Boolean,
+      default: false
+    },
+    titleClickable: {
       type: Boolean,
       default: false
     }
@@ -66,7 +75,9 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
-  cursor: pointer;
+  &[data-is-clickable] {
+    cursor: pointer;
+  }
   &:last-child {
     // 折り畳み時の見た目調整
     margin-bottom: 0;
