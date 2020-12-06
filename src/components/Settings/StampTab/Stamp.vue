@@ -17,6 +17,7 @@
           label="スタンプ名"
           prefix=":"
           suffix=":"
+          :max-length="32"
           v-model="state.name"
           :class="$style.form"
         />
@@ -35,7 +36,7 @@
       </div>
       <form-button
         label="変更"
-        :disabled="!stampChanged"
+        :disabled="!stampChanged || !isNameValid"
         :loading="isEditing"
         @click="editStamp"
       />
@@ -57,6 +58,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useStateDiff from '../use/stateDiff'
 import { ActiveUserMap } from '@/store/entities'
+import { isValidStampName } from '@/lib/validate'
 
 const creatorOptions = computed(() =>
   Object.values(store.getters.entities.activeUsers as ActiveUserMap)
@@ -160,6 +162,7 @@ export default defineComponent({
     const stampChanged = computed(
       () => isStateChanged.value || imageUploadState.imgData !== undefined
     )
+    const isNameValid = computed(() => isValidStampName(state.name))
 
     const onStartEdit = () => {
       context.emit('start-edit')
@@ -188,6 +191,7 @@ export default defineComponent({
       onNewImgSet,
       onNewDestroyed,
       stampChanged,
+      isNameValid,
       isEditing,
       editStamp,
       onStartEdit

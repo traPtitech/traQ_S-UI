@@ -81,6 +81,7 @@ import Password from '@/components/Settings/ProfileTab/Password.vue'
 import useChannelOptions from '@/use/channelOptions'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import useMaxLength from '@/use/maxLength'
+import { isValidTwitter } from '@/lib/validate'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -181,8 +182,7 @@ export default defineComponent({
     )
     const isLengthValid = useIsLengthValid(state)
     const isTwitterIdValid = computed(
-      () =>
-        state.twitterId === '' || /^[a-zA-Z0-9_]{1,15}$/.test(state.twitterId)
+      () => state.twitterId === '' || isValidTwitter(state.twitterId)
     )
 
     const canUpdate = computed(
