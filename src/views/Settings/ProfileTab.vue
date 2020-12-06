@@ -18,11 +18,20 @@
     </div>
     <div :class="$style.element">
       <h3>表示名</h3>
-      <form-input v-model="state.displayName" :class="$style.form" />
+      <form-input
+        v-model="state.displayName"
+        :class="$style.form"
+        :max-length="32"
+      />
     </div>
     <div :class="$style.element">
       <h3>ひとこと</h3>
-      <form-text-area v-model="state.bio" :class="$style.form" rows="1" />
+      <form-text-area
+        v-model="state.bio"
+        :class="$style.form"
+        rows="1"
+        :max-length="1000"
+      />
     </div>
     <div :class="$style.element">
       <h3>ホームチャンネル</h3>
@@ -34,12 +43,17 @@
     </div>
     <div :class="$style.element">
       <h3>Twitter</h3>
-      <form-input v-model="state.twitterId" prefix="@" :class="$style.form" />
+      <form-input
+        v-model="state.twitterId"
+        prefix="@"
+        :class="$style.form"
+        :max-length="15"
+      />
     </div>
     <div :class="$style.updater">
       <form-button
         label="更新"
-        :disabled="!isChanged"
+        :disabled="!canUpdate"
         :loading="isUpdating"
         @click="onUpdateClick"
       />
@@ -49,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref, ref } from 'vue'
+import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
@@ -66,6 +80,7 @@ import { nullUuid } from '@/lib/util/uuid'
 import Password from '@/components/Settings/ProfileTab/Password.vue'
 import useChannelOptions from '@/use/channelOptions'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
+import useMaxLength from '@/use/maxLength'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -126,6 +141,19 @@ const useProfileUpdate = (
   return { isUpdating, onUpdateClick }
 }
 
+const useIsLengthValid = (state: Profile) => {
+  const { isExceeded: isDisplayNameExceeded } = useMaxLength(
+    reactive({ val: toRef(state, 'displayName'), maxLength: 30 })
+  )
+  const { isExceeded: isBioExceeded } = useMaxLength(
+    reactive({ val: toRef(state, 'bio'), maxLength: 1000 })
+  )
+  const isLengthValid = computed(
+    () => !isDisplayNameExceeded.value && !isBioExceeded.value
+  )
+  return isLengthValid
+}
+
 export default defineComponent({
   name: 'ProfileTab',
   setup() {
@@ -151,6 +179,15 @@ export default defineComponent({
       isChanged,
       destroyImageUploadState
     )
+    const isLengthValid = useIsLengthValid(state)
+    const isTwitterIdValid = computed(
+      () =>
+        state.twitterId === '' || /^[a-zA-Z0-9_]{1,15}$/.test(state.twitterId)
+    )
+
+    const canUpdate = computed(
+      () => isChanged.value && isLengthValid.value && isTwitterIdValid.value
+    )
 
     return {
       detail,
@@ -159,7 +196,7 @@ export default defineComponent({
       imageUploadState,
       onNewImgSet,
       onNewDestroyed,
-      isChanged,
+      canUpdate,
       isUpdating,
       onUpdateClick
     }
