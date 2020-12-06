@@ -8,7 +8,7 @@
       />
       <length-count
         :class="$style.count"
-        :value="valueReal"
+        :val="valueReal"
         :max-length="maxLength"
       />
     </div>

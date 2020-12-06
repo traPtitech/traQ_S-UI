@@ -6,30 +6,37 @@
     icon-mdi
     :class="$style.container"
   >
-    <form-input label="名前" :class="$style.input" v-model="name" />
+    <form-input
+      label="名前"
+      :class="$style.input"
+      v-model="name.val"
+      :max-length="30"
+    />
     <form-text-area
       label="説明"
       :class="$style.input"
-      v-model="description"
+      v-model="description.val"
       :max-height="160"
+      :max-length="1000"
     />
     <form-button
       label="作成"
       :disabled="!isCreateEnabled"
       :class="$style.button"
-      @click="createClipFolder(name, description)"
+      @click="createClipFolder(name.val, description.val)"
     />
   </modal-frame>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed, reactive } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import FormButton from '@/components/UI/FormButton.vue'
+import useMaxLength from '@/use/maxLength'
 
 const useCreateClipFolder = () => {
   const createClipFolder = async (name: string, description: string) => {
@@ -58,10 +65,18 @@ export default defineComponent({
     FormButton
   },
   setup() {
-    const name = ref('')
-    const description = ref('')
+    const name = reactive({ val: '', maxLength: 30 })
+    const description = reactive({ val: '', maxLength: 1000 })
+
+    const { isExceeded: isNameExceeded } = useMaxLength(name)
+    const { isExceeded: isDescriptionExceeded } = useMaxLength(description)
+
     const { createClipFolder } = useCreateClipFolder()
-    const isCreateEnabled = computed(() => name.value !== '')
+    const isCreateEnabled = computed(
+      () =>
+        name.val !== '' && !isNameExceeded.value && !isDescriptionExceeded.value
+    )
+
     return { name, description, createClipFolder, isCreateEnabled }
   }
 })

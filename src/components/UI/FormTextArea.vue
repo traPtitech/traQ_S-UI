@@ -20,7 +20,7 @@
       />
       <length-count
         :class="$style.count"
-        :value="modelValue"
+        :val="modelValue"
         :max-length="maxLength"
       />
     </div>

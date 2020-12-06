@@ -15,7 +15,7 @@ import useMaxLength from '@/use/maxLength'
 export default defineComponent({
   name: 'LengthCount',
   props: {
-    value: {
+    val: {
       type: String,
       default: ''
     },
