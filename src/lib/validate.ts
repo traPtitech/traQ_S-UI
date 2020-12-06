@@ -6,3 +6,5 @@ export const isValidStampName = (name: string) =>
 
 export const isValidChannelName = (name: string) =>
   /^[a-zA-Z0-9-_]{1,20}$/.test(name)
+
+export const MESSAGE_MAX_LENGTH = 10000

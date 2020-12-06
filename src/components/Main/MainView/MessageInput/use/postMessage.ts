@@ -6,6 +6,8 @@ import { Attachment } from '@/store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
+import { nullUuid } from '@/lib/util/uuid'
+import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -31,6 +33,11 @@ const uploadAttachments = async (
     )
   }
   return responses.map(res => buildFilePathForPost(res.data.id))
+}
+
+const createContent = (embededText: string, fileUrls: string[]) => {
+  const embededUrls = fileUrls.join('\n')
+  return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
 }
 
 const usePostMessage = (
@@ -77,6 +84,18 @@ const usePostMessage = (
       }
     })
 
+    const dummyFileUrls = store.state.ui.fileInput.attachments.map(() =>
+      buildFilePathForPost(nullUuid)
+    )
+    const dummyText = createContent(embededText, dummyFileUrls)
+    if (Array.from(dummyText).length > MESSAGE_MAX_LENGTH) {
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'メッセージが長すぎます'
+      })
+      return
+    }
+
     let posted = false
     try {
       isPosting.value = true
@@ -88,11 +107,9 @@ const usePostMessage = (
           progress.value = p
         }
       )
-      const embededUrls = fileUrls.join('\n')
 
       await apis.postMessage(props.channelId, {
-        content:
-          embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
+        content: createContent(embededText, fileUrls)
       })
 
       textState.text = ''
