@@ -22,7 +22,7 @@
     </div>
     <div :class="$style.element">
       <h3>ひとこと</h3>
-      <form-input v-model="state.bio" :class="$style.form" />
+      <form-text-area v-model="state.bio" :class="$style.form" rows="1" />
     </div>
     <div :class="$style.element">
       <h3>ホームチャンネル</h3>
@@ -65,6 +65,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
 import Password from '@/components/Settings/ProfileTab/Password.vue'
 import useChannelOptions from '@/use/channelOptions'
+import FormTextArea from '@/components/UI/FormTextArea.vue'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -169,7 +170,8 @@ export default defineComponent({
     FormInput,
     FormSelector,
     FormButton,
-    Password
+    Password,
+    FormTextArea
   }
 })
 </script>
