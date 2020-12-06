@@ -1,17 +1,18 @@
 <template>
   <div :class="$style.add">
-    <input
-      type="text"
-      :class="$style.input"
-      v-model="newTagName"
-      placeholder="タグを追加"
-      minlength="1"
-      maxLength="30"
-    />
+    <div :class="$style.inputContainer">
+      <input
+        type="text"
+        :class="$style.input"
+        v-model="newTagName"
+        placeholder="タグを追加"
+      />
+      <length-count :val="newTagName" :max-length="30" />
+    </div>
     <button
       :class="$style.button"
       @click="addTag"
-      :disabled="newTagName.length === 0 || adding"
+      :disabled="newTagName.length === 0 || isExceeded || adding"
     >
       <icon name="plus" mdi :class="$style.icon" />
     </button>
@@ -19,11 +20,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue'
+import { defineComponent, ref, PropType, reactive } from 'vue'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import store from '@/store'
+import LengthCount from '@/components/UI/LengthCount.vue'
+import useMaxLength from '@/use/maxLength'
 
 export default defineComponent({
   name: 'TagsTab',
@@ -36,6 +39,9 @@ export default defineComponent({
   setup(props) {
     const newTagName = ref('')
     const adding = ref(false)
+    const { isExceeded } = useMaxLength(
+      reactive({ val: newTagName, maxLength: 30 })
+    )
 
     const addTag = async () => {
       adding.value = true
@@ -53,10 +59,11 @@ export default defineComponent({
       adding.value = false
     }
 
-    return { newTagName, addTag, adding }
+    return { newTagName, isExceeded, addTag, adding }
   },
   components: {
-    Icon
+    Icon,
+    LengthCount
   }
 })
 </script>
@@ -68,14 +75,20 @@ export default defineComponent({
   margin: 8px;
 }
 
-.input {
+.inputContainer {
   @include color-ui-secondary;
   @include background-secondary;
-  min-width: 0;
+  display: flex;
+  align-items: center;
   flex: 1 1;
   padding: 4px;
-  padding-left: 16px;
   border-radius: 6px;
+}
+
+.input {
+  @include color-text-primary;
+  width: 100%;
+  padding: 0 8px;
   &::placeholder {
     @include color-ui-secondary;
   }
@@ -88,6 +101,9 @@ export default defineComponent({
   margin-left: 8px;
   border-radius: 6px;
   cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 
 .icon {
