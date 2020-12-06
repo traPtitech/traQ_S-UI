@@ -33,12 +33,13 @@ import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
+import { countLength } from '@/lib/util/string'
 
 const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {
-    if (Array.from(textState.text).length > MESSAGE_MAX_LENGTH) {
+    if (countLength(textState.text) > MESSAGE_MAX_LENGTH) {
       store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージが長すぎます'

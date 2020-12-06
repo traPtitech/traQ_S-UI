@@ -1,10 +1,11 @@
 import { computed } from 'vue'
+import { countLength } from '@/lib/util/string'
 
 const useMaxLength = (state: {
   val: string
   maxLength: number | undefined
 }) => {
-  const length = computed(() => Array.from(state.val).length)
+  const length = computed(() => countLength(state.val))
   const isExceeded = computed(
     () => !!(state.maxLength && state.maxLength < length.value)
   )

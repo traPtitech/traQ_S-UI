@@ -8,6 +8,7 @@ import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
+import { countLength } from '@/lib/util/string'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -88,7 +89,7 @@ const usePostMessage = (
       buildFilePathForPost(nullUuid)
     )
     const dummyText = createContent(embededText, dummyFileUrls)
-    if (Array.from(dummyText).length > MESSAGE_MAX_LENGTH) {
+    if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
       store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージが長すぎます'

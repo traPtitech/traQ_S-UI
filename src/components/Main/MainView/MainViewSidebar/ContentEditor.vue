@@ -32,6 +32,7 @@
 import { defineComponent, computed, ref } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import LengthCount from '@/components/UI/LengthCount.vue'
+import { countLength } from '@/lib/util/string'
 
 export default defineComponent({
   name: 'ContentEditor',
@@ -65,10 +66,7 @@ export default defineComponent({
     const valueReal = ref(props.value ?? '')
     const isExceeded = computed(
       () =>
-        !!(
-          props.maxLength &&
-          Array.from(valueReal.value).length > props.maxLength
-        )
+        !!(props.maxLength && countLength(valueReal.value) > props.maxLength)
     )
 
     const onInput = (payload: string) => {
