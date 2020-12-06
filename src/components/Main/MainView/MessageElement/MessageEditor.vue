@@ -37,10 +37,17 @@ const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {
-    await apis.editMessage(props.messageId, {
-      content: textState.text
-    })
-    store.commit.domain.messagesView.unsetEditingMessageId()
+    try {
+      await apis.editMessage(props.messageId, {
+        content: textState.text
+      })
+      store.commit.domain.messagesView.unsetEditingMessageId()
+    } catch {
+      store.commit.ui.toast.addToast({
+        type: 'error',
+        text: 'メッセージの編集に失敗しました'
+      })
+    }
   }
   const cancel = () => {
     store.commit.domain.messagesView.unsetEditingMessageId()

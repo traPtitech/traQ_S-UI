@@ -7,7 +7,12 @@
     :class="$style.container"
   >
     <form-input label="名前" :class="$style.input" v-model="name" />
-    <form-input label="説明" :class="$style.input" v-model="description" />
+    <form-text-area
+      label="説明"
+      :class="$style.input"
+      v-model="description"
+      :max-height="160"
+    />
     <form-button
       label="作成"
       :disabled="!isCreateEnabled"
@@ -23,6 +28,7 @@ import apis from '@/lib/apis'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
+import FormTextArea from '@/components/UI/FormTextArea.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 
 const useCreateClipFolder = () => {
@@ -48,6 +54,7 @@ export default defineComponent({
   components: {
     ModalFrame,
     FormInput,
+    FormTextArea,
     FormButton
   },
   setup() {

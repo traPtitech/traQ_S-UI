@@ -36,7 +36,6 @@
     <modal-container />
     <stamp-picker-container />
     <message-tools-menu-container />
-    <toast-container />
   </div>
   <div v-else></div>
 </template>
@@ -61,7 +60,6 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
-import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 import useInitialFetch from './use/initialFetch'
 
 const useStyles = (
@@ -90,7 +88,6 @@ export default defineComponent({
     ModalContainer,
     StampPickerContainer,
     MessageToolsMenuContainer,
-    ToastContainer,
     NotFound
   },
   setup() {

@@ -1,7 +1,8 @@
 <template>
   <sidebar-content-container
     :title="title"
-    :clickable="clickable || !isOpen"
+    :clickable="!isOpen"
+    title-clickable
     :large-padding="largePadding"
     @toggle="toggle"
   >
@@ -38,10 +39,6 @@ export default defineComponent({
   props: {
     title: String,
     largePadding: {
-      type: Boolean,
-      default: false
-    },
-    clickable: {
       type: Boolean,
       default: false
     }

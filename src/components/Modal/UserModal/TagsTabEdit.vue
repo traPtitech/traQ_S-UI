@@ -26,6 +26,7 @@ import { defineComponent, PropType } from 'vue'
 import { TagId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import Icon from '@/components/UI/Icon.vue'
+import store from '@/store'
 
 export default defineComponent({
   name: 'TagsTabEdit',
@@ -52,11 +53,26 @@ export default defineComponent({
       if (!props.userId) return
 
       if (!confirm(`本当にこのタグを削除しますか？`)) return
-      await apis.removeUserTag(props.userId, props.tagId)
+
+      try {
+        await apis.removeUserTag(props.userId, props.tagId)
+      } catch {
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'タグの削除に失敗しました'
+        })
+      }
     }
 
     const toggleTagState = async () => {
-      await apis.editMyUserTag(props.tagId, { isLocked: !props.isLocked })
+      try {
+        await apis.editMyUserTag(props.tagId, { isLocked: !props.isLocked })
+      } catch {
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'タグのロックに失敗しました'
+        })
+      }
     }
 
     return { removeTag, toggleTagState }

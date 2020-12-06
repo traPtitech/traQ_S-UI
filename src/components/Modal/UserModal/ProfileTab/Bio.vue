@@ -39,6 +39,7 @@ export default defineComponent({
 <style lang="scss" module>
 .bio {
   @include color-ui-primary;
+  white-space: pre-line;
   &[aria-busy='true'],
   &[data-is-empty] {
     @include color-ui-tertiary;

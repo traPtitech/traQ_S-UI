@@ -2,7 +2,6 @@
   <div :class="$style.container">
     <share-target :title="title" :text="text" :url="url" />
     <stamp-picker-container />
-    <toast-container />
   </div>
 </template>
 
@@ -11,7 +10,6 @@ import { defineComponent, computed, onMounted, ref } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import ShareTarget from '@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 import { RouteName } from '@/router'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
@@ -20,8 +18,7 @@ export default defineComponent({
   name: 'Share',
   components: {
     ShareTarget,
-    StampPickerContainer,
-    ToastContainer
+    StampPickerContainer
   },
   setup(props, context) {
     const route = useRoute()

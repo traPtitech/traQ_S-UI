@@ -5,6 +5,7 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
+    <toast-container />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '@/lib/media'
+import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
@@ -150,7 +152,9 @@ const useStyleBody = (style: Ref<ThemeVariablesOrProperties>) => {
 
 export default defineComponent({
   name: 'App',
-  components: {},
+  components: {
+    ToastContainer
+  },
   setup() {
     useWindowResizeObserver()
     const isMobile = computed(() => store.state.ui.isMobile)
