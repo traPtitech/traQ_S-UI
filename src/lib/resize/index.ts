@@ -6,13 +6,13 @@ import {
   needDimentionSwap,
   getOrientation
 } from './orientation'
-import { isIOS } from '../util/browser'
+import { isIOS12 } from '../util/browser'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
 export const isJpeg = (mime: string) => mime === 'image/jpeg'
 
-const needRotation = isIOS()
+const needRotation = isIOS12()
 
 export const resize = async (
   inputFile: Readonly<File>

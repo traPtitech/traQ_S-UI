@@ -7,12 +7,11 @@ export const isSafari = () => {
 }
 
 export const isIOS = () => {
-  return (
-    isIOSApp() ||
-    ua.includes('iphone') ||
-    ua.includes('ipod') ||
-    ua.includes('ipad')
-  )
+  return ua.includes('iphone') || ua.includes('ipod') || ua.includes('ipad')
+}
+
+export const isIOS12 = () => {
+  return isIOS() && ua.includes('os 12')
 }
 
 export const isIOSApp = () => {
