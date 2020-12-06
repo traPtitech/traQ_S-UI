@@ -23,6 +23,7 @@ import { defineComponent, ref, PropType } from 'vue'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
+import store from '@/store'
 
 export default defineComponent({
   name: 'TagsTab',
@@ -38,11 +39,18 @@ export default defineComponent({
 
     const addTag = async () => {
       adding.value = true
-      await apis.addUserTag(props.userId, {
-        tag: newTagName.value
-      })
+      try {
+        await apis.addUserTag(props.userId, {
+          tag: newTagName.value
+        })
+        newTagName.value = ''
+      } catch {
+        store.commit.ui.toast.addToast({
+          type: 'error',
+          text: 'タグの追加に失敗しました'
+        })
+      }
       adding.value = false
-      newTagName.value = ''
     }
 
     return { newTagName, addTag, adding }
