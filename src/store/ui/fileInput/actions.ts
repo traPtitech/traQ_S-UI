@@ -5,8 +5,10 @@ import { mimeToFileType } from '@/lib/util/file'
 import { ActionContext } from 'vuex'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
 import { resize, canResize } from '@/lib/resize'
+import config from '@/config'
 
 const imageSizeLimit = 20 * 1000 * 1000 // 20MB
+const fileSizeLimit = 30 * 1000 * 1000 // 30MB
 
 export const fileInputActionContext = (
   context: ActionContext<unknown, unknown>
@@ -19,7 +21,19 @@ export const actions = defineActions({
 
     if (fileType === 'image' && file.size > imageSizeLimit) {
       window.alert(
-        '画像サイズは20MBまでです\n大きい画像の共有にはDriveを使用してください'
+        `画像サイズは20MBまでです\n${config.tooLargeFileMessage.replace(
+          '%s',
+          '画像'
+        )}`
+      )
+      return
+    }
+    if (file.size > fileSizeLimit) {
+      window.alert(
+        `画像サイズは30MBまでです\n${config.tooLargeFileMessage.replace(
+          '%s',
+          'ファイル'
+        )}`
       )
       return
     }
