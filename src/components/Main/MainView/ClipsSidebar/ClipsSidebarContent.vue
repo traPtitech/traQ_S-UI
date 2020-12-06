@@ -7,7 +7,7 @@
         @input-value="onNameInput"
         @edit-done="onNameEditDone"
         @edit-start="startNameEdit"
-        :maxlength="30"
+        :max-length="30"
       />
     </sidebar-content-container>
     <sidebar-content-container-foldable title="説明" :class="$style.item">

@@ -28,6 +28,11 @@
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
       </span>
+      <length-count
+        :class="$style.count"
+        :value="modelValue"
+        :max-length="maxLength"
+      />
       <button
         v-if="type === 'password'"
         :title="`パスワードを${isPasswordShown ? '非表示' : '表示'}`"
@@ -50,10 +55,14 @@ import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 import Icon from '@/components/UI/Icon.vue'
 import useShowPassword from '@/use/showPassword'
+import LengthCount from '@/components/UI/LengthCount.vue'
 
 export default defineComponent({
   name: 'FormInput',
-  components: { Icon },
+  components: {
+    Icon,
+    LengthCount
+  },
   props: {
     type: {
       type: String,
@@ -79,6 +88,7 @@ export default defineComponent({
     min: String,
     max: String,
     step: String,
+    maxLength: Number,
     useChangeEvent: {
       type: Boolean,
       default: false
@@ -154,6 +164,9 @@ export default defineComponent({
 }
 .suffix {
   margin-right: 8px;
+}
+.count {
+  margin-right: 4px;
 }
 .toggle {
   @include color-ui-primary;

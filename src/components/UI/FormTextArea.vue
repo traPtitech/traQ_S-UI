@@ -18,6 +18,11 @@
         rows="1"
         @input-value="onInput"
       />
+      <length-count
+        :class="$style.count"
+        :value="modelValue"
+        :max-length="maxLength"
+      />
     </div>
   </div>
 </template>
@@ -25,9 +30,13 @@
 <script lang="ts">
 import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
+import LengthCount from '@/components/UI/LengthCount.vue'
 
 export default defineComponent({
   name: 'FormInput',
+  components: {
+    LengthCount
+  },
   props: {
     modelValue: {
       type: String,
@@ -50,6 +59,10 @@ export default defineComponent({
       default: undefined
     },
     maxHeight: {
+      type: Number,
+      default: undefined
+    },
+    maxLength: {
       type: Number,
       default: undefined
     }
@@ -86,8 +99,6 @@ export default defineComponent({
   @include color-ui-primary;
   @include background-secondary;
   @include size-body1;
-  display: flex;
-  align-items: center;
   border-radius: 4px;
   &[data-on-secondary] {
     @include background-primary;
@@ -102,5 +113,9 @@ export default defineComponent({
   padding: 0 8px;
   width: 100%;
   color: inherit;
+}
+.count {
+  margin-right: 4px;
+  margin-bottom: 4px;
 }
 </style>

@@ -6,7 +6,7 @@
       v-model="newTagName"
       placeholder="タグを追加"
       minlength="1"
-      maxlength="30"
+      maxLength="30"
     />
     <button
       :class="$style.button"
