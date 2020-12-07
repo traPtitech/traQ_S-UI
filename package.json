@@ -21,7 +21,7 @@
     "@traptitech/traq": "^3.5.0-4",
     "@traptitech/traq-markdown-it": "^4.0.5",
     "@types/pica": "^5.1.2",
-    "core-js": "^3.8.0",
+    "core-js": "^3.8.1",
     "cropperjs": "^1.5.9",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.2",
