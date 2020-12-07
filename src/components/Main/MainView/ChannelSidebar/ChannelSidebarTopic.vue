@@ -6,7 +6,7 @@
       @input-value="onInput"
       @edit-done="onEditDone"
       @edit-start="startEdit"
-      :maxlength="200"
+      :max-length="200"
     />
   </sidebar-content-container-foldable>
 </template>

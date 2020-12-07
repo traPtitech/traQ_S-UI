@@ -6,13 +6,11 @@
         :class="$style.editor"
         @input-value="onInput"
       />
-      <div
-        v-if="maxlength"
+      <length-count
         :class="$style.count"
-        :data-is-exceeded="$boolAttr(isExceeded)"
-      >
-        {{ length }}/{{ maxlength }}
-      </div>
+        :val="valueReal"
+        :max-length="maxLength"
+      />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       {{ content }}
@@ -33,17 +31,20 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
+import LengthCount from '@/components/UI/LengthCount.vue'
+import { countLength } from '@/lib/util/string'
 
 export default defineComponent({
   name: 'ContentEditor',
   components: {
-    Icon
+    Icon,
+    LengthCount
   },
   props: {
     value: { type: String, required: false },
     isEditing: { type: Boolean, default: false },
     fallbackValue: { type: String, default: '未設定' },
-    maxlength: { type: Number, required: false }
+    maxLength: { type: Number, required: false }
   },
   setup(props, context) {
     const content = computed(() => {
@@ -62,16 +63,25 @@ export default defineComponent({
       }
     }
 
-    const length = ref(0)
+    const valueReal = ref(props.value ?? '')
     const isExceeded = computed(
-      () => !!(props.maxlength && props.maxlength < length.value)
+      () =>
+        !!(props.maxLength && countLength(valueReal.value) > props.maxLength)
     )
 
     const onInput = (payload: string) => {
-      length.value = Array.from(payload).length
+      valueReal.value = payload
       context.emit('input-value', payload)
     }
-    return { content, isEmpty, onButtonClick, length, isExceeded, onInput }
+    return {
+      content,
+      isEmpty,
+      onButtonClick,
+      length,
+      valueReal,
+      isExceeded,
+      onInput
+    }
   }
 })
 </script>
@@ -97,14 +107,6 @@ export default defineComponent({
   @include color-ui-primary;
   width: 100%;
   resize: none;
-}
-.count {
-  @include color-ui-secondary;
-  @include size-caption;
-  text-align: right;
-  &[data-is-exceeded] {
-    color: $theme-accent-error;
-  }
 }
 .button {
   @include color-ui-primary;

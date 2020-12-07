@@ -24,3 +24,8 @@ export const compareStringInsensitive = (
  */
 export const count = (str: string, char: string) =>
   [...str].reduce((acc, c) => (c === char ? acc + 1 : acc), 0)
+
+/**
+ * CodePointの数をカウントする
+ */
+export const countLength = (text: string) => Array.from(text).length

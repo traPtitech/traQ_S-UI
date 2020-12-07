@@ -1,6 +1,10 @@
 <template>
   <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
-    <form-input label="チャンネル名" v-model="manageState.name" />
+    <form-input
+      label="チャンネル名"
+      v-model="manageState.name"
+      :max-length="20"
+    />
     <form-selector
       label="親チャンネル"
       v-model="manageState.parent"
@@ -47,6 +51,7 @@ import { PatchChannelRequest } from '@traptitech/traq'
 import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
+import { isValidChannelName } from '@/lib/validate'
 
 const useManageChannel = (
   props: { id: string },
@@ -122,7 +127,10 @@ export default defineComponent({
     )
 
     const { hasDiff } = useStateDiff<PatchChannelRequest>()
-    const isManageEnabled = computed(() => hasDiff(manageState, channel))
+    const isManageEnabled = computed(
+      () =>
+        isValidChannelName(manageState.name) && hasDiff(manageState, channel)
+    )
 
     const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
     const channelOptions = computed(() =>

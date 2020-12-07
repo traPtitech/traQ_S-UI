@@ -13,6 +13,7 @@
         label="スタンプ名"
         prefix=":"
         suffix=":"
+        :max-length="32"
         :class="$style.form"
       />
       <form-button
@@ -34,6 +35,7 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
 import store from '@/store'
+import { isValidStampName } from '@/lib/validate'
 
 const useStampCreate = (
   newStampName: Ref<string>,
@@ -80,7 +82,9 @@ export default defineComponent({
 
     const newStampName = ref('')
     const isCreateEnabled = computed(
-      () => newStampName.value !== '' && imageUploadState.imgData !== undefined
+      () =>
+        isValidStampName(newStampName.value) &&
+        imageUploadState.imgData !== undefined
     )
 
     const { isCreating, createStamp } = useStampCreate(
