@@ -29,6 +29,7 @@
         {{ suffix }}
       </span>
       <length-count
+        v-if="maxLength"
         :class="$style.count"
         :val="modelValue"
         :max-length="maxLength"
