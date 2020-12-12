@@ -5,21 +5,19 @@
         :class="$style.button"
         title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
-        :value="!isAll"
-        @click="toggleAll"
+        v-model="isAll"
       />
       <toggle-button
         :class="$style.button"
         title="同じチャンネルでは一つしかメッセージを表示しない"
         icon-name="comment-multiple-outline"
         icon-mdi
-        :value="isPerChannel"
-        @click="togglePerChannel"
+        v-model="isPerChannel"
       />
     </div>
     <transition-group name="timeline" tag="div">
       <activity-element
-        v-for="message in state.messages"
+        v-for="message in messages"
         :key="message.id"
         :class="$style.element"
         :type="isPerChannel ? 'channel' : 'message'"
@@ -32,11 +30,9 @@
 <script lang="ts">
 import {
   defineComponent,
-  reactive,
   computed,
   onBeforeUnmount,
   watch,
-  ref,
   onMounted
 } from 'vue'
 import store from '@/store'
@@ -78,27 +74,20 @@ const useActivityStream = () => {
 }
 
 const useActivityMode = () => {
-  const isAll = ref(store.getters.app.browserSettings.isActivityModeAll)
-  const isPerChannel = ref(
-    store.getters.app.browserSettings.isActivityModePerChannel
-  )
+  const isAll = computed({
+    get: () => store.getters.app.browserSettings.isActivityModeAll,
+    set: v => {
+      store.commit.app.browserSettings.setActivityModeAll(v)
+    }
+  })
+  const isPerChannel = computed({
+    get: () => store.getters.app.browserSettings.isActivityModePerChannel,
+    set: v => {
+      store.commit.app.browserSettings.setActivityModePerChannel(v)
+    }
+  })
 
-  const toggleAll = () => {
-    isAll.value = !isAll.value
-    store.commit.app.browserSettings.setActivityModeAll(isAll.value)
-  }
-  const togglePerChannel = () => {
-    isPerChannel.value = !isPerChannel.value
-    store.commit.app.browserSettings.setActivityModePerChannel(
-      isPerChannel.value
-    )
-  }
-  return {
-    isAll,
-    toggleAll,
-    isPerChannel,
-    togglePerChannel
-  }
+  return { isAll, isPerChannel }
 }
 
 export default defineComponent({
@@ -109,23 +98,10 @@ export default defineComponent({
   },
   setup() {
     useActivityStream()
-    const {
-      isAll,
-      toggleAll,
-      isPerChannel,
-      togglePerChannel
-    } = useActivityMode()
+    const { isAll, isPerChannel } = useActivityMode()
+    const messages = computed(() => store.state.domain.activityTimeline)
 
-    const state = reactive({
-      messages: computed(() => store.state.domain.activityTimeline)
-    })
-    return {
-      isAll,
-      toggleAll,
-      isPerChannel,
-      togglePerChannel,
-      state
-    }
+    return { isAll, isPerChannel, messages }
   }
 })
 </script>
