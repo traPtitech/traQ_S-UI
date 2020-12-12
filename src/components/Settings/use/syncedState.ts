@@ -7,7 +7,7 @@ type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 // eslint-disable-next-line @typescript-eslint/ban-types
 const useSyncedState = <T extends object>(
   storeState: Ref<T>,
-  setFunc: (payload: [keyof T, T[keyof T]]) => void
+  setFunc: (payload: Partial<T>) => void
 ) => {
   const { getDiffKeys } = useStateDiff<T>()
 
@@ -15,9 +15,11 @@ const useSyncedState = <T extends object>(
 
   watchEffect(() => {
     const diffKeys = getDiffKeys(state, storeState)
+    const data: Partial<T> = {}
     diffKeys.forEach(key => {
-      setFunc([key, klona(state[key])])
+      data[key] = state[key]
     })
+    setFunc(klona(data))
   })
 
   return { state }

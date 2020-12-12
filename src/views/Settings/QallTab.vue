@@ -10,7 +10,7 @@
         マイクなどへのアクセス許可が必要です
       </p>
     </div>
-    <div v-if="rtcSettings.isEnabled" :class="$style.element">
+    <div v-if="state.isEnabled" :class="$style.element">
       <h3>マスターボリューム</h3>
       <div :class="[$style.content, $style.masterVolume]">
         <form-input
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div v-if="rtcSettings.isEnabled" :class="$style.element">
+    <div v-if="state.isEnabled" :class="$style.element">
       <h3>入力デバイス</h3>
       <div :class="$style.content">
         <form-selector
@@ -37,7 +37,7 @@
         <p v-else>デバイスが取得できませんでした</p>
       </div>
     </div>
-    <div v-if="rtcSettings.isEnabled" :class="$style.element">
+    <div v-if="state.isEnabled" :class="$style.element">
       <div :class="$style.enable">
         <h3>メッセージの読み上げ</h3>
         <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
@@ -46,7 +46,7 @@
         Qallしているチャンネルに投稿されたメッセージを読み上げます
       </p>
     </div>
-    <div v-if="rtcSettings.isTtsEnabled" :class="$style.element">
+    <div v-if="state.isTtsEnabled" :class="$style.element">
       <h3>メッセージ読み上げの声</h3>
       <div :class="$style.content">
         <form-selector
@@ -192,7 +192,6 @@ export default defineComponent({
     const voiceOptions = useVoices(state)
 
     return {
-      rtcSettings,
       state,
       ...devicesInfo,
       audioInputDeviceOptions,
