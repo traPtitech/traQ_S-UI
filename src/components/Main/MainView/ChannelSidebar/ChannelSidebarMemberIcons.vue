@@ -60,5 +60,8 @@ export default defineComponent({
 
 .name {
   margin-left: 8px;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
 }
 </style>

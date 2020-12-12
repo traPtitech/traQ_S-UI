@@ -48,5 +48,8 @@ export default defineComponent({
 .userName {
   margin-left: 8px;
   font-weight: bold;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
 }
 </style>

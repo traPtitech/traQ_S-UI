@@ -144,7 +144,7 @@ const useProfileUpdate = (
 
 const useIsLengthValid = (state: Profile) => {
   const { isExceeded: isDisplayNameExceeded } = useMaxLength(
-    reactive({ val: toRef(state, 'displayName'), maxLength: 30 })
+    reactive({ val: toRef(state, 'displayName'), maxLength: 32 })
   )
   const { isExceeded: isBioExceeded } = useMaxLength(
     reactive({ val: toRef(state, 'bio'), maxLength: 1000 })
