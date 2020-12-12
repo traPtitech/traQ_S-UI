@@ -47,23 +47,17 @@ export const actions = defineActions({
 
     // デフォルトをセットする
     if (audioInputDevices.length > 0) {
-      commit.set(['audioInputDeviceId', audioInputDevices[0].deviceId])
+      commit.set({ audioInputDeviceId: audioInputDevices[0].deviceId })
       return true
     }
     return false
   },
-  /**
-   * keyに一致しないvalueを入れることができるので注意
-   */
-  set<K extends keyof S>(
-    context: ActionContext<unknown, unknown>,
-    [key, val]: [K, S[K]]
-  ) {
+  set(context, newState: Partial<S>) {
     const { commit, rootCommit } = rtcSettingsActionContext(context)
-    commit.set([key, val])
+    commit.set(newState)
 
-    if (key === 'masterVolume') {
-      rootCommit.app.rtc.setMasterVolume(val as S['masterVolume'])
+    if (newState.masterVolume) {
+      rootCommit.app.rtc.setMasterVolume(newState.masterVolume)
     }
   }
 })

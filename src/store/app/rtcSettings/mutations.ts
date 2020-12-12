@@ -1,11 +1,9 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
+import { overwrite } from '@/lib/util/object'
 
 export const mutations = defineMutations<S>()({
-  /**
-   * keyに一致しないvalueを入れることができるので注意
-   */
-  set<K extends keyof S>(state: S, [key, value]: [K, S[K]]) {
-    state[key] = value
+  set(state: S, newState: Partial<S>) {
+    overwrite(state, newState)
   }
 })
