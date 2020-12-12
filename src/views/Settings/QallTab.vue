@@ -17,7 +17,7 @@
           <form-input
             :class="$style.masterVolumeRange"
             type="range"
-            v-model.number.lazy="state.masterVolume"
+            v-model.number="state.masterVolume"
             min="0"
             step="0.005"
             max="1"
