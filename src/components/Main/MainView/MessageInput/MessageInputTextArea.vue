@@ -2,11 +2,10 @@
   <textarea-autosize
     ref="textareaAutosizeRef"
     :class="$style.container"
-    :model-value="text"
+    v-model="value"
     :readonly="isPosting"
     placeholder="メッセージを送信"
     rows="1"
-    @update:model-value="onInput"
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
@@ -28,6 +27,7 @@ import {
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
+import useModelSyncer from '@/use/modelSyncer'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -41,17 +41,17 @@ const useFocus = (context: SetupContext) => {
 }
 
 const useLineBreak = (
-  props: { text: string },
+  props: { modelValue: string },
   textareaRef: Ref<HTMLTextAreaElement | undefined>,
   context: SetupContext
 ) => {
   const insertLineBreak = async () => {
     if (!textareaRef.value) return
-    const pre = props.text.slice(0, textareaRef.value.selectionStart)
-    const suf = props.text.slice(textareaRef.value.selectionEnd)
+    const pre = props.modelValue.slice(0, textareaRef.value.selectionStart)
+    const suf = props.modelValue.slice(textareaRef.value.selectionEnd)
     const selectionIndex = pre.length + 1
     // inputイベントを発火することでテキストを変更
-    context.emit('input-value', `${pre}\n${suf}`)
+    context.emit('update:modelValue', `${pre}\n${suf}`)
 
     await nextTick()
     textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
@@ -81,7 +81,7 @@ export default defineComponent({
     TextareaAutosize
   },
   props: {
-    text: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -90,10 +90,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
-    const onInput = (value: string) => {
-      context.emit('input-value', value)
-    }
+  setup(props, context) {
+    const value = useModelSyncer(props, context)
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
@@ -111,7 +109,7 @@ export default defineComponent({
     const { onPaste } = usePaste()
 
     return {
-      onInput,
+      value,
       onBeforeInput,
       onKeyDown,
       onKeyUp,

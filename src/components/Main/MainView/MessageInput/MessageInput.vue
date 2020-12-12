@@ -17,11 +17,10 @@
         />
         <message-input-text-area
           ref="textareaRef"
-          :text="textState.text"
+          v-model="textState.text"
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
-          @input-value="onInputText"
           @modifier-key-down="onModifierKeyDown"
           @modifier-key-up="onModifierKeyUp"
           @post-message="postMessage"
@@ -78,12 +77,7 @@ export default defineComponent({
   },
   setup(props) {
     const { isMobile } = useIsMobile()
-    const {
-      textState,
-      onInputText,
-      onModifierKeyDown,
-      onModifierKeyUp
-    } = useTextInput()
+    const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput()
     const { attachmentsState, addAttachment, destroy } = useAttachments()
 
     onBeforeUnmount(() => {
@@ -146,7 +140,6 @@ export default defineComponent({
       attachmentsState,
       onFocus,
       onBlur,
-      onInputText,
       onModifierKeyDown,
       onModifierKeyUp,
       onStampClick,

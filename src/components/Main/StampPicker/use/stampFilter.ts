@@ -83,12 +83,8 @@ const useStampFilter = () => {
       return [...new Set([...fullMatchedStamps, ...matchedStamps])]
     })
   })
-  const setQuery = (query: string) => {
-    state.query = query
-  }
   return {
-    filterState: state,
-    setQuery
+    filterState: state
   }
 }
 

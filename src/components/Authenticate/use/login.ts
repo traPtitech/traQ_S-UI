@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import apis from '@/lib/apis'
 import useRedirectParam from './redirectParam'
 
@@ -9,14 +9,13 @@ const useLogin = () => {
     pass: '',
     error: undefined as string | undefined
   })
-  const setName = (name: string) => {
-    state.error = undefined
-    state.name = name
-  }
-  const setPass = (pass: string) => {
-    state.error = undefined
-    state.pass = pass
-  }
+  watch(
+    () => state.name + state.pass,
+    () => {
+      state.error = undefined
+    }
+  )
+
   const login = async () => {
     try {
       await apis.login('/', { name: state.name, password: state.pass })
@@ -54,9 +53,7 @@ const useLogin = () => {
   return {
     loginState: state,
     login,
-    loginExternal,
-    setName,
-    setPass
+    loginExternal
   }
 }
 

@@ -3,27 +3,24 @@
     <authenticate-header :class="$style.header" title="新規登録" />
     <authenticate-input
       label="traQ ID"
-      :text="loginState.name"
+      v-model="loginState.name"
       :class="$style.item"
       autocomplete="username"
-      @input-value="setName"
       autofocus
     />
     <authenticate-input
       label="表示名"
-      :text="loginState.name"
+      v-model="loginState.name"
       :class="$style.item"
       autocomplete="nickname"
-      @input-value="setName"
     />
     <authenticate-input
       label="パスワード"
       type="password"
-      :text="loginState.name"
+      v-model="loginState.name"
       :class="$style.item"
       autocomplete="new-password"
       enterkeyhint="done"
-      @input-value="setName"
     />
     <div :class="$style.error">
       <span v-if="loginState.error">{{ loginState.error }}</span>
@@ -54,8 +51,8 @@ export default defineComponent({
     AuthenticateButton
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin()
-    return { loginState, setName, setPass, login, loginExternal }
+    const { loginState, login, loginExternal } = useLogin()
+    return { loginState, login, loginExternal }
   }
 })
 </script>

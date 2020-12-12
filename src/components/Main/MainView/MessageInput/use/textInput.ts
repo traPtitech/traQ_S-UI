@@ -11,9 +11,6 @@ const useTextInput = (initialText = '') => {
     isEmpty: computed(() => state.text.length === 0),
     isModifierKeyPressed: false
   })
-  const onInputText = (text: string) => {
-    state.text = text
-  }
 
   const onModifierKeyDown = () => {
     state.isModifierKeyPressed = true
@@ -24,7 +21,6 @@ const useTextInput = (initialText = '') => {
 
   return {
     textState: state,
-    onInputText,
     onModifierKeyDown,
     onModifierKeyUp
   }

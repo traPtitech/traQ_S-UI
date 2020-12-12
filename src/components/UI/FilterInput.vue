@@ -8,13 +8,12 @@
     <input
       ref="inputRef"
       :class="$style.input"
-      :value="text"
+      v-model="value"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
       :inputmode="disableIme ? 'url' : undefined"
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
-      @input="onInput"
       @keydown.esc="reset"
       type="text"
     />
@@ -24,8 +23,8 @@
 <script lang="ts">
 import { defineComponent, shallowRef, onMounted } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
-import useInput from '@/use/input'
 import { isTouchDevice } from '@/lib/util/browser'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FilterInput',
@@ -33,7 +32,7 @@ export default defineComponent({
     Icon
   },
   props: {
-    text: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -63,11 +62,11 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { onInput } = useInput(context)
+    const value = useModelSyncer(props, context)
 
     const reset = () => {
-      // input-valueイベントを発火することで値を変更する
-      context.emit('input-value', '')
+      // update:modelValueイベントを発火することで値を変更する
+      context.emit('update:modelValue', '')
     }
 
     const inputRef = shallowRef<HTMLInputElement | null>(null)
@@ -79,7 +78,7 @@ export default defineComponent({
       inputRef.value?.focus()
     }
 
-    return { focus, inputRef, onInput, reset }
+    return { value, focus, inputRef, reset }
   }
 })
 </script>

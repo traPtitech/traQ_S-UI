@@ -5,13 +5,12 @@
       <input
         :class="$style.input"
         :id="id"
-        :value="text"
+        v-model="value"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
         :autocapitalize="autocapitalize"
         :enterkeyhint="enterkeyhint"
-        @input="onInput"
       />
       <button
         v-if="type === 'password'"
@@ -31,17 +30,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from 'vue'
-import useInput from '@/use/input'
+import { defineComponent, PropType } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import Icon from '@/components/UI/Icon.vue'
 import useShowPassword from '@/use/showPassword'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'AuthenticateInput',
   components: { Icon },
   props: {
-    text: { type: String, default: '' },
+    modelValue: { type: String, default: '' },
     label: { type: String, default: '' },
     type: {
       type: String as PropType<'text' | 'password'>,
@@ -61,15 +60,16 @@ export default defineComponent({
     },
     enterkeyhint: String
   },
-  setup(props, context: SetupContext) {
-    const { onInput } = useInput(context)
+  setup(props, context) {
+    const value = useModelSyncer(props, context)
+
     const id = randomString()
 
     const { isPasswordShown, togglePassword, typeWithShown } = useShowPassword(
       props
     )
 
-    return { onInput, id, isPasswordShown, togglePassword, typeWithShown }
+    return { value, id, isPasswordShown, togglePassword, typeWithShown }
   }
 })
 </script>

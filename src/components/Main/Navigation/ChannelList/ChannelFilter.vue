@@ -1,17 +1,12 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.input">
-      <filter-input
-        on-secondary
-        :text="text"
-        @input-value="onInput"
-        disable-ime
-      />
+      <filter-input on-secondary v-model="value" disable-ime />
     </div>
     <button
       :class="$style.star"
       :aria-selected="isStared"
-      @click="emit('toggle-star-filter')"
+      @click="$emit('toggle-star-filter')"
     >
       <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
     </button>
@@ -22,6 +17,7 @@
 import { defineComponent } from 'vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'ChannelFilter',
@@ -30,7 +26,7 @@ export default defineComponent({
     FilterInput
   },
   props: {
-    text: {
+    modelValue: {
       type: String,
       required: true
     },
@@ -39,14 +35,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { emit }) {
-    const onInput = (value: string) => {
-      emit('input-filter', value)
-    }
-    return {
-      emit,
-      onInput
-    }
+  setup(props, context) {
+    const value = useModelSyncer(props, context)
+    return { value }
   }
 })
 </script>

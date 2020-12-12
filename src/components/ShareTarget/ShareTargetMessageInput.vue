@@ -8,9 +8,8 @@
             ref="textareaRef"
             :class="$style.input"
             :id="id"
-            :value="textState.text"
+            v-model="textState.text"
             :is-posting="isPosting"
-            @input="onInput"
           />
         </div>
         <div :class="$style.controls">
@@ -67,10 +66,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { textState, onInputText } = useTextInput()
-    const onInput = (e: InputEvent) => {
-      onInputText((e.target as HTMLTextAreaElement).value)
-    }
+    const { textState } = useTextInput()
     watch(
       () => textState.text,
       val => {
@@ -123,7 +119,6 @@ export default defineComponent({
     const id = randomString()
     return {
       textState,
-      onInput,
       attachmentsState,
       addAttachment,
       canPostMessage,

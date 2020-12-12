@@ -2,8 +2,7 @@
   <div :class="$style.container" v-click-outside="onClickOutside">
     <div :class="$style.inputContainer">
       <filter-input
-        :text="filterState.query"
-        @input-value="setQuery"
+        v-model="filterState.query"
         :placeholder="placeholder"
         disable-ime
         focus-on-mount
@@ -86,7 +85,7 @@ export default defineComponent({
     )
     const queryString = ref('')
 
-    const { stamps, filterState, setQuery } = useStampList(currentStampSet)
+    const { stamps, filterState } = useStampList(currentStampSet)
     const { stampPickerState, onInputStamp } = useStampPicker()
     const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
@@ -101,7 +100,6 @@ export default defineComponent({
       stamps,
       queryString,
       filterState,
-      setQuery,
       placeholder,
       onInputStamp,
       onHoverStamp,
