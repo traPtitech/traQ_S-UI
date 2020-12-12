@@ -29,6 +29,7 @@
         {{ suffix }}
       </span>
       <length-count
+        v-if="maxLength"
         :class="$style.count"
         :val="modelValue"
         :max-length="maxLength"
@@ -50,12 +51,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef } from 'vue'
+import { defineComponent, shallowRef, onMounted } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import useInput from '@/use/input'
 import Icon from '@/components/UI/Icon.vue'
 import useShowPassword from '@/use/showPassword'
 import LengthCount from '@/components/UI/LengthCount.vue'
+import { wait } from '@/lib/util/timer'
 
 export default defineComponent({
   name: 'FormInput',
@@ -110,6 +112,14 @@ export default defineComponent({
     const focus = () => {
       inputRef.value?.focus()
     }
+
+    // これをしないと初期値がおかしかった Vue 3.0.3で確認
+    onMounted(async () => {
+      await wait(0)
+      if (inputRef.value && Number.isFinite(props.modelValue)) {
+        inputRef.value.valueAsNumber = props.modelValue as number
+      }
+    })
 
     const id = randomString()
 
