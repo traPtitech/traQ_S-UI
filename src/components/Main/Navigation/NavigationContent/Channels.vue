@@ -9,8 +9,7 @@
       <template #default>
         <channel-filter
           @toggle-star-filter="toggleStarChannelFilter"
-          @input-filter="setQuery"
-          :text="channelListFilterState.query"
+          v-model="channelListFilterState.query"
           :is-stared="filterStarChannel"
           :class="$style.filter"
         />
@@ -45,10 +44,9 @@ import NavigationContentContainer from '@/components/Main/Navigation/NavigationC
 import Icon from '@/components/UI/Icon.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
-  const { textFilterState, setQuery } = useTextFilter(channels, 'name')
+  const { textFilterState } = useTextFilter(channels, 'name')
   return {
-    channelListFilterState: textFilterState,
-    setQuery
+    channelListFilterState: textFilterState
   }
 }
 
@@ -122,7 +120,7 @@ export default defineComponent({
       filterStarChannel,
       toggleStarChannelFilter
     } = useFilterStarChannel()
-    const { channelListFilterState, setQuery } = useChannelListFilter(
+    const { channelListFilterState } = useChannelListFilter(
       useChannelList(filterStarChannel)
     )
 
@@ -137,7 +135,6 @@ export default defineComponent({
       toggleStarChannelFilter,
       filterStarChannel,
       channelListFilterState,
-      setQuery,
       staredChannels,
       topLevelChannels
     }

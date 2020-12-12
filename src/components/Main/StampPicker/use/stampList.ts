@@ -31,7 +31,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     return []
   })
-  const { filterState, setQuery } = useStampFilter()
+  const { filterState } = useStampFilter()
 
   const stamps = computed(() => {
     if (filterState.query === '') {
@@ -41,7 +41,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     return filterState.filteredItems
   })
 
-  return { stamps, filterState, setQuery }
+  return { stamps, filterState }
 }
 
 export default useStampList

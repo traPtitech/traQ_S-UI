@@ -4,8 +4,7 @@
     <authenticate-header :class="$style.header" />
     <authenticate-input
       label="traQ ID"
-      :text="loginState.name"
-      @input-value="setName"
+      v-model="loginState.name"
       autocomplete="username"
       :class="$style.item"
       autofocus
@@ -14,10 +13,9 @@
       <authenticate-input
         label="パスワード"
         type="password"
-        :text="loginState.pass"
+        v-model="loginState.pass"
         autocomplete="current-password"
         enterkeyhint="done"
-        @input-value="setPass"
       />
       <a
         v-if="resetLink !== undefined"
@@ -96,7 +94,7 @@ export default defineComponent({
     AuthenticateSeparator
   },
   setup(_, context) {
-    const { loginState, login, loginExternal, setName, setPass } = useLogin()
+    const { loginState, login, loginExternal } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
     const externalLogin = computed(
@@ -106,8 +104,6 @@ export default defineComponent({
     return {
       resetLink,
       loginState,
-      setName,
-      setPass,
       login,
       loginExternal,
       isIOS,

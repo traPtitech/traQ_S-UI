@@ -7,12 +7,7 @@
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <select
-        @input="onInput"
-        :value="modelValue"
-        :id="id"
-        :class="$style.select"
-      >
+      <select v-model="value" :id="id" :class="$style.select">
         <option
           v-for="option in options"
           :key="option.value"
@@ -28,8 +23,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useInput from '@/use/input'
 import { randomString } from '@/lib/util/randomString'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormSelector',
@@ -52,9 +47,9 @@ export default defineComponent({
     label: String
   },
   setup(props, context) {
-    const { onInput } = useInput(context, 'update:modelValue')
+    const value = useModelSyncer(props, context)
     const id = randomString()
-    return { onInput, id }
+    return { value, id }
   }
 })
 </script>

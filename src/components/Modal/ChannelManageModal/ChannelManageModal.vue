@@ -12,21 +12,14 @@
     />
     <label :class="$style.toggle">
       アーカイブ
-      <toggle
-        :value="manageState.archived"
-        @input="manageState.archived = !manageState.archived"
-        :disabled="!canToggleArchive"
-      />
+      <toggle v-model="manageState.archived" :disabled="!canToggleArchive" />
     </label>
     <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
       このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
     </p>
     <label :class="$style.toggle">
       強制通知
-      <toggle
-        :value="manageState.force"
-        @input="manageState.force = !manageState.force"
-      />
+      <toggle v-model="manageState.force" />
     </label>
     <form-button
       label="変更"

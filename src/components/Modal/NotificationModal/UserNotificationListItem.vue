@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <user-icon :user-id="userId" />
     <span :class="$style.name">{{ name }}</span>
-    <toggle @input="onClick" :value="subscribed" />
+    <toggle v-model="value" />
   </div>
 </template>
 
@@ -30,13 +30,16 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const onClick = () => {
-      context.emit('change-notification', props.userId, !props.subscribed)
-    }
+    const value = computed({
+      get: () => props.subscribed,
+      set: v => {
+        context.emit('change-notification', props.userId, !props.subscribed)
+      }
+    })
     const name = computed(
       () => store.state.entities.users[props.userId]?.name ?? ''
     )
-    return { onClick, name }
+    return { value, name }
   }
 })
 </script>

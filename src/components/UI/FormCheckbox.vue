@@ -4,8 +4,7 @@
       type="checkbox"
       :class="$style.checkbox"
       v-bind="$attrs"
-      :checked="modelValue"
-      @input="onInput"
+      v-model="value"
     />
     <div
       :class="$style.pseudoCheckbox"
@@ -20,6 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormCheckbox',
@@ -38,13 +38,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const onInput = (event: InputEvent) =>
-      context.emit(
-        'update:modelValue',
-        (event.target as HTMLInputElement).checked
-      )
+    const value = useModelSyncer(props, context)
 
-    return { onInput }
+    return { value }
   }
 })
 </script>

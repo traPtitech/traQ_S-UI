@@ -5,8 +5,7 @@
       <message-input-text-area
         ref="textareaRef"
         :class="$style.inputTextArea"
-        :text="textState.text"
-        @input-value="onInputText"
+        v-model="textState.text"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
@@ -84,12 +83,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const {
-      textState,
-      onInputText,
-      onModifierKeyDown,
-      onModifierKeyUp
-    } = useTextInput(props.rawContent)
+    const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput(
+      props.rawContent
+    )
     const { editMessage, cancel } = useEditMessage(props, textState)
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
@@ -112,7 +108,6 @@ export default defineComponent({
       editMessage,
       cancel,
       textState,
-      onInputText,
       onModifierKeyDown,
       onModifierKeyUp,
       teleportTargetName,

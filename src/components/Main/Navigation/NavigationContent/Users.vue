@@ -14,11 +14,7 @@
       </div>
     </navigation-content-container>
     <navigation-content-container subtitle="ユーザーリスト">
-      <filter-input
-        :text="userListFilterState.query"
-        @input-value="setQuery"
-        on-secondary
-      />
+      <filter-input v-model="userListFilterState.query" on-secondary />
       <div v-if="userListFilterState.query.length > 0" :class="$style.list">
         <users-element
           v-for="user in userListFilterState.filteredItems"
@@ -126,10 +122,9 @@ const useUserListFilter = () => {
   const activeUsers = computed(() =>
     Object.values(store.getters.entities.activeUsers as ActiveUserMap)
   )
-  const { textFilterState, setQuery } = useTextFilter(activeUsers, 'name')
+  const { textFilterState } = useTextFilter(activeUsers, 'name')
   return {
-    userListFilterState: textFilterState,
-    setQuery
+    userListFilterState: textFilterState
   }
 }
 
@@ -145,12 +140,11 @@ export default defineComponent({
   setup() {
     const usersWithNotification = useUsersWithNotification()
     const userLists = useListByGradeName()
-    const { userListFilterState, setQuery } = useUserListFilter()
+    const { userListFilterState } = useUserListFilter()
     return {
       usersWithNotification,
       userLists,
-      userListFilterState,
-      setQuery
+      userListFilterState
     }
   }
 })

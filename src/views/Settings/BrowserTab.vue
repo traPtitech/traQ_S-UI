@@ -73,11 +73,7 @@
     <div :class="$style.element">
       <div :class="$style.echo">
         <h3>省エネモード</h3>
-        <toggle
-          @input="state.ecoMode = !state.ecoMode"
-          :value="state.ecoMode"
-          :class="$style.toggle"
-        />
+        <toggle v-model="state.ecoMode" :class="$style.toggle" />
       </div>
       <div :class="$style.content">
         <p>

@@ -3,7 +3,7 @@
     @click="toggle"
     :class="$style.container"
     role="switch"
-    :aria-checked="value"
+    :aria-checked="modelValue"
     :aria-disabled="disabled"
   >
     <div :class="$style.knob"></div>
@@ -16,7 +16,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Toggle',
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false
     },
@@ -29,7 +29,7 @@ export default defineComponent({
     const toggle = () => {
       if (props.disabled) return
 
-      context.emit('input')
+      context.emit('update:modelValue', !props.modelValue)
     }
 
     return { toggle }

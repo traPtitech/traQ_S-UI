@@ -3,11 +3,7 @@
     <div :class="$style.element">
       <div :class="$style.enable">
         <h3>RTC機能を有効にする</h3>
-        <toggle
-          @input="state.isEnabled = !state.isEnabled"
-          :value="state.isEnabled"
-          :class="$style.toggle"
-        />
+        <toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
       <p :class="$style.content">
         通話などのRTC(リアルタイムコミュニケーション)機能を有効化します<br />
@@ -44,11 +40,7 @@
     <div v-if="rtcSettings.isEnabled" :class="$style.element">
       <div :class="$style.enable">
         <h3>メッセージの読み上げ</h3>
-        <toggle
-          @input="state.isTtsEnabled = !state.isTtsEnabled"
-          :value="state.isTtsEnabled"
-          :class="$style.toggle"
-        />
+        <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
       </div>
       <p :class="$style.content">
         Qallしているチャンネルに投稿されたメッセージを読み上げます

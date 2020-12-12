@@ -1,6 +1,11 @@
 <template>
-  <button :class="$style.container" :title="title" :aria-pressed="value">
-    <Icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
+  <button
+    :class="$style.container"
+    :title="title"
+    :aria-pressed="modelValue"
+    @click="toggle"
+  >
+    <icon :size="22" :class="$style.icon" :name="iconName" :mdi="iconMdi" />
   </button>
 </template>
 
@@ -19,14 +24,17 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    value: {
+    modelValue: {
       type: Boolean,
       default: false
     },
     title: String
   },
-  setup() {
-    return {}
+  setup(props, context) {
+    const toggle = () => {
+      context.emit('update:modelValue', !props.modelValue)
+    }
+    return { toggle }
   },
   components: {
     Icon

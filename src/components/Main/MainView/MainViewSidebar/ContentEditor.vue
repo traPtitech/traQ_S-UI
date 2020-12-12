@@ -1,11 +1,7 @@
 <template>
   <div :class="$style.container">
     <div v-if="isEditing">
-      <textarea-autosize
-        :model-value="value"
-        :class="$style.editor"
-        @update:model-value="onInput"
-      />
+      <textarea-autosize v-model="modelValue" :class="$style.editor" />
       <length-count
         :class="$style.count"
         :val="valueReal"
@@ -43,10 +39,10 @@ export default defineComponent({
     TextareaAutosize
   },
   props: {
-    value: { type: String, required: false },
+    value: { type: String, default: undefined },
     isEditing: { type: Boolean, default: false },
     fallbackValue: { type: String, default: '未設定' },
-    maxLength: { type: Number, required: false }
+    maxLength: { type: Number, default: undefined }
   },
   setup(props, context) {
     const content = computed(() => {
@@ -71,10 +67,14 @@ export default defineComponent({
         !!(props.maxLength && countLength(valueReal.value) > props.maxLength)
     )
 
-    const onInput = (payload: string) => {
-      valueReal.value = payload
-      context.emit('input-value', payload)
-    }
+    const modelValue = computed({
+      get: () => props.value ?? '',
+      set: v => {
+        valueReal.value = v ?? ''
+        context.emit('input-value', v ?? '')
+      }
+    })
+
     return {
       content,
       isEmpty,
@@ -82,7 +82,7 @@ export default defineComponent({
       length,
       valueReal,
       isExceeded,
-      onInput
+      modelValue
     }
   }
 })
