@@ -3,14 +3,14 @@
     <user-icon :user-id="user.id" :prevent-modal="true" :size="48" />
     <div :class="$style.names">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
-      <p :class="$style.name">
+      <div :class="$style.nameInfo">
         <online-indicator-with-tooltip
           :class="$style.indicator"
           :user-id="user.id"
           :last-online="detail?.lastOnline"
         />
-        <span>@{{ user.name }}</span>
-      </p>
+        <span :class="$style.name">@{{ user.name }}</span>
+      </div>
     </div>
     <buttons
       :class="$style.buttons"
@@ -68,17 +68,20 @@ export default defineComponent({
 }
 .displayName {
   @include size-h3;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  word-break: normal;
+  overflow-wrap: break-word; // for Safari
+  overflow-wrap: anywhere;
+}
+.nameInfo {
+  display: flex;
 }
 .name {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  word-break: break-all;
 }
 .indicator {
+  margin-top: 6px;
   margin-right: 4px;
+  flex-shrink: 0;
 }
 .buttons {
   margin-right: 8px;

@@ -3,7 +3,7 @@
     :class="$style.container"
     :data-is-online="$boolAttr(isOnline)"
     :size="size"
-    :border-width="isOnline ? 0 : borderWidth"
+    :border-width="borderWidth"
   />
 </template>
 
