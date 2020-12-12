@@ -2,9 +2,9 @@
   <div :class="$style.container">
     <div v-if="isEditing">
       <textarea-autosize
-        :value="value"
+        :model-value="value"
         :class="$style.editor"
-        @input-value="onInput"
+        @update:model-value="onInput"
       />
       <length-count
         :class="$style.count"
@@ -33,12 +33,14 @@ import { defineComponent, computed, ref } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import { countLength } from '@/lib/util/string'
+import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 
 export default defineComponent({
   name: 'ContentEditor',
   components: {
     Icon,
-    LengthCount
+    LengthCount,
+    TextareaAutosize
   },
   props: {
     value: { type: String, required: false },

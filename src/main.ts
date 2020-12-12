@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import boolAttr from './bool-attr'
 import vClickOutside from 'v-click-outside'
-import VueTextareaAutosize from 'vue-textarea-autosize'
 import { setupGlobalFuncs } from './markdown-bridge'
 import { loadResizeObserver } from './resizeObserver'
 
@@ -21,7 +20,6 @@ import('katex/dist/katex.css')
 
   app.use(boolAttr)
   app.use(vClickOutside)
-  app.use(VueTextareaAutosize)
 
   app.mount('#app')
 

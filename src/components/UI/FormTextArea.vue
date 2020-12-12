@@ -11,12 +11,12 @@
         ref="inputRef"
         :class="$style.input"
         :id="id"
-        :value="modelValue"
+        :model-value="modelValue"
         :name="name"
         :placeholder="placeholder"
-        :max-height="maxHeight"
+        :style="style"
         rows="1"
-        @input-value="onInput"
+        @update:model-value="onInput"
       />
       <length-count
         :class="$style.count"
@@ -28,14 +28,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef } from 'vue'
+import { computed, defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import LengthCount from '@/components/UI/LengthCount.vue'
+import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 
 export default defineComponent({
   name: 'FormInput',
   components: {
-    LengthCount
+    LengthCount,
+    TextareaAutosize
   },
   props: {
     modelValue: {
@@ -72,6 +74,8 @@ export default defineComponent({
       context.emit('update:modelValue', val)
     }
 
+    const style = computed(() => ({ maxHeight: props.maxHeight }))
+
     const inputRef = shallowRef<HTMLInputElement | null>(null)
     const focus = () => {
       inputRef.value?.focus()
@@ -81,6 +85,7 @@ export default defineComponent({
 
     return {
       onInput,
+      style,
       id,
       inputRef,
       focus

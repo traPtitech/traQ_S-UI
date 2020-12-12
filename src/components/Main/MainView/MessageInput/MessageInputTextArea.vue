@@ -2,13 +2,11 @@
   <textarea-autosize
     ref="textareaAutosizeRef"
     :class="$style.container"
-    :value="text"
+    :model-value="text"
     :readonly="isPosting"
     placeholder="メッセージを送信"
     rows="1"
-    :max-height="160"
-    @input-value="onInput"
-    @compositionupdate="onCompositionUpdate"
+    @update:model-value="onInput"
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
@@ -29,6 +27,7 @@ import {
 } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import store from '@/store'
+import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -55,8 +54,7 @@ const useLineBreak = (
     context.emit('input-value', `${pre}\n${suf}`)
 
     await nextTick()
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    textareaRef.value!.selectionStart = textareaRef.value!.selectionEnd = selectionIndex
+    textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
   }
 
   return { insertLineBreak }
@@ -79,6 +77,9 @@ const usePaste = () => {
 
 export default defineComponent({
   name: 'MessageInputTextArea',
+  components: {
+    TextareaAutosize
+  },
   props: {
     text: {
       type: String,
@@ -96,15 +97,10 @@ export default defineComponent({
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
-      resize: () => void
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
-
-    const onCompositionUpdate = () => {
-      textareaAutosizeRef.value?.resize()
-    }
 
     const { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
       context,
@@ -116,7 +112,6 @@ export default defineComponent({
 
     return {
       onInput,
-      onCompositionUpdate,
       onBeforeInput,
       onKeyDown,
       onKeyUp,
@@ -133,6 +128,7 @@ export default defineComponent({
 .container {
   @include color-text-primary;
   width: 100%;
+  max-height: 160px;
   &[readonly] {
     @include color-ui-secondary;
     opacity: 0.5;
