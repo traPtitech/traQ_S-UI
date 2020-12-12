@@ -1,10 +1,5 @@
 <template>
-  <textarea
-    ref="textareaEle"
-    :value="modelValue"
-    @input="onInput"
-    :class="$style.textarea"
-  />
+  <textarea ref="textareaEle" v-model="value" :class="$style.textarea" />
 </template>
 
 <script lang="ts">
@@ -17,8 +12,8 @@ import {
   watch,
   nextTick
 } from 'vue'
-import useInput from '@/use/input'
 import autosize from 'autosize'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'TextareaAutosize',
@@ -33,7 +28,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { onInput } = useInput(context, 'update:modelValue')
+    const value = useModelSyncer(props, context)
 
     const textareaEle = ref<HTMLTextAreaElement | null>(null)
     onMounted(() => {
@@ -53,7 +48,7 @@ export default defineComponent({
       }
     })
 
-    return { textareaEle, onInput }
+    return { value, textareaEle }
   }
 })
 </script>

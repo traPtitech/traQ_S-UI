@@ -5,10 +5,9 @@
       :class="$style.radio"
       v-bind="$attrs"
       :value="inputValue"
-      :checked="checked"
-      @input="onInput"
+      v-model="value"
     />
-    <div :class="$style.pseudoRadio" role="radio" :aria-checked="checked">
+    <div :class="$style.pseudoRadio" role="radio" :aria-checked="isChecked">
       <div :class="$style.pseudoRadioInner" />
     </div>
     {{ label }}
@@ -16,8 +15,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import useInput from '@/use/input'
+import { computed, defineComponent } from 'vue'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormRadio',
@@ -46,10 +45,10 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const checked = computed(() => props.inputValue === props.modelValue)
-    const { onInput } = useInput(context, 'update:modelValue')
+    const value = useModelSyncer(props, context)
+    const isChecked = computed(() => props.inputValue === value.value)
 
-    return { checked, onInput }
+    return { value, isChecked }
   }
 })
 </script>

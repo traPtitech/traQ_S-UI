@@ -11,12 +11,11 @@
         ref="inputRef"
         :class="$style.input"
         :id="id"
-        :model-value="modelValue"
+        v-model="value"
         :name="name"
         :placeholder="placeholder"
         :style="style"
         rows="1"
-        @update:model-value="onInput"
       />
       <length-count
         :class="$style.count"
@@ -32,6 +31,7 @@ import { computed, defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
+import useModelSyncer from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormInput',
@@ -70,9 +70,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const onInput = (val: string) => {
-      context.emit('update:modelValue', val)
-    }
+    const value = useModelSyncer(props, context)
 
     const style = computed(() => ({ maxHeight: props.maxHeight }))
 
@@ -84,7 +82,7 @@ export default defineComponent({
     const id = randomString()
 
     return {
-      onInput,
+      value,
       style,
       id,
       inputRef,
