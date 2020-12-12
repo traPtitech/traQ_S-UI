@@ -27,8 +27,8 @@
   </div>
   <template v-if="isImporterOpen">
     <textarea-autosize
-      @input-value="updateEditedTheme"
-      :value="editedTheme"
+      @update:model-value="updateEditedTheme"
+      :model-value="editedTheme"
       :class="$style.jsonField"
     />
     <div :class="$style.import">
@@ -56,6 +56,7 @@ import store from '@/store'
 import { Theme } from '@/types/theme'
 import { dequal } from 'dequal'
 import { lightTheme } from '@/store/app/themeSettings/default'
+import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isValidThemeJSON = (theme: any): theme is Theme => {
@@ -151,7 +152,8 @@ export default defineComponent({
     }
   },
   components: {
-    FormButton
+    FormButton,
+    TextareaAutosize
   }
 })
 </script>

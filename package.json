@@ -20,7 +20,9 @@
     "@mdi/js": "^5.8.55",
     "@traptitech/traq": "^3.5.0-4",
     "@traptitech/traq-markdown-it": "^4.0.5",
+    "@types/autosize": "^3.0.7",
     "@types/pica": "^5.1.2",
+    "autosize": "^4.0.2",
     "core-js": "^3.8.1",
     "cropperjs": "^1.5.9",
     "deepmerge": "^4.2.2",
@@ -38,7 +40,6 @@
     "vue": "^3.0.3",
     "vue-router": "^4.0.1",
     "vue-slider-component": "^4.0.0-beta.3",
-    "vue-textarea-autosize": "^1.1.1",
     "vuex": "^4.0.0-rc.2",
     "vuex-persist": "^3.1.3"
   },

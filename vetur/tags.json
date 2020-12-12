@@ -1,6 +1,0 @@
-{
-  "textarea-autosize": {
-    "attributes": ["v-model", "value", "autosize", "minHeight", "maxHeight", "important"],
-    "description": "<textarea> with auto-size"
-  }
-}
