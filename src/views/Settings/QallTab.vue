@@ -10,71 +10,73 @@
         マイクなどへのアクセス許可が必要です
       </p>
     </div>
-    <div v-if="state.isEnabled" :class="$style.element">
-      <h3>マスターボリューム</h3>
-      <div :class="[$style.content, $style.masterVolume]">
-        <form-input
-          :class="$style.masterVolumeRange"
-          type="range"
-          v-model.number.lazy="state.masterVolume"
-          min="0"
-          step="0.005"
-          max="1"
-        />
-        <div :class="$style.masterVolumeValue">
-          {{ Math.round(state.masterVolume * 200) }}%
+    <template v-if="state.isEnabled">
+      <div :class="$style.element">
+        <h3>マスターボリューム</h3>
+        <div :class="[$style.content, $style.masterVolume]">
+          <form-input
+            :class="$style.masterVolumeRange"
+            type="range"
+            v-model.number.lazy="state.masterVolume"
+            min="0"
+            step="0.005"
+            max="1"
+          />
+          <div :class="$style.masterVolumeValue">
+            {{ Math.round(state.masterVolume * 200) }}%
+          </div>
         </div>
       </div>
-    </div>
-    <div v-if="state.isEnabled" :class="$style.element">
-      <h3>入力デバイス</h3>
-      <div :class="$style.content">
-        <form-selector
-          v-if="!fetchFailed && audioInputDevices.length > 0"
-          v-model="state.audioInputDeviceId"
-          :options="audioInputDeviceOptions"
-        />
-        <p v-else>デバイスが取得できませんでした</p>
+      <div :class="$style.element">
+        <h3>入力デバイス</h3>
+        <div :class="$style.content">
+          <form-selector
+            v-if="!fetchFailed && audioInputDevices.length > 0"
+            v-model="state.audioInputDeviceId"
+            :options="audioInputDeviceOptions"
+          />
+          <p v-else>デバイスが取得できませんでした</p>
+        </div>
       </div>
-    </div>
-    <div v-if="state.isEnabled" :class="$style.element">
-      <div :class="$style.enable">
-        <h3>メッセージの読み上げ</h3>
-        <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+      <div :class="$style.element">
+        <div :class="$style.enable">
+          <h3>メッセージの読み上げ</h3>
+          <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+        </div>
+        <p :class="$style.content">
+          Qallしているチャンネルに投稿されたメッセージを読み上げます
+        </p>
       </div>
-      <p :class="$style.content">
-        Qallしているチャンネルに投稿されたメッセージを読み上げます
-      </p>
-    </div>
-    <div v-if="state.isTtsEnabled" :class="$style.element">
-      <h3>メッセージ読み上げの声</h3>
-      <div :class="$style.content">
-        <form-selector
-          v-if="voiceOptions.length > 0"
-          v-model="state.voiceName"
-          :options="voiceOptions"
-        />
-        <p v-else>読み上げ音声の声の種類が取得できませんでした</p>
-        <form-input
-          label="ピッチ"
-          type="number"
-          step="0.1"
-          v-model.number="state.voicePitch"
-        />
-        <form-input
-          label="速度"
-          type="number"
-          step="0.1"
-          v-model.number="state.voiceRate"
-        />
-        <form-input
-          label="音量"
-          type="number"
-          step="0.1"
-          v-model.number="state.voiceVolume"
-        />
+      <div v-if="state.isTtsEnabled" :class="$style.element">
+        <h3>メッセージ読み上げの声</h3>
+        <div :class="$style.content">
+          <form-selector
+            v-if="voiceOptions.length > 0"
+            v-model="state.voiceName"
+            :options="voiceOptions"
+          />
+          <p v-else>読み上げ音声の声の種類が取得できませんでした</p>
+          <form-input
+            label="ピッチ"
+            type="number"
+            step="0.1"
+            v-model.number="state.voicePitch"
+          />
+          <form-input
+            label="速度"
+            type="number"
+            step="0.1"
+            v-model.number="state.voiceRate"
+          />
+          <form-input
+            label="音量"
+            type="number"
+            step="0.1"
+            v-model.number="state.voiceVolume"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </section>
 </template>
 
