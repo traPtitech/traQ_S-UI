@@ -33,13 +33,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { changeChannelById } from '@/router/channel'
-import { rootChannelId } from '@/store/domain/channelTree/state'
+import { rootChannelId } from '@/_store/domain/channelTree/state'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelOptions from '@/use/channelOptions'
 import FormSelector from '@/components/UI/FormSelector.vue'

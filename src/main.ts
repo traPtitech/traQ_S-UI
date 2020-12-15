@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './_store'
 import boolAttr from './bool-attr'
 import vClickOutside from 'v-click-outside'
 import { setupGlobalFuncs } from './markdown-bridge'

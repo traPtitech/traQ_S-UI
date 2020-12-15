@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '@/use/modalOpener'
 

@@ -16,8 +16,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import { ViewInformation } from '@/store/ui/mainView/state'
+import store from '@/_store'
+import { ViewInformation } from '@/_store/ui/mainView/state'
 import ChannelViewHeader from '@/components/Main/MainView/ChannelView/Header.vue'
 import ClipsHeader from '@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
 import DMHeader from '@/components/Main/MainView/DMHeader/DMHeader.vue'

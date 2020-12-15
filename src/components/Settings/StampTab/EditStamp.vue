@@ -16,10 +16,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { StampId } from '@/types/entity-ids'
 import Stamp from './Stamp.vue'
-import { StampMap } from '@/store/entities'
+import { StampMap } from '@/_store/entities'
 
 export default defineComponent({
   name: 'EditStamp',

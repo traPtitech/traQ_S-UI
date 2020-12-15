@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import UserIcon from '@/components/UI/UserIcon.vue'

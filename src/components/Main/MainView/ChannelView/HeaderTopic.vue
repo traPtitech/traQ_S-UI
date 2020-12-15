@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import store from '@/_store'
 
 export default defineComponent({
   name: 'MainViewHeaderTopic',

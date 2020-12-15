@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, SetupContext, reactive, Ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'

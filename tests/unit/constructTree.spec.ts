@@ -1,5 +1,5 @@
-import { ChannelTree } from '@/store/domain/channelTree/state'
-import { constructTree, ChannelLike } from '@/store/domain/channelTree/actions'
+import { ChannelTree } from '@/_store/domain/channelTree/state'
+import { constructTree, ChannelLike } from '@/_store/domain/channelTree/actions'
 import { ChannelId } from '@/types/entity-ids'
 
 describe('constructTree', () => {

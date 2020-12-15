@@ -37,7 +37,7 @@ import { Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import store from '@/store'
+import store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
 

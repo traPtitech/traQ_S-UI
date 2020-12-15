@@ -47,7 +47,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath } from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -57,7 +57,7 @@ import { Stamp } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useStateDiff from '../use/stateDiff'
-import { ActiveUserMap } from '@/store/entities'
+import { ActiveUserMap } from '@/_store/entities'
 import { isValidStampName } from '@/lib/validate'
 
 const creatorOptions = computed(() =>

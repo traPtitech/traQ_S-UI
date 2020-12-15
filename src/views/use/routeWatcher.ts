@@ -1,5 +1,5 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '@/store'
+import store, { originalStore } from '@/_store'
 import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'

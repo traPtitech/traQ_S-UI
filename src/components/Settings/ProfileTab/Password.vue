@@ -39,7 +39,7 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import config from '@/config'
 import apis from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 
 interface State {
   old: string

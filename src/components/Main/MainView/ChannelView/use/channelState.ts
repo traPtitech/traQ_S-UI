@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { ChannelId } from '@/types/entity-ids'
 
 const useChannelState = (props: { channelId: ChannelId }) => {

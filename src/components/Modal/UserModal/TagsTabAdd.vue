@@ -24,7 +24,7 @@ import { defineComponent, ref, PropType, reactive } from 'vue'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
-import store from '@/store'
+import store from '@/_store'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import useMaxLength from '@/use/maxLength'
 

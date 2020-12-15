@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'

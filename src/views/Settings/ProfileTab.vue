@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import useStateDiff from '@/components/Settings/use/stateDiff'

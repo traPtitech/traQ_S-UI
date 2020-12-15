@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
-import store from '@/store'
+import store from '@/_store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
 import { teleportTargetName } from './ShareTargetMessageInput.vue'

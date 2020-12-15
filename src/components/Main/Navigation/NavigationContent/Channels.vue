@@ -33,10 +33,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
-import { constructTree } from '@/store/domain/channelTree/actions'
+import { constructTree } from '@/_store/domain/channelTree/actions'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'

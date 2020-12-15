@@ -13,12 +13,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, toRefs } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
-import { ActiveUserMap } from '@/store/entities'
+import { ActiveUserMap } from '@/_store/entities'
 
 // TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {

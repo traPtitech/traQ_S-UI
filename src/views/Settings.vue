@@ -23,7 +23,7 @@ import { defaultSettingsName } from '@/router/settings'
 import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
-import store from '@/store'
+import store from '@/_store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
 

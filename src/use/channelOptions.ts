@@ -1,5 +1,5 @@
 import { computed, Ref, unref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import { compareStringInsensitive } from '@/lib/util/string'
 import { nullUuid } from '@/lib/util/uuid'

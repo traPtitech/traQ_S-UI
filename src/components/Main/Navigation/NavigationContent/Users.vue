@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
@@ -47,7 +47,7 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
 import { isDefined } from '@/lib/util/array'
 import { ActiveUser } from '@/lib/user'
-import { ActiveUserMap } from '@/store/entities'
+import { ActiveUserMap } from '@/_store/entities'
 import DMActivityElement from './DMActivityElement.vue'
 
 const useUsersWithNotification = () => {

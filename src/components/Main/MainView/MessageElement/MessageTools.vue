@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'

@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeMount, watchEffect, Ref } from 'vue'
-import store from './store'
+import store from '@/_store'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'

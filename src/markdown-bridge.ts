@@ -1,4 +1,4 @@
-import store from '@/store'
+import store from '@/_store'
 import { UserId, UserGroupId } from '@/types/entity-ids'
 import { changeChannelByPath } from './router/channel'
 

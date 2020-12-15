@@ -38,7 +38,7 @@ import useAudio from './use/audio'
 import Icon from '@/components/UI/Icon.vue'
 import ChromeAudioTime from './ChromeAudioTime.vue'
 import ChromeAudioSlider from './ChromeAudioSlider.vue'
-import store from '@/store'
+import store from '@/_store'
 import { checkPinPSupport, isSafari } from '@/lib/util/browser'
 
 const safariFlag = isSafari()

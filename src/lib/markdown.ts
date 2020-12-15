@@ -1,5 +1,5 @@
 import { Store } from '@traptitech/traq-markdown-it'
-import store from '@/store'
+import store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
 

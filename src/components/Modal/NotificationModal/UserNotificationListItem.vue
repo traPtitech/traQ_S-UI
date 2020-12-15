@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { UserId } from '@/types/entity-ids'
 import Toggle from '@/components/UI/Toggle.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'

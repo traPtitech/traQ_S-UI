@@ -1,7 +1,7 @@
 import useChannelPath from '@/use/channelPath'
 import { canCreateChildChannel as canCreateChildChannel_ } from '@/lib/channel'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import store from '@/_store'
 import { nullUuid } from '@/lib/util/uuid'
 
 const useCanCreateChildChannel = () => {

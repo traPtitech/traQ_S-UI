@@ -23,7 +23,7 @@ import MessagesScroller from '@/components/Main/MainView/MessagesScroller/Messag
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
-import store from '@/store'
+import store from '@/_store'
 
 export default defineComponent({
   name: 'ChannelViewContent',

@@ -1,4 +1,4 @@
-import store from '@/store'
+import store from '@/_store'
 import { ChannelId } from '@/types/entity-ids'
 
 export const buildDescendantsChannelArray = (

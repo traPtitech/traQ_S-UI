@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'

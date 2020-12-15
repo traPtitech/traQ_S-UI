@@ -26,7 +26,7 @@ import {
   PropType,
   onMounted
 } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { MessageStampById } from './MessageStampList.vue'

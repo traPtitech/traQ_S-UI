@@ -1,6 +1,6 @@
-import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
+import { ChannelTree, ChannelTreeNode } from '@/_store/domain/channelTree/state'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import store from '@/_store'
 import { dmParentUuid } from '@/lib/util/uuid'
 import { constructUserPath, constructChannelPath } from '@/router'
 

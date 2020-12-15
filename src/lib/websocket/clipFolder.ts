@@ -6,7 +6,7 @@ import {
   ClipFolderMessageDeletedEvent
 } from './events'
 import apis from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 
 export const onClipFolderCreated = async (
   data: ClipFolderCreatedEvent['body']

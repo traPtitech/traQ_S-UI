@@ -1,4 +1,4 @@
-import store from '@/store'
+import store from '@/_store'
 import { computed, reactive } from 'vue'
 import {
   NavigationItemType,

@@ -38,7 +38,7 @@ import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/Sideba
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import { useQallSession } from './use/channelRTCSession'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import store from '@/store'
+import store from '@/_store'
 
 export default defineComponent({
   name: 'ChannelSidebar',

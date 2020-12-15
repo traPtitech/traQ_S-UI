@@ -11,7 +11,7 @@ import { getStringParam } from '@/lib/util/params'
 import ShareTarget from '@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
 import { RouteName } from '@/router'
-import store from '@/store'
+import store from '@/_store'
 import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({

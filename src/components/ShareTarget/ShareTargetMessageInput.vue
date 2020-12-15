@@ -38,7 +38,7 @@ import {
   shallowRef
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
-import store from '@/store'
+import store from '@/_store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useTextInput from '../Main/MainView/MessageInput/use/textInput'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'

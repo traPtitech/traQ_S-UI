@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { UserId } from '@/types/entity-ids'
 import { useUserModalOpener } from '@/use/modalOpener'
 

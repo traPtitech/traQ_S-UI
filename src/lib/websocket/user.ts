@@ -1,5 +1,5 @@
 import apis from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 import {
   UserJoinedEvent,
   UserLeftEvent,

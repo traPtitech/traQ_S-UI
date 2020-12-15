@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, watch } from 'vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
-import store from '@/store'
+import store from '@/_store'
 import { nullUuid } from '@/lib/util/uuid'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
