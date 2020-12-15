@@ -66,6 +66,12 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
+      - uses: actions/cache@v2
+        with:
+          path: public/fonts
+          key: font-build-${{ runner.os }}
+          restore-keys: |
+            font-build-${{ runner.os }}
       - name: npm ci
         run: npm ci
         env:
