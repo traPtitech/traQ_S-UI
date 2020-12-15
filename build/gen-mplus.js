@@ -100,6 +100,12 @@ const generateFontFace = (font, filename) => {
 }
 
 ;(async () => {
+  if (process.env.MAY_SKIP_FONT_GEN) {
+    if ((await fs.readdir('./public.fonts')).some(f => f.endsWith('.woff2'))) {
+      return
+    }
+  }
+
   const fonts = await getFontsInfo()
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
