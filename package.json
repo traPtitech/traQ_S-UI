@@ -51,7 +51,7 @@
     "@types/node": "^14.14.13",
     "@types/punycode": "^2.1.0",
     "@types/throttle-debounce": "^2.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
     "@vue/cli-plugin-babel": "^4.5.9",
     "@vue/cli-plugin-e2e-cypress": "^4.5.9",
