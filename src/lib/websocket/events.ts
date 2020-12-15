@@ -9,28 +9,28 @@ import {
 } from '@/types/entity-ids'
 import { ChannelViewer, WebRTCUserStateSessions } from '@traptitech/traq'
 
-export type WebSocketEvent =
-  | UserEvent
-  | ChannelEvent
-  | MessageEvent
-  | StampEvent
-  | ClipFolderEvent
+export type WebSocketEvent = UserEvent &
+  ChannelEvent &
+  MessageEvent &
+  StampEvent &
+  ClipFolderEvent
 
 /*
  * User
  */
-type UserEvent =
-  | UserJoinedEvent
-  | UserUpdatedEvent
-  | UserLeftEvent
-  | UserTagsUpdatedEvent
-  | UserIconUpdatedEvent
-  | UserOnlineEvent
-  | UserOfflineEvent
-  | UserWebRTCStateChangedEvent
-  | UserGroupCreatedEvent
-  | UserGroupUpdatedEvent
-  | UserGroupDeletedEvent
+type UserEvent = {
+  USER_JOINED: UserJoinedEvent
+  USER_UPDATED: UserUpdatedEvent
+  USER_LEFT: UserLeftEvent
+  USER_TAGS_UPDATED: UserTagsUpdatedEvent
+  USER_ICON_UPDATED: UserIconUpdatedEvent
+  USER_ONLINE: UserOnlineEvent
+  USER_OFFLINE: UserOfflineEvent
+  USER_WEBRTC_STATE_CHANGED: UserWebRTCStateChangedEvent
+  USER_GROUP_CREATED: UserGroupCreatedEvent
+  USER_GROUP_UPDATED: UserGroupUpdatedEvent
+  USER_GROUP_DELETED: UserGroupDeletedEvent
+}
 
 interface UserIdBody {
   id: UserId
@@ -40,201 +40,110 @@ interface UserGroupIdBody {
   id: UserGroupId
 }
 
-export interface UserJoinedEvent {
-  type: 'USER_JOINED'
-  body: UserIdBody
+export type UserJoinedEvent = UserIdBody
+export type UserUpdatedEvent = UserIdBody
+export type UserLeftEvent = UserIdBody
+export type UserTagsUpdatedEvent = UserIdBody
+export type UserIconUpdatedEvent = UserIdBody
+export type UserOnlineEvent = UserIdBody
+export type UserOfflineEvent = UserIdBody
+
+export type UserWebRTCStateChangedEvent = {
+  user_id: UserId
+  channel_id: ChannelId
+  sessions: WebRTCUserStateSessions[]
 }
 
-export interface UserUpdatedEvent {
-  type: 'USER_UPDATED'
-  body: UserIdBody
-}
-
-export interface UserLeftEvent {
-  type: 'USER_LEFT'
-  body: UserIdBody
-}
-
-export interface UserTagsUpdatedEvent {
-  type: 'USER_TAGS_UPDATED'
-  body: UserIdBody
-}
-
-export interface UserIconUpdatedEvent {
-  type: 'USER_ICON_UPDATED'
-  body: UserIdBody
-}
-
-export interface UserOnlineEvent {
-  type: 'USER_ONLINE'
-  body: UserIdBody
-}
-
-export interface UserOfflineEvent {
-  type: 'USER_OFFLINE'
-  body: UserIdBody
-}
-
-export interface UserWebRTCStateChangedEvent {
-  type: 'USER_WEBRTC_STATE_CHANGED'
-  body: {
-    user_id: UserId
-    channel_id: ChannelId
-    sessions: WebRTCUserStateSessions[]
-  }
-}
-
-export interface UserGroupCreatedEvent {
-  type: 'USER_GROUP_CREATED'
-  body: UserGroupIdBody
-}
-
-export interface UserGroupUpdatedEvent {
-  type: 'USER_GROUP_UPDATED'
-  body: UserGroupIdBody
-}
-
-export interface UserGroupDeletedEvent {
-  type: 'USER_GROUP_DELETED'
-  body: UserGroupIdBody
-}
+export type UserGroupCreatedEvent = UserGroupIdBody
+export type UserGroupUpdatedEvent = UserGroupIdBody
+export type UserGroupDeletedEvent = UserGroupIdBody
 
 /*
  * Channel
  */
-type ChannelEvent =
-  | ChannelCreatedEvent
-  | ChannelDeletedEvent
-  | ChannelUpdatedEvent
-  | ChannelStaredEvent
-  | ChannelUnstaredEvent
-  | ChannelViewersChangedEvent
-  | ChannelSubscribersChangedEvent
+type ChannelEvent = {
+  CHANNEL_CREATED: ChannelCreatedEvent
+  CHANNEL_DELETED: ChannelDeletedEvent
+  CHANNEL_UPDATED: ChannelUpdatedEvent
+  CHANNEL_STARED: ChannelStaredEvent
+  CHANNEL_UNSTARED: ChannelUnstaredEvent
+  CHANNEL_VIEWERS_CHANGED: ChannelViewersChangedEvent
+  CHANNEL_SUBSCRIBERS_CHANGED: ChannelSubscribersChangedEvent
+}
 
 interface ChannelIdBody {
   id: ChannelId
 }
 
-export interface ChannelCreatedEvent {
-  type: 'CHANNEL_CREATED'
-  body: ChannelIdBody
-}
-
-export interface ChannelDeletedEvent {
-  type: 'CHANNEL_DELETED'
-  body: ChannelIdBody
-}
-
-export interface ChannelUpdatedEvent {
-  type: 'CHANNEL_UPDATED'
-  body: ChannelIdBody
-}
-
-export interface ChannelStaredEvent {
-  type: 'CHANNEL_STARED'
-  body: ChannelIdBody
-}
-
-export interface ChannelUnstaredEvent {
-  type: 'CHANNEL_UNSTARED'
-  body: ChannelIdBody
-}
+export type ChannelCreatedEvent = ChannelIdBody
+export type ChannelDeletedEvent = ChannelIdBody
+export type ChannelUpdatedEvent = ChannelIdBody
+export type ChannelStaredEvent = ChannelIdBody
+export type ChannelUnstaredEvent = ChannelIdBody
 
 export interface ChannelViewersChangedEvent {
-  type: 'CHANNEL_VIEWERS_CHANGED'
-  body: {
-    id: ChannelId
-    viewers: ChannelViewer[]
-  }
+  id: ChannelId
+  viewers: ChannelViewer[]
 }
 
-export interface ChannelSubscribersChangedEvent {
-  type: 'CHANNEL_SUBSCRIBERS_CHANGED'
-  body: ChannelIdBody
-}
+export type ChannelSubscribersChangedEvent = ChannelIdBody
 
 /*
  * Message
  */
-type MessageEvent =
-  | MessageCreatedEvent
-  | MessageUpdatedEvent
-  | MessageDeletedEvent
-  | MessageReadEvent
-  | MessageStampedEvent
-  | MessageUnstampedEvent
-  | MessagePinnedEvent
-  | MessageUnpinnedEvent
+type MessageEvent = {
+  MESSAGE_CREATED: MessageCreatedEvent
+  MESSAGE_UPDATED: MessageUpdatedEvent
+  MESSAGE_DELETED: MessageDeletedEvent
+  MESSAGE_READ: MessageReadEvent
+  MESSAGE_STAMPED: MessageStampedEvent
+  MESSAGE_UNSTAMPED: MessageUnstampedEvent
+  MESSAGE_PINNED: MessagePinnedEvent
+  MESSAGE_UNPINNED: MessageUnpinnedEvent
+}
 
-interface MessageIdBody {
+type MessageIdBody = {
   id: MessageId
 }
 
-interface PinBody {
+type PinBody = {
   message_id: MessageId
   channel_id: ChannelId
 }
 
-export interface MessageCreatedEvent {
-  type: 'MESSAGE_CREATED'
-  body: MessageIdBody
-}
-
-export interface MessageUpdatedEvent {
-  type: 'MESSAGE_UPDATED'
-  body: MessageIdBody
-}
-
-export interface MessageDeletedEvent {
-  type: 'MESSAGE_DELETED'
-  body: MessageIdBody
-}
-
-export interface MessageReadEvent {
-  type: 'MESSAGE_READ'
-  body: MessageIdBody
-}
+export type MessageCreatedEvent = MessageIdBody
+export type MessageUpdatedEvent = MessageIdBody
+export type MessageDeletedEvent = MessageIdBody
+export type MessageReadEvent = MessageIdBody
 
 export interface MessageStampedEvent {
-  type: 'MESSAGE_STAMPED'
-  body: {
-    message_id: MessageId
-    user_id: UserId
-    stamp_id: StampId
-    count: number
-    created_at: string
-  }
+  message_id: MessageId
+  user_id: UserId
+  stamp_id: StampId
+  count: number
+  created_at: string
 }
 
 export interface MessageUnstampedEvent {
-  type: 'MESSAGE_UNSTAMPED'
-  body: {
-    message_id: MessageId
-    user_id: UserId
-    stamp_id: StampId
-  }
+  message_id: MessageId
+  user_id: UserId
+  stamp_id: StampId
 }
 
-export interface MessagePinnedEvent {
-  type: 'MESSAGE_PINNED'
-  body: PinBody
-}
-
-export interface MessageUnpinnedEvent {
-  type: 'MESSAGE_UNPINNED'
-  body: PinBody
-}
+export type MessagePinnedEvent = PinBody
+export type MessageUnpinnedEvent = PinBody
 
 /*
  * Stamp
  */
-type StampEvent =
-  | StampCreatedEvent
-  | StampUpdatedEvent
-  | StampDeletedEvent
-  | StampPaletteCreatedEvent
-  | StampPaletteUpdatedEvent
-  | StampPaletteDeletedEvent
+type StampEvent = {
+  STAMP_CREATED: StampCreatedEvent
+  STAMP_UPDATED: StampUpdatedEvent
+  STAMP_DELETED: StampDeletedEvent
+  STAMP_PALETTE_CREATED: StampPaletteCreatedEvent
+  STAMP_PALETTE_UPDATED: StampPaletteUpdatedEvent
+  STAMP_PALETTE_DELETED: StampPaletteDeletedEvent
+}
 
 interface StampIdBody {
   id: StampId
@@ -244,75 +153,35 @@ interface StampPaletteIdBody {
   id: StampPaletteId
 }
 
-export interface StampCreatedEvent {
-  type: 'STAMP_CREATED'
-  body: StampIdBody
-}
-
-export interface StampUpdatedEvent {
-  type: 'STAMP_UPDATED'
-  body: StampIdBody
-}
-
-export interface StampDeletedEvent {
-  type: 'STAMP_DELETED'
-  body: StampIdBody
-}
-
-export interface StampPaletteCreatedEvent {
-  type: 'STAMP_PALETTE_CREATED'
-  body: StampPaletteIdBody
-}
-
-export interface StampPaletteUpdatedEvent {
-  type: 'STAMP_PALETTE_UPDATED'
-  body: StampPaletteIdBody
-}
-
-export interface StampPaletteDeletedEvent {
-  type: 'STAMP_PALETTE_DELETED'
-  body: StampPaletteIdBody
-}
+export type StampCreatedEvent = StampIdBody
+export type StampUpdatedEvent = StampIdBody
+export type StampDeletedEvent = StampIdBody
+export type StampPaletteCreatedEvent = StampPaletteIdBody
+export type StampPaletteUpdatedEvent = StampPaletteIdBody
+export type StampPaletteDeletedEvent = StampPaletteIdBody
 
 /*
  * Clip Folder
  */
-type ClipFolderEvent =
-  | ClipFolderCreatedEvent
-  | ClipFolderUpdatedEvent
-  | ClipFolderDeletedEvent
-  | ClipFolderMessageAddedEvent
-  | ClipFolderMessageDeletedEvent
+type ClipFolderEvent = {
+  CLIP_FOLDER_CREATED: ClipFolderCreatedEvent
+  CLIP_FOLDER_UPDATED: ClipFolderUpdatedEvent
+  CLIP_FOLDER_DELETED: ClipFolderDeletedEvent
+  CLIP_FOLDER_MESSAGE_ADDED: ClipFolderMessageAddedEvent
+  CLIP_FOLDER_MESSAGE_DELETED: ClipFolderMessageDeletedEvent
+}
 
-interface ClipFolderIdBody {
+type ClipFolderIdBody = {
   id: ClipFolderId
 }
 
-interface ClipFolderIdAndMessageIdBody {
+type ClipFolderIdAndMessageIdBody = {
   folder_id: ClipFolderId
   message_id: MessageId
 }
 
-export interface ClipFolderCreatedEvent {
-  type: 'CLIP_FOLDER_CREATED'
-  body: ClipFolderIdBody
-}
-
-export interface ClipFolderUpdatedEvent {
-  type: 'CLIP_FOLDER_UPDATED'
-  body: ClipFolderIdBody
-}
-export interface ClipFolderDeletedEvent {
-  type: 'CLIP_FOLDER_DELETED'
-  body: ClipFolderIdBody
-}
-
-export interface ClipFolderMessageAddedEvent {
-  type: 'CLIP_FOLDER_MESSAGE_ADDED'
-  body: ClipFolderIdAndMessageIdBody
-}
-
-export interface ClipFolderMessageDeletedEvent {
-  type: 'CLIP_FOLDER_MESSAGE_DELETED'
-  body: ClipFolderIdAndMessageIdBody
-}
+export type ClipFolderCreatedEvent = ClipFolderIdBody
+export type ClipFolderUpdatedEvent = ClipFolderIdBody
+export type ClipFolderDeletedEvent = ClipFolderIdBody
+export type ClipFolderMessageAddedEvent = ClipFolderIdAndMessageIdBody
+export type ClipFolderMessageDeletedEvent = ClipFolderIdAndMessageIdBody

@@ -17,8 +17,9 @@ export const ws = new AutoReconnectWebSocket(
 )
 
 export const wsListener = createWebSocketListener(ws)
-wsListener.on('all', detail => {
-  onReceive(detail)
+wsListener.on('all', event => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onReceive(event as any)
 })
 
 export const setupWebSocket = () => {

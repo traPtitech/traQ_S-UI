@@ -100,7 +100,7 @@ export const mutations = defineMutations<S>()({
   deleteClipFolder: deleteMutation('clipFolders'),
   deleteOgpData: deleteMutation('ogpData'),
 
-  onMessageStamped(state, e: MessageStampedEvent['body']) {
+  onMessageStamped(state, e: MessageStampedEvent) {
     const message = state.messages[e.message_id]
     if (!message) return
 
@@ -127,7 +127,7 @@ export const mutations = defineMutations<S>()({
       message.stamps.push(stamp)
     }
   },
-  onMessageUnstamped(state, e: MessageUnstampedEvent['body']) {
+  onMessageUnstamped(state, e: MessageUnstampedEvent) {
     const message = state.messages[e.message_id]
     if (!message) return
 

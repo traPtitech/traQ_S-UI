@@ -21,7 +21,7 @@ const isCurrentChannel = (channelId: string) => {
   )
 }
 
-export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
+export const onChannelCreated = async ({ id }: ChannelCreatedEvent) => {
   const res = await apis.getChannel(id)
   if (res.data.parentId === dmParentUuid) {
     // dmが既にデータにあるときは何もしない
@@ -44,11 +44,11 @@ export const onChannelCreated = async ({ id }: ChannelCreatedEvent['body']) => {
   await store.dispatch.domain.channelTree.constructChannelTree()
 }
 
-export const onChannelDeleted = ({ id }: ChannelDeletedEvent['body']) => {
+export const onChannelDeleted = ({ id }: ChannelDeletedEvent) => {
   store.commit.entities.deleteChannel(id)
 }
 
-export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
+export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent) => {
   const { channelIdToPathString } = useChannelPath()
   const oldPath = channelIdToPathString(id)
 
@@ -98,23 +98,21 @@ export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent['body']) => {
   }
 }
 
-export const onChannelStared = (data: ChannelStaredEvent['body']) => {
+export const onChannelStared = (data: ChannelStaredEvent) => {
   store.commit.domain.me.addStaredChannel(data.id)
 }
 
-export const onChannelUnstared = (data: ChannelUnstaredEvent['body']) => {
+export const onChannelUnstared = (data: ChannelUnstaredEvent) => {
   store.commit.domain.me.deleteStaredChannel(data.id)
 }
 
-export const onChannelViewersChanged = (
-  data: ChannelViewersChangedEvent['body']
-) => {
+export const onChannelViewersChanged = (data: ChannelViewersChangedEvent) => {
   store.commit.domain.messagesView.setCurrentViewer(data.viewers)
 }
 
 export const onChannelSubscribersChanged = async ({
   id
-}: ChannelSubscribersChangedEvent['body']) => {
+}: ChannelSubscribersChangedEvent) => {
   if (isCurrentChannel(id)) {
     const subscribers = (await apis.getChannelSubscribers(id)).data
     store.commit.domain.messagesView.setSubscribers(subscribers)

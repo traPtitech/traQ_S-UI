@@ -21,7 +21,7 @@ const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
   )
 }
 
-export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
+export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
 
@@ -53,7 +53,7 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent['body']) => {
   })
 }
 
-export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
+export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   const res = await apis.getMessage(id)
   store.commit.entities.addMessage({ id, entity: res.data })
 
@@ -69,7 +69,7 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent['body']) => {
   })
 }
 
-export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
+export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
   store.commit.entities.deleteMessage(id)
 
   store.commit.domain.deleteActivity(id)
@@ -78,19 +78,19 @@ export const onMessageDeleted = async ({ id }: MessageDeletedEvent['body']) => {
   store.commit.domain.messagesView.removePinnedMessage(id)
 }
 
-export const onMessageRead = ({ id }: MessageReadEvent['body']) => {
+export const onMessageRead = ({ id }: MessageReadEvent) => {
   store.commit.domain.me.deleteUnreadChannel(id)
 }
 
-export const onMessageStamped = (data: MessageStampedEvent['body']) => {
+export const onMessageStamped = (data: MessageStampedEvent) => {
   store.commit.entities.onMessageStamped(data)
 }
 
-export const onMessageUnstamped = (data: MessageUnstampedEvent['body']) => {
+export const onMessageUnstamped = (data: MessageUnstampedEvent) => {
   store.commit.entities.onMessageUnstamped(data)
 }
 
-export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
+export const onMessagePinned = async (data: MessagePinnedEvent) => {
   if (!isMessageForCurrentChannel(data.channel_id)) {
     return
   }
@@ -108,7 +108,7 @@ export const onMessagePinned = async (data: MessagePinnedEvent['body']) => {
   }
 }
 
-export const onMessageUnpinned = async (data: MessageUnpinnedEvent['body']) => {
+export const onMessageUnpinned = async (data: MessageUnpinnedEvent) => {
   const message = store.state.entities.messages[data.message_id]
   if (message) {
     store.commit.entities.extendMessages({

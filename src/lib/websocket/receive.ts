@@ -47,131 +47,130 @@ import {
 } from './stamp'
 import { WebSocketEvent } from './events'
 
-export const onReceive = (data: string) => {
-  const event = JSON.parse(data) as WebSocketEvent
-
+export const onReceive = <T extends keyof WebSocketEvent>(event: {
+  type: T
+  body: WebSocketEvent[T]
+}) => {
   if (event.type === undefined) {
     // eslint-disable-next-line no-console
-    console.warn(`[WebSocket] Invalid Event Received: ${data}`)
+    console.warn(`[WebSocket] Invalid Event Received: ${event}`)
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const body = event.body as any
+
   switch (event.type) {
     case 'USER_JOINED':
-      onUserJoined(event.body)
+      onUserJoined(body)
       break
     case 'USER_UPDATED':
-      onUserUpdated(event.body)
+      onUserUpdated(body)
       break
     case 'USER_LEFT':
-      onUserLeft(event.body)
+      onUserLeft(body)
       break
     case 'USER_TAGS_UPDATED':
-      onUserTagsUpdated(event.body)
+      onUserTagsUpdated(body)
       break
     case 'USER_ICON_UPDATED':
-      onUserIconUpdated(event.body)
+      onUserIconUpdated(body)
       break
     case 'USER_ONLINE':
-      onUserOnline(event.body)
+      onUserOnline(body)
       break
     case 'USER_OFFLINE':
-      onUserOffline(event.body)
+      onUserOffline(body)
       break
     case 'USER_WEBRTC_STATE_CHANGED':
-      onUserWebRTCStateChanged(event.body)
+      onUserWebRTCStateChanged(body)
       break
     case 'USER_GROUP_CREATED':
-      onUserGroupCreated(event.body)
+      onUserGroupCreated(body)
       break
     case 'USER_GROUP_UPDATED':
-      onUserGroupUpdated(event.body)
+      onUserGroupUpdated(body)
       break
     case 'USER_GROUP_DELETED':
-      onUserGroupDeleted(event.body)
+      onUserGroupDeleted(body)
       break
     case 'CHANNEL_CREATED':
-      onChannelCreated(event.body)
+      onChannelCreated(body)
       break
     case 'CHANNEL_DELETED':
-      onChannelDeleted(event.body)
+      onChannelDeleted(body)
       break
     case 'CHANNEL_UPDATED':
-      onChannelUpdated(event.body)
+      onChannelUpdated(body)
       break
     case 'CHANNEL_STARED':
-      onChannelStared(event.body)
+      onChannelStared(body)
       break
     case 'CHANNEL_UNSTARED':
-      onChannelUnstared(event.body)
+      onChannelUnstared(body)
       break
     case 'CHANNEL_VIEWERS_CHANGED':
-      onChannelViewersChanged(event.body)
+      onChannelViewersChanged(body)
       break
     case 'CHANNEL_SUBSCRIBERS_CHANGED':
-      onChannelSubscribersChanged(event.body)
+      onChannelSubscribersChanged(body)
       break
     case 'MESSAGE_CREATED':
-      onMessageCreated(event.body)
+      onMessageCreated(body)
       break
     case 'MESSAGE_UPDATED':
-      onMessageUpdated(event.body)
+      onMessageUpdated(body)
       break
     case 'MESSAGE_DELETED':
-      onMessageDeleted(event.body)
+      onMessageDeleted(body)
       break
     case 'MESSAGE_READ':
-      onMessageRead(event.body)
+      onMessageRead(body)
       break
     case 'MESSAGE_STAMPED':
-      onMessageStamped(event.body)
+      onMessageStamped(body)
       break
     case 'MESSAGE_UNSTAMPED':
-      onMessageUnstamped(event.body)
+      onMessageUnstamped(body)
       break
     case 'MESSAGE_PINNED':
-      onMessagePinned(event.body)
+      onMessagePinned(body)
       break
     case 'MESSAGE_UNPINNED':
-      onMessageUnpinned(event.body)
+      onMessageUnpinned(body)
       break
     case 'STAMP_CREATED':
-      onStampCreated(event.body)
+      onStampCreated(body)
       break
     case 'STAMP_UPDATED':
-      onStampUpdated(event.body)
+      onStampUpdated(body)
       break
     case 'STAMP_DELETED':
-      onStampDeleted(event.body)
+      onStampDeleted(body)
       break
     case 'STAMP_PALETTE_CREATED':
-      onStampPaletteCreated(event.body)
+      onStampPaletteCreated(body)
       break
     case 'STAMP_PALETTE_UPDATED':
-      onStampPaletteUpdated(event.body)
+      onStampPaletteUpdated(body)
       break
     case 'STAMP_PALETTE_DELETED':
-      onStampPaletteDeleted(event.body)
+      onStampPaletteDeleted(body)
       break
     case 'CLIP_FOLDER_CREATED':
-      onClipFolderCreated(event.body)
+      onClipFolderCreated(body)
       break
     case 'CLIP_FOLDER_UPDATED':
-      onClipFolderUpdated(event.body)
+      onClipFolderUpdated(body)
       break
     case 'CLIP_FOLDER_DELETED':
-      onClipFolderDeleted(event.body)
+      onClipFolderDeleted(body)
       break
     case 'CLIP_FOLDER_MESSAGE_ADDED':
-      onClipFolderMessageAdded(event.body)
+      onClipFolderMessageAdded(body)
       break
     case 'CLIP_FOLDER_MESSAGE_DELETED':
-      onClipFolderMessageDeleted(event.body)
+      onClipFolderMessageDeleted(body)
       break
-    default: {
-      const strangeValue: never = event
-      // eslint-disable-next-line no-console
-      console.warn(`[WebSocket] Unknown event: `, strangeValue)
-    }
   }
 }

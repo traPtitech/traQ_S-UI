@@ -8,26 +8,22 @@ import {
 import apis from '@/lib/apis'
 import store from '@/_store'
 
-export const onClipFolderCreated = async (
-  data: ClipFolderCreatedEvent['body']
-) => {
+export const onClipFolderCreated = async (data: ClipFolderCreatedEvent) => {
   const res = await apis.getClipFolder(data.id)
   store.commit.entities.addClipFolder({ id: data.id, entity: res.data })
 }
 
-export const onClipFolderUpdated = async (
-  data: ClipFolderUpdatedEvent['body']
-) => {
+export const onClipFolderUpdated = async (data: ClipFolderUpdatedEvent) => {
   const res = await apis.getClipFolder(data.id)
   store.commit.entities.extendClipFolder({ [data.id]: res.data })
 }
 
-export const onClipFolderDeleted = (data: ClipFolderDeletedEvent['body']) => {
+export const onClipFolderDeleted = (data: ClipFolderDeletedEvent) => {
   store.commit.entities.deleteClipFolder(data.id)
 }
 
 export const onClipFolderMessageAdded = async (
-  data: ClipFolderMessageAddedEvent['body']
+  data: ClipFolderMessageAddedEvent
 ) => {
   const currentPrimaryView = store.state.ui.mainView.primaryView
   if (
@@ -44,7 +40,7 @@ export const onClipFolderMessageAdded = async (
 }
 
 export const onClipFolderMessageDeleted = (
-  data: ClipFolderMessageDeletedEvent['body']
+  data: ClipFolderMessageDeletedEvent
 ) => {
   const currentPrimaryView = store.state.ui.mainView.primaryView
   if (
