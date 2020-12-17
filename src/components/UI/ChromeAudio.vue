@@ -38,7 +38,7 @@ import useAudio from './use/audio'
 import Icon from '@/components/UI/Icon.vue'
 import ChromeAudioTime from './ChromeAudioTime.vue'
 import ChromeAudioSlider from './ChromeAudioSlider.vue'
-import store from '@/_store'
+import store from '@/store'
 import { checkPinPSupport, isSafari } from '@/lib/util/browser'
 
 const safariFlag = isSafari()
@@ -76,7 +76,7 @@ export default defineComponent({
     } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = async () => {
       const iconId =
-        store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+        store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
           ?.iconFileId ?? ''
       await startPinP(iconId)
     }

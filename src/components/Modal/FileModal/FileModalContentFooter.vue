@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
@@ -35,8 +36,8 @@ export default defineComponent({
   },
   setup(props, context) {
     const { fileMeta } = useFileMeta(props, context)
-    const user = computed(
-      () => store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+    const user = computed(() =>
+      store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
     )
     const createdAt = computed(() =>
       getCreatedDate(fileMeta.value?.createdAt ?? '')
@@ -56,7 +57,7 @@ export default defineComponent({
     const onClick = async () => {
       if (channelPath.value === '') return
       const pathCache = channelPath.value
-      await store.dispatch.ui.modal.clearModal()
+      await _store.dispatch.ui.modal.clearModal()
       changeChannelByPath(pathCache)
     }
 

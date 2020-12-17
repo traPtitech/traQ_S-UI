@@ -45,7 +45,6 @@ const deleteMutation = <
 }
 
 export const mutations = defineMutations<S>()({
-  setUsers: setMutation('users'),
   setMessages: setMutation('messages'),
   setChannels(state, payload: Record<ChannelId, Channel>) {
     state.channels = payload
@@ -61,7 +60,6 @@ export const mutations = defineMutations<S>()({
   setClipFolders: setMutation('clipFolders'),
   setOgpData: setMutation('ogpData'),
 
-  extendUsers: extendMutation('users'),
   extendMessages: extendMutation('messages'),
   extendChannels: extendMutation('channels'),
   extendDMChannels: extendMutation('dmChannels'),
@@ -74,7 +72,6 @@ export const mutations = defineMutations<S>()({
   extendClipFolder: extendMutation('clipFolders'),
   extendOgpData: extendMutation('ogpData'),
 
-  addUser: addMutation('users'),
   addMessage: addMutation('messages'),
   addChannel: addMutation('channels'),
   addDMChannel: addMutation('dmChannels'),
@@ -87,7 +84,6 @@ export const mutations = defineMutations<S>()({
   addClipFolder: addMutation('clipFolders'),
   addOgpData: addMutation('ogpData'),
 
-  deleteUser: deleteMutation('users'),
   deleteMessage: deleteMutation('messages'),
   deleteChannel: deleteMutation('channels'),
   deleteDMChannel: deleteMutation('dmChannels'),

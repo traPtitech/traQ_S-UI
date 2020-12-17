@@ -1,5 +1,6 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/_store'
+import _store, { moduleActionContext } from '@/_store'
+import store from '@/store'
 import { mainView } from './index'
 import {
   ClipFolderId,
@@ -19,13 +20,16 @@ export const actions = defineActions({
     payload: { channelId: ChannelId | DMChannelId; entryMessageId?: MessageId }
   ) {
     const { dispatch } = mainViewActionContext(context)
-    const DMChannel = store.state.entities.dmChannels[payload.channelId]
+    const DMChannel = _store.state.entities.dmChannels[payload.channelId]
     if (DMChannel) {
-      if (!(DMChannel.userId in store.state.entities.users)) {
-        await store.dispatch.entities.fetchUser(DMChannel.userId)
+      if (!store.state.entities.usersMap.has(DMChannel.userId)) {
+        await store.dispatch.entities.fetchUser({
+          userId: DMChannel.userId,
+          cacheStrategy: 'useCache'
+        })
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const user = store.state.entities.users[DMChannel.userId]!
+      const user = store.state.entities.usersMap.get(DMChannel.userId)!
 
       dispatch.changePrimaryViewToDM({
         ...payload,

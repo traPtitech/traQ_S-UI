@@ -1,4 +1,5 @@
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { UserId, UserGroupId } from '@/types/entity-ids'
 import { changeChannelByPath } from './router/channel'
 
@@ -27,9 +28,9 @@ interface ExtendedWindow extends Window {
 declare const window: ExtendedWindow
 
 const checkUserExistence = async (userId: UserId) => {
-  if (userId in store.state.entities.users) return true
+  if (store.state.entities.usersMap.has(userId)) return true
   try {
-    await store.dispatch.entities.fetchUser(userId)
+    await store.dispatch.entities.fetchUser({ userId })
     return true
   } catch {
     return false
@@ -37,17 +38,17 @@ const checkUserExistence = async (userId: UserId) => {
 }
 
 const checkGroupExistence = (userGroupId: UserGroupId) => {
-  return userGroupId in store.state.entities.userGroups
+  return userGroupId in _store.state.entities.userGroups
 }
 
 export const setupGlobalFuncs = () => {
   window.openUserModal = async (userId: UserId) => {
     if (!(await checkUserExistence(userId))) return
 
-    const user = store.state.entities.users[userId]
+    const user = store.state.entities.usersMap.get(userId)
     if (user?.bot && user.name.startsWith('Webhook#')) return
 
-    store.dispatch.ui.modal.pushModal({
+    _store.dispatch.ui.modal.pushModal({
       type: 'user',
       id: userId
     })
@@ -55,7 +56,7 @@ export const setupGlobalFuncs = () => {
 
   window.openGroupModal = (userGroupId: UserGroupId) => {
     if (!checkGroupExistence(userGroupId)) return
-    store.dispatch.ui.modal.pushModal({
+    _store.dispatch.ui.modal.pushModal({
       type: 'group',
       id: userGroupId
     })

@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import Toggle from '@/components/UI/Toggle.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -37,7 +37,7 @@ export default defineComponent({
       }
     })
     const name = computed(
-      () => store.state.entities.users[props.userId]?.name ?? ''
+      () => store.state.entities.usersMap.get(props.userId)?.name ?? ''
     )
     return { value, name }
   }

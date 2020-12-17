@@ -1,16 +1,10 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import {
-  entities,
-  StampMap,
-  UserMap,
-  ActiveUserMap,
-  Undefinedable
-} from './index'
+import { entities, StampMap } from '.'
 import { moduleGetterContext } from '@/_store'
-import { User, Stamp, UserGroup } from '@traptitech/traq'
+import { Stamp, UserGroup } from '@traptitech/traq'
 import { UserId, DMChannelId } from '@/types/entity-ids'
-import { isActive, ActiveUser } from '@/lib/user'
+import store from '@/store'
 
 const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
@@ -37,24 +31,9 @@ export const getters = defineGetters<S>()({
     const { getters } = entitiesGetterContext(args)
     return name => getters.stampNameTable[name]
   },
-  userByName(state): (name: string) => User | undefined {
-    return name => {
-      const loweredName = name.toLowerCase()
-      return Object.values(state.users).find(
-        user => user?.name.toLowerCase() === loweredName
-      )
-    }
-  },
   userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
-    return id => state.users[state.dmChannels[id].userId]?.name
-  },
-  activeUsers(state): Undefinedable<ActiveUserMap> {
-    return Object.fromEntries(
-      Object.entries(state.users as UserMap).filter((entry): entry is [
-        UserId,
-        ActiveUser
-      ] => isActive(entry[1]))
-    )
+    return id =>
+      store.state.entities.usersMap.get(state.dmChannels[id].userId)?.name
   },
   DMChannelUserIdTable(state) {
     return Object.fromEntries(

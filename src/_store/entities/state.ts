@@ -1,7 +1,6 @@
 import { UserGroup, StampPalette, Channel } from '@traptitech/traq'
 import { UserGroupId, StampPaletteId, ChannelId } from '@/types/entity-ids'
 import {
-  UserMap,
   MessageMap,
   Undefinedable,
   DMChannelMap,
@@ -14,7 +13,6 @@ import {
 } from '.'
 
 export type S = {
-  users: Undefinedable<UserMap>
   messages: Undefinedable<MessageMap>
   channels: Record<ChannelId, Channel>
   dmChannels: DMChannelMap
@@ -29,7 +27,6 @@ export type S = {
 }
 
 export const state: S = {
-  users: {},
   messages: {},
   channels: {},
   dmChannels: {},

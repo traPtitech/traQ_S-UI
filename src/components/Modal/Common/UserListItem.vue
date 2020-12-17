@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '@/use/modalOpener'
 
@@ -22,7 +22,7 @@ export default defineComponent({
     userId: { type: String, default: '' }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.users[props.userId])
+    const user = computed(() => store.state.entities.usersMap.get(props.userId))
     const name = computed(() => user.value?.displayName)
 
     const { isClickable, openModal } = useUserModalOpener(props, user)

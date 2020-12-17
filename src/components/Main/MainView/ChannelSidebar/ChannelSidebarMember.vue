@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
@@ -30,13 +31,13 @@ export default defineComponent({
   },
   setup(props) {
     const isForceNotification = computed(
-      () => store.state.entities.channels[props.channelId]?.force
+      () => _store.state.entities.channels[props.channelId]?.force
     )
-    const userIds = computed(() => store.state.domain.messagesView.subscribers)
+    const userIds = computed(() => _store.state.domain.messagesView.subscribers)
     const viewStates = computed(() =>
       userIds.value
         .map(id => ({
-          user: store.getters.entities.activeUsers[id],
+          user: store.getters.entities.activeUsersMap.get(id),
           active: props.viewerIds.includes(id)
         }))
         .filter(state => state.user !== undefined)

@@ -52,35 +52,11 @@ interface GetDirectMessagesParams extends BaseGetMessagesParams {
   userId: string
 }
 
-// 重複して取得が走らないようにする
-const fetchingUser = new Map<UserId, Promise<AxiosResponse<UserDetail>>>()
-
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, entities)
 
 export const actions = defineActions({
-  async fetchUser(context, userId: string) {
-    const { commit } = entitiesActionContext(context)
-    if (fetchingUser.has(userId)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const res = await fetchingUser.get(userId)!
-      return res.data
-    }
-
-    const promise = apis.getUser(userId)
-    fetchingUser.set(userId, promise)
-    const res = await promise
-
-    commit.addUser({ id: userId, entity: res.data })
-    fetchingUser.delete(userId)
-    return res.data
-  },
-  async fetchUsers(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getUsers()
-    commit.setUsers(reduceToRecord(res.data, 'id'))
-  },
   async fetchChannels(context) {
     const { commit } = entitiesActionContext(context)
     const res = await apis.getChannels(true)

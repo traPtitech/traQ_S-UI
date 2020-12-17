@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { UserId } from '@/types/entity-ids'
 import UserName from '@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
@@ -30,7 +30,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.users[props.userId])
+    const user = computed(() => store.state.entities.usersMap.get(props.userId))
 
     const onClick = () => {
       if (!user.value) return

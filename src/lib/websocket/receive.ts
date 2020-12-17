@@ -1,6 +1,4 @@
 import {
-  onUserJoined,
-  onUserLeft,
   onUserTagsUpdated,
   onUserIconUpdated,
   onUserOnline,
@@ -61,14 +59,8 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
   const body = event.body as any
 
   switch (event.type) {
-    case 'USER_JOINED':
-      onUserJoined(body)
-      break
     case 'USER_UPDATED':
       onUserUpdated(body)
-      break
-    case 'USER_LEFT':
-      onUserLeft(body)
       break
     case 'USER_TAGS_UPDATED':
       onUserTagsUpdated(body)

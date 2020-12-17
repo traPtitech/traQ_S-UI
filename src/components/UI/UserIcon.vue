@@ -15,7 +15,8 @@
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { useUserModalOpener } from '@/use/modalOpener'
 import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
 
@@ -47,9 +48,9 @@ export default defineComponent({
   },
   setup(props) {
     const user = computed(() =>
-      props.userId === store.state.domain.me.detail?.id
-        ? store.state.domain.me.detail
-        : store.state.entities.users[props.userId]
+      props.userId === _store.state.domain.me.detail?.id
+        ? _store.state.domain.me.detail
+        : store.state.entities.usersMap.get(props.userId)
     )
     const userIconFileId = computed(
       () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''

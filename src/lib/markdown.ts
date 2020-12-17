@@ -1,28 +1,30 @@
 import { Store } from '@traptitech/traq-markdown-it'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
+import { usersMapInitialFetchPromise } from '@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
 
 const storeProvider: Store = {
   getUser(id) {
-    return store.state.entities.users[id]
+    return store.state.entities.usersMap.get(id)
   },
   getChannel(id) {
-    return store.state.entities.channels[id]
+    return _store.state.entities.channels[id]
   },
   getChannelPath(id) {
     return channelIdToPathString(id)
   },
   getUserGroup(id) {
-    return store.state.entities.userGroups[id]
+    return _store.state.entities.userGroups[id]
   },
   getMe() {
-    return store.state.domain.me.detail
+    return _store.state.domain.me.detail
   },
   getStampByName(name) {
-    return store.getters.entities.stampByName(name)
+    return _store.getters.entities.stampByName(name)
   },
   getUserByName(name) {
     return store.getters.entities.userByName(name)
@@ -34,15 +36,20 @@ const md = (async () => {
   return new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 })()
 
+const initialFetchPromise = Promise.all([usersMapInitialFetchPromise])
+
 export const render = async (text: string) => {
+  await initialFetchPromise
   return (await md).render(text)
 }
 
 export const renderInline = async (text: string) => {
+  await initialFetchPromise
   return (await md).renderInline(text)
 }
 
 export const parse = async (text: string) => {
+  await initialFetchPromise
   return (await md).md.parse(text, {})
 }
 

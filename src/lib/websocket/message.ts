@@ -1,5 +1,6 @@
 import apis from '@/lib/apis'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import {
   MessageCreatedEvent,
   MessageUpdatedEvent,
@@ -14,7 +15,7 @@ import { MessageId } from '@/types/entity-ids'
 import { tts } from '../tts'
 
 const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
-  const currentView = store.state.ui.mainView.primaryView
+  const currentView = _store.state.ui.mainView.primaryView
   return (
     (currentView.type === 'channel' || currentView.type === 'dm') &&
     recievedChannelId === currentView.channelId
@@ -23,15 +24,16 @@ const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
 
 export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
-  store.commit.entities.addMessage({ id, entity: res.data })
+  _store.commit.entities.addMessage({ id, entity: res.data })
 
-  if (res.data.channelId in store.state.entities.channels) {
-    store.commit.domain.addActivity(res.data)
+  if (res.data.channelId in _store.state.entities.channels) {
+    _store.commit.domain.addActivity(res.data)
   }
 
-  if (res.data.userId !== store.state.domain.me.detail?.id) {
+  if (res.data.userId !== _store.state.domain.me.detail?.id) {
     const userDisplayName =
-      store.state.entities.users[res.data.userId]?.displayName ?? 'はてな'
+      store.state.entities.usersMap.get(res.data.userId)?.displayName ??
+      'はてな'
     tts.addQueue({
       channelId: res.data.channelId,
       userDisplayName,
@@ -41,53 +43,53 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {
     // 未読処理
-    const myId = store.state.domain.me.detail?.id
+    const myId = _store.state.domain.me.detail?.id
     if (res.data.userId !== myId) {
-      store.commit.domain.me.upsertUnreadChannel(res.data)
+      _store.commit.domain.me.upsertUnreadChannel(res.data)
     }
     return
   }
 
-  await store.dispatch.domain.messagesView.addAndRenderMessage({
+  await _store.dispatch.domain.messagesView.addAndRenderMessage({
     message: res.data
   })
 }
 
 export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   const res = await apis.getMessage(id)
-  store.commit.entities.addMessage({ id, entity: res.data })
+  _store.commit.entities.addMessage({ id, entity: res.data })
 
-  if (res.data.channelId in store.state.entities.channels) {
-    store.commit.domain.updateActivity(res.data)
+  if (res.data.channelId in _store.state.entities.channels) {
+    _store.commit.domain.updateActivity(res.data)
   }
 
   if (!isMessageForCurrentChannel(res.data.channelId)) {
     return
   }
-  await store.dispatch.domain.messagesView.updateAndRenderMessageId({
+  await _store.dispatch.domain.messagesView.updateAndRenderMessageId({
     message: res.data
   })
 }
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
-  store.commit.entities.deleteMessage(id)
+  _store.commit.entities.deleteMessage(id)
 
-  store.commit.domain.deleteActivity(id)
+  _store.commit.domain.deleteActivity(id)
 
-  store.commit.domain.messagesView.deleteMessageId(id)
-  store.commit.domain.messagesView.removePinnedMessage(id)
+  _store.commit.domain.messagesView.deleteMessageId(id)
+  _store.commit.domain.messagesView.removePinnedMessage(id)
 }
 
 export const onMessageRead = ({ id }: MessageReadEvent) => {
-  store.commit.domain.me.deleteUnreadChannel(id)
+  _store.commit.domain.me.deleteUnreadChannel(id)
 }
 
 export const onMessageStamped = (data: MessageStampedEvent) => {
-  store.commit.entities.onMessageStamped(data)
+  _store.commit.entities.onMessageStamped(data)
 }
 
 export const onMessageUnstamped = (data: MessageUnstampedEvent) => {
-  store.commit.entities.onMessageUnstamped(data)
+  _store.commit.entities.onMessageUnstamped(data)
 }
 
 export const onMessagePinned = async (data: MessagePinnedEvent) => {
@@ -98,22 +100,22 @@ export const onMessagePinned = async (data: MessagePinnedEvent) => {
     apis.getMessage(data.message_id),
     apis.getPin(data.message_id)
   ])
-  store.commit.domain.messagesView.addPinnedMessages({
+  _store.commit.domain.messagesView.addPinnedMessages({
     userId: pin.data.userId,
     message: message.data,
     pinnedAt: pin.data.pinnedAt
   })
-  if (store.state.entities.messages[data.message_id]) {
-    store.commit.entities.extendMessages({ [data.message_id]: message.data })
+  if (_store.state.entities.messages[data.message_id]) {
+    _store.commit.entities.extendMessages({ [data.message_id]: message.data })
   }
 }
 
 export const onMessageUnpinned = async (data: MessageUnpinnedEvent) => {
-  const message = store.state.entities.messages[data.message_id]
+  const message = _store.state.entities.messages[data.message_id]
   if (message) {
-    store.commit.entities.extendMessages({
+    _store.commit.entities.extendMessages({
       [data.message_id]: { ...message, pinned: false }
     })
   }
-  store.commit.domain.messagesView.removePinnedMessage(data.message_id)
+  _store.commit.domain.messagesView.removePinnedMessage(data.message_id)
 }

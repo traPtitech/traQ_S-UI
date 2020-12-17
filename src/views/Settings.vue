@@ -26,6 +26,7 @@ import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
 import store from '@/_store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
+import { usersMapInitialFetchPromise } from '@/store/entities/promises'
 
 const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
   const route = useRoute()
@@ -81,7 +82,7 @@ export default defineComponent({
         // ホームチャンネルの選択などに必要
         execIfEmpty('channels', store.dispatch.entities.fetchChannels),
         // スタンプの所有者変更に必要
-        execIfEmpty('users', store.dispatch.entities.fetchUsers)
+        usersMapInitialFetchPromise
       ])
 
       hasInitialFetchForSettingsDone.value = true

@@ -37,7 +37,7 @@ import { Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import store from '@/_store'
+import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -68,11 +68,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const userState = computed(
-      () => store.state.entities.users[props.message.userId]
+    const userState = computed(() =>
+      store.state.entities.usersMap.get(props.message.userId)
     )
     if (userState.value === undefined) {
-      store.dispatch.entities.fetchUser(props.message.userId)
+      store.dispatch.entities.fetchUser({ userId: props.message.userId })
     }
 
     const { channelIdToShortPathString } = useChannelPath()

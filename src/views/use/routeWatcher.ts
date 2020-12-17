@@ -1,5 +1,6 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '@/_store'
+import _store, { originalStore } from '@/_store'
+import store from '@/store'
 import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
@@ -7,23 +8,24 @@ import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { useRoute } from 'vue-router'
+import { usersMapInitialFetchPromise } from '@/store/entities/promises'
 
 type Views = 'none' | 'main' | 'not-found'
 
 const setUnreadState = (id: ChannelId | DMChannelId) => {
   // 未読の処理
   // TODO: 新着メッセージ基準設定などの処理
-  store.commit.domain.messagesView.unsetUnreadSince()
-  const unreadChannel = store.state.domain.me.unreadChannelsSet[id]
+  _store.commit.domain.messagesView.unsetUnreadSince()
+  const unreadChannel = _store.state.domain.me.unreadChannelsSet[id]
   if (unreadChannel) {
     if (
-      store.state.domain.me.subscriptionMap[id] > 0 ||
-      store.state.entities.dmChannels[id]
+      _store.state.domain.me.subscriptionMap[id] > 0 ||
+      _store.state.entities.dmChannels[id]
     ) {
-      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
+      _store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
     }
 
-    store.dispatch.domain.me.readChannel({ channelId: id })
+    _store.dispatch.domain.me.readChannel({ channelId: id })
   }
 }
 
@@ -52,7 +54,7 @@ const useRouteWatcher = () => {
 
   const useOpenChannel = async () => {
     await originalStore.restored
-    return computed(() => store.getters.app.browserSettings.defaultChannelName)
+    return computed(() => _store.getters.app.browserSettings.defaultChannelName)
   }
   const onRouteChangedToIndex = async () => {
     const openChannelPath = await useOpenChannel()
@@ -65,26 +67,26 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToNull = () => {
-    store.dispatch.ui.mainView.changePrimaryViewToNull()
+    _store.dispatch.ui.mainView.changePrimaryViewToNull()
     state.view = 'main'
   }
 
   const onRouteChangedToChannel = () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
-        store.state.domain.channelTree.channelTree
+        _store.state.domain.channelTree.channelTree
       )
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
       setUnreadState(id)
 
-      store.dispatch.ui.mainView.changePrimaryViewToChannel({
+      _store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: route.query?.message as string
       })
@@ -96,15 +98,17 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToUser = async () => {
+    // ユーザーの全件情報がないとユーザー名からユーザーIDがひけない
+    await usersMapInitialFetchPromise
     const user = store.getters.entities.userByName(state.currentRouteParam)
     try {
       if (!user) throw 'user not found'
 
-      let dmChannelId = store.getters.entities.DMChannelIdByUserId(user.id)
+      let dmChannelId = _store.getters.entities.DMChannelIdByUserId(user.id)
 
       if (!dmChannelId) {
         const { data } = await apis.getUserDMChannel(user.id)
-        store.commit.entities.addDMChannel({
+        _store.commit.entities.addDMChannel({
           id: data.id,
           entity: data
         })
@@ -114,7 +118,7 @@ const useRouteWatcher = () => {
 
       setUnreadState(dmChannelId)
 
-      store.dispatch.ui.mainView.changePrimaryViewToDM({
+      _store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
         entryMessageId: route.query?.message as string
@@ -131,27 +135,27 @@ const useRouteWatcher = () => {
     const id = state.idParam
     try {
       const clipFolder =
-        store.state.entities.clipFolders[id] ??
-        (await store.dispatch.entities.fetchClipFolder(id))
+        _store.state.entities.clipFolders[id] ??
+        (await _store.dispatch.entities.fetchClipFolder(id))
       changeViewTitle(clipFolder.name)
     } catch {
       state.view = 'not-found'
       return
     }
-    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    _store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
 
   const onRouteChangedToFile = async () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
     const fileId = state.idParam
-    if (!store.state.entities.fileMetaData[fileId]) {
-      await store.dispatch.entities.fetchFileMetaByFileId(fileId)
+    if (!_store.state.entities.fileMetaData[fileId]) {
+      await _store.dispatch.entities.fetchFileMetaByFileId(fileId)
     }
-    const file = store.state.entities.fileMetaData[fileId]
+    const file = _store.state.entities.fileMetaData[fileId]
 
     if (!file) {
       // ファイルがなかった
@@ -170,7 +174,7 @@ const useRouteWatcher = () => {
       try {
         channelId = channelPathToId(
           channelPath.split('/'),
-          store.state.domain.channelTree.channelTree
+          _store.state.domain.channelTree.channelTree
         )
       } catch (e) {
         state.view = 'not-found'
@@ -179,8 +183,8 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
-    if (store.state.ui.mainView.primaryView.type === 'null') {
-      store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
+    if (_store.state.ui.mainView.primaryView.type === 'null') {
+      _store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
     }
@@ -190,19 +194,19 @@ const useRouteWatcher = () => {
       id: fileId,
       relatedRoute: RouteName.File as const
     }
-    store.dispatch.ui.modal.replaceModal(modalPayload)
+    _store.dispatch.ui.modal.replaceModal(modalPayload)
     changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
 
   const onRouteChangedToMessage = async () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
     const messageId = state.idParam
     const message =
-      store.state.entities.messages[messageId] ??
-      (await store.dispatch.entities.fetchMessage(messageId))
+      _store.state.entities.messages[messageId] ??
+      (await _store.dispatch.entities.fetchMessage(messageId))
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'
@@ -211,16 +215,16 @@ const useRouteWatcher = () => {
 
     const channelId = message.channelId
 
-    if (channelId in store.state.entities.channels) {
+    if (channelId in _store.state.entities.channels) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
         path: constructChannelPath(channelIdToPathString(message.channelId)),
         query: { message: message.id }
       })
-    } else if (channelId in store.state.entities.dmChannels) {
-      const dmChannel = store.state.entities.dmChannels[channelId]
-      const user = store.state.entities.users[dmChannel.userId]
+    } else if (channelId in _store.state.entities.dmChannels) {
+      const dmChannel = _store.state.entities.dmChannels[channelId]
+      const user = store.state.entities.usersMap.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
         params: { user: user?.name ?? '' },
@@ -236,7 +240,7 @@ const useRouteWatcher = () => {
     routeParam: string,
     prevRouteParam: string
   ) => {
-    store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    _store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
@@ -246,7 +250,7 @@ const useRouteWatcher = () => {
     if (routeParam === prevRouteParam) {
       return
     }
-    if (!store.state.app.initialFetchCompleted) {
+    if (!_store.state.app.initialFetchCompleted) {
       onRouteChangedToNull()
       return
     }
@@ -268,12 +272,12 @@ const useRouteWatcher = () => {
       state.isInitialView &&
       history.state?.modalState &&
       !!history.state?.modalState[0]?.relatedRoute
-    store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+    _store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
 
     if (state.isInitialView && !isOnInitialModalRoute) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      if (store.state.ui.modal.modalState.length !== 0) {
-        store.commit.ui.modal.setState([])
+      if (_store.state.ui.modal.modalState.length !== 0) {
+        _store.commit.ui.modal.setState([])
       }
       history.replaceState({ ...history.state, modalState: [] }, '')
     }
@@ -284,7 +288,7 @@ const useRouteWatcher = () => {
 
   watch(
     computed(() =>
-      store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
+      _store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
     ),
     onRouteParamChange
   )

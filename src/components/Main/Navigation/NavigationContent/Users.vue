@@ -38,7 +38,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
@@ -47,16 +48,15 @@ import FilterInput from '@/components/UI/FilterInput.vue'
 import useTextFilter from '@/use/textFilter'
 import { isDefined } from '@/lib/util/array'
 import { ActiveUser } from '@/lib/user'
-import { ActiveUserMap } from '@/_store/entities'
 import DMActivityElement from './DMActivityElement.vue'
 
 const useUsersWithNotification = () => {
   const usersWithNotification = computed(() =>
-    Object.values(store.state.domain.me.unreadChannelsSet)
+    Object.values(_store.state.domain.me.unreadChannelsSet)
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )
-      .map(unread => store.state.entities.dmChannels[unread.channelId ?? ''])
+      .map(unread => _store.state.entities.dmChannels[unread.channelId ?? ''])
       .filter(isDefined)
       .map(({ userId }) => userId)
   )
@@ -69,13 +69,10 @@ interface UsersGradeList {
 }
 
 const useListByGradeName = () => {
-  const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
-  const activeUsers = computed(() => store.getters.entities.activeUsers)
+  const userGroups = computed(() => _store.getters.entities.gradeTypeUserGroups)
+  const activeUsersMap = computed(() => store.getters.entities.activeUsersMap)
   const listByGradeName = computed((): UsersGradeList[] => {
-    if (
-      userGroups.value.length === 0 ||
-      Object.keys(activeUsers.value).length === 0
-    ) {
+    if (userGroups.value.length === 0 || activeUsersMap.value.size === 0) {
       return []
     }
     const userGrades: UsersGradeList[] = []
@@ -84,7 +81,7 @@ const useListByGradeName = () => {
     // 学年グループ
     for (const group of userGroups.value) {
       const member = group.members
-        .map(member => activeUsers.value[member.id])
+        .map(member => activeUsersMap.value.get(member.id))
         .filter(isDefined)
         .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
       if (member.length === 0) continue // グループ内にメンバーが居ない場合は非表示
@@ -95,13 +92,13 @@ const useListByGradeName = () => {
     }
 
     // BOTグループ
-    const bots = Object.values(activeUsers.value as ActiveUserMap)
+    const bots = [...activeUsersMap.value.values()]
       .filter(user => user.bot)
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
-    const others = Object.values(activeUsers.value as ActiveUserMap)
+    const others = [...activeUsersMap.value.values()]
       .filter(user => !categorized.has(user.id))
       .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
 
@@ -119,9 +116,9 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const activeUsers = computed(() =>
-    Object.values(store.getters.entities.activeUsers as ActiveUserMap)
-  )
+  const activeUsers = computed(() => [
+    ...store.getters.entities.activeUsersMap.values()
+  ])
   const { textFilterState } = useTextFilter(activeUsers, 'name')
   return {
     userListFilterState: textFilterState

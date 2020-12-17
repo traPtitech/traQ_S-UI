@@ -26,7 +26,8 @@ import {
   PropType,
   onMounted
 } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import SpinNumber from '@/components/UI/SpinNumber.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { MessageStampById } from './MessageStampList.vue'
@@ -42,7 +43,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stamp.id]?.name ?? ''
+      () => _store.state.entities.stamps[props.stamp.id]?.name ?? ''
     )
 
     const state = reactive({
@@ -52,7 +53,7 @@ export default defineComponent({
           `:${stampName.value}:`,
           ...props.stamp.users.map(
             u =>
-              `${store.state.entities.users[u.id]?.displayName ?? ''}(${
+              `${store.state.entities.usersMap.get(u.id)?.displayName ?? ''}(${
                 u.count
               })`
           )

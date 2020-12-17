@@ -5,6 +5,8 @@ import { WebSocketEvent } from './events'
 type WebSocketListenerEventMap = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   all: (event: { type: keyof WebSocketEvent; body: WebSocketEvent }) => any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  reconnect: () => any
 } & {
   [Type in keyof WebSocketEvent]: (
     payload: WebSocketEvent[Type]
@@ -31,6 +33,9 @@ export const createWebSocketListener = (ws: AutoReconnectWebSocket) => {
       // eslint-disable-next-line no-console
       console.warn('[WebSocket] Failed to parse: ', e)
     }
+  })
+  ws.addEventListener('reconnect', () => {
+    listener.emit('reconnect')
   })
 
   // 外でemitできないようにOmitする

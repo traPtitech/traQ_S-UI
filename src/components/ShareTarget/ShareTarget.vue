@@ -63,7 +63,6 @@ export default defineComponent({
     // メッセージの投稿に必要
     Promise.all([
       store.dispatch.entities.fetchChannels(),
-      store.dispatch.entities.fetchUsers(),
       store.dispatch.entities.fetchUserGroups(),
       store.dispatch.entities.fetchStamps(),
       store.dispatch.domain.stampCategory.constructStampCategories(),

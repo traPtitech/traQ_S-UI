@@ -1,8 +1,6 @@
 import apis from '@/lib/apis'
 import store from '@/_store'
 import {
-  UserJoinedEvent,
-  UserLeftEvent,
   UserTagsUpdatedEvent,
   UserIconUpdatedEvent,
   UserOnlineEvent,
@@ -16,12 +14,8 @@ import {
 import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
 import { WebRTCUserState } from '@traptitech/traq'
 
-export const onUserJoined = async ({ id }: UserJoinedEvent) => {
-  store.dispatch.entities.fetchUser(id)
-}
-
 export const onUserUpdated = async ({ id }: UserUpdatedEvent) => {
-  const user = await store.dispatch.entities.fetchUser(id)
+  const { data: user } = await apis.getUser(id)
 
   if (store.state.domain.userDetails[id]) {
     store.commit.domain.setUserDetail(user)
@@ -33,10 +27,6 @@ export const onUserUpdated = async ({ id }: UserUpdatedEvent) => {
   }
 }
 
-export const onUserLeft = ({ id }: UserLeftEvent) => {
-  store.commit.entities.deleteUser(id)
-}
-
 export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent) => {
   if (store.state.domain.userDetails[id]) {
     store.dispatch.domain.fetchUserDetail(id)
@@ -44,7 +34,7 @@ export const onUserTagsUpdated = ({ id }: UserTagsUpdatedEvent) => {
 }
 
 export const onUserIconUpdated = async ({ id }: UserIconUpdatedEvent) => {
-  const user = await store.dispatch.entities.fetchUser(id)
+  const { data: user } = await apis.getUser(id)
 
   if (store.state.domain.userDetails[id]) {
     store.commit.domain.setUserDetail(user)

@@ -1,34 +1,40 @@
 import { onBeforeMount, onActivated } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import { ws } from '@/lib/websocket'
 import { performLoginCheck } from './loginCheck'
+
+// TODO: 各ルートで必要なものをとるように書き換える
+// Settings.vueに来たら～
+// Main.vueに来たら～
+// みたいに
 
 // Main以外(Settingsなど)からMainに飛んだ場合は二重にfetchが走るが、
 // レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
   await Promise.all([
-    store.dispatch.entities.fetchChannels(),
-    store.dispatch.domain.me.fetchUnreadChannels(),
     store.dispatch.entities.fetchUsers(),
+    _store.dispatch.entities.fetchChannels(),
+    _store.dispatch.domain.me.fetchUnreadChannels(),
     // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
     // メッセージのレンダリングにも必要なので待つ必要がある
-    store.dispatch.entities.fetchStamps()
+    _store.dispatch.entities.fetchStamps()
   ])
 
-  store.commit.app.setInitialFetchCompleted()
+  _store.commit.app.setInitialFetchCompleted()
 
-  store.dispatch.entities.fetchUserGroups()
-  store.dispatch.domain.stampCategory.constructStampCategories()
-  store.dispatch.entities.fetchStampPalettes()
-  store.dispatch.entities.fetchClipFolders()
-  store.dispatch.domain.fetchOnlineUsers()
-  store.dispatch.domain.me.fetchStaredChannels()
-  store.dispatch.domain.me.fetchStampHistory()
-  store.dispatch.app.rtc.fetchRTCState()
+  _store.dispatch.entities.fetchUserGroups()
+  _store.dispatch.domain.stampCategory.constructStampCategories()
+  _store.dispatch.entities.fetchStampPalettes()
+  _store.dispatch.entities.fetchClipFolders()
+  _store.dispatch.domain.fetchOnlineUsers()
+  _store.dispatch.domain.me.fetchStaredChannels()
+  _store.dispatch.domain.me.fetchStampHistory()
+  _store.dispatch.app.rtc.fetchRTCState()
 
-  await store.dispatch.domain.me.fetchSubscriptions()
-  store.dispatch.domain.channelTree.constructHomeChannelTree()
+  await _store.dispatch.domain.me.fetchSubscriptions()
+  _store.dispatch.domain.channelTree.constructHomeChannelTree()
 }
 
 const initialFetchIfPossible = async () => {
@@ -45,7 +51,7 @@ const initialFetchIfPossible = async () => {
  */
 const useInitialFetch = (afterLoginCheck: () => void) => {
   const hook = async () => {
-    if (store.state.app.initialFetchCompleted) return
+    if (_store.state.app.initialFetchCompleted) return
     try {
       await initialFetchIfPossible()
       afterLoginCheck()
