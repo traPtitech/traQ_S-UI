@@ -4,6 +4,7 @@ import { StampId, ChannelId } from '@/types/entity-ids'
 import { moduleGetterContext } from '@/_store'
 import { me } from '.'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import store from '@/store'
 
 const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
@@ -22,9 +23,8 @@ export const getters = defineGetters<S>()({
       .map(e => e[0])
     return history
   },
-  subscribedChannels(...args): ChannelId[] {
-    const { state, rootState } = meGetterContext(args)
-    return Object.values(rootState.entities.channels)
+  subscribedChannels(state): ChannelId[] {
+    return [...store.state.entities.channelsMap.values()]
       .filter(
         c =>
           (state.subscriptionMap[c.id] ?? ChannelSubscribeLevel.none) !==

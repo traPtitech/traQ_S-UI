@@ -1,5 +1,5 @@
 import { computed, Ref, unref } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import { compareStringInsensitive } from '@/lib/util/string'
 import { nullUuid } from '@/lib/util/uuid'
@@ -28,7 +28,7 @@ const useChannelOptions = (
   })
 
   const channelOptions = computed(() => {
-    const channels = Object.values(store.state.entities.channels)
+    const channels = [...store.state.entities.channelsMap.values()]
       .map(channel => ({
         key: channelIdToPathString(channel.id, true),
         value: channelToVal(channel)

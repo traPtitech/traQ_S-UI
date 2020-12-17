@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'MainViewHeaderTopic',
@@ -19,7 +19,7 @@ export default defineComponent({
   },
   setup(props) {
     const topic = computed(
-      () => store.state.entities.channels[props.channelId]?.topic
+      () => store.state.entities.channelsMap.get(props.channelId)?.topic
     )
     return { topic }
   }

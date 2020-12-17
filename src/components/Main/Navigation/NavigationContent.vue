@@ -19,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
-import store from '@/_store'
+import { defineComponent, PropType } from 'vue'
 import { NavigationItemType } from '@/components/Main/Navigation/use/navigationConstructor'
 import Home from './NavigationContent/Home.vue'
 import Channels from './NavigationContent/Channels.vue'
@@ -44,16 +43,6 @@ export default defineComponent({
       type: String as PropType<NavigationItemType>,
       default: 'home' as const
     }
-  },
-  setup() {
-    const state = reactive({
-      channels: computed(() => store.state.entities.channels)
-    })
-    const topLevelChannels = computed(
-      () => store.state.domain.channelTree.channelTree.children ?? []
-    )
-
-    return { state, topLevelChannels }
   }
 })
 </script>

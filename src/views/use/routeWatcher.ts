@@ -8,7 +8,10 @@ import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { useRoute } from 'vue-router'
-import { usersMapInitialFetchPromise } from '@/store/entities/promises'
+import {
+  bothChannelsMapInitialFetchPromise,
+  usersMapInitialFetchPromise
+} from '@/store/entities/promises'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -20,7 +23,7 @@ const setUnreadState = (id: ChannelId | DMChannelId) => {
   if (unreadChannel) {
     if (
       _store.state.domain.me.subscriptionMap[id] > 0 ||
-      _store.state.entities.dmChannels[id]
+      store.state.entities.dmChannelsMap.has(id)
     ) {
       _store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
     }
@@ -71,7 +74,9 @@ const useRouteWatcher = () => {
     state.view = 'main'
   }
 
-  const onRouteChangedToChannel = () => {
+  const onRouteChangedToChannel = async () => {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
     if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -104,14 +109,12 @@ const useRouteWatcher = () => {
     try {
       if (!user) throw 'user not found'
 
-      let dmChannelId = _store.getters.entities.DMChannelIdByUserId(user.id)
+      let dmChannelId = store.getters.entities.DMChannelIdByUserId(user.id)
 
       if (!dmChannelId) {
+        // TODO: いい感じにする
         const { data } = await apis.getUserDMChannel(user.id)
-        _store.commit.entities.addDMChannel({
-          id: data.id,
-          entity: data
-        })
+        store.commit.entities.setDmChannel(data)
         dmChannelId = data.id
       }
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
@@ -147,6 +150,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFile = async () => {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
     if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -200,6 +205,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToMessage = async () => {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
     if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
@@ -215,15 +222,18 @@ const useRouteWatcher = () => {
 
     const channelId = message.channelId
 
-    if (channelId in _store.state.entities.channels) {
+    if (store.state.entities.channelsMap.has(channelId)) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
         path: constructChannelPath(channelIdToPathString(message.channelId)),
         query: { message: message.id }
       })
-    } else if (channelId in _store.state.entities.dmChannels) {
-      const dmChannel = _store.state.entities.dmChannels[channelId]
+    } else if (store.state.entities.dmChannelsMap.has(channelId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const dmChannel = store.state.entities.dmChannelsMap.get(channelId)!
+      // ユーザーIDからユーザー名への変換に必要
+      await usersMapInitialFetchPromise
       const user = store.state.entities.usersMap.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
@@ -256,7 +266,7 @@ const useRouteWatcher = () => {
     }
 
     if (routeName === RouteName.Channel) {
-      onRouteChangedToChannel()
+      await onRouteChangedToChannel()
     } else if (routeName === RouteName.User) {
       await onRouteChangedToUser()
     } else if (routeName === RouteName.ClipFolders) {

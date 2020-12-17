@@ -23,7 +23,8 @@ import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '@/components/UI/SlideDown.vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { isDefined } from '@/lib/util/array'
 
 const useFolding = () => {
@@ -62,7 +63,7 @@ export default defineComponent({
     )
     const hasNotification = computed(() =>
       dmChannelIds.value.some(
-        id => !!store.state.domain.me.unreadChannelsSet[id]
+        id => !!_store.state.domain.me.unreadChannelsSet[id]
       )
     )
 

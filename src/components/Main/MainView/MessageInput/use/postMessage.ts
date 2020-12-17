@@ -12,12 +12,14 @@ import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import {
   usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
 ])
 
 /**
@@ -58,7 +60,7 @@ const usePostMessage = (
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
 
   const isForce = computed(
-    () => _store.state.entities.channels[props.channelId]?.force
+    () => store.state.entities.channelsMap.get(props.channelId)?.force
   )
   const confirmString = computed(
     () =>

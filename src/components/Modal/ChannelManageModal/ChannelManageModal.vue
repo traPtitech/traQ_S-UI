@@ -32,7 +32,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, SetupContext, reactive, Ref } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -70,12 +71,12 @@ const useManageChannel = (
       }
       await apis.editChannel(props.id, reqJson)
 
-      await store.dispatch.ui.modal.popModal()
+      await _store.dispatch.ui.modal.popModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'チャンネルの変更に失敗しました'
       })
@@ -99,12 +100,12 @@ export default defineComponent({
   setup(props, context) {
     const channel = computed(
       (): Required<PatchChannelRequest> => {
-        const c = store.state.entities.channels[props.id]
+        const c = store.state.entities.channelsMap.get(props.id)
         return {
-          name: c.name,
-          parent: c.parentId ?? nullUuid,
-          archived: c.archived,
-          force: c.force
+          name: c?.name ?? '',
+          parent: c?.parentId ?? nullUuid,
+          archived: c?.archived ?? false,
+          force: c?.force ?? false
         }
       }
     )
@@ -132,11 +133,12 @@ export default defineComponent({
           value !== props.id &&
           // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
           (channel.value.archived ||
-            !store.state.entities.channels[value]?.archived)
+            !store.state.entities.channelsMap.get(value)?.archived)
       )
     )
     const canToggleArchive = computed(
-      () => !store.state.entities.channels[channel.value.parent]?.archived
+      () =>
+        !store.state.entities.channelsMap.get(channel.value.parent)?.archived
     )
 
     return {

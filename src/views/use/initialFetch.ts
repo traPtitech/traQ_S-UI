@@ -15,7 +15,7 @@ const initialFetch = async () => {
   // 初回fetch
   await Promise.all([
     store.dispatch.entities.fetchUsers(),
-    _store.dispatch.entities.fetchChannels(),
+    store.dispatch.entities.fetchChannels(),
     _store.dispatch.domain.me.fetchUnreadChannels(),
     // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
     // メッセージのレンダリングにも必要なので待つ必要がある

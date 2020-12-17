@@ -33,7 +33,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
 import { constructTree } from '@/_store/domain/channelTree/actions'
@@ -52,11 +53,11 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 
 const useFilterStarChannel = () => {
   const filterStarChannel = computed(
-    () => store.state.app.browserSettings.filterStarChannel
+    () => _store.state.app.browserSettings.filterStarChannel
   )
 
   const toggleStarChannelFilter = () => {
-    store.commit.app.browserSettings.setFilterStarChannel(
+    _store.commit.app.browserSettings.setFilterStarChannel(
       !filterStarChannel.value
     )
   }
@@ -72,19 +73,21 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
     filterStarChannel.value
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
+            Object.keys(_store.state.domain.me.staredChannelSet).flatMap(v =>
               buildDescendantsChannelArray(v, false)
             )
           )
         ]
-      : Object.values(store.state.entities.channels).filter(ch => !ch.archived)
+      : [...store.state.entities.channelsMap.values()].filter(
+          ch => !ch.archived
+        )
   )
 }
 
 const useTopLevelChannels = () =>
   computed(
     () =>
-      store.state.domain.channelTree.channelTree.children.filter(
+      _store.state.domain.channelTree.channelTree.children.filter(
         channel => !channel.archived
       ) ?? []
   )
@@ -98,9 +101,9 @@ const useStaredChannels = () =>
           name: '',
           parentId: null,
           archived: false,
-          children: Object.keys(store.state.domain.me.staredChannelSet)
+          children: Object.keys(_store.state.domain.me.staredChannelSet)
         },
-        store.state.entities.channels
+        store.state.entities.channelsMap
       )?.children.filter(channel => !channel.archived) ?? []
   )
 
@@ -125,7 +128,7 @@ export default defineComponent({
     )
 
     const onClickButton = () => {
-      store.dispatch.ui.modal.pushModal({
+      _store.dispatch.ui.modal.pushModal({
         type: 'channel-create'
       })
     }

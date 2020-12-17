@@ -7,7 +7,6 @@ import {
   FileId,
   TagId,
   MessageId,
-  ChannelId,
   ClipFolderId,
   ExternalUrl
 } from '@/types/entity-ids'
@@ -54,12 +53,6 @@ export const entitiesActionContext = (
 ) => moduleActionContext(context, entities)
 
 export const actions = defineActions({
-  async fetchChannels(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getChannels(true)
-    commit.setChannels(reduceToRecord(res.data.public, 'id'))
-    commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
-  },
   async fetchStamps(context) {
     const { commit } = entitiesActionContext(context)
 
@@ -145,23 +138,6 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     const res = await apis.getTag(tagId)
     commit.addTags({ id: res.data.id, entity: res.data })
-  },
-  async createChannel(
-    context,
-    payload: { name: string; parent: ChannelId | null }
-  ) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.createChannel({
-      name: payload.name,
-      parent: payload.parent
-    })
-    commit.addChannel({ id: res.data.id, entity: res.data })
-    if (res.data.parentId) {
-      // 親チャンネルの`children`が不整合になるので再取得
-      const parentRes = await apis.getChannel(res.data.parentId)
-      commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
-    }
-    return res.data
   },
   async fetchClipFolders(context) {
     const { commit } = entitiesActionContext(context)

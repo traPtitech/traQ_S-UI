@@ -1,8 +1,6 @@
-import { Channel, MessageStamp } from '@traptitech/traq'
+import { MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId } from '@/types/entity-ids'
-import store from '..'
 import {
   MessageStampedEvent,
   MessageUnstampedEvent
@@ -46,11 +44,6 @@ const deleteMutation = <
 
 export const mutations = defineMutations<S>()({
   setMessages: setMutation('messages'),
-  setChannels(state, payload: Record<ChannelId, Channel>) {
-    state.channels = payload
-    store.dispatch.domain.channelTree.constructAllTrees()
-  },
-  setDMChannels: setMutation('dmChannels'),
   setStamps: setMutation('stamps'),
   setStampPalettes: setMutation('stampPalettes'),
   setWebhooks: setMutation('webhooks'),
@@ -60,8 +53,6 @@ export const mutations = defineMutations<S>()({
   setOgpData: setMutation('ogpData'),
 
   extendMessages: extendMutation('messages'),
-  extendChannels: extendMutation('channels'),
-  extendDMChannels: extendMutation('dmChannels'),
   extendStamps: extendMutation('stamps'),
   extendStampPalettes: extendMutation('stampPalettes'),
   extendWebhooks: extendMutation('webhooks'),
@@ -71,8 +62,6 @@ export const mutations = defineMutations<S>()({
   extendOgpData: extendMutation('ogpData'),
 
   addMessage: addMutation('messages'),
-  addChannel: addMutation('channels'),
-  addDMChannel: addMutation('dmChannels'),
   addStamp: addMutation('stamps'),
   addStampPalette: addMutation('stampPalettes'),
   addWebhook: addMutation('webhooks'),
@@ -82,8 +71,6 @@ export const mutations = defineMutations<S>()({
   addOgpData: addMutation('ogpData'),
 
   deleteMessage: deleteMutation('messages'),
-  deleteChannel: deleteMutation('channels'),
-  deleteDMChannel: deleteMutation('dmChannels'),
   deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteWebhook: deleteMutation('webhooks'),

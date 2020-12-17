@@ -1,4 +1,5 @@
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { computed, reactive } from 'vue'
 import {
   NavigationItemType,
@@ -64,24 +65,24 @@ export const ephemeralItems: Record<
 
 const useNavigationSelectorEntry = () => {
   const unreadChannels = computed(() =>
-    Object.values(store.state.domain.me.unreadChannelsSet)
+    Object.values(_store.state.domain.me.unreadChannelsSet)
   )
   const notificationState = reactive({
     channel: computed(() =>
-      unreadChannels.value.some(
-        c => c.channelId in store.state.entities.channels
+      unreadChannels.value.some(c =>
+        store.state.entities.channelsMap.has(c.channelId)
       )
     ),
     dm: computed(() =>
-      unreadChannels.value.some(
-        c => c.channelId in store.state.entities.dmChannels
+      unreadChannels.value.some(c =>
+        store.state.entities.dmChannelsMap.has(c.channelId)
       )
     )
   })
   const entries = computed(() => createItems(notificationState))
 
   const hasActiveQallSession = computed(() => {
-    return !!store.getters.app.rtc.qallSession
+    return !!_store.getters.app.rtc.qallSession
   })
   const ephemeralEntries = computed(() =>
     [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(

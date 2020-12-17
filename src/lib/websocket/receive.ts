@@ -8,7 +8,6 @@ import {
 } from './user'
 import {
   onChannelCreated,
-  onChannelDeleted,
   onChannelUpdated,
   onChannelStared,
   onChannelUnstared,
@@ -76,9 +75,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'CHANNEL_CREATED':
       onChannelCreated(body)
-      break
-    case 'CHANNEL_DELETED':
-      onChannelDeleted(body)
       break
     case 'CHANNEL_UPDATED':
       onChannelUpdated(body)

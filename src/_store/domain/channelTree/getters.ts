@@ -3,14 +3,14 @@ import { Channel } from '@traptitech/traq'
 import { S } from './state'
 import { moduleGetterContext } from '@/_store'
 import { channelTree } from './index'
+import store from '@/store'
 
 const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, channelTree)
 
 export const getters = defineGetters<S>()({
-  topLevelChannels(...args): Channel[] {
-    const { rootState } = getterContext(args)
-    return Object.values(rootState.entities.channels).filter(
+  topLevelChannels(): Channel[] {
+    return [...store.state.entities.channelsMap.values()].filter(
       channel => channel.parentId === undefined || channel.parentId === null
     )
   }

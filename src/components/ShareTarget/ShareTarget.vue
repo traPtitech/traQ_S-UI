@@ -62,7 +62,6 @@ export default defineComponent({
 
     // メッセージの投稿に必要
     Promise.all([
-      store.dispatch.entities.fetchChannels(),
       store.dispatch.entities.fetchStamps(),
       store.dispatch.domain.stampCategory.constructStampCategories(),
       store.dispatch.entities.fetchStampPalettes(),

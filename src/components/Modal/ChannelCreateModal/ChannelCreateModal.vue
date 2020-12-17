@@ -33,7 +33,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -65,21 +66,22 @@ const useCreateChannel = (state: State) => {
     }
 
     try {
+      // TODO: いい感じにする
       const channel = await store.dispatch.entities.createChannel({
         name: state.channelName,
         parent: state.parentChannelId
       })
 
       // 新規作成なのでホームチャンネルにならないため、全体のみ再構築
-      await store.dispatch.domain.channelTree.constructChannelTree()
+      await _store.dispatch.domain.channelTree.constructChannelTree()
 
-      await store.dispatch.ui.modal.popModal()
+      await _store.dispatch.ui.modal.popModal()
       changeChannelById(channel.id)
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネル作成に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'チャンネル作成に失敗しました'
       })
@@ -90,7 +92,7 @@ const useCreateChannel = (state: State) => {
 
 const useChannelOptionsForSelector = () => {
   const hasChannelEditPermission = computed(() =>
-    store.state.domain.me.detail?.permissions.includes(
+    _store.state.domain.me.detail?.permissions.includes(
       UserPermission.EditChannel
     )
   )

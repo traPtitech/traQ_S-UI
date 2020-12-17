@@ -1,14 +1,16 @@
-import store from '@/_store'
+import { isDefined } from '@/lib/util/array'
+import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 
 export const buildDescendantsChannelArray = (
   id: ChannelId,
   containArchive: boolean
 ) => {
-  if (!(id in store.state.entities.channels)) {
+  if (!store.state.entities.channelsMap.has(id)) {
     throw `channelIdToPath: No channel: ${id}`
   }
-  const channel = store.state.entities.channels[id]
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const channel = store.state.entities.channelsMap.get(id)!
   if (channel.archived) return []
 
   const result = [channel]
@@ -16,7 +18,8 @@ export const buildDescendantsChannelArray = (
   while (result.length !== i + 1 || result[i].children.length !== 0) {
     result.push(
       ...result[i].children
-        .map(c => store.state.entities.channels[c])
+        .map(c => store.state.entities.channelsMap.get(c))
+        .filter(isDefined)
         .filter(ch => (containArchive ? !ch.archived : ch))
     )
     i++

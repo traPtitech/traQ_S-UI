@@ -2,15 +2,16 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from '.'
 import { ActionContext } from 'vuex'
-import { UserGroupId, UserId } from '@/types/entity-ids'
+import { ChannelId, DMChannelId, UserGroupId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import { User, UserGroup } from '@traptitech/traq'
+import { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
 import {
   userGroupsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from './promises'
 import { AxiosResponse } from 'axios'
+import { arrayToMap } from '@/lib/util/map'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -28,6 +29,9 @@ const getUser = createSingleflight(apis.getUser.bind(apis))
 const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
+const getChannel = createSingleflight(apis.getChannel.bind(apis))
+const getDmChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
+const getChannels = createSingleflight(apis.getChannels.bind(apis))
 
 /**
  * キャッシュを使いつつ単体を取得する
@@ -108,7 +112,7 @@ export const actions = defineActions({
     }
 
     const [{ data: users }, shared] = await getUsers()
-    const usersMap = new Map(users.map(user => [user.id, user]))
+    const usersMap = arrayToMap(users, 'id')
     if (!shared) {
       commit.setUsersMap(usersMap)
     }
@@ -150,9 +154,7 @@ export const actions = defineActions({
     }
 
     const [{ data: userGroups }, shared] = await getUserGroups()
-    const userGroupsMap = new Map(
-      userGroups.map(userGroup => [userGroup.id, userGroup])
-    )
+    const userGroupsMap = arrayToMap(userGroups, 'id')
     if (!shared) {
       commit.setUserGroupsMap(userGroupsMap)
     }
@@ -161,5 +163,48 @@ export const actions = defineActions({
   deleteUserGroup(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteUserGroup(userId)
+  },
+
+  // TODO: fetchChannel
+  // TODO: fetchDmChannel
+  async fetchChannels(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<[Map<ChannelId, Channel>, Map<DMChannelId, DMChannel>]> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.bothChannelsMapFetched) {
+      return [state.channelsMap, state.dmChannelsMap]
+    }
+
+    const [{ data: channels }, shared] = await getChannels(true)
+    const channelsMap = arrayToMap(channels.public, 'id')
+    const dmChannelsMap = arrayToMap(channels.dm, 'id')
+    if (!shared) {
+      commit.setBothChannelsMap([channelsMap, dmChannelsMap])
+    }
+    return [channelsMap, dmChannelsMap]
+  },
+  deleteChannel(context, channelId: ChannelId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteChannel(channelId)
+  },
+  // TODO: どうやるのがよいか考える
+  async createChannel(
+    context,
+    payload: { name: string; parent: ChannelId | null }
+  ) {
+    const { commit } = entitiesActionContext(context)
+    const { data: channel } = await apis.createChannel(payload)
+    commit.setChannel(channel)
+    if (channel.parentId) {
+      // 親チャンネルの`children`が不整合になるので再取得
+      const [{ data: parentChannel }, shared] = await getChannel(
+        channel.parentId
+      )
+      if (!shared) {
+        commit.setChannel(parentChannel)
+      }
+    }
+    return channel
   }
 })

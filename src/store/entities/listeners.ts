@@ -24,8 +24,20 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.deleteUserGroup(id)
   })
 
+  listener.on('CHANNEL_CREATED', ({ id }) => {
+    // TODO: いい感じにする
+  })
+  listener.on('CHANNEL_UPDATED', ({ id }) => {
+    // TODO: いい感じにする
+  })
+  listener.on('CHANNEL_DELETED', ({ id }) => {
+    // DMは削除されない
+    dispatch.deleteChannel(id)
+  })
+
   listener.on('reconnect', () => {
     dispatch.fetchUsers({ force: true })
     dispatch.fetchUserGroups({ force: true })
+    dispatch.fetchChannels({ force: true })
   })
 })

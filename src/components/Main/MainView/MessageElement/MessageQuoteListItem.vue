@@ -25,7 +25,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
@@ -50,18 +51,19 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() => _store.state.entities.messages[props.messageId]),
       shouldShow: computed(
         (): boolean =>
           !!state.message &&
           // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
-          (!store.state.entities.dmChannels[state.message.channelId] ||
+          (!store.state.entities.dmChannelsMap.has(state.message.channelId) ||
             state.message.channelId === props.parentMessageChannelId)
       ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          _store.state.domain.messagesView.renderedContentMap[
+            props.messageId
+          ] ?? ''
       )
     })
     return { state }

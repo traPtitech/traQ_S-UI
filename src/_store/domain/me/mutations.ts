@@ -8,15 +8,16 @@ import {
   Message
 } from '@traptitech/traq'
 import { detectMentionOfMe } from '@/lib/detector'
-import store from '@/_store'
+import _store from '@/_store'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
 import { removeNotification } from '@/lib/firebase'
+import store from '@/store'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 const updateBadge = async () => {
   if (!isBadgingAPISupported) return
 
-  const unreadChannelsSet = store.state.domain.me.unreadChannelsSet
+  const unreadChannelsSet = _store.state.domain.me.unreadChannelsSet
 
   const unreadCount = Object.entries(unreadChannelsSet).reduce(
     (acc, [, current]) => acc + current.count,
@@ -52,12 +53,12 @@ export const mutations = defineMutations<S>()({
         message.content,
         state.detail?.id ?? '',
         state.detail?.groups ?? []
-      ) || store.state.entities.channels[message.channelId]?.force
+      ) || !!store.state.entities.channelsMap.get(message.channelId)?.force
 
     if (
       !(
         state.subscriptionMap[message.channelId] > 0 ||
-        store.state.entities.dmChannels[message.channelId] ||
+        store.state.entities.dmChannelsMap.get(message.channelId) ||
         noticeable
       )
     )

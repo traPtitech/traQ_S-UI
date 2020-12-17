@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/_store'
+import { moduleActionContext } from '@/_store'
 import { messagesView } from './index'
 import { ChannelId, MessageId, StampId, ClipFolderId } from '@/types/entity-ids'
 import { ChannelViewState, Message } from '@traptitech/traq'
@@ -12,6 +12,7 @@ import {
   isMessage,
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
+import store from '@/store'
 
 export const messagesViewActionContext = (
   context: ActionContext<unknown, unknown>
@@ -53,7 +54,7 @@ export const actions = defineActions({
     }
     if (
       !payload.isDM &&
-      !rootState.entities.channels[payload.channelId]?.force
+      !store.state.entities.channelsMap.get(payload.channelId)?.force
     ) {
       dispatch.fetchSubscribers()
     }
@@ -168,20 +169,21 @@ export const actions = defineActions({
     })
   },
   async addAndRenderMessage(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.addMessageId(payload.message.id)
-    store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
+    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.updateMessageId(payload.message.id)
-    store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
+    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
-  async addStamp(_, payload: { messageId: MessageId; stampId: StampId }) {
+  async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
+    const { rootCommit } = messagesViewActionContext(context)
     apis.addMessageStamp(payload.messageId, payload.stampId)
-    store.commit.domain.me.upsertLocalStampHistory({
+    rootCommit.domain.me.upsertLocalStampHistory({
       stampId: payload.stampId,
       datetime: new Date()
     })

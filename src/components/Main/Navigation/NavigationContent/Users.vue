@@ -56,7 +56,9 @@ const useUsersWithNotification = () => {
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )
-      .map(unread => _store.state.entities.dmChannels[unread.channelId ?? ''])
+      .map(unread =>
+        store.state.entities.dmChannelsMap.get(unread.channelId ?? '')
+      )
       .filter(isDefined)
       .map(({ userId }) => userId)
   )

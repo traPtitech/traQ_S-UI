@@ -38,7 +38,7 @@ import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/Sideba
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import { useQallSession } from './use/channelRTCSession'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'ChannelSidebar',
@@ -70,7 +70,7 @@ export default defineComponent({
     } = useChannelSidebarCommon()
 
     const channelName = computed(
-      () => store.state.entities.channels[props.channelId ?? '']?.name ?? ''
+      () => store.state.entities.channelsMap.get(props.channelId)?.name ?? ''
     )
 
     const { sessionUserIds: qallUserIds } = useQallSession(props)

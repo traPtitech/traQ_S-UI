@@ -1,9 +1,8 @@
-import { StampPalette, Channel } from '@traptitech/traq'
-import { StampPaletteId, ChannelId } from '@/types/entity-ids'
+import { StampPalette } from '@traptitech/traq'
+import { StampPaletteId } from '@/types/entity-ids'
 import {
   MessageMap,
   Undefinedable,
-  DMChannelMap,
   WebhookMap,
   FileMetaDataMap,
   TagMap,
@@ -14,8 +13,6 @@ import {
 
 export type S = {
   messages: Undefinedable<MessageMap>
-  channels: Record<ChannelId, Channel>
-  dmChannels: DMChannelMap
   stamps: Undefinedable<StampMap>
   stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Undefinedable<WebhookMap>
@@ -27,8 +24,6 @@ export type S = {
 
 export const state: S = {
   messages: {},
-  channels: {},
-  dmChannels: {},
   stamps: {},
   stampPalettes: {},
   webhooks: {},

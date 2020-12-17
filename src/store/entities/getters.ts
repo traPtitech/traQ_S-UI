@@ -4,7 +4,7 @@ import { entities } from './index'
 import { moduleGetterContext } from '@/store'
 import { User, UserGroup } from '@traptitech/traq'
 import { ActiveUser, isActive } from '@/lib/user'
-import { UserId } from '@/types/entity-ids'
+import { DMChannelId, UserId } from '@/types/entity-ids'
 
 const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
@@ -46,5 +46,19 @@ export const getters = defineGetters<S>()({
         userGroup => userGroup?.name.toLowerCase() === loweredName
       )
     }
+  },
+
+  userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
+    return id => {
+      const userId = state.dmChannelsMap.get(id)?.userId
+      return userId ? state.usersMap.get(userId)?.name : undefined
+    }
+  },
+  DMChannelUserIdMap(state) {
+    return new Map([...state.dmChannelsMap.values()].map(c => [c.userId, c.id]))
+  },
+  DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return id => getters.DMChannelUserIdMap.get(id)
   }
 })

@@ -6,17 +6,18 @@ import { ChannelId } from '@/types/entity-ids'
 import { channelTree } from './index'
 import { ChannelTreeNode, rootChannelId } from './state'
 import { ActionContext } from 'vuex'
+import store from '@/store'
 
 export const channelTreeActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, channelTree)
 
 const channelNameSortFunction = (
-  channelEntities: Record<ChannelId, ChannelLike>
+  channelEntities: Map<ChannelId, ChannelLike>
 ) => (node1: ChannelTreeNode, node2: ChannelTreeNode) => {
   // sort by channel name
-  const name1 = channelEntities[node1.id].name.toUpperCase()
-  const name2 = channelEntities[node2.id].name.toUpperCase()
+  const name1 = channelEntities.get(node1.id)?.name.toUpperCase()
+  const name2 = channelEntities.get(node2.id)?.name.toUpperCase()
   return compareString(name1, name2)
 }
 
@@ -27,7 +28,7 @@ export type ChannelLike = Pick<
 
 export const constructTree = (
   channel: ChannelLike,
-  channelEntities: Record<ChannelId, ChannelLike>,
+  channelEntities: Map<ChannelId, ChannelLike>,
   subscribedChannels?: Set<ChannelId>
 ): ChannelTreeNode | undefined => {
   const isRootChannel = channel.id === rootChannelId
@@ -50,7 +51,7 @@ export const constructTree = (
   /** 表示しないものをフィルタした子孫チャンネル */
   const children = channel.children
     .reduce((acc, id) => {
-      const child = channelEntities[id]
+      const child = channelEntities.get(id)
       if (!child) {
         return acc
       }
@@ -103,7 +104,7 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels
+          store.state.entities.channelsMap
         )?.children ?? []
     }
     commit.setChannelTree(tree)
@@ -118,7 +119,7 @@ export const actions = defineActions({
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
-      Object.values(rootState.entities.channels)
+      [...store.state.entities.channelsMap.values()]
         .filter(c => c.force)
         .map(c => c.id)
     )
@@ -132,7 +133,7 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels,
+          store.state.entities.channelsMap,
           new Set(subscribedOrForceChannels)
         )?.children ?? []
     }

@@ -31,7 +31,7 @@ export default defineComponent({
   },
   setup(props) {
     const isForceNotification = computed(
-      () => _store.state.entities.channels[props.channelId]?.force
+      () => store.state.entities.channelsMap.get(props.channelId)?.force
     )
     const userIds = computed(() => _store.state.domain.messagesView.subscribers)
     const viewStates = computed(() =>

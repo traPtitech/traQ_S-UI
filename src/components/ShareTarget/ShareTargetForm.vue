@@ -22,7 +22,8 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, watch } from 'vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { nullUuid } from '@/lib/util/uuid'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
@@ -44,7 +45,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const homeChannelId = computed(
-      () => store.state.domain.me.detail?.homeChannel ?? nullUuid
+      () => _store.state.domain.me.detail?.homeChannel ?? nullUuid
     )
 
     store.dispatch.entities.fetchChannels()

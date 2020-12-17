@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import _store, { moduleActionContext } from '@/_store'
+import { moduleActionContext } from '@/_store'
 import store from '@/store'
 import { mainView } from './index'
 import {
@@ -20,7 +20,7 @@ export const actions = defineActions({
     payload: { channelId: ChannelId | DMChannelId; entryMessageId?: MessageId }
   ) {
     const { dispatch } = mainViewActionContext(context)
-    const DMChannel = _store.state.entities.dmChannels[payload.channelId]
+    const DMChannel = store.state.entities.dmChannelsMap.get(payload.channelId)
     if (DMChannel) {
       if (!store.state.entities.usersMap.has(DMChannel.userId)) {
         await store.dispatch.entities.fetchUser({

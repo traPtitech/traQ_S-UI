@@ -5,7 +5,8 @@ import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
 import {
   usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
@@ -15,7 +16,7 @@ const storeProvider: Store = {
     return store.state.entities.usersMap.get(id)
   },
   getChannel(id) {
-    return _store.state.entities.channels[id]
+    return store.state.entities.channelsMap.get(id)
   },
   getChannelPath(id) {
     return channelIdToPathString(id)
@@ -41,7 +42,8 @@ const md = (async () => {
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
 ])
 
 export const render = async (text: string) => {

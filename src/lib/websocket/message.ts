@@ -26,7 +26,7 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
   _store.commit.entities.addMessage({ id, entity: res.data })
 
-  if (res.data.channelId in _store.state.entities.channels) {
+  if (store.state.entities.channelsMap.has(res.data.channelId)) {
     _store.commit.domain.addActivity(res.data)
   }
 
@@ -59,7 +59,7 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   const res = await apis.getMessage(id)
   _store.commit.entities.addMessage({ id, entity: res.data })
 
-  if (res.data.channelId in _store.state.entities.channels) {
+  if (store.state.entities.channelsMap.has(res.data.channelId)) {
     _store.commit.domain.updateActivity(res.data)
   }
 

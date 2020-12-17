@@ -45,7 +45,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
@@ -59,27 +60,27 @@ export default defineComponent({
     NavigationContentContainer
   },
   setup() {
-    const homeChannel = computed(
-      () =>
-        store.state.entities.channels[
-          store.state.domain.me.detail?.homeChannel ?? ''
-        ]
+    const homeChannel = computed(() =>
+      store.state.entities.channelsMap.get(
+        _store.state.domain.me.detail?.homeChannel ?? ''
+      )
     )
     const channelsWithNotification = computed(() =>
-      Object.values(store.state.domain.me.unreadChannelsSet)
-        .map(unread => store.state.entities.channels[unread.channelId ?? ''])
+      Object.values(_store.state.domain.me.unreadChannelsSet)
+        .map(unread => store.state.entities.channelsMap.get(unread.channelId))
         .filter(isDefined)
     )
     const topLevelChannels = computed(
       () =>
-        store.state.domain.channelTree.homeChannelTree.children.filter(
+        _store.state.domain.channelTree.homeChannelTree.children.filter(
           channel => !channel.archived
         ) ?? []
     )
     const channelsWithRtc = computed(() =>
-      Object.entries(store.state.app.rtc.channelSessionsMap)
+      Object.entries(_store.state.app.rtc.channelSessionsMap)
         .filter(([, sessionIds]) => sessionIds && sessionIds.length > 0)
-        .map(([channelId]) => store.state.entities.channels[channelId])
+        .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
+        .filter(isDefined)
     )
 
     return {

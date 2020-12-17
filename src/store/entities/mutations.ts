@@ -1,7 +1,8 @@
-import { UserGroupId, UserId } from '@/types/entity-ids'
-import { User, UserGroup } from '@traptitech/traq'
+import { ChannelId, UserGroupId, UserId } from '@/types/entity-ids'
+import { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
+import _store from '@/_store'
 
 export const mutations = defineMutations<S>()({
   setUser(state: S, user: User) {
@@ -24,5 +25,29 @@ export const mutations = defineMutations<S>()({
   },
   deleteUserGroup(state: S, userGroupId: UserGroupId) {
     state.userGroupsMap.delete(userGroupId)
+  },
+
+  setChannel(state: S, channel: Channel) {
+    state.channelsMap.set(channel.id, channel)
+  },
+  setDmChannel(state: S, dmChannel: DMChannel) {
+    state.dmChannelsMap.set(dmChannel.id, dmChannel)
+  },
+  setBothChannelsMap(
+    state: S,
+    [channelsMap, dmChannelsMap]: [
+      Map<ChannelId, Channel>,
+      Map<ChannelId, DMChannel>
+    ]
+  ) {
+    state.channelsMap = channelsMap
+    state.dmChannelsMap = dmChannelsMap
+    state.bothChannelsMapFetched = true
+
+    // TODO: eventを使うようにする
+    _store.dispatch.domain.channelTree.constructAllTrees()
+  },
+  deleteChannel(state: S, channelId: ChannelId) {
+    state.channelsMap.delete(channelId)
   }
 })

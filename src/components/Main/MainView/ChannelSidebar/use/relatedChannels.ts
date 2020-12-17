@@ -1,29 +1,32 @@
 import { computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '@/lib/util/string'
+import { isDefined } from '@/lib/util/array'
 
 const useRelatedChannels = (props: { channelId: ChannelId }) => {
   const compareNameInsensitive = (a: Channel, b: Channel) =>
     compareStringInsensitive(a.name, b.name)
 
-  const current = computed(() => store.state.entities.channels[props.channelId])
+  const current = computed(() =>
+    store.state.entities.channelsMap.get(props.channelId)
+  )
   const parent = computed(() => {
-    if (!current.value.parentId) return undefined
-    return store.state.entities.channels[current.value.parentId]
+    if (!current.value?.parentId) return undefined
+    return store.state.entities.channelsMap.get(current.value.parentId)
   })
   const siblings = computed(() => {
     const sibs =
-      parent.value?.children.map(v => store.state.entities.channels[v]) ??
-      store.state.domain.channelTree.channelTree.children.map(
-        v => store.state.entities.channels[v.id]
-      )
+      parent.value?.children
+        .map(v => store.state.entities.channelsMap.get(v))
+        .filter(isDefined) ?? []
     return sibs.filter(el => !el.archived).sort(compareNameInsensitive)
   })
   const children = computed(() =>
-    current.value.children
-      .map(id => store.state.entities.channels[id])
+    current.value?.children
+      .map(id => store.state.entities.channelsMap.get(id))
+      .filter(isDefined)
       .filter(el => !el.archived)
       .sort(compareNameInsensitive)
   )
