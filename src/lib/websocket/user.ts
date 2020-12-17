@@ -6,9 +6,6 @@ import {
   UserOnlineEvent,
   UserOfflineEvent,
   UserWebRTCStateChangedEvent,
-  UserGroupCreatedEvent,
-  UserGroupUpdatedEvent,
-  UserGroupDeletedEvent,
   UserUpdatedEvent
 } from './events'
 import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
@@ -59,18 +56,4 @@ export const onUserWebRTCStateChanged = (
 ) => {
   const data = formatSnakeKeysToCamelShallow(dataSnake) as WebRTCUserState
   store.commit.app.rtc.updateRTCState(data)
-}
-
-export const onUserGroupCreated = async ({ id }: UserGroupCreatedEvent) => {
-  const res = await apis.getUserGroup(id)
-  store.commit.entities.addUserGroup({ id, entity: res.data })
-}
-
-export const onUserGroupUpdated = async ({ id }: UserGroupUpdatedEvent) => {
-  const res = await apis.getUserGroup(id)
-  store.commit.entities.extendUserGroups({ [id]: res.data })
-}
-
-export const onUserGroupDeleted = ({ id }: UserGroupDeletedEvent) => {
-  store.commit.entities.deleteUserGroup(id)
 }

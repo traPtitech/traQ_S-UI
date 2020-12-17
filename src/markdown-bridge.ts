@@ -38,7 +38,7 @@ const checkUserExistence = async (userId: UserId) => {
 }
 
 const checkGroupExistence = (userGroupId: UserGroupId) => {
-  return userGroupId in _store.state.entities.userGroups
+  return store.state.entities.userGroupsMap.has(userGroupId)
 }
 
 export const setupGlobalFuncs = () => {

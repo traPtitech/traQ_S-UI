@@ -1,5 +1,5 @@
-import { UserId } from '@/types/entity-ids'
-import { User } from '@traptitech/traq'
+import { UserGroupId, UserId } from '@/types/entity-ids'
+import { User, UserGroup } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 
@@ -13,5 +13,16 @@ export const mutations = defineMutations<S>()({
   },
   deleteUser(state: S, userId: UserId) {
     state.usersMap.delete(userId)
+  },
+
+  setUserGroup(state: S, userGroup: UserGroup) {
+    state.userGroupsMap.set(userGroup.id, userGroup)
+  },
+  setUserGroupsMap(state: S, userGroupsMap: Map<UserGroupId, UserGroup>) {
+    state.userGroupsMap = userGroupsMap
+    state.userGroupsMapFetched = true
+  },
+  deleteUserGroup(state: S, userGroupId: UserGroupId) {
+    state.userGroupsMap.delete(userGroupId)
   }
 })

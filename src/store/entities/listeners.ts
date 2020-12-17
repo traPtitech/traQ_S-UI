@@ -14,7 +14,18 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.fetchUser({ userId: id })
   })
 
+  listener.on('USER_GROUP_CREATED', ({ id }) => {
+    dispatch.fetchUserGroup({ userGroupId: id })
+  })
+  listener.on('USER_GROUP_UPDATED', ({ id }) => {
+    dispatch.fetchUserGroup({ userGroupId: id })
+  })
+  listener.on('USER_GROUP_DELETED', ({ id }) => {
+    dispatch.deleteUserGroup(id)
+  })
+
   listener.on('reconnect', () => {
     dispatch.fetchUsers({ force: true })
+    dispatch.fetchUserGroups({ force: true })
   })
 })

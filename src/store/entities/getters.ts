@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
-import { User } from '@traptitech/traq'
+import { User, UserGroup } from '@traptitech/traq'
 import { ActiveUser, isActive } from '@/lib/user'
 import { UserId } from '@/types/entity-ids'
 
@@ -25,5 +25,26 @@ export const getters = defineGetters<S>()({
         ActiveUser
       ] => isActive(entry[1]))
     )
+  },
+
+  gradeTypeUserGroups(state) {
+    return [...state.userGroupsMap.values()].filter(
+      group => group.type === 'grade'
+    )
+  },
+  gradeGroupByUserId(...args): (userId: UserId) => UserGroup | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return userId =>
+      getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
+        userGroup.members.some(member => member.id === userId)
+      )
+  },
+  userGroupByName(state): (name: string) => UserGroup | undefined {
+    return name => {
+      const loweredName = name.toLowerCase()
+      return [...state.userGroupsMap.values()].find(
+        userGroup => userGroup?.name.toLowerCase() === loweredName
+      )
+    }
   }
 })

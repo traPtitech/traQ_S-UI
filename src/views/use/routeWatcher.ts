@@ -258,7 +258,7 @@ const useRouteWatcher = () => {
     if (routeName === RouteName.Channel) {
       onRouteChangedToChannel()
     } else if (routeName === RouteName.User) {
-      onRouteChangedToUser()
+      await onRouteChangedToUser()
     } else if (routeName === RouteName.ClipFolders) {
       onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {

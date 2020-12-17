@@ -3,7 +3,10 @@ import store from '@/store'
 import _store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
-import { usersMapInitialFetchPromise } from '@/store/entities/promises'
+import {
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise
+} from '@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
 
@@ -18,7 +21,7 @@ const storeProvider: Store = {
     return channelIdToPathString(id)
   },
   getUserGroup(id) {
-    return _store.state.entities.userGroups[id]
+    return store.state.entities.userGroupsMap.get(id)
   },
   getMe() {
     return _store.state.domain.me.detail
@@ -36,7 +39,10 @@ const md = (async () => {
   return new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 })()
 
-const initialFetchPromise = Promise.all([usersMapInitialFetchPromise])
+const initialFetchPromise = Promise.all([
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise
+])
 
 export const render = async (text: string) => {
   await initialFetchPromise

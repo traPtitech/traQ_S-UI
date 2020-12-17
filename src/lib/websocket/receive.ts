@@ -4,9 +4,6 @@ import {
   onUserOnline,
   onUserOffline,
   onUserWebRTCStateChanged,
-  onUserGroupCreated,
-  onUserGroupUpdated,
-  onUserGroupDeleted,
   onUserUpdated
 } from './user'
 import {
@@ -76,15 +73,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'USER_WEBRTC_STATE_CHANGED':
       onUserWebRTCStateChanged(body)
-      break
-    case 'USER_GROUP_CREATED':
-      onUserGroupCreated(body)
-      break
-    case 'USER_GROUP_UPDATED':
-      onUserGroupUpdated(body)
-      break
-    case 'USER_GROUP_DELETED':
-      onUserGroupDeleted(body)
       break
     case 'CHANNEL_CREATED':
       onChannelCreated(body)

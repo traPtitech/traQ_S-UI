@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
@@ -34,7 +33,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const group = computed(() => _store.state.entities.userGroups[props.id])
+    const group = computed(() =>
+      store.state.entities.userGroupsMap.get(props.id)
+    )
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
       () =>

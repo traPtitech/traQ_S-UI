@@ -9,13 +9,10 @@ import {
   MessageId,
   ChannelId,
   ClipFolderId,
-  ExternalUrl,
-  UserId
+  ExternalUrl
 } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
-import { AxiosResponse } from 'axios'
-import { UserDetail } from '@traptitech/traq'
 
 // TODO: リクエストパラメータの型置き場
 interface BaseGetMessagesParams {
@@ -62,11 +59,6 @@ export const actions = defineActions({
     const res = await apis.getChannels(true)
     commit.setChannels(reduceToRecord(res.data.public, 'id'))
     commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
-  },
-  async fetchUserGroups(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getUserGroups()
-    commit.setUserGroups(reduceToRecord(res.data, 'id'))
   },
   async fetchStamps(context) {
     const { commit } = entitiesActionContext(context)

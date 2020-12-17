@@ -24,7 +24,7 @@ const initialFetch = async () => {
 
   _store.commit.app.setInitialFetchCompleted()
 
-  _store.dispatch.entities.fetchUserGroups()
+  store.dispatch.entities.fetchUserGroups()
   _store.dispatch.domain.stampCategory.constructStampCategories()
   _store.dispatch.entities.fetchStampPalettes()
   _store.dispatch.entities.fetchClipFolders()

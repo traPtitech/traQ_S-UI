@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { entities, StampMap } from '.'
 import { moduleGetterContext } from '@/_store'
-import { Stamp, UserGroup } from '@traptitech/traq'
+import { Stamp } from '@traptitech/traq'
 import { UserId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
 
@@ -10,18 +10,6 @@ const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
 
 export const getters = defineGetters<S>()({
-  gradeTypeUserGroups(state) {
-    return Object.values(state.userGroups).filter(
-      group => group.type === 'grade'
-    )
-  },
-  gradeGroupByUserId(...args): (userId: UserId) => UserGroup | undefined {
-    const { getters } = entitiesGetterContext(args)
-    return userId =>
-      getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
-        userGroup.members?.some(member => member.id === userId)
-      )
-  },
   stampNameTable(state) {
     return Object.fromEntries(
       Object.values(state.stamps as StampMap).map(stamp => [stamp.name, stamp])
@@ -43,14 +31,6 @@ export const getters = defineGetters<S>()({
   DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
     const { getters } = entitiesGetterContext(args)
     return id => getters.DMChannelUserIdTable[id]
-  },
-  userGroupByName(state): (name: string) => UserGroup | undefined {
-    return name => {
-      const loweredName = name.toLowerCase()
-      return Object.values(state.userGroups).find(
-        userGroup => userGroup?.name.toLowerCase() === loweredName
-      )
-    }
   },
   nonEmptyStampPaletteIds(state) {
     return Object.values(state.stampPalettes)

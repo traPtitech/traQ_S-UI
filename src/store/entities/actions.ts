@@ -2,11 +2,14 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from '.'
 import { ActionContext } from 'vuex'
-import { UserId } from '@/types/entity-ids'
+import { UserGroupId, UserId } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import { User } from '@traptitech/traq'
-import { usersMapInitialFetchPromise } from './promises'
+import { User, UserGroup } from '@traptitech/traq'
+import {
+  userGroupsMapInitialFetchPromise,
+  usersMapInitialFetchPromise
+} from './promises'
 import { AxiosResponse } from 'axios'
 
 export const entitiesActionContext = (
@@ -23,6 +26,8 @@ type CacheStrategy = 'forceFetch' | 'useCache' | 'waitForAllFetch'
 
 const getUser = createSingleflight(apis.getUser.bind(apis))
 const getUsers = createSingleflight(apis.getUsers.bind(apis))
+const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
+const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 
 /**
  * キャッシュを使いつつ単体を取得する
@@ -112,5 +117,49 @@ export const actions = defineActions({
   deleteUser(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteUser(userId)
+  },
+
+  async fetchUserGroup(
+    context,
+    {
+      userGroupId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { userGroupId: UserGroupId; cacheStrategy?: CacheStrategy }
+  ): Promise<UserGroup | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const userGroup = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.userGroupsMap,
+      userGroupId,
+      state.userGroupsMapFetched,
+      userGroupsMapInitialFetchPromise,
+      getUserGroup,
+      userGroup => {
+        commit.setUserGroup(userGroup)
+      }
+    )
+    return userGroup
+  },
+  async fetchUserGroups(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<UserGroupId, UserGroup>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.userGroupsMapFetched) {
+      return state.userGroupsMap
+    }
+
+    const [{ data: userGroups }, shared] = await getUserGroups()
+    const userGroupsMap = new Map(
+      userGroups.map(userGroup => [userGroup.id, userGroup])
+    )
+    if (!shared) {
+      commit.setUserGroupsMap(userGroupsMap)
+    }
+    return userGroupsMap
+  },
+  deleteUserGroup(context, userId: UserId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteUserGroup(userId)
   }
 })

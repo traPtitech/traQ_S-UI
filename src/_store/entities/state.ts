@@ -1,5 +1,5 @@
-import { UserGroup, StampPalette, Channel } from '@traptitech/traq'
-import { UserGroupId, StampPaletteId, ChannelId } from '@/types/entity-ids'
+import { StampPalette, Channel } from '@traptitech/traq'
+import { StampPaletteId, ChannelId } from '@/types/entity-ids'
 import {
   MessageMap,
   Undefinedable,
@@ -16,7 +16,6 @@ export type S = {
   messages: Undefinedable<MessageMap>
   channels: Record<ChannelId, Channel>
   dmChannels: DMChannelMap
-  userGroups: Record<UserGroupId, UserGroup>
   stamps: Undefinedable<StampMap>
   stampPalettes: Record<StampPaletteId, StampPalette>
   webhooks: Undefinedable<WebhookMap>
@@ -30,7 +29,6 @@ export const state: S = {
   messages: {},
   channels: {},
   dmChannels: {},
-  userGroups: {},
   stamps: {},
   stampPalettes: {},
   webhooks: {},

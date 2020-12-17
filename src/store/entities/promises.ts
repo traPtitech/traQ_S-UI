@@ -28,3 +28,6 @@ const createInitialFetchPromise = async <N extends keyof S>(
 export const usersMapInitialFetchPromise = createInitialFetchPromise(
   'usersMapFetched'
 )
+export const userGroupsMapInitialFetchPromise = createInitialFetchPromise(
+  'userGroupsMapFetched'
+)

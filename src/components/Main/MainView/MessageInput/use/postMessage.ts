@@ -10,9 +10,15 @@ import { computed, ref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
-import { usersMapInitialFetchPromise } from '@/store/entities/promises'
+import {
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise
+} from '@/store/entities/promises'
 
-const initialFetchPromise = Promise.all([usersMapInitialFetchPromise])
+const initialFetchPromise = Promise.all([
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise
+])
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -77,7 +83,7 @@ const usePostMessage = (
 
     const embededText = embedInternalLink(textState.text, {
       getUser: store.getters.entities.userByName,
-      getGroup: _store.getters.entities.userGroupByName,
+      getGroup: store.getters.entities.userGroupByName,
       getChannel: path => {
         try {
           const id = channelPathToId(
