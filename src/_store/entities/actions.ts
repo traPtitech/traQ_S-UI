@@ -5,7 +5,6 @@ import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
 import {
   FileId,
-  TagId,
   MessageId,
   ClipFolderId,
   ExternalUrl
@@ -119,11 +118,6 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  },
-  async fetchTag(context, tagId: TagId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getTag(tagId)
-    commit.addTags({ id: res.data.id, entity: res.data })
   },
   async fetchClipFolders(context) {
     const { commit } = entitiesActionContext(context)

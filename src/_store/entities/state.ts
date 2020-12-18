@@ -4,7 +4,6 @@ import {
   MessageMap,
   Undefinedable,
   FileMetaDataMap,
-  TagMap,
   ClipFolderMap,
   OgpDataMap
 } from '.'
@@ -13,7 +12,6 @@ export type S = {
   messages: Undefinedable<MessageMap>
   stampPalettes: Record<StampPaletteId, StampPalette>
   fileMetaData: Undefinedable<FileMetaDataMap>
-  tags: Undefinedable<TagMap>
   clipFolders: Undefinedable<ClipFolderMap>
   ogpData: Undefinedable<OgpDataMap>
 }
@@ -22,7 +20,6 @@ export const state: S = {
   messages: {},
   stampPalettes: {},
   fileMetaData: {},
-  tags: {},
   clipFolders: {},
   ogpData: {}
 }

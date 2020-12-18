@@ -138,8 +138,6 @@ export const actions = defineActions({
         store.commit.domain.deleteUserDetail(modalState.id)
         break
       case 'tag':
-        store.commit.entities.deleteTag(modalState.id)
-        break
       case 'notification':
       case 'file':
       case 'group':

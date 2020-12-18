@@ -46,28 +46,24 @@ export const mutations = defineMutations<S>()({
   setMessages: setMutation('messages'),
   setStampPalettes: setMutation('stampPalettes'),
   setFileMetaData: setMutation('fileMetaData'),
-  setTags: setMutation('tags'),
   setClipFolders: setMutation('clipFolders'),
   setOgpData: setMutation('ogpData'),
 
   extendMessages: extendMutation('messages'),
   extendStampPalettes: extendMutation('stampPalettes'),
   extendFileMetaData: extendMutation('fileMetaData'),
-  extendUserTags: extendMutation('tags'),
   extendClipFolder: extendMutation('clipFolders'),
   extendOgpData: extendMutation('ogpData'),
 
   addMessage: addMutation('messages'),
   addStampPalette: addMutation('stampPalettes'),
   addFileMetaData: addMutation('fileMetaData'),
-  addTags: addMutation('tags'),
   addClipFolder: addMutation('clipFolders'),
   addOgpData: addMutation('ogpData'),
 
   deleteMessage: deleteMutation('messages'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
-  deleteTag: deleteMutation('tags'),
   deleteClipFolder: deleteMutation('clipFolders'),
   deleteOgpData: deleteMutation('ogpData'),
 
