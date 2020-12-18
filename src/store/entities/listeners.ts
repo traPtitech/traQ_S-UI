@@ -55,11 +55,25 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.deleteStamp(id)
   })
 
+  listener.on('STAMP_PALETTE_CREATED', ({ id }) => {
+    // eslint-disable-next-line no-console
+    console.error('onStampPaletteCreated: Not implemented')
+  })
+  listener.on('STAMP_PALETTE_UPDATED', ({ id }) => {
+    // eslint-disable-next-line no-console
+    console.error('onStampPaletteUpdated: Not implemented')
+  })
+  listener.on('STAMP_PALETTE_DELETED', ({ id }) => {
+    // eslint-disable-next-line no-console
+    console.error('onStampPaletteDeleted: Not implemented')
+  })
+
   listener.on('reconnect', () => {
     dispatch.fetchUsers({ force: true })
     dispatch.fetchUserGroups({ force: true })
     dispatch.fetchChannels({ force: true })
     dispatch.fetchClipFolders({ force: true })
     dispatch.fetchStamps({ force: true })
+    dispatch.fetchStampPalettes({ force: true })
   })
 })

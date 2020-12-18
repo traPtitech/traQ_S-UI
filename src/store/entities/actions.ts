@@ -7,6 +7,7 @@ import {
   ClipFolderId,
   DMChannelId,
   StampId,
+  StampPaletteId,
   UserGroupId,
   UserId
 } from '@/types/entity-ids'
@@ -17,11 +18,13 @@ import {
   ClipFolder,
   DMChannel,
   Stamp,
+  StampPalette,
   User,
   UserGroup
 } from '@traptitech/traq'
 import {
   clipFoldersMapInitialFetchPromise,
+  stampPalettesMapInitialFetchPromise,
   stampsMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   usersMapInitialFetchPromise
@@ -53,6 +56,8 @@ const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
 const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
 const getStamp = createSingleflight(apis.getStamp.bind(apis))
 const getStamps = createSingleflight(apis.getStamps.bind(apis))
+const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))
+const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
 
 /**
  * キャッシュを使いつつ単体を取得する
@@ -327,5 +332,47 @@ export const actions = defineActions({
   deleteStamp(context, stampId: StampId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteStamp(stampId)
+  },
+
+  async fetchStampPalette(
+    context,
+    {
+      stampPaletteId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampPaletteId: StampPaletteId; cacheStrategy?: CacheStrategy }
+  ): Promise<StampPalette | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stampPalette = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampPalettesMap,
+      stampPaletteId,
+      state.stampPalettesMapFetched,
+      stampPalettesMapInitialFetchPromise,
+      getStampPlalette,
+      stampPalette => {
+        commit.setStampPalette(stampPalette)
+      }
+    )
+    return stampPalette
+  },
+  async fetchStampPalettes(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<StampPaletteId, StampPalette>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.stampPalettesMapFetched) {
+      return state.stampPalettesMap
+    }
+
+    const [{ data: stampPalettes }, shared] = await getStampPlalettes()
+    const stampPalettesMap = arrayToMap(stampPalettes, 'id')
+    if (!shared) {
+      commit.setStampPalettesMap(stampPalettesMap)
+    }
+    return stampPalettesMap
+  },
+  async deleteStampPalette(context, stampPaletteId: StampPaletteId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteStampPalette(stampPaletteId)
   }
 })

@@ -40,3 +40,6 @@ export const clipFoldersMapInitialFetchPromise = createInitialFetchPromise(
 export const stampsMapInitialFetchPromise = createInitialFetchPromise(
   'stampsMapFetched'
 )
+export const stampPalettesMapInitialFetchPromise = createInitialFetchPromise(
+  'stampPalettesMapFetched'
+)

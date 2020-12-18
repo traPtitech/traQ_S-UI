@@ -44,22 +44,18 @@ const deleteMutation = <
 
 export const mutations = defineMutations<S>()({
   setMessages: setMutation('messages'),
-  setStampPalettes: setMutation('stampPalettes'),
   setFileMetaData: setMutation('fileMetaData'),
   setOgpData: setMutation('ogpData'),
 
   extendMessages: extendMutation('messages'),
-  extendStampPalettes: extendMutation('stampPalettes'),
   extendFileMetaData: extendMutation('fileMetaData'),
   extendOgpData: extendMutation('ogpData'),
 
   addMessage: addMutation('messages'),
-  addStampPalette: addMutation('stampPalettes'),
   addFileMetaData: addMutation('fileMetaData'),
   addOgpData: addMutation('ogpData'),
 
   deleteMessage: deleteMutation('messages'),
-  deleteStampPalette: deleteMutation('stampPalettes'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
   deleteOgpData: deleteMutation('ogpData'),
 

@@ -12,7 +12,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
-      const stampPalette = _store.state.entities.stampPalettes[id]
+      const stampPalette = store.state.entities.stampPalettesMap.get(id)
       return stampPalette?.stamps ?? []
     }
     if (currentStampSet.value.type === 'category') {

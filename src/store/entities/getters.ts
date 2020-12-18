@@ -70,5 +70,11 @@ export const getters = defineGetters<S>()({
   stampByName(...args): (name: string) => Stamp | undefined {
     const { getters } = entitiesGetterContext(args)
     return name => getters.stampNameTable.get(name)
+  },
+
+  nonEmptyStampPaletteIds(state) {
+    return [...state.stampPalettesMap.values()]
+      .filter(palette => palette.stamps?.length > 0)
+      .map(palette => palette.id)
   }
 })

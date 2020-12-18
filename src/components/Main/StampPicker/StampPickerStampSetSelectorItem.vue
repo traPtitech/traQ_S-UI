@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { StampPaletteId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
@@ -37,8 +37,9 @@ import { StampSet } from './use/stampSetSelector'
 
 const useStampPaletteThumbnail = () => {
   const pickThumbnail = (paletteId: StampPaletteId) => {
-    const palette = store.state.entities.stampPalettes[paletteId]
-    if ((palette?.stamps?.length ?? 0) > 0) {
+    const palette = store.state.entities.stampPalettesMap.get(paletteId)
+    if (!palette) return ''
+    if ((palette.stamps?.length ?? 0) > 0) {
       return palette.stamps[0]
     }
     return ''

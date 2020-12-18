@@ -9,8 +9,6 @@ import { performLoginCheck } from './loginCheck'
 // Main.vueに来たら～
 // みたいに
 
-// Main以外(Settingsなど)からMainに飛んだ場合は二重にfetchが走るが、
-// レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
   store.dispatch.entities.fetchUsers()
@@ -22,7 +20,7 @@ const initialFetch = async () => {
   _store.commit.app.setInitialFetchCompleted()
 
   store.dispatch.entities.fetchUserGroups()
-  _store.dispatch.entities.fetchStampPalettes()
+  store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
   _store.dispatch.domain.fetchOnlineUsers()
   _store.dispatch.domain.me.fetchStaredChannels()

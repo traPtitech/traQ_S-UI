@@ -2,6 +2,7 @@ import {
   ChannelId,
   ClipFolderId,
   StampId,
+  StampPaletteId,
   UserGroupId,
   UserId
 } from '@/types/entity-ids'
@@ -10,6 +11,7 @@ import {
   ClipFolder,
   DMChannel,
   Stamp,
+  StampPalette,
   User,
   UserGroup
 } from '@traptitech/traq'
@@ -26,6 +28,8 @@ export type S = {
   clipFoldersMapFetched: boolean
   stampsMap: Map<StampId, Stamp>
   stampsMapFetched: boolean
+  stampPalettesMap: Map<StampPaletteId, StampPalette>
+  stampPalettesMapFetched: boolean
 }
 
 export const state: S = {
@@ -39,5 +43,7 @@ export const state: S = {
   clipFoldersMap: new Map(),
   clipFoldersMapFetched: false,
   stampsMap: new Map(),
-  stampsMapFetched: false
+  stampsMapFetched: false,
+  stampPalettesMap: new Map(),
+  stampPalettesMapFetched: false
 }

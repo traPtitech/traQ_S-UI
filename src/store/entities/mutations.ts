@@ -2,6 +2,7 @@ import {
   ChannelId,
   ClipFolderId,
   StampId,
+  StampPaletteId,
   UserGroupId,
   UserId
 } from '@/types/entity-ids'
@@ -10,6 +11,7 @@ import {
   ClipFolder,
   DMChannel,
   Stamp,
+  StampPalette,
   User,
   UserGroup
 } from '@traptitech/traq'
@@ -92,5 +94,19 @@ export const mutations = defineMutations<S>()({
 
     // TODO: eventを使うようにする
     _store.dispatch.domain.stampCategory.constructStampCategories()
+  },
+
+  setStampPalette(state: S, stampPalette: StampPalette) {
+    state.stampPalettesMap.set(stampPalette.id, stampPalette)
+  },
+  setStampPalettesMap(
+    state: S,
+    stampPalettesMap: Map<StampPaletteId, StampPalette>
+  ) {
+    state.stampPalettesMap = stampPalettesMap
+    state.stampPalettesMapFetched = true
+  },
+  deleteStampPalette(state: S, stampPaletteId: StampPaletteId) {
+    state.stampPalettesMap.delete(stampPaletteId)
   }
 })

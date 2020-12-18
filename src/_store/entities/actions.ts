@@ -45,11 +45,6 @@ export const entitiesActionContext = (
 ) => moduleActionContext(context, entities)
 
 export const actions = defineActions({
-  async fetchStampPalettes(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getStampPalettes()
-    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
-  },
   // TODO: ドメインデータっぽい
   async fetchMessagesInClipFolder(context, params: GetClipsParam) {
     const { commit } = entitiesActionContext(context)
