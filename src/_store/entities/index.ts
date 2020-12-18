@@ -5,7 +5,6 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import {
   MessageId,
-  DMChannelId,
   WebhookId,
   FileId,
   TagId,
@@ -15,7 +14,6 @@ import {
 } from '@/types/entity-ids'
 import {
   Message,
-  DMChannel,
   Webhook,
   FileInfo,
   Tag,
@@ -25,7 +23,6 @@ import {
 } from '@traptitech/traq'
 
 export type MessageMap = Record<MessageId, Message>
-export type DMChannelMap = Record<DMChannelId, DMChannel>
 export type StampMap = Record<StampId, Stamp>
 export type WebhookMap = Record<WebhookId, Webhook>
 export type FileMetaDataMap = Record<FileId, FileInfo>
