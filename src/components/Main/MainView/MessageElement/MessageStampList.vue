@@ -36,7 +36,8 @@ import { defineComponent, computed, PropType, ref, Ref } from 'vue'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -77,7 +78,7 @@ const createStampList = (
   const map: Record<StampId, MessageStampById> = {}
   props.stamps.forEach(stamp => {
     const { stampId } = stamp
-    if (!store.state.entities.stamps[stampId]) return
+    if (!store.state.entities.stampsMap.has(stampId)) return
 
     if (!map[stamp.stampId]) {
       map[stampId] = {
@@ -140,7 +141,7 @@ export default defineComponent({
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
-    const myId = computed(() => store.state.domain.me.detail?.id)
+    const myId = computed(() => _store.state.domain.me.detail?.id)
     const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)
@@ -149,13 +150,13 @@ export default defineComponent({
     }
 
     const addStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.addStamp({
+      _store.dispatch.domain.messagesView.addStamp({
         messageId: props.messageId,
         stampId
       })
     }
     const removeStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.removeStamp({
+      _store.dispatch.domain.messagesView.removeStamp({
         messageId: props.messageId,
         stampId
       })

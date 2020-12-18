@@ -1,5 +1,5 @@
-import { ChannelId, UserGroupId, UserId } from '@/types/entity-ids'
-import { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
+import { ChannelId, StampId, UserGroupId, UserId } from '@/types/entity-ids'
+import { Channel, DMChannel, Stamp, User, UserGroup } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import _store from '@/_store'
@@ -49,5 +49,25 @@ export const mutations = defineMutations<S>()({
   },
   deleteChannel(state: S, channelId: ChannelId) {
     state.channelsMap.delete(channelId)
+  },
+
+  setStamp(state: S, stamp: Stamp) {
+    state.stampsMap.set(stamp.id, stamp)
+
+    // TODO: eventを使うようにする
+    _store.dispatch.domain.stampCategory.constructStampCategories()
+  },
+  setStampsMap(state: S, stampsMap: Map<StampId, Stamp>) {
+    state.stampsMap = stampsMap
+    state.stampsMapFetched = true
+
+    // TODO: eventを使うようにする
+    _store.dispatch.domain.stampCategory.constructStampCategories()
+  },
+  deleteStamp(state: S, stampId: StampId) {
+    state.stampsMap.delete(stampId)
+
+    // TODO: eventを使うようにする
+    _store.dispatch.domain.stampCategory.constructStampCategories()
   }
 })

@@ -8,20 +8,11 @@ import {
   FileId,
   TagId,
   ClipFolderId,
-  StampId,
   ExternalUrl
 } from '@/types/entity-ids'
-import {
-  Message,
-  FileInfo,
-  Tag,
-  ClipFolder,
-  Stamp,
-  Ogp
-} from '@traptitech/traq'
+import { Message, FileInfo, Tag, ClipFolder, Ogp } from '@traptitech/traq'
 
 export type MessageMap = Record<MessageId, Message>
-export type StampMap = Record<StampId, Stamp>
 export type FileMetaDataMap = Record<FileId, FileInfo>
 export type TagMap = Record<TagId, Tag>
 export type ClipFolderMap = Record<ClipFolderId, ClipFolder>

@@ -28,7 +28,7 @@ const storeProvider: Store = {
     return _store.state.domain.me.detail
   },
   getStampByName(name) {
-    return _store.getters.entities.stampByName(name)
+    return store.getters.entities.stampByName(name)
   },
   getUserByName(name) {
     return store.getters.entities.userByName(name)

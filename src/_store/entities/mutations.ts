@@ -44,7 +44,6 @@ const deleteMutation = <
 
 export const mutations = defineMutations<S>()({
   setMessages: setMutation('messages'),
-  setStamps: setMutation('stamps'),
   setStampPalettes: setMutation('stampPalettes'),
   setFileMetaData: setMutation('fileMetaData'),
   setTags: setMutation('tags'),
@@ -52,7 +51,6 @@ export const mutations = defineMutations<S>()({
   setOgpData: setMutation('ogpData'),
 
   extendMessages: extendMutation('messages'),
-  extendStamps: extendMutation('stamps'),
   extendStampPalettes: extendMutation('stampPalettes'),
   extendFileMetaData: extendMutation('fileMetaData'),
   extendUserTags: extendMutation('tags'),
@@ -60,7 +58,6 @@ export const mutations = defineMutations<S>()({
   extendOgpData: extendMutation('ogpData'),
 
   addMessage: addMutation('messages'),
-  addStamp: addMutation('stamps'),
   addStampPalette: addMutation('stampPalettes'),
   addFileMetaData: addMutation('fileMetaData'),
   addTags: addMutation('tags'),
@@ -68,7 +65,6 @@ export const mutations = defineMutations<S>()({
   addOgpData: addMutation('ogpData'),
 
   deleteMessage: deleteMutation('messages'),
-  deleteStamp: deleteMutation('stamps'),
   deleteStampPalette: deleteMutation('stampPalettes'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
   deleteTag: deleteMutation('tags'),

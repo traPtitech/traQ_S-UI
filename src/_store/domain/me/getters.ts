@@ -13,7 +13,7 @@ export const getters = defineGetters<S>()({
   recentStampIds(...args): StampId[] {
     const { state, rootState } = meGetterContext(args)
     const history = Object.entries(state.stampHistory)
-      .filter(([stampId]) => rootState.entities.stamps[stampId] !== undefined)
+      .filter(([stampId]) => store.state.entities.stampsMap.has(stampId))
       .sort((e1, e2) => {
         // 日付の降順
         if (e1[1] > e2[1]) return -1

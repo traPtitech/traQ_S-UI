@@ -35,9 +35,20 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.deleteChannel(id)
   })
 
+  listener.on('STAMP_CREATED', ({ id }) => {
+    dispatch.fetchStamp({ stampId: id })
+  })
+  listener.on('STAMP_UPDATED', ({ id }) => {
+    dispatch.fetchStamp({ stampId: id, cacheStrategy: 'forceFetch' })
+  })
+  listener.on('STAMP_DELETED', ({ id }) => {
+    dispatch.deleteStamp(id)
+  })
+
   listener.on('reconnect', () => {
     dispatch.fetchUsers({ force: true })
     dispatch.fetchUserGroups({ force: true })
     dispatch.fetchChannels({ force: true })
+    dispatch.fetchStamps({ force: true })
   })
 })

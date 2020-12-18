@@ -32,9 +32,6 @@ import {
   onClipFolderMessageDeleted
 } from './clipFolder'
 import {
-  onStampCreated,
-  onStampUpdated,
-  onStampDeleted,
   onStampPaletteCreated,
   onStampPaletteUpdated,
   onStampPaletteDeleted
@@ -114,15 +111,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'MESSAGE_UNPINNED':
       onMessageUnpinned(body)
-      break
-    case 'STAMP_CREATED':
-      onStampCreated(body)
-      break
-    case 'STAMP_UPDATED':
-      onStampUpdated(body)
-      break
-    case 'STAMP_DELETED':
-      onStampDeleted(body)
       break
     case 'STAMP_PALETTE_CREATED':
       onStampPaletteCreated(body)

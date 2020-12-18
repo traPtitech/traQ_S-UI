@@ -19,13 +19,12 @@ const initialFetch = async () => {
     _store.dispatch.domain.me.fetchUnreadChannels(),
     // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
     // メッセージのレンダリングにも必要なので待つ必要がある
-    _store.dispatch.entities.fetchStamps()
+    store.dispatch.entities.fetchStamps()
   ])
 
   _store.commit.app.setInitialFetchCompleted()
 
   store.dispatch.entities.fetchUserGroups()
-  _store.dispatch.domain.stampCategory.constructStampCategories()
   _store.dispatch.entities.fetchStampPalettes()
   _store.dispatch.entities.fetchClipFolders()
   _store.dispatch.domain.fetchOnlineUsers()

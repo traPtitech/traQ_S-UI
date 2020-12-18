@@ -74,7 +74,7 @@ export default defineComponent({
     const hasInitialFetchForSettingsDone = ref(false)
     useLoginCheck(async () => {
       await Promise.all([
-        execIfEmpty('stamps', _store.dispatch.entities.fetchStamps),
+        store.dispatch.entities.fetchStamps(),
         execIfEmpty(
           'stampPalettes',
           _store.dispatch.entities.fetchStampPalettes

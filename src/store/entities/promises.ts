@@ -34,3 +34,6 @@ export const userGroupsMapInitialFetchPromise = createInitialFetchPromise(
 export const bothChannelsMapInitialFetchPromise = createInitialFetchPromise(
   'bothChannelsMapFetched'
 )
+export const stampsMapInitialFetchPromise = createInitialFetchPromise(
+  'stampsMapFetched'
+)

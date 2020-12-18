@@ -2,16 +2,24 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from '.'
 import { ActionContext } from 'vuex'
-import { ChannelId, DMChannelId, UserGroupId, UserId } from '@/types/entity-ids'
+import {
+  ChannelId,
+  DMChannelId,
+  StampId,
+  UserGroupId,
+  UserId
+} from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
+import { Channel, DMChannel, Stamp, User, UserGroup } from '@traptitech/traq'
 import {
+  stampsMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from './promises'
 import { AxiosResponse } from 'axios'
 import { arrayToMap } from '@/lib/util/map'
+import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -32,6 +40,8 @@ const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getDmChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
+const getStamp = createSingleflight(apis.getStamp.bind(apis))
+const getStamps = createSingleflight(apis.getStamps.bind(apis))
 
 /**
  * キャッシュを使いつつ単体を取得する
@@ -206,5 +216,63 @@ export const actions = defineActions({
       }
     }
     return channel
+  },
+
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamp(
+    context,
+    {
+      stampId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampId: StampId; cacheStrategy?: CacheStrategy }
+  ): Promise<Stamp | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stamp = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampsMap,
+      stampId,
+      state.stampsMapFetched,
+      stampsMapInitialFetchPromise,
+      getStamp,
+      stamp => {
+        commit.setStamp(stamp)
+      }
+    )
+    return stamp
+  },
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamps(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<StampId, Stamp>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.stampsMapFetched) {
+      return state.stampsMap
+    }
+
+    const unicodeStamps = await getUnicodeStamps()
+    // unicodeスタンプがIndexedDBに存在しないときは含めて取得する
+    const [{ data: stamps }, shared] = await getStamps(!unicodeStamps)
+
+    const stampsWithUnicodeStamps = unicodeStamps
+      ? [...unicodeStamps, ...stamps]
+      : stamps
+    const stampsMap = arrayToMap(stampsWithUnicodeStamps, 'id')
+    if (!shared) {
+      commit.setStampsMap(stampsMap)
+      // 新しくunicodeスタンプが取得されたときはIndexedDBに保存する
+      if (!unicodeStamps) {
+        setUnicodeStamps(stamps.filter(stamp => stamp.isUnicode))
+      }
+    }
+    return stampsMap
+  },
+  deleteStamp(context, stampId: StampId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteStamp(stampId)
   }
 })
