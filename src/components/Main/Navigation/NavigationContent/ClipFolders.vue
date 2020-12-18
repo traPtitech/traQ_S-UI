@@ -20,12 +20,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import Icon from '@/components/UI/Icon.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
-import { ClipFolder } from '@traptitech/traq'
-import { ClipFolderId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ClipFolders',
@@ -35,11 +34,11 @@ export default defineComponent({
     ClipFoldersElement
   },
   setup() {
-    const clipFolders = computed(
-      () => store.state.entities.clipFolders as Record<ClipFolderId, ClipFolder>
-    )
+    const clipFolders = computed(() => [
+      ...store.state.entities.clipFoldersMap.values()
+    ])
     const onClickButton = () => {
-      store.dispatch.ui.modal.pushModal({
+      _store.dispatch.ui.modal.pushModal({
         type: 'clip-folder-create'
       })
     }

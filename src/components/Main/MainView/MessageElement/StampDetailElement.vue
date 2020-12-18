@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { MessageStampById } from './MessageStampList.vue'
 
@@ -32,7 +32,7 @@ export default defineComponent({
   },
   setup(props) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stamp.id]?.name ?? ''
+      () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''
     )
     return { stampName }
   }

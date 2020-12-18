@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasInitialFetchForSettingsDone" :class="$style.container">
+  <div v-if="isLoginCheckDone" :class="$style.container">
     <mobile-setting-modal v-if="isMobile">
       <router-view />
     </mobile-setting-modal>
@@ -24,7 +24,6 @@ import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
 import _store from '@/_store'
-import store from '@/store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
 
@@ -62,33 +61,13 @@ export default defineComponent({
       changeViewState(null)
     })
 
-    const execIfEmpty = <T extends keyof typeof _store.state.entities>(
-      key: T,
-      exector: () => Promise<void>
-    ) =>
-      Object.entries(_store.state.entities[key]).length > 0
-        ? undefined
-        : exector()
-
     // ログイン必要ルート
-    const hasInitialFetchForSettingsDone = ref(false)
+    const isLoginCheckDone = ref(false)
     useLoginCheck(async () => {
-      await Promise.all([
-        execIfEmpty('stamps', _store.dispatch.entities.fetchStamps),
-        execIfEmpty(
-          'stampPalettes',
-          _store.dispatch.entities.fetchStampPalettes
-        ),
-        // ホームチャンネルの選択などに必要
-        store.dispatch.entities.fetchChannels,
-        // スタンプの所有者変更に必要
-        store.dispatch.entities.fetchUsers
-      ])
-
-      hasInitialFetchForSettingsDone.value = true
+      isLoginCheckDone.value = true
     })
 
-    return { isMobile, hasInitialFetchForSettingsDone }
+    return { isMobile, isLoginCheckDone }
   },
   components: {
     DesktopSettingModal,

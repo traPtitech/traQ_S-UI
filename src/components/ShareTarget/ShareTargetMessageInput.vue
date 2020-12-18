@@ -38,7 +38,8 @@ import {
   shallowRef
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useTextInput from '../Main/MainView/MessageInput/use/textInput'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'
@@ -104,8 +105,8 @@ export default defineComponent({
     )
 
     const onStampClick = (e: MouseEvent) => {
-      if (store.getters.ui.stampPicker.isStampPickerShown) {
-        store.dispatch.ui.stampPicker.closeStampPicker()
+      if (_store.getters.ui.stampPicker.isStampPickerShown) {
+        _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
         invokeStampPicker()
       }
@@ -113,8 +114,8 @@ export default defineComponent({
 
     // スタンプピッカーに必要
     store.dispatch.entities.fetchStamps()
-    store.dispatch.domain.stampCategory.constructStampCategories()
     store.dispatch.entities.fetchStampPalettes()
+    _store.dispatch.domain.me.fetchStampHistory()
 
     const id = randomString()
     return {

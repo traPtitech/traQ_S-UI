@@ -9,25 +9,19 @@ import { performLoginCheck } from './loginCheck'
 // Main.vueに来たら～
 // みたいに
 
-// Main以外(Settingsなど)からMainに飛んだ場合は二重にfetchが走るが、
-// レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
-  await Promise.all([
-    store.dispatch.entities.fetchUsers(),
-    store.dispatch.entities.fetchChannels(),
-    _store.dispatch.domain.me.fetchUnreadChannels(),
-    // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
-    // メッセージのレンダリングにも必要なので待つ必要がある
-    _store.dispatch.entities.fetchStamps()
-  ])
+  store.dispatch.entities.fetchUsers()
+  store.dispatch.entities.fetchChannels()
+  store.dispatch.entities.fetchStamps()
+  // 未読処理前に未読を取得していないと未読を消せないため
+  await _store.dispatch.domain.me.fetchUnreadChannels()
 
   _store.commit.app.setInitialFetchCompleted()
 
   store.dispatch.entities.fetchUserGroups()
-  _store.dispatch.domain.stampCategory.constructStampCategories()
-  _store.dispatch.entities.fetchStampPalettes()
-  _store.dispatch.entities.fetchClipFolders()
+  store.dispatch.entities.fetchStampPalettes()
+  store.dispatch.entities.fetchClipFolders()
   _store.dispatch.domain.fetchOnlineUsers()
   _store.dispatch.domain.me.fetchStaredChannels()
   _store.dispatch.domain.me.fetchStampHistory()

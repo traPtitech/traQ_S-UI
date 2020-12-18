@@ -86,7 +86,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import { SendKeys } from '@/_store/app/browserSettings'
 import useSyncedState from '@/components/Settings/use/syncedState'
@@ -116,10 +117,14 @@ export default defineComponent({
   name: 'BrowserTab',
   setup() {
     const { channelIdToPathString } = useChannelPath()
-    const browserSettings = computed(() => store.state.app.browserSettings)
+
+    // 起動時チャンネルの選択に必要
+    store.dispatch.entities.fetchChannels()
+
+    const browserSettings = computed(() => _store.state.app.browserSettings)
     const { state } = useSyncedState(
       browserSettings,
-      store.commit.app.browserSettings.set
+      _store.commit.app.browserSettings.set
     )
 
     const { channelOptions } = useChannelOptions(undefined, channel =>

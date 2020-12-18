@@ -15,7 +15,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
-import store from '@/_store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
 import { teleportTargetName } from './ShareTargetMessageInput.vue'
@@ -59,14 +58,6 @@ export default defineComponent({
         window.close()
       }
     })
-
-    // メッセージの投稿に必要
-    Promise.all([
-      store.dispatch.entities.fetchStamps(),
-      store.dispatch.domain.stampCategory.constructStampCategories(),
-      store.dispatch.entities.fetchStampPalettes(),
-      store.dispatch.domain.me.fetchStampHistory()
-    ])
 
     return { defaultText, isMobile, donePost, onPost, teleportTargetName }
   }

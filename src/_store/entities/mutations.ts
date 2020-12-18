@@ -44,39 +44,19 @@ const deleteMutation = <
 
 export const mutations = defineMutations<S>()({
   setMessages: setMutation('messages'),
-  setStamps: setMutation('stamps'),
-  setStampPalettes: setMutation('stampPalettes'),
-  setWebhooks: setMutation('webhooks'),
   setFileMetaData: setMutation('fileMetaData'),
-  setTags: setMutation('tags'),
-  setClipFolders: setMutation('clipFolders'),
   setOgpData: setMutation('ogpData'),
 
   extendMessages: extendMutation('messages'),
-  extendStamps: extendMutation('stamps'),
-  extendStampPalettes: extendMutation('stampPalettes'),
-  extendWebhooks: extendMutation('webhooks'),
   extendFileMetaData: extendMutation('fileMetaData'),
-  extendUserTags: extendMutation('tags'),
-  extendClipFolder: extendMutation('clipFolders'),
   extendOgpData: extendMutation('ogpData'),
 
   addMessage: addMutation('messages'),
-  addStamp: addMutation('stamps'),
-  addStampPalette: addMutation('stampPalettes'),
-  addWebhook: addMutation('webhooks'),
   addFileMetaData: addMutation('fileMetaData'),
-  addTags: addMutation('tags'),
-  addClipFolder: addMutation('clipFolders'),
   addOgpData: addMutation('ogpData'),
 
   deleteMessage: deleteMutation('messages'),
-  deleteStamp: deleteMutation('stamps'),
-  deleteStampPalette: deleteMutation('stampPalettes'),
-  deleteWebhook: deleteMutation('webhooks'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
-  deleteTag: deleteMutation('tags'),
-  deleteClipFolder: deleteMutation('clipFolders'),
   deleteOgpData: deleteMutation('ogpData'),
 
   onMessageStamped(state, e: MessageStampedEvent) {

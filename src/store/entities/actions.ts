@@ -2,16 +2,36 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from '.'
 import { ActionContext } from 'vuex'
-import { ChannelId, DMChannelId, UserGroupId, UserId } from '@/types/entity-ids'
+import {
+  ChannelId,
+  ClipFolderId,
+  DMChannelId,
+  StampId,
+  StampPaletteId,
+  UserGroupId,
+  UserId
+} from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import { Channel, DMChannel, User, UserGroup } from '@traptitech/traq'
 import {
+  Channel,
+  ClipFolder,
+  DMChannel,
+  Stamp,
+  StampPalette,
+  User,
+  UserGroup
+} from '@traptitech/traq'
+import {
+  clipFoldersMapInitialFetchPromise,
+  stampPalettesMapInitialFetchPromise,
+  stampsMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from './promises'
 import { AxiosResponse } from 'axios'
 import { arrayToMap } from '@/lib/util/map'
+import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -32,6 +52,12 @@ const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getDmChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
+const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
+const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
+const getStamp = createSingleflight(apis.getStamp.bind(apis))
+const getStamps = createSingleflight(apis.getStamps.bind(apis))
+const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))
+const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
 
 /**
  * キャッシュを使いつつ単体を取得する
@@ -206,5 +232,147 @@ export const actions = defineActions({
       }
     }
     return channel
+  },
+
+  async fetchClipFolder(
+    context,
+    {
+      clipFolderId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { clipFolderId: ClipFolderId; cacheStrategy?: CacheStrategy }
+  ): Promise<ClipFolder | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const clipFolder = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.clipFoldersMap,
+      clipFolderId,
+      state.clipFoldersMapFetched,
+      clipFoldersMapInitialFetchPromise,
+      getClipFolder,
+      clipFolder => {
+        commit.setClipFolder(clipFolder)
+      }
+    )
+    return clipFolder
+  },
+  async fetchClipFolders(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<ClipFolderId, ClipFolder>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.clipFoldersMapFetched) {
+      return state.clipFoldersMap
+    }
+
+    const [{ data: clipFolders }, shared] = await getClipFolders()
+    const clipFoldersMap = arrayToMap(clipFolders, 'id')
+    if (!shared) {
+      commit.setClipFoldersMap(clipFoldersMap)
+    }
+    return clipFoldersMap
+  },
+  async deleteClipFolders(context, clipFolderId: ClipFolderId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteClipFolder(clipFolderId)
+  },
+
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamp(
+    context,
+    {
+      stampId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampId: StampId; cacheStrategy?: CacheStrategy }
+  ): Promise<Stamp | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stamp = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampsMap,
+      stampId,
+      state.stampsMapFetched,
+      stampsMapInitialFetchPromise,
+      getStamp,
+      stamp => {
+        commit.setStamp(stamp)
+      }
+    )
+    return stamp
+  },
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamps(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<StampId, Stamp>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.stampsMapFetched) {
+      return state.stampsMap
+    }
+
+    const unicodeStamps = await getUnicodeStamps()
+    // unicodeスタンプがIndexedDBに存在しないときは含めて取得する
+    const [{ data: stamps }, shared] = await getStamps(!unicodeStamps)
+
+    const stampsWithUnicodeStamps = unicodeStamps
+      ? [...unicodeStamps, ...stamps]
+      : stamps
+    const stampsMap = arrayToMap(stampsWithUnicodeStamps, 'id')
+    if (!shared) {
+      commit.setStampsMap(stampsMap)
+      // 新しくunicodeスタンプが取得されたときはIndexedDBに保存する
+      if (!unicodeStamps) {
+        setUnicodeStamps(stamps.filter(stamp => stamp.isUnicode))
+      }
+    }
+    return stampsMap
+  },
+  deleteStamp(context, stampId: StampId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteStamp(stampId)
+  },
+
+  async fetchStampPalette(
+    context,
+    {
+      stampPaletteId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampPaletteId: StampPaletteId; cacheStrategy?: CacheStrategy }
+  ): Promise<StampPalette | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stampPalette = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampPalettesMap,
+      stampPaletteId,
+      state.stampPalettesMapFetched,
+      stampPalettesMapInitialFetchPromise,
+      getStampPlalette,
+      stampPalette => {
+        commit.setStampPalette(stampPalette)
+      }
+    )
+    return stampPalette
+  },
+  async fetchStampPalettes(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<StampPaletteId, StampPalette>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.stampPalettesMapFetched) {
+      return state.stampPalettesMap
+    }
+
+    const [{ data: stampPalettes }, shared] = await getStampPlalettes()
+    const stampPalettesMap = arrayToMap(stampPalettes, 'id')
+    if (!shared) {
+      commit.setStampPalettesMap(stampPalettesMap)
+    }
+    return stampPalettesMap
+  },
+  async deleteStampPalette(context, stampPaletteId: StampPaletteId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteStampPalette(stampPaletteId)
   }
 })

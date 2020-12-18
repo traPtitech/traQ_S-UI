@@ -17,13 +17,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import apis from '@/lib/apis'
 import { compareString } from '@/lib/util/string'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import { ClipFolderMap } from '@/_store/entities'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -35,20 +35,20 @@ const useCreateClip = (
         messageId: props.messageId
       })
       selectedState[clipFolderId] = true
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'success',
         text: 'クリップフォルダに追加しました'
       })
     } catch (e) {
       if (e.response.status === 409) {
         selectedState[clipFolderId] = true
-        store.commit.ui.toast.addToast({
+        _store.commit.ui.toast.addToast({
           type: 'error',
           text: 'すでに追加されています'
         })
         return
       } else {
-        store.commit.ui.toast.addToast({
+        _store.commit.ui.toast.addToast({
           type: 'error',
           text: '追加に失敗しました'
         })
@@ -59,7 +59,7 @@ const useCreateClip = (
   const deleteClip = async (clipFolderId: ClipFolderId) => {
     await apis.unclipMessage(clipFolderId, props.messageId)
     selectedState[clipFolderId] = false
-    store.commit.ui.toast.addToast({
+    _store.commit.ui.toast.addToast({
       type: 'success',
       text: 'クリップフォルダから削除しました'
     })
@@ -88,12 +88,10 @@ export default defineComponent({
   },
   setup(props) {
     const message = computed(
-      () => store.state.entities.messages[props.messageId]
+      () => _store.state.entities.messages[props.messageId]
     )
     const clipFolders = computed(() => {
-      const folders = Object.values(
-        store.state.entities.clipFolders as ClipFolderMap
-      )
+      const folders = [...store.state.entities.clipFoldersMap.values()]
       folders.sort((a, b) => compareString(a.name, b.name))
       return folders
     })

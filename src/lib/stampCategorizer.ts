@@ -22,15 +22,13 @@ export type StampCategory = {
  * スタンプを名前→IDのマップに変換する
  * @param stampEntities スタンプのエンティティ
  */
-export const constructStampNameIdMap = (
-  stampEntities: Record<StampId, Stamp>
-) => {
+export const constructStampNameIdMap = (stampEntities: Map<StampId, Stamp>) => {
   /** Unicodeスタンプの名前→IDマップ */
   const unicodeStampMap: Record<StampName, StampId> = {}
 
   /** traQスタンプのIDリスト */
   const traQStampMap: Record<StampName, StampId> = {}
-  Object.values(stampEntities).forEach(stamp => {
+  ;[...stampEntities.values()].forEach(stamp => {
     if (stamp.isUnicode) {
       unicodeStampMap[stamp.name] = stamp.id
     } else {

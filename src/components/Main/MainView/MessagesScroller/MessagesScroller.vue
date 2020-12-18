@@ -1,6 +1,6 @@
 <template>
   <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
-    <div :class="$style.viewport">
+    <div :class="$style.viewport" v-if="state.initialFetchCompleted">
       <messages-scroller-separator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
@@ -63,6 +63,7 @@ import { getFullDayString } from '@/lib/date'
 import { embeddingOrigin } from '@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute } from '@/router'
+import { stampsMapInitialFetchPromise } from '@/store/entities/promises'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -192,8 +193,16 @@ export default defineComponent({
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition
+      scrollTop: store.state.ui.mainView.lastScrollPosition,
+      initialFetchCompleted: false
     })
+
+    // メッセージスタンプ表示時にスタンプが存在していないと
+    // 場所が確保されないくてずれてしまうので、取得完了を待つ
+    ;(async () => {
+      await stampsMapInitialFetchPromise
+      state.initialFetchCompleted = true
+    })()
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {

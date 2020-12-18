@@ -28,7 +28,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import { ClipFolderId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
@@ -36,7 +37,6 @@ import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEdi
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '@/router'
-import { ClipFolderMap } from '@/_store/entities'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -69,9 +69,7 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       return
     }
     await apis.deleteClipFolder(props.clipFolderId)
-    const clipFolders = Object.values(
-      store.state.entities.clipFolders as ClipFolderMap
-    )
+    const clipFolders = [...store.state.entities.clipFoldersMap.values()]
       .filter(v => v.id !== props.clipFolderId)
       .sort((a, b) => {
         const aDate = new Date(a.createdAt)
@@ -85,7 +83,9 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       return
     }
     router.push(
-      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
+      constructChannelPath(
+        _store.getters.app.browserSettings.defaultChannelName
+      )
     )
   }
   return { deleteClip }
@@ -103,17 +103,14 @@ export default defineComponent({
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
   },
   setup(props) {
-    const name = computed(
-      () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
+    const clipFolder = computed(() =>
+      store.state.entities.clipFoldersMap.get(props.clipFolderId)
     )
-    const description = computed(
-      () =>
-        store.state.entities.clipFolders[props.clipFolderId]?.description ?? ''
-    )
+    const name = computed(() => clipFolder.value?.name ?? '')
+    const description = computed(() => clipFolder.value?.description ?? '')
     const state = reactive({
-      name: store.state.entities.clipFolders[props.clipFolderId]?.name ?? '',
-      description:
-        store.state.entities.clipFolders[props.clipFolderId]?.description ?? ''
+      name: clipFolder.value?.name ?? '',
+      description: clipFolder.value?.description ?? ''
     })
     const {
       isEditing: isNameEditing,

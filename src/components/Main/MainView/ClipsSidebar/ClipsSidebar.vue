@@ -25,7 +25,7 @@ import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainView
 import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'ClipsSidebar',
@@ -49,7 +49,8 @@ export default defineComponent({
     const { closeSidebar } = useSidebar()
 
     const clipFolderName = computed(
-      () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
+      () =>
+        store.state.entities.clipFoldersMap.get(props.clipFolderId)?.name ?? ''
     )
 
     return {

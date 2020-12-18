@@ -3,17 +3,9 @@ import { moduleActionContext } from '@/_store'
 import { entities } from './index'
 import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
-import {
-  FileId,
-  TagId,
-  MessageId,
-  ClipFolderId,
-  ExternalUrl
-} from '@/types/entity-ids'
+import { FileId, MessageId, ExternalUrl } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
-import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 
-// TODO: リクエストパラメータの型置き場
 interface BaseGetMessagesParams {
   limit?: number
   offset?: number
@@ -53,23 +45,6 @@ export const entitiesActionContext = (
 ) => moduleActionContext(context, entities)
 
 export const actions = defineActions({
-  async fetchStamps(context) {
-    const { commit } = entitiesActionContext(context)
-
-    const unicodeStamps = await getUnicodeStamps()
-    const res = await apis.getStamps(!unicodeStamps)
-    if (!unicodeStamps) {
-      setUnicodeStamps(res.data.filter(stamp => stamp.isUnicode))
-    }
-
-    const stamps = unicodeStamps ? [...unicodeStamps, ...res.data] : res.data
-    commit.setStamps(reduceToRecord(stamps, 'id'))
-  },
-  async fetchStampPalettes(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getStampPalettes()
-    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
-  },
   // TODO: ドメインデータっぽい
   async fetchMessagesInClipFolder(context, params: GetClipsParam) {
     const { commit } = entitiesActionContext(context)
@@ -133,22 +108,6 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  },
-  async fetchTag(context, tagId: TagId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getTag(tagId)
-    commit.addTags({ id: res.data.id, entity: res.data })
-  },
-  async fetchClipFolders(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolders()
-    commit.setClipFolders(reduceToRecord(res.data, 'id'))
-  },
-  async fetchClipFolder(context, id: ClipFolderId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolder(id)
-    commit.addClipFolder({ id, entity: res.data })
-    return res.data
   },
   async fetchOgpData(context, url: ExternalUrl) {
     const { commit } = entitiesActionContext(context)

@@ -13,15 +13,27 @@
 import { defineComponent } from 'vue'
 import NewStamp from '@/components/Settings/StampTab/NewStamp.vue'
 import EditStamp from '@/components/Settings/StampTab/EditStamp.vue'
+import store from '@/store'
+import _store from '@/_store'
+
+const execIfEmpty = <T extends keyof typeof _store.state.entities>(
+  key: T,
+  exector: () => Promise<void>
+) =>
+  Object.entries(_store.state.entities[key]).length > 0 ? undefined : exector()
 
 export default defineComponent({
   name: 'StampTab',
-  setup() {
-    return {}
-  },
   components: {
     NewStamp,
     EditStamp
+  },
+  setup() {
+    store.dispatch.entities.fetchStamps()
+    store.dispatch.entities.fetchStampPalettes()
+    // 所有者変更に必要
+    store.dispatch.entities.fetchUsers()
+    return {}
   }
 })
 </script>

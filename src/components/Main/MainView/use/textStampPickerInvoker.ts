@@ -1,5 +1,5 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import store from '@/_store'
+import store from '@/store'
 import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (
@@ -12,7 +12,7 @@ const useTextStampPickerInvoker = (
   const { invokeStampPicker } = useStampPickerInvoker(
     teleportTargetName,
     async stampData => {
-      const stampName = store.state.entities.stamps[stampData.id]?.name
+      const stampName = store.state.entities.stampsMap.get(stampData.id)?.name
       if (!stampName) return
       const size = stampData.size ? `.${stampData.size}` : ''
       const effects =

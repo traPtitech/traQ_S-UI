@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { buildFilePath } from '@/lib/apis'
 
@@ -44,10 +44,10 @@ export default defineComponent({
   },
   setup(props) {
     const name = computed(
-      () => store.state.entities.stamps[props.stampId]?.name ?? ''
+      () => store.state.entities.stampsMap.get(props.stampId)?.name ?? ''
     )
     const imageUrl = computed(() => {
-      const fileId = store.state.entities.stamps[props.stampId]?.fileId
+      const fileId = store.state.entities.stampsMap.get(props.stampId)?.fileId
       return fileId ? `${buildFilePath(fileId)}` : ''
     })
     const styles = useStyles(props)

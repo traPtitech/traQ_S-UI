@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { entities } from './index'
 import { moduleGetterContext } from '@/store'
-import { User, UserGroup } from '@traptitech/traq'
+import { Stamp, User, UserGroup } from '@traptitech/traq'
 import { ActiveUser, isActive } from '@/lib/user'
 import { DMChannelId, UserId } from '@/types/entity-ids'
 
@@ -60,5 +60,21 @@ export const getters = defineGetters<S>()({
   DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
     const { getters } = entitiesGetterContext(args)
     return id => getters.DMChannelUserIdMap.get(id)
+  },
+
+  stampNameTable(state) {
+    return new Map(
+      [...state.stampsMap.values()].map(stamp => [stamp.name, stamp])
+    )
+  },
+  stampByName(...args): (name: string) => Stamp | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return name => getters.stampNameTable.get(name)
+  },
+
+  nonEmptyStampPaletteIds(state) {
+    return [...state.stampPalettesMap.values()]
+      .filter(palette => palette.stamps?.length > 0)
+      .map(palette => palette.id)
   }
 })

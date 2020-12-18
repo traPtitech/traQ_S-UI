@@ -6,7 +6,8 @@ import { embeddingOrigin } from './apis'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
+  bothChannelsMapInitialFetchPromise,
+  stampsMapInitialFetchPromise
 } from '@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
@@ -28,7 +29,7 @@ const storeProvider: Store = {
     return _store.state.domain.me.detail
   },
   getStampByName(name) {
-    return _store.getters.entities.stampByName(name)
+    return store.getters.entities.stampByName(name)
   },
   getUserByName(name) {
     return store.getters.entities.userByName(name)
@@ -43,7 +44,8 @@ const md = (async () => {
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
+  bothChannelsMapInitialFetchPromise,
+  stampsMapInitialFetchPromise
 ])
 
 export const render = async (text: string) => {
