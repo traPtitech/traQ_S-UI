@@ -1,5 +1,18 @@
-import { ChannelId, StampId, UserGroupId, UserId } from '@/types/entity-ids'
-import { Channel, DMChannel, Stamp, User, UserGroup } from '@traptitech/traq'
+import {
+  ChannelId,
+  ClipFolderId,
+  StampId,
+  UserGroupId,
+  UserId
+} from '@/types/entity-ids'
+import {
+  Channel,
+  ClipFolder,
+  DMChannel,
+  Stamp,
+  User,
+  UserGroup
+} from '@traptitech/traq'
 
 export type S = {
   usersMap: Map<UserId, User>
@@ -9,6 +22,8 @@ export type S = {
   channelsMap: Map<ChannelId, Channel>
   dmChannelsMap: Map<ChannelId, DMChannel>
   bothChannelsMapFetched: boolean
+  clipFoldersMap: Map<ClipFolderId, ClipFolder>
+  clipFoldersMapFetched: boolean
   stampsMap: Map<StampId, Stamp>
   stampsMapFetched: boolean
 }
@@ -21,6 +36,8 @@ export const state: S = {
   channelsMap: new Map(),
   dmChannelsMap: new Map(),
   bothChannelsMapFetched: false,
+  clipFoldersMap: new Map(),
+  clipFoldersMapFetched: false,
   stampsMap: new Map(),
   stampsMapFetched: false
 }

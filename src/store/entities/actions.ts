@@ -4,6 +4,7 @@ import { entities } from '.'
 import { ActionContext } from 'vuex'
 import {
   ChannelId,
+  ClipFolderId,
   DMChannelId,
   StampId,
   UserGroupId,
@@ -11,8 +12,16 @@ import {
 } from '@/types/entity-ids'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import { Channel, DMChannel, Stamp, User, UserGroup } from '@traptitech/traq'
 import {
+  Channel,
+  ClipFolder,
+  DMChannel,
+  Stamp,
+  User,
+  UserGroup
+} from '@traptitech/traq'
+import {
+  clipFoldersMapInitialFetchPromise,
   stampsMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   usersMapInitialFetchPromise
@@ -40,6 +49,8 @@ const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getDmChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
+const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
+const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
 const getStamp = createSingleflight(apis.getStamp.bind(apis))
 const getStamps = createSingleflight(apis.getStamps.bind(apis))
 
@@ -216,6 +227,48 @@ export const actions = defineActions({
       }
     }
     return channel
+  },
+
+  async fetchClipFolder(
+    context,
+    {
+      clipFolderId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { clipFolderId: ClipFolderId; cacheStrategy?: CacheStrategy }
+  ): Promise<ClipFolder | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const clipFolder = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.clipFoldersMap,
+      clipFolderId,
+      state.clipFoldersMapFetched,
+      clipFoldersMapInitialFetchPromise,
+      getClipFolder,
+      clipFolder => {
+        commit.setClipFolder(clipFolder)
+      }
+    )
+    return clipFolder
+  },
+  async fetchClipFolders(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<Map<ClipFolderId, ClipFolder>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!force && state.clipFoldersMapFetched) {
+      return state.clipFoldersMap
+    }
+
+    const [{ data: clipFolders }, shared] = await getClipFolders()
+    const clipFoldersMap = arrayToMap(clipFolders, 'id')
+    if (!shared) {
+      commit.setClipFoldersMap(clipFoldersMap)
+    }
+    return clipFoldersMap
+  },
+  async deleteClipFolders(context, clipFolderId: ClipFolderId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteClipFolder(clipFolderId)
   },
 
   /**

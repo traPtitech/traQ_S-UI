@@ -1,26 +1,9 @@
 import {
-  ClipFolderCreatedEvent,
-  ClipFolderUpdatedEvent,
-  ClipFolderDeletedEvent,
   ClipFolderMessageAddedEvent,
   ClipFolderMessageDeletedEvent
 } from './events'
 import apis from '@/lib/apis'
 import store from '@/_store'
-
-export const onClipFolderCreated = async (data: ClipFolderCreatedEvent) => {
-  const res = await apis.getClipFolder(data.id)
-  store.commit.entities.addClipFolder({ id: data.id, entity: res.data })
-}
-
-export const onClipFolderUpdated = async (data: ClipFolderUpdatedEvent) => {
-  const res = await apis.getClipFolder(data.id)
-  store.commit.entities.extendClipFolder({ [data.id]: res.data })
-}
-
-export const onClipFolderDeleted = (data: ClipFolderDeletedEvent) => {
-  store.commit.entities.deleteClipFolder(data.id)
-}
 
 export const onClipFolderMessageAdded = async (
   data: ClipFolderMessageAddedEvent

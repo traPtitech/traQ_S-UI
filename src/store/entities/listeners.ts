@@ -35,6 +35,16 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.deleteChannel(id)
   })
 
+  listener.on('CLIP_FOLDER_CREATED', ({ id }) => {
+    dispatch.fetchClipFolder({ clipFolderId: id })
+  })
+  listener.on('CLIP_FOLDER_UPDATED', ({ id }) => {
+    dispatch.fetchClipFolder({ clipFolderId: id })
+  })
+  listener.on('CLIP_FOLDER_DELETED', ({ id }) => {
+    dispatch.deleteClipFolders(id)
+  })
+
   listener.on('STAMP_CREATED', ({ id }) => {
     dispatch.fetchStamp({ stampId: id })
   })
@@ -49,6 +59,7 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.fetchUsers({ force: true })
     dispatch.fetchUserGroups({ force: true })
     dispatch.fetchChannels({ force: true })
+    dispatch.fetchClipFolders({ force: true })
     dispatch.fetchStamps({ force: true })
   })
 })

@@ -23,7 +23,7 @@ const initialFetch = async () => {
 
   store.dispatch.entities.fetchUserGroups()
   _store.dispatch.entities.fetchStampPalettes()
-  _store.dispatch.entities.fetchClipFolders()
+  store.dispatch.entities.fetchClipFolders()
   _store.dispatch.domain.fetchOnlineUsers()
   _store.dispatch.domain.me.fetchStaredChannels()
   _store.dispatch.domain.me.fetchStampHistory()

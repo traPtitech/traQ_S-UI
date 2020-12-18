@@ -3,12 +3,7 @@ import { moduleActionContext } from '@/_store'
 import { entities } from './index'
 import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
-import {
-  FileId,
-  MessageId,
-  ClipFolderId,
-  ExternalUrl
-} from '@/types/entity-ids'
+import { FileId, MessageId, ExternalUrl } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 
 interface BaseGetMessagesParams {
@@ -118,17 +113,6 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  },
-  async fetchClipFolders(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolders()
-    commit.setClipFolders(reduceToRecord(res.data, 'id'))
-  },
-  async fetchClipFolder(context, id: ClipFolderId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolder(id)
-    commit.addClipFolder({ id, entity: res.data })
-    return res.data
   },
   async fetchOgpData(context, url: ExternalUrl) {
     const { commit } = entitiesActionContext(context)

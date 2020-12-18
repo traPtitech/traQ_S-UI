@@ -136,15 +136,15 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToClipFolders = async () => {
     const id = state.idParam
-    try {
-      const clipFolder =
-        _store.state.entities.clipFolders[id] ??
-        (await _store.dispatch.entities.fetchClipFolder(id))
-      changeViewTitle(clipFolder.name)
-    } catch {
+    const clipFolder = await store.dispatch.entities.fetchClipFolder({
+      clipFolderId: id,
+      cacheStrategy: 'useCache'
+    })
+    if (!clipFolder) {
       state.view = 'not-found'
       return
     }
+    changeViewTitle(clipFolder.name)
     _store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }

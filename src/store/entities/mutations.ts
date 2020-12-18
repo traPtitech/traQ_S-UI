@@ -1,5 +1,18 @@
-import { ChannelId, StampId, UserGroupId, UserId } from '@/types/entity-ids'
-import { Channel, DMChannel, Stamp, User, UserGroup } from '@traptitech/traq'
+import {
+  ChannelId,
+  ClipFolderId,
+  StampId,
+  UserGroupId,
+  UserId
+} from '@/types/entity-ids'
+import {
+  Channel,
+  ClipFolder,
+  DMChannel,
+  Stamp,
+  User,
+  UserGroup
+} from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import _store from '@/_store'
@@ -49,6 +62,16 @@ export const mutations = defineMutations<S>()({
   },
   deleteChannel(state: S, channelId: ChannelId) {
     state.channelsMap.delete(channelId)
+  },
+
+  setClipFolder(state: S, clipFolder: ClipFolder) {
+    state.clipFoldersMap.set(clipFolder.id, clipFolder)
+  },
+  setClipFoldersMap(state: S, clipFoldersMap: Map<ClipFolderId, ClipFolder>) {
+    state.clipFoldersMap = clipFoldersMap
+  },
+  deleteClipFolder(state: S, clipFolderId: ClipFolderId) {
+    state.clipFoldersMap.delete(clipFolderId)
   },
 
   setStamp(state: S, stamp: Stamp) {

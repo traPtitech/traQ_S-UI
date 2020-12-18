@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { ClipFolderId } from '@/types/entity-ids'
 import useSidebar from '@/use/sidebar'
 import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
@@ -41,7 +41,8 @@ export default defineComponent({
   },
   setup(props) {
     const clipFolderName = computed(
-      () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
+      () =>
+        store.state.entities.clipFoldersMap.get(props.clipFolderId)?.name ?? ''
     )
     const { openSidebar } = useSidebar()
     return {
