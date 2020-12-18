@@ -80,9 +80,9 @@ export default defineComponent({
           _store.dispatch.entities.fetchStampPalettes
         ),
         // ホームチャンネルの選択などに必要
-        store.dispatch.entities.fetchChannels,
+        store.dispatch.entities.fetchChannels(),
         // スタンプの所有者変更に必要
-        store.dispatch.entities.fetchUsers
+        store.dispatch.entities.fetchUsers()
       ])
 
       hasInitialFetchForSettingsDone.value = true
