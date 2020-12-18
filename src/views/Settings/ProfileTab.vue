@@ -64,7 +64,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import useStateDiff from '@/components/Settings/use/stateDiff'
@@ -124,7 +125,7 @@ const useProfileUpdate = (
       await Promise.all(promises)
       destroyImageUploadState()
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'success',
         text: 'プロフィールを更新しました'
       })
@@ -132,7 +133,7 @@ const useProfileUpdate = (
       // eslint-disable-next-line no-console
       console.error('プロフィールの更新に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'プロフィールの更新に失敗しました'
       })
@@ -159,7 +160,10 @@ export default defineComponent({
   name: 'ProfileTab',
   setup() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const detail = computed(() => store.state.domain.me.detail!)
+    const detail = computed(() => _store.state.domain.me.detail!)
+
+    // ホームチャンネルの選択に必要
+    store.dispatch.entities.fetchChannels()
 
     const { channelOptions } = useChannelOptions('--未設定--')
 

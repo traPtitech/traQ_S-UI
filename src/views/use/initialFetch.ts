@@ -13,14 +13,11 @@ import { performLoginCheck } from './loginCheck'
 // レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
-  await Promise.all([
-    store.dispatch.entities.fetchUsers(),
-    store.dispatch.entities.fetchChannels(),
-    _store.dispatch.domain.me.fetchUnreadChannels(),
-    // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
-    // メッセージのレンダリングにも必要なので待つ必要がある
-    store.dispatch.entities.fetchStamps()
-  ])
+  store.dispatch.entities.fetchUsers()
+  store.dispatch.entities.fetchChannels()
+  store.dispatch.entities.fetchStamps()
+  // 未読処理前に未読を取得していないと未読を消せないため
+  await _store.dispatch.domain.me.fetchUnreadChannels()
 
   _store.commit.app.setInitialFetchCompleted()
 

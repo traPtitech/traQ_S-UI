@@ -6,7 +6,8 @@ import { embeddingOrigin } from './apis'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
+  bothChannelsMapInitialFetchPromise,
+  stampsMapInitialFetchPromise
 } from '@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
@@ -43,7 +44,8 @@ const md = (async () => {
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
+  bothChannelsMapInitialFetchPromise,
+  stampsMapInitialFetchPromise
 ])
 
 export const render = async (text: string) => {
