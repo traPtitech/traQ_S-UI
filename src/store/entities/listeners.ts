@@ -5,20 +5,20 @@ defineListeners('entities', (listener, { dispatch }) => {
     dispatch.fetchUser({ userId: id })
   })
   listener.on('USER_UPDATED', ({ id }) => {
-    dispatch.fetchUser({ userId: id })
+    dispatch.fetchUser({ userId: id, cacheStrategy: 'forceFetch' })
   })
   listener.on('USER_LEFT', ({ id }) => {
     dispatch.deleteUser(id)
   })
   listener.on('USER_ICON_UPDATED', ({ id }) => {
-    dispatch.fetchUser({ userId: id })
+    dispatch.fetchUser({ userId: id, cacheStrategy: 'forceFetch' })
   })
 
   listener.on('USER_GROUP_CREATED', ({ id }) => {
     dispatch.fetchUserGroup({ userGroupId: id })
   })
   listener.on('USER_GROUP_UPDATED', ({ id }) => {
-    dispatch.fetchUserGroup({ userGroupId: id })
+    dispatch.fetchUserGroup({ userGroupId: id, cacheStrategy: 'forceFetch' })
   })
   listener.on('USER_GROUP_DELETED', ({ id }) => {
     dispatch.deleteUserGroup(id)
