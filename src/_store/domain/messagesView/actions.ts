@@ -150,6 +150,9 @@ export const actions = defineActions({
       .filter(isExternalUrl)
       .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
       .map(async e => {
+        const cache = rootState.entities.ogpData[e.url]
+        if (cache) return
+
         try {
           await rootDispatch.entities.fetchOgpData(e.url)
         } catch {

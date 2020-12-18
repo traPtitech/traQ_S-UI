@@ -77,7 +77,7 @@ jobs:
         env:
           CYPRESS_INSTALL_BINARY: 0
       - name: run build
-        run: npm run build:with-font
+        run: npm run build:may-with-font
   test-unit:
     name: run test:unit
     runs-on: ubuntu-latest

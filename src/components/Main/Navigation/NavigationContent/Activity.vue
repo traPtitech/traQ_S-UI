@@ -5,7 +5,7 @@
         :class="$style.button"
         title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
-        v-model="isAll"
+        v-model="isNotAll"
       />
       <toggle-button
         :class="$style.button"
@@ -74,10 +74,11 @@ const useActivityStream = () => {
 }
 
 const useActivityMode = () => {
-  const isAll = computed({
-    get: () => store.getters.app.browserSettings.isActivityModeAll,
+  // 反転していることに注意
+  const isNotAll = computed({
+    get: () => !store.getters.app.browserSettings.isActivityModeAll,
     set: v => {
-      store.commit.app.browserSettings.setActivityModeAll(v)
+      store.commit.app.browserSettings.setActivityModeAll(!v)
     }
   })
   const isPerChannel = computed({
@@ -87,7 +88,7 @@ const useActivityMode = () => {
     }
   })
 
-  return { isAll, isPerChannel }
+  return { isNotAll, isPerChannel }
 }
 
 export default defineComponent({
@@ -98,10 +99,10 @@ export default defineComponent({
   },
   setup() {
     useActivityStream()
-    const { isAll, isPerChannel } = useActivityMode()
+    const { isNotAll, isPerChannel } = useActivityMode()
     const messages = computed(() => store.state.domain.activityTimeline)
 
-    return { isAll, isPerChannel, messages }
+    return { isNotAll, isPerChannel, messages }
   }
 })
 </script>
