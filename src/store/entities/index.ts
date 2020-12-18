@@ -3,6 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
+import { messages } from './messages'
 
 /**
  * サーバーから取得したエンティティを扱うstore
@@ -14,5 +15,8 @@ export const entities = defineModule({
   state,
   getters,
   mutations,
-  actions
+  actions,
+  modules: {
+    messages
+  }
 })
