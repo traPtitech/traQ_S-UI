@@ -5,7 +5,6 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import {
   MessageId,
-  WebhookId,
   FileId,
   TagId,
   ClipFolderId,
@@ -14,7 +13,6 @@ import {
 } from '@/types/entity-ids'
 import {
   Message,
-  Webhook,
   FileInfo,
   Tag,
   ClipFolder,
@@ -24,7 +22,6 @@ import {
 
 export type MessageMap = Record<MessageId, Message>
 export type StampMap = Record<StampId, Stamp>
-export type WebhookMap = Record<WebhookId, Webhook>
 export type FileMetaDataMap = Record<FileId, FileInfo>
 export type TagMap = Record<TagId, Tag>
 export type ClipFolderMap = Record<ClipFolderId, ClipFolder>
