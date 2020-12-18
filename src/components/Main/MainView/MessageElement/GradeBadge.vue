@@ -10,6 +10,7 @@
 import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
+import _store from '@/_store'
 
 export default defineComponent({
   name: 'GradeBadge',
@@ -31,7 +32,7 @@ export default defineComponent({
 
     const onClick = () => {
       if (!gradeGroup.value) return
-      store.dispatch.ui.modal.pushModal({
+      _store.dispatch.ui.modal.pushModal({
         type: 'group',
         id: gradeGroup.value.id
       })

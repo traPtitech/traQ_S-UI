@@ -17,13 +17,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import apis from '@/lib/apis'
 import { compareString } from '@/lib/util/string'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import { ClipFolderMap } from '@/store/entities'
+import { ClipFolderMap } from '@/_store/entities'
 
 const useCreateClip = (
   props: { messageId: MessageId },

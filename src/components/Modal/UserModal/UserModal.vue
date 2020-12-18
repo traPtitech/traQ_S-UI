@@ -30,6 +30,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
 import store from '@/store'
+import _store from '@/_store'
 import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -59,20 +60,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const isMobile = computed(() => _store.state.ui.isMobile)
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))
 
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
+    const onClickClear = () => _store.dispatch.ui.modal.clearModal()
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
-    const user = computed(() => store.state.entities.users[props.id])
+    const user = computed(() => store.state.entities.usersMap.get(props.id))
 
-    const detail = computed(() => store.state.domain.userDetails[props.id])
-    store.dispatch.domain.fetchUserDetail(props.id)
+    const detail = computed(() => _store.state.domain.userDetails[props.id])
+    _store.dispatch.domain.fetchUserDetail(props.id)
 
-    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
+    const onClickOutside = () => _store.dispatch.ui.modal.clearModal()
 
     return {
       isMobile,

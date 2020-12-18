@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
 
 export default defineComponent({

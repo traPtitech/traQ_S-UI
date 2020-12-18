@@ -39,6 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
+import _store from '@/_store'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
@@ -85,7 +86,8 @@ export default defineComponent({
     })
 
     const isArchived = computed(
-      () => store.state.entities.channels[props.channelId]?.archived ?? false
+      () =>
+        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
     )
 
     const { isFocused, onFocus, onBlur } = useFocus()
@@ -101,7 +103,7 @@ export default defineComponent({
     )
 
     const typingUsers = computed(
-      () => store.getters.domain.messagesView.typingUsers
+      () => _store.getters.domain.messagesView.typingUsers
     )
 
     const canPostMessage = computed(
@@ -110,7 +112,7 @@ export default defineComponent({
     const showKeyGuide = computed(
       () =>
         textState.isModifierKeyPressed &&
-        (store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
+        (_store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
           canPostMessage.value)
     )
 
@@ -123,8 +125,8 @@ export default defineComponent({
     )
 
     const onStampClick = () => {
-      if (store.getters.ui.stampPicker.isStampPickerShown) {
-        store.dispatch.ui.stampPicker.closeStampPicker()
+      if (_store.getters.ui.stampPicker.isStampPickerShown) {
+        _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
         invokeStampPicker()
       }

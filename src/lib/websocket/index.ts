@@ -1,6 +1,7 @@
 import { WEBSOCKET_ENDPOINT } from '@/lib/apis'
 import { onReceive } from './receive'
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
+import { createWebSocketListener } from './WebSocketListener'
 
 const absoluteWebsocketEndpoint = new URL(WEBSOCKET_ENDPOINT, document.baseURI)
 absoluteWebsocketEndpoint.protocol =
@@ -15,12 +16,14 @@ export const ws = new AutoReconnectWebSocket(
   }
 )
 
+export const wsListener = createWebSocketListener(ws)
+wsListener.on('all', event => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onReceive(event as any)
+})
+
 export const setupWebSocket = () => {
   ws.connect()
-
-  ws.addEventListener('message', event => {
-    onReceive(event.detail as string)
-  })
 }
 
 export * from './send'

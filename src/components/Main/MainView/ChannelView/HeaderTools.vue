@@ -47,7 +47,7 @@ import useChannelManageModal from './use/channelManageModal'
 import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 import { useRoute } from 'vue-router'
 
 const useCopy = () => {

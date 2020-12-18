@@ -49,7 +49,8 @@ export default defineComponent({
     } = useChannelMessageFetcher(props)
 
     const isArchived = computed(
-      () => store.state.entities.channels[props.channelId]?.archived ?? false
+      () =>
+        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
     )
 
     return {

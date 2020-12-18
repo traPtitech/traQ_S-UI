@@ -20,9 +20,11 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
+import _store from '@/_store'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
+import { isDefined } from '@/lib/util/array'
 
 export default defineComponent({
   name: 'GroupsTab',
@@ -33,13 +35,13 @@ export default defineComponent({
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
-        props.detail?.groups.map(
-          groupId => store.state.entities.userGroups[groupId]
-        ) ?? []
+        props.detail?.groups
+          .map(groupId => store.state.entities.userGroupsMap.get(groupId))
+          .filter(isDefined) ?? []
     )
 
     const onGroupClick = (id: UserGroupId) => {
-      store.dispatch.ui.modal.pushModal({
+      _store.dispatch.ui.modal.pushModal({
         type: 'group',
         id
       })

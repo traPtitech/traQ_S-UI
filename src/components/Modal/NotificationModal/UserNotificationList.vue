@@ -18,12 +18,11 @@ import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
-import { ActiveUserMap } from '@/store/entities'
 
 // TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const allUsers = computed(() =>
-    Object.values(store.getters.entities.activeUsers as ActiveUserMap).filter(
+    [...store.getters.entities.activeUsersMap.values()].filter(
       // BOT除外
       u => !u.bot
     )

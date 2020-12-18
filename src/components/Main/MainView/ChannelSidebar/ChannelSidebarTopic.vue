@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, ref, PropType, watchEffect, reactive } from 'vue'
 import apis from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import { ChannelId } from '@/types/entity-ids'

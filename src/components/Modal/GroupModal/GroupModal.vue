@@ -33,14 +33,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const group = computed(() => store.state.entities.userGroups[props.id])
+    const group = computed(() =>
+      store.state.entities.userGroupsMap.get(props.id)
+    )
     const groupName = computed(() => group.value?.name)
     const groupMember = computed(
       () =>
         group.value?.members
-          .filter(
-            member =>
-              store.getters.entities.activeUsers[member.id] !== undefined
+          .filter(member =>
+            store.getters.entities.activeUsersMap.has(member.id)
           )
           .map(member => member.id) ?? []
     )

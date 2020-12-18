@@ -28,7 +28,7 @@ const useChannelOptions = (
   })
 
   const channelOptions = computed(() => {
-    const channels = Object.values(store.state.entities.channels)
+    const channels = [...store.state.entities.channelsMap.values()]
       .map(channel => ({
         key: channelIdToPathString(channel.id, true),
         value: channelToVal(channel)

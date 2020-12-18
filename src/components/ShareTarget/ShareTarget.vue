@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
-import store from '@/store'
+import store from '@/_store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
 import { teleportTargetName } from './ShareTargetMessageInput.vue'
@@ -62,9 +62,6 @@ export default defineComponent({
 
     // メッセージの投稿に必要
     Promise.all([
-      store.dispatch.entities.fetchChannels(),
-      store.dispatch.entities.fetchUsers(),
-      store.dispatch.entities.fetchUserGroups(),
       store.dispatch.entities.fetchStamps(),
       store.dispatch.domain.stampCategory.constructStampCategories(),
       store.dispatch.entities.fetchStampPalettes(),

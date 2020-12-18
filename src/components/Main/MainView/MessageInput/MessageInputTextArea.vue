@@ -25,7 +25,7 @@ import {
   nextTick
 } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
-import store from '@/store'
+import store from '@/_store'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
 

@@ -86,9 +86,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { isMac } from '@/lib/util/browser'
-import { SendKeys } from '@/store/app/browserSettings'
+import { SendKeys } from '@/_store/app/browserSettings'
 import useSyncedState from '@/components/Settings/use/syncedState'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'

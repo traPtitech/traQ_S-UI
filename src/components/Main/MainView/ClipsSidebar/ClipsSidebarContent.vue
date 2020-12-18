@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { ClipFolderId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
@@ -36,7 +36,7 @@ import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEdi
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '@/router'
-import { ClipFolderMap } from '@/store/entities'
+import { ClipFolderMap } from '@/_store/entities'
 
 const useEdit = (
   props: { clipFolderId: string },

@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { StampId } from '@/types/entity-ids'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'

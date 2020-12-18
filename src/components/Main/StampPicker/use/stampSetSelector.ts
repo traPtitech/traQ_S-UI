@@ -1,5 +1,5 @@
 import { reactive, computed } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 
 export type StampSetType = 'palette' | 'category' | 'history'
 

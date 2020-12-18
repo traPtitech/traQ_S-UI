@@ -23,6 +23,7 @@ import { defaultSettingsName } from '@/router/settings'
 import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
+import _store from '@/_store'
 import store from '@/store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
@@ -35,7 +36,7 @@ const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
       return
     }
     if (isMobile.value) {
-      store.commit.ui.settings.setSettingsRootShown(true)
+      _store.commit.ui.settings.setSettingsRootShown(true)
     } else {
       router.replace({ name: defaultSettingsName })
     }
@@ -52,7 +53,7 @@ export default defineComponent({
     useSettingsRootPathWatcher(isMobile)
 
     onBeforeRouteLeave(() => {
-      store.commit.ui.settings.setSettingsRootShown(false)
+      _store.commit.ui.settings.setSettingsRootShown(false)
       return true
     })
 
@@ -61,11 +62,11 @@ export default defineComponent({
       changeViewState(null)
     })
 
-    const execIfEmpty = <T extends keyof typeof store.state.entities>(
+    const execIfEmpty = <T extends keyof typeof _store.state.entities>(
       key: T,
       exector: () => Promise<void>
     ) =>
-      Object.entries(store.state.entities[key]).length > 0
+      Object.entries(_store.state.entities[key]).length > 0
         ? undefined
         : exector()
 
@@ -73,15 +74,15 @@ export default defineComponent({
     const hasInitialFetchForSettingsDone = ref(false)
     useLoginCheck(async () => {
       await Promise.all([
-        execIfEmpty('stamps', store.dispatch.entities.fetchStamps),
+        execIfEmpty('stamps', _store.dispatch.entities.fetchStamps),
         execIfEmpty(
           'stampPalettes',
-          store.dispatch.entities.fetchStampPalettes
+          _store.dispatch.entities.fetchStampPalettes
         ),
         // ホームチャンネルの選択などに必要
-        execIfEmpty('channels', store.dispatch.entities.fetchChannels),
+        store.dispatch.entities.fetchChannels,
         // スタンプの所有者変更に必要
-        execIfEmpty('users', store.dispatch.entities.fetchUsers)
+        store.dispatch.entities.fetchUsers
       ])
 
       hasInitialFetchForSettingsDone.value = true

@@ -1,14 +1,26 @@
 import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
+import _store from '@/_store'
 import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
-import { Attachment } from '@/store/ui/fileInput/state'
+import { Attachment } from '@/_store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
+import {
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
+} from '@/store/entities/promises'
+
+const initialFetchPromise = Promise.all([
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
+])
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -48,7 +60,7 @@ const usePostMessage = (
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
 
   const isForce = computed(
-    () => store.state.entities.channels[props.channelId]?.force
+    () => store.state.entities.channelsMap.get(props.channelId)?.force
   )
   const confirmString = computed(
     () =>
@@ -62,12 +74,14 @@ const usePostMessage = (
 
   const postMessage = async () => {
     if (isPosting.value) return false
-    if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return false
+    if (textState.isEmpty && _store.getters.ui.fileInput.isEmpty) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
       return false
     }
+
+    await initialFetchPromise
 
     const embededText = embedInternalLink(textState.text, {
       getUser: store.getters.entities.userByName,
@@ -76,7 +90,7 @@ const usePostMessage = (
         try {
           const id = channelPathToId(
             path.split('/'),
-            store.state.domain.channelTree.channelTree
+            _store.state.domain.channelTree.channelTree
           )
           return { id }
         } catch {
@@ -85,12 +99,12 @@ const usePostMessage = (
       }
     })
 
-    const dummyFileUrls = store.state.ui.fileInput.attachments.map(() =>
+    const dummyFileUrls = _store.state.ui.fileInput.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
     const dummyText = createContent(embededText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージが長すぎます'
       })
@@ -102,7 +116,7 @@ const usePostMessage = (
       isPosting.value = true
 
       const fileUrls = await uploadAttachments(
-        store.state.ui.fileInput.attachments,
+        _store.state.ui.fileInput.attachments,
         props.channelId,
         p => {
           progress.value = p
@@ -114,13 +128,13 @@ const usePostMessage = (
       })
 
       textState.text = ''
-      store.commit.ui.fileInput.clearAttachments()
+      _store.commit.ui.fileInput.clearAttachments()
       posted = true
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('メッセージ送信に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージ送信に失敗しました'
       })

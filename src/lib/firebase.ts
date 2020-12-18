@@ -8,7 +8,7 @@ import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import store from '@/_store'
 import config from '@/config'
 
 declare const window: NativeAppWindow

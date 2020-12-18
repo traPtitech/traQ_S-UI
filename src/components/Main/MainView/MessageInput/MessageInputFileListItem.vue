@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import { Attachment } from '@/store/ui/fileInput/state'
+import { Attachment } from '@/_store/ui/fileInput/state'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'

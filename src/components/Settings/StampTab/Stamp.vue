@@ -47,6 +47,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath } from '@/lib/apis'
+import _store from '@/_store'
 import store from '@/store'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
@@ -57,11 +58,10 @@ import { Stamp } from '@traptitech/traq'
 import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useStateDiff from '../use/stateDiff'
-import { ActiveUserMap } from '@/store/entities'
 import { isValidStampName } from '@/lib/validate'
 
 const creatorOptions = computed(() =>
-  Object.values(store.getters.entities.activeUsers as ActiveUserMap)
+  [...store.getters.entities.activeUsersMap.values()]
     .filter(u => !u.bot)
     .map(u => ({ key: `@${u.name}`, value: u.id }))
     .sort((a, b) => compareStringInsensitive(a.key, b.key))
@@ -117,7 +117,7 @@ const useStampEdit = (
       await Promise.all(promises)
       afterSuccess()
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'success',
         text: 'スタンプを更新しました'
       })
@@ -125,7 +125,7 @@ const useStampEdit = (
       // eslint-disable-next-line no-console
       console.error('スタンプの編集に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'スタンプの編集に失敗しました'
       })

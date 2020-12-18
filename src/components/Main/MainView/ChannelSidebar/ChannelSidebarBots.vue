@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
+import _store from '@/_store'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
@@ -21,10 +22,10 @@ export default defineComponent({
     channelId: { type: String as PropType<ChannelId>, required: true }
   },
   setup() {
-    const botUserIds = computed(() => store.state.domain.messagesView.bots)
+    const botUserIds = computed(() => _store.state.domain.messagesView.bots)
     const viewStates = computed(() =>
       botUserIds.value.map(id => ({
-        user: store.state.entities.users[id],
+        user: store.state.entities.usersMap.get(id),
         active: true
       }))
     )

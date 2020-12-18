@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import FileDescription from '@/components/UI/FileDescription.vue'
 

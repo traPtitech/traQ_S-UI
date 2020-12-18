@@ -18,7 +18,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.users[props.userId ?? ''])
+    const user = computed(() =>
+      store.state.entities.usersMap.get(props.userId ?? '')
+    )
 
     const { openModal } = useUserModalOpener(props, user)
 

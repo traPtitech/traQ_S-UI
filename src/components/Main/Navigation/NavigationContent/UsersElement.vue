@@ -15,6 +15,7 @@ import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
+import _store from '@/_store'
 import store from '@/store'
 import { changeDMChannelByUsername } from '@/router/channel'
 
@@ -36,7 +37,7 @@ export default defineComponent({
     )
     const hasNotification = computed(() =>
       dmChannelId.value
-        ? !!store.state.domain.me.unreadChannelsSet[dmChannelId.value]
+        ? !!_store.state.domain.me.unreadChannelsSet[dmChannelId.value]
         : false
     )
 

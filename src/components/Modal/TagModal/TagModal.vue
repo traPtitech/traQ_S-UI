@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import _store from '@/_store'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
@@ -34,13 +35,13 @@ export default defineComponent({
     }
   },
   setup(props) {
-    store.dispatch.entities.fetchTag(props.id)
-    const tag = computed(() => store.state.entities.tags[props.id])
+    _store.dispatch.entities.fetchTag(props.id)
+    const tag = computed(() => _store.state.entities.tags[props.id])
     const tagName = computed(() => tag.value?.tag)
     const taggedUsers = computed(
       () =>
-        tag.value?.users.filter(
-          user => store.getters.entities.activeUsers[user] !== undefined
+        tag.value?.users.filter(user =>
+          store.getters.entities.activeUsersMap.has(user)
         ) ?? []
     )
     return { tagName, taggedUsers }

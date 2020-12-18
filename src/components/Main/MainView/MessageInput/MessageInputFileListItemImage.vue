@@ -18,7 +18,7 @@ import {
   PropType,
   shallowRef
 } from 'vue'
-import { Attachment } from '@/store/ui/fileInput/state'
+import { Attachment } from '@/_store/ui/fileInput/state'
 
 const useImageThumbnail = (
   props: { attachment: Attachment },

@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import store from '@/_store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'

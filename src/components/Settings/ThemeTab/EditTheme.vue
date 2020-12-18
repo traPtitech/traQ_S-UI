@@ -52,10 +52,10 @@ import {
   watchEffect
 } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import store from '@/store'
+import store from '@/_store'
 import { Theme } from '@/types/theme'
 import { dequal } from 'dequal'
-import { lightTheme } from '@/store/app/themeSettings/default'
+import { lightTheme } from '@/_store/app/themeSettings/default'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

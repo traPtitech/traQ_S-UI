@@ -1,4 +1,4 @@
-import { ChannelTree, ChannelTreeNode } from '@/store/domain/channelTree/state'
+import { ChannelTree, ChannelTreeNode } from '@/_store/domain/channelTree/state'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { dmParentUuid } from '@/lib/util/uuid'
@@ -35,17 +35,18 @@ const useChannelPath = () => {
   const channelIdToSimpleChannelPath = (
     id: ChannelId | DMChannelId
   ): SimpleChannel[] => {
-    if (id in store.state.entities.dmChannels) {
+    if (store.state.entities.dmChannelsMap.has(id)) {
       return [
         {
           id,
           name: store.getters.entities.userNameByDMChannelId(id) ?? ''
         }
       ]
-    } else if (!(id in store.state.entities.channels)) {
+    } else if (!store.state.entities.channelsMap.has(id)) {
       throw `channelIdToPath: No channel: ${id}`
     }
-    const channel = store.state.entities.channels[id]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const channel = store.state.entities.channelsMap.get(id)!
     if (!channel.parentId || channel.parentId === dmParentUuid) {
       return [{ id, name: channel.name }]
     }
@@ -65,7 +66,7 @@ const useChannelPath = () => {
     id: ChannelId | DMChannelId,
     hashed = false
   ): string => {
-    if (id in store.state.entities.dmChannels)
+    if (store.state.entities.dmChannelsMap.has(id))
       return dmChannelIdToPathString(id, hashed)
     return (hashed ? '#' : '') + channelIdToPath(id).join('/')
   }
@@ -74,8 +75,9 @@ const useChannelPath = () => {
     id: ChannelId | DMChannelId,
     hashed = false
   ): string => {
-    if (id in store.state.entities.dmChannels)
+    if (store.state.entities.dmChannelsMap.has(id)) {
       return dmChannelIdToPathString(id, hashed)
+    }
     const channels = channelIdToPath(id)
     const formattedChannels = channels.slice(0, -1).map(c => c[0])
     formattedChannels.push(channels.pop() ?? '')
@@ -84,8 +86,9 @@ const useChannelPath = () => {
 
   const channelIdToLink = (id: ChannelId | DMChannelId) => {
     const pathString = channelIdToPathString(id, false)
-    if (id in store.state.entities.dmChannels)
+    if (store.state.entities.dmChannelsMap.has(id)) {
       return constructUserPath(pathString)
+    }
     return constructChannelPath(pathString)
   }
 

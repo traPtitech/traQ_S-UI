@@ -35,7 +35,7 @@ import {
   watch,
   onMounted
 } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import { ws, setTimelineStreamingState } from '@/lib/websocket'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'

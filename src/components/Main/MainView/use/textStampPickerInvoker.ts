@@ -1,5 +1,5 @@
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
-import store from '@/store'
+import store from '@/_store'
 import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (

@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, Ref } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import StampPicker from './StampPicker.vue'
-import { Place } from '@/store/ui/stampPicker'
+import { Place } from '@/_store/ui/stampPicker'
 
 const useStampPicker = () => {
   const state = reactive({

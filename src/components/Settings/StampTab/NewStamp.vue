@@ -34,7 +34,7 @@ import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
-import store from '@/store'
+import store from '@/_store'
 import { isValidStampName } from '@/lib/validate'
 
 const useStampCreate = (

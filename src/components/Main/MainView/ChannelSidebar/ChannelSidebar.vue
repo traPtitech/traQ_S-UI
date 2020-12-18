@@ -70,7 +70,7 @@ export default defineComponent({
     } = useChannelSidebarCommon()
 
     const channelName = computed(
-      () => store.state.entities.channels[props.channelId ?? '']?.name ?? ''
+      () => store.state.entities.channelsMap.get(props.channelId)?.name ?? ''
     )
 
     const { sessionUserIds: qallUserIds } = useQallSession(props)

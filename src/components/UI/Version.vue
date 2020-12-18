@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import version from '@/lib/env/version'
-import store from '@/store'
+import store from '@/_store'
 
 export default defineComponent({
   name: 'Version',

@@ -10,7 +10,7 @@ const useCanCreateChildChannel = () => {
   const canCreateChildChannel = (channelId: ChannelId) => {
     const path = channelId !== nullUuid ? channelIdToPathString(channelId) : ''
     const isArchived =
-      store.state.entities.channels[channelId]?.archived ?? false
+      store.state.entities.channelsMap.get(channelId)?.archived ?? false
     return canCreateChildChannel_(path, isArchived)
   }
 

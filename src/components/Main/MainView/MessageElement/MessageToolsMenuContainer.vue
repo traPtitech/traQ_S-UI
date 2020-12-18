@@ -24,7 +24,7 @@ import {
   nextTick,
   shallowRef
 } from 'vue'
-import store from '@/store'
+import store from '@/_store'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 
 const useMenu = () => {

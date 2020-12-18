@@ -1,6 +1,6 @@
-import store from '@/store'
-import { StampSelectHandler } from '@/store/ui/stampPicker/state'
-import { Place } from '@/store/ui/stampPicker'
+import store from '@/_store'
+import { StampSelectHandler } from '@/_store/ui/stampPicker/state'
+import { Place } from '@/_store/ui/stampPicker'
 
 const useStampPickerInvoker = (
   teleportTargetName: string,
