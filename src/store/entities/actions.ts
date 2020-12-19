@@ -106,6 +106,7 @@ const fetchWithCacheStrategy = async <T, R>(
   return res
 }
 
+// TODO: fetchのエラー処理
 export const actions = defineActions({
   async fetchUser(
     context,
