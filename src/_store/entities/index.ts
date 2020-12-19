@@ -3,10 +3,9 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { MessageId, FileId, ExternalUrl } from '@/types/entity-ids'
-import { Message, FileInfo, Ogp } from '@traptitech/traq'
+import { FileId, ExternalUrl } from '@/types/entity-ids'
+import { FileInfo, Ogp } from '@traptitech/traq'
 
-export type MessageMap = Record<MessageId, Message>
 export type FileMetaDataMap = Record<FileId, FileInfo>
 export type OgpDataMap = Record<ExternalUrl, Ogp>
 

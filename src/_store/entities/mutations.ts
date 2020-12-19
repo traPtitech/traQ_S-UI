@@ -1,10 +1,5 @@
-import { MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import {
-  MessageStampedEvent,
-  MessageUnstampedEvent
-} from '@/lib/websocket/events'
 
 type RecordKeyOf<R> = R extends Record<infer K, unknown> ? K : never
 type RecordValueOf<R> = R extends Record<string, infer V> ? V : never
@@ -43,55 +38,15 @@ const deleteMutation = <
 }
 
 export const mutations = defineMutations<S>()({
-  setMessages: setMutation('messages'),
   setFileMetaData: setMutation('fileMetaData'),
   setOgpData: setMutation('ogpData'),
 
-  extendMessages: extendMutation('messages'),
   extendFileMetaData: extendMutation('fileMetaData'),
   extendOgpData: extendMutation('ogpData'),
 
-  addMessage: addMutation('messages'),
   addFileMetaData: addMutation('fileMetaData'),
   addOgpData: addMutation('ogpData'),
 
-  deleteMessage: deleteMutation('messages'),
   deleteFileMetaData: deleteMutation('fileMetaData'),
-  deleteOgpData: deleteMutation('ogpData'),
-
-  onMessageStamped(state, e: MessageStampedEvent) {
-    const message = state.messages[e.message_id]
-    if (!message) return
-
-    const { stamps } = message
-    // 既に押されているスタンプは更新、新規は追加
-    if (
-      stamps.some(
-        stamp => stamp.stampId === e.stamp_id && stamp.userId === e.user_id
-      )
-    ) {
-      message.stamps = stamps.map(stamp =>
-        stamp.stampId === e.stamp_id && stamp.userId === e.user_id
-          ? { ...stamp, count: e.count, createdAt: e.created_at }
-          : stamp
-      )
-    } else {
-      const stamp: MessageStamp = {
-        userId: e.user_id,
-        stampId: e.stamp_id,
-        count: e.count,
-        createdAt: e.created_at,
-        updatedAt: e.created_at
-      }
-      message.stamps.push(stamp)
-    }
-  },
-  onMessageUnstamped(state, e: MessageUnstampedEvent) {
-    const message = state.messages[e.message_id]
-    if (!message) return
-
-    message.stamps = message.stamps.filter(
-      stamp => !(stamp.stampId === e.stamp_id && stamp.userId === e.user_id)
-    )
-  }
+  deleteOgpData: deleteMutation('ogpData')
 })

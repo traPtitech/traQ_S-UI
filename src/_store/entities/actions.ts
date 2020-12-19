@@ -3,8 +3,9 @@ import { moduleActionContext } from '@/_store'
 import { entities } from './index'
 import apis from '@/lib/apis'
 import { reduceToRecord } from '@/lib/util/record'
-import { FileId, MessageId, ExternalUrl } from '@/types/entity-ids'
+import { FileId, ExternalUrl } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
+import store from '@/store'
 
 interface BaseGetMessagesParams {
   limit?: number
@@ -47,19 +48,13 @@ export const entitiesActionContext = (
 export const actions = defineActions({
   // TODO: ドメインデータっぽい
   async fetchMessagesInClipFolder(context, params: GetClipsParam) {
-    const { commit } = entitiesActionContext(context)
     const { data, headers } = await apis.getClips(
       params.folderId,
       params.limit,
       params.offset,
       params.order
     )
-    commit.extendMessages(
-      reduceToRecord(
-        data.map(c => c.message),
-        'id'
-      )
-    )
+    store.dispatch.entities.messages.extendMessagesMap(data.map(c => c.message))
     return {
       clips: data,
       hasMore: headers['x-traq-more'] === 'true'
@@ -76,17 +71,11 @@ export const actions = defineActions({
       params.inclusive,
       params.order
     )
-    commit.extendMessages(reduceToRecord(res.data, 'id'))
+    store.dispatch.entities.messages.extendMessagesMap(res.data)
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  },
-  async fetchMessage(context, messageId: MessageId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getMessage(messageId)
-    commit.addMessage({ id: res.data.id, entity: res.data })
-    return res.data
   },
   async fetchFileMetaByChannelId(
     context,

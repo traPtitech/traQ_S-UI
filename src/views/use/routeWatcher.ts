@@ -210,10 +210,9 @@ const useRouteWatcher = () => {
     if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
-    const messageId = state.idParam
-    const message =
-      _store.state.entities.messages[messageId] ??
-      (await _store.dispatch.entities.fetchMessage(messageId))
+    const message = await store.dispatch.entities.messages.fetchMessage({
+      messageId: state.idParam
+    })
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'

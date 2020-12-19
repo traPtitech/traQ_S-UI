@@ -21,7 +21,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useElementRenderObserver from './use/elementRenderObserver'
@@ -54,7 +55,9 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
     const { channelIdToPathString } = useChannelPath()
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       channelPath: computed((): string =>
         state.message
           ? channelIdToPathString(state.message.channelId, false)
@@ -65,8 +68,9 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          _store.state.domain.messagesView.renderedContentMap[
+            props.messageId
+          ] ?? ''
       )
     })
 

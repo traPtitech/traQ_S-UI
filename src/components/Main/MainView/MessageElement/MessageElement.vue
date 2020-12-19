@@ -36,7 +36,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
@@ -73,18 +74,23 @@ export default defineComponent({
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          _store.state.domain.messagesView.renderedContentMap[
+            props.messageId
+          ] ?? ''
       ),
       rawContent: computed(
-        () => store.state.entities.messages[props.messageId]?.content ?? ''
+        () =>
+          store.state.entities.messages.messagesMap.get(props.messageId)
+            ?.content ?? ''
       ),
       isEditing: computed(
         () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
+          props.messageId === _store.state.domain.messagesView.editingMessageId
       ),
       isPinned: computed((): boolean => state.message?.pinned ?? false)
     })

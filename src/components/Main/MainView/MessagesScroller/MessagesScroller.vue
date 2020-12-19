@@ -57,7 +57,8 @@ import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.v
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '@/lib/markdown'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
 import { embeddingOrigin } from '@/lib/apis'
@@ -124,8 +125,9 @@ const useCompareDate = (props: { messageIds: MessageId[] }) => {
     if (index === 0) {
       return true
     }
-    const pre = store.state.entities.messages[props.messageIds[index - 1]]
-    const current = store.state.entities.messages[props.messageIds[index]]
+    const { messagesMap } = store.state.entities.messages
+    const pre = messagesMap.get(props.messageIds[index - 1])
+    const current = messagesMap.get(props.messageIds[index])
     const preDate = new Date(pre?.createdAt || ``)
     const currentDate = new Date(current?.createdAt || ``)
     return preDate.toDateString() !== currentDate.toDateString()
@@ -143,15 +145,15 @@ const useScrollRestoration = (
     computed(() => route.name),
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        store.commit.ui.mainView.setLastScrollPosition(
+        _store.commit.ui.mainView.setLastScrollPosition(
           rootRef.value?.scrollTop ?? 0
         )
       }
       if (isMessageScrollerRoute(to)) {
-        state.scrollTop = store.state.ui.mainView.lastScrollPosition
+        state.scrollTop = _store.state.ui.mainView.lastScrollPosition
         await nextTick()
         rootRef.value?.scrollTo({ top: state.scrollTop })
-        store.commit.ui.mainView.setLastScrollPosition(0)
+        _store.commit.ui.mainView.setLastScrollPosition(0)
       }
     }
   )
@@ -193,7 +195,7 @@ export default defineComponent({
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition,
+      scrollTop: _store.state.ui.mainView.lastScrollPosition,
       initialFetchCompleted: false
     })
 
@@ -206,7 +208,7 @@ export default defineComponent({
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {
-      const message = store.state.entities.messages[id]
+      const message = store.state.entities.messages.messagesMap.get(id)
       if (!message) {
         return ''
       }
@@ -215,10 +217,12 @@ export default defineComponent({
     }
 
     const unreadIndex = computed(() => {
-      const unreadSince = store.state.domain.messagesView.unreadSince
+      const unreadSince = _store.state.domain.messagesView.unreadSince
       if (!unreadSince) return -1
       return props.messageIds.findIndex(
-        id => store.state.entities.messages[id]?.createdAt === unreadSince
+        id =>
+          store.state.entities.messages.messagesMap.get(id)?.createdAt ===
+          unreadSince
       )
     })
 
@@ -228,7 +232,7 @@ export default defineComponent({
     } = useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     const messageComponent = computed(() =>
-      store.state.ui.mainView.primaryView.type === 'clips'
+      _store.state.ui.mainView.primaryView.type === 'clips'
         ? ClipElement
         : MessageElement
     )

@@ -51,7 +51,9 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      message: computed(() => _store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       shouldShow: computed(
         (): boolean =>
           !!state.message &&

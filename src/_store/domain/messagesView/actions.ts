@@ -119,7 +119,8 @@ export const actions = defineActions({
     const { commit, rootState, rootDispatch } = messagesViewActionContext(
       context
     )
-    const content = rootState.entities.messages[messageId]?.content ?? ''
+    const content =
+      store.state.entities.messages.messagesMap.get(messageId)?.content ?? ''
 
     const rendered = await render(content)
 
@@ -134,7 +135,9 @@ export const actions = defineActions({
       .filter(isMessage)
       .map(async e => {
         try {
-          const message = await rootDispatch.entities.fetchMessage(e.id)
+          const message = await store.dispatch.entities.messages.fetchMessage({
+            messageId: e.id
+          })
 
           // テキスト部分のみレンダリング
           const rendered = await render(message.content)
