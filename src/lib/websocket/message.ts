@@ -69,6 +69,8 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   await _store.dispatch.domain.messagesView.updateAndRenderMessageId({
     message: res.data
   })
+
+  // TODO: ピン止めの内容の更新
 }
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
