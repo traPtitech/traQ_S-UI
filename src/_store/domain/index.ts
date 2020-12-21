@@ -1,5 +1,4 @@
 import { defineModule } from 'direct-vuex'
-import { MessageId, UserId } from '@/types/entity-ids'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
@@ -8,13 +7,6 @@ import { me } from './me'
 import { channelTree } from './channelTree'
 import { messagesView } from './messagesView'
 import { stampCategory } from './stampCategory'
-
-export interface ChannelState {
-  messages: MessageId[]
-  pinnedMessages: MessageId[]
-  subscribedUser: UserId[]
-  notifiedUser: UserId[]
-}
 
 export const domain = defineModule({
   namespaced: true,
