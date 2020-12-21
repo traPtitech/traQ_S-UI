@@ -1,12 +1,12 @@
 import { computed, reactive } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { isImage, isNonPreviewable, isVideo, isAudio } from '@/lib/util/file'
 import { isDefined } from '@/lib/util/array'
 
 const useFileMetaList = (props: { fileIds: string[] }) => {
   const fileMetaData = computed(() =>
     props.fileIds
-      .map(id => store.state.entities.fileMetaData[id])
+      .map(id => store.state.entities.messages.fileMetaDataMap.get(id))
       .filter(isDefined)
   )
   const state = reactive({

@@ -1,5 +1,5 @@
-import { Message } from '@traptitech/traq'
-import { MessageId } from '@/types/entity-ids'
+import { FileInfo, Message } from '@traptitech/traq'
+import { FileId, MessageId } from '@/types/entity-ids'
 
 export type S = {
   /**
@@ -12,8 +12,10 @@ export type S = {
     さらにabortControllerをここにおけば、Promise変わったときにabortすることで
     同時に取得するのを止められる
   */
+  fileMetaDataMap: Map<FileId, FileInfo>
 }
 
 export const state: S = {
-  messagesMap: new Map()
+  messagesMap: new Map(),
+  fileMetaDataMap: new Map()
 }

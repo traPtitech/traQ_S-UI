@@ -38,15 +38,11 @@ const deleteMutation = <
 }
 
 export const mutations = defineMutations<S>()({
-  setFileMetaData: setMutation('fileMetaData'),
   setOgpData: setMutation('ogpData'),
 
-  extendFileMetaData: extendMutation('fileMetaData'),
   extendOgpData: extendMutation('ogpData'),
 
-  addFileMetaData: addMutation('fileMetaData'),
   addOgpData: addMutation('ogpData'),
 
-  deleteFileMetaData: deleteMutation('fileMetaData'),
   deleteOgpData: deleteMutation('ogpData')
 })

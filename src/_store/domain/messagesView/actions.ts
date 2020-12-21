@@ -126,7 +126,9 @@ export const actions = defineActions({
 
     const filePromises = rendered.embeddings.filter(isFile).map(async e => {
       try {
-        await rootDispatch.entities.fetchFileMetaByFileId(e.id)
+        await store.dispatch.entities.messages.fetchFileMetaData({
+          fileId: e.id
+        })
       } catch {
         // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
       }

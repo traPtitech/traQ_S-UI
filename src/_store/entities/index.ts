@@ -3,10 +3,9 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { FileId, ExternalUrl } from '@/types/entity-ids'
-import { FileInfo, Ogp } from '@traptitech/traq'
+import { ExternalUrl } from '@/types/entity-ids'
+import { Ogp } from '@traptitech/traq'
 
-export type FileMetaDataMap = Record<FileId, FileInfo>
 export type OgpDataMap = Record<ExternalUrl, Ogp>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

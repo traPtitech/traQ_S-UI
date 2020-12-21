@@ -1,5 +1,5 @@
-import { MessageId } from '@/types/entity-ids'
-import { Message, MessageStamp } from '@traptitech/traq'
+import { FileId, MessageId } from '@/types/entity-ids'
+import { FileInfo, Message, MessageStamp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 
@@ -30,5 +30,12 @@ export const mutations = defineMutations<S>()({
     const message = state.messagesMap.get(messageId)
     if (!message) return
     message.pinned = pinned
+  },
+
+  setFileMetaData(state, fileMetaData: FileInfo) {
+    state.fileMetaDataMap.set(fileMetaData.id, fileMetaData)
+  },
+  deleteFileMetaData(state, fileId: FileId) {
+    state.fileMetaDataMap.delete(fileId)
   }
 })

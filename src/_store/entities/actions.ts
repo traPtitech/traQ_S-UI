@@ -2,8 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/_store'
 import { entities } from './index'
 import apis from '@/lib/apis'
-import { reduceToRecord } from '@/lib/util/record'
-import { FileId, ExternalUrl } from '@/types/entity-ids'
+import { ExternalUrl } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 import store from '@/store'
 
@@ -72,27 +71,6 @@ export const actions = defineActions({
       params.order
     )
     store.dispatch.entities.messages.extendMessagesMap(res.data)
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchFileMetaByChannelId(
-    context,
-    { channelId, limit, offset }: GetFilesChannelParams
-  ) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getFiles(channelId, limit, offset)
-    commit.extendFileMetaData(reduceToRecord(res.data, 'id'))
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchFileMetaByFileId(context, fileId: FileId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getFileMeta(fileId)
-    commit.addFileMetaData({ id: res.data.id, entity: res.data })
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'

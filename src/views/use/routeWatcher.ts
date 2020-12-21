@@ -157,10 +157,9 @@ const useRouteWatcher = () => {
       return
     }
     const fileId = state.idParam
-    if (!_store.state.entities.fileMetaData[fileId]) {
-      await _store.dispatch.entities.fetchFileMetaByFileId(fileId)
-    }
-    const file = _store.state.entities.fileMetaData[fileId]
+    const file = await store.dispatch.entities.messages.fetchFileMetaData({
+      fileId
+    })
 
     if (!file) {
       // ファイルがなかった

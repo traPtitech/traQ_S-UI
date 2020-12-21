@@ -2,8 +2,8 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messages } from '.'
 import { ActionContext } from 'vuex'
-import { Message, MessageStamp } from '@traptitech/traq'
-import { MessageId } from '@/types/entity-ids'
+import { FileInfo, Message, MessageStamp } from '@traptitech/traq'
+import { FileId, MessageId } from '@/types/entity-ids'
 import { createSingleflight } from '@/lib/async'
 import apis from '@/lib/apis'
 import {
@@ -16,6 +16,7 @@ export const messagesActionContext = (
 ) => moduleActionContext(context, messages)
 
 const getMessage = createSingleflight(apis.getMessage.bind(apis))
+const getFileMeta = createSingleflight(apis.getFileMeta.bind(apis))
 
 export const actions = defineActions({
   async fetchMessage(
@@ -92,5 +93,22 @@ export const actions = defineActions({
   ) {
     const { commit } = messagesActionContext(context)
     commit.setMessagePinnedState({ messageId, pinned })
+  },
+
+  async fetchFileMetaData(
+    context,
+    { fileId, force = false }: { fileId: FileId; force?: boolean }
+  ): Promise<FileInfo | undefined> {
+    const { state, commit } = messagesActionContext(context)
+    if (!force && state.fileMetaDataMap.has(fileId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return state.fileMetaDataMap.get(fileId)!
+    }
+
+    const [{ data: fileMetaData }, shared] = await getFileMeta(fileId)
+    if (!shared) {
+      commit.setFileMetaData(fileMetaData)
+    }
+    return fileMetaData
   }
 })

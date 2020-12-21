@@ -24,7 +24,8 @@
 <script lang="ts">
 import { defineComponent, computed, watchEffect, ref, watch } from 'vue'
 import { renderInline } from '@/lib/markdown'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
@@ -49,7 +50,7 @@ export default defineComponent({
       rendered.value = await renderInline(props.content)
     })
     watch(
-      () => store.state.app.initialFetchCompleted,
+      () => _store.state.app.initialFetchCompleted,
       async () => {
         rendered.value = await renderInline(props.content)
       }
@@ -59,14 +60,16 @@ export default defineComponent({
 
     watchEffect(() => {
       files.value?.forEach(file =>
-        store.dispatch.entities.fetchFileMetaByFileId(file.id)
+        store.dispatch.entities.messages.fetchFileMetaData({ fileId: file.id })
       )
     })
 
     const fileTypes = computed(() => [
       ...new Set(
         files.value?.map(file => {
-          const mime = store.state.entities.fileMetaData[file.id]?.mime
+          const mime = store.state.entities.messages.fileMetaDataMap.get(
+            file.id
+          )?.mime
           return mime ? mimeToFileType(mime) : 'file'
         })
       )
