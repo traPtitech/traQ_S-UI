@@ -1,11 +1,20 @@
 import { FileId, MessageId } from '@/types/entity-ids'
 import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
+import { messageMitt } from '.'
 import { S } from './state'
 
 export const mutations = defineMutations<S>()({
   setMessage(state, message: Message) {
+    const isAdd = !state.messagesMap.has(message.id)
+
     state.messagesMap.set(message.id, message)
+
+    if (isAdd) {
+      messageMitt.emit('addMessage', message)
+    } else {
+      messageMitt.emit('updateMessage', message)
+    }
   },
   extendMessagesMap(state, messages: Message[]) {
     messages.forEach(message => {
@@ -14,6 +23,8 @@ export const mutations = defineMutations<S>()({
   },
   deleteMessage(state, messageId: MessageId) {
     state.messagesMap.delete(messageId)
+
+    messageMitt.emit('deleteMessage', messageId)
   },
   updateMessageStamps(
     state,

@@ -1,6 +1,7 @@
 import { wsListener } from '@/lib/websocket'
 import { defineSubModuleListeners } from '@/store/utils/defineListeners'
 import _store from '@/_store'
+import { messageMitt } from '.'
 
 export const listeners = defineSubModuleListeners(
   wsListener,
@@ -55,5 +56,8 @@ export const listeners = defineSubModuleListeners(
       }
     )
 
+    listener.on('reconnect', () => {
+      messageMitt.emit('reconnect')
+    })
   }
 )
