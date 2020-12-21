@@ -43,7 +43,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -77,19 +78,20 @@ export default defineComponent({
   setup(props) {
     const { isMobile } = useIsMobile()
     const state = reactive({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      message: computed(() => store.state.entities.messages[props.messageId]!),
+      message: computed(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        () => store.state.entities.messages.messagesMap.get(props.messageId)!
+      ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          _store.state.domain.messagesView.renderedContentMap[
+            props.messageId
+          ] ?? ''
       ),
-      rawContent: computed(
-        () => store.state.entities.messages[props.messageId]?.content ?? ''
-      ),
+      rawContent: computed((): string => state.message.content ?? ''),
       isEditing: computed(
         () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
+          props.messageId === _store.state.domain.messagesView.editingMessageId
       ),
       stampDetailFoldingState: false
     })

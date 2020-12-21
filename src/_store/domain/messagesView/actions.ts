@@ -116,16 +116,17 @@ export const actions = defineActions({
     commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
-    const { commit, rootState, rootDispatch } = messagesViewActionContext(
-      context
-    )
-    const content = rootState.entities.messages[messageId]?.content ?? ''
+    const { commit } = messagesViewActionContext(context)
+    const content =
+      store.state.entities.messages.messagesMap.get(messageId)?.content ?? ''
 
     const rendered = await render(content)
 
     const filePromises = rendered.embeddings.filter(isFile).map(async e => {
       try {
-        await rootDispatch.entities.fetchFileMetaByFileId(e.id)
+        await store.dispatch.entities.messages.fetchFileMetaData({
+          fileId: e.id
+        })
       } catch {
         // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
       }
@@ -134,7 +135,9 @@ export const actions = defineActions({
       .filter(isMessage)
       .map(async e => {
         try {
-          const message = await rootDispatch.entities.fetchMessage(e.id)
+          const message = await store.dispatch.entities.messages.fetchMessage({
+            messageId: e.id
+          })
 
           // テキスト部分のみレンダリング
           const rendered = await render(message.content)
@@ -150,11 +153,10 @@ export const actions = defineActions({
       .filter(isExternalUrl)
       .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
       .map(async e => {
-        const cache = rootState.entities.ogpData[e.url]
-        if (cache) return
-
         try {
-          await rootDispatch.entities.fetchOgpData(e.url)
+          await store.dispatch.entities.messages.fetchOgpData({
+            url: e.url
+          })
         } catch {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }

@@ -157,10 +157,9 @@ const useRouteWatcher = () => {
       return
     }
     const fileId = state.idParam
-    if (!_store.state.entities.fileMetaData[fileId]) {
-      await _store.dispatch.entities.fetchFileMetaByFileId(fileId)
-    }
-    const file = _store.state.entities.fileMetaData[fileId]
+    const file = await store.dispatch.entities.messages.fetchFileMetaData({
+      fileId
+    })
 
     if (!file) {
       // ファイルがなかった
@@ -210,10 +209,9 @@ const useRouteWatcher = () => {
     if (_store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
-    const messageId = state.idParam
-    const message =
-      _store.state.entities.messages[messageId] ??
-      (await _store.dispatch.entities.fetchMessage(messageId))
+    const message = await store.dispatch.entities.messages.fetchMessage({
+      messageId: state.idParam
+    })
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'

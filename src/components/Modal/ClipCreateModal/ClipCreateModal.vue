@@ -87,8 +87,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const message = computed(
-      () => _store.state.entities.messages[props.messageId]
+    const message = computed(() =>
+      store.state.entities.messages.messagesMap.get(props.messageId)
     )
     const clipFolders = computed(() => {
       const folders = [...store.state.entities.clipFoldersMap.values()]

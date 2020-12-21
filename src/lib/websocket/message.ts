@@ -6,8 +6,6 @@ import {
   MessageUpdatedEvent,
   MessageDeletedEvent,
   MessageReadEvent,
-  MessageStampedEvent,
-  MessageUnstampedEvent,
   MessagePinnedEvent,
   MessageUnpinnedEvent
 } from './events'
@@ -24,7 +22,6 @@ const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
 
 export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
-  _store.commit.entities.addMessage({ id, entity: res.data })
 
   if (store.state.entities.channelsMap.has(res.data.channelId)) {
     _store.commit.domain.addActivity(res.data)
@@ -57,7 +54,6 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
 
 export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   const res = await apis.getMessage(id)
-  _store.commit.entities.addMessage({ id, entity: res.data })
 
   if (store.state.entities.channelsMap.has(res.data.channelId)) {
     _store.commit.domain.updateActivity(res.data)
@@ -69,11 +65,11 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   await _store.dispatch.domain.messagesView.updateAndRenderMessageId({
     message: res.data
   })
+
+  // TODO: ピン止めの内容の更新
 }
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
-  _store.commit.entities.deleteMessage(id)
-
   _store.commit.domain.deleteActivity(id)
 
   _store.commit.domain.messagesView.deleteMessageId(id)
@@ -82,14 +78,6 @@ export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
 
 export const onMessageRead = ({ id }: MessageReadEvent) => {
   _store.commit.domain.me.deleteUnreadChannel(id)
-}
-
-export const onMessageStamped = (data: MessageStampedEvent) => {
-  _store.commit.entities.onMessageStamped(data)
-}
-
-export const onMessageUnstamped = (data: MessageUnstampedEvent) => {
-  _store.commit.entities.onMessageUnstamped(data)
 }
 
 export const onMessagePinned = async (data: MessagePinnedEvent) => {
@@ -105,17 +93,8 @@ export const onMessagePinned = async (data: MessagePinnedEvent) => {
     message: message.data,
     pinnedAt: pin.data.pinnedAt
   })
-  if (_store.state.entities.messages[data.message_id]) {
-    _store.commit.entities.extendMessages({ [data.message_id]: message.data })
-  }
 }
 
 export const onMessageUnpinned = async (data: MessageUnpinnedEvent) => {
-  const message = _store.state.entities.messages[data.message_id]
-  if (message) {
-    _store.commit.entities.extendMessages({
-      [data.message_id]: { ...message, pinned: false }
-    })
-  }
   _store.commit.domain.messagesView.removePinnedMessage(data.message_id)
 }
