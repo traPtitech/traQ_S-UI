@@ -8,6 +8,7 @@ export enum RouteName {
   User = 'user',
   Message = 'message',
   File = 'File',
+  Files = 'files',
   ClipFolders = 'clip-folders',
   ShareTarget = 'share-target',
   Login = 'login',
@@ -73,6 +74,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/files/:id',
     name: RouteName.File,
+    component: Main
+  },
+  {
+    path: constructChannelPath(':channel(.*)') + '/files',
+    name: RouteName.Files,
     component: Main
   },
   {

@@ -175,6 +175,10 @@ const useRouteWatcher = () => {
     state.view = 'main'
   }
 
+  const onRouteChangedToFiles = async () => {
+    state.view = 'main'
+  }
+
   const onRouteChangedToMessage = async () => {
     const message = await store.dispatch.entities.messages.fetchMessage({
       messageId: state.idParam
@@ -240,6 +244,8 @@ const useRouteWatcher = () => {
       await onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
+    } else if (routeName === RouteName.Files) {
+      onRouteChangedToFiles()
     } else if (routeName === RouteName.Message) {
       await onRouteChangedToMessage()
     }

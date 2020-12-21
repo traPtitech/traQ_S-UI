@@ -8,6 +8,7 @@
     v-else-if="viewInfo.type === 'clips'"
     :clip-folder-id="viewInfo.clipFolderId"
   />
+  <files-view v-else-if="viewInfo.type === 'files'" />
   <null-view v-else />
 </template>
 
@@ -17,10 +18,11 @@ import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelView from '@/components/Main/MainView/ChannelView/ChannelView.vue'
 import ClipsView from '@/components/Main/MainView/ClipsView/ClipsView.vue'
 import NullView from '@/components/Main/MainView/NullView/NullView.vue'
+import FilesView from '@/components/Main/MainView/FilesView/FilesView.vue'
 
 export default defineComponent({
   name: 'MainViewComponentSelector',
-  components: { ChannelView, ClipsView, NullView },
+  components: { ChannelView, ClipsView, NullView, FilesView },
   props: {
     viewInfo: {
       type: Object as PropType<ViewInformation>,
