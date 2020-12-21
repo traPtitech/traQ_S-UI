@@ -45,6 +45,10 @@ const useActivityStream = () => {
     fetch()
   })
 
+  const onReconnect = async () => {
+    setTimelineStreamingState(mode.value.all)
+    await fetch()
+  }
   const onAddMessage = (activity: Message) => {
     // 通常のチャンネルではない、つまりDMのときは無視
     if (!store.state.entities.channelsMap.has(activity.channelId)) return
@@ -106,13 +110,13 @@ const useActivityStream = () => {
     }
   }
 
-  messageMitt.on('reconnect', fetch)
+  messageMitt.on('reconnect', onReconnect)
   messageMitt.on('addMessage', onAddMessage)
   messageMitt.on('updateMessage', onUpdateMessage)
   messageMitt.on('deleteMessage', onDeleteMessage)
 
   onBeforeUnmount(() => {
-    messageMitt.off('reconnect', fetch)
+    messageMitt.off('reconnect', onReconnect)
     messageMitt.off('addMessage', onAddMessage)
     messageMitt.off('updateMessage', onUpdateMessage)
     messageMitt.off('deleteMessage', onDeleteMessage)
