@@ -1,15 +1,5 @@
 import { defineModule } from 'direct-vuex'
-import { state } from './state'
-import { getters } from './getters'
-import { mutations } from './mutations'
 import { actions } from './actions'
-import { ExternalUrl } from '@/types/entity-ids'
-import { Ogp } from '@traptitech/traq'
-
-export type OgpDataMap = Record<ExternalUrl, Ogp>
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Undefinedable<T extends Record<string, any>> = Partial<T>
 
 /**
  * サーバーから取得したエンティティを扱うstore
@@ -18,8 +8,5 @@ export type Undefinedable<T extends Record<string, any>> = Partial<T>
  */
 export const entities = defineModule({
   namespaced: true,
-  state,
-  getters,
-  mutations,
   actions
 })

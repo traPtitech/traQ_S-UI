@@ -116,9 +116,7 @@ export const actions = defineActions({
     commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
-    const { commit, rootState, rootDispatch } = messagesViewActionContext(
-      context
-    )
+    const { commit } = messagesViewActionContext(context)
     const content =
       store.state.entities.messages.messagesMap.get(messageId)?.content ?? ''
 
@@ -155,11 +153,10 @@ export const actions = defineActions({
       .filter(isExternalUrl)
       .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
       .map(async e => {
-        const cache = rootState.entities.ogpData[e.url]
-        if (cache) return
-
         try {
-          await rootDispatch.entities.fetchOgpData(e.url)
+          await store.dispatch.entities.messages.fetchOgpData({
+            url: e.url
+          })
         } catch {
           // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
         }

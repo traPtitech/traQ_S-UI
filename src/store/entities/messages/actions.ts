@@ -2,14 +2,15 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { messages } from '.'
 import { ActionContext } from 'vuex'
-import { FileInfo, Message, MessageStamp } from '@traptitech/traq'
-import { FileId, MessageId } from '@/types/entity-ids'
+import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
+import { ExternalUrl, FileId, MessageId } from '@/types/entity-ids'
 import { createSingleflight } from '@/lib/async'
 import apis from '@/lib/apis'
 import {
   MessageStampedEvent,
   MessageUnstampedEvent
 } from '@/lib/websocket/events'
+import { AxiosError } from 'axios'
 
 export const messagesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -17,6 +18,7 @@ export const messagesActionContext = (
 
 const getMessage = createSingleflight(apis.getMessage.bind(apis))
 const getFileMeta = createSingleflight(apis.getFileMeta.bind(apis))
+const getOgp = createSingleflight(apis.getOgp.bind(apis))
 
 export const actions = defineActions({
   async fetchMessage(
@@ -110,5 +112,31 @@ export const actions = defineActions({
       commit.setFileMetaData(fileMetaData)
     }
     return fileMetaData
+  },
+
+  async fetchOgpData(
+    context,
+    { url, force = false }: { url: ExternalUrl; force?: boolean }
+  ): Promise<Ogp | undefined> {
+    const { state, commit } = messagesActionContext(context)
+    if (!force && state.ogpDataMap.has(url)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return state.ogpDataMap.get(url)!
+    }
+
+    try {
+      const [{ data: ogpData }, shared] = await getOgp(url)
+      if (!shared) {
+        commit.setOgpData({ url, ogpData })
+      }
+      return ogpData
+    } catch (e: unknown) {
+      const err = e as AxiosError
+      if (err.response?.status !== 404) {
+        // eslint-disable-next-line no-console
+        console.error(err)
+      }
+      return undefined
+    }
   }
 })

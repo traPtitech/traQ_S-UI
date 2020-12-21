@@ -2,7 +2,6 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/_store'
 import { entities } from './index'
 import apis from '@/lib/apis'
-import { ExternalUrl } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
 import store from '@/store'
 
@@ -75,15 +74,5 @@ export const actions = defineActions({
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
     }
-  },
-  async fetchOgpData(context, url: ExternalUrl) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getOgp(url)
-
-    try {
-      // 比較的例外起こしやすいのでここで取る
-      commit.addOgpData({ id: url, entity: res.data })
-      return res.data
-    } catch {}
   }
 })

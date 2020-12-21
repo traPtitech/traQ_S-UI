@@ -1,5 +1,5 @@
-import { FileInfo, Message } from '@traptitech/traq'
-import { FileId, MessageId } from '@/types/entity-ids'
+import { FileInfo, Message, Ogp } from '@traptitech/traq'
+import { ExternalUrl, FileId, MessageId } from '@/types/entity-ids'
 
 export type S = {
   /**
@@ -13,9 +13,11 @@ export type S = {
     同時に取得するのを止められる
   */
   fileMetaDataMap: Map<FileId, FileInfo>
+  ogpDataMap: Map<ExternalUrl, Ogp>
 }
 
 export const state: S = {
   messagesMap: new Map(),
-  fileMetaDataMap: new Map()
+  fileMetaDataMap: new Map(),
+  ogpDataMap: new Map()
 }
