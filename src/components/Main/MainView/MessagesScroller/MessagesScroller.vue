@@ -1,5 +1,10 @@
 <template>
-  <div ref="rootRef" :class="$style.root" @scroll.passive="handleScroll">
+  <div
+    ref="rootRef"
+    :class="$style.root"
+    @scroll.passive="handleScroll"
+    @click="onClick"
+  >
     <div :class="$style.viewport">
       <messages-scroller-separator
         v-if="isReachedEnd"
@@ -46,7 +51,6 @@ import {
   onMounted,
   PropType,
   Ref,
-  onBeforeUnmount,
   nextTick,
   shallowRef
 } from 'vue'
@@ -66,14 +70,24 @@ import { isMessageScrollerRoute } from '@/router'
 
 const LOAD_MORE_THRESHOLD = 10
 
-const useInternalLink = (
-  rootRef: Ref<HTMLElement | null>,
-  context: SetupContext
-) => {
-  const hostname = new URL(embeddingOrigin).hostname
-
+const useMarkdownInternalHandler = (context: SetupContext) => {
+  const { hostname } = new URL(embeddingOrigin)
   const router = useRouter()
+
   const onClick = (event: MouseEvent) => {
+    if (!event.target) return
+    const target = event.target as HTMLElement
+
+    toggleSpoilerHandler(event)
+    internalLinkClickHandler(event)
+  }
+
+  const toggleSpoilerHandler = (event: MouseEvent) => {
+    if (!event.target) return
+    toggleSpoiler(event.target as HTMLElement)
+  }
+
+  const internalLinkClickHandler = (event: MouseEvent) => {
     if (!event.target) return
     const target = event.target as HTMLElement
     const $a = target.closest('a[href]') as HTMLAnchorElement | null
@@ -94,28 +108,7 @@ const useInternalLink = (
     router.push(linkPath)
   }
 
-  onMounted(() => {
-    rootRef.value?.addEventListener('click', onClick)
-  })
-  onBeforeUnmount(() => {
-    rootRef.value?.removeEventListener('click', onClick)
-  })
-}
-
-const useSpoilerToggler = (rootRef: Ref<HTMLElement | null>) => {
-  const toggleSpoilerHandler = (event: MouseEvent) => {
-    if (event.target) {
-      toggleSpoiler(event.target as HTMLElement)
-    }
-  }
-
-  onMounted(() => {
-    rootRef.value?.addEventListener('click', toggleSpoilerHandler)
-  })
-
-  onBeforeUnmount(() => {
-    rootRef.value?.removeEventListener('click', toggleSpoilerHandler)
-  })
+  return { onClick }
 }
 
 const useCompareDate = (props: { messageIds: MessageId[] }) => {
@@ -284,14 +277,14 @@ export default defineComponent({
       }
     })
 
-    useInternalLink(rootRef, context)
-    useSpoilerToggler(rootRef)
+    const { onClick } = useMarkdownInternalHandler(context)
     useScrollRestoration(rootRef, state)
 
     const dayDiff = useCompareDate(props)
 
     return {
       state,
+      onClick,
       rootRef,
       handleScroll,
       onChangeHeight,
