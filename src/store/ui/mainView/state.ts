@@ -26,6 +26,7 @@ export interface ChannelView extends ViewInformationBase {
 }
 export interface FilesView extends ViewInformationBase {
   type: 'files'
+  channelId: ChannelId
 }
 export interface QallView extends ViewInformationBase {
   type: 'qall'

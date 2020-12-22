@@ -176,7 +176,31 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFiles = async () => {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
+      return
+    }
+    try {
+      const id = channelPathToId(
+        state.channelParam.split('/'),
+        store.state.domain.channelTree.channelTree
+      )
+
+      store.dispatch.ui.mainView.changePrimaryViewToFiles({
+        channelId: id
+      })
+    } catch (e) {
+      state.view = 'not-found'
+      return
+    }
     state.view = 'main'
+    // const id = channelPathToId(
+    //   state.channelParam.split('/'),
+    //   store.state.domain.channelTree.channelTree
+    // )
+    // store.dispatch.ui.mainView.changePrimaryViewToFiles({
+    //   channelId: id
+    // })
   }
 
   const onRouteChangedToMessage = async () => {
