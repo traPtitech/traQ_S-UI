@@ -45,6 +45,7 @@ import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
 import { isValidChannelName } from '@/lib/validate'
+import { canCreateChildChannel } from '@/lib/channel'
 
 const useManageChannel = (
   props: { id: string },
@@ -127,13 +128,28 @@ export default defineComponent({
 
     const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
     const channelOptions = computed(() =>
-      rawChannelOptions.value.filter(
-        ({ value }) =>
-          value !== props.id &&
-          // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
-          (channel.value.archived ||
-            !store.state.entities.channels[value]?.archived)
-      )
+      rawChannelOptions.value
+        .filter(
+          ({ value }) =>
+            value !== props.id &&
+            // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
+            (channel.value.archived ||
+              !store.state.entities.channels[value]?.archived)
+        )
+        .filter(({ key }) => canCreateChildChannel(key))
+        .map(({ key, value }) => ({
+          key,
+          value:
+            // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
+            // ただし今の親チャンネルは選択できる
+            value !== channel.value.parent &&
+            store.state.entities.channels[value]?.children.some(
+              child =>
+                store.state.entities.channels[child]?.name === manageState.name
+            )
+              ? null
+              : value
+        }))
     )
     const canToggleArchive = computed(
       () => !store.state.entities.channels[channel.value.parent]?.archived
