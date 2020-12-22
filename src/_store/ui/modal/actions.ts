@@ -135,8 +135,6 @@ export const actions = defineActions({
 
     switch (modalState.type) {
       case 'user':
-        store.commit.domain.deleteUserDetail(modalState.id)
-        break
       case 'tag':
       case 'notification':
       case 'file':
