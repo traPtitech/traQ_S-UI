@@ -6,6 +6,7 @@
         :class="$style.input"
         :id="id"
         v-model="value"
+        @compositionupdate="onComposition"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
@@ -34,7 +35,7 @@ import { defineComponent, PropType } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import Icon from '@/components/UI/Icon.vue'
 import useShowPassword from '@/use/showPassword'
-import useModelSyncer from '@/use/modelSyncer'
+import useTextModelSyncer from '@/use/textModelSyncer'
 
 export default defineComponent({
   name: 'AuthenticateInput',
@@ -61,7 +62,7 @@ export default defineComponent({
     enterkeyhint: String
   },
   setup(props, context) {
-    const value = useModelSyncer(props, context)
+    const { value, onComposition } = useTextModelSyncer(props, context)
 
     const id = randomString()
 
@@ -69,7 +70,14 @@ export default defineComponent({
       props
     )
 
-    return { value, id, isPasswordShown, togglePassword, typeWithShown }
+    return {
+      value,
+      onComposition,
+      id,
+      isPasswordShown,
+      togglePassword,
+      typeWithShown
+    }
   }
 })
 </script>
