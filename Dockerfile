@@ -1,5 +1,5 @@
 # alpineにするとnode-gypで死ぬ
-FROM node:14.15.1 as build
+FROM node:14.15.3 as build
 WORKDIR /app
 
 ENV CYPRESS_INSTALL_BINARY=0
