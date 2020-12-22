@@ -85,3 +85,5 @@ class TrieNode {
     return child.search(str, pos + 1)
   }
 }
+
+export default TrieNode

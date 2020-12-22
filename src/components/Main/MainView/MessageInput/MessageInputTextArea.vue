@@ -7,7 +7,7 @@
     placeholder="メッセージを送信"
     rows="1"
     @before-input="onBeforeInput"
-    @keydown="onKeyDown"
+    @keydown="_onKeyDown"
     @keyup="onKeyUp"
     @focus="onFocus"
     @blur="onBlur"
@@ -32,6 +32,7 @@ import useModelSyncer from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
+import useWordCompleter from './use/wordCompleter'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -114,10 +115,23 @@ export default defineComponent({
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
-    const { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
+    let { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
       context,
       insertLineBreak
     )
+
+    const { getCurrentWord } = useWordCompleter()
+
+    // 一旦、ラップして実装
+    const _onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab' && !e.isComposing) {
+        e.preventDefault()
+        if (!textareaRef.value) return
+        const target = getCurrentWord(textareaRef.value, value.value)
+        console.log(target)
+      }
+      onKeyDown(e)
+    }
 
     const { onFocus, onBlur } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
@@ -125,7 +139,7 @@ export default defineComponent({
     return {
       value,
       onBeforeInput,
-      onKeyDown,
+      _onKeyDown,
       onKeyUp,
       textareaAutosizeRef,
       onFocus,
