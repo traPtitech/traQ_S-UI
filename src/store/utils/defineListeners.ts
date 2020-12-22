@@ -51,7 +51,10 @@ type ListenerSetterSub<
   subModule: SubModule<ModuleName, SubModuleName>
 ) => void
 
-const getModuleFromStore = (store: AppStore, moduleName: ModuleNames) => ({
+const getModuleFromStore = <ModuleName extends ModuleNames>(
+  store: AppStore,
+  moduleName: ModuleName
+) => ({
   state: store.state[moduleName],
   getters: store.getters[moduleName],
   commit: store.commit[moduleName],

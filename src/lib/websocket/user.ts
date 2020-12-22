@@ -3,8 +3,6 @@ import store from '@/_store'
 import {
   UserTagsUpdatedEvent,
   UserIconUpdatedEvent,
-  UserOnlineEvent,
-  UserOfflineEvent,
   UserWebRTCStateChangedEvent,
   UserUpdatedEvent
 } from './events'
@@ -41,14 +39,6 @@ export const onUserIconUpdated = async ({ id }: UserIconUpdatedEvent) => {
     const res = await apis.getMe()
     store.commit.domain.me.setDetail(res.data)
   }
-}
-
-export const onUserOnline = ({ id }: UserOnlineEvent) => {
-  store.commit.domain.addOnlineUser(id)
-}
-
-export const onUserOffline = ({ id }: UserOfflineEvent) => {
-  store.commit.domain.deleteOnlineUser(id)
 }
 
 export const onUserWebRTCStateChanged = (

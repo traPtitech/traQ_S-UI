@@ -1,8 +1,6 @@
 import {
   onUserTagsUpdated,
   onUserIconUpdated,
-  onUserOnline,
-  onUserOffline,
   onUserWebRTCStateChanged,
   onUserUpdated
 } from './user'
@@ -48,12 +46,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'USER_ICON_UPDATED':
       onUserIconUpdated(body)
-      break
-    case 'USER_ONLINE':
-      onUserOnline(body)
-      break
-    case 'USER_OFFLINE':
-      onUserOffline(body)
       break
     case 'USER_WEBRTC_STATE_CHANGED':
       onUserWebRTCStateChanged(body)

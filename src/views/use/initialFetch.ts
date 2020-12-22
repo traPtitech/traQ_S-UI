@@ -22,7 +22,6 @@ const initialFetch = async () => {
   store.dispatch.entities.fetchUserGroups()
   store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
-  _store.dispatch.domain.fetchOnlineUsers()
   _store.dispatch.domain.me.fetchStaredChannels()
   _store.dispatch.domain.me.fetchStampHistory()
   _store.dispatch.app.rtc.fetchRTCState()

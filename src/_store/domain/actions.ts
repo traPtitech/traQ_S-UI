@@ -9,11 +9,6 @@ export const domainActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, domain)
 
 export const actions = defineActions({
-  async fetchOnlineUsers(context) {
-    const { commit } = domainActionContext(context)
-    const result = await apis.getOnlineUsers()
-    commit.setOnlineUsers(result.data)
-  },
   async fetchUserDetail(context, userId: UserId) {
     const { commit } = domainActionContext(context)
     const result = await apis.getUser(userId)
