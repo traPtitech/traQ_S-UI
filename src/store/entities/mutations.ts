@@ -58,12 +58,12 @@ export const mutations = defineMutations<S>()({
     state.channelsMap = channelsMap
     state.dmChannelsMap = dmChannelsMap
     state.bothChannelsMapFetched = true
-
-    // TODO: eventを使うようにする
-    _store.dispatch.domain.channelTree.constructAllTrees()
   },
   deleteChannel(state, channelId: ChannelId) {
     state.channelsMap.delete(channelId)
+    if (state.dmChannelsMap.has(channelId)) {
+      state.dmChannelsMap.delete(channelId)
+    }
   },
 
   setClipFolder(state, clipFolder: ClipFolder) {

@@ -1,7 +1,7 @@
 import { defineGetters } from 'direct-vuex'
 import { Channel } from '@traptitech/traq'
 import { S } from './state'
-import { moduleGetterContext } from '@/_store'
+import { moduleGetterContext } from '@/store'
 import { channelTree } from './index'
 import store from '@/store'
 

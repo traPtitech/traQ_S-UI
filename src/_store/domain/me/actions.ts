@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/_store'
+import store, { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
 import { me } from './index'
 import { ChannelId } from '@/types/entity-ids'
@@ -57,6 +57,7 @@ export const actions = defineActions({
       ChannelSubscribeLevel
     > = Object.fromEntries(res.data.map(s => [s.channelId, s.level]))
     commit.setSubscriptionMap(subscriptions)
+    store.dispatch.domain.channelTree.constructHomeChannelTree()
   },
   async changeSubscriptionLevel(
     context,

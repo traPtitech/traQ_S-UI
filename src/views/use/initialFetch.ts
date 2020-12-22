@@ -26,8 +26,7 @@ const initialFetch = async () => {
   _store.dispatch.domain.me.fetchStampHistory()
   _store.dispatch.app.rtc.fetchRTCState()
 
-  await _store.dispatch.domain.me.fetchSubscriptions()
-  _store.dispatch.domain.channelTree.constructHomeChannelTree()
+  _store.dispatch.domain.me.fetchSubscriptions()
 }
 
 const initialFetchIfPossible = async () => {

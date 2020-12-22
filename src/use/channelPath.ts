@@ -1,4 +1,4 @@
-import { ChannelTree, ChannelTreeNode } from '@/_store/domain/channelTree/state'
+import { ChannelTree, ChannelTreeNode } from '@/lib/channelTree'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import { dmParentUuid } from '@/lib/util/uuid'

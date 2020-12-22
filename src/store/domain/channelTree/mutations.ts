@@ -1,5 +1,6 @@
+import { ChannelTree } from '@/lib/channelTree'
 import { defineMutations } from 'direct-vuex'
-import { S, ChannelTree } from './state'
+import { S } from './state'
 
 export const mutations = defineMutations<S>()({
   setChannelTree(state, payload: Readonly<ChannelTree>) {

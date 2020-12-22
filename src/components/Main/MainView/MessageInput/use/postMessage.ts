@@ -90,7 +90,7 @@ const usePostMessage = (
         try {
           const id = channelPathToId(
             path.split('/'),
-            _store.state.domain.channelTree.channelTree
+            store.state.domain.channelTree.channelTree
           )
           return { id }
         } catch {

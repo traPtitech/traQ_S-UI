@@ -5,12 +5,9 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import { messages } from './messages'
 import { listeners } from './listeners'
+import { mitt } from '@/lib/typedMitt'
+import { Channel } from '@traptitech/traq'
 
-/**
- * サーバーから取得したエンティティを扱うstore
- *
- * このモジュールのstateは id => body の形をしたMapのみ許す
- */
 export const entities = defineModule({
   namespaced: true,
   state,
@@ -22,3 +19,11 @@ export const entities = defineModule({
   }
 })
 listeners()
+
+type EntityEventMap = {
+  setChannels: () => void
+  addChannel: (channel: Channel) => void
+  updateChannel: (data: { newChannel: Channel; oldChannel: Channel }) => void
+}
+
+export const entityMitt = mitt<EntityEventMap>()

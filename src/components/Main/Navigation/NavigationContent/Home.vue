@@ -72,7 +72,7 @@ export default defineComponent({
     )
     const topLevelChannels = computed(
       () =>
-        _store.state.domain.channelTree.homeChannelTree.children.filter(
+        store.state.domain.channelTree.homeChannelTree.children.filter(
           channel => !channel.archived
         ) ?? []
     )
