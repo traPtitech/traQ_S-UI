@@ -75,11 +75,10 @@ export default defineComponent({
     style: solid;
     color: $theme-background-secondary;
   }
-  max-width: min(600px, 100%);
+  max-width: 100%;
   img {
-    height: auto;
-    width: 100%;
-    max-width: 100%;
+    height: 100%;
+    width: min(600px, 100%);
     max-height: 450px;
     cursor: pointer;
   }
