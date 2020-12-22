@@ -137,6 +137,19 @@ export default defineComponent({
               !store.state.entities.channels[value]?.archived)
         )
         .filter(({ key }) => canCreateChildChannel(key))
+        .map(({ key, value }) => ({
+          key,
+          value:
+            // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
+            // ただし今の親チャンネルは選択できる
+            value !== channel.value.parent &&
+            store.state.entities.channels[value]?.children.some(
+              child =>
+                store.state.entities.channels[child]?.name === manageState.name
+            )
+              ? null
+              : value
+        }))
     )
     const canToggleArchive = computed(
       () => !store.state.entities.channels[channel.value.parent]?.archived
