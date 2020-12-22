@@ -3,22 +3,18 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { messages } from './messages'
 import { listeners } from './listeners'
 
 /**
- * サーバーから取得したエンティティを扱うstore
+ * entitiesでないサーバーの情報を扱うstore
  *
- * このモジュールのstateは id => body の形をしたMapのみ許す
+ * listenersでwebsocketを受け取ったり、entitiesの変更を受け取ったりする
  */
-export const entities = defineModule({
+export const domain = defineModule({
   namespaced: true,
   state,
   getters,
   mutations,
-  actions,
-  modules: {
-    messages
-  }
+  actions
 })
 listeners()

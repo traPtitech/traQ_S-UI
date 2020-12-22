@@ -23,10 +23,6 @@ const isMessageForCurrentChannel = (recievedChannelId: MessageId) => {
 export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
 
-  if (store.state.entities.channelsMap.has(res.data.channelId)) {
-    _store.commit.domain.addActivity(res.data)
-  }
-
   if (res.data.userId !== _store.state.domain.me.detail?.id) {
     const userDisplayName =
       store.state.entities.usersMap.get(res.data.userId)?.displayName ??
@@ -55,10 +51,6 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
 export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
   const res = await apis.getMessage(id)
 
-  if (store.state.entities.channelsMap.has(res.data.channelId)) {
-    _store.commit.domain.updateActivity(res.data)
-  }
-
   if (!isMessageForCurrentChannel(res.data.channelId)) {
     return
   }
@@ -70,8 +62,6 @@ export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
 }
 
 export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
-  _store.commit.domain.deleteActivity(id)
-
   _store.commit.domain.messagesView.deleteMessageId(id)
   _store.commit.domain.messagesView.removePinnedMessage(id)
 }

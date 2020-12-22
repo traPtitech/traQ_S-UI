@@ -1,5 +1,9 @@
-import { wsListener } from '@/lib/websocket'
+import { TypedMitt } from '@/lib/typedMitt'
+import { waitMount } from '@/onMount'
 import store, { AppStore as AppStoreWithOriginal } from '@/store'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyMitt = Omit<TypedMitt<any>, 'emit'>
 
 type AppStore = Omit<AppStoreWithOriginal, 'original'>
 type ModuleNamesOf<K extends keyof AppStore> = keyof AppStore[K]
@@ -34,19 +38,23 @@ type SubModule<
   dispatch: AppStore['dispatch'][ModuleName][SubModuleName]
 }
 
-type ListenerSetter<ModuleName extends ModuleNames> = (
-  listener: typeof wsListener,
-  module: Module<ModuleName>
-) => void
+type ListenerSetter<
+  Listener extends AnyMitt,
+  ModuleName extends ModuleNames
+> = (listener: Listener, module: Module<ModuleName>) => void
 type ListenerSetterSub<
+  Listener extends AnyMitt,
   ModuleName extends ModuleNames,
   SubModuleName extends SubModuleNames<ModuleName>
 > = (
-  listener: typeof wsListener,
+  listener: Listener,
   subModule: SubModule<ModuleName, SubModuleName>
 ) => void
 
-const getModuleFromStore = (store: AppStore, moduleName: ModuleNames) => ({
+const getModuleFromStore = <ModuleName extends ModuleNames>(
+  store: AppStore,
+  moduleName: ModuleName
+) => ({
   state: store.state[moduleName],
   getters: store.getters[moduleName],
   commit: store.commit[moduleName],
@@ -64,33 +72,41 @@ const getSubModuleFromStore = <ModuleName extends ModuleNames>(
 })
 
 /**
- * WebSocketからイベントを受け取る用
+ * イベントを受け取る用
  * @param moduleName 一階層目のモジュール名のみ利用可能
  * @param listenerSetter この中でlistenする
  */
-export const defineListeners = <ModuleName extends ModuleNames>(
+export const defineListeners = <
+  Listener extends AnyMitt,
+  ModuleName extends ModuleNames
+>(
+  listener: Listener,
   moduleName: ModuleName,
-  listenerSetter: ListenerSetter<ModuleName>
-): void => {
-  listenerSetter(wsListener, getModuleFromStore(store, moduleName))
+  listenerSetter: ListenerSetter<Listener, ModuleName>
+): (() => Promise<void>) => async () => {
+  await waitMount
+  listenerSetter(listener, getModuleFromStore(store, moduleName))
 }
 
 /**
- * WebSocketからイベントを受け取る用
+ * イベントを受け取る用
  * @param moduleName 一階層目のモジュール名のみ利用可能
  * @param subModuleName 二階層目のモジュール名のみ利用可能
  * @param listenerSetter この中でlistenする
  */
 export const defineSubModuleListeners = <
+  Listener extends AnyMitt,
   ModuleName extends ModuleNames,
   SubModuleName extends SubModuleNames<ModuleName>
 >(
+  listener: Listener,
   moduleName: ModuleName,
   subModuleName: SubModuleName,
-  listenerSetter: ListenerSetterSub<ModuleName, SubModuleName>
-): void => {
+  listenerSetter: ListenerSetterSub<Listener, ModuleName, SubModuleName>
+): (() => Promise<void>) => async () => {
+  await waitMount
   listenerSetter(
-    wsListener,
+    listener,
     getSubModuleFromStore(store, moduleName, subModuleName) as SubModule<
       ModuleName,
       SubModuleName
