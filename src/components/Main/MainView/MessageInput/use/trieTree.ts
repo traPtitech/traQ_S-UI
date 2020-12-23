@@ -1,6 +1,7 @@
+// case sensitive
 class TrieNode {
   isWord: boolean
-  children: { [key: string]: TrieNode }
+  children: Record<string, TrieNode>
 
   constructor() {
     this.isWord = false

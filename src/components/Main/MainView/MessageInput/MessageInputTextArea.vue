@@ -21,11 +21,13 @@ import {
   ref,
   SetupContext,
   Ref,
+  onMounted,
   computed,
   nextTick,
   PropType,
   toRef
 } from 'vue'
+import styles from '@/store'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
@@ -108,6 +110,11 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
+    const { createTree, getCurrentWord } = useWordCompleter()
+    const tree = createTree(
+      store.getters.entities.allUserNames.map(userName => '@' + userName)
+    )
+
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
     }>()
@@ -120,15 +127,22 @@ export default defineComponent({
       insertLineBreak
     )
 
-    const { getCurrentWord } = useWordCompleter()
-
     // 一旦、ラップして実装
     const _onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Tab' && !e.isComposing) {
         e.preventDefault()
         if (!textareaRef.value) return
         const target = getCurrentWord(textareaRef.value, value.value)
-        console.log(target)
+        value.value =
+          value.value.slice(0, target.begin) +
+          (tree.search(target.word).length === 0
+            ? target.word
+            : tree.search(target.word)[0]) +
+          (target.end === value.value.length
+            ? ''
+            : value.value.slice(target.end))
+        // caretが末尾になる(これは効かなそう)
+        textareaRef.value.setSelectionRange(target.end, target.end)
       }
       onKeyDown(e)
     }
