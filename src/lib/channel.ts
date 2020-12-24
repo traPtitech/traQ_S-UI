@@ -8,7 +8,7 @@ const MAX_CHANNEL_PATH_SLASHES = MAX_CHANNEL_DEPTH - 1
 
 export const canCreateChildChannel = (
   channelPath: string,
-  isArchived: boolean
+  isArchived = false
 ) => !isArchived && count(channelPath, '/') < MAX_CHANNEL_PATH_SLASHES
 
 export type SimpleChannel = {

@@ -46,6 +46,7 @@ import { nullUuid } from '@/lib/util/uuid'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
 import { isValidChannelName } from '@/lib/validate'
+import { canCreateChildChannel } from '@/lib/channel'
 
 const useManageChannel = (
   props: { id: string },
@@ -98,9 +99,10 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props, context) {
+    const channelsMap = computed(() => store.state.entities.channelsMap)
     const channel = computed(
       (): Required<PatchChannelRequest> => {
-        const c = store.state.entities.channelsMap.get(props.id)
+        const c = channelsMap.value.get(props.id)
         return {
           name: c?.name ?? '',
           parent: c?.parentId ?? nullUuid,
@@ -128,17 +130,31 @@ export default defineComponent({
 
     const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
     const channelOptions = computed(() =>
-      rawChannelOptions.value.filter(
-        ({ value }) =>
-          value !== props.id &&
-          // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
-          (channel.value.archived ||
-            !store.state.entities.channelsMap.get(value)?.archived)
-      )
+      rawChannelOptions.value
+        .filter(
+          ({ value }) =>
+            value !== props.id &&
+            // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
+            (channel.value.archived || !channelsMap.value.get(value)?.archived)
+        )
+        .filter(({ key }) => canCreateChildChannel(key))
+        .map(({ key, value }) => ({
+          key,
+          value:
+            // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
+            // ただし今の親チャンネルは選択できる
+            value !== channel.value.parent &&
+            channelsMap.value
+              .get(value)
+              ?.children.some(
+                child => channelsMap.value.get(child)?.name === manageState.name
+              )
+              ? null
+              : value
+        }))
     )
     const canToggleArchive = computed(
-      () =>
-        !store.state.entities.channelsMap.get(channel.value.parent)?.archived
+      () => !channelsMap.value.get(channel.value.parent)?.archived
     )
 
     return {

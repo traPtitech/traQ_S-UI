@@ -68,6 +68,7 @@ export default defineComponent({
   }
 }
 .largeContainer {
+  display: flex;
   border-radius: 6px;
   overflow: hidden;
   border: {
@@ -78,8 +79,10 @@ export default defineComponent({
   max-width: 100%;
   img {
     height: 100%;
-    width: min(600px, 100%);
+    width: auto;
     max-height: 450px;
+    max-width: min(600px, 100%);
+    object-fit: contain;
     cursor: pointer;
   }
 }
