@@ -1,5 +1,5 @@
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import _store from '@/_store'
@@ -82,9 +82,6 @@ export const mutations = defineMutations<S>()({
   },
   setCurrentViewer(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
-  },
-  setBots(state, bots: UserId[]) {
-    state.bots = bots
   },
   setEditingMessageId(state, messageId: MessageId) {
     state.editingMessageId = messageId

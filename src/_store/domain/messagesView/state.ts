@@ -1,4 +1,4 @@
-import { MessageId, ChannelId, UserId, ClipFolderId } from '@/types/entity-ids'
+import { MessageId, ChannelId, ClipFolderId } from '@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
@@ -31,8 +31,6 @@ export interface S {
 
   currentViewers: ChannelViewer[]
 
-  bots: UserId[]
-
   /** 現在編集中のメッセージID */
   editingMessageId?: MessageId
 
@@ -49,7 +47,6 @@ export const state: S = {
   embeddingsMap: {},
   shouldRetriveMessageCreateEvent: false,
   currentViewers: [],
-  bots: [],
   editingMessageId: undefined,
   unreadSince: undefined
 }
