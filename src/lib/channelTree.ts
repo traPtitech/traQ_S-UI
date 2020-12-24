@@ -91,3 +91,25 @@ export const constructTree = (
     children
   }
 }
+
+export const channelPathToId = (
+  separatedPath: readonly string[],
+  channelTree: Readonly<ChannelTree | ChannelTreeNode>
+): string => {
+  if (separatedPath.length === 0) {
+    throw 'channelPathToId: Empty path'
+  }
+
+  const loweredChildName = separatedPath[0].toLowerCase()
+  const nextTree = channelTree.children.find(
+    child => child.name.toLowerCase() === loweredChildName
+  )
+  if (!nextTree) {
+    throw `channelPathToId: No channel: ${separatedPath[0]}`
+  }
+  if (separatedPath.length === 1) {
+    return nextTree.id
+  }
+
+  return channelPathToId(separatedPath.slice(1), nextTree)
+}

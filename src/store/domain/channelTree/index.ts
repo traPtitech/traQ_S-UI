@@ -18,7 +18,7 @@ entityListeners()
 
 type ChannelTreeEventMap = {
   created: (data: { id: ChannelId; path: string }) => void
-  moved: (data: { newPath: string; oldPath: string }) => void
+  moved: (data: { id: ChannelId; newPath: string; oldPath: string }) => void
 }
 
 export const channelTreeMitt = mitt<ChannelTreeEventMap>()

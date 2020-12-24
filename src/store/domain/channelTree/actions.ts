@@ -1,15 +1,55 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { channelTree } from './index'
+import { channelTree, channelTreeMitt } from '.'
 import { ActionContext } from 'vuex'
 import _store from '@/_store'
 import { constructTree, rootChannelId } from '@/lib/channelTree'
+import { Channel } from '@traptitech/traq'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const channelTreeActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, channelTree)
 
 export const actions = defineActions({
+  onSetChannels(context) {
+    const { dispatch } = channelTreeActionContext(context)
+    dispatch.constructAllTrees()
+  },
+  async onAddChannel(context, channel: Channel) {
+    const { rootState, dispatch } = channelTreeActionContext(context)
+
+    // 新規追加のときはホームに表示されることはないのでhomeChannelTree構築しない
+    await dispatch.constructChannelTree()
+
+    const path = channelIdToPathString(
+      channel.id,
+      rootState.entities.channelsMap
+    )
+    channelTreeMitt.emit('created', { id: channel.id, path })
+  },
+  async onUpdateChannel(
+    context,
+    { newChannel, oldChannel }: { newChannel: Channel; oldChannel: Channel }
+  ) {
+    const { rootState, dispatch } = channelTreeActionContext(context)
+
+    const oldPath = channelIdToPathString(
+      newChannel.id,
+      rootState.entities.channelsMap
+    )
+
+    await dispatch.constructAllTrees()
+
+    if (newChannel.parentId !== oldChannel.parentId) {
+      const newPath = channelIdToPathString(
+        newChannel.id,
+        rootState.entities.channelsMap
+      )
+      channelTreeMitt.emit('moved', { id: newChannel.id, oldPath, newPath })
+    }
+  },
+
   async constructAllTrees(context) {
     const { dispatch } = channelTreeActionContext(context)
     await Promise.all([

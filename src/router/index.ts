@@ -1,3 +1,5 @@
+import { isCurrentChannel } from '@/lib/websocket/channel'
+import { channelTreeMitt } from '@/store/domain/channelTree'
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
@@ -140,3 +142,11 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+
+channelTreeMitt.on('moved', ({ id, newPath }) => {
+  // TODO: 移動したチャンネルの子チャンネルでも変えないといけない？
+  if (isCurrentChannel(id)) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    router.replace(constructChannelPath(newPath)).catch(() => {})
+  }
+})
