@@ -24,7 +24,7 @@ import {
   defineAsyncComponent
 } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import { ChannelTreeNode } from '@/_store/domain/channelTree/state'
+import { ChannelTreeNode } from '@/lib/channelTree'
 import useChannelSelect from '@/use/channelSelect'
 import { Channel } from '@traptitech/traq'
 import SlideDown from '@/components/UI/SlideDown.vue'

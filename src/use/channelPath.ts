@@ -1,37 +1,13 @@
-import { ChannelTree, ChannelTreeNode } from '@/_store/domain/channelTree/state'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import { dmParentUuid } from '@/lib/util/uuid'
 import { constructUserPath, constructChannelPath } from '@/router'
-
-type SimpleChannel = {
-  id: ChannelId
-  name: string
-}
+import {
+  channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath,
+  SimpleChannel
+} from '@/lib/channel'
+import { channelPathToId } from '@/lib/channelTree'
 
 const useChannelPath = () => {
-  const channelPathToId = (
-    separatedPath: readonly string[],
-    channelTree: Readonly<ChannelTree | ChannelTreeNode>
-  ): string => {
-    if (separatedPath.length === 0) {
-      throw 'channelPathToId: Empty path'
-    }
-
-    const loweredChildName = separatedPath[0].toLowerCase()
-    const nextTree = channelTree.children.find(
-      child => child.name.toLowerCase() === loweredChildName
-    )
-    if (!nextTree) {
-      throw `channelPathToId: No channel: ${separatedPath[0]}`
-    }
-    if (separatedPath.length === 1) {
-      return nextTree.id
-    }
-
-    return channelPathToId(separatedPath.slice(1), nextTree)
-  }
-
   const channelIdToSimpleChannelPath = (
     id: ChannelId | DMChannelId
   ): SimpleChannel[] => {
@@ -45,15 +21,7 @@ const useChannelPath = () => {
     } else if (!store.state.entities.channelsMap.has(id)) {
       throw `channelIdToPath: No channel: ${id}`
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const channel = store.state.entities.channelsMap.get(id)!
-    if (!channel.parentId || channel.parentId === dmParentUuid) {
-      return [{ id, name: channel.name }]
-    }
-    return [
-      ...channelIdToSimpleChannelPath(channel.parentId),
-      { id, name: channel.name }
-    ]
+    return libChannelIdToSimpleChannelPath(id, store.state.entities.channelsMap)
   }
 
   const channelIdToPath = (id: ChannelId | DMChannelId): string[] =>

@@ -1,6 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { entities } from '.'
+import { entityMitt } from './mitt'
 import { ActionContext } from 'vuex'
 import {
   ChannelId,
@@ -32,6 +33,7 @@ import {
 import { AxiosResponse } from 'axios'
 import { arrayToMap } from '@/lib/util/map'
 import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
+import { dmParentUuid } from '@/lib/util/uuid'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -50,7 +52,6 @@ const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
-const getDmChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
 const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
 const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
@@ -192,8 +193,6 @@ export const actions = defineActions({
     commit.deleteUserGroup(userId)
   },
 
-  // TODO: fetchChannel
-  // TODO: fetchDmChannel
   async fetchChannels(
     context,
     { force = false }: { force?: boolean } = {}
@@ -208,6 +207,7 @@ export const actions = defineActions({
     const dmChannelsMap = arrayToMap(channels.dm, 'id')
     if (!shared) {
       commit.setBothChannelsMap([channelsMap, dmChannelsMap])
+      entityMitt.emit('setChannels')
     }
     return [channelsMap, dmChannelsMap]
   },
@@ -215,24 +215,74 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     commit.deleteChannel(channelId)
   },
-  // TODO: どうやるのがよいか考える
-  async createChannel(
-    context,
-    payload: { name: string; parent: ChannelId | null }
-  ) {
-    const { commit } = entitiesActionContext(context)
-    const { data: channel } = await apis.createChannel(payload)
-    commit.setChannel(channel)
+  async addChannel(context, channelId: ChannelId | DMChannelId) {
+    const { state, commit, dispatch } = entitiesActionContext(context)
+    if (
+      state.channelsMap.has(channelId) ||
+      state.dmChannelsMap.has(channelId)
+    ) {
+      return
+    }
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
+
+    // DMのとき
+    if (channel.parentId === dmParentUuid) {
+      // channelIdからuserIdが辿れないので全取得
+      await dispatch.fetchChannels()
+      return
+    }
+
+    // ルート直下でないチャンネル
     if (channel.parentId) {
       // 親チャンネルの`children`が不整合になるので再取得
-      const [{ data: parentChannel }, shared] = await getChannel(
-        channel.parentId
-      )
-      if (!shared) {
-        commit.setChannel(parentChannel)
+      const { data: parentChannel } = await apis.getChannel(channel.parentId)
+      // 注:下のsetChannelとの間にawaitがないようにする
+      commit.setChannel(parentChannel)
+    }
+
+    commit.setChannel(channel)
+
+    entityMitt.emit('addChannel', channel)
+  },
+  async updateChannel(context, channelId: ChannelId | DMChannelId) {
+    const { state, commit, dispatch } = entitiesActionContext(context)
+
+    const old = state.channelsMap.get(channelId)
+    // 元々存在していなかったものが来たら追加として処理する
+    if (!old) {
+      await dispatch.addChannel(channelId)
+      return
+    }
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
+
+    // DMのときは変化しないはずなので処理しない
+    if (channel.parentId === dmParentUuid) return
+
+    // 親チャンネルが変わったときは`children`が不整合にならないように親チャンネルの情報を更新する
+    if (old.parentId !== channel.parentId) {
+      const oldParentRes = old.parentId
+        ? await getChannel(old.parentId)
+        : undefined
+      const newParentRes = channel.parentId
+        ? await getChannel(channel.parentId)
+        : undefined
+
+      // 注:下のsetChannelとの間にawaitがないようにする
+      if (oldParentRes) {
+        commit.setChannel(oldParentRes[0].data)
+      }
+      if (newParentRes) {
+        commit.setChannel(newParentRes[0].data)
       }
     }
-    return channel
+
+    commit.setChannel(channel)
+
+    entityMitt.emit('updateChannel', { oldChannel: old, newChannel: channel })
   },
 
   async fetchClipFolder(

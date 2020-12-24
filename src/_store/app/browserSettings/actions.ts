@@ -1,7 +1,8 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/_store'
+import store, { moduleActionContext } from '@/_store'
 import { browserSettings } from './index'
 import { ActionContext } from 'vuex'
+import { channelTreeMitt } from '@/store/domain/channelTree'
 
 export const browserSettingsActionContext = (
   context: ActionContext<unknown, unknown>
@@ -20,4 +21,13 @@ export const actions = defineActions({
       commit.setLastOpenChannelName(newName)
     }
   }
+})
+
+// TODO: いい感じにする
+// TODO: 移動したチャンネルの子チャンネルでも変えないといけない？
+channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
+  store.dispatch.app.browserSettings.updateOpenChannelNames({
+    oldName: oldPath,
+    newName: newPath
+  })
 })

@@ -29,13 +29,12 @@ export const listeners = defineListeners(
     })
 
     listener.on('CHANNEL_CREATED', ({ id }) => {
-      // TODO: いい感じにする
+      dispatch.addChannel(id)
     })
     listener.on('CHANNEL_UPDATED', ({ id }) => {
-      // TODO: いい感じにする
+      dispatch.updateChannel(id)
     })
     listener.on('CHANNEL_DELETED', ({ id }) => {
-      // DMは削除されない
       dispatch.deleteChannel(id)
     })
 

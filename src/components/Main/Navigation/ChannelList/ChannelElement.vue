@@ -68,7 +68,7 @@ import {
   defineAsyncComponent
 } from 'vue'
 import store from '@/_store'
-import { ChannelTreeNode } from '@/_store/domain/channelTree/state'
+import { ChannelTreeNode } from '@/lib/channelTree'
 import { ChannelId } from '@/types/entity-ids'
 import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'

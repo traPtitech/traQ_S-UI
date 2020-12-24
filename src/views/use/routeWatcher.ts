@@ -77,14 +77,14 @@ const useRouteWatcher = () => {
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
     try {
       const id = channelPathToId(
         state.channelParam.split('/'),
-        _store.state.domain.channelTree.channelTree
+        store.state.domain.channelTree.channelTree
       )
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
@@ -152,7 +152,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToFile = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
@@ -178,7 +178,7 @@ const useRouteWatcher = () => {
       try {
         channelId = channelPathToId(
           channelPath.split('/'),
-          _store.state.domain.channelTree.channelTree
+          store.state.domain.channelTree.channelTree
         )
       } catch (e) {
         state.view = 'not-found'
@@ -206,7 +206,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToMessage = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (_store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
       return
     }
     const message = await store.dispatch.entities.messages.fetchMessage({

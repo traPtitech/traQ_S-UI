@@ -37,7 +37,7 @@ import _store from '@/_store'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
-import { constructTree } from '@/_store/domain/channelTree/actions'
+import { constructTree } from '@/lib/channelTree'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
@@ -87,7 +87,7 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
 const useTopLevelChannels = () =>
   computed(
     () =>
-      _store.state.domain.channelTree.channelTree.children.filter(
+      store.state.domain.channelTree.channelTree.children.filter(
         channel => !channel.archived
       ) ?? []
   )

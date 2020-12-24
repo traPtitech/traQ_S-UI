@@ -15,13 +15,17 @@ export const createSingleflight = <T extends unknown[], S>(
     const key = JSON.stringify(args)
     if (cacheMap.has(key)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const res = await cacheMap.get(key)!
+      const promise = cacheMap.get(key)!
+      const res = await promise
       return [res, true]
     }
 
     const promise = func(...args)
     cacheMap.set(key, promise)
     const res = await promise
+    // promiseがresolveしたときはpromiseをmapから取り出し済みなので消してよい
+    // ここで消さないと取得し直しがされない
+    cacheMap.delete(key)
     return [res, false]
   }
 }

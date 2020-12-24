@@ -4,6 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { listeners } from './listeners'
+import { channelTree } from './channelTree'
 
 /**
  * entitiesでないサーバーの情報を扱うstore
@@ -15,6 +16,9 @@ export const domain = defineModule({
   state,
   getters,
   mutations,
-  actions
+  actions,
+  modules: {
+    channelTree
+  }
 })
 listeners()
