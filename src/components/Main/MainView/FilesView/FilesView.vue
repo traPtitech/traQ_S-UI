@@ -1,15 +1,23 @@
 <template>
-  <div>
-    <h1>aaa</h1>
+  <div :class="$style.container">
+    <files-view-content />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import FilesViewContent from './FilesViewContent.vue'
 
 export default defineComponent({
-  name: 'FilesView'
+  name: 'FilesView',
+  components: {
+    FilesViewContent
+  }
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.container {
+  @include background-primary;
+}
+</style>
