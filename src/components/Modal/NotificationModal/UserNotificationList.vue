@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="subscribers" :class="$style.container">
     <user-notification-list-item
       v-for="entry in subscriptionStateSorted"
       :key="entry.userId"
@@ -9,6 +9,7 @@
       @change-notification="onChangeNotification"
     />
   </div>
+  <div v-else :class="$style.container">通知状態の取得に失敗しました</div>
 </template>
 
 <script lang="ts">
@@ -43,7 +44,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
       .map(u => ({
         userId: u.id,
         name: u.name,
-        subscribed: subscribers.value.has(u.id)
+        subscribed: subscribers.value?.has(u.id)
       }))
       .sort((u1, u2) => {
         const s1 = initialSubscribers.value.has(u1.userId)
@@ -66,7 +67,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     }
   }
 
-  return { subscriptionStateSorted, onChangeNotification }
+  return { subscribers, subscriptionStateSorted, onChangeNotification }
 }
 
 export default defineComponent({
@@ -82,15 +83,19 @@ export default defineComponent({
   },
   setup(props) {
     const {
+      subscribers,
       subscriptionStateSorted,
       onChangeNotification
     } = useChannelNotificationState(props)
-    return { subscriptionStateSorted, onChangeNotification }
+    return { subscribers, subscriptionStateSorted, onChangeNotification }
   }
 })
 </script>
 
 <style lang="scss" module>
+.container {
+  @include color-ui-secondary;
+}
 .item {
   margin: 16px 0;
 }

@@ -1,6 +1,9 @@
 <template>
   <sidebar-content-container title="メンバー">
     <empty-state v-if="isForceNotification">強制通知チャンネル</empty-state>
+    <empty-state v-else-if="!subscribers">
+      メンバーの取得に失敗しました
+    </empty-state>
     <channel-sidebar-member-icons
       v-else-if="subscribers.size > 0"
       :viewer-states="viewStates"
@@ -36,7 +39,7 @@ export default defineComponent({
       () => store.state.entities.channelsMap.get(props.channelId)?.force
     )
     const viewStates = computed(() =>
-      [...subscribers.value]
+      [...(subscribers.value ?? [])]
         .map(id => ({
           user: store.getters.entities.activeUsersMap.get(id),
           active: props.viewerIds.includes(id)
