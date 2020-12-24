@@ -1,5 +1,5 @@
 import { defineSubModuleListeners } from '../../utils/defineListeners'
-import { entityMitt } from '@/store/entities'
+import { entityMitt } from '@/store/entities/mitt'
 
 export const entityListeners = defineSubModuleListeners(
   entityMitt,

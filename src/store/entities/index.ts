@@ -5,8 +5,6 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import { messages } from './messages'
 import { listeners } from './listeners'
-import { mitt } from '@/lib/typedMitt'
-import { Channel } from '@traptitech/traq'
 
 export const entities = defineModule({
   namespaced: true,
@@ -19,11 +17,3 @@ export const entities = defineModule({
   }
 })
 listeners()
-
-type EntityEventMap = {
-  setChannels: () => void
-  addChannel: (channel: Channel) => void
-  updateChannel: (data: { newChannel: Channel; oldChannel: Channel }) => void
-}
-
-export const entityMitt = mitt<EntityEventMap>()

@@ -1,6 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { entities, entityMitt } from '.'
+import { entities } from '.'
+import { entityMitt } from './mitt'
 import { ActionContext } from 'vuex'
 import {
   ChannelId,
