@@ -5,6 +5,7 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import { listeners } from './listeners'
 import { channelTree } from './channelTree'
+import { stampCategory } from './stampCategory'
 
 /**
  * entitiesでないサーバーの情報を扱うstore
@@ -18,7 +19,8 @@ export const domain = defineModule({
   mutations,
   actions,
   modules: {
-    channelTree
+    channelTree,
+    stampCategory
   }
 })
 listeners()
