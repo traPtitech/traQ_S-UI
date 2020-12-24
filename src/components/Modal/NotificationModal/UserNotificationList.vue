@@ -22,7 +22,6 @@ import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useChannelSubscribers from '@/use/channelSubscribers'
 
-// TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const subscribers = useChannelSubscribers(props)
 
@@ -33,15 +32,15 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     }
   })
 
-  const allUsers = computed(() =>
+  const allUsersWithoutMe = computed(() =>
     [...store.getters.entities.activeUsersMap.values()].filter(
-      // BOT除外
-      u => !u.bot
+      // BOTと自分を除外
+      u => !u.bot && u.id !== _store.state.domain.me.detail?.id
     )
   )
 
   const subscriptionStateSorted = computed(() =>
-    allUsers.value
+    allUsersWithoutMe.value
       .map(u => ({
         userId: u.id,
         name: u.name,
