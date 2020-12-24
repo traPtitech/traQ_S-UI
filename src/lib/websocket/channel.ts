@@ -1,7 +1,6 @@
 import apis from '@/lib/apis'
 import _store from '@/_store'
 import {
-  ChannelUpdatedEvent,
   ChannelStaredEvent,
   ChannelUnstaredEvent,
   ChannelViewersChangedEvent,
@@ -14,14 +13,6 @@ export const isCurrentChannel = (channelId: string) => {
     (primaryView.type === 'channel' || primaryView.type === 'dm') &&
     primaryView.channelId === channelId
   )
-}
-
-export const onChannelUpdated = async ({ id }: ChannelUpdatedEvent) => {
-  const res = await apis.getChannel(id)
-
-  if (isCurrentChannel(id)) {
-    _store.commit.domain.messagesView.setTopic(res.data.topic)
-  }
 }
 
 export const onChannelStared = (data: ChannelStaredEvent) => {

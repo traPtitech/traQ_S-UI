@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, ref, PropType, watchEffect, reactive } from 'vue'
 import apis from '@/lib/apis'
-import store from '@/_store'
+import store from '@/store'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import { ChannelId } from '@/types/entity-ids'
@@ -47,12 +47,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const topic = ref(store.state.domain.messagesView.topic)
+    const getTopic = () =>
+      store.state.entities.channelsMap.get(props.channelId)?.topic ?? ''
+
+    const topic = ref(getTopic())
     const state = reactive({
-      topic: store.state.domain.messagesView.topic
+      topic: getTopic()
     })
     watchEffect(() => {
-      topic.value = store.state.domain.messagesView.topic
+      topic.value = getTopic()
     })
     const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, state)
     return {

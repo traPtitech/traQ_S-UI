@@ -49,9 +49,6 @@ export const actions = defineActions({
     dispatch.resetViewState()
 
     dispatch.fetchPinnedMessages()
-    if (!payload.isDM) {
-      dispatch.fetchTopic()
-    }
     if (
       !payload.isDM &&
       !store.state.entities.channelsMap.get(payload.channelId)?.force
@@ -79,12 +76,6 @@ export const actions = defineActions({
     if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
-  },
-  async fetchTopic(context) {
-    const { state, commit } = messagesViewActionContext(context)
-    if (!state.currentChannelId) throw 'no channel id'
-    const res = await apis.getChannelTopic(state.currentChannelId)
-    commit.setTopic(res.data.topic)
   },
   async fetchSubscribers(context) {
     const { state, commit } = messagesViewActionContext(context)

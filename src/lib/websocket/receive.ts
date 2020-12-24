@@ -4,7 +4,6 @@ import {
   onUserUpdated
 } from './user'
 import {
-  onChannelUpdated,
   onChannelStared,
   onChannelUnstared,
   onChannelViewersChanged,
@@ -44,9 +43,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'USER_WEBRTC_STATE_CHANGED':
       onUserWebRTCStateChanged(body)
-      break
-    case 'CHANNEL_UPDATED':
-      onChannelUpdated(body)
       break
     case 'CHANNEL_STARED':
       onChannelStared(body)

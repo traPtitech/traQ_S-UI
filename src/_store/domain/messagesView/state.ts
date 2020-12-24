@@ -31,8 +31,6 @@ export interface S {
 
   currentViewers: ChannelViewer[]
 
-  topic: string
-
   subscribers: UserId[]
 
   bots: UserId[]
@@ -53,7 +51,6 @@ export const state: S = {
   embeddingsMap: {},
   shouldRetriveMessageCreateEvent: false,
   currentViewers: [],
-  topic: '',
   subscribers: [],
   bots: [],
   editingMessageId: undefined,

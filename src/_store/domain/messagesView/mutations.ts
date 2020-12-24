@@ -83,9 +83,6 @@ export const mutations = defineMutations<S>()({
   setCurrentViewer(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
   },
-  setTopic(state, topic: string) {
-    state.topic = topic
-  },
   setBots(state, bots: UserId[]) {
     state.bots = bots
   },
