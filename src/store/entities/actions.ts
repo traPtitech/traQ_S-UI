@@ -347,6 +347,8 @@ export const actions = defineActions({
       getStamp,
       stamp => {
         commit.setStamp(stamp)
+
+        entityMitt.emit('setStamp', stamp)
       }
     )
     return stamp
@@ -377,12 +379,16 @@ export const actions = defineActions({
       if (!unicodeStamps) {
         setUnicodeStamps(stamps.filter(stamp => stamp.isUnicode))
       }
+
+      entityMitt.emit('setStamps')
     }
     return stampsMap
   },
   deleteStamp(context, stampId: StampId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteStamp(stampId)
+
+    entityMitt.emit('deleteStamp', stampId)
   },
 
   async fetchStampPalette(

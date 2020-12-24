@@ -78,20 +78,20 @@ const stampEntities: Map<StampId, Stamp> = new Map([
 ])
 
 const stampNameIdMap = {
-  unicodeStampMap: {
-    smile: '84956b64-3575-40ca-b55f-54b0364fbca3',
-    regional_indicator_e: '1265290a-3f16-4066-a6c5-43703d0db269'
-  },
-  traQStampMap: {
-    e: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
-    d: 'd7461966-e5d3-4c6d-9538-7c8605f45a1d'
-  }
+  unicodeStampMap: new Map([
+    ['smile', '84956b64-3575-40ca-b55f-54b0364fbca3'],
+    ['regional_indicator_e', '1265290a-3f16-4066-a6c5-43703d0db269']
+  ]),
+  traQStampMap: new Map([
+    ['e', 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'],
+    ['d', 'd7461966-e5d3-4c6d-9538-7c8605f45a1d']
+  ])
 }
 
-const unicodeStampNameIdMap = {
-  smile: '84956b64-3575-40ca-b55f-54b0364fbca3',
-  regional_indicator_e: '1265290a-3f16-4066-a6c5-43703d0db269'
-}
+const unicodeStampNameIdMap = new Map([
+  ['smile', '84956b64-3575-40ca-b55f-54b0364fbca3'],
+  ['regional_indicator_e', '1265290a-3f16-4066-a6c5-43703d0db269']
+])
 
 const unicodeCategories = [
   { name: 'people', stampIds: ['84956b64-3575-40ca-b55f-54b0364fbca3'] },
@@ -105,10 +105,10 @@ const unicodeCategories = [
   { name: 'regional', stampIds: ['1265290a-3f16-4066-a6c5-43703d0db269'] }
 ]
 
-const traQStampNameIdMap = {
-  e: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
-  d: 'd7461966-e5d3-4c6d-9538-7c8605f45a1d'
-}
+const traQStampNameIdMap = new Map([
+  ['e', 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'],
+  ['d', 'd7461966-e5d3-4c6d-9538-7c8605f45a1d']
+])
 
 const traQCategory = {
   name: 'traq',

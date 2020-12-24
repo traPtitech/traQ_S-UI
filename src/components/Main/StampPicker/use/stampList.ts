@@ -17,9 +17,9 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     if (currentStampSet.value.type === 'category') {
       const traQStampCategory =
-        _store.state.domain.stampCategory.traQStampCategory
+        store.state.domain.stampCategory.traQStampCategory
       const unicodeStampCategories =
-        _store.state.domain.stampCategory.unicodeStampCategories
+        store.state.domain.stampCategory.unicodeStampCategories
       const name = currentStampSet.value.id
       if (name === traQStampCategory.name) {
         return traQStampCategory.stampIds

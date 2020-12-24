@@ -27,12 +27,12 @@ const useStampSetSelector = () => {
     stampCategories: computed((): StampSet[] => [
       {
         type: 'category',
-        id: _store.state.domain.stampCategory.traQStampCategory.name
+        id: store.state.domain.stampCategory.traQStampCategory.name
       },
       ...state.foldedStampSets
     ]),
     foldedStampSets: computed((): StampSet[] =>
-      _store.state.domain.stampCategory.unicodeStampCategories.map(c => ({
+      store.state.domain.stampCategory.unicodeStampCategories.map(c => ({
         type: 'category',
         id: 'unicode-' + c.name
       }))

@@ -17,7 +17,6 @@ import {
 } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import _store from '@/_store'
 
 export const mutations = defineMutations<S>()({
   setUser(state, user: User) {
@@ -78,22 +77,13 @@ export const mutations = defineMutations<S>()({
 
   setStamp(state, stamp: Stamp) {
     state.stampsMap.set(stamp.id, stamp)
-
-    // TODO: eventを使うようにする
-    _store.dispatch.domain.stampCategory.constructStampCategories()
   },
   setStampsMap(state, stampsMap: Map<StampId, Stamp>) {
     state.stampsMap = stampsMap
     state.stampsMapFetched = true
-
-    // TODO: eventを使うようにする
-    _store.dispatch.domain.stampCategory.constructStampCategories()
   },
   deleteStamp(state, stampId: StampId) {
     state.stampsMap.delete(stampId)
-
-    // TODO: eventを使うようにする
-    _store.dispatch.domain.stampCategory.constructStampCategories()
   },
 
   setStampPalette(state, stampPalette: StampPalette) {
