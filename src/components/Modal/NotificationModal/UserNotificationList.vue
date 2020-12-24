@@ -12,62 +12,61 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, toRefs } from 'vue'
+import { defineComponent, computed, ref, watch } from 'vue'
 import store from '@/store'
 import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
+import useChannelSubscribers from '@/use/channelSubscribers'
 
 // TODO: ユーザー検索、自分を変更した際の通知状況更新
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
+  const subscribers = useChannelSubscribers(props)
+
+  const initialSubscribers = ref(new Set<string>())
+  watch(subscribers, (newVal, oldVal) => {
+    if (oldVal === undefined && newVal) {
+      initialSubscribers.value = new Set(newVal)
+    }
+  })
+
   const allUsers = computed(() =>
     [...store.getters.entities.activeUsersMap.values()].filter(
       // BOT除外
       u => !u.bot
     )
   )
-  const state = reactive({
-    initialSubscribers: new Set<string>(),
-    subscribersMap: {} as Record<UserId, boolean | undefined>,
-    subscriptionStateSorted: computed((): {
-      userId: UserId
-      name: string
-      subscribed: boolean
-    }[] =>
-      allUsers.value
-        .map(u => ({
-          userId: u.id,
-          name: u.name,
-          subscribed: state.subscribersMap[u.id] ?? false
-        }))
-        .sort((u1, u2) => {
-          const s1 = state.initialSubscribers.has(u1.userId)
-          const s2 = state.initialSubscribers.has(u2.userId)
-          return s1 && !s2
-            ? -1
-            : !s1 && s2
-            ? 1
-            : compareStringInsensitive(u1.name, u2.name)
-        })
-    )
-  })
-  apis.getChannelSubscribers(props.channelId).then(res => {
-    state.initialSubscribers = new Set(res.data)
-    state.subscribersMap = Object.fromEntries(res.data.map(uid => [uid, true]))
-  })
-  const onChangeNotification = async (userId: UserId, subscribe: boolean) => {
-    const newMap = { ...state.subscribersMap, [userId]: subscribe }
-    try {
-      await apis.setChannelSubscribers(props.channelId, {
-        on: Object.entries(newMap)
-          .filter(e => e[1])
-          .map(e => e[0])
+
+  const subscriptionStateSorted = computed(() =>
+    allUsers.value
+      .map(u => ({
+        userId: u.id,
+        name: u.name,
+        subscribed: subscribers.value.has(u.id)
+      }))
+      .sort((u1, u2) => {
+        const s1 = initialSubscribers.value.has(u1.userId)
+        const s2 = initialSubscribers.value.has(u2.userId)
+        return s1 && !s2
+          ? -1
+          : !s1 && s2
+          ? 1
+          : compareStringInsensitive(u1.name, u2.name)
       })
-      state.subscribersMap = newMap
-    } catch {}
+  )
+
+  const onChangeNotification = async (userId: UserId, subscribe: boolean) => {
+    try {
+      await apis.editChannelSubscribers(props.channelId, {
+        [subscribe ? 'on' : 'off']: [userId]
+      })
+    } catch {
+      // TODO: エラー表示
+    }
   }
-  return { ...toRefs(state), onChangeNotification }
+
+  return { subscriptionStateSorted, onChangeNotification }
 }
 
 export default defineComponent({

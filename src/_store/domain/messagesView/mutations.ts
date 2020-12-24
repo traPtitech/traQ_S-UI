@@ -86,9 +86,6 @@ export const mutations = defineMutations<S>()({
   setBots(state, bots: UserId[]) {
     state.bots = bots
   },
-  setSubscribers(state, subscribers: UserId[]) {
-    state.subscribers = subscribers
-  },
   setEditingMessageId(state, messageId: MessageId) {
     state.editingMessageId = messageId
   },

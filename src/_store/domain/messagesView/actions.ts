@@ -24,7 +24,6 @@ export const actions = defineActions({
     commit.setMessageIds([])
     commit.setRenderedContent({})
     commit.setCurrentViewer([])
-    commit.setSubscribers([])
   },
   async changeCurrentChannel(
     context,
@@ -49,12 +48,6 @@ export const actions = defineActions({
     dispatch.resetViewState()
 
     dispatch.fetchPinnedMessages()
-    if (
-      !payload.isDM &&
-      !store.state.entities.channelsMap.get(payload.channelId)?.force
-    ) {
-      dispatch.fetchSubscribers()
-    }
     if (!payload.isDM) {
       dispatch.fetchBots()
     }
@@ -76,12 +69,6 @@ export const actions = defineActions({
     if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
-  },
-  async fetchSubscribers(context) {
-    const { state, commit } = messagesViewActionContext(context)
-    if (!state.currentChannelId) throw 'no channel id'
-    const res = await apis.getChannelSubscribers(state.currentChannelId)
-    commit.setSubscribers(res.data)
   },
   async fetchBots(context) {
     const { state, commit } = messagesViewActionContext(context)
