@@ -22,10 +22,15 @@ export const createSingleflight = <T extends unknown[], S>(
 
     const promise = func(...args)
     cacheMap.set(key, promise)
-    const res = await promise
-    // promiseがresolveしたときはpromiseをmapから取り出し済みなので消してよい
-    // ここで消さないと取得し直しがされない
-    cacheMap.delete(key)
-    return [res, false]
+    try {
+      const res = await promise
+      return [res, false]
+    } catch (e) {
+      throw e
+    } finally {
+      // promiseがresolveまたはrejectしたときはpromiseをmapから取り出し済みなので消してよい
+      // ここで消さないと取得し直しがされない
+      cacheMap.delete(key)
+    }
   }
 }
