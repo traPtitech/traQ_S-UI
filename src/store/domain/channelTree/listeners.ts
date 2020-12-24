@@ -13,8 +13,9 @@ export const entityListeners = defineSubModuleListeners(
       dispatch.onAddChannel(channel)
     })
     listener.on('updateChannel', async ({ newChannel, oldChannel }) => {
-      // 親チャンネルもアーカイブ状態も変わっていないなら構造は変わらない
+      // 名前も親チャンネルもアーカイブ状態も変わっていないなら構造は変わらない
       if (
+        newChannel.name === oldChannel.name &&
         newChannel.parentId === oldChannel.parentId &&
         newChannel.archived === oldChannel.archived
       ) {

@@ -41,7 +41,10 @@ export const actions = defineActions({
 
     await dispatch.constructAllTrees()
 
-    if (newChannel.parentId !== oldChannel.parentId) {
+    if (
+      newChannel.name !== oldChannel.name ||
+      newChannel.parentId !== oldChannel.parentId
+    ) {
       const newPath = channelIdToPathString(
         newChannel.id,
         rootState.entities.channelsMap
