@@ -15,6 +15,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
 import store from '@/store'
+import _store from '@/_store'
 import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
@@ -62,8 +63,14 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
       await apis.editChannelSubscribers(props.channelId, {
         [subscribe ? 'on' : 'off']: [userId]
       })
-    } catch {
-      // TODO: エラー表示
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e)
+
+      _store.commit.ui.toast.addToast({
+        type: 'error',
+        text: '通知設定の変更に失敗しました'
+      })
     }
   }
 
