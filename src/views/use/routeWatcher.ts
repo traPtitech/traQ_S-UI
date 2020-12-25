@@ -18,14 +18,14 @@ type Views = 'none' | 'main' | 'not-found'
 const setUnreadState = (id: ChannelId | DMChannelId) => {
   // 未読の処理
   // TODO: 新着メッセージ基準設定などの処理
-  _store.commit.domain.messagesView.unsetUnreadSince()
+  store.commit.domain.messagesView.unsetUnreadSince()
   const unreadChannel = _store.state.domain.me.unreadChannelsSet[id]
   if (unreadChannel) {
     if (
       _store.state.domain.me.subscriptionMap[id] > 0 ||
       store.state.entities.dmChannelsMap.has(id)
     ) {
-      _store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
+      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
     }
 
     _store.dispatch.domain.me.readChannel({ channelId: id })

@@ -1,6 +1,6 @@
 import useChannelPath from '@/use/channelPath'
 import { computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 
 const useCurrentChannelPath = () => {
   const { channelIdToPathString } = useChannelPath()

@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import {
   isFile,
@@ -21,8 +21,8 @@ const isIncludedHost = (url: ExternalUrl) => {
 }
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
-  const embeddingsMap = computed(
-    () => store.state.domain.messagesView.embeddingsMap[props.messageId]
+  const embeddingsMap = computed(() =>
+    store.state.domain.messagesView.embeddingsMap.get(props.messageId)
   )
   const state = reactive({
     fileIds: computed(

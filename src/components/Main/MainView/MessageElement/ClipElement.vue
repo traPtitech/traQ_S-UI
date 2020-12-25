@@ -22,7 +22,6 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useElementRenderObserver from './use/elementRenderObserver'
@@ -68,9 +67,9 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          _store.state.domain.messagesView.renderedContentMap[
+          store.state.domain.messagesView.renderedContentMap.get(
             props.messageId
-          ] ?? ''
+          ) ?? ''
       )
     })
 

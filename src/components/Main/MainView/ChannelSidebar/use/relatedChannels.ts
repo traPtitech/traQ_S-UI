@@ -9,6 +9,11 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
   const compareNameInsensitive = (a: Channel, b: Channel) =>
     compareStringInsensitive(a.name, b.name)
 
+  const getParentChildrenChannels = () =>
+    parent.value?.children
+      .map(v => store.state.entities.channelsMap.get(v))
+      .filter(isDefined) ?? []
+
   const current = computed(() =>
     store.state.entities.channelsMap.get(props.channelId)
   )
@@ -17,10 +22,11 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
     return store.state.entities.channelsMap.get(current.value.parentId)
   })
   const siblings = computed(() => {
+    // ルート直下のチャンネルの場合はルート直下のチャンネル
     const sibs =
-      parent.value?.children
-        .map(v => store.state.entities.channelsMap.get(v))
-        .filter(isDefined) ?? []
+      current.value?.parentId === null
+        ? store.getters.domain.channelTree.topLevelChannels
+        : getParentChildrenChannels()
     return sibs.filter(el => !el.archived).sort(compareNameInsensitive)
   })
   const children = computed(() =>

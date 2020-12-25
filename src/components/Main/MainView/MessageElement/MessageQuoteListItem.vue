@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
@@ -63,9 +62,9 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          _store.state.domain.messagesView.renderedContentMap[
+          store.state.domain.messagesView.renderedContentMap.get(
             props.messageId
-          ] ?? ''
+          ) ?? ''
       )
     })
     return { state }

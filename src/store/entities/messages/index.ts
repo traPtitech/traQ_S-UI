@@ -22,6 +22,7 @@ type MessageEventMap = {
   addMessage: (message: Message) => void
   updateMessage: (message: Message) => void
   deleteMessage: (messageId: MessageId) => void
+  changeMessagePinned: (payload: { message: Message; pinned: boolean }) => void
 }
 
 export const messageMitt = mitt<MessageEventMap>()

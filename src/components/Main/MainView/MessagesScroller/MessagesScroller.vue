@@ -55,7 +55,7 @@ import {
   shallowRef
 } from 'vue'
 import { MessageId } from '@/types/entity-ids'
-import { LoadingDirection } from '@/_store/domain/messagesView/state'
+import { LoadingDirection } from '@/store/domain/messagesView/state'
 import MessageElement from '@/components/Main/MainView/MessageElement/MessageElement.vue'
 import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
@@ -210,7 +210,7 @@ export default defineComponent({
     }
 
     const unreadIndex = computed(() => {
-      const unreadSince = _store.state.domain.messagesView.unreadSince
+      const unreadSince = store.state.domain.messagesView.unreadSince
       if (!unreadSince) return -1
       return props.messageIds.findIndex(
         id =>

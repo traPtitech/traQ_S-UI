@@ -1,5 +1,5 @@
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import _store from '@/_store'
@@ -11,6 +11,7 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
 
+    // TODO: いい感じにする
     // 通常のチャンネルでない場合は最後に開いたチャンネルとして保持しない
     if (!store.state.entities.channelsMap.get(currentChannelId)) return
 
@@ -51,7 +52,7 @@ export const mutations = defineMutations<S>()({
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
   },
-  addPinnedMessages(state, message: Pin) {
+  addPinnedMessage(state, message: Pin) {
     state.pinnedMessages.push(message)
   },
   removePinnedMessage(state, messageId: MessageId) {
@@ -69,28 +70,19 @@ export const mutations = defineMutations<S>()({
       renderedContent
     }: { messageId: MessageId; renderedContent: string }
   ) {
-    state.renderedContentMap[messageId] = renderedContent
+    state.renderedContentMap.set(messageId, renderedContent)
   },
-  setRenderedContent(state, renderedContentMap: Record<string, string>) {
+  setRenderedContent(state, renderedContentMap: Map<string, string>) {
     state.renderedContentMap = renderedContentMap
   },
   addEmbedding(
     state,
     payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
   ) {
-    state.embeddingsMap[payload.messageId] = payload.embeddings
+    state.embeddingsMap.set(payload.messageId, payload.embeddings)
   },
-  setCurrentViewer(state, viewers: ChannelViewer[]) {
+  setCurrentViewers(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
-  },
-  setTopic(state, topic: string) {
-    state.topic = topic
-  },
-  setBots(state, bots: UserId[]) {
-    state.bots = bots
-  },
-  setSubscribers(state, subscribers: UserId[]) {
-    state.subscribers = subscribers
   },
   setEditingMessageId(state, messageId: MessageId) {
     state.editingMessageId = messageId

@@ -43,13 +43,13 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
   ) {
-    const { commit, rootDispatch } = mainViewActionContext(context)
+    const { commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'channel',
       channelId: payload.channelId,
       entryMessageId: payload.entryMessageId
     })
-    rootDispatch.domain.messagesView.changeCurrentChannel(payload)
+    store.dispatch.domain.messagesView.changeCurrentChannel(payload)
   },
   changePrimaryViewToDM(
     context,
@@ -59,14 +59,14 @@ export const actions = defineActions({
       entryMessageId?: MessageId
     }
   ) {
-    const { commit, rootDispatch } = mainViewActionContext(context)
+    const { commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'dm',
       channelId: payload.channelId,
       userName: payload.userName,
       entryMessageId: payload.entryMessageId
     })
-    rootDispatch.domain.messagesView.changeCurrentChannel({
+    store.dispatch.domain.messagesView.changeCurrentChannel({
       ...payload,
       isDM: true
     })
@@ -75,12 +75,12 @@ export const actions = defineActions({
     context,
     { clipFolderId }: { clipFolderId: ClipFolderId }
   ) {
-    const { commit, rootDispatch } = mainViewActionContext(context)
+    const { commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'clips',
       clipFolderId
     })
-    rootDispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+    store.dispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
   },
   changePrimaryViewToNull(context) {
     const { commit } = mainViewActionContext(context)

@@ -6,15 +6,7 @@ import { S } from './state'
 
 export const mutations = defineMutations<S>()({
   setMessage(state, message: Message) {
-    const isAdd = !state.messagesMap.has(message.id)
-
     state.messagesMap.set(message.id, message)
-
-    if (isAdd) {
-      messageMitt.emit('addMessage', message)
-    } else {
-      messageMitt.emit('updateMessage', message)
-    }
   },
   extendMessagesMap(state, messages: Message[]) {
     messages.forEach(message => {
@@ -41,6 +33,8 @@ export const mutations = defineMutations<S>()({
     const message = state.messagesMap.get(messageId)
     if (!message) return
     message.pinned = pinned
+
+    messageMitt.emit('changeMessagePinned', { message, pinned })
   },
 
   setFileMetaData(state, fileMetaData: FileInfo) {

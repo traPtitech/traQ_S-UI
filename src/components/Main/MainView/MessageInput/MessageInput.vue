@@ -103,7 +103,7 @@ export default defineComponent({
     )
 
     const typingUsers = computed(
-      () => _store.getters.domain.messagesView.typingUsers
+      () => store.getters.domain.messagesView.typingUsers
     )
 
     const canPostMessage = computed(
