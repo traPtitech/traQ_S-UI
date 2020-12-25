@@ -6,16 +6,7 @@ import { S } from './state'
 
 export const mutations = defineMutations<S>()({
   setMessage(state, message: Message) {
-    const isAdd = !state.messagesMap.has(message.id)
-
     state.messagesMap.set(message.id, message)
-
-    // TODO: メッセージが新しいものか元々存在してたけど今初めて取得したかの判定ができない
-    if (isAdd) {
-      messageMitt.emit('addMessage', message)
-    } else {
-      messageMitt.emit('updateMessage', message)
-    }
   },
   extendMessagesMap(state, messages: Message[]) {
     messages.forEach(message => {
