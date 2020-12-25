@@ -17,10 +17,10 @@ const isBadgingAPISupported = checkBadgeAPISupport()
 const updateBadge = async () => {
   if (!isBadgingAPISupported) return
 
-  const unreadChannelsSet = _store.state.domain.me.unreadChannelsSet
+  const unreadChannelsMap = _store.state.domain.me.unreadChannelsMap
 
-  const unreadCount = Object.entries(unreadChannelsSet).reduce(
-    (acc, [, current]) => acc + current.count,
+  const unreadCount = [...unreadChannelsMap.values()].reduce(
+    (acc, current) => acc + current.count,
     0
   )
   if (unreadCount > 0) {
@@ -34,14 +34,15 @@ export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: Readonly<MyUserDetail>) {
     state.detail = detail
   },
-  setStampHistory(state: S, stampHistory: Record<StampId, Date>) {
+  setStampHistory(state: S, stampHistory: Map<StampId, Date>) {
     state.stampHistory = stampHistory
   },
 
-  setUnreadChannelsSet(state: S, unreadChannels: readonly UnreadChannel[]) {
-    state.unreadChannelsSet = Object.fromEntries(
-      unreadChannels.map(unread => [unread.channelId, unread])
-    )
+  setUnreadChannelsMap(
+    state: S,
+    unreadChannelsMap: Map<ChannelId, UnreadChannel>
+  ) {
+    state.unreadChannelsMap = unreadChannelsMap
     updateBadge()
   },
   upsertUnreadChannel(state: S, message: Readonly<Message>) {
@@ -52,63 +53,65 @@ export const mutations = defineMutations<S>()({
         state.detail?.groups ?? []
       ) || !!store.state.entities.channelsMap.get(message.channelId)?.force
 
+    const subscriptionLevel =
+      state.subscriptionMap.get(message.channelId) ?? ChannelSubscribeLevel.none
+
     if (
       !(
-        state.subscriptionMap[message.channelId] > 0 ||
-        store.state.entities.dmChannelsMap.get(message.channelId) ||
+        subscriptionLevel !== ChannelSubscribeLevel.none ||
+        store.state.entities.dmChannelsMap.has(message.channelId) ||
         noticeable
       )
     )
       return
 
-    if (message.channelId in state.unreadChannelsSet) {
-      const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
-      state.unreadChannelsSet[message.channelId] = {
+    if (state.unreadChannelsMap.has(message.channelId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const oldUnreadChannel = state.unreadChannelsMap.get(message.channelId)!
+      state.unreadChannelsMap.set(message.channelId, {
         ...oldUnreadChannel,
         count: oldUnreadChannel.count + 1,
         noticeable: oldUnreadChannel.noticeable || noticeable,
         updatedAt: message.createdAt
-      }
+      })
     } else {
-      state.unreadChannelsSet[message.channelId] = {
+      state.unreadChannelsMap.set(message.channelId, {
         channelId: message.channelId,
         count: 1,
         noticeable,
         since: message.createdAt,
         updatedAt: message.createdAt
-      }
+      })
     }
     updateBadge()
   },
   // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
-    delete state.unreadChannelsSet[channelId]
+    state.unreadChannelsMap.delete(channelId)
     updateBadge()
     removeNotification(channelId)
   },
 
-  setStaredChannels(state: S, channelIds: readonly ChannelId[]) {
-    state.staredChannelSet = Object.fromEntries(
-      channelIds.map(id => [id, true])
-    )
+  setStaredChannels(state: S, channelIds: Set<ChannelId>) {
+    state.staredChannelSet = channelIds
   },
   addStaredChannel(state: S, channelId: ChannelId) {
-    state.staredChannelSet[channelId] = true
+    state.staredChannelSet.add(channelId)
   },
   deleteStaredChannel(state: S, channelId: ChannelId) {
-    delete state.staredChannelSet[channelId]
+    state.staredChannelSet.delete(channelId)
   },
 
   upsertLocalStampHistory(
     state: S,
     { stampId, datetime }: { stampId: StampId; datetime: Date }
   ) {
-    state.stampHistory[stampId] = datetime
+    state.stampHistory.set(stampId, datetime)
   },
 
   setSubscriptionMap(
     state: S,
-    subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
+    subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
   ) {
     state.subscriptionMap = subscriptionMap
   },
@@ -119,6 +122,6 @@ export const mutations = defineMutations<S>()({
       subscriptionLevel: ChannelSubscribeLevel
     }
   ) {
-    state.subscriptionMap[payload.channelId] = payload.subscriptionLevel
+    state.subscriptionMap.set(payload.channelId, payload.subscriptionLevel)
   }
 })

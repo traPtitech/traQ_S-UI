@@ -19,10 +19,10 @@ const setUnreadState = (id: ChannelId | DMChannelId) => {
   // 未読の処理
   // TODO: 新着メッセージ基準設定などの処理
   store.commit.domain.messagesView.unsetUnreadSince()
-  const unreadChannel = _store.state.domain.me.unreadChannelsSet[id]
+  const unreadChannel = _store.state.domain.me.unreadChannelsMap.get(id)
   if (unreadChannel) {
     if (
-      _store.state.domain.me.subscriptionMap[id] > 0 ||
+      _store.getters.domain.me.isChannelSubscribed(id) ||
       store.state.entities.dmChannelsMap.has(id)
     ) {
       store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
@@ -59,6 +59,7 @@ const useRouteWatcher = () => {
     await originalStore.restored
     return computed(() => _store.getters.app.browserSettings.defaultChannelName)
   }
+
   const onRouteChangedToIndex = async () => {
     const openChannelPath = await useOpenChannel()
     await router

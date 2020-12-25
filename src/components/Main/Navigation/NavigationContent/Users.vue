@@ -52,7 +52,7 @@ import DMActivityElement from './DMActivityElement.vue'
 
 const useUsersWithNotification = () => {
   const usersWithNotification = computed(() =>
-    Object.values(_store.state.domain.me.unreadChannelsSet)
+    [..._store.state.domain.me.unreadChannelsMap.values()]
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )

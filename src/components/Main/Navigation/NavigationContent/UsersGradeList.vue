@@ -62,8 +62,8 @@ export default defineComponent({
         .filter(isDefined)
     )
     const hasNotification = computed(() =>
-      dmChannelIds.value.some(
-        id => !!_store.state.domain.me.unreadChannelsSet[id]
+      dmChannelIds.value.some(id =>
+        _store.state.domain.me.unreadChannelsMap.has(id)
       )
     )
 

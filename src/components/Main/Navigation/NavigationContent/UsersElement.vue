@@ -36,9 +36,7 @@ export default defineComponent({
       store.getters.entities.DMChannelIdByUserId(props.user.id)
     )
     const hasNotification = computed(() =>
-      dmChannelId.value
-        ? !!_store.state.domain.me.unreadChannelsSet[dmChannelId.value]
-        : false
+      _store.state.domain.me.unreadChannelsMap.has(dmChannelId.value ?? '')
     )
 
     const onClick = () => {

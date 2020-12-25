@@ -7,17 +7,17 @@ import {
 
 export interface S {
   detail?: Readonly<MyUserDetail>
-  stampHistory: Record<StampId, Date>
+  stampHistory: Map<StampId, Date>
 
-  unreadChannelsSet: Record<ChannelId | DMChannelId, UnreadChannel>
-  staredChannelSet: Record<ChannelId, true>
-  subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
+  unreadChannelsMap: Map<ChannelId | DMChannelId, UnreadChannel>
+  staredChannelSet: Set<ChannelId>
+  subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
 }
 
 export const state: S = {
   detail: undefined,
-  stampHistory: {},
-  unreadChannelsSet: {},
-  staredChannelSet: {},
-  subscriptionMap: {}
+  stampHistory: new Map(),
+  unreadChannelsMap: new Map(),
+  staredChannelSet: new Set(),
+  subscriptionMap: new Map()
 }

@@ -83,9 +83,11 @@ export const actions = defineActions({
     const { getters, commit, rootState } = channelTreeActionContext(context)
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
-    const subscribedOrForceChannels = _store.getters.domain.me.subscribedChannels.concat(
-      getters.forcedChannels.map(c => c.id)
-    )
+    const subscribedOrForceChannels = new Set([
+      // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
+      ..._store.getters.domain.me.subscribedChannels.values(),
+      ...getters.forcedChannels.map(c => c.id)
+    ])
     const tree = {
       children:
         constructTree(
@@ -97,7 +99,7 @@ export const actions = defineActions({
             children: topLevelChannelIds
           },
           rootState.entities.channelsMap,
-          new Set(subscribedOrForceChannels)
+          subscribedOrForceChannels
         )?.children ?? []
     }
     commit.setHomeChannelTree(tree)

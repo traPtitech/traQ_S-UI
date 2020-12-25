@@ -98,8 +98,8 @@ const useChannelClick = (
 }
 
 const useNotification = (props: TypedProps) => {
-  const unreadChannel = computed(
-    () => _store.state.domain.me.unreadChannelsSet[props.channel.id]
+  const unreadChannel = computed(() =>
+    _store.state.domain.me.unreadChannelsMap.get(props.channel.id)
   )
 
   const notificationState = reactive({
@@ -107,9 +107,8 @@ const useNotification = (props: TypedProps) => {
     hasNotificationOnChild: computed(() =>
       props.ignoreChildren
         ? false
-        : deepSome(
-            props.channel,
-            channel => channel.id in _store.state.domain.me.unreadChannelsSet
+        : deepSome(props.channel, channel =>
+            _store.state.domain.me.unreadChannelsMap.has(channel.id)
           )
     ),
     unreadCount: computed(() => unreadChannel.value?.count),

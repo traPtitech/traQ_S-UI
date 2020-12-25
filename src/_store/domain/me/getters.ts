@@ -23,13 +23,20 @@ export const getters = defineGetters<S>()({
       .map(e => e[0])
     return history
   },
-  subscribedChannels(state): ChannelId[] {
-    return [...store.state.entities.channelsMap.values()]
-      .filter(
-        c =>
-          (state.subscriptionMap[c.id] ?? ChannelSubscribeLevel.none) !==
-          ChannelSubscribeLevel.none
-      )
-      .map(c => c.id)
+  subscribedChannels(state): Set<ChannelId> {
+    return new Set(
+      [...state.subscriptionMap.entries()]
+        .filter(
+          ([id, level]) =>
+            store.state.entities.channelsMap.has(id) &&
+            level !== ChannelSubscribeLevel.none
+        )
+        .map(([id]) => id)
+    )
+  },
+  isChannelSubscribed(state): (channelId: ChannelId) => boolean {
+    return channelId =>
+      (state.subscriptionMap.get(channelId) ?? ChannelSubscribeLevel.none) !==
+      ChannelSubscribeLevel.none
   }
 })

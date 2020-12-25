@@ -18,7 +18,11 @@ export const actions = defineActions({
   async fetchUnreadChannels(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMyUnreadChannels()
-    commit.setUnreadChannelsSet(data)
+    commit.setUnreadChannelsMap(
+      new Map(
+        data.map(unreadChannel => [unreadChannel.channelId, unreadChannel])
+      )
+    )
   },
 
   /** チャンネルを既読にする */
@@ -31,32 +35,21 @@ export const actions = defineActions({
   async fetchStaredChannels(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMyStars()
-    commit.setStaredChannels(data)
-  },
-  async starChannel(context, id: ChannelId) {
-    await apis.addMyStar({
-      channelId: id
-    })
-  },
-  async unstarChannel(context, id: ChannelId) {
-    await apis.removeMyStar(id)
+    commit.setStaredChannels(new Set(data))
   },
   async fetchStampHistory(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMyStampHistory()
-    const history = Object.fromEntries(
-      data.map(h => [h.stampId, new Date(h.datetime)])
+    commit.setStampHistory(
+      new Map(data.map(h => [h.stampId, new Date(h.datetime)]))
     )
-    commit.setStampHistory(history)
   },
   async fetchSubscriptions(context) {
     const { commit } = meActionContext(context)
     const res = await apis.getMyChannelSubscriptions()
-    const subscriptions: Record<
-      ChannelId,
-      ChannelSubscribeLevel
-    > = Object.fromEntries(res.data.map(s => [s.channelId, s.level]))
-    commit.setSubscriptionMap(subscriptions)
+    commit.setSubscriptionMap(
+      new Map(res.data.map(s => [s.channelId, s.level]))
+    )
     store.dispatch.domain.channelTree.constructHomeChannelTree()
   },
   async changeSubscriptionLevel(
