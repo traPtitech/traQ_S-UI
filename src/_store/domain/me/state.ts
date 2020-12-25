@@ -1,4 +1,4 @@
-import { WebhookId, StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
+import { StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   MyUserDetail,
@@ -7,7 +7,6 @@ import {
 
 export interface S {
   detail?: Readonly<MyUserDetail>
-  webhooks: WebhookId[]
   stampHistory: Record<StampId, Date>
 
   unreadChannelsSet: Record<ChannelId | DMChannelId, UnreadChannel>
@@ -17,7 +16,6 @@ export interface S {
 
 export const state: S = {
   detail: undefined,
-  webhooks: [],
   stampHistory: {},
   unreadChannelsSet: {},
   staredChannelSet: {},

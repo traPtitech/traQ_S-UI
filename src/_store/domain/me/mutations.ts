@@ -1,6 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
+import { ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   MyUserDetail,
@@ -33,9 +33,6 @@ const updateBadge = async () => {
 export const mutations = defineMutations<S>()({
   setDetail(state: S, detail: Readonly<MyUserDetail>) {
     state.detail = detail
-  },
-  setWebhooks(state: S, webhooks: WebhookId[]) {
-    state.webhooks = webhooks
   },
   setStampHistory(state: S, stampHistory: Record<StampId, Date>) {
     state.stampHistory = stampHistory
