@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import {
   isFile,

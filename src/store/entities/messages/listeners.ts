@@ -1,6 +1,5 @@
 import { wsListener } from '@/lib/websocket'
 import { defineSubModuleListeners } from '@/store/utils/defineListeners'
-import _store from '@/_store'
 import { messageMitt } from '.'
 
 export const listeners = defineSubModuleListeners(
@@ -9,11 +8,7 @@ export const listeners = defineSubModuleListeners(
   'messages',
   (listener, { dispatch }) => {
     listener.on('MESSAGE_CREATED', async ({ id }) => {
-      const message = await dispatch.fetchMessage({ messageId: id })
-
-      if (!message) return
-      // TODO: eventを使うようにする
-      await _store.dispatch.domain.messagesView.addAndRenderMessage({ message })
+      dispatch.fetchMessage({ messageId: id })
     })
     listener.on('MESSAGE_UPDATED', ({ id }) => {
       dispatch.fetchMessage({ messageId: id })
@@ -35,26 +30,6 @@ export const listeners = defineSubModuleListeners(
     })
 
     // reconnect時のメッセージの再取得処理はそれぞれの方で行う
-
-    // TODO: うつす
-    listener.on(
-      'CLIP_FOLDER_MESSAGE_ADDED',
-      async ({ message_id, folder_id }) => {
-        const currentPrimaryView = _store.state.ui.mainView.primaryView
-        if (
-          currentPrimaryView.type !== 'clips' ||
-          currentPrimaryView.clipFolderId !== folder_id
-        ) {
-          return
-        }
-
-        const message = await dispatch.fetchMessage({ messageId: message_id })
-        if (!message) return
-        await _store.dispatch.domain.messagesView.addAndRenderMessage({
-          message
-        })
-      }
-    )
 
     listener.on('reconnect', () => {
       messageMitt.emit('reconnect')

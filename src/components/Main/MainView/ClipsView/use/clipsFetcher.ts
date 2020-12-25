@@ -1,5 +1,5 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '@/_store'
+import store from '@/store'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import { reactive, Ref, watch, onMounted } from 'vue'
 
@@ -21,7 +21,7 @@ const useClipsFetcher = (props: {
     const {
       clips,
       hasMore
-    } = await store.dispatch.entities.fetchMessagesInClipFolder({
+    } = await store.dispatch.domain.messagesView.fetchMessagesInClipFolder({
       folderId: props.clipFolderId,
       limit: fetchLimit,
       offset: state.nextLoadOffset

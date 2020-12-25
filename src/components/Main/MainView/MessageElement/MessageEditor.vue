@@ -22,7 +22,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import apis from '@/lib/apis'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useTextInput, {
@@ -39,7 +40,7 @@ const teleportTargetName = 'message-menu-popup'
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const editMessage = async () => {
     if (countLength(textState.text) > MESSAGE_MAX_LENGTH) {
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージが長すぎます'
       })
@@ -52,7 +53,7 @@ const useEditMessage = (props: { messageId: string }, textState: TextState) => {
       })
       store.commit.domain.messagesView.unsetEditingMessageId()
     } catch {
-      store.commit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'メッセージの編集に失敗しました'
       })
@@ -96,8 +97,8 @@ export default defineComponent({
     )
 
     const onStampClick = (e: MouseEvent) => {
-      if (store.getters.ui.stampPicker.isStampPickerShown) {
-        store.dispatch.ui.stampPicker.closeStampPicker()
+      if (_store.getters.ui.stampPicker.isStampPickerShown) {
+        _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
         invokeStampPicker({ x: e.pageX, y: e.pageY })
       }

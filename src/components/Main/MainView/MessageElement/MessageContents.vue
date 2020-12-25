@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
@@ -84,14 +83,13 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          _store.state.domain.messagesView.renderedContentMap[
-            props.messageId
-          ] ?? ''
+          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
+          ''
       ),
       rawContent: computed((): string => state.message.content ?? ''),
       isEditing: computed(
         () =>
-          props.messageId === _store.state.domain.messagesView.editingMessageId
+          props.messageId === store.state.domain.messagesView.editingMessageId
       ),
       stampDetailFoldingState: false
     })

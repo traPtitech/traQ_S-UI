@@ -5,6 +5,7 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import { listeners } from './listeners'
 import { channelTree } from './channelTree'
+import { messagesView } from './messagesView'
 import { stampCategory } from './stampCategory'
 
 /**
@@ -20,6 +21,7 @@ export const domain = defineModule({
   actions,
   modules: {
     channelTree,
+    messagesView,
     stampCategory
   }
 })

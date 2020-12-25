@@ -1,5 +1,6 @@
 import { computed } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const useChannelSubscriptionState = () => {
@@ -8,12 +9,12 @@ const useChannelSubscriptionState = () => {
   )
   const currentChannelSubscription = computed(
     () =>
-      store.state.domain.me.subscriptionMap[currentChannelId.value ?? ''] ??
+      _store.state.domain.me.subscriptionMap[currentChannelId.value ?? ''] ??
       ChannelSubscribeLevel.none
   )
   const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {
     if (!currentChannelId.value) return
-    store.dispatch.domain.me.changeSubscriptionLevel({
+    _store.dispatch.domain.me.changeSubscriptionLevel({
       channelId: currentChannelId.value,
       subscriptionLevel: level
     })

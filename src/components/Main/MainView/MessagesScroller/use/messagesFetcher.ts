@@ -1,5 +1,4 @@
 import { computed, ref, Ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
@@ -21,7 +20,7 @@ const useMessageFetcher = (
     | undefined
 ) => {
   // メッセージIDはwsイベントで処理されるため、storeに置く
-  const messageIds = computed(() => _store.state.domain.messagesView.messageIds)
+  const messageIds = computed(() => store.state.domain.messagesView.messageIds)
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
   const isLoading = ref(false)
@@ -35,11 +34,11 @@ const useMessageFetcher = (
    * そのチェックの際に前後で変化していないかという形で利用する
    */
   const getCurrentViewIdentifier = () => {
-    const channelId = _store.state.domain.messagesView.currentChannelId
+    const channelId = store.state.domain.messagesView.currentChannelId
     if (channelId) {
       return `ch:${channelId}`
     }
-    const clipFolderId = _store.state.domain.messagesView.currentClipFolderId
+    const clipFolderId = store.state.domain.messagesView.currentClipFolderId
     if (clipFolderId) {
       return `cf:${clipFolderId}`
     }
@@ -65,17 +64,17 @@ const useMessageFetcher = (
   const renderMessageFromIds = async (messageIdsToRender: MessageId[]) => {
     await Promise.all(
       messageIdsToRender.map(messageId =>
-        _store.dispatch.domain.messagesView.renderMessageContent(messageId)
+        store.dispatch.domain.messagesView.renderMessageContent(messageId)
       )
     )
   }
 
   const reset = () => {
-    _store.commit.domain.messagesView.setMessageIds([])
+    store.commit.domain.messagesView.setMessageIds([])
     isReachedEnd.value = false
     isReachedLatest.value = false
-    _store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
-    _store.commit.domain.messagesView.setMessageIds([])
+    store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
+    store.commit.domain.messagesView.setMessageIds([])
     isLoading.value = false
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
@@ -98,7 +97,7 @@ const useMessageFetcher = (
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
 
-        _store.commit.domain.messagesView.setMessageIds([
+        store.commit.domain.messagesView.setMessageIds([
           ...new Set([...newMessageIds.reverse(), ...messageIds.value])
         ])
       }
@@ -122,7 +121,7 @@ const useMessageFetcher = (
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latter'
 
-        _store.commit.domain.messagesView.setMessageIds([
+        store.commit.domain.messagesView.setMessageIds([
           ...new Set([...messageIds.value, ...newMessageIds])
         ])
       }
@@ -161,7 +160,7 @@ const useMessageFetcher = (
         isInitialLoad.value = false
         lastLoadingDirection.value = 'around'
 
-        _store.commit.domain.messagesView.setMessageIds(newMessageIds)
+        store.commit.domain.messagesView.setMessageIds(newMessageIds)
       }
     )
   }
@@ -172,7 +171,7 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      _store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
+      store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
       onLoadFormerMessagesRequest()
     }
   }

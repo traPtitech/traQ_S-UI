@@ -7,7 +7,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
@@ -22,7 +21,7 @@ export default defineComponent({
   },
   setup(props) {
     const userDisplayName = computed(() => {
-      const pin = _store.state.domain.messagesView.pinnedMessages.find(
+      const pin = store.state.domain.messagesView.pinnedMessages.find(
         v => v.message.id === props.messageId
       )
       const user = store.state.entities.usersMap.get(pin?.userId ?? '')

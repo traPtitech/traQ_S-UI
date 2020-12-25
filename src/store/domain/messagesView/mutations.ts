@@ -11,6 +11,7 @@ export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
 
+    // TODO: いい感じにする
     // 通常のチャンネルでない場合は最後に開いたチャンネルとして保持しない
     if (!store.state.entities.channelsMap.get(currentChannelId)) return
 
@@ -51,7 +52,7 @@ export const mutations = defineMutations<S>()({
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
   },
-  addPinnedMessages(state, message: Pin) {
+  addPinnedMessage(state, message: Pin) {
     state.pinnedMessages.push(message)
   },
   removePinnedMessage(state, messageId: MessageId) {
@@ -80,7 +81,7 @@ export const mutations = defineMutations<S>()({
   ) {
     state.embeddingsMap[payload.messageId] = payload.embeddings
   },
-  setCurrentViewer(state, viewers: ChannelViewer[]) {
+  setCurrentViewers(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
   },
   setEditingMessageId(state, messageId: MessageId) {

@@ -18,7 +18,8 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
@@ -30,7 +31,7 @@ const useFileDragDrop = () => {
   const onDrop = (event: DragEvent) => {
     const files = event.dataTransfer?.files ?? ([] as File[])
     Array.from(files).forEach(file => {
-      store.dispatch.ui.fileInput.addAttachment(file)
+      _store.dispatch.ui.fileInput.addAttachment(file)
     })
     state.isDragging = false
   }

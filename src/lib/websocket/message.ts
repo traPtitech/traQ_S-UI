@@ -1,14 +1,7 @@
 import apis from '@/lib/apis'
 import store from '@/store'
 import _store from '@/_store'
-import {
-  MessageCreatedEvent,
-  MessageUpdatedEvent,
-  MessageDeletedEvent,
-  MessageReadEvent,
-  MessagePinnedEvent,
-  MessageUnpinnedEvent
-} from './events'
+import { MessageCreatedEvent, MessageReadEvent } from './events'
 import { MessageId } from '@/types/entity-ids'
 import { tts } from '../tts'
 
@@ -40,51 +33,9 @@ export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
     if (res.data.userId !== myId) {
       _store.commit.domain.me.upsertUnreadChannel(res.data)
     }
-    return
   }
-
-  await _store.dispatch.domain.messagesView.addAndRenderMessage({
-    message: res.data
-  })
-}
-
-export const onMessageUpdated = async ({ id }: MessageUpdatedEvent) => {
-  const res = await apis.getMessage(id)
-
-  if (!isMessageForCurrentChannel(res.data.channelId)) {
-    return
-  }
-  await _store.dispatch.domain.messagesView.updateAndRenderMessageId({
-    message: res.data
-  })
-
-  // TODO: ピン止めの内容の更新
-}
-
-export const onMessageDeleted = async ({ id }: MessageDeletedEvent) => {
-  _store.commit.domain.messagesView.deleteMessageId(id)
-  _store.commit.domain.messagesView.removePinnedMessage(id)
 }
 
 export const onMessageRead = ({ id }: MessageReadEvent) => {
   _store.commit.domain.me.deleteUnreadChannel(id)
-}
-
-export const onMessagePinned = async (data: MessagePinnedEvent) => {
-  if (!isMessageForCurrentChannel(data.channel_id)) {
-    return
-  }
-  const [message, pin] = await Promise.all([
-    apis.getMessage(data.message_id),
-    apis.getPin(data.message_id)
-  ])
-  _store.commit.domain.messagesView.addPinnedMessages({
-    userId: pin.data.userId,
-    message: message.data,
-    pinnedAt: pin.data.pinnedAt
-  })
-}
-
-export const onMessageUnpinned = async (data: MessageUnpinnedEvent) => {
-  _store.commit.domain.messagesView.removePinnedMessage(data.message_id)
 }

@@ -1,5 +1,5 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '@/_store'
+import store from '@/store'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { reactive, Ref, watch, onMounted } from 'vue'
 import { Message } from '@traptitech/traq'
@@ -33,7 +33,7 @@ const useChannelMessageFetcher = (
     const {
       messages,
       hasMore
-    } = await store.dispatch.entities.fetchMessagesByChannelId({
+    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit,
       order: 'desc',
@@ -64,7 +64,7 @@ const useChannelMessageFetcher = (
     const {
       messages,
       hasMore
-    } = await store.dispatch.entities.fetchMessagesByChannelId({
+    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit,
       order: 'asc',

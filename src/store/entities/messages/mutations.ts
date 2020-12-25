@@ -10,6 +10,7 @@ export const mutations = defineMutations<S>()({
 
     state.messagesMap.set(message.id, message)
 
+    // TODO: メッセージが新しいものか元々存在してたけど今初めて取得したかの判定ができない
     if (isAdd) {
       messageMitt.emit('addMessage', message)
     } else {
@@ -41,6 +42,8 @@ export const mutations = defineMutations<S>()({
     const message = state.messagesMap.get(messageId)
     if (!message) return
     message.pinned = pinned
+
+    messageMitt.emit('changeMessagePinned', { message, pinned })
   },
 
   setFileMetaData(state, fileMetaData: FileInfo) {
