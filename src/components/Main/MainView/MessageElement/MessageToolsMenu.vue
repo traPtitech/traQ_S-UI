@@ -74,18 +74,14 @@ const execWithToast = async (
 
 const usePinToggler = (props: { messageId: MessageId }) => {
   const addPinned = async () => {
-    execWithToast(undefined, 'ピン留めに失敗しました', () =>
-      _store.dispatch.domain.messagesView.addPinned({
-        messageId: props.messageId
-      })
-    )
+    execWithToast(undefined, 'ピン留めに失敗しました', async () => {
+      await apis.createPin(props.messageId)
+    })
   }
   const removePinned = async () => {
-    execWithToast(undefined, 'ピン留めの解除に失敗しました', () =>
-      _store.dispatch.domain.messagesView.removePinned({
-        messageId: props.messageId
-      })
-    )
+    execWithToast(undefined, 'ピン留めの解除に失敗しました', async () => {
+      await apis.removePin(props.messageId)
+    })
   }
   return { addPinned, removePinned }
 }
@@ -145,8 +141,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isPinned = computed(() =>
-      _store.getters.domain.messagesView.isPinned(props.messageId)
+    const isPinned = computed(
+      () =>
+        store.state.entities.messages.messagesMap.get(props.messageId)?.pinned
     )
     const isMine = computed(
       () =>

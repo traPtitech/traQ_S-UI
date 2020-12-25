@@ -40,6 +40,7 @@ import _store from '@/_store'
 import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
+import apis from '@/lib/apis'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -149,17 +150,15 @@ export default defineComponent({
       isDetailShown.value = !isDetailShown.value
     }
 
-    const addStamp = (stampId: StampId) => {
-      _store.dispatch.domain.messagesView.addStamp({
-        messageId: props.messageId,
-        stampId
+    const addStamp = async (stampId: StampId) => {
+      await apis.addMessageStamp(props.messageId, stampId)
+      _store.commit.domain.me.upsertLocalStampHistory({
+        stampId,
+        datetime: new Date()
       })
     }
-    const removeStamp = (stampId: StampId) => {
-      _store.dispatch.domain.messagesView.removeStamp({
-        messageId: props.messageId,
-        stampId
-      })
+    const removeStamp = async (stampId: StampId) => {
+      await apis.removeMessageStamp(props.messageId, stampId)
     }
 
     return {

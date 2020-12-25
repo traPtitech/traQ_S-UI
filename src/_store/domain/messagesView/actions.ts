@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/_store'
 import { messagesView } from './index'
-import { ChannelId, MessageId, StampId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { ChannelViewState, Message } from '@traptitech/traq'
 import { render } from '@/lib/markdown'
 import apis from '@/lib/apis'
@@ -33,9 +33,7 @@ export const actions = defineActions({
       isDM?: boolean
     }
   ) {
-    const { state, commit, dispatch, rootState } = messagesViewActionContext(
-      context
-    )
+    const { state, commit, dispatch } = messagesViewActionContext(context)
 
     // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
     changeViewState(payload.channelId, ChannelViewState.Monitoring)
@@ -153,22 +151,5 @@ export const actions = defineActions({
     await dispatch.renderMessageContent(payload.message.id)
     commit.updateMessageId(payload.message.id)
     rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
-  },
-  async addStamp(context, payload: { messageId: MessageId; stampId: StampId }) {
-    const { rootCommit } = messagesViewActionContext(context)
-    apis.addMessageStamp(payload.messageId, payload.stampId)
-    rootCommit.domain.me.upsertLocalStampHistory({
-      stampId: payload.stampId,
-      datetime: new Date()
-    })
-  },
-  removeStamp(_, payload: { messageId: MessageId; stampId: StampId }) {
-    apis.removeMessageStamp(payload.messageId, payload.stampId)
-  },
-  async addPinned(_, payload: { messageId: MessageId }) {
-    await apis.createPin(payload.messageId)
-  },
-  async removePinned(_, payload: { messageId: MessageId }) {
-    await apis.removePin(payload.messageId)
   }
 })

@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { moduleGetterContext } from '@/_store'
 import { messagesView } from './index'
-import { UserId, MessageId } from '@/types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
 
 const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
@@ -30,10 +30,5 @@ export const getters = defineGetters<S>()({
       .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
       .map(v => v.userId)
       .reverse()
-  },
-  isPinned(state): (id: MessageId) => boolean {
-    return (id: MessageId) => {
-      return state.pinnedMessages.some(v => v.message.id === id)
-    }
   }
 })

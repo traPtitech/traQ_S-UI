@@ -70,6 +70,7 @@ import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useIsMobile from '@/use/isMobile'
+import apis from '@/lib/apis'
 
 const teleportTargetName = 'message-menu-popup'
 
@@ -87,17 +88,18 @@ export default defineComponent({
     const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
     )
-    const addStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.addStamp({
-        messageId: props.messageId,
-        stampId
+    const addStamp = async (stampId: StampId) => {
+      await apis.addMessageStamp(props.messageId, stampId)
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId,
+        datetime: new Date()
       })
     }
 
     const { invokeStampPicker } = useStampPickerInvoker(
       teleportTargetName,
       stampData => {
-        addStamp(stampData.id)
+        apis.addMessageStamp(props.messageId, stampData.id)
       }
     )
     const onStampIconClick = (e: MouseEvent) => {
