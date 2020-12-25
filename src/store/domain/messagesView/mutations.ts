@@ -70,16 +70,16 @@ export const mutations = defineMutations<S>()({
       renderedContent
     }: { messageId: MessageId; renderedContent: string }
   ) {
-    state.renderedContentMap[messageId] = renderedContent
+    state.renderedContentMap.set(messageId, renderedContent)
   },
-  setRenderedContent(state, renderedContentMap: Record<string, string>) {
+  setRenderedContent(state, renderedContentMap: Map<string, string>) {
     state.renderedContentMap = renderedContentMap
   },
   addEmbedding(
     state,
     payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
   ) {
-    state.embeddingsMap[payload.messageId] = payload.embeddings
+    state.embeddingsMap.set(payload.messageId, payload.embeddings)
   },
   setCurrentViewers(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers

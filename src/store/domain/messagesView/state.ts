@@ -25,10 +25,11 @@ export interface S {
    */
   shouldRetriveMessageCreateEvent: boolean
 
-  renderedContentMap: Record<MessageId, string>
+  renderedContentMap: Map<MessageId, string>
 
-  embeddingsMap: Record<MessageId, EmbeddingOrUrl[] | undefined>
+  embeddingsMap: Map<MessageId, EmbeddingOrUrl[] | undefined>
 
+  /** チャンネルを見ている人の一覧(古い順) */
   currentViewers: ChannelViewer[]
 
   /** 現在編集中のメッセージID */
@@ -43,8 +44,8 @@ export const state: S = {
   currentClipFolderId: undefined,
   messageIds: [],
   pinnedMessages: [],
-  renderedContentMap: {},
-  embeddingsMap: {},
+  renderedContentMap: new Map(),
+  embeddingsMap: new Map(),
   shouldRetriveMessageCreateEvent: false,
   currentViewers: [],
   editingMessageId: undefined,

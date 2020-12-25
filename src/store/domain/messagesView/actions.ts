@@ -59,7 +59,7 @@ export const actions = defineActions({
   resetViewState(context) {
     const { commit } = messagesViewActionContext(context)
     commit.setMessageIds([])
-    commit.setRenderedContent({})
+    commit.setRenderedContent(new Map())
     commit.setCurrentViewers([])
   },
   async changeCurrentChannel(

@@ -21,8 +21,8 @@ const isIncludedHost = (url: ExternalUrl) => {
 }
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
-  const embeddingsMap = computed(
-    () => store.state.domain.messagesView.embeddingsMap[props.messageId]
+  const embeddingsMap = computed(() =>
+    store.state.domain.messagesView.embeddingsMap.get(props.messageId)
   )
   const state = reactive({
     fileIds: computed(

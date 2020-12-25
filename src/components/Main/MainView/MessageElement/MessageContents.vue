@@ -83,8 +83,9 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          store.state.domain.messagesView.renderedContentMap.get(
+            props.messageId
+          ) ?? ''
       ),
       rawContent: computed((): string => state.message.content ?? ''),
       isEditing: computed(
