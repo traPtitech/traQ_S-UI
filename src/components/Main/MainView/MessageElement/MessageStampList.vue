@@ -152,7 +152,7 @@ export default defineComponent({
 
     const addStamp = async (stampId: StampId) => {
       await apis.addMessageStamp(props.messageId, stampId)
-      _store.commit.domain.me.upsertLocalStampHistory({
+      store.commit.domain.me.upsertLocalStampHistory({
         stampId,
         datetime: new Date()
       })

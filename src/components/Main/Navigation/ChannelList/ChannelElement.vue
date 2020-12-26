@@ -68,7 +68,6 @@ import {
   defineAsyncComponent
 } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { ChannelTreeNode } from '@/lib/channelTree'
 import { ChannelId } from '@/types/entity-ids'
 import ChannelElementHash from './ChannelElementHash.vue'
@@ -99,7 +98,7 @@ const useChannelClick = (
 
 const useNotification = (props: TypedProps) => {
   const unreadChannel = computed(() =>
-    _store.state.domain.me.unreadChannelsMap.get(props.channel.id)
+    store.state.domain.me.unreadChannelsMap.get(props.channel.id)
   )
 
   const notificationState = reactive({
@@ -108,7 +107,7 @@ const useNotification = (props: TypedProps) => {
       props.ignoreChildren
         ? false
         : deepSome(props.channel, channel =>
-            _store.state.domain.me.unreadChannelsMap.has(channel.id)
+            store.state.domain.me.unreadChannelsMap.has(channel.id)
           )
     ),
     unreadCount: computed(() => unreadChannel.value?.count),

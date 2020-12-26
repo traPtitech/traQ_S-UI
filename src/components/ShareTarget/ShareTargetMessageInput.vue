@@ -115,7 +115,7 @@ export default defineComponent({
     // スタンプピッカーに必要
     store.dispatch.entities.fetchStamps()
     store.dispatch.entities.fetchStampPalettes()
-    _store.dispatch.domain.me.fetchStampHistory()
+    store.dispatch.domain.me.fetchStampHistory()
 
     const id = randomString()
     return {

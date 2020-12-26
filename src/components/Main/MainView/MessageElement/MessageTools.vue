@@ -64,7 +64,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
@@ -103,15 +104,15 @@ export default defineComponent({
       }
     )
     const onStampIconClick = (e: MouseEvent) => {
-      if (store.getters.ui.stampPicker.isStampPickerShown) {
-        store.dispatch.ui.stampPicker.closeStampPicker()
+      if (_store.getters.ui.stampPicker.isStampPickerShown) {
+        _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
         invokeStampPicker({ x: e.pageX, y: e.pageY })
       }
     }
 
     const onDotsClick = (e: MouseEvent) => {
-      store.dispatch.ui.messageContextMenu.openMessageContextMenu({
+      _store.dispatch.ui.messageContextMenu.openMessageContextMenu({
         messageId: props.messageId,
         x: e.pageX,
         y: e.pageY,

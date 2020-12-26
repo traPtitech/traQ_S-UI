@@ -12,7 +12,6 @@ import {
   isMessage,
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
-import _store from '@/_store'
 import { createSingleflight } from '@/lib/async'
 
 interface BaseGetMessagesParams {
@@ -210,16 +209,18 @@ export const actions = defineActions({
     })
   },
   async addAndRenderMessage(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.addMessageId(payload.message.id)
-    _store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
+    // TODO
+    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.updateMessageId(payload.message.id)
-    _store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
+    // TODO
+    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
 
   setCurrentViewers(context, viewers: ChannelViewer[]) {

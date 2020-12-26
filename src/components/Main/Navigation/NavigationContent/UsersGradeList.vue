@@ -23,7 +23,6 @@ import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '@/components/UI/SlideDown.vue'
-import _store from '@/_store'
 import store from '@/store'
 import { isDefined } from '@/lib/util/array'
 
@@ -63,7 +62,7 @@ export default defineComponent({
     )
     const hasNotification = computed(() =>
       dmChannelIds.value.some(id =>
-        _store.state.domain.me.unreadChannelsMap.has(id)
+        store.state.domain.me.unreadChannelsMap.has(id)
       )
     )
 

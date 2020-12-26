@@ -19,16 +19,17 @@ const setUnreadState = (id: ChannelId | DMChannelId) => {
   // 未読の処理
   // TODO: 新着メッセージ基準設定などの処理
   store.commit.domain.messagesView.unsetUnreadSince()
-  const unreadChannel = _store.state.domain.me.unreadChannelsMap.get(id)
+  const unreadChannel = store.state.domain.me.unreadChannelsMap.get(id)
   if (unreadChannel) {
     if (
-      _store.getters.domain.me.isChannelSubscribed(id) ||
+      store.getters.domain.me.isChannelSubscribed(id) ||
       store.state.entities.dmChannelsMap.has(id)
     ) {
       store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
     }
 
-    _store.dispatch.domain.me.readChannel({ channelId: id })
+    // TODO
+    store.dispatch.domain.me.readChannel({ channelId: id })
   }
 }
 

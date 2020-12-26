@@ -73,7 +73,7 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
     filterStarChannel.value
       ? [
           ...new Set(
-            [..._store.state.domain.me.staredChannelSet].flatMap(v =>
+            [...store.state.domain.me.staredChannelSet].flatMap(v =>
               buildDescendantsChannelArray(v, false)
             )
           )
@@ -101,7 +101,7 @@ const useStaredChannels = () =>
           name: '',
           parentId: null,
           archived: false,
-          children: [..._store.state.domain.me.staredChannelSet]
+          children: [...store.state.domain.me.staredChannelSet]
         },
         store.state.entities.channelsMap
       )?.children.filter(channel => !channel.archived) ?? []

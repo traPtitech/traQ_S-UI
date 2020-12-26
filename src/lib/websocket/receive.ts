@@ -3,8 +3,7 @@ import {
   onUserWebRTCStateChanged,
   onUserUpdated
 } from './user'
-import { onChannelStared, onChannelUnstared } from './channel'
-import { onMessageCreated, onMessageRead } from './message'
+import { onMessageCreated } from './message'
 
 import { WebSocketEvent } from './events'
 
@@ -31,17 +30,8 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
     case 'USER_WEBRTC_STATE_CHANGED':
       onUserWebRTCStateChanged(body)
       break
-    case 'CHANNEL_STARED':
-      onChannelStared(body)
-      break
-    case 'CHANNEL_UNSTARED':
-      onChannelUnstared(body)
-      break
     case 'MESSAGE_CREATED':
       onMessageCreated(body)
-      break
-    case 'MESSAGE_READ':
-      onMessageRead(body)
       break
   }
 }

@@ -15,18 +15,18 @@ const initialFetch = async () => {
   store.dispatch.entities.fetchChannels()
   store.dispatch.entities.fetchStamps()
   // 未読処理前に未読を取得していないと未読を消せないため
-  await _store.dispatch.domain.me.fetchUnreadChannels()
+  await store.dispatch.domain.me.fetchUnreadChannels()
 
   _store.commit.app.setInitialFetchCompleted()
 
   store.dispatch.entities.fetchUserGroups()
   store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
-  _store.dispatch.domain.me.fetchStaredChannels()
-  _store.dispatch.domain.me.fetchStampHistory()
+  store.dispatch.domain.me.fetchStaredChannels()
+  store.dispatch.domain.me.fetchStampHistory()
   _store.dispatch.app.rtc.fetchRTCState()
 
-  _store.dispatch.domain.me.fetchSubscriptions()
+  store.dispatch.domain.me.fetchSubscriptions()
 }
 
 const initialFetchIfPossible = async () => {

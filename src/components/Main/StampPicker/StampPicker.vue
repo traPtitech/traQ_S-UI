@@ -37,7 +37,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, ref } from 'vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
@@ -52,10 +53,10 @@ import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 const useStampPicker = () => {
   const state = reactive({
     teleportTargetName: computed(
-      () => store.state.ui.stampPicker.teleportTargetName
+      () => _store.state.ui.stampPicker.teleportTargetName
     ),
     shouldShowStampPicker: computed(
-      () => store.getters.ui.stampPicker.isStampPickerShown
+      () => _store.getters.ui.stampPicker.isStampPickerShown
     )
   })
   const onInputStamp = (id: StampId) => {
@@ -63,7 +64,7 @@ const useStampPicker = () => {
       stampId: id,
       datetime: new Date()
     })
-    store.state.ui.stampPicker.selectHandler({
+    _store.state.ui.stampPicker.selectHandler({
       id
     })
   }
@@ -81,7 +82,7 @@ export default defineComponent({
   },
   setup() {
     const currentStampSet = computed(
-      () => store.state.ui.stampPicker.currentStampSet
+      () => _store.state.ui.stampPicker.currentStampSet
     )
     const queryString = ref('')
 
@@ -92,7 +93,7 @@ export default defineComponent({
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const onClickOutside = () =>
-      store.dispatch.ui.stampPicker.closeStampPicker()
+      _store.dispatch.ui.stampPicker.closeStampPicker()
     return {
       stampSetState,
       stampPickerState,

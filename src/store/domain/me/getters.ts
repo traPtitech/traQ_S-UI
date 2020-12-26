@@ -1,10 +1,9 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { StampId, ChannelId } from '@/types/entity-ids'
-import { moduleGetterContext } from '@/_store'
+import { moduleGetterContext } from '@/store'
 import { me } from '.'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import store from '@/store'
 
 const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
@@ -13,7 +12,7 @@ export const getters = defineGetters<S>()({
   recentStampIds(...args): StampId[] {
     const { state, rootState } = meGetterContext(args)
     const history = Object.entries(state.stampHistory)
-      .filter(([stampId]) => store.state.entities.stampsMap.has(stampId))
+      .filter(([stampId]) => rootState.entities.stampsMap.has(stampId))
       .sort((e1, e2) => {
         // 日付の降順
         if (e1[1] > e2[1]) return -1
@@ -23,12 +22,13 @@ export const getters = defineGetters<S>()({
       .map(e => e[0])
     return history
   },
-  subscribedChannels(state): Set<ChannelId> {
+  subscribedChannels(...args): Set<ChannelId> {
+    const { state, rootState } = meGetterContext(args)
     return new Set(
       [...state.subscriptionMap.entries()]
         .filter(
           ([id, level]) =>
-            store.state.entities.channelsMap.has(id) &&
+            rootState.entities.channelsMap.has(id) &&
             level !== ChannelSubscribeLevel.none
         )
         .map(([id]) => id)

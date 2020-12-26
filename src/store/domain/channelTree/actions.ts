@@ -2,7 +2,7 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import { channelTree, channelTreeMitt } from '.'
 import { ActionContext } from 'vuex'
-import _store from '@/_store'
+import store from '@/store'
 import { constructTree, rootChannelId } from '@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 import { channelIdToPathString } from '@/lib/channel'
@@ -85,7 +85,7 @@ export const actions = defineActions({
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = new Set([
       // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
-      ..._store.getters.domain.me.subscribedChannels.values(),
+      ...store.getters.domain.me.subscribedChannels.values(),
       ...getters.forcedChannels.map(c => c.id)
     ])
     const tree = {
