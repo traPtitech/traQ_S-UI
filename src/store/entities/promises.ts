@@ -3,13 +3,17 @@ import store from '..'
 import { S } from './state'
 import { waitMount } from '@/onMount'
 
+type ExtractBooleanValueKeys<T> = keyof {
+  [K in keyof T as T[K] extends boolean ? K : never]: T[K]
+}
+
 /**
  * 最初に`～Fetched`が`true`になったときにresolveするPromiseを返す
  * @param fetchedPropertyName entitiesのstateのうち値がbooleanであるようなキーだけを許可
  *   想定は`～Fetched`
  */
-const createInitialFetchPromise = async <N extends keyof S>(
-  fetchedPropertyName: S[N] extends boolean ? N : never
+const createInitialFetchPromise = async <N extends ExtractBooleanValueKeys<S>>(
+  fetchedPropertyName: N
 ) => {
   await waitMount
   return new Promise<void>(async resolve => {
