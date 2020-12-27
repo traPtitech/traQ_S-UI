@@ -112,7 +112,13 @@ export default defineComponent({
 
     const { createTree, getCurrentWord } = useWordCompleter()
     const tree = createTree(
-      store.getters.entities.allUserNames.map(userName => '@' + userName)
+      store.getters.entities.allUserNames.map(userName => '@' + userName),
+      store.getters.entities.allUserGroupNames.map(
+        userGroupName => '@' + userGroupName
+      ),
+      store.getters.entities.allStampNames.map(
+        stampName => ':' + stampName + ':'
+      )
     )
 
     const textareaAutosizeRef = ref<{

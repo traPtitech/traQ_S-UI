@@ -83,5 +83,19 @@ export const getters = defineGetters<S>()({
       .filter(
         (value: string | undefined): value is string => value !== undefined
       )
+  },
+  allUserGroupNames(state) {
+    return Object.values(state.userGroups)
+      .map(userGroup => userGroup?.name)
+      .filter(
+        (value: string | undefined): value is string => value !== undefined
+      )
+  },
+  allStampNames(state) {
+    return Object.values(state.stamps)
+      .map(stamp => stamp?.name)
+      .filter(
+        (value: string | undefined): value is string => value !== undefined
+      )
   }
 })
