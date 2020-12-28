@@ -12,7 +12,10 @@ export const listeners = defineSubModuleListeners(
       messageMitt.emit('addMessage', message)
     })
     listener.on('MESSAGE_UPDATED', async ({ id }) => {
-      const message = await dispatch.fetchMessage({ messageId: id })
+      const message = await dispatch.fetchMessage({
+        messageId: id,
+        force: true
+      })
       messageMitt.emit('updateMessage', message)
     })
     listener.on('MESSAGE_DELETED', ({ id }) => {
