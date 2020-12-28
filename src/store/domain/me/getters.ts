@@ -11,7 +11,7 @@ const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
 export const getters = defineGetters<S>()({
   recentStampIds(...args): StampId[] {
     const { state, rootState } = meGetterContext(args)
-    const history = Object.entries(state.stampHistory)
+    const history = [...state.stampHistory.entries()]
       .filter(([stampId]) => rootState.entities.stampsMap.has(stampId))
       .sort((e1, e2) => {
         // 日付の降順
