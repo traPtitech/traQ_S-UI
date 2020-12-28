@@ -36,9 +36,13 @@ const useClipsFetcher = (props: {
     return clips.map(clip => clip.message.id)
   }
 
+  // クリップフォルダは、wsの再接続時にうまく取得ができないので、
+  // 自動で再取得するのはあきらめる
+
   const messagesFetcher = useMessageFetcher(
     {},
     fetchFormerMessages,
+    undefined,
     undefined,
     undefined
   )

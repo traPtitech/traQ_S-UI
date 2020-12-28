@@ -25,7 +25,7 @@ export const wsListeners = defineSubModuleListeners(
       })
     })
 
-    // TODO: websocketのreconnect時の再取得
+    // 再接続時の再取得はmessagesFetcherで行う
   }
 )
 
@@ -39,7 +39,6 @@ export const messageListeners = defineSubModuleListeners(
     })
     listener.on('updateMessage', message => {
       dispatch.onChannelMessageUpdated(message)
-      // TODO: ピン止めの内容の更新
     })
     listener.on('deleteMessage', messageId => {
       dispatch.onChannelMessageDeleted(messageId)

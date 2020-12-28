@@ -42,7 +42,10 @@ export const listeners = defineListeners(
       dispatch.fetchClipFolder({ clipFolderId: id })
     })
     listener.on('CLIP_FOLDER_UPDATED', ({ id }) => {
-      dispatch.fetchClipFolder({ clipFolderId: id })
+      dispatch.fetchClipFolder({
+        clipFolderId: id,
+        cacheStrategy: 'forceFetch'
+      })
     })
     listener.on('CLIP_FOLDER_DELETED', ({ id }) => {
       dispatch.deleteClipFolders(id)

@@ -229,9 +229,10 @@ export const actions = defineActions({
     dispatch.addAndRenderMessage({ message })
   },
   onChannelMessageUpdated(context, message: Message) {
-    const { state, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId !== message.channelId) return
     dispatch.updateAndRenderMessageId({ message })
+    commit.updatePinnedMessage(message)
   },
   onChannelMessageDeleted(context, messageId: MessageId) {
     const { commit } = messagesViewActionContext(context)
