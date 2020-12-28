@@ -48,7 +48,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const onChange = (val: number | string) => {
-      context.emit('change-value', val)
+      context.emit('changeValue', val)
     }
     return { onChange }
   }

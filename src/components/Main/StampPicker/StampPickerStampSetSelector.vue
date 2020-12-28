@@ -39,7 +39,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const onStampSetSelect = (stampSet: StampSet) => {
-      context.emit('stamp-set-select', stampSet)
+      context.emit('stampSetSelect', stampSet)
     }
     return { onStampSetSelect }
   }
