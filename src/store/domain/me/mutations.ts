@@ -2,17 +2,14 @@ import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId, StampId } from '@/types/entity-ids'
 import { UnreadChannel, ChannelSubscribeLevel, Message } from '@traptitech/traq'
-import { detectMentionOfMe } from '@/lib/detector'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
 import { removeNotification } from '@/lib/firebase'
-import store from '@/store'
-import _store from '@/_store'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
-const updateBadge = async () => {
+const updateBadge = async (
+  unreadChannelsMap: Map<ChannelId, UnreadChannel>
+) => {
   if (!isBadgingAPISupported) return
-
-  const unreadChannelsMap = store.state.domain.me.unreadChannelsMap
 
   const unreadCount = [...unreadChannelsMap.values()].reduce(
     (acc, current) => acc + current.count,
@@ -35,28 +32,12 @@ export const mutations = defineMutations<S>()({
     unreadChannelsMap: Map<ChannelId, UnreadChannel>
   ) {
     state.unreadChannelsMap = unreadChannelsMap
-    updateBadge()
+    updateBadge(state.unreadChannelsMap)
   },
-  upsertUnreadChannel(state: S, message: Readonly<Message>) {
-    const noticeable =
-      detectMentionOfMe(
-        message.content,
-        _store.state.domain.me.detail?.id ?? '',
-        _store.state.domain.me.detail?.groups ?? []
-      ) || !!store.state.entities.channelsMap.get(message.channelId)?.force
-
-    const subscriptionLevel =
-      state.subscriptionMap.get(message.channelId) ?? ChannelSubscribeLevel.none
-
-    if (
-      !(
-        subscriptionLevel !== ChannelSubscribeLevel.none ||
-        store.state.entities.dmChannelsMap.has(message.channelId) ||
-        noticeable
-      )
-    )
-      return
-
+  upsertUnreadChannel(
+    state: S,
+    { message, noticeable }: { message: Readonly<Message>; noticeable: boolean }
+  ) {
     if (state.unreadChannelsMap.has(message.channelId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const oldUnreadChannel = state.unreadChannelsMap.get(message.channelId)!
@@ -75,12 +56,11 @@ export const mutations = defineMutations<S>()({
         updatedAt: message.createdAt
       })
     }
-    updateBadge()
+    updateBadge(state.unreadChannelsMap)
   },
-  // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
     state.unreadChannelsMap.delete(channelId)
-    updateBadge()
+    updateBadge(state.unreadChannelsMap)
     removeNotification(channelId)
   },
 

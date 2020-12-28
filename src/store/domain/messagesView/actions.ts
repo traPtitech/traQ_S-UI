@@ -62,6 +62,7 @@ export const actions = defineActions({
     commit.unsetPinnedMessages()
     commit.unsetRenderedContent()
     commit.unsetCurrentViewers()
+    commit.unsetUnreadSince()
   },
   async changeCurrentChannel(
     context,
@@ -71,7 +72,9 @@ export const actions = defineActions({
       isDM?: boolean
     }
   ) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch, rootState } = messagesViewActionContext(
+      context
+    )
 
     // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
     changeViewState(payload.channelId, ChannelViewState.Monitoring)
@@ -80,6 +83,16 @@ export const actions = defineActions({
 
     dispatch.resetViewState()
     commit.setCurrentChannelId(payload.channelId)
+
+    const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
+      payload.channelId
+    )
+    if (unreadChannel) {
+      // 未読表示を**追加してから**未読を削除
+      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+      commit.setUnreadSince(unreadChannel.since)
+      apis.readChannel(payload.channelId)
+    }
 
     dispatch.fetchPinnedMessages()
   },
@@ -196,18 +209,14 @@ export const actions = defineActions({
     })
   },
   async addAndRenderMessage(context, payload: { message: Message }) {
-    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
+    const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.addMessageId(payload.message.id)
-    // TODO
-    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
-    const { commit, dispatch, rootCommit } = messagesViewActionContext(context)
+    const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.updateMessageId(payload.message.id)
-    // TODO
-    rootCommit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
 
   setCurrentViewers(context, viewers: ChannelViewer[]) {

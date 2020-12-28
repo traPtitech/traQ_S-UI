@@ -6,7 +6,6 @@ import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
 import apis from '@/lib/apis'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
@@ -14,24 +13,6 @@ import {
 } from '@/store/entities/promises'
 
 type Views = 'none' | 'main' | 'not-found'
-
-const setUnreadState = (id: ChannelId | DMChannelId) => {
-  // 未読の処理
-  // TODO: 新着メッセージ基準設定などの処理
-  store.commit.domain.messagesView.unsetUnreadSince()
-  const unreadChannel = store.state.domain.me.unreadChannelsMap.get(id)
-  if (unreadChannel) {
-    if (
-      store.getters.domain.me.isChannelSubscribed(id) ||
-      store.state.entities.dmChannelsMap.has(id)
-    ) {
-      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
-    }
-
-    // TODO
-    store.dispatch.domain.me.readChannel({ channelId: id })
-  }
-}
 
 const getHeadIfArray = (param: string[] | string) => {
   if (Array.isArray(param)) return param[0]
@@ -91,8 +72,6 @@ const useRouteWatcher = () => {
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
-      setUnreadState(id)
-
       _store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: route.query?.message as string
@@ -120,8 +99,6 @@ const useRouteWatcher = () => {
         dmChannelId = data.id
       }
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
-
-      setUnreadState(dmChannelId)
 
       _store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,

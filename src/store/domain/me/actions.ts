@@ -6,6 +6,7 @@ import { ChannelId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import _store from '@/_store'
+import { detectMentionOfMe } from '@/lib/detector'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -19,7 +20,6 @@ export const actions = defineActions({
     )
   },
 
-  // TODO: 整理する
   async fetchUnreadChannels(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMyUnreadChannels()
@@ -29,25 +29,29 @@ export const actions = defineActions({
       )
     )
   },
-  /** チャンネルを既読にする */
-  readChannel(context, payload: { channelId: ChannelId }) {
-    const { commit } = meActionContext(context)
-    commit.deleteUnreadChannel(payload.channelId)
-    apis.readChannel(payload.channelId)
-  },
   onChannelRead(context, channelId: ChannelId) {
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
   },
   onMessageCreated(context, message: Message) {
-    const { rootState, commit } = meActionContext(context)
+    const { rootState, getters, commit } = meActionContext(context)
     // 見ているチャンネルは未読に追加しない
     if (rootState.domain.messagesView.currentChannelId === message.channelId)
       return
     // 自分の投稿は未読に追加しない
     if (_store.state.domain.me.detail?.id === message.userId) return
 
-    commit.upsertUnreadChannel(message)
+    const noticeable =
+      detectMentionOfMe(
+        message.content,
+        _store.state.domain.me.detail?.id ?? '',
+        _store.state.domain.me.detail?.groups ?? []
+      ) || !!rootState.entities.channelsMap.get(message.channelId)?.force
+    const isDM = rootState.entities.dmChannelsMap.has(message.channelId)
+    const isChannelSubscribed = getters.isChannelSubscribed(message.channelId)
+    if (!noticeable && !isDM && !isChannelSubscribed) return
+
+    commit.upsertUnreadChannel({ message, noticeable })
   },
 
   async fetchStaredChannels(context) {
