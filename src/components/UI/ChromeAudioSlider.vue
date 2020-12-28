@@ -60,10 +60,10 @@ export default defineComponent({
     const roundedDuration = computed(() => Math.floor(props.duration))
 
     const changeVolume = (vol: number) => {
-      context.emit('change-volume', vol)
+      context.emit('changeVolume', vol)
     }
     const changeTime = (time: number) => {
-      context.emit('change-time', time)
+      context.emit('changeTime', time)
     }
     return {
       roundedVolume,

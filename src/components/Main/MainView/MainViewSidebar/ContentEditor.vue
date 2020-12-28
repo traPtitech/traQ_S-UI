@@ -55,9 +55,9 @@ export default defineComponent({
     )
     const onButtonClick = () => {
       if (props.isEditing) {
-        context.emit('edit-done')
+        context.emit('editDone')
       } else {
-        context.emit('edit-start')
+        context.emit('editStart')
       }
     }
 
@@ -71,7 +71,7 @@ export default defineComponent({
       get: () => props.value ?? '',
       set: v => {
         valueReal.value = v ?? ''
-        context.emit('input-value', v ?? '')
+        context.emit('inputValue', v ?? '')
       }
     })
 

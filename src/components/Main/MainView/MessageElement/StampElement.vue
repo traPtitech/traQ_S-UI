@@ -65,9 +65,9 @@ export default defineComponent({
     const onClick = () => {
       if (state.isProgress) return
       if (state.includeMe) {
-        context.emit('remove-stamp', props.stamp.id)
+        context.emit('removeStamp', props.stamp.id)
       } else {
-        context.emit('add-stamp', props.stamp.id)
+        context.emit('addStamp', props.stamp.id)
       }
       state.isProgress = true
     }
