@@ -25,7 +25,7 @@ export const wsListeners = defineSubModuleListeners(
       })
     })
 
-    // TODO: websocketのreconnect時の再取得
+    // 再接続時の再取得はmessagesFetcherで行う
   }
 )
 
