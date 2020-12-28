@@ -3,12 +3,6 @@ import { S } from './state'
 import { Version } from '@traptitech/traq'
 
 export const mutations = defineMutations<S>()({
-  setLoaded(state: S, loaded: boolean) {
-    state.loaded = loaded
-  },
-  setComponentLoaded(state: S, componentLoaded: boolean) {
-    state.componentLoaded = componentLoaded
-  },
   setLoginCheckSucceeded(state: S) {
     state.loginCheckSucceeded = true
   },
