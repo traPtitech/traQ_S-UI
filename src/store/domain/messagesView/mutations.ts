@@ -1,7 +1,7 @@
 import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
-import { Pin, ChannelViewer } from '@traptitech/traq'
+import { Pin, ChannelViewer, Message } from '@traptitech/traq'
 import _store from '@/_store'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
@@ -60,6 +60,14 @@ export const mutations = defineMutations<S>()({
   },
   addPinnedMessage(state, message: Pin) {
     state.pinnedMessages.push(message)
+  },
+  updatePinnedMessage(state, message: Message) {
+    const index = state.pinnedMessages.findIndex(
+      element => element.message.id === message.id
+    )
+    if (index > -1) {
+      state.pinnedMessages[index].message = message
+    }
   },
   removePinnedMessage(state, messageId: MessageId) {
     const index = state.pinnedMessages.findIndex(

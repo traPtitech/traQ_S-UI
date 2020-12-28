@@ -39,7 +39,6 @@ export const messageListeners = defineSubModuleListeners(
     })
     listener.on('updateMessage', message => {
       dispatch.onChannelMessageUpdated(message)
-      // TODO: ピン止めの内容の更新
     })
     listener.on('deleteMessage', messageId => {
       dispatch.onChannelMessageDeleted(messageId)
