@@ -57,9 +57,11 @@ const getPin = createSingleflight(apis.getPin.bind(apis))
 export const actions = defineActions({
   resetViewState(context) {
     const { commit } = messagesViewActionContext(context)
-    commit.setMessageIds([])
-    commit.setRenderedContent(new Map())
-    commit.setCurrentViewers([])
+    commit.unsetCurrentChannelId()
+    commit.unsetCurrentClipFolderId()
+    commit.unsetPinnedMessages()
+    commit.unsetRenderedContent()
+    commit.unsetCurrentViewers()
   },
   async changeCurrentChannel(
     context,
@@ -76,10 +78,8 @@ export const actions = defineActions({
 
     if (state.currentChannelId === payload.channelId) return
 
-    commit.unsetCurrentClipFolderId()
-
-    commit.setCurrentChannelId(payload.channelId)
     dispatch.resetViewState()
+    commit.setCurrentChannelId(payload.channelId)
 
     dispatch.fetchPinnedMessages()
   },
@@ -87,10 +87,12 @@ export const actions = defineActions({
   /** クリップフォルダに移行 */
   async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
+
+    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
+    changeViewState(null)
+
     if (state.currentClipFolderId === clipFolderId) return
 
-    commit.unsetCurrentChannelId()
-    changeViewState(null)
     dispatch.resetViewState()
     commit.setCurrentClipFolderId(clipFolderId)
   },
@@ -132,21 +134,6 @@ export const actions = defineActions({
     if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
-  },
-  async fetchChannelLatestMessage(context) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
-    if (!state.currentChannelId) throw 'no channel id'
-
-    const { messages } = await dispatch.fetchMessagesByChannelId({
-      channelId: state.currentChannelId,
-      limit: 1,
-      offset: 0
-    })
-    if (messages.length !== 1) return
-
-    const messageId = messages[0].id
-    await dispatch.renderMessageContent(messageId)
-    commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
     const { commit, rootState, rootDispatch } = messagesViewActionContext(
