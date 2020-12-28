@@ -12,7 +12,6 @@ import {
   isMessage,
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
-import _store from '@/_store'
 import { createSingleflight } from '@/lib/async'
 
 interface BaseGetMessagesParams {
@@ -58,9 +57,12 @@ const getPin = createSingleflight(apis.getPin.bind(apis))
 export const actions = defineActions({
   resetViewState(context) {
     const { commit } = messagesViewActionContext(context)
-    commit.setMessageIds([])
-    commit.setRenderedContent(new Map())
-    commit.setCurrentViewers([])
+    commit.unsetCurrentChannelId()
+    commit.unsetCurrentClipFolderId()
+    commit.unsetPinnedMessages()
+    commit.unsetRenderedContent()
+    commit.unsetCurrentViewers()
+    commit.unsetUnreadSince()
   },
   async changeCurrentChannel(
     context,
@@ -70,17 +72,27 @@ export const actions = defineActions({
       isDM?: boolean
     }
   ) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch, rootState } = messagesViewActionContext(
+      context
+    )
 
     // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
     changeViewState(payload.channelId, ChannelViewState.Monitoring)
 
     if (state.currentChannelId === payload.channelId) return
 
-    commit.unsetCurrentClipFolderId()
-
-    commit.setCurrentChannelId(payload.channelId)
     dispatch.resetViewState()
+    commit.setCurrentChannelId(payload.channelId)
+
+    const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
+      payload.channelId
+    )
+    if (unreadChannel) {
+      // 未読表示を**追加してから**未読を削除
+      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+      commit.setUnreadSince(unreadChannel.since)
+      apis.readChannel(payload.channelId)
+    }
 
     dispatch.fetchPinnedMessages()
   },
@@ -88,10 +100,12 @@ export const actions = defineActions({
   /** クリップフォルダに移行 */
   async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
+
+    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
+    changeViewState(null)
+
     if (state.currentClipFolderId === clipFolderId) return
 
-    commit.unsetCurrentChannelId()
-    changeViewState(null)
     dispatch.resetViewState()
     commit.setCurrentClipFolderId(clipFolderId)
   },
@@ -133,21 +147,6 @@ export const actions = defineActions({
     if (!state.currentChannelId) throw 'no channel id'
     const res = await apis.getChannelPins(state.currentChannelId)
     commit.setPinnedMessages(res.data)
-  },
-  async fetchChannelLatestMessage(context) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
-    if (!state.currentChannelId) throw 'no channel id'
-
-    const { messages } = await dispatch.fetchMessagesByChannelId({
-      channelId: state.currentChannelId,
-      limit: 1,
-      offset: 0
-    })
-    if (messages.length !== 1) return
-
-    const messageId = messages[0].id
-    await dispatch.renderMessageContent(messageId)
-    commit.setMessageIds([...state.messageIds, messageId])
   },
   async renderMessageContent(context, messageId: string) {
     const { commit, rootState, rootDispatch } = messagesViewActionContext(
@@ -213,13 +212,11 @@ export const actions = defineActions({
     const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.addMessageId(payload.message.id)
-    _store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
     const { commit, dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
     commit.updateMessageId(payload.message.id)
-    _store.commit.domain.me.deleteUnreadChannel(payload.message.channelId)
   },
 
   setCurrentViewers(context, viewers: ChannelViewer[]) {

@@ -55,9 +55,7 @@ const useActivityStream = () => {
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
     if (!mode.value.all) {
-      const subscriptionLevel =
-        _store.state.domain.me.subscriptionMap[activity.channelId]
-      if (!subscriptionLevel || subscriptionLevel <= 0) {
+      if (!store.getters.domain.me.isChannelSubscribed(activity.channelId)) {
         return
       }
     }

@@ -38,7 +38,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
@@ -52,7 +51,7 @@ import DMActivityElement from './DMActivityElement.vue'
 
 const useUsersWithNotification = () => {
   const usersWithNotification = computed(() =>
-    Object.values(_store.state.domain.me.unreadChannelsSet)
+    [...store.state.domain.me.unreadChannelsMap.values()]
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )

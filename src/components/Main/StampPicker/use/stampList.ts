@@ -1,5 +1,4 @@
 import { computed, Ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
@@ -8,7 +7,7 @@ import useStampFilter from './stampFilter'
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return _store.getters.domain.me.recentStampIds
+      return store.getters.domain.me.recentStampIds
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id

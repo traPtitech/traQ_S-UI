@@ -20,11 +20,11 @@ export const mutations = defineMutations<S>()({
       currentChannelPathString.value
     )
   },
-  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
-    state.currentClipFolderId = currentClipFolderId
-  },
   unsetCurrentChannelId(state) {
     state.currentChannelId = undefined
+  },
+  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
+    state.currentClipFolderId = currentClipFolderId
   },
   unsetCurrentClipFolderId(state) {
     state.currentClipFolderId = undefined
@@ -49,8 +49,14 @@ export const mutations = defineMutations<S>()({
   deleteMessageId(state, messageId: MessageId) {
     state.messageIds = state.messageIds.filter(id => id !== messageId)
   },
+  unsetMessageIds(state) {
+    state.messageIds = []
+  },
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
+  },
+  unsetPinnedMessages(state) {
+    state.pinnedMessages = []
   },
   addPinnedMessage(state, message: Pin) {
     state.pinnedMessages.push(message)
@@ -75,6 +81,9 @@ export const mutations = defineMutations<S>()({
   setRenderedContent(state, renderedContentMap: Map<string, string>) {
     state.renderedContentMap = renderedContentMap
   },
+  unsetRenderedContent(state) {
+    state.renderedContentMap = new Map()
+  },
   addEmbedding(
     state,
     payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
@@ -83,6 +92,9 @@ export const mutations = defineMutations<S>()({
   },
   setCurrentViewers(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
+  },
+  unsetCurrentViewers(state) {
+    state.currentViewers = []
   },
   setEditingMessageId(state, messageId: MessageId) {
     state.editingMessageId = messageId

@@ -64,9 +64,9 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
-  const unreadChannels = computed(() =>
-    Object.values(_store.state.domain.me.unreadChannelsSet)
-  )
+  const unreadChannels = computed(() => [
+    ...store.state.domain.me.unreadChannelsMap.values()
+  ])
   const notificationState = reactive({
     channel: computed(() =>
       unreadChannels.value.some(c =>

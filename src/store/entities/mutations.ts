@@ -70,6 +70,7 @@ export const mutations = defineMutations<S>()({
   },
   setClipFoldersMap(state, clipFoldersMap: Map<ClipFolderId, ClipFolder>) {
     state.clipFoldersMap = clipFoldersMap
+    state.clipFoldersMapFetched = true
   },
   deleteClipFolder(state, clipFolderId: ClipFolderId) {
     state.clipFoldersMap.delete(clipFolderId)

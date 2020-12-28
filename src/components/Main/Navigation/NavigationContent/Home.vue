@@ -66,7 +66,7 @@ export default defineComponent({
       )
     )
     const channelsWithNotification = computed(() =>
-      Object.values(_store.state.domain.me.unreadChannelsSet)
+      [...store.state.domain.me.unreadChannelsMap.values()]
         .map(unread => store.state.entities.channelsMap.get(unread.channelId))
         .filter(isDefined)
     )
