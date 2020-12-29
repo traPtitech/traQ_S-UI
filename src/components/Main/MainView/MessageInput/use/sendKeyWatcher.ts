@@ -112,7 +112,7 @@ const useSendKeyWatcher = (
     }
   }
 
-  const onKeyDown = (event: KeyboardEvent) => {
+  const onKeyDownA = (event: KeyboardEvent) => {
     if (touchDeviceFlag) return
 
     if (withModifierKey(event) && !event.isComposing) {
@@ -174,7 +174,7 @@ const useSendKeyWatcher = (
   return {
     sendKeyState: state,
     onBeforeInput,
-    onKeyDown,
+    onKeyDownA,
     onKeyUp
   }
 }

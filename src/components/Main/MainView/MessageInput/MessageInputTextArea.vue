@@ -7,7 +7,7 @@
     placeholder="メッセージを送信"
     rows="1"
     @before-input="onBeforeInput"
-    @keydown="_onKeyDown"
+    @keydown="onKeyDown"
     @keyup="onKeyUp"
     @focus="onFocus"
     @blur="onBlur"
@@ -26,7 +26,6 @@ import {
   PropType,
   toRef
 } from 'vue'
-import styles from '@/store'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
@@ -110,18 +109,6 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const { getCurrentWord, getDeterminedCharacters } = useWordCompleter()
-
-    const tree = createTree(
-      store.getters.entities.allUserNames.map(userName => '@' + userName),
-      store.getters.entities.allUserGroupNames.map(
-        userGroupName => '@' + userGroupName
-      ),
-      store.getters.entities.allStampNames.map(
-        stampName => ':' + stampName + ':'
-      )
-    )
-
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
     }>()
@@ -129,29 +116,15 @@ export default defineComponent({
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
-    let { onBeforeInput, onKeyDown, onKeyUp } = useSendKeyWatcher(
+    const { onBeforeInput, onKeyDownA, onKeyUp } = useSendKeyWatcher(
       context,
       insertLineBreak
     )
+    const { onKeyDownB } = useWordCompleter(textareaRef, value)
 
-    // 一旦、ラップして実装
-    const _onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab' && !e.isComposing) {
-        e.preventDefault()
-        if (!textareaRef.value) return
-        const target = getCurrentWord(textareaRef.value, value.value)
-        value.value =
-          value.value.slice(0, target.begin) +
-          (tree.search(target.word).length === 0
-            ? target.word
-            : getDeterminedCharacters(tree.search(target.word))) +
-          (target.end === value.value.length
-            ? ''
-            : value.value.slice(target.end))
-        // caretが末尾になる(これは効かなそう)
-        textareaRef.value.setSelectionRange(target.end, target.end)
-      }
-      onKeyDown(e)
+    const onKeyDown = (e: KeyboardEvent) => {
+      onKeyDownA(e)
+      onKeyDownB(e)
     }
 
     const { onFocus, onBlur } = useFocus(context)
@@ -160,7 +133,7 @@ export default defineComponent({
     return {
       value,
       onBeforeInput,
-      _onKeyDown,
+      onKeyDown,
       onKeyUp,
       textareaAutosizeRef,
       onFocus,
