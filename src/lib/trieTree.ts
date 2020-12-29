@@ -87,4 +87,10 @@ class TrieNode {
   }
 }
 
-export default TrieNode
+function createTree(...lists: Array<readonly string[]>): TrieNode {
+  const tree = new TrieNode()
+  lists.forEach(list => list.forEach(word => tree.insert(word)))
+  return tree
+}
+
+export default createTree

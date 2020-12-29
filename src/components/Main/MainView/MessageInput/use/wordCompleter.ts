@@ -1,11 +1,4 @@
-import TrieNode from '@/lib/trieTree'
-
 const useWordCompleter = () => {
-  const createTree = (...lists: Array<readonly string[]>): TrieNode => {
-    const tree = new TrieNode()
-    lists.forEach(list => list.forEach(word => tree.insert(word)))
-    return tree
-  }
   const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
     text = text.replaceAll('　', ' ')
     const startIndex = elm.selectionStart
@@ -31,7 +24,6 @@ const useWordCompleter = () => {
     return determined.join('')
   }
   return {
-    createTree,
     getCurrentWord,
     getDeterminedCharacters
   }

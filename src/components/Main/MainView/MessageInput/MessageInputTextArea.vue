@@ -21,7 +21,6 @@ import {
   ref,
   SetupContext,
   Ref,
-  onMounted,
   computed,
   nextTick,
   PropType,
@@ -34,6 +33,7 @@ import useModelSyncer from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
+import createTree from '@/lib/trieTree'
 import useWordCompleter from './use/wordCompleter'
 
 const useFocus = (context: SetupContext) => {
@@ -110,11 +110,7 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const {
-      createTree,
-      getCurrentWord,
-      getDeterminedCharacters
-    } = useWordCompleter()
+    const { getCurrentWord, getDeterminedCharacters } = useWordCompleter()
 
     const tree = createTree(
       store.getters.entities.allUserNames.map(userName => '@' + userName),
