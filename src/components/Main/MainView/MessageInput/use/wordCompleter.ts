@@ -1,6 +1,6 @@
 import store from '@/store'
 import createTree from '@/lib/trieTree'
-import { ComputedRef, WritableComputedRef } from 'vue'
+import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
 
 function getCurrentWord(elm: HTMLTextAreaElement, text: string) {
   text = text.replaceAll('　', ' ')
@@ -39,19 +39,21 @@ const useWordCompleter = (
     ),
     store.getters.entities.allStampNames.map(stampName => ':' + stampName + ':')
   )
-  const onKeyDownB = (e: KeyboardEvent) => {
+  const onKeyDownB = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
       e.preventDefault()
       if (!textareaRef.value) return
       const target = getCurrentWord(textareaRef.value, value.value)
+      const determined = getDeterminedCharacters(tree.search(target.word))
       value.value =
         value.value.slice(0, target.begin) +
-        (tree.search(target.word).length === 0
-          ? target.word
-          : getDeterminedCharacters(tree.search(target.word))) +
+        (tree.search(target.word).length === 0 ? target.word : determined) +
         (target.end === value.value.length ? '' : value.value.slice(target.end))
-      // caretが末尾になる(これは効かなそう)
-      textareaRef.value.setSelectionRange(target.end, target.end)
+      await nextTick()
+      textareaRef.value.setSelectionRange(
+        target.begin + determined.length,
+        target.begin + determined.length
+      )
     }
   }
   return { onKeyDownB }
