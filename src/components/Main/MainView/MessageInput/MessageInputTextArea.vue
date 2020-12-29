@@ -143,7 +143,7 @@ export default defineComponent({
           value.value.slice(0, target.begin) +
           (tree.search(target.word).length === 0
             ? target.word
-            : tree.search(target.word)[0]) +
+            : tree.search(target.word).sort()[0]) +
           (target.end === value.value.length
             ? ''
             : value.value.slice(target.end))
