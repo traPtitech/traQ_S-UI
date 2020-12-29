@@ -8,18 +8,34 @@ const useWordCompleter = () => {
   }
   const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
     text = text.replaceAll('　', ' ')
-    const start_index = elm.selectionStart
-    const end_index = elm.selectionEnd
-    const previous_space_index = text.lastIndexOf(' ', start_index - 1)
-    const next_space_index = text.indexOf(' ', end_index)
-    const begin = previous_space_index < 0 ? 0 : previous_space_index + 1
-    const end = next_space_index < 0 ? text.length : next_space_index
+    const startIndex = elm.selectionStart
+    const endIndex = elm.selectionEnd
+    const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
+    const nextSpaceIndex = text.indexOf(' ', endIndex)
+    const begin = prevSpaceIndex < 0 ? 0 : prevSpaceIndex + 1
+    const end = nextSpaceIndex < 0 ? text.length : nextSpaceIndex
     const word = text.substring(begin, end)
     return { word, begin, end }
   }
+  const getDeterminedCharacters = (candidates: string[]) => {
+    const minLength = candidates.reduce((min, candidate) => {
+      return min > candidate.length ? candidate.length : min
+    }, 32)
+    const determined: string[] = []
+    for (let i = 0; i < minLength; i++) {
+      determined[i] = candidates[0][i]
+      for (const candidate of candidates) {
+        if (determined[i] !== candidate[i]) {
+          return determined.slice(0, determined.length - 1).join('')
+        }
+      }
+    }
+    return determined.join('')
+  }
   return {
     createTree,
-    getCurrentWord
+    getCurrentWord,
+    getDeterminedCharacters
   }
 }
 

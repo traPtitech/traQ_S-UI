@@ -110,7 +110,12 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const { createTree, getCurrentWord } = useWordCompleter()
+    const {
+      createTree,
+      getCurrentWord,
+      getDeterminedCharacters
+    } = useWordCompleter()
+
     const tree = createTree(
       store.getters.entities.allUserNames.map(userName => '@' + userName),
       store.getters.entities.allUserGroupNames.map(
@@ -143,7 +148,7 @@ export default defineComponent({
           value.value.slice(0, target.begin) +
           (tree.search(target.word).length === 0
             ? target.word
-            : tree.search(target.word).sort()[0]) +
+            : getDeterminedCharacters(tree.search(target.word))) +
           (target.end === value.value.length
             ? ''
             : value.value.slice(target.end))
