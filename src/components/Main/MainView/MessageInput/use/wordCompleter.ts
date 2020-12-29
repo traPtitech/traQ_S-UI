@@ -1,4 +1,4 @@
-import TrieNode from './trieTree'
+import TrieNode from '@/lib/trieTree'
 
 const useWordCompleter = () => {
   const createTree = (...lists: Array<readonly string[]>): TrieNode => {
@@ -18,9 +18,7 @@ const useWordCompleter = () => {
     return { word, begin, end }
   }
   const getDeterminedCharacters = (candidates: string[]) => {
-    const minLength = candidates.reduce((min, candidate) => {
-      return min > candidate.length ? candidate.length : min
-    }, 32)
+    const minLength = Math.min(...candidates.map(c => c.length))
     const determined: string[] = []
     for (let i = 0; i < minLength; i++) {
       determined[i] = candidates[0][i]
