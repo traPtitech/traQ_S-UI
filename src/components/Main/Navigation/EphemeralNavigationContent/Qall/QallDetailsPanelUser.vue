@@ -21,7 +21,7 @@
     </button>
     <button
       v-else-if="showTuneDoneButton"
-      @click="$emit('tune-done')"
+      @click="$emit('tuneDone')"
       :class="[$style.button, $style.tuneDone]"
     >
       <icon mdi name="check" :size="16" />

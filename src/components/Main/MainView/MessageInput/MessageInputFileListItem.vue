@@ -43,7 +43,7 @@ export default defineComponent({
           : false
       )
     })
-    const onClickClose = () => context.emit('item-remove')
+    const onClickClose = () => context.emit('itemRemove')
 
     return { state, onClickClose }
   }

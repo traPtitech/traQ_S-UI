@@ -31,10 +31,10 @@ export default defineComponent({
   },
   setup(props, context) {
     const onClickStamp = (id: StampId) => {
-      context.emit('input-stamp', id)
+      context.emit('inputStamp', id)
     }
     const onStampHover = (name: string) => {
-      context.emit('hover-stamp', name)
+      context.emit('hoverStamp', name)
     }
     return { onClickStamp, onStampHover }
   }

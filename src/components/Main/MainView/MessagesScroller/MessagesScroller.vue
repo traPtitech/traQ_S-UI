@@ -280,13 +280,13 @@ export default defineComponent({
 
       if (props.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
-        context.emit('request-load-former')
+        context.emit('requestLoadFormer')
       }
       if (
         scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
         !props.isReachedLatest
       ) {
-        context.emit('request-load-latter')
+        context.emit('requestLoadLatter')
       }
     })
 

@@ -165,10 +165,10 @@ export default defineComponent({
     const isNameValid = computed(() => isValidStampName(state.name))
 
     const onStartEdit = () => {
-      context.emit('start-edit')
+      context.emit('startEdit')
     }
     const onEndEdit = () => {
-      context.emit('end-edit')
+      context.emit('endEdit')
     }
 
     const { isEditing, editStamp } = useStampEdit(

@@ -33,7 +33,7 @@ export default defineComponent({
     const value = computed({
       get: () => props.subscribed,
       set: v => {
-        context.emit('change-notification', props.userId, !props.subscribed)
+        context.emit('changeNotification', props.userId, !props.subscribed)
       }
     })
     const name = computed(

@@ -30,7 +30,7 @@ export default defineComponent({
     }
   },
   setup(_, context) {
-    const onClickLink = () => context.emit('click-link')
+    const onClickLink = () => context.emit('clickLink')
     return { onClickLink }
   }
 })
