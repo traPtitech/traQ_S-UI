@@ -142,7 +142,7 @@ export default defineComponent({
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
-    const myId = computed(() => _store.state.domain.me.detail?.id)
+    const myId = computed(() => _store.getters.domain.me.myId)
     const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)

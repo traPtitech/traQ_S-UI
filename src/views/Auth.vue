@@ -29,11 +29,10 @@ const usePageSwitch = (props: { type: PageType }) => {
   const isConsent = computed(() => props.type === 'consent')
 
   const updateState = async () => {
-    let isLoggedIn = false
     try {
       await store.dispatch.domain.me.fetchMe()
-      isLoggedIn = true
     } catch {}
+    const isLoggedIn = store.getters.domain.me.isLoggedIn
 
     if (isConsent.value) {
       if (isLoggedIn) {

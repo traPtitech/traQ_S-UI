@@ -20,9 +20,9 @@ export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
 
 const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
-  const { rootState, state, commit, getters } = rtcActionContext(context)
+  const { rootGetters, state, commit, getters } = rtcActionContext(context)
   const update = () => {
-    const myId = rootState.domain.me.detail?.id
+    const myId = rootGetters.domain.me.myId
     const userStateDiff: Record<UserId, number> = {}
 
     store.getters.domain.rtc.currentSessionUsers.forEach(userId => {
@@ -107,14 +107,14 @@ export const actions = defineActions({
   },
 
   async establishConnection(context) {
-    const { rootState, dispatch } = rtcActionContext(context)
-    if (!rootState.domain.me.detail) {
+    const { rootGetters, dispatch } = rtcActionContext(context)
+    if (!rootGetters.domain.me.myId) {
       throw 'application not initialized'
     }
     if (client) {
       client.closeConnection()
     }
-    const id = rootState.domain.me.detail.id
+    const id = rootGetters.domain.me.myId
     initClient(id)
     client?.addEventListener('connectionerror', async e => {
       /* eslint-disable-next-line no-console */

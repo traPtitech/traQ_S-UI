@@ -26,7 +26,7 @@ export const getters = defineGetters<S>()({
   typingUsers(...args): UserId[] {
     const { state } = getterContext(args)
 
-    const myId = _store.state.domain.me.detail?.id
+    const myId = _store.getters.domain.me.myId
     return state.currentViewers
       .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
       .map(v => v.userId)

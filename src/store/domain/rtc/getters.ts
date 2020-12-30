@@ -19,8 +19,7 @@ export const getters = defineGetters<S>()({
     }
   },
   currentRTCState(state) {
-    if (!_store.state.domain.me.detail) return undefined
-    return state.userStateMap.get(_store.state.domain.me.detail?.id)
+    return state.userStateMap.get(_store.getters.domain.me.myId ?? '')
   },
   qallSession(...args): UserSessionState | undefined {
     const { state, getters } = rtcGetterContext(args)

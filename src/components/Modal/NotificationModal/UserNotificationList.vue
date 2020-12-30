@@ -35,7 +35,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const allUsersWithoutMe = computed(() =>
     [...store.getters.entities.activeUsersMap.values()].filter(
       // BOTと自分を除外
-      u => !u.bot && u.id !== _store.state.domain.me.detail?.id
+      u => !u.bot && u.id !== _store.getters.domain.me.myId
     )
   )
 

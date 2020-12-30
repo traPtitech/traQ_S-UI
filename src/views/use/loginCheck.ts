@@ -19,7 +19,7 @@ export const performLoginCheck = async () => {
 
 const useLoginCheck = (afterCheck?: () => void) => {
   const hook = async () => {
-    if (!store.state.domain.me.detail) {
+    if (!store.getters.domain.me.isLoggedIn) {
       try {
         await performLoginCheck()
       } catch {}
