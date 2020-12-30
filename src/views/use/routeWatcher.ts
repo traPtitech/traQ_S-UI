@@ -52,11 +52,6 @@ const useRouteWatcher = () => {
     return
   }
 
-  const onRouteChangedToNull = () => {
-    _store.dispatch.ui.mainView.changePrimaryViewToNull()
-    state.view = 'main'
-  }
-
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
@@ -129,12 +124,6 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFile = async () => {
-    // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      // まだチャンネルツリーが構築されていない
-      return
-    }
     const fileId = state.idParam
     const file = await store.dispatch.entities.messages.fetchFileMetaData({
       fileId
@@ -143,6 +132,13 @@ const useRouteWatcher = () => {
     if (!file) {
       // ファイルがなかった
       state.view = 'not-found'
+      return
+    }
+
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
       return
     }
 
@@ -166,7 +162,10 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
-    if (_store.state.ui.mainView.primaryView.type === 'null') {
+    if (
+      _store.state.ui.mainView.primaryView.type === 'channel' &&
+      _store.state.ui.mainView.primaryView.channelId === ''
+    ) {
       _store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
@@ -183,11 +182,6 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToMessage = async () => {
-    // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      return
-    }
     const message = await store.dispatch.entities.messages.fetchMessage({
       messageId: state.idParam
     })
@@ -198,6 +192,12 @@ const useRouteWatcher = () => {
     }
 
     const channelId = message.channelId
+
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      return
+    }
 
     if (store.state.entities.channelsMap.has(channelId)) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
@@ -237,10 +237,6 @@ const useRouteWatcher = () => {
     if (routeParam === prevRouteParam) {
       return
     }
-    if (!_store.state.app.initialFetchCompleted) {
-      onRouteChangedToNull()
-      return
-    }
 
     if (routeName === RouteName.Channel) {
       await onRouteChangedToChannel()
@@ -274,9 +270,7 @@ const useRouteWatcher = () => {
   }
 
   watch(
-    computed(() =>
-      _store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
-    ),
+    computed(() => state.currentRouteParam),
     onRouteParamChange
   )
 

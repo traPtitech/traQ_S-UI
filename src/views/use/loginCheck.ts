@@ -5,7 +5,7 @@ import { onActivated, onBeforeMount } from 'vue'
 /**
  * ログイン状態かを確認し、ログインしていなかった場合はログイン画面へ遷移する
  */
-export const performLoginCheck = async () => {
+const performLoginCheck = async () => {
   try {
     await store.dispatch.domain.me.fetchMe()
   } catch {
