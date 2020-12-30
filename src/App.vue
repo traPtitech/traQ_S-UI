@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, watchEffect, Ref } from 'vue'
+import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '@/_store'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
@@ -167,10 +167,6 @@ export default defineComponent({
 
     const style = useStyle()
     useStyleBody(style)
-
-    onBeforeMount(async () => {
-      await store.dispatch.app.fetchVersionInfo()
-    })
 
     return { isMobile }
   }

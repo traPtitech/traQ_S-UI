@@ -75,15 +75,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import useLogin from './use/login'
-import store from '@/_store'
 import { isIOSApp } from '@/lib/util/browser'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import config from '@/config'
+import { Version } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -93,12 +93,18 @@ export default defineComponent({
     AuthenticateButton,
     AuthenticateSeparator
   },
-  setup(_, context) {
+  props: {
+    version: {
+      type: Object as PropType<Version>,
+      required: true
+    }
+  },
+  setup(props, context) {
     const { loginState, login, loginExternal } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
     const externalLogin = computed(
-      () => store.state.app.version.flags.externalLogin
+      () => props.version.flags.externalLogin ?? []
     )
 
     return {
