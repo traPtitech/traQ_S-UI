@@ -1,11 +1,14 @@
-import { defineDBModule } from '@/_store/defineDBModule'
+import { defineModule } from 'direct-vuex'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 
-export const me = defineDBModule({
-  path: ['domain.me.detail'],
+/**
+ * 接続中のQallの情報を持つストア
+ * 接続していないものも含むQallの情報はdomain/rtc
+ */
+export const rtc = defineModule({
   namespaced: true,
   state,
   getters,

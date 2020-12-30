@@ -77,8 +77,8 @@ export default defineComponent({
         ) ?? []
     )
     const channelsWithRtc = computed(() =>
-      Object.entries(_store.state.app.rtc.channelSessionsMap)
-        .filter(([, sessionIds]) => sessionIds && sessionIds.length > 0)
+      [...store.state.domain.rtc.channelSessionsMap.entries()]
+        .filter(([, sessionIds]) => sessionIds.size > 0)
         .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
         .filter(isDefined)
     )

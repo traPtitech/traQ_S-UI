@@ -32,11 +32,10 @@ export default defineComponent({
     const show = ref(false)
 
     onMounted(async () => {
-      let isLoggedIn = false
       try {
         await store.dispatch.domain.me.fetchMe()
-        isLoggedIn = true
       } catch {}
+      const isLoggedIn = store.getters.domain.me.isLoggedIn
 
       if (isLoggedIn) {
         show.value = true

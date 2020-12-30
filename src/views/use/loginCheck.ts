@@ -5,7 +5,7 @@ import { onActivated, onBeforeMount } from 'vue'
 /**
  * ログイン状態かを確認し、ログインしていなかった場合はログイン画面へ遷移する
  */
-export const performLoginCheck = async () => {
+const performLoginCheck = async () => {
   try {
     await store.dispatch.domain.me.fetchMe()
   } catch {
@@ -15,12 +15,11 @@ export const performLoginCheck = async () => {
     })
     throw 'Login required'
   }
-  store.commit.app.setLoginCheckSucceeded()
 }
 
 const useLoginCheck = (afterCheck?: () => void) => {
   const hook = async () => {
-    if (!store.state.app.loginCheckSucceeded) {
+    if (!store.getters.domain.me.isLoggedIn) {
       try {
         await performLoginCheck()
       } catch {}

@@ -1,8 +1,7 @@
-import { onBeforeMount, onActivated } from 'vue'
 import store from '@/store'
 import _store from '@/_store'
-import { ws } from '@/lib/websocket'
-import { performLoginCheck } from './loginCheck'
+import { ref } from 'vue'
+import useLoginCheck from './loginCheck'
 
 // TODO: 各ルートで必要なものをとるように書き換える
 // Settings.vueに来たら～
@@ -14,44 +13,29 @@ const initialFetch = async () => {
   store.dispatch.entities.fetchUsers()
   store.dispatch.entities.fetchChannels()
   store.dispatch.entities.fetchStamps()
-  // 未読処理前に未読を取得していないと未読を消せないため
-  await store.dispatch.domain.me.fetchUnreadChannels()
-
-  _store.commit.app.setInitialFetchCompleted()
+  store.dispatch.domain.me.fetchUnreadChannels()
 
   store.dispatch.entities.fetchUserGroups()
   store.dispatch.entities.fetchStampPalettes()
   store.dispatch.entities.fetchClipFolders()
   store.dispatch.domain.me.fetchStaredChannels()
   store.dispatch.domain.me.fetchStampHistory()
-  _store.dispatch.app.rtc.fetchRTCState()
+  store.dispatch.domain.rtc.fetchRTCState()
 
   store.dispatch.domain.me.fetchSubscriptions()
 }
 
-const initialFetchIfPossible = async () => {
-  await performLoginCheck()
-  initialFetch()
-
-  ws.addEventListener('reconnect', () => {
-    initialFetch()
-  })
-}
-
-/**
- * ログインチェック成功後にafterLoginCheckが呼び出される
- */
 const useInitialFetch = (afterLoginCheck: () => void) => {
-  const hook = async () => {
-    if (_store.state.app.initialFetchCompleted) return
-    try {
-      await initialFetchIfPossible()
-      afterLoginCheck()
-    } catch {}
-  }
+  const initialFetchCompleted = ref(false)
 
-  onBeforeMount(hook)
-  onActivated(hook)
+  useLoginCheck(() => {
+    if (!_store.getters.domain.me.isLoggedIn) return
+    if (initialFetchCompleted.value) return
+
+    initialFetchCompleted.value = true
+    initialFetch()
+    afterLoginCheck()
+  })
 }
 
 export default useInitialFetch

@@ -13,6 +13,7 @@ import {
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
 import { createSingleflight } from '@/lib/async'
+import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
 
 interface BaseGetMessagesParams {
   limit?: number
@@ -83,6 +84,9 @@ export const actions = defineActions({
 
     dispatch.resetViewState()
     commit.setCurrentChannelId(payload.channelId)
+
+    // 未読処理前に未読を取得していないと未読を消せないため
+    await unreadChannelsMapInitialFetchPromise
 
     const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
       payload.channelId

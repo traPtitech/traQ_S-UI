@@ -3,6 +3,7 @@ import { moduleActionContext } from '@/_store'
 import { rtcSettings } from './index'
 import { ActionContext } from 'vuex'
 import { S } from './state'
+import store from '@/store'
 
 export const rtcSettingsActionContext = (
   context: ActionContext<unknown, unknown>
@@ -57,7 +58,7 @@ export const actions = defineActions({
     commit.set(newState)
 
     if (newState.masterVolume) {
-      rootCommit.app.rtc.setMasterVolume(newState.masterVolume)
+      store.commit.app.rtc.setMasterVolume(newState.masterVolume)
     }
   }
 })

@@ -2,19 +2,19 @@
   <div :class="$style.container">
     <div :class="$style.title">traQ</div>
     <div>Client: v{{ clientVersion }}</div>
-    <div>Server: {{ severVersion.version }}</div>
+    <div>Server: {{ severVersion?.version ?? '-----' }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import version from '@/lib/env/version'
-import store from '@/_store'
+import useVersion from '@/use/version'
 
 export default defineComponent({
   name: 'Version',
   setup() {
-    const severVersion = computed(() => store.state.app.version)
+    const severVersion = useVersion()
     return { clientVersion: version, severVersion }
   }
 })

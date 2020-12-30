@@ -48,7 +48,7 @@ export default defineComponent({
   },
   setup(props) {
     const user = computed(() =>
-      props.userId === _store.state.domain.me.detail?.id
+      props.userId === _store.getters.domain.me.myId
         ? _store.state.domain.me.detail
         : store.state.entities.usersMap.get(props.userId)
     )

@@ -148,7 +148,7 @@ export default defineComponent({
     const isMine = computed(
       () =>
         store.state.entities.messages.messagesMap.get(props.messageId)
-          ?.userId === _store.state.domain.me.detail?.id
+          ?.userId === _store.getters.domain.me.myId
     )
     const isMinimum = computed(
       () => _store.state.ui.messageContextMenu.isMinimum

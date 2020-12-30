@@ -7,7 +7,7 @@ import { tts } from '../tts'
 export const onMessageCreated = async ({ id }: MessageCreatedEvent) => {
   const res = await apis.getMessage(id)
 
-  if (res.data.userId !== _store.state.domain.me.detail?.id) {
+  if (res.data.userId !== _store.getters.domain.me.myId) {
     const userDisplayName =
       store.state.entities.usersMap.get(res.data.userId)?.displayName ??
       'はてな'

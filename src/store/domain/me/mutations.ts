@@ -32,6 +32,7 @@ export const mutations = defineMutations<S>()({
     unreadChannelsMap: Map<ChannelId, UnreadChannel>
   ) {
     state.unreadChannelsMap = unreadChannelsMap
+    state.unreadChannelsMapFetched = true
     updateBadge(state.unreadChannelsMap)
   },
   upsertUnreadChannel(

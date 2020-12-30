@@ -22,10 +22,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect, ref, watch } from 'vue'
+import { defineComponent, computed, watchEffect, ref } from 'vue'
 import { renderInline } from '@/lib/markdown'
 import store from '@/store'
-import _store from '@/_store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
@@ -49,12 +48,6 @@ export default defineComponent({
     watchEffect(async () => {
       rendered.value = await renderInline(props.content)
     })
-    watch(
-      () => _store.state.app.initialFetchCompleted,
-      async () => {
-        rendered.value = await renderInline(props.content)
-      }
-    )
 
     const files = computed(() => rendered.value?.embeddings.filter(isFile))
 

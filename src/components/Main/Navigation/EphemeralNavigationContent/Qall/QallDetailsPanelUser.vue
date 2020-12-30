@@ -38,7 +38,6 @@ import Slider from '@/components/UI/Slider.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { UserId } from '@/types/entity-ids'
-import _store from '@/_store'
 import store from '@/store'
 
 const maxVolumeValue = 200
@@ -61,17 +60,18 @@ export default defineComponent({
   setup(props) {
     const volume = computed(() =>
       Math.round(
-        (_store.state.app.rtc.userVolumeMap[props.userId] ?? 0) * maxVolumeValue
+        (store.state.app.rtc.userVolumeMap.get(props.userId) ?? 0) *
+          maxVolumeValue
       )
     )
     const userName = computed(
       () => store.state.entities.usersMap.get(props.userId)?.displayName ?? ''
     )
-    const talkingLevel = computed(
-      () => _store.state.app.rtc.talkingUsersState[props.userId]
+    const talkingLevel = computed(() =>
+      store.state.app.rtc.talkingUsersState.get(props.userId)
     )
     const onChange = (value: number) => {
-      _store.commit.app.rtc.setUserVolume({
+      store.commit.app.rtc.setUserVolume({
         userId: props.userId,
         volume: value / maxVolumeValue
       })

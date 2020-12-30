@@ -4,6 +4,7 @@ import { UnreadChannel, ChannelSubscribeLevel } from '@traptitech/traq'
 export interface S {
   stampHistory: Map<StampId, Date>
   unreadChannelsMap: Map<ChannelId | DMChannelId, UnreadChannel>
+  unreadChannelsMapFetched: boolean
   staredChannelSet: Set<ChannelId>
   subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
 }
@@ -11,6 +12,7 @@ export interface S {
 export const state: S = {
   stampHistory: new Map(),
   unreadChannelsMap: new Map(),
+  unreadChannelsMapFetched: false,
   staredChannelSet: new Set(),
   subscriptionMap: new Map()
 }

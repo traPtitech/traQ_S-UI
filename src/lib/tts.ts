@@ -1,4 +1,5 @@
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
 import { parse } from './markdown'
 import { embeddingOrigin } from './apis'
@@ -117,7 +118,7 @@ class Tts {
   }
 
   private getVoiceRate() {
-    const defaultRate = store.state.app.rtcSettings.voiceRate
+    const defaultRate = _store.state.app.rtcSettings.voiceRate
     const size = this.queue.length
     const ratio =
       1 +
@@ -127,23 +128,23 @@ class Tts {
   }
 
   private isNeeded(channelId: ChannelId): boolean {
-    if (!store.state.app.rtcSettings.isTtsEnabled) return false
-    if (!store.getters.app.rtc.qallSession) return false
-    return store.state.app.rtc.currentRTCState?.channelId === channelId
+    if (!_store.state.app.rtcSettings.isTtsEnabled) return false
+    if (!store.getters.domain.rtc.qallSession) return false
+    return store.getters.domain.rtc.currentRTCState?.channelId === channelId
   }
 
   private createUtter(text: string): SpeechSynthesisUtterance {
     const utter = new SpeechSynthesisUtterance(text)
     const voice = speechSynthesis
       .getVoices()
-      .find(v => v.name === store.state.app.rtcSettings.voiceName)
+      .find(v => v.name === _store.state.app.rtcSettings.voiceName)
     if (voice) {
       utter.voice = voice
       utter.lang = voice.lang
     }
-    utter.pitch = store.state.app.rtcSettings.voicePitch
+    utter.pitch = _store.state.app.rtcSettings.voicePitch
     utter.rate = this.getVoiceRate()
-    utter.volume = store.state.app.rtcSettings.voiceVolume
+    utter.volume = _store.state.app.rtcSettings.voiceVolume
     return utter
   }
 

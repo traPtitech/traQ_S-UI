@@ -1,20 +1,20 @@
-import store from '@/_store'
+import store from '@/store'
 import { computed } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 
 const useQall = (props: { channelId: ChannelId }) => {
   const isQallSessionOpened = computed(() =>
-    Object.values(store.state.app.rtc.sessionInfoMap).some(
+    [...store.state.domain.rtc.sessionInfoMap.values()].some(
       s => s?.channelId === props.channelId && s?.type === 'qall'
     )
   )
   const hasActiveQallSession = computed(() => {
-    return !!store.getters.app.rtc.qallSession
+    return !!store.getters.domain.rtc.qallSession
   })
   const isJoinedQallSession = computed(
     () =>
       hasActiveQallSession.value &&
-      store.state.app.rtc.currentRTCState?.channelId === props.channelId
+      store.getters.domain.rtc.currentRTCState?.channelId === props.channelId
   )
   const startQallOnCurrentChannel = () => {
     store.dispatch.app.rtc.startQall(props.channelId)

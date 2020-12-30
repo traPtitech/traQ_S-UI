@@ -16,7 +16,7 @@
 import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'NavigationContentQall',
@@ -26,8 +26,8 @@ export default defineComponent({
   },
   setup() {
     const currentChannel = computed(() =>
-      store.getters.app.rtc.qallSession
-        ? store.state.app.rtc.currentRTCState?.channelId
+      store.getters.domain.rtc.qallSession
+        ? store.getters.domain.rtc.currentRTCState?.channelId
         : undefined
     )
     const onEndQallClick = () => {

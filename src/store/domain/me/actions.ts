@@ -39,12 +39,12 @@ export const actions = defineActions({
     if (rootState.domain.messagesView.currentChannelId === message.channelId)
       return
     // 自分の投稿は未読に追加しない
-    if (_store.state.domain.me.detail?.id === message.userId) return
+    if (_store.getters.domain.me.myId === message.userId) return
 
     const noticeable =
       detectMentionOfMe(
         message.content,
-        _store.state.domain.me.detail?.id ?? '',
+        _store.getters.domain.me.myId ?? '',
         _store.state.domain.me.detail?.groups ?? []
       ) || !!rootState.entities.channelsMap.get(message.channelId)?.force
     const isDM = rootState.entities.dmChannelsMap.has(message.channelId)

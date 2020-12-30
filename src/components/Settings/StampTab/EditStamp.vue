@@ -26,7 +26,7 @@ export default defineComponent({
   setup() {
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myUserId = computed(() => _store.state.domain.me.detail!.id)
+    const myUserId = computed(() => _store.getters.domain.me.myId!)
     const myStamps = computed(() =>
       [...store.state.entities.stampsMap.values()].filter(
         stamp => stamp.creatorId === myUserId.value
