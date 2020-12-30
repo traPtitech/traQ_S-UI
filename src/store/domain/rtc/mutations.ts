@@ -73,7 +73,7 @@ export const mutations = defineMutations<S>()({
         } else {
           const newSessionInfo = toSessionInfo(s.sessionId, rtcState.channelId)
           sessionInfoMap.set(s.sessionId, newSessionInfo)
-          sessionUsersMap.set(s.sessionId, new Set(rtcState.userId))
+          sessionUsersMap.set(s.sessionId, new Set([rtcState.userId]))
         }
       })
     })
@@ -116,7 +116,7 @@ export const mutations = defineMutations<S>()({
         newChannelSessions.add(sessionId)
         state.channelSessionsMap.set(payload.channelId, newChannelSessions)
         state.sessionInfoMap.set(sessionId, newSessionInfo)
-        state.sessionUsersMap.set(sessionId, new Set(payload.userId))
+        state.sessionUsersMap.set(sessionId, new Set([payload.userId]))
       }
     })
 

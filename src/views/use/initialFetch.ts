@@ -24,7 +24,7 @@ const initialFetch = async () => {
   store.dispatch.entities.fetchClipFolders()
   store.dispatch.domain.me.fetchStaredChannels()
   store.dispatch.domain.me.fetchStampHistory()
-  _store.dispatch.app.rtc.fetchRTCState()
+  store.dispatch.domain.rtc.fetchRTCState()
 
   store.dispatch.domain.me.fetchSubscriptions()
 }

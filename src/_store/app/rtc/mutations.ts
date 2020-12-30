@@ -3,15 +3,8 @@ import { shallowReactive } from 'vue'
 import { S, ExtendedMediaStream } from './state'
 import { UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-import { UserRTCState } from '@/store/domain/rtc/state'
 
 export const mutations = defineMutations<S>()({
-  setCurrentRTCState(state, payload: Readonly<UserRTCState>) {
-    state.currentRTCState = payload
-  },
-  unsetCurrentRTCState(state) {
-    state.currentRTCState = undefined
-  },
   setMixer(state, mixer: AudioStreamMixer) {
     state.mixer = shallowReactive(mixer)
   },

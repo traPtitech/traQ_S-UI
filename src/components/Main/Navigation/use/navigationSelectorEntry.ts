@@ -1,4 +1,3 @@
-import _store from '@/_store'
 import store from '@/store'
 import { computed, reactive } from 'vue'
 import {
@@ -82,7 +81,7 @@ const useNavigationSelectorEntry = () => {
   const entries = computed(() => createItems(notificationState))
 
   const hasActiveQallSession = computed(() => {
-    return !!_store.getters.app.rtc.qallSession
+    return !!store.getters.domain.rtc.qallSession
   })
   const ephemeralEntries = computed(() =>
     [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(

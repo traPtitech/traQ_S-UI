@@ -1,6 +1,5 @@
 import { UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-import { UserRTCState } from '@/store/domain/rtc/state'
 
 export interface ExtendedMediaStream extends MediaStream {
   userMuted?: boolean
@@ -18,9 +17,6 @@ export interface S {
 
   /** マイクミュート */
   isMicMuted: boolean
-
-  /** 自分のRTC状態 */
-  currentRTCState?: Readonly<UserRTCState>
 
   /** ローカルで指定するユーザー音量のマップ */
   userVolumeMap: Record<UserId, number | undefined>
@@ -40,7 +36,6 @@ export const state: S = {
   localStream: undefined,
   localAnalyzerNode: undefined,
   isMicMuted: false,
-  currentRTCState: undefined,
   userVolumeMap: {},
   remoteAudioStreamMap: {},
   talkingStateUpdateId: 0,

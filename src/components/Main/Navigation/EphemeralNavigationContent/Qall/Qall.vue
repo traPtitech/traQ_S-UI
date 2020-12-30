@@ -16,7 +16,8 @@
 import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
-import store from '@/_store'
+import _store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'NavigationContentQall',
@@ -26,19 +27,19 @@ export default defineComponent({
   },
   setup() {
     const currentChannel = computed(() =>
-      store.getters.app.rtc.qallSession
-        ? store.state.app.rtc.currentRTCState?.channelId
+      store.getters.domain.rtc.qallSession
+        ? store.getters.domain.rtc.currentRTCState?.channelId
         : undefined
     )
     const onEndQallClick = () => {
-      store.dispatch.app.rtc.endQall()
+      _store.dispatch.app.rtc.endQall()
     }
-    const isMicMuted = computed(() => store.state.app.rtc.isMicMuted)
+    const isMicMuted = computed(() => _store.state.app.rtc.isMicMuted)
     const onMicClick = () => {
       if (isMicMuted.value) {
-        store.dispatch.app.rtc.unmute()
+        _store.dispatch.app.rtc.unmute()
       } else {
-        store.dispatch.app.rtc.mute()
+        _store.dispatch.app.rtc.mute()
       }
     }
     const status = computed(() => '通話中')
