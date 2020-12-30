@@ -55,14 +55,6 @@ const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
 
 export const actions = defineActions({
   // ---- RTC Session ---- //
-  async fetchRTCState(context) {
-    const { commit } = rtcActionContext(context)
-    const { data } = await apis.getWebRTCState()
-    if (data) {
-      commit.setRTCState(data.flat(1))
-    }
-  },
-
   async syncRTCState(context) {
     const { state } = rtcActionContext(context)
     if (!state.currentRTCState) {

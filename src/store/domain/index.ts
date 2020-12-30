@@ -7,6 +7,7 @@ import { listeners } from './listeners'
 import { channelTree } from './channelTree'
 import { me } from './me'
 import { messagesView } from './messagesView'
+import { rtc } from './rtc'
 import { stampCategory } from './stampCategory'
 
 /**
@@ -24,6 +25,7 @@ export const domain = defineModule({
     channelTree,
     me,
     messagesView,
+    rtc,
     stampCategory
   }
 })

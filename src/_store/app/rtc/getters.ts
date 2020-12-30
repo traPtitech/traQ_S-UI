@@ -1,9 +1,10 @@
 import { defineGetters } from 'direct-vuex'
-import { S, SessionType } from './state'
-import { ChannelId, UserId } from '@/types/entity-ids'
+import { S } from './state'
+import { UserId } from '@/types/entity-ids'
 import { getTalkingLoundnessLevel } from '@/lib/audioStreamMixer'
 import { rtc } from '.'
 import { moduleGetterContext } from '@/_store'
+import store from '@/store'
 
 const rtcGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, rtc)
@@ -11,30 +12,25 @@ const rtcGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
 export const getters = defineGetters<S>()({
   qallSession(state) {
     return state.currentRTCState?.sessionStates.find(
-      s => state.sessionInfoMap[s.sessionId]?.type === 'qall'
+      s =>
+        store.state.domain.rtc.sessionInfoMap.get(s.sessionId)?.type === 'qall'
     )
   },
-  channelRTCSessionId: state => (
-    sessionType: SessionType,
-    channelId: ChannelId
-  ) => {
-    return state.channelSessionsMap[channelId]?.find(
-      sessionId => state.sessionInfoMap[sessionId]?.type === sessionType
-    )
-  },
-  currentSessionUsers(...args): UserId[] {
-    const { state, getters } = rtcGetterContext(args)
+  currentSessionUsers(...args): Set<UserId> {
+    const { getters } = rtcGetterContext(args)
     const session = getters.qallSession
-    if (!session) return []
-    return state.sessionUsersMap[session.sessionId] ?? []
+    if (!session) return new Set()
+    return (
+      store.state.domain.rtc.sessionUsersMap.get(session.sessionId) ?? new Set()
+    )
   },
   currentMutedUsers(...args): UserId[] {
-    const { state, getters } = rtcGetterContext(args)
+    const { getters } = rtcGetterContext(args)
     const session = getters.qallSession
     if (!session) return []
-    return Object.entries(state.userStateMap)
+    return [...store.state.domain.rtc.userStateMap.entries()]
       .filter(([_, state]) =>
-        state?.sessionStates.some(
+        state.sessionStates.some(
           s =>
             s.sessionId === session.sessionId && s.states.includes('micmuted')
         )

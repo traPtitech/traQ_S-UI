@@ -1,8 +1,4 @@
-import {
-  onUserIconUpdated,
-  onUserWebRTCStateChanged,
-  onUserUpdated
-} from './user'
+import { onUserIconUpdated, onUserUpdated } from './user'
 import { onMessageCreated } from './message'
 
 import { WebSocketEvent } from './events'
@@ -26,9 +22,6 @@ export const onReceive = <T extends keyof WebSocketEvent>(event: {
       break
     case 'USER_ICON_UPDATED':
       onUserIconUpdated(body)
-      break
-    case 'USER_WEBRTC_STATE_CHANGED':
-      onUserWebRTCStateChanged(body)
       break
     case 'MESSAGE_CREATED':
       onMessageCreated(body)

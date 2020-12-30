@@ -1,24 +1,6 @@
-import { UserId, ChannelId } from '@/types/entity-ids'
+import { UserId } from '@/types/entity-ids'
 import AudioStreamMixer from '@/lib/audioStreamMixer'
-
-export type SessionId = string
-export type SessionType = 'qall' | 'draw'
-export type SessionInfoBase = {
-  sessionId: SessionId
-  type: SessionType
-  channelId: ChannelId
-}
-export type QallSessionInfo = SessionInfoBase & { type: 'qall' }
-export type DrawSessionInfo = SessionInfoBase & { type: 'draw' }
-export type SessionInfo = QallSessionInfo | DrawSessionInfo
-export type UserSessionState = {
-  sessionId: SessionId
-  states: string[]
-}
-export type UserRTCState = {
-  channelId: ChannelId
-  sessionStates: UserSessionState[]
-}
+import { UserRTCState } from '@/store/domain/rtc/state'
 
 export interface ExtendedMediaStream extends MediaStream {
   userMuted?: boolean
@@ -40,18 +22,6 @@ export interface S {
   /** 自分のRTC状態 */
   currentRTCState?: Readonly<UserRTCState>
 
-  /** ユーザーのRTC状態のマップ */
-  userStateMap: Record<UserId, UserRTCState | undefined>
-
-  /** チャンネルIDと立っているセッションIDのマップ */
-  channelSessionsMap: Record<ChannelId, SessionId[] | undefined>
-
-  /** セッションIDとセッションの状態のマップ */
-  sessionInfoMap: Record<SessionId, SessionInfo | undefined>
-
-  /** セッションIDとセッションの状態のマップ */
-  sessionUsersMap: Record<SessionId, UserId[] | undefined>
-
   /** ローカルで指定するユーザー音量のマップ */
   userVolumeMap: Record<UserId, number | undefined>
 
@@ -71,10 +41,6 @@ export const state: S = {
   localAnalyzerNode: undefined,
   isMicMuted: false,
   currentRTCState: undefined,
-  userStateMap: {},
-  channelSessionsMap: {},
-  sessionInfoMap: {},
-  sessionUsersMap: {},
   userVolumeMap: {},
   remoteAudioStreamMap: {},
   talkingStateUpdateId: 0,
