@@ -15,12 +15,11 @@ export const performLoginCheck = async () => {
     })
     throw 'Login required'
   }
-  store.commit.app.setLoginCheckSucceeded()
 }
 
 const useLoginCheck = (afterCheck?: () => void) => {
   const hook = async () => {
-    if (!store.state.app.loginCheckSucceeded) {
+    if (!store.state.domain.me.detail) {
       try {
         await performLoginCheck()
       } catch {}
