@@ -50,23 +50,26 @@ export const mutations = defineMutations<S>()({
     state,
     payload: { userId: UserId; mediaStream: MediaStream }
   ) {
-    state.remoteAudioStreamMap[payload.userId] = payload.mediaStream
+    state.remoteAudioStreamMap.set(payload.userId, payload.mediaStream)
   },
   removeRemoteStream(state, userId: UserId) {
-    state.remoteAudioStreamMap[userId]?.getTracks().forEach(t => t.stop())
-    delete state.remoteAudioStreamMap[userId]
+    state.remoteAudioStreamMap
+      .get(userId)
+      ?.getTracks()
+      .forEach(t => t.stop())
+    state.remoteAudioStreamMap.delete(userId)
   },
   clearRemoteStream(state) {
-    Object.values(state.remoteAudioStreamMap).forEach(stream =>
+    state.remoteAudioStreamMap.forEach(stream =>
       stream?.getTracks().forEach(t => t.stop())
     )
-    state.remoteAudioStreamMap = {}
+    state.remoteAudioStreamMap.clear()
   },
   /**
    * @param volume 0-1で指定するボリューム (0がミュート、1がAudioStreamMixer.maxGainに相当するゲイン)
    */
   setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
-    state.userVolumeMap[userId] = volume
+    state.userVolumeMap.set(userId, volume)
     if (state.mixer) {
       state.mixer.setAndSaveVolumeOf(userId, volume)
     }
@@ -74,9 +77,9 @@ export const mutations = defineMutations<S>()({
   setTalkingStateUpdateId(state, id: number) {
     state.talkingStateUpdateId = id
   },
-  updateTalkingUserState(state, diffState: Readonly<Record<UserId, number>>) {
-    Object.entries(diffState).forEach(([userId, loudnessLevel]) => {
-      state.talkingUsersState[userId] = loudnessLevel
+  updateTalkingUserState(state, diffState: ReadonlyMap<UserId, number>) {
+    diffState.forEach((loudnessLevel, userId) => {
+      state.talkingUsersState.set(userId, loudnessLevel)
     })
   }
 })

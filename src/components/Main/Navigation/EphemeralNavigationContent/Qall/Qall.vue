@@ -16,7 +16,6 @@
 import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
-import _store from '@/_store'
 import store from '@/store'
 
 export default defineComponent({
@@ -32,14 +31,14 @@ export default defineComponent({
         : undefined
     )
     const onEndQallClick = () => {
-      _store.dispatch.app.rtc.endQall()
+      store.dispatch.app.rtc.endQall()
     }
-    const isMicMuted = computed(() => _store.state.app.rtc.isMicMuted)
+    const isMicMuted = computed(() => store.state.app.rtc.isMicMuted)
     const onMicClick = () => {
       if (isMicMuted.value) {
-        _store.dispatch.app.rtc.unmute()
+        store.dispatch.app.rtc.unmute()
       } else {
-        _store.dispatch.app.rtc.mute()
+        store.dispatch.app.rtc.mute()
       }
     }
     const status = computed(() => '通話中')

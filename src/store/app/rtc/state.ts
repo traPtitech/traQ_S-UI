@@ -5,7 +5,7 @@ export interface ExtendedMediaStream extends MediaStream {
   userMuted?: boolean
 }
 
-export interface S {
+export type S = {
   /** ミキサー */
   mixer?: AudioStreamMixer
 
@@ -19,16 +19,16 @@ export interface S {
   isMicMuted: boolean
 
   /** ローカルで指定するユーザー音量のマップ */
-  userVolumeMap: Record<UserId, number | undefined>
+  userVolumeMap: Map<UserId, number>
 
   /** 他ユーザーのオーディオ */
-  remoteAudioStreamMap: Record<UserId, MediaStream | undefined>
+  remoteAudioStreamMap: Map<UserId, MediaStream>
 
   /** 現在発話しているユーザーを判定するsetIntervalのID */
   talkingStateUpdateId: number
 
   /** 現在発話してるユーザーの声の大きさのレベル */
-  talkingUsersState: Record<UserId, number>
+  talkingUsersState: Map<UserId, number>
 }
 
 export const state: S = {
@@ -36,8 +36,8 @@ export const state: S = {
   localStream: undefined,
   localAnalyzerNode: undefined,
   isMicMuted: false,
-  userVolumeMap: {},
-  remoteAudioStreamMap: {},
+  userVolumeMap: new Map(),
+  remoteAudioStreamMap: new Map(),
   talkingStateUpdateId: 0,
-  talkingUsersState: {}
+  talkingUsersState: new Map()
 }

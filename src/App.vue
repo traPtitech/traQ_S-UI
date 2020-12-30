@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
-import store from '@/_store'
+import store from '@/store'
+import _store from '@/_store'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
@@ -22,11 +23,11 @@ import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
 
-  store.commit.ui.setIsMobile(queryList.matches)
+  _store.commit.ui.setIsMobile(queryList.matches)
 
   // safariではaddEventListener('change', func)が未対応なため
   queryList.addListener((event: MediaQueryListEvent) => {
-    store.commit.ui.setIsMobile(event.matches)
+    _store.commit.ui.setIsMobile(event.matches)
   })
 }
 
@@ -43,7 +44,7 @@ const useQallConfirmer = () => {
 
 const useThemeObserver = () => {
   const themeColor = computed(
-    () => store.getters.app.themeSettings.currentTheme.accent.primary
+    () => _store.getters.app.themeSettings.currentTheme.accent.primary
   )
 
   const $themeColor = document.querySelector(
@@ -57,30 +58,30 @@ const useThemeObserver = () => {
     }
   })
 
-  const themeType = computed(() => store.state.app.themeSettings.type)
+  const themeType = computed(() => _store.state.app.themeSettings.type)
   const isDark = computed(() =>
     themeType.value === 'custom'
-      ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
+      ? isDarkColor(_store.state.app.themeSettings.custom.background.primary)
       : themeType.value === 'dark' ||
         (themeType.value === 'auto' &&
-          store.state.app.themeSettings.isOsDarkTheme)
+          _store.state.app.themeSettings.isOsDarkTheme)
   )
   useHtmlDatasetBoolean('isDarkTheme', isDark)
 }
 
 const useEcoModeObserver = () => {
-  const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
+  const ecoMode = computed(() => _store.state.app.browserSettings.ecoMode)
   useHtmlDatasetBoolean('ecoMode', ecoMode)
 }
 
 const useOsDarkTheme = () => {
   const queryList = window.matchMedia('(prefers-color-scheme: dark)')
 
-  store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
+  _store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
 
   // safariではaddEventListener('change', func)が未対応なため
   queryList.addListener((event: MediaQueryListEvent) => {
-    store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
+    _store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
   })
 }
 
@@ -157,7 +158,7 @@ export default defineComponent({
   },
   setup() {
     useWindowResizeObserver()
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const isMobile = computed(() => _store.state.ui.isMobile)
 
     useQallConfirmer()
 

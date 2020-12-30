@@ -1,6 +1,6 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/_store'
-import { rtc } from './index'
+import { moduleActionContext } from '@/store'
+import { rtc } from '.'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import { randomString } from '@/lib/util/randomString'
 import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
@@ -11,7 +11,7 @@ import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '@/lib/tts'
 import { wait } from '@/lib/util/timer'
-import store from '@/store'
+import _store from '@/_store'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -22,25 +22,25 @@ export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
 const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
   const { rootGetters, state, commit, getters } = rtcActionContext(context)
   const update = () => {
-    const myId = rootGetters.domain.me.myId
-    const userStateDiff: Record<UserId, number> = {}
+    const myId = _store.getters.domain.me.myId
+    const userStateDiff = new Map<UserId, number>()
 
-    store.getters.domain.rtc.currentSessionUsers.forEach(userId => {
+    rootGetters.domain.rtc.currentSessionUsers.forEach(userId => {
       if (userId === myId) return
 
-      const loudness = store.getters.domain.rtc.currentMutedUsers.has(userId)
+      const loudness = rootGetters.domain.rtc.currentMutedUsers.has(userId)
         ? 0
         : getters.getTalkingLoudnessLevel(userId)
-      if (state.talkingUsersState[userId] !== loudness) {
-        userStateDiff[userId] = loudness
+      if (state.talkingUsersState.get(userId) !== loudness) {
+        userStateDiff.set(userId, loudness)
       }
     })
 
     if (state.localAnalyzerNode && myId) {
       const level = state.mixer?.getLevelOfNode(state.localAnalyzerNode) ?? 0
       const loudness = getTalkingLoundnessLevel(level)
-      if (state.talkingUsersState[myId] !== loudness) {
-        userStateDiff[myId] = loudness
+      if (state.talkingUsersState.get(myId) !== loudness) {
+        userStateDiff.set(myId, loudness)
       }
     }
 
@@ -55,27 +55,25 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId; sessionType: string }
   ): { sessionId: string; isNewSession: boolean } {
+    const { rootGetters, rootState, rootDispatch } = rtcActionContext(context)
     if (
-      store.getters.domain.rtc.currentRTCState &&
-      store.getters.domain.rtc.currentRTCState.channelId !== payload.channelId
+      rootGetters.domain.rtc.currentRTCState?.channelId !== payload.channelId
     ) {
       throw `RTC session is already open for channel ${payload.channelId}`
     }
 
-    const currentSessionIds = store.state.domain.rtc.channelSessionsMap.get(
+    const currentSessionIds = rootState.domain.rtc.channelSessionsMap.get(
       payload.channelId
     )
     const currentSession = currentSessionIds
       ? [...currentSessionIds]
-          .map(sessionId =>
-            store.state.domain.rtc.sessionInfoMap.get(sessionId)
-          )
+          .map(sessionId => rootState.domain.rtc.sessionInfoMap.get(sessionId))
           .find(session => session?.type === payload.sessionType)
       : undefined
     const sessionId =
-      currentSession?.sessionId ?? payload.sessionType + '-' + randomString()
+      currentSession?.sessionId ?? `${payload.sessionType}-${randomString()}`
 
-    store.dispatch.domain.rtc.addRTCSession({
+    rootDispatch.domain.rtc.addRTCSession({
       channelId: payload.channelId,
       state: {
         sessionId,
@@ -88,14 +86,13 @@ export const actions = defineActions({
   // ---- RTC Connection ---- //
 
   initializeMixer(context) {
-    const { state, commit, rootState } = rtcActionContext(context)
-    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
+    const { state, commit } = rtcActionContext(context)
+    const mixer = new AudioStreamMixer(
+      _store.state.app.rtcSettings.masterVolume
+    )
 
-    Object.keys(state.remoteAudioStreamMap).forEach(userId => {
-      const stream = state.remoteAudioStreamMap[userId]
-      if (stream) {
-        mixer.addStream(userId, stream)
-      }
+    state.remoteAudioStreamMap.forEach((stream, userId) => {
+      mixer.addStream(userId, stream)
     })
 
     mixer.addFileSource('qall_start', '/static/qall_start.mp3')
@@ -107,14 +104,14 @@ export const actions = defineActions({
   },
 
   async establishConnection(context) {
-    const { rootGetters, dispatch } = rtcActionContext(context)
-    if (!rootGetters.domain.me.myId) {
+    const { rootGetters, dispatch, rootDispatch } = rtcActionContext(context)
+    if (!_store.getters.domain.me.myId) {
       throw 'application not initialized'
     }
     if (client) {
       client.closeConnection()
     }
-    const id = rootGetters.domain.me.myId
+    const id = _store.getters.domain.me.myId
     initClient(id)
     client?.addEventListener('connectionerror', async e => {
       /* eslint-disable-next-line no-console */
@@ -127,9 +124,9 @@ export const actions = defineActions({
 
       await dispatch.closeConnection()
       // session接続後にCredential expiredで切れる場合は退出しないといけない
-      const qallSession = store.getters.domain.rtc.qallSession
+      const qallSession = rootGetters.domain.rtc.qallSession
       if (qallSession) {
-        store.dispatch.domain.rtc.removeRTCSession({
+        rootDispatch.domain.rtc.removeRTCSession({
           sessionId: qallSession.sessionId
         })
         tts.stop()
@@ -156,17 +153,11 @@ export const actions = defineActions({
   },
 
   async joinVoiceChannel(context, room: string) {
-    const {
-      state,
-      commit,
-      rootState,
-      dispatch,
-      rootDispatch
-    } = rtcActionContext(context)
-    if (!rootState.app.rtcSettings.isEnabled) {
+    const { state, commit, dispatch } = rtcActionContext(context)
+    if (!_store.state.app.rtcSettings.isEnabled) {
       return
     }
-    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
+    if (!(await _store.dispatch.app.rtcSettings.ensureDeviceIds())) {
       window.alert('マイクの設定に失敗しました')
       return
     }
@@ -185,9 +176,7 @@ export const actions = defineActions({
       const userId = e.detail.userId
       /* eslint-disable-next-line no-console */
       console.log(`[RTC] User joined, ID: ${userId}`)
-      if (state.mixer) {
-        state.mixer.playFileSource('qall_joined')
-      }
+      state.mixer?.playFileSource('qall_joined')
     })
 
     client.addEventListener('userleave', async e => {
@@ -217,7 +206,7 @@ export const actions = defineActions({
     })
 
     const localStream = await getUserAudio(
-      rootState.app.rtcSettings.audioInputDeviceId
+      _store.state.app.rtcSettings.audioInputDeviceId
     )
     commit.setLocalStream(localStream)
 
@@ -232,31 +221,35 @@ export const actions = defineActions({
     state.mixer.playFileSource('qall_start')
   },
   mute(context) {
-    const { state, commit } = rtcActionContext(context)
-    const qallSession = store.getters.domain.rtc.qallSession
+    const { state, commit, rootGetters, rootDispatch } = rtcActionContext(
+      context
+    )
+    const qallSession = rootGetters.domain.rtc.qallSession
     if (!state.localStream || !qallSession) {
       return
     }
     commit.muteLocalStream()
-    const states = [...new Set([...(qallSession?.states ?? []), 'micmuted'])]
-    store.dispatch.domain.rtc.modifyRTCSession({
-      sessionId: qallSession?.sessionId,
-      states
+    const statesSet = new Set(qallSession.states)
+    statesSet.add('micmuted')
+    rootDispatch.domain.rtc.modifyRTCSession({
+      sessionId: qallSession.sessionId,
+      states: [...statesSet]
     })
   },
   unmute(context) {
-    const { state, commit } = rtcActionContext(context)
-    const qallSession = store.getters.domain.rtc.qallSession
+    const { state, commit, rootGetters, rootDispatch } = rtcActionContext(
+      context
+    )
+    const qallSession = rootGetters.domain.rtc.qallSession
     if (!state.localStream || !qallSession) {
       return
     }
     commit.unmuteLocalStream()
-    const stateSet = new Set(qallSession?.states ?? [])
+    const stateSet = new Set(qallSession.states)
     stateSet.delete('micmuted')
-    const states = [...stateSet]
-    store.dispatch.domain.rtc.modifyRTCSession({
-      sessionId: qallSession?.sessionId,
-      states
+    rootDispatch.domain.rtc.modifyRTCSession({
+      sessionId: qallSession.sessionId,
+      states: [...stateSet]
     })
   },
 
@@ -270,7 +263,7 @@ export const actions = defineActions({
 
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
-    const { dispatch, rootCommit } = rtcActionContext(context)
+    const { dispatch } = rtcActionContext(context)
     try {
       const { sessionId } = await dispatch.startOrJoinRTCSession({
         channelId,
@@ -281,7 +274,7 @@ export const actions = defineActions({
       // eslint-disable-next-line no-console
       console.error('Qallの開始に失敗しました', e)
 
-      rootCommit.ui.toast.addToast({
+      _store.commit.ui.toast.addToast({
         type: 'error',
         text: 'Qallの開始に失敗しました'
       })
@@ -289,13 +282,13 @@ export const actions = defineActions({
   },
 
   async endQall(context) {
-    const { dispatch } = rtcActionContext(context)
-    const qallSession = store.getters.domain.rtc.qallSession
+    const { dispatch, rootGetters, rootDispatch } = rtcActionContext(context)
+    const qallSession = rootGetters.domain.rtc.qallSession
     if (!qallSession) {
       throw 'something went wrong'
     }
     await dispatch.closeConnection()
-    store.dispatch.domain.rtc.removeRTCSession({
+    rootDispatch.domain.rtc.removeRTCSession({
       sessionId: qallSession.sessionId
     })
 

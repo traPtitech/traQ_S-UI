@@ -1,4 +1,3 @@
-import _store from '@/_store'
 import store from '@/store'
 import { computed } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
@@ -18,10 +17,10 @@ const useQall = (props: { channelId: ChannelId }) => {
       store.getters.domain.rtc.currentRTCState?.channelId === props.channelId
   )
   const startQallOnCurrentChannel = () => {
-    _store.dispatch.app.rtc.startQall(props.channelId)
+    store.dispatch.app.rtc.startQall(props.channelId)
   }
   const endQall = () => {
-    _store.dispatch.app.rtc.endQall()
+    store.dispatch.app.rtc.endQall()
   }
   const toggleQall = () => {
     if (isJoinedQallSession.value) {
