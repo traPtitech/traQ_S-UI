@@ -2,7 +2,7 @@ import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
 
-function getCurrentWord(elm: HTMLTextAreaElement, text: string) {
+const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
   text = text.replaceAll('　', ' ')
   const startIndex = elm.selectionStart
   const endIndex = elm.selectionEnd
@@ -14,7 +14,7 @@ function getCurrentWord(elm: HTMLTextAreaElement, text: string) {
   return { word, begin, end }
 }
 
-function getDeterminedCharacters(candidates: string[]) {
+const getDeterminedCharacters = (candidates: string[]) => {
   const minLength = Math.min(...candidates.map(c => c.length))
   const determined: string[] = []
   for (let i = 0; i < minLength; i++) {
