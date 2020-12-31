@@ -5,7 +5,7 @@
     @drop.prevent.stop="onDrop"
   >
     <channel-view-file-upload-overlay
-      v-if="fileDragDropState.isDragging"
+      v-if="isDragging"
       :class="$style.fileUploadOverlay"
     />
     <channel-view-content
@@ -16,37 +16,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
+import { defineComponent, reactive, computed, PropType, ref } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import _store from '@/_store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
+import useMessageInputState from '@/use/messageInputState'
 
-const useFileDragDrop = () => {
-  const state = reactive({
-    isDragging: false
-  })
+const useDragDrop = () => {
+  const { addFromDataTransfer } = useMessageInputState()
+
+  // itemsはsafariには存在しない
+  const hasFilesOrItems = (dt: DataTransfer) =>
+    dt.files.length > 0 || dt.items?.length > 0
+
+  const isDragging = ref(false)
   const onDrop = (event: DragEvent) => {
-    const files = event.dataTransfer?.files ?? ([] as File[])
-    Array.from(files).forEach(file => {
-      _store.dispatch.ui.fileInput.addAttachment(file)
-    })
-    state.isDragging = false
+    if (event.dataTransfer) {
+      addFromDataTransfer(event.dataTransfer)
+    }
+    isDragging.value = false
   }
 
   /** ドラッグ終了判定するまでにdragoverが何ms開けばいいか */
   const dragoverResetDurationMs = 100
   const resetDraggingState = debounce(dragoverResetDurationMs, () => {
-    state.isDragging = false
+    isDragging.value = false
   })
   const onDragOver = (event: DragEvent) => {
-    state.isDragging = true
+    if (event.dataTransfer && hasFilesOrItems(event.dataTransfer)) {
+      isDragging.value = true
+    }
     resetDraggingState()
   }
   return {
-    fileDragDropState: state,
+    isDragging,
     onDrop,
     onDragOver
   }
@@ -72,11 +77,11 @@ export default defineComponent({
       )
     })
 
-    const { fileDragDropState, onDrop, onDragOver } = useFileDragDrop()
+    const { isDragging, onDrop, onDragOver } = useDragDrop()
 
     return {
       state,
-      fileDragDropState,
+      isDragging,
       onDrop,
       onDragOver
     }

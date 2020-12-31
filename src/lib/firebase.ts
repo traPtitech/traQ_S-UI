@@ -8,7 +8,6 @@ import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import store from '@/_store'
 import config from '@/config'
 
 declare const window: NativeAppWindow
@@ -73,21 +72,25 @@ interface NotificationPayload {
   priority: string
 }
 
-const showUpdateToast = () => {
-  store.commit.ui.toast.addToast({
-    type: 'success',
-    text: 'クリックでアップデートできます',
-    timeout: 10000,
-    onClick: async () => {
-      const registration = await navigator.serviceWorker.getRegistration()
-      registration?.waiting?.postMessage({ type: 'SKIP_WAITING' })
-    }
-  })
-}
+/**
+ * アップデートできるときに実行される関数
+ * アップデートを実行するときにrunUpdateを呼び出す
+ */
+type OnCanUpdate = (runUpdate: () => void) => void
 
-const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
+const setupUpdateToast = (
+  registration: ServiceWorkerRegistration,
+  onCanUpdate: OnCanUpdate
+) => {
   // 新しいsw
   if (!navigator.serviceWorker.controller) return
+
+  const doCanUpdate = () => {
+    onCanUpdate(async () => {
+      const registration = await navigator.serviceWorker.getRegistration()
+      registration?.waiting?.postMessage({ type: 'SKIP_WAITING' })
+    })
+  }
 
   // swが更新完了したときにリロード
   let reloading = false
@@ -99,7 +102,7 @@ const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
 
   // ほかのタブでswが更新されたとき
   if (registration.waiting) {
-    showUpdateToast()
+    doCanUpdate()
     return
   }
 
@@ -108,7 +111,7 @@ const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
   if (newWorker) {
     newWorker.addEventListener('statechange', () => {
       if (newWorker.state !== 'installed') return
-      showUpdateToast()
+      doCanUpdate()
     })
     return
   }
@@ -118,12 +121,12 @@ const setupUpdateToast = (registration: ServiceWorkerRegistration) => {
     const newWorker = registration.installing
     newWorker?.addEventListener('statechange', () => {
       if (newWorker.state !== 'installed') return
-      showUpdateToast()
+      doCanUpdate()
     })
   })
 }
 
-export const connectFirebase = async () => {
+export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   if (isIOSApp()) {
     // iOSはNotificationがないため、先にFCMトークンを登録する
     const token = window.iOSToken
@@ -155,7 +158,7 @@ export const connectFirebase = async () => {
       scope: '/'
     })
 
-    setupUpdateToast(registration)
+    setupUpdateToast(registration, onCanUpdate)
 
     const messaging = firebase.messaging()
 

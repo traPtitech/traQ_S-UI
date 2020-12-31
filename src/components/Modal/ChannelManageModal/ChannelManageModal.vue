@@ -47,6 +47,7 @@ import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
 import { isValidChannelName } from '@/lib/validate'
 import { canCreateChildChannel } from '@/lib/channel'
+import useToastStore from '@/use/toastStore'
 
 const useManageChannel = (
   props: { id: string },
@@ -55,6 +56,7 @@ const useManageChannel = (
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
   const { channelIdToPathString } = useChannelPath()
+  const { addErrorToast } = useToastStore()
 
   const manageChannel = async () => {
     const channelPath = channelIdToPathString(props.id)
@@ -77,10 +79,7 @@ const useManageChannel = (
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'チャンネルの変更に失敗しました'
-      })
+      addErrorToast('チャンネルの変更に失敗しました')
     }
   }
   return { manageChannel }

@@ -17,10 +17,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import { Attachment } from '@/_store/ui/fileInput/state'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
+import { Attachment } from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'MessageInputFileListItem',

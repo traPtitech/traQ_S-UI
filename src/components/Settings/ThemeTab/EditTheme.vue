@@ -52,35 +52,18 @@ import {
   watchEffect
 } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import store from '@/_store'
 import { Theme } from '@/types/theme'
 import { dequal } from 'dequal'
 import { lightTheme } from '@/_store/app/themeSettings/default'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isValidThemeJSON = (theme: any): theme is Theme => {
-  return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
-    Object.keys(lightTheme[category]).every(
-      colorName =>
-        theme[category] &&
-        theme[category][colorName] &&
-        typeof theme[category][colorName] === 'string'
-    )
-  )
-}
-
-const failedUpdateTheme = (text?: string) => {
-  store.commit.ui.toast.addToast({
-    type: 'error',
-    text: 'テーマの更新に失敗しました' + (text === undefined ? '' : `: ${text}`)
-  })
-}
+import useToastStore from '@/use/toastStore'
 
 const useEditedThemes = (
   props: { custom: Theme },
   context: SetupContext<{ 'change-theme': (theme: Theme) => true }>
 ) => {
+  const { addErrorToast } = useToastStore()
+
   const appliedThemeStringified = computed(() =>
     JSON.stringify(props.custom, null, '\t')
   )
@@ -98,6 +81,22 @@ const useEditedThemes = (
       return true
     }
   })
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isValidThemeJSON = (theme: any): theme is Theme => {
+    return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
+      Object.keys(lightTheme[category]).every(
+        colorName =>
+          theme[category] &&
+          theme[category][colorName] &&
+          typeof theme[category][colorName] === 'string'
+      )
+    )
+  }
+  const failedUpdateTheme = (text: string) => {
+    addErrorToast(`テーマの更新に失敗しました: ${text}`)
+  }
+
   const applyTheme = () => {
     try {
       const themeObj = JSON.parse(editedTheme.value)
@@ -110,6 +109,7 @@ const useEditedThemes = (
       failedUpdateTheme('無効なJSON')
     }
   }
+
   return { editedTheme, updateEditedTheme, isChanged, applyTheme }
 }
 

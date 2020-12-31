@@ -24,9 +24,9 @@ import { defineComponent, ref, PropType, reactive } from 'vue'
 import apis from '@/lib/apis'
 import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
-import store from '@/_store'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import useMaxLength from '@/use/maxLength'
+import useToastStore from '@/use/toastStore'
 
 export default defineComponent({
   name: 'TagsTab',
@@ -37,6 +37,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { addErrorToast } = useToastStore()
+
     const newTagName = ref('')
     const adding = ref(false)
     const { isExceeded } = useMaxLength(
@@ -51,10 +53,7 @@ export default defineComponent({
         })
         newTagName.value = ''
       } catch {
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'タグの追加に失敗しました'
-        })
+        addErrorToast('タグの追加に失敗しました')
       }
       adding.value = false
     }

@@ -18,7 +18,10 @@ import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '@/lib/media'
-import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
+import ToastContainer from '@/components/Toast/ToastContainer.vue'
+import { provideToastStore } from '@/use/toastStore'
+import { provideStampPickerStore } from '@/use/stampPicker'
+import { provideMessageInputState } from '@/use/messageInputState'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
@@ -157,6 +160,10 @@ export default defineComponent({
     ToastContainer
   },
   setup() {
+    provideToastStore()
+    provideStampPickerStore()
+    provideMessageInputState()
+
     useWindowResizeObserver()
     const isMobile = computed(() => _store.state.ui.isMobile)
 

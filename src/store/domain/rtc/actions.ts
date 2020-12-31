@@ -4,11 +4,7 @@ import { rtc } from '.'
 import { ActionContext } from 'vuex'
 import apis from '@/lib/apis'
 import { createSingleflight } from '@/lib/async'
-import {
-  WebRTCUserState,
-  WebRTCUserStates,
-  WebRTCUserStateSessions
-} from '@traptitech/traq'
+import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { SessionId, UserRTCState, UserSessionState } from './state'
 import { changeRTCState } from '@/lib/websocket'
 import { ChannelId } from '@/types/entity-ids'
@@ -47,8 +43,7 @@ export const actions = defineActions({
 
     const [{ data: webRTCStates }, shared] = await getWebRTCState()
     if (!shared) {
-      // TODO: 空のときnullが帰ってきてる https://github.com/traPtitech/traQ/issues/1047
-      commit.setRTCState((webRTCStates as WebRTCUserStates | null) ?? [])
+      commit.setRTCState(webRTCStates)
     }
   },
   /** サーバーの情報をローカルに反映する */

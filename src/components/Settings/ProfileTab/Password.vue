@@ -39,7 +39,7 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import config from '@/config'
 import apis from '@/lib/apis'
-import store from '@/_store'
+import useToastStore from '@/use/toastStore'
 
 interface State {
   old: string
@@ -47,6 +47,7 @@ interface State {
 }
 
 const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
+  const { addSuccessToast, addErrorToast } = useToastStore()
   const isChanging = ref(false)
 
   const onChangeClick = async () => {
@@ -59,18 +60,12 @@ const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
         newPassword: state.new
       })
 
-      store.commit.ui.toast.addToast({
-        type: 'success',
-        text: 'パスワードを変更しました'
-      })
+      addSuccessToast('パスワードを変更しました')
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('パスワードの変更に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'パスワードの変更に失敗しました'
-      })
+      addErrorToast('パスワードの変更に失敗しました')
     }
     isChanging.value = false
   }

@@ -21,8 +21,10 @@ import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useChannelSubscribers from '@/use/channelSubscribers'
+import useToastStore from '@/use/toastStore'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
+  const { addErrorToast } = useToastStore()
   const subscribers = useChannelSubscribers(props)
 
   const initialSubscribers = ref(new Set<string>())
@@ -66,10 +68,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
       // eslint-disable-next-line no-console
       console.error(e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: '通知設定の変更に失敗しました'
-      })
+      addErrorToast('通知設定の変更に失敗しました')
     }
   }
 

@@ -47,25 +47,20 @@ import useChannelManageModal from './use/channelManageModal'
 import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
-import store from '@/_store'
 import { useRoute } from 'vue-router'
+import useToastStore from '@/use/toastStore'
 
 const useCopy = () => {
   const route = useRoute()
+  const { addInfoToast } = useToastStore()
   const copyLink = async () => {
     try {
       await clipboard.writeText(
         `[#${route.params['channel']}](${embeddingOrigin}${route.path})`
       )
-      store.commit.ui.toast.addToast({
-        type: 'info',
-        text: 'チャンネルリンクをコピーしました'
-      })
+      addInfoToast('チャンネルリンクをコピーしました')
     } catch {
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'チャンネルリンクをコピーできませんでした'
-      })
+      addInfoToast('チャンネルリンクをコピーできませんでした')
     }
   }
   return { copyLink }

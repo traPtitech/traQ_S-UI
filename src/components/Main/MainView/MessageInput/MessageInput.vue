@@ -1,11 +1,14 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+  <div
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+    ref="containerEle"
+  >
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
-      <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
       <message-input-file-list :class="$style.fileList" />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
@@ -17,7 +20,7 @@
         />
         <message-input-text-area
           ref="textareaRef"
-          v-model="textState.text"
+          v-model="state.text"
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
@@ -30,7 +33,7 @@
           :can-post-message="canPostMessage"
           :is-posting="isPosting"
           @click-send="postMessage"
-          @click-stamp="onStampClick"
+          @click-stamp="toggleStampPicker"
         />
       </div>
     </template>
@@ -38,14 +41,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
+import {
+  defineComponent,
+  PropType,
+  computed,
+  onBeforeUnmount,
+  ref,
+  toRef
+} from 'vue'
 import _store from '@/_store'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
-import useTextInput from './use/textInput'
+import useModifierKey from './use/modifierKey'
 import usePostMessage from './use/postMessage'
 import useFocus from './use/focus'
 import useEditingStatus from './use/editingStatus'
@@ -57,6 +67,7 @@ import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -78,8 +89,13 @@ export default defineComponent({
   },
   setup(props) {
     const { isMobile } = useIsMobile()
-    const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput()
-    const { attachmentsState, addAttachment, destroy } = useAttachments()
+    const { state, isEmpty } = useMessageInputState()
+    const { addAttachment, destroy } = useAttachments()
+    const {
+      isModifierKeyPressed,
+      onModifierKeyDown,
+      onModifierKeyUp
+    } = useModifierKey()
 
     onBeforeUnmount(() => {
       destroy()
@@ -93,58 +109,44 @@ export default defineComponent({
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(
       computed(() => props.channelId),
-      textState,
+      state,
       isFocused
     )
 
-    const { postMessage, isPosting, progress } = usePostMessage(
-      textState,
-      props
-    )
+    const { postMessage, isPosting, progress } = usePostMessage(props)
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers
     )
 
-    const canPostMessage = computed(
-      () => !isPosting.value && !(textState.isEmpty && attachmentsState.isEmpty)
-    )
+    const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
     const showKeyGuide = computed(
       () =>
-        textState.isModifierKeyPressed &&
+        isModifierKeyPressed.value &&
         (_store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
           canPostMessage.value)
     )
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const teleportTargetName = 'message-input-stamp-picker'
-    const { invokeStampPicker } = useTextStampPickerInvoker(
-      teleportTargetName,
-      textState,
-      textareaRef
+    const containerEle = ref<HTMLDivElement>()
+    const { toggleStampPicker } = useTextStampPickerInvoker(
+      toRef(state, 'text'),
+      textareaRef,
+      containerEle
     )
 
-    const onStampClick = () => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        invokeStampPicker()
-      }
-    }
-
     return {
+      containerEle,
       textareaRef,
       isArchived,
-      teleportTargetName,
       isMobile,
       typingUsers,
-      textState,
-      attachmentsState,
+      state,
       onFocus,
       onBlur,
       onModifierKeyDown,
       onModifierKeyUp,
-      onStampClick,
+      toggleStampPicker,
       postMessage,
       addAttachment,
       showKeyGuide,

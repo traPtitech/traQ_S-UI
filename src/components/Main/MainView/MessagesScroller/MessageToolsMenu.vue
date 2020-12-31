@@ -47,32 +47,36 @@ import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
+import useToastStore from '@/use/toastStore'
+import { useMessageContextMenuStore } from './use/messageContextMenu'
 
-const execWithToast = async (
-  successText: string | undefined,
-  errorText: string,
-  func: () => void | Promise<void>
-) => {
-  try {
-    await func()
-    if (successText) {
-      _store.commit.ui.toast.addToast({
-        type: 'info',
-        text: successText
-      })
+const useExecWithToast = () => {
+  const { addInfoToast, addErrorToast } = useToastStore()
+
+  const execWithToast = async (
+    successText: string | undefined,
+    errorText: string,
+    func: () => void | Promise<void>
+  ) => {
+    try {
+      await func()
+      if (successText) {
+        addInfoToast(successText)
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(errorText, e)
+
+      addErrorToast(errorText)
     }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(errorText, e)
-
-    _store.commit.ui.toast.addToast({
-      type: 'error',
-      text: errorText
-    })
   }
+
+  return { execWithToast }
 }
 
 const usePinToggler = (props: { messageId: MessageId }) => {
+  const { execWithToast } = useExecWithToast()
+
   const addPinned = async () => {
     execWithToast(undefined, 'ピン留めに失敗しました', async () => {
       await apis.createPin(props.messageId)
@@ -87,6 +91,8 @@ const usePinToggler = (props: { messageId: MessageId }) => {
 }
 
 const useMessageChanger = (props: { messageId: MessageId }) => {
+  const { execWithToast } = useExecWithToast()
+
   const editMessage = () => {
     store.commit.domain.messagesView.setEditingMessageId(props.messageId)
   }
@@ -105,6 +111,8 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
 }
 
 const useCopy = (props: { messageId: MessageId }) => {
+  const { execWithToast } = useExecWithToast()
+
   const copyLink = async () => {
     const link = `${embeddingOrigin}/messages/${props.messageId}`
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
@@ -141,6 +149,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { state, closeContextMenu } = useMessageContextMenuStore()
+
     const isPinned = computed(
       () =>
         store.state.entities.messages.messagesMap.get(props.messageId)?.pinned
@@ -150,9 +160,7 @@ export default defineComponent({
         store.state.entities.messages.messagesMap.get(props.messageId)
           ?.userId === _store.getters.domain.me.myId
     )
-    const isMinimum = computed(
-      () => _store.state.ui.messageContextMenu.isMinimum
-    )
+    const isMinimum = computed(() => state.isMinimum)
 
     const { copyLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
@@ -160,7 +168,7 @@ export default defineComponent({
     const { showClipCreateModal } = useShowClipCreateModal(props)
     const withClose = async (func: () => void | Promise<void>) => {
       await func()
-      _store.dispatch.ui.messageContextMenu.closeMessageContextMenu()
+      closeContextMenu()
     }
 
     return {

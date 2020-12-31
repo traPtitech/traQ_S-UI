@@ -1,21 +1,21 @@
 <template>
   <div :class="$style.container">
     <label :for="id" :class="$style.label">メッセージ</label>
-    <div :class="$style.wrapper">
+    <div :class="$style.wrapper" ref="wrapperEle">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
           <textarea
             ref="textareaRef"
             :class="$style.input"
             :id="id"
-            v-model="textState.text"
+            v-model="state.text"
             :is-posting="isPosting"
           />
         </div>
         <div :class="$style.controls">
           <message-input-insert-stamp-button
             :class="$style.button"
-            @click="onStampClick"
+            @click="toggleStampPicker"
           />
           <message-input-upload-button
             :class="$style.button"
@@ -33,21 +33,19 @@ import {
   defineComponent,
   computed,
   onBeforeUnmount,
-  watch,
   onMounted,
-  shallowRef
+  shallowRef,
+  ref,
+  toRef
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
-import _store from '@/_store'
 import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
-import useTextInput from '../Main/MainView/MessageInput/use/textInput'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-
-export const teleportTargetName = 'share-target-stamp-picker'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -57,36 +55,20 @@ export default defineComponent({
     MessageInputInsertStampButton
   },
   props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
     isPosting: {
       type: Boolean,
       default: false
     }
   },
   setup(props, context) {
-    const { textState } = useTextInput()
-    watch(
-      () => textState.text,
-      val => {
-        context.emit('update:modelValue', val)
-      }
-    )
-    onMounted(() => {
-      textState.text = props.modelValue
-    })
-
-    const { attachmentsState, addAttachment, destroy } = useAttachments()
+    const { state, isEmpty } = useMessageInputState()
+    const { addAttachment, destroy } = useAttachments()
 
     onBeforeUnmount(() => {
       destroy()
     })
 
-    const canPostMessage = computed(
-      () => !props.isPosting && !(textState.isEmpty && attachmentsState.isEmpty)
-    )
+    const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
 
     const textareaRef = shallowRef<HTMLTextAreaElement | null>(null)
     const focus = () => {
@@ -96,21 +78,14 @@ export default defineComponent({
       focus()
     })
 
-    const { invokeStampPicker } = useTextStampPickerInvoker(
-      teleportTargetName,
-      textState,
+    const wrapperEle = ref<HTMLDivElement>()
+    const { toggleStampPicker } = useTextStampPickerInvoker(
+      toRef(state, 'text'),
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
-      )
+      ),
+      wrapperEle
     )
-
-    const onStampClick = (e: MouseEvent) => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        invokeStampPicker()
-      }
-    }
 
     // スタンプピッカーに必要
     store.dispatch.entities.fetchStamps()
@@ -119,14 +94,13 @@ export default defineComponent({
 
     const id = randomString()
     return {
-      textState,
-      attachmentsState,
+      wrapperEle,
+      state,
       addAttachment,
       canPostMessage,
-      teleportTargetName,
       id,
       textareaRef,
-      onStampClick
+      toggleStampPicker
     }
   }
 })

@@ -25,9 +25,9 @@ import {
   nextTick
 } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
-import store from '@/_store'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
+import useMessageInputState from '@/use/messageInputState'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -61,15 +61,14 @@ const useLineBreak = (
 }
 
 const usePaste = () => {
+  const { addAttachment } = useMessageInputState()
+
   const onPaste = (event: ClipboardEvent) => {
-    const items = event?.clipboardData?.items
-    if (!items) return
-    for (const item of items) {
-      if (item.kind === 'string') {
-        continue
-      }
-      const file = item.getAsFile()
-      if (file) store.dispatch.ui.fileInput.addAttachment(file)
+    const dt = event?.clipboardData
+    if (dt) {
+      Array.from(dt.files).forEach(file => {
+        addAttachment(file)
+      })
     }
   }
   return { onPaste }

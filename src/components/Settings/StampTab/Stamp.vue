@@ -47,7 +47,6 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath } from '@/lib/apis'
-import _store from '@/_store'
 import store from '@/store'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
@@ -59,6 +58,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useStateDiff from '../use/stateDiff'
 import { isValidStampName } from '@/lib/validate'
+import useToastStore from '@/use/toastStore'
 
 const creatorOptions = computed(() =>
   [...store.getters.entities.activeUsersMap.values()]
@@ -93,6 +93,7 @@ const useStampEdit = (
   diffKeys: Ref<Array<keyof StampEditState>>,
   afterSuccess: () => void
 ) => {
+  const { addSuccessToast, addErrorToast } = useToastStore()
   const isEditing = ref(false)
 
   const editStamp = async () => {
@@ -117,18 +118,12 @@ const useStampEdit = (
       await Promise.all(promises)
       afterSuccess()
 
-      _store.commit.ui.toast.addToast({
-        type: 'success',
-        text: 'スタンプを更新しました'
-      })
+      addSuccessToast('スタンプを更新しました')
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('スタンプの編集に失敗しました', e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'スタンプの編集に失敗しました'
-      })
+      addErrorToast('スタンプの編集に失敗しました')
     }
     isEditing.value = false
   }

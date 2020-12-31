@@ -83,6 +83,7 @@ import useChannelOptions from '@/use/channelOptions'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import useMaxLength from '@/use/maxLength'
 import { isValidTwitter } from '@/lib/validate'
+import useToastStore from '@/use/toastStore'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -110,6 +111,7 @@ const useProfileUpdate = (
   isStateChanged: Ref<boolean>,
   destroyImageUploadState: () => void
 ) => {
+  const { addSuccessToast, addErrorToast } = useToastStore()
   const isUpdating = ref(false)
 
   const onUpdateClick = async () => {
@@ -125,18 +127,12 @@ const useProfileUpdate = (
       await Promise.all(promises)
       destroyImageUploadState()
 
-      _store.commit.ui.toast.addToast({
-        type: 'success',
-        text: 'プロフィールを更新しました'
-      })
+      addSuccessToast('プロフィールを更新しました')
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('プロフィールの更新に失敗しました', e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'プロフィールの更新に失敗しました'
-      })
+      addErrorToast('プロフィールの更新に失敗しました')
     }
     isUpdating.value = false
   }

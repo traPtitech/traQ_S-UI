@@ -5,15 +5,15 @@
       :key="i"
       :attachment="attachment"
       :class="$style.element"
-      @item-remove="removeItem(i)"
+      @item-remove="removeAttachmentAt(i)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
-import store from '@/_store'
+import { defineComponent } from 'vue'
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'MessageInputFileList',
@@ -21,14 +21,8 @@ export default defineComponent({
     MessageInputFileListItem
   },
   setup() {
-    const state = reactive({
-      attachments: computed(() => store.state.ui.fileInput.attachments)
-    })
-    const removeItem = (indexStr: string) => {
-      const index = parseInt(indexStr)
-      store.commit.ui.fileInput.removeAttachmentAt(index)
-    }
-    return { state, removeItem }
+    const { state, removeAttachmentAt } = useMessageInputState()
+    return { state, removeAttachmentAt }
   }
 })
 </script>
