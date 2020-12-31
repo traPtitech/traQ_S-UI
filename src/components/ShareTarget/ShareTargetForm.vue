@@ -3,13 +3,10 @@
     <form-selector
       :class="$style.item"
       label="投稿先チャンネル"
-      v-model="state.channelId"
+      v-model="channelState.channelId"
       :options="channelOptions"
     />
-    <share-target-message-input
-      :class="[$style.item, $style.input]"
-      v-model="state.text"
-    />
+    <share-target-message-input :class="[$style.item, $style.input]" />
     <form-button
       :class="[$style.item, $style.button]"
       label="送信"
@@ -29,6 +26,7 @@ import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import usePostMessage from '@/components/Main/MainView/MessageInput/use/postMessage'
 import useChannelOptions from '@/use/channelOptions'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'ShareTargetForm',
@@ -51,18 +49,19 @@ export default defineComponent({
     store.dispatch.entities.fetchChannels()
     const { channelOptions } = useChannelOptions('-----')
 
-    const state = reactive({
-      channelId: nullUuid,
-      text: '',
-      isEmpty: computed((): boolean => state.text === '')
+    const channelState = reactive({
+      channelId: nullUuid
     })
     watch(
       homeChannelId,
       newVal => {
-        state.channelId = newVal
+        channelState.channelId = newVal
       },
       { immediate: true }
     )
+
+    // FIXME: 親子関係なのにprovide-injectを乱用してるの微妙
+    const { state } = useMessageInputState()
     watch(
       () => props.defaultText,
       newVal => {
@@ -70,8 +69,7 @@ export default defineComponent({
       },
       { immediate: true }
     )
-
-    const { postMessage, isPosting } = usePostMessage(state, state)
+    const { postMessage, isPosting } = usePostMessage(channelState)
     const post = async () => {
       const posted = await postMessage()
       if (posted) {
@@ -79,7 +77,7 @@ export default defineComponent({
       }
     }
 
-    return { state, channelOptions, post, isPosting }
+    return { channelState, state, channelOptions, post, isPosting }
   }
 })
 </script>

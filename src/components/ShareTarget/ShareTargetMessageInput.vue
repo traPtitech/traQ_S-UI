@@ -8,7 +8,7 @@
             ref="textareaRef"
             :class="$style.input"
             :id="id"
-            v-model="textState.text"
+            v-model="state.text"
             :is-posting="isPosting"
           />
         </div>
@@ -33,15 +33,14 @@ import {
   defineComponent,
   computed,
   onBeforeUnmount,
-  watch,
   onMounted,
   shallowRef,
-  ref
+  ref,
+  toRef
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
-import useTextInput from '../Main/MainView/MessageInput/use/textInput'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
@@ -56,37 +55,20 @@ export default defineComponent({
     MessageInputInsertStampButton
   },
   props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
     isPosting: {
       type: Boolean,
       default: false
     }
   },
   setup(props, context) {
-    const { isAttachmentEmpty } = useMessageInputState()
-    const { textState } = useTextInput()
-    watch(
-      () => textState.text,
-      val => {
-        context.emit('update:modelValue', val)
-      }
-    )
-    onMounted(() => {
-      textState.text = props.modelValue
-    })
-
+    const { state, isEmpty } = useMessageInputState()
     const { addAttachment, destroy } = useAttachments()
 
     onBeforeUnmount(() => {
       destroy()
     })
 
-    const canPostMessage = computed(
-      () => !props.isPosting && !(textState.isEmpty && isAttachmentEmpty.value)
-    )
+    const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
 
     const textareaRef = shallowRef<HTMLTextAreaElement | null>(null)
     const focus = () => {
@@ -98,7 +80,7 @@ export default defineComponent({
 
     const wrapperEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
-      textState,
+      toRef(state, 'text'),
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
       ),
@@ -113,7 +95,7 @@ export default defineComponent({
     const id = randomString()
     return {
       wrapperEle,
-      textState,
+      state,
       addAttachment,
       canPostMessage,
       id,

@@ -7,7 +7,7 @@ import store from '@/store'
 import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (
-  textState: { text: string },
+  text: Ref<string>,
   textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
   positionElement: Ref<HTMLElement | undefined>,
   positionOf: PositionOf = 'bottom-right'
@@ -25,14 +25,14 @@ const useTextStampPickerInvoker = (
     const stampText = `:${stampName}${size}${effects}:`
 
     if (!elementRef.value) {
-      textState.text += stampText
+      text.value += stampText
       return
     }
 
-    const pre = textState.text.slice(0, elementRef.value.selectionStart)
-    const suf = textState.text.slice(elementRef.value.selectionEnd)
+    const pre = text.value.slice(0, elementRef.value.selectionStart)
+    const suf = text.value.slice(elementRef.value.selectionEnd)
     const selectionIndex = pre.length + stampText.length
-    textState.text = `${pre}${stampText}${suf}`
+    text.value = `${pre}${stampText}${suf}`
 
     await nextTick()
     if (!textareaRef.value) return

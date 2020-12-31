@@ -20,7 +20,7 @@
         />
         <message-input-text-area
           ref="textareaRef"
-          v-model="textState.text"
+          v-model="state.text"
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
@@ -41,14 +41,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, onBeforeUnmount, ref } from 'vue'
+import {
+  defineComponent,
+  PropType,
+  computed,
+  onBeforeUnmount,
+  ref,
+  toRef
+} from 'vue'
 import _store from '@/_store'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
-import useTextInput from './use/textInput'
+import useModifierKey from './use/modifierKey'
 import usePostMessage from './use/postMessage'
 import useFocus from './use/focus'
 import useEditingStatus from './use/editingStatus'
@@ -82,9 +89,13 @@ export default defineComponent({
   },
   setup(props) {
     const { isMobile } = useIsMobile()
-    const { isAttachmentEmpty } = useMessageInputState()
-    const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput()
+    const { state, isEmpty } = useMessageInputState()
     const { addAttachment, destroy } = useAttachments()
+    const {
+      isModifierKeyPressed,
+      onModifierKeyDown,
+      onModifierKeyUp
+    } = useModifierKey()
 
     onBeforeUnmount(() => {
       destroy()
@@ -98,25 +109,20 @@ export default defineComponent({
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(
       computed(() => props.channelId),
-      textState,
+      state,
       isFocused
     )
 
-    const { postMessage, isPosting, progress } = usePostMessage(
-      textState,
-      props
-    )
+    const { postMessage, isPosting, progress } = usePostMessage(props)
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers
     )
 
-    const canPostMessage = computed(
-      () => !isPosting.value && !(textState.isEmpty && isAttachmentEmpty.value)
-    )
+    const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
     const showKeyGuide = computed(
       () =>
-        textState.isModifierKeyPressed &&
+        isModifierKeyPressed.value &&
         (_store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
           canPostMessage.value)
     )
@@ -124,7 +130,7 @@ export default defineComponent({
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
-      textState,
+      toRef(state, 'text'),
       textareaRef,
       containerEle
     )
@@ -135,7 +141,7 @@ export default defineComponent({
       isArchived,
       isMobile,
       typingUsers,
-      textState,
+      state,
       onFocus,
       onBlur,
       onModifierKeyDown,

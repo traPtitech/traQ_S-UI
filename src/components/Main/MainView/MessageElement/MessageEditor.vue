@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container" ref="containerEle">
-    <message-input-key-guide :show="textState.isModifierKeyPressed" is-edit />
+    <message-input-key-guide :show="isModifierKeyPressed" is-edit />
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
         :class="$style.inputTextArea"
-        v-model="textState.text"
+        v-model="text"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
@@ -20,14 +20,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, Ref, ref } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
-import useTextInput, {
-  TextState
-} from '@/components/Main/MainView/MessageInput/use/textInput'
+import useModifierKey from '@/components/Main/MainView/MessageInput/use/modifierKey'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
@@ -35,17 +33,17 @@ import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/use/toastStore'
 
-const useEditMessage = (props: { messageId: string }, textState: TextState) => {
+const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   const { addErrorToast } = useToastStore()
   const editMessage = async () => {
-    if (countLength(textState.text) > MESSAGE_MAX_LENGTH) {
+    if (countLength(text.value) > MESSAGE_MAX_LENGTH) {
       addErrorToast('メッセージが長すぎます')
       return
     }
 
     try {
       await apis.editMessage(props.messageId, {
-        content: textState.text
+        content: text.value
       })
       store.commit.domain.messagesView.unsetEditingMessageId()
     } catch {
@@ -77,15 +75,18 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput(
-      props.rawContent
-    )
-    const { editMessage, cancel } = useEditMessage(props, textState)
+    const text = ref(props.rawContent)
+    const { editMessage, cancel } = useEditMessage(props, text)
+    const {
+      isModifierKeyPressed,
+      onModifierKeyDown,
+      onModifierKeyUp
+    } = useModifierKey()
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
-      textState,
+      text,
       textareaRef,
       containerEle
     )
@@ -99,7 +100,8 @@ export default defineComponent({
       textareaRef,
       editMessage,
       cancel,
-      textState,
+      text,
+      isModifierKeyPressed,
       onModifierKeyDown,
       onModifierKeyUp,
       onStampClick

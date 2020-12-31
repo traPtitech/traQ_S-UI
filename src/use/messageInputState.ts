@@ -1,4 +1,4 @@
-import { provide, inject, reactive, computed, readonly } from 'vue'
+import { provide, inject, reactive, computed } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
 import config from '@/config'
 import { canResize, resize } from '@/lib/resize'
@@ -19,6 +19,7 @@ const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${co
 const MessageInputStateSymbol = Symbol()
 
 interface MessageInputState {
+  text: string
   attachments: Attachment[]
 }
 
@@ -30,6 +31,7 @@ export type Attachment = {
 
 const createMessageInputState = () => {
   return reactive<MessageInputState>({
+    text: '',
     attachments: []
   })
 }
@@ -44,7 +46,9 @@ const useMessageInputState = () => {
     throw new Error('useMessageInputState() was called without provider.')
   }
 
+  const isTextEmpty = computed(() => state.text === '')
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)
+  const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
 
   const addAttachment = async (file: File) => {
     const fileType = mimeToFileType(file.type)
@@ -89,16 +93,19 @@ const useMessageInputState = () => {
     }
   }
 
-  const clearAttachments = () => {
+  const clearState = () => {
+    state.text = ''
     state.attachments = []
   }
 
   return {
-    state: readonly(state),
+    state,
+    isTextEmpty,
     isAttachmentEmpty,
+    isEmpty,
     addAttachment,
     removeAttachmentAt,
-    clearAttachments
+    clearState
   }
 }
 

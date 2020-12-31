@@ -1,4 +1,3 @@
-import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
@@ -53,11 +52,8 @@ const createContent = (embededText: string, fileUrls: string[]) => {
   return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
 }
 
-const usePostMessage = (
-  textState: Pick<TextState, 'text' | 'isEmpty'>,
-  props: { channelId: ChannelId }
-) => {
-  const { state, isAttachmentEmpty, clearAttachments } = useMessageInputState()
+const usePostMessage = (props: { channelId: ChannelId }) => {
+  const { state, isEmpty, clearState } = useMessageInputState()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
@@ -75,8 +71,7 @@ const usePostMessage = (
   const progress = ref(0)
 
   const postMessage = async () => {
-    if (isPosting.value) return false
-    if (textState.isEmpty && isAttachmentEmpty.value) return false
+    if (isPosting.value || isEmpty.value) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
@@ -85,7 +80,7 @@ const usePostMessage = (
 
     await initialFetchPromise
 
-    const embededText = embedInternalLink(textState.text, {
+    const embededText = embedInternalLink(state.text, {
       getUser: store.getters.entities.userByName,
       getGroup: store.getters.entities.userGroupByName,
       getChannel: path => {
@@ -126,8 +121,7 @@ const usePostMessage = (
         content: createContent(embededText, fileUrls)
       })
 
-      textState.text = ''
-      clearAttachments()
+      clearState()
       posted = true
     } catch (e) {
       // eslint-disable-next-line no-console
