@@ -1,4 +1,6 @@
 // case sensitive
+type Characters = string[]
+
 class TrieNode {
   isWord: boolean
   children: Record<string, TrieNode>
@@ -8,7 +10,7 @@ class TrieNode {
     this.children = {}
   }
 
-  insert(str: string, pos = 0) {
+  insert(str: Characters, pos = 0) {
     if (str.length === 0) {
       return
     }
@@ -49,7 +51,7 @@ class TrieNode {
       return
     }
     this.remove(strOld)
-    this.insert(strNew)
+    this.insert([...strNew])
   }
 
   getAllWords(str = '') {
@@ -89,7 +91,7 @@ class TrieNode {
 
 function createTree(...lists: Array<readonly string[]>): TrieNode {
   const tree = new TrieNode()
-  lists.forEach(list => list.forEach(word => tree.insert(word)))
+  lists.forEach(list => list.forEach(word => tree.insert([...word])))
   return tree
 }
 
