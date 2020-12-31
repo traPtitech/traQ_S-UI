@@ -56,13 +56,9 @@ const useSettingsNavigation = () => {
     router.push(
       constructChannelPath(store.state.app.browserSettings.lastOpenChannelName)
     )
-  const back = () => {
-    if (store.state.ui.settings.settingsRootShown) {
-      router.back()
-    } else {
-      router.push({ name: RouteName.Settings })
-    }
+  const showRoot = () => {
+    router.push({ name: RouteName.Settings })
   }
-  return { close, back }
+  return { close, showRoot }
 }
 export default useSettingsNavigation

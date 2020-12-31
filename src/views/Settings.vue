@@ -23,11 +23,13 @@ import { defaultSettingsName } from '@/router/settings'
 import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
-import _store from '@/_store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
 
-const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
+const useSettingsRootPathWatcher = (
+  isMobile: Ref<boolean>,
+  settingsRootShown: Ref<boolean>
+) => {
   const route = useRoute()
   const router = useRouter()
   const redirectOrMarkRootIfNeeded = () => {
@@ -35,7 +37,7 @@ const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
       return
     }
     if (isMobile.value) {
-      _store.commit.ui.settings.setSettingsRootShown(true)
+      settingsRootShown.value = true
     } else {
       router.replace({ name: defaultSettingsName })
     }
@@ -49,12 +51,13 @@ export default defineComponent({
   name: 'Settings',
   setup() {
     const { isMobile } = useIsMobile()
-    useSettingsRootPathWatcher(isMobile)
 
+    const settingsRootShown = ref(false)
     onBeforeRouteLeave(() => {
-      _store.commit.ui.settings.setSettingsRootShown(false)
-      return true
+      settingsRootShown.value = false
     })
+
+    useSettingsRootPathWatcher(isMobile, settingsRootShown)
 
     onBeforeRouteUpdate(() => {
       // 設定画面を開いたときは閲覧チャンネルを消す
