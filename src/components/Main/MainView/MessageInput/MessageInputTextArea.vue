@@ -116,15 +116,19 @@ export default defineComponent({
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
-    const { onBeforeInput, onKeyDownA, onKeyUp } = useSendKeyWatcher(
-      context,
-      insertLineBreak
+    const {
+      onBeforeInput,
+      onKeyDown: onKeyDownSendKeyWatcher,
+      onKeyUp
+    } = useSendKeyWatcher(context, insertLineBreak)
+    const { onKeyDown: onKeyDownWordCompleter } = useWordCompleter(
+      textareaRef,
+      value
     )
-    const { onKeyDownB } = useWordCompleter(textareaRef, value)
 
     const onKeyDown = (e: KeyboardEvent) => {
-      onKeyDownA(e)
-      onKeyDownB(e)
+      onKeyDown: onKeyDownSendKeyWatcher(e)
+      onKeyDown: onKeyDownWordCompleter(e)
     }
 
     const { onFocus, onBlur } = useFocus(context)

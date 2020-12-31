@@ -39,7 +39,7 @@ const useWordCompleter = (
     ),
     store.getters.entities.allStampNames.map(stampName => ':' + stampName + ':')
   )
-  const onKeyDownB = async (e: KeyboardEvent) => {
+  const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
       e.preventDefault()
       if (!textareaRef.value) return
@@ -56,7 +56,7 @@ const useWordCompleter = (
       )
     }
   }
-  return { onKeyDownB }
+  return { onKeyDown }
 }
 
 export default useWordCompleter
