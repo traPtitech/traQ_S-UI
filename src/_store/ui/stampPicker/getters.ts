@@ -8,6 +8,6 @@ const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
 
 export const getters = defineGetters<S>()({
   isStampPickerShown(state) {
-    return state.teleportTargetName.length > 0
+    return state.position !== undefined
   }
 })

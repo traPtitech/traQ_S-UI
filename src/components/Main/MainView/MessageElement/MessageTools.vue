@@ -1,56 +1,11 @@
 <template>
-  <div v-if="isMinimum" :class="$style.container" data-is-minimum>
-    <icon
-      :class="$style.icon"
-      :size="28"
-      mdi
-      name="dots-horizontal"
-      @click="onDotsClick"
-    />
-  </div>
-  <div v-else :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <transition name="quick-reaction">
-      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
-        <stamp
-          v-for="stamp in recentStamps"
-          :key="stamp"
-          :stamp-id="stamp"
-          @click="addStamp(stamp)"
-          :size="28"
-          :class="$style.stampListItem"
-        />
-        <span :class="$style.line" />
-      </div>
-    </transition>
-    <div
-      :class="$style.tools"
-      :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
-    >
-      <template v-if="isMobile">
-        <icon
-          v-if="showQuickReaction"
-          mdi
-          name="chevron-right"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleQuickReaction"
-        />
-        <icon
-          v-else
-          mdi
-          name="chevron-left"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleQuickReaction"
-        />
-      </template>
-      <icon
-        mdi
-        name="emoticon-outline"
-        :size="28"
-        :class="$style.icon"
-        @click="onStampIconClick"
-      />
+  <div
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-minimum="$boolAttr(isMinimum)"
+    ref="containerEle"
+  >
+    <template v-if="isMinimum">
       <icon
         :class="$style.icon"
         :size="28"
@@ -58,7 +13,62 @@
         name="dots-horizontal"
         @click="onDotsClick"
       />
-    </div>
+    </template>
+    <template v-else>
+      <transition name="quick-reaction">
+        <div
+          v-if="showQuickReaction || !isMobile"
+          :class="$style.quickReaction"
+        >
+          <stamp
+            v-for="stamp in recentStamps"
+            :key="stamp"
+            :stamp-id="stamp"
+            @click="addStamp(stamp)"
+            :size="28"
+            :class="$style.stampListItem"
+          />
+          <span :class="$style.line" />
+        </div>
+      </transition>
+      <div
+        :class="$style.tools"
+        :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
+      >
+        <template v-if="isMobile">
+          <icon
+            v-if="showQuickReaction"
+            mdi
+            name="chevron-right"
+            :size="28"
+            :class="$style.icon"
+            @click="toggleQuickReaction"
+          />
+          <icon
+            v-else
+            mdi
+            name="chevron-left"
+            :size="28"
+            :class="$style.icon"
+            @click="toggleQuickReaction"
+          />
+        </template>
+        <icon
+          mdi
+          name="emoticon-outline"
+          :size="28"
+          :class="$style.icon"
+          @click="onStampIconClick"
+        />
+        <icon
+          :class="$style.icon"
+          :size="28"
+          mdi
+          name="dots-horizontal"
+          @click="onDotsClick"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -72,8 +82,6 @@ import { StampId, MessageId } from '@/types/entity-ids'
 import useStampPickerInvoker from '@/use/stampPickerInvoker'
 import useIsMobile from '@/use/isMobile'
 import apis from '@/lib/apis'
-
-const teleportTargetName = 'message-menu-popup'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -97,17 +105,16 @@ export default defineComponent({
       })
     }
 
-    const { invokeStampPicker } = useStampPickerInvoker(
-      teleportTargetName,
-      stampData => {
-        apis.addMessageStamp(props.messageId, stampData.id)
-      }
-    )
+    const containerEle = ref<HTMLDivElement>()
+    const { invokeStampPicker } = useStampPickerInvoker(stampData => {
+      apis.addMessageStamp(props.messageId, stampData.id)
+    })
     const onStampIconClick = (e: MouseEvent) => {
       if (_store.getters.ui.stampPicker.isStampPickerShown) {
         _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
-        invokeStampPicker({ x: e.pageX, y: e.pageY })
+        if (!containerEle.value) return
+        invokeStampPicker(containerEle.value)
       }
     }
 
@@ -126,6 +133,7 @@ export default defineComponent({
       (showQuickReaction.value = !showQuickReaction.value)
 
     return {
+      containerEle,
       recentStamps,
       addStamp,
       onDotsClick,

@@ -1,12 +1,9 @@
 <template>
-  <teleport
-    v-if="state.isStampPickerShown"
-    :to="`#${state.teleportTargetName}`"
-  >
+  <teleport v-if="isStampPickerShown" to="#stamp-picker-popup">
     <keep-alive>
       <stamp-picker
         :style="styles.stampPicker"
-        :class="[state.isPositionAbsolute ? $style.positionAbsolute : '']"
+        :class="$style.positionAbsolute"
       />
     </keep-alive>
   </teleport>
@@ -17,35 +14,35 @@ import { defineComponent, reactive, computed, Ref } from 'vue'
 import store from '@/_store'
 import StampPicker from './StampPicker.vue'
 import { Place } from '@/_store/ui/stampPicker'
+import { PositionOf } from '@/_store/ui/stampPicker/state'
 
-const useStampPicker = () => {
-  const state = reactive({
-    teleportTargetName: computed(
-      () => store.state.ui.stampPicker.teleportTargetName
-    ),
-    isStampPickerShown: computed(
-      () => store.getters.ui.stampPicker.isStampPickerShown
-    ),
-    isPositionAbsolute: computed(
-      () => store.state.ui.stampPicker.position !== undefined
-    )
-  })
-  return { state }
-}
-
-const useStyles = (position: Ref<Place | undefined>) =>
+const useStyles = (
+  position: Ref<Place | undefined>,
+  positionOf: Ref<PositionOf>
+) =>
   reactive({
     stampPicker: computed(() => {
       if (!position.value) return {}
       const height = 320
       const width = 340
-      const margin = 20
-      return {
-        top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
-        left: `min(${Math.max(
-          position.value.x,
-          width + margin
-        )}px, calc(100vw - ${margin}px))`
+      const margin = 16
+      const left = `min(${Math.max(
+        position.value.x,
+        width + margin
+      )}px, calc(100vw - ${margin}px))`
+      if (positionOf.value === 'top-right') {
+        return {
+          top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
+          left
+        }
+      }
+      if (positionOf.value === 'bottom-right') {
+        return {
+          bottom: `min(calc(100vh - ${height + margin}px), calc(100vh - ${
+            position.value.y
+          }px))`,
+          left
+        }
       }
     })
   })
@@ -56,10 +53,13 @@ export default defineComponent({
     StampPicker
   },
   setup() {
-    const { state } = useStampPicker()
+    const isStampPickerShown = computed(
+      () => store.getters.ui.stampPicker.isStampPickerShown
+    )
     const position = computed(() => store.state.ui.stampPicker.position)
-    const styles = useStyles(position)
-    return { state, styles }
+    const positionOf = computed(() => store.state.ui.stampPicker.positionOf)
+    const styles = useStyles(position, positionOf)
+    return { isStampPickerShown, styles }
   }
 })
 </script>

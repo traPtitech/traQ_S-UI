@@ -1,11 +1,14 @@
 <template>
-  <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+  <div
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+    ref="containerEle"
+  >
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
-      <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
       <message-input-file-list :class="$style.fileList" />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
@@ -117,25 +120,25 @@ export default defineComponent({
     )
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const teleportTargetName = 'message-input-stamp-picker'
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      teleportTargetName,
       textState,
       textareaRef
     )
 
+    const containerEle = ref<HTMLDivElement>()
     const onStampClick = () => {
       if (_store.getters.ui.stampPicker.isStampPickerShown) {
         _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
-        invokeStampPicker()
+        if (!containerEle.value) return
+        invokeStampPicker(containerEle.value, 'bottom-right')
       }
     }
 
     return {
+      containerEle,
       textareaRef,
       isArchived,
-      teleportTargetName,
       isMobile,
       typingUsers,
       textState,

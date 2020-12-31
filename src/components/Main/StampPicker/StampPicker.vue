@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import _store from '@/_store'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
@@ -51,14 +51,6 @@ import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 
 const useStampPicker = () => {
-  const state = reactive({
-    teleportTargetName: computed(
-      () => _store.state.ui.stampPicker.teleportTargetName
-    ),
-    shouldShowStampPicker: computed(
-      () => _store.getters.ui.stampPicker.isStampPickerShown
-    )
-  })
   const onInputStamp = (id: StampId) => {
     store.commit.domain.me.upsertLocalStampHistory({
       stampId: id,
@@ -68,7 +60,7 @@ const useStampPicker = () => {
       id
     })
   }
-  return { stampPickerState: state, onInputStamp }
+  return { onInputStamp }
 }
 
 export default defineComponent({
@@ -87,16 +79,16 @@ export default defineComponent({
     const queryString = ref('')
 
     const { stamps, filterState } = useStampList(currentStampSet)
-    const { stampPickerState, onInputStamp } = useStampPicker()
+    const { onInputStamp } = useStampPicker()
     const { stampSetState, changeStampSet } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
-    const onClickOutside = () =>
+    const onClickOutside = () => {
       _store.dispatch.ui.stampPicker.closeStampPicker()
+    }
     return {
       stampSetState,
-      stampPickerState,
       effectSelectorState,
       stamps,
       queryString,

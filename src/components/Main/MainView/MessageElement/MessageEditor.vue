@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" ref="containerEle">
     <message-input-key-guide :show="textState.isModifierKeyPressed" is-edit />
     <div :class="$style.inputContainer">
       <message-input-text-area
@@ -35,8 +35,6 @@ import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInp
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/use/toastStore'
-
-const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
   const { addErrorToast } = useToastStore()
@@ -87,27 +85,28 @@ export default defineComponent({
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      teleportTargetName,
       textState,
       textareaRef
     )
 
+    const containerEle = ref<HTMLDivElement>()
     const onStampClick = (e: MouseEvent) => {
       if (_store.getters.ui.stampPicker.isStampPickerShown) {
         _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
-        invokeStampPicker({ x: e.pageX, y: e.pageY })
+        if (!containerEle.value) return
+        invokeStampPicker(containerEle.value, 'bottom-right')
       }
     }
 
     return {
+      containerEle,
       textareaRef,
       editMessage,
       cancel,
       textState,
       onModifierKeyDown,
       onModifierKeyUp,
-      teleportTargetName,
       onStampClick
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <label :for="id" :class="$style.label">メッセージ</label>
-    <div :class="$style.wrapper">
+    <div :class="$style.wrapper" ref="wrapperEle">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
           <textarea
@@ -35,7 +35,8 @@ import {
   onBeforeUnmount,
   watch,
   onMounted,
-  shallowRef
+  shallowRef,
+  ref
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import _store from '@/_store'
@@ -46,8 +47,6 @@ import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-
-export const teleportTargetName = 'share-target-stamp-picker'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -97,18 +96,19 @@ export default defineComponent({
     })
 
     const { invokeStampPicker } = useTextStampPickerInvoker(
-      teleportTargetName,
       textState,
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
       )
     )
 
+    const wrapperEle = ref<HTMLDivElement>()
     const onStampClick = (e: MouseEvent) => {
       if (_store.getters.ui.stampPicker.isStampPickerShown) {
         _store.dispatch.ui.stampPicker.closeStampPicker()
       } else {
-        invokeStampPicker()
+        if (!wrapperEle.value) return
+        invokeStampPicker(wrapperEle.value, 'bottom-right')
       }
     }
 
@@ -119,11 +119,11 @@ export default defineComponent({
 
     const id = randomString()
     return {
+      wrapperEle,
       textState,
       attachmentsState,
       addAttachment,
       canPostMessage,
-      teleportTargetName,
       id,
       textareaRef,
       onStampClick

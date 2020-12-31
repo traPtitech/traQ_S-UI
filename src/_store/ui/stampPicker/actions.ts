@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/_store'
 import { stampPicker, Place } from '.'
-import { StampSelectHandler } from './state'
+import { PositionOf, StampSelectHandler } from './state'
 import { ActionContext } from 'vuex'
 
 export const stampPickerActionContext = (
@@ -12,19 +12,18 @@ export const actions = defineActions({
   openStampPicker(
     context,
     payload: {
-      teleportTargetName: string
       selectHandler: StampSelectHandler
-      position?: Place
+      position: Place
+      positionOf: PositionOf
     }
   ) {
     const { commit } = stampPickerActionContext(context)
-    commit.setTeleportTargetName(payload.teleportTargetName)
     commit.setSelectHandler(payload.selectHandler)
     commit.setPosition(payload.position)
+    commit.setPositionOf(payload.positionOf)
   },
   closeStampPicker(context) {
     const { commit } = stampPickerActionContext(context)
-    commit.clearTeleportTargetName()
     commit.clearSelectHandler()
     commit.clearPosition()
   }

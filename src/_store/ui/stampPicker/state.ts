@@ -1,5 +1,6 @@
 import { StampId } from '@/types/entity-ids'
 import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
+import { Place } from '.'
 
 enum StampEffect {
   wiggle = 'wiggle',
@@ -17,24 +18,24 @@ export type SelectedStampData = {
   size?: StampSize
 }
 export type StampSelectHandler = (stamp: SelectedStampData) => void
+export type PositionOf = 'top-right' | 'bottom-right'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
 export interface S {
-  teleportTargetName: string
-
   selectHandler: StampSelectHandler
   currentStampSet: StampSet
-  position: { x: number; y: number } | undefined
+  position: Place | undefined
+  positionOf: PositionOf
 }
 
 export const state: S = {
-  teleportTargetName: '',
   selectHandler: defaultSelectHandler,
   currentStampSet: {
     type: 'history',
     id: ''
   },
-  position: undefined
+  position: undefined,
+  positionOf: 'top-right'
 }
