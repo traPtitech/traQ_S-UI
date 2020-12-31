@@ -10,7 +10,10 @@
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
       />
-      <message-input-insert-stamp-button @click="onStampClick" />
+      <!-- divで包まないとホバー時の拡大の中心位置がずれる -->
+      <div>
+        <message-input-insert-stamp-button @click="onStampClick" />
+      </div>
     </div>
     <div :class="$style.controls">
       <form-button @click="cancel" label="キャンセル" color="secondary" />
