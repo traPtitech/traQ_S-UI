@@ -58,7 +58,7 @@
           name="emoticon-outline"
           :size="28"
           :class="$style.icon"
-          @click="onStampIconClick"
+          @click="toggleStampPicker"
         />
         <icon
           :class="$style.icon"
@@ -79,7 +79,7 @@ import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
-import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import { useStampPickerInvoker } from '@/use/stampPicker'
 import useIsMobile from '@/use/isMobile'
 import apis from '@/lib/apis'
 
@@ -106,17 +106,9 @@ export default defineComponent({
     }
 
     const containerEle = ref<HTMLDivElement>()
-    const { invokeStampPicker } = useStampPickerInvoker(stampData => {
+    const { toggleStampPicker } = useStampPickerInvoker(stampData => {
       apis.addMessageStamp(props.messageId, stampData.id)
-    })
-    const onStampIconClick = (e: MouseEvent) => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        if (!containerEle.value) return
-        invokeStampPicker(containerEle.value)
-      }
-    }
+    }, containerEle)
 
     const onDotsClick = (e: MouseEvent) => {
       _store.dispatch.ui.messageContextMenu.openMessageContextMenu({
@@ -137,7 +129,7 @@ export default defineComponent({
       recentStamps,
       addStamp,
       onDotsClick,
-      onStampIconClick,
+      toggleStampPicker,
       isMobile,
       showQuickReaction,
       toggleQuickReaction

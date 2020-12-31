@@ -1,14 +1,20 @@
-import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import {
+  PositionOf,
+  StampSelectHandler,
+  useStampPickerInvoker
+} from '@/use/stampPicker'
 import store from '@/store'
 import { Ref, computed, nextTick } from 'vue'
 
 const useTextStampPickerInvoker = (
   textState: { text: string },
-  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>
+  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
+  positionElement: Ref<HTMLElement | undefined>,
+  positionOf: PositionOf = 'bottom-right'
 ) => {
   const elementRef = computed(() => textareaRef.value?.$el)
 
-  const { invokeStampPicker } = useStampPickerInvoker(async stampData => {
+  const selecterHandler: StampSelectHandler = async stampData => {
     const stampName = store.state.entities.stampsMap.get(stampData.id)?.name
     if (!stampName) return
     const size = stampData.size ? `.${stampData.size}` : ''
@@ -31,9 +37,9 @@ const useTextStampPickerInvoker = (
     await nextTick()
     if (!textareaRef.value) return
     textareaRef.value.$el.selectionStart = textareaRef.value.$el.selectionEnd = selectionIndex
-  })
+  }
 
-  return { invokeStampPicker }
+  return useStampPickerInvoker(selecterHandler, positionElement, positionOf)
 }
 
 export default useTextStampPickerInvoker

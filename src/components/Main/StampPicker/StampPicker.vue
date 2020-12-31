@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" v-click-outside="onClickOutside">
+  <div :class="$style.container" v-click-outside="closeStampPicker">
     <div :class="$style.inputContainer">
       <filter-input
         v-model="filterState.query"
@@ -29,15 +29,14 @@
     <stamp-picker-stamp-set-selector
       :class="$style.paletteSelector"
       :stamp-sets="stampSetState.stampSets"
-      :current-stamp-set="stampSetState.currentStampSet"
-      @stamp-set-select="changeStampSet"
+      :current-stamp-set="state.currentStampSet"
+      @stamp-set-select="setCurrentStampSet"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import FilterInput from '@/components/UI/FilterInput.vue'
@@ -49,19 +48,7 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-
-const useStampPicker = () => {
-  const onInputStamp = (id: StampId) => {
-    store.commit.domain.me.upsertLocalStampHistory({
-      stampId: id,
-      datetime: new Date()
-    })
-    _store.state.ui.stampPicker.selectHandler({
-      id
-    })
-  }
-  return { onInputStamp }
-}
+import { useStampPickerStore } from '@/use/stampPicker'
 
 export default defineComponent({
   name: 'StampPicker',
@@ -73,21 +60,31 @@ export default defineComponent({
     //StampPickerEffectToggleButton
   },
   setup() {
-    const currentStampSet = computed(
-      () => _store.state.ui.stampPicker.currentStampSet
-    )
+    const {
+      state,
+      setCurrentStampSet,
+      closeStampPicker
+    } = useStampPickerStore()
+    const currentStampSet = computed(() => state.currentStampSet)
     const queryString = ref('')
 
     const { stamps, filterState } = useStampList(currentStampSet)
-    const { onInputStamp } = useStampPicker()
-    const { stampSetState, changeStampSet } = useStampSetSelector()
+    const { stampSetState } = useStampSetSelector()
     const { effectSelectorState, toggleShowEffect } = useEffectSelector()
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
-    const onClickOutside = () => {
-      _store.dispatch.ui.stampPicker.closeStampPicker()
+    const onInputStamp = (id: StampId) => {
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId: id,
+        datetime: new Date()
+      })
+      state.selectHandler({
+        id
+      })
     }
+
     return {
+      state,
       stampSetState,
       effectSelectorState,
       stamps,
@@ -96,9 +93,9 @@ export default defineComponent({
       placeholder,
       onInputStamp,
       onHoverStamp,
-      onClickOutside,
+      closeStampPicker,
       toggleShowEffect,
-      changeStampSet
+      setCurrentStampSet
     }
   }
 })

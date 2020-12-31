@@ -23,7 +23,6 @@
 import { defineComponent, ref } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
-import _store from '@/_store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useTextInput, {
@@ -84,19 +83,15 @@ export default defineComponent({
     const { editMessage, cancel } = useEditMessage(props, textState)
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const { invokeStampPicker } = useTextStampPickerInvoker(
+    const containerEle = ref<HTMLDivElement>()
+    const { toggleStampPicker } = useTextStampPickerInvoker(
       textState,
-      textareaRef
+      textareaRef,
+      containerEle
     )
 
-    const containerEle = ref<HTMLDivElement>()
-    const onStampClick = (e: MouseEvent) => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        if (!containerEle.value) return
-        invokeStampPicker(containerEle.value, 'bottom-right')
-      }
+    const onStampClick = () => {
+      toggleStampPicker()
     }
 
     return {

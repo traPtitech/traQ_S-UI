@@ -1,5 +1,4 @@
 import { reactive, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 
 export type StampSetType = 'palette' | 'category' | 'history'
@@ -13,9 +12,6 @@ export type StampSet = {
 
 const useStampSetSelector = () => {
   const state = reactive({
-    currentStampSet: computed(
-      () => _store.state.ui.stampPicker.currentStampSet
-    ),
     stampSets: computed((): StampSet[] => [
       {
         type: 'history',
@@ -45,9 +41,8 @@ const useStampSetSelector = () => {
     ),
     hasStampPalette: computed((): boolean => state.stampPalettes.length > 0)
   })
-  const changeStampSet = (stampSet: StampSet) =>
-    _store.commit.ui.stampPicker.setCurrentStampSet(stampSet)
-  return { stampSetState: state, changeStampSet }
+
+  return { stampSetState: state }
 }
 
 export default useStampSetSelector

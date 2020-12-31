@@ -5,7 +5,6 @@ import { mutations } from './mutations'
 import { actions } from './actions'
 import { mainView } from './mainView'
 import { messageContextMenu } from './messageContextMenu'
-import { stampPicker } from './stampPicker'
 import { modal } from './modal'
 import { fileInput } from './fileInput'
 
@@ -17,7 +16,6 @@ export const ui = defineModule({
   actions,
   modules: {
     mainView,
-    stampPicker,
     messageContextMenu,
     modal,
     fileInput

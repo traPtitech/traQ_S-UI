@@ -33,7 +33,7 @@
           :can-post-message="canPostMessage"
           :is-posting="isPosting"
           @click-send="postMessage"
-          @click-stamp="onStampClick"
+          @click-stamp="toggleStampPicker"
         />
       </div>
     </template>
@@ -120,20 +120,12 @@ export default defineComponent({
     )
 
     const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
-    const { invokeStampPicker } = useTextStampPickerInvoker(
-      textState,
-      textareaRef
-    )
-
     const containerEle = ref<HTMLDivElement>()
-    const onStampClick = () => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        if (!containerEle.value) return
-        invokeStampPicker(containerEle.value, 'bottom-right')
-      }
-    }
+    const { toggleStampPicker } = useTextStampPickerInvoker(
+      textState,
+      textareaRef,
+      containerEle
+    )
 
     return {
       containerEle,
@@ -147,7 +139,7 @@ export default defineComponent({
       onBlur,
       onModifierKeyDown,
       onModifierKeyUp,
-      onStampClick,
+      toggleStampPicker,
       postMessage,
       addAttachment,
       showKeyGuide,

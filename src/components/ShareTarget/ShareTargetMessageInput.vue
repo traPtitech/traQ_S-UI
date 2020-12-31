@@ -15,7 +15,7 @@
         <div :class="$style.controls">
           <message-input-insert-stamp-button
             :class="$style.button"
-            @click="onStampClick"
+            @click="toggleStampPicker"
           />
           <message-input-upload-button
             :class="$style.button"
@@ -39,7 +39,6 @@ import {
   ref
 } from 'vue'
 import { randomString } from '@/lib/util/randomString'
-import _store from '@/_store'
 import store from '@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useTextInput from '../Main/MainView/MessageInput/use/textInput'
@@ -95,22 +94,14 @@ export default defineComponent({
       focus()
     })
 
-    const { invokeStampPicker } = useTextStampPickerInvoker(
+    const wrapperEle = ref<HTMLDivElement>()
+    const { toggleStampPicker } = useTextStampPickerInvoker(
       textState,
       computed(() =>
         textareaRef.value ? { $el: textareaRef.value } : undefined
-      )
+      ),
+      wrapperEle
     )
-
-    const wrapperEle = ref<HTMLDivElement>()
-    const onStampClick = (e: MouseEvent) => {
-      if (_store.getters.ui.stampPicker.isStampPickerShown) {
-        _store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        if (!wrapperEle.value) return
-        invokeStampPicker(wrapperEle.value, 'bottom-right')
-      }
-    }
 
     // スタンプピッカーに必要
     store.dispatch.entities.fetchStamps()
@@ -126,7 +117,7 @@ export default defineComponent({
       canPostMessage,
       id,
       textareaRef,
-      onStampClick
+      toggleStampPicker
     }
   }
 })

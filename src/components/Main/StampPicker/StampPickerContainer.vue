@@ -10,36 +10,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from 'vue'
-import store from '@/_store'
+import { defineComponent, reactive, computed } from 'vue'
 import StampPicker from './StampPicker.vue'
-import { Place } from '@/_store/ui/stampPicker'
-import { PositionOf } from '@/_store/ui/stampPicker/state'
+import { useStampPickerStore, Place, PositionOf } from '@/use/stampPicker'
 
-const useStyles = (
-  position: Ref<Place | undefined>,
-  positionOf: Ref<PositionOf>
-) =>
+const useStyles = (state: {
+  position: Place | undefined
+  positionOf: PositionOf
+}) =>
   reactive({
     stampPicker: computed(() => {
-      if (!position.value) return {}
+      if (!state.position) return {}
       const height = 320
       const width = 340
       const margin = 16
       const left = `min(${Math.max(
-        position.value.x,
+        state.position.x,
         width + margin
       )}px, calc(100vw - ${margin}px))`
-      if (positionOf.value === 'top-right') {
+      if (state.positionOf === 'top-right') {
         return {
-          top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
+          top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
           left
         }
       }
-      if (positionOf.value === 'bottom-right') {
+      if (state.positionOf === 'bottom-right') {
         return {
           bottom: `min(calc(100vh - ${height + margin}px), calc(100vh - ${
-            position.value.y
+            state.position.y
           }px))`,
           left
         }
@@ -53,12 +51,10 @@ export default defineComponent({
     StampPicker
   },
   setup() {
-    const isStampPickerShown = computed(
-      () => store.getters.ui.stampPicker.isStampPickerShown
-    )
-    const position = computed(() => store.state.ui.stampPicker.position)
-    const positionOf = computed(() => store.state.ui.stampPicker.positionOf)
-    const styles = useStyles(position, positionOf)
+    const { state, isStampPickerShown } = useStampPickerStore()
+    const position = computed(() => state.position)
+    const positionOf = computed(() => state.positionOf)
+    const styles = useStyles(state)
     return { isStampPickerShown, styles }
   }
 })

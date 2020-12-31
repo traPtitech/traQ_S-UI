@@ -53,7 +53,7 @@ export const provideToastStore = () => {
 const useToastStore = () => {
   const toastStore = inject<ToastStore>(ToastStoreSymbol)
   if (!toastStore) {
-    throw new Error('useToast() was called without provider.')
+    throw new Error('useToastStore() was called without provider.')
   }
 
   const addToast = (toast: ToastOption) => {
