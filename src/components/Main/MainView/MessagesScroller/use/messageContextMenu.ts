@@ -69,6 +69,10 @@ export const useMessageContextMenuInvoker = (props: {
     closeContextMenu
   } = useMessageContextMenuStoreBase()
 
+  const isThisContextMenuShown = computed(
+    () => messageContextMenuStore.target === props.messageId
+  )
+
   const openContextMenu = ({ x, y }: Point) => {
     messageContextMenuStore.target = props.messageId
     messageContextMenuStore.position = { x, y }
@@ -84,6 +88,7 @@ export const useMessageContextMenuInvoker = (props: {
   }
 
   return {
+    isThisContextMenuShown,
     openContextMenu,
     toggleContextMenu,
     closeContextMenu

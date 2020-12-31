@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen"
+    v-if="show || isStampPickerOpen || isThisContextMenuShown"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-minimum="$boolAttr(isMinimum)"
@@ -115,7 +115,10 @@ export default defineComponent({
       apis.addMessageStamp(props.messageId, stampData.id)
     }, containerEle)
 
-    const { openContextMenu } = useMessageContextMenuInvoker(props)
+    const {
+      isThisContextMenuShown,
+      openContextMenu
+    } = useMessageContextMenuInvoker(props)
 
     const onDotsClick = (e: MouseEvent) => {
       openContextMenu({
@@ -131,6 +134,7 @@ export default defineComponent({
 
     return {
       containerEle,
+      isThisContextMenuShown,
       isStampPickerOpen,
       recentStamps,
       addStamp,
