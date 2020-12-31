@@ -16,7 +16,7 @@
       :class="$style.pinned"
     />
     <message-tools
-      v-if="isHovered && !state.isEditing"
+      :show="isHovered && !state.isEditing"
       :class="$style.tools"
       :message-id="messageId"
       :is-minimum="isArchived"

@@ -1,4 +1,13 @@
-import { provide, inject, reactive, computed, readonly, Ref } from 'vue'
+import {
+  provide,
+  inject,
+  reactive,
+  computed,
+  readonly,
+  Ref,
+  ref,
+  watch
+} from 'vue'
 import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 import { StampId } from '@/types/entity-ids'
 
@@ -119,6 +128,13 @@ export const useStampPickerInvoker = (
     closeStampPicker
   } = useStampPickerBase()
 
+  const isThisOpen = ref(false)
+  watch(isStampPickerShown, newShown => {
+    if (isThisOpen.value && !newShown) {
+      isThisOpen.value = false
+    }
+  })
+
   const openStampPicker = () => {
     if (!element.value) return
 
@@ -133,6 +149,8 @@ export const useStampPickerInvoker = (
     stampPickerStore.selectHandler = selectHandler
     stampPickerStore.position = position
     stampPickerStore.positionOf = positionOf
+
+    isThisOpen.value = true
   }
 
   const toggleStampPicker = () => {
@@ -143,5 +161,5 @@ export const useStampPickerInvoker = (
     }
   }
 
-  return { openStampPicker, closeStampPicker, toggleStampPicker }
+  return { isThisOpen, openStampPicker, closeStampPicker, toggleStampPicker }
 }

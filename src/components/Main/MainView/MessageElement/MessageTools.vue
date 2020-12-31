@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="show || isStampPickerOpen"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-minimum="$boolAttr(isMinimum)"
@@ -91,7 +92,8 @@ export default defineComponent({
   },
   props: {
     messageId: { type: String as PropType<MessageId>, required: true },
-    isMinimum: { type: Boolean, default: false }
+    isMinimum: { type: Boolean, default: false },
+    show: { type: Boolean, default: false }
   },
   setup(props) {
     const recentStamps = computed(() =>
@@ -106,7 +108,10 @@ export default defineComponent({
     }
 
     const containerEle = ref<HTMLDivElement>()
-    const { toggleStampPicker } = useStampPickerInvoker(stampData => {
+    const {
+      isThisOpen: isStampPickerOpen,
+      toggleStampPicker
+    } = useStampPickerInvoker(stampData => {
       apis.addMessageStamp(props.messageId, stampData.id)
     }, containerEle)
 
@@ -126,6 +131,7 @@ export default defineComponent({
 
     return {
       containerEle,
+      isStampPickerOpen,
       recentStamps,
       addStamp,
       onDotsClick,
