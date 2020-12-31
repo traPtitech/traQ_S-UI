@@ -38,6 +38,7 @@
       </div>
     </div>
     <div :class="$style.bottomSpacer"></div>
+    <message-tools-menu-container />
   </div>
 </template>
 
@@ -69,6 +70,8 @@ import { embeddingOrigin } from '@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute } from '@/router'
 import { stampsMapInitialFetchPromise } from '@/store/entities/promises'
+import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
+import { provideMessageContextMenuStore } from './use/messageContextMenu'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -157,7 +160,8 @@ export default defineComponent({
   components: {
     MessageElement,
     ClipElement,
-    MessagesScrollerSeparator
+    MessagesScrollerSeparator,
+    MessageToolsMenuContainer
   },
   props: {
     messageIds: {
@@ -185,6 +189,8 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
+    provideMessageContextMenuStore()
+
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,

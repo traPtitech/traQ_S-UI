@@ -75,7 +75,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
@@ -83,6 +82,7 @@ import { StampId, MessageId } from '@/types/entity-ids'
 import { useStampPickerInvoker } from '@/use/stampPicker'
 import useIsMobile from '@/use/isMobile'
 import apis from '@/lib/apis'
+import { useMessageContextMenuInvoker } from '@/components/Main/MainView/MessagesScroller/use/messageContextMenu'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -115,12 +115,12 @@ export default defineComponent({
       apis.addMessageStamp(props.messageId, stampData.id)
     }, containerEle)
 
+    const { openContextMenu } = useMessageContextMenuInvoker(props)
+
     const onDotsClick = (e: MouseEvent) => {
-      _store.dispatch.ui.messageContextMenu.openMessageContextMenu({
-        messageId: props.messageId,
+      openContextMenu({
         x: e.pageX,
-        y: e.pageY,
-        isMinimum: props.isMinimum
+        y: e.pageY
       })
     }
 

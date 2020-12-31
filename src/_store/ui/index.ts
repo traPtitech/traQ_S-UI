@@ -4,7 +4,6 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { mainView } from './mainView'
-import { messageContextMenu } from './messageContextMenu'
 import { modal } from './modal'
 import { fileInput } from './fileInput'
 
@@ -16,7 +15,6 @@ export const ui = defineModule({
   actions,
   modules: {
     mainView,
-    messageContextMenu,
     modal,
     fileInput
   }
