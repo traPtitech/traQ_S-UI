@@ -1,11 +1,7 @@
-import store from '@/_store'
-import { computed, reactive } from 'vue'
+import useMessageInputState from '@/use/messageInputState'
 
 const useAttachments = () => {
-  const state = reactive({
-    attachments: computed(() => store.state.ui.fileInput.attachments),
-    isEmpty: computed(() => store.getters.ui.fileInput.isEmpty)
-  })
+  const { addAttachment } = useMessageInputState()
 
   const input = document.createElement('input')
   input.type = 'file'
@@ -13,7 +9,7 @@ const useAttachments = () => {
 
   const onChange = () => {
     for (const file of input.files ?? []) {
-      store.dispatch.ui.fileInput.addAttachment(file)
+      addAttachment(file)
     }
     // `input.files = null`ではリセットできない
     input.value = ''
@@ -21,7 +17,7 @@ const useAttachments = () => {
 
   input.addEventListener('change', onChange)
 
-  const addAttachment = () => {
+  const startAddingAttachment = () => {
     input.click()
   }
 
@@ -30,8 +26,7 @@ const useAttachments = () => {
   }
 
   return {
-    attachmentsState: state,
-    addAttachment,
+    addAttachment: startAddingAttachment,
     destroy
   }
 }

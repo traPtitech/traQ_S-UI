@@ -60,6 +60,7 @@ import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -81,8 +82,9 @@ export default defineComponent({
   },
   setup(props) {
     const { isMobile } = useIsMobile()
+    const { isAttachmentEmpty } = useMessageInputState()
     const { textState, onModifierKeyDown, onModifierKeyUp } = useTextInput()
-    const { attachmentsState, addAttachment, destroy } = useAttachments()
+    const { addAttachment, destroy } = useAttachments()
 
     onBeforeUnmount(() => {
       destroy()
@@ -110,7 +112,7 @@ export default defineComponent({
     )
 
     const canPostMessage = computed(
-      () => !isPosting.value && !(textState.isEmpty && attachmentsState.isEmpty)
+      () => !isPosting.value && !(textState.isEmpty && isAttachmentEmpty.value)
     )
     const showKeyGuide = computed(
       () =>
@@ -134,7 +136,6 @@ export default defineComponent({
       isMobile,
       typingUsers,
       textState,
-      attachmentsState,
       onFocus,
       onBlur,
       onModifierKeyDown,

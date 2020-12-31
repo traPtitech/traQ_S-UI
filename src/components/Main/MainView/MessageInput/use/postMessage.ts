@@ -1,9 +1,7 @@
 import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
-import _store from '@/_store'
 import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
-import { Attachment } from '@/_store/ui/fileInput/state'
 import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
@@ -16,6 +14,7 @@ import {
   bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
 import useToastStore from '@/use/toastStore'
+import useMessageInputState, { Attachment } from '@/use/messageInputState'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
@@ -29,7 +28,7 @@ const initialFetchPromise = Promise.all([
 type ProgressCallback = (progress: number) => void
 
 const uploadAttachments = async (
-  attachments: Attachment[],
+  attachments: ReadonlyArray<Readonly<Attachment>>,
   channelId: ChannelId,
   onProgress: ProgressCallback
 ) => {
@@ -58,6 +57,7 @@ const usePostMessage = (
   textState: Pick<TextState, 'text' | 'isEmpty'>,
   props: { channelId: ChannelId }
 ) => {
+  const { state, isAttachmentEmpty, clearAttachments } = useMessageInputState()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
@@ -76,7 +76,7 @@ const usePostMessage = (
 
   const postMessage = async () => {
     if (isPosting.value) return false
-    if (textState.isEmpty && _store.getters.ui.fileInput.isEmpty) return false
+    if (textState.isEmpty && isAttachmentEmpty.value) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
@@ -101,7 +101,7 @@ const usePostMessage = (
       }
     })
 
-    const dummyFileUrls = _store.state.ui.fileInput.attachments.map(() =>
+    const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
     const dummyText = createContent(embededText, dummyFileUrls)
@@ -115,7 +115,7 @@ const usePostMessage = (
       isPosting.value = true
 
       const fileUrls = await uploadAttachments(
-        _store.state.ui.fileInput.attachments,
+        state.attachments,
         props.channelId,
         p => {
           progress.value = p
@@ -127,7 +127,7 @@ const usePostMessage = (
       })
 
       textState.text = ''
-      _store.commit.ui.fileInput.clearAttachments()
+      clearAttachments()
       posted = true
     } catch (e) {
       // eslint-disable-next-line no-console

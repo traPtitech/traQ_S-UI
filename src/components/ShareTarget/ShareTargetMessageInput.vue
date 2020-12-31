@@ -46,6 +46,7 @@ import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import useMessageInputState from '@/use/messageInputState'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -65,6 +66,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const { isAttachmentEmpty } = useMessageInputState()
     const { textState } = useTextInput()
     watch(
       () => textState.text,
@@ -76,14 +78,14 @@ export default defineComponent({
       textState.text = props.modelValue
     })
 
-    const { attachmentsState, addAttachment, destroy } = useAttachments()
+    const { addAttachment, destroy } = useAttachments()
 
     onBeforeUnmount(() => {
       destroy()
     })
 
     const canPostMessage = computed(
-      () => !props.isPosting && !(textState.isEmpty && attachmentsState.isEmpty)
+      () => !props.isPosting && !(textState.isEmpty && isAttachmentEmpty.value)
     )
 
     const textareaRef = shallowRef<HTMLTextAreaElement | null>(null)
@@ -112,7 +114,6 @@ export default defineComponent({
     return {
       wrapperEle,
       textState,
-      attachmentsState,
       addAttachment,
       canPostMessage,
       id,
