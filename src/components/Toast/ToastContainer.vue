@@ -7,14 +7,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import { defineComponent } from 'vue'
 import Toast from './Toast.vue'
+import useToastStore from '@/use/toastStore'
 
 export default defineComponent({
   name: 'ToastContainer',
   setup() {
-    const toasts = computed(() => store.state.ui.toast.toasts)
+    const { toasts } = useToastStore()
     return { toasts }
   },
   components: {

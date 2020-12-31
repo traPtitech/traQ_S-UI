@@ -34,14 +34,15 @@ import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
-import store from '@/_store'
 import { isValidStampName } from '@/lib/validate'
+import useToastStore from '@/use/toastStore'
 
 const useStampCreate = (
   newStampName: Ref<string>,
   imageUploadState: ImageUploadState,
   destroyImageUploadState: () => void
 ) => {
+  const { addSuccessToast, addErrorToast } = useToastStore()
   const isCreating = ref(false)
 
   const createStamp = async () => {
@@ -51,18 +52,12 @@ const useStampCreate = (
       newStampName.value = ''
       destroyImageUploadState()
 
-      store.commit.ui.toast.addToast({
-        type: 'success',
-        text: 'スタンプを登録しました'
-      })
+      addSuccessToast('スタンプを登録しました')
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('スタンプの作成に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'スタンプの作成に失敗しました'
-      })
+      addErrorToast('スタンプの作成に失敗しました')
     }
     isCreating.value = false
   }

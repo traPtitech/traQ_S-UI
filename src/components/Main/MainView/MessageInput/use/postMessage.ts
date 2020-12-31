@@ -15,6 +15,7 @@ import {
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
+import useToastStore from '@/use/toastStore'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
@@ -58,6 +59,7 @@ const usePostMessage = (
   props: { channelId: ChannelId }
 ) => {
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
+  const { addErrorToast } = useToastStore()
 
   const isForce = computed(
     () => store.state.entities.channelsMap.get(props.channelId)?.force
@@ -104,10 +106,7 @@ const usePostMessage = (
     )
     const dummyText = createContent(embededText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージが長すぎます'
-      })
+      addErrorToast('メッセージが長すぎます')
       return
     }
 
@@ -134,10 +133,7 @@ const usePostMessage = (
       // eslint-disable-next-line no-console
       console.error('メッセージ送信に失敗しました', e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージ送信に失敗しました'
-      })
+      addErrorToast('メッセージ送信に失敗しました')
     } finally {
       isPosting.value = false
       progress.value = 0

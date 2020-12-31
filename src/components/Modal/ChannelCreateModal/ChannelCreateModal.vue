@@ -50,6 +50,7 @@ import useCanCreateChildChannel from '@/use/canCreateChildChannel'
 import { isValidChannelName } from '@/lib/validate'
 import apis from '@/lib/apis'
 import { channelTreeMitt } from '@/store/domain/channelTree'
+import useToastStore from '@/use/toastStore'
 
 interface State {
   channelName: string
@@ -57,6 +58,8 @@ interface State {
 }
 
 const useCreateChannel = (state: State) => {
+  const { addErrorToast } = useToastStore()
+
   const obtainChannelPath = (channelId: ChannelId) =>
     new Promise<string>(resolve => {
       const onCreated = ({ id, path }: { id: ChannelId; path: string }) => {
@@ -93,10 +96,7 @@ const useCreateChannel = (state: State) => {
       // eslint-disable-next-line no-console
       console.error('チャンネル作成に失敗しました', e)
 
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'チャンネル作成に失敗しました'
-      })
+      addErrorToast('チャンネル作成に失敗しました')
     }
   }
   return { createChannel }

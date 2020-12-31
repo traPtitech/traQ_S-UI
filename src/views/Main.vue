@@ -61,6 +61,7 @@ import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import MessageToolsMenuContainer from '@/components/Main/MainView/MessageElement/MessageToolsMenuContainer.vue'
 import useInitialFetch from './use/initialFetch'
+import useToastStore from '@/use/toastStore'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -106,6 +107,7 @@ export default defineComponent({
       isMainViewActive,
       currentActiveDrawer
     } = useMainViewLayout(navWidth, sidebarWidth)
+    const { addToast } = useToastStore()
 
     const { isMobile } = useIsMobile()
     const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
@@ -117,7 +119,14 @@ export default defineComponent({
     const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
     useInitialFetch(() => {
       setupWebSocket()
-      connectFirebase()
+      connectFirebase(onClick => {
+        addToast({
+          type: 'success',
+          text: 'クリックでアップデートできます',
+          timeout: 10000,
+          onClick
+        })
+      })
       triggerRouteParamChange()
     })
 

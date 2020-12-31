@@ -264,21 +264,11 @@ export const actions = defineActions({
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
-    try {
-      const { sessionId } = await dispatch.startOrJoinRTCSession({
-        channelId,
-        sessionType: 'qall'
-      })
-      dispatch.joinVoiceChannel(sessionId)
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('Qallの開始に失敗しました', e)
-
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'Qallの開始に失敗しました'
-      })
-    }
+    const { sessionId } = await dispatch.startOrJoinRTCSession({
+      channelId,
+      sessionType: 'qall'
+    })
+    dispatch.joinVoiceChannel(sessionId)
   },
 
   async endQall(context) {

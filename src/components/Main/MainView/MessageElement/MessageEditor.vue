@@ -34,16 +34,15 @@ import FormButton from '@/components/UI/FormButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
+import useToastStore from '@/use/toastStore'
 
 const teleportTargetName = 'message-menu-popup'
 
 const useEditMessage = (props: { messageId: string }, textState: TextState) => {
+  const { addErrorToast } = useToastStore()
   const editMessage = async () => {
     if (countLength(textState.text) > MESSAGE_MAX_LENGTH) {
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージが長すぎます'
-      })
+      addErrorToast('メッセージが長すぎます')
       return
     }
 
@@ -53,10 +52,7 @@ const useEditMessage = (props: { messageId: string }, textState: TextState) => {
       })
       store.commit.domain.messagesView.unsetEditingMessageId()
     } catch {
-      _store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージの編集に失敗しました'
-      })
+      addErrorToast('メッセージの編集に失敗しました')
     }
   }
   const cancel = () => {
