@@ -50,6 +50,30 @@ const useMessageInputState = () => {
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)
   const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
 
+  const addFromDataTransfer = (dt: DataTransfer) => {
+    const types = dt.types
+    // iOS Safariでは存在しない
+    if (!types) return
+
+    if (types.includes('Files')) {
+      Array.from(dt.files).forEach(file => {
+        addAttachment(file)
+      })
+      return
+    }
+    if (types.includes('text/uri-list')) {
+      addTextToLast(dt.getData('text/uri-list'))
+      return
+    }
+    if (types.includes('text/plain')) {
+      addTextToLast(dt.getData('text/plain'))
+    }
+  }
+
+  const addTextToLast = (text: string) => {
+    state.text += state.text !== '' ? `\n${text}` : text
+  }
+
   const addAttachment = async (file: File) => {
     const fileType = mimeToFileType(file.type)
 
@@ -103,6 +127,7 @@ const useMessageInputState = () => {
     isTextEmpty,
     isAttachmentEmpty,
     isEmpty,
+    addFromDataTransfer,
     addAttachment,
     removeAttachmentAt,
     clearState

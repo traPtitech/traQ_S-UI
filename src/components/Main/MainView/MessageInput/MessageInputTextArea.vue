@@ -64,14 +64,11 @@ const usePaste = () => {
   const { addAttachment } = useMessageInputState()
 
   const onPaste = (event: ClipboardEvent) => {
-    const items = event?.clipboardData?.items
-    if (!items) return
-    for (const item of items) {
-      if (item.kind === 'string') {
-        continue
-      }
-      const file = item.getAsFile()
-      if (file) addAttachment(file)
+    const dt = event?.clipboardData
+    if (dt) {
+      Array.from(dt.files).forEach(file => {
+        addAttachment(file)
+      })
     }
   }
   return { onPaste }

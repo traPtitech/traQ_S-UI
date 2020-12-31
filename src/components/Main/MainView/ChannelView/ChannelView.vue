@@ -24,15 +24,17 @@ import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
 import useMessageInputState from '@/use/messageInputState'
 
-const useFileDragDrop = () => {
-  const { addAttachment } = useMessageInputState()
+const useDragDrop = () => {
+  const { addFromDataTransfer } = useMessageInputState()
+
+  // itemsはsafariには存在しない
+  const hasFilesOrItems = (dt: DataTransfer) =>
+    dt.files.length > 0 || dt.items?.length > 0
 
   const isDragging = ref(false)
   const onDrop = (event: DragEvent) => {
     if (event.dataTransfer) {
-      Array.from(event.dataTransfer.files).forEach(file => {
-        addAttachment(file)
-      })
+      addFromDataTransfer(event.dataTransfer)
     }
     isDragging.value = false
   }
@@ -43,7 +45,9 @@ const useFileDragDrop = () => {
     isDragging.value = false
   })
   const onDragOver = (event: DragEvent) => {
-    isDragging.value = true
+    if (event.dataTransfer && hasFilesOrItems(event.dataTransfer)) {
+      isDragging.value = true
+    }
     resetDraggingState()
   }
   return {
@@ -73,7 +77,7 @@ export default defineComponent({
       )
     })
 
-    const { isDragging, onDrop, onDragOver } = useFileDragDrop()
+    const { isDragging, onDrop, onDragOver } = useDragDrop()
 
     return {
       state,
