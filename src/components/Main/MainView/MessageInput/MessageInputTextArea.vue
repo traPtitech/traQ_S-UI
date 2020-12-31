@@ -127,8 +127,8 @@ export default defineComponent({
     )
 
     const onKeyDown = (e: KeyboardEvent) => {
-      onKeyDown: onKeyDownSendKeyWatcher(e)
-      onKeyDown: onKeyDownWordCompleter(e)
+      onKeyDownSendKeyWatcher(e)
+      onKeyDownWordCompleter(e)
     }
 
     const { onFocus, onBlur } = useFocus(context)

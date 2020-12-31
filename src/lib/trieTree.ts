@@ -71,7 +71,7 @@ class TrieNode {
     return ret
   }
 
-  // sort済みでない
+  // 結果はヒットした順
   search(str: string, pos = 0): string[] {
     if (str.length === 0) {
       return []
