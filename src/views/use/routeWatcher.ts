@@ -67,7 +67,7 @@ const useRouteWatcher = () => {
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
-      _store.dispatch.ui.mainView.changePrimaryViewToChannel({
+      store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: route.query?.message as string
       })
@@ -95,7 +95,7 @@ const useRouteWatcher = () => {
       }
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
-      _store.dispatch.ui.mainView.changePrimaryViewToDM({
+      store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
         entryMessageId: route.query?.message as string
@@ -119,7 +119,7 @@ const useRouteWatcher = () => {
       return
     }
     changeViewTitle(clipFolder.name)
-    _store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
 
@@ -163,10 +163,10 @@ const useRouteWatcher = () => {
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
-      _store.state.ui.mainView.primaryView.type === 'channel' &&
-      _store.state.ui.mainView.primaryView.channelId === ''
+      store.state.ui.mainView.primaryView.type === 'channel' &&
+      store.state.ui.mainView.primaryView.channelId === ''
     ) {
-      _store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
+      store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
     }
@@ -176,7 +176,7 @@ const useRouteWatcher = () => {
       id: fileId,
       relatedRoute: RouteName.File as const
     }
-    _store.dispatch.ui.modal.replaceModal(modalPayload)
+    store.dispatch.ui.modal.replaceModal(modalPayload)
     changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
@@ -227,7 +227,7 @@ const useRouteWatcher = () => {
     routeParam: string,
     prevRouteParam: string
   ) => {
-    _store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
@@ -255,12 +255,12 @@ const useRouteWatcher = () => {
       state.isInitialView &&
       history.state?.modalState &&
       !!history.state?.modalState[0]?.relatedRoute
-    _store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+    store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
 
     if (state.isInitialView && !isOnInitialModalRoute) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      if (_store.state.ui.modal.modalState.length !== 0) {
-        _store.commit.ui.modal.setState([])
+      if (store.state.ui.modal.modalState.length !== 0) {
+        store.commit.ui.modal.setState([])
       }
       history.replaceState({ ...history.state, modalState: [] }, '')
     }

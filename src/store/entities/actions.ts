@@ -34,6 +34,7 @@ import { AxiosResponse } from 'axios'
 import { arrayToMap } from '@/lib/util/map'
 import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 import { dmParentUuid } from '@/lib/util/uuid'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -256,6 +257,8 @@ export const actions = defineActions({
       return
     }
 
+    const oldPath = channelIdToPathString(channelId, state.channelsMap)
+
     const [{ data: channel }, shared] = await getChannel(channelId)
     if (shared) return
 
@@ -282,7 +285,11 @@ export const actions = defineActions({
 
     commit.setChannel(channel)
 
-    entityMitt.emit('updateChannel', { oldChannel: old, newChannel: channel })
+    entityMitt.emit('updateChannel', {
+      oldChannel: old,
+      newChannel: channel,
+      oldPath
+    })
   },
 
   async fetchClipFolder(

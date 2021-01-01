@@ -2,6 +2,7 @@ import { createDirectStore } from 'direct-vuex'
 import { entities } from './entities'
 import { domain } from './domain'
 import { app } from './app'
+import { ui } from './ui'
 
 const vuexStrict = process.env.NODE_ENV !== 'production'
 
@@ -15,7 +16,8 @@ const {
   modules: {
     entities,
     domain,
-    app
+    app,
+    ui
   },
   strict: vuexStrict
 })

@@ -26,11 +26,11 @@ import { provideMessageInputState } from '@/use/messageInputState'
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
 
-  _store.commit.ui.setIsMobile(queryList.matches)
+  store.commit.ui.setIsMobile(queryList.matches)
 
   // safariではaddEventListener('change', func)が未対応なため
   queryList.addListener((event: MediaQueryListEvent) => {
-    _store.commit.ui.setIsMobile(event.matches)
+    store.commit.ui.setIsMobile(event.matches)
   })
 }
 
@@ -165,7 +165,7 @@ export default defineComponent({
     provideMessageInputState()
 
     useWindowResizeObserver()
-    const isMobile = computed(() => _store.state.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
 
     useQallConfirmer()
 

@@ -1,4 +1,3 @@
-import _store from '@/_store'
 import store from '@/store'
 import { UserId, UserGroupId } from '@/types/entity-ids'
 import { changeChannelByPath } from './router/channel'
@@ -48,7 +47,7 @@ export const setupGlobalFuncs = () => {
     const user = store.state.entities.usersMap.get(userId)
     if (user?.bot && user.name.startsWith('Webhook#')) return
 
-    _store.dispatch.ui.modal.pushModal({
+    store.dispatch.ui.modal.pushModal({
       type: 'user',
       id: userId
     })
@@ -56,7 +55,7 @@ export const setupGlobalFuncs = () => {
 
   window.openGroupModal = (userGroupId: UserGroupId) => {
     if (!checkGroupExistence(userGroupId)) return
-    _store.dispatch.ui.modal.pushModal({
+    store.dispatch.ui.modal.pushModal({
       type: 'group',
       id: userGroupId
     })

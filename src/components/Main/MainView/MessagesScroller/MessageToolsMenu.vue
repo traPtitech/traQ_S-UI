@@ -132,7 +132,7 @@ const useCopy = (props: { messageId: MessageId }) => {
 
 const useShowClipCreateModal = (props: { messageId: MessageId }) => {
   const showClipCreateModal = () => {
-    _store.dispatch.ui.modal.pushModal({
+    store.dispatch.ui.modal.pushModal({
       type: 'clip-create',
       messageId: props.messageId
     })

@@ -1,11 +1,9 @@
 import { computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 
 const useIsMobile = () => {
   const isMobile = computed(() => store.state.ui.isMobile)
-  return {
-    isMobile
-  }
+  return { isMobile }
 }
 
 export default useIsMobile

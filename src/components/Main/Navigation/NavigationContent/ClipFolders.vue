@@ -21,7 +21,6 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import Icon from '@/components/UI/Icon.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
@@ -38,7 +37,7 @@ export default defineComponent({
       ...store.state.entities.clipFoldersMap.values()
     ])
     const onClickButton = () => {
-      _store.dispatch.ui.modal.pushModal({
+      store.dispatch.ui.modal.pushModal({
         type: 'clip-folder-create'
       })
     }

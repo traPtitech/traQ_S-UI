@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
@@ -57,7 +56,7 @@ export default defineComponent({
     const onClick = async () => {
       if (channelPath.value === '') return
       const pathCache = channelPath.value
-      await _store.dispatch.ui.modal.clearModal()
+      await store.dispatch.ui.modal.clearModal()
       changeChannelByPath(pathCache)
     }
 

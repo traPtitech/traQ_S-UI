@@ -30,7 +30,6 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { UserId } from '@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import UserIcon from '@/components/UI/UserIcon.vue'
@@ -61,19 +60,19 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isMobile = computed(() => _store.state.ui.isMobile)
+    const isMobile = computed(() => store.state.ui.isMobile)
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))
 
-    const onClickClear = () => _store.dispatch.ui.modal.clearModal()
+    const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     const user = computed(() => store.state.entities.usersMap.get(props.id))
 
     const { userDetail } = useUserDetail(props)
 
-    const onClickOutside = () => _store.dispatch.ui.modal.clearModal()
+    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
 
     return {
       isMobile,

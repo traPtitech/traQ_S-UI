@@ -1,5 +1,5 @@
 import { channelTreeMitt } from '@/store/domain/channelTree'
-import _store from '@/_store'
+import store from '@/store'
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
@@ -144,7 +144,7 @@ router.beforeEach((to, from, next) => {
 export default router
 
 const isCurrentChannel = (channelId: string) => {
-  const primaryView = _store.state.ui.mainView.primaryView
+  const primaryView = store.state.ui.mainView.primaryView
   return (
     (primaryView.type === 'channel' || primaryView.type === 'dm') &&
     primaryView.channelId === channelId

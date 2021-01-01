@@ -90,7 +90,7 @@ const useCreateChannel = (state: State) => {
       await store.dispatch.entities.addChannel(channel.id)
       const path = await obtainChannelPath(channel.id)
 
-      await _store.dispatch.ui.modal.popModal()
+      await store.dispatch.ui.modal.popModal()
       changeChannelByPath(path)
     } catch (e) {
       // eslint-disable-next-line no-console

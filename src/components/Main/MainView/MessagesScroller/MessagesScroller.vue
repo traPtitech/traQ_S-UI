@@ -62,7 +62,6 @@ import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.v
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '@/lib/markdown'
-import _store from '@/_store'
 import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
@@ -141,15 +140,15 @@ const useScrollRestoration = (
     computed(() => route.name),
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        _store.commit.ui.mainView.setLastScrollPosition(
+        store.commit.ui.mainView.setLastScrollPosition(
           rootRef.value?.scrollTop ?? 0
         )
       }
       if (isMessageScrollerRoute(to)) {
-        state.scrollTop = _store.state.ui.mainView.lastScrollPosition
+        state.scrollTop = store.state.ui.mainView.lastScrollPosition
         await nextTick()
         rootRef.value?.scrollTo({ top: state.scrollTop })
-        _store.commit.ui.mainView.setLastScrollPosition(0)
+        store.commit.ui.mainView.setLastScrollPosition(0)
       }
     }
   )
@@ -194,7 +193,7 @@ export default defineComponent({
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: _store.state.ui.mainView.lastScrollPosition,
+      scrollTop: store.state.ui.mainView.lastScrollPosition,
       initialFetchCompleted: false
     })
 
@@ -231,7 +230,7 @@ export default defineComponent({
     } = useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     const messageComponent = computed(() =>
-      _store.state.ui.mainView.primaryView.type === 'clips'
+      store.state.ui.mainView.primaryView.type === 'clips'
         ? ClipElement
         : MessageElement
     )

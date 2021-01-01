@@ -9,7 +9,7 @@
 import { defineComponent, computed } from 'vue'
 import DesktopNavigation from '@/components/Main/Navigation/DesktopNavigation.vue'
 import MobileNavigation from '@/components/Main/Navigation/MobileNavigation.vue'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'Navigation',

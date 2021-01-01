@@ -29,8 +29,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, defineAsyncComponent } from 'vue'
-import store from '@/_store'
-import { ModalState } from '@/_store/ui/modal/state'
+import store from '@/store'
+import { ModalState } from '@/store/ui/modal/state'
 
 const modalComponentMap: Record<ModalState['type'], string> = {
   user: 'UserModal/UserModal',

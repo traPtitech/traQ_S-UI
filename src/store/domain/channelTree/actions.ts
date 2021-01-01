@@ -30,14 +30,13 @@ export const actions = defineActions({
   },
   async onUpdateChannel(
     context,
-    { newChannel, oldChannel }: { newChannel: Channel; oldChannel: Channel }
+    {
+      newChannel,
+      oldChannel,
+      oldPath
+    }: { newChannel: Channel; oldChannel: Channel; oldPath: string }
   ) {
     const { rootState, dispatch } = channelTreeActionContext(context)
-
-    const oldPath = channelIdToPathString(
-      newChannel.id,
-      rootState.entities.channelsMap
-    )
 
     await dispatch.constructAllTrees()
 
