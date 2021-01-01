@@ -1,17 +1,28 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
-import { me } from './index'
-import { ChannelId } from '@/types/entity-ids'
+import { me, meMitt } from './index'
+import { ChannelId, UserId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
-import _store from '@/_store'
-import { detectMentionOfMe } from '@/lib/detector'
+import { detectMentionOfMe } from '@/lib/markdown/detector'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
 
 export const actions = defineActions({
+  async fetchMe(context) {
+    const { commit } = meActionContext(context)
+    const { data } = await apis.getMe()
+    commit.setDetail(data)
+  },
+  onUserUpdated(context, userId: UserId) {
+    const { getters, dispatch } = meActionContext(context)
+    if (getters.myId !== userId) return
+
+    dispatch.fetchMe()
+  },
+
   async fetchStampHistory(context) {
     const { commit } = meActionContext(context)
     const { data } = await apis.getMyStampHistory()
@@ -34,18 +45,18 @@ export const actions = defineActions({
     commit.deleteUnreadChannel(channelId)
   },
   onMessageCreated(context, message: Message) {
-    const { rootState, getters, commit } = meActionContext(context)
+    const { rootState, getters, commit, rootGetters } = meActionContext(context)
     // 見ているチャンネルは未読に追加しない
     if (rootState.domain.messagesView.currentChannelId === message.channelId)
       return
     // 自分の投稿は未読に追加しない
-    if (_store.getters.domain.me.myId === message.userId) return
+    if (rootGetters.domain.me.myId === message.userId) return
 
     const noticeable =
       detectMentionOfMe(
         message.content,
-        _store.getters.domain.me.myId ?? '',
-        _store.state.domain.me.detail?.groups ?? []
+        rootGetters.domain.me.myId ?? '',
+        rootState.domain.me.detail?.groups ?? []
       ) || !!rootState.entities.channelsMap.get(message.channelId)?.force
     const isDM = rootState.entities.dmChannelsMap.has(message.channelId)
     const isChannelSubscribed = getters.isChannelSubscribed(message.channelId)
@@ -69,22 +80,22 @@ export const actions = defineActions({
   },
 
   async fetchSubscriptions(context) {
-    const { rootDispatch, commit } = meActionContext(context)
+    const { commit } = meActionContext(context)
     const res = await apis.getMyChannelSubscriptions()
     commit.setSubscriptionMap(
       new Map(res.data.map(s => [s.channelId, s.level]))
     )
-    rootDispatch.domain.channelTree.constructHomeChannelTree()
+    meMitt.emit('setSubscriptions')
   },
   async changeSubscriptionLevel(
     context,
     payload: { channelId: ChannelId; subscriptionLevel: ChannelSubscribeLevel }
   ) {
-    const { commit, rootDispatch } = meActionContext(context)
+    const { commit } = meActionContext(context)
     apis.setChannelSubscribeLevel(payload.channelId, {
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)
-    rootDispatch.domain.channelTree.constructHomeChannelTree()
+    meMitt.emit('updateSubscriptions')
   }
 })

@@ -1,4 +1,4 @@
-import { formatUrl } from '@/lib/tts'
+import { formatUrl } from '@/lib/tts/format'
 
 const embeddingOrigin = 'https://example.com'
 

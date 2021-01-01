@@ -4,7 +4,7 @@ import {
   isMac,
   isTouchDevice
 } from '@/lib/util/browser'
-import store from '@/_store'
+import store from '@/store'
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
 const touchDeviceFlag = isTouchDevice()

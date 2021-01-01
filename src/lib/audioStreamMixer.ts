@@ -49,7 +49,7 @@ export default class AudioStreamMixer {
     return defaultValue * userVolumeSquare * masterVolumeSquare
   }
 
-  private async createAudioSourceNodeGraph(buffer: AudioBuffer) {
+  private createAudioSourceNodeGraph(buffer: AudioBuffer) {
     const source = this.context.createBufferSource()
     const gain = this.context.createGain()
     source.buffer = buffer
@@ -101,9 +101,7 @@ export default class AudioStreamMixer {
     if (key.startsWith(fileSourcePrefix)) {
       throw 'Cannot use this name as audio stream key'
     }
-    const { source, gain, analyser } = await this.createStreamNodeGraph(
-      mediaStream
-    )
+    const { source, gain, analyser } = this.createStreamNodeGraph(mediaStream)
 
     // register audio for chrome
     const audio = document.createElement('audio')
@@ -128,7 +126,7 @@ export default class AudioStreamMixer {
   public async playFileSource(key: string) {
     const suspended = this.context.state === 'suspended'
     const prefixedKey = fileSourcePrefix + key
-    const source = await this.createAudioSourceNodeGraph(
+    const source = this.createAudioSourceNodeGraph(
       this.audioBufferMap[prefixedKey]
     )
     if (suspended) {

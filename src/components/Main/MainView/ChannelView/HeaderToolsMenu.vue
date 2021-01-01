@@ -43,7 +43,7 @@ import { defineComponent, computed } from 'vue'
 import MainViewHeaderPopupFrame from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '@/use/isMobile'
-import store from '@/_store'
+import store from '@/store'
 import { UserPermission } from '@traptitech/traq'
 
 export default defineComponent({

@@ -1,9 +1,9 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { MyUserDetail } from '@traptitech/traq'
+import { overwrite } from '@/lib/util/object'
 
 export const mutations = defineMutations<S>()({
-  setDetail(state: S, detail: Readonly<MyUserDetail>) {
-    state.detail = detail
+  set(state, newState: Partial<S>) {
+    overwrite(state, newState)
   }
 })

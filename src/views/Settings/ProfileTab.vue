@@ -64,7 +64,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
 import apis from '@/lib/apis'
@@ -156,7 +155,7 @@ export default defineComponent({
   name: 'ProfileTab',
   setup() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const detail = computed(() => _store.state.domain.me.detail!)
+    const detail = computed(() => store.state.domain.me.detail!)
 
     // ホームチャンネルの選択に必要
     store.dispatch.entities.fetchChannels()

@@ -1,6 +1,5 @@
 import { computed, reactive, watch } from 'vue'
-import _store, { originalStore } from '@/_store'
-import store from '@/store'
+import store, { originalStore } from '@/store'
 import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
@@ -38,7 +37,7 @@ const useRouteWatcher = () => {
 
   const useOpenChannel = async () => {
     await originalStore.restored
-    return computed(() => _store.getters.app.browserSettings.defaultChannelName)
+    return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
 
   const onRouteChangedToIndex = async () => {

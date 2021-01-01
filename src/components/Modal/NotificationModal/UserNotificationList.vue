@@ -15,7 +15,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import apis from '@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
@@ -37,7 +36,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const allUsersWithoutMe = computed(() =>
     [...store.getters.entities.activeUsersMap.values()].filter(
       // BOTと自分を除外
-      u => !u.bot && u.id !== _store.getters.domain.me.myId
+      u => !u.bot && u.id !== store.getters.domain.me.myId
     )
   )
 

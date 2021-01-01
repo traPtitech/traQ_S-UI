@@ -29,7 +29,6 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { ClipFolderId } from '@/types/entity-ids'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
@@ -83,9 +82,7 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       return
     }
     router.push(
-      constructChannelPath(
-        _store.getters.app.browserSettings.defaultChannelName
-      )
+      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
     )
   }
   return { deleteClip }

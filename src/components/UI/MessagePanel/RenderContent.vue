@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, watchEffect, ref } from 'vue'
-import { renderInline } from '@/lib/markdown'
+import { renderInline } from '@/lib/markdown/markdown'
 import store from '@/store'
 import { mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'

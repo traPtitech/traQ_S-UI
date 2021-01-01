@@ -1,5 +1,6 @@
 import { defineSubModuleListeners } from '../../utils/defineListeners'
 import { entityMitt } from '@/store/entities/mitt'
+import { meMitt } from '../me'
 
 export const entityListeners = defineSubModuleListeners(
   entityMitt,
@@ -26,5 +27,19 @@ export const entityListeners = defineSubModuleListeners(
         dispatch.onUpdateChannel({ newChannel, oldChannel, oldPath })
       }
     )
+  }
+)
+
+export const meListeners = defineSubModuleListeners(
+  meMitt,
+  'domain',
+  'channelTree',
+  (listener, { dispatch }) => {
+    listener.on('setSubscriptions', () => {
+      dispatch.constructHomeChannelTree()
+    })
+    listener.on('updateSubscriptions', () => {
+      dispatch.constructHomeChannelTree()
+    })
   }
 )

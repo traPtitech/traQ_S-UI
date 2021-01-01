@@ -1,5 +1,4 @@
 import store from '@/store'
-import _store from '@/_store'
 import { ref } from 'vue'
 import useLoginCheck from './loginCheck'
 
@@ -29,7 +28,7 @@ const useInitialFetch = (afterLoginCheck: () => void) => {
   const initialFetchCompleted = ref(false)
 
   useLoginCheck(() => {
-    if (!_store.getters.domain.me.isLoggedIn) return
+    if (!store.getters.domain.me.isLoggedIn) return
     if (initialFetchCompleted.value) return
 
     initialFetchCompleted.value = true

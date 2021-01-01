@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
@@ -53,11 +52,11 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 
 const useFilterStarChannel = () => {
   const filterStarChannel = computed(
-    () => _store.state.app.browserSettings.filterStarChannel
+    () => store.state.app.browserSettings.filterStarChannel
   )
 
   const toggleStarChannelFilter = () => {
-    _store.commit.app.browserSettings.setFilterStarChannel(
+    store.commit.app.browserSettings.setFilterStarChannel(
       !filterStarChannel.value
     )
   }

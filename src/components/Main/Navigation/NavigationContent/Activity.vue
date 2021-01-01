@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 import useActivityStream from './use/activityStream'

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 
 export default defineComponent({
   name: 'MessageInputKeyGuide',

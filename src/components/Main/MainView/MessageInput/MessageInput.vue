@@ -49,7 +49,6 @@ import {
   ref,
   toRef
 } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
@@ -123,7 +122,7 @@ export default defineComponent({
     const showKeyGuide = computed(
       () =>
         isModifierKeyPressed.value &&
-        (_store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
+        (store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
           canPostMessage.value)
     )
 

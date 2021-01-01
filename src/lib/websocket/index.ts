@@ -1,5 +1,4 @@
 import { WEBSOCKET_ENDPOINT } from '@/lib/apis'
-import { onReceive } from './receive'
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
 import { createWebSocketListener } from './WebSocketListener'
 
@@ -40,10 +39,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const wsListener = createWebSocketListener(ws)
-wsListener.on('all', event => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onReceive(event as any)
-})
 
 export const setupWebSocket = () => {
   ws.connect()

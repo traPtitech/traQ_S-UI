@@ -1,4 +1,3 @@
-import { channelTreeMitt } from '@/store/domain/channelTree'
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
@@ -148,7 +147,7 @@ export default router
  * @param paths 元のパスとその新しいパス
  * @returns nullのときは書き換え不要、文字列のときはnowPathを書き換えた結果
  */
-const rewriteChannelPath = (
+export const rewriteChannelPath = (
   nowPath: string,
   { oldPath, newPath }: { oldPath: string; newPath: string }
 ) => {
@@ -160,15 +159,3 @@ const rewriteChannelPath = (
   const newFullPath = constructChannelPath(newPath)
   return `${newFullPath}${nowPath.slice(oldFullPath.length)}`
 }
-
-channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
-  const nowPath = router.currentRoute.value.path
-  const rewrittenPath = rewriteChannelPath(nowPath, { oldPath, newPath })
-  if (rewrittenPath === null) {
-    return
-  }
-
-  router.replace({
-    path: rewrittenPath
-  })
-})

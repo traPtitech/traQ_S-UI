@@ -1,7 +1,12 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 import { ChannelId, StampId } from '@/types/entity-ids'
-import { UnreadChannel, ChannelSubscribeLevel, Message } from '@traptitech/traq'
+import {
+  UnreadChannel,
+  ChannelSubscribeLevel,
+  Message,
+  MyUserDetail
+} from '@traptitech/traq'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
 import { removeNotification } from '@/lib/firebase'
 
@@ -23,6 +28,10 @@ const updateBadge = async (
 }
 
 export const mutations = defineMutations<S>()({
+  setDetail(state, detail: Readonly<MyUserDetail>) {
+    state.detail = detail
+  },
+
   setStampHistory(state: S, stampHistory: Map<StampId, Date>) {
     state.stampHistory = stampHistory
   },

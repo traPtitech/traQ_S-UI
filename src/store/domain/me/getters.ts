@@ -9,6 +9,13 @@ const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
 
 export const getters = defineGetters<S>()({
+  myId(state) {
+    return state.detail?.id
+  },
+  isLoggedIn(state) {
+    return state.detail !== undefined
+  },
+
   recentStampIds(...args): StampId[] {
     const { state, rootState } = meGetterContext(args)
     const history = [...state.stampHistory.entries()]

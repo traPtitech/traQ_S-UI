@@ -7,6 +7,13 @@ export const wsListeners = defineSubModuleListeners(
   'domain',
   'me',
   (listener, { dispatch }) => {
+    listener.on('USER_UPDATED', ({ id }) => {
+      dispatch.onUserUpdated(id)
+    })
+    listener.on('USER_ICON_UPDATED', ({ id }) => {
+      dispatch.onUserUpdated(id)
+    })
+
     listener.on('MESSAGE_READ', ({ id }) => {
       dispatch.onChannelRead(id)
     })
@@ -19,6 +26,7 @@ export const wsListeners = defineSubModuleListeners(
     })
 
     listener.on('reconnect', () => {
+      dispatch.fetchMe()
       dispatch.fetchUnreadChannels()
       dispatch.fetchStaredChannels()
       dispatch.fetchSubscriptions()

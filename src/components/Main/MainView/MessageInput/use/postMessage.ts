@@ -1,7 +1,7 @@
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
-import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
+import { replace as embedInternalLink } from '@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'

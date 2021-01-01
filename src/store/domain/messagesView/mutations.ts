@@ -2,23 +2,11 @@ import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
 import { Pin, ChannelViewer, Message } from '@traptitech/traq'
-import _store from '@/_store'
-import useCurrentChannelPath from '@/use/currentChannelPath'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
-import store from '@/store'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
-
-    // TODO: いい感じにする
-    // 通常のチャンネルでない場合は最後に開いたチャンネルとして保持しない
-    if (!store.state.entities.channelsMap.get(currentChannelId)) return
-
-    const { currentChannelPathString } = useCurrentChannelPath()
-    _store.commit.app.browserSettings.setLastOpenChannelName(
-      currentChannelPathString.value
-    )
   },
   unsetCurrentChannelId(state) {
     state.currentChannelId = undefined
