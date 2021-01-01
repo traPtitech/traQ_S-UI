@@ -3,7 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { entityListeners } from './listeners'
+import { entityListeners, meListeners } from './listeners'
 import { mitt } from '@/lib/typedMitt'
 import { ChannelId } from '@/types/entity-ids'
 
@@ -15,6 +15,7 @@ export const channelTree = defineModule({
   actions
 })
 entityListeners()
+meListeners()
 
 type ChannelTreeEventMap = {
   created: (data: { id: ChannelId; path: string }) => void

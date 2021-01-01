@@ -1,7 +1,7 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
-import { me } from './index'
+import { me, meMitt } from './index'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
@@ -80,22 +80,22 @@ export const actions = defineActions({
   },
 
   async fetchSubscriptions(context) {
-    const { rootDispatch, commit } = meActionContext(context)
+    const { commit } = meActionContext(context)
     const res = await apis.getMyChannelSubscriptions()
     commit.setSubscriptionMap(
       new Map(res.data.map(s => [s.channelId, s.level]))
     )
-    rootDispatch.domain.channelTree.constructHomeChannelTree()
+    meMitt.emit('setSubscriptions')
   },
   async changeSubscriptionLevel(
     context,
     payload: { channelId: ChannelId; subscriptionLevel: ChannelSubscribeLevel }
   ) {
-    const { commit, rootDispatch } = meActionContext(context)
+    const { commit } = meActionContext(context)
     apis.setChannelSubscribeLevel(payload.channelId, {
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)
-    rootDispatch.domain.channelTree.constructHomeChannelTree()
+    meMitt.emit('updateSubscriptions')
   }
 })
