@@ -6,6 +6,7 @@ import { actions } from './actions'
 import { entityListeners, meListeners } from './listeners'
 import { mitt } from '@/lib/typedMitt'
 import { ChannelId } from '@/types/entity-ids'
+import router, { rewriteChannelPath } from '@/router'
 
 export const channelTree = defineModule({
   namespaced: true,
@@ -23,3 +24,16 @@ type ChannelTreeEventMap = {
 }
 
 export const channelTreeMitt = mitt<ChannelTreeEventMap>()
+
+// 循環参照を回避するためにこっちに書く
+channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
+  const nowPath = router.currentRoute.value.path
+  const rewrittenPath = rewriteChannelPath(nowPath, { oldPath, newPath })
+  if (rewrittenPath === null) {
+    return
+  }
+
+  router.replace({
+    path: rewrittenPath
+  })
+})
