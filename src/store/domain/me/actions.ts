@@ -23,16 +23,26 @@ export const actions = defineActions({
     dispatch.fetchMe()
   },
 
-  async fetchStampHistory(context) {
-    const { commit } = meActionContext(context)
+  async fetchStampHistory(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!force && state.stampHistoryFetched) return
+
     const { data } = await apis.getMyStampHistory()
     commit.setStampHistory(
       new Map(data.map(h => [h.stampId, new Date(h.datetime)]))
     )
   },
 
-  async fetchUnreadChannels(context) {
-    const { commit } = meActionContext(context)
+  async fetchUnreadChannels(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!force && state.unreadChannelsMapFetched) return
+
     const { data } = await apis.getMyUnreadChannels()
     commit.setUnreadChannelsMap(
       new Map(
@@ -65,8 +75,13 @@ export const actions = defineActions({
     commit.upsertUnreadChannel({ message, noticeable })
   },
 
-  async fetchStaredChannels(context) {
-    const { commit } = meActionContext(context)
+  async fetchStaredChannels(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!force && state.staredChannelSetFetched) return
+
     const { data } = await apis.getMyStars()
     commit.setStaredChannels(new Set(data))
   },
@@ -79,8 +94,13 @@ export const actions = defineActions({
     commit.deleteStaredChannel(channelId)
   },
 
-  async fetchSubscriptions(context) {
-    const { commit } = meActionContext(context)
+  async fetchSubscriptions(
+    context,
+    { force = false }: { force?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!force && state.subscriptionMapFetched) return
+
     const res = await apis.getMyChannelSubscriptions()
     commit.setSubscriptionMap(
       new Map(res.data.map(s => [s.channelId, s.level]))
