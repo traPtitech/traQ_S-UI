@@ -34,6 +34,7 @@ import { AxiosResponse } from 'axios'
 import { arrayToMap } from '@/lib/util/map'
 import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
 import { dmParentUuid } from '@/lib/util/uuid'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
@@ -53,6 +54,7 @@ const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
 const getChannel = createSingleflight(apis.getChannel.bind(apis))
 const getChannels = createSingleflight(apis.getChannels.bind(apis))
+const getUserDMChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
 const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
 const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
 const getStamp = createSingleflight(apis.getStamp.bind(apis))
@@ -193,6 +195,14 @@ export const actions = defineActions({
     commit.deleteUserGroup(userId)
   },
 
+  async fetchUserDMChannel(context, userId: UserId): Promise<DMChannelId> {
+    const { commit } = entitiesActionContext(context)
+    const [{ data: dmChannel }, shared] = await getUserDMChannel(userId)
+    if (!shared) {
+      commit.setDmChannel(dmChannel)
+    }
+    return dmChannel.id
+  },
   async fetchChannels(
     context,
     { force = false }: { force?: boolean } = {}
@@ -256,6 +266,8 @@ export const actions = defineActions({
       return
     }
 
+    const oldPath = channelIdToPathString(channelId, state.channelsMap)
+
     const [{ data: channel }, shared] = await getChannel(channelId)
     if (shared) return
 
@@ -282,7 +294,11 @@ export const actions = defineActions({
 
     commit.setChannel(channel)
 
-    entityMitt.emit('updateChannel', { oldChannel: old, newChannel: channel })
+    entityMitt.emit('updateChannel', {
+      oldChannel: old,
+      newChannel: channel,
+      oldPath
+    })
   },
 
   async fetchClipFolder(

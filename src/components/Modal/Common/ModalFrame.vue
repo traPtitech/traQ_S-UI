@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import CommonModalHeader from './ModalHeader.vue'
 
 export default defineComponent({

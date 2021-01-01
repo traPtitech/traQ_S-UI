@@ -2,19 +2,19 @@ import { defineMutations } from 'direct-vuex'
 import { S, LayoutType, ViewInformation, MainViewComponentState } from './state'
 
 export const mutations = defineMutations<S>()({
-  setLayout(state: S, layout: LayoutType) {
+  setLayout(state, layout: LayoutType) {
     state.layout = layout
   },
-  setMainViewComponentState(state: S, componentState: MainViewComponentState) {
+  setMainViewComponentState(state, componentState: MainViewComponentState) {
     state.currentMainViewComponentState = componentState
   },
-  setPrimaryView(state: S, view: ViewInformation) {
+  setPrimaryView(state, view: ViewInformation) {
     state.primaryView = view
   },
-  setSecondaryView(state: S, view: ViewInformation) {
+  setSecondaryView(state, view: ViewInformation) {
     state.primaryView = view
   },
-  setLastScrollPosition(state: S, position: number) {
+  setLastScrollPosition(state, position: number) {
     state.lastScrollPosition = position
   }
 })

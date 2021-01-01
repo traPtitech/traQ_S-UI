@@ -5,7 +5,11 @@ import { Channel, Stamp } from '@traptitech/traq'
 type EntityEventMap = {
   setChannels: () => void
   addChannel: (channel: Channel) => void
-  updateChannel: (data: { newChannel: Channel; oldChannel: Channel }) => void
+  updateChannel: (data: {
+    newChannel: Channel
+    oldChannel: Channel
+    oldPath: string
+  }) => void
 
   setStamps: () => void
   setStamp: (stamp: Stamp) => void

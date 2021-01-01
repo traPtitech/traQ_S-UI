@@ -1,5 +1,4 @@
 import { channelTreeMitt } from '@/store/domain/channelTree'
-import _store from '@/_store'
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
@@ -143,17 +142,33 @@ router.beforeEach((to, from, next) => {
 
 export default router
 
-const isCurrentChannel = (channelId: string) => {
-  const primaryView = _store.state.ui.mainView.primaryView
-  return (
-    (primaryView.type === 'channel' || primaryView.type === 'dm') &&
-    primaryView.channelId === channelId
-  )
-}
-channelTreeMitt.on('moved', ({ id, newPath }) => {
-  // TODO: 移動したチャンネルの子チャンネルでも変えないといけない？
-  if (isCurrentChannel(id)) {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    router.replace(constructChannelPath(newPath)).catch(() => {})
+/**
+ * チャンネルパスが変化したときに/channels/～を書き換える
+ * @param nowPath 書き換えたいパス
+ * @param paths 元のパスとその新しいパス
+ * @returns nullのときは書き換え不要、文字列のときはnowPathを書き換えた結果
+ */
+const rewriteChannelPath = (
+  nowPath: string,
+  { oldPath, newPath }: { oldPath: string; newPath: string }
+) => {
+  const oldFullPath = constructChannelPath(oldPath)
+
+  if (!nowPath.startsWith(oldFullPath)) {
+    return null
   }
+  const newFullPath = constructChannelPath(newPath)
+  return `${newFullPath}${nowPath.slice(oldFullPath.length)}`
+}
+
+channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
+  const nowPath = router.currentRoute.value.path
+  const rewrittenPath = rewriteChannelPath(nowPath, { oldPath, newPath })
+  if (rewrittenPath === null) {
+    return
+  }
+
+  router.replace({
+    path: rewrittenPath
+  })
 })

@@ -20,7 +20,6 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
@@ -41,7 +40,7 @@ export default defineComponent({
     )
 
     const onGroupClick = (id: UserGroupId) => {
-      _store.dispatch.ui.modal.pushModal({
+      store.dispatch.ui.modal.pushModal({
         type: 'group',
         id
       })

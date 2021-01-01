@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, SetupContext, reactive, Ref } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
@@ -74,7 +73,7 @@ const useManageChannel = (
       }
       await apis.editChannel(props.id, reqJson)
 
-      await _store.dispatch.ui.modal.popModal()
+      await store.dispatch.ui.modal.popModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import { changeChannelById, changeDMChannelByUsername } from '@/router/channel'
 import LinkButton from './LinkButton.vue'
 

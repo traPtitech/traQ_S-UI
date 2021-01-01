@@ -1,8 +1,8 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/_store'
+import { moduleActionContext } from '@/store'
 import { dequal } from 'dequal'
 import { ModalState } from './state'
-import { modal } from './index'
+import { modal } from '.'
 import router, { constructChannelPath, constructUserPath } from '@/router'
 import useCurrentChannelPath from '@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
@@ -80,7 +80,9 @@ export const actions = defineActions({
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
-    const { commit, state, dispatch, getters } = modalActionContext(context)
+    const { commit, state, dispatch, getters, rootState } = modalActionContext(
+      context
+    )
     const { currentState } = getters
     history.replaceState(
       {
@@ -94,7 +96,7 @@ export const actions = defineActions({
     )
     commit.setState(history.state.modalState)
     const { currentChannelPathString } = useCurrentChannelPath()
-    const primaryViewType = store.state.ui.mainView.primaryView.type
+    const primaryViewType = rootState.ui.mainView.primaryView.type
     if (primaryViewType === 'dm') {
       router.replace(constructUserPath(currentChannelPathString.value))
     } else if (primaryViewType === 'channel') {

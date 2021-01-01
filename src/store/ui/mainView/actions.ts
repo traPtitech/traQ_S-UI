@@ -1,7 +1,6 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/_store'
-import store from '@/store'
-import { mainView } from './index'
+import { moduleActionContext } from '@/store'
+import { mainView } from '.'
 import {
   ClipFolderId,
   ChannelId,
@@ -19,17 +18,17 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId | DMChannelId; entryMessageId?: MessageId }
   ) {
-    const { dispatch } = mainViewActionContext(context)
-    const DMChannel = store.state.entities.dmChannelsMap.get(payload.channelId)
+    const { rootState, rootDispatch, dispatch } = mainViewActionContext(context)
+    const DMChannel = rootState.entities.dmChannelsMap.get(payload.channelId)
     if (DMChannel) {
-      if (!store.state.entities.usersMap.has(DMChannel.userId)) {
-        await store.dispatch.entities.fetchUser({
+      if (!rootState.entities.usersMap.has(DMChannel.userId)) {
+        await rootDispatch.entities.fetchUser({
           userId: DMChannel.userId,
           cacheStrategy: 'useCache'
         })
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const user = store.state.entities.usersMap.get(DMChannel.userId)!
+      const user = rootState.entities.usersMap.get(DMChannel.userId)!
 
       dispatch.changePrimaryViewToDM({
         ...payload,
@@ -43,13 +42,13 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
   ) {
-    const { commit } = mainViewActionContext(context)
+    const { rootDispatch, commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'channel',
       channelId: payload.channelId,
       entryMessageId: payload.entryMessageId
     })
-    store.dispatch.domain.messagesView.changeCurrentChannel(payload)
+    rootDispatch.domain.messagesView.changeCurrentChannel(payload)
   },
   changePrimaryViewToDM(
     context,
@@ -59,14 +58,14 @@ export const actions = defineActions({
       entryMessageId?: MessageId
     }
   ) {
-    const { commit } = mainViewActionContext(context)
+    const { rootDispatch, commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'dm',
       channelId: payload.channelId,
       userName: payload.userName,
       entryMessageId: payload.entryMessageId
     })
-    store.dispatch.domain.messagesView.changeCurrentChannel({
+    rootDispatch.domain.messagesView.changeCurrentChannel({
       ...payload,
       isDM: true
     })
@@ -75,11 +74,11 @@ export const actions = defineActions({
     context,
     { clipFolderId }: { clipFolderId: ClipFolderId }
   ) {
-    const { commit } = mainViewActionContext(context)
+    const { rootDispatch, commit } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'clips',
       clipFolderId
     })
-    store.dispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+    rootDispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
   }
 })

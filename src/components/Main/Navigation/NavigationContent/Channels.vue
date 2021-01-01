@@ -128,7 +128,7 @@ export default defineComponent({
     )
 
     const onClickButton = () => {
-      _store.dispatch.ui.modal.pushModal({
+      store.dispatch.ui.modal.pushModal({
         type: 'channel-create'
       })
     }

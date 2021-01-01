@@ -36,7 +36,6 @@ import {
   onBeforeUnmount
 } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import useIsMobile from '@/use/isMobile'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
@@ -51,9 +50,9 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      layout: computed(() => _store.state.ui.mainView.layout),
-      primary: computed(() => _store.state.ui.mainView.primaryView),
-      secondary: computed(() => _store.state.ui.mainView.secondaryView)
+      layout: computed(() => store.state.ui.mainView.layout),
+      primary: computed(() => store.state.ui.mainView.primaryView),
+      secondary: computed(() => store.state.ui.mainView.secondaryView)
     })
     const channelId = computed(
       () => store.state.domain.messagesView.currentChannelId
