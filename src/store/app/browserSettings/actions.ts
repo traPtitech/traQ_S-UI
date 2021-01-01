@@ -1,8 +1,7 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/_store'
-import { browserSettings } from './index'
+import { moduleActionContext } from '@/store'
+import { browserSettings } from '.'
 import { ActionContext } from 'vuex'
-import { channelTreeMitt } from '@/store/domain/channelTree'
 
 export const browserSettingsActionContext = (
   context: ActionContext<unknown, unknown>
@@ -28,12 +27,4 @@ export const actions = defineActions({
       )
     }
   }
-})
-
-// TODO: いい感じにする
-channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
-  store.dispatch.app.browserSettings.updateOpenChannelNames({
-    oldName: oldPath,
-    newName: newPath
-  })
 })

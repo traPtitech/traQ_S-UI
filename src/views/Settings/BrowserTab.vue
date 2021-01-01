@@ -86,10 +86,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import { isMac } from '@/lib/util/browser'
-import { SendKeys } from '@/_store/app/browserSettings'
+import { SendKeys } from '@/store/app/browserSettings'
 import useSyncedState from '@/components/Settings/use/syncedState'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
@@ -121,10 +120,10 @@ export default defineComponent({
     // 起動時チャンネルの選択に必要
     store.dispatch.entities.fetchChannels()
 
-    const browserSettings = computed(() => _store.state.app.browserSettings)
+    const browserSettings = computed(() => store.state.app.browserSettings)
     const { state } = useSyncedState(
       browserSettings,
-      _store.commit.app.browserSettings.set
+      store.commit.app.browserSettings.set
     )
 
     const { channelOptions } = useChannelOptions(undefined, channel =>

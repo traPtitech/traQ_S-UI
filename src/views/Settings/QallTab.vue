@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
-import store from '@/_store'
+import store from '@/store'
 import useSyncedState from '@/components/Settings/use/syncedState'
 import Toggle from '@/components/UI/Toggle.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'

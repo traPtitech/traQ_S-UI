@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/_store'
+import { moduleActionContext } from '@/store'
 import { rtcSettings } from './index'
 import { ActionContext } from 'vuex'
 import { S } from './state'

@@ -11,7 +11,6 @@ import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '@/lib/tts'
 import { wait } from '@/lib/util/timer'
-import _store from '@/_store'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -22,7 +21,7 @@ export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
 const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
   const { rootGetters, state, commit, getters } = rtcActionContext(context)
   const update = () => {
-    const myId = _store.getters.domain.me.myId
+    const myId = rootGetters.domain.me.myId
     const userStateDiff = new Map<UserId, number>()
 
     rootGetters.domain.rtc.currentSessionUsers.forEach(userId => {
@@ -86,10 +85,8 @@ export const actions = defineActions({
   // ---- RTC Connection ---- //
 
   initializeMixer(context) {
-    const { state, commit } = rtcActionContext(context)
-    const mixer = new AudioStreamMixer(
-      _store.state.app.rtcSettings.masterVolume
-    )
+    const { state, commit, rootState } = rtcActionContext(context)
+    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
 
     state.remoteAudioStreamMap.forEach((stream, userId) => {
       mixer.addStream(userId, stream)
@@ -105,13 +102,13 @@ export const actions = defineActions({
 
   async establishConnection(context) {
     const { rootGetters, dispatch, rootDispatch } = rtcActionContext(context)
-    if (!_store.getters.domain.me.myId) {
+    if (!rootGetters.domain.me.myId) {
       throw 'application not initialized'
     }
     if (client) {
       client.closeConnection()
     }
-    const id = _store.getters.domain.me.myId
+    const id = rootGetters.domain.me.myId
     initClient(id)
     client?.addEventListener('connectionerror', async e => {
       /* eslint-disable-next-line no-console */
@@ -153,11 +150,17 @@ export const actions = defineActions({
   },
 
   async joinVoiceChannel(context, room: string) {
-    const { state, commit, dispatch } = rtcActionContext(context)
-    if (!_store.state.app.rtcSettings.isEnabled) {
+    const {
+      state,
+      commit,
+      dispatch,
+      rootState,
+      rootDispatch
+    } = rtcActionContext(context)
+    if (!rootState.app.rtcSettings.isEnabled) {
       return
     }
-    if (!(await _store.dispatch.app.rtcSettings.ensureDeviceIds())) {
+    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
       window.alert('マイクの設定に失敗しました')
       return
     }
@@ -206,7 +209,7 @@ export const actions = defineActions({
     })
 
     const localStream = await getUserAudio(
-      _store.state.app.rtcSettings.audioInputDeviceId
+      rootState.app.rtcSettings.audioInputDeviceId
     )
     commit.setLocalStream(localStream)
 

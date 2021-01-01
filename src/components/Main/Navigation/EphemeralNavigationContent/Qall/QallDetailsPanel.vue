@@ -35,7 +35,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -61,7 +60,7 @@ export default defineComponent({
       showVolumeTune.value = show
     }
 
-    const me = computed(() => _store.state.domain.me.detail?.id)
+    const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() =>
       // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
       [...store.getters.domain.rtc.currentSessionUsers.values()].filter(

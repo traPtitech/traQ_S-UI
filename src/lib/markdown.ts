@@ -1,6 +1,5 @@
 import { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
-import _store from '@/_store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from './apis'
 import {
@@ -26,7 +25,7 @@ const storeProvider: Store = {
     return store.state.entities.userGroupsMap.get(id)
   },
   getMe() {
-    return _store.state.domain.me.detail
+    return store.state.domain.me.detail
   },
   getStampByName(name) {
     return store.getters.entities.stampByName(name)

@@ -8,6 +8,7 @@ import {
   DMChannelId
 } from '@/types/entity-ids'
 import { ActionContext } from 'vuex'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const mainViewActionContext = (
   context: ActionContext<unknown, unknown>
@@ -42,13 +43,25 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
   ) {
-    const { rootDispatch, commit } = mainViewActionContext(context)
+    const {
+      rootDispatch,
+      commit,
+      rootCommit,
+      rootState
+    } = mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'channel',
       channelId: payload.channelId,
       entryMessageId: payload.entryMessageId
     })
     rootDispatch.domain.messagesView.changeCurrentChannel(payload)
+
+    // 通常のチャンネルは最後に開いたチャンネルとして保持
+    const channelPath = channelIdToPathString(
+      payload.channelId,
+      rootState.entities.channelsMap
+    )
+    rootCommit.app.browserSettings.setLastOpenChannelName(channelPath)
   },
   changePrimaryViewToDM(
     context,

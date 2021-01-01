@@ -1,9 +1,8 @@
 import { defineGetters } from 'direct-vuex'
-import { S, SessionType, UserSessionState } from './state'
+import { S, SessionType, UserRTCState, UserSessionState } from './state'
 import { rtc } from '.'
 import { moduleGetterContext } from '@/store'
 import { ChannelId, UserId } from '@/types/entity-ids'
-import _store from '@/_store'
 
 const rtcGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, rtc)
@@ -18,8 +17,9 @@ export const getters = defineGetters<S>()({
       )
     }
   },
-  currentRTCState(state) {
-    return state.userStateMap.get(_store.getters.domain.me.myId ?? '')
+  currentRTCState(...args): UserRTCState | undefined {
+    const { rootGetters, state } = rtcGetterContext(args)
+    return state.userStateMap.get(rootGetters.domain.me.myId ?? '')
   },
   qallSession(...args): UserSessionState | undefined {
     const { state, getters } = rtcGetterContext(args)

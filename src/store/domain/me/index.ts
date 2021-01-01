@@ -1,11 +1,12 @@
-import { defineModule } from 'direct-vuex'
+import { defineDBModule } from '@/store/defineDBModule'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { wsListeners, messageListeners } from './listeners'
 
-export const me = defineModule({
+export const me = defineDBModule({
+  path: ['domain.me.detail'],
   namespaced: true,
   state,
   getters,

@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
@@ -104,7 +103,7 @@ const useCreateChannel = (state: State) => {
 
 const useChannelOptionsForSelector = () => {
   const hasChannelEditPermission = computed(() =>
-    _store.state.domain.me.detail?.permissions.includes(
+    store.state.domain.me.detail?.permissions.includes(
       UserPermission.EditChannel
     )
   )

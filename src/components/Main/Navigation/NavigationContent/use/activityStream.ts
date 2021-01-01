@@ -1,6 +1,5 @@
 import { computed, onBeforeUnmount, watch, onMounted, ref } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { setTimelineStreamingState } from '@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
@@ -10,7 +9,7 @@ import { ChannelId, MessageId } from '@/types/entity-ids'
 export const ACTIVITY_LENGTH = 50
 
 const useActivityStream = () => {
-  const mode = computed(() => _store.state.app.browserSettings.activityMode)
+  const mode = computed(() => store.state.app.browserSettings.activityMode)
 
   /**
    * 新しいもの順

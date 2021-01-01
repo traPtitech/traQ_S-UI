@@ -1,5 +1,5 @@
 import router, { RouteName } from '@/router'
-import store from '@/_store'
+import store from '@/store'
 import { onActivated, onBeforeMount } from 'vue'
 
 /**

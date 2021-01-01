@@ -4,7 +4,6 @@ import { moduleGetterContext } from '@/store'
 import { messagesView } from './index'
 import { UserId } from '@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
-import _store from '@/_store'
 
 const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, messagesView)
@@ -24,9 +23,9 @@ export const getters = defineGetters<S>()({
    * チャンネルで入力中の人のIDの一覧(新しい順)
    */
   typingUsers(...args): UserId[] {
-    const { state } = getterContext(args)
+    const { state, rootGetters } = getterContext(args)
 
-    const myId = _store.getters.domain.me.myId
+    const myId = rootGetters.domain.me.myId
     return state.currentViewers
       .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
       .map(v => v.userId)

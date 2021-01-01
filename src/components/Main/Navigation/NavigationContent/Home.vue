@@ -45,7 +45,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
@@ -62,7 +61,7 @@ export default defineComponent({
   setup() {
     const homeChannel = computed(() =>
       store.state.entities.channelsMap.get(
-        _store.state.domain.me.detail?.homeChannel ?? ''
+        store.state.domain.me.detail?.homeChannel ?? ''
       )
     )
     const channelsWithNotification = computed(() =>

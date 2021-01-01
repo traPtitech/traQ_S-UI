@@ -12,7 +12,6 @@
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '@/store'
-import _store from '@/_store'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
@@ -47,7 +46,7 @@ const useQallConfirmer = () => {
 
 const useThemeObserver = () => {
   const themeColor = computed(
-    () => _store.getters.app.themeSettings.currentTheme.accent.primary
+    () => store.getters.app.themeSettings.currentTheme.accent.primary
   )
 
   const $themeColor = document.querySelector(
@@ -61,30 +60,30 @@ const useThemeObserver = () => {
     }
   })
 
-  const themeType = computed(() => _store.state.app.themeSettings.type)
+  const themeType = computed(() => store.state.app.themeSettings.type)
   const isDark = computed(() =>
     themeType.value === 'custom'
-      ? isDarkColor(_store.state.app.themeSettings.custom.background.primary)
+      ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
       : themeType.value === 'dark' ||
         (themeType.value === 'auto' &&
-          _store.state.app.themeSettings.isOsDarkTheme)
+          store.state.app.themeSettings.isOsDarkTheme)
   )
   useHtmlDatasetBoolean('isDarkTheme', isDark)
 }
 
 const useEcoModeObserver = () => {
-  const ecoMode = computed(() => _store.state.app.browserSettings.ecoMode)
+  const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
   useHtmlDatasetBoolean('ecoMode', ecoMode)
 }
 
 const useOsDarkTheme = () => {
   const queryList = window.matchMedia('(prefers-color-scheme: dark)')
 
-  _store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
+  store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
 
   // safariではaddEventListener('change', func)が未対応なため
   queryList.addListener((event: MediaQueryListEvent) => {
-    _store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
+    store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
   })
 }
 

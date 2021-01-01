@@ -36,7 +36,6 @@ import { defineComponent, computed, PropType, ref, Ref } from 'vue'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '@/types/entity-ids'
-import _store from '@/_store'
 import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
@@ -142,7 +141,7 @@ export default defineComponent({
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
-    const myId = computed(() => _store.getters.domain.me.myId)
+    const myId = computed(() => store.getters.domain.me.myId)
     const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)

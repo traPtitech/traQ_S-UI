@@ -42,7 +42,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import _store from '@/_store'
 import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
@@ -158,7 +157,7 @@ export default defineComponent({
     const isMine = computed(
       () =>
         store.state.entities.messages.messagesMap.get(props.messageId)
-          ?.userId === _store.getters.domain.me.myId
+          ?.userId === store.getters.domain.me.myId
     )
     const isMinimum = computed(() => state.isMinimum)
 

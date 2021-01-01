@@ -1,4 +1,4 @@
-import store from '@/_store'
+import store from '@/store'
 import {
   Theme,
   ThemeVariables,
