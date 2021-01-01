@@ -5,7 +5,6 @@ import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
-import apis from '@/lib/apis'
 import { useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
@@ -85,14 +84,10 @@ const useRouteWatcher = () => {
     try {
       if (!user) throw 'user not found'
 
-      let dmChannelId = store.getters.entities.DMChannelIdByUserId(user.id)
+      const dmChannelId =
+        store.getters.entities.DMChannelIdByUserId(user.id) ??
+        (await store.dispatch.entities.fetchUserDMChannel(user.id))
 
-      if (!dmChannelId) {
-        // TODO: いい感じにする
-        const { data } = await apis.getUserDMChannel(user.id)
-        store.commit.entities.setDmChannel(data)
-        dmChannelId = data.id
-      }
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
       store.dispatch.ui.mainView.changePrimaryViewToDM({
