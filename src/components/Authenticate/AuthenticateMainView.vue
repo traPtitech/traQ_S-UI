@@ -1,9 +1,12 @@
 <template>
   <transition name="zoom" appear>
     <!-- https://github.com/vuejs/rfcs/blob/master/active-rfcs/0017-transition-as-root.md -->
-    <div v-if="show && (type !== 'login' || version)" :class="$style.container">
+    <div
+      v-if="show && (type !== 'login' || externalLogin)"
+      :class="$style.container"
+    >
       <authenticate-modal>
-        <login-form v-if="type === 'login'" :version="version" />
+        <login-form v-if="type === 'login'" :external-login="externalLogin" />
         <registration-form v-if="type === 'registration'" />
         <consent-form v-if="type === 'consent'" />
       </authenticate-modal>
@@ -41,8 +44,8 @@ export default defineComponent({
   setup(props) {
     const isLogin = computed(() => props.type === 'login')
     // ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
-    const version = useVersion(isLogin)
-    return { version }
+    const { externalLogin } = useVersion(isLogin)
+    return { externalLogin }
   }
 })
 </script>

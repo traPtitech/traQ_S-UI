@@ -39,7 +39,7 @@ export default defineComponent({
       () => store.state.entities.channelsMap.get(props.channelId)?.force
     )
     const viewStates = computed(() =>
-      [...(subscribers.value ?? [])]
+      [...(subscribers.value ?? new Set())]
         .map(id => ({
           user: store.getters.entities.activeUsersMap.get(id),
           active: props.viewerIds.includes(id)

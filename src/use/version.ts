@@ -1,9 +1,12 @@
-import { readonly, Ref, ref, toRaw, watchEffect } from 'vue'
+import { computed, readonly, Ref, ref, toRaw, watchEffect } from 'vue'
 import apis from '@/lib/apis'
 import { Version } from '@traptitech/traq'
 
 const useVersion = (needed: Ref<boolean> | boolean = true) => {
   const version = ref<Version>()
+  const externalLogin = computed(
+    () => new Set(version.value?.flags.externalLogin ?? [])
+  )
 
   const fetch = async () => {
     const res = await apis.getServerVersion()
@@ -15,7 +18,10 @@ const useVersion = (needed: Ref<boolean> | boolean = true) => {
     }
   })
 
-  return readonly(version)
+  return {
+    version: readonly(version),
+    externalLogin
+  }
 }
 
 export default useVersion
