@@ -34,6 +34,13 @@ export const mutations = defineMutations<S>()({
 
   setStampHistory(state: S, stampHistory: Map<StampId, Date>) {
     state.stampHistory = stampHistory
+    state.stampHistoryFetched = true
+  },
+  upsertLocalStampHistory(
+    state: S,
+    { stampId, datetime }: { stampId: StampId; datetime: Date }
+  ) {
+    state.stampHistory.set(stampId, datetime)
   },
 
   setUnreadChannelsMap(
@@ -76,6 +83,7 @@ export const mutations = defineMutations<S>()({
 
   setStaredChannels(state: S, channelIds: Set<ChannelId>) {
     state.staredChannelSet = channelIds
+    state.staredChannelSetFetched = true
   },
   addStaredChannel(state: S, channelId: ChannelId) {
     state.staredChannelSet.add(channelId)
@@ -84,18 +92,12 @@ export const mutations = defineMutations<S>()({
     state.staredChannelSet.delete(channelId)
   },
 
-  upsertLocalStampHistory(
-    state: S,
-    { stampId, datetime }: { stampId: StampId; datetime: Date }
-  ) {
-    state.stampHistory.set(stampId, datetime)
-  },
-
   setSubscriptionMap(
     state: S,
     subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
   ) {
     state.subscriptionMap = subscriptionMap
+    state.subscriptionMapFetched = true
   },
   setSubscription(
     state: S,

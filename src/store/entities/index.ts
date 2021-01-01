@@ -6,6 +6,11 @@ import { actions } from './actions'
 import { messages } from './messages'
 import { listeners } from './listeners'
 
+/**
+ * サーバーの情報を扱う (key-value のもののみ)
+ * WebSocketで状態が同期される
+ * ほかのストアには依存しないようにする
+ */
 export const entities = defineModule({
   namespaced: true,
   state,
