@@ -3,6 +3,8 @@ import { ChannelId } from '@/types/entity-ids'
 import { parse } from './markdown'
 import { embeddingOrigin } from './apis'
 import Token from 'markdown-it/lib/token'
+import { messageMitt } from '@/store/entities/messages'
+import { Message } from '@traptitech/traq'
 
 export const formatUrl = (text: string, embeddingOrigin: string) => {
   try {
@@ -103,6 +105,8 @@ class Tts {
   private queue: Speach[] = []
 
   constructor() {
+    messageMitt.on('addMessage', this.onAddMessage)
+
     // タブ閉じたときには止める
     window.addEventListener('unload', () => {
       this.stop()
@@ -184,7 +188,20 @@ class Tts {
     })
   }
 
+  onAddMessage = (message: Message) => {
+    if (store.getters.domain.me.myId === message.userId) return
+
+    const userDisplayName =
+      store.state.entities.usersMap.get(message.userId)?.displayName ?? 'はてな'
+    this.addQueue({
+      channelId: message.channelId,
+      userDisplayName,
+      text: message.content
+    })
+  }
+
   stop() {
+    messageMitt.off('addMessage', this.onAddMessage)
     this.queue.splice(0, this.queue.length)
     speechSynthesis.cancel()
   }
