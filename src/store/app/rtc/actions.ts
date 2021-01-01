@@ -85,18 +85,21 @@ export const actions = defineActions({
 
   // ---- RTC Connection ---- //
 
-  initializeMixer(context) {
+  async initializeMixer(context) {
     const { state, commit, rootState } = rtcActionContext(context)
     const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
 
-    state.remoteAudioStreamMap.forEach((stream, userId) => {
-      mixer.addStream(userId, stream)
-    })
+    const promises: Array<Promise<void>> = []
+    state.remoteAudioStreamMap.forEach((stream, userId) =>
+      promises.push(mixer.addStream(userId, stream))
+    )
 
-    mixer.addFileSource('qall_start', '/static/qall_start.mp3')
-    mixer.addFileSource('qall_end', '/static/qall_end.mp3')
-    mixer.addFileSource('qall_joined', '/static/qall_joined.mp3')
-    mixer.addFileSource('qall_left', '/static/qall_left.mp3')
+    promises.push(mixer.addFileSource('qall_start', '/static/qall_start.mp3'))
+    promises.push(mixer.addFileSource('qall_end', '/static/qall_end.mp3'))
+    promises.push(mixer.addFileSource('qall_joined', '/static/qall_joined.mp3'))
+    promises.push(mixer.addFileSource('qall_left', '/static/qall_left.mp3'))
+
+    await Promise.all(promises)
 
     commit.setMixer(mixer)
   },
@@ -170,7 +173,7 @@ export const actions = defineActions({
       await dispatch.establishConnection()
     }
 
-    dispatch.initializeMixer()
+    await dispatch.initializeMixer()
     if (!state.mixer) {
       return
     }
