@@ -1,7 +1,7 @@
 import { Store } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
-import { embeddingOrigin } from './apis'
+import { embeddingOrigin } from '../apis'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
@@ -60,9 +60,4 @@ export const renderInline = async (text: string) => {
 export const parse = async (text: string) => {
   await initialFetchPromise
   return (await md).md.parse(text, {})
-}
-
-export const toggleSpoiler = (element: HTMLElement) => {
-  const $spoiler = element.closest('.spoiler')
-  $spoiler?.toggleAttribute('shown')
 }

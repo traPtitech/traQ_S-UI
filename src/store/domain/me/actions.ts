@@ -5,7 +5,7 @@ import { me, meMitt } from './index'
 import { ChannelId, UserId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
-import { detectMentionOfMe } from '@/lib/detector'
+import { detectMentionOfMe } from '@/lib/markdown/detector'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)

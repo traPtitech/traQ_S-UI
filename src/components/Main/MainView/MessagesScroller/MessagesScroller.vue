@@ -61,7 +61,7 @@ import MessageElement from '@/components/Main/MainView/MessageElement/MessageEle
 import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
-import { toggleSpoiler } from '@/lib/markdown'
+import { toggleSpoiler } from '@/lib/markdown/spoiler'
 import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
