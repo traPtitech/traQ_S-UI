@@ -70,7 +70,7 @@ interface UsersGradeList {
 }
 
 const useListByGradeName = () => {
-  const userGroups = computed(() => store.getters.entities.gradeTypeUserGroups)
+  const userGroups = computed(() => store.getters.entities.gradeGroups)
   const activeUsersMap = computed(() => store.getters.entities.activeUsersMap)
   const listByGradeName = computed((): UsersGradeList[] => {
     if (userGroups.value.length === 0 || activeUsersMap.value.size === 0) {

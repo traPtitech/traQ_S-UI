@@ -27,7 +27,7 @@ export const getters = defineGetters<S>()({
     )
   },
 
-  gradeTypeUserGroups(state) {
+  gradeGroups(state) {
     return [...state.userGroupsMap.values()].filter(
       group => group.type === 'grade'
     )
@@ -35,7 +35,7 @@ export const getters = defineGetters<S>()({
   gradeGroupByUserId(...args): (userId: UserId) => UserGroup | undefined {
     const { getters } = entitiesGetterContext(args)
     return userId =>
-      getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
+      getters.gradeGroups.find((userGroup: UserGroup) =>
         userGroup.members.some(member => member.id === userId)
       )
   },
