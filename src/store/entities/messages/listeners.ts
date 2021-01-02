@@ -14,7 +14,7 @@ export const listeners = defineSubModuleListeners(
     listener.on('MESSAGE_UPDATED', async ({ id }) => {
       const message = await dispatch.fetchMessage({
         messageId: id,
-        force: true
+        ignoreCache: true
       })
       messageMitt.emit('updateMessage', message)
     })

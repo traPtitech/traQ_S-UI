@@ -34,10 +34,10 @@ const postRTCState = (state: Readonly<UserRTCState> | null) => {
 export const actions = defineActions({
   async fetchRTCState(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<void> {
     const { state, commit } = rtcActionContext(context)
-    if (!force && state.rtcStateFetched) {
+    if (!ignoreCache && state.rtcStateFetched) {
       return
     }
 

@@ -15,10 +15,10 @@ const getOnlineUsers = createSingleflight(apis.getOnlineUsers.bind(apis))
 export const actions = defineActions({
   async fetchOnlineUsers(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Set<UserId>> {
     const { state, commit } = domainActionContext(context)
-    if (state.onlineUsersFetched && !force) {
+    if (state.onlineUsersFetched && !ignoreCache) {
       return state.onlineUsers
     }
 

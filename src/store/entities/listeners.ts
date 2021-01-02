@@ -75,12 +75,12 @@ export const listeners = defineListeners(
     })
 
     listener.on('reconnect', () => {
-      dispatch.fetchUsers({ force: true })
-      dispatch.fetchUserGroups({ force: true })
-      dispatch.fetchChannels({ force: true })
-      dispatch.fetchClipFolders({ force: true })
-      dispatch.fetchStamps({ force: true })
-      dispatch.fetchStampPalettes({ force: true })
+      dispatch.fetchUsers({ ignoreCache: true })
+      dispatch.fetchUserGroups({ ignoreCache: true })
+      dispatch.fetchChannels({ ignoreCache: true })
+      dispatch.fetchClipFolders({ ignoreCache: true })
+      dispatch.fetchStamps({ ignoreCache: true })
+      dispatch.fetchStampPalettes({ ignoreCache: true })
     })
   }
 )

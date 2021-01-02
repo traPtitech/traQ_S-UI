@@ -27,9 +27,9 @@ export const wsListeners = defineSubModuleListeners(
 
     listener.on('reconnect', () => {
       dispatch.fetchMe()
-      dispatch.fetchUnreadChannels({ force: true })
-      dispatch.fetchStaredChannels({ force: true })
-      dispatch.fetchSubscriptions({ force: true })
+      dispatch.fetchUnreadChannels({ ignoreCache: true })
+      dispatch.fetchStaredChannels({ ignoreCache: true })
+      dispatch.fetchSubscriptions({ ignoreCache: true })
     })
   }
 )

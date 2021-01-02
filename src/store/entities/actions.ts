@@ -134,10 +134,10 @@ export const actions = defineActions({
   },
   async fetchUsers(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Map<UserId, User>> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.usersMapFetched) {
+    if (!ignoreCache && state.usersMapFetched) {
       return state.usersMap
     }
 
@@ -176,10 +176,10 @@ export const actions = defineActions({
   },
   async fetchUserGroups(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Map<UserGroupId, UserGroup>> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.userGroupsMapFetched) {
+    if (!ignoreCache && state.userGroupsMapFetched) {
       return state.userGroupsMap
     }
 
@@ -205,10 +205,10 @@ export const actions = defineActions({
   },
   async fetchChannels(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<[Map<ChannelId, Channel>, Map<DMChannelId, DMChannel>]> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.bothChannelsMapFetched) {
+    if (!ignoreCache && state.bothChannelsMapFetched) {
       return [state.channelsMap, state.dmChannelsMap]
     }
 
@@ -324,10 +324,10 @@ export const actions = defineActions({
   },
   async fetchClipFolders(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Map<ClipFolderId, ClipFolder>> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.clipFoldersMapFetched) {
+    if (!ignoreCache && state.clipFoldersMapFetched) {
       return state.clipFoldersMap
     }
 
@@ -374,10 +374,10 @@ export const actions = defineActions({
    */
   async fetchStamps(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Map<StampId, Stamp>> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.stampsMapFetched) {
+    if (!ignoreCache && state.stampsMapFetched) {
       return state.stampsMap
     }
 
@@ -430,10 +430,10 @@ export const actions = defineActions({
   },
   async fetchStampPalettes(
     context,
-    { force = false }: { force?: boolean } = {}
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
   ): Promise<Map<StampPaletteId, StampPalette>> {
     const { state, commit } = entitiesActionContext(context)
-    if (!force && state.stampPalettesMapFetched) {
+    if (!ignoreCache && state.stampPalettesMapFetched) {
       return state.stampPalettesMap
     }
 

@@ -23,10 +23,13 @@ const getOgp = createSingleflight(apis.getOgp.bind(apis))
 export const actions = defineActions({
   async fetchMessage(
     context,
-    { messageId, force = false }: { messageId: MessageId; force?: boolean }
+    {
+      messageId,
+      ignoreCache = false
+    }: { messageId: MessageId; ignoreCache?: boolean }
   ): Promise<Message> {
     const { state, commit } = messagesActionContext(context)
-    if (!force && state.messagesMap.has(messageId)) {
+    if (!ignoreCache && state.messagesMap.has(messageId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return state.messagesMap.get(messageId)!
     }
@@ -99,10 +102,10 @@ export const actions = defineActions({
 
   async fetchFileMetaData(
     context,
-    { fileId, force = false }: { fileId: FileId; force?: boolean }
+    { fileId, ignoreCache = false }: { fileId: FileId; ignoreCache?: boolean }
   ): Promise<FileInfo | undefined> {
     const { state, commit } = messagesActionContext(context)
-    if (!force && state.fileMetaDataMap.has(fileId)) {
+    if (!ignoreCache && state.fileMetaDataMap.has(fileId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return state.fileMetaDataMap.get(fileId)!
     }
@@ -116,10 +119,10 @@ export const actions = defineActions({
 
   async fetchOgpData(
     context,
-    { url, force = false }: { url: ExternalUrl; force?: boolean }
+    { url, ignoreCache = false }: { url: ExternalUrl; ignoreCache?: boolean }
   ): Promise<Ogp | undefined> {
     const { state, commit } = messagesActionContext(context)
-    if (!force && state.ogpDataMap.has(url)) {
+    if (!ignoreCache && state.ogpDataMap.has(url)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return state.ogpDataMap.get(url)!
     }

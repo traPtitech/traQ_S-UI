@@ -13,7 +13,7 @@ export const listeners = defineListeners(
     })
 
     listener.on('reconnect', () => {
-      dispatch.fetchOnlineUsers({ force: true })
+      dispatch.fetchOnlineUsers({ ignoreCache: true })
     })
   }
 )

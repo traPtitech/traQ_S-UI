@@ -14,7 +14,7 @@ export const listeners = defineSubModuleListeners(
     })
 
     listener.on('reconnect', () => {
-      dispatch.fetchRTCState({ force: true })
+      dispatch.fetchRTCState({ ignoreCache: true })
     })
   }
 )
