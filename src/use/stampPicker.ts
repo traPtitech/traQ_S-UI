@@ -36,13 +36,13 @@ export interface Place {
   x: number
   y: number
 }
-export type PositionOf = 'top-right' | 'bottom-right'
+export type AlignmentPosition = 'top-right' | 'bottom-right'
 
 interface StampPickerStore {
   selectHandler: StampSelectHandler
   currentStampSet: StampSet
   position: Place | undefined
-  positionOf: PositionOf
+  alignment: AlignmentPosition
 }
 
 const createStampPickerStore = () => {
@@ -53,7 +53,7 @@ const createStampPickerStore = () => {
       id: ''
     },
     position: undefined,
-    positionOf: 'top-right'
+    alignment: 'top-right'
   })
 }
 
@@ -115,12 +115,12 @@ const getBottomRightPosition = (rect: DOMRect) => ({
  * スタンプピッカーを表示させる側で利用
  *
  * @param element スタンプピッカーを表示する基準となる要素
- * @param positionOf その要素の四隅のどの点の位置にスタンプピッカーの右上が来るかを指定する
+ * @param alignment その要素の四隅のどの点の位置にスタンプピッカーの右上が来るかを指定する
  */
 export const useStampPickerInvoker = (
   selectHandler: StampSelectHandler,
   element: Ref<HTMLElement | undefined>,
-  positionOf: PositionOf = 'top-right'
+  alignment: AlignmentPosition = 'top-right'
 ) => {
   const {
     stampPickerStore,
@@ -140,15 +140,15 @@ export const useStampPickerInvoker = (
 
     const rect = element.value.getBoundingClientRect()
     const position =
-      positionOf === 'top-right'
+      alignment === 'top-right'
         ? getBottomRightPosition(rect)
-        : positionOf === 'bottom-right'
+        : alignment === 'bottom-right'
         ? getTopRightPosition(rect)
         : rect // never
 
     stampPickerStore.selectHandler = selectHandler
     stampPickerStore.position = position
-    stampPickerStore.positionOf = positionOf
+    stampPickerStore.alignment = alignment
 
     isThisOpen.value = true
   }

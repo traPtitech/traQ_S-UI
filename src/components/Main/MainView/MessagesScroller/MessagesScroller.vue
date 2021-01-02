@@ -5,7 +5,7 @@
     @scroll.passive="handleScroll"
     @click="onClick"
   >
-    <div :class="$style.viewport" v-if="state.initialFetchCompleted">
+    <div :class="$style.viewport" v-if="state.stampsInitialFetchCompleted">
       <messages-scroller-separator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
@@ -194,14 +194,14 @@ export default defineComponent({
     const state = reactive({
       height: 0,
       scrollTop: store.state.ui.mainView.lastScrollPosition,
-      initialFetchCompleted: false
+      stampsInitialFetchCompleted: false
     })
 
     // メッセージスタンプ表示時にスタンプが存在していないと
     // 場所が確保されないくてずれてしまうので、取得完了を待つ
     ;(async () => {
       await stampsMapInitialFetchPromise
-      state.initialFetchCompleted = true
+      state.stampsInitialFetchCompleted = true
     })()
 
     // DaySeparatorの表示

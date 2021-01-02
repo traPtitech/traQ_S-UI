@@ -84,6 +84,7 @@ export const defineListeners = <
   moduleName: ModuleName,
   listenerSetter: ListenerSetter<Listener, ModuleName>
 ): (() => Promise<void>) => async () => {
+  // Vueの初期化が終わらないとstoreにアクセスできない
   await waitMount
   listenerSetter(listener, getModuleFromStore(store, moduleName))
 }
@@ -104,6 +105,7 @@ export const defineSubModuleListeners = <
   subModuleName: SubModuleName,
   listenerSetter: ListenerSetterSub<Listener, ModuleName, SubModuleName>
 ): (() => Promise<void>) => async () => {
+  // Vueの初期化が終わらないとstoreにアクセスできない
   await waitMount
   listenerSetter(
     listener,

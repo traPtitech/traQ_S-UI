@@ -12,11 +12,15 @@
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue'
 import StampPicker from './StampPicker.vue'
-import { useStampPickerStore, Place, PositionOf } from '@/use/stampPicker'
+import {
+  useStampPickerStore,
+  Place,
+  AlignmentPosition
+} from '@/use/stampPicker'
 
 const useStyles = (state: {
   position: Place | undefined
-  positionOf: PositionOf
+  alignment: AlignmentPosition
 }) =>
   reactive({
     stampPicker: computed(() => {
@@ -28,13 +32,13 @@ const useStyles = (state: {
         state.position.x,
         width + margin
       )}px, calc(100vw - ${margin}px))`
-      if (state.positionOf === 'top-right') {
+      if (state.alignment === 'top-right') {
         return {
           top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
           left
         }
       }
-      if (state.positionOf === 'bottom-right') {
+      if (state.alignment === 'bottom-right') {
         return {
           bottom: `min(calc(100vh - ${height + margin}px), calc(100vh - ${
             state.position.y
@@ -53,7 +57,7 @@ export default defineComponent({
   setup() {
     const { state, isStampPickerShown } = useStampPickerStore()
     const position = computed(() => state.position)
-    const positionOf = computed(() => state.positionOf)
+    const alignment = computed(() => state.alignment)
     const styles = useStyles(state)
     return { isStampPickerShown, styles }
   }

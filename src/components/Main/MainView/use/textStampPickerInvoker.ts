@@ -1,5 +1,5 @@
 import {
-  PositionOf,
+  AlignmentPosition,
   StampSelectHandler,
   useStampPickerInvoker
 } from '@/use/stampPicker'
@@ -10,7 +10,7 @@ const useTextStampPickerInvoker = (
   text: Ref<string>,
   textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
   positionElement: Ref<HTMLElement | undefined>,
-  positionOf: PositionOf = 'bottom-right'
+  positionOf: AlignmentPosition = 'bottom-right'
 ) => {
   const elementRef = computed(() => textareaRef.value?.$el)
 
