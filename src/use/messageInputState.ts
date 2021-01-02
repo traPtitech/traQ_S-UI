@@ -1,4 +1,4 @@
-import { provide, inject, reactive, computed } from 'vue'
+import { provide, inject, reactive, computed, InjectionKey } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
 import config from '@/config'
 import { canResize, resize } from '@/lib/resize'
@@ -16,7 +16,7 @@ const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${co
   'ファイル'
 )}`
 
-const MessageInputStateSymbol = Symbol()
+const messageInputStateSymbol: InjectionKey<MessageInputState> = Symbol()
 
 interface MessageInputState {
   text: string
@@ -37,11 +37,11 @@ const createMessageInputState = () => {
 }
 
 export const provideMessageInputState = () => {
-  provide(MessageInputStateSymbol, createMessageInputState())
+  provide(messageInputStateSymbol, createMessageInputState())
 }
 
 const useMessageInputState = () => {
-  const state = inject<MessageInputState>(MessageInputStateSymbol)
+  const state = inject(messageInputStateSymbol)
   if (!state) {
     throw new Error('useMessageInputState() was called without provider.')
   }

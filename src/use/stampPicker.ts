@@ -6,12 +6,13 @@ import {
   readonly,
   Ref,
   ref,
-  watch
+  watch,
+  InjectionKey
 } from 'vue'
 import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 import { StampId } from '@/types/entity-ids'
 
-const StampPickerStoreSymbol = Symbol()
+const stampPickerStoreSymbol: InjectionKey<StampPickerStore> = Symbol()
 
 enum StampEffect {
   wiggle = 'wiggle',
@@ -58,11 +59,11 @@ const createStampPickerStore = () => {
 }
 
 export const provideStampPickerStore = () => {
-  provide(StampPickerStoreSymbol, createStampPickerStore())
+  provide(stampPickerStoreSymbol, createStampPickerStore())
 }
 
 const useStampPickerBase = () => {
-  const stampPickerStore = inject<StampPickerStore>(StampPickerStoreSymbol)
+  const stampPickerStore = inject(stampPickerStoreSymbol)
   if (!stampPickerStore) {
     throw new Error('useStampPickerStore() was called without provider.')
   }

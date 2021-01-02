@@ -1,9 +1,9 @@
-import { provide, inject, reactive, computed } from 'vue'
+import { provide, inject, reactive, computed, InjectionKey } from 'vue'
 
 const DEFAULT_TOAST_TIMEOUT = 1500
 const MAX_TOAST_COUNT = 5
 
-const ToastStoreSymbol = Symbol()
+const toastStoreSymbol: InjectionKey<ToastStore> = Symbol()
 
 interface ToastStore {
   toasts: Toast[]
@@ -47,11 +47,11 @@ const createToastStore = () => {
 }
 
 export const provideToastStore = () => {
-  provide(ToastStoreSymbol, createToastStore())
+  provide(toastStoreSymbol, createToastStore())
 }
 
 const useToastStore = () => {
-  const toastStore = inject<ToastStore>(ToastStoreSymbol)
+  const toastStore = inject(toastStoreSymbol)
   if (!toastStore) {
     throw new Error('useToastStore() was called without provider.')
   }

@@ -1,7 +1,14 @@
-import { provide, inject, reactive, computed, readonly } from 'vue'
+import {
+  provide,
+  inject,
+  reactive,
+  computed,
+  readonly,
+  InjectionKey
+} from 'vue'
 import { MessageId } from '@/types/entity-ids'
 
-const MessageContextMenuStoreSymbol = Symbol()
+const messageContextMenuStoreSymbol: InjectionKey<MessageContextMenuStore> = Symbol()
 
 interface MessageContextMenuStore {
   target?: MessageId
@@ -18,13 +25,11 @@ const createMessageContextMenuStore = () => {
 }
 
 export const provideMessageContextMenuStore = () => {
-  provide(MessageContextMenuStoreSymbol, createMessageContextMenuStore())
+  provide(messageContextMenuStoreSymbol, createMessageContextMenuStore())
 }
 
 const useMessageContextMenuStoreBase = () => {
-  const messageContextMenuStore = inject<MessageContextMenuStore>(
-    MessageContextMenuStoreSymbol
-  )
+  const messageContextMenuStore = inject(messageContextMenuStoreSymbol)
   if (!messageContextMenuStore) {
     throw new Error('useMessageContextMenuStore() was called without provider.')
   }
