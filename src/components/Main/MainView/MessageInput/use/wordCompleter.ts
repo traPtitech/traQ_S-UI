@@ -44,10 +44,14 @@ const useWordCompleter = (
       e.preventDefault()
       if (!textareaRef.value) return
       const target = getCurrentWord(textareaRef.value, value.value)
-      const determined = getDeterminedCharacters(tree.search(target.word))
+      const candidates = tree.search(target.word)
+      if (candidates.length === 0) {
+        return
+      }
+      const determined = getDeterminedCharacters(candidates)
       value.value =
         value.value.slice(0, target.begin) +
-        (tree.search(target.word).length === 0 ? target.word : determined) +
+        determined +
         (target.end === value.value.length ? '' : value.value.slice(target.end))
       await nextTick()
       textareaRef.value.setSelectionRange(
