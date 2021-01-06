@@ -17,7 +17,7 @@ describe('trieTree class', () => {
     expect(tree.search('@ta').sort()).toEqual(['@takashi', '@takashi_trap'])
   })
   it('can insert', () => {
-    tree.insert(('@ryoha' as unknown) as Parameters<typeof tree.insert>[0])
+    tree.insert('@ryoha')
     expect(tree.search('@r')).toEqual(['@ryoha'])
   })
   it('can remove', () => {

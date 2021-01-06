@@ -1,28 +1,31 @@
-// case sensitive
-type Characters = string[]
-
+let lastInsertedId = 0
+const dict = new Map<number, string>()
 class TrieNode {
+  id: number
   isWord: boolean
   children: Record<string, TrieNode>
 
-  constructor() {
+  constructor(id = 0) {
     this.isWord = false
     this.children = {}
+    this.id = id
   }
 
-  insert(str: Characters, pos = 0) {
+  insert(str: string, pos = 0) {
     if (str.length === 0) {
       return
     }
 
     if (pos === str.length) {
       this.isWord = true
+      dict.set(this.id, str)
       return
     }
 
-    const k = str[pos]
+    const k = [...str.toLocaleLowerCase()][pos]
     if (this.children[k] === undefined) {
-      this.children[k] = new TrieNode()
+      this.children[k] = new TrieNode(lastInsertedId + 1)
+      lastInsertedId++
     }
     const child = this.children[k]
     child.insert(str, pos + 1)
@@ -41,7 +44,7 @@ class TrieNode {
       return
     }
 
-    const k = str[pos]
+    const k = [...str.toLocaleLowerCase()][pos]
     const child = this.children[k]
     child.remove(str, pos + 1)
   }
@@ -51,7 +54,7 @@ class TrieNode {
       return
     }
     this.remove(strOld)
-    this.insert([...strNew])
+    this.insert(strNew)
   }
 
   getAllWords(str = '') {
@@ -77,7 +80,7 @@ class TrieNode {
       return []
     }
 
-    const k = str[pos]
+    const k = [...str.toLocaleLowerCase()][pos]
     const child = this.children[k]
     if (child === undefined) {
       return []
@@ -91,7 +94,7 @@ class TrieNode {
 
 function createTree(...lists: Array<readonly string[]>): TrieNode {
   const tree = new TrieNode()
-  lists.forEach(list => list.forEach(word => tree.insert([...word])))
+  lists.forEach(list => list.forEach(word => tree.insert(word)))
   return tree
 }
 

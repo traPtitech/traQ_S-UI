@@ -13,10 +13,10 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
   const word = text.substring(begin, end)
   return { word, begin, end }
 }
-type Characters = string[]
-const getDeterminedCharacters = (candidates: Characters) => {
+
+const getDeterminedCharacters = (candidates: string[]) => {
   const minLength = Math.min(...candidates.map(c => c.length))
-  const determined: Characters = []
+  const determined: string[] = []
   for (let i = 0; i < minLength; i++) {
     determined[i] = [...candidates[0]][i]
     for (const candidate of candidates) {
