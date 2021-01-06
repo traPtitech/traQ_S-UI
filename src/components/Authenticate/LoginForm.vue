@@ -31,7 +31,7 @@
     <div :class="$style.buttons">
       <authenticate-button type="primary" label="ログイン" is-submit />
     </div>
-    <template v-if="!isIOS && externalLogin.length > 0">
+    <template v-if="!isIOS && externalLogin.size > 0">
       <authenticate-separator label="または" :class="$style.separator" />
       <div :class="$style.exLoginButtons">
         <authenticate-button
