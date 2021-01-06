@@ -15,7 +15,8 @@
     "types": [
       "dom-screen-wake-lock",
       "webpack-env",
-      "jest"
+      "jest",
+      "webappsec-credential-management"
     ],
     "typeRoots": [
       "node_modules/@types",

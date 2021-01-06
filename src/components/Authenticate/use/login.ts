@@ -1,9 +1,12 @@
-import { reactive, watch } from 'vue'
+import { reactive, ref, watch, watchEffect } from 'vue'
 import apis from '@/lib/apis'
 import useRedirectParam from './redirectParam'
+import useCredentialManager from './credentialManager'
 
 const useLogin = () => {
+  const { getPass, savePass } = useCredentialManager()
   const { redirect } = useRedirectParam()
+
   const state = reactive({
     name: '',
     pass: '',
@@ -16,9 +19,28 @@ const useLogin = () => {
     }
   )
 
+  const saved = ref<PasswordCredential | null>(null)
+  watchEffect(async () => {
+    const res = await getPass()
+    if (!res) return
+    saved.value = res
+  })
+
+  const dontUseSaved = () => {
+    saved.value = null
+  }
+
+  const loginWithSaved = () => {
+    if (!saved.value || !saved.value.id || !saved.value.password) return
+    state.name = saved.value.id
+    state.pass = saved.value.password ?? ''
+    login()
+  }
+
   const login = async () => {
     try {
       await apis.login('/', { name: state.name, password: state.pass })
+      await savePass(state.name, state.pass)
 
       redirect()
     } catch (e) {
@@ -52,8 +74,11 @@ const useLogin = () => {
   }
   return {
     loginState: state,
+    saved,
     login,
-    loginExternal
+    loginWithSaved,
+    loginExternal,
+    dontUseSaved
   }
 }
 
