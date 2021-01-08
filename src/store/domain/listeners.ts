@@ -1,9 +1,9 @@
-import { defineListeners } from '../utils/defineListeners'
+import { createDefineListeners } from '../utils/defineListeners'
 import { wsListener } from '@/lib/websocket'
+import { domain } from '.'
 
-export const listeners = defineListeners(
+export const defineWsListeners = createDefineListeners<typeof domain>()(
   wsListener,
-  'domain',
   (listener, { dispatch }) => {
     listener.on('USER_ONLINE', ({ id }) => {
       dispatch.addOnlineUser(id)

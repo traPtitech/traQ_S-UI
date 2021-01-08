@@ -1,9 +1,9 @@
-import { defineListeners } from '../utils/defineListeners'
+import { createDefineListeners } from '../utils/defineListeners'
 import { wsListener } from '@/lib/websocket'
+import { entities } from '.'
 
-export const listeners = defineListeners(
+export const defineWsListeners = createDefineListeners<typeof entities>()(
   wsListener,
-  'entities',
   (listener, { dispatch }) => {
     listener.on('USER_JOINED', ({ id }) => {
       dispatch.fetchUser({ userId: id })

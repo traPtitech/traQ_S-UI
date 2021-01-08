@@ -4,7 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { messages } from './messages'
-import { listeners } from './listeners'
+import { defineWsListeners } from './listeners'
 
 /**
  * サーバーの情報を扱う (key-value のもののみ)
@@ -21,4 +21,4 @@ export const entities = defineModule({
     messages
   }
 })
-listeners()
+defineWsListeners(store => store.entities)

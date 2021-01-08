@@ -1,11 +1,9 @@
 import { wsListener } from '@/lib/websocket'
-import { defineSubModuleListeners } from '@/store/utils/defineListeners'
-import { messageMitt } from '.'
+import { createDefineListeners } from '@/store/utils/defineListeners'
+import { messageMitt, messages } from '.'
 
-export const listeners = defineSubModuleListeners(
+export const defineWsListeners = createDefineListeners<typeof messages>()(
   wsListener,
-  'entities',
-  'messages',
   (listener, { dispatch }) => {
     listener.on('MESSAGE_CREATED', async ({ id }) => {
       const message = await dispatch.fetchMessage({ messageId: id })

@@ -3,7 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { listeners } from './listeners'
+import { defineWsListeners } from './listeners'
 
 /**
  * traQサーバーでのRTC状態を扱うstore
@@ -15,4 +15,4 @@ export const rtc = defineModule({
   mutations,
   actions
 })
-listeners()
+defineWsListeners(store => store.domain.rtc)

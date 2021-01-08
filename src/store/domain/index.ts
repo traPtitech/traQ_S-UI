@@ -3,7 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { listeners } from './listeners'
+import { defineWsListeners } from './listeners'
 import { channelTree } from './channelTree'
 import { me } from './me'
 import { messagesView } from './messagesView'
@@ -29,4 +29,4 @@ export const domain = defineModule({
     stampCategory
   }
 })
-listeners()
+defineWsListeners(store => store.domain)

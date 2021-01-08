@@ -3,7 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { entityListeners } from './listeners'
+import { defineEntityListeners } from './listeners'
 
 export const stampCategory = defineModule({
   namespaced: true,
@@ -12,4 +12,4 @@ export const stampCategory = defineModule({
   mutations,
   actions
 })
-entityListeners()
+defineEntityListeners(store => store.domain.stampCategory)

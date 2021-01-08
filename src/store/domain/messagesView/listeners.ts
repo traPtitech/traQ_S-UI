@@ -1,12 +1,10 @@
-import { defineSubModuleListeners } from '../../utils/defineListeners'
-
+import { createDefineListeners } from '../../utils/defineListeners'
 import { messageMitt } from '@/store/entities/messages'
 import { wsListener } from '@/lib/websocket'
+import { messagesView } from '.'
 
-export const wsListeners = defineSubModuleListeners(
+export const defineWsListeners = createDefineListeners<typeof messagesView>()(
   wsListener,
-  'domain',
-  'messagesView',
   (listener, { dispatch }) => {
     listener.on('CHANNEL_VIEWERS_CHANGED', ({ viewers }) => {
       dispatch.setCurrentViewers(viewers)
@@ -29,22 +27,19 @@ export const wsListeners = defineSubModuleListeners(
   }
 )
 
-export const messageListeners = defineSubModuleListeners(
-  messageMitt,
-  'domain',
-  'messagesView',
-  (listener, { dispatch }) => {
-    listener.on('addMessage', message => {
-      dispatch.onChannelMessageCreated(message)
-    })
-    listener.on('updateMessage', message => {
-      dispatch.onChannelMessageUpdated(message)
-    })
-    listener.on('deleteMessage', messageId => {
-      dispatch.onChannelMessageDeleted(messageId)
-    })
-    listener.on('changeMessagePinned', ({ message, pinned }) => {
-      dispatch.onChangeMessagePinned({ message, pinned })
-    })
-  }
-)
+export const defineMessageListeners = createDefineListeners<
+  typeof messagesView
+>()(messageMitt, (listener, { dispatch }) => {
+  listener.on('addMessage', message => {
+    dispatch.onChannelMessageCreated(message)
+  })
+  listener.on('updateMessage', message => {
+    dispatch.onChannelMessageUpdated(message)
+  })
+  listener.on('deleteMessage', messageId => {
+    dispatch.onChannelMessageDeleted(messageId)
+  })
+  listener.on('changeMessagePinned', ({ message, pinned }) => {
+    dispatch.onChangeMessagePinned({ message, pinned })
+  })
+})

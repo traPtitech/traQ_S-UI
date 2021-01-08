@@ -1,12 +1,11 @@
-import { defineSubModuleListeners } from '../../utils/defineListeners'
+import { createDefineListeners } from '../../utils/defineListeners'
 import { wsListener } from '@/lib/websocket'
 import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
 import { WebRTCUserState } from '@traptitech/traq'
+import { rtc } from '.'
 
-export const listeners = defineSubModuleListeners(
+export const defineWsListeners = createDefineListeners<typeof rtc>()(
   wsListener,
-  'domain',
-  'rtc',
   (listener, { dispatch }) => {
     listener.on('USER_WEBRTC_STATE_CHANGED', dataSnake => {
       const data = formatSnakeKeysToCamelShallow(dataSnake) as WebRTCUserState

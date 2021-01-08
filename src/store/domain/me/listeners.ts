@@ -1,11 +1,10 @@
-import { defineSubModuleListeners } from '../../utils/defineListeners'
+import { createDefineListeners } from '../../utils/defineListeners'
 import { wsListener } from '@/lib/websocket'
 import { messageMitt } from '@/store/entities/messages'
+import { me } from '.'
 
-export const wsListeners = defineSubModuleListeners(
+export const defineWsListeners = createDefineListeners<typeof me>()(
   wsListener,
-  'domain',
-  'me',
   (listener, { dispatch }) => {
     listener.on('USER_UPDATED', ({ id }) => {
       dispatch.onUserUpdated(id)
@@ -34,10 +33,8 @@ export const wsListeners = defineSubModuleListeners(
   }
 )
 
-export const messageListeners = defineSubModuleListeners(
+export const defineMessageListeners = createDefineListeners<typeof me>()(
   messageMitt,
-  'domain',
-  'me',
   (listener, { dispatch }) => {
     listener.on('addMessage', message => {
       dispatch.onMessageCreated(message)

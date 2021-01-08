@@ -3,7 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { listeners } from './listeners'
+import { defineWsListeners } from './listeners'
 import { mitt } from '@/lib/typedMitt'
 import { Message } from '@traptitech/traq'
 import { MessageId } from '@/types/entity-ids'
@@ -15,7 +15,7 @@ export const messages = defineModule({
   mutations,
   actions
 })
-listeners()
+defineWsListeners(store => store.entities.messages)
 
 type MessageEventMap = {
   reconnect: () => void
