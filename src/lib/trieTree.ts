@@ -41,6 +41,7 @@ class TrieNode {
     }
     if (pos === str.length) {
       this.isWord = false
+      dict.delete(this.id)
       return
     }
 
@@ -60,13 +61,13 @@ class TrieNode {
   getAllWords(str = '') {
     let ret = [] as string[]
 
-    if (this === undefined) {
-      return []
+    if (this.isWord) {
+      const val = dict.get(this.id)
+      if (val !== undefined) {
+        ret.push(val)
+      }
     }
 
-    if (this.isWord) {
-      ret.push(str)
-    }
     for (const k in this.children) {
       const child = this.children[k]
       ret = ret.concat(child.getAllWords(str + k))

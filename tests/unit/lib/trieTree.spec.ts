@@ -16,6 +16,9 @@ describe('trieTree class', () => {
   it('can search', () => {
     expect(tree.search('@ta').sort()).toEqual(['@takashi', '@takashi_trap'])
   })
+  it('is case insensitive', () => {
+    expect(tree.search('@SAPP').sort()).toEqual(['@sappi_red'])
+  })
   it('can insert', () => {
     tree.insert('@ryoha')
     expect(tree.search('@r')).toEqual(['@ryoha'])
