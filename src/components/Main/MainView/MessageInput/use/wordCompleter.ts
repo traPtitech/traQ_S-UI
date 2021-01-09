@@ -2,6 +2,35 @@ import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
 
+// import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it' あとでexportする
+const animeEffectSet = new Set([
+  'rotate',
+  'rotate-inv',
+  'wiggle',
+  'parrot',
+  'zoom',
+  'inversion',
+  'turn',
+  'turn-v',
+  'happa',
+  'pyon',
+  'flashy',
+  'pull',
+  'atsumori',
+  'stretch',
+  'stretch-v',
+  'conga',
+  'conga-inv',
+  'marquee',
+  'marquee-inv',
+  'rainbow',
+  'ascension',
+  'shake',
+  'party',
+  'attract'
+] as const)
+const sizeEffectSet = new Set(['ex-large', 'large', 'small'] as const)
+
 const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
   text = text.replaceAll('　', ' ')
   const startIndex = elm.selectionStart
@@ -37,7 +66,11 @@ const useWordCompleter = (
     store.getters.entities.allUserGroupNames.map(
       userGroupName => '@' + userGroupName
     ),
-    store.getters.entities.allStampNames.map(stampName => ':' + stampName + ':')
+    store.getters.entities.allStampNames.map(
+      stampName => ':' + stampName + ':'
+    ),
+    [...animeEffectSet].map(effectName => '.' + effectName),
+    [...sizeEffectSet].map(effectName => '.' + effectName)
   )
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
