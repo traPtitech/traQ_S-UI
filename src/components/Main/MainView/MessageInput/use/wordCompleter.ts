@@ -34,11 +34,12 @@ const sizeEffectSet = new Set(['ex-large', 'large', 'small'] as const)
 const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
   text = text.replaceAll('　', ' ')
   const startIndex = elm.selectionStart
-  const endIndex = elm.selectionEnd
-  const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
-  const nextSpaceIndex = text.indexOf(' ', endIndex)
-  const begin = prevSpaceIndex < 0 ? 0 : prevSpaceIndex + 1
-  const end = nextSpaceIndex < 0 ? text.length : nextSpaceIndex
+  const prevAtMarkIndex = text.lastIndexOf('@', startIndex - 1)
+  const prevColonIndex = text.lastIndexOf(':', startIndex - 1)
+  const prevPeriodIndex = text.lastIndexOf('.', startIndex - 1)
+  const nearest = Math.max(prevAtMarkIndex, prevColonIndex, prevPeriodIndex)
+  const begin = nearest < 0 ? 0 : nearest
+  const end = elm.selectionEnd
   const word = text.substring(begin, end)
   return { word, begin, end }
 }
