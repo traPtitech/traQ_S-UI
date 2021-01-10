@@ -44,6 +44,7 @@ export default defineComponent({
   height: 48px;
 }
 .fullLogoText {
+  height: 100%;
   margin-left: 10px;
 }
 .logoWithTitle {
