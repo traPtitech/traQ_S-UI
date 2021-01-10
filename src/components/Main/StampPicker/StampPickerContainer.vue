@@ -53,8 +53,6 @@ export default defineComponent({
   },
   setup() {
     const { state, isStampPickerShown } = useStampPickerStore()
-    const position = computed(() => state.position)
-    const alignment = computed(() => state.alignment)
     const styles = useStyles(state)
     return { isStampPickerShown, styles }
   }
