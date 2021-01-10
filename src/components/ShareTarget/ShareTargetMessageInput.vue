@@ -23,7 +23,10 @@
           />
         </div>
       </div>
-      <message-input-file-list :class="$style.fileList" />
+      <message-input-file-list
+        :class="$style.fileList"
+        channel-id="share-target"
+      />
     </div>
   </div>
 </template>
@@ -61,8 +64,8 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { state, isEmpty } = useMessageInputState()
-    const { addAttachment, destroy } = useAttachments()
+    const { state, isEmpty } = useMessageInputState('share-target')
+    const { addAttachment, destroy } = useAttachments('share-target')
 
     onBeforeUnmount(() => {
       destroy()

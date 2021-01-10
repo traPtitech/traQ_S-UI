@@ -9,7 +9,10 @@
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <template v-else>
-      <message-input-file-list :class="$style.fileList" />
+      <message-input-file-list
+        :class="$style.fileList"
+        :channel-id="channelId"
+      />
       <message-input-typing-users :typing-users="typingUsers" />
       <message-input-key-guide :show="showKeyGuide" />
       <message-input-upload-progress v-if="isPosting" :progress="progress" />
@@ -21,6 +24,7 @@
         <message-input-text-area
           ref="textareaRef"
           v-model="state.text"
+          :channel-id="channelId"
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
@@ -88,8 +92,9 @@ export default defineComponent({
   },
   setup(props) {
     const { isMobile } = useIsMobile()
-    const { state, isEmpty } = useMessageInputState()
-    const { addAttachment, destroy } = useAttachments()
+    const channelId = toRef(props, 'channelId')
+    const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
+    const { addAttachment, destroy } = useAttachments(channelId)
     const {
       isModifierKeyPressed,
       onModifierKeyDown,
@@ -106,13 +111,9 @@ export default defineComponent({
     )
 
     const { isFocused, onFocus, onBlur } = useFocus()
-    useEditingStatus(
-      computed(() => props.channelId),
-      state,
-      isFocused
-    )
+    useEditingStatus(channelId, isTextEmpty, isFocused)
 
-    const { postMessage, isPosting, progress } = usePostMessage(props)
+    const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
     const typingUsers = computed(
       () => store.getters.domain.messagesView.typingUsers

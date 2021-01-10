@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType, ref } from 'vue'
+import { defineComponent, computed, PropType, ref, Ref, toRef } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
@@ -24,8 +24,8 @@ import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
 import useMessageInputState from '@/providers/messageInputState'
 
-const useDragDrop = () => {
-  const { addFromDataTransfer } = useMessageInputState()
+const useDragDrop = (channelId: Ref<ChannelId>) => {
+  const { addFromDataTransfer } = useMessageInputState(channelId)
 
   // itemsはsafariには存在しない
   const hasFilesOrItems = (dt: DataTransfer) =>
@@ -67,20 +67,17 @@ export default defineComponent({
     ChannelViewContent,
     ChannelViewFileUploadOverlay
   },
-  setup() {
-    const state = reactive({
-      channelMessageIds: computed(
-        () => store.state.domain.messagesView.messageIds
-      ),
-      channelId: computed(
-        () => store.state.domain.messagesView.currentChannelId
-      )
-    })
+  setup(props) {
+    const channelMessageIds = computed(
+      () => store.state.domain.messagesView.messageIds
+    )
 
-    const { isDragging, onDrop, onDragOver } = useDragDrop()
+    const { isDragging, onDrop, onDragOver } = useDragDrop(
+      toRef(props, 'channelId')
+    )
 
     return {
-      state,
+      channelMessageIds,
       isDragging,
       onDrop,
       onDragOver

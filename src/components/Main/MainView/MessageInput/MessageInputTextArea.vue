@@ -22,12 +22,15 @@ import {
   SetupContext,
   Ref,
   computed,
-  nextTick
+  nextTick,
+  PropType,
+  toRef
 } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
 import useMessageInputState from '@/providers/messageInputState'
+import { ChannelId } from '@/types/entity-ids'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -60,10 +63,13 @@ const useLineBreak = (
   return { insertLineBreak }
 }
 
-const usePaste = () => {
-  const { addAttachment } = useMessageInputState()
+const usePaste = (channelId: Ref<ChannelId>) => {
+  const { addAttachment } = useMessageInputState(channelId)
 
   const onPaste = (event: ClipboardEvent) => {
+    // メッセージ編集の場合などは無視
+    if (channelId.value === '') return
+
     const dt = event?.clipboardData
     if (dt) {
       Array.from(dt.files).forEach(file => {
@@ -82,6 +88,10 @@ export default defineComponent({
   props: {
     modelValue: {
       type: String,
+      default: ''
+    },
+    channelId: {
+      type: String as PropType<ChannelId>,
       default: ''
     },
     isPosting: {
@@ -105,7 +115,7 @@ export default defineComponent({
     )
 
     const { onFocus, onBlur } = useFocus(context)
-    const { onPaste } = usePaste()
+    const { onPaste } = usePaste(toRef(props, 'channelId'))
 
     return {
       value,

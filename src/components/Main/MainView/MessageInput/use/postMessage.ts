@@ -3,7 +3,7 @@ import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
 import { replace as embedInternalLink } from '@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
-import { computed, ref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
@@ -13,7 +13,10 @@ import {
   bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
 import useToastStore from '@/providers/toastStore'
-import useMessageInputState, { Attachment } from '@/providers/messageInputState'
+import useMessageInputState, {
+  Attachment,
+  MessageInputStateKey
+} from '@/providers/messageInputState'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
@@ -52,18 +55,21 @@ const createContent = (embededText: string, fileUrls: string[]) => {
   return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
 }
 
-const usePostMessage = (props: { channelId: ChannelId }) => {
-  const { state, isEmpty, clearState } = useMessageInputState()
+const usePostMessage = (
+  channelId: MessageInputStateKey,
+  inputStateKey = channelId
+) => {
+  const { state, isEmpty, clearState } = useMessageInputState(inputStateKey)
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
   const isForce = computed(
-    () => store.state.entities.channelsMap.get(props.channelId)?.force
+    () => store.state.entities.channelsMap.get(unref(channelId))?.force
   )
   const confirmString = computed(
     () =>
       `#${channelIdToShortPathString(
-        props.channelId
+        unref(channelId)
       )}に投稿されたメッセージは全員に通知されます。メッセージを投稿しますか？`
   )
 
@@ -111,13 +117,13 @@ const usePostMessage = (props: { channelId: ChannelId }) => {
 
       const fileUrls = await uploadAttachments(
         state.attachments,
-        props.channelId,
+        unref(channelId),
         p => {
           progress.value = p
         }
       )
 
-      await apis.postMessage(props.channelId, {
+      await apis.postMessage(unref(channelId), {
         content: createContent(embededText, fileUrls)
       })
 

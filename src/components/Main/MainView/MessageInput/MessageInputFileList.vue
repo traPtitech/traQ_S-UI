@@ -11,17 +11,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType, toRef } from 'vue'
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
-import useMessageInputState from '@/providers/messageInputState'
+import useMessageInputState, {
+  VirtualChannelId
+} from '@/providers/messageInputState'
+import { ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'MessageInputFileList',
   components: {
     MessageInputFileListItem
   },
-  setup() {
-    const { state, removeAttachmentAt } = useMessageInputState()
+  props: {
+    channelId: {
+      type: String as PropType<ChannelId | VirtualChannelId>,
+      required: true
+    }
+  },
+  setup(props) {
+    const { state, removeAttachmentAt } = useMessageInputState(
+      toRef(props, 'channelId')
+    )
     return { state, removeAttachmentAt }
   }
 })
