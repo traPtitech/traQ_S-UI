@@ -1,12 +1,12 @@
-import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
+import apis from '@/lib/apis'
 
 const useStarChannel = (props: { channelId: ChannelId }) => {
-  const starChannel = () => {
-    store.dispatch.domain.me.starChannel(props.channelId)
+  const starChannel = async () => {
+    await apis.addMyStar({ channelId: props.channelId })
   }
-  const unstarChannel = () => {
-    store.dispatch.domain.me.unstarChannel(props.channelId)
+  const unstarChannel = async () => {
+    await apis.removeMyStar(props.channelId)
   }
   return { starChannel, unstarChannel }
 }

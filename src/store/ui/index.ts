@@ -4,13 +4,13 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { mainView } from './mainView'
-import { messageContextMenu } from './messageContextMenu'
-import { stampPicker } from './stampPicker'
 import { modal } from './modal'
-import { fileInput } from './fileInput'
-import { toast } from './toast'
-import { settings } from './settings'
 
+/**
+ * 通信することもIndexedDBを利用することもないストア
+ * 特定のコンポーネントのみが利用することが多い
+ * ここが他のストアを変更することはあっても、ここをほかのストアが変更することはない
+ */
 export const ui = defineModule({
   namespaced: true,
   state,
@@ -19,11 +19,6 @@ export const ui = defineModule({
   actions,
   modules: {
     mainView,
-    stampPicker,
-    messageContextMenu,
-    modal,
-    fileInput,
-    toast,
-    settings
+    modal
   }
 })

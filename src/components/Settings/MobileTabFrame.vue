@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.container">
     <div :class="$style.header">
-      <return-button @click="back" :size="40" />
+      <return-button @click="showRoot" :size="40" />
       <tab-content-title :class="$style.title" is-mobile />
       <close-button @close="close" :size="36" />
     </div>
@@ -26,8 +26,8 @@ export default defineComponent({
     CloseButton
   },
   setup() {
-    const { close, back } = useSettingsNavigation()
-    return { back, close }
+    const { close, showRoot } = useSettingsNavigation()
+    return { showRoot, close }
   }
 })
 </script>

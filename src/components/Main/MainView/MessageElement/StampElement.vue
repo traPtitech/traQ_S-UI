@@ -42,7 +42,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const stampName = computed(
-      () => store.state.entities.stamps[props.stamp.id]?.name ?? ''
+      () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''
     )
 
     const state = reactive({
@@ -52,7 +52,7 @@ export default defineComponent({
           `:${stampName.value}:`,
           ...props.stamp.users.map(
             u =>
-              `${store.state.entities.users[u.id]?.displayName ?? ''}(${
+              `${store.state.entities.usersMap.get(u.id)?.displayName ?? ''}(${
                 u.count
               })`
           )

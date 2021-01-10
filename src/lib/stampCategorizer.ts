@@ -22,19 +22,17 @@ export type StampCategory = {
  * スタンプを名前→IDのマップに変換する
  * @param stampEntities スタンプのエンティティ
  */
-export const constructStampNameIdMap = (
-  stampEntities: Record<StampId, Stamp>
-) => {
+export const constructStampNameIdMap = (stampEntities: Map<StampId, Stamp>) => {
   /** Unicodeスタンプの名前→IDマップ */
-  const unicodeStampMap: Record<StampName, StampId> = {}
+  const unicodeStampMap = new Map<StampName, StampId>()
 
   /** traQスタンプのIDリスト */
-  const traQStampMap: Record<StampName, StampId> = {}
-  Object.values(stampEntities).forEach(stamp => {
+  const traQStampMap = new Map<StampName, StampId>()
+  stampEntities.forEach(stamp => {
     if (stamp.isUnicode) {
-      unicodeStampMap[stamp.name] = stamp.id
+      unicodeStampMap.set(stamp.name, stamp.id)
     } else {
-      traQStampMap[stamp.name] = stamp.id
+      traQStampMap.set(stamp.name, stamp.id)
     }
   })
   return { unicodeStampMap, traQStampMap }
@@ -45,7 +43,7 @@ export const constructStampNameIdMap = (
  * @param unicodeStampMap Unicodeスタンプ名→IDのマップ
  */
 export const categorizeUnicodeStamps = async (
-  unicodeStampNameIdMap: Record<StampName, StampId>
+  unicodeStampNameIdMap: Map<StampName, StampId>
 ) => {
   const unicodeEmojis = (await import('@/assets/unicode_emojis.json')).default
 
@@ -55,7 +53,7 @@ export const categorizeUnicodeStamps = async (
   unicodeEmojis.forEach((emojiCategory, i) => {
     const name = emojiCategory.category
     const stampIds = emojiCategory.emojis
-      .map(emojiName => unicodeStampNameIdMap[emojiName])
+      .map(emojiName => unicodeStampNameIdMap.get(emojiName))
       .filter(isDefined)
     unicodeStampCategories[i] = { name, stampIds }
   })
@@ -67,9 +65,9 @@ export const categorizeUnicodeStamps = async (
  * @param traQStampMap traQスタンプ名→IDのマップ
  */
 export const traQStampsToStampCategory = (
-  traQStampNameIdMap: Record<StampName, StampId>
+  traQStampNameIdMap: Map<StampName, StampId>
 ): StampCategory => {
-  const stampIds = Object.entries(traQStampNameIdMap)
+  const stampIds = [...traQStampNameIdMap.entries()]
     .sort(([name1], [name2]) => compareStringInsensitive(name1, name2))
     .map(([, value]) => value)
 

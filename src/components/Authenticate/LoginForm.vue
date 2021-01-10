@@ -31,13 +31,13 @@
     <div :class="$style.buttons">
       <authenticate-button type="primary" label="ログイン" is-submit />
     </div>
-    <template v-if="!isIOS && externalLogin.length > 0">
+    <template v-if="!isIOS && externalLogin.size > 0">
       <authenticate-separator label="または" :class="$style.separator" />
       <div :class="$style.exLoginButtons">
         <authenticate-button
           type="secondary"
           :class="$style.exLoginButton"
-          v-show="externalLogin.includes('traQ')"
+          v-show="externalLogin.has('traQ')"
           label="traP"
           icon-name="traQ"
           @click="loginExternal('traq')"
@@ -45,7 +45,7 @@
         <authenticate-button
           type="secondary"
           :class="$style.exLoginButton"
-          v-show="externalLogin.includes('google')"
+          v-show="externalLogin.has('google')"
           label="Google"
           icon-mdi
           icon-name="google"
@@ -54,7 +54,7 @@
         <authenticate-button
           type="secondary"
           :class="$style.exLoginButton"
-          v-show="externalLogin.includes('github')"
+          v-show="externalLogin.has('github')"
           label="GitHub"
           icon-mdi
           icon-name="github"
@@ -63,7 +63,7 @@
         <authenticate-button
           type="secondary"
           :class="$style.exLoginButton"
-          v-show="externalLogin.includes('oidc')"
+          v-show="externalLogin.has('oidc')"
           label="OpenID Connect"
           icon-mdi
           icon-name="openid"
@@ -75,9 +75,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useLogin from './use/login'
-import store from '@/store'
 import { isIOSApp } from '@/lib/util/browser'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
@@ -93,21 +92,23 @@ export default defineComponent({
     AuthenticateButton,
     AuthenticateSeparator
   },
-  setup(_, context) {
+  props: {
+    externalLogin: {
+      type: Set as PropType<Set<string>>,
+      required: true
+    }
+  },
+  setup(props, context) {
     const { loginState, login, loginExternal } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
-    const externalLogin = computed(
-      () => store.state.app.version.flags.externalLogin
-    )
 
     return {
       resetLink,
       loginState,
       login,
       loginExternal,
-      isIOS,
-      externalLogin
+      isIOS
     }
   }
 })

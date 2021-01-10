@@ -25,7 +25,7 @@ export default defineComponent({
     }
     const users = computed(() =>
       props.viewerIds
-        .map(id => store.state.entities.users[id])
+        .map(id => store.state.entities.usersMap.get(id))
         .filter(isDefined)
     )
     return { closeDetail, users }

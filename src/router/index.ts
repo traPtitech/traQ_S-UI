@@ -140,3 +140,22 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+
+/**
+ * チャンネルパスが変化したときに/channels/～を書き換える
+ * @param nowPath 書き換えたいパス
+ * @param paths 元のパスとその新しいパス
+ * @returns nullのときは書き換え不要、文字列のときはnowPathを書き換えた結果
+ */
+export const rewriteChannelPath = (
+  nowPath: string,
+  { oldPath, newPath }: { oldPath: string; newPath: string }
+) => {
+  const oldFullPath = constructChannelPath(oldPath)
+
+  if (!nowPath.startsWith(oldFullPath)) {
+    return null
+  }
+  const newFullPath = constructChannelPath(newPath)
+  return `${newFullPath}${nowPath.slice(oldFullPath.length)}`
+}

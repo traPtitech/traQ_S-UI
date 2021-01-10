@@ -19,7 +19,7 @@ export default defineComponent({
   },
   setup(props) {
     const topic = computed(
-      () => store.state.entities.channels[props.channelId]?.topic ?? ''
+      () => store.state.entities.channelsMap.get(props.channelId)?.topic ?? ''
     )
     return { topic }
   }

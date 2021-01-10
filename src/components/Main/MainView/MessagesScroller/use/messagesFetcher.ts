@@ -1,7 +1,8 @@
-import { computed, ref, Ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, Ref } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
+import { wsListener } from '@/lib/websocket'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -17,6 +18,9 @@ const useMessageFetcher = (
         isReachedLatest: Ref<boolean>,
         isReachedEnd: Ref<boolean>
       ) => Promise<MessageId[]>)
+    | undefined,
+  fetchNewMessages:
+    | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
     | undefined
 ) => {
   // メッセージIDはwsイベントで処理されるため、storeに置く
@@ -137,9 +141,9 @@ const useMessageFetcher = (
     ) {
       return
     }
-    const entryMessage =
-      store.state.entities.messages[messageId] ??
-      (await store.dispatch.entities.fetchMessage(messageId))
+    const entryMessage = await store.dispatch.entities.messages.fetchMessage({
+      messageId
+    })
     if (!entryMessage) {
       return
     }
@@ -165,6 +169,29 @@ const useMessageFetcher = (
     )
   }
 
+  const loadNewMessages = async () => {
+    if (!fetchNewMessages || !isReachedLatest.value) {
+      return
+    }
+    isLoading.value = true
+
+    await runWithIdentifierCheck(
+      async () => {
+        const newMessageIds = await fetchNewMessages(isReachedLatest)
+        await renderMessageFromIds(newMessageIds)
+        return newMessageIds
+      },
+      newMessageIds => {
+        isLoading.value = false
+        lastLoadingDirection.value = 'latter'
+
+        store.commit.domain.messagesView.setMessageIds([
+          ...new Set([...messageIds.value, ...newMessageIds])
+        ])
+      }
+    )
+  }
+
   const init = () => {
     reset()
     if (props.entryMessageId) {
@@ -175,6 +202,16 @@ const useMessageFetcher = (
       onLoadFormerMessagesRequest()
     }
   }
+
+  const onReconnect = () => {
+    loadNewMessages()
+  }
+  onMounted(() => {
+    wsListener.on('reconnect', onReconnect)
+  })
+  onBeforeUnmount(() => {
+    wsListener.off('reconnect', onReconnect)
+  })
 
   return {
     messageIds,

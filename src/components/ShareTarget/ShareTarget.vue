@@ -8,17 +8,14 @@
       @post="onPost"
     />
     <div v-else>投稿しました。1秒後にウィンドウを閉じます。</div>
-    <div :class="$style.stampPickerLocator" :id="teleportTargetName" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
-import store from '@/store'
 import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '@/use/isMobile'
-import { teleportTargetName } from './ShareTargetMessageInput.vue'
 import { wait } from '@/lib/util/timer'
 
 export default defineComponent({
@@ -60,18 +57,7 @@ export default defineComponent({
       }
     })
 
-    // メッセージの投稿に必要
-    Promise.all([
-      store.dispatch.entities.fetchChannels(),
-      store.dispatch.entities.fetchUsers(),
-      store.dispatch.entities.fetchUserGroups(),
-      store.dispatch.entities.fetchStamps(),
-      store.dispatch.domain.stampCategory.constructStampCategories(),
-      store.dispatch.entities.fetchStampPalettes(),
-      store.dispatch.domain.me.fetchStampHistory()
-    ])
-
-    return { defaultText, isMobile, donePost, onPost, teleportTargetName }
+    return { defaultText, isMobile, donePost, onPost }
   }
 })
 </script>

@@ -26,8 +26,8 @@ export default defineComponent({
   },
   setup() {
     const currentChannel = computed(() =>
-      store.getters.app.rtc.qallSession
-        ? store.state.app.rtc.currentRTCState?.channelId
+      store.getters.domain.rtc.qallSession
+        ? store.getters.domain.rtc.currentRTCState?.channelId
         : undefined
     )
     const onEndQallClick = () => {

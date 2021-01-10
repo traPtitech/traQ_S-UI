@@ -1,25 +1,32 @@
-import { WebhookId, StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
+import { StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import {
   UnreadChannel,
-  MyUserDetail,
-  ChannelSubscribeLevel
+  ChannelSubscribeLevel,
+  MyUserDetail
 } from '@traptitech/traq'
 
 export interface S {
   detail?: Readonly<MyUserDetail>
-  webhooks: WebhookId[]
-  stampHistory: Record<StampId, Date>
 
-  unreadChannelsSet: Record<ChannelId | DMChannelId, UnreadChannel>
-  staredChannelSet: Record<ChannelId, true>
-  subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
+  stampHistory: Map<StampId, Date>
+  stampHistoryFetched: boolean
+  unreadChannelsMap: Map<ChannelId | DMChannelId, UnreadChannel>
+  unreadChannelsMapFetched: boolean
+  staredChannelSet: Set<ChannelId>
+  staredChannelSetFetched: boolean
+  subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
+  subscriptionMapFetched: boolean
 }
 
 export const state: S = {
   detail: undefined,
-  webhooks: [],
-  stampHistory: {},
-  unreadChannelsSet: {},
-  staredChannelSet: {},
-  subscriptionMap: {}
+
+  stampHistory: new Map(),
+  stampHistoryFetched: false,
+  unreadChannelsMap: new Map(),
+  unreadChannelsMapFetched: false,
+  staredChannelSet: new Set(),
+  staredChannelSetFetched: false,
+  subscriptionMap: new Map(),
+  subscriptionMapFetched: false
 }

@@ -76,7 +76,7 @@ export default defineComponent({
     } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = async () => {
       const iconId =
-        store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+        store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
           ?.iconFileId ?? ''
       await startPinP(iconId)
     }

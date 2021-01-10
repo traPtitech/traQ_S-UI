@@ -1,25 +1,23 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { WebhookId, ChannelId, StampId } from '@/types/entity-ids'
+import { ChannelId, StampId } from '@/types/entity-ids'
 import {
   UnreadChannel,
-  MyUserDetail,
   ChannelSubscribeLevel,
-  Message
+  Message,
+  MyUserDetail
 } from '@traptitech/traq'
-import { detectMentionOfMe } from '@/lib/detector'
-import store from '@/store'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
 import { removeNotification } from '@/lib/firebase'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
-const updateBadge = async () => {
+const updateBadge = async (
+  unreadChannelsMap: Map<ChannelId, UnreadChannel>
+) => {
   if (!isBadgingAPISupported) return
 
-  const unreadChannelsSet = store.state.domain.me.unreadChannelsSet
-
-  const unreadCount = Object.entries(unreadChannelsSet).reduce(
-    (acc, [, current]) => acc + current.count,
+  const unreadCount = [...unreadChannelsMap.values()].reduce(
+    (acc, current) => acc + current.count,
     0
   )
   if (unreadCount > 0) {
@@ -30,89 +28,79 @@ const updateBadge = async () => {
 }
 
 export const mutations = defineMutations<S>()({
-  setDetail(state: S, detail: Readonly<MyUserDetail>) {
+  setDetail(state, detail: Readonly<MyUserDetail>) {
     state.detail = detail
   },
-  setWebhooks(state: S, webhooks: WebhookId[]) {
-    state.webhooks = webhooks
+  unsetDetail(state) {
+    state.detail = undefined
   },
-  setStampHistory(state: S, stampHistory: Record<StampId, Date>) {
+
+  setStampHistory(state: S, stampHistory: Map<StampId, Date>) {
     state.stampHistory = stampHistory
+    state.stampHistoryFetched = true
+  },
+  upsertLocalStampHistory(
+    state: S,
+    { stampId, datetime }: { stampId: StampId; datetime: Date }
+  ) {
+    state.stampHistory.set(stampId, datetime)
   },
 
-  setUnreadChannelsSet(state: S, unreadChannels: readonly UnreadChannel[]) {
-    state.unreadChannelsSet = Object.fromEntries(
-      unreadChannels.map(unread => [unread.channelId, unread])
-    )
-    updateBadge()
+  setUnreadChannelsMap(
+    state: S,
+    unreadChannelsMap: Map<ChannelId, UnreadChannel>
+  ) {
+    state.unreadChannelsMap = unreadChannelsMap
+    state.unreadChannelsMapFetched = true
+    updateBadge(state.unreadChannelsMap)
   },
-  upsertUnreadChannel(state: S, message: Readonly<Message>) {
-    const noticeable =
-      detectMentionOfMe(
-        message.content,
-        state.detail?.id ?? '',
-        state.detail?.groups ?? []
-      ) || store.state.entities.channels[message.channelId]?.force
-
-    if (
-      !(
-        state.subscriptionMap[message.channelId] > 0 ||
-        store.state.entities.dmChannels[message.channelId] ||
-        noticeable
-      )
-    )
-      return
-
-    if (message.channelId in state.unreadChannelsSet) {
-      const oldUnreadChannel = state.unreadChannelsSet[message.channelId]
-      state.unreadChannelsSet[message.channelId] = {
+  upsertUnreadChannel(
+    state: S,
+    { message, noticeable }: { message: Readonly<Message>; noticeable: boolean }
+  ) {
+    if (state.unreadChannelsMap.has(message.channelId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const oldUnreadChannel = state.unreadChannelsMap.get(message.channelId)!
+      state.unreadChannelsMap.set(message.channelId, {
         ...oldUnreadChannel,
         count: oldUnreadChannel.count + 1,
         noticeable: oldUnreadChannel.noticeable || noticeable,
         updatedAt: message.createdAt
-      }
+      })
     } else {
-      state.unreadChannelsSet[message.channelId] = {
+      state.unreadChannelsMap.set(message.channelId, {
         channelId: message.channelId,
         count: 1,
         noticeable,
         since: message.createdAt,
         updatedAt: message.createdAt
-      }
+      })
     }
-    updateBadge()
+    updateBadge(state.unreadChannelsMap)
   },
-  // TODO: https://github.com/traPtitech/traQ_S-UI/issues/636
   deleteUnreadChannel(state: S, channelId: ChannelId) {
-    delete state.unreadChannelsSet[channelId]
-    updateBadge()
+    state.unreadChannelsMap.delete(channelId)
+    updateBadge(state.unreadChannelsMap)
     removeNotification(channelId)
   },
 
-  setStaredChannels(state: S, channelIds: readonly ChannelId[]) {
-    state.staredChannelSet = Object.fromEntries(
-      channelIds.map(id => [id, true])
-    )
+  setStaredChannels(state: S, channelIds: Set<ChannelId>) {
+    state.staredChannelSet = channelIds
+    state.staredChannelSetFetched = true
   },
   addStaredChannel(state: S, channelId: ChannelId) {
-    state.staredChannelSet[channelId] = true
+    state.staredChannelSet.add(channelId)
   },
   deleteStaredChannel(state: S, channelId: ChannelId) {
-    delete state.staredChannelSet[channelId]
-  },
-
-  upsertLocalStampHistory(
-    state: S,
-    { stampId, datetime }: { stampId: StampId; datetime: Date }
-  ) {
-    state.stampHistory[stampId] = datetime
+    state.staredChannelSet.delete(channelId)
   },
 
   setSubscriptionMap(
     state: S,
-    subscriptionMap: Record<ChannelId, ChannelSubscribeLevel>
+    subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
   ) {
     state.subscriptionMap = subscriptionMap
+    state.subscriptionMapFetched = true
   },
   setSubscription(
     state: S,
@@ -121,6 +109,6 @@ export const mutations = defineMutations<S>()({
       subscriptionLevel: ChannelSubscribeLevel
     }
   ) {
-    state.subscriptionMap[payload.channelId] = payload.subscriptionLevel
+    state.subscriptionMap.set(payload.channelId, payload.subscriptionLevel)
   }
 })

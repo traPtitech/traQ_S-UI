@@ -1,23 +1,4 @@
-import { Version } from '@traptitech/traq'
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type S = {}
 
-export interface S {
-  loaded: boolean
-  componentLoaded: boolean
-  loginCheckSucceeded: boolean
-  initialFetchCompleted: boolean
-  version: Readonly<Version>
-}
-
-export const state: S = {
-  loaded: false,
-  componentLoaded: false,
-  loginCheckSucceeded: false,
-  initialFetchCompleted: false,
-  version: {
-    version: '',
-    revision: '',
-    flags: {
-      externalLogin: []
-    }
-  }
-}
+export const state: S = {}

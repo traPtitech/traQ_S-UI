@@ -4,28 +4,13 @@ import router, { RouteName, constructChannelPath } from '@/router'
 import useNavigationController from '@/use/navigationController'
 import useChannelPath from '@/use/channelPath'
 import useViewTitle from './viewTitle'
-import apis from '@/lib/apis'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
 import { useRoute } from 'vue-router'
+import {
+  bothChannelsMapInitialFetchPromise,
+  usersMapInitialFetchPromise
+} from '@/store/entities/promises'
 
 type Views = 'none' | 'main' | 'not-found'
-
-const setUnreadState = (id: ChannelId | DMChannelId) => {
-  // 未読の処理
-  // TODO: 新着メッセージ基準設定などの処理
-  store.commit.domain.messagesView.unsetUnreadSince()
-  const unreadChannel = store.state.domain.me.unreadChannelsSet[id]
-  if (unreadChannel) {
-    if (
-      store.state.domain.me.subscriptionMap[id] > 0 ||
-      store.state.entities.dmChannels[id]
-    ) {
-      store.commit.domain.messagesView.setUnreadSince(unreadChannel.since)
-    }
-
-    store.dispatch.domain.me.readChannel({ channelId: id })
-  }
-}
 
 const getHeadIfArray = (param: string[] | string) => {
   if (Array.isArray(param)) return param[0]
@@ -54,6 +39,7 @@ const useRouteWatcher = () => {
     await originalStore.restored
     return computed(() => store.getters.app.browserSettings.defaultChannelName)
   }
+
   const onRouteChangedToIndex = async () => {
     const openChannelPath = await useOpenChannel()
     await router
@@ -64,12 +50,9 @@ const useRouteWatcher = () => {
     return
   }
 
-  const onRouteChangedToNull = () => {
-    store.dispatch.ui.mainView.changePrimaryViewToNull()
-    state.view = 'main'
-  }
-
-  const onRouteChangedToChannel = () => {
+  const onRouteChangedToChannel = async () => {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -81,8 +64,6 @@ const useRouteWatcher = () => {
       )
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
-
-      setUnreadState(id)
 
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
@@ -96,23 +77,17 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToUser = async () => {
+    // ユーザーの全件情報がないとユーザー名からユーザーIDがひけない
+    await usersMapInitialFetchPromise
     const user = store.getters.entities.userByName(state.currentRouteParam)
     try {
       if (!user) throw 'user not found'
 
-      let dmChannelId = store.getters.entities.DMChannelIdByUserId(user.id)
+      const dmChannelId =
+        store.getters.entities.DMChannelIdByUserId(user.id) ??
+        (await store.dispatch.entities.fetchUserDMChannel(user.id))
 
-      if (!dmChannelId) {
-        const { data } = await apis.getUserDMChannel(user.id)
-        store.commit.entities.addDMChannel({
-          id: data.id,
-          entity: data
-        })
-        dmChannelId = data.id
-      }
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
-
-      setUnreadState(dmChannelId)
 
       store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
@@ -129,33 +104,35 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToClipFolders = async () => {
     const id = state.idParam
-    try {
-      const clipFolder =
-        store.state.entities.clipFolders[id] ??
-        (await store.dispatch.entities.fetchClipFolder(id))
-      changeViewTitle(clipFolder.name)
-    } catch {
+    const clipFolder = await store.dispatch.entities.fetchClipFolder({
+      clipFolderId: id,
+      cacheStrategy: 'useCache'
+    })
+    if (!clipFolder) {
       state.view = 'not-found'
       return
     }
+    changeViewTitle(clipFolder.name)
     store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
 
   const onRouteChangedToFile = async () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      // まだチャンネルツリーが構築されていない
-      return
-    }
     const fileId = state.idParam
-    if (!store.state.entities.fileMetaData[fileId]) {
-      await store.dispatch.entities.fetchFileMetaByFileId(fileId)
-    }
-    const file = store.state.entities.fileMetaData[fileId]
+    const file = await store.dispatch.entities.messages.fetchFileMetaData({
+      fileId
+    })
 
     if (!file) {
       // ファイルがなかった
       state.view = 'not-found'
+      return
+    }
+
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
       return
     }
 
@@ -179,7 +156,10 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
-    if (store.state.ui.mainView.primaryView.type === 'null') {
+    if (
+      store.state.ui.mainView.primaryView.type === 'channel' &&
+      store.state.ui.mainView.primaryView.channelId === ''
+    ) {
       store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
@@ -196,13 +176,9 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToMessage = async () => {
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
-      return
-    }
-    const messageId = state.idParam
-    const message =
-      store.state.entities.messages[messageId] ??
-      (await store.dispatch.entities.fetchMessage(messageId))
+    const message = await store.dispatch.entities.messages.fetchMessage({
+      messageId: state.idParam
+    })
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'
@@ -211,16 +187,25 @@ const useRouteWatcher = () => {
 
     const channelId = message.channelId
 
-    if (channelId in store.state.entities.channels) {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      return
+    }
+
+    if (store.state.entities.channelsMap.has(channelId)) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
         path: constructChannelPath(channelIdToPathString(message.channelId)),
         query: { message: message.id }
       })
-    } else if (channelId in store.state.entities.dmChannels) {
-      const dmChannel = store.state.entities.dmChannels[channelId]
-      const user = store.state.entities.users[dmChannel.userId]
+    } else if (store.state.entities.dmChannelsMap.has(channelId)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const dmChannel = store.state.entities.dmChannelsMap.get(channelId)!
+      // ユーザーIDからユーザー名への変換に必要
+      await usersMapInitialFetchPromise
+      const user = store.state.entities.usersMap.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
         params: { user: user?.name ?? '' },
@@ -246,17 +231,13 @@ const useRouteWatcher = () => {
     if (routeParam === prevRouteParam) {
       return
     }
-    if (!store.state.app.initialFetchCompleted) {
-      onRouteChangedToNull()
-      return
-    }
 
     if (routeName === RouteName.Channel) {
-      onRouteChangedToChannel()
+      await onRouteChangedToChannel()
     } else if (routeName === RouteName.User) {
-      onRouteChangedToUser()
+      await onRouteChangedToUser()
     } else if (routeName === RouteName.ClipFolders) {
-      onRouteChangedToClipFolders()
+      await onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
     } else if (routeName === RouteName.Message) {
@@ -283,9 +264,7 @@ const useRouteWatcher = () => {
   }
 
   watch(
-    computed(() =>
-      store.state.app.initialFetchCompleted ? state.currentRouteParam : ''
-    ),
+    computed(() => state.currentRouteParam),
     onRouteParamChange
   )
 

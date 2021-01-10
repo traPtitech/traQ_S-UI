@@ -1,59 +1,35 @@
-import { onBeforeMount, onActivated } from 'vue'
 import store from '@/store'
-import { ws } from '@/lib/websocket'
-import { performLoginCheck } from './loginCheck'
+import { ref } from 'vue'
+import useLoginCheck from './loginCheck'
 
-// Main以外(Settingsなど)からMainに飛んだ場合は二重にfetchが走るが、
-// レアケースなので対応しない(基本的にMainから開くため)
 const initialFetch = async () => {
   // 初回fetch
-  await Promise.all([
-    store.dispatch.entities.fetchChannels(),
-    store.dispatch.domain.me.fetchUnreadChannels(),
-    store.dispatch.entities.fetchUsers(),
-    // チャンネルでのメッセージスタンプ表示時にずれてしまうので先に取得しておく
-    // メッセージのレンダリングにも必要なので待つ必要がある
-    store.dispatch.entities.fetchStamps()
-  ])
-
-  store.commit.app.setInitialFetchCompleted()
-
+  store.dispatch.entities.fetchUsers()
   store.dispatch.entities.fetchUserGroups()
-  store.dispatch.domain.stampCategory.constructStampCategories()
-  store.dispatch.entities.fetchStampPalettes()
-  store.dispatch.entities.fetchClipFolders()
-  store.dispatch.domain.fetchOnlineUsers()
-  store.dispatch.domain.me.fetchStaredChannels()
+  store.dispatch.entities.fetchChannels()
+  store.dispatch.entities.fetchStamps()
+
+  store.dispatch.domain.me.fetchUnreadChannels()
+  store.dispatch.domain.me.fetchSubscriptions()
+
   store.dispatch.domain.me.fetchStampHistory()
-  store.dispatch.app.rtc.fetchRTCState()
+  store.dispatch.entities.fetchStampPalettes()
 
-  await store.dispatch.domain.me.fetchSubscriptions()
-  store.dispatch.domain.channelTree.constructHomeChannelTree()
+  store.dispatch.domain.me.fetchStaredChannels()
+  store.dispatch.entities.fetchClipFolders()
+  store.dispatch.domain.rtc.fetchRTCState()
 }
 
-const initialFetchIfPossible = async () => {
-  await performLoginCheck()
-  initialFetch()
-
-  ws.addEventListener('reconnect', () => {
-    initialFetch()
-  })
-}
-
-/**
- * ログインチェック成功後にafterLoginCheckが呼び出される
- */
 const useInitialFetch = (afterLoginCheck: () => void) => {
-  const hook = async () => {
-    if (store.state.app.initialFetchCompleted) return
-    try {
-      await initialFetchIfPossible()
-      afterLoginCheck()
-    } catch {}
-  }
+  const initialFetchCompleted = ref(false)
 
-  onBeforeMount(hook)
-  onActivated(hook)
+  useLoginCheck(() => {
+    if (initialFetchCompleted.value) return
+
+    initialFetchCompleted.value = true
+    initialFetch()
+    afterLoginCheck()
+  })
 }
 
 export default useInitialFetch

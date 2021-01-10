@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasInitialFetchForSettingsDone" :class="$style.container">
+  <div v-if="isLoginCheckDone" :class="$style.container">
     <mobile-setting-modal v-if="isMobile">
       <router-view />
     </mobile-setting-modal>
@@ -23,11 +23,13 @@ import { defaultSettingsName } from '@/router/settings'
 import useIsMobile from '@/use/isMobile'
 import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
-import store from '@/store'
 import { changeViewState } from '@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
 
-const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
+const useSettingsRootPathWatcher = (
+  isMobile: Ref<boolean>,
+  settingsRootShown: Ref<boolean>
+) => {
   const route = useRoute()
   const router = useRouter()
   const redirectOrMarkRootIfNeeded = () => {
@@ -35,7 +37,7 @@ const useSettingsRootPathWatcher = (isMobile: Ref<boolean>) => {
       return
     }
     if (isMobile.value) {
-      store.commit.ui.settings.setSettingsRootShown(true)
+      settingsRootShown.value = true
     } else {
       router.replace({ name: defaultSettingsName })
     }
@@ -49,45 +51,23 @@ export default defineComponent({
   name: 'Settings',
   setup() {
     const { isMobile } = useIsMobile()
-    useSettingsRootPathWatcher(isMobile)
 
+    const settingsRootShown = ref(false)
     onBeforeRouteLeave(() => {
-      store.commit.ui.settings.setSettingsRootShown(false)
-      return true
+      settingsRootShown.value = false
     })
+
+    useSettingsRootPathWatcher(isMobile, settingsRootShown)
 
     onBeforeRouteUpdate(() => {
       // 設定画面を開いたときは閲覧チャンネルを消す
       changeViewState(null)
     })
 
-    const execIfEmpty = <T extends keyof typeof store.state.entities>(
-      key: T,
-      exector: () => Promise<void>
-    ) =>
-      Object.entries(store.state.entities[key]).length > 0
-        ? undefined
-        : exector()
-
     // ログイン必要ルート
-    const hasInitialFetchForSettingsDone = ref(false)
-    useLoginCheck(async () => {
-      await Promise.all([
-        execIfEmpty('stamps', store.dispatch.entities.fetchStamps),
-        execIfEmpty(
-          'stampPalettes',
-          store.dispatch.entities.fetchStampPalettes
-        ),
-        // ホームチャンネルの選択などに必要
-        execIfEmpty('channels', store.dispatch.entities.fetchChannels),
-        // スタンプの所有者変更に必要
-        execIfEmpty('users', store.dispatch.entities.fetchUsers)
-      ])
+    const { isLoginCheckDone } = useLoginCheck()
 
-      hasInitialFetchForSettingsDone.value = true
-    })
-
-    return { isMobile, hasInitialFetchForSettingsDone }
+    return { isMobile, isLoginCheckDone }
   },
   components: {
     DesktopSettingModal,

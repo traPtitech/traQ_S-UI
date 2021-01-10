@@ -35,8 +35,8 @@ export default defineComponent({
   },
   setup(props, context) {
     const { fileMeta } = useFileMeta(props, context)
-    const user = computed(
-      () => store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+    const user = computed(() =>
+      store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
     )
     const createdAt = computed(() =>
       getCreatedDate(fileMeta.value?.createdAt ?? '')

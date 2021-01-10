@@ -47,11 +47,6 @@ export {
   moduleGetterContext
 }
 export type AppStore = typeof store
-declare module 'vuex' {
-  interface Store<S> {
-    direct: AppStore
-  }
-}
 
 type OriginalStore = typeof store.original & {
   readonly restored: Promise<void>

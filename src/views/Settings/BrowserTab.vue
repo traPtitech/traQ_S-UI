@@ -116,6 +116,10 @@ export default defineComponent({
   name: 'BrowserTab',
   setup() {
     const { channelIdToPathString } = useChannelPath()
+
+    // 起動時チャンネルの選択に必要
+    store.dispatch.entities.fetchChannels()
+
     const browserSettings = computed(() => store.state.app.browserSettings)
     const { state } = useSyncedState(
       browserSettings,

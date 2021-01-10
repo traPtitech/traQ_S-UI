@@ -63,25 +63,25 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
-  const unreadChannels = computed(() =>
-    Object.values(store.state.domain.me.unreadChannelsSet)
-  )
+  const unreadChannels = computed(() => [
+    ...store.state.domain.me.unreadChannelsMap.values()
+  ])
   const notificationState = reactive({
     channel: computed(() =>
-      unreadChannels.value.some(
-        c => c.channelId in store.state.entities.channels
+      unreadChannels.value.some(c =>
+        store.state.entities.channelsMap.has(c.channelId)
       )
     ),
     dm: computed(() =>
-      unreadChannels.value.some(
-        c => c.channelId in store.state.entities.dmChannels
+      unreadChannels.value.some(c =>
+        store.state.entities.dmChannelsMap.has(c.channelId)
       )
     )
   })
   const entries = computed(() => createItems(notificationState))
 
   const hasActiveQallSession = computed(() => {
-    return !!store.getters.app.rtc.qallSession
+    return !!store.getters.domain.rtc.qallSession
   })
   const ephemeralEntries = computed(() =>
     [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(

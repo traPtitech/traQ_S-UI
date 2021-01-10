@@ -12,7 +12,6 @@ export type StampSet = {
 
 const useStampSetSelector = () => {
   const state = reactive({
-    currentStampSet: computed(() => store.state.ui.stampPicker.currentStampSet),
     stampSets: computed((): StampSet[] => [
       {
         type: 'history',
@@ -42,9 +41,8 @@ const useStampSetSelector = () => {
     ),
     hasStampPalette: computed((): boolean => state.stampPalettes.length > 0)
   })
-  const changeStampSet = (stampSet: StampSet) =>
-    store.commit.ui.stampPicker.setCurrentStampSet(stampSet)
-  return { stampSetState: state, changeStampSet }
+
+  return { stampSetState: state }
 }
 
 export default useStampSetSelector

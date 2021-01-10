@@ -33,7 +33,7 @@ const useChannelMessageFetcher = (
     const {
       messages,
       hasMore
-    } = await store.dispatch.entities.fetchMessagesByChannelId({
+    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit,
       order: 'desc',
@@ -64,7 +64,7 @@ const useChannelMessageFetcher = (
     const {
       messages,
       hasMore
-    } = await store.dispatch.entities.fetchMessagesByChannelId({
+    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
       limit: fetchLimit,
       order: 'asc',
@@ -111,11 +111,41 @@ const useChannelMessageFetcher = (
     ]
   }
 
+  const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
+    const {
+      messages,
+      hasMore
+    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
+      channelId: props.channelId,
+      limit: fetchLimit,
+      order: 'desc',
+      since: state.loadedMessageLatestDate
+    })
+
+    if (!hasMore) {
+      isReachedLatest.value = true
+    }
+
+    const oldestMessage = messages[messages.length - 1] as Message | undefined
+    if (oldestMessage) {
+      const oldestMessageDate = new Date(oldestMessage.createdAt)
+      if (
+        !state.loadedMessageOldestDate ||
+        oldestMessageDate < state.loadedMessageOldestDate
+      ) {
+        state.loadedMessageOldestDate = oldestMessageDate
+      }
+    }
+
+    return messages.map(message => message.id)
+  }
+
   const messagesFetcher = useMessageFetcher(
     props,
     fetchFormerMessages,
     fetchLatterMessages,
-    fetchAroundMessages
+    fetchAroundMessages,
+    fetchNewMessages
   )
 
   onMounted(() => {

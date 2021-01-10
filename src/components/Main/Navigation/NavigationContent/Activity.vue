@@ -17,7 +17,7 @@
     </div>
     <transition-group name="timeline" tag="div">
       <activity-element
-        v-for="message in messages"
+        v-for="message in timeline"
         :key="message.id"
         :class="$style.element"
         :type="isPerChannel ? 'channel' : 'message'"
@@ -28,50 +28,11 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  onBeforeUnmount,
-  watch,
-  onMounted
-} from 'vue'
+import { defineComponent, computed } from 'vue'
 import store from '@/store'
-import { ws, setTimelineStreamingState } from '@/lib/websocket'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
-
-const useActivityStream = () => {
-  const mode = computed(() => store.state.app.browserSettings.activityMode)
-
-  const fetch = (payload: { all?: boolean; perChannel?: boolean }) => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    return store.dispatch.domain.fetchActivityTimeline(payload).catch(() => {})
-  }
-  const handler = () => {
-    fetch(mode.value)
-  }
-
-  onMounted(async () => {
-    setTimelineStreamingState(mode.value.all)
-    await fetch(mode.value)
-  })
-
-  watch(mode, async (newMode, oldMode) => {
-    if (newMode.all !== oldMode.all) {
-      setTimelineStreamingState(newMode.all)
-    }
-    await fetch(mode.value)
-  })
-  ws.addEventListener('reconnect', handler)
-
-  onBeforeUnmount(() => {
-    if (mode.value.all) {
-      setTimelineStreamingState(mode.value.all)
-    }
-
-    ws.removeEventListener('reconnect', handler)
-  })
-}
+import useActivityStream from './use/activityStream'
 
 const useActivityMode = () => {
   // 反転していることに注意
@@ -98,11 +59,10 @@ export default defineComponent({
     ActivityElement
   },
   setup() {
-    useActivityStream()
+    const { timeline } = useActivityStream()
     const { isNotAll, isPerChannel } = useActivityMode()
-    const messages = computed(() => store.state.domain.activityTimeline)
 
-    return { isNotAll, isPerChannel, messages }
+    return { isNotAll, isPerChannel, timeline }
   }
 })
 </script>

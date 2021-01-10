@@ -68,11 +68,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const userState = computed(
-      () => store.state.entities.users[props.message.userId]
+    const userState = computed(() =>
+      store.state.entities.usersMap.get(props.message.userId)
     )
     if (userState.value === undefined) {
-      store.dispatch.entities.fetchUser(props.message.userId)
+      store.dispatch.entities.fetchUser({ userId: props.message.userId })
     }
 
     const { channelIdToShortPathString } = useChannelPath()

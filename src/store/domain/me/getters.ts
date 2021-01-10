@@ -9,10 +9,14 @@ const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
 
 export const getters = defineGetters<S>()({
+  myId(state) {
+    return state.detail?.id
+  },
+
   recentStampIds(...args): StampId[] {
     const { state, rootState } = meGetterContext(args)
-    const history = Object.entries(state.stampHistory)
-      .filter(([stampId]) => rootState.entities.stamps[stampId] !== undefined)
+    const history = [...state.stampHistory.entries()]
+      .filter(([stampId]) => rootState.entities.stampsMap.has(stampId))
       .sort((e1, e2) => {
         // 日付の降順
         if (e1[1] > e2[1]) return -1
@@ -22,14 +26,21 @@ export const getters = defineGetters<S>()({
       .map(e => e[0])
     return history
   },
-  subscribedChannels(...args): ChannelId[] {
+  subscribedChannels(...args): Set<ChannelId> {
     const { state, rootState } = meGetterContext(args)
-    return Object.values(rootState.entities.channels)
-      .filter(
-        c =>
-          (state.subscriptionMap[c.id] ?? ChannelSubscribeLevel.none) !==
-          ChannelSubscribeLevel.none
-      )
-      .map(c => c.id)
+    return new Set(
+      [...state.subscriptionMap.entries()]
+        .filter(
+          ([id, level]) =>
+            rootState.entities.channelsMap.has(id) &&
+            level !== ChannelSubscribeLevel.none
+        )
+        .map(([id]) => id)
+    )
+  },
+  isChannelSubscribed(state): (channelId: ChannelId) => boolean {
+    return channelId =>
+      (state.subscriptionMap.get(channelId) ?? ChannelSubscribeLevel.none) !==
+      ChannelSubscribeLevel.none
   }
 })

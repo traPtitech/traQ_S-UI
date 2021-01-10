@@ -1,10 +1,12 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/store'
+import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
-import { me } from './index'
-import { ChannelId } from '@/types/entity-ids'
-import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { me, meMitt } from './index'
+import { ChannelId, UserId } from '@/types/entity-ids'
+import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
+import { detectMentionOfMe } from '@/lib/markdown/detector'
+import { deleteToken } from '@/lib/firebase'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -12,51 +14,111 @@ export const meActionContext = (context: ActionContext<unknown, unknown>) =>
 export const actions = defineActions({
   async fetchMe(context) {
     const { commit } = meActionContext(context)
-    const { data } = await apis.getMe()
-    commit.setDetail(data)
+    try {
+      const { data } = await apis.getMe()
+      commit.setDetail(data)
+      return data
+    } catch {
+      commit.unsetDetail()
+      return undefined
+    }
   },
-  async fetchUnreadChannels(context) {
+  async logout(context, { allSession = false }: { allSession?: boolean } = {}) {
     const { commit } = meActionContext(context)
-    const { data } = await apis.getMyUnreadChannels()
-    commit.setUnreadChannelsSet(data)
+    commit.unsetDetail()
+    await apis.logout(undefined, allSession)
+    await deleteToken()
+  },
+  onUserUpdated(context, userId: UserId) {
+    const { getters, dispatch } = meActionContext(context)
+    if (getters.myId !== userId) return
+
+    dispatch.fetchMe()
   },
 
-  /** チャンネルを既読にする */
-  readChannel(context, payload: { channelId: ChannelId }) {
-    const { commit } = meActionContext(context)
-    commit.deleteUnreadChannel(payload.channelId)
-    apis.readChannel(payload.channelId)
-  },
+  async fetchStampHistory(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.stampHistoryFetched) return
 
-  async fetchStaredChannels(context) {
-    const { commit } = meActionContext(context)
-    const { data } = await apis.getMyStars()
-    commit.setStaredChannels(data)
-  },
-  async starChannel(context, id: ChannelId) {
-    await apis.addMyStar({
-      channelId: id
-    })
-  },
-  async unstarChannel(context, id: ChannelId) {
-    await apis.removeMyStar(id)
-  },
-  async fetchStampHistory(context) {
-    const { commit } = meActionContext(context)
     const { data } = await apis.getMyStampHistory()
-    const history = Object.fromEntries(
-      data.map(h => [h.stampId, new Date(h.datetime)])
+    commit.setStampHistory(
+      new Map(data.map(h => [h.stampId, new Date(h.datetime)]))
     )
-    commit.setStampHistory(history)
   },
-  async fetchSubscriptions(context) {
+
+  async fetchUnreadChannels(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.unreadChannelsMapFetched) return
+
+    const { data } = await apis.getMyUnreadChannels()
+    commit.setUnreadChannelsMap(
+      new Map(
+        data.map(unreadChannel => [unreadChannel.channelId, unreadChannel])
+      )
+    )
+  },
+  onChannelRead(context, channelId: ChannelId) {
     const { commit } = meActionContext(context)
+    commit.deleteUnreadChannel(channelId)
+  },
+  onMessageCreated(context, message: Message) {
+    const { rootState, getters, commit, rootGetters } = meActionContext(context)
+    // 見ているチャンネルは未読に追加しない
+    if (rootState.domain.messagesView.currentChannelId === message.channelId)
+      return
+    // 自分の投稿は未読に追加しない
+    if (rootGetters.domain.me.myId === message.userId) return
+
+    const noticeable =
+      detectMentionOfMe(
+        message.content,
+        rootGetters.domain.me.myId ?? '',
+        rootState.domain.me.detail?.groups ?? []
+      ) || !!rootState.entities.channelsMap.get(message.channelId)?.force
+    const isDM = rootState.entities.dmChannelsMap.has(message.channelId)
+    const isChannelSubscribed = getters.isChannelSubscribed(message.channelId)
+    if (!noticeable && !isDM && !isChannelSubscribed) return
+
+    commit.upsertUnreadChannel({ message, noticeable })
+  },
+
+  async fetchStaredChannels(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.staredChannelSetFetched) return
+
+    const { data } = await apis.getMyStars()
+    commit.setStaredChannels(new Set(data))
+  },
+  onAddStaredChannel(context, channelId: ChannelId) {
+    const { commit } = meActionContext(context)
+    commit.addStaredChannel(channelId)
+  },
+  onDeleteStaredChannel(context, channelId: ChannelId) {
+    const { commit } = meActionContext(context)
+    commit.deleteStaredChannel(channelId)
+  },
+
+  async fetchSubscriptions(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.subscriptionMapFetched) return
+
     const res = await apis.getMyChannelSubscriptions()
-    const subscriptions: Record<
-      ChannelId,
-      ChannelSubscribeLevel
-    > = Object.fromEntries(res.data.map(s => [s.channelId, s.level]))
-    commit.setSubscriptionMap(subscriptions)
+    commit.setSubscriptionMap(
+      new Map(res.data.map(s => [s.channelId, s.level]))
+    )
+    meMitt.emit('setSubscriptions')
   },
   async changeSubscriptionLevel(
     context,
@@ -67,6 +129,6 @@ export const actions = defineActions({
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)
-    store.dispatch.domain.channelTree.constructHomeChannelTree()
+    meMitt.emit('updateSubscriptions')
   }
 })

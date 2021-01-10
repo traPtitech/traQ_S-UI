@@ -1,219 +1,451 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { entities } from './index'
-import apis from '@/lib/apis'
-import { reduceToRecord } from '@/lib/util/record'
+import { entities } from '.'
+import { entityMitt } from './mitt'
+import { ActionContext } from 'vuex'
 import {
-  FileId,
-  TagId,
-  MessageId,
   ChannelId,
   ClipFolderId,
-  ExternalUrl,
+  DMChannelId,
+  StampId,
+  StampPaletteId,
+  UserGroupId,
   UserId
 } from '@/types/entity-ids'
-import { ActionContext } from 'vuex'
-import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
+import apis from '@/lib/apis'
+import { createSingleflight } from '@/lib/async'
+import {
+  Channel,
+  ClipFolder,
+  DMChannel,
+  Stamp,
+  StampPalette,
+  User,
+  UserGroup
+} from '@traptitech/traq'
+import {
+  clipFoldersMapInitialFetchPromise,
+  stampPalettesMapInitialFetchPromise,
+  stampsMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise,
+  usersMapInitialFetchPromise
+} from './promises'
 import { AxiosResponse } from 'axios'
-import { UserDetail } from '@traptitech/traq'
-
-// TODO: リクエストパラメータの型置き場
-interface BaseGetMessagesParams {
-  limit?: number
-  offset?: number
-  since?: Date
-  until?: Date
-  inclusive?: boolean
-  order?: 'asc' | 'desc'
-}
-interface GetMessagesParams extends BaseGetMessagesParams {
-  channelId: string
-}
-
-interface GetFilesChannelParams {
-  channelId: string
-  limit?: number
-  offset?: number
-  since?: Date
-  until?: Date
-  inclusive?: boolean
-  order?: 'asc' | 'desc'
-  mine?: boolean
-}
-
-interface GetClipsParam {
-  folderId: string
-  limit?: number
-  offset?: number
-  order?: 'asc' | 'desc'
-}
-
-interface GetDirectMessagesParams extends BaseGetMessagesParams {
-  userId: string
-}
-
-// 重複して取得が走らないようにする
-const fetchingUser = new Map<UserId, Promise<AxiosResponse<UserDetail>>>()
+import { arrayToMap } from '@/lib/util/map'
+import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
+import { dmParentUuid } from '@/lib/util/uuid'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, entities)
 
-export const actions = defineActions({
-  async fetchUser(context, userId: string) {
-    const { commit } = entitiesActionContext(context)
-    if (fetchingUser.has(userId)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const res = await fetchingUser.get(userId)!
-      return res.data
+/**
+ * キャッシュを使うかどうかと全取得が完了するまで待つか
+ * forceFetch: キャッシュを一切利用しない
+ * useCache: あればキャッシュを利用して、全取得が終わってない場合でもそれを待たずに取得する
+ * waitForAllFetch: 全取得が完了してから取得が必要なときだけ取得する
+ */
+type CacheStrategy = 'forceFetch' | 'useCache' | 'waitForAllFetch'
+
+const getUser = createSingleflight(apis.getUser.bind(apis))
+const getUsers = createSingleflight(apis.getUsers.bind(apis))
+const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
+const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
+const getChannel = createSingleflight(apis.getChannel.bind(apis))
+const getChannels = createSingleflight(apis.getChannels.bind(apis))
+const getUserDMChannel = createSingleflight(apis.getUserDMChannel.bind(apis))
+const getClipFolder = createSingleflight(apis.getClipFolder.bind(apis))
+const getClipFolders = createSingleflight(apis.getClipFolders.bind(apis))
+const getStamp = createSingleflight(apis.getStamp.bind(apis))
+const getStamps = createSingleflight(apis.getStamps.bind(apis))
+const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))
+const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
+
+/**
+ * キャッシュを使いつつ単体を取得する
+ * @param cacheStrategy CacheStrategy型を参照
+ * @param map usersMapのように一覧が格納されているMap
+ * @param key MapのKey、usersMapならuserId
+ * @param fetched 全件取得が完了したか、例えばusersMapFetched
+ * @param fetch singleflight化した取得関数
+ * @param set 取得が発生したときに行うcommit
+ * @returns 取得結果
+ *
+ * @see [traQ_S-UI#1699](https://github.com/traPtitech/traQ_S-UI/pull/1699#issuecomment-747115101)
+ */
+const fetchWithCacheStrategy = async <T, R>(
+  cacheStrategy: CacheStrategy,
+  map: Map<T, R>,
+  key: T,
+  fetched: boolean,
+  initialFetchPromise: Promise<void>,
+  fetch: (key: T) => Promise<[AxiosResponse<R>, boolean]>,
+  set: (res: R) => void
+): Promise<R> => {
+  // キャッシュを利用する場合はこのブロックに入る
+  if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
+    const res = map.get(key)
+    if (res) {
+      return res
     }
 
-    const promise = apis.getUser(userId)
-    fetchingUser.set(userId, promise)
-    const res = await promise
+    // キャッシュに存在してなかったかつ、全取得が完了してない場合は
+    // 全取得を待って含まれてるか確認する
+    if (cacheStrategy === 'waitForAllFetch' && !fetched) {
+      await initialFetchPromise
+      const res = map.get(key)
+      if (res) {
+        return res
+      }
+    }
+  }
 
-    commit.addUser({ id: userId, entity: res.data })
-    fetchingUser.delete(userId)
-    return res.data
+  const [{ data: res }, isShared] = await fetch(key)
+  // 他の取得とまとめられていた場合は既にcommitされてるためcommitしない
+  if (!isShared) {
+    set(res)
+  }
+  return res
+}
+
+// TODO: fetchのエラー処理
+export const actions = defineActions({
+  async fetchUser(
+    context,
+    {
+      userId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { userId: UserId; cacheStrategy?: CacheStrategy }
+  ): Promise<User | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const user = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.usersMap,
+      userId,
+      state.usersMapFetched,
+      usersMapInitialFetchPromise,
+      getUser,
+      user => {
+        commit.setUser(user)
+      }
+    )
+    return user
   },
-  async fetchUsers(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getUsers()
-    commit.setUsers(reduceToRecord(res.data, 'id'))
+  async fetchUsers(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Map<UserId, User>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.usersMapFetched) {
+      return state.usersMap
+    }
+
+    const [{ data: users }, shared] = await getUsers()
+    const usersMap = arrayToMap(users, 'id')
+    if (!shared) {
+      commit.setUsersMap(usersMap)
+    }
+    return usersMap
   },
-  async fetchChannels(context) {
+  deleteUser(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getChannels(true)
-    commit.setChannels(reduceToRecord(res.data.public, 'id'))
-    commit.setDMChannels(reduceToRecord(res.data.dm, 'id'))
+    commit.deleteUser(userId)
   },
-  async fetchUserGroups(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getUserGroups()
-    commit.setUserGroups(reduceToRecord(res.data, 'id'))
+
+  async fetchUserGroup(
+    context,
+    {
+      userGroupId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { userGroupId: UserGroupId; cacheStrategy?: CacheStrategy }
+  ): Promise<UserGroup | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const userGroup = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.userGroupsMap,
+      userGroupId,
+      state.userGroupsMapFetched,
+      userGroupsMapInitialFetchPromise,
+      getUserGroup,
+      userGroup => {
+        commit.setUserGroup(userGroup)
+      }
+    )
+    return userGroup
   },
-  async fetchStamps(context) {
+  async fetchUserGroups(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Map<UserGroupId, UserGroup>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.userGroupsMapFetched) {
+      return state.userGroupsMap
+    }
+
+    const [{ data: userGroups }, shared] = await getUserGroups()
+    const userGroupsMap = arrayToMap(userGroups, 'id')
+    if (!shared) {
+      commit.setUserGroupsMap(userGroupsMap)
+    }
+    return userGroupsMap
+  },
+  deleteUserGroup(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
+    commit.deleteUserGroup(userId)
+  },
+
+  async fetchUserDMChannel(context, userId: UserId): Promise<DMChannelId> {
+    const { commit } = entitiesActionContext(context)
+    const [{ data: dmChannel }, shared] = await getUserDMChannel(userId)
+    if (!shared) {
+      commit.setDmChannel(dmChannel)
+    }
+    return dmChannel.id
+  },
+  async fetchChannels(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<[Map<ChannelId, Channel>, Map<DMChannelId, DMChannel>]> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.bothChannelsMapFetched) {
+      return [state.channelsMap, state.dmChannelsMap]
+    }
+
+    const [{ data: channels }, shared] = await getChannels(true)
+    const channelsMap = arrayToMap(channels.public, 'id')
+    const dmChannelsMap = arrayToMap(channels.dm, 'id')
+    if (!shared) {
+      commit.setBothChannelsMap([channelsMap, dmChannelsMap])
+      entityMitt.emit('setChannels')
+    }
+    return [channelsMap, dmChannelsMap]
+  },
+  deleteChannel(context, channelId: ChannelId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteChannel(channelId)
+  },
+  async addChannel(context, channelId: ChannelId | DMChannelId) {
+    const { state, commit, dispatch } = entitiesActionContext(context)
+    if (
+      state.channelsMap.has(channelId) ||
+      state.dmChannelsMap.has(channelId)
+    ) {
+      return
+    }
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
+
+    // DMのとき
+    if (channel.parentId === dmParentUuid) {
+      // channelIdからuserIdが辿れないので全取得
+      await dispatch.fetchChannels()
+      return
+    }
+
+    // ルート直下でないチャンネル
+    if (channel.parentId) {
+      // 親チャンネルの`children`が不整合になるので再取得
+      const { data: parentChannel } = await apis.getChannel(channel.parentId)
+      // 注:下のsetChannelとの間にawaitがないようにする
+      commit.setChannel(parentChannel)
+    }
+
+    commit.setChannel(channel)
+
+    entityMitt.emit('addChannel', channel)
+  },
+  async updateChannel(context, channelId: ChannelId | DMChannelId) {
+    const { state, commit, dispatch } = entitiesActionContext(context)
+
+    const old = state.channelsMap.get(channelId)
+    // 元々存在していなかったものが来たら追加として処理する
+    if (!old) {
+      await dispatch.addChannel(channelId)
+      return
+    }
+
+    const oldPath = channelIdToPathString(channelId, state.channelsMap)
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
+
+    // DMのときは変化しないはずなので処理しない
+    if (channel.parentId === dmParentUuid) return
+
+    // 親チャンネルが変わったときは`children`が不整合にならないように親チャンネルの情報を更新する
+    if (old.parentId !== channel.parentId) {
+      const oldParentRes = old.parentId
+        ? await getChannel(old.parentId)
+        : undefined
+      const newParentRes = channel.parentId
+        ? await getChannel(channel.parentId)
+        : undefined
+
+      // 注:下のsetChannelとの間にawaitがないようにする
+      if (oldParentRes) {
+        commit.setChannel(oldParentRes[0].data)
+      }
+      if (newParentRes) {
+        commit.setChannel(newParentRes[0].data)
+      }
+    }
+
+    commit.setChannel(channel)
+
+    entityMitt.emit('updateChannel', {
+      oldChannel: old,
+      newChannel: channel,
+      oldPath
+    })
+  },
+
+  async fetchClipFolder(
+    context,
+    {
+      clipFolderId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { clipFolderId: ClipFolderId; cacheStrategy?: CacheStrategy }
+  ): Promise<ClipFolder | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const clipFolder = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.clipFoldersMap,
+      clipFolderId,
+      state.clipFoldersMapFetched,
+      clipFoldersMapInitialFetchPromise,
+      getClipFolder,
+      clipFolder => {
+        commit.setClipFolder(clipFolder)
+      }
+    )
+    return clipFolder
+  },
+  async fetchClipFolders(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Map<ClipFolderId, ClipFolder>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.clipFoldersMapFetched) {
+      return state.clipFoldersMap
+    }
+
+    const [{ data: clipFolders }, shared] = await getClipFolders()
+    const clipFoldersMap = arrayToMap(clipFolders, 'id')
+    if (!shared) {
+      commit.setClipFoldersMap(clipFoldersMap)
+    }
+    return clipFoldersMap
+  },
+  async deleteClipFolders(context, clipFolderId: ClipFolderId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteClipFolder(clipFolderId)
+  },
+
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamp(
+    context,
+    {
+      stampId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampId: StampId; cacheStrategy?: CacheStrategy }
+  ): Promise<Stamp | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stamp = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampsMap,
+      stampId,
+      state.stampsMapFetched,
+      stampsMapInitialFetchPromise,
+      getStamp,
+      stamp => {
+        commit.setStamp(stamp)
+
+        entityMitt.emit('setStamp', stamp)
+      }
+    )
+    return stamp
+  },
+  /**
+   * unicodeスタンプが更新されたときの考慮は存在しない
+   */
+  async fetchStamps(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Map<StampId, Stamp>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.stampsMapFetched) {
+      return state.stampsMap
+    }
 
     const unicodeStamps = await getUnicodeStamps()
-    const res = await apis.getStamps(!unicodeStamps)
-    if (!unicodeStamps) {
-      setUnicodeStamps(res.data.filter(stamp => stamp.isUnicode))
+    // unicodeスタンプがIndexedDBに存在しないときは含めて取得する
+    const [{ data: stamps }, shared] = await getStamps(!unicodeStamps)
+
+    const stampsWithUnicodeStamps = unicodeStamps
+      ? [...unicodeStamps, ...stamps]
+      : stamps
+    const stampsMap = arrayToMap(stampsWithUnicodeStamps, 'id')
+    if (!shared) {
+      commit.setStampsMap(stampsMap)
+      // 新しくunicodeスタンプが取得されたときはIndexedDBに保存する
+      if (!unicodeStamps) {
+        setUnicodeStamps(stamps.filter(stamp => stamp.isUnicode))
+      }
+
+      entityMitt.emit('setStamps')
+    }
+    return stampsMap
+  },
+  deleteStamp(context, stampId: StampId) {
+    const { commit } = entitiesActionContext(context)
+    commit.deleteStamp(stampId)
+
+    entityMitt.emit('deleteStamp', stampId)
+  },
+
+  async fetchStampPalette(
+    context,
+    {
+      stampPaletteId,
+      cacheStrategy = 'waitForAllFetch'
+    }: { stampPaletteId: StampPaletteId; cacheStrategy?: CacheStrategy }
+  ): Promise<StampPalette | undefined> {
+    const { state, commit } = entitiesActionContext(context)
+    const stampPalette = await fetchWithCacheStrategy(
+      cacheStrategy,
+      state.stampPalettesMap,
+      stampPaletteId,
+      state.stampPalettesMapFetched,
+      stampPalettesMapInitialFetchPromise,
+      getStampPlalette,
+      stampPalette => {
+        commit.setStampPalette(stampPalette)
+      }
+    )
+    return stampPalette
+  },
+  async fetchStampPalettes(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Map<StampPaletteId, StampPalette>> {
+    const { state, commit } = entitiesActionContext(context)
+    if (!ignoreCache && state.stampPalettesMapFetched) {
+      return state.stampPalettesMap
     }
 
-    const stamps = unicodeStamps ? [...unicodeStamps, ...res.data] : res.data
-    commit.setStamps(reduceToRecord(stamps, 'id'))
-  },
-  async fetchStampPalettes(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getStampPalettes()
-    commit.setStampPalettes(reduceToRecord(res.data, 'id'))
-  },
-  // TODO: ドメインデータっぽい
-  async fetchMessagesInClipFolder(context, params: GetClipsParam) {
-    const { commit } = entitiesActionContext(context)
-    const { data, headers } = await apis.getClips(
-      params.folderId,
-      params.limit,
-      params.offset,
-      params.order
-    )
-    commit.extendMessages(
-      reduceToRecord(
-        data.map(c => c.message),
-        'id'
-      )
-    )
-    return {
-      clips: data,
-      hasMore: headers['x-traq-more'] === 'true'
+    const [{ data: stampPalettes }, shared] = await getStampPlalettes()
+    const stampPalettesMap = arrayToMap(stampPalettes, 'id')
+    if (!shared) {
+      commit.setStampPalettesMap(stampPalettesMap)
     }
+    return stampPalettesMap
   },
-  async fetchMessagesByChannelId(context, params: GetMessagesParams) {
+  async deleteStampPalette(context, stampPaletteId: StampPaletteId) {
     const { commit } = entitiesActionContext(context)
-    const res = await apis.getMessages(
-      params.channelId,
-      params.limit,
-      params.offset,
-      params.since?.toISOString(),
-      params.until?.toISOString(),
-      params.inclusive,
-      params.order
-    )
-    commit.extendMessages(reduceToRecord(res.data, 'id'))
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchMessage(context, messageId: MessageId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getMessage(messageId)
-    commit.addMessage({ id: res.data.id, entity: res.data })
-    return res.data
-  },
-  async fetchFileMetaByChannelId(
-    context,
-    { channelId, limit, offset }: GetFilesChannelParams
-  ) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getFiles(channelId, limit, offset)
-    commit.extendFileMetaData(reduceToRecord(res.data, 'id'))
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchFileMetaByFileId(context, fileId: FileId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getFileMeta(fileId)
-    commit.addFileMetaData({ id: res.data.id, entity: res.data })
-    return {
-      messages: res.data,
-      hasMore: res.headers['x-traq-more'] === 'true'
-    }
-  },
-  async fetchTag(context, tagId: TagId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getTag(tagId)
-    commit.addTags({ id: res.data.id, entity: res.data })
-  },
-  async createChannel(
-    context,
-    payload: { name: string; parent: ChannelId | null }
-  ) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.createChannel({
-      name: payload.name,
-      parent: payload.parent
-    })
-    commit.addChannel({ id: res.data.id, entity: res.data })
-    if (res.data.parentId) {
-      // 親チャンネルの`children`が不整合になるので再取得
-      const parentRes = await apis.getChannel(res.data.parentId)
-      commit.addChannel({ id: parentRes.data.id, entity: parentRes.data })
-    }
-    return res.data
-  },
-  async fetchClipFolders(context) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolders()
-    commit.setClipFolders(reduceToRecord(res.data, 'id'))
-  },
-  async fetchClipFolder(context, id: ClipFolderId) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getClipFolder(id)
-    commit.addClipFolder({ id, entity: res.data })
-    return res.data
-  },
-  async fetchOgpData(context, url: ExternalUrl) {
-    const { commit } = entitiesActionContext(context)
-    const res = await apis.getOgp(url)
-
-    try {
-      // 比較的例外起こしやすいのでここで取る
-      commit.addOgpData({ id: url, entity: res.data })
-      return res.data
-    } catch {}
+    commit.deleteStampPalette(stampPaletteId)
   }
 })

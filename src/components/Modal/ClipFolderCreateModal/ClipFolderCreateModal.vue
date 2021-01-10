@@ -37,8 +37,11 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import useMaxLength from '@/use/maxLength'
+import useToastStore from '@/providers/toastStore'
 
 const useCreateClipFolder = () => {
+  const { addErrorToast } = useToastStore()
+
   const createClipFolder = async (name: string, description: string) => {
     try {
       await apis.createClipFolder({ name, description })
@@ -47,10 +50,7 @@ const useCreateClipFolder = () => {
       // eslint-disable-next-line no-console
       console.error('クリップフォルダの作成に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'クリップフォルダの作成に失敗しました'
-      })
+      addErrorToast('クリップフォルダの作成に失敗しました')
     }
   }
   return { createClipFolder }

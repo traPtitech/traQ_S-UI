@@ -5,8 +5,8 @@ import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
 import useFileLink from '@/use/fileLink'
 
 const useFileMeta = (props: { fileId: string }, context: SetupContext) => {
-  const fileMeta = computed(
-    () => store.state.entities.fileMetaData[props.fileId]
+  const fileMeta = computed(() =>
+    store.state.entities.messages.fileMetaDataMap.get(props.fileId)
   )
   const { fileLink, onFileDownloadLinkClick, onFileLinkClick } = useFileLink(
     props

@@ -33,6 +33,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    store.dispatch.domain.fetchOnlineUsers()
     const isOnline = computed(() =>
       store.getters.domain.isUserOnline(props.userId)
     )

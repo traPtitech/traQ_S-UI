@@ -60,14 +60,15 @@ export default defineComponent({
   setup(props) {
     const volume = computed(() =>
       Math.round(
-        (store.state.app.rtc.userVolumeMap[props.userId] ?? 0) * maxVolumeValue
+        (store.state.app.rtc.userVolumeMap.get(props.userId) ?? 0) *
+          maxVolumeValue
       )
     )
     const userName = computed(
-      () => store.state.entities.users[props.userId]?.displayName ?? ''
+      () => store.state.entities.usersMap.get(props.userId)?.displayName ?? ''
     )
-    const talkingLevel = computed(
-      () => store.state.app.rtc.talkingUsersState[props.userId]
+    const talkingLevel = computed(() =>
+      store.state.app.rtc.talkingUsersState.get(props.userId)
     )
     const onChange = (value: number) => {
       store.commit.app.rtc.setUserVolume({

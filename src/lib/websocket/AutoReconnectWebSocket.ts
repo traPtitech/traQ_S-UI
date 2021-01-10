@@ -32,6 +32,8 @@ export default class AutoReconnectWebSocket {
   isInitialized = false
   reconnecting = false
 
+  mockFail = false
+
   constructor(
     url: string,
     protocols: string | string[] | undefined,
@@ -142,7 +144,9 @@ export default class AutoReconnectWebSocket {
 
       if (this.isOpen) break
 
-      await this._setupWs()
+      if (!this.mockFail) {
+        await this._setupWs()
+      }
 
       if (this.isOpen) break
 

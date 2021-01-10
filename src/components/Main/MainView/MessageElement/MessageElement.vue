@@ -16,7 +16,7 @@
       :class="$style.pinned"
     />
     <message-tools
-      v-if="isHovered && !state.isEditing"
+      :show="isHovered && !state.isEditing"
       :class="$style.tools"
       :message-id="messageId"
       :is-minimum="isArchived"
@@ -73,14 +73,19 @@ export default defineComponent({
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          store.state.domain.messagesView.renderedContentMap.get(
+            props.messageId
+          ) ?? ''
       ),
       rawContent: computed(
-        () => store.state.entities.messages[props.messageId]?.content ?? ''
+        () =>
+          store.state.entities.messages.messagesMap.get(props.messageId)
+            ?.content ?? ''
       ),
       isEditing: computed(
         () =>

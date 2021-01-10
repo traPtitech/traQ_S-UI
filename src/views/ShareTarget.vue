@@ -6,13 +6,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { getStringParam } from '@/lib/util/params'
 import ShareTarget from '@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import { RouteName } from '@/router'
-import store from '@/store'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import useLoginCheck from './use/loginCheck'
 
 export default defineComponent({
   name: 'Share',
@@ -27,29 +26,7 @@ export default defineComponent({
     const text = computed(() => getStringParam(query.value.text))
     const url = computed(() => getStringParam(query.value.url))
 
-    const router = useRouter()
-
-    const show = ref(false)
-
-    onMounted(async () => {
-      let isLoggedIn = false
-      try {
-        await store.dispatch.domain.me.fetchMe()
-        isLoggedIn = true
-      } catch {}
-
-      if (isLoggedIn) {
-        show.value = true
-        return
-      }
-
-      // シェア画面に入る前にログインさせる
-      // ログインしたら戻ってくる
-      router.replace({
-        name: RouteName.Login,
-        query: { redirect: `${location.pathname}${location.search}` }
-      })
-    })
+    useLoginCheck()
 
     return { title, text, url }
   }

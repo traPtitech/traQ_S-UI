@@ -39,6 +39,7 @@ import { StampId, UserId } from '@/types/entity-ids'
 import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
+import apis from '@/lib/apis'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -74,13 +75,13 @@ const createStampList = (
   props: { stamps: MessageStamp[] },
   myId: Ref<UserId | undefined>
 ) => {
-  const map: Record<StampId, MessageStampById> = {}
+  const map = new Map<StampId, MessageStampById>()
   props.stamps.forEach(stamp => {
     const { stampId } = stamp
-    if (!store.state.entities.stamps[stampId]) return
+    if (!store.state.entities.stampsMap.has(stampId)) return
 
-    if (!map[stamp.stampId]) {
-      map[stampId] = {
+    if (!map.has(stamp.stampId)) {
+      map.set(stampId, {
         id: stamp.stampId,
         sum: stamp.count,
         myCount: stamp.userId === myId.value ? stamp.count : 0,
@@ -93,31 +94,33 @@ const createStampList = (
         ],
         createdAt: new Date(stamp.createdAt),
         updatedAt: new Date(stamp.updatedAt)
-      }
+      })
     } else {
-      map[stampId].sum += stamp.count
-      map[stampId].users.push({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const s = map.get(stampId)!
+      s.sum += stamp.count
+      s.users.push({
         id: stamp.userId,
         count: stamp.count,
         createdAt: new Date(stamp.createdAt)
       })
       if (stamp.userId === myId.value) {
-        map[stampId].myCount = stamp.count
+        s.myCount = stamp.count
       }
       const createdAt = new Date(stamp.createdAt)
-      if (createdAt < map[stampId].createdAt) {
-        map[stampId].createdAt = createdAt
+      if (createdAt < s.createdAt) {
+        s.createdAt = createdAt
       }
       const updatedAt = new Date(stamp.updatedAt)
-      if (map[stampId].updatedAt < updatedAt) {
-        map[stampId].updatedAt = updatedAt
+      if (s.updatedAt < updatedAt) {
+        s.updatedAt = updatedAt
       }
     }
   })
-  Object.values(map).forEach(stamp =>
+  map.forEach(stamp =>
     stamp.users.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
   )
-  return Object.values(map).sort(
+  return [...map.values()].sort(
     (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
   )
 }
@@ -140,7 +143,7 @@ export default defineComponent({
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
-    const myId = computed(() => store.state.domain.me.detail?.id)
+    const myId = computed(() => store.getters.domain.me.myId)
     const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)
@@ -148,17 +151,15 @@ export default defineComponent({
       isDetailShown.value = !isDetailShown.value
     }
 
-    const addStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.addStamp({
-        messageId: props.messageId,
-        stampId
+    const addStamp = async (stampId: StampId) => {
+      await apis.addMessageStamp(props.messageId, stampId)
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId,
+        datetime: new Date()
       })
     }
-    const removeStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.removeStamp({
-        messageId: props.messageId,
-        stampId
-      })
+    const removeStamp = async (stampId: StampId) => {
+      await apis.removeMessageStamp(props.messageId, stampId)
     }
 
     return {

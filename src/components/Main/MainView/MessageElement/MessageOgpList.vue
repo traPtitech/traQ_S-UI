@@ -18,7 +18,7 @@ import { isDefined } from '@/lib/util/array'
 const useOgpData = (props: { externalUrls: string[] }) => {
   const ogpData = computed(() =>
     props.externalUrls
-      .map(url => store.state.entities.ogpData[url])
+      .map(url => store.state.entities.messages.ogpDataMap.get(url))
       .filter(isDefined)
       .filter(o => o.title)
   )

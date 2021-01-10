@@ -38,8 +38,8 @@ import useChannelPath from '@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import { changeChannelById } from '@/router/channel'
-import { rootChannelId } from '@/store/domain/channelTree/state'
+import { changeChannelByPath } from '@/router/channel'
+import { rootChannelId } from '@/lib/channelTree'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelOptions from '@/use/channelOptions'
 import FormSelector from '@/components/UI/FormSelector.vue'
@@ -47,6 +47,9 @@ import { UserPermission } from '@traptitech/traq'
 import config from '@/config'
 import useCanCreateChildChannel from '@/use/canCreateChildChannel'
 import { isValidChannelName } from '@/lib/validate'
+import apis from '@/lib/apis'
+import { channelTreeMitt } from '@/store/domain/channelTree'
+import useToastStore from '@/providers/toastStore'
 
 interface State {
   channelName: string
@@ -54,6 +57,19 @@ interface State {
 }
 
 const useCreateChannel = (state: State) => {
+  const { addErrorToast } = useToastStore()
+
+  const obtainChannelPath = (channelId: ChannelId) =>
+    new Promise<string>(resolve => {
+      const onCreated = ({ id, path }: { id: ChannelId; path: string }) => {
+        if (id !== channelId) return
+
+        resolve(path)
+        channelTreeMitt.off('created', onCreated)
+      }
+      channelTreeMitt.on('created', onCreated)
+    })
+
   const createChannel = async () => {
     if (state.parentChannelId === null) return
     if (
@@ -65,24 +81,21 @@ const useCreateChannel = (state: State) => {
     }
 
     try {
-      const channel = await store.dispatch.entities.createChannel({
+      const { data: channel } = await apis.createChannel({
         name: state.channelName,
         parent: state.parentChannelId
       })
 
-      // 新規作成なのでホームチャンネルにならないため、全体のみ再構築
-      await store.dispatch.domain.channelTree.constructChannelTree()
+      await store.dispatch.entities.addChannel(channel.id)
+      const path = await obtainChannelPath(channel.id)
 
       await store.dispatch.ui.modal.popModal()
-      changeChannelById(channel.id)
+      changeChannelByPath(path)
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネル作成に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'チャンネル作成に失敗しました'
-      })
+      addErrorToast('チャンネル作成に失敗しました')
     }
   }
   return { createChannel }

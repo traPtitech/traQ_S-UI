@@ -19,10 +19,10 @@ type WebkitWindow = Window &
   }
 
 export default class AudioStreamMixer {
-  private streamSourceNodeMap: Record<string, MediaStreamAudioSourceNode> = {}
-  private audioBufferMap: Record<string, AudioBuffer> = {}
-  private analyserNodeMap: Record<string, AnalyserNode> = {}
-  private gainNodeMap: Record<string, GainNode> = {}
+  private streamSourceNodeMap = new Map<string, MediaStreamAudioSourceNode>()
+  private audioBufferMap = new Map<string, AudioBuffer>()
+  private analyserNodeMap = new Map<string, AnalyserNode>()
+  private gainNodeMap = new Map<string, GainNode>()
   private context: AudioContext
   private masterVolume = 1
   private fileVolume = 0.25
@@ -30,7 +30,7 @@ export default class AudioStreamMixer {
    * それぞれのstreamのボリューム
    * ミュート時はミュートされる前の値を保持
    */
-  private volumeMap: Record<string, number> = {}
+  private volumeMap = new Map<string, number>()
   readonly analyserFftSize = 128
   private readonly frequencyUint8Array = new Uint8Array(
     this.analyserFftSize / 2
@@ -49,7 +49,7 @@ export default class AudioStreamMixer {
     return defaultValue * userVolumeSquare * masterVolumeSquare
   }
 
-  private async createAudioSourceNodeGraph(buffer: AudioBuffer) {
+  private createAudioSourceNodeGraph(buffer: AudioBuffer) {
     const source = this.context.createBufferSource()
     const gain = this.context.createGain()
     source.buffer = buffer
@@ -101,18 +101,16 @@ export default class AudioStreamMixer {
     if (key.startsWith(fileSourcePrefix)) {
       throw 'Cannot use this name as audio stream key'
     }
-    const { source, gain, analyser } = await this.createStreamNodeGraph(
-      mediaStream
-    )
+    const { source, gain, analyser } = this.createStreamNodeGraph(mediaStream)
 
     // register audio for chrome
     const audio = document.createElement('audio')
     audio.srcObject = mediaStream
     audio.volume = 0
 
-    this.streamSourceNodeMap[key] = source
-    this.analyserNodeMap[key] = analyser
-    this.gainNodeMap[key] = gain
+    this.streamSourceNodeMap.set(key, source)
+    this.analyserNodeMap.set(key, analyser)
+    this.gainNodeMap.set(key, gain)
   }
 
   public async addFileSource(key: string, url: string) {
@@ -120,17 +118,21 @@ export default class AudioStreamMixer {
     const buffer = await response.arrayBuffer()
     const prefixedKey = fileSourcePrefix + key
 
-    this.audioBufferMap[prefixedKey] = await this.context.decodeAudioData(
-      buffer
+    this.audioBufferMap.set(
+      prefixedKey,
+      await this.context.decodeAudioData(buffer)
     )
   }
 
   public async playFileSource(key: string) {
     const suspended = this.context.state === 'suspended'
     const prefixedKey = fileSourcePrefix + key
-    const source = await this.createAudioSourceNodeGraph(
-      this.audioBufferMap[prefixedKey]
-    )
+    const buffer = this.audioBufferMap.get(prefixedKey)
+    if (!buffer) {
+      throw new Error(`Unloaded buffer: key name of ${prefixedKey}}`)
+    }
+
+    const source = this.createAudioSourceNodeGraph(buffer)
     if (suspended) {
       await this.context.resume()
       source.addEventListener(
@@ -145,7 +147,7 @@ export default class AudioStreamMixer {
   }
 
   public async removeStream(key: string) {
-    if (!this.streamSourceNodeMap[key]) {
+    if (!this.streamSourceNodeMap.has(key)) {
       // eslint-disable-next-line no-console
       console.warn(
         'audioStreamMixer::removeStream: 同じstreamを重複して取り除こうとした可能性があります'
@@ -154,34 +156,38 @@ export default class AudioStreamMixer {
     }
 
     this.disconnectNodeGraph(
-      this.streamSourceNodeMap[key],
-      this.analyserNodeMap[key],
-      this.gainNodeMap[key]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.streamSourceNodeMap.get(key)!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.analyserNodeMap.get(key)!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.gainNodeMap.get(key)!
     )
 
-    delete this.streamSourceNodeMap[key]
-    delete this.gainNodeMap[key]
-    delete this.volumeMap[key]
+    this.streamSourceNodeMap.delete(key)
+    this.gainNodeMap.delete(key)
+    this.volumeMap.delete(key)
 
-    if (Object.keys(this.gainNodeMap).length === 0) {
+    if (this.gainNodeMap.size === 0) {
       await this.context.suspend()
     }
   }
 
   public getVolumeOf(key: string) {
-    return this.gainNodeMap[key].gain.value
+    return this.gainNodeMap.get(key)?.gain.value
   }
 
   public setAndSaveVolumeOf(key: string, volume: number) {
     const v = Math.max(0, Math.min(1, volume))
-    this.setVolumeOf(key, v)
-    this.volumeMap[key] = v
+    const node = this.gainNodeMap.get(key)
+    if (!node) return
+    this.setVolumeOfGainNode(node, v)
+    this.volumeMap.set(key, v)
   }
 
-  public setVolumeOf(key: string, userVolume: number) {
-    const gainNode = this.gainNodeMap[key]
-    const value = this.calcVolumeValue(gainNode, userVolume)
-    gainNode.gain.setValueAtTime(value, this.context.currentTime)
+  public setVolumeOfGainNode(node: GainNode, userVolume: number) {
+    const value = this.calcVolumeValue(node, userVolume)
+    node.gain.setValueAtTime(value, this.context.currentTime)
   }
 
   public setfileVolume(volume: number) {
@@ -197,19 +203,20 @@ export default class AudioStreamMixer {
   }
 
   public getLevelOf(key: string) {
-    return this.getLevelOfNode(this.analyserNodeMap[key])
+    return this.getLevelOfNode(this.analyserNodeMap.get(key))
   }
 
   public muteAll() {
-    Object.keys(this.gainNodeMap).forEach(key => {
-      this.setVolumeOf(key, 0)
+    this.gainNodeMap.forEach(node => {
+      this.setVolumeOfGainNode(node, 0)
     })
   }
 
   public unmuteAll() {
-    Object.entries(this.volumeMap).forEach(([key, volume]) => {
-      if (!(key in this.gainNodeMap)) return
-      this.setVolumeOf(key, volume)
+    this.volumeMap.forEach((volume, key) => {
+      const node = this.gainNodeMap.get(key)
+      if (!node) return
+      this.setVolumeOfGainNode(node, volume)
     })
   }
 
@@ -218,8 +225,9 @@ export default class AudioStreamMixer {
     if (this.masterVolume === newMasterVolume) return
 
     this.masterVolume = newMasterVolume
-    Object.keys(this.gainNodeMap).forEach(key => {
-      this.setVolumeOf(key, this.volumeMap[key])
+    this.gainNodeMap.forEach((node, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.setVolumeOfGainNode(node, this.volumeMap.get(key)!)
     })
   }
   get volume() {

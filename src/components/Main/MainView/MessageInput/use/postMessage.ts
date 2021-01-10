@@ -1,14 +1,25 @@
-import { TextState } from './textInput'
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import apis, { buildFilePathForPost } from '@/lib/apis'
-import { Attachment } from '@/store/ui/fileInput/state'
-import { replace as embedInternalLink } from '@/lib/internalLinkEmbedder'
+import { replace as embedInternalLink } from '@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref } from 'vue'
 import { nullUuid } from '@/lib/util/uuid'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
+import {
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
+} from '@/store/entities/promises'
+import useToastStore from '@/providers/toastStore'
+import useMessageInputState, { Attachment } from '@/providers/messageInputState'
+
+const initialFetchPromise = Promise.all([
+  usersMapInitialFetchPromise,
+  userGroupsMapInitialFetchPromise,
+  bothChannelsMapInitialFetchPromise
+])
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -16,7 +27,7 @@ import { countLength } from '@/lib/util/string'
 type ProgressCallback = (progress: number) => void
 
 const uploadAttachments = async (
-  attachments: Attachment[],
+  attachments: ReadonlyArray<Readonly<Attachment>>,
   channelId: ChannelId,
   onProgress: ProgressCallback
 ) => {
@@ -41,14 +52,13 @@ const createContent = (embededText: string, fileUrls: string[]) => {
   return embededText + (embededText && embededUrls ? '\n\n' : '') + embededUrls
 }
 
-const usePostMessage = (
-  textState: Pick<TextState, 'text' | 'isEmpty'>,
-  props: { channelId: ChannelId }
-) => {
+const usePostMessage = (props: { channelId: ChannelId }) => {
+  const { state, isEmpty, clearState } = useMessageInputState()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
+  const { addErrorToast } = useToastStore()
 
   const isForce = computed(
-    () => store.state.entities.channels[props.channelId]?.force
+    () => store.state.entities.channelsMap.get(props.channelId)?.force
   )
   const confirmString = computed(
     () =>
@@ -61,15 +71,16 @@ const usePostMessage = (
   const progress = ref(0)
 
   const postMessage = async () => {
-    if (isPosting.value) return false
-    if (textState.isEmpty && store.getters.ui.fileInput.isEmpty) return false
+    if (isPosting.value || isEmpty.value) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
       // 強制通知チャンネルでconfirmをキャンセルしたときは何もしない
       return false
     }
 
-    const embededText = embedInternalLink(textState.text, {
+    await initialFetchPromise
+
+    const embededText = embedInternalLink(state.text, {
       getUser: store.getters.entities.userByName,
       getGroup: store.getters.entities.userGroupByName,
       getChannel: path => {
@@ -85,15 +96,12 @@ const usePostMessage = (
       }
     })
 
-    const dummyFileUrls = store.state.ui.fileInput.attachments.map(() =>
+    const dummyFileUrls = state.attachments.map(() =>
       buildFilePathForPost(nullUuid)
     )
     const dummyText = createContent(embededText, dummyFileUrls)
     if (countLength(dummyText) > MESSAGE_MAX_LENGTH) {
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージが長すぎます'
-      })
+      addErrorToast('メッセージが長すぎます')
       return
     }
 
@@ -102,7 +110,7 @@ const usePostMessage = (
       isPosting.value = true
 
       const fileUrls = await uploadAttachments(
-        store.state.ui.fileInput.attachments,
+        state.attachments,
         props.channelId,
         p => {
           progress.value = p
@@ -113,17 +121,13 @@ const usePostMessage = (
         content: createContent(embededText, fileUrls)
       })
 
-      textState.text = ''
-      store.commit.ui.fileInput.clearAttachments()
+      clearState()
       posted = true
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('メッセージ送信に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'メッセージ送信に失敗しました'
-      })
+      addErrorToast('メッセージ送信に失敗しました')
     } finally {
       isPosting.value = false
       progress.value = 0

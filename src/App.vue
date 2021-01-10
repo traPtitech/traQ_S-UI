@@ -10,14 +10,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, watchEffect, Ref } from 'vue'
-import store from './store'
+import { computed, defineComponent, watchEffect, Ref } from 'vue'
+import store from '@/store'
 import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
 import { transparentize, isDarkColor } from '@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '@/lib/media'
-import ToastContainer from '@/components/Main/Toast/ToastContainer.vue'
+import ToastContainer from '@/components/Toast/ToastContainer.vue'
+import { provideToastStore } from '@/providers/toastStore'
+import { provideStampPickerStore } from '@/providers/stampPicker'
+import { provideMessageInputState } from '@/providers/messageInputState'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
@@ -156,6 +159,10 @@ export default defineComponent({
     ToastContainer
   },
   setup() {
+    provideToastStore()
+    provideStampPickerStore()
+    provideMessageInputState()
+
     useWindowResizeObserver()
     const isMobile = computed(() => store.state.ui.isMobile)
 
@@ -167,10 +174,6 @@ export default defineComponent({
 
     const style = useStyle()
     useStyleBody(style)
-
-    onBeforeMount(async () => {
-      await store.dispatch.app.fetchVersionInfo()
-    })
 
     return { isMobile }
   }

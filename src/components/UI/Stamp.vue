@@ -44,10 +44,10 @@ export default defineComponent({
   },
   setup(props) {
     const name = computed(
-      () => store.state.entities.stamps[props.stampId]?.name ?? ''
+      () => store.state.entities.stampsMap.get(props.stampId)?.name ?? ''
     )
     const imageUrl = computed(() => {
-      const fileId = store.state.entities.stamps[props.stampId]?.fileId
+      const fileId = store.state.entities.stampsMap.get(props.stampId)?.fileId
       return fileId ? `${buildFilePath(fileId)}` : ''
     })
     const styles = useStyles(props)

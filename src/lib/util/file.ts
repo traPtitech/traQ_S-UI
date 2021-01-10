@@ -9,12 +9,12 @@ export type AttachmentType =
   | 'file'
 
 const PDF_MIME = 'application/pdf'
-const SLIDE_MIMES = [
+const SLIDE_MIMES: ReadonlySet<string> = new Set([
   /* microsoft powerpoint */ 'application/vnd.ms-powerpoint',
   /* microsoft powerpoint */ 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   /* libreoffice impress */ 'application/vnd.sun.xml.impress',
   /* apple keynote */ 'application/vnd.apple.keynote'
-] as const
+])
 
 export const mimeToFileType = (mime: string): AttachmentType => {
   if (mime.startsWith('image/')) {
@@ -29,7 +29,7 @@ export const mimeToFileType = (mime: string): AttachmentType => {
   if (mime === PDF_MIME) {
     return 'pdf'
   }
-  if ((SLIDE_MIMES as ReadonlyArray<string>).includes(mime)) {
+  if (SLIDE_MIMES.has(mime)) {
     return 'slide'
   }
   return 'file'

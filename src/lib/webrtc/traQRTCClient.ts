@@ -1,5 +1,5 @@
 import type Peer from 'skyway-js'
-import { SfuRoom, RoomData } from 'skyway-js'
+import type { SfuRoom, RoomData } from 'skyway-js'
 import apis from '@/lib/apis'
 import config from '@/config'
 
@@ -111,7 +111,7 @@ class traQRTCClient extends traQRTCClientBase {
     this.dispatchEvent(new Event('connect'))
 
     this.peer.on('close', this.handlePeerClose.bind(this))
-    this.peer.on('disnonected', this.handlePeerDisconnected.bind(this))
+    this.peer.on('disconnected', this.handlePeerDisconnected.bind(this))
     this.peer.on('error', this.handlePeerError.bind(this))
 
     // this.id = this.peer.id

@@ -17,7 +17,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const fileId = store.state.entities.stamps[props.stampId]?.fileId ?? ''
+    const fileId =
+      store.state.entities.stampsMap.get(props.stampId)?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     return { imageUrl }
   }

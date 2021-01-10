@@ -1,28 +1,18 @@
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, UserId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
 import { S } from './state'
-import { Pin, ChannelViewer } from '@traptitech/traq'
-import store from '@/store'
-import useCurrentChannelPath from '@/use/currentChannelPath'
+import { Pin, ChannelViewer, Message } from '@traptitech/traq'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {
     state.currentChannelId = currentChannelId
-
-    // 通常のチャンネルでない場合は最後に開いたチャンネルとして保持しない
-    if (!store.state.entities.channels[currentChannelId]) return
-
-    const { currentChannelPathString } = useCurrentChannelPath()
-    store.commit.app.browserSettings.setLastOpenChannelName(
-      currentChannelPathString.value
-    )
-  },
-  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
-    state.currentClipFolderId = currentClipFolderId
   },
   unsetCurrentChannelId(state) {
     state.currentChannelId = undefined
+  },
+  setCurrentClipFolderId(state, currentClipFolderId: ClipFolderId) {
+    state.currentClipFolderId = currentClipFolderId
   },
   unsetCurrentClipFolderId(state) {
     state.currentClipFolderId = undefined
@@ -47,11 +37,25 @@ export const mutations = defineMutations<S>()({
   deleteMessageId(state, messageId: MessageId) {
     state.messageIds = state.messageIds.filter(id => id !== messageId)
   },
+  unsetMessageIds(state) {
+    state.messageIds = []
+  },
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
   },
-  addPinnedMessages(state, message: Pin) {
+  unsetPinnedMessages(state) {
+    state.pinnedMessages = []
+  },
+  addPinnedMessage(state, message: Pin) {
     state.pinnedMessages.push(message)
+  },
+  updatePinnedMessage(state, message: Message) {
+    const index = state.pinnedMessages.findIndex(
+      element => element.message.id === message.id
+    )
+    if (index > -1) {
+      state.pinnedMessages[index].message = message
+    }
   },
   removePinnedMessage(state, messageId: MessageId) {
     const index = state.pinnedMessages.findIndex(
@@ -68,28 +72,25 @@ export const mutations = defineMutations<S>()({
       renderedContent
     }: { messageId: MessageId; renderedContent: string }
   ) {
-    state.renderedContentMap[messageId] = renderedContent
+    state.renderedContentMap.set(messageId, renderedContent)
   },
-  setRenderedContent(state, renderedContentMap: Record<string, string>) {
+  setRenderedContent(state, renderedContentMap: Map<string, string>) {
     state.renderedContentMap = renderedContentMap
+  },
+  unsetRenderedContent(state) {
+    state.renderedContentMap = new Map()
   },
   addEmbedding(
     state,
     payload: { messageId: MessageId; embeddings: EmbeddingOrUrl[] }
   ) {
-    state.embeddingsMap[payload.messageId] = payload.embeddings
+    state.embeddingsMap.set(payload.messageId, payload.embeddings)
   },
-  setCurrentViewer(state, viewers: ChannelViewer[]) {
+  setCurrentViewers(state, viewers: ChannelViewer[]) {
     state.currentViewers = viewers
   },
-  setTopic(state, topic: string) {
-    state.topic = topic
-  },
-  setBots(state, bots: UserId[]) {
-    state.bots = bots
-  },
-  setSubscribers(state, subscribers: UserId[]) {
-    state.subscribers = subscribers
+  unsetCurrentViewers(state) {
+    state.currentViewers = []
   },
   setEditingMessageId(state, messageId: MessageId) {
     state.editingMessageId = messageId

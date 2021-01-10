@@ -5,7 +5,7 @@
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
-      :is-opened="channelFoldingState[channel.id]"
+      :is-opened="foldedChannels.has(channel.id)"
       :ignore-children="ignoreChildren"
       :show-shortened-path="showShortenedPath"
       :show-topic="showTopic"
@@ -16,32 +16,24 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  toRefs,
-  PropType,
-  defineAsyncComponent
-} from 'vue'
+import { defineComponent, PropType, defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import { ChannelTreeNode } from '@/lib/channelTree'
 import useChannelSelect from '@/use/channelSelect'
 import { Channel } from '@traptitech/traq'
 import SlideDown from '@/components/UI/SlideDown.vue'
 
 const useChannelFolding = () => {
-  const state = reactive({
-    channelFoldingState: {} as Record<ChannelId, boolean>
-  })
+  const foldedChannels = ref(new Set<ChannelId>())
   const onChannelFoldingToggle = (id: ChannelId) => {
-    if (state.channelFoldingState[id]) {
-      state.channelFoldingState[id] = false
+    if (foldedChannels.value.has(id)) {
+      foldedChannels.value.delete(id)
     } else {
-      state.channelFoldingState[id] = true
+      foldedChannels.value.add(id)
     }
   }
   return {
-    ...toRefs(state),
+    foldedChannels,
     onChannelFoldingToggle
   }
 }
@@ -82,9 +74,9 @@ export default defineComponent({
   },
   setup() {
     const { onChannelSelect } = useChannelSelect()
-    const { channelFoldingState, onChannelFoldingToggle } = useChannelFolding()
+    const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
     return {
-      channelFoldingState,
+      foldedChannels,
       onChannelSelect,
       onChannelFoldingToggle
     }

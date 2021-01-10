@@ -36,7 +36,7 @@ import { defineComponent, computed, Ref } from 'vue'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import useTextFilter from '@/use/textFilter'
-import { constructTree } from '@/store/domain/channelTree/actions'
+import { constructTree } from '@/lib/channelTree'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
@@ -72,12 +72,14 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
     filterStarChannel.value
       ? [
           ...new Set(
-            Object.keys(store.state.domain.me.staredChannelSet).flatMap(v =>
+            [...store.state.domain.me.staredChannelSet].flatMap(v =>
               buildDescendantsChannelArray(v, false)
             )
           )
         ]
-      : Object.values(store.state.entities.channels).filter(ch => !ch.archived)
+      : [...store.state.entities.channelsMap.values()].filter(
+          ch => !ch.archived
+        )
   )
 }
 
@@ -98,9 +100,9 @@ const useStaredChannels = () =>
           name: '',
           parentId: null,
           archived: false,
-          children: Object.keys(store.state.domain.me.staredChannelSet)
+          children: [...store.state.domain.me.staredChannelSet]
         },
-        store.state.entities.channels
+        store.state.entities.channelsMap
       )?.children.filter(channel => !channel.archived) ?? []
   )
 

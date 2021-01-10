@@ -24,7 +24,7 @@ export default defineComponent({
       const pin = store.state.domain.messagesView.pinnedMessages.find(
         v => v.message.id === props.messageId
       )
-      const user = store.state.entities.users[pin?.userId ?? '']
+      const user = store.state.entities.usersMap.get(pin?.userId ?? '')
       return user?.displayName
     })
     return { userDisplayName }

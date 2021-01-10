@@ -8,7 +8,7 @@ const useChannelSubscriptionState = () => {
   )
   const currentChannelSubscription = computed(
     () =>
-      store.state.domain.me.subscriptionMap[currentChannelId.value ?? ''] ??
+      store.state.domain.me.subscriptionMap.get(currentChannelId.value ?? '') ??
       ChannelSubscribeLevel.none
   )
   const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {

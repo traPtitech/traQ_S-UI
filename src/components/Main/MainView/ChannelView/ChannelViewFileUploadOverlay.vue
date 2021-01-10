@@ -4,6 +4,7 @@
       <icon mdi name="file-upload" :size="72" />
     </span>
     <p>ドロップしてファイルをアップロード</p>
+    <p>またはテキストを追加</p>
   </div>
 </template>
 

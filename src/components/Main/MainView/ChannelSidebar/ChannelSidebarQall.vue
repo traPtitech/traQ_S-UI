@@ -26,7 +26,7 @@ export default defineComponent({
   setup(props) {
     const viewStates = computed(() =>
       props.qallUserIds.map(id => ({
-        user: store.state.entities.users[id],
+        user: store.state.entities.usersMap.get(id),
         active: true
       }))
     )

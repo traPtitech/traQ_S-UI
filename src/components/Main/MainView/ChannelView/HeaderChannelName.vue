@@ -24,9 +24,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import { constructChannelPath } from '@/router'
 import useIsMobile from '@/use/isMobile'
@@ -66,9 +65,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const state = reactive({
-      channels: computed(() => store.state.entities.channels)
-    })
     const { isMobile } = useIsMobile()
     const { pathInfoList } = usePathInfo(props)
     const ancestorsPath = computed(() =>
@@ -80,7 +76,6 @@ export default defineComponent({
     const buildChannelLink = (path: string[]) =>
       constructChannelPath(path.join('/'))
     return {
-      state,
       ancestorsPath,
       pathInfo,
       pathInfoList,

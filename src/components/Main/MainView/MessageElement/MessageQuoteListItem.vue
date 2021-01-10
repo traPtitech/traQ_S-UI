@@ -50,18 +50,21 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       shouldShow: computed(
         (): boolean =>
           !!state.message &&
           // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
-          (!store.state.entities.dmChannels[state.message.channelId] ||
+          (!store.state.entities.dmChannelsMap.has(state.message.channelId) ||
             state.message.channelId === props.parentMessageChannelId)
       ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          store.state.domain.messagesView.renderedContentMap.get(
+            props.messageId
+          ) ?? ''
       )
     })
     return { state }

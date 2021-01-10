@@ -15,8 +15,9 @@ const useMessageScrollerElementResizeObserver = (
 ) => {
   const entryMessageDate = computed(() => {
     if (scrollerProps.entryMessageId) {
-      const message =
-        store.state.entities.messages[scrollerProps.entryMessageId]
+      const message = store.state.entities.messages.messagesMap.get(
+        scrollerProps.entryMessageId
+      )
       return message ? new Date(message.createdAt) : undefined
     }
     return undefined

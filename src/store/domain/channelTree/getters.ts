@@ -10,8 +10,14 @@ const getterContext = (args: [unknown, unknown, unknown, unknown]) =>
 export const getters = defineGetters<S>()({
   topLevelChannels(...args): Channel[] {
     const { rootState } = getterContext(args)
-    return Object.values(rootState.entities.channels).filter(
+    return [...rootState.entities.channelsMap.values()].filter(
       channel => channel.parentId === undefined || channel.parentId === null
+    )
+  },
+  forcedChannels(...args): Channel[] {
+    const { rootState } = getterContext(args)
+    return [...rootState.entities.channelsMap.values()].filter(
+      channel => channel.force
     )
   }
 })

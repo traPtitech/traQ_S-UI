@@ -13,7 +13,7 @@
         :class="$style.slider"
         :key="me"
         :user-id="me"
-        :mic-muted="mutedUsers.includes(me)"
+        :mic-muted="mutedUsers.has(me)"
         :show-tune-button="!showVolumeTune"
         :show-tune-done-button="showVolumeTune"
         @tune="toggleVolumeTune(true)"
@@ -25,7 +25,7 @@
         :class="$style.slider"
         :key="id"
         :user-id="id"
-        :mic-muted="mutedUsers.includes(id)"
+        :mic-muted="mutedUsers.has(id)"
         :show-volume-control="showVolumeTune"
       />
     </div>
@@ -62,9 +62,14 @@ export default defineComponent({
 
     const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() =>
-      store.getters.app.rtc.currentSessionUsers.filter(id => id !== me.value)
+      // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
+      [...store.getters.domain.rtc.currentSessionUsers.values()].filter(
+        id => id !== me.value
+      )
     )
-    const mutedUsers = computed(() => store.getters.app.rtc.currentMutedUsers)
+    const mutedUsers = computed(
+      () => store.getters.domain.rtc.currentMutedUsers
+    )
 
     return {
       isExpanded,

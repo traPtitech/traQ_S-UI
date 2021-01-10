@@ -1,80 +1,79 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import {
-  entities,
-  StampMap,
-  UserMap,
-  ActiveUserMap,
-  Undefinedable
-} from './index'
+import { entities } from './index'
 import { moduleGetterContext } from '@/store'
-import { User, Stamp, UserGroup } from '@traptitech/traq'
-import { UserId, DMChannelId } from '@/types/entity-ids'
-import { isActive, ActiveUser } from '@/lib/user'
+import { Stamp, User, UserGroup } from '@traptitech/traq'
+import { ActiveUser, isActive } from '@/lib/user'
+import { DMChannelId, UserId } from '@/types/entity-ids'
 
 const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
 
 export const getters = defineGetters<S>()({
-  gradeTypeUserGroups(state) {
-    return Object.values(state.userGroups).filter(
+  userByName(state): (name: string) => User | undefined {
+    return name => {
+      const loweredName = name.toLowerCase()
+      return [...state.usersMap.values()].find(
+        user => user?.name.toLowerCase() === loweredName
+      )
+    }
+  },
+  activeUsersMap(state): Map<string, ActiveUser> {
+    return new Map(
+      [...state.usersMap.entries()].filter((entry): entry is [
+        UserId,
+        ActiveUser
+      ] => isActive(entry[1]))
+    )
+  },
+
+  gradeGroups(state) {
+    return [...state.userGroupsMap.values()].filter(
       group => group.type === 'grade'
     )
   },
   gradeGroupByUserId(...args): (userId: UserId) => UserGroup | undefined {
     const { getters } = entitiesGetterContext(args)
     return userId =>
-      getters.gradeTypeUserGroups.find((userGroup: UserGroup) =>
-        userGroup.members?.some(member => member.id === userId)
+      getters.gradeGroups.find((userGroup: UserGroup) =>
+        userGroup.members.some(member => member.id === userId)
       )
-  },
-  stampNameTable(state) {
-    return Object.fromEntries(
-      Object.values(state.stamps as StampMap).map(stamp => [stamp.name, stamp])
-    )
-  },
-  stampByName(...args): (name: string) => Stamp | undefined {
-    const { getters } = entitiesGetterContext(args)
-    return name => getters.stampNameTable[name]
-  },
-  userByName(state): (name: string) => User | undefined {
-    return name => {
-      const loweredName = name.toLowerCase()
-      return Object.values(state.users).find(
-        user => user?.name.toLowerCase() === loweredName
-      )
-    }
-  },
-  userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
-    return id => state.users[state.dmChannels[id].userId]?.name
-  },
-  activeUsers(state): Undefinedable<ActiveUserMap> {
-    return Object.fromEntries(
-      Object.entries(state.users as UserMap).filter((entry): entry is [
-        UserId,
-        ActiveUser
-      ] => isActive(entry[1]))
-    )
-  },
-  DMChannelUserIdTable(state) {
-    return Object.fromEntries(
-      Object.values(state.dmChannels).map(c => [c.userId, c.id])
-    )
-  },
-  DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
-    const { getters } = entitiesGetterContext(args)
-    return id => getters.DMChannelUserIdTable[id]
   },
   userGroupByName(state): (name: string) => UserGroup | undefined {
     return name => {
       const loweredName = name.toLowerCase()
-      return Object.values(state.userGroups).find(
+      return [...state.userGroupsMap.values()].find(
         userGroup => userGroup?.name.toLowerCase() === loweredName
       )
     }
   },
+
+  userNameByDMChannelId(state): (id: DMChannelId) => string | undefined {
+    return id => {
+      const userId = state.dmChannelsMap.get(id)?.userId
+      return userId ? state.usersMap.get(userId)?.name : undefined
+    }
+  },
+  DMChannelUserIdMap(state) {
+    return new Map([...state.dmChannelsMap.values()].map(c => [c.userId, c.id]))
+  },
+  DMChannelIdByUserId(...args): (id: UserId) => DMChannelId | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return id => getters.DMChannelUserIdMap.get(id)
+  },
+
+  stampNameTable(state) {
+    return new Map(
+      [...state.stampsMap.values()].map(stamp => [stamp.name, stamp])
+    )
+  },
+  stampByName(...args): (name: string) => Stamp | undefined {
+    const { getters } = entitiesGetterContext(args)
+    return name => getters.stampNameTable.get(name)
+  },
+
   nonEmptyStampPaletteIds(state) {
-    return Object.values(state.stampPalettes)
+    return [...state.stampPalettesMap.values()]
       .filter(palette => palette.stamps?.length > 0)
       .map(palette => palette.id)
   }

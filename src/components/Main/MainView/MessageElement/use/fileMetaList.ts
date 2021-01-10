@@ -6,7 +6,7 @@ import { isDefined } from '@/lib/util/array'
 const useFileMetaList = (props: { fileIds: string[] }) => {
   const fileMetaData = computed(() =>
     props.fileIds
-      .map(id => store.state.entities.fileMetaData[id])
+      .map(id => store.state.entities.messages.fileMetaDataMap.get(id))
       .filter(isDefined)
   )
   const state = reactive({

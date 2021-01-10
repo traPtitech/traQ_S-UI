@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+import { Attachment } from '@/providers/messageInputState'
 import {
   defineComponent,
   computed,
@@ -18,7 +19,6 @@ import {
   PropType,
   shallowRef
 } from 'vue'
-import { Attachment } from '@/store/ui/fileInput/state'
 
 const useImageThumbnail = (
   props: { attachment: Attachment },

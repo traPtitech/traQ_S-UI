@@ -1,56 +1,12 @@
 <template>
-  <div v-if="isMinimum" :class="$style.container" data-is-minimum>
-    <icon
-      :class="$style.icon"
-      :size="28"
-      mdi
-      name="dots-horizontal"
-      @click="onDotsClick"
-    />
-  </div>
-  <div v-else :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <transition name="quick-reaction">
-      <div v-if="showQuickReaction || !isMobile" :class="$style.quickReaction">
-        <stamp
-          v-for="stamp in recentStamps"
-          :key="stamp"
-          :stamp-id="stamp"
-          @click="addStamp(stamp)"
-          :size="28"
-          :class="$style.stampListItem"
-        />
-        <span :class="$style.line" />
-      </div>
-    </transition>
-    <div
-      :class="$style.tools"
-      :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
-    >
-      <template v-if="isMobile">
-        <icon
-          v-if="showQuickReaction"
-          mdi
-          name="chevron-right"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleQuickReaction"
-        />
-        <icon
-          v-else
-          mdi
-          name="chevron-left"
-          :size="28"
-          :class="$style.icon"
-          @click="toggleQuickReaction"
-        />
-      </template>
-      <icon
-        mdi
-        name="emoticon-outline"
-        :size="28"
-        :class="$style.icon"
-        @click="onStampIconClick"
-      />
+  <div
+    v-if="show || isStampPickerOpen || isThisContextMenuShown"
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+    :data-is-minimum="$boolAttr(isMinimum)"
+    ref="containerEle"
+  >
+    <template v-if="isMinimum">
       <icon
         :class="$style.icon"
         :size="28"
@@ -58,7 +14,62 @@
         name="dots-horizontal"
         @click="onDotsClick"
       />
-    </div>
+    </template>
+    <template v-else>
+      <transition name="quick-reaction">
+        <div
+          v-if="showQuickReaction || !isMobile"
+          :class="$style.quickReaction"
+        >
+          <stamp
+            v-for="stamp in recentStamps"
+            :key="stamp"
+            :stamp-id="stamp"
+            @click="addStamp(stamp)"
+            :size="28"
+            :class="$style.stampListItem"
+          />
+          <span :class="$style.line" />
+        </div>
+      </transition>
+      <div
+        :class="$style.tools"
+        :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
+      >
+        <template v-if="isMobile">
+          <icon
+            v-if="showQuickReaction"
+            mdi
+            name="chevron-right"
+            :size="28"
+            :class="$style.icon"
+            @click="toggleQuickReaction"
+          />
+          <icon
+            v-else
+            mdi
+            name="chevron-left"
+            :size="28"
+            :class="$style.icon"
+            @click="toggleQuickReaction"
+          />
+        </template>
+        <icon
+          mdi
+          name="emoticon-outline"
+          :size="28"
+          :class="$style.icon"
+          @click="toggleStampPicker"
+        />
+        <icon
+          :class="$style.icon"
+          :size="28"
+          mdi
+          name="dots-horizontal"
+          @click="onDotsClick"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -68,10 +79,10 @@ import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import Stamp from '@/components/UI/Stamp.vue'
 import { StampId, MessageId } from '@/types/entity-ids'
-import useStampPickerInvoker from '@/use/stampPickerInvoker'
+import { useStampPickerInvoker } from '@/providers/stampPicker'
 import useIsMobile from '@/use/isMobile'
-
-const teleportTargetName = 'message-menu-popup'
+import apis from '@/lib/apis'
+import { useMessageContextMenuInvoker } from '@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -81,39 +92,38 @@ export default defineComponent({
   },
   props: {
     messageId: { type: String as PropType<MessageId>, required: true },
-    isMinimum: { type: Boolean, default: false }
+    isMinimum: { type: Boolean, default: false },
+    show: { type: Boolean, default: false }
   },
   setup(props) {
     const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
     )
-    const addStamp = (stampId: StampId) => {
-      store.dispatch.domain.messagesView.addStamp({
-        messageId: props.messageId,
-        stampId
+    const addStamp = async (stampId: StampId) => {
+      await apis.addMessageStamp(props.messageId, stampId)
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId,
+        datetime: new Date()
       })
     }
 
-    const { invokeStampPicker } = useStampPickerInvoker(
-      teleportTargetName,
-      stampData => {
-        addStamp(stampData.id)
-      }
-    )
-    const onStampIconClick = (e: MouseEvent) => {
-      if (store.getters.ui.stampPicker.isStampPickerShown) {
-        store.dispatch.ui.stampPicker.closeStampPicker()
-      } else {
-        invokeStampPicker({ x: e.pageX, y: e.pageY })
-      }
-    }
+    const containerEle = ref<HTMLDivElement>()
+    const {
+      isThisOpen: isStampPickerOpen,
+      toggleStampPicker
+    } = useStampPickerInvoker(stampData => {
+      apis.addMessageStamp(props.messageId, stampData.id)
+    }, containerEle)
+
+    const {
+      isThisContextMenuShown,
+      openContextMenu
+    } = useMessageContextMenuInvoker(props)
 
     const onDotsClick = (e: MouseEvent) => {
-      store.dispatch.ui.messageContextMenu.openMessageContextMenu({
-        messageId: props.messageId,
+      openContextMenu({
         x: e.pageX,
-        y: e.pageY,
-        isMinimum: props.isMinimum
+        y: e.pageY
       })
     }
 
@@ -123,10 +133,13 @@ export default defineComponent({
       (showQuickReaction.value = !showQuickReaction.value)
 
     return {
+      containerEle,
+      isThisContextMenuShown,
+      isStampPickerOpen,
       recentStamps,
       addStamp,
       onDotsClick,
-      onStampIconClick,
+      toggleStampPicker,
       isMobile,
       showQuickReaction,
       toggleQuickReaction

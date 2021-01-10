@@ -5,7 +5,7 @@
     @scroll.passive="handleScroll"
     @click="onClick"
   >
-    <div :class="$style.viewport">
+    <div :class="$style.viewport" v-if="state.stampsInitialFetchCompleted">
       <messages-scroller-separator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
@@ -38,6 +38,7 @@
       </div>
     </div>
     <div :class="$style.bottomSpacer"></div>
+    <message-tools-menu-container />
   </div>
 </template>
 
@@ -60,13 +61,16 @@ import MessageElement from '@/components/Main/MainView/MessageElement/MessageEle
 import ClipElement from '@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
-import { toggleSpoiler } from '@/lib/markdown'
+import { toggleSpoiler } from '@/lib/markdown/spoiler'
 import store from '@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '@/lib/date'
 import { embeddingOrigin } from '@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute } from '@/router'
+import { stampsMapInitialFetchPromise } from '@/store/entities/promises'
+import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
+import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -116,8 +120,9 @@ const useCompareDate = (props: { messageIds: MessageId[] }) => {
     if (index === 0) {
       return true
     }
-    const pre = store.state.entities.messages[props.messageIds[index - 1]]
-    const current = store.state.entities.messages[props.messageIds[index]]
+    const { messagesMap } = store.state.entities.messages
+    const pre = messagesMap.get(props.messageIds[index - 1])
+    const current = messagesMap.get(props.messageIds[index])
     const preDate = new Date(pre?.createdAt || ``)
     const currentDate = new Date(current?.createdAt || ``)
     return preDate.toDateString() !== currentDate.toDateString()
@@ -154,7 +159,8 @@ export default defineComponent({
   components: {
     MessageElement,
     ClipElement,
-    MessagesScrollerSeparator
+    MessagesScrollerSeparator,
+    MessageToolsMenuContainer
   },
   props: {
     messageIds: {
@@ -182,15 +188,25 @@ export default defineComponent({
     }
   },
   setup(props, context: SetupContext) {
+    provideMessageContextMenuStore()
+
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition
+      scrollTop: store.state.ui.mainView.lastScrollPosition,
+      stampsInitialFetchCompleted: false
     })
+
+    // メッセージスタンプ表示時にスタンプが存在していないと
+    // 場所が確保されないくてずれてしまうので、取得完了を待つ
+    ;(async () => {
+      await stampsMapInitialFetchPromise
+      state.stampsInitialFetchCompleted = true
+    })()
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {
-      const message = store.state.entities.messages[id]
+      const message = store.state.entities.messages.messagesMap.get(id)
       if (!message) {
         return ''
       }
@@ -202,7 +218,9 @@ export default defineComponent({
       const unreadSince = store.state.domain.messagesView.unreadSince
       if (!unreadSince) return -1
       return props.messageIds.findIndex(
-        id => store.state.entities.messages[id]?.createdAt === unreadSince
+        id =>
+          store.state.entities.messages.messagesMap.get(id)?.createdAt ===
+          unreadSince
       )
     })
 

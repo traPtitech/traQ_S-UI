@@ -1,8 +1,11 @@
 <template>
   <sidebar-content-container title="メンバー">
     <empty-state v-if="isForceNotification">強制通知チャンネル</empty-state>
+    <empty-state v-else-if="!subscribers">
+      メンバーの取得に失敗しました
+    </empty-state>
     <channel-sidebar-member-icons
-      v-else-if="userIds.length > 0"
+      v-else-if="subscribers.size > 0"
       :viewer-states="viewStates"
     />
     <empty-state v-else>メンバーはいません</empty-state>
@@ -16,6 +19,7 @@ import { ChannelId, UserId } from '@/types/entity-ids'
 import EmptyState from '@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import useChannelSubscribers from '@/use/channelSubscribers'
 
 export default defineComponent({
   name: 'ChannelSidebarMember',
@@ -29,14 +33,15 @@ export default defineComponent({
     viewerIds: { type: Array as PropType<UserId[]>, default: [] }
   },
   setup(props) {
+    const subscribers = useChannelSubscribers(props)
+
     const isForceNotification = computed(
-      () => store.state.entities.channels[props.channelId]?.force
+      () => store.state.entities.channelsMap.get(props.channelId)?.force
     )
-    const userIds = computed(() => store.state.domain.messagesView.subscribers)
     const viewStates = computed(() =>
-      userIds.value
+      [...(subscribers.value ?? new Set())]
         .map(id => ({
-          user: store.getters.entities.activeUsers[id],
+          user: store.getters.entities.activeUsersMap.get(id),
           active: props.viewerIds.includes(id)
         }))
         .filter(state => state.user !== undefined)
@@ -47,7 +52,7 @@ export default defineComponent({
           return a.active ? -1 : 1
         })
     )
-    return { userIds, isForceNotification, viewStates }
+    return { subscribers, isForceNotification, viewStates }
   }
 })
 </script>

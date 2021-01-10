@@ -54,7 +54,9 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
     const { channelIdToPathString } = useChannelPath()
     const state = reactive({
-      message: computed(() => store.state.entities.messages[props.messageId]),
+      message: computed(() =>
+        store.state.entities.messages.messagesMap.get(props.messageId)
+      ),
       channelPath: computed((): string =>
         state.message
           ? channelIdToPathString(state.message.channelId, false)
@@ -65,8 +67,9 @@ export default defineComponent({
       ),
       content: computed(
         () =>
-          store.state.domain.messagesView.renderedContentMap[props.messageId] ??
-          ''
+          store.state.domain.messagesView.renderedContentMap.get(
+            props.messageId
+          ) ?? ''
       )
     })
 

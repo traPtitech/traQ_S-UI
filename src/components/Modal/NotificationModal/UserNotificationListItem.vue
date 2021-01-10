@@ -37,7 +37,7 @@ export default defineComponent({
       }
     })
     const name = computed(
-      () => store.state.entities.users[props.userId]?.name ?? ''
+      () => store.state.entities.usersMap.get(props.userId)?.name ?? ''
     )
     return { value, name }
   }

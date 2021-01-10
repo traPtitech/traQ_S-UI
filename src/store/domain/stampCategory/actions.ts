@@ -7,16 +7,15 @@ import {
 import { moduleActionContext } from '@/store'
 import { stampCategory } from '.'
 import { ActionContext } from 'vuex'
-import { StampMap } from '@/store/entities'
 
 const stampCategoryActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, stampCategory)
 
 export const actions = defineActions({
   async constructStampCategories(context) {
-    const { commit, rootState } = stampCategoryActionContext(context)
+    const { rootState, commit } = stampCategoryActionContext(context)
     const { unicodeStampMap, traQStampMap } = constructStampNameIdMap(
-      rootState.entities.stamps as StampMap
+      rootState.entities.stampsMap
     )
     const unicodeStampCategories = await categorizeUnicodeStamps(
       unicodeStampMap

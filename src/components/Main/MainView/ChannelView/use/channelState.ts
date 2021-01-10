@@ -4,14 +4,16 @@ import { ChannelId } from '@/types/entity-ids'
 
 const useChannelState = (props: { channelId: ChannelId }) => {
   const state = reactive({
-    stared: computed(
-      () => props.channelId in store.state.domain.me.staredChannelSet
+    stared: computed(() =>
+      store.state.domain.me.staredChannelSet.has(props.channelId)
     ),
     forced: computed(
-      () => store.state.entities.channels[props.channelId]?.force ?? false
+      () =>
+        store.state.entities.channelsMap.get(props.channelId)?.force ?? false
     ),
     archived: computed(
-      () => store.state.entities.channels[props.channelId]?.archived ?? false
+      () =>
+        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
     )
   })
   return { channelState: state }

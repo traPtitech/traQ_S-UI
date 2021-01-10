@@ -46,6 +46,7 @@ import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
 import { isValidChannelName } from '@/lib/validate'
 import { canCreateChildChannel } from '@/lib/channel'
+import useToastStore from '@/providers/toastStore'
 
 const useManageChannel = (
   props: { id: string },
@@ -54,6 +55,7 @@ const useManageChannel = (
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
   const { channelIdToPathString } = useChannelPath()
+  const { addErrorToast } = useToastStore()
 
   const manageChannel = async () => {
     const channelPath = channelIdToPathString(props.id)
@@ -76,10 +78,7 @@ const useManageChannel = (
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)
 
-      store.commit.ui.toast.addToast({
-        type: 'error',
-        text: 'チャンネルの変更に失敗しました'
-      })
+      addErrorToast('チャンネルの変更に失敗しました')
     }
   }
   return { manageChannel }
@@ -98,14 +97,15 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props, context) {
+    const channelsMap = computed(() => store.state.entities.channelsMap)
     const channel = computed(
       (): Required<PatchChannelRequest> => {
-        const c = store.state.entities.channels[props.id]
+        const c = channelsMap.value.get(props.id)
         return {
-          name: c.name,
-          parent: c.parentId ?? nullUuid,
-          archived: c.archived,
-          force: c.force
+          name: c?.name ?? '',
+          parent: c?.parentId ?? nullUuid,
+          archived: c?.archived ?? false,
+          force: c?.force ?? false
         }
       }
     )
@@ -133,8 +133,7 @@ export default defineComponent({
           ({ value }) =>
             value !== props.id &&
             // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
-            (channel.value.archived ||
-              !store.state.entities.channels[value]?.archived)
+            (channel.value.archived || !channelsMap.value.get(value)?.archived)
         )
         .filter(({ key }) => canCreateChildChannel(key))
         .map(({ key, value }) => ({
@@ -143,16 +142,17 @@ export default defineComponent({
             // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
             // ただし今の親チャンネルは選択できる
             value !== channel.value.parent &&
-            store.state.entities.channels[value]?.children.some(
-              child =>
-                store.state.entities.channels[child]?.name === manageState.name
-            )
+            channelsMap.value
+              .get(value)
+              ?.children.some(
+                child => channelsMap.value.get(child)?.name === manageState.name
+              )
               ? null
               : value
         }))
     )
     const canToggleArchive = computed(
-      () => !store.state.entities.channels[channel.value.parent]?.archived
+      () => !channelsMap.value.get(channel.value.parent)?.archived
     )
 
     return {

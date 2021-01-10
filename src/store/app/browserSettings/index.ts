@@ -3,6 +3,7 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
+import { defineChannelTreeListeners } from './listeners'
 
 export type SendKey = 'modifier' | 'none'
 export interface SendKeys {
@@ -37,3 +38,4 @@ export const browserSettings = defineDBModule({
   mutations,
   actions
 })
+defineChannelTreeListeners(store => store.app.browserSettings)

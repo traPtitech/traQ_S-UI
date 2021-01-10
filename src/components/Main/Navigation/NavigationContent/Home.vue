@@ -59,15 +59,14 @@ export default defineComponent({
     NavigationContentContainer
   },
   setup() {
-    const homeChannel = computed(
-      () =>
-        store.state.entities.channels[
-          store.state.domain.me.detail?.homeChannel ?? ''
-        ]
+    const homeChannel = computed(() =>
+      store.state.entities.channelsMap.get(
+        store.state.domain.me.detail?.homeChannel ?? ''
+      )
     )
     const channelsWithNotification = computed(() =>
-      Object.values(store.state.domain.me.unreadChannelsSet)
-        .map(unread => store.state.entities.channels[unread.channelId ?? ''])
+      [...store.state.domain.me.unreadChannelsMap.values()]
+        .map(unread => store.state.entities.channelsMap.get(unread.channelId))
         .filter(isDefined)
     )
     const topLevelChannels = computed(
@@ -77,9 +76,10 @@ export default defineComponent({
         ) ?? []
     )
     const channelsWithRtc = computed(() =>
-      Object.entries(store.state.app.rtc.channelSessionsMap)
-        .filter(([, sessionIds]) => sessionIds && sessionIds.length > 0)
-        .map(([channelId]) => store.state.entities.channels[channelId])
+      [...store.state.domain.rtc.channelSessionsMap.entries()]
+        .filter(([, sessionIds]) => sessionIds.size > 0)
+        .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
+        .filter(isDefined)
     )
 
     return {

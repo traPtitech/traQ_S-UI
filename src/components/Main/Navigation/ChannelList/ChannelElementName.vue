@@ -25,7 +25,7 @@ import useChannelPath from '@/use/channelPath'
 import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
 import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
-import { ChannelTreeNode } from '@/store/domain/channelTree/state'
+import { ChannelTreeNode } from '@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 
 interface TreeProps {

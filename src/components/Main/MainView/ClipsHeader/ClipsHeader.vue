@@ -41,7 +41,8 @@ export default defineComponent({
   },
   setup(props) {
     const clipFolderName = computed(
-      () => store.state.entities.clipFolders[props.clipFolderId]?.name ?? ''
+      () =>
+        store.state.entities.clipFoldersMap.get(props.clipFolderId)?.name ?? ''
     )
     const { openSidebar } = useSidebar()
     return {

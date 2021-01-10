@@ -9,63 +9,53 @@
       v-for="clipFolder in clipFolders"
       :key="clipFolder.id"
       :folder-name="clipFolder.name"
-      :is-selected="selectedState[clipFolder.id]"
+      :is-selected="isSelected.has(clipFolder.id)"
       @click="toggleClip(clipFolder.id)"
     />
   </modal-frame>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
+import { defineComponent, computed, ref, Ref } from 'vue'
 import store from '@/store'
 import apis from '@/lib/apis'
 import { compareString } from '@/lib/util/string'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import { ClipFolderMap } from '@/store/entities'
+import useToastStore from '@/providers/toastStore'
 
 const useCreateClip = (
   props: { messageId: MessageId },
-  selectedState: Record<ClipFolderId, boolean>
+  isSelected: Ref<Set<ClipFolderId>>
 ) => {
+  const { addSuccessToast, addErrorToast } = useToastStore()
+
   const createClip = async (clipFolderId: ClipFolderId) => {
     try {
       await apis.clipMessage(clipFolderId, {
         messageId: props.messageId
       })
-      selectedState[clipFolderId] = true
-      store.commit.ui.toast.addToast({
-        type: 'success',
-        text: 'クリップフォルダに追加しました'
-      })
+      isSelected.value.add(clipFolderId)
+      addSuccessToast('クリップフォルダに追加しました')
     } catch (e) {
       if (e.response.status === 409) {
-        selectedState[clipFolderId] = true
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: 'すでに追加されています'
-        })
+        isSelected.value.add(clipFolderId)
+        addErrorToast('すでに追加されています')
         return
       } else {
-        store.commit.ui.toast.addToast({
-          type: 'error',
-          text: '追加に失敗しました'
-        })
+        addErrorToast('追加に失敗しました')
       }
       throw e
     }
   }
   const deleteClip = async (clipFolderId: ClipFolderId) => {
     await apis.unclipMessage(clipFolderId, props.messageId)
-    selectedState[clipFolderId] = false
-    store.commit.ui.toast.addToast({
-      type: 'success',
-      text: 'クリップフォルダから削除しました'
-    })
+    isSelected.value.delete(clipFolderId)
+    addSuccessToast('クリップフォルダから削除しました')
   }
   const toggleClip = async (clipFolderId: ClipFolderId) => {
-    if (selectedState[clipFolderId]) {
+    if (isSelected.value.has(clipFolderId)) {
       await deleteClip(clipFolderId)
     } else {
       await createClip(clipFolderId)
@@ -87,27 +77,23 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const message = computed(
-      () => store.state.entities.messages[props.messageId]
+    const message = computed(() =>
+      store.state.entities.messages.messagesMap.get(props.messageId)
     )
     const clipFolders = computed(() => {
-      const folders = Object.values(
-        store.state.entities.clipFolders as ClipFolderMap
-      )
+      const folders = [...store.state.entities.clipFoldersMap.values()]
       folders.sort((a, b) => compareString(a.name, b.name))
       return folders
     })
-    const selectedState = reactive(
-      Object.fromEntries(
-        clipFolders.value.map(folder => [folder.id, false])
-      ) as Record<ClipFolderId, boolean>
-    )
+
+    const isSelected = ref(new Set<ClipFolderId>())
     apis.getMessageClips(props.messageId).then(res => {
-      res.data.forEach(mc => (selectedState[mc.folderId] = true))
+      isSelected.value = new Set(res.data.map(c => c.folderId))
     })
+
     const messageContent = computed(() => message.value?.content ?? '')
-    const { toggleClip } = useCreateClip(props, selectedState)
-    return { messageContent, clipFolders, selectedState, toggleClip }
+    const { toggleClip } = useCreateClip(props, isSelected)
+    return { messageContent, clipFolders, isSelected, toggleClip }
   }
 })
 </script>

@@ -31,9 +31,7 @@ export default defineComponent({
   },
   setup(props) {
     const userId = computed(() => props.detail?.id)
-    const isMine = computed(
-      () => userId.value === store.state.domain.me.detail?.id
-    )
+    const isMine = computed(() => userId.value === store.getters.domain.me.myId)
     const tags = computed(() => props.detail?.tags ?? [])
 
     return {

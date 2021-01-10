@@ -1,34 +1,40 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import apis from '@/lib/apis'
-import { domain, ACTIVITY_LENGTH } from '.'
-import { UserId } from '@/types/entity-ids'
+import { domain } from '.'
 import { ActionContext } from 'vuex'
+import { UserId } from '@/types/entity-ids'
+import apis from '@/lib/apis'
+import { createSingleflight } from '@/lib/async'
 
 export const domainActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, domain)
 
+const getOnlineUsers = createSingleflight(apis.getOnlineUsers.bind(apis))
+
+// TODO: fetchのエラー処理
 export const actions = defineActions({
-  async fetchActivityTimeline(
+  async fetchOnlineUsers(
     context,
-    options: { all?: boolean; perChannel?: boolean }
-  ) {
-    const { commit } = domainActionContext(context)
-    const result = await apis.getActivityTimeline(
-      ACTIVITY_LENGTH,
-      options.all,
-      options.perChannel
-    )
-    commit.setActivityTimeline(result.data)
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ): Promise<Set<UserId>> {
+    const { state, commit } = domainActionContext(context)
+    if (state.onlineUsersFetched && !ignoreCache) {
+      return state.onlineUsers
+    }
+
+    const [{ data: userIdsArray }, shared] = await getOnlineUsers()
+    const userIds = new Set(userIdsArray)
+    if (!shared) {
+      commit.setOnlineUsers(new Set(userIds))
+    }
+    return userIds
   },
-  async fetchOnlineUsers(context) {
+  addOnlineUser(context, userId: UserId) {
     const { commit } = domainActionContext(context)
-    const result = await apis.getOnlineUsers()
-    commit.setOnlineUsers(result.data)
+    commit.addOnlineUser(userId)
   },
-  async fetchUserDetail(context, userId: UserId) {
+  deleteOnlineUser(context, userId: UserId) {
     const { commit } = domainActionContext(context)
-    const result = await apis.getUser(userId)
-    commit.setUserDetail(result.data)
+    commit.deleteOnlineUser(userId)
   }
 })

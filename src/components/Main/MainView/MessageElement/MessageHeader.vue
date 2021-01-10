@@ -41,14 +41,14 @@ export default defineComponent({
   components: { GradeBadge, Icon },
   setup(props) {
     const state = reactive({
-      user: computed(() => store.state.entities.users[props.userId]),
+      user: computed(() => store.state.entities.usersMap.get(props.userId)),
       displayName: computed((): string => state.user?.displayName ?? 'unknown'),
       name: computed((): string => state.user?.name ?? 'unknown'),
       bot: computed((): boolean => state.user?.bot ?? false),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
     if (state.user === undefined) {
-      store.dispatch.entities.fetchUser(props.userId)
+      store.dispatch.entities.fetchUser({ userId: props.userId })
     }
     return { state }
   }

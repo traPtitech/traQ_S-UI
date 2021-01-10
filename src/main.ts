@@ -6,6 +6,7 @@ import boolAttr from './bool-attr'
 import vClickOutside from 'v-click-outside'
 import { setupGlobalFuncs } from './markdown-bridge'
 import { loadResizeObserver } from './resizeObserver'
+import { mountMitt } from '@/onMount'
 
 import('katex/dist/katex.css')
 
@@ -26,4 +27,6 @@ import('katex/dist/katex.css')
   if (process.env.NODE_ENV === 'development') {
     app.config.performance = true
   }
+
+  mountMitt.emit('mount')
 })()

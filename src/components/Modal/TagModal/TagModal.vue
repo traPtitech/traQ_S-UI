@@ -16,10 +16,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref, watchEffect } from 'vue'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
+import { Tag } from '@traptitech/traq'
+import apis from '@/lib/apis'
+
+const useTag = (props: { id: string }) => {
+  const tag = ref<Tag | null>()
+  watchEffect(async () => {
+    tag.value = (await apis.getTag(props.id)).data
+  })
+  return tag
+}
 
 export default defineComponent({
   name: 'TagModal',
@@ -34,13 +44,12 @@ export default defineComponent({
     }
   },
   setup(props) {
-    store.dispatch.entities.fetchTag(props.id)
-    const tag = computed(() => store.state.entities.tags[props.id])
+    const tag = useTag(props)
     const tagName = computed(() => tag.value?.tag)
     const taggedUsers = computed(
       () =>
-        tag.value?.users.filter(
-          user => store.getters.entities.activeUsers[user] !== undefined
+        tag.value?.users.filter(user =>
+          store.getters.entities.activeUsersMap.has(user)
         ) ?? []
     )
     return { tagName, taggedUsers }

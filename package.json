@@ -33,6 +33,7 @@
     "highlight.js": "^10.5.0",
     "idb-keyval": "^3.2.0",
     "klona": "^2.0.4",
+    "mitt": "^2.1.0",
     "pica": "^6.1.1",
     "shvl": "^2.0.1",
     "skyway-js": "^4.2.0",

@@ -1,87 +1,57 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { Channel } from '@traptitech/traq'
-import { compareString } from '@/lib/util/string'
-import { ChannelId } from '@/types/entity-ids'
-import { channelTree } from './index'
-import { ChannelTreeNode, rootChannelId } from './state'
+import { channelTree, channelTreeMitt } from '.'
 import { ActionContext } from 'vuex'
+import store from '@/store'
+import { constructTree, rootChannelId } from '@/lib/channelTree'
+import { Channel } from '@traptitech/traq'
+import { channelIdToPathString } from '@/lib/channel'
 
 export const channelTreeActionContext = (
   context: ActionContext<unknown, unknown>
 ) => moduleActionContext(context, channelTree)
 
-const channelNameSortFunction = (
-  channelEntities: Record<ChannelId, ChannelLike>
-) => (node1: ChannelTreeNode, node2: ChannelTreeNode) => {
-  // sort by channel name
-  const name1 = channelEntities[node1.id].name.toUpperCase()
-  const name2 = channelEntities[node2.id].name.toUpperCase()
-  return compareString(name1, name2)
-}
-
-export type ChannelLike = Pick<
-  Channel,
-  'id' | 'name' | 'parentId' | 'children' | 'archived'
->
-
-export const constructTree = (
-  channel: ChannelLike,
-  channelEntities: Record<ChannelId, ChannelLike>,
-  subscribedChannels?: Set<ChannelId>
-): ChannelTreeNode | undefined => {
-  const isRootChannel = channel.id === rootChannelId
-  const isSubscribed =
-    isRootChannel || (subscribedChannels?.has(channel.id) ?? true)
-
-  if (channel.children.length === 0) {
-    // 葉チャンネル
-    return isSubscribed
-      ? {
-          id: channel.id,
-          name: channel.name,
-          active: true,
-          archived: channel.archived,
-          children: []
-        }
-      : undefined
-  }
-
-  /** 表示しないものをフィルタした子孫チャンネル */
-  const children = channel.children
-    .reduce((acc, id) => {
-      const child = channelEntities[id]
-      if (!child) {
-        return acc
-      }
-      const result = constructTree(child, channelEntities, subscribedChannels)
-      return result ? [...acc, result] : acc
-    }, [] as ChannelTreeNode[])
-    .sort(channelNameSortFunction(channelEntities))
-  if (children.length === 0 && !isSubscribed) {
-    // 子がいない非購読チャンネル
-    return undefined
-  }
-  if (children.length === 1 && !isSubscribed) {
-    // 子が1つの非購読チャンネル
-    const ancestorNames = children[0].skippedAncestorNames ?? []
-    ancestorNames.push(channel.name)
-    return {
-      ...children[0],
-      skippedAncestorNames: ancestorNames
-    }
-  }
-  // 子が2つ以上か、購読チャンネル
-  return {
-    id: channel.id,
-    name: channel.name,
-    active: isSubscribed,
-    archived: channel.archived,
-    children
-  }
-}
-
 export const actions = defineActions({
+  onSetChannels(context) {
+    const { dispatch } = channelTreeActionContext(context)
+    dispatch.constructAllTrees()
+  },
+  async onAddChannel(context, channel: Channel) {
+    const { rootState, dispatch } = channelTreeActionContext(context)
+
+    // 新規追加のときはホームに表示されることはないのでhomeChannelTree構築しない
+    await dispatch.constructChannelTree()
+
+    const path = channelIdToPathString(
+      channel.id,
+      rootState.entities.channelsMap
+    )
+    channelTreeMitt.emit('created', { id: channel.id, path })
+  },
+  async onUpdateChannel(
+    context,
+    {
+      newChannel,
+      oldChannel,
+      oldPath
+    }: { newChannel: Channel; oldChannel: Channel; oldPath: string }
+  ) {
+    const { rootState, dispatch } = channelTreeActionContext(context)
+
+    await dispatch.constructAllTrees()
+
+    if (
+      newChannel.name !== oldChannel.name ||
+      newChannel.parentId !== oldChannel.parentId
+    ) {
+      const newPath = channelIdToPathString(
+        newChannel.id,
+        rootState.entities.channelsMap
+      )
+      channelTreeMitt.emit('moved', { id: newChannel.id, oldPath, newPath })
+    }
+  },
+
   async constructAllTrees(context) {
     const { dispatch } = channelTreeActionContext(context)
     await Promise.all([
@@ -103,25 +73,20 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels
+          rootState.entities.channelsMap
         )?.children ?? []
     }
     commit.setChannelTree(tree)
   },
   constructHomeChannelTree(context) {
-    const {
-      getters,
-      commit,
-      rootState,
-      rootGetters
-    } = channelTreeActionContext(context)
+    const { getters, commit, rootState } = channelTreeActionContext(context)
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
-    const subscribedOrForceChannels = rootGetters.domain.me.subscribedChannels.concat(
-      Object.values(rootState.entities.channels)
-        .filter(c => c.force)
-        .map(c => c.id)
-    )
+    const subscribedOrForceChannels = new Set([
+      // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
+      ...store.getters.domain.me.subscribedChannels.values(),
+      ...getters.forcedChannels.map(c => c.id)
+    ])
     const tree = {
       children:
         constructTree(
@@ -132,8 +97,8 @@ export const actions = defineActions({
             archived: false,
             children: topLevelChannelIds
           },
-          rootState.entities.channels,
-          new Set(subscribedOrForceChannels)
+          rootState.entities.channelsMap,
+          subscribedOrForceChannels
         )?.children ?? []
     }
     commit.setHomeChannelTree(tree)

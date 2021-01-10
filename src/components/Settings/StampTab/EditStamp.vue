@@ -19,16 +19,15 @@ import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
 import { StampId } from '@/types/entity-ids'
 import Stamp from './Stamp.vue'
-import { StampMap } from '@/store/entities'
 
 export default defineComponent({
   name: 'EditStamp',
   setup() {
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myUserId = computed(() => store.state.domain.me.detail!.id)
+    const myUserId = computed(() => store.getters.domain.me.myId!)
     const myStamps = computed(() =>
-      Object.values(store.state.entities.stamps as StampMap).filter(
+      [...store.state.entities.stampsMap.values()].filter(
         stamp => stamp.creatorId === myUserId.value
       )
     )
