@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <share-target :title="title" :text="text" :url="url" />
+    <share-target-component :title="title" :text="text" :url="url" />
     <stamp-picker-container />
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { getStringParam } from '@/lib/util/params'
-import ShareTarget from '@/components/ShareTarget/ShareTarget.vue'
+import ShareTargetComponent from '@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
 import { useRoute } from 'vue-router'
 import useLoginCheck from './use/loginCheck'
@@ -16,7 +16,7 @@ import useLoginCheck from './use/loginCheck'
 export default defineComponent({
   name: 'Share',
   components: {
-    ShareTarget,
+    ShareTargetComponent,
     StampPickerContainer
   },
   setup(props, context) {
