@@ -52,7 +52,7 @@ import useToastStore from '@/use/toastStore'
 
 const useCopy = () => {
   const route = useRoute()
-  const { addInfoToast } = useToastStore()
+  const { addInfoToast, addErrorToast } = useToastStore()
   const copyLink = async () => {
     try {
       await clipboard.writeText(
@@ -60,7 +60,7 @@ const useCopy = () => {
       )
       addInfoToast('チャンネルリンクをコピーしました')
     } catch {
-      addInfoToast('チャンネルリンクをコピーできませんでした')
+      addErrorToast('チャンネルリンクをコピーできませんでした')
     }
   }
   return { copyLink }
