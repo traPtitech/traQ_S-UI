@@ -45,6 +45,7 @@ export default defineComponent({
       () => store.state.domain.me.detail?.homeChannel ?? nullUuid
     )
 
+    // 投稿先チャンネルとメッセージでの置換に必要
     store.dispatch.entities.fetchChannels()
     const { channelOptions } = useChannelOptions('-----')
 
@@ -58,6 +59,10 @@ export default defineComponent({
       },
       { immediate: true }
     )
+
+    // メッセージでの置換に必要
+    store.dispatch.entities.fetchUsers()
+    store.dispatch.entities.fetchUserGroups()
 
     // FIXME: 親子関係なのにprovide-injectを乱用してるの微妙
     const { state } = useMessageInputState()
