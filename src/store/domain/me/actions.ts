@@ -6,6 +6,7 @@ import { ChannelId, UserId } from '@/types/entity-ids'
 import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '@/lib/markdown/detector'
+import { deleteToken } from '@/lib/firebase'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -13,8 +14,20 @@ export const meActionContext = (context: ActionContext<unknown, unknown>) =>
 export const actions = defineActions({
   async fetchMe(context) {
     const { commit } = meActionContext(context)
-    const { data } = await apis.getMe()
-    commit.setDetail(data)
+    try {
+      const { data } = await apis.getMe()
+      commit.setDetail(data)
+      return data
+    } catch {
+      commit.unsetDetail()
+      return undefined
+    }
+  },
+  async logout(context, { allSession = false }: { allSession?: boolean } = {}) {
+    const { commit } = meActionContext(context)
+    commit.unsetDetail()
+    await apis.logout(undefined, allSession)
+    await deleteToken()
   },
   onUserUpdated(context, userId: UserId) {
     const { getters, dispatch } = meActionContext(context)

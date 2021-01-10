@@ -14,10 +14,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
-import { deleteToken } from '@/lib/firebase'
 import { useRouter } from 'vue-router'
+import store from '@/store'
 
 export default defineComponent({
   name: 'Account',
@@ -25,8 +24,7 @@ export default defineComponent({
     const router = useRouter()
 
     const onLogoutClick = async () => {
-      await apis.logout()
-      await deleteToken()
+      await store.dispatch.domain.me.logout()
       router.push('/login')
     }
 
@@ -37,8 +35,7 @@ export default defineComponent({
           'ログイン中のセッションを全て破棄します。（実行するとログアウトされます）'
         )
       ) {
-        await apis.logout(undefined, true)
-        await deleteToken()
+        await store.dispatch.domain.me.logout({ allSession: true })
         router.push('/login')
       }
     }

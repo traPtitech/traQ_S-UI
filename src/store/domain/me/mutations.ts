@@ -31,6 +31,9 @@ export const mutations = defineMutations<S>()({
   setDetail(state, detail: Readonly<MyUserDetail>) {
     state.detail = detail
   },
+  unsetDetail(state) {
+    state.detail = undefined
+  },
 
   setStampHistory(state: S, stampHistory: Map<StampId, Date>) {
     state.stampHistory = stampHistory

@@ -24,7 +24,6 @@ const useInitialFetch = (afterLoginCheck: () => void) => {
   const initialFetchCompleted = ref(false)
 
   useLoginCheck(() => {
-    if (!store.getters.domain.me.isLoggedIn) return
     if (initialFetchCompleted.value) return
 
     initialFetchCompleted.value = true

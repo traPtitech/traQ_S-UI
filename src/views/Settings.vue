@@ -65,10 +65,7 @@ export default defineComponent({
     })
 
     // ログイン必要ルート
-    const isLoginCheckDone = ref(false)
-    useLoginCheck(async () => {
-      isLoginCheckDone.value = true
-    })
+    const { isLoginCheckDone } = useLoginCheck()
 
     return { isMobile, isLoginCheckDone }
   },
