@@ -8,7 +8,7 @@
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
       :size="16"
-      name="pencil"
+      name="pencil-outline"
       mdi
     />
   </div>

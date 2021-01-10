@@ -19,7 +19,7 @@
       :class="$style.button"
     >
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
-      <icon v-else width="20" height="20" name="pencil" mdi />
+      <icon v-else width="20" height="20" name="pencil-outline" mdi />
     </button>
   </div>
 </template>
