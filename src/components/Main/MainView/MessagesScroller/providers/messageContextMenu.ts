@@ -7,12 +7,13 @@ import {
   InjectionKey
 } from 'vue'
 import { MessageId } from '@/types/entity-ids'
+import { Point } from '@/lib/point'
 
 const messageContextMenuStoreSymbol: InjectionKey<MessageContextMenuStore> = Symbol()
 
 interface MessageContextMenuStore {
   target?: MessageId
-  position: { x: number; y: number }
+  position: Point
   isMinimum: boolean
 }
 
@@ -57,11 +58,6 @@ export const useMessageContextMenuStore = () => {
     isShown,
     closeContextMenu
   }
-}
-
-type Point = {
-  x: number
-  y: number
 }
 
 export const useMessageContextMenuInvoker = (props: {

@@ -11,6 +11,7 @@ import {
 } from 'vue'
 import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 import { StampId } from '@/types/entity-ids'
+import { Point } from '@/lib/point'
 
 const stampPickerStoreSymbol: InjectionKey<StampPickerStore> = Symbol()
 
@@ -33,16 +34,12 @@ export type StampSelectHandler = (stamp: SelectedStampData) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
-export interface Place {
-  x: number
-  y: number
-}
 export type AlignmentPosition = 'top-right' | 'bottom-right'
 
 interface StampPickerStore {
   selectHandler: StampSelectHandler
   currentStampSet: StampSet
-  position: Place | undefined
+  position: Point | undefined
   alignment: AlignmentPosition
 }
 
