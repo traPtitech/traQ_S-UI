@@ -23,7 +23,7 @@ import { compareString } from '@/lib/util/string'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useCreateClip = (
   props: { messageId: MessageId },

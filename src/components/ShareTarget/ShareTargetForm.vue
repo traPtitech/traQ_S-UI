@@ -25,7 +25,7 @@ import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import usePostMessage from '@/components/Main/MainView/MessageInput/use/postMessage'
 import useChannelOptions from '@/use/channelOptions'
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'ShareTargetForm',

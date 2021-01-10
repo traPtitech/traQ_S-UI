@@ -45,7 +45,7 @@ import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',

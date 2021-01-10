@@ -49,7 +49,7 @@ import useCanCreateChildChannel from '@/use/canCreateChildChannel'
 import { isValidChannelName } from '@/lib/validate'
 import apis from '@/lib/apis'
 import { channelTreeMitt } from '@/store/domain/channelTree'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 interface State {
   channelName: string

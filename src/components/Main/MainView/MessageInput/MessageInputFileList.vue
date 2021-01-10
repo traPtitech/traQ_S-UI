@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MessageInputFileListItem from './MessageInputFileListItem.vue'
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'MessageInputFileList',

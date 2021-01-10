@@ -46,8 +46,8 @@ import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import clipboard from '@cloudcmd/clipboard'
-import useToastStore from '@/use/toastStore'
-import { useMessageContextMenuStore } from './use/messageContextMenu'
+import useToastStore from '@/providers/toastStore'
+import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()

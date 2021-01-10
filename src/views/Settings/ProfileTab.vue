@@ -82,7 +82,7 @@ import useChannelOptions from '@/use/channelOptions'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import useMaxLength from '@/use/maxLength'
 import { isValidTwitter } from '@/lib/validate'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({

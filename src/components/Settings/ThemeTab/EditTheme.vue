@@ -56,7 +56,7 @@ import { Theme } from '@/types/theme'
 import { dequal } from 'dequal'
 import { lightTheme } from '@/store/app/themeSettings/default'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useEditedThemes = (
   props: { custom: Theme },

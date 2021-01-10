@@ -26,7 +26,7 @@ import {
   toRef
 } from 'vue'
 import MessageToolsMenu from './MessageToolsMenu.vue'
-import { useMessageContextMenuStore } from './use/messageContextMenu'
+import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
 const useMenuHeight = (context: SetupContext, isShown: Ref<boolean>) => {
   const height = ref(0)

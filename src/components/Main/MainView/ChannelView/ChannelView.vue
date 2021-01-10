@@ -22,7 +22,7 @@ import store from '@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 const useDragDrop = () => {
   const { addFromDataTransfer } = useMessageInputState()

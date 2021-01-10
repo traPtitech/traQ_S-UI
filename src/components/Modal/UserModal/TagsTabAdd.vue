@@ -26,7 +26,7 @@ import { UserId } from '@/types/entity-ids'
 import Icon from '@/components/UI/Icon.vue'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import useMaxLength from '@/use/maxLength'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 export default defineComponent({
   name: 'TagsTab',

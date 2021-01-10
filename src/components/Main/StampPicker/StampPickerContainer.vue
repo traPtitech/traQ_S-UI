@@ -16,7 +16,7 @@ import {
   useStampPickerStore,
   Place,
   AlignmentPosition
-} from '@/use/stampPicker'
+} from '@/providers/stampPicker'
 
 const useStyles = (state: {
   position: Place | undefined

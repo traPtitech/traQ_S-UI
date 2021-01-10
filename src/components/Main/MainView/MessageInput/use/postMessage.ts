@@ -12,8 +12,8 @@ import {
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
-import useToastStore from '@/use/toastStore'
-import useMessageInputState, { Attachment } from '@/use/messageInputState'
+import useToastStore from '@/providers/toastStore'
+import useMessageInputState, { Attachment } from '@/providers/messageInputState'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,

@@ -66,7 +66,7 @@ import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',

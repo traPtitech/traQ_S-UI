@@ -46,7 +46,7 @@ import useStateDiff from '@/components/Settings/use/stateDiff'
 import useChannelOptions from '@/use/channelOptions'
 import { isValidChannelName } from '@/lib/validate'
 import { canCreateChildChannel } from '@/lib/channel'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useManageChannel = (
   props: { id: string },

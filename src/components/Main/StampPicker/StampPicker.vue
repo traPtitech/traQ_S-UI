@@ -48,7 +48,7 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-import { useStampPickerStore } from '@/use/stampPicker'
+import { useStampPickerStore } from '@/providers/stampPicker'
 
 export default defineComponent({
   name: 'StampPicker',

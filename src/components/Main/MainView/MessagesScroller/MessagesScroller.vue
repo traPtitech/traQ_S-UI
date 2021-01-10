@@ -70,7 +70,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute } from '@/router'
 import { stampsMapInitialFetchPromise } from '@/store/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
-import { provideMessageContextMenuStore } from './use/messageContextMenu'
+import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 
 const LOAD_MORE_THRESHOLD = 10
 

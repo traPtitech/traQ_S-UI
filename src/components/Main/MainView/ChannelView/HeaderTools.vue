@@ -48,7 +48,7 @@ import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
 import { useRoute } from 'vue-router'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useCopy = () => {
   const route = useRoute()

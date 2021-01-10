@@ -2,7 +2,7 @@ import {
   AlignmentPosition,
   StampSelectHandler,
   useStampPickerInvoker
-} from '@/use/stampPicker'
+} from '@/providers/stampPicker'
 import store from '@/store'
 import { Ref, computed, nextTick } from 'vue'
 

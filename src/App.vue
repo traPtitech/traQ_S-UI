@@ -18,9 +18,9 @@ import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '@/lib/media'
 import ToastContainer from '@/components/Toast/ToastContainer.vue'
-import { provideToastStore } from '@/use/toastStore'
-import { provideStampPickerStore } from '@/use/stampPicker'
-import { provideMessageInputState } from '@/use/messageInputState'
+import { provideToastStore } from '@/providers/toastStore'
+import { provideStampPickerStore } from '@/providers/stampPicker'
+import { provideMessageInputState } from '@/providers/messageInputState'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)

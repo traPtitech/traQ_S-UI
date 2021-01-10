@@ -1,4 +1,4 @@
-import useMessageInputState from '@/use/messageInputState'
+import useMessageInputState from '@/providers/messageInputState'
 
 const useAttachments = () => {
   const { addAttachment } = useMessageInputState()

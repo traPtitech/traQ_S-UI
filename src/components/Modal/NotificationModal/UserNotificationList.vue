@@ -20,7 +20,7 @@ import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useChannelSubscribers from '@/use/channelSubscribers'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const { addErrorToast } = useToastStore()

@@ -58,7 +58,7 @@ import Icon from '@/components/UI/Icon.vue'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useStateDiff from '../use/stateDiff'
 import { isValidStampName } from '@/lib/validate'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const creatorOptions = computed(() =>
   [...store.getters.entities.activeUsersMap.values()]

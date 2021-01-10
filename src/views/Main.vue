@@ -59,7 +59,7 @@ import StampPickerContainer from '@/components/Main/StampPicker/StampPickerConta
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,

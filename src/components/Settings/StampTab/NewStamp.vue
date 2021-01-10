@@ -35,7 +35,7 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
 import { isValidStampName } from '@/lib/validate'
-import useToastStore from '@/use/toastStore'
+import useToastStore from '@/providers/toastStore'
 
 const useStampCreate = (
   newStampName: Ref<string>,
