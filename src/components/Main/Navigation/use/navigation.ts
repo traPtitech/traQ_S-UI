@@ -29,7 +29,12 @@ const useNav = () => {
   }
 
   const onEphemeralEntryAdd = (entry: EphemeralNavigationSelectorEntry) => {
-    _onEphemeralNavigationChange(entry.type)
+    if (
+      entry.selectOnAdd ||
+      ephemeralNavigationSelectorState.currentNavigation === undefined
+    ) {
+      _onEphemeralNavigationChange(entry.type)
+    }
   }
 
   return {
