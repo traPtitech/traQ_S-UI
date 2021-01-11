@@ -19,7 +19,6 @@
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
         :style="styles.mainViewWrapper"
-        :class="$style.mainViewWrapper"
         @click.capture="onClickMainViewFrame"
       >
         <main-view :class="$style.mainView" />
@@ -178,6 +177,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+// ナビゲーションバーの幅
+$min-nav-width: 260px;
+$max-nav-width: 360px;
+// ナビゲーションバーの幅が最小・最大になる画面幅
+$min-nav-width-display-width: 700px;
+$max-nav-width-display-width: 2560px;
+// それぞれの差と二つの比率
+$nav-width-diff: $max-nav-width - $min-nav-width;
+$nav-width-display-width-diff: $max-nav-width-display-width -
+  $min-nav-width-display-width;
+$nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
+
 .homeWrapper {
   height: 100%;
 }
@@ -192,16 +203,17 @@ export default defineComponent({
 .navigationWrapper {
   height: 100%;
   max-width: 360px;
-  flex: 1 0 260px; // .mainViewWrapperのflexと調節する
+  min-width: 260px;
+  flex-shrink: 0;
+  flex-basis: calc(
+    260px + ((100vw - #{$min-nav-width-display-width}) * #{$nav-width-ratio})
+  );
   [data-is-mobile] & {
     position: absolute;
     top: 0;
     left: 0;
     width: 320px;
   }
-}
-.mainViewWrapper {
-  flex: 12 1 320px; // .navigationViewWrapperのflexと調節する
 }
 .sidebarWrapper {
   @include background-secondary;
