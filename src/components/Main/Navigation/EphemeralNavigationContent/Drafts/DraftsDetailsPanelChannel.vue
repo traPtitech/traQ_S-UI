@@ -60,6 +60,7 @@ export default defineComponent({
   cursor: pointer;
 }
 .state {
+  @include color-ui-primary;
   display: flex;
 }
 .icon {
@@ -71,7 +72,7 @@ export default defineComponent({
   white-space: nowrap;
 }
 .channelPath {
-  @include color-text-secondary;
+  @include color-ui-secondary;
   @include size-caption;
 }
 </style>
