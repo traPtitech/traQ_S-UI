@@ -230,6 +230,7 @@ export const actions = defineActions({
   onChannelMessageCreated(context, message: Message) {
     const { state, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId !== message.channelId) return
+    if (!state.shouldRetriveMessageCreateEvent) return
     dispatch.addAndRenderMessage({ message })
   },
   onChannelMessageUpdated(context, message: Message) {
