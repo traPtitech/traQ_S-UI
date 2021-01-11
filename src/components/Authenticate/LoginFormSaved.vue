@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.user">
     <img :src="saved.iconURL" :class="$style.userIcon" />
-    <p>{{ saved.id }}</p>
+    <p :class="$style.name">{{ saved.id }}</p>
   </div>
   <div :class="$style.buttons">
     <authenticate-button
@@ -39,7 +39,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .user {
-  @include color-ui-secondary;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,6 +47,11 @@ export default defineComponent({
 .userIcon {
   height: 64px;
   width: 64px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+.name {
+  @include color-ui-secondary;
 }
 .buttons {
   margin-top: 48px;
