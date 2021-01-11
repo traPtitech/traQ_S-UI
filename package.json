@@ -70,7 +70,7 @@
     "@vue/test-utils": "1.1.2",
     "axios": "^0.21.1",
     "compression-webpack-plugin": "^6.1.1",
-    "csstype": "^3.0.5",
+    "csstype": "^3.0.6",
     "cypress": "^6.2.1",
     "eslint": "^7.17.0",
     "eslint-plugin-prettier": "^3.3.1",
