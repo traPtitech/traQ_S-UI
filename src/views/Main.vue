@@ -179,7 +179,7 @@ export default defineComponent({
 <style lang="scss" module>
 // ナビゲーションバーの幅
 $min-nav-width: 260px;
-$max-nav-width: 360px;
+$max-nav-width: 400px;
 // ナビゲーションバーの幅が最小・最大になる画面幅
 $min-nav-width-display-width: 700px;
 $max-nav-width-display-width: 2560px;
@@ -202,7 +202,7 @@ $nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
 }
 .navigationWrapper {
   height: 100%;
-  max-width: 360px;
+  max-width: 400px;
   min-width: 260px;
   flex-shrink: 0;
   flex-basis: calc(
