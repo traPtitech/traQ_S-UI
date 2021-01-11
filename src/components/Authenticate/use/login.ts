@@ -2,6 +2,7 @@ import { reactive, ref, watch, watchEffect } from 'vue'
 import apis from '@/lib/apis'
 import useRedirectParam from './redirectParam'
 import useCredentialManager from './credentialManager'
+import store from '@/store'
 
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
@@ -39,8 +40,10 @@ const useLogin = () => {
 
   const login = async () => {
     try {
-      await apis.login('/', { name: state.name, password: state.pass })
+      await apis.login(undefined, { name: state.name, password: state.pass })
       await savePass(state.name, state.pass)
+
+      await store.dispatch.domain.me.fetchMe()
 
       redirect()
     } catch (e) {

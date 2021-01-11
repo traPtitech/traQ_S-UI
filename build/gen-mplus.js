@@ -101,9 +101,13 @@ const generateFontFace = (font, filename) => {
 
 ;(async () => {
   if (process.env.MAY_SKIP_FONT_GEN) {
-    if ((await fs.readdir('./public.fonts')).some(f => f.endsWith('.woff2'))) {
-      return
-    }
+    try {
+      const files = await fs.readdir('./public/fonts')
+      if (files.some(f => f.endsWith('.woff2'))) {
+        console.log('Font cache found. Skipping...')
+        return
+      }
+    } catch {}
   }
 
   const fonts = await getFontsInfo()
