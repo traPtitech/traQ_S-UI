@@ -1,17 +1,19 @@
 import { AsyncStorage } from 'vuex-persist'
-import { Store, get, set, del, clear, keys } from 'idb-keyval'
+import { createStore, get, set, del, clear, keys } from 'idb-keyval'
 import { toRawDeep } from '@/lib/util/reactive'
 
-const store = new Store('vuex', 'vuex')
+const store = createStore('vuex', 'vuex')
 
 const indexedDBStorage: AsyncStorage = {
-  getItem(key) {
-    return get(key, store)
+  async getItem(key) {
+    const res = get(key, store)
+    return res
   },
   async setItem(key, val) {
     // indexedDBにはproxyされたobjectは入らないのでtoRawする
     await set(key, toRawDeep(val), store)
-    return get(key, store)
+    const res = get(key, store)
+    return res
   },
   removeItem(key) {
     return del(key, store)
