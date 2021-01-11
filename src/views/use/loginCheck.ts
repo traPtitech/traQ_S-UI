@@ -1,3 +1,4 @@
+import { createSingleflight } from '@/lib/async'
 import router, { RouteName } from '@/router'
 import store from '@/store'
 import { onActivated, onBeforeMount, ref } from 'vue'
@@ -5,7 +6,7 @@ import { onActivated, onBeforeMount, ref } from 'vue'
 /**
  * ログイン状態かを確認し、ログインしていなかった場合はログイン画面へ遷移する
  */
-const performLoginCheck = async () => {
+const performLoginCheck = createSingleflight(async () => {
   const res = await store.dispatch.domain.me.fetchMe()
   if (!res) {
     router.replace({
@@ -14,7 +15,7 @@ const performLoginCheck = async () => {
     })
     throw 'Login required'
   }
-}
+})
 
 /**
  * @param afterCheck ログイン確認後、ログインしていたら実行される
