@@ -18,6 +18,7 @@ module.exports = {
           }
         : false
   },
+  transpileDependencies: ['@traptitech/traq'],
 
   configureWebpack,
 
