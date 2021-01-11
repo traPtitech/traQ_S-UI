@@ -1,60 +1,41 @@
 <template>
-  <div :class="$style.container">
-    <div
-      :class="$style.expandButton"
-      :data-is-expanded="$boolAttr(isExpanded)"
-      @click="toggleExpanded"
-    >
-      <icon :class="$style.expandIcon" name="chevron-up" mdi />
-    </div>
-    <div :class="$style.list" :data-is-expanded="$boolAttr(isExpanded)">
-      <qall-details-panel-user
-        v-if="me"
-        :class="$style.slider"
-        :key="me"
-        :user-id="me"
-        :mic-muted="mutedUsers.has(me)"
-        :show-tune-button="!showVolumeTune"
-        :show-tune-done-button="showVolumeTune"
-        @tune="toggleVolumeTune(true)"
-        @tune-done="toggleVolumeTune(false)"
-        disabled
-      />
-      <qall-details-panel-user
-        v-for="id in users"
-        :class="$style.slider"
-        :key="id"
-        :user-id="id"
-        :mic-muted="mutedUsers.has(id)"
-        :show-volume-control="showVolumeTune"
-      />
-    </div>
-  </div>
+  <collapse-content>
+    <qall-details-panel-user
+      v-if="me"
+      :class="$style.slider"
+      :key="me"
+      :user-id="me"
+      :mic-muted="mutedUsers.has(me)"
+      :show-tune-button="!showVolumeTune"
+      :show-tune-done-button="showVolumeTune"
+      @tune="toggleVolumeTune(true)"
+      @tune-done="toggleVolumeTune(false)"
+      disabled
+    />
+    <qall-details-panel-user
+      v-for="id in users"
+      :class="$style.slider"
+      :key="id"
+      :user-id="id"
+      :mic-muted="mutedUsers.has(id)"
+      :show-volume-control="showVolumeTune"
+    />
+  </collapse-content>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
-import Icon from '@/components/UI/Icon.vue'
-
-const useExpanded = () => {
-  const isExpanded = ref(false)
-  const toggleExpanded = () => {
-    isExpanded.value = !isExpanded.value
-  }
-  return { isExpanded, toggleExpanded }
-}
+import CollapseContent from '../CollapseContent.vue'
 
 export default defineComponent({
   name: 'QallDetailsPanel',
   components: {
-    Icon,
+    CollapseContent,
     QallDetailsPanelUser
   },
   setup() {
-    const { isExpanded, toggleExpanded } = useExpanded()
-
     const showVolumeTune = ref(false)
     const toggleVolumeTune = (show: boolean) => {
       showVolumeTune.value = show
@@ -72,8 +53,6 @@ export default defineComponent({
     )
 
     return {
-      isExpanded,
-      toggleExpanded,
       users,
       me,
       mutedUsers,

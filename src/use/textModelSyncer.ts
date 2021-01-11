@@ -17,7 +17,7 @@ const useTextModelSyncer = (
   const value = useModelSyncer(props, context, onUpdate)
   const onComposition = (e: CompositionEvent) => {
     onUpdate?.(e.data)
-    context.emit('update:modelValue', e.data)
+    context.emit('update:modelValue', value.value)
   }
 
   return { value, onComposition }

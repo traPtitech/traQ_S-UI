@@ -66,7 +66,8 @@ import {
   mdiEyeOutline,
   mdiEyeOffOutline,
   mdiFilePdf,
-  mdiFileChart
+  mdiFileChart,
+  mdiPencil
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -107,7 +108,8 @@ const mdi: MdiIconsMapping = {
   account: mdiAccount,
   cogs: mdiCogs,
   'brightness-6': mdiBrightness6,
-  pencil: mdiPencilOutline,
+  pencil: mdiPencil,
+  'pencil-outline': mdiPencilOutline,
   'toggle-switch-off': mdiToggleSwitchOff,
   'toggle-switch-on': mdiToggleSwitch,
   'chevron-double': mdiChevronDoubleLeft,

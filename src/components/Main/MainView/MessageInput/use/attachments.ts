@@ -1,7 +1,9 @@
-import useMessageInputState from '@/providers/messageInputState'
+import useMessageInputState, {
+  MessageInputStateKey
+} from '@/providers/messageInputState'
 
-const useAttachments = () => {
-  const { addAttachment } = useMessageInputState()
+const useAttachments = (channelId: MessageInputStateKey) => {
+  const { addAttachment } = useMessageInputState(channelId)
 
   const input = document.createElement('input')
   input.type = 'file'

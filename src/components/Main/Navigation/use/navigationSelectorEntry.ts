@@ -6,6 +6,7 @@ import {
 } from './navigationConstructor'
 import { ThemeClaim } from '@/lib/styles'
 import { isDefined } from '@/lib/util/array'
+import { useMessageInputStates } from '@/providers/messageInputState'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -59,10 +60,17 @@ export const ephemeralItems: Record<
     iconName: 'phone',
     iconMdi: true,
     colorClaim: (_, common) => common.ui.qall
+  },
+  drafts: {
+    type: 'drafts',
+    iconName: 'pencil',
+    iconMdi: true
   }
 }
 
 const useNavigationSelectorEntry = () => {
+  const { hasInputChannel } = useMessageInputStates()
+
   const unreadChannels = computed(() => [
     ...store.state.domain.me.unreadChannelsMap.values()
   ])
@@ -84,9 +92,10 @@ const useNavigationSelectorEntry = () => {
     return !!store.getters.domain.rtc.qallSession
   })
   const ephemeralEntries = computed(() =>
-    [hasActiveQallSession.value ? ephemeralItems.qall : undefined].filter(
-      isDefined
-    )
+    [
+      hasActiveQallSession.value ? ephemeralItems.qall : undefined,
+      hasInputChannel.value ? ephemeralItems.drafts : undefined
+    ].filter(isDefined)
   )
 
   return {

@@ -5,10 +5,10 @@ import { ChannelViewState } from '@traptitech/traq'
 
 const useEditingStatus = (
   channelId: Ref<ChannelId | DMChannelId>,
-  textStatus: { text: string },
+  isTextEmpty: Ref<boolean>,
   isFocused: Ref<boolean>
 ) => {
-  const isEditing = computed(() => textStatus.text !== '' && isFocused.value)
+  const isEditing = computed(() => !isTextEmpty.value && isFocused.value)
 
   const change = (isEditing: boolean) => {
     changeViewState(

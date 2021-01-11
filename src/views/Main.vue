@@ -60,6 +60,7 @@ import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
 import useToastStore from '@/providers/toastStore'
+import { useMessageInputStates } from '@/providers/messageInputState'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -73,6 +74,19 @@ const useStyles = (
       transform: `translateX(${sidebarPosition.value}px)`
     }))
   })
+
+const useDraftConfirmer = () => {
+  const { hasInputChannel } = useMessageInputStates()
+  window.addEventListener('beforeunload', event => {
+    if (hasInputChannel.value) {
+      const unloadMessage =
+        'このまま終了すると下書きが削除されます。本当に終了しますか？'
+      event.preventDefault()
+      event.returnValue = unloadMessage
+      return unloadMessage
+    }
+  })
+}
 
 const NotFound = defineAsyncComponent(
   () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
@@ -112,6 +126,8 @@ export default defineComponent({
     const hideOuter = computed(
       () => isMobile.value && isNavCompletelyAppeared.value
     )
+
+    useDraftConfirmer()
 
     const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
     useInitialFetch(() => {

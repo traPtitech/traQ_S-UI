@@ -3,7 +3,7 @@
     <form-selector
       :class="$style.item"
       label="投稿先チャンネル"
-      v-model="channelState.channelId"
+      v-model="channelId"
       :options="channelOptions"
     />
     <share-target-message-input :class="[$style.item, $style.input]" />
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, watch } from 'vue'
+import { defineComponent, computed, watch, ref } from 'vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import store from '@/store'
 import { nullUuid } from '@/lib/util/uuid'
@@ -26,6 +26,7 @@ import FormButton from '@/components/UI/FormButton.vue'
 import usePostMessage from '@/components/Main/MainView/MessageInput/use/postMessage'
 import useChannelOptions from '@/use/channelOptions'
 import useMessageInputState from '@/providers/messageInputState'
+import { ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ShareTargetForm',
@@ -49,13 +50,11 @@ export default defineComponent({
     store.dispatch.entities.fetchChannels()
     const { channelOptions } = useChannelOptions('-----')
 
-    const channelState = reactive({
-      channelId: nullUuid
-    })
+    const channelId = ref<ChannelId>(nullUuid)
     watch(
       homeChannelId,
       newVal => {
-        channelState.channelId = newVal
+        channelId.value = newVal
       },
       { immediate: true }
     )
@@ -65,7 +64,7 @@ export default defineComponent({
     store.dispatch.entities.fetchUserGroups()
 
     // FIXME: 親子関係なのにprovide-injectを乱用してるの微妙
-    const { state } = useMessageInputState()
+    const { state } = useMessageInputState('share-target')
     watch(
       () => props.defaultText,
       newVal => {
@@ -73,7 +72,7 @@ export default defineComponent({
       },
       { immediate: true }
     )
-    const { postMessage, isPosting } = usePostMessage(channelState)
+    const { postMessage, isPosting } = usePostMessage(channelId, 'share-target')
     const post = async () => {
       const posted = await postMessage()
       if (posted) {
@@ -81,7 +80,7 @@ export default defineComponent({
       }
     }
 
-    return { channelState, state, channelOptions, post, isPosting }
+    return { channelId, state, channelOptions, post, isPosting }
   }
 })
 </script>

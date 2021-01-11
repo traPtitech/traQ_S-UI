@@ -1,8 +1,7 @@
 <template>
-  <div v-if="currentChannel" :class="$style.container">
+  <div v-if="currentChannel">
     <qall-details-panel />
     <qall-control-panel
-      :class="$style.control"
       :status="status"
       :channel-id="currentChannel"
       :is-mic-muted="isMicMuted"
@@ -52,15 +51,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition: all 0.3s ease;
-}
-.control {
-  flex: 0 1 64px;
-}
-</style>

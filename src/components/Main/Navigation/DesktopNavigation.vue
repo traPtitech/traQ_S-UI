@@ -83,6 +83,7 @@ $ephemeralNavigationMinHeight: 64px;
   display: flex;
   width: 100%;
   height: 100%;
+  contain: strict;
 }
 .selector {
   display: flex;

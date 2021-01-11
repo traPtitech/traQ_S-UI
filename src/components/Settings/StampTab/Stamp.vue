@@ -4,7 +4,7 @@
     <div v-if="!isSelected" :class="$style.notSelected">
       <p>:{{ stamp.name }}:</p>
       <icon
-        name="pencil"
+        name="pencil-outline"
         mdi
         :size="20"
         @click="onStartEdit"

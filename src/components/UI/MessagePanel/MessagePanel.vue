@@ -20,7 +20,7 @@
         v-if="message.createdAt !== message.updatedAt"
         :class="$style.editIcon"
         :size="16"
-        name="pencil"
+        name="pencil-outline"
         mdi
       />
     </div>
