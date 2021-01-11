@@ -1,4 +1,3 @@
-import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
 
@@ -40,21 +39,14 @@ export const isMessageScrollerRoute = (
   )
 }
 
-const Main = defineAsyncComponent(
-  () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
-)
-const Settings = defineAsyncComponent(
-  () => import(/* webpackChunkName: "NotFound" */ '@/views/Settings.vue')
-)
-const ShareTarget = defineAsyncComponent(
-  () => import(/* webpackChunkname: "ShareTarget" */ '@/views/ShareTarget.vue')
-)
-const Auth = defineAsyncComponent(
-  () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue')
-)
-const NotFound = defineAsyncComponent(
-  () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
-)
+const Main = () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+const Settings = () =>
+  import(/* webpackChunkName: "NotFound" */ '@/views/Settings.vue')
+const ShareTarget = () =>
+  import(/* webpackChunkname: "ShareTarget" */ '@/views/ShareTarget.vue')
+const Auth = () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue')
+const NotFound = () =>
+  import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
 
 const routes: RouteRecordRaw[] = [
   {
