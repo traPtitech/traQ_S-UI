@@ -44,3 +44,13 @@ export const checkPinPSupport = () => {
 export const checkMediaSessionSupport = () => {
   return !!navigator.mediaSession
 }
+
+declare global {
+  interface Window {
+    PasswordCredential: PasswordCredential
+  }
+}
+
+export const checkCredentialManagerSupport = () => {
+  return !!window.PasswordCredential
+}

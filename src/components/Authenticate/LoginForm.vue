@@ -2,74 +2,82 @@
   <!-- Enterキーでログインするため -->
   <form @submit.prevent="login">
     <authenticate-header :class="$style.header" />
-    <authenticate-input
-      label="traQ ID"
-      v-model="loginState.name"
-      autocomplete="username"
-      :class="$style.item"
-      autofocus
+    <login-form-saved
+      v-if="saved"
+      :saved="saved"
+      @login="loginWithSaved"
+      @use-other="dontUseSaved"
     />
-    <span :class="$style.item">
+    <template v-else>
       <authenticate-input
-        label="パスワード"
-        type="password"
-        v-model="loginState.pass"
-        autocomplete="current-password"
-        enterkeyhint="done"
+        label="traQ ID"
+        v-model="loginState.name"
+        autocomplete="username"
+        :class="$style.item"
+        autofocus
       />
-      <a
-        v-if="resetLink !== undefined"
-        :href="resetLink"
-        :class="$style.forgotPassword"
-      >
-        パスワードを忘れた
-      </a>
-    </span>
-    <div :class="$style.error">
-      <span v-if="loginState.error">{{ loginState.error }}</span>
-    </div>
-    <div :class="$style.buttons">
-      <authenticate-button type="primary" label="ログイン" is-submit />
-    </div>
-    <template v-if="!isIOS && externalLogin.size > 0">
-      <authenticate-separator label="または" :class="$style.separator" />
-      <div :class="$style.exLoginButtons">
-        <authenticate-button
-          type="secondary"
-          :class="$style.exLoginButton"
-          v-show="externalLogin.has('traQ')"
-          label="traP"
-          icon-name="traQ"
-          @click="loginExternal('traq')"
+      <span :class="$style.item">
+        <authenticate-input
+          label="パスワード"
+          type="password"
+          v-model="loginState.pass"
+          autocomplete="current-password"
+          enterkeyhint="done"
         />
-        <authenticate-button
-          type="secondary"
-          :class="$style.exLoginButton"
-          v-show="externalLogin.has('google')"
-          label="Google"
-          icon-mdi
-          icon-name="google"
-          @click="loginExternal('google')"
-        />
-        <authenticate-button
-          type="secondary"
-          :class="$style.exLoginButton"
-          v-show="externalLogin.has('github')"
-          label="GitHub"
-          icon-mdi
-          icon-name="github"
-          @click="loginExternal('github')"
-        />
-        <authenticate-button
-          type="secondary"
-          :class="$style.exLoginButton"
-          v-show="externalLogin.has('oidc')"
-          label="OpenID Connect"
-          icon-mdi
-          icon-name="openid"
-          @click="loginExternal('oidc')"
-        />
+        <a
+          v-if="resetLink !== undefined"
+          :href="resetLink"
+          :class="$style.forgotPassword"
+        >
+          パスワードを忘れた
+        </a>
+      </span>
+      <div :class="$style.error">
+        <span v-if="loginState.error">{{ loginState.error }}</span>
       </div>
+      <div :class="$style.buttons">
+        <authenticate-button type="primary" label="ログイン" is-submit />
+      </div>
+      <template v-if="!isIOS && externalLogin.size > 0">
+        <authenticate-separator label="または" :class="$style.separator" />
+        <div :class="$style.exLoginButtons">
+          <authenticate-button
+            type="secondary"
+            :class="$style.exLoginButton"
+            v-show="externalLogin.has('traQ')"
+            label="traP"
+            icon-name="traQ"
+            @click="loginExternal('traq')"
+          />
+          <authenticate-button
+            type="secondary"
+            :class="$style.exLoginButton"
+            v-show="externalLogin.has('google')"
+            label="Google"
+            icon-mdi
+            icon-name="google"
+            @click="loginExternal('google')"
+          />
+          <authenticate-button
+            type="secondary"
+            :class="$style.exLoginButton"
+            v-show="externalLogin.has('github')"
+            label="GitHub"
+            icon-mdi
+            icon-name="github"
+            @click="loginExternal('github')"
+          />
+          <authenticate-button
+            type="secondary"
+            :class="$style.exLoginButton"
+            v-show="externalLogin.has('oidc')"
+            label="OpenID Connect"
+            icon-mdi
+            icon-name="openid"
+            @click="loginExternal('oidc')"
+          />
+        </div>
+      </template>
     </template>
   </form>
 </template>
@@ -83,10 +91,12 @@ import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import config from '@/config'
+import LoginFormSaved from './LoginFormSaved.vue'
 
 export default defineComponent({
   name: 'LoginForm',
   components: {
+    LoginFormSaved,
     AuthenticateInput,
     AuthenticateHeader,
     AuthenticateButton,
@@ -99,15 +109,25 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { loginState, login, loginExternal } = useLogin()
+    const {
+      loginState,
+      saved,
+      login,
+      loginWithSaved,
+      loginExternal,
+      dontUseSaved
+    } = useLogin()
     const isIOS = isIOSApp()
     const { resetLink } = config.auth
 
     return {
       resetLink,
       loginState,
+      saved,
       login,
+      loginWithSaved,
       loginExternal,
+      dontUseSaved,
       isIOS
     }
   }
