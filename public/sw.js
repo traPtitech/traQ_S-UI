@@ -27,7 +27,8 @@
         new RegExp('/channels/'),
         new RegExp('/users/'),
         new RegExp('/messages/'),
-        new RegExp('/files/')
+        new RegExp('/files/'),
+        new RegExp('/clip-folders/')
       ],
       blacklist: [
         new RegExp('/pipeline'),
