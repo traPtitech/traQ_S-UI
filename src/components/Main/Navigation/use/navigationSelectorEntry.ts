@@ -20,6 +20,7 @@ export type EphemeralNavigationSelectorEntry = {
   iconName: string
   iconMdi?: boolean
   colorClaim?: ThemeClaim<string> // 色
+  selectOnAdd?: boolean
 }
 
 export const createItems = (notificationState: {
@@ -59,7 +60,8 @@ export const ephemeralItems: Record<
     type: 'qall',
     iconName: 'phone',
     iconMdi: true,
-    colorClaim: (_, common) => common.ui.qall
+    colorClaim: (_, common) => common.ui.qall,
+    selectOnAdd: true
   },
   drafts: {
     type: 'drafts',
