@@ -1,4 +1,4 @@
-import { Component, defineAsyncComponent } from 'vue'
+import { Component } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
 
 const settingsRouteNamePrefix = 'settings'
@@ -33,36 +33,24 @@ const pathByRouteName = (routeName: SettingsRouteName) => {
   }
 }
 
-const Profile = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsProfile" */ '@/views/Settings/ProfileTab.vue'
-    )
-)
-const Browser = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsBrowser" */ '@/views/Settings/BrowserTab.vue'
-    )
-)
-const Qall = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsQall" */ '@/views/Settings/QallTab.vue'
-    )
-)
-const Stamp = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsStamps" */ '@/views/Settings/StampTab.vue'
-    )
-)
-const Theme = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsTheme" */ '@/views/Settings/ThemeTab.vue'
-    )
-)
+const Profile = () =>
+  import(
+    /* webpackChunkName: "SettingsProfile" */ '@/views/Settings/ProfileTab.vue'
+  )
+const Browser = () =>
+  import(
+    /* webpackChunkName: "SettingsBrowser" */ '@/views/Settings/BrowserTab.vue'
+  )
+const Qall = () =>
+  import(/* webpackChunkName: "SettingsQall" */ '@/views/Settings/QallTab.vue')
+const Stamp = () =>
+  import(
+    /* webpackChunkName: "SettingsStamps" */ '@/views/Settings/StampTab.vue'
+  )
+const Theme = () =>
+  import(
+    /* webpackChunkName: "SettingsTheme" */ '@/views/Settings/ThemeTab.vue'
+  )
 
 const createRoute = (name: SettingsRouteName, component: Component) => ({
   name,
