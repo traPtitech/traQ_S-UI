@@ -5,8 +5,8 @@
       <input
         :class="$style.input"
         :id="id"
-        v-model="value"
-        @compositionupdate="onComposition"
+        :value="value"
+        @input="onInput"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
@@ -62,7 +62,7 @@ export default defineComponent({
     enterkeyhint: String
   },
   setup(props, context) {
-    const { value, onComposition } = useTextModelSyncer(props, context)
+    const { value, onInput } = useTextModelSyncer(props, context)
 
     const id = randomString()
 
@@ -72,7 +72,7 @@ export default defineComponent({
 
     return {
       value,
-      onComposition,
+      onInput,
       id,
       isPasswordShown,
       togglePassword,

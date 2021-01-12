@@ -8,13 +8,13 @@
     <input
       ref="inputRef"
       :class="$style.input"
-      v-model="value"
+      :value="value"
       :placeholder="placeholder"
       :autocapitalize="autocapitalize"
       :inputmode="disableIme ? 'url' : undefined"
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
-      @compositionupdate="onComposition"
+      @input="onInput"
       @keydown.esc="reset"
       @keydown.enter="$emit('enter')"
       type="text"
@@ -64,7 +64,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { value, onComposition } = useTextModelSyncer(props, context)
+    const { value, onInput } = useTextModelSyncer(props, context)
 
     const reset = () => {
       // update:modelValueイベントを発火することで値を変更する
@@ -80,7 +80,7 @@ export default defineComponent({
       inputRef.value?.focus()
     }
 
-    return { value, onComposition, focus, inputRef, reset }
+    return { value, onInput, focus, inputRef, reset }
   }
 })
 </script>
