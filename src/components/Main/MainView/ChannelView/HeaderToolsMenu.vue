@@ -68,10 +68,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
     const qallLabel = computed(() => {
+      if (props.isJoinedWithCurrentDevice) {
+        return '別のデバイスでQall中'
+      }
       if (props.isJoinedQallSession) {
-        return props.isJoinedWithCurrentDevice
-          ? 'Qallを終了'
-          : '別のデバイスでQall中'
+        return 'Qallを終了'
       }
       if (props.isQallSessionOpened) {
         return 'Qallに参加'
