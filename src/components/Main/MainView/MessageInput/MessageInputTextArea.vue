@@ -29,7 +29,8 @@ import {
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import useModelSyncer from '@/use/modelSyncer'
-import useMessageInputState from '@/providers/messageInputState'
+import { useMessageInputStateAttachment } from '@/providers/messageInputState'
+import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
 
 const useFocus = (context: SetupContext) => {
@@ -64,7 +65,11 @@ const useLineBreak = (
 }
 
 const usePaste = (channelId: Ref<ChannelId>) => {
-  const { addAttachment } = useMessageInputState(channelId)
+  const { addErrorToast } = useToastStore()
+  const { addAttachment } = useMessageInputStateAttachment(
+    channelId,
+    addErrorToast
+  )
 
   const onPaste = (event: ClipboardEvent) => {
     // メッセージ編集の場合などは無視
