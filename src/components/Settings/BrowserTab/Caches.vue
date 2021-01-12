@@ -25,6 +25,7 @@
 import { defineComponent } from 'vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import useToastStore from '@/providers/toastStore'
+import { wait } from '@/lib/util/timer'
 
 const confirmClear = () => window.confirm('本当に削除しますか？')
 
@@ -38,8 +39,10 @@ export default defineComponent({
   components: { FormButton },
   setup() {
     const { addSuccessToast } = useToastStore()
-    const showToast = () => {
-      addSuccessToast('削除に成功しました')
+    const showToast = (extraMesage?: string) => {
+      addSuccessToast(
+        `削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`
+      )
     }
 
     const clearMainCache = async () => {
@@ -51,7 +54,15 @@ export default defineComponent({
         .forEach(name => {
           clearCacheStorage(name)
         })
-      showToast()
+      const registration = await navigator.serviceWorker.getRegistration()
+      if (registration) {
+        registration.unregister()
+        showToast('1秒後にリロードします')
+        await wait(1000)
+        window.location.reload()
+      } else {
+        showToast()
+      }
     }
     const clearFileCache = async () => {
       if (!confirmClear()) return
