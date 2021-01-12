@@ -2,7 +2,10 @@
   <div :class="$style.container" @click="changeChannel">
     <div :class="$style.state">
       <icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
-      <div :class="$style.text" v-html="renderedContent"></div>
+      <div
+        :class="[$style.text, 'markdown-inline-body']"
+        v-html="renderedContent"
+      ></div>
     </div>
     <div :class="$style.channelPath">{{ channelPath }}</div>
   </div>
