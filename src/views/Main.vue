@@ -227,6 +227,7 @@ $nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
     x: hidden;
     y: auto;
   }
+  contain: strict;
 }
 .sidebarPortal {
   width: 100%;

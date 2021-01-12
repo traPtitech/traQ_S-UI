@@ -43,9 +43,10 @@ $paddingSize: 16px;
   position: relative;
   width: 100%;
   min-width: 0;
-  margin: $paddingSize 0;
+  padding: $paddingSize 0;
   border-radius: 4px;
   transition: opacity 0.3s ease;
+  contain: strict;
 }
 .body {
   height: calc(100% + #{$paddingSize * 2});

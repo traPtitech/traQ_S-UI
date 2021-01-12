@@ -66,7 +66,10 @@ export const constructTree = (
         return acc
       }
       const result = constructTree(child, channelEntities, subscribedChannels)
-      return result ? [...acc, result] : acc
+      if (result) {
+        acc.push(result)
+      }
+      return acc
     }, [] as ChannelTreeNode[])
     .sort(channelNameSortFunction(channelEntities))
   if (children.length === 0 && !isSubscribed) {
