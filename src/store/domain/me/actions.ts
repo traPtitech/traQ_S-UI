@@ -69,8 +69,11 @@ export const actions = defineActions({
   },
   onMessageCreated(context, message: Message) {
     const { rootState, getters, commit, rootGetters } = meActionContext(context)
-    // 見ているチャンネルは未読に追加しない
-    if (rootState.domain.messagesView.currentChannelId === message.channelId)
+    // 最新の投稿を見ているチャンネルは未読に追加しない
+    if (
+      rootState.domain.messagesView.currentChannelId === message.channelId &&
+      rootState.domain.messagesView.shouldRetriveMessageCreateEvent
+    )
       return
     // 自分の投稿は未読に追加しない
     if (rootGetters.domain.me.myId === message.userId) return

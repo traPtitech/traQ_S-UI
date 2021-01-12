@@ -1,8 +1,16 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '@/store'
 import { ChannelId, MessageId } from '@/types/entity-ids'
-import { reactive, Ref, watch, onMounted } from 'vue'
+import {
+  reactive,
+  Ref,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  onActivated
+} from 'vue'
 import { Message } from '@traptitech/traq'
+import { wsListener } from '@/lib/websocket'
 
 const fetchLimit = 20
 
@@ -73,7 +81,9 @@ const useChannelMessageFetcher = (
 
     if (!hasMore) {
       isReachedLatest.value = true
-      store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
+      store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(
+        true
+      )
       onReachedLatest()
     }
 
@@ -170,8 +180,29 @@ const useChannelMessageFetcher = (
       }
       reset()
       messagesFetcher.init()
+
+      store.dispatch.domain.messagesView.syncViewState()
     }
   )
+  watch(messagesFetcher.isReachedLatest, () => {
+    store.dispatch.domain.messagesView.syncViewState()
+  })
+
+  const onReconnect = () => {
+    messagesFetcher.loadNewMessages()
+  }
+  onMounted(() => {
+    wsListener.on('reconnect', onReconnect)
+  })
+  onBeforeUnmount(() => {
+    wsListener.off('reconnect', onReconnect)
+  })
+  onActivated(() => {
+    messagesFetcher.loadNewMessages()
+
+    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
+    store.dispatch.domain.messagesView.syncViewState()
+  })
 
   return messagesFetcher
 }
