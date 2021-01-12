@@ -22,10 +22,15 @@ import store from '@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce } from 'throttle-debounce'
-import useMessageInputState from '@/providers/messageInputState'
+import { useMessageInputStateAttachment } from '@/providers/messageInputState'
+import useToastStore from '@/providers/toastStore'
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
-  const { addFromDataTransfer } = useMessageInputState(channelId)
+  const { addErrorToast } = useToastStore()
+  const { addFromDataTransfer } = useMessageInputStateAttachment(
+    channelId,
+    addErrorToast
+  )
 
   // itemsはsafariには存在しない
   const hasFilesOrItems = (dt: DataTransfer) =>

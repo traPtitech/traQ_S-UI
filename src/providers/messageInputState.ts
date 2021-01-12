@@ -74,7 +74,7 @@ export const useMessageInputStates = () => {
 
 export type MessageInputStateKey = Ref<ChannelId> | VirtualChannelId
 
-const useMessageInputState = (channelId: MessageInputStateKey) => {
+const useMessageInputStateBase = (channelId: MessageInputStateKey) => {
   const states = inject(messageInputStateSymbol)
   if (!states) {
     throw new Error('useMessageInputState() was called without provider.')
@@ -116,9 +116,43 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
     { deep: true }
   )
 
+  return { state }
+}
+
+const useMessageInputState = (channelId: MessageInputStateKey) => {
+  const { state } = useMessageInputStateBase(channelId)
+
   const isTextEmpty = computed(() => state.text === '')
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)
   const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
+
+  const addTextToLast = (text: string) => {
+    state.text += state.text !== '' ? `\n${text}` : text
+  }
+
+  const clearState = () => {
+    state.text = ''
+    state.attachments = []
+  }
+
+  return {
+    state,
+    isTextEmpty,
+    isAttachmentEmpty,
+    isEmpty,
+    clearState
+  }
+}
+
+export default useMessageInputState
+
+export const useMessageInputStateAttachment = (
+  channelId: MessageInputStateKey,
+  onError: (message: string) => void
+) => {
+  const { state } = useMessageInputStateBase(channelId)
+
+  const attachments = computed(() => state.attachments)
 
   const addFromDataTransfer = (dt: DataTransfer) => {
     const types = dt.types
@@ -148,11 +182,11 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
     const fileType = mimeToFileType(file.type)
 
     if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
-      window.alert(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
+      onError(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
       return
     }
     if (file.size > FILE_SIZE_LIMIT) {
-      window.alert(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
+      onError(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
       return
     }
 
@@ -168,7 +202,14 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
 
     let resizedFile = file
     if (resizable) {
-      resizedFile = (await resize(file)) ?? file
+      const res = await resize(file)
+      if (res === 'cannot resize') {
+        onError('画像が大きいためサムネイルは生成されません')
+      } else if (res === 'error') {
+        onError('画像の形式が不正なためサムネイルは生成されません')
+      } else if (res) {
+        resizedFile = res
+      }
     }
 
     const thumbnailDataUrl = await convertToDataUrl(resizedFile)
@@ -187,21 +228,10 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
     }
   }
 
-  const clearState = () => {
-    state.text = ''
-    state.attachments = []
-  }
-
   return {
-    state,
-    isTextEmpty,
-    isAttachmentEmpty,
-    isEmpty,
+    attachments,
     addFromDataTransfer,
     addAttachment,
-    removeAttachmentAt,
-    clearState
+    removeAttachmentAt
   }
 }
-
-export default useMessageInputState
