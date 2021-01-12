@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, Ref } from 'vue'
+import { defineComponent, ref, computed, Ref, watchEffect } from 'vue'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
@@ -36,6 +36,11 @@ import FormButton from '@/components/UI/FormButton.vue'
 import apis from '@/lib/apis'
 import { isValidStampName } from '@/lib/validate'
 import useToastStore from '@/providers/toastStore'
+
+/**
+ * 拡張子を削る
+ */
+const trimExt = (filename: string) => filename.replace(/\.[^.]+$/, '')
 
 const useStampCreate = (
   newStampName: Ref<string>,
@@ -81,6 +86,11 @@ export default defineComponent({
         isValidStampName(newStampName.value) &&
         imageUploadState.imgData !== undefined
     )
+    watchEffect(() => {
+      if (imageUploadState.imgData) {
+        newStampName.value = trimExt(imageUploadState.imgData.name)
+      }
+    })
 
     const { isCreating, createStamp } = useStampCreate(
       newStampName,
