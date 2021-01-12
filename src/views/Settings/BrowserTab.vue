@@ -81,6 +81,7 @@
         </p>
       </div>
     </div>
+    <caches />
   </section>
 </template>
 
@@ -96,6 +97,7 @@ import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import Account from '@/components/Settings/BrowserTab/Account.vue'
 import Notification from '@/components/Settings/BrowserTab/Notification.vue'
+import Caches from '@/components/Settings/BrowserTab/Caches.vue'
 import useChannelPath from '@/use/channelPath'
 import useChannelOptions from '@/use/channelOptions'
 
@@ -148,7 +150,8 @@ export default defineComponent({
     FormRadio,
     FormSelector,
     FormCheckbox,
-    Toggle
+    Toggle,
+    Caches
   }
 })
 </script>
