@@ -49,6 +49,7 @@ $headerHeight: 80px;
   flex: 0 0 $headerHeight;
   padding: 16px;
   border-bottom: 2px solid $theme-ui-tertiary;
+  contain: layout;
 }
 .headerBody {
   width: 100%;

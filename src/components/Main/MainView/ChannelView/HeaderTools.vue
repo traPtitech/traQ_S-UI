@@ -126,5 +126,6 @@ export default defineComponent({
   right: 0;
   top: 100%;
   z-index: $z-index-header-tools;
+  contain: content;
 }
 </style>

@@ -9,9 +9,10 @@ export const mutations = defineMutations<S>()({
     state.messagesMap.set(message.id, message)
   },
   extendMessagesMap(state, messages: Message[]) {
-    messages.forEach(message => {
-      state.messagesMap.set(message.id, message)
-    })
+    state.messagesMap = new Map([
+      ...state.messagesMap,
+      ...messages.map(message => [message.id, message] as const)
+    ])
   },
   deleteMessage(state, messageId: MessageId) {
     state.messagesMap.delete(messageId)
