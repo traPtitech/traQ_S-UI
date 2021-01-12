@@ -50,7 +50,10 @@ class Tts {
   private isNeeded(channelId: ChannelId): boolean {
     if (!store.state.app.rtcSettings.isTtsEnabled) return false
     if (!store.getters.domain.rtc.qallSession) return false
-    return store.getters.domain.rtc.currentRTCState?.channelId === channelId
+    if (store.getters.domain.rtc.currentRTCState?.channelId !== channelId) {
+      return false
+    }
+    return store.getters.app.rtc.isCurrentDevice
   }
 
   private createUtter(text: string): SpeechSynthesisUtterance {

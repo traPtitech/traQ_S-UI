@@ -7,9 +7,18 @@
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
-        :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-        :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
+        :disabled="
+          isArchived ||
+          (hasActiveQallSession &&
+            (!isJoinedQallSession || !isJoinedWithCurrentDevice))
+        "
+        :data-is-active="$boolAttr(isQallSessionOpened)"
         :data-is-joined="$boolAttr(isJoinedQallSession)"
+        :tooltip="
+          isJoinedQallSession && !isJoinedWithCurrentDevice
+            ? '別の端末で参加中'
+            : undefined
+        "
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -104,6 +113,7 @@ export default defineComponent({
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false },
+    isJoinedWithCurrentDevice: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
