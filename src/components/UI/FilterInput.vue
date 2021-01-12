@@ -16,6 +16,7 @@
       :enterkeyhint="enterkeyhint"
       @compositionupdate="onComposition"
       @keydown.esc="reset"
+      @keydown.enter="$emit('enter')"
       type="text"
     />
   </div>

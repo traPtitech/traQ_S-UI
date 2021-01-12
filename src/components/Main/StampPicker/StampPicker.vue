@@ -6,6 +6,7 @@
         :placeholder="placeholder"
         disable-ime
         focus-on-mount
+        @enter="onFilterEnter"
       />
       <!--
       <stamp-picker-effect-toggle-button
@@ -82,6 +83,10 @@ export default defineComponent({
         id
       })
     }
+    const onFilterEnter = () => {
+      if (stamps.value.length <= 0) return
+      onInputStamp(stamps.value[0].id)
+    }
 
     return {
       state,
@@ -91,6 +96,7 @@ export default defineComponent({
       queryString,
       filterState,
       placeholder,
+      onFilterEnter,
       onInputStamp,
       onHoverStamp,
       closeStampPicker,
