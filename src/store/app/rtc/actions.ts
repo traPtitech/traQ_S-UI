@@ -84,6 +84,17 @@ export const actions = defineActions({
   },
 
   // ---- RTC Connection ---- //
+  async ensureDevicePermission(context) {
+    const { rootDispatch, rootState } = rtcActionContext(context)
+    if (!rootState.app.rtcSettings.isEnabled) {
+      return false
+    }
+    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
+      window.alert('マイクの設定に失敗しました')
+      return false
+    }
+    return true
+  },
 
   async initializeMixer(context) {
     const { state, commit, rootState } = rtcActionContext(context)
@@ -154,20 +165,7 @@ export const actions = defineActions({
   },
 
   async joinVoiceChannel(context, room: string) {
-    const {
-      state,
-      commit,
-      dispatch,
-      rootState,
-      rootDispatch
-    } = rtcActionContext(context)
-    if (!rootState.app.rtcSettings.isEnabled) {
-      return
-    }
-    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
-      window.alert('マイクの設定に失敗しました')
-      return
-    }
+    const { state, commit, dispatch, rootState } = rtcActionContext(context)
 
     while (!client) {
       await dispatch.establishConnection()
@@ -271,6 +269,10 @@ export const actions = defineActions({
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
     const { dispatch } = rtcActionContext(context)
+    if (!(await dispatch.ensureDevicePermission())) {
+      return
+    }
+
     const { sessionId } = await dispatch.startOrJoinRTCSession({
       channelId,
       sessionType: 'qall'

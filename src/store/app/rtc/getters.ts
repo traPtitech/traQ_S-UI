@@ -9,6 +9,7 @@ const rtcGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, rtc)
 
 export const getters = defineGetters<S>()({
+  isCurrentDevice: state => state.mixer !== undefined,
   getTalkingLoudnessLevel: state => (userId: UserId) => {
     const level = state.mixer?.getLevelOf(userId)
     return getTalkingLoundnessLevel(level)

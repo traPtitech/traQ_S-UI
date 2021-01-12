@@ -7,8 +7,12 @@
       icon-mdi
       :class="$style.qallIcon"
       :label="qallLabel"
-      :disabled="isArchived || (hasActiveQallSession && !isJoinedQallSession)"
-      :data-is-active="$boolAttr(isJoinedQallSession || isQallSessionOpened)"
+      :disabled="
+        isArchived ||
+        (hasActiveQallSession &&
+          (!isJoinedQallSession || !isJoinedWithCurrentDevice))
+      "
+      :data-is-active="$boolAttr(isQallSessionOpened)"
     />
     <header-tools-menu-item
       v-if="isChildChannelCreatable"
@@ -57,6 +61,7 @@ export default defineComponent({
     hasActiveQallSession: { type: Boolean, default: false },
     isQallSessionOpened: { type: Boolean, default: false },
     isJoinedQallSession: { type: Boolean, default: false },
+    isJoinedWithCurrentDevice: { type: Boolean, default: false },
     isChildChannelCreatable: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
@@ -64,7 +69,9 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
     const qallLabel = computed(() => {
       if (props.isJoinedQallSession) {
-        return 'Qallを終了'
+        return props.isJoinedWithCurrentDevice
+          ? 'Qallを終了'
+          : '別のデバイスでQall中'
       }
       if (props.isQallSessionOpened) {
         return 'Qallに参加'

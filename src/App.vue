@@ -35,7 +35,7 @@ const useWindowResizeObserver = () => {
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
-    if (store.state.app.rtc.mixer) {
+    if (store.getters.app.rtc.isCurrentDevice) {
       const unloadMessage = 'Qall中ですが本当に終了しますか？'
       event.preventDefault()
       event.returnValue = unloadMessage

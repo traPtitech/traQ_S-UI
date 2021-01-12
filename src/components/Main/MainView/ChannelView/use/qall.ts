@@ -19,6 +19,10 @@ const useQall = (props: { channelId: ChannelId }) => {
       hasActiveQallSession.value &&
       store.getters.domain.rtc.currentRTCState?.channelId === props.channelId
   )
+  const isJoinedWithCurrentDevice = computed(
+    () => store.getters.app.rtc.isCurrentDevice
+  )
+
   const startQallOnCurrentChannel = () => {
     try {
       store.dispatch.app.rtc.startQall(props.channelId)
@@ -34,7 +38,9 @@ const useQall = (props: { channelId: ChannelId }) => {
   }
   const toggleQall = () => {
     if (isJoinedQallSession.value) {
-      endQall()
+      if (isJoinedWithCurrentDevice.value) {
+        endQall()
+      }
     } else {
       startQallOnCurrentChannel()
     }
@@ -43,6 +49,7 @@ const useQall = (props: { channelId: ChannelId }) => {
     hasActiveQallSession,
     isJoinedQallSession,
     isQallSessionOpened,
+    isJoinedWithCurrentDevice,
     toggleQall
   }
 }

@@ -6,6 +6,7 @@
       :has-active-qall-session="hasActiveQallSession"
       :is-qall-session-opened="isQallSessionOpened"
       :is-joined-qall-session="isJoinedQallSession"
+      :is-joined-with-current-device="isJoinedWithCurrentDevice"
       :is-stared="channelState.stared"
       :is-archived="channelState.archived"
       @click-qall="toggleQall"
@@ -20,6 +21,7 @@
         :has-active-qall-session="hasActiveQallSession"
         :is-qall-session-opened="isQallSessionOpened"
         :is-joined-qall-session="isJoinedQallSession"
+        :is-joined-with-current-device="isJoinedWithCurrentDevice"
         :is-child-channel-creatable="isChildChannelCreatable"
         :is-archived="channelState.archived"
         v-click-outside="closePopupMenu"
@@ -92,6 +94,7 @@ export default defineComponent({
       hasActiveQallSession,
       isJoinedQallSession,
       isQallSessionOpened,
+      isJoinedWithCurrentDevice,
       toggleQall
     } = useQall(props)
     const { openChannelManageModal } = useChannelManageModal(props)
@@ -99,6 +102,7 @@ export default defineComponent({
       hasActiveQallSession,
       isQallSessionOpened,
       isJoinedQallSession,
+      isJoinedWithCurrentDevice,
       isPopupMenuShown,
       channelState,
       toggleQall,

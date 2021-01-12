@@ -91,7 +91,7 @@ const useNavigationSelectorEntry = () => {
   const entries = computed(() => createItems(notificationState))
 
   const hasActiveQallSession = computed(() => {
-    return !!store.getters.domain.rtc.qallSession
+    return store.getters.app.rtc.isCurrentDevice
   })
   const ephemeralEntries = computed(() =>
     [
