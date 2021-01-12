@@ -1,8 +1,8 @@
 <template>
   <textarea
     ref="textareaEle"
-    v-model="value"
-    @compositionupdate="onComposition"
+    :value="value"
+    @input="onInput"
     :class="$style.textarea"
   />
 </template>
@@ -33,7 +33,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { value, onComposition } = useTextModelSyncer(props, context)
+    const { value, onInput } = useTextModelSyncer(props, context)
 
     const textareaEle = ref<HTMLTextAreaElement | null>(null)
     onMounted(() => {
@@ -53,7 +53,7 @@ export default defineComponent({
       }
     })
 
-    return { value, onComposition, textareaEle }
+    return { value, onInput, textareaEle }
   }
 })
 </script>
