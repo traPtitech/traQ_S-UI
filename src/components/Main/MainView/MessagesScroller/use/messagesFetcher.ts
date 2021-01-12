@@ -1,8 +1,7 @@
-import { computed, onBeforeUnmount, onMounted, ref, Ref } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
-import { wsListener } from '@/lib/websocket'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -77,7 +76,7 @@ const useMessageFetcher = (
     store.commit.domain.messagesView.setMessageIds([])
     isReachedEnd.value = false
     isReachedLatest.value = false
-    store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
+    store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
     store.commit.domain.messagesView.setMessageIds([])
     isLoading.value = false
     isInitialLoad.value = false
@@ -169,6 +168,10 @@ const useMessageFetcher = (
     )
   }
 
+  /**
+   * 再取得が必要な場合に最新メッセージを再取得する
+   * 過去メッセージ閲覧中は何もしない
+   */
   const loadNewMessages = async () => {
     if (!fetchNewMessages || !isReachedLatest.value) {
       return
@@ -198,20 +201,12 @@ const useMessageFetcher = (
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      store.commit.domain.messagesView.setShouldRetriveMessageCreateEvent(true)
+      store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(
+        true
+      )
       onLoadFormerMessagesRequest()
     }
   }
-
-  const onReconnect = () => {
-    loadNewMessages()
-  }
-  onMounted(() => {
-    wsListener.on('reconnect', onReconnect)
-  })
-  onBeforeUnmount(() => {
-    wsListener.off('reconnect', onReconnect)
-  })
 
   return {
     messageIds,
@@ -225,7 +220,8 @@ const useMessageFetcher = (
     renderMessageFromIds,
     onLoadFormerMessagesRequest,
     onLoadLatterMessagesRequest,
-    onLoadAroundMessagesRequest
+    onLoadAroundMessagesRequest,
+    loadNewMessages
   }
 }
 

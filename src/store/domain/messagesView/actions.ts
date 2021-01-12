@@ -76,16 +76,13 @@ export const actions = defineActions({
     const { state, commit, dispatch, rootState } = messagesViewActionContext(
       context
     )
-
-    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
-    changeViewState(payload.channelId, ChannelViewState.Monitoring)
-
     if (state.currentChannelId === payload.channelId) return
 
+    // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
     dispatch.resetViewState()
     commit.setCurrentChannelId(payload.channelId)
 
-    // 未読処理前に未読を取得していないと未読を消せないため
+    // 未読を取得していないと未読を表示できないため
     await unreadChannelsMapInitialFetchPromise
 
     const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
@@ -93,9 +90,8 @@ export const actions = defineActions({
     )
     if (unreadChannel) {
       // 未読表示を**追加してから**未読を削除
-      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+      // 未読の削除は最新メッセージ読み込み完了時
       commit.setUnreadSince(unreadChannel.since)
-      apis.readChannel(payload.channelId)
     }
 
     dispatch.fetchPinnedMessages()
@@ -104,12 +100,9 @@ export const actions = defineActions({
   /** クリップフォルダに移行 */
   async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
-
-    // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
-    changeViewState(null)
-
     if (state.currentClipFolderId === clipFolderId) return
 
+    // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
     dispatch.resetViewState()
     commit.setCurrentClipFolderId(clipFolderId)
   },
@@ -284,5 +277,34 @@ export const actions = defineActions({
     const { state, commit } = messagesViewActionContext(context)
     if (state.currentClipFolderId !== folderId) return
     commit.deleteMessageId(messageId)
+  },
+
+  syncViewState(context) {
+    const { state } = messagesViewActionContext(context)
+    if (state.currentChannelId) {
+      changeViewState(
+        state.currentChannelId,
+        state.shouldRetriveMessageCreateEvent
+          ? ChannelViewState.Monitoring
+          : ChannelViewState.None
+      )
+    } else {
+      changeViewState(null)
+    }
+  },
+  async setShouldRetriveMessageCreateEvent(
+    context,
+    shouldRetriveMessageCreateEvent: boolean
+  ) {
+    const { state, commit } = messagesViewActionContext(context)
+    if (shouldRetriveMessageCreateEvent && state.currentChannelId) {
+      // 未読を取得していないと未読を表示できないため (また既読にできないため)
+      await unreadChannelsMapInitialFetchPromise
+
+      // チャンネルを既読にする
+      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+      apis.readChannel(state.currentChannelId)
+    }
+    commit.setShouldRetriveMessageCreateEvent(shouldRetriveMessageCreateEvent)
   }
 })

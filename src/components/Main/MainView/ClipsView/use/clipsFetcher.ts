@@ -1,7 +1,7 @@
 import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '@/store'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
-import { reactive, Ref, watch, onMounted } from 'vue'
+import { reactive, Ref, watch, onMounted, onActivated } from 'vue'
 
 const fetchLimit = 50
 
@@ -36,9 +36,6 @@ const useClipsFetcher = (props: {
     return clips.map(clip => clip.message.id)
   }
 
-  // クリップフォルダは、wsの再接続時にうまく取得ができないので、
-  // 自動で再取得するのはあきらめる
-
   const messagesFetcher = useMessageFetcher(
     {},
     fetchFormerMessages,
@@ -50,6 +47,8 @@ const useClipsFetcher = (props: {
   onMounted(() => {
     reset()
     messagesFetcher.init()
+
+    store.dispatch.domain.messagesView.syncViewState()
   })
   watch(
     () => props.clipFolderId,
@@ -61,6 +60,14 @@ const useClipsFetcher = (props: {
       messagesFetcher.init()
     }
   )
+
+  onActivated(() => {
+    // 一応送りなおす
+    store.dispatch.domain.messagesView.syncViewState()
+  })
+
+  // クリップフォルダは、wsの再接続時にうまく取得ができないので、
+  // 自動で再取得するのはあきらめる
 
   return messagesFetcher
 }
