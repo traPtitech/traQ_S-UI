@@ -27,7 +27,12 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
       current.value?.parentId === null
         ? store.getters.domain.channelTree.topLevelChannels
         : getParentChildrenChannels()
-    return sibs.filter(el => !el.archived).sort(compareNameInsensitive)
+    return (
+      sibs
+        // 凍結されていても自身は含む
+        .filter(el => current.value?.id === el.id || !el.archived)
+        .sort(compareNameInsensitive)
+    )
   })
   const children = computed(() =>
     current.value?.children
