@@ -3,13 +3,9 @@ import { mitt, TypedMitt } from '@/lib/typedMitt'
 import { WebSocketEvent } from './events'
 
 type WebSocketListenerEventMap = {
-  all: <T extends keyof WebSocketEvent>(event: {
-    type: T
-    body: WebSocketEvent[T]
-  }) => void
-  reconnect: () => void
-} & {
   [Type in keyof WebSocketEvent]: (payload: WebSocketEvent[Type]) => void
+} & {
+  reconnect: () => void
 }
 
 export const createWebSocketListener = (ws: AutoReconnectWebSocket) => {
@@ -22,7 +18,6 @@ export const createWebSocketListener = (ws: AutoReconnectWebSocket) => {
         body: WebSocketEvent[keyof WebSocketEvent]
       } = JSON.parse(event.detail as string)
 
-      listener.emit('all', wsEvent)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       listener.emit(wsEvent.type as any, wsEvent.body)
     } catch (e) {
