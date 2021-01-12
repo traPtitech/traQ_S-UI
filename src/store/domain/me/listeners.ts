@@ -20,6 +20,9 @@ export const defineWsListeners = createDefineListeners<typeof me>()(
     listener.on('CHANNEL_STARED', ({ id }) => {
       dispatch.onAddStaredChannel(id)
     })
+    listener.on('CHANNEL_UNSTARED', ({ id }) => {
+      dispatch.onDeleteStaredChannel(id)
+    })
     listener.on('CHANNEL_DELETED', ({ id }) => {
       dispatch.onDeleteStaredChannel(id)
     })
