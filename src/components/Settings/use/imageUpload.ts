@@ -43,7 +43,7 @@ export const useImageUploadInternal = (onImageSelect: () => void) => {
 }
 
 export interface ImageUploadState {
-  imgData: Blob | undefined
+  imgData: File | undefined
   destroyFlag: boolean
 }
 
@@ -53,7 +53,7 @@ const useImageUpload = () => {
     destroyFlag: false
   })
 
-  const onNewImgSet = (file: Blob) => {
+  const onNewImgSet = (file: File) => {
     state.imgData = file
   }
 
