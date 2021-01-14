@@ -45,14 +45,14 @@ const useMessageScrollerElementResizeObserver = (
       const messageDate = new Date(payload.date)
       if (messageDate < entryMessageDate.value) {
         rootRef.value.scrollTop += payload.heightDiff
-        viewPortState.height += payload.heightDiff
+        viewPortState.height = rootRef.value.scrollHeight
       }
     } else if (
       scrollerProps.lastLoadingDirection === 'latest' ||
       scrollerProps.lastLoadingDirection === 'former'
     ) {
       rootRef.value.scrollTop += payload.heightDiff
-      viewPortState.height += payload.heightDiff
+      viewPortState.height = rootRef.value.scrollHeight
     }
   }
 
