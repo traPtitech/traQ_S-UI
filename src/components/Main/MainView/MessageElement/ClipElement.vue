@@ -5,8 +5,15 @@
     v-if="state.message"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-entry="$boolAttr(isEntryMessage)"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
-    <message-tools :class="$style.tools" :message-id="messageId" is-minimum />
+    <message-tools
+      :class="$style.tools"
+      :show="isHovered"
+      :message-id="messageId"
+      is-minimum
+    />
     <message-contents
       :class="$style.messageContents"
       :message-id="messageId"
@@ -31,6 +38,7 @@ import MessageTools from './MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
 import useChannelPath from '@/use/channelPath'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import useHover from '@/use/hover'
 
 export default defineComponent({
   name: 'ClipElement',
@@ -77,11 +85,16 @@ export default defineComponent({
 
     useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
 
+    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+
     return {
       state,
       bodyRef,
       embeddingsState,
-      isMobile
+      isMobile,
+      isHovered,
+      onMouseEnter,
+      onMouseLeave
     }
   }
 })
@@ -116,9 +129,6 @@ $messagePaddingMobile: 16px;
 }
 
 .tools {
-  .body:not(:hover) & {
-    display: none;
-  }
   position: absolute;
   top: 4px;
   right: 16px;
