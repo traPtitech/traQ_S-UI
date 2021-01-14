@@ -7,11 +7,13 @@ import {
   Ref,
   ref,
   watch,
-  InjectionKey
+  InjectionKey,
+  watchEffect
 } from 'vue'
 import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
 import { StampId } from '@/types/entity-ids'
 import { Point } from '@/lib/point'
+import { throttle } from 'throttle-debounce'
 
 const stampPickerStoreSymbol: InjectionKey<StampPickerStore> = Symbol()
 
@@ -133,7 +135,7 @@ export const useStampPickerInvoker = (
     }
   })
 
-  const openStampPicker = () => {
+  const setPosition = throttle(100, () => {
     if (!element.value) return
 
     const rect = element.value.getBoundingClientRect()
@@ -144,8 +146,20 @@ export const useStampPickerInvoker = (
         ? getTopRightPosition(rect)
         : rect // never
 
-    stampPickerStore.selectHandler = selectHandler
     stampPickerStore.position = position
+  })
+
+  watchEffect(() => {
+    if (isThisOpen.value) {
+      window.addEventListener('resize', setPosition)
+    } else {
+      window.removeEventListener('resize', setPosition)
+    }
+  })
+
+  const openStampPicker = () => {
+    setPosition()
+    stampPickerStore.selectHandler = selectHandler
     stampPickerStore.alignment = alignment
 
     isThisOpen.value = true
@@ -159,5 +173,10 @@ export const useStampPickerInvoker = (
     }
   }
 
-  return { isThisOpen, openStampPicker, closeStampPicker, toggleStampPicker }
+  return {
+    isThisOpen,
+    openStampPicker,
+    closeStampPicker,
+    toggleStampPicker
+  }
 }
