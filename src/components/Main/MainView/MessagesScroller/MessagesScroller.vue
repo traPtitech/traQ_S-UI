@@ -241,9 +241,10 @@ export default defineComponent({
 
     watch(
       () => props.messageIds,
-      async (ids, prevIds) => {
+      (ids, prevIds) => {
         if (!rootRef.value) return
-        await nextTick()
+        /* state.height の更新を忘れないようにすること */
+
         const newHeight = rootRef.value.scrollHeight
         if (
           props.lastLoadingDirection === 'latest' ||
@@ -251,6 +252,7 @@ export default defineComponent({
         ) {
           if (ids.length - prevIds.length === -1) {
             // 削除された場合は何もしない
+            state.height = newHeight
             return
           }
           // XXX: 追加時にここは0になる
@@ -265,6 +267,7 @@ export default defineComponent({
                 top: newHeight
               })
             }
+            state.height = newHeight
             return
           }
           rootRef.value.scrollTo({
@@ -273,7 +276,7 @@ export default defineComponent({
         }
         state.height = newHeight
       },
-      { deep: true }
+      { deep: true, flush: 'post' }
     )
 
     const handleScroll = throttle(17, () => {
