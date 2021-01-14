@@ -118,7 +118,5 @@ module.exports = {
         agent: keepAliveAgent
       }
     }
-  },
-
-  productionSourceMap: false
+  }
 }
