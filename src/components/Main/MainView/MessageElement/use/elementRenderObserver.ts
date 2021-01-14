@@ -52,15 +52,19 @@ const useElementRenderObserver = (
     lastBottom = bottom
     lastTop = top
   })
-  const stop = watchEffect(async () => {
-    if (
-      (props.isEntryMessage || embeddingsState.fileIds.length > 0) &&
-      bodyRef.value
-    ) {
-      // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする
-      resizeObserver.observe(bodyRef.value, { box: 'border-box' })
-    }
-  })
+  const stop = watchEffect(
+    async () => {
+      if (
+        (props.isEntryMessage || embeddingsState.fileIds.length > 0) &&
+        bodyRef.value
+      ) {
+        // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする
+        resizeObserver.observe(bodyRef.value, { box: 'border-box' })
+      }
+    },
+    // 監視前に高さが変わってしまうのを防止するためにsyncを指定する
+    { flush: 'sync' }
+  )
   watch(
     () => route.path,
     () =>

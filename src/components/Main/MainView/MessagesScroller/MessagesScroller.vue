@@ -336,6 +336,9 @@ export default defineComponent({
   display: flex;
   flex-flow: column;
   min-height: 100%;
+  // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
+  // 手動で調節しているため明示的に無効化する
+  overflow-anchor: none;
 }
 
 .element {
