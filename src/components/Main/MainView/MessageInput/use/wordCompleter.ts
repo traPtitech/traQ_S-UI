@@ -1,6 +1,7 @@
 import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
+import textFieldMirror from './textFieldMirror'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 
 const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
@@ -66,7 +67,18 @@ const useWordCompleter = (
       )
     }
   }
-  return { onKeyDown }
+
+  const onKeyUp = async (e: KeyboardEvent) => {
+    if (!textareaRef.value) return
+    const { mirror, marker } = textFieldMirror(
+      textareaRef.value,
+      textareaRef.value.selectionEnd
+    )
+    const pos = { top: marker.offsetTop, left: marker.offsetLeft }
+    console.log(pos)
+  }
+
+  return { onKeyDown, onKeyUp }
 }
 
 export default useWordCompleter
