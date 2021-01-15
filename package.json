@@ -20,7 +20,7 @@
     "@juggle/resize-observer": "^3.2.0",
     "@mdi/js": "^5.8.55",
     "@traptitech/traq": "^3.5.0-4",
-    "@traptitech/traq-markdown-it": "^4.0.9",
+    "@traptitech/traq-markdown-it": "^5.0.1",
     "@types/autosize": "^3.0.7",
     "@types/pica": "^5.1.2",
     "autosize": "^4.0.2",
