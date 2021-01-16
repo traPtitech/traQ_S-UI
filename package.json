@@ -16,7 +16,6 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@cloudcmd/clipboard": "^2.0.0",
     "@mdi/js": "^5.8.55",
     "@traptitech/traq": "^3.5.0-4",
     "@traptitech/traq-markdown-it": "^5.0.1",
