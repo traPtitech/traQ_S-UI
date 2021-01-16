@@ -1,10 +1,7 @@
 import { SetupContext, Ref, watchEffect, watch } from 'vue'
 import { FileId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
-import { ResizeObserverWindow } from '@/types/ResizeObserver'
 import { useRoute } from 'vue-router'
-
-declare const window: ResizeObserverWindow
 
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
@@ -23,7 +20,7 @@ const useElementRenderObserver = (
   let lastHeight = 0
   let lastBottom = 0
   let lastTop = 0
-  const resizeObserver = new window.ResizeObserver(entries => {
+  const resizeObserver = new ResizeObserver(entries => {
     const entry = entries[0]
     const { height, bottom, top } = entry.target.getBoundingClientRect()
     if (lastHeight === 0) {
