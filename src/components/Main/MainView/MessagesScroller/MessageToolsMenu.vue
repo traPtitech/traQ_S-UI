@@ -45,7 +45,6 @@ import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
-import clipboard from '@cloudcmd/clipboard'
 import useToastStore from '@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
@@ -115,7 +114,7 @@ const useCopy = (props: { messageId: MessageId }) => {
   const copyLink = async () => {
     const link = `${embeddingOrigin}/messages/${props.messageId}`
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      clipboard.writeText(link)
+      navigator.clipboard.writeText(link)
     )
   }
   const copyMd = async () => {
@@ -123,7 +122,7 @@ const useCopy = (props: { messageId: MessageId }) => {
       store.state.entities.messages.messagesMap.get(props.messageId)?.content ??
       ''
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      clipboard.writeText(content)
+      navigator.clipboard.writeText(content)
     )
   }
   return { copyLink, copyMd }

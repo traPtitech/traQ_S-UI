@@ -38,7 +38,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
-import clipboard from '@cloudcmd/clipboard'
 import useQall from './use/qall'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
@@ -57,7 +56,7 @@ const useCopy = () => {
   const { addInfoToast, addErrorToast } = useToastStore()
   const copyLink = async () => {
     try {
-      await clipboard.writeText(
+      await navigator.clipboard.writeText(
         `[#${route.params['channel']}](${embeddingOrigin}${route.path})`
       )
       addInfoToast('チャンネルリンクをコピーしました')

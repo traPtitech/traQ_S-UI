@@ -26,7 +26,6 @@ import {
   watch,
   nextTick
 } from 'vue'
-// import { ResizeObserver } from '@juggle/resize-observer'
 import { throttle } from 'throttle-debounce'
 
 const binarySearch = (arr: number[], x: number) => {
