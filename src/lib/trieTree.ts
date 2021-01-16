@@ -17,6 +17,7 @@ class TrieNode {
     }
 
     if (pos === str.length) {
+      if (this.isWord === true) return
       this.isWord = true
       dict.set(this.id, str)
       return
