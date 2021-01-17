@@ -1,4 +1,4 @@
-import { Store } from '@traptitech/traq-markdown-it'
+import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
 import store from '@/store'
 import useChannelPath from '@/use/channelPath'
 import { embeddingOrigin } from '../apis'
@@ -35,29 +35,31 @@ const storeProvider: Store = {
   }
 }
 
-const md = (async () => {
+let md: traQMarkdownIt
+const loadMd = async () => {
+  if (md) return
   const { traQMarkdownIt } = await import('./traq-markdown-it')
-  return new traQMarkdownIt(storeProvider, [], embeddingOrigin)
-})()
+  md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
+}
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise,
   stampsMapInitialFetchPromise
-])
+]).then(() => loadMd())
 
 export const render = async (text: string) => {
   await initialFetchPromise
-  return (await md).render(text)
+  return md.render(text)
 }
 
 export const renderInline = async (text: string) => {
   await initialFetchPromise
-  return (await md).renderInline(text)
+  return md.renderInline(text)
 }
 
 export const parse = async (text: string) => {
   await initialFetchPromise
-  return (await md).md.parse(text, {})
+  return md.md.parse(text, {})
 }
