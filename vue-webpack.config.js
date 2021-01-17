@@ -22,13 +22,15 @@ module.exports = {
           }),
           new webpack.DefinePlugin({
             __VERSION__: JSON.stringify(require('./package.json').version),
-            __DEV_SERVER__: JSON.stringify('')
+            __DEV_SERVER__: JSON.stringify(''),
+            __VUE_OPTIONS_API__: false
           })
         ]
       : [
           new webpack.DefinePlugin({
             __VERSION__: JSON.stringify('dev'),
-            __DEV_SERVER__: JSON.stringify(DEV_SERVER_PROXY_HOST)
+            __DEV_SERVER__: JSON.stringify(DEV_SERVER_PROXY_HOST),
+            __VUE_OPTIONS_API__: false
           })
         ],
   optimization: {
