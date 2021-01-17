@@ -296,14 +296,19 @@ export const actions = defineActions({
     context,
     shouldRetriveMessageCreateEvent: boolean
   ) {
-    const { state, commit } = messagesViewActionContext(context)
+    const { rootState, state, commit } = messagesViewActionContext(context)
     if (shouldRetriveMessageCreateEvent && state.currentChannelId) {
       // 未読を取得していないと未読を表示できないため (また既読にできないため)
       await unreadChannelsMapInitialFetchPromise
 
-      // チャンネルを既読にする
-      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
-      apis.readChannel(state.currentChannelId)
+      const isUnreadChannel = rootState.domain.me.unreadChannelsMap.has(
+        state.currentChannelId
+      )
+      if (isUnreadChannel) {
+        // チャンネルを既読にする
+        // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+        apis.readChannel(state.currentChannelId)
+      }
     }
     commit.setShouldRetriveMessageCreateEvent(shouldRetriveMessageCreateEvent)
   }
