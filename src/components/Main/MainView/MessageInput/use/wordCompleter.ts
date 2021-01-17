@@ -1,6 +1,6 @@
 import store from '@/store'
 import createTree from '@/lib/trieTree'
-import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
+import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
 import textFieldMirror from './textFieldMirror'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 
@@ -33,9 +33,14 @@ const getDeterminedCharacters = (candidates: string[]) => {
 
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: WritableComputedRef<string>
+  value: WritableComputedRef<string>,
+  hasCandidates: Ref<boolean>,
+  position: Ref<{ top: number; left: number }>
 ) => {
   const tree = createTree(
+    // ユーザー名とグループ名に重複あり
+    // メンションはcase insensitiveでユーザー名を優先
+    // 重複を許す場合、優先するものから入れる
     store.getters.entities.allUserNames.map(userName => '@' + userName),
     store.getters.entities.allUserGroupNames.map(
       userGroupName => '@' + userGroupName
@@ -67,15 +72,13 @@ const useWordCompleter = (
       )
     }
   }
-
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
     const { mirror, marker } = textFieldMirror(
       textareaRef.value,
       textareaRef.value.selectionEnd
     )
-    const pos = { top: marker.offsetTop, left: marker.offsetLeft }
-    console.log(pos)
+    position.value = { top: marker.offsetTop, left: marker.offsetLeft }
   }
 
   return { onKeyDown, onKeyUp }

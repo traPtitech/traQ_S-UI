@@ -13,6 +13,7 @@
     @blur="onBlur"
     @paste="onPaste"
   />
+  <dropdown-suggester v-if="hasCandidates" :position="computedPos" />
 </template>
 
 <script lang="ts">
@@ -34,6 +35,7 @@ import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
 import createTree from '@/lib/trieTree'
 import useWordCompleter from './use/wordCompleter'
+import DropdownSuggester from './DropdownSuggester.vue'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -90,7 +92,8 @@ const usePaste = (channelId: Ref<ChannelId>) => {
 export default defineComponent({
   name: 'MessageInputTextArea',
   components: {
-    TextareaAutosize
+    TextareaAutosize,
+    DropdownSuggester
   },
   props: {
     modelValue: {
@@ -109,6 +112,10 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
+    const hasCandidates = ref(true) // false
+    const position = ref({ top: 0, left: 0 })
+    const computedPos = computed(() => position.value)
+
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
     }>()
@@ -124,13 +131,12 @@ export default defineComponent({
     const {
       onKeyDown: onKeyDownWordCompleter,
       onKeyUp: onKeyUpWordCompleter
-    } = useWordCompleter(textareaRef, value)
+    } = useWordCompleter(textareaRef, value, hasCandidates, position)
 
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
       onKeyDownWordCompleter(e)
     }
-
     const onKeyUp = (e: KeyboardEvent) => {
       onKeyUpSendKeyWatcher(e)
       onKeyUpWordCompleter(e)
@@ -147,7 +153,9 @@ export default defineComponent({
       textareaAutosizeRef,
       onFocus,
       onBlur,
-      onPaste
+      onPaste,
+      hasCandidates,
+      computedPos
     }
   }
 })

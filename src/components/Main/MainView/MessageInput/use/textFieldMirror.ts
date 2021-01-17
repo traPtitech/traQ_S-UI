@@ -2,8 +2,8 @@ const properties = [
   'position:absolute;',
   'overflow:auto;',
   'word-wrap:break-word;',
-  'top:-200px;',
-  'left:30px;'
+  'top:0px;',
+  'left:-9999px;'
 ]
 
 // カーソルの位置に影響するCSSプロパティをテキストフィールドからdiv要素にコピーする
