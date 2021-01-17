@@ -2,7 +2,7 @@ import { reactive, computed, ref } from 'vue'
 import { Stamp } from '@traptitech/traq'
 import store from '@/store'
 import { compareStringInsensitive } from '@/lib/util/string'
-import { getFullMatchedAndMatched } from '@/lib/util/array'
+import { getMatchedWithPriority } from '@/lib/util/array'
 
 const emojiAltnameTable = import('@/assets/emoji_altname_table.json')
 
@@ -15,8 +15,7 @@ const useStampFilter = () => {
 
   const altNameTable = ref<Record<string, string>>({})
   const altNames = ref<string[]>([])
-  const altNamesToNames = (altNames: string[]) =>
-    altNames.map(altName => altNameTable.value[altName])
+  const altNameToName = (altName: string) => altNameTable.value[altName]
   emojiAltnameTable.then(
     ({
       altNameTable: strictAltNameTable,
@@ -35,10 +34,8 @@ const useStampFilter = () => {
   )
   const oneLetterAltNames = altNames.value.filter(name => name.length === 1)
 
-  const getSortedStamps = (stampNames: Iterable<string>) => {
-    return [...new Set(stampNames)]
-      .sort(compareStringInsensitive)
-      .map(name => stampsTable.value[name])
+  const getStamps = (stampNames: Iterable<string>) => {
+    return [...new Set(stampNames)].map(name => stampsTable.value[name])
   }
 
   const state = reactive({
@@ -50,34 +47,33 @@ const useStampFilter = () => {
 
       const query = state.query.toLowerCase()
       if (state.query.length === 1) {
-        const altNameMatched = oneLetterAltNames.filter(
-          altName => altName.toLowerCase() === query
-        )
+        const altNameMatched = oneLetterAltNames
+          .filter(altName => altName.toLowerCase() === query)
+          .map(altNameToName)
         const matched = oneLetterNames.value.filter(
           name => name.toLowerCase() === query
         )
-        return getSortedStamps([...altNamesToNames(altNameMatched), ...matched])
+        const res = [...altNameMatched, ...matched].sort(
+          compareStringInsensitive
+        )
+        return getStamps(res)
       }
 
-      const {
-        fullMatched: altNameFullMatched,
-        matched: altNameMatched
-      } = getFullMatchedAndMatched(altNames.value, query)
-      const { fullMatched, matched } = getFullMatchedAndMatched(
-        stampNames.value,
-        query
-      )
+      const altNameRes = getMatchedWithPriority(altNames.value, query)
+      const res = getMatchedWithPriority(stampNames.value, query)
 
-      const fullMatchedStamps = getSortedStamps([
-        ...altNamesToNames(altNameFullMatched),
-        ...fullMatched
-      ])
-      const matchedStamps = getSortedStamps([
-        ...altNamesToNames(altNameMatched),
-        ...matched
-      ])
+      const result = [
+        ...altNameRes.map(r => ({
+          value: altNameToName(r.value),
+          priority: r.priority
+        })),
+        ...res
+      ]
+        .map(r => ({ value: r.value, sortKey: `${r.priority}${r.value}` }))
+        .sort((a, b) => compareStringInsensitive(a.sortKey, b.sortKey))
+        .map(r => r.value)
 
-      return [...new Set([...fullMatchedStamps, ...matchedStamps])]
+      return getStamps(result)
     })
   })
   return {

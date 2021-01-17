@@ -1,30 +1,44 @@
 import {
-  getFullMatchedAndMatched,
+  getMatchedWithPriority,
   pickSomeAroundIndex,
   isDefined
 } from '@/lib/util/array'
 
-describe('getFullMatchedAndMatched', () => {
+describe('getMatchedWithPriority', () => {
   it('can get fullMatched', () => {
-    const expected = { fullMatched: ['aaaaa'], matched: [] }
-    const actual = getFullMatchedAndMatched(arr, 'aaaaa')
+    const expected = [{ value: 'aaaaa', priority: 0 }]
+    const actual = getMatchedWithPriority(arr, 'aaaaa')
+    expect(actual).toEqual(expected)
+  })
+  it('can get prefixMatched', () => {
+    const expected = [{ value: 'aaaaa', priority: 1 }]
+    const actual = getMatchedWithPriority(arr, 'aaaa')
     expect(actual).toEqual(expected)
   })
 
   it('can get matched (1)', () => {
-    const expected = { fullMatched: [], matched: ['ddddd'] }
-    const actual = getFullMatchedAndMatched(arr, 'dd')
+    const expected = [{ value: 'AAAbd', priority: 2 }]
+    const actual = getMatchedWithPriority(arr, 'abd')
     expect(actual).toEqual(expected)
   })
   it('can get matched (2)', () => {
-    const expected = { fullMatched: [], matched: ['abcde', 'cde', 'cdecd'] }
-    const actual = getFullMatchedAndMatched(arr, 'cd')
+    const expected = [
+      { value: 'abcde', priority: 2 },
+      { value: 'cde', priority: 2 },
+      { value: 'cdecd', priority: 2 }
+    ]
+    const actual = getMatchedWithPriority(arr, 'de')
     expect(actual).toEqual(expected)
   })
 
-  it('can get fullMatched and matched', () => {
-    const expected = { fullMatched: ['aaa'], matched: ['aaaaa', 'AAAAb'] }
-    const actual = getFullMatchedAndMatched(arr, 'aaa')
+  it('can get fullMatched and prefixMatched and matched', () => {
+    const expected = [
+      { value: 'aaaaa', priority: 1 },
+      { value: 'AAAbd', priority: 1 },
+      { value: 'baaa', priority: 2 },
+      { value: 'aaa', priority: 0 }
+    ]
+    const actual = getMatchedWithPriority(arr, 'aaa')
     expect(actual).toEqual(expected)
   })
 })
@@ -70,7 +84,8 @@ describe('isDefined', () => {
 const arr = [
   'aaaaa',
   'abcde',
-  'AAAAb',
+  'AAAbd',
+  'baaa',
   'bbbbb',
   'cde',
   'cdecd',

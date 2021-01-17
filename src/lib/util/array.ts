@@ -1,26 +1,30 @@
 /**
- * 完全一致するキーの一覧と一致するキーの一覧を返す
+ * 一致するキーの一覧を返す
+ * priorityが0のとき完全一致
+ * 1のとき前方一致
+ * 2のとき部分一致
  *
  * @param arr 検索対象のキーの配列
  * @param query lowercaseになっているクエリ
  */
-export const getFullMatchedAndMatched = (
+export const getMatchedWithPriority = (
   arr: readonly string[],
   query: string
 ) => {
-  const fullMatched: string[] = []
-  const matched: string[] = []
+  const result: Array<{ value: string; priority: number }> = []
 
   for (const val of arr) {
     const valLower = val.toLowerCase()
     if (valLower === query) {
-      fullMatched.push(val)
+      result.push({ value: val, priority: 0 })
+    } else if (valLower.startsWith(query)) {
+      result.push({ value: val, priority: 1 })
     } else if (valLower.includes(query)) {
-      matched.push(val)
+      result.push({ value: val, priority: 2 })
     }
   }
 
-  return { fullMatched, matched }
+  return result
 }
 
 /**
