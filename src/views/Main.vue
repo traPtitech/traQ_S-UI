@@ -5,7 +5,6 @@
     :route-name="routeWatcherState.currentRouteName"
   />
   <div
-    v-else-if="routeWatcherState.view === 'main'"
     :class="$style.homeWrapper"
     @touchstart="touchstartHandler"
     @touchmove="touchmoveHandler"
@@ -15,6 +14,7 @@
     <div :class="$style.homeContainer">
       <navigation v-show="shouldShowNav" :class="$style.navigationWrapper" />
       <main-view-frame
+        v-if="routeWatcherState.view === 'main'"
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
@@ -35,7 +35,6 @@
     <modal-container />
     <stamp-picker-container />
   </div>
-  <div v-else></div>
 </template>
 
 <script lang="ts">
