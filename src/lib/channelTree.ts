@@ -1,7 +1,7 @@
 import { Channel } from '@traptitech/traq'
 import { ChannelId } from '@/types/entity-ids'
 import { nullUuid } from '@/lib/util/uuid'
-import { compareString } from '@/lib/util/string'
+import { compareStringInsensitive } from '@/lib/util/string'
 
 export const rootChannelId = nullUuid
 export type RootChannelId = typeof rootChannelId
@@ -28,12 +28,11 @@ export interface ChannelTree {
 }
 
 const channelNameSortFunction = (
-  channelEntities: Map<ChannelId, ChannelLike>
-) => (node1: ChannelTreeNode, node2: ChannelTreeNode) => {
+  node1: ChannelTreeNode,
+  node2: ChannelTreeNode
+) => {
   // sort by channel name
-  const name1 = channelEntities.get(node1.id)?.name.toUpperCase()
-  const name2 = channelEntities.get(node2.id)?.name.toUpperCase()
-  return compareString(name1, name2)
+  return compareStringInsensitive(node1.name, node2.name)
 }
 
 export const constructTree = (
@@ -71,7 +70,7 @@ export const constructTree = (
       }
       return acc
     }, [] as ChannelTreeNode[])
-    .sort(channelNameSortFunction(channelEntities))
+    .sort(channelNameSortFunction)
   if (children.length === 0 && !isSubscribed) {
     // 子がいない非購読チャンネル
     return undefined

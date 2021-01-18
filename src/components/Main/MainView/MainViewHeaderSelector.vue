@@ -15,8 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
+import { defineComponent, PropType } from 'vue'
 import { ViewInformation } from '@/store/ui/mainView/state'
 import ChannelViewHeader from '@/components/Main/MainView/ChannelView/Header.vue'
 import ClipsHeader from '@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
@@ -26,15 +25,9 @@ export default defineComponent({
   name: 'MainViewHeaderSelector',
   components: { ChannelViewHeader, ClipsHeader, DMHeader },
   props: {
-    viewInfo: Object as PropType<ViewInformation>
-  },
-  setup() {
-    const channelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-
-    return {
-      channelId
+    viewInfo: {
+      type: Object as PropType<ViewInformation>,
+      required: true
     }
   }
 })
