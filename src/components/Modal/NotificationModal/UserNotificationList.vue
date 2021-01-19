@@ -1,13 +1,16 @@
 <template>
   <div v-if="subscribers" :class="$style.container">
-    <user-notification-list-item
-      v-for="entry in subscriptionStateSorted"
-      :key="entry.userId"
-      :class="$style.item"
-      :user-id="entry.userId"
-      :subscribed="entry.subscribed"
-      @change-notification="onChangeNotification"
-    />
+    <filter-input v-model="textFilterState.query" />
+    <div :class="$style.list">
+      <user-notification-list-item
+        v-for="entry in subscriptionStateSorted"
+        :key="entry.userId"
+        :class="$style.item"
+        :user-id="entry.userId"
+        :subscribed="entry.subscribed"
+        @change-notification="onChangeNotification"
+      />
+    </div>
   </div>
   <div v-else :class="$style.container">通知状態の取得に失敗しました</div>
 </template>
@@ -21,6 +24,8 @@ import { UserId, ChannelId } from '@/types/entity-ids'
 import { compareStringInsensitive } from '@/lib/util/string'
 import useChannelSubscribers from '@/use/channelSubscribers'
 import useToastStore from '@/providers/toastStore'
+import FilterInput from '@/components/UI/FilterInput.vue'
+import useTextFilter from '@/use/textFilter'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const { addErrorToast } = useToastStore()
@@ -40,8 +45,10 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     )
   )
 
+  const { textFilterState } = useTextFilter(allUsersWithoutMe, 'name')
+
   const subscriptionStateSorted = computed(() =>
-    allUsersWithoutMe.value
+    textFilterState.filteredItems
       .map(u => ({
         userId: u.id,
         name: u.name,
@@ -71,12 +78,18 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     }
   }
 
-  return { subscribers, subscriptionStateSorted, onChangeNotification }
+  return {
+    textFilterState,
+    subscribers,
+    subscriptionStateSorted,
+    onChangeNotification
+  }
 }
 
 export default defineComponent({
   name: 'UserNotificationList',
   components: {
+    FilterInput,
     UserNotificationListItem
   },
   props: {
@@ -87,11 +100,17 @@ export default defineComponent({
   },
   setup(props) {
     const {
+      textFilterState,
       subscribers,
       subscriptionStateSorted,
       onChangeNotification
     } = useChannelNotificationState(props)
-    return { subscribers, subscriptionStateSorted, onChangeNotification }
+    return {
+      textFilterState,
+      subscribers,
+      subscriptionStateSorted,
+      onChangeNotification
+    }
   }
 })
 </script>
@@ -99,6 +118,13 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-secondary;
+  margin-top: 4px;
+}
+.list {
+  height: 300px;
+  margin-top: 4px;
+  padding: 0 4px;
+  overflow-y: scroll;
 }
 .item {
   margin: 16px 0;
