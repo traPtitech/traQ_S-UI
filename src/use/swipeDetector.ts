@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, Ref } from 'vue'
 
 type SwipeDirection = 'left' | 'right' | 'none'
 
@@ -47,7 +47,7 @@ const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
 /**
  * x方向のスワイプを検出する
  */
-const useSwipeDetector = () => {
+const useSwipeDetector = (isEnabled: Ref<boolean>) => {
   const state: SwipeDetectorState = reactive({
     lastTouchPosX: -1,
     lastTouchPosY: -1,
@@ -58,6 +58,7 @@ const useSwipeDetector = () => {
   })
 
   const touchstartHandler = (e: Readonly<TouchEvent>) => {
+    if (!isEnabled.value) return
     if (e.touches.length !== 1) return
     if (isHorizontalScrollable(e)) return
     const x = e.touches[0].clientX
@@ -101,6 +102,7 @@ const useSwipeDetector = () => {
   }
 
   const touchmoveHandler = (e: Readonly<TouchEvent>) => {
+    if (!isEnabled.value) return
     if (state.isStartingSwipe) {
       checkSwipeStarted(e)
       return
