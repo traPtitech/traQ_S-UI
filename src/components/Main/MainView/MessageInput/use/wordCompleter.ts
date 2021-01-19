@@ -34,7 +34,7 @@ const getDeterminedCharacters = (candidates: string[]) => {
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>,
-  hasCandidates: Ref<boolean>,
+  hideSuggester: Ref<boolean>,
   position: Ref<{ top: number; left: number }>
 ) => {
   const tree = createTree(
@@ -80,8 +80,11 @@ const useWordCompleter = (
     )
     position.value = { top: marker.offsetTop, left: marker.offsetLeft }
   }
+  const onBlur = async () => {
+    hideSuggester.value = true
+  }
 
-  return { onKeyDown, onKeyUp }
+  return { onKeyDown, onKeyUp, onBlur }
 }
 
 export default useWordCompleter

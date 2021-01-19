@@ -13,7 +13,7 @@
     @blur="onBlur"
     @paste="onPaste"
   />
-  <dropdown-suggester v-if="hasCandidates" :position="computedPos" />
+  <dropdown-suggester v-show="!hideSuggester" :position="computedPos" />
 </template>
 
 <script lang="ts">
@@ -112,7 +112,7 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const hasCandidates = ref(true) // false
+    const hideSuggester = ref(false) // true
     const position = ref({ top: 0, left: 0 })
     const computedPos = computed(() => position.value)
 
@@ -130,8 +130,9 @@ export default defineComponent({
     } = useSendKeyWatcher(context, insertLineBreak)
     const {
       onKeyDown: onKeyDownWordCompleter,
-      onKeyUp: onKeyUpWordCompleter
-    } = useWordCompleter(textareaRef, value, hasCandidates, position)
+      onKeyUp: onKeyUpWordCompleter,
+      onBlur: onBlurWordCompleter
+    } = useWordCompleter(textareaRef, value, hideSuggester, position)
 
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
@@ -142,8 +143,13 @@ export default defineComponent({
       onKeyUpWordCompleter(e)
     }
 
-    const { onFocus, onBlur } = useFocus(context)
+    const { onFocus, onBlur: onBlurDefault } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
+
+    const onBlur = (e: FocusEvent) => {
+      onBlurWordCompleter()
+      onBlurDefault()
+    }
 
     return {
       value,
@@ -154,7 +160,7 @@ export default defineComponent({
       onFocus,
       onBlur,
       onPaste,
-      hasCandidates,
+      hideSuggester,
       computedPos
     }
   }
