@@ -7,7 +7,8 @@ import {
   watch,
   onMounted,
   onBeforeUnmount,
-  onActivated
+  onActivated,
+  computed
 } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '@/lib/websocket'
@@ -31,11 +32,6 @@ const useChannelMessageFetcher = (
     loadedMessageLatestDate: undefined,
     loadedMessageOldestDate: undefined
   })
-
-  const reset = () => {
-    state.loadedMessageOldestDate = undefined
-    state.loadedMessageLatestDate = undefined
-  }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     const {
@@ -158,9 +154,20 @@ const useChannelMessageFetcher = (
     fetchNewMessages
   )
 
+  const reset = () => {
+    messagesFetcher.reset()
+    state.loadedMessageOldestDate = undefined
+    state.loadedMessageLatestDate = undefined
+  }
+
+  const init = () => {
+    messagesFetcher.init()
+    store.dispatch.domain.messagesView.syncViewState()
+  }
+
   onMounted(() => {
     reset()
-    messagesFetcher.init()
+    init()
   })
   watch(
     () => props.entryMessageId,
@@ -169,7 +176,7 @@ const useChannelMessageFetcher = (
         return
       }
       reset()
-      messagesFetcher.init()
+      init()
     }
   )
   watch(
@@ -179,14 +186,19 @@ const useChannelMessageFetcher = (
         return
       }
       reset()
-      messagesFetcher.init()
-
+      init()
+    }
+  )
+  watch(
+    // syncViewStateがshouldRetriveMessageCreateEventを利用してるので
+    // isReachedLatestだとタイミングがずれて正しい値がセットされない
+    computed(
+      () => store.state.domain.messagesView.shouldRetriveMessageCreateEvent
+    ),
+    () => {
       store.dispatch.domain.messagesView.syncViewState()
     }
   )
-  watch(messagesFetcher.isReachedLatest, () => {
-    store.dispatch.domain.messagesView.syncViewState()
-  })
 
   const onReconnect = () => {
     messagesFetcher.loadNewMessages()
