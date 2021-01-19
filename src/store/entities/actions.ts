@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import store, { moduleActionContext } from '@/store'
 import { entities } from '.'
 import { entityMitt } from './mitt'
 import { ActionContext } from 'vuex'
@@ -62,6 +62,8 @@ const getStamps = createSingleflight(apis.getStamps.bind(apis))
 const getStampPlalette = createSingleflight(apis.getStampPalette.bind(apis))
 const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
 
+type Entities = typeof store.state.entities
+
 /**
  * キャッシュを使いつつ単体を取得する
  * @param cacheStrategy CacheStrategy型を参照
@@ -74,9 +76,9 @@ const getStampPlalettes = createSingleflight(apis.getStampPalettes.bind(apis))
  *
  * @see [traQ_S-UI#1699](https://github.com/traPtitech/traQ_S-UI/pull/1699#issuecomment-747115101)
  */
-const fetchWithCacheStrategy = async <T, R>(
+const fetchWithCacheStrategy = async <T, R, K extends keyof Entities>(
   cacheStrategy: CacheStrategy,
-  map: Map<T, R>,
+  mapName: Entities[K] extends Map<unknown, unknown> ? K : never,
   key: T,
   fetched: boolean,
   initialFetchPromise: Promise<void>,
@@ -85,6 +87,8 @@ const fetchWithCacheStrategy = async <T, R>(
 ): Promise<R> => {
   // キャッシュを利用する場合はこのブロックに入る
   if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
+    // mapでない場合はneverになる
+    const map = (store.state.entities[mapName] as unknown) as Map<T, R>
     const res = map.get(key)
     if (res) {
       return res
@@ -94,6 +98,10 @@ const fetchWithCacheStrategy = async <T, R>(
     // 全取得を待って含まれてるか確認する
     if (cacheStrategy === 'waitForAllFetch' && !fetched) {
       await initialFetchPromise
+
+      // 参照が変わっているので取り直す
+      // mapでない場合はneverになる
+      const map = (store.state.entities[mapName] as unknown) as Map<T, R>
       const res = map.get(key)
       if (res) {
         return res
@@ -121,7 +129,7 @@ export const actions = defineActions({
     const { state, commit } = entitiesActionContext(context)
     const user = await fetchWithCacheStrategy(
       cacheStrategy,
-      state.usersMap,
+      'usersMap',
       userId,
       state.usersMapFetched,
       usersMapInitialFetchPromise,
@@ -163,7 +171,7 @@ export const actions = defineActions({
     const { state, commit } = entitiesActionContext(context)
     const userGroup = await fetchWithCacheStrategy(
       cacheStrategy,
-      state.userGroupsMap,
+      'userGroupsMap',
       userGroupId,
       state.userGroupsMapFetched,
       userGroupsMapInitialFetchPromise,
@@ -311,7 +319,7 @@ export const actions = defineActions({
     const { state, commit } = entitiesActionContext(context)
     const clipFolder = await fetchWithCacheStrategy(
       cacheStrategy,
-      state.clipFoldersMap,
+      'clipFoldersMap',
       clipFolderId,
       state.clipFoldersMapFetched,
       clipFoldersMapInitialFetchPromise,
@@ -356,7 +364,7 @@ export const actions = defineActions({
     const { state, commit } = entitiesActionContext(context)
     const stamp = await fetchWithCacheStrategy(
       cacheStrategy,
-      state.stampsMap,
+      'stampsMap',
       stampId,
       state.stampsMapFetched,
       stampsMapInitialFetchPromise,
@@ -417,7 +425,7 @@ export const actions = defineActions({
     const { state, commit } = entitiesActionContext(context)
     const stampPalette = await fetchWithCacheStrategy(
       cacheStrategy,
-      state.stampPalettesMap,
+      'stampPalettesMap',
       stampPaletteId,
       state.stampPalettesMapFetched,
       stampPalettesMapInitialFetchPromise,

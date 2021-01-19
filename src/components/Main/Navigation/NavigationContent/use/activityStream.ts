@@ -1,12 +1,17 @@
 import { computed, onBeforeUnmount, watch, onMounted, ref } from 'vue'
-import store from '@/store'
+import store, { originalStore } from '@/store'
 import { setTimelineStreamingState } from '@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import { messageMitt } from '@/store/entities/messages'
 import { ChannelId, MessageId } from '@/types/entity-ids'
+import { createSingleflight } from '@/lib/async'
 
 export const ACTIVITY_LENGTH = 50
+
+const getActivityTimeline = createSingleflight(
+  apis.getActivityTimeline.bind(apis)
+)
 
 const useActivityStream = () => {
   const mode = computed(() => store.state.app.browserSettings.activityMode)
@@ -18,12 +23,16 @@ const useActivityStream = () => {
   const timelineChannelMap = ref(new Map<ChannelId, ActivityTimelineMessage>())
 
   const fetch = async () => {
+    // 無駄な取得を減らすために保存されてる情報が復元されるのを待つ
+    await originalStore.restored
+
     try {
-      const { data: res } = await apis.getActivityTimeline(
+      const [{ data: res }, shared] = await getActivityTimeline(
         ACTIVITY_LENGTH,
         mode.value.all,
         mode.value.perChannel
       )
+      if (shared) return
       timeline.value = res
 
       timelineChannelMap.value = new Map(
