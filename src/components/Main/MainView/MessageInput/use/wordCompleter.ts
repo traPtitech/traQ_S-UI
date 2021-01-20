@@ -37,7 +37,8 @@ const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>,
   hideSuggester: Ref<boolean>,
-  position: Ref<{ top: number; left: number }>
+  position: Ref<{ top: number; left: number }>,
+  suggesteCandidates: Ref<string[]>
 ) => {
   const tree = createTree(
     // ユーザー名とグループ名に重複あり
@@ -77,12 +78,12 @@ const useWordCompleter = (
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
     const target = getCurrentWord(textareaRef.value, value.value)
-    if (target.divided) {
+    if (target.divided || target.word.length < 3) {
       hideSuggester.value = true
       return
     }
-    const candidates = tree.search(target.word)
-    if (candidates.length === 0) {
+    suggesteCandidates.value = tree.search(target.word)
+    if (suggesteCandidates.value.length === 0) {
       hideSuggester.value = true
       return
     }

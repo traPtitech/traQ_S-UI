@@ -1,9 +1,15 @@
 <template>
   <div
     :class="$style.container"
-    :style="{ top: position.top - 48 + 'px', left: position.left + 60 + 'px' }"
+    :style="{ top: position.top - 152 + 'px', left: position.left + 60 + 'px' }"
   >
-    <!-- <div :class="$style.item" v-for="candidate in candidates" :key="candidate."> -->
+    <div
+      :class="$style.item"
+      v-for="(candidate, index) in candidates"
+      :key="index"
+    >
+      {{ candidate }}
+    </div>
   </div>
 </template>
 
@@ -35,6 +41,10 @@ export default defineComponent({
     //   type: Array as PropType<Candidate[]>,
     //   default: null
     // }
+    candidates: {
+      type: Array as PropType<string[]>,
+      default: []
+    },
     position: {
       type: Object as PropType<{ top: number; left: number }>
     }
@@ -67,8 +77,19 @@ export default defineComponent({
   position: absolute;
   // top: var(--top);
   // left: var(--left);
-  width: 80px;
-  height: 60px;
-  border: solid 2px $theme-ui-tertiary;
+  background: $theme-background-primary;
+  color: $theme-ui-primary;
+  width: 240px;
+  height: 160px;
+  border: solid 2px $theme-background-secondary;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  padding: 8px;
+}
+.item {
+  width: fit-content;
+  max-width: 200px;
 }
 </style>

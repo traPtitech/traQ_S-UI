@@ -13,7 +13,11 @@
     @blur="onBlur"
     @paste="onPaste"
   />
-  <dropdown-suggester v-show="!hideSuggester" :position="computedPos" />
+  <dropdown-suggester
+    v-show="!hideSuggester"
+    :position="computedPos"
+    :candidates="computedCandidates"
+  />
 </template>
 
 <script lang="ts">
@@ -112,9 +116,12 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const hideSuggester = ref(false) // true
+    const hideSuggester = ref(true)
     const position = ref({ top: 0, left: 0 })
     const computedPos = computed(() => position.value)
+
+    const suggesteCandidates = ref([] as string[])
+    const computedCandidates = computed(() => suggesteCandidates.value)
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
@@ -132,7 +139,13 @@ export default defineComponent({
       onKeyDown: onKeyDownWordCompleter,
       onKeyUp: onKeyUpWordCompleter,
       onBlur: onBlurWordCompleter
-    } = useWordCompleter(textareaRef, value, hideSuggester, position)
+    } = useWordCompleter(
+      textareaRef,
+      value,
+      hideSuggester,
+      position,
+      suggesteCandidates
+    )
 
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
@@ -161,7 +174,8 @@ export default defineComponent({
       onBlur,
       onPaste,
       hideSuggester,
-      computedPos
+      computedPos,
+      computedCandidates
     }
   }
 })
