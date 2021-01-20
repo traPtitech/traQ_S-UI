@@ -5,6 +5,10 @@ import {
 } from '@/lib/markdown/internalLinkEmbedder'
 
 const users = {
+  'dfdff0c9-5de0-46ee-9721-2525e8bb3d44': {
+    name: 'a',
+    id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d44'
+  },
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d45': {
     name: 'takashi_trap',
     id: 'dfdff0c9-5de0-46ee-9721-2525e8bb3d45'
@@ -104,6 +108,10 @@ const specs: Spec[] = [
   [
     '@)、(@takashi_trap @takashi_trap)',
     '@)、(!{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} !{"type":"user","raw":"@takashi_trap","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d45"})'
+  ],
+  [
+    '@a',
+    '!{"type":"user","raw":"@a","id":"dfdff0c9-5de0-46ee-9721-2525e8bb3d44"}'
   ]
 ]
 
