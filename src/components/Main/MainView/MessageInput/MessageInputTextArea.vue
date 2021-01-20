@@ -17,6 +17,7 @@
     v-show="!hideSuggester"
     :position="computedPos"
     :candidates="computedCandidates"
+    @select="onSelect"
   />
 </template>
 
@@ -138,7 +139,8 @@ export default defineComponent({
     const {
       onKeyDown: onKeyDownWordCompleter,
       onKeyUp: onKeyUpWordCompleter,
-      onBlur: onBlurWordCompleter
+      onBlur: onBlurWordCompleter,
+      onSelect
     } = useWordCompleter(
       textareaRef,
       value,
@@ -173,6 +175,7 @@ export default defineComponent({
       onFocus,
       onBlur,
       onPaste,
+      onSelect,
       hideSuggester,
       computedPos,
       computedCandidates

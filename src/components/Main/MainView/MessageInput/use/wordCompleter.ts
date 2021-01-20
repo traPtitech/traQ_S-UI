@@ -92,10 +92,24 @@ const useWordCompleter = (
     hideSuggester.value = false
   }
   const onBlur = async () => {
-    hideSuggester.value = true
+    // 候補選択時にselectイベントが発火するまで待つ
+    setTimeout(() => (hideSuggester.value = true), 200)
+  }
+  const onSelect = async (word: string) => {
+    if (!textareaRef.value) return
+    const target = getCurrentWord(textareaRef.value, value.value)
+    value.value =
+      value.value.slice(0, target.begin) +
+      word +
+      (target.end === value.value.length ? '' : value.value.slice(target.end))
+    await nextTick()
+    textareaRef.value.setSelectionRange(
+      target.begin + word.length,
+      target.begin + word.length
+    )
   }
 
-  return { onKeyDown, onKeyUp, onBlur }
+  return { onKeyDown, onKeyUp, onBlur, onSelect }
 }
 
 export default useWordCompleter

@@ -7,6 +7,7 @@
       :class="$style.item"
       v-for="(candidate, index) in candidates"
       :key="index"
+      @click="onClick(e, candidate)"
     >
       {{ candidate }}
     </div>
@@ -14,18 +15,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { defineComponent, SetupContext, PropType } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
-// const useClickHandlers = (
-//   context: SetupContext
-// ) => {
-//   const onClick = (text: string) => {
-//     context.emit('selected', text)
-//   }
-//   return { onClick }
-// }
+const useClickHandlers = (context: SetupContext<'select'[]>) => {
+  const onClick = (_e: MouseEvent, word: string) => {
+    context.emit('select', word)
+  }
+  return { onClick }
+}
 
+// スタンプのプレビュー表示とか用(wordCompleterからexportしたほうが良さそう)
 // interface Candidate {
 //   text: string
 //   type:
@@ -49,10 +49,9 @@ export default defineComponent({
       type: Object as PropType<{ top: number; left: number }>
     }
   },
+  emits: ['select'],
   setup(props, context) {
-    // const { onClick } = useClickHandlers(
-    //   context
-    // )
+    const { onClick } = useClickHandlers(context)
 
     // TODO: styleが動かん、書き方間違えてるかも
     // const style = computed(() => ({
@@ -62,7 +61,7 @@ export default defineComponent({
 
     return {
       // style
-      // onClick
+      onClick
     }
   }
 })
@@ -70,10 +69,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-secondary;
+
   // --top: 0px;
   // --left: 0px;
 
-  @include color-ui-secondary;
   position: absolute;
   // top: var(--top);
   // left: var(--left);
@@ -91,5 +91,6 @@ export default defineComponent({
 .item {
   width: fit-content;
   max-width: 200px;
+  cursor: pointer;
 }
 </style>
