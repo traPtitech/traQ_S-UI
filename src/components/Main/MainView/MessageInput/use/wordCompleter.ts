@@ -14,7 +14,9 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
   const begin = nearest < 0 ? 0 : nearest
   const end = elm.selectionEnd
   const word = text.substring(begin, end)
-  return { word, begin, end }
+  const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
+  const divided = prevSpaceIndex > nearest
+  return { word, begin, end, divided }
 }
 
 const getDeterminedCharacters = (candidates: string[]) => {
@@ -74,11 +76,19 @@ const useWordCompleter = (
   }
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
-    const { mirror, marker } = textFieldMirror(
-      textareaRef.value,
-      textareaRef.value.selectionEnd
-    )
+    const target = getCurrentWord(textareaRef.value, value.value)
+    if (target.divided) {
+      hideSuggester.value = true
+      return
+    }
+    const candidates = tree.search(target.word)
+    if (candidates.length === 0) {
+      hideSuggester.value = true
+      return
+    }
+    const { mirror, marker } = textFieldMirror(textareaRef.value, target.begin)
     position.value = { top: marker.offsetTop, left: marker.offsetLeft }
+    hideSuggester.value = false
   }
   const onBlur = async () => {
     hideSuggester.value = true
