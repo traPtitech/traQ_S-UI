@@ -15,7 +15,11 @@
 import { defineComponent, SetupContext, computed, PropType } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 
-const useClickHandlers = (context: SetupContext<'select'[]>) => {
+const useClickHandlers = (
+  context: SetupContext<{
+    select: (word: string) => string
+  }>
+) => {
   const onClick = (_e: MouseEvent, word: string) => {
     context.emit('select', word)
   }
@@ -47,7 +51,9 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['select'],
+  emits: {
+    select: (word: string) => word
+  },
   setup(props, context) {
     const { onClick } = useClickHandlers(context)
 
