@@ -78,24 +78,12 @@ export const getters = defineGetters<S>()({
       .map(palette => palette.id)
   },
   allUserNames(state) {
-    return Object.values(state.users)
-      .map(user => user?.name)
-      .filter(
-        (value: string | undefined): value is string => value !== undefined
-      )
+    return [...state.usersMap.values()].map(user => user.name)
   },
   allUserGroupNames(state) {
-    return Object.values(state.userGroups)
-      .map(userGroup => userGroup?.name)
-      .filter(
-        (value: string | undefined): value is string => value !== undefined
-      )
+    return [...state.userGroupsMap.values()].map(userGroup => userGroup.name)
   },
   allStampNames(state) {
-    return Object.values(state.stamps)
-      .map(stamp => stamp?.name)
-      .filter(
-        (value: string | undefined): value is string => value !== undefined
-      )
+    return [...state.stampsMap.values()].map(stamp => stamp.name)
   }
 })
