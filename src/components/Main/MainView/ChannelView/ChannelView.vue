@@ -1,11 +1,12 @@
 <template>
   <div
     :class="$style.container"
+    @dragstart.stop="onDragStart"
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
     <channel-view-file-upload-overlay
-      v-if="isDragging"
+      v-if="canDrop"
       :class="$style.fileUploadOverlay"
     />
     <channel-view-content
@@ -37,17 +38,26 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
     dt.files.length > 0 || dt.items?.length > 0
 
   const isDragging = ref(false)
+  /** ドラッグがtraQの画面からスタートしたかどうか */
+  const isDragStartInside = ref(false)
+  const canDrop = computed(() => isDragging.value && !isDragStartInside.value)
+
   const onDrop = (event: DragEvent) => {
-    if (event.dataTransfer) {
+    if (canDrop.value && event.dataTransfer) {
       addFromDataTransfer(event.dataTransfer)
     }
     isDragging.value = false
+    isDragStartInside.value = false
+  }
+  const onDragStart = (event: DragEvent) => {
+    isDragStartInside.value = true
   }
 
   /** ドラッグ終了判定するまでにdragoverが何ms開けばいいか */
   const dragoverResetDurationMs = 100
   const resetDraggingState = debounce(dragoverResetDurationMs, () => {
     isDragging.value = false
+    isDragStartInside.value = false
   })
   const onDragOver = (event: DragEvent) => {
     if (event.dataTransfer && hasFilesOrItems(event.dataTransfer)) {
@@ -56,8 +66,9 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
     resetDraggingState()
   }
   return {
-    isDragging,
+    canDrop,
     onDrop,
+    onDragStart,
     onDragOver
   }
 }
@@ -77,14 +88,15 @@ export default defineComponent({
       () => store.state.domain.messagesView.messageIds
     )
 
-    const { isDragging, onDrop, onDragOver } = useDragDrop(
+    const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(
       toRef(props, 'channelId')
     )
 
     return {
       channelMessageIds,
-      isDragging,
+      canDrop,
       onDrop,
+      onDragStart,
       onDragOver
     }
   }
