@@ -1,8 +1,8 @@
 <template>
-  <div :class="$style.container" :style="style">
+  <div v-show="show" :class="$style.container" :style="style">
     <div
-      :class="{ [$style.item]: true, [$style.first]: index === 0 }"
-      v-for="(candidate, index) in candidates"
+      :class="$style.item"
+      v-for="candidate in candidates"
       :key="candidate"
       @click="onClick(e, candidate)"
     >
@@ -42,6 +42,10 @@ export default defineComponent({
     //   type: Array as PropType<Candidate[]>,
     //   default: null
     // }
+    show: {
+      type: Boolean,
+      default: false
+    },
     candidates: {
       type: Array as PropType<string[]>,
       default: []
@@ -73,13 +77,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-secondary;
-
-  --top: 0px;
-  --left: 0px;
-
   position: absolute;
-  top: var(--top);
-  left: var(--left);
   background: $theme-background-primary;
   color: $theme-ui-primary;
   width: 240px;
@@ -96,7 +94,7 @@ export default defineComponent({
   width: fit-content;
   max-width: 200px;
   cursor: pointer;
-  &.first {
+  &:first-child {
     font-weight: bold;
   }
 }

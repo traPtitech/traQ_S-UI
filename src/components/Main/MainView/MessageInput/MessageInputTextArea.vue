@@ -14,7 +14,7 @@
     @paste="onPaste"
   />
   <dropdown-suggester
-    v-show="!hideSuggester"
+    :show="!hideSuggester"
     :position="computedPos"
     :candidates="computedCandidates"
     @select="onSelect"
@@ -124,7 +124,6 @@ export default defineComponent({
 
     const {
       onKeyUp: onKeyUpWordSuggester,
-      onBlur: onBlurWordSuggester,
       onSelect,
       tree,
       hideSuggester,
@@ -133,6 +132,7 @@ export default defineComponent({
     } = useWordSuggester(textareaRef, value)
     const computedPos = computed(() => position.value)
     const computedCandidates = computed(() => suggesteCandidates.value)
+    const hideRef = computed(() => hideSuggester.value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -156,13 +156,8 @@ export default defineComponent({
       onKeyUpWordSuggester(e)
     }
 
-    const { onFocus, onBlur: onBlurDefault } = useFocus(context)
+    const { onFocus, onBlur } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
-
-    const onBlur = (e: FocusEvent) => {
-      onBlurWordSuggester()
-      onBlurDefault()
-    }
 
     return {
       value,

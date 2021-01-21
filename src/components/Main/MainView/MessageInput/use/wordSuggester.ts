@@ -58,10 +58,6 @@ const useWordSuggester = (
     position.value = { top: marker.offsetTop, left: marker.offsetLeft }
     hideSuggester.value = false
   }
-  const onBlur = async () => {
-    // 候補選択時にselectイベントが発火するまで待つ
-    setTimeout(() => (hideSuggester.value = true), 200)
-  }
   const onSelect = async (word: string) => {
     if (!textareaRef.value) return
     const target = getCurrentWord(textareaRef.value, value.value)
@@ -77,7 +73,6 @@ const useWordSuggester = (
   }
   return {
     onKeyUp,
-    onBlur,
     onSelect,
     tree,
     hideSuggester,
