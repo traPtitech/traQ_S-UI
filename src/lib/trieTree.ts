@@ -1,6 +1,6 @@
 let lastInsertedId = 0
 const dict = new Map<number, string>()
-class TrieNode {
+export class TrieNode {
   id: number
   isWord: boolean
   children: Record<string, TrieNode>

@@ -38,9 +38,9 @@ import useModelSyncer from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
-import createTree from '@/lib/trieTree'
 import useWordCompleter from './use/wordCompleter'
 import DropdownSuggester from './DropdownSuggester.vue'
+import useWordSuggester from './use/wordSuggester'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -117,17 +117,22 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelSyncer(props, context)
 
-    const hideSuggester = ref(true)
-    const position = ref({ top: 0, left: 0 })
-    const computedPos = computed(() => position.value)
-
-    const suggesteCandidates = ref([] as string[])
-    const computedCandidates = computed(() => suggesteCandidates.value)
-
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
+
+    const {
+      onKeyUp: onKeyUpWordSuggester,
+      onBlur: onBlurWordSuggester,
+      onSelect,
+      tree,
+      hideSuggester,
+      position,
+      suggesteCandidates
+    } = useWordSuggester(textareaRef, value)
+    const computedPos = computed(() => position.value)
+    const computedCandidates = computed(() => suggesteCandidates.value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -136,17 +141,10 @@ export default defineComponent({
       onKeyDown: onKeyDownSendKeyWatcher,
       onKeyUp: onKeyUpSendKeyWatcher
     } = useSendKeyWatcher(context, insertLineBreak)
-    const {
-      onKeyDown: onKeyDownWordCompleter,
-      onKeyUp: onKeyUpWordCompleter,
-      onBlur: onBlurWordCompleter,
-      onSelect
-    } = useWordCompleter(
+    const { onKeyDown: onKeyDownWordCompleter } = useWordCompleter(
       textareaRef,
       value,
-      hideSuggester,
-      position,
-      suggesteCandidates
+      tree
     )
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -155,14 +153,14 @@ export default defineComponent({
     }
     const onKeyUp = (e: KeyboardEvent) => {
       onKeyUpSendKeyWatcher(e)
-      onKeyUpWordCompleter(e)
+      onKeyUpWordSuggester(e)
     }
 
     const { onFocus, onBlur: onBlurDefault } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
 
     const onBlur = (e: FocusEvent) => {
-      onBlurWordCompleter()
+      onBlurWordSuggester()
       onBlurDefault()
     }
 
