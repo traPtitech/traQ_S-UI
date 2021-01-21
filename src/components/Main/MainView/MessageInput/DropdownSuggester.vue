@@ -6,20 +6,15 @@
       :key="candidate"
       @click="onClick(e, candidate)"
     >
-      {{ candidate }}
+      <div :class="$style.name">
+        {{ candidate }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, computed, PropType } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-
-// スタンプのプレビュー表示とか用(wordCompleterからexportしたほうが良さそう)
-// interface Candidate {
-//   text: string
-//   type:
-// }
+import { defineComponent, computed, PropType } from 'vue'
 
 export default defineComponent({
   name: 'DropdownSuggester',
@@ -75,14 +70,20 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  padding: 8px;
 }
 .item {
-  width: fit-content;
-  max-width: 200px;
+  padding: 4px;
   cursor: pointer;
   &:first-child {
-    font-weight: bold;
+    background-color: $theme-background-secondary;
   }
+  &:hover {
+    background-color: $theme-background-secondary;
+  }
+}
+.name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
