@@ -1,10 +1,17 @@
 import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
-import { nextTick, ComputedRef, WritableComputedRef, ref } from 'vue'
+import { ComputedRef, WritableComputedRef, ref } from 'vue'
 import textFieldMirror from './textFieldMirror'
 
-export const getCurrentWord = (elm: HTMLTextAreaElement, text: string) => {
+export type Target = {
+  word: string
+  begin: number
+  end: number
+  divided: boolean
+}
+
+const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
   text = text.replaceAll('　', ' ')
   const startIndex = elm.selectionStart
   const prevAtMarkIndex = text.lastIndexOf('@', startIndex - 1)
@@ -26,6 +33,12 @@ const useWordSuggester = (
   const hideSuggester = ref(true)
   const interactingWithList = ref(false)
   const position = ref({ top: 0, left: 0 })
+  const target = ref({
+    word: '',
+    begin: 0,
+    end: 0,
+    divided: false
+  }) as Ref<Target>
   const suggesteCandidates = ref([] as string[])
 
   const tree = createTree(
@@ -45,33 +58,24 @@ const useWordSuggester = (
 
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
-    const target = getCurrentWord(textareaRef.value, value.value)
-    if (target.divided || target.word.length < 3) {
+    target.value = getCurrentWord(textareaRef.value, value.value)
+    if (target.value.divided || target.value.word.length < 3) {
       hideSuggester.value = true
       return
     }
-    suggesteCandidates.value = tree.search(target.word.replaceAll('＠', '@'))
+    suggesteCandidates.value = tree.search(
+      target.value.word.replaceAll('＠', '@')
+    )
     if (suggesteCandidates.value.length === 0) {
       hideSuggester.value = true
       return
     }
-    const { mirror, marker } = textFieldMirror(textareaRef.value, target.begin)
+    const { mirror, marker } = textFieldMirror(
+      textareaRef.value,
+      target.value.begin
+    )
     position.value = { top: marker.offsetTop, left: marker.offsetLeft }
     hideSuggester.value = false
-  }
-  const onSelect = async (word: string) => {
-    if (!textareaRef.value) return
-    const target = getCurrentWord(textareaRef.value, value.value)
-    value.value =
-      value.value.slice(0, target.begin) +
-      word +
-      (target.end === value.value.length ? '' : value.value.slice(target.end))
-    hideSuggester.value = true
-    await nextTick()
-    textareaRef.value.setSelectionRange(
-      target.begin + word.length,
-      target.begin + word.length
-    )
   }
   const onBlur = async () => {
     if (interactingWithList.value) {
@@ -85,12 +89,11 @@ const useWordSuggester = (
   }
   return {
     onKeyUp,
-    onSelect,
     onBlur,
     onMousedown,
-    tree,
     hideSuggester,
     position,
+    target,
     suggesteCandidates
   }
 }

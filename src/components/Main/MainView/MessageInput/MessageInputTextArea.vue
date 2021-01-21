@@ -125,11 +125,10 @@ export default defineComponent({
 
     const {
       onKeyUp: onKeyUpWordSuggester,
-      onSelect,
       onBlur: onBlurWordSuggester,
       onMousedown,
-      tree,
       hideSuggester,
+      target,
       position,
       suggesteCandidates
     } = useWordSuggester(textareaRef, value)
@@ -145,10 +144,12 @@ export default defineComponent({
       onKeyDown: onKeyDownSendKeyWatcher,
       onKeyUp: onKeyUpSendKeyWatcher
     } = useSendKeyWatcher(context, insertLineBreak)
-    const { onKeyDown: onKeyDownWordCompleter } = useWordCompleter(
+    const { onKeyDown: onKeyDownWordCompleter, onSelect } = useWordCompleter(
       textareaRef,
+      target,
       value,
-      tree
+      suggesteCandidates,
+      hideSuggester
     )
 
     const onKeyDown = (e: KeyboardEvent) => {

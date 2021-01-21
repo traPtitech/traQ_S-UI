@@ -1,6 +1,5 @@
-import { TrieNode } from '@/lib/trieTree'
-import { nextTick, ComputedRef, WritableComputedRef } from 'vue'
-import { getCurrentWord } from './wordSuggester'
+import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
+import { Target } from './wordSuggester'
 
 const getDeterminedCharacters = (candidates: string[]) => {
   const minLength = Math.min(...candidates.map(c => c.length))
@@ -18,32 +17,48 @@ const getDeterminedCharacters = (candidates: string[]) => {
 
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
+  target: Ref<Target>,
   value: WritableComputedRef<string>,
-  tree: TrieNode
+  suggesteCandidates: Ref<string[]>,
+  hideSuggester: Ref<boolean>
 ) => {
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
       e.preventDefault()
       if (!textareaRef.value) return
-      const target = getCurrentWord(textareaRef.value, value.value)
-      const candidates = tree.search(target.word.replaceAll('＠', '@'))
-      if (candidates.length === 0) {
+      if (suggesteCandidates.value.length === 0) {
         return
       }
-      const determined = getDeterminedCharacters(candidates)
+      const determined = getDeterminedCharacters(suggesteCandidates.value)
       value.value =
-        value.value.slice(0, target.begin) +
+        value.value.slice(0, target.value.begin) +
         determined +
-        (target.end === value.value.length ? '' : value.value.slice(target.end))
+        (target.value.end === value.value.length
+          ? ''
+          : value.value.slice(target.value.end))
       await nextTick()
       textareaRef.value.setSelectionRange(
-        target.begin + determined.length,
-        target.begin + determined.length
+        target.value.begin + determined.length,
+        target.value.begin + determined.length
       )
     }
   }
-
-  return { onKeyDown }
+  const onSelect = async (word: string) => {
+    if (!textareaRef.value) return
+    value.value =
+      value.value.slice(0, target.value.begin) +
+      word +
+      (target.value.end === value.value.length
+        ? ''
+        : value.value.slice(target.value.end))
+    hideSuggester.value = true
+    await nextTick()
+    textareaRef.value.setSelectionRange(
+      target.value.begin + word.length,
+      target.value.begin + word.length
+    )
+  }
+  return { onKeyDown, onSelect }
 }
 
 export default useWordCompleter
