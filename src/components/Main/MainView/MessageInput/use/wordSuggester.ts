@@ -71,9 +71,18 @@ const useWordSuggester = (
       target.begin + word.length
     )
   }
+  const onBlur = async (e: MouseEvent) => {
+    if (e.target !== e.currentTarget) {
+      console.log(e.target)
+      console.log(e.currentTarget)
+      return
+    }
+    hideSuggester.value = true
+  }
   return {
     onKeyUp,
     onSelect,
+    onBlur,
     tree,
     hideSuggester,
     position,

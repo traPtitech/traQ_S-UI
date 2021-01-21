@@ -1,24 +1,25 @@
 <template>
-  <textarea-autosize
-    ref="textareaAutosizeRef"
-    :class="$style.container"
-    v-model="value"
-    :readonly="isPosting"
-    placeholder="メッセージを送信"
-    rows="1"
-    @before-input="onBeforeInput"
-    @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    @focus="onFocus"
-    @blur="onBlur"
-    @paste="onPaste"
-  />
-  <dropdown-suggester
-    :show="!hideSuggester"
-    :position="computedPos"
-    :candidates="computedCandidates"
-    @select="onSelect"
-  />
+  <div :class="$style.container" @focusout.self="onBlur">
+    <textarea-autosize
+      ref="textareaAutosizeRef"
+      :class="$style.textarea"
+      v-model="value"
+      :readonly="isPosting"
+      placeholder="メッセージを送信"
+      rows="1"
+      @before-input="onBeforeInput"
+      @keydown="onKeyDown"
+      @keyup="onKeyUp"
+      @focus="onFocus"
+      @paste="onPaste"
+    />
+    <dropdown-suggester
+      :show="!hideSuggester"
+      :position="computedPos"
+      :candidates="computedCandidates"
+      @select="onSelect"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -125,6 +126,7 @@ export default defineComponent({
     const {
       onKeyUp: onKeyUpWordSuggester,
       onSelect,
+      onBlur: onBlurWordSuggester,
       tree,
       hideSuggester,
       position,
@@ -156,8 +158,13 @@ export default defineComponent({
       onKeyUpWordSuggester(e)
     }
 
-    const { onFocus, onBlur } = useFocus(context)
+    const { onFocus, onBlur: onBlurDefault } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
+
+    const onBlur = (e: MouseEvent) => {
+      onBlurWordSuggester(e)
+      onBlurDefault()
+    }
 
     return {
       value,
@@ -179,6 +186,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  // display: contents;
+}
+.textarea {
   @include color-text-primary;
   width: 100%;
   max-height: 160px;
