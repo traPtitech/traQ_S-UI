@@ -24,6 +24,7 @@ const useWordSuggester = (
   value: WritableComputedRef<string>
 ) => {
   const hideSuggester = ref(true)
+  const interactingWithList = ref(false)
   const position = ref({ top: 0, left: 0 })
   const suggesteCandidates = ref([] as string[])
 
@@ -65,24 +66,28 @@ const useWordSuggester = (
       value.value.slice(0, target.begin) +
       word +
       (target.end === value.value.length ? '' : value.value.slice(target.end))
+    hideSuggester.value = true
     await nextTick()
     textareaRef.value.setSelectionRange(
       target.begin + word.length,
       target.begin + word.length
     )
   }
-  const onBlur = async (e: MouseEvent) => {
-    if (e.target !== e.currentTarget) {
-      console.log(e.target)
-      console.log(e.currentTarget)
+  const onBlur = async () => {
+    if (interactingWithList.value) {
+      interactingWithList.value = false
       return
     }
     hideSuggester.value = true
+  }
+  const onMousedown = async () => {
+    interactingWithList.value = true
   }
   return {
     onKeyUp,
     onSelect,
     onBlur,
+    onMousedown,
     tree,
     hideSuggester,
     position,

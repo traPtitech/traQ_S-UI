@@ -6,7 +6,7 @@ const properties = [
   'left:-9999px;'
 ]
 
-// カーソルの位置に影響するCSSプロパティをテキストフィールドからdiv要素にコピーする
+// カーソルの位置に影響するCSSプロパティ
 const propertyNamesToCopy = [
   'box-sizing',
   'font-family',
@@ -34,42 +34,50 @@ const propertyNamesToCopy = [
   'word-spacing'
 ]
 
-// { テキストフィールド: ミラー }
-const mirrorMap = new WeakMap()
+const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
+  const style = window.getComputedStyle(textField)
+  const props = [...properties]
+  if (textField.nodeName.toLowerCase() === 'textarea') {
+    props.push('white-space:pre-wrap;')
+  } else {
+    props.push('white-space:nowrap;')
+  }
+  propertyNamesToCopy.forEach(name =>
+    props.push(`${name}:${style.getPropertyValue(name)};`)
+  )
+  return props.join(' ')
+}
 
-// テキストフィールドを模したdiv要素を画面外に準備する
-//
-// textField: HTMLInputElement or HTMLTextAreaElement element
-// markerPosition: 再現したいカーソルのインデックス(デフォルト値: テキスト終端)
-//
-// mirror: DOMに紐付いたエレメントを返す. caret位置取得後のエレメント削除は呼び出し元の責任
-// marker: カーソルと同じ位置に存在するspanエレメント
+const mirrorMap = new WeakMap<HTMLInputElement | HTMLTextAreaElement, Mirror>()
+
+/**
+ * 元の要素と同じ親要素に紐付いたDiv.
+ * caret位置取得後にDestoroyするのは呼び出し元の責任
+ */
+type Mirror = HTMLDivElement
+
+/**
+ * カーソルと同じ位置に存在するspanエレメント
+ */
+type Marker = HTMLSpanElement
+
+/**
+ * テキストフィールドを模したdiv要素を画面外に準備する
+ *
+ * @param textField HTMLInputElement or HTMLTextAreaElement
+ * @param markerPosition 再現したいカーソルのインデックス(デフォルト値: テキスト終端)
+ */
 const textFieldMirror = (
   textField: HTMLInputElement | HTMLTextAreaElement,
   markerPosition: number | null
-): { mirror: HTMLElement; marker: HTMLSpanElement } => {
-  const nodeName = textField.nodeName.toLowerCase()
-  if (nodeName !== 'textarea' && nodeName !== 'input') {
-    throw new Error('expected textField to a textarea or input')
-  }
-
+): { mirror: Mirror; marker: Marker } => {
   let mirror = mirrorMap.get(textField)
   if (mirror && mirror.parentElement === textField.parentElement) {
     mirror.innerHTML = ''
   } else {
     mirror = document.createElement('div')
     mirrorMap.set(textField, mirror)
-    const style = window.getComputedStyle(textField)
-    const props = properties.slice(0)
-    if (nodeName === 'textarea') {
-      props.push('white-space:pre-wrap;')
-    } else {
-      props.push('white-space:nowrap;')
-    }
-    propertyNamesToCopy.forEach(name =>
-      props.push(`${name}:${style.getPropertyValue(name)};`)
-    )
-    mirror.style.cssText = props.join(' ')
+    mirror.style.cssText = calcMirrorStyle(textField)
   }
 
   const marker = document.createElement('span')
@@ -78,7 +86,7 @@ const textFieldMirror = (
 
   let before
   let after
-  if (typeof markerPosition === 'number') {
+  if (markerPosition !== null) {
     let text = textField.value.substring(0, markerPosition)
     if (text) {
       before = document.createTextNode(text)

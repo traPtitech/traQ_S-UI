@@ -1,5 +1,5 @@
 <template>
-  <div v-show="show" :class="$style.container" :style="style">
+  <div :class="$style.container" :style="style">
     <div
       :class="$style.item"
       v-for="candidate in candidates"
@@ -14,17 +14,6 @@
 <script lang="ts">
 import { defineComponent, SetupContext, computed, PropType } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
-
-const useClickHandlers = (
-  context: SetupContext<{
-    select: (word: string) => string
-  }>
-) => {
-  const onClick = (_e: MouseEvent, word: string) => {
-    context.emit('select', word)
-  }
-  return { onClick }
-}
 
 // スタンプのプレビュー表示とか用(wordCompleterからexportしたほうが良さそう)
 // interface Candidate {
@@ -42,10 +31,6 @@ export default defineComponent({
     //   type: Array as PropType<Candidate[]>,
     //   default: null
     // }
-    show: {
-      type: Boolean,
-      default: false
-    },
     candidates: {
       type: Array as PropType<string[]>,
       default: []
@@ -56,13 +41,15 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (word: string) => word
+    select: (word: string) => true
   },
   setup(props, context) {
-    const { onClick } = useClickHandlers(context)
+    const onClick = (_e: MouseEvent, word: string) => {
+      context.emit('select', word)
+    }
 
     const style = computed(() => ({
-      top: props.position.top + 'px',
+      top: (props.position.top < 150 ? props.position.top : 150) + 'px', // textarea = max-height: 160px, overflow: scroll
       left: props.position.left + 60 + 'px'
     }))
 

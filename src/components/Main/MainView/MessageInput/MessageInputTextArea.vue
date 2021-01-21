@@ -1,25 +1,25 @@
 <template>
-  <div :class="$style.container" @focusout.self="onBlur">
-    <textarea-autosize
-      ref="textareaAutosizeRef"
-      :class="$style.textarea"
-      v-model="value"
-      :readonly="isPosting"
-      placeholder="メッセージを送信"
-      rows="1"
-      @before-input="onBeforeInput"
-      @keydown="onKeyDown"
-      @keyup="onKeyUp"
-      @focus="onFocus"
-      @paste="onPaste"
-    />
-    <dropdown-suggester
-      :show="!hideSuggester"
-      :position="computedPos"
-      :candidates="computedCandidates"
-      @select="onSelect"
-    />
-  </div>
+  <textarea-autosize
+    ref="textareaAutosizeRef"
+    :class="$style.container"
+    v-model="value"
+    :readonly="isPosting"
+    placeholder="メッセージを送信"
+    rows="1"
+    @before-input="onBeforeInput"
+    @keydown="onKeyDown"
+    @keyup="onKeyUp"
+    @focus="onFocus"
+    @blur="onBlur"
+    @paste="onPaste"
+  />
+  <dropdown-suggester
+    v-show="!hideSuggester"
+    :position="computedPos"
+    :candidates="computedCandidates"
+    @mousedown="onMousedown"
+    @select="onSelect"
+  />
 </template>
 
 <script lang="ts">
@@ -127,14 +127,16 @@ export default defineComponent({
       onKeyUp: onKeyUpWordSuggester,
       onSelect,
       onBlur: onBlurWordSuggester,
+      onMousedown,
       tree,
       hideSuggester,
       position,
       suggesteCandidates
     } = useWordSuggester(textareaRef, value)
+
+    // ここ２つはComputedRefじゃないとpropsにうまく渡らない
     const computedPos = computed(() => position.value)
     const computedCandidates = computed(() => suggesteCandidates.value)
-    const hideRef = computed(() => hideSuggester.value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -162,7 +164,7 @@ export default defineComponent({
     const { onPaste } = usePaste(toRef(props, 'channelId'))
 
     const onBlur = (e: MouseEvent) => {
-      onBlurWordSuggester(e)
+      onBlurWordSuggester()
       onBlurDefault()
     }
 
@@ -174,6 +176,7 @@ export default defineComponent({
       textareaAutosizeRef,
       onFocus,
       onBlur,
+      onMousedown,
       onPaste,
       onSelect,
       hideSuggester,
@@ -186,9 +189,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  // display: contents;
-}
-.textarea {
   @include color-text-primary;
   width: 100%;
   max-height: 160px;
