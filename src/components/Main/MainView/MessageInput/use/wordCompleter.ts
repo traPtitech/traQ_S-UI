@@ -59,7 +59,7 @@ const useWordCompleter = (
       e.preventDefault()
       if (!textareaRef.value) return
       const target = getCurrentWord(textareaRef.value, value.value)
-      const candidates = tree.search(target.word)
+      const candidates = tree.search(target.word.replaceAll('＠', '@'))
       if (candidates.length === 0) {
         return
       }
@@ -82,7 +82,7 @@ const useWordCompleter = (
       hideSuggester.value = true
       return
     }
-    suggesteCandidates.value = tree.search(target.word)
+    suggesteCandidates.value = tree.search(target.word.replaceAll('＠', '@'))
     if (suggesteCandidates.value.length === 0) {
       hideSuggester.value = true
       return
