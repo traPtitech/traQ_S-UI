@@ -63,13 +63,14 @@ export const actions = defineActions({
       )
     )
   },
-  onChannelRead(context, channelId: ChannelId) {
+  deleteUnreadChannel(context, channelId: ChannelId) {
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
   },
   onMessageCreated(context, message: Message) {
     const { rootState, getters, commit, rootGetters } = meActionContext(context)
     // 最新の投稿を見ているチャンネルは未読に追加しない
+    // 他端末で閲覧中のチャンネルでは未読に追加されることに注意
     if (
       rootState.domain.messagesView.currentChannelId === message.channelId &&
       rootState.domain.messagesView.shouldRetriveMessageCreateEvent
