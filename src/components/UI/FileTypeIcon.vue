@@ -35,6 +35,7 @@ export default defineComponent({
         case 'audio':
           return 'file-music'
       }
+      throw new Error(`Unexpected type ${prop.type}`)
     })
     return { iconName }
   }

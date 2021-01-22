@@ -43,6 +43,7 @@ const useStyles = (state: {
           left
         }
       }
+      throw new Error(`Unexpected alignment value: ${state.alignment}`)
     })
   })
 
