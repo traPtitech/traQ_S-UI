@@ -14,7 +14,7 @@ export const defineWsListeners = createDefineListeners<typeof me>()(
     })
 
     listener.on('MESSAGE_READ', ({ id }) => {
-      dispatch.onChannelRead(id)
+      dispatch.deleteUnreadChannel(id)
     })
 
     listener.on('CHANNEL_STARED', ({ id }) => {

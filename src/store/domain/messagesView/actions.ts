@@ -296,7 +296,12 @@ export const actions = defineActions({
     context,
     shouldRetriveMessageCreateEvent: boolean
   ) {
-    const { rootState, state, commit } = messagesViewActionContext(context)
+    const {
+      rootState,
+      rootDispatch,
+      state,
+      commit
+    } = messagesViewActionContext(context)
     if (shouldRetriveMessageCreateEvent && state.currentChannelId) {
       // 未読を取得していないと未読を表示できないため (また既読にできないため)
       await unreadChannelsMapInitialFetchPromise
@@ -308,6 +313,9 @@ export const actions = defineActions({
         // チャンネルを既読にする
         // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
         apis.readChannel(state.currentChannelId)
+        // ただし他端末で閲覧中の場合は未読に追加されないので
+        // 既読イベントが送信されてこないのでローカルでも既読にする
+        rootDispatch.domain.me.deleteUnreadChannel(state.currentChannelId)
       }
     }
     commit.setShouldRetriveMessageCreateEvent(shouldRetriveMessageCreateEvent)
