@@ -120,7 +120,10 @@ const getCaretPosition = (
   mirror.scrollTop = textField.scrollTop
   mirror.scrollLeft = textField.scrollLeft
 
-  return { top: marker.offsetTop, left: marker.offsetLeft }
+  return {
+    top: marker.offsetTop - mirror.scrollTop,
+    left: marker.offsetLeft - mirror.scrollLeft
+  }
 }
 
 export default getCaretPosition

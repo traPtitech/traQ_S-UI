@@ -44,7 +44,7 @@ export default defineComponent({
     }
 
     const style = computed(() => ({
-      top: (props.position.top < 150 ? props.position.top : 150) + 'px', // textarea = max-height: 160px, overflow: scroll
+      top: props.position.top + 'px',
       left: props.position.left + 60 + 'px'
     }))
 
