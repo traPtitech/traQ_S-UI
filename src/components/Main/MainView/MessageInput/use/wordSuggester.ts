@@ -33,13 +33,13 @@ const useWordSuggester = (
   const hideSuggester = ref(true)
   const interactingWithList = ref(false)
   const position = ref({ top: 0, left: 0 })
-  const target = ref({
+  const target = ref<Target>({
     word: '',
     begin: 0,
     end: 0,
     divided: false
-  }) as Ref<Target>
-  const suggesteCandidates = ref([] as string[])
+  })
+  const suggesteCandidates = ref<string[]>([])
 
   const tree = createTree(
     // ユーザー名とグループ名に重複あり
