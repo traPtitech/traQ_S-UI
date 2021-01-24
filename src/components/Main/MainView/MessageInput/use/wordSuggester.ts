@@ -30,7 +30,7 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
-  const hideSuggester = ref(true)
+  const showSuggester = ref(false)
   const interactingWithList = ref(false)
   const position = ref({ top: 0, left: 0 })
   const target = ref<Target>({
@@ -60,25 +60,25 @@ const useWordSuggester = (
     if (!textareaRef.value) return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
-      hideSuggester.value = true
+      showSuggester.value = false
       return
     }
     suggestedCandidates.value = tree.search(
       target.value.word.replaceAll('＠', '@')
     )
     if (suggestedCandidates.value.length === 0) {
-      hideSuggester.value = true
+      showSuggester.value = false
       return
     }
     position.value = getCaretPosition(textareaRef.value, target.value.begin)
-    hideSuggester.value = false
+    showSuggester.value = true
   }
   const onBlur = async () => {
     if (interactingWithList.value) {
       interactingWithList.value = false
       return
     }
-    hideSuggester.value = true
+    showSuggester.value = false
   }
   const onMousedown = async () => {
     interactingWithList.value = true
@@ -87,7 +87,7 @@ const useWordSuggester = (
     onKeyUp,
     onBlur,
     onMousedown,
-    hideSuggester,
+    showSuggester,
     position,
     target,
     suggestedCandidates

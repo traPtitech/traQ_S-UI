@@ -20,7 +20,7 @@ const useWordCompleter = (
   target: Ref<Target>,
   value: WritableComputedRef<string>,
   suggestedCandidates: Ref<string[]>,
-  hideSuggester: Ref<boolean>
+  showSuggester: Ref<boolean>
 ) => {
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
@@ -51,7 +51,7 @@ const useWordCompleter = (
       (target.value.end === value.value.length
         ? ''
         : value.value.slice(target.value.end))
-    hideSuggester.value = true
+    showSuggester.value = false
     await nextTick()
     textareaRef.value.setSelectionRange(
       target.value.begin + word.length,

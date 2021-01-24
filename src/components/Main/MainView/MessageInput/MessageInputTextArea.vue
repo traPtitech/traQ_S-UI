@@ -14,7 +14,7 @@
     @paste="onPaste"
   />
   <dropdown-suggester
-    v-show="!hideSuggester"
+    v-show="showSuggester"
     :position="computedPos"
     :candidates="computedCandidates"
     @mousedown="onMousedown"
@@ -127,7 +127,7 @@ export default defineComponent({
       onKeyUp: onKeyUpWordSuggester,
       onBlur: onBlurWordSuggester,
       onMousedown,
-      hideSuggester,
+      showSuggester,
       target,
       position,
       suggestedCandidates
@@ -149,7 +149,7 @@ export default defineComponent({
       target,
       value,
       suggestedCandidates,
-      hideSuggester
+      showSuggester
     )
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -180,7 +180,7 @@ export default defineComponent({
       onMousedown,
       onPaste,
       onSelect,
-      hideSuggester,
+      showSuggester,
       computedPos,
       computedCandidates
     }
