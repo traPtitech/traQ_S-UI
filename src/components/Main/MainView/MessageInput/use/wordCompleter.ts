@@ -22,29 +22,7 @@ const useWordCompleter = (
   suggestedCandidates: Ref<string[]>,
   showSuggester: Ref<boolean>
 ) => {
-  const onKeyDown = async (e: KeyboardEvent) => {
-    if (e.key === 'Tab' && !e.isComposing) {
-      e.preventDefault()
-      if (!textareaRef.value) return
-      if (suggestedCandidates.value.length === 0) {
-        return
-      }
-      const determined = getDeterminedCharacters(suggestedCandidates.value)
-      value.value =
-        value.value.slice(0, target.value.begin) +
-        determined +
-        (target.value.end === value.value.length
-          ? ''
-          : value.value.slice(target.value.end))
-      await nextTick()
-      textareaRef.value.setSelectionRange(
-        target.value.begin + determined.length,
-        target.value.begin + determined.length
-      )
-    }
-  }
-  const onSelect = async (word: string) => {
-    if (!textareaRef.value) return
+  const commitCompletion = async (word: string) => {
     value.value =
       value.value.slice(0, target.value.begin) +
       word +
@@ -53,10 +31,24 @@ const useWordCompleter = (
         : value.value.slice(target.value.end))
     showSuggester.value = false
     await nextTick()
-    textareaRef.value.setSelectionRange(
+    textareaRef.value?.setSelectionRange(
       target.value.begin + word.length,
       target.value.begin + word.length
     )
+  }
+  const onKeyDown = async (e: KeyboardEvent) => {
+    if (e.key === 'Tab' && !e.isComposing) {
+      e.preventDefault()
+      if (!textareaRef.value) return
+      if (suggestedCandidates.value.length === 0) {
+        return
+      }
+      const determined = getDeterminedCharacters(suggestedCandidates.value)
+      commitCompletion(determined)
+    }
+  }
+  const onSelect = async (word: string) => {
+    commitCompletion(word)
   }
   return { onKeyDown, onSelect }
 }
