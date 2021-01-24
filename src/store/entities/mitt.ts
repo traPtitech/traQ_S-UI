@@ -7,6 +7,12 @@ import { Channel, Stamp } from '@traptitech/traq'
  * すべてaction側で発火することにしている
  */
 type EntityEventMap = {
+  setUsers: () => void
+  deleteUser: () => void
+
+  setUserGroups: () => void
+  deleteUserGroup: () => void
+
   setChannels: () => void
   addChannel: (channel: Channel) => void
   updateChannel: (data: {

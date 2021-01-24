@@ -153,12 +153,14 @@ export const actions = defineActions({
     const usersMap = arrayToMap(users, 'id')
     if (!shared) {
       commit.setUsersMap(usersMap)
+      entityMitt.emit('setUsers')
     }
     return usersMap
   },
   deleteUser(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteUser(userId)
+    entityMitt.emit('deleteUser')
   },
 
   async fetchUserGroup(
@@ -195,12 +197,14 @@ export const actions = defineActions({
     const userGroupsMap = arrayToMap(userGroups, 'id')
     if (!shared) {
       commit.setUserGroupsMap(userGroupsMap)
+      entityMitt.emit('setUserGroups')
     }
     return userGroupsMap
   },
   deleteUserGroup(context, userId: UserId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteUserGroup(userId)
+    entityMitt.emit('deleteUserGroup')
   },
 
   async fetchUserDMChannel(context, userId: UserId): Promise<DMChannelId> {

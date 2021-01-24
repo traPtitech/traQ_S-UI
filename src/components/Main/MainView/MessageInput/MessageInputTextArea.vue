@@ -15,8 +15,8 @@
   />
   <dropdown-suggester
     v-show="showSuggester"
-    :position="computedPos"
-    :candidates="computedCandidates"
+    :position="position"
+    :candidates="suggestedCandidates"
     @mousedown="onMousedown"
     @select="onSelect"
   />
@@ -133,10 +133,6 @@ export default defineComponent({
       suggestedCandidates
     } = useWordSuggester(textareaRef, value)
 
-    // ここ２つはComputedRefじゃないとpropsにうまく渡らない
-    const computedPos = computed(() => position.value)
-    const computedCandidates = computed(() => suggestedCandidates.value)
-
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
     const {
@@ -181,8 +177,8 @@ export default defineComponent({
       onPaste,
       onSelect,
       showSuggester,
-      computedPos,
-      computedCandidates
+      position,
+      suggestedCandidates
     }
   }
 })

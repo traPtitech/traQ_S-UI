@@ -3,6 +3,7 @@ import createTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ComputedRef, WritableComputedRef, ref } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
+import { entityMitt } from '@/store/entities/mitt'
 
 export type Target = {
   word: string
@@ -41,20 +42,44 @@ const useWordSuggester = (
   })
   const suggestedCandidates = ref<string[]>([])
 
-  const tree = createTree(
-    // ユーザー名とグループ名に重複あり
-    // メンションはcase insensitiveでユーザー名を優先
-    // 重複を許す場合、優先するものから入れる
-    store.getters.entities.allUserNames.map(userName => '@' + userName),
-    store.getters.entities.allUserGroupNames.map(
-      userGroupName => '@' + userGroupName
-    ),
-    store.getters.entities.allStampNames.map(
-      stampName => ':' + stampName + ':'
-    ),
-    [...animeEffectSet].map(effectName => '.' + effectName),
-    [...sizeEffectSet].map(effectName => '.' + effectName)
-  )
+  let tree: ReturnType<typeof createTree>
+  const updateTree = () => {
+    tree = createTree(
+      // ユーザー名とグループ名に重複あり
+      // メンションはcase insensitiveでユーザー名を優先
+      // 重複を許す場合、優先するものから入れる
+      store.getters.entities.allUserNames.map(userName => '@' + userName),
+      store.getters.entities.allUserGroupNames.map(
+        userGroupName => '@' + userGroupName
+      ),
+      store.getters.entities.allStampNames.map(
+        stampName => ':' + stampName + ':'
+      ),
+      [...animeEffectSet].map(effectName => '.' + effectName),
+      [...sizeEffectSet].map(effectName => '.' + effectName)
+    )
+  }
+
+  updateTree()
+
+  entityMitt.on('setUsers', () => {
+    updateTree()
+  })
+  entityMitt.on('deleteUser', () => {
+    updateTree()
+  })
+  entityMitt.on('setUserGroups', () => {
+    updateTree()
+  })
+  entityMitt.on('deleteUserGroup', () => {
+    updateTree()
+  })
+  entityMitt.on('setStamps', () => {
+    updateTree()
+  })
+  entityMitt.on('deleteStamp', () => {
+    updateTree()
+  })
 
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
