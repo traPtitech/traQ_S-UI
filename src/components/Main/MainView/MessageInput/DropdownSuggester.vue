@@ -61,21 +61,19 @@ export default defineComponent({
   @include color-ui-secondary;
   position: absolute;
   background: $theme-background-primary;
-  color: $theme-ui-primary;
   width: 240px;
   max-height: 160px;
   transform: translateY(-95%);
   border: solid 2px $theme-background-secondary;
   border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 .item {
   padding: 4px;
   cursor: pointer;
   &:first-child {
     background-color: $theme-background-secondary;
+    font-weight: bold;
   }
   &:hover {
     background-color: $theme-background-secondary;

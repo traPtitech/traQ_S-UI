@@ -2,7 +2,7 @@ import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ComputedRef, WritableComputedRef, ref } from 'vue'
-import textFieldMirror from './textFieldMirror'
+import getCaretPosition from '@/lib/caretPosition'
 
 export type Target = {
   word: string
@@ -70,11 +70,7 @@ const useWordSuggester = (
       hideSuggester.value = true
       return
     }
-    const { mirror, marker } = textFieldMirror(
-      textareaRef.value,
-      target.value.begin
-    )
-    position.value = { top: marker.offsetTop, left: marker.offsetLeft }
+    position.value = getCaretPosition(textareaRef.value, target.value.begin)
     hideSuggester.value = false
   }
   const onBlur = async () => {

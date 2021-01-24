@@ -6,7 +6,7 @@ const properties = [
   'left:-9999px;'
 ]
 
-// カーソルの位置に影響するCSSプロパティ
+/** カーソルの位置に影響するCSSプロパティ */
 const propertyNamesToCopy = [
   'box-sizing',
   'font-family',
@@ -48,29 +48,27 @@ const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
   return props.join(' ')
 }
 
-const mirrorMap = new WeakMap<HTMLInputElement | HTMLTextAreaElement, Mirror>()
+/**
+ * テキストフィールドとそれを再現したミラー要素を一意に管理するためのマップ
+ */
+const mirrorMap = new WeakMap<
+  HTMLInputElement | HTMLTextAreaElement,
+  HTMLDivElement
+>()
 
 /**
- * 元の要素と同じ親要素に紐付いたDiv.
- * caret位置取得後にDestoroyするのは呼び出し元の責任
+ * キャレットのテキストフィールドに対する相対位置
  */
-type Mirror = HTMLDivElement
+type caretPosition = { top: number; left: number }
 
 /**
- * カーソルと同じ位置に存在するspanエレメント
+ * テキストフィールドのキャレット位置を取得する
+ * @param markerPosition 再現したいキャレットのインデックス(デフォルト値: テキスト終端)
  */
-type Marker = HTMLSpanElement
-
-/**
- * テキストフィールドを模したdiv要素を画面外に準備する
- *
- * @param textField HTMLInputElement or HTMLTextAreaElement
- * @param markerPosition 再現したいカーソルのインデックス(デフォルト値: テキスト終端)
- */
-const textFieldMirror = (
+const getCaretPosition = (
   textField: HTMLInputElement | HTMLTextAreaElement,
   markerPosition: number | null
-): { mirror: Mirror; marker: Marker } => {
+): caretPosition => {
   let mirror = mirrorMap.get(textField)
   if (mirror && mirror.parentElement === textField.parentElement) {
     mirror.innerHTML = ''
@@ -122,7 +120,7 @@ const textFieldMirror = (
   mirror.scrollTop = textField.scrollTop
   mirror.scrollLeft = textField.scrollLeft
 
-  return { mirror, marker }
+  return { top: marker.offsetTop, left: marker.offsetLeft }
 }
 
-export default textFieldMirror
+export default getCaretPosition
