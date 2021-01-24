@@ -39,7 +39,7 @@ const useWordSuggester = (
     end: 0,
     divided: false
   })
-  const suggesteCandidates = ref<string[]>([])
+  const suggestedCandidates = ref<string[]>([])
 
   const tree = createTree(
     // ユーザー名とグループ名に重複あり
@@ -63,10 +63,10 @@ const useWordSuggester = (
       hideSuggester.value = true
       return
     }
-    suggesteCandidates.value = tree.search(
+    suggestedCandidates.value = tree.search(
       target.value.word.replaceAll('＠', '@')
     )
-    if (suggesteCandidates.value.length === 0) {
+    if (suggestedCandidates.value.length === 0) {
       hideSuggester.value = true
       return
     }
@@ -90,7 +90,7 @@ const useWordSuggester = (
     hideSuggester,
     position,
     target,
-    suggesteCandidates
+    suggestedCandidates
   }
 }
 

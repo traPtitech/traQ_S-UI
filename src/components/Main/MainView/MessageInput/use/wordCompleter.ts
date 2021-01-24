@@ -19,17 +19,17 @@ const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   target: Ref<Target>,
   value: WritableComputedRef<string>,
-  suggesteCandidates: Ref<string[]>,
+  suggestedCandidates: Ref<string[]>,
   hideSuggester: Ref<boolean>
 ) => {
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key === 'Tab' && !e.isComposing) {
       e.preventDefault()
       if (!textareaRef.value) return
-      if (suggesteCandidates.value.length === 0) {
+      if (suggestedCandidates.value.length === 0) {
         return
       }
-      const determined = getDeterminedCharacters(suggesteCandidates.value)
+      const determined = getDeterminedCharacters(suggestedCandidates.value)
       value.value =
         value.value.slice(0, target.value.begin) +
         determined +

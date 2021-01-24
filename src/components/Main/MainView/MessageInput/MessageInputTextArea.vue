@@ -130,12 +130,12 @@ export default defineComponent({
       hideSuggester,
       target,
       position,
-      suggesteCandidates
+      suggestedCandidates
     } = useWordSuggester(textareaRef, value)
 
     // ここ２つはComputedRefじゃないとpropsにうまく渡らない
     const computedPos = computed(() => position.value)
-    const computedCandidates = computed(() => suggesteCandidates.value)
+    const computedCandidates = computed(() => suggestedCandidates.value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -148,7 +148,7 @@ export default defineComponent({
       textareaRef,
       target,
       value,
-      suggesteCandidates,
+      suggestedCandidates,
       hideSuggester
     )
 
