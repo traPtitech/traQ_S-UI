@@ -63,10 +63,11 @@ export default defineComponent({
   background: $theme-background-primary;
   width: 240px;
   max-height: 160px;
-  transform: translateY(-95%);
+  transform: translateY(-100%);
   border: solid 2px $theme-background-secondary;
   border-radius: 4px;
   overflow-y: scroll;
+  filter: $common-drop-shadow-default;
 }
 .item {
   padding: 4px;
