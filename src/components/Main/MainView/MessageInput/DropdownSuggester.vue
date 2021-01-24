@@ -68,6 +68,7 @@ export default defineComponent({
   border-radius: 4px;
   overflow-y: scroll;
   filter: $common-drop-shadow-default;
+  z-index: $z-index-word-suggester;
 }
 .item {
   padding: 4px;
