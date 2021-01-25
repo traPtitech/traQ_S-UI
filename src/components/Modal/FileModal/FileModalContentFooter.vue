@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
-    <div :class="$style.channelPath" @click="onClick">#{{ channelPath }}</div>
+    <div :class="$style.channelPath" @click="onClick">{{ channelPath }}</div>
     <file-modal-content-footer-username
       :class="$style.userName"
       :user-id="user?.id"
@@ -16,7 +16,7 @@ import useFileMeta from '@/use/fileMeta'
 import useChannelPath from '@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { getCreatedDate } from '@/lib/date'
-import { changeChannelByPath } from '@/router/channel'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'FileModalContentFooter',
@@ -34,6 +34,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const router = useRouter()
     const { fileMeta } = useFileMeta(props, context)
     const user = computed(() =>
       store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
@@ -42,11 +43,20 @@ export default defineComponent({
       getCreatedDate(fileMeta.value?.createdAt ?? '')
     )
 
-    const { channelIdToPathString } = useChannelPath()
+    const { channelIdToPathString, channelIdToLink } = useChannelPath()
     const channelPath = computed(() => {
       try {
         return fileMeta.value?.channelId
-          ? channelIdToPathString(fileMeta.value?.channelId)
+          ? channelIdToPathString(fileMeta.value?.channelId, true)
+          : ''
+      } catch {
+        return ''
+      }
+    })
+    const channelLink = computed(() => {
+      try {
+        return fileMeta.value?.channelId
+          ? channelIdToLink(fileMeta.value?.channelId)
           : ''
       } catch {
         return ''
@@ -54,10 +64,10 @@ export default defineComponent({
     })
 
     const onClick = async () => {
-      if (channelPath.value === '') return
-      const pathCache = channelPath.value
+      if (channelLink.value === '') return
+      const pathCache = channelLink.value
       await store.dispatch.ui.modal.clearModal()
-      changeChannelByPath(pathCache)
+      router.push(pathCache)
     }
 
     return { channelPath, createdAt, user, onClick }
@@ -81,6 +91,7 @@ export default defineComponent({
   }
 }
 .channelPath {
+  @include size-body1;
   grid-area: channelPath;
   display: flex;
   align-items: center;
@@ -88,6 +99,7 @@ export default defineComponent({
 }
 .userName {
   @include color-ui-secondary;
+  @include size-body2;
   grid-area: userName;
   display: flex;
   align-items: center;
