@@ -74,27 +74,28 @@ import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 
 const LOAD_MORE_THRESHOLD = 10
 
-const useMarkdownInternalHandler = (context: SetupContext) => {
+type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
+
+const useMarkdownInternalHandler = () => {
   const { hostname } = new URL(embeddingOrigin)
   const router = useRouter()
 
   const onClick = (event: MouseEvent) => {
     if (!event.target) return
-    const target = event.target as HTMLElement
+    const e = event as HTMLElementTargetMouseEvent
 
-    toggleSpoilerHandler(event)
-    internalLinkClickHandler(event)
+    toggleSpoilerHandler(e)
+    internalLinkClickHandler(e)
   }
 
-  const toggleSpoilerHandler = (event: MouseEvent) => {
+  const toggleSpoilerHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
-    toggleSpoiler(event.target as HTMLElement)
+    toggleSpoiler(event.target)
   }
 
-  const internalLinkClickHandler = (event: MouseEvent) => {
+  const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
-    const target = event.target as HTMLElement
-    const $a = target.closest('a[href]') as HTMLAnchorElement | null
+    const $a = event.target.closest('a[href]') as HTMLAnchorElement | null
     if (!$a || !$a.href.includes(`://${hostname}`)) return
 
     // markdown内でない場合(添付ファイルなど)は無視
@@ -123,8 +124,8 @@ const useCompareDate = (props: { messageIds: MessageId[] }) => {
     const { messagesMap } = store.state.entities.messages
     const pre = messagesMap.get(props.messageIds[index - 1])
     const current = messagesMap.get(props.messageIds[index])
-    const preDate = new Date(pre?.createdAt || ``)
-    const currentDate = new Date(current?.createdAt || ``)
+    const preDate = new Date(pre?.createdAt ?? '')
+    const currentDate = new Date(current?.createdAt ?? '')
     return preDate.toDateString() !== currentDate.toDateString()
   }
   return dayDiff
@@ -281,9 +282,7 @@ export default defineComponent({
 
     const handleScroll = throttle(17, () => {
       if (!rootRef.value) return
-      const clientHeight = rootRef.value.clientHeight
-      const scrollHeight = rootRef.value.scrollHeight
-      const scrollTop = rootRef.value.scrollTop
+      const { clientHeight, scrollHeight, scrollTop } = rootRef.value
       state.scrollTop = scrollTop
 
       if (props.isLoading) return
@@ -298,7 +297,7 @@ export default defineComponent({
       }
     })
 
-    const { onClick } = useMarkdownInternalHandler(context)
+    const { onClick } = useMarkdownInternalHandler()
     useScrollRestoration(rootRef, state)
 
     const dayDiff = useCompareDate(props)
