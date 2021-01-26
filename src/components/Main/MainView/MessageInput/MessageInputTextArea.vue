@@ -144,7 +144,8 @@ export default defineComponent({
     const {
       onBeforeInput,
       onKeyDown: onKeyDownSendKeyWatcher,
-      onKeyUp: onKeyUpSendKeyWatcher
+      onKeyUp: onKeyUpSendKeyWatcher,
+      onBlur: onBlurSendKeyWatcher
     } = useSendKeyWatcher(context, insertLineBreak)
     const { onKeyDown: onKeyDownWordCompleter, onSelect } = useWordCompleter(
       textareaRef,
@@ -180,6 +181,7 @@ export default defineComponent({
 
     const onBlur = () => {
       onBlurWordSuggester()
+      onBlurSendKeyWatcher()
       onBlurDefault()
     }
 
