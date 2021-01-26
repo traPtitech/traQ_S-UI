@@ -54,7 +54,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
   }
 
   /** ドラッグ終了判定するまでにdragoverが何ms開けばいいか */
-  const dragoverResetDurationMs = 100
+  const dragoverResetDurationMs = 150
   const resetDraggingState = debounce(dragoverResetDurationMs, () => {
     isDragging.value = false
     isDragStartInside.value = false
