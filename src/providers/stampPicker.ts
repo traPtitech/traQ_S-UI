@@ -36,7 +36,7 @@ export type StampSelectHandler = (stamp: SelectedStampData) => void
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const defaultSelectHandler = (_: SelectedStampData) => {}
 
-export type AlignmentPosition = 'top-right' | 'bottom-right'
+export type AlignmentPosition = 'top-left' | 'top-right' | 'bottom-right'
 
 interface StampPickerStore {
   selectHandler: StampSelectHandler
@@ -102,6 +102,10 @@ export const useStampPickerStore = () => {
 }
 
 const MARGIN_BETWEEN = 4
+const getBottomLeftPosition = (rect: DOMRect) => ({
+  x: rect.left,
+  y: rect.bottom + MARGIN_BETWEEN
+})
 const getTopRightPosition = (rect: DOMRect) => ({
   x: rect.right,
   y: rect.top - MARGIN_BETWEEN
@@ -110,6 +114,24 @@ const getBottomRightPosition = (rect: DOMRect) => ({
   x: rect.right,
   y: rect.bottom + MARGIN_BETWEEN
 })
+
+const getPositionFromAlignment = (
+  alignment: AlignmentPosition,
+  rect: DOMRect
+) => {
+  // alignmentと関数名が異なることに注意
+  // 例えば、左上を合わせたいなら基準となる要素の左下の位置がほしいため
+  switch (alignment) {
+    case 'top-left':
+      return getBottomLeftPosition(rect)
+    case 'top-right':
+      return getBottomRightPosition(rect)
+    case 'bottom-right':
+      return getTopRightPosition(rect)
+  }
+  // never
+  return rect
+}
 
 /**
  * スタンプピッカーを表示させる側で利用
@@ -139,12 +161,7 @@ export const useStampPickerInvoker = (
     if (!element.value) return
 
     const rect = element.value.getBoundingClientRect()
-    const position =
-      alignment === 'top-right'
-        ? getBottomRightPosition(rect)
-        : alignment === 'bottom-right'
-        ? getTopRightPosition(rect)
-        : rect // never
+    const position = getPositionFromAlignment(alignment, rect)
 
     stampPickerStore.position = position
   })
