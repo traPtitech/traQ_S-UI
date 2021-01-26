@@ -6,13 +6,13 @@
     <template v-if="qallUserIds.length > 0">
       <icon :class="$style.qallIcon" :size="16" mdi name="phone-outline" />
       <user-icon-ellipsis-list
+        :class="$style.qallUserList"
         direction="row"
         transition="fade-right"
         :user-ids="qallUserIds"
         :border-width="2"
         :icon-size="24"
-        :overlap="8"
-        :show-count="false"
+        :overlap="12"
         prevent-modal
       />
     </template>
@@ -124,7 +124,10 @@ export default defineComponent({
 }
 .qallIcon {
   flex-shrink: 0;
-  margin: 2px 8px;
+  margin: 2px 4px;
   opacity: 0.5;
+}
+.qallUserList {
+  @include size-caption;
 }
 </style>

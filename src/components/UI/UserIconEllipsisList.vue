@@ -44,7 +44,7 @@ const useSizeStyles = (props: {
         [isRow ? 'marginLeft' : 'marginTop']: `-${props.overlap}px`
       },
       count: {
-        [isRow ? 'marginLeft' : 'marginTop']: '0.5em'
+        [isRow ? 'marginLeft' : 'marginTop']: '0.25em'
       }
     }
   })
