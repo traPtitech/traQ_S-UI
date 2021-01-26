@@ -4,7 +4,7 @@
       :class="$style.item"
       v-for="candidate in candidates"
       :key="candidate"
-      @click="onClick(e, candidate)"
+      @click="onClick(candidate)"
     >
       <div :class="$style.name">
         {{ candidate }}
@@ -18,14 +18,7 @@ import { defineComponent, computed, PropType } from 'vue'
 
 export default defineComponent({
   name: 'DropdownSuggester',
-  // components: {
-  //   Icon
-  // },
   props: {
-    // candidates: {
-    //   type: Array as PropType<Candidate[]>,
-    //   default: null
-    // }
     candidates: {
       type: Array as PropType<string[]>,
       default: []
@@ -39,7 +32,7 @@ export default defineComponent({
     select: (word: string) => true
   },
   setup(props, context) {
-    const onClick = (_e: MouseEvent, word: string) => {
+    const onClick = (word: string) => {
       context.emit('select', word)
     }
 
@@ -73,12 +66,10 @@ export default defineComponent({
 .item {
   padding: 4px;
   cursor: pointer;
-  &:first-child {
-    background-color: $theme-background-secondary;
-    font-weight: bold;
-  }
+  &:first-child,
   &:hover {
     background-color: $theme-background-secondary;
+    font-weight: bold;
   }
 }
 .name {

@@ -60,7 +60,7 @@ export class TrieNode {
   }
 
   getAllWords(str = '') {
-    let ret = [] as string[]
+    let ret: string[] = []
 
     if (this.isWord) {
       const val = dict.get(this.id)

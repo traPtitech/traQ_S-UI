@@ -82,16 +82,16 @@ const getCaretPosition = (
   marker.style.cssText = 'position: absolute;'
   marker.innerHTML = '&nbsp;'
 
-  let before
-  let after
+  let before: Text | undefined
+  let after: Text | undefined
   if (markerPosition !== null) {
-    let text = textField.value.substring(0, markerPosition)
-    if (text) {
-      before = document.createTextNode(text)
+    const prefix = textField.value.substring(0, markerPosition)
+    if (prefix) {
+      before = document.createTextNode(prefix)
     }
-    text = textField.value.substring(markerPosition)
-    if (text) {
-      after = document.createTextNode(text)
+    const suffix = textField.value.substring(markerPosition)
+    if (suffix) {
+      after = document.createTextNode(suffix)
     }
   } else {
     const text = textField.value

@@ -26,9 +26,7 @@ const useWordCompleter = (
     value.value =
       value.value.slice(0, target.value.begin) +
       word +
-      (target.value.end === value.value.length
-        ? ''
-        : value.value.slice(target.value.end))
+      value.value.slice(target.value.end)
     showSuggester.value = false
     await nextTick()
     textareaRef.value?.setSelectionRange(
