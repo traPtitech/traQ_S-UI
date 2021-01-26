@@ -25,6 +25,13 @@ const useStyles = (state: {
       const height = 320
       const width = 340
       const margin = 16
+      if (state.alignment === 'top-left') {
+        return {
+          top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
+          left: `${state.position.x}px`
+        }
+      }
+
       const left = `min(${Math.max(
         state.position.x,
         width + margin
@@ -32,7 +39,8 @@ const useStyles = (state: {
       if (state.alignment === 'top-right') {
         return {
           top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
-          left
+          left,
+          transform: 'translateX(-100%)'
         }
       }
       if (state.alignment === 'bottom-right') {
@@ -40,7 +48,8 @@ const useStyles = (state: {
           bottom: `min(calc(100vh - ${height + margin}px), calc(100vh - ${
             state.position.y
           }px))`,
-          left
+          left,
+          transform: 'translateX(-100%)'
         }
       }
       throw new Error(`Unexpected alignment value: ${state.alignment}`)
@@ -64,7 +73,6 @@ export default defineComponent({
 .positionAbsolute {
   position: absolute;
   z-index: $z-index-stamp-picker;
-  transform: translateX(-100%);
   contain: strict;
 }
 </style>

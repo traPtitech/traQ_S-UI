@@ -8,26 +8,34 @@
       :data-is-open="$boolAttr(isDetailShown)"
       @click="toggleDetail"
     />
-    <transition-group
-      name="stamp"
-      tag="div"
+    <div
       :class="$style.stampList"
       :data-show-details="$boolAttr(isDetailShown)"
+      ref="listEle"
     >
-      <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
-        <stamp-element
-          :class="$style.element"
-          :stamp="stamp"
-          @add-stamp="addStamp"
-          @remove-stamp="removeStamp"
-        />
-        <stamp-detail-element
-          v-if="isDetailShown"
-          :class="$style.detail"
-          :stamp="stamp"
-        />
+      <transition-group name="stamp">
+        <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
+          <stamp-element
+            :class="$style.element"
+            :stamp="stamp"
+            @add-stamp="addStamp"
+            @remove-stamp="removeStamp"
+          />
+          <stamp-detail-element
+            v-if="isDetailShown"
+            :class="$style.detail"
+            :stamp="stamp"
+          />
+        </div>
+      </transition-group>
+      <div
+        v-if="!isDetailShown"
+        :class="$style.stampPickerOpener"
+        @click="toggleStampPicker"
+      >
+        <icon mdi name="plus" :size="20" />
       </div>
-    </transition-group>
+    </div>
   </div>
 </template>
 
@@ -40,6 +48,7 @@ import store from '@/store'
 import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
 import apis from '@/lib/apis'
+import { useStampPickerInvoker } from '@/providers/stampPicker'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -162,12 +171,23 @@ export default defineComponent({
       await apis.removeMessageStamp(props.messageId, stampId)
     }
 
+    const listEle = ref<HTMLDivElement>()
+    const { toggleStampPicker } = useStampPickerInvoker(
+      stampData => {
+        apis.addMessageStamp(props.messageId, stampData.id)
+      },
+      listEle,
+      'top-left'
+    )
+
     return {
       stampList,
       isDetailShown,
       toggleDetail,
       addStamp,
-      removeStamp
+      removeStamp,
+      listEle,
+      toggleStampPicker
     }
   }
 })
@@ -213,5 +233,15 @@ export default defineComponent({
 }
 .detail {
   margin-left: 4px;
+}
+
+.stampPickerOpener {
+  @include color-ui-tertiary;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  border: 2px solid $theme-ui-tertiary;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
