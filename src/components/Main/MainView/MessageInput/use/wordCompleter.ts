@@ -35,15 +35,12 @@ const useWordCompleter = (
     )
   }
   const onKeyDown = async (e: KeyboardEvent) => {
-    if (e.key === 'Tab' && !e.isComposing) {
-      e.preventDefault()
-      if (!textareaRef.value) return
-      if (suggestedCandidates.value.length === 0) {
-        return
-      }
-      const determined = getDeterminedCharacters(suggestedCandidates.value)
-      commitCompletion(determined)
-    }
+    if (e.key !== 'Tab' || e.isComposing) return
+    if (!textareaRef.value) return
+    if (suggestedCandidates.value.length === 0) return
+    e.preventDefault()
+    const determined = getDeterminedCharacters(suggestedCandidates.value)
+    commitCompletion(determined)
   }
   const onSelect = async (word: string) => {
     commitCompletion(word)
