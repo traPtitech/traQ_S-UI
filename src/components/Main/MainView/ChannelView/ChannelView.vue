@@ -22,7 +22,7 @@ import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
-import { debounce } from 'throttle-debounce'
+import { debounce, throttle } from 'throttle-debounce'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 
@@ -59,12 +59,12 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
     isDragging.value = false
     isDragStartInside.value = false
   })
-  const onDragOver = (event: DragEvent) => {
+  const onDragOver = throttle(50, (event: DragEvent) => {
     if (event.dataTransfer && hasFilesOrItems(event.dataTransfer)) {
       isDragging.value = true
     }
     resetDraggingState()
-  }
+  })
   return {
     canDrop,
     onDrop,
