@@ -52,6 +52,7 @@ export default defineComponent({
 .header {
   display: flex;
   align-items: center;
+  overflow-x: auto;
 }
 .topic {
   margin-left: 16px;
