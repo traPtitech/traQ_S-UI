@@ -6,10 +6,12 @@ import { Channel, Stamp } from '@traptitech/traq'
  * addChannelイベントにaction時の情報が必要なため、
  * すべてaction側で発火することにしている
  */
-type EntityEventMap = {
+export type EntityEventMap = {
+  setUser: () => void
   setUsers: () => void
   deleteUser: () => void
 
+  setUserGroup: () => void
   setUserGroups: () => void
   deleteUserGroup: () => void
 
@@ -21,8 +23,8 @@ type EntityEventMap = {
     oldPath: string
   }) => void
 
-  setStamps: () => void
   setStamp: (stamp: Stamp) => void
+  setStamps: () => void
   deleteStamp: (stampId: StampId) => void
 }
 

@@ -1,9 +1,9 @@
 import store from '@/store'
 import createTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
-import { ComputedRef, WritableComputedRef, ref } from 'vue'
+import { ComputedRef, onBeforeMount, WritableComputedRef, ref } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
-import { entityMitt } from '@/store/entities/mitt'
+import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
 
 export type Target = {
   word: string
@@ -62,23 +62,28 @@ const useWordSuggester = (
 
   updateTree()
 
-  entityMitt.on('setUsers', () => {
-    updateTree()
+  const events: (keyof EntityEventMap)[] = [
+    'setUser',
+    'setUsers',
+    'deleteUser',
+    'setUserGroup',
+    'setUserGroups',
+    'deleteUserGroup',
+    'setStamp',
+    'setStamps',
+    'deleteStamp'
+  ]
+  events.forEach(event => {
+    entityMitt.on(event, () => {
+      updateTree()
+    })
   })
-  entityMitt.on('deleteUser', () => {
-    updateTree()
-  })
-  entityMitt.on('setUserGroups', () => {
-    updateTree()
-  })
-  entityMitt.on('deleteUserGroup', () => {
-    updateTree()
-  })
-  entityMitt.on('setStamps', () => {
-    updateTree()
-  })
-  entityMitt.on('deleteStamp', () => {
-    updateTree()
+  onBeforeMount(() => {
+    events.forEach(event => {
+      entityMitt.off(event, () => {
+        updateTree()
+      })
+    })
   })
 
   const onKeyUp = async (e: KeyboardEvent) => {

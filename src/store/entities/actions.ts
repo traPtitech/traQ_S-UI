@@ -136,6 +136,8 @@ export const actions = defineActions({
       getUser,
       user => {
         commit.setUser(user)
+
+        entityMitt.emit('setUser')
       }
     )
     return user
@@ -180,6 +182,8 @@ export const actions = defineActions({
       getUserGroup,
       userGroup => {
         commit.setUserGroup(userGroup)
+
+        entityMitt.emit('setUserGroup')
       }
     )
     return userGroup
