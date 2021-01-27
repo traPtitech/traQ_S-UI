@@ -29,7 +29,8 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
 
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: WritableComputedRef<string>
+  value: WritableComputedRef<string>,
+  suggesterRef: ComputedRef<HTMLDivElement | undefined>
 ) => {
   const showSuggester = ref(false)
   const interactingWithList = ref(false)
@@ -41,6 +42,7 @@ const useWordSuggester = (
     divided: false
   })
   const suggestedCandidates = ref<string[]>([])
+  const currentCandidateIndex = ref(-1)
 
   let tree: ReturnType<typeof createTree>
   const updateTree = () => {
@@ -88,14 +90,18 @@ const useWordSuggester = (
 
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
       showSuggester.value = false
+      currentCandidateIndex.value = -1
       return
     }
+    if (e.key === 'Tab') return
     suggestedCandidates.value = tree.search(
       target.value.word.replaceAll('＠', '@')
     )
+    currentCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
       showSuggester.value = false
       return
@@ -103,24 +109,48 @@ const useWordSuggester = (
     position.value = getCaretPosition(textareaRef.value, target.value.begin)
     showSuggester.value = true
   }
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (!showSuggester.value || !suggesterRef.value) return
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (currentCandidateIndex.value <= 0) {
+        currentCandidateIndex.value = suggestedCandidates.value.length - 1
+      }
+      currentCandidateIndex.value--
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (currentCandidateIndex.value > suggestedCandidates.value.length - 2) {
+        currentCandidateIndex.value = 0
+      }
+      currentCandidateIndex.value++
+    }
+    if (currentCandidateIndex.value < 2) {
+      suggesterRef.value.scrollTop = 0
+      return
+    }
+    suggesterRef.value.scrollTop = 32 * currentCandidateIndex.value - 2
+  }
   const onBlur = async () => {
     if (interactingWithList.value) {
       interactingWithList.value = false
       return
     }
     showSuggester.value = false
+    currentCandidateIndex.value = -1
   }
   const onMousedown = async () => {
     interactingWithList.value = true
   }
   return {
     onKeyUp,
+    onKeyDown,
     onBlur,
     onMousedown,
     showSuggester,
     position,
     target,
-    suggestedCandidates
+    suggestedCandidates,
+    currentCandidateIndex
   }
 }
 

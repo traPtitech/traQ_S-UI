@@ -1,10 +1,13 @@
 <template>
   <div :class="$style.container" :style="style">
     <div
-      :class="$style.item"
-      v-for="candidate in candidates"
+      :class="{
+        [$style.item]: true,
+        [$style.selected]: index === currentIndex
+      }"
+      v-for="(candidate, index) in candidates"
       :key="candidate"
-      @click="onClick(candidate)"
+      @click="onClick(index)"
     >
       <div :class="$style.name">
         {{ candidate }}
@@ -23,17 +26,21 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       default: []
     },
+    currentIndex: {
+      type: Number,
+      default: -1
+    },
     position: {
       type: Object as PropType<{ top: number; left: number }>,
       required: true
     }
   },
   emits: {
-    select: (word: string) => true
+    select: (index: number) => true
   },
   setup(props, context) {
-    const onClick = (word: string) => {
-      context.emit('select', word)
+    const onClick = (index: number) => {
+      context.emit('select', index)
     }
 
     const style = computed(() => ({
@@ -66,6 +73,7 @@ export default defineComponent({
 .item {
   padding: 4px;
   cursor: pointer;
+  &.selected,
   &:first-child,
   &:hover {
     background-color: $theme-background-secondary;

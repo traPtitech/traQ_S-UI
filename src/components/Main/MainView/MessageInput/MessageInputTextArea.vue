@@ -14,8 +14,10 @@
     @paste="onPaste"
   />
   <dropdown-suggester
+    ref="dropdownSuggesterRef"
     v-show="showSuggester"
     :position="position"
+    :current-index="currentCandidateIndex"
     :candidates="suggestedCandidates"
     @mousedown="onMousedown"
     @select="onSelect"
@@ -123,15 +125,20 @@ export default defineComponent({
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
+    const dropdownSuggesterRef = ref<{ $el: HTMLDivElement }>()
+    const suggesterRef = computed(() => dropdownSuggesterRef.value?.$el)
+
     const {
       onKeyUp: onKeyUpWordSuggester,
+      onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
       onMousedown,
       showSuggester,
       target,
       position,
-      suggestedCandidates
-    } = useWordSuggester(textareaRef, value)
+      suggestedCandidates,
+      currentCandidateIndex
+    } = useWordSuggester(textareaRef, value, suggesterRef)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -145,11 +152,13 @@ export default defineComponent({
       target,
       value,
       suggestedCandidates,
+      currentCandidateIndex,
       showSuggester
     )
 
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
+      onKeyDownWordSuggester(e)
       onKeyDownWordCompleter(e)
     }
     const onKeyUp = (e: KeyboardEvent) => {
@@ -171,6 +180,7 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       textareaAutosizeRef,
+      dropdownSuggesterRef,
       onFocus,
       onBlur,
       onMousedown,
@@ -178,7 +188,8 @@ export default defineComponent({
       onSelect,
       showSuggester,
       position,
-      suggestedCandidates
+      suggestedCandidates,
+      currentCandidateIndex
     }
   }
 })

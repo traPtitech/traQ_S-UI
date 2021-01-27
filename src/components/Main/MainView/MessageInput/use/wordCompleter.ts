@@ -20,6 +20,7 @@ const useWordCompleter = (
   target: Ref<Target>,
   value: WritableComputedRef<string>,
   suggestedCandidates: Ref<string[]>,
+  currentCandidateIndex: Ref<number>,
   showSuggester: Ref<boolean>
 ) => {
   const commitCompletion = async (word: string) => {
@@ -27,7 +28,6 @@ const useWordCompleter = (
       value.value.slice(0, target.value.begin) +
       word +
       value.value.slice(target.value.end)
-    showSuggester.value = false
     await nextTick()
     textareaRef.value?.setSelectionRange(
       target.value.begin + word.length,
@@ -39,11 +39,29 @@ const useWordCompleter = (
     if (!textareaRef.value) return
     if (suggestedCandidates.value.length === 0) return
     e.preventDefault()
-    const determined = getDeterminedCharacters(suggestedCandidates.value)
-    commitCompletion(determined)
+    if (suggestedCandidates.value.length === 1) {
+      commitCompletion(suggestedCandidates.value[0])
+      showSuggester.value = false
+      return
+    }
+    if (currentCandidateIndex.value === -1) {
+      const determined = getDeterminedCharacters(suggestedCandidates.value)
+      commitCompletion(determined)
+      if (determined === suggestedCandidates.value[0]) {
+        currentCandidateIndex.value++
+      }
+    } else {
+      commitCompletion(suggestedCandidates.value[currentCandidateIndex.value])
+    }
+    if (currentCandidateIndex.value === suggestedCandidates.value.length - 1) {
+      return
+    }
+    currentCandidateIndex.value++
   }
-  const onSelect = async (word: string) => {
-    commitCompletion(word)
+  const onSelect = async (index: number) => {
+    commitCompletion(suggestedCandidates.value[index])
+    currentCandidateIndex.value = -1
+    showSuggester.value = false
   }
   return { onKeyDown, onSelect }
 }
