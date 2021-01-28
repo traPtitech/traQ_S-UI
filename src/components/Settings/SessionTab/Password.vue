@@ -1,35 +1,37 @@
 <template>
-  <p v-if="showChangeLink">
-    パスワードの変更は
-    <a :href="changeLink" target="_blank">{{ changeName }}</a>
-    から可能です
-  </p>
-  <div v-else>
+  <div>
     <h3>パスワード変更</h3>
-    <form-input
-      v-model="state.old"
-      label="現在のパスワード"
-      type="password"
-      name="current-password"
-      autocomplete="current-password"
-      :class="$style.form"
-    />
-    <form-input
-      v-model="state.new"
-      label="新しいパスワード"
-      type="password"
-      name="new-password"
-      autocomplete="new-password"
-      :class="$style.form"
-    />
-    <div :class="$style.changeButton">
-      <form-button
-        label="変更"
-        :disabled="!isValid"
-        :loading="isChanging"
-        @click="onChangeClick"
+    <p v-if="showChangeLink">
+      パスワードの変更は
+      <a :href="changeLink" target="_blank">{{ changeName }}</a>
+      から可能です
+    </p>
+    <template v-else>
+      <form-input
+        v-model="state.old"
+        label="現在のパスワード"
+        type="password"
+        name="current-password"
+        autocomplete="current-password"
+        :class="$style.form"
       />
-    </div>
+      <form-input
+        v-model="state.new"
+        label="新しいパスワード"
+        type="password"
+        name="new-password"
+        autocomplete="new-password"
+        :class="$style.form"
+      />
+      <div :class="$style.changeButton">
+        <form-button
+          label="変更"
+          :disabled="!isValid"
+          :loading="isChanging"
+          @click="onChangeClick"
+        />
+      </div>
+    </template>
   </div>
 </template>
 

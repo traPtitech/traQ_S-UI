@@ -5,6 +5,7 @@ import store from '@/store'
 
 export type NavigationItemType =
   | 'profile'
+  | 'session'
   | 'browser'
   | 'qall'
   | 'stamp'
@@ -13,6 +14,7 @@ export type NavigationItemType =
 // TODO: 言語系リソースの置き場所
 export const navigationRouteNameTitleMap: Record<SettingsRouteName, string> = {
   settingsProfile: 'プロフィール',
+  settingsSession: 'セッション',
   settingsBrowser: 'ブラウザ',
   settingsQall: '通話 (Qall)',
   settingsStamp: 'スタンプ',
@@ -27,6 +29,11 @@ export const navigations: {
   {
     routeName: 'settingsProfile',
     iconName: 'user'
+  },
+  {
+    routeName: 'settingsSession',
+    iconName: 'key-chain',
+    iconMdi: true
   },
   {
     routeName: 'settingsBrowser',
