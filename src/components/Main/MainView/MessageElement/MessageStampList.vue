@@ -236,12 +236,12 @@ export default defineComponent({
 }
 
 .stampPickerOpener {
-  @include color-ui-tertiary;
   display: flex;
   height: 100%;
   align-items: center;
-  border: 2px solid $theme-ui-tertiary;
+  border: 2px solid $theme-ui-primary--06;
   border-radius: 4px;
+  color: $theme-ui-primary--06;
   cursor: pointer;
 }
 </style>
