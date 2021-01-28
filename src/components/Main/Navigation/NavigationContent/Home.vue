@@ -1,15 +1,11 @@
 <template>
   <div>
     <navigation-content-container
-      v-if="homeChannel"
+      v-if="homeChannelWithTree.length > 0"
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-list
-        :channels="[homeChannel]"
-        ignore-children
-        show-shortened-path
-      />
+      <channel-list :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
     <navigation-content-container
       v-if="channelsWithNotification.length !== 0"
@@ -50,6 +46,7 @@ import EmptyState from '@/components/UI/EmptyState.vue'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import { isDefined } from '@/lib/util/array'
+import { constructTree } from '@/lib/channelTree'
 
 export default defineComponent({
   name: 'Home',
@@ -59,10 +56,19 @@ export default defineComponent({
     NavigationContentContainer
   },
   setup() {
-    const homeChannel = computed(() =>
-      store.state.entities.channelsMap.get(
-        store.state.domain.me.detail?.homeChannel ?? ''
-      )
+    const homeChannelWithTree = computed(() =>
+      !store.state.domain.me.detail?.homeChannel
+        ? []
+        : constructTree(
+            {
+              id: '',
+              name: '',
+              parentId: null,
+              archived: false,
+              children: [store.state.domain.me.detail.homeChannel]
+            },
+            store.state.entities.channelsMap
+          )?.children?.filter(channel => !channel.archived) ?? []
     )
     const channelsWithNotification = computed(() =>
       [...store.state.domain.me.unreadChannelsMap.values()]
@@ -83,7 +89,7 @@ export default defineComponent({
     )
 
     return {
-      homeChannel,
+      homeChannelWithTree,
       topLevelChannels,
       channelsWithNotification,
       channelsWithRtc
