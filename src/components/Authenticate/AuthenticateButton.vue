@@ -2,7 +2,6 @@
   <button
     :class="$style.container"
     :disabled="$boolAttr(disabled)"
-    @click="$emit('click')"
     :data-type="type"
     :type="isSubmit ? 'submit' : 'button'"
   >
