@@ -2,6 +2,7 @@
   <section>
     <account :class="$style.element" />
     <password :class="$style.element" />
+    <tokens :class="$style.element" />
   </section>
 </template>
 
@@ -9,12 +10,14 @@
 import { defineComponent } from 'vue'
 import Account from '@/components/Settings/SessionTab/Account.vue'
 import Password from '@/components/Settings/SessionTab/Password.vue'
+import Tokens from '@/components/Settings/SessionTab/Tokens.vue'
 
 export default defineComponent({
   name: 'SessionTab',
   components: {
     Account,
-    Password
+    Password,
+    Tokens
   },
   setup() {
     return {}
