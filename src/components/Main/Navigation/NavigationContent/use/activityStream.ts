@@ -6,6 +6,7 @@ import apis from '@/lib/apis'
 import { messageMitt } from '@/store/entities/messages'
 import { ChannelId, MessageId } from '@/types/entity-ids'
 import { createSingleflight } from '@/lib/async'
+import { bothChannelsMapInitialFetchPromise } from '@/store/entities/promises'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -25,6 +26,9 @@ const useActivityStream = () => {
   const fetch = async () => {
     // 無駄な取得を減らすために保存されてる情報が復元されるのを待つ
     await originalStore.restored
+    // ログイン前に取得されるのを回避するために、チャンネル取得を待つ
+    // チャンネル取得である必要性はない
+    await bothChannelsMapInitialFetchPromise
 
     try {
       const [{ data: res }, shared] = await getActivityTimeline(
