@@ -77,12 +77,12 @@ export class TrieNode {
   }
 
   // 結果はヒットした順
-  search(str: string, pos = 0): string[] {
+  private _search(str: string, pos = 0): string[] {
     if (str.length === 0) {
       return []
     }
 
-    const k = [...str.toLocaleLowerCase()][pos]
+    const k = [...str][pos]
     const child = this.children[k]
     if (child === undefined) {
       return []
@@ -90,7 +90,11 @@ export class TrieNode {
     if (pos === str.length - 1) {
       return child.getAllWords(str)
     }
-    return child.search(str, pos + 1)
+    return child._search(str, pos + 1)
+  }
+
+  search(str: string, pos = 0): string[] {
+    return this._search(str.toLocaleLowerCase(), pos)
   }
 }
 
