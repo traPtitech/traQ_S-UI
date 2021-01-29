@@ -1,7 +1,12 @@
+interface ExtendedMediaTrackConstraints extends MediaTrackConstraints {
+  echoCancellationType?: 'system' | 'browser'
+}
+
 export const getUserAudio = async (deviceId?: string) => {
-  const baseAudioConstraint: MediaTrackConstraints = {
+  const baseAudioConstraint: ExtendedMediaTrackConstraints = {
     autoGainControl: true,
     echoCancellation: true,
+    echoCancellationType: 'system',
     noiseSuppression: true
   }
   const constraint: MediaStreamConstraints = deviceId
