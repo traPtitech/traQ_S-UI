@@ -95,6 +95,8 @@ const useWordSuggester = (
     if (target.value.divided || target.value.word.length < 3) {
       showSuggester.value = false
       currentCandidateIndex.value = -1
+      suggestedCandidates.value = []
+
       return
     }
     if (e.key === 'Tab') return
@@ -124,11 +126,11 @@ const useWordSuggester = (
       }
       currentCandidateIndex.value++
     }
-    if (currentCandidateIndex.value < 2) {
+    if (currentCandidateIndex.value < 3) {
       suggesterRef.value.scrollTop = 0
       return
     }
-    suggesterRef.value.scrollTop = 32 * currentCandidateIndex.value - 2
+    suggesterRef.value.scrollTop = 32 * currentCandidateIndex.value - 64
   }
   const onBlur = async () => {
     if (interactingWithList.value) {
@@ -137,6 +139,7 @@ const useWordSuggester = (
     }
     showSuggester.value = false
     currentCandidateIndex.value = -1
+    suggestedCandidates.value = []
   }
   const onMousedown = async () => {
     interactingWithList.value = true

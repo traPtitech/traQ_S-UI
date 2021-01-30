@@ -42,6 +42,8 @@ const useWordCompleter = (
     if (suggestedCandidates.value.length === 1) {
       commitCompletion(suggestedCandidates.value[0])
       showSuggester.value = false
+      suggestedCandidates.value = []
+      currentCandidateIndex.value = -1
       return
     }
     if (currentCandidateIndex.value === -1) {
@@ -60,8 +62,9 @@ const useWordCompleter = (
   }
   const onSelect = async (index: number) => {
     commitCompletion(suggestedCandidates.value[index])
-    currentCandidateIndex.value = -1
     showSuggester.value = false
+    suggestedCandidates.value = []
+    currentCandidateIndex.value = -1
   }
   return { onKeyDown, onSelect }
 }

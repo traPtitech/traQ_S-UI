@@ -16,11 +16,12 @@
   <dropdown-suggester
     ref="dropdownSuggesterRef"
     v-show="showSuggester"
-    :position="position"
+    :class="$style.suggester"
     :current-index="currentCandidateIndex"
     :candidates="suggestedCandidates"
     @mousedown="onMousedown"
     @select="onSelect"
+    :style="suggesterPosition"
   />
 </template>
 
@@ -156,6 +157,11 @@ export default defineComponent({
       showSuggester
     )
 
+    const suggesterPosition = computed(() => ({
+      top: position.value.top + 'px',
+      left: position.value.left + 60 + 'px'
+    }))
+
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
       onKeyDownWordSuggester(e)
@@ -187,7 +193,7 @@ export default defineComponent({
       onPaste,
       onSelect,
       showSuggester,
-      position,
+      suggesterPosition,
       suggestedCandidates,
       currentCandidateIndex
     }

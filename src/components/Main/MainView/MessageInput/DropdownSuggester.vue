@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="style">
+  <div :class="$style.container">
     <div
       :class="{
         [$style.item]: true,
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'DropdownSuggester',
@@ -29,10 +29,6 @@ export default defineComponent({
     currentIndex: {
       type: Number,
       default: -1
-    },
-    position: {
-      type: Object as PropType<{ top: number; left: number }>,
-      required: true
     }
   },
   emits: {
@@ -43,13 +39,7 @@ export default defineComponent({
       context.emit('select', index)
     }
 
-    const style = computed(() => ({
-      top: props.position.top + 'px',
-      left: props.position.left + 60 + 'px'
-    }))
-
     return {
-      style,
       onClick
     }
   }
