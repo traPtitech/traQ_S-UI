@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.element">
-    <h3>スタンプ新規登録</h3>
+    <h3 :class="$style.header">スタンプ新規登録</h3>
     <div :class="$style.content">
       <image-upload
         @input="onNewImgSet"
@@ -117,6 +117,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .element {
   margin: 24px 0;
 }

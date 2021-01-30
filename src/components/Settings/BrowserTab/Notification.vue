@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>通知: {{ status }}</h3>
+    <h3 :class="$style.header">通知: {{ status }}</h3>
     <div :class="$style.content">
       <form-button
         v-if="permission === 'default'"
@@ -51,6 +51,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .content {
   margin-left: 12px;
 }

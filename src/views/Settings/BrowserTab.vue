@@ -2,7 +2,7 @@
   <section>
     <notification :class="$style.element" />
     <div :class="$style.element">
-      <h3>起動時チャンネル設定</h3>
+      <h3 :class="$style.header">起動時チャンネル設定</h3>
       <div :class="$style.content">
         <div :class="$style.channel">
           <form-radio
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div :class="$style.element">
-      <h3>メッセージ送信スタイル</h3>
+      <h3 :class="$style.header">メッセージ送信スタイル</h3>
       <div :class="$style.content">
         <form-radio
           label="修飾キー+Enterで送信 / Enterで改行"
@@ -71,7 +71,7 @@
     </div>
     <div :class="$style.element">
       <div :class="$style.echo">
-        <h3>省エネモード</h3>
+        <h3 :class="$style.header">省エネモード</h3>
         <toggle v-model="state.ecoMode" :class="$style.toggle" />
       </div>
       <div :class="$style.content">
@@ -157,7 +157,7 @@ export default defineComponent({
 .element {
   margin: 24px 0;
 }
-h3 {
+.header {
   margin-bottom: 8px;
 }
 .sendWithModifierKey {

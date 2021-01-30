@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.element">
-    <h3>スタンプ編集</h3>
+    <h3 :class="$style.header">スタンプ編集</h3>
     <div :class="$style.content">
       <stamp
         v-for="stamp in myStamps"
@@ -53,6 +53,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .element {
   margin: 24px 0;
 }

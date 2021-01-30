@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>アカウント</h3>
+    <h3 :class="$style.header">アカウント</h3>
     <div :class="$style.content">
       <form-button
         label="ログアウト"
@@ -48,6 +48,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .content {
   margin-left: 12px;
 }

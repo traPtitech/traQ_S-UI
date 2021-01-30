@@ -3,7 +3,7 @@
     <new-stamp />
     <edit-stamp />
     <div :class="$style.element">
-      <h3>スタンプパレット</h3>
+      <h3 :class="$style.header">スタンプパレット</h3>
       <p title="4/1には実装されるよ" :class="$style.content">実装予定</p>
     </div>
   </section>
@@ -32,7 +32,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-h3 {
+.header {
   margin-bottom: 8px;
 }
 .element {

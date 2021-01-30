@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="$style.element">
-      <h3>アイコン</h3>
+      <h3 :class="$style.header">アイコン</h3>
       <user-icon
         :user-id="detail.id"
         :size="100"
@@ -17,7 +17,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3>表示名</h3>
+      <h3 :class="$style.header">表示名</h3>
       <form-input
         v-model="state.displayName"
         :class="$style.form"
@@ -25,7 +25,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3>ひとこと</h3>
+      <h3 :class="$style.header">ひとこと</h3>
       <form-text-area
         v-model="state.bio"
         :class="$style.form"
@@ -34,7 +34,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3>ホームチャンネル</h3>
+      <h3 :class="$style.header">ホームチャンネル</h3>
       <form-selector
         v-model="state.homeChannel"
         :options="channelOptions"
@@ -42,7 +42,7 @@
       />
     </div>
     <div :class="$style.element">
-      <h3>Twitter</h3>
+      <h3 :class="$style.header">Twitter</h3>
       <form-input
         v-model="state.twitterId"
         prefix="@"
@@ -213,7 +213,7 @@ export default defineComponent({
 .element {
   margin: 24px 0;
 }
-h3 {
+.header {
   margin-bottom: 8px;
 }
 .form {

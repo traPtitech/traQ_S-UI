@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>アクセスを許可しているアプリ</h3>
+    <h3 :class="$style.header">アクセスを許可しているアプリ</h3>
     <div :class="$style.content">
       <token-info
         v-for="token in tokensWithClientData"
@@ -83,6 +83,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .content {
   @include color-ui-secondary;
   @include background-secondary;

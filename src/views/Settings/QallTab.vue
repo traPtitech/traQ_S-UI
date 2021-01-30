@@ -2,7 +2,7 @@
   <section>
     <div :class="$style.element">
       <div :class="$style.enable">
-        <h3>RTC機能を有効にする</h3>
+        <h3 :class="$style.header">RTC機能を有効にする</h3>
         <toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
       <p :class="$style.content">
@@ -12,7 +12,7 @@
     </div>
     <template v-if="state.isEnabled">
       <div :class="$style.element">
-        <h3>マスターボリューム</h3>
+        <h3 :class="$style.header">マスターボリューム</h3>
         <div :class="[$style.content, $style.masterVolume]">
           <form-input
             :class="$style.masterVolumeRange"
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div :class="$style.element">
-        <h3>入力デバイス</h3>
+        <h3 :class="$style.header">入力デバイス</h3>
         <div :class="$style.content">
           <form-selector
             v-if="!fetchFailed && audioInputDevices.length > 0"
@@ -40,7 +40,7 @@
       </div>
       <div :class="$style.element">
         <div :class="$style.enable">
-          <h3>メッセージの読み上げ</h3>
+          <h3 :class="$style.header">メッセージの読み上げ</h3>
           <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
         </div>
         <p :class="$style.content">
@@ -48,7 +48,7 @@
         </p>
       </div>
       <div v-if="state.isTtsEnabled" :class="$style.element">
-        <h3>メッセージ読み上げの声</h3>
+        <h3 :class="$style.header">メッセージ読み上げの声</h3>
         <div :class="$style.content">
           <form-selector
             v-if="voiceOptions.length > 0"
@@ -209,7 +209,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-h3 {
+.header {
   margin-bottom: 8px;
 }
 .element {

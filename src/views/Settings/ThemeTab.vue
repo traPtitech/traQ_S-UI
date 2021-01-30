@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="$style.element">
-      <h3>テーマ切り替え</h3>
+      <h3 :class="$style.header">テーマ切り替え</h3>
       <div :class="$style.content">
         <form-radio
           label="自動切替 (OSのテーマに合わせる)"
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div :class="$style.element">
-      <h3>カスタムテーマ設定</h3>
+      <h3 :class="$style.header">カスタムテーマ設定</h3>
       <div :class="$style.content">
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
@@ -98,7 +98,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-h3 {
+.header {
   margin-bottom: 8px;
 }
 .element {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>パスワード変更</h3>
+    <h3 :class="$style.header">パスワード変更</h3>
     <p v-if="showChangeLink">
       パスワードの変更は
       <a :href="changeLink" target="_blank">{{ changeName }}</a>
@@ -104,6 +104,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .form {
   margin-left: 12px;
 }

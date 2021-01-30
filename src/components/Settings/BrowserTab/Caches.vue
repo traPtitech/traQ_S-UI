@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>キャッシュの削除</h3>
+    <h3 :class="$style.header">キャッシュの削除</h3>
     <div :class="$style.content">
       <form-button
         :class="$style.button"
@@ -81,6 +81,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.header {
+  margin-bottom: 8px;
+}
 .content {
   margin-left: 12px;
 }
