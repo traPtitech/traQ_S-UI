@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
     <messages-scroller
+      ref="scrollerEle"
       :message-ids="messageIds"
       :is-reached-end="isReachedEnd"
       :is-reached-latest="isReachedLatest"
@@ -17,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, shallowRef } from 'vue'
 import { ChannelId } from '@/types/entity-ids'
 import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '@/components/Main/MainView/MessageInput/MessageInput.vue'
@@ -37,6 +38,7 @@ export default defineComponent({
     MessageInput
   },
   setup(props) {
+    const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
     const {
       messageIds,
       isReachedEnd,
@@ -46,7 +48,7 @@ export default defineComponent({
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
       onLoadAroundMessagesRequest
-    } = useChannelMessageFetcher(props)
+    } = useChannelMessageFetcher(scrollerEle, props)
 
     const isArchived = computed(
       () =>
@@ -54,6 +56,7 @@ export default defineComponent({
     )
 
     return {
+      scrollerEle,
       messageIds,
       isReachedEnd,
       isReachedLatest,
