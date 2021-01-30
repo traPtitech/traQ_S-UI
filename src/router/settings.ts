@@ -4,6 +4,7 @@ import { RouteRecordRaw } from 'vue-router'
 const settingsRouteNamePrefix = 'settings'
 export type SettingsRouteName =
   | 'settingsProfile'
+  | 'settingsSession'
   | 'settingsBrowser'
   | 'settingsQall'
   | 'settingsStamp'
@@ -22,6 +23,8 @@ const pathByRouteName = (routeName: SettingsRouteName) => {
   switch (routeName) {
     case 'settingsProfile':
       return 'profile'
+    case 'settingsSession':
+      return 'session'
     case 'settingsBrowser':
       return 'browser'
     case 'settingsQall':
@@ -36,6 +39,10 @@ const pathByRouteName = (routeName: SettingsRouteName) => {
 const Profile = () =>
   import(
     /* webpackChunkName: "SettingsProfile" */ '@/views/Settings/ProfileTab.vue'
+  )
+const Session = () =>
+  import(
+    /* webpackChunkName: "SettingsSession" */ '@/views/Settings/SessionTab.vue'
   )
 const Browser = () =>
   import(
@@ -60,6 +67,7 @@ const createRoute = (name: SettingsRouteName, component: Component) => ({
 
 export const settingsRoutes: RouteRecordRaw[] = [
   createRoute('settingsProfile', Profile),
+  createRoute('settingsSession', Session),
   createRoute('settingsBrowser', Browser),
   createRoute('settingsQall', Qall),
   createRoute('settingsStamp', Stamp),

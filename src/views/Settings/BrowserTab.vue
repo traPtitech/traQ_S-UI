@@ -1,6 +1,5 @@
 <template>
   <section>
-    <account :class="$style.element" />
     <notification :class="$style.element" />
     <div :class="$style.element">
       <h3>起動時チャンネル設定</h3>
@@ -95,7 +94,6 @@ import FormSelector from '@/components/UI/FormSelector.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
-import Account from '@/components/Settings/BrowserTab/Account.vue'
 import Notification from '@/components/Settings/BrowserTab/Notification.vue'
 import Caches from '@/components/Settings/BrowserTab/Caches.vue'
 import useChannelPath from '@/use/channelPath'
@@ -145,7 +143,6 @@ export default defineComponent({
     }
   },
   components: {
-    Account,
     Notification,
     FormRadio,
     FormSelector,

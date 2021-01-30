@@ -58,7 +58,6 @@
         @click="onUpdateClick"
       />
     </div>
-    <password :class="$style.element" />
   </section>
 </template>
 
@@ -77,7 +76,6 @@ import FormInput from '@/components/UI/FormInput.vue'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 import { nullUuid } from '@/lib/util/uuid'
-import Password from '@/components/Settings/ProfileTab/Password.vue'
 import useChannelOptions from '@/use/channelOptions'
 import FormTextArea from '@/components/UI/FormTextArea.vue'
 import useMaxLength from '@/use/maxLength'
@@ -206,7 +204,6 @@ export default defineComponent({
     FormInput,
     FormSelector,
     FormButton,
-    Password,
     FormTextArea
   }
 })
