@@ -12,8 +12,10 @@ import {
 } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '@/lib/websocket'
+import useFetchLimit from '@/components/Main/MainView/MessagesScroller/use/fetchLimit'
 
-const fetchLimit = 20
+/** 一つのメッセージの最低の高さ (CSSに依存) */
+const MESSAGE_HEIGHT = 60
 
 type State = {
   loadedMessageLatestDate: Date | undefined
@@ -21,6 +23,7 @@ type State = {
 }
 
 const useChannelMessageFetcher = (
+  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
   props: {
     channelId: ChannelId
     entryMessageId?: MessageId
@@ -28,18 +31,20 @@ const useChannelMessageFetcher = (
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onReachedLatest = () => {}
 ) => {
+  const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const state: State = reactive({
     loadedMessageLatestDate: undefined,
     loadedMessageOldestDate: undefined
   })
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
+    await waitMounted
     const {
       messages,
       hasMore
     } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit,
+      limit: fetchLimit.value,
       order: 'desc',
       until: state.loadedMessageOldestDate
     })
@@ -65,12 +70,13 @@ const useChannelMessageFetcher = (
   const fetchLatterMessages = async (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
+    await waitMounted
     const {
       messages,
       hasMore
     } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit,
+      limit: fetchLimit.value,
       order: 'asc',
       since: state.loadedMessageLatestDate
     })
@@ -104,6 +110,7 @@ const useChannelMessageFetcher = (
     state.loadedMessageLatestDate = date
     state.loadedMessageOldestDate = date
 
+    await waitMounted
     const [formerMessageIds, latterMessageIds] = await Promise.all([
       fetchFormerMessages(isReachedEnd),
       fetchLatterMessages(isReachedLatest)
@@ -118,12 +125,13 @@ const useChannelMessageFetcher = (
   }
 
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
+    await waitMounted
     const {
       messages,
       hasMore
     } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
       channelId: props.channelId,
-      limit: fetchLimit,
+      limit: fetchLimit.value,
       order: 'desc',
       since: state.loadedMessageLatestDate
     })

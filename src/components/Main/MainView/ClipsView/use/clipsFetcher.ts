@@ -2,13 +2,19 @@ import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/m
 import store from '@/store'
 import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import { reactive, Ref, watch, onMounted, onActivated } from 'vue'
+import useFetchLimit from '@/components/Main/MainView/MessagesScroller/use/fetchLimit'
 
-const fetchLimit = 50
+/** 一つのメッセージの最低の高さ (CSSに依存) */
+const MESSAGE_HEIGHT = 80
 
-const useClipsFetcher = (props: {
-  clipFolderId: ClipFolderId
-  entryMessageId?: MessageId
-}) => {
+const useClipsFetcher = (
+  scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
+  props: {
+    clipFolderId: ClipFolderId
+    entryMessageId?: MessageId
+  }
+) => {
+  const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const state = reactive({
     nextLoadOffset: 0
   })
@@ -18,19 +24,20 @@ const useClipsFetcher = (props: {
   }
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
+    await waitMounted
     const {
       clips,
       hasMore
     } = await store.dispatch.domain.messagesView.fetchMessagesInClipFolder({
       folderId: props.clipFolderId,
-      limit: fetchLimit,
+      limit: fetchLimit.value,
       offset: state.nextLoadOffset
     })
 
     if (!hasMore) {
       isReachedEnd.value = true
     } else {
-      state.nextLoadOffset += fetchLimit
+      state.nextLoadOffset += fetchLimit.value
     }
 
     return clips.map(clip => clip.message.id)
