@@ -60,11 +60,11 @@ export default defineComponent({
       const res = await apis.getClients(true)
       clients.value = new Map(res.data.map(client => [client.id, client]))
     }
-    const revokeToken = async (token: string) => {
+    const revokeToken = async (tokenId: string) => {
       if (!window.confirm('本当にトークンを無効化しますか？')) return
       try {
-        await apis.revokeOAuth2Token({ token })
-        tokens.value = tokens.value.filter(t => t.id !== token)
+        await apis.revokeMyToken(tokenId)
+        tokens.value = tokens.value.filter(token => token.id !== tokenId)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e)
