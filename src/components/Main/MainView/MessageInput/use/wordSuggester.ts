@@ -143,14 +143,14 @@ const useWordSuggester = (
     currentCandidateIndex.value = -1
     suggestedCandidates.value = []
   }
-  const onMousedown = async () => {
+  const beforeSelect = async () => {
     interactingWithList.value = true
   }
   return {
     onKeyUp,
     onKeyDown,
     onBlur,
-    onMousedown,
+    beforeSelect,
     showSuggester,
     position,
     target,

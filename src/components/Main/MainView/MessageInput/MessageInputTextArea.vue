@@ -19,7 +19,7 @@
     :class="$style.suggester"
     :current-index="currentCandidateIndex"
     :candidates="suggestedCandidates"
-    @mousedown="onMousedown"
+    @mousedown="beforeSelect"
     @select="onSelect"
     :style="suggesterPosition"
   />
@@ -133,7 +133,7 @@ export default defineComponent({
       onKeyUp: onKeyUpWordSuggester,
       onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
-      onMousedown,
+      beforeSelect,
       showSuggester,
       target,
       position,
@@ -189,7 +189,7 @@ export default defineComponent({
       dropdownSuggesterRef,
       onFocus,
       onBlur,
-      onMousedown,
+      beforeSelect,
       onPaste,
       onSelect,
       showSuggester,
