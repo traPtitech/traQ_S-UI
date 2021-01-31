@@ -1,7 +1,7 @@
 <template>
   <main-view-header>
     <template #header>
-      <main-view-header-title :title="title" />
+      <main-view-header-title :class="$style.header" :title="title" />
     </template>
     <template #tools>
       <main-view-header-tools-item
@@ -41,4 +41,10 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.header {
+  overflow-x: auto;
+  word-break: keep-all;
+  white-space: nowrap;
+}
+</style>

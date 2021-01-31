@@ -2,6 +2,7 @@
   <main-view-header>
     <template #header>
       <main-view-header-title
+        :class="$style.header"
         :title="clipFolderName"
         icon-mdi
         icon-name="bookmark"
@@ -52,3 +53,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.header {
+  overflow-x: auto;
+  word-break: keep-all;
+  white-space: nowrap;
+}
+</style>
