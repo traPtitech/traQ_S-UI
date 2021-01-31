@@ -211,9 +211,8 @@ export const actions = defineActions({
     commit.addMessageId(payload.message.id)
   },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
-    commit.updateMessageId(payload.message.id)
   },
 
   setCurrentViewers(context, viewers: ChannelViewer[]) {
