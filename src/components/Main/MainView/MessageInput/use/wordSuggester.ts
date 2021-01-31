@@ -1,5 +1,5 @@
 import store from '@/store'
-import createTree from '@/lib/trieTree'
+import createTree, { TrieNode } from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ComputedRef, onBeforeMount, WritableComputedRef, ref } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
@@ -27,6 +27,34 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
   return { word, begin, end, divided }
 }
 
+const events: (keyof EntityEventMap)[] = [
+  'setUser',
+  'setUsers',
+  'deleteUser',
+  'setUserGroup',
+  'setUserGroups',
+  'deleteUserGroup',
+  'setStamp',
+  'setStamps',
+  'deleteStamp'
+]
+
+const constructTree = () =>
+  createTree(
+    // ユーザー名とグループ名に重複あり
+    // メンションはcase insensitiveでユーザー名を優先
+    // 重複を許す場合、優先するものから入れる
+    store.getters.entities.allUserNames.map(userName => '@' + userName),
+    store.getters.entities.allUserGroupNames.map(
+      userGroupName => '@' + userGroupName
+    ),
+    store.getters.entities.allStampNames.map(
+      stampName => ':' + stampName + ':'
+    ),
+    [...animeEffectSet].map(effectName => '.' + effectName),
+    [...sizeEffectSet].map(effectName => '.' + effectName)
+  )
+
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>,
@@ -44,37 +72,11 @@ const useWordSuggester = (
   const suggestedCandidates = ref<string[]>([])
   const currentCandidateIndex = ref(-1)
 
-  let tree: ReturnType<typeof createTree>
+  const tree = ref<TrieNode>(constructTree())
   const updateTree = () => {
-    tree = createTree(
-      // ユーザー名とグループ名に重複あり
-      // メンションはcase insensitiveでユーザー名を優先
-      // 重複を許す場合、優先するものから入れる
-      store.getters.entities.allUserNames.map(userName => '@' + userName),
-      store.getters.entities.allUserGroupNames.map(
-        userGroupName => '@' + userGroupName
-      ),
-      store.getters.entities.allStampNames.map(
-        stampName => ':' + stampName + ':'
-      ),
-      [...animeEffectSet].map(effectName => '.' + effectName),
-      [...sizeEffectSet].map(effectName => '.' + effectName)
-    )
+    tree.value = constructTree()
   }
 
-  updateTree()
-
-  const events: (keyof EntityEventMap)[] = [
-    'setUser',
-    'setUsers',
-    'deleteUser',
-    'setUserGroup',
-    'setUserGroups',
-    'deleteUserGroup',
-    'setStamp',
-    'setStamps',
-    'deleteStamp'
-  ]
   events.forEach(event => {
     entityMitt.on(event, () => {
       updateTree()
@@ -100,7 +102,7 @@ const useWordSuggester = (
       return
     }
     if (e.key === 'Tab') return
-    suggestedCandidates.value = tree.search(
+    suggestedCandidates.value = tree.value.search(
       target.value.word.replaceAll('＠', '@')
     )
     currentCandidateIndex.value = -1
