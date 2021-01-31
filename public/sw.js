@@ -33,7 +33,8 @@
       blacklist: [
         new RegExp('/pipeline'),
         new RegExp('/widget/'),
-        new RegExp('/api/')
+        new RegExp('/api/'),
+        new RegExp('/.well-known/')
       ]
     }
   )
