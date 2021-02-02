@@ -207,6 +207,7 @@ class traQRTCClient extends traQRTCClientBase {
     this.dispatchEvent(new Event('roomopen'))
   }
   private async handleRoomClose() {
+    // eslint-disable-next-line no-console
     console.log('[RTC] room closed')
     this.dispatchEvent(new Event('roomclose'))
   }
