@@ -3,7 +3,12 @@
     <span :class="$style.displayName">{{ state.displayName }}</span>
     <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
     <span :class="$style.name">@{{ state.name }}</span>
-    <span :class="$style.date">{{ state.date }}</span>
+    <span
+      :class="$style.date"
+      :title="createdAt !== updatedAt ? state.createdDate : undefined"
+    >
+      {{ state.date }}
+    </span>
     <icon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
@@ -18,7 +23,7 @@
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import store from '@/store'
-import { getDisplayDate } from '@/lib/date'
+import { getDisplayDate, getFullDayWithTimeString } from '@/lib/date'
 import GradeBadge from './GradeBadge.vue'
 import Icon from '@/components/UI/Icon.vue'
 
@@ -45,6 +50,9 @@ export default defineComponent({
       displayName: computed((): string => state.user?.displayName ?? 'unknown'),
       name: computed((): string => state.user?.name ?? 'unknown'),
       bot: computed((): boolean => state.user?.bot ?? false),
+      createdDate: computed(() =>
+        getFullDayWithTimeString(new Date(props.createdAt))
+      ),
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
     if (state.user === undefined) {
