@@ -13,16 +13,17 @@
     @blur="onBlur"
     @paste="onPaste"
   />
-  <dropdown-suggester
-    ref="dropdownSuggesterRef"
-    v-show="showSuggester"
-    :class="$style.suggester"
-    :current-index="currentCandidateIndex"
-    :candidates="suggestedCandidates"
-    @mousedown="beforeSelect"
-    @select="onSelect"
-    :style="suggesterPosition"
-  />
+  <teleport to="#dropdown-suggester-popup">
+    <dropdown-suggester
+      ref="dropdownSuggesterRef"
+      v-show="showSuggester"
+      :current-index="currentCandidateIndex"
+      :candidates="suggestedCandidates"
+      @mousedown="beforeSelect"
+      @select="onSelect"
+      :style="suggesterPosition"
+    />
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -157,10 +158,19 @@ export default defineComponent({
       showSuggester
     )
 
-    const suggesterPosition = computed(() => ({
-      top: position.value.top + 'px',
-      left: position.value.left + 60 + 'px'
-    }))
+    const suggesterPosition = computed(() => {
+      if (!textareaRef.value) return
+      return {
+        top:
+          textareaRef.value.getBoundingClientRect().top +
+          position.value.top +
+          'px',
+        left:
+          textareaRef.value.getBoundingClientRect().left +
+          position.value.left +
+          'px'
+      }
+    })
 
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
