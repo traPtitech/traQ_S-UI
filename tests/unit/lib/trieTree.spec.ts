@@ -36,7 +36,7 @@ describe('trieTree class', () => {
     tree.remove('@ryoha')
     expect(tree.search('@ryoha')).toEqual([])
   })
-  it('can hundle blank remove', () => {
+  it('can handle blank removal', () => {
     const before = tree
     tree.remove('')
     expect(before).toEqual(tree)
