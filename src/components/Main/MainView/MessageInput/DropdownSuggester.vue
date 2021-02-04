@@ -20,9 +20,9 @@
           {{ candidate.word }}
         </div>
       </template>
-      <template v-else :class="$style.name">
+      <div v-else :class="$style.name">
         {{ candidate.word }}
-      </template>
+      </div>
     </div>
   </div>
 </template>
