@@ -150,5 +150,10 @@ export default {
    * 大きなファイルサイズのファイルを送信した際に表示されるメッセージ
    * `%s`の部分には「画像」または「ファイル」が入る
    */
-  tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください'
+  tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
+  /**
+   * iframe埋め込みウィジェットのコピーボタンの有効化
+   * 同じドメインの/widget/以下にtraQ-Widgetがデプロイされていることが前提
+   */
+  showWidgetCopyButton: true
 } as const
