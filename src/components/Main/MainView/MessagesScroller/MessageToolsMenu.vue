@@ -27,6 +27,13 @@
     <span :class="$style.text" @click="withClose(copyLink)">
       リンクをコピー
     </span>
+    <span
+      v-if="showWidgetCopyButton"
+      :class="$style.text"
+      @click="withClose(copyEmbedLink)"
+    >
+      埋め込みリンクをコピー
+    </span>
     <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
     </span>
@@ -47,6 +54,9 @@ import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import useToastStore from '@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
+import config from '@/config'
+
+const { showWidgetCopyButton } = config
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()
@@ -117,6 +127,12 @@ const useCopy = (props: { messageId: MessageId }) => {
       navigator.clipboard.writeText(link)
     )
   }
+  const copyEmbedLink = async () => {
+    const link = `${embeddingOrigin}/widget?type=message&id=${props.messageId}`
+    execWithToast('コピーしました', 'コピーに失敗しました', () =>
+      navigator.clipboard.writeText(link)
+    )
+  }
   const copyMd = async () => {
     const content =
       store.state.entities.messages.messagesMap.get(props.messageId)?.content ??
@@ -125,7 +141,7 @@ const useCopy = (props: { messageId: MessageId }) => {
       navigator.clipboard.writeText(content)
     )
   }
-  return { copyLink, copyMd }
+  return { copyLink, copyEmbedLink, copyMd }
 }
 
 const useShowClipCreateModal = (props: { messageId: MessageId }) => {
@@ -160,7 +176,7 @@ export default defineComponent({
     )
     const isMinimum = computed(() => state.isMinimum)
 
-    const { copyLink, copyMd } = useCopy(props)
+    const { copyLink, copyEmbedLink, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
     const { showClipCreateModal } = useShowClipCreateModal(props)
@@ -170,12 +186,14 @@ export default defineComponent({
     }
 
     return {
+      showWidgetCopyButton,
       isPinned,
       isMine,
       isMinimum,
       addPinned,
       removePinned,
       copyLink,
+      copyEmbedLink,
       copyMd,
       editMessage,
       deleteMessage,
