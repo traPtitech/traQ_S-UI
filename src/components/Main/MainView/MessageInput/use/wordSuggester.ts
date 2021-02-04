@@ -57,8 +57,7 @@ const constructTree = () =>
 
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: WritableComputedRef<string>,
-  suggesterRef: ComputedRef<HTMLDivElement | undefined>
+  value: WritableComputedRef<string>
 ) => {
   const showSuggester = ref(false)
   const interactingWithList = ref(false)
@@ -113,7 +112,7 @@ const useWordSuggester = (
     showSuggester.value = true
   }
   const onKeyDown = (e: KeyboardEvent) => {
-    if (!showSuggester.value || !suggesterRef.value) return
+    if (!showSuggester.value) return
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       if (selectedCandidateIndex.value <= 0) {
@@ -127,11 +126,6 @@ const useWordSuggester = (
       }
       selectedCandidateIndex.value++
     }
-    if (selectedCandidateIndex.value < 3) {
-      suggesterRef.value.scrollTop = 0
-      return
-    }
-    suggesterRef.value.scrollTop = 32 * selectedCandidateIndex.value - 64
   }
   const onBlur = async () => {
     if (interactingWithList.value) {

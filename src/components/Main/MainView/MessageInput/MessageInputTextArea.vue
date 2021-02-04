@@ -13,17 +13,14 @@
     @blur="onBlur"
     @paste="onPaste"
   />
-  <teleport to="#dropdown-suggester-popup">
-    <dropdown-suggester
-      ref="dropdownSuggesterRef"
-      v-show="showSuggester"
-      :selected-index="selectedCandidateIndex"
-      :candidates="suggestedCandidates"
-      @mousedown="beforeSelect"
-      @select="onSelect"
-      :style="suggesterPosition"
-    />
-  </teleport>
+  <dropdown-suggester
+    :is-show="showSuggester"
+    :position="suggesterPosition"
+    :selected-index="selectedCandidateIndex"
+    :candidates="suggestedCandidates"
+    @mousedown="beforeSelect"
+    @select="onSelect"
+  />
 </template>
 
 <script lang="ts">
@@ -127,9 +124,6 @@ export default defineComponent({
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
-    const dropdownSuggesterRef = ref<{ $el: HTMLDivElement }>()
-    const suggesterRef = computed(() => dropdownSuggesterRef.value?.$el)
-
     const {
       onKeyUp: onKeyUpWordSuggester,
       onKeyDown: onKeyDownWordSuggester,
@@ -140,7 +134,7 @@ export default defineComponent({
       position,
       suggestedCandidates,
       selectedCandidateIndex
-    } = useWordSuggester(textareaRef, value, suggesterRef)
+    } = useWordSuggester(textareaRef, value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
 
@@ -161,14 +155,9 @@ export default defineComponent({
     const suggesterPosition = computed(() => {
       if (!textareaRef.value) return
       return {
-        top:
-          textareaRef.value.getBoundingClientRect().top +
-          position.value.top +
-          'px',
+        top: textareaRef.value.getBoundingClientRect().top + position.value.top,
         left:
-          textareaRef.value.getBoundingClientRect().left +
-          position.value.left +
-          'px'
+          textareaRef.value.getBoundingClientRect().left + position.value.left
       }
     })
 
@@ -196,7 +185,6 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       textareaAutosizeRef,
-      dropdownSuggesterRef,
       onFocus,
       onBlur,
       beforeSelect,
