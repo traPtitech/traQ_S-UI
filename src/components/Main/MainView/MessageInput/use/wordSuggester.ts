@@ -70,7 +70,7 @@ const useWordSuggester = (
     divided: false
   })
   const suggestedCandidates = ref<string[]>([])
-  const currentCandidateIndex = ref(-1)
+  const selectedCandidateIndex = ref(-1)
 
   const tree = ref<TrieNode>(constructTree())
   const updateTree = () => {
@@ -96,16 +96,15 @@ const useWordSuggester = (
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
       showSuggester.value = false
-      currentCandidateIndex.value = -1
+      selectedCandidateIndex.value = -1
       suggestedCandidates.value = []
-
       return
     }
     if (e.key === 'Tab') return
     suggestedCandidates.value = tree.value.search(
       target.value.word.replaceAll('＠', '@')
     )
-    currentCandidateIndex.value = -1
+    selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
       showSuggester.value = false
       return
@@ -117,22 +116,22 @@ const useWordSuggester = (
     if (!showSuggester.value || !suggesterRef.value) return
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      if (currentCandidateIndex.value <= 0) {
-        currentCandidateIndex.value = suggestedCandidates.value.length - 1
+      if (selectedCandidateIndex.value <= 0) {
+        selectedCandidateIndex.value = suggestedCandidates.value.length
       }
-      currentCandidateIndex.value--
+      selectedCandidateIndex.value--
     } else if (e.key === 'ArrowDown') {
       e.preventDefault()
-      if (currentCandidateIndex.value > suggestedCandidates.value.length - 2) {
-        currentCandidateIndex.value = 0
+      if (selectedCandidateIndex.value > suggestedCandidates.value.length - 2) {
+        selectedCandidateIndex.value = -1
       }
-      currentCandidateIndex.value++
+      selectedCandidateIndex.value++
     }
-    if (currentCandidateIndex.value < 3) {
+    if (selectedCandidateIndex.value < 3) {
       suggesterRef.value.scrollTop = 0
       return
     }
-    suggesterRef.value.scrollTop = 32 * currentCandidateIndex.value - 64
+    suggesterRef.value.scrollTop = 32 * selectedCandidateIndex.value - 64
   }
   const onBlur = async () => {
     if (interactingWithList.value) {
@@ -140,7 +139,7 @@ const useWordSuggester = (
       return
     }
     showSuggester.value = false
-    currentCandidateIndex.value = -1
+    selectedCandidateIndex.value = -1
     suggestedCandidates.value = []
   }
   const beforeSelect = async () => {
@@ -155,7 +154,7 @@ const useWordSuggester = (
     position,
     target,
     suggestedCandidates,
-    currentCandidateIndex
+    selectedCandidateIndex
   }
 }
 

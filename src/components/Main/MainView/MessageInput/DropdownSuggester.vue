@@ -3,7 +3,7 @@
     <div
       :class="{
         [$style.item]: true,
-        [$style.selected]: index === currentIndex
+        [$style.selected]: index === selectedIndex
       }"
       v-for="(candidate, index) in candidatesWithId"
       :key="candidate"
@@ -44,7 +44,7 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       default: []
     },
-    currentIndex: {
+    selectedIndex: {
       type: Number,
       default: -1
     }
@@ -55,7 +55,7 @@ export default defineComponent({
   setup(props, context) {
     const candidatesWithId = computed(() =>
       props.candidates.map(word => {
-        if ([...word][0] !== '@')
+        if (!word.startsWith('@'))
           return {
             isUser: false,
             word,
@@ -109,7 +109,6 @@ export default defineComponent({
   padding: 4px;
   cursor: pointer;
   &.selected,
-  &:first-child,
   &:hover {
     background-color: $theme-background-secondary;
     font-weight: bold;

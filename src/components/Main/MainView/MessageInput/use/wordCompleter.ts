@@ -20,7 +20,7 @@ const useWordCompleter = (
   target: Ref<Target>,
   value: WritableComputedRef<string>,
   suggestedCandidates: Ref<string[]>,
-  currentCandidateIndex: Ref<number>,
+  selectedCandidateIndex: Ref<number>,
   showSuggester: Ref<boolean>
 ) => {
   const commitCompletion = async (word: string) => {
@@ -43,28 +43,28 @@ const useWordCompleter = (
       commitCompletion(suggestedCandidates.value[0])
       showSuggester.value = false
       suggestedCandidates.value = []
-      currentCandidateIndex.value = -1
+      selectedCandidateIndex.value = -1
       return
     }
-    if (currentCandidateIndex.value === -1) {
+    if (selectedCandidateIndex.value === -1) {
       const determined = getDeterminedCharacters(suggestedCandidates.value)
       commitCompletion(determined)
       if (determined === suggestedCandidates.value[0]) {
-        currentCandidateIndex.value++
+        selectedCandidateIndex.value++
       }
     } else {
-      commitCompletion(suggestedCandidates.value[currentCandidateIndex.value])
+      commitCompletion(suggestedCandidates.value[selectedCandidateIndex.value])
     }
-    if (currentCandidateIndex.value === suggestedCandidates.value.length - 1) {
+    if (selectedCandidateIndex.value === suggestedCandidates.value.length - 1) {
       return
     }
-    currentCandidateIndex.value++
+    selectedCandidateIndex.value++
   }
   const onSelect = async (index: number) => {
     commitCompletion(suggestedCandidates.value[index])
     showSuggester.value = false
     suggestedCandidates.value = []
-    currentCandidateIndex.value = -1
+    selectedCandidateIndex.value = -1
   }
   return { onKeyDown, onSelect }
 }
