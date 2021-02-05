@@ -10,14 +10,10 @@
         :ref="setItemRef"
         :key="candidate"
         @click="onClick(index)"
+        @mousedown="onMousedown"
       >
         <template v-if="candidate.isUser">
-          <user-icon :user-id="candidate.userId" :size="24" />
-          <online-indicator
-            :class="$style.indicator"
-            :user-id="candidate.userId"
-            :size="8"
-          />
+          <dropdown-suggester-user-icon :user-id="candidate.userId" />
           <div :class="$style.name">
             {{ candidate.word }}
           </div>
@@ -33,14 +29,12 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, watch, onBeforeUpdate } from 'vue'
 import store from '@/store'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
+import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 
 export default defineComponent({
   name: 'DropdownSuggester',
   components: {
-    UserIcon,
-    OnlineIndicator
+    DropdownSuggesterUserIcon
   },
   props: {
     isShow: {
@@ -61,14 +55,14 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (index: number) => true
+    select: (index: number) => true,
+    mousedown: () => true
   },
   setup(props, context) {
     const styledPosition = computed(() => ({
       top: props.position?.top + 'px',
       left: props.position?.left + 'px'
     }))
-
     let itemRefs: HTMLDivElement[] = []
     const setItemRef = (el: HTMLDivElement) => {
       itemRefs.push(el)
@@ -83,7 +77,6 @@ export default defineComponent({
         itemRefs[i]?.scrollIntoView()
       }
     )
-
     const candidatesWithId = computed(() =>
       props.candidates.map(word => {
         if (!word.startsWith('@'))
@@ -108,7 +101,9 @@ export default defineComponent({
         }
       })
     )
-
+    const onMousedown = () => {
+      context.emit('mousedown')
+    }
     const onClick = (index: number) => {
       context.emit('select', index)
     }
@@ -117,6 +112,7 @@ export default defineComponent({
       setItemRef,
       styledPosition,
       candidatesWithId,
+      onMousedown,
       onClick
     }
   }
@@ -146,9 +142,6 @@ export default defineComponent({
     background-color: $theme-background-secondary;
     font-weight: bold;
   }
-}
-.indicator {
-  flex-shrink: 0;
 }
 .name {
   margin-left: 4px;
