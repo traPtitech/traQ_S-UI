@@ -1,13 +1,15 @@
-import { Apis } from '@traptitech/traq'
+import { Apis, Configuration } from '@traptitech/traq'
 import { FileId } from '@/types/entity-ids'
 import DEV_SERVER from '@/lib/env/devServer'
 
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'
 
-const apis = new Apis({
-  basePath: BASE_PATH
-})
+const apis = new Apis(
+  new Configuration({
+    basePath: BASE_PATH
+  })
+)
 
 export const buildFilePath = (fileId: FileId) => `${BASE_PATH}/files/${fileId}`
 
