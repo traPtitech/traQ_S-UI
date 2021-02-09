@@ -30,9 +30,9 @@
     <span
       v-if="showWidgetCopyButton"
       :class="$style.text"
-      @click="withClose(copyEmbedLink)"
+      @click="withClose(copyEmbedded)"
     >
-      埋め込みリンクをコピー
+      メッセージを埋め込む
     </span>
     <span :class="$style.text" @click="withClose(copyMd)">
       Markdownをコピー
@@ -127,8 +127,8 @@ const useCopy = (props: { messageId: MessageId }) => {
       navigator.clipboard.writeText(link)
     )
   }
-  const copyEmbedLink = async () => {
-    const link = `${embeddingOrigin}/widget?type=message&id=${props.messageId}`
+  const copyEmbedded = async () => {
+    const link = `<iframe src="${embeddingOrigin}/widget/?type=message&id=${props.messageId}" scrolling="no" frameborder="no" width="600"></iframe>`
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
       navigator.clipboard.writeText(link)
     )
@@ -141,7 +141,7 @@ const useCopy = (props: { messageId: MessageId }) => {
       navigator.clipboard.writeText(content)
     )
   }
-  return { copyLink, copyEmbedLink, copyMd }
+  return { copyLink, copyEmbedded, copyMd }
 }
 
 const useShowClipCreateModal = (props: { messageId: MessageId }) => {
@@ -176,7 +176,7 @@ export default defineComponent({
     )
     const isMinimum = computed(() => state.isMinimum)
 
-    const { copyLink, copyEmbedLink, copyMd } = useCopy(props)
+    const { copyLink, copyEmbedded, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
     const { showClipCreateModal } = useShowClipCreateModal(props)
@@ -193,7 +193,7 @@ export default defineComponent({
       addPinned,
       removePinned,
       copyLink,
-      copyEmbedLink,
+      copyEmbedded,
       copyMd,
       editMessage,
       deleteMessage,
