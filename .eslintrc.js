@@ -31,8 +31,8 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-unused-vars': 'off',
-    'unused-imports/no-unused-imports-ts': 'warn',
-    'unused-imports/no-unused-vars-ts': 'off',
+    'unused-imports/no-unused-imports': 'warn',
+    'unused-imports/no-unused-vars': 'off',
     'vue/custom-event-name-casing': ['error', 'camelCase'],
     // TODO: 消す
     'vue/require-default-prop': 'off',

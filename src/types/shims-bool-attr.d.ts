@@ -1,4 +1,4 @@
-// eslint-disable-next-line unused-imports/no-unused-imports-ts
+// eslint-disable-next-line unused-imports/no-unused-imports
 import { ComponentCustomProperties } from 'vue'
 import type { $boolAttr } from '@/bool-attr'
 
