@@ -28,7 +28,7 @@
     "dequal": "^2.0.2",
     "direct-vuex": "^0.12.1",
     "firebase": "^8.2.6",
-    "highlight.js": "^10.5.0",
+    "highlight.js": "^10.6.0",
     "idb-keyval": "^5.0.2",
     "klona": "^2.0.4",
     "mitt": "^2.1.0",
