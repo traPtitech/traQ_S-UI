@@ -74,7 +74,10 @@ export default defineComponent({
       () => props.selectedIndex,
       i => {
         if (i === -1) return
-        itemRefs[i]?.scrollIntoView()
+        itemRefs[i]?.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center'
+        })
       }
     )
     const candidatesWithId = computed(() =>
