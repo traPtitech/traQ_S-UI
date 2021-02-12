@@ -22,8 +22,14 @@
           @click="onClick(index)"
           @mousedown="onMousedown"
         >
-          <template v-if="candidate.isUser">
-            <dropdown-suggester-user-icon :user-id="candidate.userId" />
+          <template v-if="candidate.type === 'user'">
+            <dropdown-suggester-user-icon :user-id="candidate.id" />
+            <div :class="$style.name">
+              {{ candidate.word }}
+            </div>
+          </template>
+          <template v-if="candidate.type === 'stamp'">
+            <dropdown-suggester-stamp-preview :stamp-id="candidate.id" />
             <div :class="$style.name">
               {{ candidate.word }}
             </div>
@@ -41,11 +47,13 @@
 import { defineComponent, computed, PropType, watch, onBeforeUpdate } from 'vue'
 import store from '@/store'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
+import DropdownSuggesterStampPreview from './DropdownSuggesterStampPreview.vue'
 
 export default defineComponent({
   name: 'DropdownSuggester',
   components: {
-    DropdownSuggesterUserIcon
+    DropdownSuggesterUserIcon,
+    DropdownSuggesterStampPreview
   },
   props: {
     isShow: {
@@ -105,25 +113,31 @@ export default defineComponent({
     )
     const candidatesWithId = computed(() =>
       props.candidates.map(word => {
-        if (!word.startsWith('@'))
+        if (word.startsWith('.')) {
           return {
-            isUser: false,
+            type: 'stamp-effect',
             word,
-            userId: undefined
+            id: undefined
           }
-        const userId = store.getters.entities.userByName(
-          [...word].slice(1).join('')
-        )?.id
-        if (!userId)
-          return {
-            isUser: false,
-            word,
-            userId: undefined
+        }
+        if (word.startsWith('@')) {
+          const userId = store.getters.entities.userByName(
+            [...word].slice(1).join('')
+          )?.id
+          if (!userId) {
+            return {
+              type: 'group',
+              word,
+              id: undefined
+            }
           }
-        return {
-          isUser: true,
-          word,
-          userId
+          return { type: 'user', word, id: userId }
+        }
+        if (word.startsWith(':')) {
+          const stampId = store.getters.entities.stampByName(
+            [...word].slice(1).join('')
+          )?.id
+          return { type: 'stamp', word, id: stampId }
         }
       })
     )
@@ -169,7 +183,7 @@ export default defineComponent({
 }
 .scroll {
   overflow-y: scroll;
-  height: 112px;
+  max-height: 144px;
 }
 .item {
   display: flex;
