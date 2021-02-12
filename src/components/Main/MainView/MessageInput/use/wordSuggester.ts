@@ -62,9 +62,7 @@ const constructTree = () =>
     store.getters.entities.allUserGroupNames.map(
       userGroupName => '@' + userGroupName
     ),
-    store.getters.entities.allStampNames.map(
-      stampName => ':' + stampName + ':'
-    ),
+    store.getters.entities.allStampNames.map(stampName => ':' + stampName),
     [...animeEffectSet].map(effectName => '.' + effectName),
     [...sizeEffectSet].map(effectName => '.' + effectName)
   )
