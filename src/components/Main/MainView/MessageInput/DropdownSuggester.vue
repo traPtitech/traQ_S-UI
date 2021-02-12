@@ -2,24 +2,35 @@
   <teleport to="#dropdown-suggester-popup">
     <div v-show="isShow" :class="$style.container" :style="styledPosition">
       <div
+        :ref="determinedRef"
         :class="{
-          [$style.item]: true,
-          [$style.selected]: index === selectedIndex
+          [$style.determined]: true,
+          [$style.selected]: -1 === selectedIndex
         }"
-        v-for="(candidate, index) in candidatesWithId"
-        :ref="setItemRef"
-        :key="candidate"
-        @click="onClick(index)"
-        @mousedown="onMousedown"
       >
-        <template v-if="candidate.isUser">
-          <dropdown-suggester-user-icon :user-id="candidate.userId" />
-          <div :class="$style.name">
+        {{ determined }}
+      </div>
+      <div :class="$style.scroll">
+        <div
+          :class="{
+            [$style.item]: true,
+            [$style.selected]: index === selectedIndex
+          }"
+          v-for="(candidate, index) in candidatesWithId"
+          :ref="setItemRef"
+          :key="candidate"
+          @click="onClick(index)"
+          @mousedown="onMousedown"
+        >
+          <template v-if="candidate.isUser">
+            <dropdown-suggester-user-icon :user-id="candidate.userId" />
+            <div :class="$style.name">
+              {{ candidate.word }}
+            </div>
+          </template>
+          <div v-else :class="$style.name">
             {{ candidate.word }}
           </div>
-        </template>
-        <div v-else :class="$style.name">
-          {{ candidate.word }}
         </div>
       </div>
     </div>
@@ -52,6 +63,10 @@ export default defineComponent({
     selectedIndex: {
       type: Number,
       default: -1
+    },
+    determined: {
+      type: String,
+      default: ''
     }
   },
   emits: {
@@ -67,16 +82,24 @@ export default defineComponent({
     const setItemRef = (el: HTMLDivElement) => {
       itemRefs.push(el)
     }
+    let determinedRef: HTMLDivElement | undefined = undefined
     onBeforeUpdate(() => {
       itemRefs = []
+      determinedRef = undefined
     })
     watch(
       () => props.selectedIndex,
       i => {
-        if (i === -1) return
+        if (i === -1) {
+          determinedRef?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          })
+          return
+        }
         itemRefs[i]?.scrollIntoView({
           behavior: 'smooth',
-          inline: 'center'
+          block: 'center'
         })
       }
     )
@@ -113,6 +136,7 @@ export default defineComponent({
 
     return {
       setItemRef,
+      determinedRef,
       styledPosition,
       candidatesWithId,
       onMousedown,
@@ -128,13 +152,24 @@ export default defineComponent({
   position: absolute;
   background: $theme-background-primary;
   width: 240px;
-  max-height: 160px;
   transform: translateY(-100%);
   border: solid 2px $theme-background-secondary;
   border-radius: 4px;
-  overflow-y: scroll;
   filter: $common-drop-shadow-default;
   z-index: $z-index-word-suggester;
+}
+.determined {
+  padding: 4px;
+  border-bottom: 2px solid $theme-background-secondary;
+  &.selected,
+  &:hover {
+    background-color: $theme-background-secondary;
+    font-weight: bold;
+  }
+}
+.scroll {
+  overflow-y: scroll;
+  height: 112px;
 }
 .item {
   display: flex;

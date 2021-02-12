@@ -16,8 +16,9 @@
   <dropdown-suggester
     :is-show="showSuggester"
     :position="suggesterPosition"
-    :selected-index="selectedCandidateIndex"
     :candidates="suggestedCandidates"
+    :selected-index="selectedCandidateIndex"
+    :determined="determined"
     @mousedown="beforeSelect"
     @select="onSelect"
   />
@@ -133,7 +134,8 @@ export default defineComponent({
       target,
       position,
       suggestedCandidates,
-      selectedCandidateIndex
+      selectedCandidateIndex,
+      determined
     } = useWordSuggester(textareaRef, value)
 
     const { insertLineBreak } = useLineBreak(props, textareaRef, context)
@@ -149,6 +151,7 @@ export default defineComponent({
       value,
       suggestedCandidates,
       selectedCandidateIndex,
+      determined,
       showSuggester
     )
 
@@ -193,7 +196,8 @@ export default defineComponent({
       showSuggester,
       suggesterPosition,
       suggestedCandidates,
-      selectedCandidateIndex
+      selectedCandidateIndex,
+      determined
     }
   }
 })

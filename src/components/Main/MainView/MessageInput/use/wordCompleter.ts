@@ -1,28 +1,22 @@
 import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
 import { Target } from './wordSuggester'
 
-const getDeterminedCharacters = (candidates: string[]) => {
-  const minLength = Math.min(...candidates.map(c => c.length))
-  const determined: string[] = []
-  for (let i = 0; i < minLength; i++) {
-    determined[i] = [...candidates[0]][i]
-    for (const candidate of candidates) {
-      if (determined[i] !== [...candidate][i]) {
-        return determined.slice(0, determined.length - 1).join('')
-      }
-    }
-  }
-  return determined.join('')
-}
-
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   target: Ref<Target>,
   value: WritableComputedRef<string>,
   suggestedCandidates: Ref<string[]>,
   selectedCandidateIndex: Ref<number>,
+  determined: Ref<string>,
   showSuggester: Ref<boolean>
 ) => {
+  const resetRefs = () => {
+    showSuggester.value = false
+    suggestedCandidates.value = []
+    selectedCandidateIndex.value = -1
+    determined.value = ''
+  }
+
   const commitCompletion = async (word: string) => {
     value.value =
       value.value.slice(0, target.value.begin) +
@@ -41,19 +35,21 @@ const useWordCompleter = (
     e.preventDefault()
     if (suggestedCandidates.value.length === 1) {
       commitCompletion(suggestedCandidates.value[0])
-      showSuggester.value = false
-      suggestedCandidates.value = []
-      selectedCandidateIndex.value = -1
+      target.value.end = target.value.begin + suggestedCandidates.value.length
+      resetRefs()
       return
     }
     if (selectedCandidateIndex.value === -1) {
-      const determined = getDeterminedCharacters(suggestedCandidates.value)
-      commitCompletion(determined)
-      if (determined === suggestedCandidates.value[0]) {
+      commitCompletion(determined.value)
+      target.value.end = target.value.begin + determined.value.length
+      if (determined.value === suggestedCandidates.value[0]) {
         selectedCandidateIndex.value++
       }
     } else {
       commitCompletion(suggestedCandidates.value[selectedCandidateIndex.value])
+      target.value.end =
+        target.value.begin +
+        suggestedCandidates.value[selectedCandidateIndex.value].length
     }
     if (selectedCandidateIndex.value === suggestedCandidates.value.length - 1) {
       selectedCandidateIndex.value = 0
@@ -63,9 +59,7 @@ const useWordCompleter = (
   }
   const onSelect = async (index: number) => {
     commitCompletion(suggestedCandidates.value[index])
-    showSuggester.value = false
-    suggestedCandidates.value = []
-    selectedCandidateIndex.value = -1
+    resetRefs()
   }
   return { onKeyDown, onSelect }
 }

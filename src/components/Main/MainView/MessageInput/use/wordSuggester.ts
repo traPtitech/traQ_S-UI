@@ -27,6 +27,20 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
   return { word, begin, end, divided }
 }
 
+export const getDeterminedCharacters = (candidates: string[]) => {
+  const minLength = Math.min(...candidates.map(c => c.length))
+  const determined: string[] = []
+  for (let i = 0; i < minLength; i++) {
+    determined[i] = [...candidates[0]][i]
+    for (const candidate of candidates) {
+      if (determined[i] !== [...candidate][i]) {
+        return determined.slice(0, determined.length - 1).join('')
+      }
+    }
+  }
+  return determined.join('')
+}
+
 const events: (keyof EntityEventMap)[] = [
   'setUser',
   'setUsers',
@@ -70,6 +84,7 @@ const useWordSuggester = (
   })
   const suggestedCandidates = ref<string[]>([])
   const selectedCandidateIndex = ref(-1)
+  const determined = ref('')
 
   const tree = ref<TrieNode>(constructTree())
   const updateTree = () => {
@@ -89,28 +104,13 @@ const useWordSuggester = (
     })
   })
 
-  const onKeyUp = async (e: KeyboardEvent) => {
-    if (!textareaRef.value) return
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
-    target.value = getCurrentWord(textareaRef.value, value.value)
-    if (target.value.divided || target.value.word.length < 3) {
-      showSuggester.value = false
-      selectedCandidateIndex.value = -1
-      suggestedCandidates.value = []
-      return
-    }
-    if (e.key === 'Tab') return
-    suggestedCandidates.value = tree.value.search(
-      target.value.word.replaceAll('＠', '@')
-    )
+  const resetRefs = () => {
+    showSuggester.value = false
+    suggestedCandidates.value = []
     selectedCandidateIndex.value = -1
-    if (suggestedCandidates.value.length === 0) {
-      showSuggester.value = false
-      return
-    }
-    position.value = getCaretPosition(textareaRef.value, target.value.begin)
-    showSuggester.value = true
+    determined.value = ''
   }
+
   const onKeyDown = (e: KeyboardEvent) => {
     if (!showSuggester.value) return
     if (e.key === 'ArrowUp') {
@@ -127,28 +127,51 @@ const useWordSuggester = (
       selectedCandidateIndex.value++
     }
   }
+  const onKeyUp = async (e: KeyboardEvent) => {
+    if (!textareaRef.value) return
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
+    target.value = getCurrentWord(textareaRef.value, value.value)
+    if (target.value.divided || target.value.word.length < 3) {
+      resetRefs()
+      return
+    }
+    if (e.key === 'Tab') return
+    suggestedCandidates.value = tree.value.search(
+      target.value.word.replaceAll('＠', '@')
+    )
+    determined.value = getDeterminedCharacters(suggestedCandidates.value)
+
+    selectedCandidateIndex.value = -1
+    if (suggestedCandidates.value.length === 0) {
+      showSuggester.value = false
+      return
+    }
+    position.value = getCaretPosition(textareaRef.value, target.value.begin)
+    showSuggester.value = true
+  }
+
+  const beforeSelect = async () => {
+    interactingWithList.value = true
+  }
   const onBlur = async () => {
     if (interactingWithList.value) {
       interactingWithList.value = false
       return
     }
-    showSuggester.value = false
-    selectedCandidateIndex.value = -1
-    suggestedCandidates.value = []
+    resetRefs()
   }
-  const beforeSelect = async () => {
-    interactingWithList.value = true
-  }
+
   return {
-    onKeyUp,
     onKeyDown,
-    onBlur,
+    onKeyUp,
     beforeSelect,
+    onBlur,
     showSuggester,
     position,
     target,
     suggestedCandidates,
-    selectedCandidateIndex
+    selectedCandidateIndex,
+    determined
   }
 }
 
