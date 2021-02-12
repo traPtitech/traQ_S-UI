@@ -56,6 +56,7 @@ const useWordCompleter = (
       commitCompletion(suggestedCandidates.value[selectedCandidateIndex.value])
     }
     if (selectedCandidateIndex.value === suggestedCandidates.value.length - 1) {
+      selectedCandidateIndex.value = 0
       return
     }
     selectedCandidateIndex.value++
