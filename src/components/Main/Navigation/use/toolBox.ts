@@ -1,6 +1,7 @@
 import store from '@/store'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
+import { useCommandPaletteInvoker } from '@/providers/commandPalette'
 import config from '@/config'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/router'
@@ -16,12 +17,18 @@ const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
   const router = useRouter()
 
+  const { openCommandPalette } = useCommandPaletteInvoker()
   const openQrCodeModal = () =>
     store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
   const openSettings = () => router.push({ name: RouteName.Settings })
 
   const tools = computed(() => {
     const tools: Tool[] = []
+    tools.push({
+      iconName: 'search',
+      iconMdi: true,
+      onClick: () => openCommandPalette('search')
+    })
     tools.push({
       iconName: 'apps',
       iconMdi: true,

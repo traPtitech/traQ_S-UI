@@ -68,7 +68,8 @@ import {
   mdiFilePdf,
   mdiFileChart,
   mdiPencil,
-  mdiKeyChain
+  mdiKeyChain,
+  mdiCodeGreaterThan
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -145,7 +146,8 @@ const mdi: MdiIconsMapping = {
   'eye-off-outline': mdiEyeOffOutline,
   'file-pdf': mdiFilePdf,
   'file-chart': mdiFileChart,
-  'key-chain': mdiKeyChain
+  'key-chain': mdiKeyChain,
+  'code-grater-than': mdiCodeGreaterThan
 }
 
 export default mdi
