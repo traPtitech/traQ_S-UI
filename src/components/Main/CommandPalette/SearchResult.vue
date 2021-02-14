@@ -1,24 +1,34 @@
 <template>
-  <div :class="$style.container">{{ test }}</div>
+  <div v-if="resultMessages.length > 0" :class="$style.container">
+    <div v-for="message in resultMessages" :key="message.id">
+      <search-result-message-element
+        :message="message"
+        :class="$style.element"
+      />
+    </div>
+  </div>
+  <div v-else :class="$style.container"></div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref, watchEffect } from 'vue'
+import { Message } from '@traptitech/traq'
+import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
-import { watch } from 'vue'
+import useSearchMessages from './use/searchMessages'
 
 export default defineComponent({
+  components: { SearchResultMessageElement },
   name: 'SearchResult',
   setup() {
     const { commandPaletteStore: store } = useCommandPaletteStore()
-    const test = ref('')
-    watch(
-      computed(() => store.query),
-      newValue => {
-        test.value = newValue
-      }
-    )
-    return { test }
+    const resultMessages = ref<Message[]>([])
+    const { fetchMessagesBySearch } = useSearchMessages()
+    watchEffect(async () => {
+      const res = await fetchMessagesBySearch(store.query)
+      resultMessages.value = res.hits
+    })
+    return { resultMessages }
   }
 })
 </script>
@@ -26,7 +36,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-tertiary;
-  text-align: center;
   padding: 32px 16px;
+  overflow-y: scroll;
+}
+.element {
+  margin-bottom: 32px;
 }
 </style>

@@ -6,6 +6,7 @@
     </div>
     <input
       :class="$style.input"
+      ref="inputRef"
       v-model="currentInput"
       @keydown.enter="onEnter"
       :placeholder="placeholder"
@@ -16,15 +17,23 @@
 <script lang="ts">
 import Icon from '@/components/UI/Icon.vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
 
 export default defineComponent({
   components: { Icon },
   name: 'CommandPaletteInput',
   setup() {
-    const { commandPaletteStore: store } = useCommandPaletteStore()
+    const inputRef = shallowRef<HTMLInputElement | null>(null)
+    const focus = () => {
+      inputRef.value?.focus()
+    }
+    onMounted(() => {
+      focus()
+    })
 
     const currentInput = ref('')
+
+    const { commandPaletteStore: store } = useCommandPaletteStore()
 
     const onEnter = () => {
       if (store.mode === 'command') {
@@ -46,7 +55,7 @@ export default defineComponent({
       }
     })
 
-    return { store, currentInput, onEnter, placeholder }
+    return { inputRef, store, currentInput, onEnter, placeholder }
   }
 })
 </script>
@@ -58,7 +67,6 @@ export default defineComponent({
   align-items: center;
   gap: 16px;
   padding: 0 16px;
-  height: 48px;
 }
 .icon {
   @include color-ui-primary;

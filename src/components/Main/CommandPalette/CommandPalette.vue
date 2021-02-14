@@ -1,8 +1,11 @@
 <template>
   <div :class="$style.container" v-click-outside="closeCommandPalette">
     <command-palette-input />
-    <hr :class="$style.separator" />
-    <search-result v-if="store.mode === 'search'" />
+    <hr
+      :class="$style.separator"
+      v-if="store.mode === 'search' && store.query.length > 0"
+    />
+    <search-result v-if="store.mode === 'search' && store.query.length > 0" />
   </div>
 </template>
 
@@ -30,18 +33,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$command-palette-max-width: 800px;
+$command-palette-max-width: min(800px, calc(100vw - 16px));
 .container {
   @include background-primary;
   width: 100%;
-  margin: 48px auto 8px auto;
+  margin: 40px auto 16px auto;
   max-width: $command-palette-max-width;
+  max-height: calc(100vh - 56px);
   border-radius: 8px;
   border: 2px solid $theme-background-secondary;
+  display: grid;
+  grid-template-rows: 48px 2px 1fr;
 }
 .separator {
   @include background-secondary;
-  height: 2px;
   border: none;
   margin: 0;
 }
