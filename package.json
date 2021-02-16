@@ -34,7 +34,7 @@
     "mitt": "^2.1.0",
     "pica": "^6.1.1",
     "shvl": "^2.0.2",
-    "skyway-js": "^4.3.0",
+    "skyway-js": "^4.4.0",
     "throttle-debounce": "^3.0.1",
     "v-click-outside": "^3.1.2",
     "vue": "^3.0.5",
