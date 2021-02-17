@@ -1,40 +1,37 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
-    <div v-show="isShow" :class="$style.container" :style="styledPosition">
+    <div v-show="isShown" :class="$style.container" :style="styledPosition">
       <div
-        :ref="determinedRef"
         :class="{
-          [$style.determined]: true,
-          [$style.selected]: -1 === selectedIndex
+          [$style.confirmedPart]: true,
+          [$style.selected]: selectedIndex === -1
         }"
+        @mousedown="onMousedown"
+        @click="onClick(-1)"
       >
-        {{ determined }}
+        {{ confirmedPart }}
       </div>
       <div :class="$style.scroll">
         <div
           :class="{
             [$style.item]: true,
-            [$style.selected]: index === selectedIndex
+            [$style.selected]: selectedIndex === index
           }"
           v-for="(candidate, index) in candidatesWithId"
           :ref="setItemRef"
           :key="candidate"
-          @click="onClick(index)"
           @mousedown="onMousedown"
+          @click="onClick(index)"
         >
-          <template v-if="candidate.type === 'user'">
-            <dropdown-suggester-user-icon :user-id="candidate.id" />
-            <div :class="$style.name">
-              {{ candidate.word }}
-            </div>
-          </template>
-          <template v-if="candidate.type === 'stamp'">
-            <dropdown-suggester-stamp-preview :stamp-id="candidate.id" />
-            <div :class="$style.name">
-              {{ candidate.word }}
-            </div>
-          </template>
-          <div v-else :class="$style.name">
+          <dropdown-suggester-user-icon
+            v-if="candidate.type === 'user'"
+            :user-id="candidate.id"
+          />
+          <dropdown-suggester-stamp-preview
+            v-else-if="candidate.type === 'stamp'"
+            :stamp-id="candidate.id"
+          />
+          <div :class="$style.name">
             {{ candidate.word }}
           </div>
         </div>
@@ -56,7 +53,7 @@ export default defineComponent({
     DropdownSuggesterStampPreview
   },
   props: {
-    isShow: {
+    isShown: {
       type: Boolean,
       default: false
     },
@@ -68,11 +65,16 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       default: []
     },
+    /**
+     選択されている候補
+     `-1`のときは確定部分までという候補
+     `0`以上は通常の候補
+     */
     selectedIndex: {
       type: Number,
       default: -1
     },
-    determined: {
+    confirmedPart: {
       type: String,
       default: ''
     }
@@ -83,28 +85,20 @@ export default defineComponent({
   },
   setup(props, context) {
     const styledPosition = computed(() => ({
-      top: props.position?.top + 'px',
-      left: props.position?.left + 'px'
+      top: `${props.position?.top}px`,
+      left: `${props.position?.left}px`
     }))
     let itemRefs: HTMLDivElement[] = []
     const setItemRef = (el: HTMLDivElement) => {
       itemRefs.push(el)
     }
-    let determinedRef: HTMLDivElement | undefined = undefined
     onBeforeUpdate(() => {
       itemRefs = []
-      determinedRef = undefined
     })
     watch(
       () => props.selectedIndex,
       i => {
-        if (i === -1) {
-          determinedRef?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-          })
-          return
-        }
+        if (i === -1) return
         itemRefs[i]?.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
@@ -150,7 +144,6 @@ export default defineComponent({
 
     return {
       setItemRef,
-      determinedRef,
       styledPosition,
       candidatesWithId,
       onMousedown,
@@ -172,9 +165,10 @@ export default defineComponent({
   filter: $common-drop-shadow-default;
   z-index: $z-index-word-suggester;
 }
-.determined {
+.confirmedPart {
   padding: 4px;
   border-bottom: 2px solid $theme-background-secondary;
+  cursor: pointer;
   &.selected,
   &:hover {
     background-color: $theme-background-secondary;

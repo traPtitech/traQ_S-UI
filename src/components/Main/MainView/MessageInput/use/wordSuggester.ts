@@ -19,7 +19,7 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
   const prevColonIndex = text.lastIndexOf(':', startIndex - 1)
   const prevPeriodIndex = text.lastIndexOf('.', startIndex - 1)
   const nearest = Math.max(prevAtMarkIndex, prevColonIndex, prevPeriodIndex)
-  const begin = nearest < 0 ? 0 : nearest
+  const begin = Math.max(nearest, 0)
   const end = elm.selectionEnd
   const word = text.substring(begin, end)
   const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
@@ -29,16 +29,16 @@ const getCurrentWord = (elm: HTMLTextAreaElement, text: string): Target => {
 
 export const getDeterminedCharacters = (candidates: string[]) => {
   const minLength = Math.min(...candidates.map(c => c.length))
-  const determined: string[] = []
+  const confirmedPart: string[] = []
   for (let i = 0; i < minLength; i++) {
-    determined[i] = [...candidates[0]][i]
+    confirmedPart[i] = [...candidates[0]][i]
     for (const candidate of candidates) {
-      if (determined[i] !== [...candidate][i]) {
-        return determined.slice(0, determined.length - 1).join('')
+      if (confirmedPart[i] !== [...candidate][i]) {
+        return confirmedPart.slice(0, confirmedPart.length - 1).join('')
       }
     }
   }
-  return determined.join('')
+  return confirmedPart.join('')
 }
 
 const events: (keyof EntityEventMap)[] = [
@@ -82,7 +82,7 @@ const useWordSuggester = (
   })
   const suggestedCandidates = ref<string[]>([])
   const selectedCandidateIndex = ref(-1)
-  const determined = ref('')
+  const confirmedPart = ref('')
 
   const tree = ref<TrieNode>(constructTree())
   const updateTree = () => {
@@ -106,7 +106,7 @@ const useWordSuggester = (
     showSuggester.value = false
     suggestedCandidates.value = []
     selectedCandidateIndex.value = -1
-    determined.value = ''
+    confirmedPart.value = ''
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -137,7 +137,7 @@ const useWordSuggester = (
     suggestedCandidates.value = tree.value.search(
       target.value.word.replaceAll('＠', '@')
     )
-    determined.value = getDeterminedCharacters(suggestedCandidates.value)
+    confirmedPart.value = getDeterminedCharacters(suggestedCandidates.value)
 
     selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
@@ -169,7 +169,7 @@ const useWordSuggester = (
     target,
     suggestedCandidates,
     selectedCandidateIndex,
-    determined
+    confirmedPart
   }
 }
 
