@@ -23,7 +23,7 @@
     "@types/pica": "^5.1.2",
     "autosize": "^4.0.2",
     "core-js": "^3.8.3",
-    "cropperjs": "^1.5.10",
+    "cropperjs": "^1.5.11",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.2",
     "direct-vuex": "^0.12.1",
