@@ -27,9 +27,10 @@
             v-if="candidate.type === 'user'"
             :user-id="candidate.id"
           />
-          <dropdown-suggester-stamp-preview
+          <stamp-element
             v-else-if="candidate.type === 'stamp'"
             :stamp-id="candidate.id"
+            :size="24"
           />
           <div :class="$style.name">
             {{ candidate.text }}
@@ -43,14 +44,14 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, watch, onBeforeUpdate } from 'vue'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
-import DropdownSuggesterStampPreview from './DropdownSuggesterStampPreview.vue'
+import StampElement from '@/components/UI/Stamp.vue'
 import { Word } from '@/lib/trieTree'
 
 export default defineComponent({
   name: 'DropdownSuggester',
   components: {
     DropdownSuggesterUserIcon,
-    DropdownSuggesterStampPreview
+    StampElement
   },
   props: {
     isShown: {
