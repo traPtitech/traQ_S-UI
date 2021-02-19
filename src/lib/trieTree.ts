@@ -1,7 +1,7 @@
 let lastInsertedId = 0
 
 type WordType = 'user' | 'user-group' | 'stamp' | 'stamp-effect'
-export type Word = { type: WordType; text: string }
+export type Word = { type: WordType; text: string; id?: string | undefined }
 class TrieNode {
   id: number
   isWord: boolean

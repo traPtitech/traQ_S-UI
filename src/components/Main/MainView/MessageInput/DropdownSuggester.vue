@@ -17,7 +17,7 @@
             [$style.item]: true,
             [$style.selected]: selectedIndex === index
           }"
-          v-for="(candidate, index) in candidatesWithId"
+          v-for="(candidate, index) in candidates"
           :ref="setItemRef"
           :key="candidate"
           @mousedown="onMousedown"
@@ -32,7 +32,7 @@
             :stamp-id="candidate.id"
           />
           <div :class="$style.name">
-            {{ candidate.word }}
+            {{ candidate.text }}
           </div>
         </div>
       </div>
@@ -42,9 +42,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, watch, onBeforeUpdate } from 'vue'
-import store from '@/store'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import DropdownSuggesterStampPreview from './DropdownSuggesterStampPreview.vue'
+import { Word } from '@/lib/trieTree'
 
 export default defineComponent({
   name: 'DropdownSuggester',
@@ -62,7 +62,7 @@ export default defineComponent({
       required: true
     },
     candidates: {
-      type: Array as PropType<string[]>,
+      type: Array as PropType<Word[]>,
       default: []
     },
     /**
@@ -105,36 +105,6 @@ export default defineComponent({
         })
       }
     )
-    const candidatesWithId = computed(() =>
-      props.candidates.map(word => {
-        if (word.startsWith('.')) {
-          return {
-            type: 'stamp-effect',
-            word,
-            id: undefined
-          }
-        }
-        if (word.startsWith('@')) {
-          const userId = store.getters.entities.userByName(
-            [...word].slice(1).join('')
-          )?.id
-          if (!userId) {
-            return {
-              type: 'group',
-              word,
-              id: undefined
-            }
-          }
-          return { type: 'user', word, id: userId }
-        }
-        if (word.startsWith(':')) {
-          const stampId = store.getters.entities.stampByName(
-            [...word].slice(1).join('')
-          )?.id
-          return { type: 'stamp', word, id: stampId }
-        }
-      })
-    )
     const onMousedown = () => {
       context.emit('mousedown')
     }
@@ -145,7 +115,6 @@ export default defineComponent({
     return {
       setItemRef,
       styledPosition,
-      candidatesWithId,
       onMousedown,
       onClick
     }

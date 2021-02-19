@@ -77,13 +77,13 @@ export const getters = defineGetters<S>()({
       .filter(palette => palette.stamps?.length > 0)
       .map(palette => palette.id)
   },
-  allUserNames(state) {
-    return [...state.usersMap.values()].map(user => user.name)
+  allUsers(state) {
+    return [...state.usersMap.values()]
   },
-  allUserGroupNames(state) {
-    return [...state.userGroupsMap.values()].map(userGroup => userGroup.name)
+  allUserGroups(state) {
+    return [...state.userGroupsMap.values()]
   },
-  allStampNames(state) {
-    return [...state.stampsMap.values()].map(stamp => stamp.name)
+  allStamps(state) {
+    return [...state.stampsMap.values()]
   }
 })

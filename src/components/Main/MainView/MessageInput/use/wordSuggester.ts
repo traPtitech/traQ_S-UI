@@ -1,5 +1,5 @@
 import store from '@/store'
-import createTree, { TrieNode } from '@/lib/trieTree'
+import TrieTree, { Word } from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ComputedRef, onBeforeMount, WritableComputedRef, ref } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
@@ -54,17 +54,33 @@ const events: (keyof EntityEventMap)[] = [
 ]
 
 const constructTree = () =>
-  createTree(
+  new TrieTree(
     // ユーザー名とグループ名に重複あり
     // メンションはcase insensitiveでユーザー名を優先
     // 重複を許す場合、優先するものから入れる
-    store.getters.entities.allUserNames.map(userName => '@' + userName),
-    store.getters.entities.allUserGroupNames.map(
-      userGroupName => '@' + userGroupName
-    ),
-    store.getters.entities.allStampNames.map(stampName => ':' + stampName),
-    [...animeEffectSet].map(effectName => '.' + effectName),
-    [...sizeEffectSet].map(effectName => '.' + effectName)
+    store.getters.entities.allUsers.map(user => ({
+      type: 'user',
+      text: '@' + user.name,
+      id: user.id
+    })),
+    store.getters.entities.allUserGroups.map(userGroup => ({
+      type: 'user-group',
+      text: '@' + userGroup.name,
+      id: userGroup.id
+    })),
+    store.getters.entities.allStamps.map(stamp => ({
+      type: 'stamp',
+      text: ':' + stamp.name,
+      id: stamp.id
+    })),
+    [...animeEffectSet].map(effectName => ({
+      type: 'stamp-effect',
+      text: '.' + effectName
+    })),
+    [...sizeEffectSet].map(effectName => ({
+      type: 'stamp-effect',
+      text: '.' + effectName
+    }))
   )
 
 const useWordSuggester = (
@@ -80,11 +96,11 @@ const useWordSuggester = (
     end: 0,
     divided: false
   })
-  const suggestedCandidates = ref<string[]>([])
+  const suggestedCandidates = ref<Word[]>([])
   const selectedCandidateIndex = ref(-1)
   const confirmedPart = ref('')
 
-  const tree = ref<TrieNode>(constructTree())
+  const tree = ref<TrieTree>(constructTree())
   const updateTree = () => {
     tree.value = constructTree()
   }
@@ -137,7 +153,9 @@ const useWordSuggester = (
     suggestedCandidates.value = tree.value.search(
       target.value.word.replaceAll('＠', '@')
     )
-    confirmedPart.value = getDeterminedCharacters(suggestedCandidates.value)
+    confirmedPart.value = getDeterminedCharacters(
+      Object.values(suggestedCandidates.value).map(obj => obj.text)
+    )
 
     selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
