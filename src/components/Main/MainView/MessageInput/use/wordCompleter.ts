@@ -9,15 +9,12 @@ const useWordCompleter = (
   suggestedCandidates: Ref<Word[]>,
   selectedCandidateIndex: Ref<number>,
   confirmedPart: Ref<string>,
-  showSuggester: Ref<boolean>
+  /**
+   * 補完候補を確定させたとき
+   * 例えば、クリックしたのでこれ以上補完候補を表示しないようにするときなどに利用
+   */
+  onCompleteDetermined: () => void
 ) => {
-  const resetRefs = () => {
-    showSuggester.value = false
-    suggestedCandidates.value = []
-    selectedCandidateIndex.value = -1
-    confirmedPart.value = ''
-  }
-
   const commitCompletion = async (word: string) => {
     value.value =
       value.value.slice(0, target.value.begin) +
@@ -37,7 +34,7 @@ const useWordCompleter = (
     if (suggestedCandidates.value.length === 1) {
       commitCompletion(suggestedCandidates.value[0].text)
       target.value.end = target.value.begin + suggestedCandidates.value.length
-      resetRefs()
+      onCompleteDetermined()
       return
     }
     if (selectedCandidateIndex.value === -1) {
@@ -66,7 +63,7 @@ const useWordCompleter = (
     } else {
       commitCompletion(suggestedCandidates.value[index].text)
     }
-    resetRefs()
+    onCompleteDetermined()
   }
   return { onKeyDown, onSelect }
 }

@@ -14,7 +14,7 @@
     @paste="onPaste"
   />
   <dropdown-suggester
-    :is-shown="showSuggester"
+    :is-shown="isSuggesterShown"
     :position="suggesterPosition"
     :candidates="suggestedCandidates"
     :selected-index="selectedCandidateIndex"
@@ -130,7 +130,8 @@ export default defineComponent({
       onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
       beforeSelect,
-      showSuggester,
+      hideSuggester,
+      isSuggesterShown,
       target,
       position,
       suggestedCandidates,
@@ -152,7 +153,7 @@ export default defineComponent({
       suggestedCandidates,
       selectedCandidateIndex,
       confirmedPart,
-      showSuggester
+      hideSuggester
     )
 
     const suggesterPosition = computed(() => {
@@ -193,7 +194,7 @@ export default defineComponent({
       beforeSelect,
       onPaste,
       onSelect,
-      showSuggester,
+      isSuggesterShown,
       suggesterPosition,
       suggestedCandidates,
       selectedCandidateIndex,

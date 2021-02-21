@@ -70,7 +70,7 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
-  const showSuggester = ref(false)
+  const isSuggesterShown = ref(false)
   const interactingWithList = ref(false)
   const position = ref({ top: 0, left: 0 })
   const target = ref<Target>({
@@ -85,15 +85,15 @@ const useWordSuggester = (
 
   const tree = useCandidateTree()
 
-  const resetRefs = () => {
-    showSuggester.value = false
+  const hideSuggester = () => {
+    isSuggesterShown.value = false
     suggestedCandidates.value = []
     selectedCandidateIndex.value = -1
     confirmedPart.value = ''
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
-    if (!showSuggester.value) return
+    if (!isSuggesterShown.value) return
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       if (selectedCandidateIndex.value <= 0) {
@@ -113,7 +113,7 @@ const useWordSuggester = (
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
-      resetRefs()
+      hideSuggester()
       return
     }
     if (e.key === 'Tab') return
@@ -126,11 +126,11 @@ const useWordSuggester = (
 
     selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
-      showSuggester.value = false
+      isSuggesterShown.value = false
       return
     }
     position.value = getCaretPosition(textareaRef.value, target.value.begin)
-    showSuggester.value = true
+    isSuggesterShown.value = true
   }
 
   const beforeSelect = async () => {
@@ -141,7 +141,7 @@ const useWordSuggester = (
       interactingWithList.value = false
       return
     }
-    resetRefs()
+    hideSuggester()
   }
 
   return {
@@ -149,7 +149,8 @@ const useWordSuggester = (
     onKeyUp,
     beforeSelect,
     onBlur,
-    showSuggester,
+    hideSuggester,
+    isSuggesterShown,
     position,
     target,
     suggestedCandidates,
