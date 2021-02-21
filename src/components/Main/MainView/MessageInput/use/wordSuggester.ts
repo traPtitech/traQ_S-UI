@@ -22,48 +22,32 @@ const events: Array<keyof EntityEventMap> = [
   'deleteStamp'
 ]
 
-const constructTree = () =>
-  new TrieTree(
-    // ユーザー名とグループ名に重複あり
-    // メンションはcase insensitiveでユーザー名を優先
-    // 重複を許す場合、優先するものから入れる
-    store.getters.entities.allUsers.map(user => ({
-      type: 'user',
-      text: '@' + user.name,
-      id: user.id
-    })),
-    store.getters.entities.allUserGroups.map(userGroup => ({
-      type: 'user-group',
-      text: '@' + userGroup.name,
-      id: userGroup.id
-    })),
-    store.getters.entities.allStamps.map(stamp => ({
-      type: 'stamp',
-      text: ':' + stamp.name,
-      id: stamp.id
-    })),
-    [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
-      type: 'stamp-effect',
-      text: '.' + effectName
-    }))
-  )
-
-const useWordSuggester = (
-  textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
-  value: WritableComputedRef<string>
-) => {
-  const showSuggester = ref(false)
-  const interactingWithList = ref(false)
-  const position = ref({ top: 0, left: 0 })
-  const target = ref<Target>({
-    word: '',
-    begin: 0,
-    end: 0,
-    divided: false
-  })
-  const suggestedCandidates = ref<Word[]>([])
-  const selectedCandidateIndex = ref(-1)
-  const confirmedPart = ref('')
+const useCandidateTree = () => {
+  const constructTree = () =>
+    new TrieTree(
+      // ユーザー名とグループ名に重複あり
+      // メンションはcase insensitiveでユーザー名を優先
+      // 重複を許す場合、優先するものから入れる
+      store.getters.entities.allUsers.map(user => ({
+        type: 'user',
+        text: '@' + user.name,
+        id: user.id
+      })),
+      store.getters.entities.allUserGroups.map(userGroup => ({
+        type: 'user-group',
+        text: '@' + userGroup.name,
+        id: userGroup.id
+      })),
+      store.getters.entities.allStamps.map(stamp => ({
+        type: 'stamp',
+        text: ':' + stamp.name,
+        id: stamp.id
+      })),
+      [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
+        type: 'stamp-effect',
+        text: '.' + effectName
+      }))
+    )
 
   const tree = ref<TrieTree>(constructTree())
   const updateTree = () => {
@@ -82,6 +66,28 @@ const useWordSuggester = (
       })
     })
   })
+
+  return tree
+}
+
+const useWordSuggester = (
+  textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
+  value: WritableComputedRef<string>
+) => {
+  const showSuggester = ref(false)
+  const interactingWithList = ref(false)
+  const position = ref({ top: 0, left: 0 })
+  const target = ref<Target>({
+    word: '',
+    begin: 0,
+    end: 0,
+    divided: false
+  })
+  const suggestedCandidates = ref<Word[]>([])
+  const selectedCandidateIndex = ref(-1)
+  const confirmedPart = ref('')
+
+  const tree = useCandidateTree()
 
   const resetRefs = () => {
     showSuggester.value = false
