@@ -24,7 +24,9 @@ export const getCurrentWord = (
 }
 
 export const getDeterminedCharacters = (candidates: string[]) => {
-  const minLength = Math.min(...candidates.map(c => c.length))
+  if (candidates.length <= 0) return ''
+
+  const minLength = Math.min(...candidates.map(c => [...c].length))
   const confirmedPart: string[] = []
   for (let i = 0; i < minLength; i++) {
     confirmedPart[i] = [...candidates[0]][i]

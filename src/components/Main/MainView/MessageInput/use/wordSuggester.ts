@@ -121,7 +121,7 @@ const useWordSuggester = (
       target.value.word.replaceAll('＠', '@')
     )
     confirmedPart.value = getDeterminedCharacters(
-      Object.values(suggestedCandidates.value).map(obj => obj.text)
+      suggestedCandidates.value.map(obj => obj.text)
     )
 
     selectedCandidateIndex.value = -1
