@@ -2,10 +2,8 @@
   <teleport to="#dropdown-suggester-popup">
     <div v-show="isShown" :class="$style.container" :style="styledPosition">
       <div
-        :class="{
-          [$style.confirmedPart]: true,
-          [$style.selected]: selectedIndex === -1
-        }"
+        :class="[$style.item, $style.confirmedPart]"
+        :aria-selected="selectedIndex === -1"
         @mousedown="onMousedown"
         @click="onClick(-1)"
       >
@@ -13,13 +11,11 @@
       </div>
       <div :class="$style.scroll">
         <div
-          :class="{
-            [$style.item]: true,
-            [$style.selected]: selectedIndex === index
-          }"
           v-for="(candidate, index) in candidates"
           :ref="setItemRef"
           :key="candidate"
+          :class="$style.item"
+          :aria-selected="selectedIndex === index"
           @mousedown="onMousedown"
           @click="onClick(index)"
         >
@@ -135,16 +131,6 @@ export default defineComponent({
   filter: $common-drop-shadow-default;
   z-index: $z-index-word-suggester;
 }
-.confirmedPart {
-  padding: 4px;
-  border-bottom: 2px solid $theme-background-secondary;
-  cursor: pointer;
-  &.selected,
-  &:hover {
-    background-color: $theme-background-secondary;
-    font-weight: bold;
-  }
-}
 .scroll {
   overflow-y: scroll;
   max-height: 144px;
@@ -153,11 +139,14 @@ export default defineComponent({
   display: flex;
   padding: 4px;
   cursor: pointer;
-  &.selected,
+  &[aria-selected='true'],
   &:hover {
     background-color: $theme-background-secondary;
     font-weight: bold;
   }
+}
+.confirmedPart {
+  border-bottom: 2px solid $theme-background-secondary;
 }
 .name {
   margin-left: 4px;
