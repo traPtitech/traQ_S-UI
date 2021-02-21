@@ -1,7 +1,7 @@
 import { Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import store from '@/store'
-import { channelPathToId, ChannelTree } from '@/lib/channelTree'
+import { channelPathToId } from '@/lib/channelTree'
 
 type SearchMessageQuery = Parameters<typeof apis.searchMessages>
 type SearchMessageResult = {
@@ -10,15 +10,21 @@ type SearchMessageResult = {
 }
 
 /**
- * 空白で区切られた後のクエリをreduceしていくときの型
+ * 値を持つフィルタ
  */
-type QueryWordOrFilter = {
-  word?: string
+type ValueFilter = {
   after?: string
   before?: string
   in?: string
   to?: string
   from?: string
+  citation?: string
+}
+
+/**
+ * フラグとして用いるフィルタ
+ */
+type FlagFilter = {
   bot?: boolean
   hasUrl?: boolean
   hasAttachments?: boolean
@@ -27,22 +33,37 @@ type QueryWordOrFilter = {
   hasAudio?: boolean
 }
 
-// フィルターのprefix
+/**
+ * 空白で分割された後のクエリ
+ */
+type QueryWordOrFilter = {
+  word?: string
+} & ValueFilter &
+  FlagFilter
 
-const afterQueryPrefixes = ['after:', 'since:']
-const beforeQueryPrefixes = ['before:', 'until:']
-const inQueryPrefixes = ['in:', '#']
-const toQueryPrefixes = ['to:', '@']
-const fromQueryPrefixes = ['from:', 'by:']
-const isQueryPrefixes = ['is:']
-const isNotQueryPrefixes = ['-is:']
-const hasQueryPrefixes = ['has:']
-const hasNoQueryPrefixes = ['-has:']
+// フィルターのprefix
+const afterFilterPrefixes = ['after:', 'since:']
+const beforeFilterPrefixes = ['before:', 'until:']
+const inFilterPrefixes = ['in:', '#']
+const toFilterPrefixes = ['to:', '@']
+const fromFilterPrefixes = ['from:', 'by:']
+const citationFilterPrefixes = ['citation:']
+const isFilterPrefixes = ['is:']
+const isFilterNegatePrefixes = ['-is:', 'not:']
+const hasFilterPrefixes = ['has:']
+const hasFilterNegatePrefixes = ['-has:']
+
+/**
+ * ValueFilterにマッチするかをテストする関数の型
+ */
+type ValueFilterMatcher = (q: string) => string | undefined
 
 /**
  * prefixesのどれかにマッチするかを確認し、マッチした場合は残りの文字列を返す
  */
-const prefixedQuery = (prefixes: string[]) => (q: string) => {
+const prefixedQuery = (prefixes: string[]): ValueFilterMatcher => (
+  q: string
+) => {
   for (const prefix of prefixes) {
     if (q.startsWith(prefix)) {
       return q.substring(prefix.length)
@@ -51,54 +72,12 @@ const prefixedQuery = (prefixes: string[]) => (q: string) => {
   return undefined
 }
 
-// フィルターにマッチする関数たち
-// マッチしたらクエリの内容を返し、しなかったらundefined
-
-const matchAfterQuery = prefixedQuery(afterQueryPrefixes)
-const matchBeforeQuery = prefixedQuery(beforeQueryPrefixes)
-const matchInQuery = (q: string, channelTree: ChannelTree) => {
-  const result = prefixedQuery(inQueryPrefixes)(q)
-  try {
-    const channelName = result?.startsWith('#') ? result?.substring(1) : result
-    return result
-      ? channelPathToId(channelName?.split('/') ?? [], channelTree)
-      : undefined
-  } catch {
-    return undefined
-  }
-}
-const matchToQuery = (q: string) => {
-  const result = prefixedQuery(toQueryPrefixes)(q)
-  const userName = result?.startsWith('@') ? result?.substring(1) : result
-  return userName ? store.getters.entities.userByName(userName)?.id : undefined
-}
-const matchFromQuery = (q: string) => {
-  const result = prefixedQuery(fromQueryPrefixes)(q)
-  const userName = result?.startsWith('@') ? result?.substring(1) : result
-  return userName ? store.getters.entities.userByName(userName)?.id : undefined
-}
-
-// isとhasのクエリは複数要素あるのでQueriesの一部を返す
-
-const matchIsQuery = (q: string): Partial<QueryWordOrFilter> => {
-  const result = prefixedQuery(isQueryPrefixes)(q)
-  const negationResult = prefixedQuery(isNotQueryPrefixes)(q)
-  return {
-    bot: checkBooleanQuery(result, negationResult, 'bot')
-  }
-}
-const matchHasQuery = (q: string): Partial<QueryWordOrFilter> => {
-  const result = prefixedQuery(hasQueryPrefixes)(q)
-  const negationResult = prefixedQuery(hasNoQueryPrefixes)(q)
-  return {
-    hasUrl: checkBooleanQuery(result, negationResult, 'url'),
-    hasAttachments: checkBooleanQuery(result, negationResult, 'attachments'),
-    hasImage: checkBooleanQuery(result, negationResult, 'image'),
-    hasVideo: checkBooleanQuery(result, negationResult, 'video'),
-    hasAudio: checkBooleanQuery(result, negationResult, 'audio')
-  }
-}
-
+/**
+ * flag filterから抽出したフィルターの内容がtargetと一致するかを検査し、一致した場合は肯定か否定かを返す
+ * @param result 肯定の内容 (例: `not:bot` -> undefined, `has:attachments` -> "attachments")
+ * @param negationResult 否定の内容 (例: `not:bot` -> "bot", `has:attachments` -> undefiend)
+ * @param target 検査したいフィルタ項目
+ */
 const checkBooleanQuery = (
   result: string | undefined,
   negationResult: string | undefined,
@@ -110,7 +89,80 @@ const checkBooleanQuery = (
     ? false
     : undefined
 
-// reduce用の関数
+/**
+ * 値を指定するフィルターかを判定する
+ */
+const valueFilterMatcherMap: Map<
+  keyof ValueFilter,
+  ValueFilterMatcher
+> = new Map([
+  ['after', prefixedQuery(afterFilterPrefixes)],
+  ['before', prefixedQuery(beforeFilterPrefixes)],
+  [
+    'in',
+    q => {
+      const channelTree = store.state.domain.channelTree.channelTree
+      const result = prefixedQuery(inFilterPrefixes)(q)
+      try {
+        const channelName = result?.startsWith('#')
+          ? result?.substring(1)
+          : result
+        return result
+          ? channelPathToId(channelName?.split('/') ?? [], channelTree)
+          : undefined
+      } catch {
+        return undefined
+      }
+    }
+  ],
+  [
+    'to',
+    q => {
+      const result = prefixedQuery(toFilterPrefixes)(q)
+      const userName = result?.startsWith('@') ? result?.substring(1) : result
+      return userName
+        ? store.getters.entities.userByName(userName)?.id
+        : undefined
+    }
+  ],
+  [
+    'from',
+    q => {
+      const result = prefixedQuery(fromFilterPrefixes)(q)
+      const userName = result?.startsWith('@') ? result?.substring(1) : result
+      return userName
+        ? store.getters.entities.userByName(userName)?.id
+        : undefined
+    }
+  ],
+  ['citation', prefixedQuery(citationFilterPrefixes)]
+])
+
+/**
+ * フラグで指定するフィルターかを判定する
+ */
+const matchFlagFilter = (q: string) => {
+  const isFilterResult = prefixedQuery(isFilterPrefixes)(q)
+  const isFilterNegationResult = prefixedQuery(isFilterNegatePrefixes)(q)
+  const bot = checkBooleanQuery(isFilterResult, isFilterNegationResult, 'bot')
+  if (bot !== undefined) {
+    return { bot }
+  }
+
+  const result = prefixedQuery(hasFilterPrefixes)(q)
+  const negationResult = prefixedQuery(hasFilterNegatePrefixes)(q)
+  return {
+    hasUrl: checkBooleanQuery(result, negationResult, 'url'),
+    hasAttachments: checkBooleanQuery(result, negationResult, 'attachments'),
+    hasImage: checkBooleanQuery(result, negationResult, 'image'),
+    hasVideo: checkBooleanQuery(result, negationResult, 'video'),
+    hasAudio: checkBooleanQuery(result, negationResult, 'audio')
+  }
+}
+
+/**
+ * 分割済みクエリをマージする
+ */
 const mergeQueries = (q1: QueryWordOrFilter, q2: QueryWordOrFilter) => ({
   word: [q1.word, q2.word].filter(v => v).join(' '),
   after: q2.after ?? q1.after,
@@ -126,25 +178,27 @@ const mergeQueries = (q1: QueryWordOrFilter, q2: QueryWordOrFilter) => ({
   hasAudio: q1.hasAudio ?? q2.hasAudio
 })
 
+const parseSplittedQuery = (q: string): QueryWordOrFilter => {
+  // value filterを試す
+  for (const [key, matcher] of valueFilterMatcherMap) {
+    const result = matcher(q)
+    if (result) {
+      return { [key]: result }
+    }
+  }
+  // frag filterを試す
+  return matchFlagFilter(q)
+}
+
 /**
  * クエリをパースし、検索ワードとフィルタに変換する
  */
 const parseQuery = (query: string): SearchMessageQuery => {
-  const channelTree = store.state.domain.channelTree.channelTree
   const result = query
     .split(' ')
     .filter(q => q)
     .map(q => {
-      const parsed: QueryWordOrFilter = {
-        word: undefined,
-        after: matchAfterQuery(q),
-        before: matchBeforeQuery(q),
-        in: matchInQuery(q, channelTree),
-        to: matchToQuery(q),
-        from: matchFromQuery(q),
-        ...matchHasQuery(q),
-        ...matchIsQuery(q)
-      }
+      const parsed: QueryWordOrFilter = parseSplittedQuery(q)
       if (Object.values(parsed).filter(v => v).length === 0) {
         parsed.word = q
       }
@@ -159,7 +213,7 @@ const parseQuery = (query: string): SearchMessageQuery => {
     result.in,
     result.to,
     result.from,
-    undefined, // TBD
+    result.citation,
     result.bot,
     result.hasUrl,
     result.hasAttachments,
