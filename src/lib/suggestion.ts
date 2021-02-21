@@ -9,7 +9,7 @@ export const getCurrentWord = (
   elm: { selectionStart: number; selectionEnd: number },
   text: string
 ): Target => {
-  text = text.replaceAll('　', ' ')
+  text = text.replace(/　/g, ' ')
   const startIndex = elm.selectionStart
   const prevAtMarkIndex = text.lastIndexOf('@', startIndex - 1)
   const prevColonIndex = text.lastIndexOf(':', startIndex - 1)
