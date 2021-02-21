@@ -1,7 +1,7 @@
 import store from '@/store'
 import TrieTree, { Word } from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
-import { ComputedRef, onBeforeMount, WritableComputedRef, ref } from 'vue'
+import { ComputedRef, WritableComputedRef, ref, onBeforeUnmount } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
 import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
 import {
@@ -55,15 +55,11 @@ const useCandidateTree = () => {
   }
 
   events.forEach(event => {
-    entityMitt.on(event, () => {
-      updateTree()
-    })
+    entityMitt.on(event, updateTree)
   })
-  onBeforeMount(() => {
+  onBeforeUnmount(() => {
     events.forEach(event => {
-      entityMitt.off(event, () => {
-        updateTree()
-      })
+      entityMitt.off(event, updateTree)
     })
   })
 
