@@ -34,6 +34,12 @@ describe('suggestion', () => {
       expect(actual).toEqual(expected)
     })
 
+    it('can get from multi case array', () => {
+      const actual = getDeterminedCharacters(['Aaab', 'aaAc', 'aaad'])
+      const expected = 'aaa'
+      expect(actual).toEqual(expected)
+    })
+
     it('can get from unicode array', () => {
       const actual = getDeterminedCharacters([
         '🤔🤔あa亜1',
