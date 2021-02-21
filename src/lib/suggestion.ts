@@ -26,6 +26,7 @@ export const getCurrentWord = (
 export const getDeterminedCharacters = (candidates: string[]) => {
   if (candidates.length <= 0) return ''
 
+  candidates = candidates.map(candidate => candidate.toLocaleLowerCase())
   const minLength = Math.min(...candidates.map(c => [...c].length))
   const confirmedPart: string[] = []
   for (let i = 0; i < minLength; i++) {
