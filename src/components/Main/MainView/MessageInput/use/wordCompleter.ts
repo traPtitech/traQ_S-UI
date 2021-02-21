@@ -1,5 +1,5 @@
 import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
-import { Target } from './wordSuggester'
+import { Target } from '@/lib/suggestion'
 import { Word } from '@/lib/trieTree'
 
 const useWordCompleter = (
