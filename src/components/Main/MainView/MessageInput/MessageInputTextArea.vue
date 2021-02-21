@@ -157,10 +157,10 @@ export default defineComponent({
 
     const suggesterPosition = computed(() => {
       if (!textareaRef.value) return
+      const { top, left } = textareaRef.value.getBoundingClientRect()
       return {
-        top: textareaRef.value.getBoundingClientRect().top + position.value.top,
-        left:
-          textareaRef.value.getBoundingClientRect().left + position.value.left
+        top: top + position.value.top,
+        left: left + position.value.left
       }
     })
 
@@ -177,7 +177,7 @@ export default defineComponent({
     const { onFocus, onBlur: onBlurDefault } = useFocus(context)
     const { onPaste } = usePaste(toRef(props, 'channelId'))
 
-    const onBlur = (e: MouseEvent) => {
+    const onBlur = () => {
       onBlurWordSuggester()
       onBlurDefault()
     }

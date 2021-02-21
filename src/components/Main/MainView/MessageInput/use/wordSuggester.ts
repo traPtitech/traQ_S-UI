@@ -10,7 +10,7 @@ import {
   Target
 } from '@/lib/suggestion'
 
-const events: (keyof EntityEventMap)[] = [
+const events: Array<keyof EntityEventMap> = [
   'setUser',
   'setUsers',
   'deleteUser',
@@ -42,11 +42,7 @@ const constructTree = () =>
       text: ':' + stamp.name,
       id: stamp.id
     })),
-    [...animeEffectSet].map(effectName => ({
-      type: 'stamp-effect',
-      text: '.' + effectName
-    })),
-    [...sizeEffectSet].map(effectName => ({
+    [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
       type: 'stamp-effect',
       text: '.' + effectName
     }))

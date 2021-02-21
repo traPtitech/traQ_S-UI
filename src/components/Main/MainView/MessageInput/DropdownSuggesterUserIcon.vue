@@ -21,9 +21,6 @@ export default defineComponent({
       type: String,
       required: true
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>
@@ -35,7 +32,7 @@ export default defineComponent({
 .indicator {
   position: absolute;
   background: $theme-background-primary;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
 }
 </style>

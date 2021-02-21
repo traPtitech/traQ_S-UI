@@ -56,16 +56,16 @@ export default defineComponent({
     },
     position: {
       type: Object as PropType<{ top: number; left: number }>,
-      required: true
+      default: { top: 0, left: 0 }
     },
     candidates: {
       type: Array as PropType<Word[]>,
       default: []
     },
     /**
-     選択されている候補
-     `-1`のときは確定部分までという候補
-     `0`以上は通常の候補
+     * 選択されている候補
+     * `-1`のときは確定部分までという候補
+     * `0`以上は通常の候補
      */
     selectedIndex: {
       type: Number,
@@ -77,14 +77,15 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (index: number) => true,
+    select: (_index: number) => true,
     mousedown: () => true
   },
   setup(props, context) {
     const styledPosition = computed(() => ({
-      top: `${props.position?.top}px`,
-      left: `${props.position?.left}px`
+      top: `${props.position.top}px`,
+      left: `${props.position.left}px`
     }))
+
     let itemRefs: HTMLDivElement[] = []
     const setItemRef = (el: HTMLDivElement) => {
       itemRefs.push(el)
@@ -92,6 +93,7 @@ export default defineComponent({
     onBeforeUpdate(() => {
       itemRefs = []
     })
+
     watch(
       () => props.selectedIndex,
       i => {
@@ -102,6 +104,7 @@ export default defineComponent({
         })
       }
     )
+
     const onMousedown = () => {
       context.emit('mousedown')
     }
@@ -133,7 +136,7 @@ export default defineComponent({
 }
 .scroll {
   overflow-y: scroll;
-  max-height: 144px;
+  max-height: 32px * 4.5;
 }
 .item {
   display: flex;
