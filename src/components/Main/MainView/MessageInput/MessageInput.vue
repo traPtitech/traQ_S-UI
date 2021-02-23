@@ -51,7 +51,8 @@ import {
   computed,
   onBeforeUnmount,
   ref,
-  toRef
+  toRef,
+  Ref
 } from 'vue'
 import store from '@/store'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
@@ -127,11 +128,15 @@ export default defineComponent({
           canPostMessage.value)
     )
 
-    const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
+    const textareaRef = ref<{
+      $refs: { textareaAutosizeRef: Ref<{ $el: HTMLTextAreaElement }> }
+    }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       toRef(state, 'text'),
-      textareaRef,
+      textareaRef.value?.$refs.textareaAutosizeRef
+        ? textareaRef.value?.$refs.textareaAutosizeRef
+        : ref(undefined),
       containerEle
     )
 
