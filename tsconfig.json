@@ -16,8 +16,7 @@
       "dom-screen-wake-lock",
       "webpack-env",
       "jest",
-      "webappsec-credential-management",
-      "resize-observer-browser"
+      "webappsec-credential-management"
     ],
     "typeRoots": [
       "node_modules/@types",
