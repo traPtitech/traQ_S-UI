@@ -19,6 +19,58 @@ describe('suggestion', () => {
       }
       expect(actual).toEqual(expected)
     })
+    it('can detect @', () => {
+      const actual = getCurrentWord(
+        { selectionStart: 18, selectionEnd: 18 },
+        'i really like@test'
+      )
+      const expected: Target = {
+        word: '@test',
+        begin: 13,
+        end: 18,
+        divided: false
+      }
+      expect(actual).toEqual(expected)
+    })
+    it('can detect :', () => {
+      const actual = getCurrentWord(
+        { selectionStart: 12, selectionEnd: 12 },
+        'this: is :test'
+      )
+      const expected: Target = {
+        word: ':te',
+        begin: 9,
+        end: 12,
+        divided: false
+      }
+      expect(actual).toEqual(expected)
+    })
+    it('can detect .', () => {
+      const actual = getCurrentWord(
+        { selectionStart: 8, selectionEnd: 8 },
+        'test.example.com'
+      )
+      const expected: Target = {
+        word: '.exa',
+        begin: 4,
+        end: 8,
+        divided: false
+      }
+      expect(actual).toEqual(expected)
+    })
+    it('can tell if divided', () => {
+      const actual = getCurrentWord(
+        { selectionStart: 11, selectionEnd: 11 },
+        'this @is test sentence.'
+      )
+      const expected: Target = {
+        word: '@is te',
+        begin: 5,
+        end: 11,
+        divided: true
+      }
+      expect(actual).toEqual(expected)
+    })
   })
 
   describe('getDeterminedCharacters', () => {
