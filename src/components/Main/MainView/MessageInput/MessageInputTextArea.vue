@@ -57,17 +57,15 @@ const useFocus = (context: SetupContext) => {
 }
 
 const useLineBreak = (
-  props: { modelValue: string },
-  textareaRef: Ref<HTMLTextAreaElement | undefined>,
-  context: SetupContext
+  value: Ref<string>,
+  textareaRef: Ref<HTMLTextAreaElement | undefined>
 ) => {
   const insertLineBreak = async () => {
     if (!textareaRef.value) return
-    const pre = props.modelValue.slice(0, textareaRef.value.selectionStart)
-    const suf = props.modelValue.slice(textareaRef.value.selectionEnd)
+    const pre = value.value.slice(0, textareaRef.value.selectionStart)
+    const suf = value.value.slice(textareaRef.value.selectionEnd)
     const selectionIndex = pre.length + 1
-    // inputイベントを発火することでテキストを変更
-    context.emit('update:modelValue', `${pre}\n${suf}`)
+    value.value = `${pre}\n${suf}`
 
     await nextTick()
     textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
@@ -139,7 +137,7 @@ export default defineComponent({
       confirmedPart
     } = useWordSuggester(textareaRef, value)
 
-    const { insertLineBreak } = useLineBreak(props, textareaRef, context)
+    const { insertLineBreak } = useLineBreak(value, textareaRef)
 
     const {
       onBeforeInput,
