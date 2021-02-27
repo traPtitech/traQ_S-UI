@@ -43,6 +43,9 @@ import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import StampElement from '@/components/UI/Stamp.vue'
 import { Word } from '@/lib/trieTree'
 
+const WIDTH = 240
+const MARGIN = 8
+
 export default defineComponent({
   name: 'DropdownSuggester',
   components: {
@@ -83,7 +86,8 @@ export default defineComponent({
   setup(props, context) {
     const styledPosition = computed(() => ({
       top: `${props.position.top}px`,
-      left: `${props.position.left}px`
+      left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
+      width: `${WIDTH}px`
     }))
 
     let itemRefs: HTMLDivElement[] = []
@@ -127,7 +131,6 @@ export default defineComponent({
   @include color-ui-secondary;
   position: absolute;
   background: $theme-background-primary;
-  width: 240px;
   transform: translateY(-100%);
   border: solid 2px $theme-background-secondary;
   border-radius: 4px;
