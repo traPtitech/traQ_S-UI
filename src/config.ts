@@ -129,7 +129,12 @@ export default {
      * 設定画面での「パスワードは～から可能です」の「～」の表示
      * undefinedにするとリンクが表示されない
      */
-    changeName: 'traPortal'
+    changeName: 'traPortal',
+    /**
+     * 登録画面や登録画面へのリンクを表示する
+     * サーバーの設定も必要
+     */
+    showRegistration: false
   },
   /**
    * 内部用認証機構へのリダイレクト
