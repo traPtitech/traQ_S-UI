@@ -219,7 +219,9 @@ const parseQuery = (query: string): SearchMessageQuery => {
     result.hasAttachments,
     result.hasImage,
     result.hasVideo,
-    result.hasAudio
+    result.hasAudio,
+    undefined,
+    undefined
   ]
 }
 

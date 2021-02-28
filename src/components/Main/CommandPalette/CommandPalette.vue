@@ -37,7 +37,7 @@ $command-palette-max-width: min(800px, calc(100vw - 16px));
 .container {
   @include background-primary;
   width: 100%;
-  margin: 40px auto 16px auto;
+  margin: 32px auto 24px auto;
   max-width: $command-palette-max-width;
   max-height: calc(100vh - 56px);
   border-radius: 8px;
