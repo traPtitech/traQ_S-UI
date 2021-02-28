@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { settingsRoutes } from './settings'
+import config from '@/config'
 
 export enum RouteName {
   Index = 'index',
@@ -96,12 +97,16 @@ const routes: RouteRecordRaw[] = [
     component: Auth,
     props: { type: 'login' }
   },
-  // {
-  //   path: '/registration',
-  //   name: RouteName.Registration,
-  //   component: Auth,
-  //   props: { type: 'registration' }
-  // },
+  ...(config.auth.showRegistration
+    ? [
+        {
+          path: '/registration',
+          name: RouteName.Registration,
+          component: Auth,
+          props: { type: 'registration' }
+        }
+      ]
+    : []),
   {
     path: '/consent',
     name: RouteName.Consent,
