@@ -78,6 +78,15 @@
           />
         </div>
       </template>
+      <template v-if="showRegistration">
+        <authenticate-separator :class="$style.separator" />
+        <authenticate-button
+          type="secondary"
+          :class="$style.registrationButton"
+          label="新規登録"
+          @click="moveToRegistration"
+        />
+      </template>
     </template>
   </form>
 </template>
@@ -92,6 +101,7 @@ import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import config from '@/config'
 import LoginFormSaved from './LoginFormSaved.vue'
+import router, { RouteName } from '@/router'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -108,7 +118,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup() {
     const {
       loginState,
       saved,
@@ -118,7 +128,10 @@ export default defineComponent({
       dontUseSaved
     } = useLogin()
     const isIOS = isIOSApp()
-    const { resetLink } = config.auth
+    const { resetLink, showRegistration } = config.auth
+    const moveToRegistration = () => {
+      router.push(RouteName.Registration)
+    }
 
     return {
       resetLink,
@@ -128,7 +141,9 @@ export default defineComponent({
       loginWithSaved,
       loginExternal,
       dontUseSaved,
-      isIOS
+      isIOS,
+      showRegistration,
+      moveToRegistration
     }
   }
 })
@@ -171,5 +186,8 @@ export default defineComponent({
 .error {
   color: $theme-accent-error;
   font-weight: bold;
+}
+.registrationButton {
+  margin: 0 auto;
 }
 </style>
