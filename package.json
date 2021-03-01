@@ -9,8 +9,8 @@
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
-    "lint:no-fix": "vue-cli-service lint --no-fix",
+    "lint": "vue-cli-service lint --cache",
+    "lint:no-fix": "vue-cli-service lint --cache --no-fix",
     "gen-fonts": "node build/gen-mplus",
     "gen-unicode_emojis": "node build/gen-unicode_emojis",
     "postinstall": "patch-package"
