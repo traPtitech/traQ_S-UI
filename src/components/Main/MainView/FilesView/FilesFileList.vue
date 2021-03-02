@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <files-file-list-image :class="$style.fileList" />
+    <!-- <files-file-list-image :class="$style.fileList" /> -->
     <!-- v-for="meta in fileMetaDataState.images"
       :key="meta.id"
       :file-id="meta.id"
@@ -16,9 +16,9 @@
       v-for="meta in fileMetaDataState.audios"
       :key="meta.id"
       :file-id="meta.id"
-    />
-    <files-file-list-file
-      v-for="meta in fileMetaDataState.files"
+    /> -->
+    <files-file-list-file :class="$style.fileList" />
+    <!-- v-for="meta in fileMetaDataState.files"
       :key="meta.id"
       :class="$style.item"
       :file-id="meta.id"
@@ -31,15 +31,15 @@ import { defineComponent } from 'vue'
 import FilesFileListImage from './FilesFileListImage.vue'
 // import FilesFileListVideo from './FilesFileListVideo.vue'
 // import FilesFileListAudio from './FilesFileListAudio.vue'
-// import FilesFileListFile from './FilesFileListFile.vue'
+import FilesFileListFile from './FilesFileListFile.vue'
 
 export default defineComponent({
   name: 'FilesFileList',
   components: {
-    FilesFileListImage
+    // FilesFileListImage,
     // FilesFileListVideo,
     // FilesFileListAudio,
-    // FilesFileListFile
+    FilesFileListFile
   }
 })
 </script>

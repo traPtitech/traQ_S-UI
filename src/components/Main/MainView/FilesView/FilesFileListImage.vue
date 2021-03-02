@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
-      <files-file-list-content-image :class="$style.contentImage" />
-      <files-file-list-description :class="$style.description" />
-    </div>
+    <files-file-list-content-image :class="$style.contentImage" />
+    <files-file-list-description :class="$style.description" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -20,7 +20,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-        overflow: hidden;
+  overflow: hidden;
   position: relative;
   width: 50%;
   &::before {
@@ -28,30 +28,30 @@ export default defineComponent({
     display: block;
     padding-top: 100%;
   }
-      border: {
-      style: solid;
-      width: 2x;
-      radius: 4px;
-      color: $theme-background-secondary;
-      }
+  border: {
+    style: solid;
+    width: 2x;
+    radius: 4px;
+    color: $theme-background-secondary;
+  }
 
-    .contentImage {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+  .contentImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .description {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-top: {
+      style: solid;
+      width: 2px;
+      color: $theme-background-secondary;
     }
-    .description {
-            position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      border-top: {
-        style: solid;
-        width: 2px;
-        color: $theme-background-secondary;
-      }
-    }
+  }
 }
 </style>

@@ -1,77 +1,151 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.descriptionContainer">
-      <div :class="$style.fileName">image.png</div>
-      <div :class="$style.info">
-        <div :class="$style.fileDate">2020/10/10</div>
-        <div :class="$style.fileSize">34KB</div>
-      </div>
-      <div :class="$style.user">
-        <img
-          :class="$style.userIcon"
-          src="https://q.trap.jp/api/v3/public/icon/tararira"
-        />
-        <div :class="$style.userId">tararira</div>
+    <div
+      :class="$style.fileName"
+      :data-is-ellipsis="$boolAttr(isEllipsis)"
+      :title="name"
+    >
+      {{ name }}
+    </div>
+    <div :class="$style.info">
+      <span :class="$style.fileDate">
+        {{ createdAt }}
+      </span>
+      <span :class="$style.fileSize">
+        {{ fileSize }}
+      </span>
+    </div>
+    <div :class="$style.user">
+      <user-icon
+      :class="$style.userIcon"
+      :user-id="user"
+      :size="24"
+      />
+      <div :class="$style.userId">
+        {{ user }}
       </div>
     </div>
+    <icon
+      mdi
+      name="download"
+      :size="24"
+      :class="$style.dl"
+      @click="onFileDownloadLinkClick"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import useFileMeta from '@/use/fileMeta'
+import Icon from '@/components/UI/Icon.vue'
+import store from '@/store'
+import { getCreatedDate } from '@/lib/date'
+import UserIcon from '@/components/UI/UserIcon.vue'
 export default defineComponent({
   name: 'FilesFileListDescription',
-  components: {}
+  components: {
+    Icon,
+    UserIcon
+  },
+  data: () => {
+    return {
+      fileSize: '5MB',
+      name: 'image.png',
+      user: 'trasta',
+      createdAt: '2020/10/10'
+    };
+  },
+  props: {
+    fileId: {
+      type: String,
+      required: true
+    },
+    isWhite: {
+      type: Boolean,
+      default: false
+    },
+    isEllipsis: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props, context) {
+    const { fileMeta, fileSize, onFileDownloadLinkClick } = useFileMeta(
+      props,
+      context
+    )
+    const name = computed(() => fileMeta.value?.name ?? 'unknown')
+    const user = computed(
+      () => store.state.entities.users[fileMeta.value?.uploaderId ?? '']
+    )
+    const createdAt = computed(() =>
+      getCreatedDate(fileMeta.value?.createdAt ?? '')
+    )
+
+    return {
+      // fileMeta,
+      onFileDownloadLinkClick,
+      // fileSize,
+      // name,
+      // createdAt,
+      // user
+    }
+  }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  padding: {
-    top: 8px;
-    left: 16px;
-    bottom: 8px;
-  }
+  padding: 8px 16px;
   @include background-primary;
-  .descriptionContainer {
-    .fileName {
-      @include color-ui-primary;
-      @include size-h3;
-    }
-    .info,
-    .user {
-      margin-top: 4px;
-    }
-    .info {
-      display: flex;
-      align-items: center;
-      .fileDate,
-      .fileSize {
-        @include color-ui-secondary;
-        @include size-caption;
-      }
-
-      .fileDate {
-      }
-      .fileSize {
-        margin-left: 8px;
-      }
-    }
-    .user {
-      display: flex;
-      align-items: center;
-
-      .userIcon {
-        width: 24px;
-        height: 24px;
-        border-radius: 100vw;
-      }
-      .userId {
-        @include size-caption;
-        @include color-ui-secondary;
-        margin-left: 4px;
-      }
-    }
+  display: grid;
+  width: 100%;
+  grid-template:
+    'name ..' minmax(min-content, 20px)
+    'info dl' minmax(min-content, 20px)
+    'user ..' minmax(min-content, 20px)
+    / auto 24px;
+}
+.fileName {
+  @include color-ui-primary;
+  @include size-h3;
+}
+.info,
+.user {
+  margin-top: 4px;
+}
+.info {
+  grid-area: info;
+  .fileDate,
+  .fileSize {
+    @include color-ui-secondary;
+    @include size-caption;
   }
+
+  .fileDate {
+  }
+  .fileSize {
+    margin-left: 8px;
+  }
+}
+
+.user {
+  grid-area: user;
+  .userIcon {
+    display: inline-flex;
+    vertical-align: middle;
+  }
+  .userId {
+    @include size-caption;
+    @include color-ui-secondary;
+    display: inline-flex;
+    margin-left: 8px;
+  }
+}
+
+.dl {
+  grid-area: dl;
+  @include color-ui-primary;
 }
 </style>
