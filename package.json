@@ -29,7 +29,7 @@
     "direct-vuex": "^0.12.1",
     "firebase": "^8.2.6",
     "highlight.js": "^10.6.0",
-    "idb-keyval": "^5.0.2",
+    "idb-keyval": "^5.0.4",
     "klona": "^2.0.4",
     "mitt": "^2.1.0",
     "pica": "^6.1.1",
