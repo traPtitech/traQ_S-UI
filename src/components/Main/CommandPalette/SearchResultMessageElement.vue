@@ -1,10 +1,11 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" @click="onClick">
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.userName">{{ userName }}</div>
     <div :class="$style.content">{{ message.content }}</div>
-    <div :class="$style.channelName">{{ channelName }}</div>
-    <time :class="$style.date">{{ date }}</time>
+    <div :class="$style.channelAndDate">
+      {{ channelName }} - <time :class="$style.date">{{ date }}</time>
+    </div>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import { Message } from '@traptitech/traq'
 import useChannelPath from '@/use/channelPath'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import store from '@/store'
+import { MessageId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'SearchResultMessageElement',
@@ -26,7 +28,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: {
+    clickOpen: (messageId: MessageId) => true
+  },
+  setup(props, { emit }) {
     const { channelIdToPathString } = useChannelPath()
     const userName = computed(
       () => store.state.entities.usersMap.get(props.message.userId)?.name ?? ''
@@ -37,7 +42,8 @@ export default defineComponent({
     const date = computed(() =>
       new Date(props.message.updatedAt).toDateString()
     )
-    return { userName, channelName, date }
+    const onClick = () => emit('clickOpen', props.message.id)
+    return { userName, channelName, date, onClick }
   }
 })
 </script>
@@ -46,11 +52,16 @@ export default defineComponent({
 .container {
   display: grid;
   grid-template:
-    'icon userName    userName'
-    'icon content     content'
-    'icon channelName date'
-    /32px min-content 1fr;
+    'icon userName'
+    'icon content'
+    'icon channelAndDate'
+    /32px 1fr;
   gap: 4px 16px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    @include background-secondary;
+  }
 }
 .icon {
   grid-area: icon;
@@ -68,15 +79,9 @@ export default defineComponent({
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.channelName {
+.channelAndDate {
   @include color-ui-secondary;
   @include size-body2;
-  font-weight: bold;
-  grid-area: channelName;
-}
-.date {
-  @include color-ui-secondary;
-  @include size-body2;
-  grid-area: date;
+  grid-area: channelAndDate;
 }
 </style>

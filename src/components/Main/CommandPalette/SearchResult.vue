@@ -11,7 +11,10 @@
       :key="message.id"
       :class="$style.elementContainer"
     >
-      <search-result-message-element :message="message" />
+      <search-result-message-element
+        :message="message"
+        @click-open="openMessage"
+      />
     </div>
   </div>
   <div v-else :class="$style.container"></div>
@@ -19,14 +22,20 @@
 
 <script lang="ts">
 import { computed, defineComponent, Ref, ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import { Message } from '@traptitech/traq'
-import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
-import useSearchMessages from './use/searchMessages'
+import { compareDateString } from '@/lib/util/date'
+import { MessageId } from '@/types/entity-ids'
+import { RouteName } from '@/router'
+import {
+  useCommandPaletteInvoker,
+  useCommandPaletteStore
+} from '@/providers/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
 } from '@/components/UI/PopupSelector.vue'
-import { compareDateString } from '@/lib/util/date'
+import useSearchMessages from './use/searchMessages'
+import SearchResultMessageElement from './SearchResultMessageElement.vue'
 
 const sortKeyCreatedAtLatest = 'created_at_latest'
 const sortKeyCreatedAtOldest = 'created_at_oldest'
@@ -64,6 +73,16 @@ const useSort = (
   return { selectorItems, sortedMessages }
 }
 
+const useMessageOpener = () => {
+  const router = useRouter()
+  const { closeCommandPalette } = useCommandPaletteInvoker()
+  const openMessage = async (messageId: MessageId) => {
+    closeCommandPalette()
+    router.push({ name: RouteName.Message, params: { id: messageId } })
+  }
+  return { openMessage }
+}
+
 export default defineComponent({
   components: { SearchResultMessageElement, PopupSelector },
   name: 'SearchResult',
@@ -83,7 +102,9 @@ export default defineComponent({
       selectorValue
     )
 
-    return { selectorItems, selectorValue, sortedMessages }
+    const { openMessage } = useMessageOpener()
+
+    return { selectorItems, selectorValue, sortedMessages, openMessage }
   }
 })
 </script>
@@ -91,11 +112,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-tertiary;
-  padding: 1rem;
   overflow-y: scroll;
 }
 .sortSelector {
-  margin-bottom: 1rem;
+  margin: 1rem;
 }
 .elementContainer {
   margin-bottom: 1rem;

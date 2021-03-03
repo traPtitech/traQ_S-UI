@@ -69,6 +69,7 @@ export const useCommandPaletteStore = () => {
 
 /** コマンドパレットを呼び出したいコンポーネントが用いる */
 export const useCommandPaletteInvoker = () => {
-  const { openCommandPalette } = useCommandPaletteBase()
-  return { openCommandPalette }
+  const { openCommandPalette, closeCommandPalette } = useCommandPaletteBase()
+
+  return { openCommandPalette, closeCommandPalette }
 }
