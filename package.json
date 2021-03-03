@@ -77,7 +77,7 @@
     "eslint-plugin-vue": "^7.6.0",
     "fibers": "^5.0.0",
     "fonteditor-core": "^2.1.5",
-    "patch-package": "^6.4.2",
+    "patch-package": "^6.4.4",
     "postcss": "^8.2.6",
     "prettier": "^2.2.1",
     "sass": "^1.32.8",
