@@ -12,11 +12,7 @@
       :updated-at="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <div
-        v-show="!state.isEditing"
-        :class="['markdown-body', $style.content]"
-        v-html="state.content"
-      />
+      <message-markdown :message-id="messageId" />
       <message-editor
         v-if="state.isEditing"
         :raw-content="state.rawContent"
@@ -47,6 +43,7 @@ import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import MessageMarkdown from '@/components/UI/MessageMarkdown.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
@@ -59,6 +56,7 @@ export default defineComponent({
   components: {
     UserIcon,
     MessageHeader,
+    MessageMarkdown,
     MessageEditor,
     MessageFileList,
     MessageQuoteList,
@@ -80,12 +78,6 @@ export default defineComponent({
       message: computed(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         () => store.state.entities.messages.messagesMap.get(props.messageId)!
-      ),
-      content: computed(
-        () =>
-          store.state.domain.messagesView.renderedContentMap.get(
-            props.messageId
-          ) ?? ''
       ),
       rawContent: computed((): string => state.message.content ?? ''),
       isEditing: computed(
@@ -134,14 +126,6 @@ export default defineComponent({
   padding-top: 4px;
   padding-left: 8px;
   min-width: 0;
-}
-
-.content {
-  grid-area: message-contents;
-  word-break: normal;
-  overflow-wrap: break-word; // for Safari
-  overflow-wrap: anywhere;
-  line-break: loose;
 }
 
 .messageEmbeddingsList {

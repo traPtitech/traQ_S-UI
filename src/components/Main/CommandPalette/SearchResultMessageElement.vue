@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.container" @click="onClick">
-    <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
-    <div :class="$style.userName">{{ userName }}</div>
-    <div :class="$style.content">{{ message.content }}</div>
+    <message-contents :message-id="message.id" />
     <div :class="$style.channelAndDate">
       {{ channelName }} - <time :class="$style.date">{{ date }}</time>
     </div>
@@ -13,14 +11,16 @@
 import { computed, defineComponent, PropType } from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelPath from '@/use/channelPath'
-import UserIcon from '@/components/UI/UserIcon.vue'
+// import UserIcon from '@/components/UI/UserIcon.vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
+import MessageContents from '../MainView/MessageElement/MessageContents.vue'
 
 export default defineComponent({
   name: 'SearchResultMessageElement',
   components: {
-    UserIcon
+    // UserIcon,
+    MessageContents
   },
   props: {
     message: {

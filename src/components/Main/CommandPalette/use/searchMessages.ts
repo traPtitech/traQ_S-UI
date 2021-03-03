@@ -226,7 +226,7 @@ const parseQuery = (query: string): SearchMessageQuery => {
 }
 
 const useSearchMessages = () => {
-  const fetchMessagesBySearch = async (
+  const fetchAndRenderMessagesBySearch = async (
     query: string
   ): Promise<SearchMessageResult> => {
     if (query === '') {
@@ -235,13 +235,16 @@ const useSearchMessages = () => {
     const res = await apis.searchMessages(...parseQuery(query))
     const hits = res.data.hits ?? []
     store.dispatch.entities.messages.extendMessagesMap(hits)
+    hits.map(message =>
+      store.dispatch.domain.messagesView.renderMessageContent(message.id)
+    )
 
     return {
       totalHits: res.data.totalHits ?? 0,
       hits
     }
   }
-  return { fetchMessagesBySearch }
+  return { fetchMessagesBySearch: fetchAndRenderMessagesBySearch }
 }
 
 export default useSearchMessages
