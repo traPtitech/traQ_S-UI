@@ -178,7 +178,7 @@ const mergeQueries = (q1: QueryWordOrFilter, q2: QueryWordOrFilter) => ({
   hasAudio: q1.hasAudio ?? q2.hasAudio
 })
 
-const parseSplittedQuery = (q: string): QueryWordOrFilter => {
+const parseSplitQuery = (q: string): QueryWordOrFilter => {
   // value filterを試す
   for (const [key, matcher] of valueFilterMatcherMap) {
     const result = matcher(q)
@@ -198,7 +198,7 @@ const parseQuery = (query: string): SearchMessageQuery => {
     .split(' ')
     .filter(q => q)
     .map(q => {
-      const parsed: QueryWordOrFilter = parseSplittedQuery(q)
+      const parsed: QueryWordOrFilter = parseSplitQuery(q)
       if (Object.values(parsed).filter(v => v).length === 0) {
         parsed.word = q
       }

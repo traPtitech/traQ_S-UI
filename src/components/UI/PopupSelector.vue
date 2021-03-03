@@ -106,7 +106,7 @@ export default defineComponent({
   top: 100%;
   z-index: $z-index-header-tools;
   width: max-content;
-  border-radius: 2px;
+  border-radius: 4px;
   cursor: pointer;
 }
 .itemIcon {
