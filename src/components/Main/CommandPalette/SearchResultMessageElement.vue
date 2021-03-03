@@ -1,6 +1,22 @@
 <template>
   <div :class="$style.container" @click="onClick">
-    <message-contents :message-id="message.id" />
+    <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
+    <div :class="$style.userName">{{ userName }}</div>
+    <div
+      ref="contentRef"
+      :class="$style.contentContainer"
+      :data-oversized="$boolAttr(oversized)"
+      :data-expanded="$boolAttr(expanded)"
+    >
+      <message-markdown :message-id="message.id" />
+    </div>
+    <div
+      :class="$style.expandButton"
+      v-if="oversized && !expanded"
+      @click.stop="onClickExpandButton"
+    >
+      <icon name="arrow-expand-vertical" mdi :size="20" />全て表示
+    </div>
     <div :class="$style.channelAndDate">
       {{ channelName }} - <time :class="$style.date">{{ date }}</time>
     </div>
@@ -8,19 +24,57 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  ref,
+  Ref
+} from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelPath from '@/use/channelPath'
-// import UserIcon from '@/components/UI/UserIcon.vue'
+import Icon from '@/components/UI/Icon.vue'
+import UserIcon from '@/components/UI/UserIcon.vue'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
-import MessageContents from '../MainView/MessageElement/MessageContents.vue'
+import MessageMarkdown from '@/components/UI/MessageMarkdown.vue'
+
+const maxHeight = 200
+
+const useHeightObserver = (contentRef: Ref<HTMLElement | undefined>) => {
+  const oversized = ref(false)
+  const observer = new ResizeObserver(entries => {
+    const entry = entries[0]
+    const { height } = entry.target.getBoundingClientRect()
+    oversized.value = height >= maxHeight
+  })
+  onMounted(() => {
+    if (contentRef.value) observer.observe(contentRef.value)
+  })
+  onBeforeUnmount(() => {
+    if (contentRef.value) observer.unobserve(contentRef.value)
+  })
+
+  return { oversized }
+}
+
+const useMessageExpansion = (contentRef: Ref<HTMLElement | undefined>) => {
+  const { oversized } = useHeightObserver(contentRef)
+  const expanded = ref(false)
+  const onClickExpandButton = () => {
+    expanded.value = !expanded.value
+  }
+  return { oversized, expanded, onClickExpandButton }
+}
 
 export default defineComponent({
   name: 'SearchResultMessageElement',
   components: {
-    // UserIcon,
-    MessageContents
+    Icon,
+    UserIcon,
+    MessageMarkdown
   },
   props: {
     message: {
@@ -32,6 +86,9 @@ export default defineComponent({
     clickOpen: (messageId: MessageId) => true
   },
   setup(props, { emit }) {
+    // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
+    store.dispatch.entities.fetchUser({ userId: props.message.userId })
+
     const { channelIdToPathString } = useChannelPath()
     const userName = computed(
       () => store.state.entities.usersMap.get(props.message.userId)?.name ?? ''
@@ -42,8 +99,24 @@ export default defineComponent({
     const date = computed(() =>
       new Date(props.message.updatedAt).toDateString()
     )
+
     const onClick = () => emit('clickOpen', props.message.id)
-    return { userName, channelName, date, onClick }
+
+    const contentRef = ref<HTMLElement>()
+    const { oversized, expanded, onClickExpandButton } = useMessageExpansion(
+      contentRef
+    )
+
+    return {
+      userName,
+      channelName,
+      date,
+      onClick,
+      expanded,
+      oversized,
+      onClickExpandButton,
+      contentRef
+    }
   }
 })
 </script>
@@ -54,6 +127,7 @@ export default defineComponent({
   grid-template:
     'icon userName'
     'icon content'
+    'icon expandButton'
     'icon channelAndDate'
     /32px 1fr;
   gap: 4px 16px;
@@ -68,20 +142,47 @@ export default defineComponent({
 }
 .userName {
   @include color-ui-primary;
-  font-weight: bold;
   grid-area: userName;
+  font-weight: bold;
 }
-.content {
+
+$message-max-height: 200px;
+
+.contentContainer {
   @include color-ui-primary;
   grid-area: content;
-  -webkit-line-clamp: 3;
+  max-height: $message-max-height;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  &[data-expanded] {
+    // NOTE: 画面幅の変更でoversizedではなくてもexpandedがつくことがあるが、
+    //       元の高さに戻すボタンは置かないためスタイル上でこの場合を考慮する必要はない
+    max-height: unset;
+  }
+  &[data-oversized]:not([data-expanded]) {
+    mask-image: linear-gradient(black calc(100% - 32px), transparent 100%);
+  }
 }
 .channelAndDate {
   @include color-ui-secondary;
   @include size-body2;
   grid-area: channelAndDate;
+}
+.expandButton {
+  @include color-ui-secondary;
+  @include size-body2;
+  grid-area: expandButton;
+  width: max-content;
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  margin: 0.25rem 0;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    @include background-tertiary;
+  }
 }
 </style>

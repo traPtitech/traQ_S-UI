@@ -118,9 +118,6 @@ export default defineComponent({
   margin: 1rem;
 }
 .elementContainer {
-  margin-bottom: 1rem;
-  &:last-child {
-    margin-bottom: 0.5rem;
-  }
+  margin-bottom: 0.5rem;
 }
 </style>

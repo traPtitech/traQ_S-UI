@@ -75,7 +75,7 @@ const prefixedQuery = (prefixes: string[]): ValueFilterMatcher => (
 /**
  * flag filterから抽出したフィルターの内容がtargetと一致するかを検査し、一致した場合は肯定か否定かを返す
  * @param result 肯定の内容 (例: `not:bot` -> undefined, `has:attachments` -> "attachments")
- * @param negationResult 否定の内容 (例: `not:bot` -> "bot", `has:attachments` -> undefiend)
+ * @param negationResult 否定の内容 (例: `not:bot` -> "bot", `has:attachments` -> undefined)
  * @param target 検査したいフィルタ項目
  */
 const checkBooleanQuery = (
