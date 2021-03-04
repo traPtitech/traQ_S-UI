@@ -30,6 +30,7 @@
       :show-detail-button="isHovered"
       :message-id="messageId"
       :stamps="state.message.stamps"
+      :is-archived="isArchived"
     />
   </div>
 </template>
