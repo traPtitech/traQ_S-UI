@@ -29,7 +29,7 @@
         </div>
       </transition-group>
       <div
-        v-if="!isDetailShown"
+        v-if="!isDetailShown && !isArchived"
         :class="$style.stampPickerOpener"
         @click="toggleStampPicker"
       >
@@ -147,6 +147,10 @@ export default defineComponent({
       required: true
     },
     showDetailButton: {
+      type: Boolean,
+      default: false
+    },
+    isArchived: {
       type: Boolean,
       default: false
     }
