@@ -44,7 +44,7 @@ import NavigationContentContainer from '@/components/Main/Navigation/NavigationC
 import Icon from '@/components/UI/Icon.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
-  const { textFilterState } = useChannelFilter(channels) // useTextFilter(channels, 'name')
+  const { textFilterState } = useChannelFilter(channels)
   return {
     channelListFilterState: textFilterState
   }
