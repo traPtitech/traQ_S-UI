@@ -29,7 +29,7 @@
         </div>
       </transition-group>
       <div
-        v-if="!isDetailShown"
+        v-if="!isDetailShown && !isArchived"
         :class="$style.stampPickerOpener"
         @click="toggleStampPicker"
       >
@@ -49,6 +49,7 @@ import StampDetailElement from './StampDetailElement.vue'
 import Icon from '@/components/UI/Icon.vue'
 import apis from '@/lib/apis'
 import { useStampPickerInvoker } from '@/providers/stampPicker'
+import useToastStore from '@/providers/toastStore'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -148,10 +149,15 @@ export default defineComponent({
     showDetailButton: {
       type: Boolean,
       default: false
+    },
+    isArchived: {
+      type: Boolean,
+      default: false
     }
   },
   components: { StampElement, StampDetailElement, Icon },
   setup(props) {
+    const { addErrorToast } = useToastStore()
     const myId = computed(() => store.getters.domain.me.myId)
     const stampList = computed(() => createStampList(props, myId))
 
@@ -161,7 +167,12 @@ export default defineComponent({
     }
 
     const addStamp = async (stampId: StampId) => {
-      await apis.addMessageStamp(props.messageId, stampId)
+      try {
+        await apis.addMessageStamp(props.messageId, stampId)
+      } catch {
+        addErrorToast('メッセージにスタンプを追加できませんでした')
+        return
+      }
       store.commit.domain.me.upsertLocalStampHistory({
         stampId,
         datetime: new Date()
@@ -173,8 +184,12 @@ export default defineComponent({
 
     const listEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useStampPickerInvoker(
-      stampData => {
-        apis.addMessageStamp(props.messageId, stampData.id)
+      async stampData => {
+        try {
+          await apis.addMessageStamp(props.messageId, stampData.id)
+        } catch {
+          addErrorToast('メッセージにスタンプを追加できませんでした')
+        }
       },
       listEle,
       'top-left'

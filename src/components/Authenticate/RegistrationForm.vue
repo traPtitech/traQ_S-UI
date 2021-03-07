@@ -3,45 +3,62 @@
     <authenticate-header :class="$style.header" title="新規登録" />
     <authenticate-input
       label="traQ ID"
-      v-model="loginState.name"
+      v-model="registerState.name"
       :class="$style.item"
       autocomplete="username"
       autofocus
     />
     <authenticate-input
-      label="表示名"
-      v-model="loginState.name"
-      :class="$style.item"
-      autocomplete="nickname"
-    />
-    <authenticate-input
       label="パスワード"
       type="password"
-      v-model="loginState.name"
+      v-model="registerState.password"
       :class="$style.item"
       autocomplete="new-password"
       enterkeyhint="done"
     />
     <div :class="$style.error">
-      <span v-if="loginState.error">{{ loginState.error }}</span>
+      <span v-if="error">{{ error }}</span>
     </div>
     <div :class="$style.buttons">
       <authenticate-button
         type="primary"
         label="アカウント作成"
         is-submit
-        @click="login"
+        @click="register"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import useLogin from './use/login'
+import { defineComponent, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
+import apis from '@/lib/apis'
+
+const useRegister = () => {
+  const router = useRouter()
+  const registerState = reactive({
+    name: '',
+    password: ''
+  })
+  const error = ref('')
+
+  const register = async () => {
+    try {
+      await apis.createUser(registerState)
+      await apis.login(undefined, registerState)
+
+      router.push('/')
+    } catch (e) {
+      error.value = '' + e
+    }
+  }
+
+  return { registerState, error, register }
+}
 
 export default defineComponent({
   name: 'RegistrationForm',
@@ -50,9 +67,9 @@ export default defineComponent({
     AuthenticateHeader,
     AuthenticateButton
   },
-  setup(_, context) {
-    const { loginState, login, loginExternal } = useLogin()
-    return { loginState, login, loginExternal }
+  setup() {
+    const { registerState, error, register } = useRegister()
+    return { registerState, error, register }
   }
 })
 </script>

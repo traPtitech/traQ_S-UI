@@ -1,4 +1,4 @@
-import { SetupContext, reactive } from 'vue'
+import { SetupContext } from 'vue'
 import {
   checkLevel2InputEventsSupport,
   isMac,
@@ -96,10 +96,6 @@ const useSendKeyWatcher = (
   context: SetupContext,
   insertLineBreak: () => void
 ) => {
-  const state = reactive({
-    isModifierKeyPressed: false
-  })
-
   /*
    * 修飾キーが押されている際は先に発火する`keydown`イベントで
    * 既にpreventされているため`beforeinput`イベントは発火しない
@@ -171,11 +167,15 @@ const useSendKeyWatcher = (
     }
   }
 
+  const onBlur = () => {
+    context.emit('modifier-key-up')
+  }
+
   return {
-    sendKeyState: state,
     onBeforeInput,
     onKeyDown,
-    onKeyUp
+    onKeyUp,
+    onBlur
   }
 }
 

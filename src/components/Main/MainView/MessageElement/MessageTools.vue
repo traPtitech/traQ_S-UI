@@ -83,6 +83,7 @@ import { useStampPickerInvoker } from '@/providers/stampPicker'
 import useIsMobile from '@/use/isMobile'
 import apis from '@/lib/apis'
 import { useMessageContextMenuInvoker } from '@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
+import useToastStore from '@/providers/toastStore'
 
 export default defineComponent({
   name: 'MessageTools',
@@ -96,11 +97,18 @@ export default defineComponent({
     show: { type: Boolean, default: false }
   },
   setup(props) {
+    const { addErrorToast } = useToastStore()
+
     const recentStamps = computed(() =>
       store.getters.domain.me.recentStampIds.slice(0, 3)
     )
     const addStamp = async (stampId: StampId) => {
-      await apis.addMessageStamp(props.messageId, stampId)
+      try {
+        await apis.addMessageStamp(props.messageId, stampId)
+      } catch {
+        addErrorToast('メッセージにスタンプを追加できませんでした')
+        return
+      }
       store.commit.domain.me.upsertLocalStampHistory({
         stampId,
         datetime: new Date()
@@ -111,8 +119,12 @@ export default defineComponent({
     const {
       isThisOpen: isStampPickerOpen,
       toggleStampPicker
-    } = useStampPickerInvoker(stampData => {
-      apis.addMessageStamp(props.messageId, stampData.id)
+    } = useStampPickerInvoker(async stampData => {
+      try {
+        await apis.addMessageStamp(props.messageId, stampData.id)
+      } catch {
+        addErrorToast('メッセージにスタンプを追加できませんでした')
+      }
     }, containerEle)
 
     const {

@@ -76,5 +76,14 @@ export const getters = defineGetters<S>()({
     return [...state.stampPalettesMap.values()]
       .filter(palette => palette.stamps?.length > 0)
       .map(palette => palette.id)
+  },
+  allUsers(state) {
+    return [...state.usersMap.values()]
+  },
+  allUserGroups(state) {
+    return [...state.userGroupsMap.values()]
+  },
+  allStamps(state) {
+    return [...state.stampsMap.values()]
   }
 })

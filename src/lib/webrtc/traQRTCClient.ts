@@ -111,7 +111,6 @@ class traQRTCClient extends traQRTCClientBase {
     this.dispatchEvent(new Event('connect'))
 
     this.peer.on('close', this.handlePeerClose.bind(this))
-    this.peer.on('disconnected', this.handlePeerDisconnected.bind(this))
     this.peer.on('error', this.handlePeerError.bind(this))
 
     // this.id = this.peer.id
@@ -192,9 +191,6 @@ class traQRTCClient extends traQRTCClientBase {
 
   private handlePeerClose() {
     this.dispatchEvent(new Event('connectionclose'))
-  }
-  private handlePeerDisconnected() {
-    this.dispatchEvent(new Event('disconnect'))
   }
   private handlePeerError(err: unknown) {
     // eslint-disable-next-line no-console

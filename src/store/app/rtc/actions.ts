@@ -144,6 +144,10 @@ export const actions = defineActions({
         tts.stop()
       }
     })
+    client?.addEventListener('connectionclose', () => {
+      // eslint-disable-next-line no-console
+      console.log('[RTC] connection closed')
+    })
     await client?.establishConnection()
   },
 
