@@ -2,12 +2,12 @@ import store from '@/store'
 import { Channel } from '@traptitech/traq'
 import { reactive, computed, Ref } from 'vue'
 
-const useChannelFilter = (items: Ref<readonly Channel[]>) => {
-  const itemsMap = computed(
-    () => new Map(items.value.map(item => [item.id, item]))
+const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
+  const targetChannelIds = computed(
+    () => new Set(targetChannels.value.map(channel => channel.id))
   )
   const oneLetterChannels = computed(() =>
-    Array.from(store.state.entities.channelsMap)
+    [...store.state.entities.channelsMap]
       .map(([_, channel]) => channel)
       .filter(channel => channel.name.length === 1)
   )
@@ -16,7 +16,7 @@ const useChannelFilter = (items: Ref<readonly Channel[]>) => {
     query: '',
     filteredItems: computed((): readonly Channel[] => {
       if (state.query.length === 0) {
-        return items.value
+        return targetChannels.value
       }
       const query = state.query.toLowerCase()
       const queryArr: [string, ...string[]] = state.query
@@ -40,7 +40,7 @@ const useChannelFilter = (items: Ref<readonly Channel[]>) => {
 
         const channel = store.state.entities.channelsMap.get(id)
         if (channel === undefined) return
-        if (itemsMap.value.has(channel.id))
+        if (targetChannelIds.value.has(channel.id))
           // 完全一致していたら fullMatched に入れる
           (channel.name.toLowerCase() === query ? fullMatched : matched).push(
             channel
