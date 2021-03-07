@@ -17,6 +17,10 @@
       />
     </div>
   </div>
+  <div v-else-if="fetchingSearchResult" :class="$style.empty">
+    <loading-spinner :class="$style.spinner" color="ui-secondary" />
+  </div>
+  <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
   <div v-else :class="$style.container"></div>
 </template>
 
@@ -36,6 +40,7 @@ import PopupSelector, {
 } from '@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
+import LoadingSpinner from '@/components/UI/LoadingSpinner.vue'
 
 const sortKeyCreatedAtLatest = 'created_at_latest'
 const sortKeyCreatedAtOldest = 'created_at_oldest'
@@ -84,13 +89,19 @@ const useMessageOpener = () => {
 }
 
 export default defineComponent({
-  components: { SearchResultMessageElement, PopupSelector },
+  components: {
+    SearchResultMessageElement,
+    PopupSelector,
+    LoadingSpinner
+  },
   name: 'SearchResult',
   setup() {
     const { commandPaletteStore: store } = useCommandPaletteStore()
     const resultMessages = ref<Message[]>([])
-    const { fetchMessagesBySearch } = useSearchMessages()
+    const { fetchMessagesBySearch, fetchingSearchResult } = useSearchMessages()
+
     watchEffect(async () => {
+      resultMessages.value = []
       const res = await fetchMessagesBySearch(store.query)
       resultMessages.value = res.hits
     })
@@ -102,9 +113,18 @@ export default defineComponent({
       selectorValue
     )
 
+    const queryEntered = computed(() => store.query.length > 0)
+
     const { openMessage } = useMessageOpener()
 
-    return { selectorItems, selectorValue, sortedMessages, openMessage }
+    return {
+      selectorItems,
+      selectorValue,
+      sortedMessages,
+      openMessage,
+      queryEntered,
+      fetchingSearchResult
+    }
   }
 })
 </script>
@@ -113,11 +133,25 @@ export default defineComponent({
 .container {
   @include color-ui-tertiary;
   overflow-y: scroll;
+  width: 100%;
 }
 .sortSelector {
   margin: 1rem;
 }
 .elementContainer {
   margin-bottom: 0.5rem;
+}
+.spinner {
+  opacity: 0.5;
+}
+.empty {
+  @include color-ui-secondary;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+
+  width: 100%;
+  padding: 4rem 0;
+  user-select: none;
 }
 </style>
