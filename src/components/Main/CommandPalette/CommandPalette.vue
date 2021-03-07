@@ -1,24 +1,28 @@
 <template>
   <div :class="$style.container" v-click-outside="closeCommandPalette">
     <command-palette-input />
-    <hr
-      :class="$style.separator"
-      v-if="store.mode === 'search' && store.query.length > 0"
+    <hr :class="$style.separator" v-if="supplementalViewType" />
+    <search-result v-if="supplementalViewType === 'search-result'" />
+    <search-suggestion
+      v-else-if="supplementalViewType === 'search-suggestion'"
     />
-    <search-result v-if="store.mode === 'search' && store.query.length > 0" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
+import SearchSuggestion from './SearchSuggestion.vue'
+
+type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
 export default defineComponent({
   components: {
     CommandPaletteInput,
-    SearchResult
+    SearchResult,
+    SearchSuggestion
   },
   name: 'CommandPalette',
   setup() {
@@ -27,7 +31,19 @@ export default defineComponent({
       commandPaletteStore: store
     } = useCommandPaletteStore()
 
-    return { closeCommandPalette, store }
+    const supplementalViewType = computed(
+      (): SupplementalViewType => {
+        if (store.mode === 'search' && store.query.length > 0) {
+          return 'search-result'
+        }
+        if (store.mode === 'search') {
+          return 'search-suggestion'
+        }
+        return undefined
+      }
+    )
+
+    return { closeCommandPalette, store, supplementalViewType }
   }
 })
 </script>

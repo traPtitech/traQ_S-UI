@@ -11,15 +11,21 @@ export interface CommandPaletteStore {
   mode: CommandPaletteMode | undefined
 
   /**
-   * 現在の入力内容
+   * 決定された入力内容
    */
   query: string
+
+  /**
+   * 現在入力中の文字列
+   */
+  currentInput: string
 }
 
 const createCommandPaletteStore = () =>
   reactive<CommandPaletteStore>({
     mode: undefined,
-    query: ''
+    query: '',
+    currentInput: ''
   })
 
 export const provideCommandPaletteStore = () => {
@@ -59,11 +65,16 @@ export const useCommandPaletteStore = () => {
     () => commandPaletteStore.mode !== undefined
   )
 
+  const settleQuery = () => {
+    commandPaletteStore.query = commandPaletteStore.currentInput
+  }
+
   return {
     commandPaletteStore,
     isCommandPaletteShown,
     openCommandPalette,
-    closeCommandPalette
+    closeCommandPalette,
+    settleQuery
   }
 }
 

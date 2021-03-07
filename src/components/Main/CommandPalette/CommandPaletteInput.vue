@@ -7,7 +7,7 @@
     <input
       :class="$style.input"
       ref="inputRef"
-      v-model="currentInput"
+      v-model="store.currentInput"
       @keydown.enter="onEnter"
       :placeholder="placeholder"
     />
@@ -17,7 +17,7 @@
 <script lang="ts">
 import Icon from '@/components/UI/Icon.vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
-import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
+import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
 
 export default defineComponent({
   components: { Icon },
@@ -31,16 +31,24 @@ export default defineComponent({
       focus()
     })
 
-    const currentInput = ref('')
+    const { commandPaletteStore: store, settleQuery } = useCommandPaletteStore()
 
-    const { commandPaletteStore: store } = useCommandPaletteStore()
+    watch(
+      computed(() => store.currentInput),
+      () => {
+        // 外から入力が変更された場合フォーカスを当てる
+        if (document.activeElement !== inputRef.value) {
+          inputRef.value?.focus()
+        }
+      }
+    )
 
     const onEnter = () => {
       if (store.mode === 'command') {
         // exec command
       }
       if (store.mode === 'search') {
-        store.query = currentInput.value
+        settleQuery()
       }
     }
 
@@ -55,7 +63,7 @@ export default defineComponent({
       }
     })
 
-    return { inputRef, store, currentInput, onEnter, placeholder }
+    return { inputRef, store, onEnter, placeholder }
   }
 })
 </script>

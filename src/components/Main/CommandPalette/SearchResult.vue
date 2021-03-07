@@ -21,7 +21,6 @@
     <loading-spinner :class="$style.spinner" color="ui-secondary" />
   </div>
   <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
-  <div v-else :class="$style.container"></div>
 </template>
 
 <script lang="ts">
