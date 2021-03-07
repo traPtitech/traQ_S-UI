@@ -1,13 +1,13 @@
 <template>
-  <div :class="$style.container" @click="onClick">
+  <div
+    :class="$style.container"
+    :data-oversized="$boolAttr(oversized)"
+    :data-expanded="$boolAttr(expanded)"
+    @click="onClick"
+  >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.userName">{{ userName }}</div>
-    <div
-      ref="contentRef"
-      :class="$style.contentContainer"
-      :data-oversized="$boolAttr(oversized)"
-      :data-expanded="$boolAttr(expanded)"
-    >
+    <div ref="contentRef" :class="$style.contentContainer">
       <message-markdown :message-id="message.id" />
     </div>
     <div
@@ -124,12 +124,18 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: grid;
-  grid-template:
+  grid-template-areas:
     'icon userName'
     'icon content'
-    'icon expandButton'
-    'icon channelAndDate'
-    /32px 1fr;
+    'icon channelAndDate';
+  grid-template-columns: 32px 1fr;
+  &[data-oversized]:not([data-expanded]) {
+    grid-template-areas:
+      'icon userName'
+      'icon content'
+      'icon expandButton'
+      'icon channelAndDate';
+  }
   gap: 4px 16px;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -149,16 +155,16 @@ export default defineComponent({
 $message-max-height: 200px;
 
 .contentContainer {
-  @include color-ui-primary;
+  @include color-text-primary;
   grid-area: content;
   max-height: $message-max-height;
   overflow: hidden;
-  &[data-expanded] {
+  .container[data-expanded] & {
     // NOTE: 画面幅の変更でoversizedではなくてもexpandedがつくことがあるが、
     //       元の高さに戻すボタンは置かないためスタイル上でこの場合を考慮する必要はない
     max-height: unset;
   }
-  &[data-oversized]:not([data-expanded]) {
+  .container[data-oversized]:not([data-expanded]) & {
     mask-image: linear-gradient(black calc(100% - 32px), transparent 100%);
   }
 }
@@ -177,7 +183,6 @@ $message-max-height: 200px;
   align-items: center;
   gap: 0.5rem;
   padding: 0.25rem;
-  margin: 0.25rem 0;
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
