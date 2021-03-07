@@ -40,11 +40,13 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
 
         const channel = store.state.entities.channelsMap.get(id)
         if (channel === undefined) return
-        if (targetChannelIds.value.has(channel.id))
+        // targetChannel に存在していたら検索結果に入れる
+        if (targetChannelIds.value.has(channel.id)) {
           // 完全一致していたら fullMatched に入れる
-          (channel.name.toLowerCase() === query ? fullMatched : matched).push(
+          ;(channel.name.toLowerCase() === query ? fullMatched : matched).push(
             channel
           )
+        }
         for (const child of channel.children) {
           recursiveMatching(child)
         }
@@ -58,7 +60,6 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         queryRest: [string, ...string[]] = queryArr
       ) => {
         if (matchedChannel.has(id)) return
-
         const channel = store.state.entities.channelsMap.get(id)
         if (channel === undefined) return
         if (queryRest.length === 1) {
@@ -91,6 +92,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
             .forEach(item => recursiveMatching(item.id))
           return [...fullMatched, ...matched]
         }
+
         for (const [id, channel] of store.state.entities.channelsMap) {
           const keyValue = channel.name.toLowerCase()
           if (keyValue.includes(query)) recursiveMatching(id)
