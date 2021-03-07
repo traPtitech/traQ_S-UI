@@ -23,16 +23,10 @@ const useChannelFilter = (items: Ref<readonly Channel[]>) => {
         .toLowerCase()
         .split(/[\/\\]/) as [string, ...string[]] // split の返り値は空配列にはならないのでキャストできる
 
-      // チャンネル情報とすでにマッチしたか を情報に持つ
-      const channelWithMatchRecord = Object.fromEntries(
-        Array.from(store.state.entities.channelsMap).map(([id, item]) => [
-          id,
-          {
-            isMatched: false,
-            channel: item
-          }
-        ])
-      )
+      /**
+       * 既にマッチしたチャンネルの id をもつ
+       */
+      const matchedChannel: Set<string> = new Set()
 
       const fullMatched: Channel[] = []
       const matched: Channel[] = []
@@ -41,10 +35,11 @@ const useChannelFilter = (items: Ref<readonly Channel[]>) => {
        *  親チャンネルから子チャンネルたちを再帰的にマッチさせていく
        */
       const recursiveMatching = (id: string) => {
-        if (channelWithMatchRecord[id] === undefined) return
-        const { isMatched, channel } = channelWithMatchRecord[id]
-        if (isMatched) return
-        channelWithMatchRecord[id].isMatched = true
+        if (matchedChannel.has(id)) return
+        matchedChannel.add(id)
+
+        const channel = store.state.entities.channelsMap.get(id)
+        if (channel === undefined) return
         if (itemsMap.value.has(channel.id))
           // 完全一致していたら fullMatched に入れる
           (channel.name.toLowerCase() === query ? fullMatched : matched).push(
@@ -62,9 +57,10 @@ const useChannelFilter = (items: Ref<readonly Channel[]>) => {
         id: string,
         queryRest: [string, ...string[]] = queryArr
       ) => {
-        if (channelWithMatchRecord[id] === undefined) return
-        const { isMatched, channel } = channelWithMatchRecord[id]
-        if (isMatched) return
+        if (matchedChannel.has(id)) return
+
+        const channel = store.state.entities.channelsMap.get(id)
+        if (channel === undefined) return
         if (queryRest.length === 1) {
           // 最後のひとつは前方一致
           if (!channel.name.startsWith(queryRest[0])) return
