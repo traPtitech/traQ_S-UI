@@ -7,9 +7,9 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
     () => new Set(targetChannels.value.map(channel => channel.id))
   )
   const oneLetterChannels = computed(() =>
-    [...store.state.entities.channelsMap]
-      .map(([_, channel]) => channel)
-      .filter(channel => channel.name.length === 1)
+    [...store.state.entities.channelsMap.values()].filter(
+      channel => channel.name.length === 1
+    )
   )
 
   const state = reactive({
@@ -100,7 +100,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         return [...fullMatched, ...matched]
       }
 
-      for (const [id, channel] of store.state.entities.channelsMap) {
+      for (const id of store.state.entities.channelsMap.keys()) {
         recursiveMatchingWithSlash(id)
       }
       return [...fullMatched, ...matched] // fullMatched は 空のはずだけど一応
