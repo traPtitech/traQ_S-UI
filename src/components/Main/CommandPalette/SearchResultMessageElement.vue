@@ -33,13 +33,14 @@ import {
   ref,
   Ref
 } from 'vue'
-import { Message } from '@traptitech/traq'
-import useChannelPath from '@/use/channelPath'
 import Icon from '@/components/UI/Icon.vue'
+import MessageMarkdown from '@/components/UI/MessageMarkdown.vue'
 import UserIcon from '@/components/UI/UserIcon.vue'
+import { getCreatedDate } from '@/lib/date'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
-import MessageMarkdown from '@/components/UI/MessageMarkdown.vue'
+import useChannelPath from '@/use/channelPath'
+import { Message } from '@traptitech/traq'
 
 const maxHeight = 200
 
@@ -96,9 +97,7 @@ export default defineComponent({
     const channelName = computed(() =>
       channelIdToPathString(props.message.channelId, true)
     )
-    const date = computed(() =>
-      new Date(props.message.updatedAt).toDateString()
-    )
+    const date = computed(() => getCreatedDate(props.message.updatedAt))
 
     const onClick = () => emit('clickOpen', props.message.id)
 
