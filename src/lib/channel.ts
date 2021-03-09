@@ -42,3 +42,80 @@ export const channelIdToPathString = (
   const simpleChannelPath = channelIdToSimpleChannelPath(channelId, channelMap)
   return simpleChannelPath.map(c => c.name).join('/')
 }
+
+export const checkResult = {
+  none: 0,
+  match: 1,
+  perfect: 2
+} as const
+export type checkResult = typeof checkResult[keyof typeof checkResult]
+
+interface matchResult {
+  perfectMatched: Channel[]
+  matched: Channel[]
+}
+
+/**
+ * 連続するチャンネルに対し、連続する条件を満たすようなチャンネルを得る関数
+ * @param channelMap チャンネルの id とチャンネル情報を対応付ける map
+ * @param f 判定する関数
+ * @param querys 連続するクエリ
+ * @param targetChannelMap 対象のチャンネルの map
+ * @returns 条件を満たすようなチャンネルの配列
+ */
+export const channelDeepMatching = <T>(
+  channelMap: ReadonlyMap<ChannelId, Channel>,
+  f: (channel: Channel, query: T) => checkResult,
+  querys: [T, ...T[]],
+  targetChannelMap: ReadonlySet<ChannelId> = new Set(channelMap.keys())
+): matchResult => {
+  const results = [...channelMap.values()].map(channel =>
+    channelRecursiveDeepMatching(
+      channelMap,
+      f,
+      querys,
+      channel.id,
+      targetChannelMap
+    )
+  )
+  return {
+    perfectMatched: results.flatMap(result => result.perfectMatched),
+    matched: results.flatMap(result => result.matched)
+  }
+}
+
+const channelRecursiveDeepMatching = <T>(
+  channelMap: ReadonlyMap<ChannelId, Channel>,
+  f: (channel: Channel, query: T) => checkResult,
+  restQuery: [T, ...T[]],
+  nowChannelId: ChannelId,
+  targetChannelMap: ReadonlySet<ChannelId>,
+  stillPerfect = true
+): matchResult => {
+  const nowChannel = channelMap.get(nowChannelId)
+  if (nowChannel === undefined) return { perfectMatched: [], matched: [] }
+  const check = f(nowChannel, restQuery[0])
+  if (check === checkResult.none) return { perfectMatched: [], matched: [] }
+  if (restQuery.length === 1) {
+    if (!targetChannelMap.has(nowChannelId)) {
+      return { perfectMatched: [], matched: [] }
+    }
+    return stillPerfect && check === checkResult.perfect
+      ? { perfectMatched: [nowChannel], matched: [] }
+      : { perfectMatched: [], matched: [nowChannel] }
+  }
+  const res = nowChannel.children.map(id =>
+    channelRecursiveDeepMatching(
+      channelMap,
+      f,
+      restQuery.slice(1) as [T, ...T[]],
+      id,
+      targetChannelMap,
+      stillPerfect && check === checkResult.perfect
+    )
+  )
+  return {
+    perfectMatched: res.flatMap(result => result.perfectMatched),
+    matched: res.flatMap(result => result.matched)
+  }
+}
