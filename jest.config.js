@@ -5,5 +5,6 @@ module.exports = {
     __DEV_SERVER__: JSON.stringify('https://example.com')
   },
   coverageDirectory: './coverage/',
-  collectCoverage: true
+  collectCoverage: true,
+  setupFiles: ['fake-indexeddb/auto']
 }
