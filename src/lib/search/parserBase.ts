@@ -1,6 +1,6 @@
 // 実際のフィルタに依存しない関数群
 import store from '@/store'
-import { ChannelId, UserId, MessageId } from '@/types/entity-ids'
+import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
 import { channelPathToId } from '../channelTree'
 
 /*
@@ -35,7 +35,8 @@ import { channelPathToId } from '../channelTree'
 /**
  * 検索クエリからフィルタとして扱える文字列を抽出し、変換したものの型
  */
-export type ExtractedFilter = {
+export type ExtractedFilter<T extends string> = {
+  type: T
   prefix: string
   body: string
   negate: boolean
@@ -46,10 +47,12 @@ export type ExtractedFilter = {
  *
  * @param q 空白で分割された文字列
  */
-export type FilterExtractor = (q: string) => ExtractedFilter | string
+export type FilterExtractor<T extends string> = (
+  q: string
+) => ExtractedFilter<T> | string
 
 /** もとのクエリを復元する */
-export const rawQuery = (extracted: ExtractedFilter) =>
+export const rawQuery = <T extends string>(extracted: ExtractedFilter<T>) =>
   extracted.prefix + extracted.body
 
 /**
@@ -58,18 +61,19 @@ export const rawQuery = (extracted: ExtractedFilter) =>
  * @param prefixes　プレフィックスとして認める物のリスト
  * @param prefixes　否定プレフィックス フラグ式のフィルター以外は指定する必要なし
  */
-export const makePrefixedFilterExtractor = (
+export const makePrefixedFilterExtractor = <T extends string>(
+  type: T,
   prefixes: string[],
   negatePrefixes: string[] = []
-) => (q: string): ExtractedFilter | string => {
+) => (q: string): ExtractedFilter<T> | string => {
   for (const prefix of prefixes) {
     if (q.startsWith(prefix)) {
-      return { prefix, body: q.substring(prefix.length), negate: false }
+      return { type, prefix, body: q.substring(prefix.length), negate: false }
     }
   }
   for (const prefix of negatePrefixes) {
     if (q.startsWith(prefix)) {
-      return { prefix, body: q.substring(prefix.length), negate: true }
+      return { type, prefix, body: q.substring(prefix.length), negate: true }
     }
   }
   return q
@@ -84,36 +88,37 @@ export const makePrefixedFilterExtractor = (
  * @param skipCondition チェックを飛ばす条件 ':'が含まれていない など
  * @returns
  */
-export const extractFilter = <F, T extends string>(
-  parser: (type: T, extracted: ExtractedFilter) => F | undefined,
-  filterExtractorMap: Map<T, FilterExtractor>,
+export const parseToFilter = <F, T extends string>(
+  parser: (extracted: ExtractedFilter<T>) => F | undefined,
+  extractor: FilterExtractor<T>,
   skipCondition?: (q: string) => boolean
 ) => (q: string): F | string => {
   if (skipCondition?.(q)) {
     return q
   }
-  for (const [type, extractor] of filterExtractorMap.entries()) {
-    const extracted = extractor(q)
-    if (typeof extracted === 'string') {
-      continue
-    }
-    const parsed = parser(type, extracted)
-    if (!parsed) {
-      continue
-    }
-    return parsed
+  const extracted = extractor(q)
+  if (typeof extracted === 'string') {
+    return q
   }
-  return q
+  const parsed = parser(extracted)
+  if (!parsed) {
+    return q
+  }
+  return parsed
 }
 
 // パーサー実装
 
 /**
- * `ExtractedFilter.body`が型`T`を持つ値として解釈できるかを検査し、成功すればその値・失敗すれば`undefined`を返すような関数の型
+ * `ExtractedFilter.body`が型`V`を持つ値として解釈できるかを検査し、成功すればその値・失敗すれば`undefined`を返すような関数の型
  */
-export type FilterParser<T> = (extracted: ExtractedFilter) => T | undefined
+export type FilterParser<T extends string, V> = (
+  extracted: ExtractedFilter<T>
+) => V | undefined
 
-export const dateParser: FilterParser<Date> = extracted => {
+export const dateParser = <T extends string>(
+  extracted: ExtractedFilter<T>
+): Date | undefined => {
   const date = new Date(extracted.body)
   if (isNaN(date.getTime())) {
     return undefined
@@ -121,7 +126,9 @@ export const dateParser: FilterParser<Date> = extracted => {
   return date
 }
 
-export const channelParser: FilterParser<ChannelId> = extracted => {
+export const channelParser = <T extends string>(
+  extracted: ExtractedFilter<T>
+): ChannelId | undefined => {
   const channelTree = store.state.domain.channelTree.channelTree
   const channelName = extracted.body.startsWith('#')
     ? extracted.body.substring(1)
@@ -137,7 +144,9 @@ export const channelParser: FilterParser<ChannelId> = extracted => {
   }
 }
 
-export const userParser: FilterParser<UserId> = extracted => {
+export const userParser = <T extends string>(
+  extracted: ExtractedFilter<T>
+): UserId | undefined => {
   const userName = extracted.body.startsWith('@')
     ? extracted.body.substring(1)
     : extracted.body
@@ -148,7 +157,10 @@ export const userParser: FilterParser<UserId> = extracted => {
   return userId
 }
 
-export const messageParser: FilterParser<MessageId> = _ => {
+export const messageParser = <T extends string>(
+  extracted: ExtractedFilter<T>
+): MessageId | undefined => {
+  const userName = extracted.body.startsWith('@')
   // TBD
   return undefined
 }

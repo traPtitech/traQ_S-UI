@@ -5,7 +5,7 @@ import {
   channelParser,
   dateParser,
   ExtractedFilter,
-  extractFilter as extractFilterBase,
+  parseToFilter as parseToFilterBase,
   FilterExtractor,
   FilterParser,
   makePrefixedFilterExtractor,
@@ -57,21 +57,36 @@ export type Filter =
     }
 export type FilterType = Filter['type']
 
-/** フィルターを得るためのextractorのマップ */
-const filterExtractorMap: Map<FilterType, FilterExtractor> = new Map([
-  ['after', makePrefixedFilterExtractor(['after:', 'since:'])],
-  ['before', makePrefixedFilterExtractor(['before:', 'until:'])],
-  ['in', makePrefixedFilterExtractor(['in:', '#'])],
-  ['to', makePrefixedFilterExtractor(['to:', '@'])],
-  ['from', makePrefixedFilterExtractor(['from:', 'by:'])],
-  ['citation', makePrefixedFilterExtractor(['citation:'])],
-  ['attrFlag', makePrefixedFilterExtractor(['is:'], ['-is:', 'not:'])],
-  ['mediaFlag', makePrefixedFilterExtractor(['has:'], ['-has:'])]
-])
+/** フィルターを得るためのextractor */
+const filterExtractors: FilterExtractor<FilterType>[] = [
+  makePrefixedFilterExtractor('after', ['after:', 'since:']),
+  makePrefixedFilterExtractor('before', ['before:', 'until:']),
+  makePrefixedFilterExtractor('in', ['in:', '#']),
+  makePrefixedFilterExtractor('to', ['to:', '@']),
+  makePrefixedFilterExtractor('from', ['from:', 'by:']),
+  makePrefixedFilterExtractor('citation', ['citation:', 'cite:']),
+  makePrefixedFilterExtractor('attrFlag', ['is:'], ['-is:', 'not:']),
+  makePrefixedFilterExtractor('mediaFlag', ['has:'], ['-has:'])
+]
+
+/** extractorの実装 */
+const extractor: FilterExtractor<FilterType> = q => {
+  for (const extractor of filterExtractors) {
+    const result = extractor(q)
+    if (typeof result === 'string') {
+      continue
+    }
+    return result
+  }
+  return q
+}
 
 // フィルタの内容に依存しているparser
 
-const attrFlagParser: FilterParser<AttrFlagFilterKey> = extracted => {
+const attrFlagParser: FilterParser<
+  FilterType,
+  AttrFlagFilterKey
+> = extracted => {
   switch (extracted.body) {
     case 'bot':
       return extracted.body
@@ -80,7 +95,10 @@ const attrFlagParser: FilterParser<AttrFlagFilterKey> = extracted => {
   }
 }
 
-const mediaFlagParser: FilterParser<MediaFlagFilterKey> = extracted => {
+const mediaFlagParser: FilterParser<
+  FilterType,
+  MediaFlagFilterKey
+> = extracted => {
   switch (extracted.body) {
     case 'attachments':
     case 'image':
@@ -94,10 +112,8 @@ const mediaFlagParser: FilterParser<MediaFlagFilterKey> = extracted => {
 
 // parserの実装
 
-const parseExtractedFilter = (
-  type: FilterType,
-  extracted: ExtractedFilter
-): Filter | undefined => {
+const parser = (extracted: ExtractedFilter<FilterType>): Filter | undefined => {
+  const type = extracted.type
   switch (type) {
     case 'after':
     case 'before': {
@@ -151,14 +167,10 @@ const parseExtractedFilter = (
 }
 
 /** extractorとparserをまとめて実装を注入したもの */
-const extractFilter = extractFilterBase(
-  parseExtractedFilter,
-  filterExtractorMap,
-  q =>
-    q.indexOf(':') < 0 &&
-    !q.startsWith('#') &&
-    !q.startsWith('@') &&
-    !q.startsWith('-')
+const parseQueryFragmentToFilter = parseToFilterBase(
+  parser,
+  extractor,
+  q => q.indexOf(':') < 0 && !q.startsWith('#') && !q.startsWith('@')
 )
 
 /** 実際のクエリに対応するオブジェクトへの変換 */
@@ -196,7 +208,7 @@ export const parseQueryToObject = (query: string): SearchMessageQueryObject => {
     .split(' ')
     .filter(q => q)
     .map(q => {
-      const parsed = extractFilter(q)
+      const parsed = parseQueryFragmentToFilter(q)
       return filterOrStringToSearchMessageQuery(parsed)
     })
     .reduce(mergeSearchMessageQueryObject)
