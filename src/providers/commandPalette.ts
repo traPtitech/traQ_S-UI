@@ -44,6 +44,7 @@ const useCommandPaletteBase = () => {
   const closeCommandPalette = () => {
     commandPaletteStore.mode = undefined
     commandPaletteStore.query = ''
+    commandPaletteStore.currentInput = ''
   }
 
   return {
