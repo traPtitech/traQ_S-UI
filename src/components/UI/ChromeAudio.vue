@@ -58,7 +58,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { fileMeta, fileRawPath } = useFileMeta(props, context)
+    const { fileMeta, fileRawPath } = useFileMeta(props)
     const {
       cantPlay,
       wasUnsupportedType,

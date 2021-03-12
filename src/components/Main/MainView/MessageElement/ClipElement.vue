@@ -32,7 +32,7 @@ import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useIsMobile from '@/use/isMobile'
 import useElementRenderObserver from './use/elementRenderObserver'
-import useEmbeddings from './use/embeddings'
+import useEmbeddings from '@/use/message/embeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import { getCreatedDate } from '@/lib/date'
@@ -90,7 +90,6 @@ export default defineComponent({
     return {
       state,
       bodyRef,
-      embeddingsState,
       isMobile,
       isHovered,
       onMouseEnter,

@@ -32,7 +32,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { fileLink } = useFileMeta(props, context)
+    const { fileLink } = useFileMeta(props)
     return {
       fileLink,
       props

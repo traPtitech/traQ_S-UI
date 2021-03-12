@@ -53,7 +53,7 @@ export default defineComponent({
       fileType,
       fileSize,
       onFileDownloadLinkClick
-    } = useFileMeta(props, context)
+    } = useFileMeta(props)
     const name = computed(() => fileMeta.value?.name ?? 'unknown')
 
     return {

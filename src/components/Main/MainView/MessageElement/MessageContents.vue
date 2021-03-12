@@ -49,7 +49,7 @@ import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
-import useEmbeddings from './use/embeddings'
+import useEmbeddings from '@/use/message/embeddings'
 
 export default defineComponent({
   name: 'MessageContent',

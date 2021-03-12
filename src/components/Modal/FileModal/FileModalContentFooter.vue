@@ -35,7 +35,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const router = useRouter()
-    const { fileMeta } = useFileMeta(props, context)
+    const { fileMeta } = useFileMeta(props)
     const user = computed(() =>
       store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
     )
