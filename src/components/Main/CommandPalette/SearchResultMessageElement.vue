@@ -7,8 +7,15 @@
   >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.userName">{{ userName }}</div>
-    <div ref="contentRef" :class="$style.contentContainer">
-      <message-markdown :message-id="message.id" />
+    <div :class="$style.contentContainer">
+      <div ref="contentRef" :class="$style.markdownContainer">
+        <message-markdown :message-id="message.id" />
+      </div>
+      <search-result-message-file-list
+        :v-if="embeddingsState.fileIds.length > 0"
+        :file-ids="embeddingsState.fileIds"
+        :class="$style.fileList"
+      />
     </div>
     <div
       :class="$style.expandButton"
@@ -40,7 +47,9 @@ import { getCreatedDate } from '@/lib/date'
 import store from '@/store'
 import { MessageId } from '@/types/entity-ids'
 import useChannelPath from '@/use/channelPath'
+import useEmbeddings from '@/use/message/embeddings'
 import { Message } from '@traptitech/traq'
+import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 
 const maxHeight = 200
 
@@ -75,7 +84,8 @@ export default defineComponent({
   components: {
     Icon,
     UserIcon,
-    MessageMarkdown
+    MessageMarkdown,
+    SearchResultMessageFileList
   },
   props: {
     message: {
@@ -99,6 +109,8 @@ export default defineComponent({
     )
     const date = computed(() => getCreatedDate(props.message.updatedAt))
 
+    const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
+
     const onClick = () => emit('clickOpen', props.message.id)
 
     const contentRef = ref<HTMLElement>()
@@ -110,6 +122,7 @@ export default defineComponent({
       userName,
       channelName,
       date,
+      embeddingsState,
       onClick,
       expanded,
       oversized,
@@ -156,6 +169,8 @@ $message-max-height: 200px;
 .contentContainer {
   @include color-text-primary;
   grid-area: content;
+}
+.markdownContainer {
   max-height: $message-max-height;
   overflow: hidden;
   .container[data-expanded] & {
@@ -166,6 +181,9 @@ $message-max-height: 200px;
   .container[data-oversized]:not([data-expanded]) & {
     mask-image: linear-gradient(black calc(100% - 32px), transparent 100%);
   }
+}
+.fileList {
+  margin-top: 0.5rem;
 }
 .channelAndDate {
   @include color-ui-secondary;
