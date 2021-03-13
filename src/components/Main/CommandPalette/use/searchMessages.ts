@@ -1,10 +1,38 @@
-import { ref, computed, readonly } from 'vue'
+import { ref, computed, readonly, Ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
+import { compareDateString } from '@/lib/date'
 import store from '@/store'
 import useQueryParer, {
   SearchMessageSortKey
 } from '@/use/searchMessage/queryParser'
+
+const useSortMessages = (
+  messages: Ref<Message[]>,
+  currentSortKey: Ref<SearchMessageSortKey>
+) => {
+  const sortedMessages = computed(() => {
+    switch (currentSortKey.value) {
+      case '-createdAt':
+        return messages.value.sort((m1, m2) =>
+          compareDateString(m1.createdAt, m2.createdAt)
+        )
+      case 'updatedAt':
+        return messages.value.sort((m1, m2) =>
+          compareDateString(m1.updatedAt, m2.updatedAt, true)
+        )
+      case '-updatedAt':
+        return messages.value.sort((m1, m2) =>
+          compareDateString(m1.updatedAt, m2.updatedAt)
+        )
+      default:
+        return messages.value.sort((m1, m2) =>
+          compareDateString(m1.createdAt, m2.createdAt, true)
+        )
+    }
+  })
+  return { sortedMessages }
+}
 
 const usePaging = (itemsPerPage: number) => {
   /** 現在表示しているページ、0-indexed */
@@ -64,6 +92,7 @@ const useSearchMessages = () => {
   const fetchingSearchResult = ref(false)
 
   const searchResult = ref<Message[]>([])
+  const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
   const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
     if (query === '') {
@@ -96,7 +125,7 @@ const useSearchMessages = () => {
   return {
     executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch,
     fetchingSearchResult,
-    searchResult,
+    searchResult: sortedMessages,
     currentPage,
     totalCount: readonly(totalCount),
     pageCount,
