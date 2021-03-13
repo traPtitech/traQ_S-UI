@@ -49,7 +49,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$command-palette-max-width: min(800px, calc(100vw - 16px));
+$command-palette-max-width: min(1000px, calc(100vw - 16px));
 .container {
   @include background-primary;
   width: 100%;

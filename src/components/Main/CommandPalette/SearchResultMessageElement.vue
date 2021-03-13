@@ -50,6 +50,7 @@ import useChannelPath from '@/use/channelPath'
 import useEmbeddings from '@/use/message/embeddings'
 import { Message } from '@traptitech/traq'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
+import { SearchMessageSortKey } from '@/use/searchMessage/queryParser'
 
 const maxHeight = 200
 
@@ -91,6 +92,10 @@ export default defineComponent({
     message: {
       type: Object as PropType<Message>,
       required: true
+    },
+    currentSortKey: {
+      type: String as PropType<SearchMessageSortKey>,
+      required: true
     }
   },
   emits: {
@@ -107,7 +112,18 @@ export default defineComponent({
     const channelName = computed(() =>
       channelIdToPathString(props.message.channelId, true)
     )
-    const date = computed(() => getCreatedDate(props.message.updatedAt))
+    const date = computed(() => {
+      let _date: string
+      if (
+        props.currentSortKey === 'createdAt' ||
+        props.currentSortKey === '-createdAt'
+      ) {
+        _date = props.message.createdAt
+      } else {
+        _date = props.message.updatedAt
+      }
+      return getCreatedDate(_date)
+    })
 
     const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
 

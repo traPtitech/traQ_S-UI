@@ -17,6 +17,9 @@ import {
 /** APIに投げる型 */
 type SearchMessageQuery = Parameters<typeof apis.searchMessages>
 
+/** ソートのキー */
+export type SearchMessageSortKey = SearchMessageQuery[15]
+
 /** APIに投げる型のオブジェクト版 */
 type SearchMessageQueryObject = {
   word?: string
@@ -203,24 +206,47 @@ const filterOrStringToSearchMessageQuery = (
   }
 }
 
-export const parseQueryToObject = (query: string): SearchMessageQueryObject => {
-  return query
-    .split(' ')
-    .filter(q => q)
-    .map(q => {
-      const parsed = parseQueryFragmentToFilter(q)
-      return filterOrStringToSearchMessageQuery(parsed)
-    })
-    .reduce(mergeSearchMessageQueryObject)
-}
-
 const useQueryParer = () => {
   /**
    * クエリをパースし、検索ワードとフィルタに変換する
    */
-  const parseQuery = (query: string): SearchMessageQuery =>
-    searchMessageQueryObjectToSearchMessageQuery(parseQueryToObject(query))
-  return { parseQuery }
+  const parseQuery = (query: string): SearchMessageQueryObject =>
+    query
+      .split(' ')
+      .filter(q => q)
+      .map(q => {
+        const parsed = parseQueryFragmentToFilter(q)
+        return filterOrStringToSearchMessageQuery(parsed)
+      })
+      .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
+
+  const toSearchMessageParam = (
+    obj: SearchMessageQueryObject,
+    options?: Partial<{
+      limit: number
+      offset: number
+      sort: SearchMessageSortKey
+    }>
+  ): SearchMessageQuery => [
+    obj.word,
+    obj.after,
+    obj.before,
+    obj.in,
+    obj.to,
+    obj.from,
+    obj.citation,
+    obj.bot,
+    obj.hasUrl,
+    obj.hasAttachments,
+    obj.hasImage,
+    obj.hasVideo,
+    obj.hasAudio,
+    options?.limit,
+    options?.offset,
+    options?.sort
+  ]
+
+  return { parseQuery, toSearchMessageParam }
 }
 
 export default useQueryParer
@@ -242,26 +268,6 @@ const emptySearchMessageQueryObject: SearchMessageQueryObject = {
   hasVideo: undefined,
   hasAudio: undefined
 }
-
-const searchMessageQueryObjectToSearchMessageQuery = (
-  obj: SearchMessageQueryObject
-): SearchMessageQuery => [
-  obj.word,
-  obj.after,
-  obj.before,
-  obj.in,
-  obj.to,
-  obj.from,
-  obj.citation,
-  obj.bot,
-  obj.hasUrl,
-  obj.hasAttachments,
-  obj.hasImage,
-  obj.hasVideo,
-  obj.hasAudio,
-  undefined,
-  undefined
-]
 
 const mergeSearchMessageQueryObject = (
   q1: SearchMessageQueryObject,
