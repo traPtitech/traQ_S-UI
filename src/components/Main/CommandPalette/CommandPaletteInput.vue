@@ -11,19 +11,23 @@
       @keydown.enter="onEnter"
       :placeholder="placeholder"
     />
-    <div :class="$style.closeIcon" @click="closeCommandPalette">
-      <icon mdi name="close" />
-    </div>
+    <close-button
+      :class="$style.closeIcon"
+      @close="closeCommandPalette"
+      :size="24"
+      :inner-size="12"
+    />
   </div>
 </template>
 
 <script lang="ts">
+import CloseButton from '@/components/UI/CloseButton.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
 import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
 
 export default defineComponent({
-  components: { Icon },
+  components: { Icon, CloseButton },
   name: 'CommandPaletteInput',
   setup() {
     const inputRef = shallowRef<HTMLInputElement | null>(null)
