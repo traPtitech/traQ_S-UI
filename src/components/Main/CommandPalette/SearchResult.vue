@@ -102,9 +102,13 @@ export default defineComponent({
     } = useSearchMessages()
 
     watchEffect(() => {
+      // `executeSearchForCurrentPage`が現在のページとソートのキーに依存しているので、
+      // ページ数やソートキーの更新をかけるだけでここが走る
       executeSearchForCurrentPage(store.query)
     })
+
     watch(
+      // クエリの変更時はページングをリセット
       computed(() => store.query),
       (query, oldQuery) => {
         if (query !== oldQuery) {
