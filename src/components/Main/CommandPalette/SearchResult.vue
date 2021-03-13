@@ -33,6 +33,9 @@
       >
         <icon name="chevron-left" mdi /> 戻る
       </div>
+      <span :class="$style.page" :aria-hidden="isMobile">
+        {{ currentPage + 1 }} / {{ pageCount }} ページ
+      </span>
       <div
         :class="$style.navigationButton"
         data-direction="next"
@@ -118,7 +121,6 @@ export default defineComponent({
     )
 
     const containerEle = ref<HTMLElement | null>(null)
-
     const queryEntered = computed(() => store.query.length > 0)
 
     const { openMessage } = useMessageOpener()
@@ -178,6 +180,7 @@ export default defineComponent({
 .navigation {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0.5rem;
 }
 .navigationButton {
@@ -201,5 +204,8 @@ export default defineComponent({
   &:hover {
     @include background-secondary;
   }
+}
+.page {
+  @include color-ui-secondary;
 }
 </style>
