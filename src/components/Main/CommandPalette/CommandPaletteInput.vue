@@ -11,6 +11,9 @@
       @keydown.enter="onEnter"
       :placeholder="placeholder"
     />
+    <div :class="$style.closeIcon" @click="closeCommandPalette">
+      <icon mdi name="close" />
+    </div>
   </div>
 </template>
 
@@ -31,7 +34,11 @@ export default defineComponent({
       focus()
     })
 
-    const { commandPaletteStore: store, settleQuery } = useCommandPaletteStore()
+    const {
+      commandPaletteStore: store,
+      settleQuery,
+      closeCommandPalette
+    } = useCommandPaletteStore()
 
     watch(
       computed(() => store.currentInput),
@@ -63,7 +70,7 @@ export default defineComponent({
       }
     })
 
-    return { inputRef, store, onEnter, placeholder }
+    return { inputRef, store, onEnter, placeholder, closeCommandPalette }
   }
 })
 </script>
@@ -71,14 +78,22 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: grid;
-  grid-template-columns: 24px 1fr;
+  grid-template-columns: 1.5rem 1fr 1.5rem;
   align-items: center;
-  gap: 16px;
-  padding: 0 16px;
+  gap: 1rem;
+  padding: 0 1rem;
 }
-.icon {
+.icon,
+.closeIcon {
   @include color-ui-primary;
-  height: 24px;
+  height: 1.5rem;
+}
+.closeIcon {
+  opacity: 0.5;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
 }
 .input {
   @include color-ui-primary;
