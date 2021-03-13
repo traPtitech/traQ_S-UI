@@ -42,7 +42,7 @@ export default defineComponent({
       fileLink,
       fileThumbnailPath,
       fileThumbnailSize
-    } = useFileMeta(props, context)
+    } = useFileMeta(props)
     return { fileThumbnailPath, fileThumbnailSize, fileLink, fileMeta }
   }
 })

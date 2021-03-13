@@ -34,7 +34,7 @@ export default defineComponent({
     const fileIdState = reactive({
       fileId: computed(() => props.id)
     })
-    const { fileMeta, fileType } = useFileMeta(fileIdState, context)
+    const { fileMeta, fileType } = useFileMeta(fileIdState)
     const onClickOutSide = () => store.dispatch.ui.modal.clearModal()
     return { fileMeta, fileType, onClickOutSide }
   }

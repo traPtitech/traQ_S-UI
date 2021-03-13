@@ -21,6 +21,7 @@ import ToastContainer from '@/components/Toast/ToastContainer.vue'
 import { provideToastStore } from '@/providers/toastStore'
 import { provideStampPickerStore } from '@/providers/stampPicker'
 import { provideMessageInputState } from '@/providers/messageInputState'
+import { provideCommandPaletteStore } from '@/providers/commandPalette'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
@@ -162,6 +163,7 @@ export default defineComponent({
     provideToastStore()
     provideStampPickerStore()
     provideMessageInputState()
+    provideCommandPaletteStore()
 
     useWindowResizeObserver()
     const isMobile = computed(() => store.state.ui.isMobile)

@@ -34,6 +34,7 @@
     </div>
     <modal-container />
     <stamp-picker-container />
+    <command-palette-container />
   </div>
 </template>
 
@@ -54,6 +55,7 @@ import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
 import ModalContainer from '@/components/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
+import CommandPaletteContainer from '@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
@@ -98,6 +100,7 @@ export default defineComponent({
     MainViewFrame,
     ModalContainer,
     StampPickerContainer,
+    CommandPaletteContainer,
     NotFound
   },
   setup() {

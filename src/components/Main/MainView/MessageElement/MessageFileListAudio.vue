@@ -26,7 +26,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props, context)
+    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
     return { fileMeta, fileLink, fileRawPath }
   }
 })

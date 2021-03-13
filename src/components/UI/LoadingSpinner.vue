@@ -1,14 +1,23 @@
 <template>
-  <div :class="$style.spinnerContainer">
+  <div :class="$style.spinnerContainer" :data-color="color">
     <div :class="$style.spinner" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
+
+type SpinnerColor = 'white' | 'ui-secondary'
+const defaultSpinnerColor: SpinnerColor = 'white'
 
 export default defineComponent({
   name: 'LoadingSpinner',
+  props: {
+    color: {
+      type: String as PropType<SpinnerColor>,
+      default: defaultSpinnerColor
+    }
+  },
   setup() {
     return {}
   }
@@ -23,13 +32,21 @@ $spinner-width: 0.35em;
   display: flex;
   justify-content: center;
   align-items: center;
+  &[data-color='white'] {
+    --spinner-color: rgba(255, 255, 255);
+    --spinner-gap-color: rgba(255, 255, 255, 0.25);
+  }
+  &[data-color='ui-secondary'] {
+    --spinner-color: var(--theme-ui-secondary);
+    --spinner-gap-color: var(--theme-ui-secondary--05);
+  }
 }
 .spinner {
   position: relative;
   height: $size;
   width: $size;
-  border: solid $spinner-width rgba(255, 255, 255);
-  border-right: solid $spinner-width rgba(255, 255, 255, 0.25);
+  border: solid $spinner-width var(--spinner-color);
+  border-right: solid $spinner-width var(--spinner-gap-color);
   border-radius: 50%;
   animation: spinner 1s infinite linear;
   &::before {
@@ -42,8 +59,8 @@ $spinner-width: 0.35em;
     display: block;
     height: $size;
     width: $size;
-    border: solid $spinner-width rgba(255, 255, 255);
-    border-right: solid $spinner-width rgba(255, 255, 255, 0.25);
+    border: solid $spinner-width var(--spinner-color);
+    border-right: solid $spinner-width var(--spinner-gap-color);
     border-radius: 50%;
     transform: rotate(60deg);
   }
