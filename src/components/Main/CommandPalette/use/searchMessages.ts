@@ -1,25 +1,86 @@
-import { ref } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import store from '@/store'
-import useQueryParer from '@/use/searchMessage/queryParser'
+import useQueryParer, {
+  SearchMessageSortKey
+} from '@/use/searchMessage/queryParser'
 
-type SearchMessageResult = {
-  totalHits: number
-  hits: Message[]
+const usePaging = (itemsPerPage: number) => {
+  /** 現在表示しているページ、0-indexed */
+  const currentPage = ref(0)
+
+  /** 項目の総数 */
+  const totalCount = ref(0)
+
+  /** 現在のオフセット */
+  const currentOffset = computed(() => currentPage.value * itemsPerPage)
+
+  /** 「n件目 - m件目 まで表示」に使う値、1-indexed*/
+  const showingRange = computed(() => [
+    currentOffset.value + 1,
+    currentOffset.value + 1 + itemsPerPage
+  ])
+
+  const pageCount = computed(() => Math.ceil(totalCount.value / itemsPerPage))
+
+  const resetPaging = () => {
+    currentPage.value = 0
+    totalCount.value = 0
+  }
+  const jumpToPage = (page: number) => {
+    if (totalCount.value <= 0) {
+      return
+    }
+    currentPage.value = Math.max(0, Math.min(page, pageCount.value - 1))
+  }
+
+  return {
+    currentPage: readonly(currentPage),
+    currentOffset,
+    totalCount,
+    pageCount,
+    showingRange,
+    resetPaging,
+    jumpToPage
+  }
 }
 
 const useSearchMessages = () => {
-  const { parseQuery } = useQueryParer()
+  const limit = 20
+  const { parseQuery, toSearchMessageParam } = useQueryParer()
+
+  const {
+    currentPage,
+    currentOffset,
+    totalCount,
+    pageCount,
+    showingRange,
+    resetPaging,
+    jumpToPage
+  } = usePaging(limit)
+
+  const currentSortKey = ref<SearchMessageSortKey>('createdAt')
   const fetchingSearchResult = ref(false)
-  const fetchAndRenderMessagesBySearch = async (
-    query: string
-  ): Promise<SearchMessageResult> => {
+
+  const searchResult = ref<Message[]>([])
+
+  const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
     if (query === '') {
-      return emptyResult
+      resetPaging()
+      searchResult.value = []
     }
+
     fetchingSearchResult.value = true
-    const res = await apis.searchMessages(...parseQuery(query))
+    const queryObject = parseQuery(query)
+    const option = {
+      limit,
+      offset: currentOffset.value,
+      sort: currentSortKey.value
+    }
+    const res = await apis.searchMessages(
+      ...toSearchMessageParam(queryObject, option)
+    )
     const hits = res.data.hits ?? []
     store.dispatch.entities.messages.extendMessagesMap(hits)
     hits.map(message =>
@@ -27,14 +88,20 @@ const useSearchMessages = () => {
     )
     fetchingSearchResult.value = false
 
-    return {
-      totalHits: res.data.totalHits ?? 0,
-      hits
-    }
+    totalCount.value = res.data.totalHits ?? 0
+    searchResult.value = res.data.hits ?? []
   }
+
   return {
-    fetchMessagesBySearch: fetchAndRenderMessagesBySearch,
-    fetchingSearchResult
+    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch,
+    fetchingSearchResult,
+    searchResult,
+    currentPage,
+    totalCount: readonly(totalCount),
+    pageCount,
+    showingRange,
+    jumpToPage,
+    currentSortKey
   }
 }
 
