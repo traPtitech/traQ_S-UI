@@ -1,4 +1,4 @@
-import { parseQueryToObject } from '@/lib/search/parseQuery'
+import { parseQueryToObject } from '@/use/searchMessage/queryParser'
 import store from '@/store'
 
 const mockChannelId = 'channel-id'

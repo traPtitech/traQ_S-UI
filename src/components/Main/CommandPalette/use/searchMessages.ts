@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '@/lib/apis'
-import parseQuery from '@/lib/search/parseQuery'
 import store from '@/store'
+import useQueryParer from '@/use/searchMessage/queryParser'
 
 type SearchMessageResult = {
   totalHits: number
@@ -10,6 +10,7 @@ type SearchMessageResult = {
 }
 
 const useSearchMessages = () => {
+  const { parseQuery } = useQueryParer()
   const fetchingSearchResult = ref(false)
   const fetchAndRenderMessagesBySearch = async (
     query: string

@@ -214,13 +214,16 @@ export const parseQueryToObject = (query: string): SearchMessageQueryObject => {
     .reduce(mergeSearchMessageQueryObject)
 }
 
-/**
- * クエリをパースし、検索ワードとフィルタに変換する
- */
-const parseQuery = (query: string): SearchMessageQuery =>
-  searchMessageQueryObjectToSearchMessageQuery(parseQueryToObject(query))
+const useQueryParer = () => {
+  /**
+   * クエリをパースし、検索ワードとフィルタに変換する
+   */
+  const parseQuery = (query: string): SearchMessageQuery =>
+    searchMessageQueryObjectToSearchMessageQuery(parseQueryToObject(query))
+  return { parseQuery }
+}
 
-export default parseQuery
+export default useQueryParer
 
 // util
 

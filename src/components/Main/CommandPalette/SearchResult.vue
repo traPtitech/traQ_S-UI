@@ -27,7 +27,7 @@
 import { computed, defineComponent, Ref, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { Message } from '@traptitech/traq'
-import { compareDateString } from '@/lib/util/date'
+import { compareDateString } from '@/lib/date'
 import { MessageId } from '@/types/entity-ids'
 import { RouteName } from '@/router'
 import {

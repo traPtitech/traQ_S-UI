@@ -1,7 +1,7 @@
 // 実際のフィルタに依存しない関数群
 import store from '@/store'
 import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
-import { channelPathToId } from '../channelTree'
+import { channelPathToId } from '../../lib/channelTree'
 
 /*
  * クエリは次のようにパースされる:
@@ -26,7 +26,7 @@ import { channelPathToId } from '../channelTree'
  *            { type: "is", raw: "not:bot", value: "bot", negate: true },
  *            { type: "word", raw: "abc", value: "abc" },
  *        ]
- * 注: 最後の変換は実際のクエリの内容に依存するためparseQuery.tsを参照
+ * 注: 最後の変換は実際のクエリの内容に依存するためqueryParser.tsを参照
  *     このモジュールではジェネリクスで対応している
  */
 
