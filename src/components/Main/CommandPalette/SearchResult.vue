@@ -111,10 +111,10 @@ export default defineComponent({
     })
 
     watch(
-      // クエリの変更時はページングをリセット
-      computed(() => store.query),
-      (query, oldQuery) => {
-        if (query !== oldQuery) {
+      // クエリの変更時・ソートキーの変更時はページングをリセット
+      computed(() => [store.query, currentSortKey.value]),
+      ([query, key], [oldQuery, oldKey]) => {
+        if (query !== oldQuery || key !== oldKey) {
           resetPaging()
         }
       }
