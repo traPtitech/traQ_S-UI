@@ -113,8 +113,10 @@ const useSearchMessages = () => {
     )
     const hits = res.data.hits ?? []
     store.dispatch.entities.messages.extendMessagesMap(hits)
-    hits.map(message =>
-      store.dispatch.domain.messagesView.renderMessageContent(message.id)
+    await Promise.all(
+      hits.map(message =>
+        store.dispatch.domain.messagesView.renderMessageContent(message.id)
+      )
     )
     fetchingSearchResult.value = false
 
@@ -130,11 +132,10 @@ const useSearchMessages = () => {
     totalCount: readonly(totalCount),
     pageCount,
     showingRange,
+    resetPaging,
     jumpToPage,
     currentSortKey
   }
 }
 
 export default useSearchMessages
-
-const emptyResult = { hits: [], totalHits: 0 }

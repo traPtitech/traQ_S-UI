@@ -20,6 +20,7 @@
     >
       <search-result-message-element
         :message="message"
+        :current-sort-key="currentSortKey"
         @click-open="openMessage"
       />
     </div>
@@ -46,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { computed, defineComponent, ref, watchEffect, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { MessageId } from '@/types/entity-ids'
 import { RouteName } from '@/router'
@@ -95,6 +96,7 @@ export default defineComponent({
       searchResult,
       currentPage,
       jumpToPage: changePage,
+      resetPaging,
       pageCount,
       currentSortKey
     } = useSearchMessages()
@@ -102,6 +104,14 @@ export default defineComponent({
     watchEffect(() => {
       executeSearchForCurrentPage(store.query)
     })
+    watch(
+      computed(() => store.query),
+      (query, oldQuery) => {
+        if (query !== oldQuery) {
+          resetPaging()
+        }
+      }
+    )
 
     const containerEle = ref<HTMLElement | null>(null)
 
