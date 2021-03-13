@@ -69,6 +69,7 @@ const useSearchMessages = () => {
     if (query === '') {
       resetPaging()
       searchResult.value = []
+      return
     }
 
     fetchingSearchResult.value = true
