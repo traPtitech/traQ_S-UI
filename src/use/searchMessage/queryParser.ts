@@ -218,7 +218,7 @@ const useQueryParer = () => {
         const parsed = parseQueryFragmentToFilter(q)
         return filterOrStringToSearchMessageQuery(parsed)
       })
-      .reduce(mergeSearchMessageQueryObject)
+      .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
 
   const toSearchMessageParam = (
     obj: SearchMessageQueryObject,
