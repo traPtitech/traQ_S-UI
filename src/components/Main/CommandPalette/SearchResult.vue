@@ -35,7 +35,7 @@
       >
         <icon name="chevron-left" mdi /> 戻る
       </div>
-      <span :class="$style.page" :aria-hidden="isMobile">
+      <span :class="$style.page">
         {{ currentPage + 1 }} / {{ pageCount }} ページ
       </span>
       <div
