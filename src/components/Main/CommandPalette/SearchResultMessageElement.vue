@@ -6,7 +6,12 @@
     @click="onClick"
   >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
-    <div :class="$style.userName">{{ userName }}</div>
+    <div :class="$style.header">
+      <span :class="$style.displayName">{{
+        user?.displayName ?? 'Unknown'
+      }}</span>
+      <span :class="$style.userName">@{{ user?.name ?? 'unknown' }}</span>
+    </div>
     <div :class="$style.contentContainer">
       <div ref="contentRef" :class="$style.markdownContainer">
         <message-markdown :message-id="message.id" />
@@ -106,8 +111,8 @@ export default defineComponent({
     store.dispatch.entities.fetchUser({ userId: props.message.userId })
 
     const { channelIdToPathString } = useChannelPath()
-    const userName = computed(
-      () => store.state.entities.usersMap.get(props.message.userId)?.name ?? ''
+    const user = computed(() =>
+      store.state.entities.usersMap.get(props.message.userId)
     )
     const channelName = computed(() =>
       channelIdToPathString(props.message.channelId, true)
@@ -135,7 +140,7 @@ export default defineComponent({
     )
 
     return {
-      userName,
+      user,
       channelName,
       date,
       embeddingsState,
@@ -153,13 +158,13 @@ export default defineComponent({
 .container {
   display: grid;
   grid-template-areas:
-    'icon userName'
+    'icon header'
     'icon content'
     'icon channelAndDate';
   grid-template-columns: 32px 1fr;
   &[data-oversized]:not([data-expanded]) {
     grid-template-areas:
-      'icon userName'
+      'icon header'
       'icon content'
       'icon expandButton'
       'icon channelAndDate';
@@ -174,10 +179,33 @@ export default defineComponent({
 .icon {
   grid-area: icon;
 }
-.userName {
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: baseline;
+}
+.displayName {
   @include color-ui-primary;
-  grid-area: userName;
   font-weight: bold;
+  flex: 2;
+  max-width: min-content;
+
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.userName {
+  @include color-ui-secondary;
+  @include size-body2;
+  margin-left: 4px;
+  flex: 1;
+  max-width: min-content;
+
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 $message-max-height: 200px;
