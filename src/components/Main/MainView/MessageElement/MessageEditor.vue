@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
 import apis from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
@@ -86,11 +86,13 @@ export default defineComponent({
       onModifierKeyUp
     } = useModifierKey()
 
-    const textareaRef = ref<{ $el: HTMLTextAreaElement }>()
+    const textareaRef = ref<{
+      textareaAutosizeRef: { $el: HTMLTextAreaElement }
+    }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       text,
-      textareaRef,
+      computed(() => textareaRef.value?.textareaAutosizeRef),
       containerEle
     )
 
