@@ -237,6 +237,7 @@ $message-max-height: 200px;
 .markdownContainer {
   max-height: $message-max-height;
   overflow: hidden;
+  overflow: clip;
   .container[data-expanded] & {
     // NOTE: 画面幅の変更でoversizedではなくてもexpandedがつくことがあるが、
     //       元の高さに戻すボタンは置かないためスタイル上でこの場合を考慮する必要はない
