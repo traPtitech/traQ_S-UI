@@ -60,7 +60,8 @@ export const resize = async (
     const outputSize = getThumbnailDimensions(inputSize)
     resetCanvas($output, outputSize)
     await pica.resize($input, $output, {
-      quality: 2
+      quality: 2,
+      alpha: true
     })
 
     const output = await pica.toBlob($output, inputFile.type)
