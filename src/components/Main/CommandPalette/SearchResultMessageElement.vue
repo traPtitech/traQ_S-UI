@@ -231,7 +231,7 @@ export default defineComponent({
 $message-max-height: 200px;
 
 .contentContainer {
-  @include color-text-primary;
+  @include color-ui-primary;
   grid-area: content;
 }
 .markdownContainer {
