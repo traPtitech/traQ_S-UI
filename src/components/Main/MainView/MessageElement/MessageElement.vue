@@ -123,6 +123,7 @@ $messagePaddingMobile: 16px;
   width: 100%;
   min-width: 0;
   overflow: hidden;
+  overflow: clip;
   padding: 8px $messagePadding;
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
