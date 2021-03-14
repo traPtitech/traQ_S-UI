@@ -13,16 +13,18 @@
       :class="$style.sortSelector"
       small
     />
-    <div
-      v-for="message in searchResult"
-      :key="message.id"
-      :class="$style.elementContainer"
-    >
-      <search-result-message-element
-        :message="message"
-        :current-sort-key="currentSortKey"
-        @click-open="openMessage"
-      />
+    <div :class="$style.resultList">
+      <div
+        v-for="message in searchResult"
+        :key="message.id"
+        :class="$style.elementContainer"
+      >
+        <search-result-message-element
+          :message="message"
+          :current-sort-key="currentSortKey"
+          @click-open="openMessage"
+        />
+      </div>
     </div>
     <div :class="$style.navigation">
       <div
@@ -155,11 +157,16 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-tertiary;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-height: 0;
 }
 .sortSelector {
   margin: 1rem;
+}
+.resultList {
+  overflow-y: scroll;
 }
 .elementContainer {
   margin-bottom: 0.5rem;
