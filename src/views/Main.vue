@@ -44,7 +44,9 @@ import {
   reactive,
   computed,
   Ref,
-  defineAsyncComponent
+  defineAsyncComponent,
+  onMounted,
+  onBeforeUnmount
 } from 'vue'
 import { setupWebSocket } from '@/lib/websocket'
 import { connectFirebase } from '@/lib/firebase'
@@ -61,6 +63,7 @@ import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
 import useToastStore from '@/providers/toastStore'
 import { useMessageInputStates } from '@/providers/messageInputState'
+import { useCommandPaletteInvoker } from '@/providers/commandPalette'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -85,6 +88,33 @@ const useDraftConfirmer = () => {
       event.returnValue = unloadMessage
       return unloadMessage
     }
+  })
+}
+
+const useCommandPaletteShortcutKey = () => {
+  const {
+    mode,
+    openCommandPalette,
+    closeCommandPalette
+  } = useCommandPaletteInvoker()
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'F' && e.shiftKey && e.ctrlKey) {
+      e.preventDefault()
+
+      if (mode.value === 'search') {
+        closeCommandPalette()
+      } else {
+        openCommandPalette('search')
+      }
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', onKeyDown)
+  })
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', onKeyDown)
   })
 }
 
@@ -120,6 +150,8 @@ export default defineComponent({
       currentActiveDrawer
     } = useMainViewLayout(navWidth, sidebarWidth)
     const { addToast } = useToastStore()
+
+    useCommandPaletteShortcutKey()
 
     const { isMobile } = useIsMobile()
     const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
