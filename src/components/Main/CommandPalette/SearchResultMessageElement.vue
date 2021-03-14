@@ -183,6 +183,7 @@ export default defineComponent({
   grid-area: header;
   display: flex;
   align-items: baseline;
+  min-width: 0;
 }
 .displayName {
   @include color-ui-primary;
