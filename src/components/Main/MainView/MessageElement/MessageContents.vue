@@ -12,7 +12,7 @@
       :updated-at="state.message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <message-markdown :message-id="messageId" />
+      <message-markdown v-show="!state.isEditing" :message-id="messageId" />
       <message-editor
         v-if="state.isEditing"
         :raw-content="state.rawContent"
