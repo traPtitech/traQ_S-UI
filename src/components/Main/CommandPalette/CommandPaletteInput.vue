@@ -101,5 +101,6 @@ export default defineComponent({
 }
 .input {
   @include color-ui-primary;
+  min-width: 0;
 }
 </style>
