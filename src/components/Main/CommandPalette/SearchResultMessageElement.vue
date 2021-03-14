@@ -14,7 +14,10 @@
     </div>
     <div :class="$style.contentContainer">
       <div ref="contentRef" :class="$style.markdownContainer">
-        <message-markdown :message-id="message.id" />
+        <message-markdown
+          :message-id="message.id"
+          @click="toggleSpoilerHandler"
+        />
       </div>
       <search-result-message-file-list
         :v-if="embeddingsState.fileIds.length > 0"
@@ -56,6 +59,7 @@ import useEmbeddings from '@/use/message/embeddings'
 import { Message } from '@traptitech/traq'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import { SearchMessageSortKey } from '@/use/searchMessage/queryParser'
+import { toggleSpoiler } from '@/lib/markdown/spoiler'
 
 const maxHeight = 200
 
@@ -83,6 +87,18 @@ const useMessageExpansion = (contentRef: Ref<HTMLElement | undefined>) => {
     expanded.value = !expanded.value
   }
   return { oversized, expanded, onClickExpandButton }
+}
+
+const useSpoilerToggler = () => {
+  const toggleSpoilerHandler = (event: MouseEvent) => {
+    if (!event.target) return
+    const toggled = toggleSpoiler(event.target as HTMLElement)
+    if (toggled) {
+      event.stopPropagation()
+    }
+  }
+
+  return { toggleSpoilerHandler }
 }
 
 export default defineComponent({
@@ -139,6 +155,8 @@ export default defineComponent({
       contentRef
     )
 
+    const { toggleSpoilerHandler } = useSpoilerToggler()
+
     return {
       user,
       channelName,
@@ -148,7 +166,8 @@ export default defineComponent({
       expanded,
       oversized,
       onClickExpandButton,
-      contentRef
+      contentRef,
+      toggleSpoilerHandler
     }
   }
 })
