@@ -78,11 +78,18 @@ export default defineComponent({
     )
     const channelsWithNotification = computed(() =>
       [...store.state.domain.me.unreadChannelsMap.values()]
+        .sort((a, b) => {
+          if (a.noticeable !== b.noticeable) {
+            return b.noticeable ? 1 : -1
+          }
+          return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+        })
         .map(unread => store.state.entities.channelsMap.get(unread.channelId))
         .filter(isDefined)
     )
     const dmChannelsWithNotification = computed(() =>
       [...store.state.domain.me.unreadChannelsMap.values()]
+        .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
         .map(unread => store.state.entities.dmChannelsMap.get(unread.channelId))
         .filter(isDefined)
     )
