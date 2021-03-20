@@ -99,7 +99,7 @@ const useCommandPaletteShortcutKey = () => {
   } = useCommandPaletteInvoker()
 
   const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'F' && e.shiftKey && e.ctrlKey) {
+    if (e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey) {
       e.preventDefault()
 
       if (mode.value === 'search') {
