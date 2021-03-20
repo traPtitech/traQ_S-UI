@@ -1,8 +1,8 @@
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
+import { ChannelId } from '@/types/entity-ids'
 import { changeChannelById } from '@/router/channel'
 
 const useChannelSelect = () => {
-  const onChannelSelect = (id: ChannelId | DMChannelId) => {
+  const onChannelSelect = (id: ChannelId) => {
     try {
       changeChannelById(id)
     } catch {

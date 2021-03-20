@@ -8,10 +8,14 @@
       <channel-list :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
     <navigation-content-container
-      v-if="channelsWithNotification.length !== 0"
+      v-if="
+        dmChannelsWithNotification.length + channelsWithNotification.length !==
+        0
+      "
       subtitle="未読"
       :class="$style.item"
     >
+      <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
       <channel-list
         :channels="channelsWithNotification"
         ignore-children
@@ -47,13 +51,15 @@ import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vu
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import { isDefined } from '@/lib/util/array'
 import { constructTree } from '@/lib/channelTree'
+import DMChannelList from '@/components/Main/Navigation/DMChannelList/DMChannelList.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
     ChannelList,
     EmptyState,
-    NavigationContentContainer
+    NavigationContentContainer,
+    DMChannelList
   },
   setup() {
     const homeChannelWithTree = computed(() =>
@@ -75,6 +81,11 @@ export default defineComponent({
         .map(unread => store.state.entities.channelsMap.get(unread.channelId))
         .filter(isDefined)
     )
+    const dmChannelsWithNotification = computed(() =>
+      [...store.state.domain.me.unreadChannelsMap.values()]
+        .map(unread => store.state.entities.dmChannelsMap.get(unread.channelId))
+        .filter(isDefined)
+    )
     const topLevelChannels = computed(
       () =>
         store.state.domain.channelTree.homeChannelTree.children.filter(
@@ -92,6 +103,7 @@ export default defineComponent({
       homeChannelWithTree,
       topLevelChannels,
       channelsWithNotification,
+      dmChannelsWithNotification,
       channelsWithRtc
     }
   }

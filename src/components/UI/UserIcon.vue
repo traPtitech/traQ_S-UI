@@ -6,7 +6,7 @@
     :style="styles.container"
   >
     <div v-if="hasNotification" :class="$style.indicator">
-      <notification-indicator />
+      <notification-indicator :size="indicatorSize" />
     </div>
   </div>
 </template>
@@ -35,6 +35,10 @@ export default defineComponent({
     size: {
       type: Number as PropType<IconSize>,
       default: 36
+    },
+    indicatorSize: {
+      type: Number,
+      default: 10
     },
     preventModal: {
       type: Boolean,
