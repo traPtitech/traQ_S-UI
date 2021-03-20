@@ -233,6 +233,7 @@ $message-max-height: 200px;
 .contentContainer {
   @include color-ui-primary;
   grid-area: content;
+  min-width: 0;
 }
 .markdownContainer {
   max-height: $message-max-height;
