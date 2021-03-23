@@ -1,6 +1,7 @@
 <template>
   <section>
     <notification :class="$style.element" />
+    <citation-notification :class="$style.element" />
     <open-mode
       :class="$style.element"
       v-model:open-mode="state.openMode"
@@ -21,6 +22,7 @@ import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import useSyncedState from '@/components/Settings/use/syncedState'
 import Notification from '@/components/Settings/BrowserTab/Notification.vue'
+import CitationNotification from '@/components/Settings/BrowserTab/CitationNotification.vue'
 import Caches from '@/components/Settings/BrowserTab/Caches.vue'
 import OpenMode from '@/components/Settings/BrowserTab/OpenMode.vue'
 import SendKey from '@/components/Settings/BrowserTab/SendKey.vue'
@@ -30,6 +32,7 @@ export default defineComponent({
   name: 'BrowserTab',
   components: {
     Notification,
+    CitationNotification,
     OpenMode,
     SendKey,
     EcoMode,
