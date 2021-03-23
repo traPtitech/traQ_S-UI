@@ -1,31 +1,11 @@
 <template>
   <section>
     <notification :class="$style.element" />
-    <div :class="$style.element">
-      <h3 :class="$style.header">起動時チャンネル設定</h3>
-      <div :class="$style.content">
-        <div :class="$style.channel">
-          <form-radio
-            label="最後に開いたチャンネル"
-            input-value="lastOpen"
-            v-model="state.openMode"
-          />
-        </div>
-        <div :class="$style.channel">
-          <form-radio
-            label="特定のチャンネル"
-            input-value="particular"
-            v-model="state.openMode"
-          />
-          <form-selector
-            v-if="state.openMode === 'particular'"
-            v-model="state.openChannelName"
-            :options="channelOptions"
-            :class="$style.selector"
-          />
-        </div>
-      </div>
-    </div>
+    <open-mode
+      :class="$style.element"
+      v-model:open-mode="state.openMode"
+      v-model:open-channel-name="state.openChannelName"
+    />
     <div :class="$style.element">
       <h3 :class="$style.header">メッセージ送信スタイル</h3>
       <div :class="$style.content">
@@ -90,14 +70,12 @@ import store from '@/store'
 import { isMac } from '@/lib/util/browser'
 import { SendKeys } from '@/store/app/browserSettings'
 import useSyncedState from '@/components/Settings/use/syncedState'
-import FormSelector from '@/components/UI/FormSelector.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormCheckbox from '@/components/UI/FormCheckbox.vue'
 import Toggle from '@/components/UI/Toggle.vue'
 import Notification from '@/components/Settings/BrowserTab/Notification.vue'
 import Caches from '@/components/Settings/BrowserTab/Caches.vue'
-import useChannelPath from '@/use/channelPath'
-import useChannelOptions from '@/use/channelOptions'
+import OpenMode from '@/components/Settings/BrowserTab/OpenMode.vue'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -115,8 +93,6 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
 export default defineComponent({
   name: 'BrowserTab',
   setup() {
-    const { channelIdToPathString } = useChannelPath()
-
     // 起動時チャンネルの選択に必要
     store.dispatch.entities.fetchChannels()
 
@@ -126,10 +102,6 @@ export default defineComponent({
       store.commit.app.browserSettings.set
     )
 
-    const { channelOptions } = useChannelOptions(undefined, channel =>
-      channel ? channelIdToPathString(channel.id) : '(unknown)'
-    )
-
     const macFlag = isMac()
     const getModifierKeyName = (key: keyof SendKeys) => {
       return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
@@ -137,15 +109,14 @@ export default defineComponent({
 
     return {
       state,
-      channelOptions,
       macFlag,
       getModifierKeyName
     }
   },
   components: {
     Notification,
+    OpenMode,
     FormRadio,
-    FormSelector,
     FormCheckbox,
     Toggle,
     Caches
@@ -166,15 +137,6 @@ export default defineComponent({
 }
 .keyCheckbox {
   margin-right: 12px;
-}
-.channel {
-  margin-bottom: 12px;
-}
-.selector {
-  margin: {
-    top: 4px;
-    left: 12px;
-  }
 }
 .content {
   margin-left: 12px;
