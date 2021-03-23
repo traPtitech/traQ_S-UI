@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormCheckbox',
@@ -37,8 +37,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
-    const value = useModelSyncer(props, context)
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
 
     return { value }
   }

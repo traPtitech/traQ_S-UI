@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormRadio',
@@ -44,8 +44,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
-    const value = useModelSyncer(props, context)
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
     const isChecked = computed(() => props.inputValue === value.value)
 
     return { value, isChecked }

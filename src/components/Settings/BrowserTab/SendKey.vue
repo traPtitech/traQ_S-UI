@@ -45,12 +45,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { SendKey, SendKeys } from '@/store/app/browserSettings'
 import { isMac } from '@/lib/util/browser'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import FormCheckbox from '@/components/UI/FormCheckbox.vue'
-import { useModelObjectSyncer } from '@/use/modelSyncer'
+import { useModelSyncer, useModelObjectSyncer } from '@/use/modelSyncer'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -82,15 +82,12 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const sendWithModifierKeyValue = computed({
-      get() {
-        return props.sendWithModifierKey
-      },
-      set(v) {
-        emit('update:sendWithModifierKey', v)
-      }
-    })
-    const modifierKeyValue = useModelObjectSyncer(props, 'modifierKey', emit)
+    const sendWithModifierKeyValue = useModelSyncer(
+      props,
+      emit,
+      'sendWithModifierKey'
+    )
+    const modifierKeyValue = useModelObjectSyncer(props, emit, 'modifierKey')
 
     const macFlag = isMac()
     const getModifierKeyName = (key: keyof SendKeys) => {

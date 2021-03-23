@@ -61,8 +61,8 @@ export default defineComponent({
     },
     enterkeyhint: String
   },
-  setup(props, context) {
-    const { value, onInput } = useTextModelSyncer(props, context)
+  setup(props, { emit }) {
+    const { value, onInput } = useTextModelSyncer(props, emit)
 
     const id = randomString()
 

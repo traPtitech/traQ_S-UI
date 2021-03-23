@@ -1,40 +1,58 @@
-import { computed, ComputedRef, SetupContext } from 'vue'
+import { computed, ComputedRef } from 'vue'
 
-const useModelSyncer = <T>(
-  props: { modelValue: T },
-  context:
-    | SetupContext<{ 'update:modelValue': (val: T) => boolean }>
-    | SetupContext<Record<string, unknown>>,
-  onUpdate?: (val: T) => void
-) => {
+export const useModelSyncer = <
+  P,
+  K extends keyof P & string,
+  E extends (n: `update:${K}`, val: P[K]) => void
+>(
+  props: P,
+  emit: E,
+  key: K,
+  onUpdate?: (val: P[K]) => void
+): ComputedRef<P[K]> => {
   const value = computed({
-    get: () => props.modelValue,
+    get: () => props[key],
     set: v => {
       onUpdate?.(v)
-      context.emit('update:modelValue', v)
+      emit(`update:${key}` as const, v)
     }
   })
   return value
 }
 
-export default useModelSyncer
-
-export const useModelObjectSyncer = <P, K extends keyof P>(
+export const useModelValueSyncer = <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  P extends { modelValue: any },
+  E extends (n: `update:modelValue`, val: P['modelValue']) => void
+>(
   props: P,
-  key = 'modelValue' as K,
+  emit: E,
+  onUpdate?: (val: P['modelValue']) => void
+) => {
+  return useModelSyncer(props, emit, 'modelValue', onUpdate)
+}
+
+type ToSyncedRefs<T> = { [KK in keyof T]: ComputedRef<T[KK]> }
+
+export const useModelObjectSyncer = <
+  P,
+  K extends keyof P & string,
+  E extends (n: `update:${K}`, val: P[K]) => void
+>(
+  props: P,
+  emit: E,
+  key = 'modelValue' as K
+): ToSyncedRefs<P[K]> => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emit: (name: string, ...args: any[]) => void
-): { [KK in keyof P[K]]: ComputedRef<P[K][KK]> } => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const computedObject: any = {}
-  for (const k of Object.keys(props[key])) {
+  const computedObject: ToSyncedRefs<P[K]> = {} as any
+
+  for (const k of Object.keys(props[key]) as Array<keyof P[K]>) {
     computedObject[k] = computed({
       get() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (props[key] as any)[k]
+        return props[key][k]
       },
       set(v) {
-        emit(`update:${key}`, { ...props[key], [k]: v })
+        emit(`update:${key}` as const, { ...props[key], [k]: v })
       }
     })
   }

@@ -37,7 +37,7 @@ import {
 } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
@@ -116,7 +116,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const value = useModelSyncer(props, context)
+    const value = useModelValueSyncer(props, context.emit)
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement

@@ -27,13 +27,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { OpenMode } from '@/store/app/browserSettings'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import FormRadio from '@/components/UI/FormRadio.vue'
 import useChannelPath from '@/use/channelPath'
 import useChannelOptions from '@/use/channelOptions'
 import store from '@/store'
+import { useModelSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'OpenMode',
@@ -57,22 +58,8 @@ export default defineComponent({
 
     const { channelIdToPathString } = useChannelPath()
 
-    const openModeValue = computed({
-      get() {
-        return props.openMode
-      },
-      set(v) {
-        emit('update:openMode', v)
-      }
-    })
-    const openChannelNameValue = computed({
-      get() {
-        return props.openChannelName
-      },
-      set(v) {
-        emit('update:openChannelName', v)
-      }
-    })
+    const openModeValue = useModelSyncer(props, emit, 'openMode')
+    const openChannelNameValue = useModelSyncer(props, emit, 'openChannelName')
 
     const { channelOptions } = useChannelOptions(undefined, channel =>
       channel ? channelIdToPathString(channel.id) : '(unknown)'
