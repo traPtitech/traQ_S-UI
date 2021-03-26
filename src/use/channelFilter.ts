@@ -1,7 +1,7 @@
 import store from '@/store'
 import { Channel } from '@traptitech/traq'
 import { reactive, computed, Ref } from 'vue'
-import { checkResult, channelDeepMatching } from '@/lib/channel'
+import { channelDeepMatching } from '@/lib/channel'
 
 const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const targetChannelIds = computed(
@@ -24,15 +24,8 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         .toLowerCase()
         .split(/[\/\\]/) as [string, ...string[]] // split の返り値は空配列にはならないのでキャストできる
 
-      const matchCheck = (channel: Channel, query: string): checkResult => {
-        if (channel.name === query) return checkResult.perfect
-        if (channel.name.includes(query)) return checkResult.match
-        return checkResult.none
-      }
-
       const { perfectMatched: fullMatched, matched } = channelDeepMatching(
         store.state.entities.channelsMap,
-        matchCheck,
         queryArr,
         targetChannelIds.value
       )

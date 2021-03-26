@@ -2,6 +2,7 @@ import { count } from '@/lib/util/string'
 import { ChannelId } from '@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { dmParentUuid } from '@/lib/util/uuid'
+import { ChannelLike } from './channelTree'
 
 const MAX_CHANNEL_DEPTH = 5
 const MAX_CHANNEL_PATH_SLASHES = MAX_CHANNEL_DEPTH - 1
@@ -45,29 +46,35 @@ export const channelIdToPathString = (
 
 export type checkResult = 'none' | 'match' | 'perfect'
 
-interface matchResult {
-  perfectMatched: Channel[]
-  matched: Channel[]
+interface matchResult<T extends ChannelLike> {
+  perfectMatched: T[]
+  matched: T[]
+}
+
+const checkMatchChannel = (
+  channel: ChannelLike,
+  query: string
+): checkResult => {
+  if (channel.name === query) return 'perfect'
+  if (channel.name.includes(query)) return 'match'
+  return 'none'
 }
 
 /**
  * 連続するチャンネルに対し、連続する条件を満たすようなチャンネルを得る関数
  * @param channelMap チャンネルの id とチャンネル情報を対応付ける map
- * @param f 判定する関数
  * @param querys 連続するクエリ
  * @param targetChannelMap 対象のチャンネルの map
  * @returns 条件を満たすようなチャンネルの配列
  */
-export const channelDeepMatching = <T>(
-  channelMap: ReadonlyMap<ChannelId, Channel>,
-  f: (channel: Channel, query: T) => checkResult,
-  querys: [T, ...T[]],
+export const channelDeepMatching = <T extends ChannelLike>(
+  channelMap: ReadonlyMap<ChannelId, T>,
+  querys: [string, ...string[]],
   targetChannelMap: ReadonlySet<ChannelId> = new Set(channelMap.keys())
-): matchResult => {
+): matchResult<T> => {
   const results = [...channelMap.values()].map(channel =>
     channelRecursiveDeepMatching(
       channelMap,
-      f,
       querys,
       channel.id,
       targetChannelMap
@@ -79,17 +86,16 @@ export const channelDeepMatching = <T>(
   }
 }
 
-const channelRecursiveDeepMatching = <T>(
-  channelMap: ReadonlyMap<ChannelId, Channel>,
-  f: (channel: Channel, query: T) => checkResult,
-  restQuery: [T, ...T[]],
+const channelRecursiveDeepMatching = <T extends ChannelLike>(
+  channelMap: ReadonlyMap<ChannelId, T>,
+  restQuery: [string, ...string[]],
   nowChannelId: ChannelId,
   targetChannelMap: ReadonlySet<ChannelId>,
   stillPerfect = true
-): matchResult => {
+): matchResult<T> => {
   const nowChannel = channelMap.get(nowChannelId)
   if (nowChannel === undefined) return { perfectMatched: [], matched: [] }
-  const check = f(nowChannel, restQuery[0])
+  const check = checkMatchChannel(nowChannel, restQuery[0])
   if (check === 'none') return { perfectMatched: [], matched: [] }
   if (restQuery.length === 1) {
     if (!targetChannelMap.has(nowChannelId)) {
@@ -102,8 +108,7 @@ const channelRecursiveDeepMatching = <T>(
   const res = nowChannel.children.map(id =>
     channelRecursiveDeepMatching(
       channelMap,
-      f,
-      restQuery.slice(1) as [T, ...T[]],
+      restQuery.slice(1) as [string, ...string[]],
       id,
       targetChannelMap,
       stillPerfect && check === 'perfect'
