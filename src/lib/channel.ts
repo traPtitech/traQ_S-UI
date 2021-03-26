@@ -43,12 +43,7 @@ export const channelIdToPathString = (
   return simpleChannelPath.map(c => c.name).join('/')
 }
 
-export const checkResult = {
-  none: 0,
-  match: 1,
-  perfect: 2
-} as const
-export type checkResult = typeof checkResult[keyof typeof checkResult]
+export type checkResult = 'none' | 'match' | 'perfect'
 
 interface matchResult {
   perfectMatched: Channel[]
@@ -95,12 +90,12 @@ const channelRecursiveDeepMatching = <T>(
   const nowChannel = channelMap.get(nowChannelId)
   if (nowChannel === undefined) return { perfectMatched: [], matched: [] }
   const check = f(nowChannel, restQuery[0])
-  if (check === checkResult.none) return { perfectMatched: [], matched: [] }
+  if (check === 'none') return { perfectMatched: [], matched: [] }
   if (restQuery.length === 1) {
     if (!targetChannelMap.has(nowChannelId)) {
       return { perfectMatched: [], matched: [] }
     }
-    return stillPerfect && check === checkResult.perfect
+    return stillPerfect && check === 'perfect'
       ? { perfectMatched: [nowChannel], matched: [] }
       : { perfectMatched: [], matched: [nowChannel] }
   }
@@ -111,7 +106,7 @@ const channelRecursiveDeepMatching = <T>(
       restQuery.slice(1) as [T, ...T[]],
       id,
       targetChannelMap,
-      stillPerfect && check === checkResult.perfect
+      stillPerfect && check === 'perfect'
     )
   )
   return {
