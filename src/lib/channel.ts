@@ -46,7 +46,7 @@ export const channelIdToPathString = (
 
 export type checkResult = 'none' | 'match' | 'perfect'
 
-interface matchResult<T extends ChannelLike> {
+export interface matchResult<T extends ChannelLike> {
   perfectMatched: T[]
   matched: T[]
 }
