@@ -93,5 +93,13 @@ export const actions = defineActions({
       clipFolderId
     })
     rootDispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+  },
+  changePrimaryViewToFiles(context, payload: { channelId: ChannelId }) {
+    const { commit, rootDispatch } = mainViewActionContext(context)
+    commit.setPrimaryView({
+      type: 'files',
+      channelId: payload.channelId
+    })
+    rootDispatch.domain.messagesView.changeCurrentChannel(payload)
   }
 })
