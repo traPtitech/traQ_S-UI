@@ -105,10 +105,6 @@ const useMarkdownInternalHandler = () => {
     const href = new URL($a.href)
     const linkPath = href.pathname + href.search + href.hash
 
-    if (confirm(`${linkPath}への内部リンクを別タブで開きますか？`)) {
-      return
-    }
-
     event.preventDefault()
     router.push(linkPath)
   }
