@@ -4,172 +4,133 @@ import { ChannelLike } from '@/lib/channelTree'
 
 describe('channelDeepMatching', () => {
   it('one empty query', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0',
-          '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
-          'c9d4d957-141d-5ca2-0557-04589ca9187a',
-          '231da375-5246-731a-8e59-0d08c3c1f138',
-          '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
-          '77524bb3-0aed-4f7e-153b-c3706945be11',
-          '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
-          '7ae96689-7720-14a3-33d9-476ba1e7194f',
-          '3648304b-a229-415c-b2c9-1cf72b7a2188',
-          '43f92228-719a-901d-00df-40c32a042fd9',
-          '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-          '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
-          'd80eeee8-9ec8-1063-f47b-2c54813725b1',
-          'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
-          'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
-          '12d1455f-ec59-36f0-7609-799cfa5fc68f',
-          'fb1cecc8-8cbc-33c3-d895-c724fcbf7039',
-          '38a5e796-f380-38fd-a1c8-92949a38caad',
-          '066f3f2b-5775-4963-aed5-78307e4e8122',
-          '346973d0-895e-80bd-c3aa-86f482dd69ce'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['']), {
+      perfectMatched: [],
+      matched: [
+        'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0',
+        '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
+        'c9d4d957-141d-5ca2-0557-04589ca9187a',
+        '231da375-5246-731a-8e59-0d08c3c1f138',
+        '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
+        '77524bb3-0aed-4f7e-153b-c3706945be11',
+        '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
+        '7ae96689-7720-14a3-33d9-476ba1e7194f',
+        '3648304b-a229-415c-b2c9-1cf72b7a2188',
+        '43f92228-719a-901d-00df-40c32a042fd9',
+        '680a82fc-3a97-62bc-c977-8ac14f9049d3',
+        '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
+        'd80eeee8-9ec8-1063-f47b-2c54813725b1',
+        'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
+        'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
+        '12d1455f-ec59-36f0-7609-799cfa5fc68f',
+        'fb1cecc8-8cbc-33c3-d895-c724fcbf7039',
+        '38a5e796-f380-38fd-a1c8-92949a38caad',
+        '066f3f2b-5775-4963-aed5-78307e4e8122',
+        '346973d0-895e-80bd-c3aa-86f482dd69ce'
+      ]
+    })
   })
   it('one query matching', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['gen']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0',
-          '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-          '38a5e796-f380-38fd-a1c8-92949a38caad'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['gen']), {
+      perfectMatched: [],
+      matched: [
+        'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0',
+        '680a82fc-3a97-62bc-c977-8ac14f9049d3',
+        '38a5e796-f380-38fd-a1c8-92949a38caad'
+      ]
+    })
   })
   it('one query matching with full match', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['gene']))).toEqual(
-      sortResult({
-        perfectMatched: [
-          '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-          '38a5e796-f380-38fd-a1c8-92949a38caad'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined),
-        matched: ['e45a34fe-2d2b-1f41-83fd-3d345fdd9df0']
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['gene']), {
+      perfectMatched: [
+        '680a82fc-3a97-62bc-c977-8ac14f9049d3',
+        '38a5e796-f380-38fd-a1c8-92949a38caad'
+      ],
+      matched: ['e45a34fe-2d2b-1f41-83fd-3d345fdd9df0']
+    })
   })
   it('two empty query', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['', '']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
-          'c9d4d957-141d-5ca2-0557-04589ca9187a',
-          '231da375-5246-731a-8e59-0d08c3c1f138',
-          '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
-          '77524bb3-0aed-4f7e-153b-c3706945be11',
-          '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
-          '7ae96689-7720-14a3-33d9-476ba1e7194f',
-          '3648304b-a229-415c-b2c9-1cf72b7a2188',
-          '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-          '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
-          'd80eeee8-9ec8-1063-f47b-2c54813725b1',
-          'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
-          'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
-          'fb1cecc8-8cbc-33c3-d895-c724fcbf7039',
-          '38a5e796-f380-38fd-a1c8-92949a38caad',
-          '066f3f2b-5775-4963-aed5-78307e4e8122',
-          '346973d0-895e-80bd-c3aa-86f482dd69ce'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['', '']), {
+      perfectMatched: [],
+      matched: [
+        '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
+        'c9d4d957-141d-5ca2-0557-04589ca9187a',
+        '231da375-5246-731a-8e59-0d08c3c1f138',
+        '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
+        '77524bb3-0aed-4f7e-153b-c3706945be11',
+        '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
+        '7ae96689-7720-14a3-33d9-476ba1e7194f',
+        '3648304b-a229-415c-b2c9-1cf72b7a2188',
+        '680a82fc-3a97-62bc-c977-8ac14f9049d3',
+        '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
+        'd80eeee8-9ec8-1063-f47b-2c54813725b1',
+        'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
+        'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
+        'fb1cecc8-8cbc-33c3-d895-c724fcbf7039',
+        '38a5e796-f380-38fd-a1c8-92949a38caad',
+        '066f3f2b-5775-4963-aed5-78307e4e8122',
+        '346973d0-895e-80bd-c3aa-86f482dd69ce'
+      ]
+    })
   })
   it('two query with parent only', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['gen', '']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
-          '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
-          '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
-          '066f3f2b-5775-4963-aed5-78307e4e8122'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['gen', '']), {
+      perfectMatched: [],
+      matched: [
+        '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
+        '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
+        '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
+        '066f3f2b-5775-4963-aed5-78307e4e8122'
+      ]
+    })
   })
   it('two query with child only', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['', 'gen']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-          '38a5e796-f380-38fd-a1c8-92949a38caad'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['', 'gen']), {
+      perfectMatched: [],
+      matched: [
+        '680a82fc-3a97-62bc-c977-8ac14f9049d3',
+        '38a5e796-f380-38fd-a1c8-92949a38caad'
+      ]
+    })
   })
   it('two query with parent & child', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['gen', 'a']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: ['27a2ec88-d2d2-8b16-4e48-87577be2cdd3']
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['gen', 'a']), {
+      perfectMatched: [],
+      matched: ['27a2ec88-d2d2-8b16-4e48-87577be2cdd3']
+    })
   })
   it('none match two query', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['zzz', 'z']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: []
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['zzz', 'z']), {
+      perfectMatched: [],
+      matched: []
+    })
   })
   it('three empry query', () => {
-    expect(sortResult(channelDeepMatching(channelMap, ['', '', '']))).toEqual(
-      sortResult({
-        perfectMatched: [],
-        matched: [
-          'c9d4d957-141d-5ca2-0557-04589ca9187a',
-          '231da375-5246-731a-8e59-0d08c3c1f138',
-          '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
-          '77524bb3-0aed-4f7e-153b-c3706945be11',
-          '7ae96689-7720-14a3-33d9-476ba1e7194f',
-          '3648304b-a229-415c-b2c9-1cf72b7a2188',
-          '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
-          'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
-          'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
-          '38a5e796-f380-38fd-a1c8-92949a38caad',
-          '066f3f2b-5775-4963-aed5-78307e4e8122',
-          '346973d0-895e-80bd-c3aa-86f482dd69ce'
-        ]
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
-    )
+    expectResultToBeSame(channelDeepMatching(channelMap, ['', '', '']), {
+      perfectMatched: [],
+      matched: [
+        'c9d4d957-141d-5ca2-0557-04589ca9187a',
+        '231da375-5246-731a-8e59-0d08c3c1f138',
+        '522cfa75-5729-92ab-78d9-4dd0ef98ecec',
+        '77524bb3-0aed-4f7e-153b-c3706945be11',
+        '7ae96689-7720-14a3-33d9-476ba1e7194f',
+        '3648304b-a229-415c-b2c9-1cf72b7a2188',
+        '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
+        'b5a49916-f1e6-b452-546c-3f4ef8843bc5',
+        'ce93eaec-203e-e7fa-b112-609b4a7f7e0f',
+        '38a5e796-f380-38fd-a1c8-92949a38caad',
+        '066f3f2b-5775-4963-aed5-78307e4e8122',
+        '346973d0-895e-80bd-c3aa-86f482dd69ce'
+      ]
+    })
   })
   it('four query', () => {
-    expect(
-      sortResult(channelDeepMatching(channelMap, ['gen', 'c', 'd', 'r']))
-    ).toEqual(
-      sortResult({
+    expectResultToBeSame(
+      channelDeepMatching(channelMap, ['gen', 'c', 'd', 'r']),
+      {
         perfectMatched: [],
         matched: ['231da375-5246-731a-8e59-0d08c3c1f138']
-          .map(id => channelMap.get(id))
-          .filter(isNotUndefined)
-      })
+      }
     )
   })
 })
@@ -177,10 +138,32 @@ describe('channelDeepMatching', () => {
 const sortResult = <T extends ChannelLike>(
   result: matchResult<T>
 ): matchResult<T> => ({
-  perfectMatched: result.perfectMatched.sort(),
-  matched: result.matched.sort()
+  perfectMatched: result.perfectMatched.sort((a: T, b: T) =>
+    a.id < b.id ? 1 : -1
+  ),
+  matched: result.matched.sort((a: T, b: T) => (a.id < b.id ? 1 : -1))
 })
 const isNotUndefined = <T>(x: T): x is Exclude<T, undefined> => x !== undefined
+
+interface matchResultIds {
+  perfectMatched: string[]
+  matched: string[]
+}
+
+const expectResultToBeSame = (
+  expected: matchResult<ChannelLike>,
+  result: matchResultIds
+) =>
+  expect(sortResult(expected)).toEqual(
+    sortResult({
+      perfectMatched: result.perfectMatched
+        .map(id => channelMap.get(id))
+        .filter(isNotUndefined),
+      matched: result.matched
+        .map(id => channelMap.get(id))
+        .filter(isNotUndefined)
+    })
+  )
 
 /*
 general (e45a34fe-2d2b-1f41-83fd-3d345fdd9df0)
