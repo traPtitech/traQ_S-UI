@@ -3,7 +3,7 @@ import { matchResult, channelDeepMatching } from '@/lib/channel'
 import { ChannelLike } from '@/lib/channelTree'
 
 describe('channelDeepMatching', () => {
-  it('one empry query', () => {
+  it('one empty query', () => {
     expect(sortResult(channelDeepMatching(channelMap, ['']))).toEqual(
       sortResult({
         perfectMatched: [],
