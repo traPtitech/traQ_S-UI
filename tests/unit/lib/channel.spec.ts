@@ -182,29 +182,28 @@ const sortResult = <T extends ChannelLike>(
 })
 const isNotUndefined = <T>(x: T): x is Exclude<T, undefined> => x !== undefined
 
-// general (e45a34fe-2d2b-1f41-83fd-3d345fdd9df0)
-// // exective (0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1)
-// // // unders (c9d4d957-141d-5ca2-0557-04589ca9187a)
-// // // // relations (231da375-5246-731a-8e59-0d08c3c1f138)
-// // // // // hoge (522cfa75-5729-92ab-78d9-4dd0ef98ecec)
-// // // // // fuga ★ (77524bb3-0aed-4f7e-153b-c3706945be11)
-// // a (27a2ec88-d2d2-8b16-4e48-87577be2cdd3)
-// // // hoge ★ (7ae96689-7720-14a3-33d9-476ba1e7194f)
-// // // // fuga (3648304b-a229-415c-b2c9-1cf72b7a2188)
-
-// a (43f92228-719a-901d-00df-40c32a042fd9)
-// // gene (680a82fc-3a97-62bc-c977-8ac14f9049d3)
-// // // b ★ (2570dac4-21b0-282f-f2ef-f8462ea17d8b)
-// // hoge (d80eeee8-9ec8-1063-f47b-2c54813725b1)
-// // // b (b5a49916-f1e6-b452-546c-3f4ef8843bc5)
-// // // // fuga (ce93eaec-203e-e7fa-b112-609b4a7f7e0f)
-
-// b (12d1455f-ec59-36f0-7609-799cfa5fc68f)
-// // a (fb1cecc8-8cbc-33c3-d895-c724fcbf7039)
-// // // gene ★ (38a5e796-f380-38fd-a1c8-92949a38caad)
-// // // // hoge (066f3f2b-5775-4963-aed5-78307e4e8122)
-// // // // // fuga (346973d0-895e-80bd-c3aa-86f482dd69ce)
-
+/*
+general (e45a34fe-2d2b-1f41-83fd-3d345fdd9df0)
+  / exective (0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1)
+    / unders (c9d4d957-141d-5ca2-0557-04589ca9187a)
+      / relations (231da375-5246-731a-8e59-0d08c3c1f138)
+        / hoge (522cfa75-5729-92ab-78d9-4dd0ef98ecec)
+        / fuga ★ (77524bb3-0aed-4f7e-153b-c3706945be11)
+  / a (27a2ec88-d2d2-8b16-4e48-87577be2cdd3)
+    / hoge ★ (7ae96689-7720-14a3-33d9-476ba1e7194f)
+      / fuga (3648304b-a229-415c-b2c9-1cf72b7a2188)
+a (43f92228-719a-901d-00df-40c32a042fd9)
+  / gene (680a82fc-3a97-62bc-c977-8ac14f9049d3)
+    / b ★ (2570dac4-21b0-282f-f2ef-f8462ea17d8b)
+  / hoge (d80eeee8-9ec8-1063-f47b-2c54813725b1)
+    / b (b5a49916-f1e6-b452-546c-3f4ef8843bc5)
+      / fuga (ce93eaec-203e-e7fa-b112-609b4a7f7e0f)
+b (12d1455f-ec59-36f0-7609-799cfa5fc68f)
+  / a (fb1cecc8-8cbc-33c3-d895-c724fcbf7039)
+    / gene ★ (38a5e796-f380-38fd-a1c8-92949a38caad)
+      / hoge (066f3f2b-5775-4963-aed5-78307e4e8122)
+        / fuga (346973d0-895e-80bd-c3aa-86f482dd69ce)
+*/
 const starChannels = new Set<string>([
   '77524bb3-0aed-4f7e-153b-c3706945be11',
   '7ae96689-7720-14a3-33d9-476ba1e7194f',
