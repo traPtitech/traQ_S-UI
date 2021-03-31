@@ -69,7 +69,7 @@ const checkMatchChannel = (
  */
 export const channelDeepMatching = <T extends ChannelLike>(
   channelMap: ReadonlyMap<ChannelId, T>,
-  querys: [string, ...string[]],
+  querys: readonly [string, ...string[]],
   targetChannelMap: ReadonlySet<ChannelId> = new Set(channelMap.keys())
 ): matchResult<T> => {
   const results = [...channelMap.values()].map(channel =>
@@ -88,7 +88,7 @@ export const channelDeepMatching = <T extends ChannelLike>(
 
 const channelRecursiveDeepMatching = <T extends ChannelLike>(
   channelMap: ReadonlyMap<ChannelId, T>,
-  restQuery: [string, ...string[]],
+  restQuery: readonly [string, ...string[]],
   nowChannelId: ChannelId,
   targetChannelMap: ReadonlySet<ChannelId>,
   stillPerfect = true
