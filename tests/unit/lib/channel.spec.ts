@@ -105,7 +105,7 @@ describe('channelDeepMatching', () => {
       matched: []
     })
   })
-  it('three empry query', () => {
+  it('three empty query', () => {
     expectResultToBeSame(channelDeepMatching(channelMap, ['', '', '']), {
       perfectMatched: [],
       matched: [
