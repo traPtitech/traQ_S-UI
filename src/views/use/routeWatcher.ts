@@ -194,13 +194,6 @@ const useRouteWatcher = () => {
       return
     }
     state.view = 'main'
-    // const id = channelPathToId(
-    //   state.channelParam.split('/'),
-    //   store.state.domain.channelTree.channelTree
-    // )
-    // store.dispatch.ui.mainView.changePrimaryViewToFiles({
-    //   channelId: id
-    // })
   }
 
   const onRouteChangedToMessage = async () => {

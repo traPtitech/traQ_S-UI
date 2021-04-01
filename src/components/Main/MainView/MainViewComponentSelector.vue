@@ -10,6 +10,7 @@
   />
   <files-view
     v-else-if="viewInfo.type === 'files'"
+    :channel-id="viewInfo.channelId"
   />
   <null-view v-else />
 </template>
