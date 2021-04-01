@@ -1,5 +1,5 @@
 import { ChannelId } from '@/types/entity-ids'
-import { matchResult, channelDeepMatching } from '@/lib/channel'
+import { MatchResult, channelDeepMatching } from '@/lib/channel'
 import { ChannelLike } from '@/lib/channelTree'
 
 describe('channelDeepMatching', () => {
@@ -136,8 +136,8 @@ describe('channelDeepMatching', () => {
 })
 
 const sortResult = <T extends ChannelLike>(
-  result: matchResult<T>
-): matchResult<T> => ({
+  result: MatchResult<T>
+): MatchResult<T> => ({
   perfectMatched: result.perfectMatched.sort((a: T, b: T) =>
     a.id < b.id ? 1 : -1
   ),
@@ -145,14 +145,14 @@ const sortResult = <T extends ChannelLike>(
 })
 const isNotUndefined = <T>(x: T): x is Exclude<T, undefined> => x !== undefined
 
-interface matchResultIds {
+interface MatchResultIds {
   perfectMatched: string[]
   matched: string[]
 }
 
 const expectResultToBeSame = (
-  expected: matchResult<ChannelLike>,
-  result: matchResultIds
+  expected: MatchResult<ChannelLike>,
+  result: MatchResultIds
 ) =>
   expect(sortResult(expected)).toEqual(
     sortResult({
