@@ -176,18 +176,20 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFiles = async () => {
+    // チャンネルIDをチャンネルパスに変換するのに必要
+    await bothChannelsMapInitialFetchPromise
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
     try {
-      const id = channelPathToId(
+      const channelId = channelPathToId(
         state.channelParam.split('/'),
         store.state.domain.channelTree.channelTree
       )
 
       store.dispatch.ui.mainView.changePrimaryViewToFiles({
-        channelId: id
+        channelId: channelId
       })
     } catch (e) {
       state.view = 'not-found'

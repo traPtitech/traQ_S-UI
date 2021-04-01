@@ -1,0 +1,80 @@
+<template>
+  <div>
+    <div :class="$style.imageContainer">
+      <message-file-list-image
+        v-for="meta in fileMetaDataState.images"
+        :key="meta.id"
+        :file-id="meta.id"
+        :is-large="showLargeImage"
+        :class="$style.imageItem"
+      />
+    </div>
+    <message-file-list-video
+      v-for="meta in fileMetaDataState.videos"
+      :key="meta.id"
+      :file-id="meta.id"
+    />
+    <message-file-list-audio
+      v-for="meta in fileMetaDataState.audios"
+      :key="meta.id"
+      :file-id="meta.id"
+    />
+    <message-file-list-file
+      v-for="meta in fileMetaDataState.files"
+      :key="meta.id"
+      :class="$style.item"
+      :file-id="meta.id"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType, computed } from 'vue'
+import { FileId } from '@/types/entity-ids'
+import useFileMetaList from '../MessageElement/use/fileMetaList'
+import MessageFileListImage from '../MessageElement/MessageFileListImage.vue'
+import MessageFileListVideo from '../MessageElement/MessageFileListVideo.vue'
+import MessageFileListAudio from '../MessageElement/MessageFileListAudio.vue'
+import MessageFileListFile from '/MessageFileListFile.vue'
+
+export default defineComponent({
+  name: 'MessageFileList',
+  components: {
+    MessageFileListImage,
+    MessageFileListVideo,
+    MessageFileListAudio,
+    MessageFileListFile
+  },
+  props: {
+    fileIds: {
+      type: Array as PropType<FileId[]>,
+      default: []
+    }
+  },
+  setup(props) {
+    const { fileMetaDataState } = useFileMetaList(props)
+    const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
+    return { fileMetaDataState, showLargeImage }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.imageContainer {
+  display: flex;
+  flex-flow: row wrap;
+}
+.imageItem {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+.item {
+  flex-shrink: 0;
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
+</style>

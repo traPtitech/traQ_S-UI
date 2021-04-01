@@ -1,12 +1,9 @@
 <template>
   <div :class="$style.container">
     <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <div
-      v-for="fileList in fileLists"
-      :key="fileList.id"
-      :class="$style.list"
-    >
+    <div v-for="fileList in fileLists" :key="fileList.id" :class="$style.list">
       {{ fileList.id }}
+      <!-- <message-file-list-image is-large="false" :file-id="fileList.id" /> -->
     </div>
   </div>
 </template>
@@ -17,13 +14,13 @@ import { ChannelId } from '@/types/entity-ids'
 import { FileInfo } from '@traptitech/traq'
 import apis from '@/lib/apis'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
-// import FilesViewFileList from './FilesViewFileList.vue'
-import useFileMeta from '@/use/fileMeta'
+import MessageFileListImage from '../MessageElement/MessageFileListImage.vue'
 export default defineComponent({
   name: 'FilesView',
   components: {
     ScrollLoadingBar,
-    // FilesViewFileList
+    // FilesViewFileList,
+    // MessageFileListImage
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true }
@@ -43,5 +40,4 @@ export default defineComponent({
 .container {
   @include background-primary;
 }
-
 </style>
