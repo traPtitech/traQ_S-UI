@@ -176,7 +176,6 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFiles = async () => {
-    // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
     if (store.state.domain.channelTree.channelTree.children.length === 0) {
       // まだチャンネルツリーが構築されていない

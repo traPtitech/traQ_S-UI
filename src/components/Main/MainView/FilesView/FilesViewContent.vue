@@ -1,36 +1,45 @@
 <template>
   <div :class="$style.container">
     <scroll-loading-bar :class="$style.loadingBar" :show="isLoading" />
-    <div v-for="fileList in fileLists" :key="fileList.id" :class="$style.list">
-      {{ fileList.id }}
-      <!-- <message-file-list-image is-large="false" :file-id="fileList.id" /> -->
-    </div>
+    <messages-scroller
+      ref="scrollerEle"
+      :message-ids="messageIds"
+      :is-reached-end="isReachedEnd"
+      :is-reached-latest="isReachedLatest"
+      :is-loading="isLoading"
+      :last-loading-direction="lastLoadingDirection"
+      without-separator
+      @request-load-former="onLoadFormerMessagesRequest"
+    />
+    <files-view-file-list
+      v-for="fileList in fileLists"
+      :key="fileList.id"
+      :class="$style.list"
+      :file-id="fileList"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId, FileId } from '@/types/entity-ids'
 import { FileInfo } from '@traptitech/traq'
 import apis from '@/lib/apis'
-import ScrollLoadingBar from '../ScrollLoadingBar.vue'
-import MessageFileListImage from '../MessageElement/MessageFileListImage.vue'
+import FilesViewFileList from './FilesViewFileList.vue'
 export default defineComponent({
   name: 'FilesView',
   components: {
-    ScrollLoadingBar,
-    // FilesViewFileList,
-    // MessageFileListImage
+    FilesViewFileList
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true }
   },
   setup(props) {
-    const fileLists = ref(new Set<FileInfo>())
+    const fileLists = ref(new Set<FileId>())
     apis.getFiles(props.channelId).then(res => {
-      fileLists.value = new Set(res.data)
+      fileLists.value = new Set(res.data.map(c => c.id))
     })
-    console.log(fileLists)
+
     return { fileLists }
   }
 })
