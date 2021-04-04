@@ -17,7 +17,7 @@ export default {
    * skyway用設定
    */
   skyway: {
-    apiKey: '2a4e923e-2e16-4d3c-9a39-607c3f605f0a'
+    apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'
   },
   /**
    * 表示されるサービス
