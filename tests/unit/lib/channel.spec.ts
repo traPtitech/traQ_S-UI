@@ -133,6 +133,48 @@ describe('channelDeepMatching', () => {
       }
     )
   })
+
+  it('one empty query on star channels', () => {
+    expectResultToBeSame(channelDeepMatching(channelMap, [''], starChannels), {
+      perfectMatched: [],
+      matched: [
+        '77524bb3-0aed-4f7e-153b-c3706945be11',
+        '7ae96689-7720-14a3-33d9-476ba1e7194f',
+        '2570dac4-21b0-282f-f2ef-f8462ea17d8b',
+        '38a5e796-f380-38fd-a1c8-92949a38caad'
+      ]
+    })
+  })
+  it('one query on star channels', () => {
+    expectResultToBeSame(
+      channelDeepMatching(channelMap, ['ge'], starChannels),
+      {
+        perfectMatched: [],
+        matched: [
+          '7ae96689-7720-14a3-33d9-476ba1e7194f',
+          '38a5e796-f380-38fd-a1c8-92949a38caad'
+        ]
+      }
+    )
+  })
+  it('two query on star channels', () => {
+    expectResultToBeSame(
+      channelDeepMatching(channelMap, ['ge', ''], starChannels),
+      {
+        perfectMatched: [],
+        matched: ['2570dac4-21b0-282f-f2ef-f8462ea17d8b']
+      }
+    )
+  })
+  it('three query on star channels', () => {
+    expectResultToBeSame(
+      channelDeepMatching(channelMap, ['b', 'a', 'ge'], starChannels),
+      {
+        perfectMatched: [],
+        matched: ['38a5e796-f380-38fd-a1c8-92949a38caad']
+      }
+    )
+  })
 })
 
 const sortResult = <T extends ChannelLike>(
