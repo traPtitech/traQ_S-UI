@@ -63,19 +63,19 @@ const checkMatchChannel = (
 /**
  * 連続するチャンネルに対し、連続する条件を満たすようなチャンネルを得る関数
  * @param channelMap チャンネルの id とチャンネル情報を対応付ける map
- * @param querys 連続するクエリ
+ * @param queries 連続するクエリ
  * @param targetChannelMap 対象のチャンネルの map
  * @returns 条件を満たすようなチャンネルの配列
  */
 export const channelDeepMatching = <T extends ChannelLike>(
   channelMap: ReadonlyMap<ChannelId, T>,
-  querys: readonly [string, ...string[]],
+  queries: readonly [string, ...string[]],
   targetChannelMap: ReadonlySet<ChannelId> = new Set(channelMap.keys())
 ): MatchResult<T> => {
   const results = [...channelMap.values()].map(channel =>
     channelRecursiveDeepMatching(
       channelMap,
-      querys,
+      queries,
       channel.id,
       targetChannelMap
     )
