@@ -31,7 +31,7 @@ import { computed, defineComponent, shallowRef } from 'vue'
 import { randomString } from '@/lib/util/randomString'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormInput',
@@ -69,8 +69,8 @@ export default defineComponent({
       default: undefined
     }
   },
-  setup(props, context) {
-    const value = useModelSyncer(props, context)
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
 
     const style = computed(() => ({ maxHeight: props.maxHeight }))
 

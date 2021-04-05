@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { randomString } from '@/lib/util/randomString'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormSelector',
@@ -46,8 +46,8 @@ export default defineComponent({
     },
     label: String
   },
-  setup(props, context) {
-    const value = useModelSyncer(props, context)
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
     const id = randomString()
     return { value, id }
   }

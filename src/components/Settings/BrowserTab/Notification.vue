@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 :class="$style.header">通知: {{ status }}</h3>
+    <h3 :class="$style.header">この端末/ブラウザでの通知: {{ status }}</h3>
     <div :class="$style.content">
       <form-button
         v-if="permission === 'default'"

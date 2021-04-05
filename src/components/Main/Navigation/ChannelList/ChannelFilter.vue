@@ -17,7 +17,7 @@
 import { defineComponent } from 'vue'
 import FilterInput from '@/components/UI/FilterInput.vue'
 import Icon from '@/components/UI/Icon.vue'
-import useModelSyncer from '@/use/modelSyncer'
+import { useModelValueSyncer } from '@/use/modelSyncer'
 
 export default defineComponent({
   name: 'ChannelFilter',
@@ -35,8 +35,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const value = useModelSyncer(props, context)
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
     return { value }
   }
 })

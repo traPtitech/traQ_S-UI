@@ -32,8 +32,8 @@ export default defineComponent({
       default: undefined
     }
   },
-  setup(props, context) {
-    const { value, onInput } = useTextModelSyncer(props, context)
+  setup(props, { emit }) {
+    const { value, onInput } = useTextModelSyncer(props, emit)
 
     const textareaEle = ref<HTMLTextAreaElement | null>(null)
     onMounted(() => {

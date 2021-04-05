@@ -63,12 +63,12 @@ export default defineComponent({
       default: 'search'
     }
   },
-  setup(props, context) {
-    const { value, onInput } = useTextModelSyncer(props, context)
+  setup(props, { emit }) {
+    const { value, onInput } = useTextModelSyncer(props, emit)
 
     const reset = () => {
       // update:modelValueイベントを発火することで値を変更する
-      context.emit('update:modelValue', '')
+      emit('update:modelValue', '')
     }
 
     const inputRef = shallowRef<HTMLInputElement | null>(null)

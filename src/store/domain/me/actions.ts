@@ -67,7 +67,10 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
   },
-  onMessageCreated(context, message: Message) {
+  onMessageCreated(
+    context,
+    { message, isCiting }: { message: Message; isCiting: boolean }
+  ) {
     const { rootState, getters, commit, rootGetters } = meActionContext(context)
     // 最新の投稿を見ているチャンネルは未読に追加しない
     // 他端末で閲覧中のチャンネルでは未読に追加されることに注意
@@ -80,11 +83,13 @@ export const actions = defineActions({
     if (rootGetters.domain.me.myId === message.userId) return
 
     const noticeable =
+      isCiting ||
       detectMentionOfMe(
         message.content,
         rootGetters.domain.me.myId ?? '',
         rootState.domain.me.detail?.groups ?? []
-      ) || !!rootState.entities.channelsMap.get(message.channelId)?.force
+      ) ||
+      !!rootState.entities.channelsMap.get(message.channelId)?.force
     const isDM = rootState.entities.dmChannelsMap.has(message.channelId)
     const isChannelSubscribed = getters.isChannelSubscribed(message.channelId)
     if (!noticeable && !isDM && !isChannelSubscribed) return
