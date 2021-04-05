@@ -74,7 +74,7 @@ describe('channelDeepMatching', () => {
     })
   })
   it('two query with parent only', () => {
-    expectResultToBeSame(channelDeepMatching(channelMap, ['gen', '']), {
+    expectResultToBeSame(channelDeepMatching(channelMap, ['geN', '']), {
       perfectMatched: [],
       matched: [
         '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
@@ -126,7 +126,7 @@ describe('channelDeepMatching', () => {
   })
   it('four query', () => {
     expectResultToBeSame(
-      channelDeepMatching(channelMap, ['gen', 'c', 'd', 'r']),
+      channelDeepMatching(channelMap, ['gen', 'C', 'd', 'r']),
       {
         perfectMatched: [],
         matched: ['231da375-5246-731a-8e59-0d08c3c1f138']
@@ -147,7 +147,7 @@ describe('channelDeepMatching', () => {
   })
   it('one query on star channels', () => {
     expectResultToBeSame(
-      channelDeepMatching(channelMap, ['ge'], starChannels),
+      channelDeepMatching(channelMap, ['gE'], starChannels),
       {
         perfectMatched: [],
         matched: [
@@ -214,11 +214,11 @@ general (e45a34fe-2d2b-1f41-83fd-3d345fdd9df0)
       / relations (231da375-5246-731a-8e59-0d08c3c1f138)
         / hoge (522cfa75-5729-92ab-78d9-4dd0ef98ecec)
         / fuga ★ (77524bb3-0aed-4f7e-153b-c3706945be11)
-  / a (27a2ec88-d2d2-8b16-4e48-87577be2cdd3)
+  / A (27a2ec88-d2d2-8b16-4e48-87577be2cdd3)
     / hoge ★ (7ae96689-7720-14a3-33d9-476ba1e7194f)
       / fuga (3648304b-a229-415c-b2c9-1cf72b7a2188)
 a (43f92228-719a-901d-00df-40c32a042fd9)
-  / gene (680a82fc-3a97-62bc-c977-8ac14f9049d3)
+  / Gene (680a82fc-3a97-62bc-c977-8ac14f9049d3)
     / b ★ (2570dac4-21b0-282f-f2ef-f8462ea17d8b)
   / hoge (d80eeee8-9ec8-1063-f47b-2c54813725b1)
     / b (b5a49916-f1e6-b452-546c-3f4ef8843bc5)
@@ -307,7 +307,7 @@ const channelMap = new Map<ChannelId, ChannelLike>([
     '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
     {
       id: '27a2ec88-d2d2-8b16-4e48-87577be2cdd3',
-      name: 'a',
+      name: 'A',
       parentId: 'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0',
       children: ['7ae96689-7720-14a3-33d9-476ba1e7194f'],
       archived: false
@@ -350,7 +350,7 @@ const channelMap = new Map<ChannelId, ChannelLike>([
     '680a82fc-3a97-62bc-c977-8ac14f9049d3',
     {
       id: '680a82fc-3a97-62bc-c977-8ac14f9049d3',
-      name: 'gene',
+      name: 'Gene',
       parentId: '43f92228-719a-901d-00df-40c32a042fd9',
       children: ['2570dac4-21b0-282f-f2ef-f8462ea17d8b'],
       archived: false

@@ -24,7 +24,9 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
 
       if (query.length === 1 && queryArr.length === 1) {
         // query が真に１文字のときは完全一致のみ
-        return oneLetterChannels.value.filter(channel => channel.name === query)
+        return oneLetterChannels.value.filter(
+          channel => channel.name.toLowerCase() === query
+        )
       }
 
       const { perfectMatched: fullMatched, matched } = channelDeepMatching(
