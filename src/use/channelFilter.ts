@@ -8,9 +8,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
     () => new Set(targetChannels.value.map(channel => channel.id))
   )
   const oneLetterChannels = computed(() =>
-    [...store.state.entities.channelsMap.values()].filter(
-      channel => channel.name.length === 1
-    )
+    targetChannels.value.filter(channel => channel.name.length === 1)
   )
 
   const state = reactive({
@@ -24,14 +22,17 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         .toLowerCase()
         .split(/[\/\\]/) as [string, ...string[]] // split の返り値は空配列にはならないのでキャストできる
 
+      if (query.length === 1 && queryArr.length === 1) {
+        // query が真に１文字のときは完全一致のみ
+        return oneLetterChannels.value.filter(channel => channel.name === query)
+      }
+
       const { perfectMatched: fullMatched, matched } = channelDeepMatching(
         store.state.entities.channelsMap,
         queryArr,
         targetChannelIds.value
       )
-      return query.length === 1 && queryArr.length === 1
-        ? [...fullMatched] // query が真に 1 文字のときは完全一致のみ
-        : [...fullMatched, ...matched]
+      return [...fullMatched, ...matched]
     })
   })
   const setQuery = (query: string) => {
