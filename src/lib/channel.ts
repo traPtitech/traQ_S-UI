@@ -95,8 +95,10 @@ const channelRecursiveDeepMatching = <T extends ChannelLike>(
 ): MatchResult<T> => {
   const nowChannel = channelMap.get(nowChannelId)
   if (nowChannel === undefined) return { perfectMatched: [], matched: [] }
+
   const check = checkMatchChannel(nowChannel, restQuery[0])
   if (check === 'none') return { perfectMatched: [], matched: [] }
+
   if (restQuery.length === 1) {
     if (!targetChannelMap.has(nowChannelId)) {
       return { perfectMatched: [], matched: [] }
@@ -105,6 +107,7 @@ const channelRecursiveDeepMatching = <T extends ChannelLike>(
       ? { perfectMatched: [nowChannel], matched: [] }
       : { perfectMatched: [], matched: [nowChannel] }
   }
+
   const res = nowChannel.children.map(id =>
     channelRecursiveDeepMatching(
       channelMap,
