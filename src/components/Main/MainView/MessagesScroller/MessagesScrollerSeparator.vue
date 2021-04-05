@@ -38,7 +38,7 @@ $margin: 30px;
     display: block;
     background-color: currentColor;
     flex: 1 1;
-    height: 1px;
+    height: 2px;
     content: '';
     opacity: 0.1;
   }

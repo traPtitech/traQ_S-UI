@@ -35,7 +35,7 @@
 import { defineComponent, computed, Ref } from 'vue'
 import store from '@/store'
 import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
-import useTextFilter from '@/use/textFilter'
+import useChannelFilter from '@/use/channelFilter'
 import { constructTree } from '@/lib/channelTree'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
@@ -44,7 +44,7 @@ import NavigationContentContainer from '@/components/Main/Navigation/NavigationC
 import Icon from '@/components/UI/Icon.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
-  const { textFilterState } = useTextFilter(channels, 'name')
+  const { textFilterState } = useChannelFilter(channels)
   return {
     channelListFilterState: textFilterState
   }
