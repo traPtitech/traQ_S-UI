@@ -17,15 +17,16 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
       if (state.query.length === 0) {
         return targetChannels.value
       }
-      const query = state.query.toLowerCase()
-      const queryArr: [string, ...string[]] = state.query
-        .toLowerCase()
-        .split(/[\/\\]/) as [string, ...string[]] // split の返り値は空配列にはならないのでキャストできる
+      const query = state.query
+      const queryArr: [string, ...string[]] = state.query.split(/[\/\\]/) as [
+        string,
+        ...string[]
+      ] // split の返り値は空配列にはならないのでキャストできる
 
       if (query.length === 1 && queryArr.length === 1) {
         // query が真に１文字のときは完全一致のみ
         return oneLetterChannels.value.filter(
-          channel => channel.name.toLowerCase() === query
+          channel => channel.name.toLowerCase() === query.toLowerCase()
         )
       }
 
