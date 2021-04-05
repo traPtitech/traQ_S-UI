@@ -14,17 +14,21 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const state = reactive({
     query: '',
     filteredItems: computed((): readonly Channel[] => {
-      if (state.query.length === 0) {
+      const query = state.query
+      if (query.length === 0) {
         return targetChannels.value
       }
-      const query = state.query.toLowerCase()
-      const queryArr: [string, ...string[]] = state.query
-        .toLowerCase()
-        .split(/[\/\\]/) as [string, ...string[]] // split の返り値は空配列にはならないのでキャストできる
+
+      const queryArr: [string, ...string[]] = state.query.split(/[\/\\]/) as [
+        string,
+        ...string[]
+      ] // split の返り値は空配列にはならないのでキャストできる
 
       if (query.length === 1 && queryArr.length === 1) {
-        // query が真に１文字のときは完全一致のみ
-        return oneLetterChannels.value.filter(channel => channel.name === query)
+        // query が区切り文字でなく１文字のときは完全一致のみ
+        return oneLetterChannels.value.filter(
+          channel => channel.name.toLowerCase() === query.toLowerCase()
+        )
       }
 
       const { perfectMatched: fullMatched, matched } = channelDeepMatching(
