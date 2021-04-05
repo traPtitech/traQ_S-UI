@@ -5,9 +5,9 @@ import { messageMitt, messages } from '.'
 export const defineWsListeners = createDefineListeners<typeof messages>()(
   wsListener,
   (listener, { dispatch }) => {
-    listener.on('MESSAGE_CREATED', async ({ id }) => {
+    listener.on('MESSAGE_CREATED', async ({ id, is_citing }) => {
       const message = await dispatch.fetchMessage({ messageId: id })
-      messageMitt.emit('addMessage', message)
+      messageMitt.emit('addMessage', { message, isCiting: is_citing })
     })
     listener.on('MESSAGE_UPDATED', async ({ id }) => {
       const message = await dispatch.fetchMessage({

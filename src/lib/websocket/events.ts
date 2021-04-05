@@ -111,7 +111,10 @@ type PinBody = {
   channel_id: ChannelId
 }
 
-export type MessageCreatedEvent = MessageIdBody
+export type MessageCreatedEvent = {
+  id: MessageId
+  is_citing: boolean
+}
 export type MessageUpdatedEvent = MessageIdBody
 export type MessageDeletedEvent = MessageIdBody
 export type MessageReadEvent = MessageIdBody

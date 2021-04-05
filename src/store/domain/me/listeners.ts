@@ -39,8 +39,8 @@ export const defineWsListeners = createDefineListeners<typeof me>()(
 export const defineMessageListeners = createDefineListeners<typeof me>()(
   messageMitt,
   (listener, { dispatch }) => {
-    listener.on('addMessage', message => {
-      dispatch.onMessageCreated(message)
+    listener.on('addMessage', payload => {
+      dispatch.onMessageCreated(payload)
     })
   }
 )

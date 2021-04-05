@@ -108,7 +108,7 @@ class Tts {
     })
   }
 
-  onAddMessage = (message: Message) => {
+  onAddMessage = ({ message }: { message: Message }) => {
     if (store.getters.domain.me.myId === message.userId) return
 
     const userDisplayName =

@@ -19,7 +19,7 @@ defineWsListeners(store => store.entities.messages)
 
 type MessageEventMap = {
   reconnect: () => void
-  addMessage: (message: Message) => void
+  addMessage: (payload: { message: Message; isCiting: boolean }) => void
   updateMessage: (message: Message) => void
   deleteMessage: (messageId: MessageId) => void
   changeMessagePinned: (payload: { message: Message; pinned: boolean }) => void

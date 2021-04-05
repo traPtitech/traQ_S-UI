@@ -30,7 +30,7 @@ export const defineWsListeners = createDefineListeners<typeof messagesView>()(
 export const defineMessageListeners = createDefineListeners<
   typeof messagesView
 >()(messageMitt, (listener, { dispatch }) => {
-  listener.on('addMessage', message => {
+  listener.on('addMessage', ({ message }) => {
     dispatch.onChannelMessageCreated(message)
   })
   listener.on('updateMessage', message => {

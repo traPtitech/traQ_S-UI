@@ -61,7 +61,7 @@ const useActivityStream = () => {
     setTimelineStreamingState(mode.value.all)
     await fetch()
   }
-  const onAddMessage = (activity: Message) => {
+  const onAddMessage = ({ message: activity }: { message: Message }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
     if (!store.state.entities.channelsMap.has(activity.channelId)) return
 
