@@ -14,10 +14,11 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const state = reactive({
     query: '',
     filteredItems: computed((): readonly Channel[] => {
-      if (state.query.length === 0) {
+      const query = state.query
+      if (query.length === 0) {
         return targetChannels.value
       }
-      const query = state.query
+
       const queryArr: [string, ...string[]] = state.query.split(/[\/\\]/) as [
         string,
         ...string[]
