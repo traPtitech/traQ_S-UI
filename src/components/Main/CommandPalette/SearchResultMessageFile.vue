@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container">
-    <file-type-icon :type="fileType" :size="24" :class="$style.icon" />
+    <file-type-icon
+      :type="fileType"
+      :size="24"
+      :is-animated-image="isAnimatedImage"
+      :class="$style.icon"
+    />
     <div :class="$style.name">{{ name }}</div>
   </div>
 </template>
@@ -22,9 +27,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { fileType, fileMeta } = useFileMeta(props)
+    const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
     const name = computed(() => fileMeta.value?.name ?? 'unknown')
-    return { fileType, name }
+    return { fileType, name, isAnimatedImage }
   }
 })
 </script>

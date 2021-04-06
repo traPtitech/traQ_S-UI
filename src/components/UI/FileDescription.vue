@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
-    <file-type-icon :type="fileType" :size="36" :class="$style.icon" />
+    <file-type-icon
+      :type="fileType"
+      :size="36"
+      :is-animated-image="isAnimatedImage"
+      :class="$style.icon"
+    />
     <div
       :class="$style.fileName"
       :data-is-ellipsis="$boolAttr(isEllipsis)"
@@ -52,7 +57,8 @@ export default defineComponent({
       fileMeta,
       fileType,
       fileSize,
-      onFileDownloadLinkClick
+      onFileDownloadLinkClick,
+      isAnimatedImage
     } = useFileMeta(props)
     const name = computed(() => fileMeta.value?.name ?? 'unknown')
 
@@ -61,6 +67,7 @@ export default defineComponent({
       fileType,
       fileSize,
       onFileDownloadLinkClick,
+      isAnimatedImage,
       name
     }
   }

@@ -70,7 +70,8 @@ import {
   mdiPencil,
   mdiKeyChain,
   mdiCodeGreaterThan,
-  mdiArrowExpandVertical
+  mdiArrowExpandVertical,
+  mdiImageMultiple
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -149,7 +150,8 @@ const mdi: MdiIconsMapping = {
   'file-chart': mdiFileChart,
   'key-chain': mdiKeyChain,
   'code-grater-than': mdiCodeGreaterThan,
-  'arrow-expand-vertical': mdiArrowExpandVertical
+  'arrow-expand-vertical': mdiArrowExpandVertical,
+  'image-multiple': mdiImageMultiple
 }
 
 export default mdi
