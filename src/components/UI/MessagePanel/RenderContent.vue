@@ -1,11 +1,12 @@
 <template>
   <div :class="[$style.container, lineClampContent ? $style.lineClamp : '']">
     <file-type-icon
-      v-for="fileType in fileTypes"
+      v-for="[fileType, isAnimatedImage] in fileTypes"
       :key="fileType"
       :class="$style.icon"
       :type="fileType"
       :size="20"
+      :is-animated-image="isAnimatedImage"
     />
     <icon
       v-if="hasMessage"
@@ -25,11 +26,28 @@
 import { defineComponent, computed, watchEffect, ref } from 'vue'
 import { renderInline } from '@/lib/markdown/markdown'
 import store from '@/store'
-import { mimeToFileType } from '@/lib/util/file'
+import { AttachmentType, mimeToFileType } from '@/lib/util/file'
 import Icon from '@/components/UI/Icon.vue'
 import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
 import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { isFile } from '@/lib/util/guard/embeddingOrUrl'
+
+const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
+  const res: Array<[AttachmentType, boolean]> = []
+
+  const set = new Set<string>()
+  const getKey = (fileType: [AttachmentType, boolean]) =>
+    `${fileType[0]}${fileType[1]}`
+
+  for (const fileType of fileTypes) {
+    const key = getKey(fileType)
+    if (set.has(key)) continue
+
+    set.add(key)
+    res.push(fileType)
+  }
+  return res
+}
 
 export default defineComponent({
   name: 'RenderContent',
@@ -49,24 +67,29 @@ export default defineComponent({
       rendered.value = await renderInline(props.content)
     })
 
-    const files = computed(() => rendered.value?.embeddings.filter(isFile))
+    const files = computed(
+      () => rendered.value?.embeddings.filter(isFile) ?? []
+    )
 
     watchEffect(() => {
-      files.value?.forEach(file =>
+      files.value.forEach(file =>
         store.dispatch.entities.messages.fetchFileMetaData({ fileId: file.id })
       )
     })
 
-    const fileTypes = computed(() => [
-      ...new Set(
-        files.value?.map(file => {
-          const mime = store.state.entities.messages.fileMetaDataMap.get(
+    const fileTypes = computed(() =>
+      getUniqueFileTypes(
+        files.value.map(file => {
+          const meta = store.state.entities.messages.fileMetaDataMap.get(
             file.id
-          )?.mime
-          return mime ? mimeToFileType(mime) : 'file'
+          )
+          return [
+            meta ? mimeToFileType(meta.mime) : 'file',
+            meta?.isAnimatedImage ?? false
+          ]
         })
       )
-    ])
+    )
     const hasMessage = computed(() =>
       rendered.value?.embeddings.some(e => e.type === 'message')
     )

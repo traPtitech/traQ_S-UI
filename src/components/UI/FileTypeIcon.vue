@@ -17,7 +17,11 @@ export default defineComponent({
       type: String as PropType<AttachmentType>,
       required: true
     },
-    size: Number
+    size: Number,
+    isAnimatedImage: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(prop) {
     const iconName = computed(() => {
@@ -29,7 +33,7 @@ export default defineComponent({
         case 'slide':
           return 'file-chart'
         case 'image':
-          return 'file-image'
+          return prop.isAnimatedImage ? 'image-multiple' : 'file-image'
         case 'video':
           return 'file-video'
         case 'audio':

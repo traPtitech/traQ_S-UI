@@ -1,5 +1,5 @@
 <template>
-  <div v-click-outside="onClickOutSide">
+  <div v-if="fileMeta" v-click-outside="onClickOutSide">
     <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
     <file-modal-video v-else-if="fileType === 'video'" :file-id="fileMeta.id" />
     <file-modal-audio v-else-if="fileType === 'audio'" :file-id="fileMeta.id" />

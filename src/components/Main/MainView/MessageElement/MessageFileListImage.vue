@@ -6,26 +6,32 @@
     -->
     <img
       draggable="false"
-      :alt="fileMeta.name"
+      :alt="fileMeta?.name"
       :src="fileThumbnailPath"
       :height="fileThumbnailSize.height"
       :width="fileThumbnailSize.width"
     />
+    <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
   </router-link>
   <router-link v-else :to="fileLink" :class="$style.container">
     <!--
       CSSで固定値指定なのでheight, widthはつけない
     -->
-    <img draggable="false" :alt="fileMeta.name" :src="fileThumbnailPath" />
+    <img draggable="false" :alt="fileMeta?.name" :src="fileThumbnailPath" />
+    <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
+import PlayIcon from '@/components/UI/PlayIcon.vue'
 
 export default defineComponent({
   name: 'MessageFileListItem',
+  components: {
+    PlayIcon
+  },
   props: {
     isLarge: {
       type: Boolean,
@@ -36,20 +42,28 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
+  setup(props) {
     const {
       fileMeta,
       fileLink,
       fileThumbnailPath,
-      fileThumbnailSize
+      fileThumbnailSize,
+      isAnimatedImage
     } = useFileMeta(props)
-    return { fileThumbnailPath, fileThumbnailSize, fileLink, fileMeta }
+    return {
+      fileThumbnailPath,
+      fileThumbnailSize,
+      fileLink,
+      fileMeta,
+      isAnimatedImage
+    }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
+  position: relative;
   width: 240px;
   max-width: 100%;
   height: 160px;
@@ -68,6 +82,7 @@ export default defineComponent({
   }
 }
 .largeContainer {
+  position: relative;
   display: flex;
   border-radius: 6px;
   overflow: hidden;
@@ -86,5 +101,13 @@ export default defineComponent({
     object-fit: contain;
     cursor: pointer;
   }
+}
+.playIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 </style>
