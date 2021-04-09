@@ -125,6 +125,9 @@ export default defineComponent({
   text-size-adjust: 100%;
   line-height: 1.2;
   word-break: break-all;
+  a {
+    pointer-events: none;
+  }
 }
 .icon + .icon,
 .icon + .content {
