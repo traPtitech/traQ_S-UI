@@ -8,7 +8,11 @@
         @edit-done="onNameEditDone"
         @edit-start="startNameEdit"
         :max-length="30"
-      />
+      >
+        <template #default="slotProps">
+          {{ slotProps.content }}
+        </template>
+      </content-editor>
     </sidebar-content-container>
     <sidebar-content-container-foldable title="説明" :class="$style.item">
       <content-editor
@@ -18,7 +22,11 @@
         @edit-done="onDesciptionEditDone"
         @edit-start="startDesciptionEdit"
         :max-length="1000"
-      />
+      >
+        <template #default="slotProps">
+          <inline-markdown :content="slotProps.content" />
+        </template>
+      </content-editor>
     </sidebar-content-container-foldable>
     <div :class="$style.item">
       <form-button @click="deleteClip" label="削除" color="error" />
@@ -36,6 +44,7 @@ import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEdi
 import apis from '@/lib/apis'
 import FormButton from '@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '@/router'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -94,6 +103,7 @@ export default defineComponent({
     SidebarContentContainer,
     SidebarContentContainerFoldable,
     ContentEditor,
+    InlineMarkdown,
     FormButton
   },
   props: {

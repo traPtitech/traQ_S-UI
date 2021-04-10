@@ -9,7 +9,7 @@
       />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
-      {{ content }}
+      <slot :content="content" />
     </div>
     <button
       @click="onButtonClick"
@@ -97,9 +97,7 @@ export default defineComponent({
   align-items: start;
 }
 .content {
-  white-space: pre-line;
-  word-break: normal;
-  overflow-wrap: break-word;
+  word-break: break-all;
   min-width: 0;
   &[data-is-empty] {
     opacity: 0.5;
