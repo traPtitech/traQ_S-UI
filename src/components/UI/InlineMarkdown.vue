@@ -1,5 +1,9 @@
 <template>
-  <span class="markdown-inline-body" v-html="renderedContent" />
+  <span
+    class="markdown-inline-body"
+    :class="$style.content"
+    v-html="renderedContent"
+  />
 </template>
 
 <script lang="ts">
@@ -26,3 +30,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.content {
+  word-break: break-all;
+}
+</style>

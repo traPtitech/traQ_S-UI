@@ -26,12 +26,18 @@
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ひとこと</h3>
-      <form-text-area
-        v-model="state.bio"
-        :class="$style.form"
-        rows="1"
-        :max-length="1000"
-      />
+      <div :class="$style.bioContainer">
+        <form-text-area
+          v-model="state.bio"
+          :class="$style.form"
+          rows="1"
+          :max-length="1000"
+        />
+        <div :class="$style.form">
+          <h4>プレビュー</h4>
+          <inline-markdown :content="state.bio" />
+        </div>
+      </div>
     </div>
     <div :class="$style.element">
       <h3 :class="$style.header">ホームチャンネル</h3>
@@ -81,6 +87,7 @@ import FormTextArea from '@/components/UI/FormTextArea.vue'
 import useMaxLength from '@/use/maxLength'
 import { isValidTwitter } from '@/lib/validate'
 import useToastStore from '@/providers/toastStore'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -155,8 +162,12 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const detail = computed(() => store.state.domain.me.detail!)
 
-    // ホームチャンネルの選択に必要
+    // ホームチャンネルの選択+ひとことのレンダリングに必要
     store.dispatch.entities.fetchChannels()
+    // ひとことのレンダリングに必要
+    store.dispatch.entities.fetchUsers()
+    store.dispatch.entities.fetchUserGroups()
+    store.dispatch.entities.fetchStamps()
 
     const { channelOptions } = useChannelOptions('--未設定--')
 
@@ -201,6 +212,7 @@ export default defineComponent({
   components: {
     UserIcon,
     ImageUpload,
+    InlineMarkdown,
     FormInput,
     FormSelector,
     FormButton,
@@ -227,6 +239,14 @@ export default defineComponent({
 }
 .uploder {
   margin-left: 12px;
+}
+.bioContainer {
+  display: flex;
+  flex-wrap: wrap;
+  > * {
+    width: 50%;
+    flex: 1 1 15rem;
+  }
 }
 .updater {
   display: flex;

@@ -1,21 +1,19 @@
 <template>
   <section>
     <profile-header text="ひとこと" :class="$style.header" />
-    <p
+    <inline-markdown
       :class="$style.bio"
       :aria-busy="isLoading"
       :data-is-empty="$boolAttr(isEmpty)"
-    >
-      <template v-if="isLoading">[Now loading...]</template>
-      <template v-else-if="isEmpty">[No bio]</template>
-      <template v-else>{{ bio }}</template>
-    </p>
+      :content="content"
+    />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import ProfileHeader from './ProfileHeader.vue'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'Bio',
@@ -28,10 +26,17 @@ export default defineComponent({
       props.bio === undefined ? false : props.bio === ''
     )
 
-    return { isLoading, isEmpty }
+    const content = computed(() => {
+      if (isLoading.value) return '[Now loading...]'
+      if (isEmpty.value) return '[No bio]'
+      return props.bio
+    })
+
+    return { isLoading, isEmpty, content }
   },
   components: {
-    ProfileHeader
+    ProfileHeader,
+    InlineMarkdown
   }
 })
 </script>
