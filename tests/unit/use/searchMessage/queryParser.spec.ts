@@ -1,6 +1,8 @@
 import useQueryParer from '@/use/searchMessage/queryParser'
 import store from '@/store'
 
+const mockMessageId = 'message-id'
+const mockMessageUrl = `https://example.com/messages/${mockMessageId}`
 const mockChannelId = 'channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
@@ -65,6 +67,18 @@ describe('parseQuery', () => {
     const parsed = parseQuery(query)
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.from).toEqual(mockUserId)
+  })
+  it('can parse query with message-filter (url)', () => {
+    const query = `lorem ipsum cite:${mockMessageUrl}`
+    const parsed = parseQuery(query)
+    expect(parsed.word).toEqual(`lorem ipsum`)
+    expect(parsed.citation).toEqual(mockMessageId)
+  })
+  it('can parse query with message-filter (id)', () => {
+    const query = `lorem ipsum cite:${mockMessageId}`
+    const parsed = parseQuery(query)
+    expect(parsed.word).toEqual(`lorem ipsum`)
+    expect(parsed.citation).toEqual(mockMessageId)
   })
   it('can parse query with flag-filter', () => {
     const query = 'lorem has:image ipsum'
