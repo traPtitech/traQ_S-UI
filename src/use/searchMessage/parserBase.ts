@@ -160,7 +160,15 @@ export const userParser = <T extends string>(
 export const messageParser = <T extends string>(
   extracted: ExtractedFilter<T>
 ): MessageId | undefined => {
-  const userName = extracted.body.startsWith('@')
-  // TBD
-  return undefined
+  try {
+    const url = new URL(extracted.body)
+    const pathNames = url.pathname.split('/')
+    if (pathNames.length === 3 && pathNames[1] === 'messages') {
+      return pathNames[2]
+    }
+    return undefined
+  } catch {
+    // URLではなかった場合、メッセージIDとして解釈
+    return extracted.body
+  }
 }

@@ -279,6 +279,7 @@ const mergeSearchMessageQueryObject = (
   in: q1.in ?? q2.in,
   to: q1.to ?? q2.to,
   from: q1.from ?? q2.from,
+  citation: q1.citation ?? q2.citation,
   bot: q1.bot ?? q2.bot,
   hasUrl: q1.hasUrl ?? q2.hasUrl,
   hasAttachments: q1.hasAttachments ?? q2.hasAttachments,
