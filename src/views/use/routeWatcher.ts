@@ -77,10 +77,11 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToUser = async () => {
-    // ユーザーの全件情報がないとユーザー名からユーザーIDがひけない
-    await usersMapInitialFetchPromise
-    const user = store.getters.entities.userByName(state.currentRouteParam)
     try {
+      const user = await store.dispatch.entities.fetchUserByName({
+        username: state.currentRouteParam,
+        cacheStrategy: 'useCache'
+      })
       if (!user) throw 'user not found'
 
       const dmChannelId =

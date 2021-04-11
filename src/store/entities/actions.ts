@@ -49,6 +49,10 @@ export const entitiesActionContext = (
 type CacheStrategy = 'forceFetch' | 'useCache' | 'waitForAllFetch'
 
 const getUser = createSingleflight(apis.getUser.bind(apis))
+const getUserByName = createSingleflight(async (name: string) => {
+  const res = await apis.getUsers(undefined, name)
+  return { data: res.data[0] }
+})
 const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
@@ -141,6 +145,40 @@ export const actions = defineActions({
       }
     )
     return user
+  },
+  async fetchUserByName(
+    context,
+    {
+      username,
+      cacheStrategy = 'waitForAllFetch'
+    }: { username: string; cacheStrategy?: CacheStrategy }
+  ): Promise<User | undefined> {
+    const { state, getters, commit } = entitiesActionContext(context)
+    // キャッシュを利用する場合はこのブロックに入る
+    if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
+      const res = getters.userByName(username)
+      if (res) {
+        return res
+      }
+
+      // キャッシュに存在してなかったかつ、全取得が完了してない場合は
+      // 全取得を待って含まれてるか確認する
+      if (cacheStrategy === 'waitForAllFetch' && !state.usersMapFetched) {
+        await usersMapInitialFetchPromise
+
+        const res = getters.userByName(username)
+        if (res) {
+          return res
+        }
+      }
+    }
+
+    const [{ data: res }, isShared] = await getUserByName(username)
+    // 他の取得とまとめられていた場合は既にcommitされてるためcommitしない
+    if (!isShared) {
+      commit.setUser(res)
+    }
+    return res
   },
   async fetchUsers(
     context,

@@ -22,14 +22,13 @@ export const actions = defineActions({
     const { rootState, rootDispatch, dispatch } = mainViewActionContext(context)
     const DMChannel = rootState.entities.dmChannelsMap.get(payload.channelId)
     if (DMChannel) {
-      if (!rootState.entities.usersMap.has(DMChannel.userId)) {
-        await rootDispatch.entities.fetchUser({
-          userId: DMChannel.userId,
-          cacheStrategy: 'useCache'
-        })
+      const user = await rootDispatch.entities.fetchUser({
+        userId: DMChannel.userId,
+        cacheStrategy: 'useCache'
+      })
+      if (!user) {
+        throw 'user not found'
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const user = rootState.entities.usersMap.get(DMChannel.userId)!
 
       dispatch.changePrimaryViewToDM({
         ...payload,
