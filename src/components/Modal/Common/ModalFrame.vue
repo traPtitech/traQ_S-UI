@@ -5,11 +5,15 @@
       :icon-name="iconName"
       :icon-mdi="iconMdi"
       :title="title"
-      :subtitle="subtitle"
       :return-button="returnButton"
-    />
+    >
+      <template #subtitle>
+        <template v-if="subtitle">{{ subtitle }}</template>
+        <slot v-else name="subtitle" />
+      </template>
+    </common-modal-header>
     <div :class="$style.body">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
