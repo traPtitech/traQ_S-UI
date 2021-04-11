@@ -86,8 +86,9 @@ const useCreateChannel = (state: State) => {
         parent: state.parentChannelId
       })
 
+      const pathObtainPromise = obtainChannelPath(channel.id)
       await store.dispatch.entities.addChannel(channel.id)
-      const path = await obtainChannelPath(channel.id)
+      const path = await pathObtainPromise
 
       await store.dispatch.ui.modal.popModal()
       changeChannelByPath(path)
