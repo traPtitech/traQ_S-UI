@@ -74,6 +74,9 @@ export default defineComponent({
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  a {
+    pointer-events: none;
+  }
 }
 .channelPath {
   @include color-ui-secondary;
