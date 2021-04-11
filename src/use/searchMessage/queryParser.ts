@@ -115,7 +115,9 @@ const mediaFlagParser: FilterParser<
 
 // parserの実装
 
-const parser = (extracted: ExtractedFilter<FilterType>): Filter | undefined => {
+const parser = async (
+  extracted: ExtractedFilter<FilterType>
+): Promise<Filter | undefined> => {
   const type = extracted.type
   switch (type) {
     case 'after':
@@ -133,7 +135,7 @@ const parser = (extracted: ExtractedFilter<FilterType>): Filter | undefined => {
     }
     case 'to':
     case 'from': {
-      const result = userParser(extracted)
+      const result = await userParser(extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -210,15 +212,19 @@ const useQueryParer = () => {
   /**
    * クエリをパースし、検索ワードとフィルタに変換する
    */
-  const parseQuery = (query: string): SearchMessageQueryObject =>
-    query
-      .split(' ')
-      .filter(q => q)
-      .map(q => {
-        const parsed = parseQueryFragmentToFilter(q)
-        return filterOrStringToSearchMessageQuery(parsed)
-      })
+  const parseQuery = async (
+    query: string
+  ): Promise<SearchMessageQueryObject> => {
+    const parseds = await Promise.all(
+      query
+        .split(' ')
+        .filter(q => q)
+        .map(parseQueryFragmentToFilter)
+    )
+    return parseds
+      .map(filterOrStringToSearchMessageQuery)
       .reduce(mergeSearchMessageQueryObject, emptySearchMessageQueryObject)
+  }
 
   const toSearchMessageParam = (
     obj: SearchMessageQueryObject,

@@ -13,7 +13,7 @@ import { channelPathToId } from '../../lib/channelTree'
  *              フィルターの種別ごとに存在する (型は`FilterExtractor`)
  * - parser: ExtractedFilterとフィルターの種別を受け取り、日時やチャンネルIDなどへの変換を試みる
  *           フィルターの持つ値の型ごとに存在する (型は`FilterParser<T>`)
- * 
+ *
  * 例: `in:#general not:bot abc`
  *     -> ["in:#general", "not:bot", "abc"]
  *     -> [
@@ -89,10 +89,10 @@ export const makePrefixedFilterExtractor = <T extends string>(
  * @returns
  */
 export const parseToFilter = <F, T extends string>(
-  parser: (extracted: ExtractedFilter<T>) => F | undefined,
+  parser: (extracted: ExtractedFilter<T>) => Promise<F | undefined>,
   extractor: FilterExtractor<T>,
   skipCondition?: (q: string) => boolean
-) => (q: string): F | string => {
+) => async (q: string): Promise<F | string> => {
   if (skipCondition?.(q)) {
     return q
   }
@@ -100,7 +100,7 @@ export const parseToFilter = <F, T extends string>(
   if (typeof extracted === 'string') {
     return q
   }
-  const parsed = parser(extracted)
+  const parsed = await parser(extracted)
   if (!parsed) {
     return q
   }
@@ -144,13 +144,15 @@ export const channelParser = <T extends string>(
   }
 }
 
-export const userParser = <T extends string>(
+export const userParser = async <T extends string>(
   extracted: ExtractedFilter<T>
-): UserId | undefined => {
-  const userName = extracted.body.startsWith('@')
+): Promise<UserId | undefined> => {
+  const username = extracted.body.startsWith('@')
     ? extracted.body.substring(1)
     : extracted.body
-  const userId = store.getters.entities.userByName(userName)?.id
+
+  const userId = (await store.dispatch.entities.fetchUserByName({ username }))
+    ?.id
   if (userId === undefined) {
     return userId
   }
