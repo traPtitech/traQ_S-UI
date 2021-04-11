@@ -25,7 +25,7 @@ describe('Main', () => {
     ).click()
 
     cy.get('[class^=UserModal_content]').get(
-      '[class^=Bio]:not(data-is-loading)'
+      '[class*=Bio_bio][aria-busy=false]'
     )
   })
 })
