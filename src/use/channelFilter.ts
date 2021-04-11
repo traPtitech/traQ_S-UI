@@ -10,6 +10,9 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
   const oneLetterChannels = computed(() =>
     targetChannels.value.filter(channel => channel.name.length === 1)
   )
+  const rootChannels = computed(() =>
+    targetChannels.value.filter(c => c.parentId === null)
+  )
 
   const state = reactive({
     query: '',
@@ -24,8 +27,14 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         ...string[]
       ] // split の返り値は空配列にはならないのでキャストできる
 
-      if (query.length === 1 && queryArr.length === 1) {
-        // query が区切り文字でなく１文字のときは完全一致のみ
+      // queryが一文字のときは件数が多くなるので、少なくなるような条件にする
+      if (query.length === 1) {
+        // query が区切り文字のときはルート直下のチャンネル
+        if (queryArr.length !== 1) {
+          return rootChannels.value
+        }
+
+        // query が区切り文字でなく1文字のときは完全一致のみ
         return oneLetterChannels.value.filter(
           channel => channel.name.toLowerCase() === query.toLowerCase()
         )
