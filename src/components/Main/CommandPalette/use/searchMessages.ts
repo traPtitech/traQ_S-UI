@@ -102,7 +102,7 @@ const useSearchMessages = () => {
     }
 
     fetchingSearchResult.value = true
-    const queryObject = parseQuery(query)
+    const queryObject = await parseQuery(query)
     const option = {
       limit,
       offset: currentOffset.value,
