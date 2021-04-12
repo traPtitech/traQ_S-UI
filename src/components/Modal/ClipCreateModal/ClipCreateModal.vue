@@ -1,17 +1,17 @@
 <template>
-  <modal-frame
-    title="クリップ"
-    :subtitle="messageContent"
-    icon-mdi
-    icon-name="bookmark"
-  >
-    <clip-folder-element
-      v-for="clipFolder in clipFolders"
-      :key="clipFolder.id"
-      :folder-name="clipFolder.name"
-      :is-selected="isSelected.has(clipFolder.id)"
-      @click="toggleClip(clipFolder.id)"
-    />
+  <modal-frame title="クリップ" icon-mdi icon-name="bookmark">
+    <template #subtitle>
+      <inline-markdown :class="$style.subtitle" :content="messageContent" />
+    </template>
+    <template #default>
+      <clip-folder-element
+        v-for="clipFolder in clipFolders"
+        :key="clipFolder.id"
+        :folder-name="clipFolder.name"
+        :is-selected="isSelected.has(clipFolder.id)"
+        @click="toggleClip(clipFolder.id)"
+      />
+    </template>
   </modal-frame>
 </template>
 
@@ -24,6 +24,7 @@ import { MessageId, ClipFolderId } from '@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
 import useToastStore from '@/providers/toastStore'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -68,6 +69,7 @@ export default defineComponent({
   name: 'ClipCreateModal',
   components: {
     ModalFrame,
+    InlineMarkdown,
     ClipFolderElement
   },
   props: {
@@ -99,6 +101,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.subtitle {
+  a {
+    pointer-events: none;
+  }
+}
 .item {
   margin: 16px 0;
 

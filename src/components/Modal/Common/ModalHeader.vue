@@ -5,7 +5,7 @@
       <h1 :class="$style.title">
         <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />{{ title }}
       </h1>
-      <h2 :class="$style.subtitle">{{ subtitle }}</h2>
+      <h2 :class="$style.subtitle"><slot name="subtitle" /></h2>
     </div>
   </div>
 </template>
