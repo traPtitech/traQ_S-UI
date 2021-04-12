@@ -54,3 +54,7 @@ declare global {
 export const checkCredentialManagerSupport = () => {
   return !!window.PasswordCredential
 }
+
+export const checkStorageManagerSupport = () => {
+  return !!navigator.storage
+}
