@@ -27,7 +27,7 @@ export default defineComponent({
     },
     messageIds: {
       type: Array as PropType<MessageId[]>,
-      default: []
+      default: () => []
     }
   },
   setup() {

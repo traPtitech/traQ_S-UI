@@ -68,11 +68,11 @@ export default defineComponent({
     parent: Object as PropType<Channel>,
     children: {
       type: Array as PropType<Channel[]>,
-      default: []
+      default: () => []
     },
     siblings: {
       type: Array as PropType<Channel[]>,
-      default: []
+      default: () => []
     },
     current: Object as PropType<Channel>
   },

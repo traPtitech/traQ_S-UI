@@ -59,11 +59,11 @@ export default defineComponent({
     },
     position: {
       type: Object as PropType<{ top: number; left: number }>,
-      default: { top: 0, left: 0 }
+      default: () => ({ top: 0, left: 0 })
     },
     candidates: {
       type: Array as PropType<Word[]>,
-      default: []
+      default: () => []
     },
     /**
      * 選択されている候補

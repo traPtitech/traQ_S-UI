@@ -34,7 +34,10 @@ export default defineComponent({
     SidebarContentContainer
   },
   props: {
-    viewerIds: { type: Array as PropType<UserId[]>, default: [] }
+    viewerIds: {
+      type: Array as PropType<UserId[]>,
+      default: () => []
+    }
   },
   setup() {
     const state = reactive({

@@ -30,7 +30,7 @@ export default defineComponent({
   props: {
     fileIds: {
       type: Array as PropType<FileId[]>,
-      default: []
+      default: () => []
     }
   },
   setup(props) {

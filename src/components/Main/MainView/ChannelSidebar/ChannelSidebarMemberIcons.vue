@@ -25,7 +25,10 @@ export default defineComponent({
   name: 'ChannelSidebarMember',
   components: { UserIcon },
   props: {
-    viewerStates: { type: Array as PropType<ViewState[]>, default: [] }
+    viewerStates: {
+      type: Array as PropType<ViewState[]>,
+      default: () => []
+    }
   },
   setup() {
     return {}

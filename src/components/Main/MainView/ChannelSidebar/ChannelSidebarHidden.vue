@@ -27,7 +27,10 @@ import { UserId } from '@/types/entity-ids'
 export default defineComponent({
   name: 'ChannelSidebarHidden',
   props: {
-    viewerIds: { type: Array as PropType<UserId[]>, default: [] }
+    viewerIds: {
+      type: Array as PropType<UserId[]>,
+      default: () => []
+    }
   },
   components: { Icon, UserIconEllipsisList },
   setup(props, context) {
