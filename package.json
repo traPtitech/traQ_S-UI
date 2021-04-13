@@ -30,7 +30,7 @@
     "fake-indexeddb": "^3.1.2",
     "firebase": "^8.3.1",
     "highlight.js": "^10.7.2",
-    "idb-keyval": "^5.0.4",
+    "idb-keyval": "^5.0.5",
     "klona": "^2.0.4",
     "mitt": "^2.1.0",
     "pica": "^6.1.1",
