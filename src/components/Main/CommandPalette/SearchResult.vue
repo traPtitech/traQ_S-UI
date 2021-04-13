@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { MessageId } from '@/types/entity-ids'
 import { RouteName } from '@/router'
@@ -106,15 +106,20 @@ export default defineComponent({
       currentSortKey
     } = useSearchMessages()
 
-    watchEffect(() => {
-      // `executeSearchForCurrentPage`が現在のページとソートのキーに依存しているので、
-      // ページ数やソートキーの更新をかけるだけでここが走る
-      executeSearchForCurrentPage(store.query)
-    })
+    watch(
+      // マウント時・クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
+      computed(
+        () => [store.query, currentSortKey.value, currentPage.value] as const
+      ),
+      () => {
+        executeSearchForCurrentPage(store.query)
+      },
+      { immediate: true }
+    )
 
     watch(
       // クエリの変更時・ソートキーの変更時はページングをリセット
-      computed(() => [store.query, currentSortKey.value]),
+      computed(() => [store.query, currentSortKey.value] as const),
       ([query, key], [oldQuery, oldKey]) => {
         if (query !== oldQuery || key !== oldKey) {
           resetPaging()
