@@ -26,7 +26,7 @@ export default defineComponent({
   props: {
     dmChannels: {
       type: Array as PropType<DMChannel[]>,
-      default: []
+      default: () => []
     }
   },
   setup() {

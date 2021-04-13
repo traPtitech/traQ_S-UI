@@ -56,7 +56,7 @@ export default defineComponent({
     },
     qallUserIds: {
       type: Array as PropType<UserId[]>,
-      default: []
+      default: () => []
     },
     pinnedMessagesCount: {
       type: Number,

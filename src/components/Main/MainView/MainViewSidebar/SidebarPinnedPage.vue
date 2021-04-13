@@ -24,7 +24,10 @@ export default defineComponent({
     SidebarPinnedList
   },
   props: {
-    pinnedMessages: { type: Array as PropType<Pin[]>, default: [] }
+    pinnedMessages: {
+      type: Array as PropType<Pin[]>,
+      default: () => []
+    }
   }
 })
 </script>

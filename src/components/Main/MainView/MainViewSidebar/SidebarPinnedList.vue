@@ -24,7 +24,10 @@ export default defineComponent({
   name: 'ChannelSidebarPinnedList',
   components: { MessagePanel },
   props: {
-    pinnedMessages: { type: Array as PropType<Pin[]>, default: [] }
+    pinnedMessages: {
+      type: Array as PropType<Pin[]>,
+      default: () => []
+    }
   },
   setup(props, context) {
     const sortedMessages = computed(() =>

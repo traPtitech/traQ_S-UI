@@ -59,7 +59,7 @@ export default defineComponent({
      */
     max: { type: Number, default: 3 },
     showCount: { type: Boolean, default: true },
-    userIds: { type: Array as PropType<UserId[]>, default: [] },
+    userIds: { type: Array as PropType<UserId[]>, default: () => [] },
     borderWidth: { type: Number, default: 4 },
     iconSize: { type: Number, default: 40 },
     overlap: { type: Number, default: 12 },

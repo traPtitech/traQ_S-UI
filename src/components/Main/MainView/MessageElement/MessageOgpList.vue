@@ -33,7 +33,7 @@ export default defineComponent({
   props: {
     externalUrls: {
       type: Array as PropType<string[]>,
-      default: []
+      default: () => []
     }
   },
   setup(props) {
