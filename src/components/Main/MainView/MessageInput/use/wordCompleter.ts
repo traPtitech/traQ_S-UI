@@ -52,6 +52,7 @@ const useWordCompleter = (
   const onSelect = async (word: WordOrConfirmedPart) => {
     insertText(word.text)
     onCompleteDetermined()
+    textareaRef.value?.focus()
   }
   return { onKeyDown, onSelect }
 }
