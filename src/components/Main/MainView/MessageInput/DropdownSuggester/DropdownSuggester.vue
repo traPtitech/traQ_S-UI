@@ -2,10 +2,10 @@
   <teleport to="#dropdown-suggester-popup">
     <div v-show="isShown" :class="$style.container" :style="styledPosition">
       <dropdown-suggester-candidate
-        :candidate="{ text: confirmedPart }"
+        :candidate="confirmedPartCandidate"
         :is-selected="selectedIndex === -1"
-        @mousedown="onMousedown"
-        @click="onClick(-1)"
+        @mousedown="emit('mousedown')"
+        @click="emit('select', confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
         <dropdown-suggester-candidate
@@ -13,8 +13,8 @@
           :key="candidate.text"
           :candidate="candidate"
           :is-selected="selectedIndex === index"
-          @mousedown="onMousedown"
-          @click="onClick(index)"
+          @mousedown="emit('mousedown')"
+          @click="emit('select', candidate)"
         />
       </div>
     </div>
@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
-import { Word } from '../use/wordSuggester'
+import { Word, WordOrConfirmedPart } from '../use/wordSuggester'
 
 const WIDTH = 240
 const MARGIN = 8
@@ -62,27 +62,27 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (_index: number) => true,
+    select: (_word: WordOrConfirmedPart) => true,
     mousedown: () => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const styledPosition = computed(() => ({
       top: `${props.position.top}px`,
       left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
       width: `${WIDTH}px`
     }))
 
-    const onMousedown = () => {
-      context.emit('mousedown')
-    }
-    const onClick = (index: number) => {
-      context.emit('select', index)
-    }
+    const confirmedPartCandidate = computed(
+      (): WordOrConfirmedPart => ({
+        type: 'confirmed-part',
+        text: props.confirmedPart
+      })
+    )
 
     return {
       styledPosition,
-      onMousedown,
-      onClick
+      confirmedPartCandidate,
+      emit
     }
   }
 })

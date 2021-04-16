@@ -1,6 +1,6 @@
 import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
 import { Target } from '@/lib/suggestion'
-import { Word } from './wordSuggester'
+import { Word, WordOrConfirmedPart } from './wordSuggester'
 
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
@@ -57,12 +57,8 @@ const useWordCompleter = (
     }
     selectedCandidateIndex.value++
   }
-  const onSelect = async (index: number) => {
-    if (index === -1) {
-      commitCompletion(confirmedPart.value)
-    } else {
-      commitCompletion(suggestedCandidates.value[index].text)
-    }
+  const onSelect = async (word: WordOrConfirmedPart) => {
+    commitCompletion(word.text)
     onCompleteDetermined()
   }
   return { onKeyDown, onSelect }
