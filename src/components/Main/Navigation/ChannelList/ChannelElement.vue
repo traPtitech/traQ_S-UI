@@ -12,15 +12,15 @@
     >
       <channel-element-hash
         :class="$style.channelHash"
-        @click="onChannelHashClick"
-        @mouseenter="onHashMouseEnter"
-        @mouseleave="onHashMouseLeave"
         :has-child="!ignoreChildren && state.hasChild"
         :is-selected="state.isSelected"
         :is-opened="isOpened"
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="state.isInactive"
+        @click="onChannelHashClick"
+        @mouseenter="onHashMouseEnter"
+        @mouseleave="onHashMouseLeave"
       />
       <channel-element-name
         :channel="channel"

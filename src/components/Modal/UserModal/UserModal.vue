@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.wrapper" v-click-outside="onClickOutside">
+  <div v-click-outside="onClickOutside" :class="$style.wrapper">
     <close-button
-      @close="onClickClear"
       :size="isMobile ? 24 : 32"
       :class="$style.close"
+      @close="onClickClear"
     />
     <user-icon
       v-if="!isMobile"
@@ -15,8 +15,8 @@
     <div :class="$style.content" :style="styles.content">
       <feature :user="user" :detail="userDetail" />
       <navigation-selector
-        @navigation-change="onNavigationChange"
         :current-navigation="currentNavigation"
+        @navigation-change="onNavigationChange"
       />
       <navigation-content
         :current-navigation="currentNavigation"
@@ -53,6 +53,13 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
 
 export default defineComponent({
   name: 'UserModal',
+  components: {
+    UserIcon,
+    Feature,
+    NavigationSelector,
+    NavigationContent,
+    CloseButton
+  },
   props: {
     id: {
       type: String as PropType<UserId>,
@@ -85,13 +92,6 @@ export default defineComponent({
       onNavigationChange,
       onClickOutside
     }
-  },
-  components: {
-    UserIcon,
-    Feature,
-    NavigationSelector,
-    NavigationContent,
-    CloseButton
   }
 })
 </script>

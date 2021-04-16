@@ -1,6 +1,6 @@
 <template>
   <a :href="url" :class="$style.container" target="_blank">
-    <div :class="$style.image" :style="styles.image" v-if="imageUrl"></div>
+    <div v-if="imageUrl" :class="$style.image" :style="styles.image"></div>
     <message-ogp-description
       :class="$style.description"
       :url="url"

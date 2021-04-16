@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" v-click-outside="close">
+  <div v-click-outside="close" :class="$style.container">
     <div :class="$style.header">
       <span :class="$style.title">サービス</span>
       <close-button

@@ -1,23 +1,23 @@
 <template>
   <channel-sidebar
-    :class="$style.messagesView"
     v-if="viewInfo.type === 'channel'"
+    :class="$style.messagesView"
     :channel-id="viewInfo.channelId"
     :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <clips-sidebar
-    :class="$style.messagesView"
     v-else-if="viewInfo.type === 'clips'"
+    :class="$style.messagesView"
     :clip-folder-id="viewInfo.clipFolderId"
     :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
   <d-m-sidebar
-    :class="$style.messagesView"
     v-else-if="viewInfo.type === 'dm'"
+    :class="$style.messagesView"
     :user-name="viewInfo.userName"
     :is-sidebar-opener-ready="isSidebarOpenerReady"
   />
-  <div :class="$style.none" v-else></div>
+  <div v-else :class="$style.none"></div>
 </template>
 
 <script lang="ts">

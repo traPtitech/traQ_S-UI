@@ -69,14 +69,14 @@ const usePageSwitch = (props: { type: PageType }) => {
 
 export default defineComponent({
   name: 'Auth',
+  components: {
+    AuthenticateMainView
+  },
   props: {
     type: {
       type: String as PropType<PageType>,
       default: 'login' as const
     }
-  },
-  components: {
-    AuthenticateMainView
   },
   setup(props) {
     const state = usePageSwitch(props)

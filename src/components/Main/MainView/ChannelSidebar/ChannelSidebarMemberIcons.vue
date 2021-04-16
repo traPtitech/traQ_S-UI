@@ -2,8 +2,8 @@
   <div :class="$style.container">
     <div
       v-for="state in viewerStates"
-      :class="[state.active ? '' : $style.notView, $style.member]"
       :key="state.user.id"
+      :class="[state.active ? '' : $style.notView, $style.member]"
     >
       <user-icon :size="28" :user-id="state.user.id" />
       <span :class="$style.name">{{ state.user.displayName }}</span>

@@ -17,6 +17,10 @@ import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'Bio',
+  components: {
+    ProfileHeader,
+    InlineMarkdown
+  },
   props: {
     bio: String
   },
@@ -33,10 +37,6 @@ export default defineComponent({
     })
 
     return { isLoading, isEmpty, content }
-  },
-  components: {
-    ProfileHeader,
-    InlineMarkdown
   }
 })
 </script>

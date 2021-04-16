@@ -8,7 +8,7 @@
     >
       {{ description }}
     </div>
-    <div :class="$style.hostname" v-if="hostname.length > 0">
+    <div v-if="hostname.length > 0" :class="$style.hostname">
       {{ hostname }}
     </div>
   </div>

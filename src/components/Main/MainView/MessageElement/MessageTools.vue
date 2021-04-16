@@ -1,10 +1,10 @@
 <template>
   <div
     v-if="show || isStampPickerOpen || isThisContextMenuShown"
+    ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-minimum="$boolAttr(isMinimum)"
-    ref="containerEle"
   >
     <template v-if="isMinimum">
       <icon
@@ -25,9 +25,9 @@
             v-for="stamp in recentStamps"
             :key="stamp"
             :stamp-id="stamp"
-            @click="addStamp(stamp)"
             :size="28"
             :class="$style.stampListItem"
+            @click="addStamp(stamp)"
           />
           <span :class="$style.line" />
         </div>

@@ -20,7 +20,7 @@
       />
     </template>
     <template #opener>
-      <channel-sidebar-hidden @open="openSidebar" :viewer-ids="viewerIds" />
+      <channel-sidebar-hidden :viewer-ids="viewerIds" @open="openSidebar" />
     </template>
   </main-view-sidebar>
 </template>

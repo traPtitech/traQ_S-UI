@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" v-click-outside="onClickOutside">
+  <div v-click-outside="onClickOutside" :class="$style.container">
     <common-modal-header
       :class="$style.header"
       :icon-name="iconName"

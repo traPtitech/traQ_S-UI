@@ -1,13 +1,13 @@
 <template>
   <modal-frame title="チャンネル管理" :subtitle="subtitle" icon-name="hash">
     <form-input
-      label="チャンネル名"
       v-model="manageState.name"
+      label="チャンネル名"
       :max-length="20"
     />
     <form-selector
-      label="親チャンネル"
       v-model="manageState.parent"
+      label="親チャンネル"
       :options="channelOptions"
     />
     <label :class="$style.toggle">

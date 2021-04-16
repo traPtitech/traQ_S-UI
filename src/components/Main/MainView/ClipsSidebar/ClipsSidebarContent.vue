@@ -4,10 +4,10 @@
       <content-editor
         :value="name"
         :is-editing="isNameEditing"
+        :max-length="30"
         @input-value="onNameInput"
         @edit-done="onNameEditDone"
         @edit-start="startNameEdit"
-        :max-length="30"
       >
         <template #default="slotProps">
           {{ slotProps.content }}
@@ -18,10 +18,10 @@
       <content-editor
         :value="description"
         :is-editing="isDesciptionEditing"
+        :max-length="1000"
         @input-value="onDesciptionInput"
         @edit-done="onDesciptionEditDone"
         @edit-start="startDesciptionEdit"
-        :max-length="1000"
       >
         <template #default="slotProps">
           <inline-markdown :content="slotProps.content" />
@@ -29,7 +29,7 @@
       </content-editor>
     </sidebar-content-container-foldable>
     <div :class="$style.item">
-      <form-button @click="deleteClip" label="削除" color="error" />
+      <form-button label="削除" color="error" @click="deleteClip" />
     </div>
   </div>
 </template>

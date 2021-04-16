@@ -2,17 +2,17 @@
   <div :class="$style.container">
     <div :class="$style.buttons">
       <toggle-button
+        v-model="isNotAll"
         :class="$style.button"
         title="通知/未読購読チャンネルのみ表示"
         icon-name="notified"
-        v-model="isNotAll"
       />
       <toggle-button
+        v-model="isPerChannel"
         :class="$style.button"
         title="同じチャンネルでは一つしかメッセージを表示しない"
         icon-name="comment-multiple-outline"
         icon-mdi
-        v-model="isPerChannel"
       />
     </div>
     <transition-group name="timeline" tag="div">

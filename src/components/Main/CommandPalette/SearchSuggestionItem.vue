@@ -25,8 +25,8 @@ export type SuggestionItem =
   | { type: 'user'; value: UserId }
 
 export default defineComponent({
-  components: { Icon, UserIcon },
   name: 'SearchSuggestionItem',
+  components: { Icon, UserIcon },
   props: {
     item: {
       type: Object as PropType<SuggestionItem>,

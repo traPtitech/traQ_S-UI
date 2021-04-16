@@ -3,7 +3,7 @@
     <form-button label="ファイルを選択" @click="addImage" />
     <div v-if="image.url !== ''">
       <div :class="$style.cropper" :data-is-rounded="$boolAttr(rounded)">
-        <img :src="image.url" ref="imgEle" />
+        <img ref="imgEle" :src="image.url" />
       </div>
       <p :class="$style.note">{{ cropperNote }}</p>
       <form-button label="キャンセル" @click="destroy" />
@@ -45,6 +45,9 @@ const cropperDefaultOptions = {
 
 export default defineComponent({
   name: 'ImageUpload',
+  components: {
+    FormButton
+  },
   props: {
     rounded: {
       type: Boolean,
@@ -105,9 +108,6 @@ export default defineComponent({
     })
 
     return { imgEle, image, addImage, cropperNote, destroy }
-  },
-  components: {
-    FormButton
   }
 })
 </script>

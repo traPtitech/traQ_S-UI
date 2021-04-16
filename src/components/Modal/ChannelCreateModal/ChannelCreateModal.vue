@@ -7,14 +7,14 @@
   >
     <form-selector
       v-if="parentChannelId === undefined"
-      label="親チャンネル"
       v-model="state.parentChannelId"
+      label="親チャンネル"
       :options="channelOptions"
     />
     <form-input
+      v-model="state.channelName"
       label="チャンネル名"
       :class="$style.input"
-      v-model="state.channelName"
       :max-length="20"
     />
     <p :class="$style.desc">

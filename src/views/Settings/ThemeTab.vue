@@ -4,26 +4,26 @@
       <h3 :class="$style.header">テーマ切り替え</h3>
       <div :class="$style.content">
         <form-radio
-          label="自動切替 (OSのテーマに合わせる)"
           v-model="state.type"
+          label="自動切替 (OSのテーマに合わせる)"
           input-value="auto"
           :class="$style.form"
         />
         <form-radio
-          label="ライトテーマ"
           v-model="state.type"
+          label="ライトテーマ"
           input-value="light"
           :class="$style.form"
         />
         <form-radio
-          label="ダークテーマ"
           v-model="state.type"
+          label="ダークテーマ"
           input-value="dark"
           :class="$style.form"
         />
         <form-radio
-          label="カスタムテーマ"
           v-model="state.type"
+          label="カスタムテーマ"
           input-value="custom"
           :class="$style.form"
         />
@@ -74,6 +74,11 @@ import FormInput from '@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'ThemeTab',
+  components: {
+    FormRadio,
+    EditTheme,
+    FormInput
+  },
   setup() {
     const browserSettings = computed(() => store.state.app.themeSettings)
     const { state } = useSyncedState(
@@ -88,11 +93,6 @@ export default defineComponent({
     // TODO: カラーピッカー
 
     return { state, changeTheme }
-  },
-  components: {
-    FormRadio,
-    EditTheme,
-    FormInput
   }
 })
 </script>

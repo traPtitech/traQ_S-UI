@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
     <icon
-      :class="$style.icon"
       v-if="iconName"
+      :class="$style.icon"
       :name="iconName"
       :mdi="iconMdi"
     />

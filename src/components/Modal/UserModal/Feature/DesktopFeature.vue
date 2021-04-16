@@ -26,6 +26,10 @@ import Buttons from './Buttons.vue'
 
 export default defineComponent({
   name: 'DesktopFeature',
+  components: {
+    OnlineIndicatorWithTooltip,
+    Buttons
+  },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -35,10 +39,6 @@ export default defineComponent({
   },
   setup() {
     return {}
-  },
-  components: {
-    OnlineIndicatorWithTooltip,
-    Buttons
   }
 })
 </script>

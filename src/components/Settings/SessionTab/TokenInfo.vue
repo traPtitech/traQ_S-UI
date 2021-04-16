@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.token" :key="token.id">
+  <div :key="token.id" :class="$style.token">
     <div :class="$style.revoke">
       <icon :class="$style.icon" name="close" mdi @click="$emit('revoke')" />
     </div>

@@ -1,8 +1,8 @@
 <template>
   <textarea-autosize
     ref="textareaAutosizeRef"
-    :class="$style.container"
     v-model="value"
+    :class="$style.container"
     :readonly="isPosting"
     placeholder="メッセージを送信"
     rows="1"

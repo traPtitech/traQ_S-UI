@@ -2,7 +2,7 @@
   <div>
     <account-state :class="$style.section" :state="user.state" />
     <bio :class="$style.section" :bio="detail?.bio" />
-    <home-channel :class="$style.section" :id="detail?.homeChannel" />
+    <home-channel :id="detail?.homeChannel" :class="$style.section" />
     <accounts
       :class="$style.section"
       :bot="user.bot"
@@ -24,6 +24,13 @@ import LastOnline from './LastOnline.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
+  components: {
+    AccountState,
+    Bio,
+    HomeChannel,
+    Accounts,
+    LastOnline
+  },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -33,13 +40,6 @@ export default defineComponent({
   },
   setup() {
     return {}
-  },
-  components: {
-    AccountState,
-    Bio,
-    HomeChannel,
-    Accounts,
-    LastOnline
   }
 })
 </script>

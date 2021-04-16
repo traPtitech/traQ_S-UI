@@ -3,10 +3,10 @@
     <content-editor
       :value="topic"
       :is-editing="isEditing"
+      :max-length="200"
       @input-value="onInput"
       @edit-done="onEditDone"
       @edit-start="startEdit"
-      :max-length="200"
     >
       <template #default="slotProps">
         <inline-markdown :content="slotProps.content" />

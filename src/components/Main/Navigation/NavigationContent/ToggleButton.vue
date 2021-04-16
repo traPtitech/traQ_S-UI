@@ -15,6 +15,9 @@ import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'ToggleButton',
+  components: {
+    Icon
+  },
   props: {
     iconName: {
       type: String,
@@ -35,9 +38,6 @@ export default defineComponent({
       context.emit('update:modelValue', !props.modelValue)
     }
     return { toggle }
-  },
-  components: {
-    Icon
   }
 })
 </script>

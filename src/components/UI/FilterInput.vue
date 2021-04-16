@@ -14,10 +14,10 @@
       :inputmode="disableIme ? 'url' : undefined"
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
+      type="text"
       @input="onInput"
       @keydown.esc="reset"
       @keydown.enter="$emit('enter')"
-      type="text"
     />
   </div>
 </template>

@@ -11,9 +11,9 @@
         {{ prefix }}
       </span>
       <input
+        :id="id"
         ref="inputRef"
         :class="$style.input"
-        :id="id"
         :type="typeWithShown"
         :value="modelValue"
         :name="name"

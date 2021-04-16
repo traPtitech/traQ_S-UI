@@ -10,17 +10,17 @@
     />
     <template v-else>
       <authenticate-input
-        label="traQ ID"
         v-model="loginState.name"
+        label="traQ ID"
         autocomplete="username"
         :class="$style.item"
         autofocus
       />
       <span :class="$style.item">
         <authenticate-input
+          v-model="loginState.pass"
           label="パスワード"
           type="password"
-          v-model="loginState.pass"
           autocomplete="current-password"
           enterkeyhint="done"
         />
@@ -42,35 +42,35 @@
         <authenticate-separator label="または" :class="$style.separator" />
         <div :class="$style.exLoginButtons">
           <authenticate-button
+            v-show="externalLogin.has('traQ')"
             type="secondary"
             :class="$style.exLoginButton"
-            v-show="externalLogin.has('traQ')"
             label="traP"
             icon-name="traQ"
             @click="loginExternal('traq')"
           />
           <authenticate-button
+            v-show="externalLogin.has('google')"
             type="secondary"
             :class="$style.exLoginButton"
-            v-show="externalLogin.has('google')"
             label="Google"
             icon-mdi
             icon-name="google"
             @click="loginExternal('google')"
           />
           <authenticate-button
+            v-show="externalLogin.has('github')"
             type="secondary"
             :class="$style.exLoginButton"
-            v-show="externalLogin.has('github')"
             label="GitHub"
             icon-mdi
             icon-name="github"
             @click="loginExternal('github')"
           />
           <authenticate-button
+            v-show="externalLogin.has('oidc')"
             type="secondary"
             :class="$style.exLoginButton"
-            v-show="externalLogin.has('oidc')"
             label="OpenID Connect"
             icon-mdi
             icon-name="openid"

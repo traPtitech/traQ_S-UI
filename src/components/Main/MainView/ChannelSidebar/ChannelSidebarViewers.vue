@@ -1,8 +1,8 @@
 <template>
   <sidebar-content-container
+    v-if="!state.isOpenDetail"
     large-padding
     clickable
-    v-if="!state.isOpenDetail"
     @toggle="toggle"
   >
     <user-icon-ellipsis-list

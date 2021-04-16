@@ -10,11 +10,11 @@
     />
     <chrome-audio-slider
       :class="$style.sliderContainer"
-      @change-volume="changeVolume"
-      @change-time="changeTime"
       :current-time="currentTime"
       :duration="duration"
       :volume="volume"
+      @change-volume="changeVolume"
+      @change-time="changeTime"
     />
     <div
       v-if="canUsePinP"

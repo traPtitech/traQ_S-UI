@@ -3,39 +3,39 @@
     <h3 :class="$style.header">メッセージ送信スタイル</h3>
     <div :class="$style.content">
       <form-radio
+        v-model="sendWithModifierKeyValue"
         label="修飾キー+Enterで送信 / Enterで改行"
         input-value="modifier"
-        v-model="sendWithModifierKeyValue"
         :class="$style.sendWithModifierKey"
       />
       <form-radio
+        v-model="sendWithModifierKeyValue"
         label="Enterで送信 / 修飾キー+Enterで改行"
         input-value="none"
-        v-model="sendWithModifierKeyValue"
         :class="$style.sendWithModifierKey"
       />
       <div :class="$style.key">
         <p>修飾キーとして利用するキー</p>
         <div>
           <form-checkbox
-            :label="getModifierKeyName('shift')"
             v-model="shift"
+            :label="getModifierKeyName('shift')"
             :class="$style.keyCheckbox"
           />
           <form-checkbox
-            :label="getModifierKeyName('alt')"
             v-model="alt"
+            :label="getModifierKeyName('alt')"
             :class="$style.keyCheckbox"
           />
           <form-checkbox
-            :label="getModifierKeyName('ctrl')"
             v-model="ctrl"
+            :label="getModifierKeyName('ctrl')"
             :class="$style.keyCheckbox"
           />
           <form-checkbox
             v-if="macFlag"
-            :label="getModifierKeyName('macCtrl')"
             v-model="macCtrl"
+            :label="getModifierKeyName('macCtrl')"
             :class="$style.keyCheckbox"
           />
         </div>

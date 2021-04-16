@@ -11,10 +11,10 @@
     -->
     <form-button
       label="インポート/エクスポート"
-      @click="onImportClick"
       :disabled="isImporterOpen"
       color="secondary"
       :class="$style.element"
+      @click="onImportClick"
     />
     <!--
     <form-button
@@ -27,16 +27,16 @@
   </div>
   <template v-if="isImporterOpen">
     <textarea-autosize
-      @update:model-value="updateEditedTheme"
       :model-value="editedTheme"
       :class="$style.jsonField"
+      @update:model-value="updateEditedTheme"
     />
     <div :class="$style.import">
       <form-button
         label="保存"
-        @click="applyTheme"
         :disabled="!isChanged"
         color="primary"
+        @click="applyTheme"
       />
     </div>
   </template>
@@ -123,6 +123,10 @@ const useImporter = () => {
 
 export default defineComponent({
   name: 'EditTheme',
+  components: {
+    FormButton,
+    TextareaAutosize
+  },
   props: {
     custom: {
       type: Object as PropType<Theme>,
@@ -150,10 +154,6 @@ export default defineComponent({
       onImportClick,
       updateEditedTheme
     }
-  },
-  components: {
-    FormButton,
-    TextareaAutosize
   }
 })
 </script>

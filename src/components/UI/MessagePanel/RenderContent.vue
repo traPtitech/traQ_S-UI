@@ -51,6 +51,10 @@ const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
 
 export default defineComponent({
   name: 'RenderContent',
+  components: {
+    FileTypeIcon,
+    Icon
+  },
   props: {
     content: {
       type: String,
@@ -96,10 +100,6 @@ export default defineComponent({
     const renderedContent = computed(() => rendered.value?.renderedText)
 
     return { fileTypes, hasMessage, renderedContent }
-  },
-  components: {
-    FileTypeIcon,
-    Icon
   }
 })
 </script>

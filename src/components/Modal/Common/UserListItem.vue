@@ -1,8 +1,8 @@
 <template>
   <div
-    @click.stop="openModal"
     :role="isClickable ? 'button' : 'listitem'"
     :class="$style.container"
+    @click.stop="openModal"
   >
     <user-icon :class="$style.icon" :user-id="userId" :size="36" />
     <span>{{ name }}</span>

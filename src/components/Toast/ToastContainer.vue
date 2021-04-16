@@ -13,12 +13,12 @@ import useToastStore from '@/providers/toastStore'
 
 export default defineComponent({
   name: 'ToastContainer',
+  components: {
+    Toast
+  },
   setup() {
     const { toasts } = useToastStore()
     return { toasts }
-  },
-  components: {
-    Toast
   }
 })
 </script>

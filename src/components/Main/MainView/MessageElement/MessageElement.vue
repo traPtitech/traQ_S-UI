@@ -1,8 +1,8 @@
 <template>
   <div
-    :class="$style.body"
-    ref="bodyRef"
     v-if="state.message"
+    ref="bodyRef"
+    :class="$style.body"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-pinned="$boolAttr(state.isPinned)"
     :data-is-entry="$boolAttr(isEntryMessage)"
@@ -11,8 +11,8 @@
     @mouseleave="onMouseLeave"
   >
     <message-pinned
-      :message-id="messageId"
       v-if="state.message.pinned"
+      :message-id="messageId"
       :class="$style.pinned"
     />
     <message-tools

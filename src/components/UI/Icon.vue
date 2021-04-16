@@ -11,8 +11,8 @@
     <path :d="getMdiPath(name)" fill="currentColor" />
   </svg>
   <component
-    v-else
     :is="svgComponent"
+    v-else
     :width="size"
     :height="size"
     view-box="0 0 24 24"

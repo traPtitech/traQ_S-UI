@@ -10,8 +10,8 @@
     </div>
     <div
       v-if="isOpen"
-      :class="$style.selectorContainer"
       v-click-outside="close"
+      :class="$style.selectorContainer"
     >
       <div
         v-for="item in items"
@@ -45,8 +45,8 @@ export type PopupSelectorItem = {
 }
 
 export default defineComponent({
-  components: { Icon },
   name: 'PopupSelector',
+  components: { Icon },
   props: {
     modelValue: {
       type: String,

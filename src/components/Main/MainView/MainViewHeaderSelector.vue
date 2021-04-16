@@ -11,7 +11,7 @@
     v-else-if="viewInfo.type === 'dm'"
     :user-name="viewInfo.userName"
   />
-  <div :class="$style.none" v-else></div>
+  <div v-else :class="$style.none"></div>
 </template>
 
 <script lang="ts">

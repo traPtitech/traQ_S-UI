@@ -3,20 +3,20 @@
     <div :class="$style.timeSlider">
       <slider
         :value="roundedCurrentTime"
-        @change-value="changeTime"
         :disabled="roundedDuration === 0"
         :min="0"
         :max="roundedDuration"
         tooltip="none"
+        @change-value="changeTime"
       />
     </div>
     <div :class="$style.volume">
       <div :class="$style.volumeSlider">
         <slider
           :value="roundedVolume"
-          @change-value="changeVolume"
           :disabled="roundedDuration === 0"
           tooltip="none"
+          @change-value="changeVolume"
         />
       </div>
       <icon

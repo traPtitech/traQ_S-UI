@@ -2,14 +2,14 @@
   <div :class="$style.container">
     <div :class="$style.selector">
       <desktop-navigation-selector
-        @navigation-change="onNavigationChange"
-        @ephemeral-navigation-change="onEphemeralNavigationChange"
-        @ephemeral-entry-remove="onEphemeralEntryRemove"
-        @ephemeral-entry-add="onEphemeralEntryAdd"
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
+        @navigation-change="onNavigationChange"
+        @ephemeral-navigation-change="onEphemeralNavigationChange"
+        @ephemeral-entry-remove="onEphemeralEntryRemove"
+        @ephemeral-entry-add="onEphemeralEntryAdd"
       />
       <desktop-tool-box />
     </div>
@@ -21,8 +21,8 @@
       />
       <transition name="fade-bottom">
         <ephemeral-navigation-content
-          :class="$style.ephemeralNavigation"
           v-if="ephemeralNavigationSelectorState.currentNavigation"
+          :class="$style.ephemeralNavigation"
           :current-ephemeral-navigation="
             ephemeralNavigationSelectorState.currentNavigation
           "

@@ -7,7 +7,7 @@ module.exports = {
     parser: '@typescript-eslint/parser'
   },
   extends: [
-    'plugin:vue/vue3-strongly-recommended',
+    'plugin:vue/vue3-recommended',
     '@vue/typescript/recommended',
     '@vue/prettier',
     '@vue/prettier/@typescript-eslint'
@@ -34,6 +34,7 @@ module.exports = {
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': 'off',
     'vue/custom-event-name-casing': ['error', 'camelCase'],
+    'vue/no-v-html': 'off',
     // TODO: 消す
     'vue/require-default-prop': 'off',
     'vue/require-explicit-emits': 'off'

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" v-click-outside="closeStampPicker">
+  <div v-click-outside="closeStampPicker" :class="$style.container">
     <div :class="$style.inputContainer">
       <filter-input
         v-model="filterState.query"

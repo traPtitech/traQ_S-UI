@@ -3,7 +3,6 @@
     <template v-if="!isMobile">
       <header-tools-item
         v-if="isQallEnabled"
-        @toggle="emit('click-qall')"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
@@ -19,6 +18,7 @@
             ? '別のデバイスでQall中'
             : undefined
         "
+        @toggle="emit('click-qall')"
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -32,45 +32,45 @@
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.notified
         "
-        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="notified"
         icon-name="notified"
         tooltip="通知チャンネル"
+        @toggle="changeToNextSubscriptionLevel"
       />
       <header-tools-item
         v-else-if="
           currentChannelSubscription === ChannelSubscribeLevel.subscribed
         "
-        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="subscribed"
         icon-name="subscribed"
         tooltip="未読管理チャンネル"
+        @toggle="changeToNextSubscriptionLevel"
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
-        @toggle="changeToNextSubscriptionLevel"
         :class="$style.notificationIcon"
         data-state="none"
         icon-name="not-subscribed"
         tooltip="未購読チャンネル"
+        @toggle="changeToNextSubscriptionLevel"
       />
     </template>
     <header-tools-item
       v-if="isStared"
-      @toggle="emit('unstar-channel')"
       :class="$style.starIcon"
       data-is-stared
       icon-name="star"
       tooltip="お気に入りから外す"
+      @toggle="emit('unstar-channel')"
     />
     <header-tools-item
       v-else
-      @toggle="emit('star-channel')"
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
+      @toggle="emit('star-channel')"
     />
     <!--
     <header-tools-item
@@ -81,12 +81,12 @@
     />
     -->
     <div :class="$style.moreButton">
-      <div :class="$style.popupLocator" :id="teleportTargetName" />
+      <div :id="teleportTargetName" :class="$style.popupLocator" />
       <header-tools-item
-        @toggle="emit('click-more')"
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
+        @toggle="emit('click-more')"
       />
     </div>
   </div>

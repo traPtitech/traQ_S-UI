@@ -7,30 +7,30 @@
         name="pencil-outline"
         mdi
         :size="20"
-        @click="onStartEdit"
         :class="$style.editIcon"
+        @click="onStartEdit"
       />
     </div>
     <div v-else :class="$style.selected">
       <div :class="$style.forms">
         <form-input
+          v-model="state.name"
           label="スタンプ名"
           prefix=":"
           suffix=":"
           :max-length="32"
-          v-model="state.name"
           :class="$style.form"
         />
         <form-selector
+          v-model="state.creatorId"
           label="所有者"
           :options="creatorOptions"
-          v-model="state.creatorId"
           :class="$style.form"
         />
         <image-upload
           :class="$style.imageUpload"
-          @input="onNewImgSet"
           :destroy-flag="imageUploadState.destroyFlag"
+          @input="onNewImgSet"
           @destroyed="onNewDestroyed"
         />
       </div>
@@ -133,6 +133,13 @@ const useStampEdit = (
 
 export default defineComponent({
   name: 'Stamp',
+  components: {
+    FormInput,
+    FormSelector,
+    FormButton,
+    ImageUpload,
+    Icon
+  },
   props: {
     stamp: {
       type: Object as PropType<Stamp>,
@@ -191,13 +198,6 @@ export default defineComponent({
       editStamp,
       onStartEdit
     }
-  },
-  components: {
-    FormInput,
-    FormSelector,
-    FormButton,
-    ImageUpload,
-    Icon
   }
 })
 </script>

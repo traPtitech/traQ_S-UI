@@ -26,6 +26,9 @@ import LinkButton from './LinkButton.vue'
 
 export default defineComponent({
   name: 'Buttons',
+  components: {
+    LinkButton
+  },
   props: {
     homeChannelId: {
       type: String,
@@ -59,9 +62,6 @@ export default defineComponent({
       onDMClick,
       onHomeChannelClick
     }
-  },
-  components: {
-    LinkButton
   }
 })
 </script>

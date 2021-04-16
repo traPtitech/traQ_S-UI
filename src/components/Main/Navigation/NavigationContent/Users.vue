@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container">
     <navigation-content-container
-      subtitle="未読ダイレクトメッセージ"
       v-if="usersWithNotification.length > 0"
+      subtitle="未読ダイレクトメッセージ"
     >
       <div :class="$style.dmActivity">
         <d-m-activity-element

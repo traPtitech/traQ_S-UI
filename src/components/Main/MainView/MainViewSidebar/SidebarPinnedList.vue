@@ -7,8 +7,8 @@
       hide-subtitle
       line-clamp-content
       :message="message"
-      @click="onMessageSelect(message.id)"
       :class="$style.sidebarItem"
+      @click="onMessageSelect(message.id)"
     />
   </div>
 </template>

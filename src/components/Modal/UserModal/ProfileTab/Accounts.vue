@@ -40,6 +40,10 @@ import config from '@/config'
 
 export default defineComponent({
   name: 'Accounts',
+  components: {
+    ProfileHeader,
+    CircleIcon
+  },
   props: {
     bot: {
       type: Boolean,
@@ -81,10 +85,6 @@ export default defineComponent({
       wikiPageLink,
       twitterLink
     }
-  },
-  components: {
-    ProfileHeader,
-    CircleIcon
   }
 })
 </script>

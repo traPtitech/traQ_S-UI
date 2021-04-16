@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <button @click="$emit('topToggleClick')" :class="$style.top">
+    <button :class="$style.top" @click="$emit('topToggleClick')">
       <icon name="phone" mdi />
     </button>
     <div :class="$style.info">
@@ -12,13 +12,13 @@
       </router-link>
     </div>
     <button
-      @click="$emit('micClick')"
       :class="$style.mic"
       :data-is-mute="$boolAttr(isMicMuted)"
+      @click="$emit('micClick')"
     >
       <icon :name="micIconName" mdi />
     </button>
-    <button @click="$emit('endQallClick')" :class="$style.end">
+    <button :class="$style.end" @click="$emit('endQallClick')">
       <icon name="phone-hangup" mdi />
     </button>
   </div>

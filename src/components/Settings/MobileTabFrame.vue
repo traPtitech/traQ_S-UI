@@ -1,9 +1,9 @@
 <template>
   <section :class="$style.container">
     <div :class="$style.header">
-      <return-button @click="showRoot" :size="40" />
+      <return-button :size="40" @click="showRoot" />
       <tab-content-title :class="$style.title" is-mobile />
-      <close-button @close="close" :size="36" />
+      <close-button :size="36" @close="close" />
     </div>
     <div :class="$style.content">
       <slot />

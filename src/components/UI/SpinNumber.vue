@@ -2,7 +2,7 @@
   <div :class="$style.body">
     <div :class="$style.dummy">{{ value }}</div>
     <transition :name="name">
-      <div :class="$style.number" :key="state.val">
+      <div :key="state.val" :class="$style.number">
         {{ state.val }}
       </div>
     </transition>

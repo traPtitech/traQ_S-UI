@@ -3,15 +3,15 @@
     <label :for="id" :class="$style.title">{{ label }}</label>
     <div :class="$style.container">
       <input
-        :class="$style.input"
         :id="id"
+        :class="$style.input"
         :value="value"
-        @input="onInput"
         :type="typeWithShown"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
         :autocapitalize="autocapitalize"
         :enterkeyhint="enterkeyhint"
+        @input="onInput"
       />
       <button
         v-if="type === 'password'"

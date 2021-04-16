@@ -1,8 +1,8 @@
 <template>
   <div
+    ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
-    ref="containerEle"
   >
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
       <icon :class="$style.controls" name="archive" mdi />

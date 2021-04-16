@@ -8,10 +8,10 @@
       :data-on-secondary="$boolAttr(onSecondary)"
     >
       <textarea-autosize
-        ref="inputRef"
-        :class="$style.input"
         :id="id"
+        ref="inputRef"
         v-model="value"
+        :class="$style.input"
         :name="name"
         :placeholder="placeholder"
         :style="style"

@@ -5,8 +5,8 @@
       <ul :class="$style.list">
         <tags-tab-tag
           v-for="tag in tags"
-          :class="$style.tag"
           :key="tag.tagId"
+          :class="$style.tag"
           :tag="tag"
           :user-id="userId"
           :is-mine="isMine"
@@ -26,6 +26,10 @@ import TagsTabAdd from '@/components/Modal/UserModal/TagsTabAdd.vue'
 
 export default defineComponent({
   name: 'TagsTab',
+  components: {
+    TagsTabTag,
+    TagsTabAdd
+  },
   props: {
     detail: Object as PropType<UserDetail>
   },
@@ -39,10 +43,6 @@ export default defineComponent({
       isMine,
       tags
     }
-  },
-  components: {
-    TagsTabTag,
-    TagsTabAdd
   }
 })
 </script>

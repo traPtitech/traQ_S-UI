@@ -1,9 +1,9 @@
 <template>
   <collapse-content>
     <drafts-details-panel-channel
-      :class="$style.channel"
       v-for="[channelId, state] in inputChannels"
       :key="channelId"
+      :class="$style.channel"
       :state="state"
       :channel-id="channelId"
     />

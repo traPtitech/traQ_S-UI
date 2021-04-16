@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.body" data-is-shown v-if="state.shouldShow">
+  <div v-if="state.shouldShow" :class="$style.body" data-is-shown>
     <user-icon
       :class="$style.userIcon"
       :user-id="state.message.userId"
@@ -18,7 +18,7 @@
       :message="state.message"
     />
   </div>
-  <div :class="$style.body" v-else>
+  <div v-else :class="$style.body">
     存在しないか表示できないメッセージの引用です
   </div>
 </template>

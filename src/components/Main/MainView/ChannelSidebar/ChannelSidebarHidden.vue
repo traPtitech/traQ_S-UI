@@ -26,13 +26,13 @@ import { UserId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarHidden',
+  components: { Icon, UserIconEllipsisList },
   props: {
     viewerIds: {
       type: Array as PropType<UserId[]>,
       default: () => []
     }
   },
-  components: { Icon, UserIconEllipsisList },
   setup(props, context) {
     const open = () => {
       context.emit('open')

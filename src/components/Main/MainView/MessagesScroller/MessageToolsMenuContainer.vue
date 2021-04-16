@@ -3,10 +3,10 @@
     <div ref="menuContainerRef">
       <message-tools-menu
         v-if="isShown"
+        v-click-outside="closeContextMenu"
         :style="styles.toolsMenu"
         :class="$style.toolsMenu"
         :message-id="state.target"
-        v-click-outside="closeContextMenu"
       />
     </div>
   </teleport>

@@ -1,11 +1,11 @@
 <template>
-  <div :class="$style.container" ref="containerEle">
+  <div ref="containerEle" :class="$style.container">
     <message-input-key-guide :show="isModifierKeyPressed" is-edit />
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
-        :class="$style.inputTextArea"
         v-model="text"
+        :class="$style.inputTextArea"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
@@ -16,8 +16,8 @@
       </div>
     </div>
     <div :class="$style.controls">
-      <form-button @click="cancel" label="キャンセル" color="secondary" />
-      <form-button @click="editMessage" label="OK" />
+      <form-button label="キャンセル" color="secondary" @click="cancel" />
+      <form-button label="OK" @click="editMessage" />
     </div>
   </div>
 </template>

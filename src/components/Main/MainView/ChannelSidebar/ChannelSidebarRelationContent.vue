@@ -64,6 +64,7 @@ const CHILDREN_DEFAULT_COUNT = 3
 
 export default defineComponent({
   name: 'ChannelSidebarRelationContent',
+  components: { ChannelSidebarRelationElement },
   props: {
     parent: Object as PropType<Channel>,
     children: {
@@ -76,7 +77,6 @@ export default defineComponent({
     },
     current: Object as PropType<Channel>
   },
-  components: { ChannelSidebarRelationElement },
   setup(props) {
     const state = reactive({
       isOpenSiblings: false,

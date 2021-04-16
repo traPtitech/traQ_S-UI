@@ -3,10 +3,10 @@
     <h3 :class="$style.header">スタンプ新規登録</h3>
     <div :class="$style.content">
       <image-upload
-        @input="onNewImgSet"
         :destroy-flag="imageUploadState.destroyFlag"
-        @destroyed="onNewDestroyed"
         :class="$style.form"
+        @input="onNewImgSet"
+        @destroyed="onNewDestroyed"
       />
       <form-input
         v-model="newStampName"
@@ -20,8 +20,8 @@
         label="新規登録"
         :disabled="!isCreateEnabled"
         :loading="isCreating"
-        @click="createStamp"
         :class="$style.form"
+        @click="createStamp"
       />
     </div>
   </div>
@@ -72,6 +72,11 @@ const useStampCreate = (
 
 export default defineComponent({
   name: 'NewStamp',
+  components: {
+    ImageUpload,
+    FormInput,
+    FormButton
+  },
   setup() {
     const {
       imageUploadState,
@@ -107,11 +112,6 @@ export default defineComponent({
       createStamp,
       isCreateEnabled
     }
-  },
-  components: {
-    ImageUpload,
-    FormInput,
-    FormButton
   }
 })
 </script>

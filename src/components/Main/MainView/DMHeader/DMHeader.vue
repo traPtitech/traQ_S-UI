@@ -5,9 +5,9 @@
     </template>
     <template #tools>
       <main-view-header-tools-item
-        @toggle="openSidebar"
         icon-mdi
         icon-name="info-outline"
+        @toggle="openSidebar"
       />
     </template>
   </main-view-header>

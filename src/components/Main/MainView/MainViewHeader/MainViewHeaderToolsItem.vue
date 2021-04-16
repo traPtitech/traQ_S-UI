@@ -1,10 +1,10 @@
 <template>
   <div
     :class="$style.container"
-    @click="onClick"
     :data-is-disabled="$boolAttr(disabled)"
     :data-header-style="headerStyle"
     :title="tooltip"
+    @click="onClick"
   >
     <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </div>

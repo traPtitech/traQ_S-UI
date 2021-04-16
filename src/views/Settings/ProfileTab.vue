@@ -9,11 +9,11 @@
         :class="$style.icon"
       />
       <image-upload
-        @input="onNewImgSet"
         :destroy-flag="imageUploadState.destroyFlag"
-        @destroyed="onNewDestroyed"
         rounded
         :class="$style.uploder"
+        @input="onNewImgSet"
+        @destroyed="onNewDestroyed"
       />
     </div>
     <div :class="$style.element">
@@ -158,6 +158,15 @@ const useIsLengthValid = (state: Profile) => {
 
 export default defineComponent({
   name: 'ProfileTab',
+  components: {
+    UserIcon,
+    ImageUpload,
+    InlineMarkdown,
+    FormInput,
+    FormSelector,
+    FormButton,
+    FormTextArea
+  },
   setup() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const detail = computed(() => store.state.domain.me.detail!)
@@ -208,15 +217,6 @@ export default defineComponent({
       isUpdating,
       onUpdateClick
     }
-  },
-  components: {
-    UserIcon,
-    ImageUpload,
-    InlineMarkdown,
-    FormInput,
-    FormSelector,
-    FormButton,
-    FormTextArea
   }
 })
 </script>

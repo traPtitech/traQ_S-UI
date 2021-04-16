@@ -2,20 +2,20 @@
   <collapse-content>
     <qall-details-panel-user
       v-if="me"
-      :class="$style.slider"
       :key="me"
+      :class="$style.slider"
       :user-id="me"
       :mic-muted="mutedUsers.has(me)"
       :show-tune-button="!showVolumeTune"
       :show-tune-done-button="showVolumeTune"
+      disabled
       @tune="toggleVolumeTune(true)"
       @tune-done="toggleVolumeTune(false)"
-      disabled
     />
     <qall-details-panel-user
       v-for="id in users"
-      :class="$style.slider"
       :key="id"
+      :class="$style.slider"
       :user-id="id"
       :mic-muted="mutedUsers.has(id)"
       :show-volume-control="showVolumeTune"

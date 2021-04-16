@@ -2,8 +2,8 @@
   <textarea
     ref="textareaEle"
     :value="value"
-    @input="onInput"
     :class="$style.textarea"
+    @input="onInput"
   />
 </template>
 

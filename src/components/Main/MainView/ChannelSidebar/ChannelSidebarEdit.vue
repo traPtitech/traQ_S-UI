@@ -2,8 +2,8 @@
   <div :class="$style.container">
     <div
       :class="$style.content"
-      @click="onClick"
       :data-is-editing="$boolAttr(state.isEditing)"
+      @click="onClick"
     >
       <Icon
         mdi

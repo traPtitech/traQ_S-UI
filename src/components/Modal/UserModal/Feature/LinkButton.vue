@@ -17,6 +17,9 @@ import useIsMobile from '@/use/isMobile'
 
 export default defineComponent({
   name: 'LinkButton',
+  components: {
+    Icon
+  },
   props: {
     title: {
       type: String,
@@ -34,9 +37,6 @@ export default defineComponent({
   setup() {
     const { isMobile } = useIsMobile()
     return { isMobile }
-  },
-  components: {
-    Icon
   }
 })
 </script>
