@@ -1,6 +1,7 @@
-import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
+import { ComputedRef, WritableComputedRef, Ref } from 'vue'
 import { Target } from '@/lib/suggestion'
 import { Word, WordOrConfirmedPart } from './wordSuggester'
+import useInsertText from '@/use/insertText'
 
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
@@ -15,38 +16,27 @@ const useWordCompleter = (
    */
   onCompleteDetermined: () => void
 ) => {
-  const commitCompletion = async (word: string) => {
-    value.value =
-      value.value.slice(0, target.value.begin) +
-      word +
-      value.value.slice(target.value.end)
-    await nextTick()
-    textareaRef.value?.setSelectionRange(
-      target.value.begin + word.length,
-      target.value.begin + word.length
-    )
-  }
+  const { insertText } = useInsertText(value, textareaRef, target)
+
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key !== 'Tab' || e.isComposing) return
     if (!textareaRef.value) return
     if (suggestedCandidates.value.length === 0) return
     e.preventDefault()
     if (suggestedCandidates.value.length === 1) {
-      commitCompletion(suggestedCandidates.value[0].text)
+      insertText(suggestedCandidates.value[0].text)
       target.value.end = target.value.begin + suggestedCandidates.value.length
       onCompleteDetermined()
       return
     }
     if (selectedCandidateIndex.value === -1) {
-      commitCompletion(confirmedPart.value)
+      insertText(confirmedPart.value)
       target.value.end = target.value.begin + confirmedPart.value.length
       if (confirmedPart.value === suggestedCandidates.value[0].text) {
         selectedCandidateIndex.value++
       }
     } else {
-      commitCompletion(
-        suggestedCandidates.value[selectedCandidateIndex.value].text
-      )
+      insertText(suggestedCandidates.value[selectedCandidateIndex.value].text)
       target.value.end =
         target.value.begin +
         suggestedCandidates.value[selectedCandidateIndex.value].text.length
@@ -58,7 +48,7 @@ const useWordCompleter = (
     selectedCandidateIndex.value++
   }
   const onSelect = async (word: WordOrConfirmedPart) => {
-    commitCompletion(word.text)
+    insertText(word.text)
     onCompleteDetermined()
   }
   return { onKeyDown, onSelect }

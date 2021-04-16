@@ -31,7 +31,6 @@ import {
   SetupContext,
   Ref,
   computed,
-  nextTick,
   PropType,
   toRef
 } from 'vue'
@@ -44,6 +43,7 @@ import { ChannelId } from '@/types/entity-ids'
 import useWordCompleter from './use/wordCompleter'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
+import useInsertText from '@/use/insertText'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -54,24 +54,6 @@ const useFocus = (context: SetupContext) => {
   }
 
   return { onFocus, onBlur }
-}
-
-const useLineBreak = (
-  value: Ref<string>,
-  textareaRef: Ref<HTMLTextAreaElement | undefined>
-) => {
-  const insertLineBreak = async () => {
-    if (!textareaRef.value) return
-    const pre = value.value.slice(0, textareaRef.value.selectionStart)
-    const suf = value.value.slice(textareaRef.value.selectionEnd)
-    const selectionIndex = pre.length + 1
-    value.value = `${pre}\n${suf}`
-
-    await nextTick()
-    textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
-  }
-
-  return { insertLineBreak }
 }
 
 const usePaste = (channelId: Ref<ChannelId>) => {
@@ -123,6 +105,8 @@ export default defineComponent({
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
+    const { insertText } = useInsertText(value, textareaRef)
+
     const {
       onKeyUp: onKeyUpWordSuggester,
       onKeyDown: onKeyDownWordSuggester,
@@ -137,14 +121,14 @@ export default defineComponent({
       confirmedPart
     } = useWordSuggester(textareaRef, value)
 
-    const { insertLineBreak } = useLineBreak(value, textareaRef)
-
     const {
       onBeforeInput,
       onKeyDown: onKeyDownSendKeyWatcher,
       onKeyUp: onKeyUpSendKeyWatcher,
       onBlur: onBlurSendKeyWatcher
-    } = useSendKeyWatcher(context, insertLineBreak)
+    } = useSendKeyWatcher(context, () => {
+      insertText('\n')
+    })
     const { onKeyDown: onKeyDownWordCompleter, onSelect } = useWordCompleter(
       textareaRef,
       target,
