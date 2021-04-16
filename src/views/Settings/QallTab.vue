@@ -15,9 +15,9 @@
         <h3 :class="$style.header">マスターボリューム</h3>
         <div :class="[$style.content, $style.masterVolume]">
           <form-input
+            v-model.number="state.masterVolume"
             :class="$style.masterVolumeRange"
             type="range"
-            v-model.number="state.masterVolume"
             min="0"
             step="0.005"
             max="1"
@@ -57,22 +57,22 @@
           />
           <p v-else>読み上げ音声の声の種類が取得できませんでした</p>
           <form-input
+            v-model.number="state.voicePitch"
             label="ピッチ"
             type="number"
             step="0.1"
-            v-model.number="state.voicePitch"
           />
           <form-input
+            v-model.number="state.voiceRate"
             label="速度"
             type="number"
             step="0.1"
-            v-model.number="state.voiceRate"
           />
           <form-input
+            v-model.number="state.voiceVolume"
             label="音量"
             type="number"
             step="0.1"
-            v-model.number="state.voiceVolume"
           />
         </div>
       </div>
@@ -175,6 +175,11 @@ const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
 
 export default defineComponent({
   name: 'QallTab',
+  components: {
+    Toggle,
+    FormSelector,
+    FormInput
+  },
   setup() {
     const rtcSettings = computed(() => store.state.app.rtcSettings)
     const { state } = useSyncedState(
@@ -199,11 +204,6 @@ export default defineComponent({
       audioInputDeviceOptions,
       voiceOptions
     }
-  },
-  components: {
-    Toggle,
-    FormSelector,
-    FormInput
   }
 })
 </script>

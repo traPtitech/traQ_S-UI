@@ -32,6 +32,9 @@ import UserIcon from '@/components/UI/UserIcon.vue'
 
 export default defineComponent({
   name: 'ConsentFormClientDesc',
+  components: {
+    UserIcon
+  },
   props: {
     client: {
       type: Object as PropType<OAuth2Client>,
@@ -41,9 +44,6 @@ export default defineComponent({
   },
   setup() {
     return {}
-  },
-  components: {
-    UserIcon
   }
 })
 </script>

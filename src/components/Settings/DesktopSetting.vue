@@ -4,7 +4,7 @@
     <desktop-tab-frame>
       <slot />
     </desktop-tab-frame>
-    <close-button :class="$style.close" with-text @close="close" :size="56" />
+    <close-button :class="$style.close" with-text :size="56" @close="close" />
   </div>
 </template>
 
@@ -17,14 +17,14 @@ import useSettingsNavigation from '@/components/Settings/use/navigation'
 
 export default defineComponent({
   name: 'DesktopSettingModal',
-  setup() {
-    const { close } = useSettingsNavigation()
-    return { close }
-  },
   components: {
     DesktopTabSelector,
     DesktopTabFrame,
     CloseButton
+  },
+  setup() {
+    const { close } = useSettingsNavigation()
+    return { close }
   }
 })
 </script>

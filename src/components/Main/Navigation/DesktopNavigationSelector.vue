@@ -7,22 +7,22 @@
       v-for="item in entries"
       :key="item.type"
       :class="$style.item"
-      @click="onNavigationItemClick(item.type)"
       :is-selected="currentNavigation === item.type"
       :has-notification="item.hasNotification"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
+      @click="onNavigationItemClick(item.type)"
     />
     <div v-if="showSeparator" :class="$style.separator" />
     <navigation-selector-item
       v-for="item in ephemeralEntries"
       :key="item.type"
       :class="$style.item"
-      @click="onEphemeralNavigationItemClick(item.type)"
       :is-selected="currentEphemeralNavigation === item.type"
       :icon-mdi="item.iconMdi"
       :icon-name="item.iconName"
       :color-claim="item.colorClaim"
+      @click="onEphemeralNavigationItemClick(item.type)"
     />
   </div>
 </template>

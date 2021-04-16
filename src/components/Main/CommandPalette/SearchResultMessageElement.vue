@@ -26,8 +26,8 @@
       />
     </div>
     <div
-      :class="$style.expandButton"
       v-if="oversized && !expanded"
+      :class="$style.expandButton"
       @click.stop="onClickExpandButton"
     >
       <icon name="arrow-expand-vertical" mdi :size="20" />全て表示

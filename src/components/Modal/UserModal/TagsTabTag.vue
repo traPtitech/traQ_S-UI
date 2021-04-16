@@ -26,6 +26,10 @@ import { UserId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'TagsTab',
+  components: {
+    Icon,
+    TagsTabEdit
+  },
   props: {
     tag: { type: Object as PropType<UserTag>, required: true },
     isMine: { type: Boolean, default: false },
@@ -40,10 +44,6 @@ export default defineComponent({
     }
 
     return { onTagClick }
-  },
-  components: {
-    Icon,
-    TagsTabEdit
   }
 })
 </script>

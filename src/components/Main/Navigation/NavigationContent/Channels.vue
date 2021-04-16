@@ -2,16 +2,16 @@
   <div>
     <navigation-content-container subtitle="チャンネルリスト">
       <template #control>
-        <button @click="onClickButton" :class="$style.button">
+        <button :class="$style.button" @click="onClickButton">
           <icon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>
       <template #default>
         <channel-filter
-          @toggle-star-filter="toggleStarChannelFilter"
           v-model="channelListFilterState.query"
           :is-stared="filterStarChannel"
           :class="$style.filter"
+          @toggle-star-filter="toggleStarChannelFilter"
         />
         <channel-list
           v-if="channelListFilterState.query.length > 0"

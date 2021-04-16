@@ -76,6 +76,10 @@ const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
 
 export default defineComponent({
   name: 'Password',
+  components: {
+    FormInput,
+    FormButton
+  },
   setup() {
     const { changeLink, changeName } = config.auth
     const showChangeLink = changeLink !== undefined && changeName !== undefined
@@ -95,10 +99,6 @@ export default defineComponent({
       isChanging,
       onChangeClick
     }
-  },
-  components: {
-    FormInput,
-    FormButton
   }
 })
 </script>

@@ -16,6 +16,7 @@
     />
     <teleport v-if="isPopupMenuShown" :to="`#${teleportTargetName}`">
       <header-tools-menu
+        v-click-outside="closePopupMenu"
         :class="$style.toolsMenu"
         :show-notification-setting-btn="!channelState.forced"
         :has-active-qall-session="hasActiveQallSession"
@@ -24,7 +25,6 @@
         :is-joined-with-current-device="isJoinedWithCurrentDevice"
         :is-child-channel-creatable="isChildChannelCreatable"
         :is-archived="channelState.archived"
-        v-click-outside="closePopupMenu"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
         @click-copy-channel-link="copyLink"

@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <navigation-content-container subtitle="クリップフォルダ">
       <template #control>
-        <button @click="onClickButton" :class="$style.button">
+        <button :class="$style.button" @click="onClickButton">
           <icon :size="20" mdi name="plus-circle-outline" />
         </button>
       </template>

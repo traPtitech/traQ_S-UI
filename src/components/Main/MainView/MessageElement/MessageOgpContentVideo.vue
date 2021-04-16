@@ -4,8 +4,8 @@
       :preview-url="previewUrl"
       :embedded-url="embeddedUrl"
       :class="$style.video"
-      @click.prevent.stop
       show-play-icon
+      @click.prevent.stop
     />
     <a :href="url" target="_blank" :class="$style.description">
       <message-ogp-description

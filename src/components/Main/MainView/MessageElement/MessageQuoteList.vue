@@ -2,8 +2,8 @@
   <div>
     <message-quote-list-item
       v-for="id in messageIds"
-      :class="$style.item"
       :key="id"
+      :class="$style.item"
       :parent-message-channel-id="parentMessageChannelId"
       :message-id="id"
     />

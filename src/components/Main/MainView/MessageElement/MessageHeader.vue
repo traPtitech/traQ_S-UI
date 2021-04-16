@@ -29,6 +29,7 @@ import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessageHeader',
+  components: { GradeBadge, Icon },
   props: {
     userId: {
       type: String as PropType<UserId>,
@@ -43,7 +44,6 @@ export default defineComponent({
       required: true
     }
   },
-  components: { GradeBadge, Icon },
   setup(props) {
     const state = reactive({
       user: computed(() => store.state.entities.usersMap.get(props.userId)),

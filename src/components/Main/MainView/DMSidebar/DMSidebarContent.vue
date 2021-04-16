@@ -3,8 +3,8 @@
     <channel-sidebar-viewers :viewer-ids="viewerIds" :class="$style.item" />
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
-      @open="$emit('pinnedModeToggle')"
       :class="$style.item"
+      @open="$emit('pinnedModeToggle')"
     />
   </div>
 </template>

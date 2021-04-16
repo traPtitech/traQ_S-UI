@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.container">
     <form-selector
+      v-model="channelId"
       :class="$style.item"
       label="投稿先チャンネル"
-      v-model="channelId"
       :options="channelOptions"
     />
     <share-target-message-input :class="[$style.item, $style.input]" />

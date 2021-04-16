@@ -1,11 +1,11 @@
 <template>
   <label :class="$style.label">
     <input
+      v-model="value"
       type="radio"
       :class="$style.radio"
       v-bind="$attrs"
       :value="inputValue"
-      v-model="value"
     />
     <div :class="$style.pseudoRadio" role="radio" :aria-checked="isChecked">
       <div :class="$style.pseudoRadioInner" />

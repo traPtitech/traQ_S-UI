@@ -12,6 +12,9 @@ import ProfileHeader from './ProfileHeader.vue'
 
 export default defineComponent({
   name: 'LastOnline',
+  components: {
+    ProfileHeader
+  },
   props: {
     lastOnline: String
   },
@@ -22,9 +25,6 @@ export default defineComponent({
         : ''
     )
     return { lastOnlineString }
-  },
-  components: {
-    ProfileHeader
   }
 })
 </script>

@@ -9,9 +9,9 @@
       @click="toggleDetail"
     />
     <div
+      ref="listEle"
       :class="$style.stampList"
       :data-show-details="$boolAttr(isDetailShown)"
-      ref="listEle"
     >
       <transition-group name="stamp">
         <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
@@ -137,6 +137,7 @@ const createStampList = (
 
 export default defineComponent({
   name: 'MessageStampList',
+  components: { StampElement, StampDetailElement, Icon },
   props: {
     stamps: {
       type: Array as PropType<MessageStamp[]>,
@@ -155,7 +156,6 @@ export default defineComponent({
       default: false
     }
   },
-  components: { StampElement, StampDetailElement, Icon },
   setup(props) {
     const { addErrorToast } = useToastStore()
     const myId = computed(() => store.getters.domain.me.myId)

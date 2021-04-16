@@ -28,14 +28,14 @@
     </div>
     <div :class="$style.selector">
       <navigation-selector
-        @navigation-change="onNavigationChange"
-        @ephemeral-navigation-change="onEphemeralNavigationChange"
-        @ephemeral-entry-remove="onEphemeralEntryRemove"
-        @ephemeral-entry-add="onEphemeralEntryAdd"
         :current-navigation="navigationSelectorState.currentNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "
+        @navigation-change="onNavigationChange"
+        @ephemeral-navigation-change="onEphemeralNavigationChange"
+        @ephemeral-entry-remove="onEphemeralEntryRemove"
+        @ephemeral-entry-add="onEphemeralEntryAdd"
       />
     </div>
   </nav>

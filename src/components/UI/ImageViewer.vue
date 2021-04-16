@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" ref="containerEle">
+  <div ref="containerEle" :class="$style.container">
     <div :class="$style.imgContainer" :style="styles.imgContainer">
       <img
         :src="src"

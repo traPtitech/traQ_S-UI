@@ -24,9 +24,9 @@
         <main-view :class="$style.mainView" />
       </main-view-frame>
       <div
+        v-show="isMobile && isSidebarAppeared"
         :class="$style.sidebarWrapper"
         :style="styles.sidebarWrapper"
-        v-show="isMobile && isSidebarAppeared"
       >
         <!-- モバイル時はスワイプ表示するためここにportal表示 -->
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />

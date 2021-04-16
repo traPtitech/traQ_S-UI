@@ -2,8 +2,8 @@
   <div :class="$style.container">
     <message-ogp-list-item
       v-for="(data, i) in ogpData"
-      :class="$style.item"
       :key="i"
+      :class="$style.item"
       :ogp-data="data"
     />
   </div>

@@ -3,16 +3,16 @@
     <notification :class="$style.element" />
     <citation-notification :class="$style.element" />
     <open-mode
-      :class="$style.element"
       v-model:open-mode="state.openMode"
       v-model:open-channel-name="state.openChannelName"
+      :class="$style.element"
     />
     <send-key
-      :class="$style.element"
       v-model:sendWithModifierKey="state.sendWithModifierKey"
       v-model:modifierKey="state.modifierKey"
+      :class="$style.element"
     />
-    <eco-mode :class="$style.element" v-model="state.ecoMode" />
+    <eco-mode v-model="state.ecoMode" :class="$style.element" />
     <caches :class="$style.element" />
   </section>
 </template>

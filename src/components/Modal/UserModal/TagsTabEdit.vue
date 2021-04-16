@@ -14,8 +14,8 @@
         name="lock-open"
         mdi
         :size="20"
-        @click.stop="toggleTagState"
         :class="$style.open"
+        @click.stop="toggleTagState"
       />
     </div>
   </div>

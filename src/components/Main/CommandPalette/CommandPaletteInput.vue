@@ -5,17 +5,17 @@
       <icon v-else-if="store.mode === 'command'" mdi name="code-grater-than" />
     </div>
     <input
-      :class="$style.input"
       ref="inputRef"
       v-model="store.currentInput"
-      @keydown.enter="onEnter"
+      :class="$style.input"
       :placeholder="placeholder"
+      @keydown.enter="onEnter"
     />
     <close-button
       :class="$style.closeIcon"
-      @close="closeCommandPalette"
       :size="24"
       :inner-size="12"
+      @close="closeCommandPalette"
     />
   </div>
 </template>
@@ -27,8 +27,8 @@ import { useCommandPaletteStore } from '@/providers/commandPalette'
 import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
 
 export default defineComponent({
-  components: { Icon, CloseButton },
   name: 'CommandPaletteInput',
+  components: { Icon, CloseButton },
   setup() {
     const inputRef = shallowRef<HTMLInputElement | null>(null)
     const focus = () => {

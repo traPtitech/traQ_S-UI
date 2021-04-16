@@ -2,7 +2,6 @@
   <main-view-header-popup-frame>
     <header-tools-menu-item
       v-if="isMobile"
-      @click="emit('click-qall')"
       icon-name="phone"
       icon-mdi
       :class="$style.qallIcon"
@@ -13,31 +12,32 @@
           (!isJoinedQallSession || !isJoinedWithCurrentDevice))
       "
       :data-is-active="$boolAttr(isQallSessionOpened)"
+      @click="emit('click-qall')"
     />
     <header-tools-menu-item
       v-if="isChildChannelCreatable"
-      @click="emit('click-create-channel')"
       icon-name="hash"
       label="子チャンネルを作成"
+      @click="emit('click-create-channel')"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
-      @click="emit('click-notification')"
       icon-name="notified-or-subscribed"
       label="通知設定"
+      @click="emit('click-notification')"
     />
     <header-tools-menu-item
-      @click="emit('click-copy-channel-link')"
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
+      @click="emit('click-copy-channel-link')"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
-      @click="emit('click-manage-channel')"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
+      @click="emit('click-manage-channel')"
     />
   </main-view-header-popup-frame>
 </template>

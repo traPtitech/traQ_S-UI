@@ -2,16 +2,16 @@
   <div>
     <authenticate-header :class="$style.header" title="新規登録" />
     <authenticate-input
-      label="traQ ID"
       v-model="registerState.name"
+      label="traQ ID"
       :class="$style.item"
       autocomplete="username"
       autofocus
     />
     <authenticate-input
+      v-model="registerState.password"
       label="パスワード"
       type="password"
-      v-model="registerState.password"
       :class="$style.item"
       autocomplete="new-password"
       enterkeyhint="done"

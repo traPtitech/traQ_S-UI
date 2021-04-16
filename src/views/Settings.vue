@@ -49,6 +49,10 @@ const useSettingsRootPathWatcher = (
 
 export default defineComponent({
   name: 'Settings',
+  components: {
+    DesktopSettingModal,
+    MobileSettingModal
+  },
   setup() {
     const { isMobile } = useIsMobile()
 
@@ -68,10 +72,6 @@ export default defineComponent({
     const { isLoginCheckDone } = useLoginCheck()
 
     return { isMobile, isLoginCheckDone }
-  },
-  components: {
-    DesktopSettingModal,
-    MobileSettingModal
   }
 })
 </script>

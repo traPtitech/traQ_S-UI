@@ -16,14 +16,14 @@ import { RouteName } from '@/router'
 
 export default defineComponent({
   name: 'MobileSettingModal',
+  components: {
+    MobileTabSelector,
+    MobileTabFrame
+  },
   setup() {
     const route = useRoute()
     const isSettingsRoot = computed(() => route.name === RouteName.Settings)
     return { isSettingsRoot }
-  },
-  components: {
-    MobileTabSelector,
-    MobileTabFrame
   }
 })
 </script>

@@ -28,14 +28,14 @@ import store from '@/store'
 
 export default defineComponent({
   name: 'ChannelViewContent',
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String
-  },
   components: {
     ScrollLoadingBar,
     MessagesScroller,
     MessageInput
+  },
+  props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
+    entryMessageId: String
   },
   setup(props) {
     const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()

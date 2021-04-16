@@ -22,6 +22,9 @@ import Stamp from './Stamp.vue'
 
 export default defineComponent({
   name: 'EditStamp',
+  components: {
+    Stamp
+  },
   setup() {
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -45,9 +48,6 @@ export default defineComponent({
       selectStamp,
       unselectStamp
     }
-  },
-  components: {
-    Stamp
   }
 })
 </script>

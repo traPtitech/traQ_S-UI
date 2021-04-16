@@ -5,7 +5,7 @@
     :large-padding="largePadding"
     @toggle="onClickLink"
   >
-    <template #header-control v-if="count !== undefined">
+    <template v-if="count !== undefined" #header-control>
       <span :class="$style.count">{{ count }}</span>
     </template>
     <template #default></template>

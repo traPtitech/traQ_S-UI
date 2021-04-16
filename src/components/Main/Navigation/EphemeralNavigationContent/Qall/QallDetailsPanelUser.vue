@@ -7,22 +7,22 @@
       <slider
         v-if="showVolumeControl"
         :value="volume"
-        @change-value="onChange"
         :min="0"
         :max="200"
         tooltip-formatter="{value}%"
         :disabled="disabled || volume === undefined"
         :tooltip="disabled ? 'none' : 'active'"
+        @change-value="onChange"
       />
       <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
-    <button v-if="showTuneButton" @click="$emit('tune')" :class="$style.button">
+    <button v-if="showTuneButton" :class="$style.button" @click="$emit('tune')">
       <icon mdi name="tune" :size="16" />
     </button>
     <button
       v-else-if="showTuneDoneButton"
-      @click="$emit('tuneDone')"
       :class="[$style.button, $style.tuneDone]"
+      @click="$emit('tuneDone')"
     >
       <icon mdi name="check" :size="16" />
     </button>

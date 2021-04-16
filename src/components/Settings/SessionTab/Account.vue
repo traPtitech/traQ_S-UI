@@ -4,8 +4,8 @@
     <div :class="$style.content">
       <form-button
         label="ログアウト"
-        @click="onLogoutClick"
         :class="$style.logout"
+        @click="onLogoutClick"
       />
       <form-button label="全セッション破棄" @click="onSessionDelete" />
     </div>
@@ -20,6 +20,9 @@ import store from '@/store'
 
 export default defineComponent({
   name: 'Account',
+  components: {
+    FormButton
+  },
   setup(props, context) {
     const router = useRouter()
 
@@ -40,9 +43,6 @@ export default defineComponent({
       }
     }
     return { onLogoutClick, onSessionDelete }
-  },
-  components: {
-    FormButton
   }
 })
 </script>

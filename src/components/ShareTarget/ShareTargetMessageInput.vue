@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.container">
     <label :for="id" :class="$style.label">メッセージ</label>
-    <div :class="$style.wrapper" ref="wrapperEle">
+    <div ref="wrapperEle" :class="$style.wrapper">
       <div :class="$style.inputContainer">
         <div :class="$style.inputWrapper">
           <textarea
-            ref="textareaRef"
-            :class="$style.input"
             :id="id"
+            ref="textareaRef"
             v-model="state.text"
+            :class="$style.input"
             :is-posting="isPosting"
           />
         </div>

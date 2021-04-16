@@ -7,7 +7,7 @@
       :class="$style.inputContainer"
       :data-on-secondary="$boolAttr(onSecondary)"
     >
-      <select v-model="value" :id="id" :class="$style.select">
+      <select :id="id" v-model="value" :class="$style.select">
         <option
           v-for="option in options"
           :key="option.value"

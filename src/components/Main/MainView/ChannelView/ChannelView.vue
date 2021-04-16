@@ -75,13 +75,13 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 
 export default defineComponent({
   name: 'ChannelView',
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String as PropType<ChannelId>
-  },
   components: {
     ChannelViewContent,
     ChannelViewFileUploadOverlay
+  },
+  props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
+    entryMessageId: String as PropType<ChannelId>
   },
   setup(props) {
     const channelMessageIds = computed(

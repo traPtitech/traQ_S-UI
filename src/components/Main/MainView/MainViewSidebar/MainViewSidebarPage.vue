@@ -6,11 +6,11 @@
         :size="28"
         mdi
         name="chevron-left"
-        @click="$emit('back')"
         :class="$style.backButton"
+        @click="$emit('back')"
       />
       <slot name="header" />
-      <close-button @close="closeSidebar" :size="28" />
+      <close-button :size="28" @close="closeSidebar" />
     </div>
     <div :class="$style.content">
       <slot name="content" />

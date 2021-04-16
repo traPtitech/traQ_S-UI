@@ -12,11 +12,11 @@
       <slot :content="content" />
     </div>
     <button
-      @click="onButtonClick"
       :data-is-editing="$boolAttr(isEditing)"
       :disabled="isExceeded"
       :data-is-exceeded="$boolAttr(isExceeded)"
       :class="$style.button"
+      @click="onButtonClick"
     >
       <icon v-if="isEditing" width="20" height="20" name="check" mdi />
       <icon v-else width="20" height="20" name="pencil-outline" mdi />

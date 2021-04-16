@@ -26,6 +26,10 @@ import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
 
 export default defineComponent({
   name: 'MessageInputTypingUsers',
+  components: {
+    MessageInputTypingAnimation,
+    UserIconEllipsisList
+  },
   props: {
     typingUsers: {
       type: Array as PropType<UserId[]>,
@@ -41,10 +45,6 @@ export default defineComponent({
     )
 
     return { text }
-  },
-  components: {
-    MessageInputTypingAnimation,
-    UserIconEllipsisList
   }
 })
 </script>

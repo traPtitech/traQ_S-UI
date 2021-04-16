@@ -25,8 +25,8 @@ import SearchResultMessageImage from './SearchResultMessageImage.vue'
 import SearchResultMessageFile from './SearchResultMessageFile.vue'
 
 export default defineComponent({
-  components: { SearchResultMessageImage, SearchResultMessageFile },
   name: 'SearchResultMessageFileList',
+  components: { SearchResultMessageImage, SearchResultMessageFile },
   props: {
     fileIds: {
       type: Array as PropType<FileId[]>,

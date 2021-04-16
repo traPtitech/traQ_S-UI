@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="fileLink" v-if="isLarge" :class="$style.largeContainer">
+  <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
     <!--
       height, widthはlayout shift対策
       https://www.mizdra.net/entry/2020/05/31/192613

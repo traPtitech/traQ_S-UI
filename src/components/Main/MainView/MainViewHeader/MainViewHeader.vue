@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.container">
     <div :class="$style.headerContainer">
-      <button :class="$style.navigationButton" v-if="isMobile" @click="openNav">
+      <button v-if="isMobile" :class="$style.navigationButton" @click="openNav">
         <icon name="traQ" />
       </button>
       <h2 :class="$style.headerBody">

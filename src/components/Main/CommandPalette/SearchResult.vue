@@ -4,8 +4,8 @@
   </div>
   <div
     v-else-if="searchResult.length > 0"
-    :class="$style.container"
     ref="containerEle"
+    :class="$style.container"
   >
     <popup-selector
       v-model="currentSortKey"
@@ -86,13 +86,13 @@ const useMessageOpener = () => {
 }
 
 export default defineComponent({
+  name: 'SearchResult',
   components: {
     SearchResultMessageElement,
     PopupSelector,
     LoadingSpinner,
     Icon
   },
-  name: 'SearchResult',
   setup() {
     const { commandPaletteStore: store } = useCommandPaletteStore()
     const {

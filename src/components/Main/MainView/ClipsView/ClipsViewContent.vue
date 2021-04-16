@@ -23,12 +23,12 @@ import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 
 export default defineComponent({
   name: 'ClipsViewContent',
-  props: {
-    clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
-  },
   components: {
     MessagesScroller,
     ScrollLoadingBar
+  },
+  props: {
+    clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
   },
   setup(props) {
     const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()

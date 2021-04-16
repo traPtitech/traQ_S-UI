@@ -10,10 +10,10 @@ import { useCommandPaletteStore } from '@/providers/commandPalette'
 import CommandPalette from './CommandPalette.vue'
 
 export default defineComponent({
+  name: 'CommandPaletteContainer',
   components: {
     CommandPalette
   },
-  name: 'CommandPaletteContainer',
   setup() {
     const { isCommandPaletteShown } = useCommandPaletteStore()
     return { isCommandPaletteShown }

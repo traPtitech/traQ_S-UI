@@ -7,15 +7,15 @@
     :class="$style.container"
   >
     <form-input
+      v-model="name.val"
       label="名前"
       :class="$style.input"
-      v-model="name.val"
       :max-length="30"
     />
     <form-text-area
+      v-model="description.val"
       label="説明"
       :class="$style.input"
-      v-model="description.val"
       :max-height="160"
       :max-length="1000"
     />

@@ -29,6 +29,11 @@ import Buttons from './Buttons.vue'
 
 export default defineComponent({
   name: 'MobileFeature',
+  components: {
+    UserIcon,
+    OnlineIndicatorWithTooltip,
+    Buttons
+  },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -38,11 +43,6 @@ export default defineComponent({
   },
   setup() {
     return {}
-  },
-  components: {
-    UserIcon,
-    OnlineIndicatorWithTooltip,
-    Buttons
   }
 })
 </script>

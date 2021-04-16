@@ -2,17 +2,17 @@
   <div :class="$style.add">
     <div :class="$style.inputContainer">
       <input
+        v-model="newTagName"
         type="text"
         :class="$style.input"
-        v-model="newTagName"
         placeholder="タグを追加"
       />
       <length-count :val="newTagName" :max-length="30" />
     </div>
     <button
       :class="$style.button"
-      @click="addTag"
       :disabled="newTagName.length === 0 || isExceeded || adding"
+      @click="addTag"
     >
       <icon name="plus" mdi :class="$style.icon" />
     </button>
@@ -30,6 +30,10 @@ import useToastStore from '@/providers/toastStore'
 
 export default defineComponent({
   name: 'TagsTab',
+  components: {
+    Icon,
+    LengthCount
+  },
   props: {
     userId: {
       type: String as PropType<UserId>,
@@ -59,10 +63,6 @@ export default defineComponent({
     }
 
     return { newTagName, isExceeded, addTag, adding }
-  },
-  components: {
-    Icon,
-    LengthCount
   }
 })
 </script>

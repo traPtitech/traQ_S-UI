@@ -27,6 +27,9 @@ import { isDefined } from '@/lib/util/array'
 
 export default defineComponent({
   name: 'GroupsTab',
+  components: {
+    Icon
+  },
   props: {
     detail: Object as PropType<UserDetail>
   },
@@ -47,9 +50,6 @@ export default defineComponent({
     }
 
     return { isLoading, groups, onGroupClick }
-  },
-  components: {
-    Icon
   }
 })
 </script>

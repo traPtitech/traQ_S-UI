@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.container" v-click-outside="closeCommandPalette">
+  <div v-click-outside="closeCommandPalette" :class="$style.container">
     <command-palette-input />
-    <hr :class="$style.separator" v-if="supplementalViewType" />
+    <hr v-if="supplementalViewType" :class="$style.separator" />
     <search-result v-if="supplementalViewType === 'search-result'" />
     <search-suggestion
       v-else-if="supplementalViewType === 'search-suggestion'"
@@ -19,12 +19,12 @@ import SearchSuggestion from './SearchSuggestion.vue'
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
 export default defineComponent({
+  name: 'CommandPalette',
   components: {
     CommandPaletteInput,
     SearchResult,
     SearchSuggestion
   },
-  name: 'CommandPalette',
   setup() {
     const {
       closeCommandPalette,

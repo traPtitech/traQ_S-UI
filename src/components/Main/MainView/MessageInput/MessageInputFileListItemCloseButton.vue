@@ -1,5 +1,5 @@
 <template>
-  <button @click="$emit('close')" :class="$style.container">
+  <button :class="$style.container" @click="$emit('close')">
     <icon mdi name="close" :size="12" :class="$style.icon" />
     <div role="presentation" :class="$style.bg"></div>
   </button>

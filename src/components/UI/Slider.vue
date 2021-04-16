@@ -1,13 +1,13 @@
 <template>
   <vue-slider
     :model-value="value"
-    @change="onChange"
     :min="min"
     :max="max"
     :disabled="disabled"
     :tooltip="tooltip"
     :tooltip-formatter="tooltipFormatter"
     :dot-size="12"
+    @change="onChange"
   />
 </template>
 

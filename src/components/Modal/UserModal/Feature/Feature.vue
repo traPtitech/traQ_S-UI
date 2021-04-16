@@ -12,6 +12,10 @@ import MobileFeature from './MobileFeature.vue'
 
 export default defineComponent({
   name: 'Feature',
+  components: {
+    DesktopFeature,
+    MobileFeature
+  },
   props: {
     user: {
       type: Object as PropType<User>,
@@ -25,10 +29,6 @@ export default defineComponent({
     return {
       isMobile
     }
-  },
-  components: {
-    DesktopFeature,
-    MobileFeature
   }
 })
 </script>

@@ -1,8 +1,8 @@
 <template>
   <sidebar-content-container-link
     title="ピン留め"
-    @click-link="onClick"
     :count="pinnedMessageLength"
+    @click-link="onClick"
   />
 </template>
 
@@ -12,8 +12,8 @@ import SidebarContentContainerLink from '@/components/Main/MainView/MainViewSide
 
 export default defineComponent({
   name: 'ChannelSidebarPinned',
-  props: { pinnedMessageLength: { type: Number, default: 0 } },
   components: { SidebarContentContainerLink },
+  props: { pinnedMessageLength: { type: Number, default: 0 } },
   setup(_, context) {
     const onClick = () => context.emit('open')
     return { onClick }

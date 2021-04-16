@@ -1,8 +1,8 @@
 <template>
   <div
-    :class="$style.body"
-    ref="bodyRef"
     v-if="state.message"
+    ref="bodyRef"
+    :class="$style.body"
     :data-is-mobile="$boolAttr(isMobile)"
     :data-is-entry="$boolAttr(isEntryMessage)"
     @mouseenter="onMouseEnter"

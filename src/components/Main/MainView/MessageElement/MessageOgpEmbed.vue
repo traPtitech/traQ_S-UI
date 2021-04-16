@@ -1,5 +1,5 @@
 <template>
-  <div @click="showContent" :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="styles.container" @click="showContent">
     <iframe
       v-if="!previewUrl || isContentShown"
       :src="embeddedUrl"

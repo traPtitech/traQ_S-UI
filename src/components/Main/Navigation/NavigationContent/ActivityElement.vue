@@ -1,9 +1,9 @@
 <template>
   <message-panel
-    @click="onChannelSelect(message.channelId)"
     :message="message"
     :title-type="titleType"
     line-clamp-content
+    @click="onChannelSelect(message.channelId)"
   />
 </template>
 

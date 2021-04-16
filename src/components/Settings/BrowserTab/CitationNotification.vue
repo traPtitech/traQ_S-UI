@@ -4,8 +4,8 @@
       <h3 :class="$style.header">引用通知</h3>
       <toggle
         :model-value="value"
-        @update:modelValue="toggle"
         :class="$style.toggle"
+        @update:modelValue="toggle"
       />
     </div>
     <div :class="$style.content">

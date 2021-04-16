@@ -4,16 +4,16 @@
     <div :class="$style.content">
       <div :class="$style.channel">
         <form-radio
+          v-model="openModeValue"
           label="最後に開いたチャンネル"
           input-value="lastOpen"
-          v-model="openModeValue"
         />
       </div>
       <div :class="$style.channel">
         <form-radio
+          v-model="openModeValue"
           label="特定のチャンネル"
           input-value="particular"
-          v-model="openModeValue"
         />
         <form-selector
           v-if="openMode === 'particular'"

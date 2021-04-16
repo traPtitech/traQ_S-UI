@@ -26,6 +26,10 @@ import { changeChannelByPath } from '@/router/channel'
 
 export default defineComponent({
   name: 'HomeChannel',
+  components: {
+    ProfileHeader,
+    Icon
+  },
   props: {
     id: String as PropType<string | null>
   },
@@ -54,10 +58,6 @@ export default defineComponent({
       channelPath,
       onClick
     }
-  },
-  components: {
-    ProfileHeader,
-    Icon
   }
 })
 </script>

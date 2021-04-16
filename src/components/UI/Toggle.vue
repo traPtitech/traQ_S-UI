@@ -1,10 +1,10 @@
 <template>
   <div
-    @click="toggle"
     :class="$style.container"
     role="switch"
     :aria-checked="modelValue"
     :aria-disabled="disabled"
+    @click="toggle"
   >
     <div :class="$style.knob"></div>
   </div>

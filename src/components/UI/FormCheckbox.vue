@@ -1,10 +1,10 @@
 <template>
   <label :class="$style.label">
     <input
+      v-model="value"
       type="checkbox"
       :class="$style.checkbox"
       v-bind="$attrs"
-      v-model="value"
     />
     <div
       :class="$style.pseudoCheckbox"

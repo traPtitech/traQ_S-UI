@@ -34,8 +34,8 @@ const querySuggestions = [
 ]
 
 export default defineComponent({
-  components: { SearchSuggestionQueryItem, SearchSuggestionItem },
   name: 'SearchSuggestion',
+  components: { SearchSuggestionQueryItem, SearchSuggestionItem },
   emits: {
     queryInsert: () => true
   },
