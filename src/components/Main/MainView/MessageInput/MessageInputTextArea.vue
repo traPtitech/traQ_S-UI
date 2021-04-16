@@ -42,7 +42,7 @@ import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
 import useWordCompleter from './use/wordCompleter'
-import DropdownSuggester from './DropdownSuggester.vue'
+import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 
 const useFocus = (context: SetupContext) => {

@@ -1,46 +1,29 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
     <div v-show="isShown" :class="$style.container" :style="styledPosition">
-      <div
-        :class="[$style.item, $style.confirmedPart]"
-        :aria-selected="selectedIndex === -1"
+      <dropdown-suggester-candidate
+        :candidate="{ text: confirmedPart }"
+        :is-selected="selectedIndex === -1"
         @mousedown="onMousedown"
         @click="onClick(-1)"
-      >
-        {{ confirmedPart }}
-      </div>
+      />
       <div :class="$style.scroll">
-        <div
+        <dropdown-suggester-candidate
           v-for="(candidate, index) in candidates"
-          :ref="setItemRef"
-          :key="candidate"
-          :class="$style.item"
-          :aria-selected="selectedIndex === index"
+          :key="candidate.text"
+          :candidate="candidate"
+          :is-selected="selectedIndex === index"
           @mousedown="onMousedown"
           @click="onClick(index)"
-        >
-          <dropdown-suggester-user-icon
-            v-if="candidate.type === 'user'"
-            :user-id="candidate.id"
-          />
-          <stamp-element
-            v-else-if="candidate.type === 'stamp'"
-            :stamp-id="candidate.id"
-            :size="24"
-          />
-          <div :class="$style.name">
-            {{ candidate.text }}
-          </div>
-        </div>
+        />
       </div>
     </div>
   </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, watch, onBeforeUpdate } from 'vue'
-import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
-import StampElement from '@/components/UI/Stamp.vue'
+import { defineComponent, computed, PropType } from 'vue'
+import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { Word } from '@/lib/trieTree'
 
 const WIDTH = 240
@@ -49,8 +32,7 @@ const MARGIN = 8
 export default defineComponent({
   name: 'DropdownSuggester',
   components: {
-    DropdownSuggesterUserIcon,
-    StampElement
+    DropdownSuggesterCandidate
   },
   props: {
     isShown: {
@@ -90,25 +72,6 @@ export default defineComponent({
       width: `${WIDTH}px`
     }))
 
-    let itemRefs: HTMLDivElement[] = []
-    const setItemRef = (el: HTMLDivElement) => {
-      itemRefs.push(el)
-    }
-    onBeforeUpdate(() => {
-      itemRefs = []
-    })
-
-    watch(
-      () => props.selectedIndex,
-      i => {
-        if (i === -1) return
-        itemRefs[i]?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        })
-      }
-    )
-
     const onMousedown = () => {
       context.emit('mousedown')
     }
@@ -117,7 +80,6 @@ export default defineComponent({
     }
 
     return {
-      setItemRef,
       styledPosition,
       onMousedown,
       onClick
@@ -140,24 +102,6 @@ export default defineComponent({
 .scroll {
   overflow-y: scroll;
   max-height: 32px * 4.5;
-}
-.item {
-  display: flex;
-  padding: 4px;
-  cursor: pointer;
-  &[aria-selected='true'],
-  &:hover {
-    background-color: $theme-background-secondary;
-    font-weight: bold;
-  }
-}
-.confirmedPart {
-  border-bottom: 2px solid $theme-background-secondary;
-}
-.name {
-  margin-left: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-top: 2px solid $theme-background-secondary;
 }
 </style>
