@@ -18,28 +18,30 @@ const useWordCompleter = (
 ) => {
   const { insertText } = useInsertText(value, textareaRef, target)
 
+  const insertTextAndMove = (text: string) => {
+    insertText(text)
+    target.value.end = target.value.begin + text.length
+  }
+
   const onKeyDown = async (e: KeyboardEvent) => {
     if (e.key !== 'Tab' || e.isComposing) return
     if (!textareaRef.value) return
     if (suggestedCandidates.value.length === 0) return
     e.preventDefault()
     if (suggestedCandidates.value.length === 1) {
-      insertText(suggestedCandidates.value[0].text)
-      target.value.end = target.value.begin + suggestedCandidates.value.length
+      insertTextAndMove(suggestedCandidates.value[0].text)
       onCompleteDetermined()
       return
     }
     if (selectedCandidateIndex.value === -1) {
-      insertText(confirmedPart.value)
-      target.value.end = target.value.begin + confirmedPart.value.length
+      insertTextAndMove(confirmedPart.value)
       if (confirmedPart.value === suggestedCandidates.value[0].text) {
         selectedCandidateIndex.value++
       }
     } else {
-      insertText(suggestedCandidates.value[selectedCandidateIndex.value].text)
-      target.value.end =
-        target.value.begin +
-        suggestedCandidates.value[selectedCandidateIndex.value].text.length
+      insertTextAndMove(
+        suggestedCandidates.value[selectedCandidateIndex.value].text
+      )
     }
     if (selectedCandidateIndex.value === suggestedCandidates.value.length - 1) {
       selectedCandidateIndex.value = 0
