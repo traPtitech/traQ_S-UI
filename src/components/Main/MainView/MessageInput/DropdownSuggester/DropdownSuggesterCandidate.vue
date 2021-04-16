@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watchEffect } from 'vue'
-import { Word } from '@/lib/trieTree'
+import { WordOrConfirmedPart } from '../use/wordSuggester'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import StampElement from '@/components/UI/Stamp.vue'
 
@@ -29,7 +29,7 @@ export default defineComponent({
   },
   props: {
     candidate: {
-      type: Object as PropType<Word>,
+      type: Object as PropType<WordOrConfirmedPart>,
       required: true
     },
     isSelected: {

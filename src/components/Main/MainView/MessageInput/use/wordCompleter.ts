@@ -1,6 +1,6 @@
 import { nextTick, ComputedRef, WritableComputedRef, Ref } from 'vue'
 import { Target } from '@/lib/suggestion'
-import { Word } from '@/lib/trieTree'
+import { Word } from './wordSuggester'
 
 const useWordCompleter = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,

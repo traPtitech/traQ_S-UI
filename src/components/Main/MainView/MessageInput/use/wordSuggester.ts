@@ -1,5 +1,5 @@
 import store from '@/store'
-import TrieTree, { Word } from '@/lib/trieTree'
+import TrieTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ComputedRef, WritableComputedRef, ref, onBeforeUnmount } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
@@ -22,9 +22,21 @@ const events: Array<keyof EntityEventMap> = [
   'deleteStamp'
 ]
 
+type WordType = 'user' | 'user-group' | 'stamp' | 'stamp-effect'
+export type Word = {
+  type: WordType
+  text: string
+  id?: string
+}
+export type WordOrConfirmedPart = {
+  type: WordType | 'confirmed-part'
+  text: string
+  id?: string
+}
+
 const useCandidateTree = () => {
   const constructTree = () =>
-    new TrieTree(
+    new TrieTree<Word>(
       // ユーザー名とグループ名に重複あり
       // メンションはcase insensitiveでユーザー名を優先
       // 重複を許す場合、優先するものから入れる
@@ -49,7 +61,7 @@ const useCandidateTree = () => {
       }))
     )
 
-  const tree = ref<TrieTree>(constructTree())
+  const tree = ref<TrieTree<Word>>(constructTree())
   const updateTree = () => {
     tree.value = constructTree()
   }

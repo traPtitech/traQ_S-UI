@@ -1,4 +1,9 @@
-import TrieTree, { Word } from '@/lib/trieTree'
+import TrieTree from '@/lib/trieTree'
+
+type Word = {
+  type: 'user' | 'stamp' | 'stamp-effect'
+  text: string
+}
 
 const users1: Array<Word> = [
   { type: 'user', text: '@temma' },
@@ -16,12 +21,12 @@ const stamps: Array<Word> = [
   { type: 'stamp', text: ':thermometer_face' }
 ]
 const stampEffects: Array<Word> = [
-  { type: 'user', text: '.wiggle' },
-  { type: 'user', text: '.ex-large' }
+  { type: 'stamp-effect', text: '.wiggle' },
+  { type: 'stamp-effect', text: '.ex-large' }
 ]
 const empty: Array<Word> = []
 
-const tree = new TrieTree(users1, users2, stamps, stampEffects, empty)
+const tree = new TrieTree<Word>(users1, users2, stamps, stampEffects, empty)
 
 describe('trieTree class', () => {
   it('can create', () => {

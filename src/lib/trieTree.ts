@@ -1,7 +1,7 @@
+import { isDefined } from '@/lib/util/array'
+
 let lastInsertedId = 0
 
-type WordType = 'user' | 'user-group' | 'stamp' | 'stamp-effect'
-export type Word = { type: WordType; text: string; id?: string | undefined }
 class TrieNode {
   id: number
   isWord: boolean
@@ -85,7 +85,7 @@ class TrieNode {
   }
 }
 
-class TrieTree {
+class TrieTree<Word extends { text: string }> {
   dict: Map<number, Word>
   root: TrieNode
 
@@ -105,7 +105,7 @@ class TrieTree {
     if (!ids) return []
     return ids
       .map(id => this.dict.get(id))
-      .filter((v): v is Word => typeof v === 'object')
+      .filter(isDefined)
       .sort((a, b) => (a.text < b.text ? -1 : 1))
   }
 
@@ -121,10 +121,10 @@ class TrieTree {
     this.dict.delete(removedId)
   }
 
-  update(oldWord: Word, newWOrd: Word) {
-    if (oldWord.text.length === 0 || newWOrd.text.length === 0) return
+  update(oldWord: Word, newWord: Word) {
+    if (oldWord.text.length === 0 || newWord.text.length === 0) return
     this.remove(oldWord.text)
-    this.insert(newWOrd)
+    this.insert(newWord)
   }
 }
 
