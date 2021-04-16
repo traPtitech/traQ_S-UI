@@ -206,7 +206,10 @@ export const actions = defineActions({
     })
   },
   async addAndRenderMessage(context, payload: { message: Message }) {
-    const { commit, dispatch } = messagesViewActionContext(context)
+    const { state, commit, dispatch } = messagesViewActionContext(context)
+    // すでに追加済みの場合は追加しない
+    // https://github.com/traPtitech/traQ_S-UI/issues/1748
+    if (state.messageIds.includes(payload.message.id)) return
     await dispatch.renderMessageContent(payload.message.id)
     commit.addMessageId(payload.message.id)
   },
