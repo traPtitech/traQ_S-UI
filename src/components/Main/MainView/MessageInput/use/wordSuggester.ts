@@ -7,7 +7,9 @@ import {
   ref,
   onBeforeUnmount,
   computed,
-  watch
+  watch,
+  Ref,
+  readonly
 } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
 import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
@@ -86,12 +88,48 @@ const useCandidateTree = () => {
   return tree
 }
 
+const useSuggestionList = (target: Ref<Target>) => {
+  const tree = useCandidateTree()
+  const suggestedCandidates = computed(() =>
+    tree.value.search(target.value.word.replaceAll('＠', '@'))
+  )
+  const confirmedPart = computed(() =>
+    getDeterminedCharacters(suggestedCandidates.value.map(obj => obj.text))
+  )
+
+  const selectedCandidateIndex = ref(-1)
+  const selectPrev = () => {
+    if (selectedCandidateIndex.value <= 0) {
+      selectedCandidateIndex.value = suggestedCandidates.value.length - 1
+      return
+    }
+    selectedCandidateIndex.value--
+  }
+  const selectNext = () => {
+    if (selectedCandidateIndex.value >= suggestedCandidates.value.length - 1) {
+      selectedCandidateIndex.value = -1
+      return
+    }
+    selectedCandidateIndex.value++
+  }
+  const resetSelection = () => {
+    selectedCandidateIndex.value = -1
+  }
+
+  return {
+    suggestedCandidates,
+    confirmedPart,
+    selectedCandidateIndex: readonly(selectedCandidateIndex),
+    selectPrev,
+    selectNext,
+    resetSelection
+  }
+}
+
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
-  const tree = useCandidateTree()
-
   const position = ref({ top: 0, left: 0 })
   watch(value, () => {
     if (!textareaRef.value) return
@@ -105,17 +143,18 @@ const useWordSuggester = (
     end: 0,
     divided: false
   })
-  const suggestedCandidates = computed(() =>
-    tree.value.search(target.value.word.replaceAll('＠', '@'))
-  )
-  const selectedCandidateIndex = ref(-1)
-  const confirmedPart = computed(() =>
-    getDeterminedCharacters(suggestedCandidates.value.map(obj => obj.text))
-  )
+
+  const {
+    suggestedCandidates,
+    confirmedPart,
+    selectedCandidateIndex,
+    selectPrev,
+    selectNext,
+    resetSelection
+  } = useSuggestionList(target)
 
   const hideSuggester = () => {
     isSuggesterShown.value = false
-    selectedCandidateIndex.value = -1
   }
 
   const { insertText } = useInsertText(value, textareaRef, target)
@@ -125,18 +164,6 @@ const useWordSuggester = (
     target.value.end = target.value.begin + text.length
   }
 
-  const selectPrev = () => {
-    if (selectedCandidateIndex.value <= 0) {
-      selectedCandidateIndex.value = suggestedCandidates.value.length
-    }
-    selectedCandidateIndex.value--
-  }
-  const selectNext = () => {
-    if (selectedCandidateIndex.value > suggestedCandidates.value.length - 2) {
-      selectedCandidateIndex.value = -1
-    }
-    selectedCandidateIndex.value++
-  }
   const updateTarget = () => {
     if (!textareaRef.value) return
     target.value = getCurrentWord(textareaRef.value, value.value)
@@ -145,7 +172,7 @@ const useWordSuggester = (
       return
     }
 
-    selectedCandidateIndex.value = -1
+    resetSelection()
     if (suggestedCandidates.value.length === 0) {
       isSuggesterShown.value = false
       return
