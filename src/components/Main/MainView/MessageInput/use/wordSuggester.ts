@@ -16,6 +16,7 @@ import {
   getDeterminedCharacters,
   Target
 } from '@/lib/suggestion'
+import useInsertText from '@/use/insertText'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -118,25 +119,27 @@ const useWordSuggester = (
     selectedCandidateIndex.value = -1
   }
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (!isSuggesterShown.value) return
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (selectedCandidateIndex.value <= 0) {
-        selectedCandidateIndex.value = suggestedCandidates.value.length
-      }
-      selectedCandidateIndex.value--
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (selectedCandidateIndex.value > suggestedCandidates.value.length - 2) {
-        selectedCandidateIndex.value = -1
-      }
-      selectedCandidateIndex.value++
-    }
+  const { insertText } = useInsertText(value, textareaRef, target)
+
+  const insertTextAndMoveTarget = (text: string) => {
+    insertText(text)
+    target.value.end = target.value.begin + text.length
   }
-  const onKeyUp = async (e: KeyboardEvent) => {
+
+  const selectPrev = () => {
+    if (selectedCandidateIndex.value <= 0) {
+      selectedCandidateIndex.value = suggestedCandidates.value.length
+    }
+    selectedCandidateIndex.value--
+  }
+  const selectNext = () => {
+    if (selectedCandidateIndex.value > suggestedCandidates.value.length - 2) {
+      selectedCandidateIndex.value = -1
+    }
+    selectedCandidateIndex.value++
+  }
+  const updateTarget = () => {
     if (!textareaRef.value) return
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
       hideSuggester()
@@ -151,8 +154,57 @@ const useWordSuggester = (
     isSuggesterShown.value = true
   }
 
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Tab' && !e.isComposing) {
+      if (!textareaRef.value) return
+      if (suggestedCandidates.value.length === 0) return
+      e.preventDefault()
+      if (suggestedCandidates.value.length === 1) {
+        insertTextAndMoveTarget(suggestedCandidates.value[0].text)
+        hideSuggester()
+        return
+      }
+      if (selectedCandidateIndex.value === -1) {
+        insertTextAndMoveTarget(confirmedPart.value)
+        if (confirmedPart.value === suggestedCandidates.value[0].text) {
+          selectedCandidateIndex.value++
+        }
+      } else {
+        insertTextAndMoveTarget(
+          suggestedCandidates.value[selectedCandidateIndex.value].text
+        )
+      }
+      if (
+        selectedCandidateIndex.value ===
+        suggestedCandidates.value.length - 1
+      ) {
+        selectedCandidateIndex.value = 0
+        return
+      }
+      selectedCandidateIndex.value++
+    }
+
+    if (!isSuggesterShown.value) return
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      selectPrev()
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      selectNext()
+    }
+  }
+  const onKeyUp = async (e: KeyboardEvent) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
+    updateTarget()
+  }
+
   const beforeSelect = async () => {
     interactingWithList.value = true
+  }
+  const onSelect = async (word: WordOrConfirmedPart) => {
+    insertText(word.text)
+    hideSuggester()
+    textareaRef.value?.focus()
   }
   const onBlur = async () => {
     if (interactingWithList.value) {
@@ -166,11 +218,10 @@ const useWordSuggester = (
     onKeyDown,
     onKeyUp,
     beforeSelect,
+    onSelect,
     onBlur,
-    hideSuggester,
     isSuggesterShown,
     position,
-    target,
     suggestedCandidates,
     selectedCandidateIndex,
     confirmedPart

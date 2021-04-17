@@ -40,7 +40,6 @@ import { useModelValueSyncer } from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
-import useWordCompleter from './use/wordCompleter'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '@/use/insertText'
@@ -112,13 +111,12 @@ export default defineComponent({
       onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
       beforeSelect,
-      hideSuggester,
       isSuggesterShown,
-      target,
       position,
       suggestedCandidates,
       selectedCandidateIndex,
-      confirmedPart
+      confirmedPart,
+      onSelect
     } = useWordSuggester(textareaRef, value)
 
     const {
@@ -129,15 +127,6 @@ export default defineComponent({
     } = useSendKeyWatcher(context, () => {
       insertText('\n')
     })
-    const { onKeyDown: onKeyDownWordCompleter, onSelect } = useWordCompleter(
-      textareaRef,
-      target,
-      value,
-      suggestedCandidates,
-      selectedCandidateIndex,
-      confirmedPart,
-      hideSuggester
-    )
 
     const suggesterPosition = computed(() => {
       if (!textareaRef.value) return
@@ -151,7 +140,6 @@ export default defineComponent({
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
       onKeyDownWordSuggester(e)
-      onKeyDownWordCompleter(e)
     }
     const onKeyUp = (e: KeyboardEvent) => {
       onKeyUpSendKeyWatcher(e)
