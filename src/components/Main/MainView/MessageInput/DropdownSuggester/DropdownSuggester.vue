@@ -50,13 +50,11 @@ export default defineComponent({
       default: () => []
     },
     /**
-     * 選択されている候補
-     * `-1`のときは確定部分までという候補
-     * `0`以上は通常の候補
+     * ../use/wordSuggester.tsを参照
      */
     selectedIndex: {
-      type: Number,
-      default: -1
+      type: Number as PropType<number | null>,
+      required: true
     },
     confirmedPart: {
       type: String,

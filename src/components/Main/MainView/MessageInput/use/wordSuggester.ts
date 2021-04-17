@@ -8,7 +8,8 @@ import {
   onBeforeUnmount,
   computed,
   Ref,
-  readonly
+  readonly,
+  watchEffect
 } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
 import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
@@ -87,7 +88,10 @@ const useCandidateTree = () => {
   return tree
 }
 
-const useSuggestionList = (target: Ref<Target>) => {
+const useSuggestionList = (
+  target: Ref<Target>,
+  currentInputWord: Ref<string>
+) => {
   const tree = useCandidateTree()
   const suggestedCandidates = computed(() =>
     tree.value.search(target.value.word.replaceAll('＠', '@'))
@@ -96,32 +100,62 @@ const useSuggestionList = (target: Ref<Target>) => {
     getDeterminedCharacters(suggestedCandidates.value.map(obj => obj.text))
   )
 
-  const selectedCandidateIndex = ref(-1)
-  const selectPrev = () => {
+  /**
+   * nullのときは未選択
+   * -1のときは確定部分が選択されている
+   * 0～のときは候補が選択されている
+   */
+  const selectedCandidateIndex = ref<number | null>(null)
+  watchEffect(() => {
+    const i = suggestedCandidates.value.findIndex(
+      c => c.text === currentInputWord.value
+    )
+    // 候補に存在せず確定部とも一致していなかったら選択状態を解除
+    if (i === -1 && confirmedPart.value !== currentInputWord.value) {
+      selectedCandidateIndex.value = null
+      return
+    }
+
+    selectedCandidateIndex.value = i
+  })
+
+  const prevCandidateIndex = computed(() => {
+    if (selectedCandidateIndex.value === null) {
+      return -1
+    }
     if (selectedCandidateIndex.value <= 0) {
-      selectedCandidateIndex.value = suggestedCandidates.value.length - 1
-      return
+      return suggestedCandidates.value.length - 1
     }
-    selectedCandidateIndex.value--
-  }
-  const selectNext = () => {
+    return selectedCandidateIndex.value - 1
+  })
+  const nextCandidateIndex = computed(() => {
+    if (selectedCandidateIndex.value === null) {
+      return -1
+    }
     if (selectedCandidateIndex.value >= suggestedCandidates.value.length - 1) {
-      selectedCandidateIndex.value = -1
-      return
+      return -1
     }
-    selectedCandidateIndex.value++
+    return selectedCandidateIndex.value + 1
+  })
+
+  const getCandidateTextFromIndex = (i: number) => {
+    if (i === -1) return confirmedPart.value
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return suggestedCandidates.value[i]!.text
   }
-  const resetSelection = () => {
-    selectedCandidateIndex.value = -1
-  }
+  const prevCandidateText = computed(() =>
+    getCandidateTextFromIndex(prevCandidateIndex.value)
+  )
+  const nextCandidateText = computed(() =>
+    getCandidateTextFromIndex(nextCandidateIndex.value)
+  )
 
   return {
     suggestedCandidates,
     confirmedPart,
     selectedCandidateIndex: readonly(selectedCandidateIndex),
-    selectPrev,
-    selectNext,
-    resetSelection
+    prevCandidateText,
+    nextCandidateText
   }
 }
 
@@ -136,6 +170,12 @@ const useWordSuggester = (
     end: 0,
     divided: false
   })
+  /**
+   * targetは補完をしたときに更新されないがこれは更新される
+   * これはtargetを更新すると候補リストが変わってしまうため
+   * (補完をしたときは候補リストを変化させたくない)
+   */
+  const currentInputWord = ref('')
 
   const position = computed(() => {
     if (!textareaRef.value) return { top: 0, left: 0 }
@@ -146,13 +186,11 @@ const useWordSuggester = (
     suggestedCandidates,
     confirmedPart,
     selectedCandidateIndex,
-    selectPrev,
-    selectNext,
-    resetSelection
-  } = useSuggestionList(target)
+    prevCandidateText,
+    nextCandidateText
+  } = useSuggestionList(target, currentInputWord)
 
   const { insertText } = useInsertText(value, textareaRef, target)
-
   const insertTextAndMoveTarget = (text: string) => {
     insertText(text)
     target.value.end = target.value.begin + text.length
@@ -166,33 +204,11 @@ const useWordSuggester = (
       return
     }
 
-    resetSelection()
     if (suggestedCandidates.value.length === 0) {
       isSuggesterShown.value = false
       return
     }
     isSuggesterShown.value = true
-  }
-
-  const complete = () => {
-    if (suggestedCandidates.value.length === 0) return
-    if (suggestedCandidates.value.length === 1) {
-      insertTextAndMoveTarget(suggestedCandidates.value[0].text)
-      isSuggesterShown.value = false
-      return
-    }
-
-    if (selectedCandidateIndex.value === -1) {
-      insertTextAndMoveTarget(confirmedPart.value)
-      if (confirmedPart.value === suggestedCandidates.value[0].text) {
-        selectNext()
-      }
-    } else {
-      insertTextAndMoveTarget(
-        suggestedCandidates.value[selectedCandidateIndex.value].text
-      )
-    }
-    selectNext()
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -201,23 +217,32 @@ const useWordSuggester = (
     // Tabによるフォーカスの移動を防止するためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
       e.preventDefault()
-      complete()
+      if (suggestedCandidates.value.length === 0) return
+      if (suggestedCandidates.value.length === 1) {
+        isSuggesterShown.value = false
+      }
+      insertTextAndMoveTarget(nextCandidateText.value)
       return
     }
 
     if (!isSuggesterShown.value) return
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      selectPrev()
+      insertTextAndMoveTarget(prevCandidateText.value)
       return
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      selectNext()
+      insertTextAndMoveTarget(nextCandidateText.value)
       return
     }
   }
   const onKeyUp = async (e: KeyboardEvent) => {
+    if (!textareaRef.value) return
+
+    // 文字入力後の状態をとるためkeyUpで行う必要がある
+    currentInputWord.value = getCurrentWord(textareaRef.value, value.value).word
+
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
     // 文字入力後の状態をとるためkeyUpで行う必要がある
     updateTarget()
