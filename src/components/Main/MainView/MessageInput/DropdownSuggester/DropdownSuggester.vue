@@ -26,7 +26,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
-import { Word, WordOrConfirmedPart } from '../use/wordSuggester'
+import { Word } from '../use/wordSuggestionList'
+import { WordOrConfirmedPart } from '../use/wordSuggester'
 
 const WIDTH = 240
 const MARGIN = 8

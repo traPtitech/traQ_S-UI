@@ -39,3 +39,29 @@ export const getDeterminedCharacters = (candidates: string[]) => {
   }
   return confirmedPart.join('')
 }
+
+export const getPrevCandidateIndex = (
+  list: readonly unknown[],
+  selectedIndex: number | null
+) => {
+  if (selectedIndex === null) {
+    return -1
+  }
+  if (selectedIndex <= 0) {
+    return list.length - 1
+  }
+  return selectedIndex - 1
+}
+
+export const getNextCandidateIndex = (
+  list: readonly unknown[],
+  selectedIndex: number | null
+) => {
+  if (selectedIndex === null) {
+    return -1
+  }
+  if (selectedIndex >= list.length - 1) {
+    return -1
+  }
+  return selectedIndex + 1
+}
