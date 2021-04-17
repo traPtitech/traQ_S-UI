@@ -1,11 +1,14 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
     <div v-show="isShown" :class="$style.container" :style="styledPosition">
+      <!--
+        mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
+        preventをすることでclickイベントでフォーカスが外れるのを回避している
+      -->
       <dropdown-suggester-candidate
         :candidate="confirmedPartCandidate"
         :is-selected="selectedIndex === -1"
-        @mousedown="emit('mousedown')"
-        @click="emit('select', confirmedPartCandidate)"
+        @mousedown.prevent="emit('select', confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
         <dropdown-suggester-candidate
@@ -13,8 +16,7 @@
           :key="candidate.text"
           :candidate="candidate"
           :is-selected="selectedIndex === index"
-          @mousedown="emit('mousedown')"
-          @click="emit('select', candidate)"
+          @mousedown.prevent="emit('select', candidate)"
         />
       </div>
     </div>
@@ -62,8 +64,7 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (_word: WordOrConfirmedPart) => true,
-    mousedown: () => true
+    select: (_word: WordOrConfirmedPart) => true
   },
   setup(props, { emit }) {
     const styledPosition = computed(() => ({

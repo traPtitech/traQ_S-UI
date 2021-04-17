@@ -19,7 +19,6 @@
     :candidates="suggestedCandidates"
     :selected-index="selectedCandidateIndex"
     :confirmed-part="confirmedPart"
-    @mousedown="beforeSelect"
     @select="onSelect"
   />
 </template>
@@ -110,7 +109,6 @@ export default defineComponent({
       onKeyUp: onKeyUpWordSuggester,
       onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
-      beforeSelect,
       isSuggesterShown,
       position,
       suggestedCandidates,
@@ -163,7 +161,6 @@ export default defineComponent({
       textareaAutosizeRef,
       onFocus,
       onBlur,
-      beforeSelect,
       onPaste,
       onSelect,
       isSuggesterShown,

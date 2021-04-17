@@ -99,7 +99,6 @@ const useWordSuggester = (
   })
 
   const isSuggesterShown = ref(false)
-  const interactingWithList = ref(false)
   const target = ref<Target>({
     word: '',
     begin: 0,
@@ -194,28 +193,17 @@ const useWordSuggester = (
     updateTarget()
   }
 
-  const beforeSelect = async () => {
-    // onClickでフォーカスが外れてしまうのでmousedownでフォーカスがあったことを保持する
-    interactingWithList.value = true
-  }
   const onSelect = async (word: WordOrConfirmedPart) => {
     insertText(word.text)
     hideSuggester()
   }
   const onBlur = async () => {
-    // beforeSelectで保持したフォーカスの復旧
-    if (interactingWithList.value) {
-      interactingWithList.value = false
-      textareaRef.value?.focus()
-      return
-    }
     hideSuggester()
   }
 
   return {
     onKeyDown,
     onKeyUp,
-    beforeSelect,
     onSelect,
     onBlur,
     isSuggesterShown,
