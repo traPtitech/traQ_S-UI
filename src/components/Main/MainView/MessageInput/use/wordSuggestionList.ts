@@ -22,12 +22,17 @@ const events: Array<keyof EntityEventMap> = [
   'deleteStamp'
 ]
 
-export type WordType = 'user' | 'user-group' | 'stamp' | 'stamp-effect'
-export type Word = {
-  type: WordType
+type WordWithId = {
+  type: 'user' | 'user-group' | 'stamp'
   text: string
-  id?: string
+  id: string
 }
+type WordWithoutId = {
+  type: 'stamp-effect'
+  text: string
+}
+
+export type Word = WordWithId | WordWithoutId
 
 const useCandidateTree = () => {
   const constructTree = () =>

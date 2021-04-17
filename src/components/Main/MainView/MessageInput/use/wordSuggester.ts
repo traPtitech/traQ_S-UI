@@ -3,6 +3,7 @@ import getCaretPosition from '@/lib/caretPosition'
 import { getCurrentWord, Target } from '@/lib/suggestion'
 import useWordSuggesterList, { Word } from './wordSuggestionList'
 import useInsertText from '@/use/insertText'
+import store from '@/store'
 
 export type WordOrConfirmedPart =
   | Word
@@ -104,6 +105,10 @@ const useWordSuggester = (
   const onSelect = async (word: WordOrConfirmedPart) => {
     if (word.type === 'stamp') {
       insertText(`${word.text}:`)
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId: word.id,
+        datetime: new Date()
+      })
     } else {
       insertText(word.text)
     }
