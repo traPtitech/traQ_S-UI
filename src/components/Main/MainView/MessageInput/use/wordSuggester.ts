@@ -153,10 +153,6 @@ const useWordSuggester = (
     resetSelection
   } = useSuggestionList(target)
 
-  const hideSuggester = () => {
-    isSuggesterShown.value = false
-  }
-
   const { insertText } = useInsertText(value, textareaRef, target)
 
   const insertTextAndMoveTarget = (text: string) => {
@@ -168,7 +164,7 @@ const useWordSuggester = (
     if (!textareaRef.value) return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
-      hideSuggester()
+      isSuggesterShown.value = false
       return
     }
 
@@ -184,7 +180,7 @@ const useWordSuggester = (
     if (suggestedCandidates.value.length === 0) return
     if (suggestedCandidates.value.length === 1) {
       insertTextAndMoveTarget(suggestedCandidates.value[0].text)
-      hideSuggester()
+      isSuggesterShown.value = false
       return
     }
 
@@ -231,10 +227,10 @@ const useWordSuggester = (
 
   const onSelect = async (word: WordOrConfirmedPart) => {
     insertText(word.text)
-    hideSuggester()
+    isSuggesterShown.value = false
   }
   const onBlur = async () => {
-    hideSuggester()
+    isSuggesterShown.value = false
   }
 
   return {
