@@ -1,7 +1,14 @@
 import store from '@/store'
 import TrieTree from '@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
-import { ComputedRef, WritableComputedRef, ref, onBeforeUnmount } from 'vue'
+import {
+  ComputedRef,
+  WritableComputedRef,
+  ref,
+  onBeforeUnmount,
+  computed,
+  watch
+} from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
 import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
 import {
@@ -82,26 +89,33 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
+  const tree = useCandidateTree()
+
+  const position = ref({ top: 0, left: 0 })
+  watch(value, () => {
+    if (!textareaRef.value) return
+    position.value = getCaretPosition(textareaRef.value, target.value.begin)
+  })
+
   const isSuggesterShown = ref(false)
   const interactingWithList = ref(false)
-  const position = ref({ top: 0, left: 0 })
   const target = ref<Target>({
     word: '',
     begin: 0,
     end: 0,
     divided: false
   })
-  const suggestedCandidates = ref<Word[]>([])
+  const suggestedCandidates = computed(() =>
+    tree.value.search(target.value.word.replaceAll('＠', '@'))
+  )
   const selectedCandidateIndex = ref(-1)
-  const confirmedPart = ref('')
-
-  const tree = useCandidateTree()
+  const confirmedPart = computed(() =>
+    getDeterminedCharacters(suggestedCandidates.value.map(obj => obj.text))
+  )
 
   const hideSuggester = () => {
     isSuggesterShown.value = false
-    suggestedCandidates.value = []
     selectedCandidateIndex.value = -1
-    confirmedPart.value = ''
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -122,26 +136,18 @@ const useWordSuggester = (
   }
   const onKeyUp = async (e: KeyboardEvent) => {
     if (!textareaRef.value) return
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
       hideSuggester()
       return
     }
-    if (e.key === 'Tab') return
-    suggestedCandidates.value = tree.value.search(
-      target.value.word.replaceAll('＠', '@')
-    )
-    confirmedPart.value = getDeterminedCharacters(
-      suggestedCandidates.value.map(obj => obj.text)
-    )
 
     selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
       isSuggesterShown.value = false
       return
     }
-    position.value = getCaretPosition(textareaRef.value, target.value.begin)
     isSuggesterShown.value = true
   }
 
