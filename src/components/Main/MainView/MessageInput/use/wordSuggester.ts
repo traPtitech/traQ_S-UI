@@ -102,7 +102,11 @@ const useWordSuggester = (
   }
 
   const onSelect = async (word: WordOrConfirmedPart) => {
-    insertText(word.text)
+    if (word.type === 'stamp') {
+      insertText(`${word.text}:`)
+    } else {
+      insertText(word.text)
+    }
     isSuggesterShown.value = false
   }
   const onBlur = async () => {
