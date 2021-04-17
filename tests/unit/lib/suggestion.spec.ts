@@ -1,6 +1,8 @@
 import {
   getCurrentWord,
   getDeterminedCharacters,
+  getNextCandidateIndex,
+  getPrevCandidateIndex,
   Target
 } from '@/lib/suggestion'
 
@@ -100,6 +102,36 @@ describe('suggestion', () => {
       ])
       const expected = '🤔🤔あa亜'
       expect(actual).toEqual(expected)
+    })
+  })
+
+  const list = [0, 1, 2, 3]
+  describe('getPrevCandidateIndex', () => {
+    it('can get prev of null', () => {
+      const actual = getPrevCandidateIndex(list, null)
+      expect(actual).toEqual(-1)
+    })
+    it('can get prev of -1', () => {
+      const actual = getPrevCandidateIndex(list, -1)
+      expect(actual).toEqual(3)
+    })
+    it('can get prev of 2', () => {
+      const actual = getPrevCandidateIndex(list, 2)
+      expect(actual).toEqual(1)
+    })
+  })
+  describe('getNextCandidateIndex', () => {
+    it('can get next of null', () => {
+      const actual = getNextCandidateIndex(list, null)
+      expect(actual).toEqual(-1)
+    })
+    it('can get next of 3', () => {
+      const actual = getNextCandidateIndex(list, 3)
+      expect(actual).toEqual(-1)
+    })
+    it('can get next of 2', () => {
+      const actual = getNextCandidateIndex(list, 2)
+      expect(actual).toEqual(3)
     })
   })
 })
