@@ -155,6 +155,7 @@ const useWordSuggester = (
   }
 
   const onKeyDown = (e: KeyboardEvent) => {
+    // Tabによるフォーカスの移動を防止するためにkeyDownで行う必要がある
     if (e.key === 'Tab' && !e.isComposing) {
       if (!textareaRef.value) return
       if (suggestedCandidates.value.length === 0) return
@@ -167,21 +168,15 @@ const useWordSuggester = (
       if (selectedCandidateIndex.value === -1) {
         insertTextAndMoveTarget(confirmedPart.value)
         if (confirmedPart.value === suggestedCandidates.value[0].text) {
-          selectedCandidateIndex.value++
+          selectNext()
         }
       } else {
         insertTextAndMoveTarget(
           suggestedCandidates.value[selectedCandidateIndex.value].text
         )
       }
-      if (
-        selectedCandidateIndex.value ===
-        suggestedCandidates.value.length - 1
-      ) {
-        selectedCandidateIndex.value = 0
-        return
-      }
-      selectedCandidateIndex.value++
+      selectNext()
+      return
     }
 
     if (!isSuggesterShown.value) return
@@ -195,20 +190,23 @@ const useWordSuggester = (
   }
   const onKeyUp = async (e: KeyboardEvent) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
+    // 文字入力後の状態をとるためkeyUpで行う必要がある
     updateTarget()
   }
 
   const beforeSelect = async () => {
+    // onClickでフォーカスが外れてしまうのでmousedownでフォーカスがあったことを保持する
     interactingWithList.value = true
   }
   const onSelect = async (word: WordOrConfirmedPart) => {
     insertText(word.text)
     hideSuggester()
-    textareaRef.value?.focus()
   }
   const onBlur = async () => {
+    // beforeSelectで保持したフォーカスの復旧
     if (interactingWithList.value) {
       interactingWithList.value = false
+      textareaRef.value?.focus()
       return
     }
     hideSuggester()
