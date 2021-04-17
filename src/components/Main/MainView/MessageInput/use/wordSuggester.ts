@@ -7,7 +7,6 @@ import {
   ref,
   onBeforeUnmount,
   computed,
-  watch,
   Ref,
   readonly
 } from 'vue'
@@ -130,18 +129,17 @@ const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
-  const position = ref({ top: 0, left: 0 })
-  watch(value, () => {
-    if (!textareaRef.value) return
-    position.value = getCaretPosition(textareaRef.value, target.value.begin)
-  })
-
   const isSuggesterShown = ref(false)
   const target = ref<Target>({
     word: '',
     begin: 0,
     end: 0,
     divided: false
+  })
+
+  const position = computed(() => {
+    if (!textareaRef.value) return { top: 0, left: 0 }
+    return getCaretPosition(textareaRef.value, target.value.begin)
   })
 
   const {
