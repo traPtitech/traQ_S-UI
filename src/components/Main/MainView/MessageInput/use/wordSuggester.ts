@@ -180,28 +180,34 @@ const useWordSuggester = (
     isSuggesterShown.value = true
   }
 
+  const complete = () => {
+    if (suggestedCandidates.value.length === 0) return
+    if (suggestedCandidates.value.length === 1) {
+      insertTextAndMoveTarget(suggestedCandidates.value[0].text)
+      hideSuggester()
+      return
+    }
+
+    if (selectedCandidateIndex.value === -1) {
+      insertTextAndMoveTarget(confirmedPart.value)
+      if (confirmedPart.value === suggestedCandidates.value[0].text) {
+        selectNext()
+      }
+    } else {
+      insertTextAndMoveTarget(
+        suggestedCandidates.value[selectedCandidateIndex.value].text
+      )
+    }
+    selectNext()
+  }
+
   const onKeyDown = (e: KeyboardEvent) => {
+    if (e.isComposing) return
+
     // Tabによるフォーカスの移動を防止するためにkeyDownで行う必要がある
-    if (e.key === 'Tab' && !e.isComposing) {
-      if (!textareaRef.value) return
-      if (suggestedCandidates.value.length === 0) return
+    if (e.key === 'Tab') {
       e.preventDefault()
-      if (suggestedCandidates.value.length === 1) {
-        insertTextAndMoveTarget(suggestedCandidates.value[0].text)
-        hideSuggester()
-        return
-      }
-      if (selectedCandidateIndex.value === -1) {
-        insertTextAndMoveTarget(confirmedPart.value)
-        if (confirmedPart.value === suggestedCandidates.value[0].text) {
-          selectNext()
-        }
-      } else {
-        insertTextAndMoveTarget(
-          suggestedCandidates.value[selectedCandidateIndex.value].text
-        )
-      }
-      selectNext()
+      complete()
       return
     }
 
@@ -209,9 +215,12 @@ const useWordSuggester = (
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       selectPrev()
-    } else if (e.key === 'ArrowDown') {
+      return
+    }
+    if (e.key === 'ArrowDown') {
       e.preventDefault()
       selectNext()
+      return
     }
   }
   const onKeyUp = async (e: KeyboardEvent) => {
