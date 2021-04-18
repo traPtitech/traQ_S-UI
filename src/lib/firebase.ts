@@ -34,7 +34,7 @@ const notify = async (
   title: string,
   options: ExtendedNotificationOptions = {}
 ) => {
-  if (title && !ignoredChannels.includes(title)) {
+  if (title.startsWith('#') && !ignoredChannels.includes(title)) {
     const verb = title.includes('#') ? '投稿' : '返信'
     options.actions = [
       {
