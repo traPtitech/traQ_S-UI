@@ -16,69 +16,78 @@ class TrieNode {
   /**
    * 結果の並びは取り出した順
    */
-  search(str: string, pos = 0): number[] | undefined {
+  search(str: string): number[] | undefined {
     if (str.length === 0) {
       return
     }
 
-    const k = [...str][pos]
-    if (!this.children[k]) return
-    if (pos === str.length - 1) {
-      return this.children[k].getAllWords()
+    const chars = [...str]
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let self: TrieNode = this
+
+    for (const char of chars) {
+      if (!self.children[char]) return
+      self = self.children[char]
     }
 
-    return this.children[k].search(str, pos + 1)
+    return self.getAllWords()
   }
 
-  insert(str: string, pos = 0): number | undefined {
+  insert(str: string): number | undefined {
     if (str.length === 0) {
       return
     }
 
-    if (pos === str.length) {
-      if (this.isWord === true) return
-      this.isWord = true
-      return this.id
+    const chars = [...str]
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let self: TrieNode = this
+
+    for (const char of chars) {
+      if (self.children[char] === undefined) {
+        self.children[char] = new TrieNode(lastInsertedId + 1)
+        lastInsertedId++
+      }
+      self = self.children[char]
     }
 
-    const k = [...str][pos]
-    if (this.children[k] === undefined) {
-      this.children[k] = new TrieNode(lastInsertedId + 1)
-      lastInsertedId++
-    }
-
-    return this.children[k].insert(str, pos + 1)
+    if (self.isWord === true) return
+    self.isWord = true
+    return self.id
   }
 
-  remove(str: string, pos = 0): number | undefined {
+  remove(str: string): number | undefined {
     if (str.length === 0) {
       return
     }
 
-    if (pos === str.length) {
-      this.isWord = false
-      return this.id
+    const chars = [...str]
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let self: TrieNode = this
+
+    for (const char of chars) {
+      if (self.children[char] === undefined) return
+      self = self.children[char]
     }
 
-    const k = [...str][pos]
-    if (this.children[k] === undefined) return
-
-    return this.children[k].remove(str, pos + 1)
+    self.isWord = false
+    return self.id
   }
 
   /**
    * 自身以下の単語をすべて取得する
    */
   private getAllWords() {
-    let results: number[] = []
+    const results: number[] = []
 
-    if (this.isWord) {
-      results.push(this.id)
-    }
+    const childrens: TrieNode[] = [this]
+    while (childrens.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const child = childrens.shift()!
+      if (child.isWord) {
+        results.push(child.id)
+      }
 
-    for (const k in this.children) {
-      const child = this.children[k]
-      results = results.concat(child.getAllWords())
+      childrens.push(...Object.values(child.children))
     }
 
     return results
