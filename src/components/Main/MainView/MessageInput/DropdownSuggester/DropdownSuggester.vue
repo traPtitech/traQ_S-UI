@@ -1,6 +1,6 @@
 <template>
   <teleport to="#dropdown-suggester-popup">
-    <div v-show="isShown" :class="$style.container" :style="styledPosition">
+    <div v-if="isShown" :class="$style.container" :style="styledPosition">
       <!--
         mousedownイベントでやっているのはclickイベントだとフォーカスが外れるため
         preventをすることでclickイベントでフォーカスが外れるのを回避している
