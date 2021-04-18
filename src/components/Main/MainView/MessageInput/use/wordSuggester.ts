@@ -104,9 +104,14 @@ const useWordSuggester = (
     }
   }
   const onKeyUp = async (e: KeyboardEvent) => {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
+    if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     // 文字入力後の状態をとるためkeyUpで行う必要がある
     updateTarget()
+
+    // updateTarget内でisSuggesterShown.value = trueが実行されうるためここで行う
+    if (e.key === 'Escape') {
+      isSuggesterShown.value = false
+    }
   }
 
   const onSelect = async (word: WordOrConfirmedPart) => {
