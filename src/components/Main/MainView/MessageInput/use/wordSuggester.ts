@@ -1,4 +1,4 @@
-import { ComputedRef, WritableComputedRef, ref, computed } from 'vue'
+import { ComputedRef, WritableComputedRef, ref, computed, watch } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
 import { getCurrentWord, Target } from '@/lib/suggestion'
 import useWordSuggesterList, { Word } from './wordSuggestionList'
@@ -24,11 +24,17 @@ const useWordSuggester = (
     divided: false
   })
   /**
-   * targetは補完をしたときに更新されないがこれは更新される
+   * targetは補完をしたときに更新されないがこれは更新する
    * これはtargetを更新すると候補リストが変わってしまうため
    * (補完をしたときは候補リストを変化させたくない)
    */
   const currentInputWord = ref('')
+  watch(
+    () => target.value.word,
+    word => {
+      currentInputWord.value = word
+    }
+  )
 
   const position = computed(() => {
     if (!textareaRef.value) return { top: 0, left: 0 }
@@ -47,6 +53,7 @@ const useWordSuggester = (
   const insertTextAndMoveTarget = (text: string) => {
     insertText(text)
     target.value.end = target.value.begin + text.length
+    currentInputWord.value = text
   }
 
   const updateTarget = () => {
@@ -67,13 +74,14 @@ const useWordSuggester = (
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.isComposing) return
 
-    // Tabによるフォーカスの移動を防止するためにkeyDownで行う必要がある
+    // Tabによるフォーカスの移動を防止するため、長押しで連続移動できるようにするためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
       e.preventDefault()
       if (suggestedCandidates.value.length === 0) return
       if (suggestedCandidates.value.length === 1) {
         isSuggesterShown.value = false
       }
+
       // 未選択状態では確定部分が補完される
       if (e.shiftKey) {
         insertTextAndMoveTarget(prevCandidateText.value)
@@ -96,11 +104,6 @@ const useWordSuggester = (
     }
   }
   const onKeyUp = async (e: KeyboardEvent) => {
-    if (!textareaRef.value) return
-
-    // 文字入力後の状態をとるためkeyUpで行う必要がある
-    currentInputWord.value = getCurrentWord(textareaRef.value, value.value).word
-
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
     // 文字入力後の状態をとるためkeyUpで行う必要がある
     updateTarget()
