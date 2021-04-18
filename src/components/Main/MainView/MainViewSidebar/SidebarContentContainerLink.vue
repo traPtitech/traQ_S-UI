@@ -6,7 +6,10 @@
     @toggle="onClickLink"
   >
     <template v-if="count !== undefined" #header-control>
-      <span :class="$style.count">{{ count }}</span>
+      <div>
+        <span :class="$style.count">{{ count }}</span>
+        <icon name="chevron-right" :class="$style.icon" mdi />
+      </div>
     </template>
     <template #default></template>
   </sidebar-content-container>
@@ -15,11 +18,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'SidebarContentContainerLink',
   components: {
-    SidebarContentContainer
+    SidebarContentContainer,
+    Icon
   },
   props: {
     title: String,
@@ -39,5 +44,9 @@ export default defineComponent({
 <style lang="scss" module>
 .count {
   font-weight: normal;
+}
+.icon {
+  margin-left: 4px;
+  vertical-align: bottom;
 }
 </style>
