@@ -75,7 +75,11 @@ const useWordSuggester = (
         isSuggesterShown.value = false
       }
       // 未選択状態では確定部分が補完される
-      insertTextAndMoveTarget(nextCandidateText.value)
+      if (e.shiftKey) {
+        insertTextAndMoveTarget(prevCandidateText.value)
+      } else {
+        insertTextAndMoveTarget(nextCandidateText.value)
+      }
       return
     }
 
