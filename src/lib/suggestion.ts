@@ -47,7 +47,7 @@ export const getPrevCandidateIndex = (
   if (selectedIndex === null) {
     return -1
   }
-  if (selectedIndex <= 0) {
+  if (selectedIndex <= -1) {
     return list.length - 1
   }
   return selectedIndex - 1
