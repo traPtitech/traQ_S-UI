@@ -34,11 +34,11 @@ export const format = (
   })
 
   const rendered = []
-  let isInLink = false
+  let linkHref: string | null = null
   let isInSpoiler = false
   for (const token of tokens) {
     if (token.type === 'link_close') {
-      isInLink = false
+      linkHref = null
       continue
     } else if (token.type === 'spoiler_close') {
       rendered.push(' ﾍﾟｹﾍﾟｹ ')
@@ -46,9 +46,13 @@ export const format = (
       continue
     }
 
-    if (isInLink) {
+    if (linkHref !== null) {
       if (token.type === 'text') {
-        rendered.push(formatUrl(token.content, embeddingOrigin))
+        if (linkHref === token.content) {
+          rendered.push(formatUrl(token.content, embeddingOrigin))
+        } else {
+          rendered.push(token.content)
+        }
       }
       continue
     } else if (isInSpoiler) {
@@ -56,7 +60,7 @@ export const format = (
     }
 
     if (token.type === 'link_open') {
-      isInLink = true
+      linkHref = token.attrGet('href') ?? ''
       continue
     } else if (token.type === 'spoiler_open') {
       isInSpoiler = true

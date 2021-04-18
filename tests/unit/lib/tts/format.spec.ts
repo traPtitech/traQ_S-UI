@@ -28,6 +28,7 @@ const input = `
 https://example.com/messages/00000000-0000-0000-0000-000000000000
 !{"type":"user","raw":"@temma","id":"00000000-0000-0000-0000-000000000000"}
 https://www.google.co.jp
+[google](https://www.google.co.jp)
 :traq:
 :traq.ex-large:
 !!かくれてる!!
@@ -45,6 +46,7 @@ console.log('po)
 const output = ` 添付メッセージ
 @temma
 www.google.co.jpドメインのURL
+google
  traqスタンプ
  traq.ex-largeスタンプ
  ﾍﾟｹﾍﾟｹ
