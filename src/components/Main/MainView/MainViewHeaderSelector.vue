@@ -1,6 +1,6 @@
 <template>
   <channel-view-header
-    v-if="viewInfo.type === 'channel'"
+    v-if="viewInfo.type === 'channel' || viewInfo.type === 'files'"
     :channel-id="viewInfo.channelId"
   />
   <clips-header

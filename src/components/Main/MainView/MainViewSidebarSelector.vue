@@ -1,7 +1,7 @@
 <template>
   <channel-sidebar
     :class="$style.messagesView"
-    v-if="viewInfo.type === 'channel'"
+    v-if="viewInfo.type === 'channel' || viewInfo.type === 'files'"
     :channel-id="viewInfo.channelId"
     :is-sidebar-opener-ready="isSidebarOpenerReady"
   />

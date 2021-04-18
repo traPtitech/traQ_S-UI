@@ -175,6 +175,28 @@ const useRouteWatcher = () => {
     state.view = 'main'
   }
 
+  const onRouteChangedToFiles = async () => {
+    await bothChannelsMapInitialFetchPromise
+    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+      // まだチャンネルツリーが構築されていない
+      return
+    }
+    try {
+      const channelId = channelPathToId(
+        state.channelParam.split('/'),
+        store.state.domain.channelTree.channelTree
+      )
+
+      store.dispatch.ui.mainView.changePrimaryViewToFiles({
+        channelId: channelId
+      })
+    } catch (e) {
+      state.view = 'not-found'
+      return
+    }
+    state.view = 'main'
+  }
+
   const onRouteChangedToMessage = async () => {
     const message = await store.dispatch.entities.messages.fetchMessage({
       messageId: state.idParam
@@ -240,6 +262,8 @@ const useRouteWatcher = () => {
       await onRouteChangedToClipFolders()
     } else if (routeName === RouteName.File) {
       await onRouteChangedToFile()
+    } else if (routeName === RouteName.Files) {
+      await onRouteChangedToFiles()
     } else if (routeName === RouteName.Message) {
       await onRouteChangedToMessage()
     }
