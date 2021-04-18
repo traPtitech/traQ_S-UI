@@ -19,7 +19,6 @@
     :candidates="suggestedCandidates"
     :selected-index="selectedCandidateIndex"
     :confirmed-part="confirmedPart"
-    @mousedown="beforeSelect"
     @select="onSelect"
   />
 </template>
@@ -31,7 +30,6 @@ import {
   SetupContext,
   Ref,
   computed,
-  nextTick,
   PropType,
   toRef
 } from 'vue'
@@ -41,9 +39,9 @@ import { useModelValueSyncer } from '@/use/modelSyncer'
 import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
-import useWordCompleter from './use/wordCompleter'
-import DropdownSuggester from './DropdownSuggester.vue'
+import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
+import useInsertText from '@/use/insertText'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {
@@ -54,24 +52,6 @@ const useFocus = (context: SetupContext) => {
   }
 
   return { onFocus, onBlur }
-}
-
-const useLineBreak = (
-  value: Ref<string>,
-  textareaRef: Ref<HTMLTextAreaElement | undefined>
-) => {
-  const insertLineBreak = async () => {
-    if (!textareaRef.value) return
-    const pre = value.value.slice(0, textareaRef.value.selectionStart)
-    const suf = value.value.slice(textareaRef.value.selectionEnd)
-    const selectionIndex = pre.length + 1
-    value.value = `${pre}\n${suf}`
-
-    await nextTick()
-    textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
-  }
-
-  return { insertLineBreak }
 }
 
 const usePaste = (channelId: Ref<ChannelId>) => {
@@ -123,37 +103,28 @@ export default defineComponent({
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
+    const { insertText } = useInsertText(value, textareaRef)
+
     const {
       onKeyUp: onKeyUpWordSuggester,
       onKeyDown: onKeyDownWordSuggester,
       onBlur: onBlurWordSuggester,
-      beforeSelect,
-      hideSuggester,
       isSuggesterShown,
-      target,
       position,
       suggestedCandidates,
       selectedCandidateIndex,
-      confirmedPart
+      confirmedPart,
+      onSelect
     } = useWordSuggester(textareaRef, value)
-
-    const { insertLineBreak } = useLineBreak(value, textareaRef)
 
     const {
       onBeforeInput,
       onKeyDown: onKeyDownSendKeyWatcher,
       onKeyUp: onKeyUpSendKeyWatcher,
       onBlur: onBlurSendKeyWatcher
-    } = useSendKeyWatcher(context, insertLineBreak)
-    const { onKeyDown: onKeyDownWordCompleter, onSelect } = useWordCompleter(
-      textareaRef,
-      target,
-      value,
-      suggestedCandidates,
-      selectedCandidateIndex,
-      confirmedPart,
-      hideSuggester
-    )
+    } = useSendKeyWatcher(context, () => {
+      insertText('\n')
+    })
 
     const suggesterPosition = computed(() => {
       if (!textareaRef.value) return
@@ -167,7 +138,6 @@ export default defineComponent({
     const onKeyDown = (e: KeyboardEvent) => {
       onKeyDownSendKeyWatcher(e)
       onKeyDownWordSuggester(e)
-      onKeyDownWordCompleter(e)
     }
     const onKeyUp = (e: KeyboardEvent) => {
       onKeyUpSendKeyWatcher(e)
@@ -191,7 +161,6 @@ export default defineComponent({
       textareaAutosizeRef,
       onFocus,
       onBlur,
-      beforeSelect,
       onPaste,
       onSelect,
       isSuggesterShown,

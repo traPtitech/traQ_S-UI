@@ -1,158 +1,130 @@
-import store from '@/store'
-import TrieTree, { Word } from '@/lib/trieTree'
-import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
-import { ComputedRef, WritableComputedRef, ref, onBeforeUnmount } from 'vue'
+import { ComputedRef, WritableComputedRef, ref, computed } from 'vue'
 import getCaretPosition from '@/lib/caretPosition'
-import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
-import {
-  getCurrentWord,
-  getDeterminedCharacters,
-  Target
-} from '@/lib/suggestion'
+import { getCurrentWord, Target } from '@/lib/suggestion'
+import useWordSuggesterList, { Word } from './wordSuggestionList'
+import useInsertText from '@/use/insertText'
+import store from '@/store'
 
-const events: Array<keyof EntityEventMap> = [
-  'setUser',
-  'setUsers',
-  'deleteUser',
-  'setUserGroup',
-  'setUserGroups',
-  'deleteUserGroup',
-  'setStamp',
-  'setStamps',
-  'deleteStamp'
-]
-
-const useCandidateTree = () => {
-  const constructTree = () =>
-    new TrieTree(
-      // ユーザー名とグループ名に重複あり
-      // メンションはcase insensitiveでユーザー名を優先
-      // 重複を許す場合、優先するものから入れる
-      store.getters.entities.allUsers.map(user => ({
-        type: 'user',
-        text: '@' + user.name,
-        id: user.id
-      })),
-      store.getters.entities.allUserGroups.map(userGroup => ({
-        type: 'user-group',
-        text: '@' + userGroup.name,
-        id: userGroup.id
-      })),
-      store.getters.entities.allStamps.map(stamp => ({
-        type: 'stamp',
-        text: ':' + stamp.name,
-        id: stamp.id
-      })),
-      [...animeEffectSet, ...sizeEffectSet].map(effectName => ({
-        type: 'stamp-effect',
-        text: '.' + effectName
-      }))
-    )
-
-  const tree = ref<TrieTree>(constructTree())
-  const updateTree = () => {
-    tree.value = constructTree()
-  }
-
-  events.forEach(event => {
-    entityMitt.on(event, updateTree)
-  })
-  onBeforeUnmount(() => {
-    events.forEach(event => {
-      entityMitt.off(event, updateTree)
-    })
-  })
-
-  return tree
-}
+export type WordOrConfirmedPart =
+  | Word
+  | {
+      type: 'confirmed-part'
+      text: string
+    }
 
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
 ) => {
   const isSuggesterShown = ref(false)
-  const interactingWithList = ref(false)
-  const position = ref({ top: 0, left: 0 })
   const target = ref<Target>({
     word: '',
     begin: 0,
     end: 0,
     divided: false
   })
-  const suggestedCandidates = ref<Word[]>([])
-  const selectedCandidateIndex = ref(-1)
-  const confirmedPart = ref('')
+  /**
+   * targetは補完をしたときに更新されないがこれは更新される
+   * これはtargetを更新すると候補リストが変わってしまうため
+   * (補完をしたときは候補リストを変化させたくない)
+   */
+  const currentInputWord = ref('')
 
-  const tree = useCandidateTree()
+  const position = computed(() => {
+    if (!textareaRef.value) return { top: 0, left: 0 }
+    return getCaretPosition(textareaRef.value, target.value.begin)
+  })
 
-  const hideSuggester = () => {
-    isSuggesterShown.value = false
-    suggestedCandidates.value = []
-    selectedCandidateIndex.value = -1
-    confirmedPart.value = ''
+  const {
+    suggestedCandidates,
+    confirmedPart,
+    selectedCandidateIndex,
+    prevCandidateText,
+    nextCandidateText
+  } = useWordSuggesterList(target, currentInputWord)
+
+  const { insertText } = useInsertText(value, textareaRef, target)
+  const insertTextAndMoveTarget = (text: string) => {
+    insertText(text)
+    target.value.end = target.value.begin + text.length
   }
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (!isSuggesterShown.value) return
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (selectedCandidateIndex.value <= 0) {
-        selectedCandidateIndex.value = suggestedCandidates.value.length
-      }
-      selectedCandidateIndex.value--
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (selectedCandidateIndex.value > suggestedCandidates.value.length - 2) {
-        selectedCandidateIndex.value = -1
-      }
-      selectedCandidateIndex.value++
-    }
-  }
-  const onKeyUp = async (e: KeyboardEvent) => {
+  const updateTarget = () => {
     if (!textareaRef.value) return
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     target.value = getCurrentWord(textareaRef.value, value.value)
     if (target.value.divided || target.value.word.length < 3) {
-      hideSuggester()
+      isSuggesterShown.value = false
       return
     }
-    if (e.key === 'Tab') return
-    suggestedCandidates.value = tree.value.search(
-      target.value.word.replaceAll('＠', '@')
-    )
-    confirmedPart.value = getDeterminedCharacters(
-      suggestedCandidates.value.map(obj => obj.text)
-    )
 
-    selectedCandidateIndex.value = -1
     if (suggestedCandidates.value.length === 0) {
       isSuggesterShown.value = false
       return
     }
-    position.value = getCaretPosition(textareaRef.value, target.value.begin)
     isSuggesterShown.value = true
   }
 
-  const beforeSelect = async () => {
-    interactingWithList.value = true
-  }
-  const onBlur = async () => {
-    if (interactingWithList.value) {
-      interactingWithList.value = false
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.isComposing) return
+
+    // Tabによるフォーカスの移動を防止するためにkeyDownで行う必要がある
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      if (suggestedCandidates.value.length === 0) return
+      if (suggestedCandidates.value.length === 1) {
+        isSuggesterShown.value = false
+      }
+      // 未選択状態では確定部分が補完される
+      insertTextAndMoveTarget(nextCandidateText.value)
       return
     }
-    hideSuggester()
+
+    if (!isSuggesterShown.value) return
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      insertTextAndMoveTarget(prevCandidateText.value)
+      return
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      insertTextAndMoveTarget(nextCandidateText.value)
+      return
+    }
+  }
+  const onKeyUp = async (e: KeyboardEvent) => {
+    if (!textareaRef.value) return
+
+    // 文字入力後の状態をとるためkeyUpで行う必要がある
+    currentInputWord.value = getCurrentWord(textareaRef.value, value.value).word
+
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Tab') return
+    // 文字入力後の状態をとるためkeyUpで行う必要がある
+    updateTarget()
+  }
+
+  const onSelect = async (word: WordOrConfirmedPart) => {
+    if (word.type === 'stamp') {
+      insertText(`${word.text}:`)
+      store.commit.domain.me.upsertLocalStampHistory({
+        stampId: word.id,
+        datetime: new Date()
+      })
+    } else {
+      insertText(word.text)
+    }
+    isSuggesterShown.value = false
+  }
+  const onBlur = async () => {
+    isSuggesterShown.value = false
   }
 
   return {
     onKeyDown,
     onKeyUp,
-    beforeSelect,
+    onSelect,
     onBlur,
-    hideSuggester,
     isSuggesterShown,
     position,
-    target,
     suggestedCandidates,
     selectedCandidateIndex,
     confirmedPart
