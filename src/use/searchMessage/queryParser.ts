@@ -48,7 +48,7 @@ export type Filter =
   | { type: 'after'; raw: string; value: Date }
   | { type: 'before'; raw: string; value: Date }
   | { type: 'in'; raw: string; value: ChannelId }
-  | { type: 'to'; raw: string; value: ChannelId }
+  | { type: 'to'; raw: string; value: UserId }
   | { type: 'from'; raw: string; value: UserId }
   | { type: 'citation'; raw: string; value: MessageId }
   | { type: 'attrFlag'; raw: string; value: AttrFlagFilterKey; negate: boolean }
