@@ -106,10 +106,15 @@ describe('suggestion', () => {
   })
 
   const list = [0, 1, 2, 3]
+  const oneElementList = [0]
   describe('getPrevCandidateIndex', () => {
     it('can get prev of null', () => {
       const actual = getPrevCandidateIndex(list, null)
       expect(actual).toEqual(-1)
+    })
+    it('can get prev of null when list has only one element', () => {
+      const actual = getPrevCandidateIndex(oneElementList, null)
+      expect(actual).toEqual(0)
     })
     it('can get prev of -1', () => {
       const actual = getPrevCandidateIndex(list, -1)
@@ -128,6 +133,10 @@ describe('suggestion', () => {
     it('can get next of null', () => {
       const actual = getNextCandidateIndex(list, null)
       expect(actual).toEqual(-1)
+    })
+    it('can get next of null when list has only one element', () => {
+      const actual = getNextCandidateIndex(oneElementList, null)
+      expect(actual).toEqual(0)
     })
     it('can get next of -1', () => {
       const actual = getNextCandidateIndex(list, -1)
