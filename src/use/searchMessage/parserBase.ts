@@ -129,7 +129,14 @@ export const dateParser = <T extends string>(
 export const channelParser = <T extends string>(
   extracted: ExtractedFilter<T>
 ): ChannelId | undefined => {
-  const channelTree = store.state.domain.channelTree.channelTree
+  if (extracted.body === 'here') {
+    const { primaryView } = store.state.ui.mainView
+    return primaryView.type === 'channel' || primaryView.type === 'dm'
+      ? primaryView.channelId
+      : undefined
+  }
+
+  const { channelTree } = store.state.domain.channelTree
   const channelName = extracted.body.startsWith('#')
     ? extracted.body.substring(1)
     : extracted.body
