@@ -45,6 +45,11 @@ export const getPrevCandidateIndex = (
   selectedIndex: number | null
 ) => {
   if (selectedIndex === null) {
+    // 候補が一件のときは確定部分ではなく候補のほうを返す
+    // こうすると大文字小文字が元のものになる
+    if (list.length === 1) {
+      return 0
+    }
     return -1
   }
   if (selectedIndex <= -1) {
@@ -58,6 +63,11 @@ export const getNextCandidateIndex = (
   selectedIndex: number | null
 ) => {
   if (selectedIndex === null) {
+    // 候補が一件のときは確定部分ではなく候補のほうを返す
+    // こうすると大文字小文字が元のものになる
+    if (list.length === 1) {
+      return 0
+    }
     return -1
   }
   if (selectedIndex >= list.length - 1) {
