@@ -11,6 +11,7 @@ import {
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '@/lib/markdown/detector'
 import { deleteToken } from '@/lib/firebase'
+import { viewStatesInitialFetchPromise } from './promises'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -71,18 +72,17 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
   },
-  onMessageCreated(
+  async onMessageCreated(
     context,
     { message, isCiting }: { message: Message; isCiting: boolean }
   ) {
     const { rootState, getters, commit, rootGetters } = meActionContext(context)
-    // 最新の投稿を見ているチャンネルは未読に追加しない
-    // 他端末で閲覧中のチャンネルでは未読に追加されることに注意
-    if (
-      rootState.domain.messagesView.currentChannelId === message.channelId &&
-      rootState.domain.messagesView.shouldRetriveMessageCreateEvent
-    )
-      return
+
+    // 他端末の閲覧状態の取得が完了するのを待つ
+    await viewStatesInitialFetchPromise
+
+    // 閲覧中のチャンネルは未読に追加しない
+    if (getters.monitoringChannels.has(message.channelId)) return
     // 自分の投稿は未読に追加しない
     if (rootGetters.domain.me.myId === message.userId) return
 
