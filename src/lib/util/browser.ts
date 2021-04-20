@@ -15,7 +15,7 @@ export const isIOS12 = () => {
 }
 
 export const isIOSApp = () => {
-  return ua.includes('traq-ios')
+  return 'iOSToken' in window
 }
 
 export const isPWA = () => {
