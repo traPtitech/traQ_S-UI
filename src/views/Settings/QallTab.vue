@@ -160,7 +160,7 @@ const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
     }))
   )
 
-  speechSynthesis.addEventListener('voiceschanged', () => {
+  speechSynthesis.addEventListener?.('voiceschanged', () => {
     voices.value = getVoicesAndSetDefault()
   })
 
