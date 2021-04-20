@@ -1,18 +1,16 @@
-import { waitMount } from '@/onMount'
 import store from '@/store'
-import { watch } from 'vue'
+import {
+  createInitialFetchPromise,
+  ExtractBooleanValueKeys
+} from '@/store/utils/promise'
 
-export const unreadChannelsMapInitialFetchPromise = (async () => {
-  await waitMount
-  return new Promise<void>(async resolve => {
-    const stop = watch(
-      () => store.state.domain.me.unreadChannelsMapFetched,
-      fetched => {
-        if (fetched) {
-          resolve()
-          stop()
-        }
-      }
-    )
-  })
-})()
+const createIFPromise = (
+  key: ExtractBooleanValueKeys<typeof store.state.domain.me>
+) => createInitialFetchPromise(() => store.state.domain.me[key])
+
+export const unreadChannelsMapInitialFetchPromise = createIFPromise(
+  'unreadChannelsMapFetched'
+)
+export const viewStatesInitialFetchPromise = createIFPromise(
+  'viewStatesFetched'
+)

@@ -27,11 +27,16 @@ export const defineWsListeners = createDefineListeners<typeof me>()(
       dispatch.onDeleteStaredChannel(id)
     })
 
+    listener.on('USER_VIEWSTATE_CHANGED', ({ view_states }) => {
+      dispatch.setViewStates(view_states)
+    })
+
     listener.on('reconnect', () => {
       dispatch.fetchMe()
       dispatch.fetchUnreadChannels({ ignoreCache: true })
       dispatch.fetchStaredChannels({ ignoreCache: true })
       dispatch.fetchSubscriptions({ ignoreCache: true })
+      dispatch.fetchViewStates({ ignoreCache: true })
     })
   }
 )

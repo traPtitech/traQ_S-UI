@@ -7,7 +7,11 @@ import {
   ClipFolderId,
   StampPaletteId
 } from '@/types/entity-ids'
-import { ChannelViewer, WebRTCUserStateSessions } from '@traptitech/traq'
+import {
+  ChannelViewer,
+  MyChannelViewState,
+  WebRTCUserStateSessions
+} from '@traptitech/traq'
 
 export type WebSocketEvent = UserEvent &
   ChannelEvent &
@@ -27,6 +31,7 @@ type UserEvent = {
   USER_ONLINE: UserOnlineEvent
   USER_OFFLINE: UserOfflineEvent
   USER_WEBRTC_STATE_CHANGED: UserWebRTCStateChangedEvent
+  USER_VIEWSTATE_CHANGED: UserViewStateChangedEvent
   USER_GROUP_CREATED: UserGroupCreatedEvent
   USER_GROUP_UPDATED: UserGroupUpdatedEvent
   USER_GROUP_DELETED: UserGroupDeletedEvent
@@ -52,6 +57,10 @@ export type UserWebRTCStateChangedEvent = {
   user_id: UserId
   channel_id: ChannelId
   sessions: WebRTCUserStateSessions[]
+}
+
+export type UserViewStateChangedEvent = {
+  view_states: MyChannelViewState[]
 }
 
 export type UserGroupCreatedEvent = UserGroupIdBody

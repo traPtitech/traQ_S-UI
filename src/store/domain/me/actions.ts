@@ -3,7 +3,11 @@ import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
 import { me, meMitt } from './index'
 import { ChannelId, UserId } from '@/types/entity-ids'
-import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
+import {
+  ChannelSubscribeLevel,
+  Message,
+  MyChannelViewState
+} from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '@/lib/markdown/detector'
 import { deleteToken } from '@/lib/firebase'
@@ -139,5 +143,20 @@ export const actions = defineActions({
     })
     commit.setSubscription(payload)
     meMitt.emit('updateSubscriptions')
+  },
+
+  async fetchViewStates(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.viewStatesFetched) return
+
+    const res = await apis.getMyViewStates()
+    commit.setViewStates(new Map(res.data.map(v => [v.key, v])))
+  },
+  setViewStates(context, payload: MyChannelViewState[]) {
+    const { commit } = meActionContext(context)
+    commit.setViewStates(new Map(payload.map(v => [v.key, v])))
   }
 })
