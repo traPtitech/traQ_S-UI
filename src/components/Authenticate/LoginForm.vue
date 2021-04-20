@@ -78,7 +78,7 @@
           />
         </div>
       </template>
-      <template v-if="showRegistration">
+      <template v-if="signUpAllowed">
         <authenticate-separator :class="$style.separator" />
         <authenticate-button
           type="secondary"
@@ -116,6 +116,10 @@ export default defineComponent({
     externalLogin: {
       type: Set as PropType<Set<string>>,
       required: true
+    },
+    signUpAllowed: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
@@ -128,7 +132,7 @@ export default defineComponent({
       dontUseSaved
     } = useLogin()
     const isIOS = isIOSApp()
-    const { resetLink, showRegistration } = config.auth
+    const { resetLink } = config.auth
     const moveToRegistration = () => {
       router.push(RouteName.Registration)
     }
@@ -142,7 +146,6 @@ export default defineComponent({
       loginExternal,
       dontUseSaved,
       isIOS,
-      showRegistration,
       moveToRegistration
     }
   }
