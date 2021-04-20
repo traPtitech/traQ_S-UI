@@ -118,10 +118,10 @@ export default class AudioStreamMixer {
     const buffer = await response.arrayBuffer()
     const prefixedKey = fileSourcePrefix + key
 
-    this.audioBufferMap.set(
-      prefixedKey,
-      await this.context.decodeAudioData(buffer)
-    )
+    // iOS Safariはpromise-based syntaxに対応していない
+    this.context.decodeAudioData(buffer, decodedData => {
+      this.audioBufferMap.set(prefixedKey, decodedData)
+    })
   }
 
   public async playFileSource(key: string) {
