@@ -78,7 +78,13 @@ const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
 const useMessageOpener = () => {
   const router = useRouter()
   const { closeCommandPalette } = useCommandPaletteInvoker()
-  const openMessage = async (messageId: MessageId) => {
+  const openMessage = async (messageId: MessageId, openWithNewTab: boolean) => {
+    if (openWithNewTab) {
+      const url = `${location.origin}/messages/${messageId}`
+      open(url, '_blank')
+      return
+    }
+
     closeCommandPalette()
     router.push({ name: RouteName.Message, params: { id: messageId } })
   }

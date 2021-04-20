@@ -3,7 +3,7 @@
     :class="$style.container"
     :data-oversized="$boolAttr(oversized)"
     :data-expanded="$boolAttr(expanded)"
-    @click="onClick"
+    @mousedown="onClick"
   >
     <user-icon :class="$style.icon" :size="32" :user-id="message.userId" />
     <div :class="$style.header">
@@ -120,7 +120,7 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOpen: (messageId: MessageId) => true
+    clickOpen: (_messageId: MessageId, _openWithNewTab: boolean) => true
   },
   setup(props, { emit }) {
     // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
@@ -148,7 +148,12 @@ export default defineComponent({
 
     const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
 
-    const onClick = () => emit('clickOpen', props.message.id)
+    const onClick = (e: MouseEvent) => {
+      if (e.button === 1) {
+        e.preventDefault()
+      }
+      emit('clickOpen', props.message.id, e.button === 1)
+    }
 
     const contentRef = ref<HTMLElement>()
     const { oversized, expanded, onClickExpandButton } = useMessageExpansion(
