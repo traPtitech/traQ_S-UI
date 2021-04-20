@@ -17,7 +17,11 @@ import { RouteName } from '@/router'
 import useRedirectParam from '@/components/Authenticate/use/redirectParam'
 import { useRouter } from 'vue-router'
 
-export type PageType = 'login' | 'password-reset' | 'registration' | 'consent'
+export type PageType =
+  | RouteName.Login
+  | RouteName.ResetPassword
+  | RouteName.Registration
+  | RouteName.Consent
 
 const usePageSwitch = (props: { type: PageType }) => {
   const router = useRouter()

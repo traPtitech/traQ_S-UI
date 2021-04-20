@@ -7,6 +7,7 @@ const useVersion = (needed: Ref<boolean> | boolean = true) => {
   const externalLogin = computed(
     () => new Set(version.value?.flags.externalLogin ?? [])
   )
+  const signUpAllowed = computed(() => version.value?.flags.signUpAllowed)
 
   const fetch = async () => {
     const res = await apis.getServerVersion()
@@ -20,7 +21,8 @@ const useVersion = (needed: Ref<boolean> | boolean = true) => {
 
   return {
     version: readonly(version),
-    externalLogin
+    externalLogin,
+    signUpAllowed
   }
 }
 
