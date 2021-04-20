@@ -5,7 +5,8 @@ import {
   UnreadChannel,
   ChannelSubscribeLevel,
   Message,
-  MyUserDetail
+  MyUserDetail,
+  MyChannelViewState
 } from '@traptitech/traq'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
 import { removeNotification } from '@/lib/firebase'
@@ -110,5 +111,16 @@ export const mutations = defineMutations<S>()({
     }
   ) {
     state.subscriptionMap.set(payload.channelId, payload.subscriptionLevel)
+  },
+
+  setViewStates(state: S, viewStates: Map<string, MyChannelViewState>) {
+    state.viewStates = viewStates
+    state.viewStatesFetched = true
+  },
+  setViewState(state: S, viewState: MyChannelViewState) {
+    state.viewStates.set(viewState.key, viewState)
+  },
+  deleteViewState(state: S, key: string) {
+    state.viewStates.delete(key)
   }
 })

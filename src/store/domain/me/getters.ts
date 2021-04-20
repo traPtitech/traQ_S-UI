@@ -3,7 +3,7 @@ import { S } from './state'
 import { StampId, ChannelId } from '@/types/entity-ids'
 import { moduleGetterContext } from '@/store'
 import { me } from '.'
-import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { ChannelSubscribeLevel, ChannelViewState } from '@traptitech/traq'
 
 const meGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, me)
@@ -42,5 +42,17 @@ export const getters = defineGetters<S>()({
     return channelId =>
       (state.subscriptionMap.get(channelId) ?? ChannelSubscribeLevel.none) !==
       ChannelSubscribeLevel.none
+  },
+
+  monitoringChannels(state): Set<ChannelId> {
+    return new Set(
+      [...state.viewStates.values()]
+        .filter(
+          vs =>
+            vs.state === ChannelViewState.Monitoring ||
+            vs.state === ChannelViewState.Editing
+        )
+        .map(vs => vs.channelId)
+    )
   }
 })

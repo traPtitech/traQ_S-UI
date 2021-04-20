@@ -3,10 +3,15 @@ import { moduleActionContext } from '@/store'
 import apis from '@/lib/apis'
 import { me, meMitt } from './index'
 import { ChannelId, UserId } from '@/types/entity-ids'
-import { ChannelSubscribeLevel, Message } from '@traptitech/traq'
+import {
+  ChannelSubscribeLevel,
+  Message,
+  MyChannelViewState
+} from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '@/lib/markdown/detector'
 import { deleteToken } from '@/lib/firebase'
+import { viewStatesInitialFetchPromise } from './promises'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -67,18 +72,17 @@ export const actions = defineActions({
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
   },
-  onMessageCreated(
+  async onMessageCreated(
     context,
     { message, isCiting }: { message: Message; isCiting: boolean }
   ) {
     const { rootState, getters, commit, rootGetters } = meActionContext(context)
-    // 最新の投稿を見ているチャンネルは未読に追加しない
-    // 他端末で閲覧中のチャンネルでは未読に追加されることに注意
-    if (
-      rootState.domain.messagesView.currentChannelId === message.channelId &&
-      rootState.domain.messagesView.shouldRetriveMessageCreateEvent
-    )
-      return
+
+    // 他端末の閲覧状態の取得が完了するのを待つ
+    await viewStatesInitialFetchPromise
+
+    // 閲覧中のチャンネルは未読に追加しない
+    if (getters.monitoringChannels.has(message.channelId)) return
     // 自分の投稿は未読に追加しない
     if (rootGetters.domain.me.myId === message.userId) return
 
@@ -139,5 +143,20 @@ export const actions = defineActions({
     })
     commit.setSubscription(payload)
     meMitt.emit('updateSubscriptions')
+  },
+
+  async fetchViewStates(
+    context,
+    { ignoreCache = false }: { ignoreCache?: boolean } = {}
+  ) {
+    const { state, commit } = meActionContext(context)
+    if (!ignoreCache && state.viewStatesFetched) return
+
+    const res = await apis.getMyViewStates()
+    commit.setViewStates(new Map(res.data.map(v => [v.key, v])))
+  },
+  setViewStates(context, payload: MyChannelViewState[]) {
+    const { commit } = meActionContext(context)
+    commit.setViewStates(new Map(payload.map(v => [v.key, v])))
   }
 })

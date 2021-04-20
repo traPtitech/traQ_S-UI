@@ -2,7 +2,8 @@ import { StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
 import {
   UnreadChannel,
   ChannelSubscribeLevel,
-  MyUserDetail
+  MyUserDetail,
+  MyChannelViewState
 } from '@traptitech/traq'
 
 export interface S {
@@ -16,6 +17,8 @@ export interface S {
   staredChannelSetFetched: boolean
   subscriptionMap: Map<ChannelId, ChannelSubscribeLevel>
   subscriptionMapFetched: boolean
+  viewStates: Map<string, MyChannelViewState>
+  viewStatesFetched: boolean
 }
 
 export const state: S = {
@@ -28,5 +31,7 @@ export const state: S = {
   staredChannelSet: new Set(),
   staredChannelSetFetched: false,
   subscriptionMap: new Map(),
-  subscriptionMapFetched: false
+  subscriptionMapFetched: false,
+  viewStates: new Map(),
+  viewStatesFetched: false
 }

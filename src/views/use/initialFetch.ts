@@ -11,6 +11,7 @@ const initialFetch = async () => {
 
   store.dispatch.domain.me.fetchUnreadChannels()
   store.dispatch.domain.me.fetchSubscriptions()
+  store.dispatch.domain.me.fetchViewStates()
 
   store.dispatch.domain.me.fetchStampHistory()
   store.dispatch.entities.fetchStampPalettes()
