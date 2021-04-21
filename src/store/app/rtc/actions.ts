@@ -11,6 +11,7 @@ import { getUserAudio } from '@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '@/lib/tts'
 import { wait } from '@/lib/util/timer'
+import { isIOSApp } from '@/lib/util/browser'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -91,6 +92,17 @@ export const actions = defineActions({
     }
     if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
       window.alert('マイクの設定に失敗しました')
+      return false
+    }
+    if (
+      isIOSApp() &&
+      'webkit' in window &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (await (window as any).webkit.scriptMessageHandler.postMessage(
+        'RequestMicrophone'
+      ))
+    ) {
+      window.alert('設定アプリからマイクの使用を許可してください')
       return false
     }
     return true
