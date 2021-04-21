@@ -90,10 +90,6 @@ export const actions = defineActions({
     if (!rootState.app.rtcSettings.isEnabled) {
       return false
     }
-    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
-      window.alert('マイクの設定に失敗しました')
-      return false
-    }
     if (
       isIOSApp() &&
       'webkit' in window &&
@@ -103,6 +99,10 @@ export const actions = defineActions({
       ))
     ) {
       window.alert('設定アプリからマイクの使用を許可してください')
+      return false
+    }
+    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
+      window.alert('マイクの設定に失敗しました')
       return false
     }
     return true
