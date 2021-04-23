@@ -6,6 +6,7 @@
         :class="$style.navigationButton"
         @pointerdown="onPointerDown"
         @pointerup="onPointerUpOrLeave"
+        @pointerleave="onPointerUpOrLeave"
       >
         <icon name="traQ" :size="28" />
         <div v-show="isLongClicking" :class="$style.popupNavigator">
