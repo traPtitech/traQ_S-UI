@@ -1,21 +1,23 @@
 <template>
   <header :class="$style.container">
     <div :class="$style.headerContainer">
+      <!-- touchstartをstopしているのはスワイプを無効化するため -->
       <button
         v-if="isMobile"
+        :id="mainviewNavigationButtonId"
         :class="$style.navigationButton"
-        @pointerdown="onPointerDown"
-        @touchstart.stop
-        @pointerup="onPointerUpOrLeave"
-        @pointerleave="onPointerUpOrLeave"
+        @touchstart.stop="onMouseTouchStart"
+        @mousedown="onMouseTouchStart"
+        @touchend="onMouseTouchEnd"
+        @mouseup="onMouseTouchEnd"
       >
         <icon name="traQ" :size="28" />
         <div v-show="isLongClicking" :class="$style.popupNavigator">
-          <div :class="$style.popupNavigatorItem" @pointerup="movePrev">
+          <div :class="$style.popupNavigatorItem" @click="movePrev">
             <icon name="arrow-left" mdi :class="$style.icon" />
             戻る
           </div>
-          <div :class="$style.popupNavigatorItem" @pointerup="moveNext">
+          <div :class="$style.popupNavigatorItem" @click="moveNext">
             <icon name="arrow-right" mdi :class="$style.icon" />
             進む
           </div>
@@ -36,6 +38,8 @@ import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
 import { useRouter } from 'vue-router'
 
+const mainviewNavigationButtonId = 'mainview-header-navigation-button'
+
 /**
  * タッチにも対応している
  */
@@ -43,19 +47,39 @@ const useIsLongClicking = (onMouseClick: () => void) => {
   const isLongClicking = ref(false)
   let timer = 0
 
-  const onPointerDown = (e: PointerEvent) => {
+  const onMouseTouchStart = () => {
     timer = window.setTimeout(() => {
       isLongClicking.value = true
     }, 100)
   }
-  const onPointerUpOrLeave = (e: PointerEvent) => {
+  const onMouseTouchEnd = (e: MouseEvent | TouchEvent) => {
     window.clearTimeout(timer)
-    if (!isLongClicking.value && e.type === 'pointerup') {
+
+    const point = 'changedTouches' in e ? e.changedTouches[0] : e
+    const target = document.elementFromPoint(point.clientX, point.clientY)
+    if (
+      target === null ||
+      target.closest(`#${mainviewNavigationButtonId}`) === null
+    ) {
+      isLongClicking.value = false
+      return
+    }
+
+    if (!isLongClicking.value) {
       onMouseClick()
+    } else {
+      let t = target
+      while (!(t instanceof HTMLElement)) {
+        if (t.parentElement === null) {
+          throw new Error('Missing HTMLElement parent')
+        }
+        t = t.parentElement
+      }
+      t.click()
     }
     isLongClicking.value = false
   }
-  return { isLongClicking, onPointerDown, onPointerUpOrLeave }
+  return { isLongClicking, onMouseTouchStart, onMouseTouchEnd }
 }
 
 const useNavigator = () => {
@@ -79,14 +103,15 @@ export default defineComponent({
     const { openNav } = useNavigationController()
     const {
       isLongClicking,
-      onPointerDown,
-      onPointerUpOrLeave
+      onMouseTouchStart,
+      onMouseTouchEnd
     } = useIsLongClicking(openNav)
     const { movePrev, moveNext } = useNavigator()
     return {
+      mainviewNavigationButtonId,
       isLongClicking,
-      onPointerDown,
-      onPointerUpOrLeave,
+      onMouseTouchStart,
+      onMouseTouchEnd,
       movePrev,
       moveNext,
       isMobile,
