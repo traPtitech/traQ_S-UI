@@ -107,6 +107,17 @@ const useCommandPaletteShortcutKey = () => {
       } else {
         openCommandPalette('search')
       }
+      return
+    }
+    if (e.key === '/' && e.ctrlKey) {
+      e.preventDefault()
+
+      if (mode.value === 'search') {
+        closeCommandPalette()
+      } else {
+        openCommandPalette('search', 'in:here ')
+      }
+      return
     }
   }
 
