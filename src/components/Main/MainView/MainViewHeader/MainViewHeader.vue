@@ -5,6 +5,7 @@
         v-if="isMobile"
         :class="$style.navigationButton"
         @pointerdown="onPointerDown"
+        @touchstart.stop
         @pointerup="onPointerUpOrLeave"
         @pointerleave="onPointerUpOrLeave"
       >
