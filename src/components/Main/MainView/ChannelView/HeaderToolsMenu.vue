@@ -27,6 +27,12 @@
       @click="emit('click-notification')"
     />
     <header-tools-menu-item
+      icon-name="search"
+      icon-mdi
+      label="チャンネル内検索"
+      @click="emit('click-search')"
+    />
+    <header-tools-menu-item
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"

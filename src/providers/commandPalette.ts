@@ -38,13 +38,13 @@ const useCommandPaletteBase = () => {
     throw Error('useCommandPaletteStore() called without provider.')
   }
 
-  const openCommandPalette = (mode: CommandPaletteMode) => {
+  const openCommandPalette = (mode: CommandPaletteMode, initialInput = '') => {
     commandPaletteStore.mode = mode
+    commandPaletteStore.query = ''
+    commandPaletteStore.currentInput = initialInput
   }
   const closeCommandPalette = () => {
     commandPaletteStore.mode = undefined
-    commandPaletteStore.query = ''
-    commandPaletteStore.currentInput = ''
   }
 
   return {

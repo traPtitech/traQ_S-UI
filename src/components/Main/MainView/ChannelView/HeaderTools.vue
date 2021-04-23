@@ -27,6 +27,7 @@
         :is-archived="channelState.archived"
         @click-notification="openNotificationModal"
         @click-create-channel="openChannelCreateModal"
+        @click-search="openCommandPalette('search', 'in:here ')"
         @click-copy-channel-link="copyLink"
         @click-qall="toggleQall"
         @click-manage-channel="openChannelManageModal"
@@ -50,6 +51,7 @@ import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '@/lib/apis'
 import { useRoute } from 'vue-router'
 import useToastStore from '@/providers/toastStore'
+import { useCommandPaletteInvoker } from '@/providers/commandPalette'
 
 const useCopy = () => {
   const route = useRoute()
@@ -97,6 +99,7 @@ export default defineComponent({
       toggleQall
     } = useQall(props)
     const { openChannelManageModal } = useChannelManageModal(props)
+    const { openCommandPalette } = useCommandPaletteInvoker()
     return {
       hasActiveQallSession,
       isQallSessionOpened,
@@ -111,6 +114,7 @@ export default defineComponent({
       isChildChannelCreatable,
       openChannelCreateModal,
       openChannelManageModal,
+      openCommandPalette,
       copyLink,
       togglePopupMenu,
       closePopupMenu,
