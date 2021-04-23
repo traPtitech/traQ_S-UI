@@ -1,5 +1,11 @@
 <template>
-  <div v-if="store.currentInput.length === 0" :class="$style.container">
+  <div v-if="store.currentInput.length > 0" :class="$style.container">
+    <search-suggestion-item
+      :item="searchConfirmItem"
+      @select="onSelectSuggestion(searchConfirmItem)"
+    />
+  </div>
+  <div :class="$style.container">
     <div :class="$style.header">検索オプション</div>
     <search-suggestion-query-item
       v-for="suggestion in querySuggestions"
@@ -7,12 +13,6 @@
       :insert-query="suggestion.insertQuery"
       :description="suggestion.description"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
-    />
-  </div>
-  <div v-else :class="$style.container">
-    <search-suggestion-item
-      :item="searchConfirmItem"
-      @select="onSelectSuggestion(searchConfirmItem)"
     />
   </div>
 </template>
@@ -48,6 +48,9 @@ export default defineComponent({
       })
     )
     const onSelectQuerySuggestion = (query: string) => {
+      if (store.currentInput !== '') {
+        store.currentInput += ' '
+      }
       store.currentInput += query
       context.emit('queryInsert')
     }
