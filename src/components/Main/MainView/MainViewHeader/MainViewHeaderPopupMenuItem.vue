@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :data-is-disabled="$boolAttr(disabled)">
+  <div
+    :class="$style.container"
+    :data-is-disabled="$boolAttr(disabled)"
+    @click="onClick"
+  >
     <icon
       :class="$style.icon"
       :name="iconName"
@@ -26,8 +30,15 @@ export default defineComponent({
     label: { type: String, default: '' },
     disabled: { type: Boolean, default: false }
   },
-  setup() {
-    return {}
+  emits: {
+    click: () => true
+  },
+  setup(props, { emit }) {
+    const onClick = () => {
+      if (props.disabled) return
+      emit('click')
+    }
+    return { onClick }
   }
 })
 </script>
@@ -39,7 +50,7 @@ export default defineComponent({
   cursor: pointer;
   &[data-is-disabled] {
     opacity: 0.5;
-    cursor: pointer;
+    cursor: not-allowed;
   }
 }
 .icon {

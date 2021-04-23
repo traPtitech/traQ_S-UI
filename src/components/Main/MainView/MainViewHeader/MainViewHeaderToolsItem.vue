@@ -35,11 +35,11 @@ export default defineComponent({
     },
     tooltip: String
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const { headerStyle } = useHeaderStyle()
     const onClick = () => {
       if (props.disabled) return
-      context.emit('toggle')
+      emit('toggle')
     }
     return { onClick, headerStyle }
   }
