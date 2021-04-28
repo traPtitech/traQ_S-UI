@@ -1,35 +1,72 @@
 <template>
-  <!-- touchstartをstopしているのはスワイプを無効化するため -->
   <button
-    v-if="isMobile"
     :id="popupNavigatorButtonId"
+    ref="buttonEle"
     :class="$style.navigationButton"
-    @touchstart.stop="onMouseTouchStart"
-    @mousedown="onMouseTouchStart"
-    @touchend="onMouseTouchEnd"
-    @mouseup="onMouseTouchEnd"
   >
     <icon name="traQ" :size="28" />
-    <div v-show="isLongClicking" :class="$style.popupNavigator">
-      <div :class="$style.popupNavigatorItem" @click="movePrev">
-        <icon name="arrow-left" mdi :class="$style.icon" />
-        戻る
+    <teleport :to="`#${popupNavigatorId}`">
+      <div
+        v-show="isLongClicking"
+        :class="$style.popupNavigator"
+        :style="popupStyle"
+      >
+        <div :class="$style.popupNavigatorItem" @click="movePrev">
+          <icon name="arrow-left" mdi :class="$style.icon" />
+          戻る
+        </div>
+        <div :class="$style.popupNavigatorItem" @click="moveNext">
+          <icon name="arrow-right" mdi :class="$style.icon" />
+          進む
+        </div>
       </div>
-      <div :class="$style.popupNavigatorItem" @click="moveNext">
-        <icon name="arrow-right" mdi :class="$style.icon" />
-        進む
-      </div>
-    </div>
+    </teleport>
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  ref,
+  shallowRef,
+  watch,
+  computed,
+  onMounted,
+  onUnmounted
+} from 'vue'
 import Icon from '@/components/UI/Icon.vue'
-import useIsMobile from '@/use/isMobile'
 import { useRouter } from 'vue-router'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
+const popupNavigatorId = 'popup-navigator'
+const POPUP_MARGIN = 4
+
+type MouseTouchEventHandler = (e: MouseEvent | TouchEvent) => void
+
+const useWindowMouseTouch = (
+  {
+    onMouseTouchStart,
+    onMouseTouchEnd
+  }: {
+    onMouseTouchStart: MouseTouchEventHandler
+    onMouseTouchEnd: MouseTouchEventHandler
+  },
+  options?: boolean | AddEventListenerOptions | undefined
+) => {
+  onMounted(() => {
+    window.addEventListener('mousedown', onMouseTouchStart, options)
+    window.addEventListener('touchstart', onMouseTouchStart, options)
+    window.addEventListener('mouseup', onMouseTouchEnd, options)
+    window.addEventListener('touchend', onMouseTouchEnd, options)
+  })
+  onUnmounted(() => {
+    window.removeEventListener('mousedown', onMouseTouchStart, options)
+    window.removeEventListener('touchstart', onMouseTouchStart, options)
+    window.removeEventListener('mouseup', onMouseTouchEnd, options)
+    window.removeEventListener('touchend', onMouseTouchEnd, options)
+  })
+}
 
 /**
  * タッチにも対応している
@@ -38,7 +75,20 @@ const useIsLongClicking = (onMouseClick: () => void) => {
   const isLongClicking = ref(false)
   let timer = 0
 
-  const onMouseTouchStart = () => {
+  const isTarget = (t: EventTarget | null): t is Element => {
+    const target = t as Element | null
+    return (
+      target !== null &&
+      (target.closest(`#${popupNavigatorButtonId}`) !== null ||
+        target.closest(`#${popupNavigatorId}`) !== null)
+    )
+  }
+
+  const onMouseTouchStart = (e: MouseEvent | TouchEvent) => {
+    if (!isTarget(e.target)) return
+    // スワイプを無効化するため
+    e.stopPropagation()
+
     timer = window.setTimeout(() => {
       isLongClicking.value = true
     }, 100)
@@ -48,10 +98,7 @@ const useIsLongClicking = (onMouseClick: () => void) => {
 
     const point = 'changedTouches' in e ? e.changedTouches[0] : e
     const target = document.elementFromPoint(point.clientX, point.clientY)
-    if (
-      target === null ||
-      target.closest(`#${popupNavigatorButtonId}`) === null
-    ) {
+    if (!isTarget(target)) {
       isLongClicking.value = false
       return
     }
@@ -90,7 +137,6 @@ export default defineComponent({
     Icon
   },
   setup(props, { emit }) {
-    const { isMobile } = useIsMobile()
     const {
       isLongClicking,
       onMouseTouchStart,
@@ -98,15 +144,35 @@ export default defineComponent({
     } = useIsLongClicking(() => {
       emit('clickIcon')
     })
+    // capture=trueなのはstopPropergationでスワイプを無効化するため
+    useWindowMouseTouch({ onMouseTouchStart, onMouseTouchEnd }, true)
+
     const { movePrev, moveNext } = useNavigator()
+
+    const position = reactive({ top: 0, left: 0 })
+    const popupStyle = computed(() => ({
+      top: `${position.top}px`,
+      left: `${position.left}px`
+    }))
+
+    const buttonEle = shallowRef<HTMLButtonElement>()
+    watch(isLongClicking, newIsLongClicking => {
+      if (!newIsLongClicking || !buttonEle.value) return
+
+      const { bottom, left } = buttonEle.value.getBoundingClientRect()
+      position.top = bottom + POPUP_MARGIN
+      position.left = left + POPUP_MARGIN
+    })
+
     return {
+      buttonEle,
       popupNavigatorButtonId,
       isLongClicking,
-      onMouseTouchStart,
-      onMouseTouchEnd,
+      popupNavigatorId,
+      position,
+      popupStyle,
       movePrev,
-      moveNext,
-      isMobile
+      moveNext
     }
   }
 })
@@ -114,21 +180,14 @@ export default defineComponent({
 
 <style lang="scss" module>
 .navigationButton {
-  @include color-ui-primary;
-  position: relative;
   display: flex;
-  height: 36px;
-  width: 36px;
   justify-content: center;
   align-items: center;
-  margin-right: 8px;
 }
 .popupNavigator {
   @include background-primary;
   @include drop-shadow-default;
   position: absolute;
-  top: -8px;
-  left: -8px;
   border-radius: 4px;
   user-select: none;
   white-space: nowrap;
