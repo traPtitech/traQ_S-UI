@@ -324,6 +324,8 @@ export default defineComponent({
   // overflow-anchorはデフォルトでautoだが、Safariが対応していないので、
   // 手動で調節しているため明示的に無効化する
   overflow-anchor: none;
+  // iOSで無限にロードが走るのを防止する
+  -webkit-overflow-scrolling: auto;
 }
 
 .messageContainer {
