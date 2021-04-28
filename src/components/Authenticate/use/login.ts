@@ -39,8 +39,12 @@ const useLogin = () => {
   }
 
   const login = async () => {
+    // @はユーザー名に含まれることはなく、
+    // 先頭に@を入れている場合があるのでその場合は@を削除する
+    const name = state.name.replace(/^@/, '')
+
     try {
-      await apis.login(undefined, { name: state.name, password: state.pass })
+      await apis.login(undefined, { name, password: state.pass })
       await savePass(state.name, state.pass)
 
       await store.dispatch.domain.me.fetchMe()
