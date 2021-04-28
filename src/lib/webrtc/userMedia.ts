@@ -6,7 +6,6 @@ export const getUserAudio = async (deviceId?: string) => {
   const baseAudioConstraint: ExtendedMediaTrackConstraints = {
     autoGainControl: true,
     echoCancellation: true,
-    echoCancellationType: 'system',
     noiseSuppression: true
   }
   const constraint: MediaStreamConstraints = deviceId
