@@ -7,7 +7,7 @@
     <icon name="traQ" :size="28" />
     <teleport :to="`#${popupNavigatorId}`">
       <div
-        v-show="isLongClicking"
+        v-show="isPopupNavigatorShown"
         :class="$style.popupNavigator"
         :style="popupStyle"
       >
@@ -28,12 +28,13 @@
 import {
   defineComponent,
   reactive,
-  ref,
   shallowRef,
   watch,
   computed,
   onMounted,
-  onUnmounted
+  onUnmounted,
+  ref,
+  readonly
 } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import { useRouter } from 'vue-router'
@@ -41,6 +42,7 @@ import { useRouter } from 'vue-router'
 const popupNavigatorButtonId = 'popup-navigation-button'
 const popupNavigatorId = 'popup-navigator'
 const POPUP_MARGIN = 4
+const LONG_CLICK_DELAY = 150
 
 type MouseTouchEventHandler = (e: MouseEvent | TouchEvent) => void
 
@@ -71,18 +73,13 @@ const useWindowMouseTouch = (
 /**
  * タッチにも対応している
  */
-const useIsLongClicking = (onMouseClick: () => void) => {
-  const isLongClicking = ref(false)
+const useIsLongClicking = (
+  isTarget: (t: EventTarget | null) => t is Element,
+  onLongClick: () => void,
+  onClick: () => void
+) => {
+  let isLongClicking = false
   let timer = 0
-
-  const isTarget = (t: EventTarget | null): t is Element => {
-    const target = t as Element | null
-    return (
-      target !== null &&
-      (target.closest(`#${popupNavigatorButtonId}`) !== null ||
-        target.closest(`#${popupNavigatorId}`) !== null)
-    )
-  }
 
   const onMouseTouchStart = (e: MouseEvent | TouchEvent) => {
     if (!isTarget(e.target)) return
@@ -90,8 +87,9 @@ const useIsLongClicking = (onMouseClick: () => void) => {
     e.stopPropagation()
 
     timer = window.setTimeout(() => {
-      isLongClicking.value = true
-    }, 100)
+      isLongClicking = true
+      onLongClick()
+    }, LONG_CLICK_DELAY)
   }
   const onMouseTouchEnd = (e: MouseEvent | TouchEvent) => {
     window.clearTimeout(timer)
@@ -99,12 +97,11 @@ const useIsLongClicking = (onMouseClick: () => void) => {
     const point = 'changedTouches' in e ? e.changedTouches[0] : e
     const target = document.elementFromPoint(point.clientX, point.clientY)
     if (!isTarget(target)) {
-      isLongClicking.value = false
       return
     }
 
-    if (!isLongClicking.value) {
-      onMouseClick()
+    if (!isLongClicking) {
+      onClick()
     } else {
       let t = target
       while (!(t instanceof HTMLElement)) {
@@ -115,20 +112,53 @@ const useIsLongClicking = (onMouseClick: () => void) => {
       }
       t.click()
     }
-    isLongClicking.value = false
+    isLongClicking = false
   }
-  return { isLongClicking, onMouseTouchStart, onMouseTouchEnd }
+  return { onMouseTouchStart, onMouseTouchEnd }
 }
 
 const useNavigator = () => {
   const router = useRouter()
+  const isPopupNavigatorShown = ref(false)
+
+  const isTarget = (t: EventTarget | null): t is Element => {
+    const target = t as Element | null
+    return (
+      target !== null &&
+      (target.closest(`#${popupNavigatorButtonId}`) !== null ||
+        target.closest(`#${popupNavigatorId}`) !== null)
+    )
+  }
+  const isPopup = (t: EventTarget | null): t is Element => {
+    const target = t as Element | null
+    return target !== null && target.closest(`#${popupNavigatorId}`) !== null
+  }
+
+  const showPopupNavigator = () => {
+    isPopupNavigatorShown.value = true
+  }
+  const hidePopupNavigator = () => {
+    isPopupNavigatorShown.value = false
+  }
+
   const movePrev = () => {
     router.back()
+    hidePopupNavigator()
   }
   const moveNext = () => {
     router.forward()
+    hidePopupNavigator()
   }
-  return { movePrev, moveNext }
+
+  return {
+    isPopupNavigatorShown: readonly(isPopupNavigatorShown),
+    isTarget,
+    isPopup,
+    showPopupNavigator,
+    hidePopupNavigator,
+    movePrev,
+    moveNext
+  }
 }
 
 export default defineComponent({
@@ -138,16 +168,35 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const {
-      isLongClicking,
-      onMouseTouchStart,
-      onMouseTouchEnd
-    } = useIsLongClicking(() => {
-      emit('clickIcon')
-    })
-    // capture=trueなのはstopPropergationでスワイプを無効化するため
-    useWindowMouseTouch({ onMouseTouchStart, onMouseTouchEnd }, true)
+      isPopupNavigatorShown,
+      isTarget,
+      isPopup,
+      showPopupNavigator,
+      hidePopupNavigator,
+      movePrev,
+      moveNext
+    } = useNavigator()
 
-    const { movePrev, moveNext } = useNavigator()
+    const { onMouseTouchStart, onMouseTouchEnd } = useIsLongClicking(
+      isTarget,
+      showPopupNavigator,
+      () => {
+        emit('clickIcon')
+      }
+    )
+    // capture=trueなのはstopPropergationでスワイプを無効化するため
+    useWindowMouseTouch(
+      {
+        onMouseTouchStart: e => {
+          if (!isPopup(e.target)) {
+            hidePopupNavigator()
+          }
+          onMouseTouchStart(e)
+        },
+        onMouseTouchEnd
+      },
+      true
+    )
 
     const position = reactive({ top: 0, left: 0 })
     const popupStyle = computed(() => ({
@@ -156,8 +205,8 @@ export default defineComponent({
     }))
 
     const buttonEle = shallowRef<HTMLButtonElement>()
-    watch(isLongClicking, newIsLongClicking => {
-      if (!newIsLongClicking || !buttonEle.value) return
+    watch(isPopupNavigatorShown, newIsPopupNavigatorShown => {
+      if (!newIsPopupNavigatorShown || !buttonEle.value) return
 
       const { bottom, left } = buttonEle.value.getBoundingClientRect()
       position.top = bottom + POPUP_MARGIN
@@ -167,10 +216,11 @@ export default defineComponent({
     return {
       buttonEle,
       popupNavigatorButtonId,
-      isLongClicking,
+      isPopupNavigatorShown,
       popupNavigatorId,
       position,
       popupStyle,
+      hidePopupNavigator,
       movePrev,
       moveNext
     }
