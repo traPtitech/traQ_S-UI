@@ -59,6 +59,7 @@ $headerHeight: 80px;
 .headerBody {
   width: 100%;
   min-width: 0;
+  user-select: none;
 }
 .headerContainer {
   display: flex;
