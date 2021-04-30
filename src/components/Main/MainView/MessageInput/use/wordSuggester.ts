@@ -12,6 +12,12 @@ export type WordOrConfirmedPart =
       text: string
     }
 
+/**
+ * 補完を表示する最小の文字数
+ * 3なら`@ab`のときは表示されて`@a`では表示されない
+ */
+const MIN_LENGTH = 3
+
 const useWordSuggester = (
   textareaRef: ComputedRef<HTMLTextAreaElement | undefined>,
   value: WritableComputedRef<string>
@@ -47,7 +53,7 @@ const useWordSuggester = (
     selectedCandidateIndex,
     prevCandidateText,
     nextCandidateText
-  } = useWordSuggesterList(target, currentInputWord)
+  } = useWordSuggesterList(target, currentInputWord, MIN_LENGTH)
 
   const { insertText } = useInsertText(value, textareaRef, target)
   const insertTextAndMoveTarget = (text: string) => {
@@ -59,7 +65,7 @@ const useWordSuggester = (
   const updateTarget = () => {
     if (!textareaRef.value) return
     target.value = getCurrentWord(textareaRef.value, value.value)
-    if (target.value.divided || target.value.word.length < 3) {
+    if (target.value.divided || target.value.word.length < MIN_LENGTH) {
       isSuggesterShown.value = false
       return
     }
@@ -73,6 +79,7 @@ const useWordSuggester = (
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.isComposing) return
+    if (!isSuggesterShown.value) return
 
     // Tabによるフォーカスの移動を防止するため、長押しで連続移動できるようにするためにkeyDownで行う必要がある
     if (e.key === 'Tab') {
@@ -91,7 +98,6 @@ const useWordSuggester = (
       return
     }
 
-    if (!isSuggesterShown.value) return
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       insertTextAndMoveTarget(prevCandidateText.value)

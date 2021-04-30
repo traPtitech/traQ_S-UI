@@ -78,13 +78,19 @@ const useCandidateTree = () => {
   return tree
 }
 
+/**
+ * @param minLength 補完が利用できるようになる最小の文字数
+ */
 const useWordSuggestionList = (
   target: Ref<Target>,
-  currentInputWord: Ref<string>
+  currentInputWord: Ref<string>,
+  minLength: number
 ) => {
   const tree = useCandidateTree()
   const candidates = computed(() =>
-    tree.value.search(target.value.word.replaceAll('＠', '@'))
+    target.value.word.length >= minLength
+      ? tree.value.search(target.value.word.replaceAll('＠', '@'))
+      : []
   )
   const confirmedPart = computed(() =>
     getDeterminedCharacters(candidates.value.map(obj => obj.text))
