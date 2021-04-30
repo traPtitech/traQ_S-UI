@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.logo" :title="`traQ ${version}`">
-      <icon name="traQ" :size="28" />
-    </div>
+    <popup-navigator :class="$style.logo" :title="`traQ ${version}`" />
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -37,12 +35,15 @@ import {
 } from '@/components/Main/Navigation/use/navigationConstructor'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
-import Icon from '@/components/UI/Icon.vue'
 import version from '@/lib/env/version'
+import PopupNavigator from '@/components/Main/PopupNavigatior/PopupNavigator.vue'
 
 export default defineComponent({
   name: 'NavigationSelector',
-  components: { NavigationSelectorItem, Icon },
+  components: {
+    PopupNavigator,
+    NavigationSelectorItem
+  },
   props: {
     currentNavigation: {
       type: String as PropType<NavigationItemType>,
