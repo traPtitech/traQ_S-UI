@@ -226,6 +226,7 @@ export default defineComponent({
   align-items: center;
 }
 .popupNavigator {
+  @include color-ui-primary;
   @include background-primary;
   @include drop-shadow-default;
   position: absolute;
@@ -236,6 +237,7 @@ export default defineComponent({
 }
 .popupNavigatorItem {
   padding: 12px 20px;
+  cursor: pointer;
   &:hover {
     @include background-secondary;
   }
