@@ -117,9 +117,8 @@ const useIsLongClicking = (
   return { onMouseTouchStart, onMouseTouchEnd }
 }
 
-const useNavigator = () => {
+const useNavigator = (emit: (name: 'clickIcon') => void) => {
   const router = useRouter()
-  const isPopupNavigatorShown = ref(false)
 
   const isTarget = (t: EventTarget | null): t is Element => {
     const target = t as Element | null
@@ -134,6 +133,7 @@ const useNavigator = () => {
     return target !== null && target.closest(`#${popupNavigatorId}`) !== null
   }
 
+  const isPopupNavigatorShown = ref(false)
   const showPopupNavigator = () => {
     isPopupNavigatorShown.value = true
   }
@@ -149,6 +149,27 @@ const useNavigator = () => {
     router.forward()
     hidePopupNavigator()
   }
+
+  const { onMouseTouchStart, onMouseTouchEnd } = useIsLongClicking(
+    isTarget,
+    showPopupNavigator,
+    () => {
+      emit('clickIcon')
+    }
+  )
+  // capture=trueなのはstopPropergationでスワイプを無効化するため
+  useWindowMouseTouch(
+    {
+      onMouseTouchStart: e => {
+        if (!isPopup(e.target)) {
+          hidePopupNavigator()
+        }
+        onMouseTouchStart(e)
+      },
+      onMouseTouchEnd
+    },
+    true
+  )
 
   return {
     isPopupNavigatorShown: readonly(isPopupNavigatorShown),
@@ -167,36 +188,7 @@ export default defineComponent({
     Icon
   },
   setup(props, { emit }) {
-    const {
-      isPopupNavigatorShown,
-      isTarget,
-      isPopup,
-      showPopupNavigator,
-      hidePopupNavigator,
-      movePrev,
-      moveNext
-    } = useNavigator()
-
-    const { onMouseTouchStart, onMouseTouchEnd } = useIsLongClicking(
-      isTarget,
-      showPopupNavigator,
-      () => {
-        emit('clickIcon')
-      }
-    )
-    // capture=trueなのはstopPropergationでスワイプを無効化するため
-    useWindowMouseTouch(
-      {
-        onMouseTouchStart: e => {
-          if (!isPopup(e.target)) {
-            hidePopupNavigator()
-          }
-          onMouseTouchStart(e)
-        },
-        onMouseTouchEnd
-      },
-      true
-    )
+    const { isPopupNavigatorShown, movePrev, moveNext } = useNavigator(emit)
 
     const position = reactive({ top: 0, left: 0 })
     const popupStyle = computed(() => ({
@@ -220,7 +212,6 @@ export default defineComponent({
       popupNavigatorId,
       position,
       popupStyle,
-      hidePopupNavigator,
       movePrev,
       moveNext
     }
