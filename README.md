@@ -3,7 +3,6 @@
 ![CI](https://github.com/traPtitech/traQ_S-UI/workflows/CI/badge.svg)
 ![release](https://github.com/traPtitech/traQ_S-UI/workflows/release/badge.svg)
 [![codecov](https://codecov.io/gh/traPtitech/traQ_S-UI/branch/master/graph/badge.svg)](https://codecov.io/gh/traPtitech/traQ_S-UI)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=traPtitech/traQ_S-UI)](https://dependabot.com)
 
 traQ-S Frontend 
 
