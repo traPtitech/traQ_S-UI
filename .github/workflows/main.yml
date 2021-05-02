@@ -118,7 +118,7 @@ jobs:
     name: run test:e2e
     runs-on: ubuntu-latest
     needs: [packages]
-    if: ${{ github.repository_owner == 'traPtitech' }}
+    if: (github.repository_owner == 'traPtitech' && github.actor != 'dependabot[bot]')
     steps:
       - name: checkout
         uses: actions/checkout@v2
