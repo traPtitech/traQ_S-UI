@@ -1,76 +1,24 @@
-# traQ_S-UI
+# traQ-S_UI - traP Internal Messenger Application
 [![GitHub release](https://img.shields.io/github/release/traPtitech/traQ_S-UI.svg)](https://GitHub.com/traPtitech/traQ_S-UI/releases/)
 ![CI](https://github.com/traPtitech/traQ_S-UI/workflows/CI/badge.svg)
 ![release](https://github.com/traPtitech/traQ_S-UI/workflows/release/badge.svg)
 [![codecov](https://codecov.io/gh/traPtitech/traQ_S-UI/branch/master/graph/badge.svg)](https://codecov.io/gh/traPtitech/traQ_S-UI)
 
-traQ-S Frontend 
+- Backend: [traQ](https://github.com/traPtitech/traQ)
+- Frontend: this repository
 
-## 開発環境構築
-実行にはNode.jsが必要です
+traQ (pronounced "track") is a messenger application built for [Digital Creators Club traP](https://trap.jp).
+traQ allows ease communication among team members by organizing contexts into tree-structured channels.
 
-```shell
-$ npm i
-$ npm run gen-fonts
-```
+![traQ](https://user-images.githubusercontent.com/49056869/115141831-5a376980-a079-11eb-93c1-7016bc2097d0.png)
 
-## コマンド
-### ホットリロード環境
-```shell
-$ npm run serve
-```
+## Deployment
 
-**実行前に一度`$ npm run gen-fonts`を実行する必要があります**
+If you want to deploy your own instance of traQ, then follow the instructions in backend [deployment.md]([./docs/deployment.md](https://github.com/traPtitech/traQ/blob/master/docs/deployment.md)).
 
-### ビルド
-```shell
-$ npm run build
-```
-フォント以外のビルド
+## Development
 
-```shell
-$ npm run build:with-font
-```
-フォントを含めたビルド
+If you want to contribute to traQ (Frontend), then follow the instructions in [development.md](./docs/development.md).
 
-```shell
-$ npm run gen-unicode_emojis
-```
-絵文字用データの生成
-リポジトリに生成物が含まれています
-このコマンドは更新用です
-
-```shell
-$ npm run gen-fonts
-```
-フォントの生成
-リポジトリに生成物が含まれていません
-
-### テスト/lint
-
-```shell
-$ npm run test:unit
-```
-ユニットテスト実行
-
-```shell
-$ npm run test:e2e
-```
-e2eテスト実行  
-`cypress.env.json`を以下の通りに作成する必要があります
-```json
-{
-  "username": "ユーザー名",
-  "password": "パスワード"
-}
-```
-
-```shell
-$ npm run lint
-```
-lintの実行とauto-fixによる修正
-
-```shell
-$ npm run lint:no-fix
-```
-lintの実行(auto-fixなし)
+## License
+Code licensed under [the MIT License](https://github.com/traPtitech/traQ_S-UI/blob/master/LICENSE).
