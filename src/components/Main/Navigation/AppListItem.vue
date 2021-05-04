@@ -5,28 +5,47 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="32" />
+    <span v-if="isSvg" :class="$style.icon" v-html="svgHtml"></span>
+    <img v-else :class="$style.icon" :src="`/img/services/${iconPath}`" />
     <span :class="$style.label">{{ label }}</span>
   </a>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'AppListItem',
-  components: {
-    Icon
-  },
   props: {
-    iconName: { type: String, required: true },
-    iconMdi: { type: Boolean, default: false },
+    iconPath: { type: String, required: true },
     label: { type: String, default: '' },
     appLink: { type: String, default: '' }
   },
-  setup() {
-    return {}
+  setup(props) {
+    const isSvg = computed(() => {
+      try {
+        return new URL(props.iconPath, 'https://example.com').pathname.endsWith(
+          '.svg'
+        )
+      } catch {
+        return false
+      }
+    })
+
+    const svgHtml = ref('')
+    watch(
+      () => props.iconPath,
+      async path => {
+        if (!isSvg.value) return
+
+        const { data } = await axios.get(`/img/services/${path}`)
+        svgHtml.value = data
+      },
+      { immediate: true }
+    )
+
+    return { isSvg, svgHtml }
   }
 })
 </script>
@@ -48,6 +67,8 @@ export default defineComponent({
   }
 }
 .icon {
+  width: 32px;
+  height: 32px;
   margin: 4px;
 }
 .label {

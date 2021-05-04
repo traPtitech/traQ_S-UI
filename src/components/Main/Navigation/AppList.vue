@@ -12,9 +12,9 @@
     <div :class="$style.list">
       <app-list-item
         v-for="app in apps"
-        :key="app.appName"
+        :key="app.label"
         :class="$style.item"
-        :icon-name="app.iconName"
+        :icon-path="app.iconPath"
         :label="app.label"
         :app-link="app.appLink"
       />

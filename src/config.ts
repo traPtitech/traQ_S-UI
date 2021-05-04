@@ -22,72 +22,72 @@ export default {
   /**
    * 表示されるサービス
    *
-   * iconNameは`src/assets/icons`からのパス
+   * iconNameは`/img/services`からのパス
    */
   services: [
     {
       label: 'Portal',
-      iconName: 'services/portal',
+      iconPath: 'portal.svg',
       appLink: 'https://portal.trap.jp/'
     },
     {
       label: 'Official Website',
-      iconName: 'services/traP',
+      iconPath: 'traP.svg',
       appLink: 'https://trap.jp/'
     },
     {
       label: 'Wiki',
-      iconName: 'services/growi',
+      iconPath: 'growi.svg',
       appLink: 'https://wiki.trap.jp/'
     },
     {
       label: 'Blog',
-      iconName: 'services/ghost',
+      iconPath: 'ghost.svg',
       appLink: 'https://blog-admin.trap.jp/'
     },
     {
       label: 'Drive',
-      iconName: 'services/nextcloud',
+      iconPath: 'nextcloud.svg',
       appLink: 'https://drive.trap.jp/'
     },
     {
       label: 'Git',
-      iconName: 'services/gitea',
+      iconPath: 'gitea.svg',
       appLink: 'https://git.trap.jp/'
     },
     {
       label: 'Showcase',
-      iconName: 'services/showcase',
+      iconPath: 'showcase.svg',
       appLink: 'https://showcase.trapti.tech/'
     },
     {
       label: 'HackMD',
-      iconName: 'services/hackmd',
+      iconPath: 'hackmd.svg',
       appLink: 'https://md.trap.jp/'
     },
     {
       label: 'anke-to',
-      iconName: 'services/anke-to',
+      iconPath: 'anke-to.svg',
       appLink: 'https://anke-to.trap.jp/'
     },
     {
       label: 'booQ',
-      iconName: 'services/booq',
+      iconPath: 'booq.svg',
       appLink: 'https://booq.trap.jp/'
     },
     {
       label: 'knoQ',
-      iconName: 'services/knoq',
+      iconPath: 'knoq.svg',
       appLink: 'https://knoq.trap.jp/'
     },
     {
       label: 'BOT Console',
-      iconName: 'services/bot-console',
+      iconPath: 'bot-console.svg',
       appLink: 'https://bot-console.trap.jp/'
     },
     {
       label: 'Jomon',
-      iconName: 'services/jomon',
+      iconPath: 'jomon.svg',
       appLink: 'https://jomon.trap.jp/'
     }
   ],
