@@ -24,7 +24,7 @@ RUN cd /usr/share/caddy && \
   mkdir -p /app/default && \
   mkdir -p /app/default/img && \
   rm config.js.br defaultTheme.js.br index.html.br img/services/*.br && \
-  cp config.js defaultTheme.js index.html /app/default && \
+  cp config.js defaultTheme.js index.html site.webmanifest /app/default && \
   cp -r img/icons img/services /app/default/img
 
 RUN mkdir -p /app/override
