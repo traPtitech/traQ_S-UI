@@ -14,7 +14,7 @@ traQ allows ease communication among team members by organizing contexts into tr
 
 ## Deployment
 
-If you want to deploy your own instance of traQ, then follow the instructions in backend [deployment.md]([./docs/deployment.md](https://github.com/traPtitech/traQ/blob/master/docs/deployment.md)).
+If you want to deploy your own instance of traQ, then follow the instructions in backend [deployment.md](https://github.com/traPtitech/traQ/blob/master/docs/deployment.md).
 
 ## Development
 
