@@ -58,3 +58,10 @@ export interface CSSCommonVariables {
   '--common-background-pin': string
   '--common-drop-shadow-default': string
 }
+
+declare global {
+  interface Window {
+    defaultLightTheme: Theme
+    defaultDarkTheme: Theme
+  }
+}

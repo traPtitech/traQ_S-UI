@@ -1,7 +1,9 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { Theme } from '@/types/theme'
-import { lightTheme, darkTheme } from './default'
+
+const lightTheme = window.defaultLightTheme
+const darkTheme = window.defaultDarkTheme
 
 export const getters = defineGetters<S>()({
   currentTheme(state): Theme {
