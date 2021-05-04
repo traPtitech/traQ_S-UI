@@ -35,35 +35,38 @@ export type Config = Readonly<{
   }>
   /**
    * OGPが表示されないようにするホスト
+   * 省略時は、すべてのホストのOGPを表示する
    */
-  ogpIgnoreHostNames: readonly string[]
+  ogpIgnoreHostNames?: readonly string[]
   /**
    * Wikiのユーザーページへのリンク
    * undefinedにするとリンクが表示されない
    */
-  wikiPageOrigin: string | undefined
-  auth: Readonly<{
+  wikiPageOrigin?: string
+  /**
+   * 外部認証が有効の場合の設定
+   * 省略時は各種リンクが表示されない
+   */
+  auth?: Readonly<{
     /**
-     * ログイン画面での「パスワードを忘れた」のリンク
-     * undefinedにするとリンクが表示されない
+     * ログイン画面での「パスワードを忘れた」のリンクのリンク先
      */
-    resetLink: string | undefined
+    resetLink: string
     /**
-     * 設定画面での「パスワードは～から可能です」のリンク
-     * undefinedにするとリンクが表示されない
+     * 設定画面での「パスワードは～から可能です」のリンクのリンク先
      */
-    changeLink: string | undefined
+    changeLink: string
     /**
      * 設定画面での「パスワードは～から可能です」の「～」の表示
-     * undefinedにするとリンクが表示されない
      */
-    changeName: string | undefined
+    changeName: string
   }>
   /**
    * 内部用認証機構へのリダイレクト
    * 通常は`false`
+   * 省略時は`false`
    */
-  pipelineEnabled: boolean
+  pipelineEnabled?: boolean
   /**
    * チャンネル変更権限をもっていないユーザーでも
    * チャンネル作成時に親チャンネルとしてrootを選択可能にする
@@ -72,18 +75,21 @@ export type Config = Readonly<{
   isRootChannelSelectableAsParentChannel: boolean
   /**
    * QRコード表示ボタンの有効化
+   * 省略時は`false`
    */
-  showQrCodeButton: boolean
+  showQrCodeButton?: boolean
   /**
-   * 大きなファイルサイズのファイルを送信した際に表示されるメッセージ
+   * 大きなファイルサイズのファイルを送信した際に表示される補足メッセージ
    * `%s`の部分には「画像」または「ファイル」が入る
+   * @default '大きい%sの共有には別のサービスを利用してください。'
    */
-  tooLargeFileMessage: string
+  tooLargeFileMessage?: string
   /**
    * iframe埋め込みウィジェットのコピーボタンの有効化
    * 同じドメインの/widget/以下にtraQ-Widgetがデプロイされていることが前提
+   * 省略時は`false`
    */
-  showWidgetCopyButton: boolean
+  showWidgetCopyButton?: boolean
 }>
 
 declare global {

@@ -131,7 +131,7 @@ export default defineComponent({
       dontUseSaved
     } = useLogin()
     const isIOS = isIOSApp()
-    const { resetLink } = window.traQConfig.auth
+    const resetLink = window.traQConfig.auth?.resetLink
     const moveToRegistration = () => {
       router.push(RouteName.Registration)
     }

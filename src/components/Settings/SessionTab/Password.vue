@@ -80,7 +80,7 @@ export default defineComponent({
     FormButton
   },
   setup() {
-    const { changeLink, changeName } = window.traQConfig.auth
+    const { changeLink, changeName } = window.traQConfig.auth ?? {}
     const showChangeLink = changeLink !== undefined && changeName !== undefined
 
     const state = reactive<State>({ old: '', new: '' })
