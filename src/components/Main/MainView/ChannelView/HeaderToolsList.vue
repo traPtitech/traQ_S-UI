@@ -14,7 +14,7 @@
         :data-is-active="$boolAttr(isQallSessionOpened)"
         :data-is-joined="$boolAttr(isJoinedQallSession)"
         :tooltip="
-          isQallSessionOpened && !isJoinedWithCurrentDevice
+          isJoinedQallSession && !isJoinedWithCurrentDevice
             ? '別のデバイスでQall中'
             : undefined
         "
