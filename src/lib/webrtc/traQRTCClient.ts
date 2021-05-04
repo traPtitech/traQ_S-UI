@@ -1,9 +1,8 @@
 import type Peer from 'skyway-js'
 import type { SfuRoom, RoomData } from 'skyway-js'
 import apis from '@/lib/apis'
-import config from '@/config'
 
-const skywayApiKey = config.skyway.apiKey
+const skywayApiKey = window.traQConfig.skyway?.apiKey
 
 type QRTCStreamChangeEvent = CustomEvent<{
   stream: MediaStream & { peerId: string }
@@ -166,6 +165,10 @@ class traQRTCClient extends traQRTCClientBase {
   }
 
   private async createPeer(peerId: string) {
+    if (skywayApiKey === undefined) {
+      throw 'Skyway apikey is not set'
+    }
+
     const res = await apis.postWebRTCAuthenticate({ peerId })
     if (res.status !== 200) {
       throw "Couldn't get credential"

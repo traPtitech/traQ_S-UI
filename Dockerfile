@@ -14,4 +14,20 @@ RUN NODE_ENV=production npm run build:with-font
 FROM caddy:2.3.0-alpine
 EXPOSE 80
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
+COPY build/docker/startup.sh /startup.sh
 COPY --from=build /app/dist /usr/share/caddy
+
+ENV THEME_COLOR #0D67EA
+
+# 設定上書き処理用に、.brを消して、元の設定を別のディレクトリに保存しておく
+RUN cd /usr/share/caddy && \
+  mkdir -p /app/default && \
+  mkdir -p /app/default/img && \
+  rm config.js.br defaultTheme.js.br index.html.br img/services/*.br && \
+  cp config.js defaultTheme.js index.html /app/default && \
+  cp -r img/icons img/services /app/default/img
+
+RUN mkdir -p /app/override
+VOLUME ["/app/override"]
+
+CMD ["/startup.sh"]

@@ -36,7 +36,6 @@ import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '@/components/UI/CircleIcon.vue'
-import config from '@/config'
 
 export default defineComponent({
   name: 'Accounts',
@@ -63,7 +62,7 @@ export default defineComponent({
       () => store.getters.app.themeSettings.currentTheme.background.primary
     )
 
-    const { wikiPageOrigin } = config
+    const { wikiPageOrigin } = window.traQConfig
     const showWikiPageLink = wikiPageOrigin !== undefined
     const wikiPageName = computed(() => {
       if (props.bot) {

@@ -3,6 +3,8 @@ import { useRouter } from 'vue-router'
 import { constructChannelPath, RouteName } from '@/router'
 import store from '@/store'
 
+const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+
 export type NavigationItemType =
   | 'profile'
   | 'session'
@@ -40,11 +42,15 @@ export const navigations: {
     iconName: 'cogs',
     iconMdi: true
   },
-  {
-    routeName: 'settingsQall',
-    iconName: 'phone',
-    iconMdi: true
-  },
+  ...(isSkywayApikeySet
+    ? [
+        {
+          routeName: 'settingsQall',
+          iconName: 'phone',
+          iconMdi: true
+        } as const
+      ]
+    : []),
   {
     routeName: 'settingsStamp',
     iconName: 'emoticon-outline',

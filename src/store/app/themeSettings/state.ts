@@ -1,5 +1,4 @@
 import { Theme } from '@/types/theme'
-import { lightTheme } from './default'
 import { ThemeType } from '.'
 
 export interface S {
@@ -11,5 +10,5 @@ export interface S {
 export const state: S = {
   type: 'auto',
   isOsDarkTheme: false,
-  custom: lightTheme
+  custom: window.defaultLightTheme
 }

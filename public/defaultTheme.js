@@ -1,6 +1,9 @@
-import { Theme } from '@/types/theme'
+//@ts-check
 
-export const lightTheme: Readonly<Theme> = {
+/**
+ * @type {import('../src/types/theme').Theme}
+ */
+const lightTheme = {
   accent: {
     primary: '#005BAC',
     notification: '#F2994A',
@@ -25,7 +28,10 @@ export const lightTheme: Readonly<Theme> = {
   }
 }
 
-export const darkTheme: Readonly<Theme> = {
+/**
+ * @type {import('../src/types/theme').Theme}
+ */
+const darkTheme = {
   accent: {
     primary: '#4899F9',
     notification: '#F2994A',
@@ -49,3 +55,6 @@ export const darkTheme: Readonly<Theme> = {
     secondary: '#BAC2C9'
   }
 }
+
+window.defaultLightTheme = lightTheme
+window.defaultDarkTheme = darkTheme

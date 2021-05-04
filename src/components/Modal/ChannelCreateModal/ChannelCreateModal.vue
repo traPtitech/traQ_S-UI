@@ -44,7 +44,6 @@ import { ChannelId } from '@/types/entity-ids'
 import useChannelOptions from '@/use/channelOptions'
 import FormSelector from '@/components/UI/FormSelector.vue'
 import { UserPermission } from '@traptitech/traq'
-import config from '@/config'
 import useCanCreateChildChannel from '@/use/canCreateChildChannel'
 import { isValidChannelName } from '@/lib/validate'
 import apis from '@/lib/apis'
@@ -109,7 +108,7 @@ const useChannelOptionsForSelector = () => {
     )
   )
   const rootChannel = computed(() =>
-    config.isRootChannelSelectableAsParentChannel ||
+    window.traQConfig.isRootChannelSelectableAsParentChannel ||
     hasChannelEditPermission.value
       ? '(root)'
       : undefined

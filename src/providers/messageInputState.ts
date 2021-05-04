@@ -9,7 +9,6 @@ import {
   watch
 } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import config from '@/config'
 import { canResize, resize } from '@/lib/resize'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
 import { ChannelId } from '@/types/entity-ids'
@@ -17,11 +16,15 @@ import { ChannelId } from '@/types/entity-ids'
 const IMAGE_SIZE_LIMIT = 20 * 1000 * 1000 // 20MB
 const FILE_SIZE_LIMIT = 30 * 1000 * 1000 // 30MB
 
-const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${config.tooLargeFileMessage.replace(
+const tooLargeFileMessage =
+  window.traQConfig.tooLargeFileMessage ??
+  '大きい%sの共有には別のサービスを利用してください。'
+
+const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${tooLargeFileMessage.replace(
   '%s',
   '画像'
 )}`
-const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${config.tooLargeFileMessage.replace(
+const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${tooLargeFileMessage.replace(
   '%s',
   'ファイル'
 )}`

@@ -8,7 +8,6 @@ import router from '@/router'
 import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import config from '@/config'
 
 declare const window: NativeAppWindow
 
@@ -20,7 +19,7 @@ const loadFirebase = async () => {
 
 const setupFirebase = (fb: typeof firebase) => {
   try {
-    fb.initializeApp(config.firebase)
+    fb.initializeApp(window.traQConfig.firebase)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[Firebase] failed to initialize', e)

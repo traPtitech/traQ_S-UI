@@ -99,7 +99,6 @@ import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
-import config from '@/config'
 import LoginFormSaved from './LoginFormSaved.vue'
 import router, { RouteName } from '@/router'
 
@@ -132,7 +131,7 @@ export default defineComponent({
       dontUseSaved
     } = useLogin()
     const isIOS = isIOSApp()
-    const { resetLink } = config.auth
+    const resetLink = window.traQConfig.auth?.resetLink
     const moveToRegistration = () => {
       router.push(RouteName.Registration)
     }

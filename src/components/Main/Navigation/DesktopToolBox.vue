@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <tool
       v-for="tool in tools"
-      :key="tool.type"
+      :key="tool.iconName"
       :class="$style.item"
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
