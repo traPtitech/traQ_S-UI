@@ -204,14 +204,9 @@ const postMessage = (channelId, text) =>
   importScripts(
     'https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js'
   )
+  importScripts('/config.js')
 
-  // TODO: use config.ts
-  firebase.initializeApp({
-    apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
-    projectId: 'traq-r',
-    appId: '1:993645413001:web:b253ea3776d6cf85163c58',
-    messagingSenderId: '993645413001'
-  })
+  firebase.initializeApp(self.traQconfig.firebase)
 
   const messaging = firebase.messaging()
 

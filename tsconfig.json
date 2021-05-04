@@ -32,7 +32,8 @@
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "scripthost",
+      "WebWorker.ImportScripts"
     ]
   },
   "include": [

@@ -107,4 +107,4 @@ const config = {
   showWidgetCopyButton: true
 }
 
-window.traQConfig = config
+self.traQConfig = config
