@@ -1,7 +1,7 @@
 <template>
   <main-view-header-popup-frame>
     <header-tools-menu-item
-      v-if="isMobile"
+      v-if="isMobile && isQallEnabled"
       icon-name="phone"
       icon-mdi
       :class="$style.qallIcon"
@@ -56,6 +56,8 @@ import useIsMobile from '@/use/isMobile'
 import store from '@/store'
 import { UserPermission } from '@traptitech/traq'
 
+const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+
 export default defineComponent({
   name: 'ChannelViewHeaderToolsMenu',
   components: {
@@ -73,6 +75,9 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
+    const isQallEnabled = computed(
+      () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled
+    )
     const qallLabel = computed(() => {
       if (props.isQallSessionOpened) {
         if (props.isJoinedWithCurrentDevice) {
@@ -93,7 +98,13 @@ export default defineComponent({
         UserPermission.EditChannel
       )
     )
-    return { emit, isMobile, qallLabel, hasChannelEditPermission }
+    return {
+      emit,
+      isMobile,
+      isQallEnabled,
+      qallLabel,
+      hasChannelEditPermission
+    }
   }
 })
 </script>

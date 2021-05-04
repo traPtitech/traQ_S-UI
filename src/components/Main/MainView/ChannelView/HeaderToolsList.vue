@@ -100,6 +100,8 @@ import store from '@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import useIsMobile from '@/use/isMobile'
 
+const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+
 export const teleportTargetName = 'header-popup'
 
 export default defineComponent({
@@ -122,7 +124,9 @@ export default defineComponent({
       currentChannelSubscription
     } = useChannelSubscriptionState()
 
-    const isQallEnabled = computed(() => store.state.app.rtcSettings.isEnabled)
+    const isQallEnabled = computed(
+      () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled
+    )
 
     const qallIconName = computed(() =>
       props.isJoinedQallSession ? 'phone' : 'phone-outline'

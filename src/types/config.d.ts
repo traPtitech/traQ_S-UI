@@ -10,8 +10,9 @@ export type Config = Readonly<{
   }>
   /**
    * skyway用設定
+   * 省略時はQall機能を無効化
    */
-  skyway: Readonly<{
+  skyway?: Readonly<{
     apiKey: string
   }>
   /**
