@@ -6,10 +6,11 @@ import {
   isMessage,
   isExternalUrl
 } from '@/lib/util/guard/embeddingOrUrl'
-import config from '@/config'
 import { ExternalUrl } from '@traptitech/traq-markdown-it'
 
-const ignoredHostNamesSet = new Set<string>(config.ogpIgnoreHostNames)
+const ignoredHostNamesSet = new Set<string>(
+  window.traQConfig.ogpIgnoreHostNames
+)
 
 const isIncludedHost = (url: ExternalUrl) => {
   try {

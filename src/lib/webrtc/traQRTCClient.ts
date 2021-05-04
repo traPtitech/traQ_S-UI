@@ -1,9 +1,8 @@
 import type Peer from 'skyway-js'
 import type { SfuRoom, RoomData } from 'skyway-js'
 import apis from '@/lib/apis'
-import config from '@/config'
 
-const skywayApiKey = config.skyway.apiKey
+const skywayApiKey = window.traQConfig.skyway.apiKey
 
 type QRTCStreamChangeEvent = CustomEvent<{
   stream: MediaStream & { peerId: string }

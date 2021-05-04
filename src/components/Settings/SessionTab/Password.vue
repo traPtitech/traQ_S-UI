@@ -39,7 +39,6 @@
 import { defineComponent, computed, reactive, Ref, ref } from 'vue'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import config from '@/config'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
 
@@ -81,7 +80,7 @@ export default defineComponent({
     FormButton
   },
   setup() {
-    const { changeLink, changeName } = config.auth
+    const { changeLink, changeName } = window.traQConfig.auth
     const showChangeLink = changeLink !== undefined && changeName !== undefined
 
     const state = reactive<State>({ old: '', new: '' })

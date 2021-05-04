@@ -1,11 +1,9 @@
-import config from '@/config'
-
 /**
  * pipelineにリダイレクトが必要な場合リダイレクトする
  * リダイレクトした場合はtrueを返す
  */
 export const redirectToPipelineIfNeeded = () => {
-  if (!config.pipelineEnabled) {
+  if (!window.traQConfig.pipelineEnabled) {
     return false
   }
 

@@ -26,13 +26,12 @@
 import { defineComponent } from 'vue'
 import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
-import config from '@/config'
 
 export default defineComponent({
   name: 'AppList',
   components: { AppListItem, CloseButton },
   setup(_, context) {
-    const apps = config.services
+    const apps = window.traQConfig.services
 
     const close = () => {
       context.emit('close')

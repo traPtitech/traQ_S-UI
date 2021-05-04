@@ -54,9 +54,8 @@ import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import useToastStore from '@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
-import config from '@/config'
 
-const { showWidgetCopyButton } = config
+const { showWidgetCopyButton } = window.traQConfig
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()

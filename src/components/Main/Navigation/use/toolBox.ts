@@ -2,7 +2,6 @@ import store from '@/store'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import { useCommandPaletteInvoker } from '@/providers/commandPalette'
-import config from '@/config'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/router'
 
@@ -34,7 +33,7 @@ const useToolBox = () => {
       iconMdi: true,
       onClick: togglePopupMenu
     })
-    if (config.showQrCodeButton) {
+    if (window.traQConfig.showQrCodeButton) {
       tools.push({
         iconName: 'qrcode',
         iconMdi: true,
