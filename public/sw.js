@@ -200,11 +200,15 @@ const postMessage = (channelId, text) =>
     )
   })
 
+  importScripts('/config.js')
+  if (self.traQconfig.firebase === undefined) {
+    return
+  }
+
   importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js')
   importScripts(
     'https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js'
   )
-  importScripts('/config.js')
 
   firebase.initializeApp(self.traQconfig.firebase)
 

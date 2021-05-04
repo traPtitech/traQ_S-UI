@@ -1,8 +1,9 @@
 export type Config = Readonly<{
   /**
    * Firebase用設定
+   * 省略時は通知機能を無効化
    */
-  firebase: Readonly<{
+  firebase?: Readonly<{
     apiKey: string
     appId: string
     projectId: string

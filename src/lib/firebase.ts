@@ -1,4 +1,3 @@
-import type firebase from 'firebase/app'
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
@@ -17,13 +16,19 @@ const loadFirebase = async () => {
   return firebase
 }
 
-const setupFirebase = (fb: typeof firebase) => {
+const setupFirebase = async () => {
+  if (window.traQConfig.firebase === undefined) {
+    return
+  }
+
+  const fb = await loadFirebase()
   try {
     fb.initializeApp(window.traQConfig.firebase)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[Firebase] failed to initialize', e)
   }
+  return fb
 }
 
 // TODO: いい感じにする
@@ -141,69 +146,73 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   }
 
-  const firebase = await loadFirebase()
-  setupFirebase(firebase)
+  const firebase = await setupFirebase()
 
-  if (process.env.NODE_ENV === 'production' && navigator?.serviceWorker) {
-    navigator.serviceWorker.addEventListener('message', data => {
-      if (data.data.type === 'navigate') {
+  if (process.env.NODE_ENV !== 'production' || !navigator?.serviceWorker) {
+    return
+  }
+
+  navigator.serviceWorker.addEventListener('message', data => {
+    if (data.data.type === 'navigate') {
+      // 同じ場所に移動しようとした際のエラーを消す
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      router.push(data.data.to).catch(() => {})
+    }
+  })
+
+  const registration = await navigator.serviceWorker.register('/sw.js', {
+    scope: '/'
+  })
+
+  setupUpdateToast(registration, onCanUpdate)
+
+  const permission = await Notification.requestPermission()
+  if (permission !== 'granted') {
+    // eslint-disable-next-line no-console
+    console.warn(`[Notification] permission ${permission}`)
+    return
+  }
+
+  if (!firebase) {
+    return
+  }
+  const messaging = firebase.messaging()
+
+  messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
+    const notification = await notify(
+      payload.data.title || 'traQ',
+      payload.data
+    )
+    if (!notification) return
+
+    notification.onclick = (event: NotificationClickEvent) => {
+      if (event.reply) {
+        const channelID = payload.data.tag?.slice('c:'.length)
+        if (channelID) {
+          apis.postMessage(channelID, {
+            content: event.reply,
+            embed: true
+          })
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('[Notification] reply channel id was missing')
+        }
+        return
+      }
+      window.focus()
+
+      if (payload.data.path) {
         // 同じ場所に移動しようとした際のエラーを消す
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(data.data.to).catch(() => {})
+        router.push(payload.data.path).catch(() => {})
       }
-    })
-
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/'
-    })
-
-    setupUpdateToast(registration, onCanUpdate)
-
-    const messaging = firebase.messaging()
-
-    const permission = await Notification.requestPermission()
-    if (permission !== 'granted') {
-      // eslint-disable-next-line no-console
-      console.warn(`[Notification] permission ${permission}`)
-      return
     }
+  })
 
-    messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
-      const notification = await notify(
-        payload.data.title || 'traQ',
-        payload.data
-      )
-      if (!notification) return
-
-      notification.onclick = (event: NotificationClickEvent) => {
-        if (event.reply) {
-          const channelID = payload.data.tag?.slice('c:'.length)
-          if (channelID) {
-            apis.postMessage(channelID, {
-              content: event.reply,
-              embed: true
-            })
-          } else {
-            // eslint-disable-next-line no-console
-            console.error('[Notification] reply channel id was missing')
-          }
-          return
-        }
-        window.focus()
-
-        if (payload.data.path) {
-          // 同じ場所に移動しようとした際のエラーを消す
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          router.push(payload.data.path).catch(() => {})
-        }
-      }
-    })
-
-    const token = await messaging.getToken({
-      serviceWorkerRegistration: registration
-    })
-    apis.registerFCMDevice({ token })
-  }
+  const token = await messaging.getToken({
+    serviceWorkerRegistration: registration
+  })
+  apis.registerFCMDevice({ token })
 }
 
 export const deleteToken = async () => {
