@@ -17,8 +17,9 @@ export type Config = Readonly<{
   }>
   /**
    * アプリ一覧に表示されるサービス
+   * 省略時はアプリ一覧ボタンを非表示にする
    */
-  services: ReadonlyArray<{
+  services?: ReadonlyArray<{
     /**
      * 表示名
      */

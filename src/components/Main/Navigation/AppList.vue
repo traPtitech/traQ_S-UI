@@ -31,7 +31,7 @@ export default defineComponent({
   name: 'AppList',
   components: { AppListItem, CloseButton },
   setup(_, context) {
-    const apps = window.traQConfig.services
+    const apps = window.traQConfig.services ?? []
 
     const close = () => {
       context.emit('close')

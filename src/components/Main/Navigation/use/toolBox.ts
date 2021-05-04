@@ -28,11 +28,13 @@ const useToolBox = () => {
       iconMdi: true,
       onClick: () => openCommandPalette('search')
     })
-    tools.push({
-      iconName: 'apps',
-      iconMdi: true,
-      onClick: togglePopupMenu
-    })
+    if (window.traQConfig.services && window.traQConfig.services.length > 0) {
+      tools.push({
+        iconName: 'apps',
+        iconMdi: true,
+        onClick: togglePopupMenu
+      })
+    }
     if (window.traQConfig.showQrCodeButton) {
       tools.push({
         iconName: 'qrcode',
