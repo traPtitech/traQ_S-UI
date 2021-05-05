@@ -7,13 +7,7 @@
         :size="32"
       />
       <div>{{ name }}</div>
-      <div v-if="fileWaveformPath" :class="$style.headerSpacer"></div>
-      <audio-player-time-slider
-        v-else
-        v-model:current-time="currentTime"
-        :class="$style.timeSlider"
-        :duration="duration"
-      />
+      <div :class="$style.headerSpacer"></div>
       <audio-player-time :current-time="currentTime" :duration="duration" />
       <audio-player-volume-slider
         v-model:volume="volume"
@@ -31,6 +25,12 @@
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"
       :waveform-path="fileWaveformPath"
+      :duration="duration"
+    />
+    <audio-player-time-slider
+      v-else
+      v-model:current-time="currentTime"
+      :class="$style.timeSlider"
       :duration="duration"
     />
   </router-link>
@@ -122,7 +122,7 @@ export default defineComponent({
   flex: 1;
 }
 .timeSlider {
-  flex: 1;
+  padding: 8px 20px;
 }
 .volumeSlider {
   padding: 4px;
