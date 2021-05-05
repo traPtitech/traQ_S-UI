@@ -76,6 +76,15 @@
             icon-name="openid"
             @click="loginExternal('oidc')"
           />
+          <authenticate-button
+            v-show="externalLogin.has('slack')"
+            type="secondary"
+            :class="$style.exLoginButton"
+            label="Slack"
+            icon-mdi
+            icon-name="slack"
+            @click="loginExternal('slack')"
+          />
         </div>
       </template>
       <template v-if="signUpAllowed">
