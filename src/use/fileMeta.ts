@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import store from '@/store'
-import { buildFilePath, buildFileThumbnailPath } from '@/lib/apis'
+import { buildFilePath } from '@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '@/lib/util/file'
 import useFileLink from '@/use/fileLink'
 
@@ -14,21 +14,6 @@ const useFileMeta = (props: { fileId: string }) => {
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
   )
-  const fileThumbnailPath = computed(() =>
-    fileMeta.value && fileMeta.value.thumbnail !== null
-      ? buildFileThumbnailPath(fileMeta.value.id)
-      : fileRawPath.value
-  )
-  const fileThumbnailSize = computed(() => {
-    const thumbnail =
-      fileMeta.value && fileMeta.value.thumbnail !== null
-        ? fileMeta.value.thumbnail
-        : undefined
-    return {
-      height: thumbnail?.height,
-      width: thumbnail?.width
-    }
-  })
   const fileType = computed(() =>
     fileMeta.value ? mimeToFileType(fileMeta.value.mime) : 'file'
   )
@@ -42,8 +27,6 @@ const useFileMeta = (props: { fileId: string }) => {
     fileMeta,
     fileLink,
     fileRawPath,
-    fileThumbnailPath,
-    fileThumbnailSize,
     fileType,
     isAnimatedImage,
     fileSize,
