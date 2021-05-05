@@ -29,8 +29,8 @@
     </div>
     <audio-player-waveform
       v-if="fileWaveformPath"
+      v-model:current-time="currentTime"
       :waveform-path="fileWaveformPath"
-      :current-time="currentTime"
       :duration="duration"
     />
   </router-link>
