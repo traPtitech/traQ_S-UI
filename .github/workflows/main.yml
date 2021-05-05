@@ -136,6 +136,7 @@ jobs:
         run: npm ci
       - name: run test:e2e
         run: npm run test:e2e -- --headless
+        if: env.CYPRESS_username != null
         env:
           CYPRESS_username: ${{ secrets.traQ_username }}
           CYPRESS_password: ${{ secrets.traQ_password }}
