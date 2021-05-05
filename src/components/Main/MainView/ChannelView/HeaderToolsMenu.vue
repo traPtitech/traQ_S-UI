@@ -27,6 +27,7 @@
       @click="emit('click-notification')"
     />
     <header-tools-menu-item
+      v-if="isSearchEnabled"
       icon-name="search"
       icon-mdi
       label="チャンネル内検索"
@@ -57,6 +58,7 @@ import store from '@/store'
 import { UserPermission } from '@traptitech/traq'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
 export default defineComponent({
   name: 'ChannelViewHeaderToolsMenu',
@@ -103,6 +105,7 @@ export default defineComponent({
       isMobile,
       isQallEnabled,
       qallLabel,
+      isSearchEnabled,
       hasChannelEditPermission
     }
   }

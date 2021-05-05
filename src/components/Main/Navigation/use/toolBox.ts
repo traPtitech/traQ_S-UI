@@ -23,11 +23,13 @@ const useToolBox = () => {
 
   const tools = computed(() => {
     const tools: Tool[] = []
-    tools.push({
-      iconName: 'search',
-      iconMdi: true,
-      onClick: () => openCommandPalette('search')
-    })
+    if (window.traQConfig.enableSearch) {
+      tools.push({
+        iconName: 'search',
+        iconMdi: true,
+        onClick: () => openCommandPalette('search')
+      })
+    }
     if (window.traQConfig.services && window.traQConfig.services.length > 0) {
       tools.push({
         iconName: 'apps',

@@ -17,6 +17,11 @@ export type Config = Readonly<{
     apiKey: string
   }>
   /**
+   * 検索機能を有効化するかどうか
+   * 省略時は無効化
+   */
+  enableSearch?: boolean
+  /**
    * アプリ一覧に表示されるサービス
    * 省略時はアプリ一覧ボタンを非表示にする
    */

@@ -98,26 +98,30 @@ const useCommandPaletteShortcutKey = () => {
     closeCommandPalette
   } = useCommandPaletteInvoker()
 
+  const isSearchEnabled = window.traQConfig.enableSearch ?? false
+
   const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey) {
-      e.preventDefault()
+    if (isSearchEnabled) {
+      if (e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey) {
+        e.preventDefault()
 
-      if (mode.value === 'search') {
-        closeCommandPalette()
-      } else {
-        openCommandPalette('search')
+        if (mode.value === 'search') {
+          closeCommandPalette()
+        } else {
+          openCommandPalette('search')
+        }
+        return
       }
-      return
-    }
-    if (e.key === '/' && e.ctrlKey) {
-      e.preventDefault()
+      if (e.key === '/' && e.ctrlKey) {
+        e.preventDefault()
 
-      if (mode.value === 'search') {
-        closeCommandPalette()
-      } else {
-        openCommandPalette('search', 'in:here ')
+        if (mode.value === 'search') {
+          closeCommandPalette()
+        } else {
+          openCommandPalette('search', 'in:here ')
+        }
+        return
       }
-      return
     }
   }
 

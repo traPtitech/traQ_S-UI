@@ -13,6 +13,7 @@
     skyway: {
       apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'
     },
+    enableSearch: true,
     services: [
       {
         label: 'Portal',
