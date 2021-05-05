@@ -1,12 +1,7 @@
 import { start, finish, initVars } from './vars'
 import { loadImage, resetCanvas } from './canvas'
 import { needResize, getThumbnailDimensions, Dimensions } from './size'
-import {
-  resetAndSetRotatedImgToCanvas,
-  needDimentionSwap,
-  getOrientation
-} from './orientation'
-import { isIOS, isIOS12 } from '../util/browser'
+import { isIOS } from '../util/browser'
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
@@ -17,8 +12,6 @@ const iOSFlag = isIOS()
 // Canvas area exceeds the maximum limit (width * height > 16777216).
 const cannotResizeWhenIOS = ({ width, height }: Readonly<Dimensions>) =>
   iOSFlag && width * height > 16777216
-
-const needRotation = isIOS12()
 
 export const resize = async (
   inputFile: Readonly<File>
@@ -40,21 +33,6 @@ export const resize = async (
 
     if (cannotResizeWhenIOS(inputSize)) {
       return finish('cannot resize', inputUrl)
-    }
-
-    // iOSでは画像の回転を手動適用
-    if (needRotation && isJpeg(inputFile.type)) {
-      const orientation = await getOrientation(inputFile)
-      resetAndSetRotatedImgToCanvas($input, inputSize, $img, orientation)
-      // resetAndSetRotatedImgToCanvas内では入れ替え前の値がほしいため、そのあとで行う
-      if (needDimentionSwap(orientation)) {
-        ;[inputSize.width, inputSize.height] = [
-          inputSize.height,
-          inputSize.width
-        ]
-      }
-    } else {
-      resetCanvas($input, inputSize, $img)
     }
 
     const outputSize = getThumbnailDimensions(inputSize)
