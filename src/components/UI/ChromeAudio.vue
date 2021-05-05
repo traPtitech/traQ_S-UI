@@ -1,29 +1,31 @@
 <template>
   <div v-if="!cantPlay" :class="$style.container">
-    <div :class="$style.icon" @click="togglePlay">
-      <icon mdi :name="isPlaying ? 'pause' : 'play'" :size="20" />
-    </div>
-    <chrome-audio-time
-      :class="$style.time"
-      :display-current-time="displayCurrentTime"
-      :display-duration="displayDuration"
+    <audio-player-play-button
+      v-model:isPlaying="isPlaying"
+      :class="$style.icon"
+      :size="20"
     />
-    <chrome-audio-slider
-      :class="$style.sliderContainer"
+    <audio-player-time
+      :class="$style.time"
       :current-time="currentTime"
       :duration="duration"
-      :volume="volume"
-      @change-volume="changeVolume"
-      @change-time="changeTime"
     />
-    <div
-      v-if="canUsePinP"
-      :class="$style.icon"
-      :aria-disabled="isPinPShown"
-      @click="startPictureInPicture"
-    >
-      <icon mdi name="picture-in-picture-bottom-right" :size="20" />
+    <div :class="$style.sliderContainer">
+      <audio-player-time-slider
+        v-model:current-time="currentTime"
+        :duration="duration"
+      />
+      <audio-player-volume-slider
+        v-model:volume="volume"
+        :disabled="duration === 0"
+      />
     </div>
+    <audio-player-pin-p-button
+      :class="$style.icon"
+      :is-pin-p-shown="isPinPShown"
+      :size="20"
+      @click.prevent="startPictureInPicture"
+    />
     <div v-if="wasUnsupportedType" :class="$style.unsupportedError">
       対応していないファイル形式でした
     </div>
@@ -35,21 +37,21 @@
 import { defineComponent } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import useAudio from './use/audio'
-import Icon from '@/components/UI/Icon.vue'
-import ChromeAudioTime from './ChromeAudioTime.vue'
-import ChromeAudioSlider from './ChromeAudioSlider.vue'
+import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
+import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
 import store from '@/store'
-import { checkPinPSupport, isSafari } from '@/lib/util/browser'
-
-const safariFlag = isSafari()
-const canUsePinP = checkPinPSupport() && !safariFlag
 
 export default defineComponent({
   name: 'ChromeAudio',
   components: {
-    Icon,
-    ChromeAudioTime,
-    ChromeAudioSlider
+    AudioPlayerPlayButton,
+    AudioPlayerTime,
+    AudioPlayerTimeSlider,
+    AudioPlayerVolumeSlider,
+    AudioPlayerPinPButton
   },
   props: {
     fileId: {
@@ -57,20 +59,15 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { fileMeta, fileRawPath } = useFileMeta(props)
     const {
       cantPlay,
       wasUnsupportedType,
       isPlaying,
       currentTime,
-      displayCurrentTime,
       duration,
-      displayDuration,
       volume,
-      togglePlay,
-      changeVolume,
-      changeTime,
       isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath)
@@ -86,14 +83,8 @@ export default defineComponent({
       wasUnsupportedType,
       isPlaying,
       currentTime,
-      displayCurrentTime,
       duration,
-      displayDuration,
       volume,
-      togglePlay,
-      changeVolume,
-      changeTime,
-      canUsePinP,
       isPinPShown,
       startPictureInPicture
     }
@@ -122,7 +113,6 @@ $background-color: rgb(241, 243, 244);
   padding: 4px;
   margin: auto 4px;
   border-radius: 50%;
-  cursor: pointer;
   &:not([aria-disabled='true']):hover {
     background: rgba(32, 33, 36, 0.06);
   }

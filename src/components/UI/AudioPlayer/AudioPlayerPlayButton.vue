@@ -1,0 +1,39 @@
+<template>
+  <div :class="$style.container" @click.prevent="toggle">
+    <icon :name="isPlaying ? 'pause' : 'play'" :size="size" mdi />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Icon from '@/components/UI/Icon.vue'
+
+export default defineComponent({
+  name: 'AudioPlayerPlayButton',
+  components: {
+    Icon
+  },
+  props: {
+    isPlaying: {
+      type: Boolean,
+      required: true
+    },
+    size: {
+      type: Number,
+      required: true
+    }
+  },
+  setup(props, { emit }) {
+    const toggle = () => {
+      emit('update:isPlaying', !props.isPlaying)
+    }
+    return { toggle }
+  }
+})
+</script>
+
+<style lang="scss" module>
+.container {
+  cursor: pointer;
+}
+</style>
