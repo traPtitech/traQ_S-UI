@@ -19,6 +19,9 @@ export const buildUserIconPath = (userIconFileId: FileId) =>
 export const buildFileThumbnailPath = (fileId: FileId) =>
   `${BASE_PATH}/files/${fileId}/thumbnail`
 
+export const buildFileWaveformPath = (fileId: FileId) =>
+  `${buildFileThumbnailPath(fileId)}?type=waveform`
+
 export const embeddingOrigin =
   DEV_SERVER !== '' &&
   (location.hostname === 'localhost' || location.hostname === '127.0.0.1')

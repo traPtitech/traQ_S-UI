@@ -6,6 +6,7 @@ import {
   isNonPreviewable,
   prettifyFileSize
 } from '@/lib/util/file'
+import { ThumbnailType } from '@traptitech/traq'
 
 describe('mimeToFileType', () => {
   it('can get filetype (1)', () => {
@@ -57,65 +58,77 @@ describe('isFileType', () => {
 
 describe('isNonPreviewable', () => {
   it('can detect file (1)', () => {
-    expect(isNonPreviewable({ mime: 'text/plain', thumbnail: null })).toEqual(
+    expect(isNonPreviewable({ mime: 'text/plain', thumbnails: [] })).toEqual(
       true
     )
   })
   it('can detect file (2)', () => {
     expect(
-      isNonPreviewable({ mime: 'application/pdf', thumbnail: null })
+      isNonPreviewable({ mime: 'application/pdf', thumbnails: [] })
     ).toEqual(true)
   })
   it('can detect file (3)', () => {
     expect(
       isNonPreviewable({
         mime: 'application/vnd.ms-powerpoint',
-        thumbnail: null
+        thumbnails: []
       })
     ).toEqual(true)
   })
 
   it('can detect image file (not svg) (1)', () => {
-    expect(isNonPreviewable({ mime: 'image/webp', thumbnail: {} })).toEqual(
-      false
-    )
+    expect(
+      isNonPreviewable({
+        mime: 'image/webp',
+        thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
+      })
+    ).toEqual(false)
   })
   it('can detect image file (not svg) (2)', () => {
-    expect(isNonPreviewable({ mime: 'image/webp', thumbnail: null })).toEqual(
+    expect(isNonPreviewable({ mime: 'image/webp', thumbnails: [] })).toEqual(
       true
     )
   })
   it('can detect svg file (1)', () => {
-    expect(isNonPreviewable({ mime: 'image/svg+xml', thumbnail: {} })).toEqual(
+    expect(
+      isNonPreviewable({
+        mime: 'image/svg+xml',
+        thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
+      })
+    ).toEqual(false)
+  })
+  it('can detect svg file (2)', () => {
+    expect(isNonPreviewable({ mime: 'image/svg+xml', thumbnails: [] })).toEqual(
       false
     )
   })
-  it('can detect svg file (2)', () => {
-    expect(
-      isNonPreviewable({ mime: 'image/svg+xml', thumbnail: null })
-    ).toEqual(false)
-  })
 
   it('can detect audio file (1)', () => {
-    expect(isNonPreviewable({ mime: 'audio/mpeg', thumbnail: null })).toEqual(
+    expect(isNonPreviewable({ mime: 'audio/mpeg', thumbnails: [] })).toEqual(
       false
     )
   })
   it('can detect audio file (2)', () => {
-    expect(isNonPreviewable({ mime: 'audio/mpeg', thumbnail: {} })).toEqual(
-      false
-    )
+    expect(
+      isNonPreviewable({
+        mime: 'audio/mpeg',
+        thumbnails: [{ type: ThumbnailType.Waveform, mime: 'image/svg+xml' }]
+      })
+    ).toEqual(false)
   })
 
   it('can detect video file (1)', () => {
-    expect(isNonPreviewable({ mime: 'video/webm', thumbnail: null })).toEqual(
+    expect(isNonPreviewable({ mime: 'video/webm', thumbnails: [] })).toEqual(
       false
     )
   })
   it('can detect video file (2)', () => {
-    expect(isNonPreviewable({ mime: 'video/webm', thumbnail: {} })).toEqual(
-      false
-    )
+    expect(
+      isNonPreviewable({
+        mime: 'video/webm',
+        thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
+      })
+    ).toEqual(false)
   })
 })
 

@@ -6,7 +6,7 @@
     -->
     <img
       draggable="false"
-      :alt="fileMeta?.name"
+      :alt="name"
       :src="fileThumbnailPath"
       :height="fileThumbnailSize.height"
       :width="fileThumbnailSize.width"
@@ -17,14 +17,14 @@
     <!--
       CSSで固定値指定なのでheight, widthはつけない
     -->
-    <img draggable="false" :alt="fileMeta?.name" :src="fileThumbnailPath" />
+    <img draggable="false" :alt="name" :src="fileThumbnailPath" />
     <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileMeta from '@/use/fileMeta'
+import useFileThumbnail from '@/use/fileThumbnail'
 import PlayIcon from '@/components/UI/PlayIcon.vue'
 
 export default defineComponent({
@@ -44,17 +44,17 @@ export default defineComponent({
   },
   setup(props) {
     const {
-      fileMeta,
+      name,
       fileLink,
       fileThumbnailPath,
       fileThumbnailSize,
       isAnimatedImage
-    } = useFileMeta(props)
+    } = useFileThumbnail(props)
     return {
+      name,
+      fileLink,
       fileThumbnailPath,
       fileThumbnailSize,
-      fileLink,
-      fileMeta,
       isAnimatedImage
     }
   }

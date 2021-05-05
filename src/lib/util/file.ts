@@ -1,4 +1,4 @@
-import { FileInfo } from '@traptitech/traq'
+import { FileInfo, ThumbnailType } from '@traptitech/traq'
 
 export type AttachmentType =
   | 'image'
@@ -39,13 +39,16 @@ export const isImage = (mime: string) => mimeToFileType(mime) === 'image'
 export const isVideo = (mime: string) => mimeToFileType(mime) === 'video'
 export const isAudio = (mime: string) => mimeToFileType(mime) === 'audio'
 export const isNonPreviewable = (
-  meta: Readonly<Pick<FileInfo, 'mime' | 'thumbnail'>>
+  meta: Readonly<Pick<FileInfo, 'mime' | 'thumbnails'>>
 ) => {
   const type = mimeToFileType(meta.mime)
   if (type === 'file' || type === 'pdf' || type === 'slide') {
     return true
   }
-  if (type === 'image' && !meta.thumbnail && meta.mime !== 'image/svg+xml') {
+  const thumbnailExists = meta.thumbnails.some(
+    t => t.type === ThumbnailType.Image
+  )
+  if (type === 'image' && !thumbnailExists && meta.mime !== 'image/svg+xml') {
     return true
   }
   return false

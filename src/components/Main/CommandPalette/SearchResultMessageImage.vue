@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { makeStyles } from '@/lib/styles'
-import useFileMeta from '@/use/fileMeta'
+import useFileThumbnail from '@/use/fileThumbnail'
 import { defineComponent, reactive, Ref } from 'vue'
 import PlayIcon from '@/components/UI/PlayIcon.vue'
 
@@ -29,7 +29,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { fileThumbnailPath, isAnimatedImage } = useFileMeta(props)
+    const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
     const styles = useStyles(fileThumbnailPath)
     return { fileThumbnailPath, isAnimatedImage, styles }
   }

@@ -1,61 +1,35 @@
-import { Ref, ref, computed, watch } from 'vue'
+import {
+  Ref,
+  ref,
+  computed,
+  watch,
+  readonly,
+  unref,
+  isRef,
+  onMounted
+} from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 
-const getDisplayTime = (time: number) => {
-  if (!Number.isFinite(time)) {
-    return '0:00'
-  }
-  const min = Math.floor(time / 60)
-  const sec = ('' + Math.floor(time % 60)).padStart(2, '0')
-  return `${min}:${sec}`
-}
-
 const toFinite = (n: number, def: number) => (Number.isFinite(n) ? n : def)
 
-const useAudio = (
-  fileMeta: Ref<FileInfo | undefined>,
-  fileRawPath: Ref<string>
-) => {
-  const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
-
-  const audio = new Audio()
-
-  const cantPlay = computed(
-    () => fileMeta.value && audio.canPlayType(fileMeta.value.mime) === ''
-  )
+const useIsPlaying = (audio: HTMLAudioElement) => {
+  const isPlayingNative = ref(false)
   const wasUnsupportedType = ref(false)
 
-  watch(
-    () => fileMeta.value?.mime + fileRawPath.value,
-    () => {
-      if (audio.canPlayType(fileMeta.value?.mime ?? '')) {
-        audio.src = fileRawPath.value
-      }
-    },
-    { immediate: true }
-  )
-
-  const isPlaying = ref(false)
   audio.addEventListener('play', () => {
-    isPlaying.value = true
+    isPlayingNative.value = true
   })
   audio.addEventListener('pause', () => {
-    isPlaying.value = false
+    isPlayingNative.value = false
   })
   audio.addEventListener('ended', () => {
-    isPlaying.value = false
+    isPlayingNative.value = false
   })
   audio.addEventListener('emptied', () => {
-    isPlaying.value = false
+    isPlayingNative.value = false
   })
-  const togglePlay = async () => {
-    if (isPlaying.value) {
-      pause()
-    } else {
-      await start()
-    }
-  }
+
   const start = async () => {
     try {
       await audio.play()
@@ -70,28 +44,123 @@ const useAudio = (
     audio.pause()
   }
 
-  const currentTime = ref(toFinite(audio.currentTime, 0))
-  audio.addEventListener('timeupdate', () => {
-    currentTime.value = toFinite(audio.currentTime, 0)
+  const isPlaying = computed({
+    get() {
+      return isPlayingNative.value
+    },
+    set(v) {
+      if (v) {
+        start()
+      } else {
+        pause()
+      }
+    }
   })
-  const displayCurrentTime = computed(() => getDisplayTime(currentTime.value))
-  const changeTime = (time: number) => {
-    audio.currentTime = time
+
+  return { wasUnsupportedType, isPlaying }
+}
+
+export const useCurrentTime = (
+  audio: Ref<HTMLAudioElement | undefined> | HTMLAudioElement
+) => {
+  const nativeCurrentTime = ref(toFinite(unref(audio)?.currentTime ?? 0, 0))
+
+  const setupTimeUpdate = (audio: HTMLAudioElement) => {
+    audio.addEventListener('timeupdate', () => {
+      nativeCurrentTime.value = toFinite(audio.currentTime, 0)
+    })
   }
 
-  const duration = ref(toFinite(audio.duration, 0))
-  audio.addEventListener('loadedmetadata', () => {
-    duration.value = toFinite(audio.duration, 0)
-  })
-  const displayDuration = computed(() => getDisplayTime(duration.value))
+  if (isRef(audio)) {
+    onMounted(() => {
+      if (!audio.value) return
+      setupTimeUpdate(audio.value)
+    })
+  } else {
+    setupTimeUpdate(audio)
+  }
 
-  const volume = ref(toFinite(audio.volume, 1))
+  const currentTime = computed<number>({
+    get() {
+      return nativeCurrentTime.value
+    },
+    set(v) {
+      const a = unref(audio)
+      if (a) {
+        a.currentTime = v
+      }
+    }
+  })
+
+  return currentTime
+}
+
+export const useDuration = (
+  audio: Ref<HTMLAudioElement | undefined> | HTMLAudioElement
+) => {
+  const nativeDuration = ref(toFinite(unref(audio)?.duration ?? 0, 0))
+
+  const setupLoadedMetadata = (audio: HTMLAudioElement) => {
+    audio.addEventListener('loadedmetadata', () => {
+      nativeDuration.value = toFinite(audio.duration, 0)
+    })
+  }
+
+  if (isRef(audio)) {
+    onMounted(() => {
+      if (!audio.value) return
+      setupLoadedMetadata(audio.value)
+    })
+  } else {
+    setupLoadedMetadata(audio)
+  }
+
+  const duration = readonly(nativeDuration)
+  return duration
+}
+
+const useVolume = (audio: HTMLAudioElement) => {
+  const nativeVolume = ref(toFinite(audio.volume, 1))
   audio.addEventListener('volumechange', () => {
-    volume.value = toFinite(audio.volume, 1)
+    nativeVolume.value = toFinite(audio.volume, 1)
   })
-  const changeVolume = (vol: number) => {
-    audio.volume = vol / 100
-  }
+  const volume = computed<number>({
+    get() {
+      return nativeVolume.value
+    },
+    set(v) {
+      audio.volume = v / 100
+    }
+  })
+  return volume
+}
+
+const useAudio = (
+  fileMeta: Ref<FileInfo | undefined>,
+  fileRawPath: Ref<string>
+) => {
+  const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
+
+  const audio = new Audio()
+
+  const cantPlay = computed(
+    () => fileMeta.value && audio.canPlayType(fileMeta.value.mime) === ''
+  )
+
+  watch(
+    () => fileMeta.value?.mime + fileRawPath.value,
+    () => {
+      if (audio.canPlayType(fileMeta.value?.mime ?? '')) {
+        audio.src = fileRawPath.value
+      }
+    },
+    { immediate: true }
+  )
+
+  const { wasUnsupportedType, isPlaying } = useIsPlaying(audio)
+  const currentTime = useCurrentTime(audio)
+  const duration = useDuration(audio)
+  const volume = useVolume(audio)
 
   const startPinP = (iconId: string) => {
     showPictureInPictureWindow(audio, iconId)
@@ -101,13 +170,8 @@ const useAudio = (
     wasUnsupportedType,
     isPlaying,
     currentTime,
-    displayCurrentTime,
     duration,
-    displayDuration,
     volume,
-    changeVolume,
-    changeTime,
-    togglePlay,
     isPinPShown,
     startPinP
   }

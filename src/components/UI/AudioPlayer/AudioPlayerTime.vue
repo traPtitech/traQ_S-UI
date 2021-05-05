@@ -18,28 +18,38 @@
 import { defineComponent, computed } from 'vue'
 import SemiFixedSizeText from '@/components/UI/SemiFixedSizeText.vue'
 
+const getDisplayTime = (time: number) => {
+  if (!Number.isFinite(time)) {
+    return '0:00'
+  }
+  const min = Math.floor(time / 60)
+  const sec = ('' + Math.floor(time % 60)).padStart(2, '0')
+  return `${min}:${sec}`
+}
 const getDisplayTimeMaxText = (duration: string) => duration.replace(/\d/g, '0')
 
 export default defineComponent({
-  name: 'ChromeAudioTime',
+  name: 'AudioPlayerTime',
   components: {
     SemiFixedSizeText
   },
   props: {
-    displayCurrentTime: {
-      type: String,
+    currentTime: {
+      type: Number,
       required: true
     },
-    displayDuration: {
-      type: String,
+    duration: {
+      type: Number,
       required: true
     }
   },
   setup(props) {
+    const displayCurrentTime = computed(() => getDisplayTime(props.currentTime))
+    const displayDuration = computed(() => getDisplayTime(props.duration))
     const displayTimeMaxText = computed(() =>
-      getDisplayTimeMaxText(props.displayDuration)
+      getDisplayTimeMaxText(displayDuration.value)
     )
-    return { displayTimeMaxText }
+    return { displayCurrentTime, displayDuration, displayTimeMaxText }
   }
 })
 </script>
