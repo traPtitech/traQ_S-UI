@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.volume">
+  <div :class="$style.volume" :data-keep-expanded="keepExpanded">
     <div :class="$style.volumeSlider">
       <slider
         :value="roundedVolume"
@@ -33,6 +33,10 @@ export default defineComponent({
     volume: {
       type: Number,
       required: true
+    },
+    keepExpanded: {
+      type: Boolean,
+      default: false
     },
     disabled: {
       type: Boolean,
@@ -78,6 +82,7 @@ $afterVolumeSliderWidth: 48px;
   width: 0;
   opacity: 0;
   margin: auto 0;
+  .volume[data-keep-expanded='true'] &,
   .volume:hover & {
     transition: width ease 0.3s, margin ease 0.3s, opacity ease 0.25s;
     width: $afterVolumeSliderWidth;

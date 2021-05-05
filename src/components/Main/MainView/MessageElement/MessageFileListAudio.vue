@@ -6,13 +6,18 @@
         :class="$style.icon"
         :size="32"
       />
-      <div>{{ name }}</div>
+      <div :class="$style.title">{{ name }}</div>
       <div :class="$style.headerSpacer"></div>
-      <audio-player-time :current-time="currentTime" :duration="duration" />
+      <audio-player-time
+        :class="$style.time"
+        :current-time="currentTime"
+        :duration="duration"
+      />
       <audio-player-volume-slider
         v-model:volume="volume"
         :class="$style.volumeSlider"
         :duration="duration"
+        keep-expanded
       />
       <audio-player-pin-p-button
         :class="$style.icon"
@@ -34,6 +39,9 @@
       :class="$style.timeSlider"
       :duration="duration"
     />
+    <div v-if="wasUnsupportedType" :class="$style.unsupportedError">
+      対応していないファイル形式でした
+    </div>
   </router-link>
 </template>
 
@@ -106,6 +114,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  position: relative;
   display: block;
   border: {
     width: 2px;
@@ -119,8 +128,16 @@ export default defineComponent({
   align-items: center;
   padding: 0 4px;
 }
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .headerSpacer {
   flex: 1;
+}
+.time {
+  margin: 0 4px;
 }
 .waveform {
   height: 60px;
@@ -134,5 +151,24 @@ export default defineComponent({
 }
 .icon {
   padding: 4px;
+  margin: 2px 4px;
+  border-radius: 50%;
+  &:not([aria-disabled='true']):hover {
+    background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+  }
+}
+.unsupportedError {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: contrast(0.5) brightness(1.3);
 }
 </style>
