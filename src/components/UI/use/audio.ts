@@ -1,4 +1,13 @@
-import { Ref, ref, computed, watch, readonly } from 'vue'
+import {
+  Ref,
+  ref,
+  computed,
+  watch,
+  readonly,
+  unref,
+  isRef,
+  onMounted
+} from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 
@@ -51,29 +60,61 @@ const useIsPlaying = (audio: HTMLAudioElement) => {
   return { wasUnsupportedType, isPlaying }
 }
 
-const useCurrentTime = (audio: HTMLAudioElement) => {
-  const nativeCurrentTime = ref(toFinite(audio.currentTime, 0))
-  audio.addEventListener('timeupdate', () => {
-    nativeCurrentTime.value = toFinite(audio.currentTime, 0)
-  })
+export const useCurrentTime = (
+  audio: Ref<HTMLAudioElement | undefined> | HTMLAudioElement
+) => {
+  const nativeCurrentTime = ref(toFinite(unref(audio)?.currentTime ?? 0, 0))
+
+  const setupTimeUpdate = (audio: HTMLAudioElement) => {
+    audio.addEventListener('timeupdate', () => {
+      nativeCurrentTime.value = toFinite(audio.currentTime, 0)
+    })
+  }
+
+  if (isRef(audio)) {
+    onMounted(() => {
+      if (!audio.value) return
+      setupTimeUpdate(audio.value)
+    })
+  } else {
+    setupTimeUpdate(audio)
+  }
 
   const currentTime = computed<number>({
     get() {
       return nativeCurrentTime.value
     },
     set(v) {
-      audio.currentTime = v
+      const a = unref(audio)
+      if (a) {
+        a.currentTime = v
+      }
     }
   })
 
   return currentTime
 }
 
-const useDuration = (audio: HTMLAudioElement) => {
-  const nativeDuration = ref(toFinite(audio.duration, 0))
-  audio.addEventListener('loadedmetadata', () => {
-    nativeDuration.value = toFinite(audio.duration, 0)
-  })
+export const useDuration = (
+  audio: Ref<HTMLAudioElement | undefined> | HTMLAudioElement
+) => {
+  const nativeDuration = ref(toFinite(unref(audio)?.duration ?? 0, 0))
+
+  const setupLoadedMetadata = (audio: HTMLAudioElement) => {
+    audio.addEventListener('loadedmetadata', () => {
+      nativeDuration.value = toFinite(audio.duration, 0)
+    })
+  }
+
+  if (isRef(audio)) {
+    onMounted(() => {
+      if (!audio.value) return
+      setupLoadedMetadata(audio.value)
+    })
+  } else {
+    setupLoadedMetadata(audio)
+  }
+
   const duration = readonly(nativeDuration)
   return duration
 }

@@ -1,26 +1,42 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header :file-id="fileMeta.id" :class="$style.header" />
+    <file-modal-content-header
+      v-if="fileMeta"
+      :file-id="fileMeta.id"
+      :class="$style.header"
+    />
     <audio
+      ref="audioEle"
       controls
-      :alt="fileMeta.name"
+      :alt="fileMeta?.name"
       :src="fileRawPath"
       :class="$style.audio"
     />
-    <file-modal-content-footer :file-id="fileMeta.id" />
+    <audio-player-waveform
+      v-if="fileWaveformPath"
+      v-model:current-time="currentTime"
+      :class="$style.waveform"
+      :waveform-path="fileWaveformPath"
+      :duration="duration"
+    />
+    <file-modal-content-footer v-if="fileMeta" :file-id="fileMeta.id" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import useFileMeta from '@/use/fileMeta'
 import FileModalContentHeader from '@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '@/components/Modal/FileModal/FileModalContentFooter.vue'
+import AudioPlayerWaveform from '@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
+import useFileWaveform from '@/use/fileWaveform'
+import { useCurrentTime, useDuration } from '@/components/UI/use/audio'
 
 export default defineComponent({
   name: 'FileModalAudio',
   components: {
     FileModalContentHeader,
+    AudioPlayerWaveform,
     FileModalContentFooter
   },
   props: {
@@ -29,9 +45,22 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { fileMeta, fileRawPath } = useFileMeta(props)
-    return { fileMeta, fileRawPath }
+    const { fileWaveformPath } = useFileWaveform(props)
+
+    const audioEle = shallowRef<HTMLAudioElement>()
+    const currentTime = useCurrentTime(audioEle)
+    const duration = useDuration(audioEle)
+
+    return {
+      fileMeta,
+      fileRawPath,
+      fileWaveformPath,
+      audioEle,
+      currentTime,
+      duration
+    }
   }
 })
 </script>
@@ -51,6 +80,10 @@ export default defineComponent({
 }
 .audio {
   margin: 16px 0;
-  width: 80%;
+  width: calc(100% - 32px);
+}
+.waveform {
+  height: 120px;
+  width: calc(100% - 32px);
 }
 </style>

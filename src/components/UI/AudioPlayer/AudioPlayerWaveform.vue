@@ -104,8 +104,7 @@ export default defineComponent({
 <style lang="scss" module>
 .waveformWrapper {
   position: relative;
-  height: 60px;
-  width: 100%;
+  cursor: pointer;
 }
 .waveformPlayedMask {
   height: 100%;

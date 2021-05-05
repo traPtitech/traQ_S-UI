@@ -24,6 +24,7 @@
     <audio-player-waveform
       v-if="fileWaveformPath"
       v-model:current-time="currentTime"
+      :class="$style.waveform"
       :waveform-path="fileWaveformPath"
       :duration="duration"
     />
@@ -120,6 +121,10 @@ export default defineComponent({
 }
 .headerSpacer {
   flex: 1;
+}
+.waveform {
+  height: 60px;
+  width: 100%;
 }
 .timeSlider {
   padding: 8px 20px;
