@@ -59,8 +59,6 @@ $afterVolumeSliderWidth: 48px;
 .volume {
   display: flex;
   align-items: center;
-  padding: 4px;
-  margin: auto;
   border-radius: 40px;
   &:hover {
     background-color: rgb(229, 231, 232);

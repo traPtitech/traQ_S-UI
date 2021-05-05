@@ -7,6 +7,7 @@
       :max="roundedDuration"
       tooltip="none"
       @change-value="changeTime"
+      @click.prevent
     />
   </div>
 </template>

@@ -17,6 +17,7 @@
       />
       <audio-player-volume-slider
         v-model:volume="volume"
+        :class="$style.volumeSlider"
         :disabled="duration === 0"
       />
     </div>
@@ -123,6 +124,9 @@ $background-color: rgb(241, 243, 244);
 .sliderContainer {
   margin: 0 4px;
   flex: 1;
+}
+.volumeSlider {
+  padding: 4px;
 }
 .unsupportedError {
   position: absolute;

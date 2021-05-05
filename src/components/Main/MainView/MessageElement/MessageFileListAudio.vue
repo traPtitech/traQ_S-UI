@@ -1,23 +1,63 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.description">
-      <message-file-list-item-content :file-id="fileId" />
+  <router-link :to="fileLink" :class="$style.container">
+    <div :class="$style.header">
+      <audio-player-play-button
+        v-model:isPlaying="isPlaying"
+        :class="$style.icon"
+        :size="32"
+      />
+      <div>{{ name }}</div>
+      <div v-if="fileWaveformPath" :class="$style.headerSpacer"></div>
+      <audio-player-time-slider
+        v-else
+        v-model:current-time="currentTime"
+        :class="$style.timeSlider"
+        :duration="duration"
+      />
+      <audio-player-time :current-time="currentTime" :duration="duration" />
+      <audio-player-volume-slider
+        v-model:volume="volume"
+        :class="$style.volumeSlider"
+        :duration="duration"
+      />
+      <audio-player-pin-p-button
+        :class="$style.icon"
+        :is-pin-p-shown="isPinPShown"
+        :size="20"
+        @click.prevent="startPictureInPicture"
+      />
     </div>
-    <chrome-audio :file-id="fileId" />
-  </div>
+    <audio-player-waveform
+      v-if="fileWaveformPath"
+      :waveform-path="fileWaveformPath"
+      :current-time="currentTime"
+      :duration="duration"
+    />
+  </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import useFileWaveform from '@/use/fileWaveform'
 import useFileMeta from '@/use/fileMeta'
-import MessageFileListItemContent from './MessageFileListItemContent.vue'
-import ChromeAudio from '@/components/UI/ChromeAudio.vue'
+import useAudio from '@/components/UI/use/audio'
+import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerVolumeSlider from '@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import AudioPlayerPinPButton from '@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
+import AudioPlayerWaveform from '@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
+import store from '@/store'
 
 export default defineComponent({
-  name: 'MessageFileListVideo',
+  name: 'MessageFileListAudio',
   components: {
-    MessageFileListItemContent,
-    ChromeAudio
+    AudioPlayerPlayButton,
+    AudioPlayerTimeSlider,
+    AudioPlayerTime,
+    AudioPlayerVolumeSlider,
+    AudioPlayerPinPButton,
+    AudioPlayerWaveform
   },
   props: {
     fileId: {
@@ -25,19 +65,47 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props, context) {
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
-    return { fileMeta, fileLink, fileRawPath }
+  setup(props) {
+    const { fileLink, name, fileWaveformPath } = useFileWaveform(props)
+    const { fileMeta, fileRawPath } = useFileMeta(props)
+    const {
+      cantPlay,
+      wasUnsupportedType,
+      isPlaying,
+      currentTime,
+      duration,
+      volume,
+      isPinPShown,
+      startPinP
+    } = useAudio(fileMeta, fileRawPath)
+    const startPictureInPicture = async () => {
+      const iconId =
+        store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
+          ?.iconFileId ?? ''
+      await startPinP(iconId)
+    }
+
+    return {
+      fileLink,
+      name,
+      fileWaveformPath,
+
+      cantPlay,
+      wasUnsupportedType,
+      isPlaying,
+      currentTime,
+      duration,
+      volume,
+      isPinPShown,
+      startPictureInPicture
+    }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  position: relative;
-  overflow: hidden;
-  max-width: min(400px, 100%);
-  height: max-content;
+  display: block;
   border: {
     width: 2px;
     style: solid;
@@ -45,9 +113,21 @@ export default defineComponent({
     color: $theme-ui-secondary;
   }
 }
-.description {
-  width: 100%;
-  margin: 6px 0;
-  cursor: pointer;
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+.headerSpacer {
+  flex: 1;
+}
+.timeSlider {
+  flex: 1;
+}
+.volumeSlider {
+  padding: 4px;
+}
+.icon {
+  padding: 4px;
 }
 </style>

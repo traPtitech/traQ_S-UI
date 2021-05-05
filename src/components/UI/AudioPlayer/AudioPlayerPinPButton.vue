@@ -35,6 +35,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 </style>
