@@ -10,11 +10,13 @@ export const isIOS = () => {
   return ua.includes('iphone') || ua.includes('ipod') || ua.includes('ipad')
 }
 
-export const isIOS12 = () => {
-  return isIOS() && ua.includes('os 12')
+type iOSAppWindow = Window & {
+  iOSToken: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  webkit: { messageHandlers: any }
 }
 
-export const isIOSApp = () => {
+export const isIOSApp = (window: Window): window is iOSAppWindow => {
   return 'iOSToken' in window
 }
 

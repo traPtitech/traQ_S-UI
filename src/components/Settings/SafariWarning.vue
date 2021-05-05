@@ -18,7 +18,7 @@ import { isSafari, isIOSApp, isPWA } from '@/lib/util/browser'
 export default defineComponent({
   name: 'SafariWarning',
   setup() {
-    const showSafariWarning = isSafari() && !isIOSApp() && !isPWA()
+    const showSafariWarning = isSafari() && !isIOSApp(window) && !isPWA()
 
     return { showSafariWarning }
   }

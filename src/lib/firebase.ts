@@ -4,11 +4,8 @@ import {
 } from '@/types/InlineNotificationReplies'
 import apis from './apis'
 import router from '@/router'
-import { NativeAppWindow } from '@/types/NativeAppBridge'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
-
-declare const window: NativeAppWindow
 
 const loadFirebase = async () => {
   const firebase = (await import('firebase/app')).default
@@ -131,7 +128,7 @@ const setupUpdateToast = (
 }
 
 export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
-  if (isIOSApp()) {
+  if (isIOSApp(window)) {
     // iOSはNotificationがないため、先にFCMトークンを登録する
     const token = window.iOSToken
     if (token && token !== 'No Token') {

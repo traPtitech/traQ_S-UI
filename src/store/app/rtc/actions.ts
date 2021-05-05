@@ -91,10 +91,8 @@ export const actions = defineActions({
       return false
     }
     if (
-      isIOSApp() &&
-      'webkit' in window &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      !(await (window as any).webkit.messageHandlers.scriptMessageHandler.postMessage(
+      isIOSApp(window) &&
+      !(await window.webkit.messageHandlers.scriptMessageHandler.postMessage(
         'RequestMicrophone'
       ))
     ) {
