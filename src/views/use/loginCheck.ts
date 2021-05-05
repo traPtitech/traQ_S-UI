@@ -35,7 +35,9 @@ const useLoginCheck = (afterCheck?: () => void) => {
 
     if (isIOSApp()) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (window as any).webkit.messageHandlers.setLoginStatusHandler.postMessage(store.state.domain.me.detail !== undefined)
+      await (window as any).webkit.messageHandlers.setLoginStatusHandler.postMessage(
+        store.state.domain.me.detail !== undefined
+      )
     }
 
     isLoginCheckDone.value = true
