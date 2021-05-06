@@ -5,6 +5,9 @@ import { moduleGetterContext } from '@/store'
 import { Stamp, User, UserGroup } from '@traptitech/traq'
 import { ActiveUser, isActive } from '@/lib/user'
 import { DMChannelId, UserId } from '@/types/entity-ids'
+import { isDefined } from '@/lib/util/array'
+
+const initialRecentStampNames = ['ok_hand', 'thumbsup', 'eyes'] as const
 
 const entitiesGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, entities)
@@ -70,6 +73,12 @@ export const getters = defineGetters<S>()({
   stampByName(...args): (name: string) => Stamp | undefined {
     const { getters } = entitiesGetterContext(args)
     return name => getters.stampNameTable.get(name)
+  },
+  initialRecentStamps(...args): Stamp[] {
+    const { getters } = entitiesGetterContext(args)
+    return initialRecentStampNames
+      .map(name => getters.stampNameTable.get(name))
+      .filter(isDefined)
   },
 
   nonEmptyStampPaletteIds(state) {
