@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" title="停止する">
     <icon name="stop" :size="size" mdi />
   </div>
 </template>

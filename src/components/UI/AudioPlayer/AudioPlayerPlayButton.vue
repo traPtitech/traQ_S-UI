@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" @click.prevent="toggle">
+  <div
+    :class="$style.container"
+    :title="isPlaying ? '一時停止する' : '再生する'"
+    @click.prevent="toggle"
+  >
     <icon :name="isPlaying ? 'pause' : 'play'" :size="size" mdi />
   </div>
 </template>

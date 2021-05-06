@@ -1,5 +1,10 @@
 <template>
-  <div v-if="canUsePinP" :class="$style.container" :aria-disabled="isPinPShown">
+  <div
+    v-if="canUsePinP"
+    :class="$style.container"
+    :aria-disabled="isPinPShown"
+    title="ピクチャーインピクチャー表示"
+  >
     <icon mdi name="picture-in-picture-bottom-right" :size="size" />
   </div>
 </template>

@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" @click.prevent="toggle">
+  <div
+    :class="$style.container"
+    :title="loop ? 'ループ再生を無効にする' : 'ループ再生を有効にする'"
+    @click.prevent="toggle"
+  >
     <icon :name="loop ? 'loop' : 'no-loop'" :size="size" />
   </div>
 </template>
