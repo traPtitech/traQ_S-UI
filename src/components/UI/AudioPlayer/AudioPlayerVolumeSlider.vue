@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.volume" :data-keep-expanded="keepExpanded">
+  <div
+    :class="$style.volume"
+    :data-keep-expanded="keepExpanded"
+    :aria-disabled="disabled"
+  >
     <div :class="$style.volumeSlider">
       <slider
         :value="roundedVolume"
@@ -10,6 +14,7 @@
       />
     </div>
     <icon
+      :class="$style.icon"
       mdi
       :size="20"
       :name="volume > 0 ? 'volume-high' : 'volume-off'"
@@ -64,8 +69,11 @@ $afterVolumeSliderWidth: 48px;
   display: flex;
   align-items: center;
   border-radius: 40px;
-  &:hover {
-    background-color: rgb(229, 231, 232);
+  &:not([aria-disabled='true']):hover {
+    background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
   }
 
   :global {
@@ -97,5 +105,8 @@ $afterVolumeSliderWidth: 48px;
   &:not(:hover) :global(.vue-slider-dot-handle) {
     opacity: 0;
   }
+}
+.icon {
+  flex-shrink: 0;
 }
 </style>

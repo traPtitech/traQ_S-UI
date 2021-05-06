@@ -152,13 +152,6 @@ export default defineComponent({
 .icon {
   padding: 4px;
   margin: 2px 4px;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
 }
 .unsupportedError {
   position: absolute;

@@ -38,6 +38,7 @@ const useIsPlaying = (
         oldAudio.removeEventListener('emptied', onStop)
       }
       if (newAudio) {
+        isPlayingNative.value = !newAudio.paused
         newAudio.addEventListener('play', onPlay)
         newAudio.addEventListener('pause', onStop)
         newAudio.addEventListener('ended', onStop)

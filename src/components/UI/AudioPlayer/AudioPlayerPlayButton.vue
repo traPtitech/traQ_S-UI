@@ -37,5 +37,12 @@ export default defineComponent({
   display: flex;
   align-items: center;
   cursor: pointer;
+  border-radius: 50%;
+  &:not([aria-disabled='true']):hover {
+    background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+  }
 }
 </style>
