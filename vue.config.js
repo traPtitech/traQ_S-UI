@@ -116,6 +116,11 @@ module.exports = {
         ws: true,
         changeOrigin: true,
         agent: keepAliveAgent
+      },
+      '/api/auth/*': {
+        target: DEV_SERVER_PROXY_HOST,
+        changeOrigin: true,
+        agent: keepAliveAgent
       }
     }
   }
