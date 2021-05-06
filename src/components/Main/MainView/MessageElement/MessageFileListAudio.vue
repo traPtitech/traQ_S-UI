@@ -7,24 +7,30 @@
         :size="32"
       />
       <div :class="$style.title">{{ name }}</div>
-      <div :class="$style.headerSpacer"></div>
-      <audio-player-time
-        :class="$style.time"
-        :current-time="currentTime"
-        :duration="duration"
-      />
-      <audio-player-volume-slider
-        v-model:volume="volume"
-        :class="$style.volumeSlider"
-        :duration="duration"
-        keep-expanded
-      />
-      <audio-player-pin-p-button
-        :class="$style.icon"
-        :is-pin-p-shown="isPinPShown"
-        :size="20"
-        @click.prevent="startPictureInPicture"
-      />
+      <div :class="$style.headerTools">
+        <audio-player-time
+          :class="$style.time"
+          :current-time="currentTime"
+          :duration="duration"
+        />
+        <audio-player-volume-slider
+          v-model:volume="volume"
+          :class="$style.volumeSlider"
+          :duration="duration"
+          keep-expanded
+        />
+        <audio-player-loop-button
+          v-model:loop="loop"
+          :class="$style.icon"
+          :size="20"
+        />
+        <audio-player-pin-p-button
+          :class="$style.icon"
+          :is-pin-p-shown="isPinPShown"
+          :size="20"
+          @click.prevent="startPictureInPicture"
+        />
+      </div>
     </div>
     <audio-player-waveform
       v-if="fileWaveformPath"
@@ -54,6 +60,7 @@ import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayBu
 import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerVolumeSlider from '@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import AudioPlayerLoopButton from '@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerWaveform from '@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import store from '@/store'
@@ -65,6 +72,7 @@ export default defineComponent({
     AudioPlayerTimeSlider,
     AudioPlayerTime,
     AudioPlayerVolumeSlider,
+    AudioPlayerLoopButton,
     AudioPlayerPinPButton,
     AudioPlayerWaveform
   },
@@ -84,6 +92,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath)
@@ -105,6 +114,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPictureInPicture
     }
@@ -116,6 +126,7 @@ export default defineComponent({
 .container {
   position: relative;
   display: block;
+  max-width: min(600px, 100%);
   border: {
     width: 2px;
     style: solid;
@@ -125,15 +136,19 @@ export default defineComponent({
 }
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   padding: 0 4px;
 }
 .title {
+  flex: 1 0 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.headerSpacer {
+.headerTools {
+  display: flex;
+  align-items: center;
   flex: 1;
 }
 .time {
@@ -148,17 +163,11 @@ export default defineComponent({
 }
 .volumeSlider {
   padding: 4px;
+  margin-left: auto;
 }
 .icon {
   padding: 4px;
   margin: 2px 4px;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
 }
 .unsupportedError {
   position: absolute;

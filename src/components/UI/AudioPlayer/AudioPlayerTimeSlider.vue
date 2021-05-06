@@ -1,8 +1,12 @@
 <template>
-  <div :class="$style.timeSlider">
+  <div
+    :class="$style.timeSlider"
+    :aria-disabled="disabled"
+    :data-show-background-on-hover="showBackgroundOnHover"
+  >
     <slider
       :value="roundedCurrentTime"
-      :disabled="roundedDuration === 0"
+      :disabled="disabled"
       :min="0"
       :max="roundedDuration"
       tooltip="none"
@@ -29,11 +33,16 @@ export default defineComponent({
     duration: {
       type: Number,
       required: true
+    },
+    showBackgroundOnHover: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
     const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
     const roundedDuration = computed(() => Math.floor(props.duration))
+    const disabled = computed(() => props.duration === 0)
 
     const changeTime = (time: number) => {
       context.emit('update:currentTime', time)
@@ -41,6 +50,7 @@ export default defineComponent({
     return {
       roundedCurrentTime,
       roundedDuration,
+      disabled,
       changeTime
     }
   }
@@ -49,8 +59,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .timeSlider {
-  flex: 1;
-  padding: 16px 8px;
+  &[data-show-background-on-hover='true']:not([aria-disabled='true']):hover {
+    background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+  }
 
   :global(.vue-slider-dot-handle) {
     opacity: 1;

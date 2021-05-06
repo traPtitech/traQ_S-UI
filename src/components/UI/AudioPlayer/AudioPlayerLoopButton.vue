@@ -1,29 +1,24 @@
 <template>
   <div
-    v-if="canUsePinP"
     :class="$style.container"
-    :aria-disabled="isPinPShown"
-    title="ピクチャーインピクチャー表示"
+    :title="loop ? 'ループ再生を無効にする' : 'ループ再生を有効にする'"
+    @click.prevent="toggle"
   >
-    <icon mdi name="picture-in-picture-bottom-right" :size="size" />
+    <icon :name="loop ? 'loop' : 'no-loop'" :size="size" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
-import { checkPinPSupport, isSafari } from '@/lib/util/browser'
-
-const safariFlag = isSafari()
-const canUsePinP = checkPinPSupport() && !safariFlag
 
 export default defineComponent({
-  name: 'AudioPlayerPinPButton',
+  name: 'AudioPlayerLoopButton',
   components: {
     Icon
   },
   props: {
-    isPinPShown: {
+    loop: {
       type: Boolean,
       required: true
     },
@@ -32,8 +27,11 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
-    return { canUsePinP }
+  setup(props, { emit }) {
+    const toggle = () => {
+      emit('update:loop', !props.loop)
+    }
+    return { toggle }
   }
 })
 </script>

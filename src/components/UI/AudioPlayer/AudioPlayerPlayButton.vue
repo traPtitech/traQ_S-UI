@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" @click.prevent="toggle">
+  <div
+    :class="$style.container"
+    :title="isPlaying ? '一時停止する' : '再生する'"
+    @click.prevent="toggle"
+  >
     <icon :name="isPlaying ? 'pause' : 'play'" :size="size" mdi />
   </div>
 </template>
@@ -37,5 +41,12 @@ export default defineComponent({
   display: flex;
   align-items: center;
   cursor: pointer;
+  border-radius: 50%;
+  &:not([aria-disabled='true']):hover {
+    background: rgba(32, 33, 36, 0.06);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+  }
 }
 </style>
