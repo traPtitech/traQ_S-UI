@@ -172,6 +172,45 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
   return volume
 }
 
+const useLoop = (audio: Ref<HTMLAudioElement | undefined>) => {
+  const nativeLoop = ref(false)
+
+  const onLoopUpdate = () => {
+    if (!audio.value) return
+    nativeLoop.value = audio.value.loop
+  }
+  const observe = (a: HTMLAudioElement) => {
+    const m = new MutationObserver(onLoopUpdate)
+    m.observe(a, { attributeFilter: ['loop'] })
+    return m
+  }
+  let mo: MutationObserver | undefined
+
+  watch(
+    audio,
+    (newAudio, oldAudio) => {
+      if (oldAudio) {
+        mo?.disconnect()
+      }
+      if (newAudio) {
+        mo = observe(newAudio)
+      }
+    },
+    { immediate: true }
+  )
+
+  const loop = computed<boolean>({
+    get() {
+      return nativeLoop.value
+    },
+    set(v) {
+      if (!audio.value) return
+      audio.value.loop = v
+    }
+  })
+  return loop
+}
+
 const useAudio = (
   fileMeta: Ref<FileInfo | undefined>,
   fileRawPath: Ref<string>,
@@ -212,6 +251,7 @@ const useAudio = (
   const currentTime = useCurrentTime(audio)
   const duration = useDuration(audio)
   const volume = useVolume(audio)
+  const loop = useLoop(audio)
 
   const startPinP = (iconId: string) => {
     showPictureInPictureWindow(audio.value, iconId)
@@ -224,6 +264,7 @@ const useAudio = (
     currentTime,
     duration,
     volume,
+    loop,
     isPinPShown,
     startPinP
   }

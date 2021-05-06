@@ -19,6 +19,11 @@
         :duration="duration"
         keep-expanded
       />
+      <audio-player-loop-button
+        v-model:loop="loop"
+        :class="$style.icon"
+        :size="20"
+      />
       <audio-player-pin-p-button
         :class="$style.icon"
         :is-pin-p-shown="isPinPShown"
@@ -54,6 +59,7 @@ import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayBu
 import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerVolumeSlider from '@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import AudioPlayerLoopButton from '@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerWaveform from '@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import store from '@/store'
@@ -65,6 +71,7 @@ export default defineComponent({
     AudioPlayerTimeSlider,
     AudioPlayerTime,
     AudioPlayerVolumeSlider,
+    AudioPlayerLoopButton,
     AudioPlayerPinPButton,
     AudioPlayerWaveform
   },
@@ -84,6 +91,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath)
@@ -105,6 +113,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPictureInPicture
     }

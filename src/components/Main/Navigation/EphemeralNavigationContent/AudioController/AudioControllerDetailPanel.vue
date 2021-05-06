@@ -21,6 +21,11 @@
         :class="$style.icon"
         @click="resetAudio"
       />
+      <audio-player-loop-button
+        v-model:loop="loop"
+        :class="$style.icon"
+        :size="20"
+      />
       <audio-player-volume-slider
         v-model:volume="volume"
         :class="$style.volumeSlider"
@@ -37,6 +42,7 @@ import useAudio from '@/components/UI/use/audio'
 import useFileMeta from '@/use/fileMeta'
 import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerStopButton from '@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
+import AudioPlayerLoopButton from '@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from '@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
@@ -46,6 +52,7 @@ export default defineComponent({
   components: {
     AudioPlayerPlayButton,
     AudioPlayerStopButton,
+    AudioPlayerLoopButton,
     AudioPlayerTime,
     AudioPlayerTimeSlider,
     AudioPlayerVolumeSlider
@@ -63,6 +70,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath, audio)
@@ -74,6 +82,7 @@ export default defineComponent({
       currentTime,
       duration,
       volume,
+      loop,
       isPinPShown,
       startPinP,
       resetAudio
