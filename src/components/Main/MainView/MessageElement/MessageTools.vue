@@ -85,6 +85,20 @@ import apis from '@/lib/apis'
 import { useMessageContextMenuInvoker } from '@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
 import useToastStore from '@/providers/toastStore'
 
+const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
+  if (recents.length >= 3) return
+
+  const initials = store.getters.entities.initialRecentStamps.map(
+    stamp => stamp.id
+  )
+  for (const s of initials) {
+    if (recents.length >= 3) return
+    if (recents.includes(s)) return
+
+    recents.push(s)
+  }
+}
+
 export default defineComponent({
   name: 'MessageTools',
   components: {
@@ -99,9 +113,11 @@ export default defineComponent({
   setup(props) {
     const { addErrorToast } = useToastStore()
 
-    const recentStamps = computed(() =>
-      store.getters.domain.me.recentStampIds.slice(0, 3)
-    )
+    const recentStamps = computed(() => {
+      const recents = store.getters.domain.me.recentStampIds.slice(0, 3)
+      pushInitialRecentStampsIfNeeded(recents)
+      return recents
+    })
     const addStamp = async (stampId: StampId) => {
       try {
         await apis.addMessageStamp(props.messageId, stampId)
