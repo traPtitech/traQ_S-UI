@@ -74,7 +74,8 @@ import {
   mdiArrowExpandVertical,
   mdiImageMultiple,
   mdiArrowLeft,
-  mdiArrowRight
+  mdiArrowRight,
+  mdiMusicNote
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -157,7 +158,8 @@ const mdi: MdiIconsMapping = {
   'arrow-expand-vertical': mdiArrowExpandVertical,
   'image-multiple': mdiImageMultiple,
   'arrow-left': mdiArrowLeft,
-  'arrow-right': mdiArrowRight
+  'arrow-right': mdiArrowRight,
+  'music-note': mdiMusicNote
 }
 
 export default mdi

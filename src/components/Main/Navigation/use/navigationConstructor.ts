@@ -12,7 +12,11 @@ export type NavigationItemType =
  *
  * 「選択しない」を許すのでnullable
  */
-export type EphemeralNavigationItemType = 'qall' | 'drafts' | undefined
+export type EphemeralNavigationItemType =
+  | 'qall'
+  | 'drafts'
+  | 'audioController'
+  | undefined
 
 // TODO: 言語系リソースの置き場所
 export const navigationTypeNameMap: Record<NavigationItemType, string> = {
@@ -28,7 +32,8 @@ export const ephemeralNavigationTypeNameMap: Record<
   string
 > = {
   qall: 'Qall',
-  drafts: '下書き一覧'
+  drafts: '下書き一覧',
+  audioController: '音楽'
 }
 
 export const {

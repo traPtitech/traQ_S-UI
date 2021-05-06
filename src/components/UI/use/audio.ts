@@ -1,10 +1,23 @@
-import { Ref, ref, computed, watch, readonly, shallowRef } from 'vue'
+import {
+  Ref,
+  ref,
+  computed,
+  watch,
+  readonly,
+  shallowRef,
+  onBeforeUnmount
+} from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
+import useAudioController from '@/providers/audioController'
+import { destroyAudio } from '@/lib/audio'
 
 const toFinite = (n: number, def: number) => (Number.isFinite(n) ? n : def)
 
-const useIsPlaying = (audio: Ref<HTMLAudioElement | undefined>) => {
+const useIsPlaying = (
+  audio: Ref<HTMLAudioElement | undefined>,
+  onPlayStart?: () => void
+) => {
   const isPlayingNative = ref(false)
   const wasUnsupportedType = ref(false)
 
@@ -38,6 +51,7 @@ const useIsPlaying = (audio: Ref<HTMLAudioElement | undefined>) => {
     if (!audio.value) return
     try {
       await audio.value.play()
+      onPlayStart?.()
     } catch (e: unknown) {
       const err = e as Error
       if (err.name === 'NotSupportedError') {
@@ -159,11 +173,19 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
 
 const useAudio = (
   fileMeta: Ref<FileInfo | undefined>,
-  fileRawPath: Ref<string>
+  fileRawPath: Ref<string>,
+  audioArg?: Ref<HTMLAudioElement>
 ) => {
+  const { fileId: globalFileId, setAudio } = useAudioController()
   const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
 
-  const audio = shallowRef(new Audio())
+  const audio = audioArg ?? shallowRef(new Audio())
+
+  onBeforeUnmount(() => {
+    if (fileMeta.value?.id !== globalFileId.value) {
+      destroyAudio(audio.value)
+    }
+  })
 
   const cantPlay = computed(
     () => fileMeta.value && audio.value.canPlayType(fileMeta.value.mime) === ''
@@ -172,20 +194,27 @@ const useAudio = (
   watch(
     () => fileMeta.value?.mime + fileRawPath.value,
     () => {
-      if (audio.value.canPlayType(fileMeta.value?.mime ?? '')) {
-        audio.value.src = fileRawPath.value
-      }
+      if (audioArg) return
+      if (!audio.value.canPlayType(fileMeta.value?.mime ?? '')) return
+      audio.value.src = fileRawPath.value
     },
     { immediate: true }
   )
 
-  const { wasUnsupportedType, isPlaying } = useIsPlaying(audio)
+  const onPlay = !audioArg
+    ? () => {
+        if (!fileMeta.value) return
+        setAudio(audio.value, fileMeta.value.id)
+      }
+    : undefined
+  const { wasUnsupportedType, isPlaying } = useIsPlaying(audio, onPlay)
   const currentTime = useCurrentTime(audio)
   const duration = useDuration(audio)
   const volume = useVolume(audio)
 
   const startPinP = (iconId: string) => {
     showPictureInPictureWindow(audio.value, iconId)
+    onPlay?.()
   }
   return {
     cantPlay,

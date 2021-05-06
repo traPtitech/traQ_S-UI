@@ -7,6 +7,7 @@ import {
 import { ThemeClaim } from '@/lib/styles'
 import { isDefined } from '@/lib/util/array'
 import { useMessageInputStates } from '@/providers/messageInputState'
+import useAudioController from '@/providers/audioController'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -67,11 +68,17 @@ export const ephemeralItems: Record<
     type: 'drafts',
     iconName: 'pencil',
     iconMdi: true
+  },
+  audioController: {
+    type: 'audioController',
+    iconName: 'music-note',
+    iconMdi: true
   }
 }
 
 const useNavigationSelectorEntry = () => {
   const { hasInputChannel } = useMessageInputStates()
+  const { fileId } = useAudioController()
 
   const unreadChannels = computed(() => [
     ...store.state.domain.me.unreadChannelsMap.values()
@@ -96,7 +103,8 @@ const useNavigationSelectorEntry = () => {
   const ephemeralEntries = computed(() =>
     [
       hasActiveQallSession.value ? ephemeralItems.qall : undefined,
-      hasInputChannel.value ? ephemeralItems.drafts : undefined
+      hasInputChannel.value ? ephemeralItems.drafts : undefined,
+      fileId.value ? ephemeralItems.audioController : undefined
     ].filter(isDefined)
   )
 

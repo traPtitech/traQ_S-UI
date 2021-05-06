@@ -2,6 +2,9 @@
   <ephemeral-navigation-content-container :transparent="transparent">
     <qall v-if="currentEphemeralNavigation === 'qall'" />
     <drafts v-else-if="currentEphemeralNavigation === 'drafts'" />
+    <audio-controller
+      v-else-if="currentEphemeralNavigation === 'audioController'"
+    />
   </ephemeral-navigation-content-container>
 </template>
 
@@ -11,13 +14,15 @@ import { EphemeralNavigationItemType } from '@/components/Main/Navigation/use/na
 import EphemeralNavigationContentContainer from './EphemeralNavigationContentContainer.vue'
 import Qall from './Qall/Qall.vue'
 import Drafts from './Drafts/Drafts.vue'
+import AudioController from './AudioController/AudioController.vue'
 
 export default defineComponent({
   name: 'EphemeralNavigationContent',
   components: {
     EphemeralNavigationContentContainer,
     Qall,
-    Drafts
+    Drafts,
+    AudioController
   },
   props: {
     currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>,
