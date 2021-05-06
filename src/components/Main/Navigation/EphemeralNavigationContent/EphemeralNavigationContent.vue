@@ -1,10 +1,12 @@
 <template>
   <ephemeral-navigation-content-container :transparent="transparent">
-    <qall v-if="currentEphemeralNavigation === 'qall'" />
-    <drafts v-else-if="currentEphemeralNavigation === 'drafts'" />
-    <audio-controller
-      v-else-if="currentEphemeralNavigation === 'audioController'"
-    />
+    <transition name="fade-bottom" mode="out-in">
+      <qall v-if="currentEphemeralNavigation === 'qall'" />
+      <drafts v-else-if="currentEphemeralNavigation === 'drafts'" />
+      <audio-controller
+        v-else-if="currentEphemeralNavigation === 'audioController'"
+      />
+    </transition>
   </ephemeral-navigation-content-container>
 </template>
 
