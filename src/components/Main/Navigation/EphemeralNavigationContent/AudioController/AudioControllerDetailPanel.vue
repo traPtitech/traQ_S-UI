@@ -93,6 +93,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include color-ui-primary;
   padding: 8px 12px;
 }
 .title {
