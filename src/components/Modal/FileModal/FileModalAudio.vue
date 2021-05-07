@@ -30,7 +30,7 @@ import FileModalContentHeader from '@/components/Modal/FileModal/FileModalConten
 import FileModalContentFooter from '@/components/Modal/FileModal/FileModalContentFooter.vue'
 import AudioPlayerWaveform from '@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import useFileWaveform from '@/use/fileWaveform'
-import { useCurrentTime, useDuration } from '@/components/UI/use/audio'
+import { useCurrentTime, useDuration } from '@/use/audio'
 
 export default defineComponent({
   name: 'FileModalAudio',
