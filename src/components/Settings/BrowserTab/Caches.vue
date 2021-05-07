@@ -21,12 +21,12 @@
       <form-button
         :class="$style.button"
         label="ファイルの本体一覧"
-        @click="clearMainCache"
+        @click="clearFileCache"
       />
       <form-button
         :class="$style.button"
         label="ファイルのサムネイル一覧"
-        @click="clearMainCache"
+        @click="clearThumbnailCache"
       />
     </div>
   </div>
