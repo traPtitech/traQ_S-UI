@@ -2,6 +2,7 @@
   <div
     :class="$style.container"
     :title="isPlaying ? '一時停止する' : '再生する'"
+    :aria-disabled="disabled"
     @click.prevent="toggle"
   >
     <icon :name="isPlaying ? 'pause' : 'play'" :size="size" mdi />
@@ -25,6 +26,10 @@ export default defineComponent({
     size: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
@@ -47,6 +52,8 @@ export default defineComponent({
   }
   &[aria-disabled='true'] {
     opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 </style>

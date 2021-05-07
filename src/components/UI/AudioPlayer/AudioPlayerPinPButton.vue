@@ -2,7 +2,7 @@
   <div
     v-if="canUsePinP"
     :class="$style.container"
-    :aria-disabled="isPinPShown"
+    :aria-disabled="isPinPShown || disabled"
     title="ピクチャーインピクチャー表示"
   >
     <icon mdi name="picture-in-picture-bottom-right" :size="size" />
@@ -30,6 +30,10 @@ export default defineComponent({
     size: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
@@ -49,6 +53,8 @@ export default defineComponent({
   }
   &[aria-disabled='true'] {
     opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 </style>
