@@ -95,6 +95,7 @@ export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('timeupdate', onTimeupdated)
       }
       if (newAudio) {
+        nativeCurrentTime.value = toFinite(newAudio.currentTime, 0)
         newAudio.addEventListener('timeupdate', onTimeupdated)
       }
     },
@@ -129,6 +130,7 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('loadedmetadata', onLoadedMetadata)
       }
       if (newAudio) {
+        nativeDuration.value = toFinite(newAudio.duration, 0)
         newAudio.addEventListener('loadedmetadata', onLoadedMetadata)
       }
     },
@@ -154,6 +156,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('volumechange', onVolumeChange)
       }
       if (newAudio) {
+        nativeVolume.value = toFinite(newAudio.volume, 1)
         newAudio.addEventListener('volumechange', onVolumeChange)
       }
     },
@@ -193,6 +196,7 @@ const useLoop = (audio: Ref<HTMLAudioElement | undefined>) => {
         mo?.disconnect()
       }
       if (newAudio) {
+        nativeLoop.value = newAudio.loop
         mo = observe(newAudio)
       }
     },
