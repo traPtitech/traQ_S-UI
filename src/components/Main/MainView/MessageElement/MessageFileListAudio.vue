@@ -55,7 +55,7 @@
 import { defineComponent } from 'vue'
 import useFileWaveform from '@/use/fileWaveform'
 import useFileMeta from '@/use/fileMeta'
-import useAudio from '@/components/UI/use/audio'
+import useAudio from '@/use/audio'
 import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'

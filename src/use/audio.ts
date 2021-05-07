@@ -5,14 +5,14 @@ import {
   watch,
   readonly,
   shallowRef,
-  onBeforeUnmount
+  onUnmounted
 } from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 import useAudioController from '@/providers/audioController'
-import { destroyAudio } from '@/lib/audio'
 
-const toFinite = (n: number, def: number) => (Number.isFinite(n) ? n : def)
+const toFinite = (n: number | undefined, def: number) =>
+  Number.isFinite(n) ? (n as number) : def
 
 const useIsPlaying = (
   audio: Ref<HTMLAudioElement | undefined>,
@@ -81,7 +81,7 @@ const useIsPlaying = (
 }
 
 export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeCurrentTime = ref(toFinite(audio.value?.currentTime ?? 0, 0))
+  const nativeCurrentTime = ref(toFinite(audio.value?.currentTime, 0))
 
   const onTimeupdated = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -95,6 +95,7 @@ export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('timeupdate', onTimeupdated)
       }
       if (newAudio) {
+        nativeCurrentTime.value = toFinite(newAudio.currentTime, 0)
         newAudio.addEventListener('timeupdate', onTimeupdated)
       }
     },
@@ -115,7 +116,7 @@ export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeDuration = ref(toFinite(audio.value?.duration ?? 0, 0))
+  const nativeDuration = ref(toFinite(audio.value?.duration, 0))
 
   const onLoadedMetadata = () => {
     if (!audio.value) return
@@ -129,6 +130,7 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('loadedmetadata', onLoadedMetadata)
       }
       if (newAudio) {
+        nativeDuration.value = toFinite(newAudio.duration, 0)
         newAudio.addEventListener('loadedmetadata', onLoadedMetadata)
       }
     },
@@ -140,7 +142,7 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeVolume = ref(toFinite(audio.value?.volume ?? 1, 1))
+  const nativeVolume = ref(toFinite(audio.value?.volume, 1))
 
   const onVolumeChange = () => {
     if (!audio.value) return
@@ -154,6 +156,7 @@ const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
         oldAudio.removeEventListener('volumechange', onVolumeChange)
       }
       if (newAudio) {
+        nativeVolume.value = toFinite(newAudio.volume, 1)
         newAudio.addEventListener('volumechange', onVolumeChange)
       }
     },
@@ -193,6 +196,7 @@ const useLoop = (audio: Ref<HTMLAudioElement | undefined>) => {
         mo?.disconnect()
       }
       if (newAudio) {
+        nativeLoop.value = newAudio.loop
         mo = observe(newAudio)
       }
     },
@@ -216,15 +220,13 @@ const useAudio = (
   fileRawPath: Ref<string>,
   audioArg?: Ref<HTMLAudioElement>
 ) => {
-  const { fileId: globalFileId, setAudio } = useAudioController()
+  const { setAudio, setShouldDestroy } = useAudioController()
   const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
 
   const audio = audioArg ?? shallowRef(new Audio())
 
-  onBeforeUnmount(() => {
-    if (fileMeta.value?.id !== globalFileId.value) {
-      destroyAudio(audio.value)
-    }
+  onUnmounted(() => {
+    setShouldDestroy()
   })
 
   const cantPlay = computed(
