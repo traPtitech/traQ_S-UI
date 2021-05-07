@@ -1,17 +1,20 @@
 <template>
-  <div :class="$style.container" title="停止する">
-    <icon name="stop" :size="size" mdi />
-  </div>
+  <audio-player-abstract-button
+    icon-name="stop"
+    icon-mdi
+    :size="size"
+    title="停止する"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 export default defineComponent({
   name: 'AudioPlayerStopButton',
   components: {
-    Icon
+    AudioPlayerAbstractButton
   },
   props: {
     size: {
@@ -21,18 +24,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
-}
-</style>
