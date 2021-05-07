@@ -13,8 +13,11 @@ RUN NODE_ENV=production npm run build:with-font
 
 FROM caddy:2.3.0-alpine
 EXPOSE 80
+
 COPY build/docker/Caddyfile /etc/caddy/Caddyfile
 COPY build/docker/startup.sh /startup.sh
+RUN chmod 755 /startup.sh
+
 COPY --from=build /app/dist /usr/share/caddy
 
 ENV THEME_COLOR #0D67EA
