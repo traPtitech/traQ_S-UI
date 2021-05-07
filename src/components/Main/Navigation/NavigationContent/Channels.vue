@@ -13,19 +13,22 @@
           :class="$style.filter"
           @toggle-star-filter="toggleStarChannelFilter"
         />
-        <channel-list
-          v-if="channelListFilterState.query.length > 0"
-          :channels="channelListFilterState.filteredItems"
-          ignore-children
-          show-shortened-path
-          show-topic
-        />
-        <channel-list
-          v-else-if="filterStarChannel"
-          :channels="staredChannels"
-          show-shortened-path
-        />
-        <channel-list v-else :channels="topLevelChannels" />
+        <template v-if="topLevelChannels.length > 0">
+          <channel-list
+            v-if="channelListFilterState.query.length > 0"
+            :channels="channelListFilterState.filteredItems"
+            ignore-children
+            show-shortened-path
+            show-topic
+          />
+          <channel-list
+            v-else-if="filterStarChannel"
+            :channels="staredChannels"
+            show-shortened-path
+          />
+          <channel-list v-else :channels="topLevelChannels" />
+        </template>
+        <empty-state v-else>チャンネルがありません</empty-state>
       </template>
     </navigation-content-container>
   </div>
@@ -42,6 +45,7 @@ import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import Icon from '@/components/UI/Icon.vue'
+import EmptyState from '@/components/UI/EmptyState.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -112,7 +116,8 @@ export default defineComponent({
     NavigationContentContainer,
     ChannelList,
     ChannelFilter,
-    Icon
+    Icon,
+    EmptyState
   },
   setup() {
     const topLevelChannels = useTopLevelChannels()
