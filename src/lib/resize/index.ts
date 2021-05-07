@@ -35,6 +35,8 @@ export const resize = async (
       return finish('cannot resize', inputUrl)
     }
 
+    resetCanvas($input, inputSize, $img)
+
     const outputSize = getThumbnailDimensions(inputSize)
     resetCanvas($output, outputSize)
     await pica.resize($input, $output, {
