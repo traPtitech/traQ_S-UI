@@ -1,8 +1,12 @@
 <template>
-  <div :class="$style.body" :data-is-grade="isGrade" @click="onClick">
+  <div
+    v-if="isBot || isGrade"
+    :class="$style.body"
+    :data-is-grade="isGrade"
+    @click="onClick"
+  >
     <span v-if="isBot">Bot</span>
     <span v-else-if="gradeGroup">{{ gradeGroup.name }}</span>
-    <span v-else>Admin</span>
   </div>
 </template>
 

@@ -5,7 +5,19 @@
     @click.stop="openModal"
   >
     <user-icon :class="$style.icon" :user-id="userId" :size="36" />
-    <span>{{ name }}</span>
+    <div :class="$style.desc">
+      <div :class="$style.displayName">
+        <icon
+          v-if="isAdmin"
+          :class="$style.adminIcon"
+          name="crown"
+          mdi
+          title="管理者"
+        />
+        <span>{{ name }}</span>
+      </div>
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -14,12 +26,23 @@ import { defineComponent, computed } from 'vue'
 import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '@/use/modalOpener'
+import Icon from '@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'UserListItem',
-  components: { UserIcon },
+  components: {
+    UserIcon,
+    Icon
+  },
   props: {
-    userId: { type: String, default: '' }
+    userId: {
+      type: String,
+      default: ''
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props) {
     const user = computed(() => store.state.entities.usersMap.get(props.userId))
@@ -61,5 +84,17 @@ export default defineComponent({
 }
 .icon {
   margin-right: 16px;
+}
+.desc {
+  min-width: 0;
+}
+.displayName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adminIcon {
+  margin-right: 0.25rem;
+  vertical-align: bottom;
 }
 </style>
