@@ -7,7 +7,7 @@
       <div :class="$style.dmActivity">
         <d-m-activity-element
           v-for="user in usersWithNotification"
-          :key="user.id"
+          :key="user"
           :user-id="user"
           :class="$style.dmActivityElement"
         />
@@ -73,9 +73,20 @@ const useListByGradeName = () => {
   const userGroups = computed(() => store.getters.entities.gradeGroups)
   const activeUsersMap = computed(() => store.getters.entities.activeUsersMap)
   const listByGradeName = computed((): UsersGradeList[] => {
-    if (userGroups.value.length === 0 || activeUsersMap.value.size === 0) {
+    if (activeUsersMap.value.size === 0) {
       return []
     }
+    if (userGroups.value.length === 0) {
+      return [
+        {
+          gradeName: 'Others',
+          users: [...activeUsersMap.value.values()].sort((u1, u2) =>
+            compareStringInsensitive(u1.name, u2.name)
+          )
+        }
+      ]
+    }
+
     const userGrades: UsersGradeList[] = []
     const categorized = new Set<string>()
 
