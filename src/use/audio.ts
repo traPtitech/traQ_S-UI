@@ -5,12 +5,11 @@ import {
   watch,
   readonly,
   shallowRef,
-  onBeforeUnmount
+  onUnmounted
 } from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
 import useAudioController from '@/providers/audioController'
-import { destroyAudio } from '@/lib/audio'
 
 const toFinite = (n: number | undefined, def: number) =>
   Number.isFinite(n) ? (n as number) : def
@@ -221,15 +220,13 @@ const useAudio = (
   fileRawPath: Ref<string>,
   audioArg?: Ref<HTMLAudioElement>
 ) => {
-  const { fileId: globalFileId, setAudio } = useAudioController()
+  const { setAudio, setShouldDestroy } = useAudioController()
   const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
 
   const audio = audioArg ?? shallowRef(new Audio())
 
-  onBeforeUnmount(() => {
-    if (fileMeta.value?.id !== globalFileId.value) {
-      destroyAudio(audio.value)
-    }
+  onUnmounted(() => {
+    setShouldDestroy()
   })
 
   const cantPlay = computed(
