@@ -1,17 +1,17 @@
 <template>
-  <div
+  <audio-player-abstract-button
     v-if="canUsePinP"
-    :class="$style.container"
-    :aria-disabled="isPinPShown"
+    :disabled="isPinPShown || disabled"
+    icon-name="picture-in-picture-bottom-right"
+    icon-mdi
+    :size="size"
     title="ピクチャーインピクチャー表示"
-  >
-    <icon mdi name="picture-in-picture-bottom-right" :size="size" />
-  </div>
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 import { checkPinPSupport, isSafari } from '@/lib/util/browser'
 
 const safariFlag = isSafari()
@@ -20,7 +20,7 @@ const canUsePinP = checkPinPSupport() && !safariFlag
 export default defineComponent({
   name: 'AudioPlayerPinPButton',
   components: {
-    Icon
+    AudioPlayerAbstractButton
   },
   props: {
     isPinPShown: {
@@ -30,6 +30,10 @@ export default defineComponent({
     size: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
@@ -37,18 +41,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
-}
-</style>

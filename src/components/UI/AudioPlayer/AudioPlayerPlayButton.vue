@@ -1,21 +1,22 @@
 <template>
-  <div
-    :class="$style.container"
+  <audio-player-abstract-button
+    :disabled="disabled"
+    :icon-name="isPlaying ? 'pause' : 'play'"
+    icon-mdi
+    :size="size"
     :title="isPlaying ? '一時停止する' : '再生する'"
     @click.prevent="toggle"
-  >
-    <icon :name="isPlaying ? 'pause' : 'play'" :size="size" mdi />
-  </div>
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 export default defineComponent({
   name: 'AudioPlayerPlayButton',
   components: {
-    Icon
+    AudioPlayerAbstractButton
   },
   props: {
     isPlaying: {
@@ -25,6 +26,10 @@ export default defineComponent({
     size: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
@@ -35,18 +40,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
-}
-</style>

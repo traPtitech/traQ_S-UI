@@ -5,6 +5,7 @@
         v-model:isPlaying="isPlaying"
         :class="$style.icon"
         :size="32"
+        :disabled="cantPlay"
       />
       <div :class="$style.title">{{ name }}</div>
       <div :class="$style.headerTools">
@@ -17,17 +18,20 @@
           v-model:volume="volume"
           :class="$style.volumeSlider"
           :duration="duration"
+          :disabled="cantPlay"
           keep-expanded
         />
         <audio-player-loop-button
           v-model:loop="loop"
           :class="$style.icon"
           :size="20"
+          :disabled="cantPlay"
         />
         <audio-player-pin-p-button
           :class="$style.icon"
           :is-pin-p-shown="isPinPShown"
           :size="20"
+          :disabled="cantPlay"
           @click.prevent="startPictureInPicture"
         />
       </div>
@@ -96,11 +100,11 @@ export default defineComponent({
       isPinPShown,
       startPinP
     } = useAudio(fileMeta, fileRawPath)
-    const startPictureInPicture = async () => {
+    const startPictureInPicture = () => {
       const iconId =
         store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
           ?.iconFileId ?? ''
-      await startPinP(iconId)
+      startPinP(iconId)
     }
 
     return {

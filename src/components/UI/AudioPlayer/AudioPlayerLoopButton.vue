@@ -1,21 +1,21 @@
 <template>
-  <div
-    :class="$style.container"
+  <audio-player-abstract-button
+    :disabled="disabled"
+    :icon-name="loop ? 'loop' : 'no-loop'"
+    :size="size"
     :title="loop ? 'ループ再生を無効にする' : 'ループ再生を有効にする'"
     @click.prevent="toggle"
-  >
-    <icon :name="loop ? 'loop' : 'no-loop'" :size="size" />
-  </div>
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 export default defineComponent({
   name: 'AudioPlayerLoopButton',
   components: {
-    Icon
+    AudioPlayerAbstractButton
   },
   props: {
     loop: {
@@ -25,6 +25,10 @@ export default defineComponent({
     size: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
@@ -35,18 +39,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" module>
-.container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
-  &:not([aria-disabled='true']):hover {
-    background: rgba(32, 33, 36, 0.06);
-  }
-  &[aria-disabled='true'] {
-    opacity: 0.5;
-  }
-}
-</style>
