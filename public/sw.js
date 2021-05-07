@@ -201,22 +201,20 @@ const postMessage = (channelId, text) =>
   })
 
   importScripts('/config.js')
-  if (self.traQconfig.firebase === undefined) {
-    return
+  if (self.traQconfig.firebase !== undefined) {
+    importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js')
+    importScripts(
+      'https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js'
+    )
+
+    firebase.initializeApp(self.traQconfig.firebase)
+
+    const messaging = firebase.messaging()
+
+    messaging.onBackgroundMessage(payload => {
+      if (payload.data && payload.data.type === 'new_message') {
+        return showNotification(payload.data)
+      }
+    })
   }
-
-  importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js')
-  importScripts(
-    'https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js'
-  )
-
-  firebase.initializeApp(self.traQconfig.firebase)
-
-  const messaging = firebase.messaging()
-
-  messaging.onBackgroundMessage(payload => {
-    if (payload.data && payload.data.type === 'new_message') {
-      return showNotification(payload.data)
-    }
-  })
 }
