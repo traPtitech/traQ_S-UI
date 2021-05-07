@@ -12,7 +12,8 @@ import { FileInfo } from '@traptitech/traq'
 import useAudioController from '@/providers/audioController'
 import { destroyAudio } from '@/lib/audio'
 
-const toFinite = (n: number, def: number) => (Number.isFinite(n) ? n : def)
+const toFinite = (n: number | undefined, def: number) =>
+  Number.isFinite(n) ? (n as number) : def
 
 const useIsPlaying = (
   audio: Ref<HTMLAudioElement | undefined>,
@@ -81,7 +82,7 @@ const useIsPlaying = (
 }
 
 export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeCurrentTime = ref(toFinite(audio.value?.currentTime ?? 0, 0))
+  const nativeCurrentTime = ref(toFinite(audio.value?.currentTime, 0))
 
   const onTimeupdated = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -116,7 +117,7 @@ export const useCurrentTime = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeDuration = ref(toFinite(audio.value?.duration ?? 0, 0))
+  const nativeDuration = ref(toFinite(audio.value?.duration, 0))
 
   const onLoadedMetadata = () => {
     if (!audio.value) return
@@ -142,7 +143,7 @@ export const useDuration = (audio: Ref<HTMLAudioElement | undefined>) => {
 }
 
 const useVolume = (audio: Ref<HTMLAudioElement | undefined>) => {
-  const nativeVolume = ref(toFinite(audio.value?.volume ?? 1, 1))
+  const nativeVolume = ref(toFinite(audio.value?.volume, 1))
 
   const onVolumeChange = () => {
     if (!audio.value) return
