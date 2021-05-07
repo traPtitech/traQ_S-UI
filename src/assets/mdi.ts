@@ -76,7 +76,8 @@ import {
   mdiArrowLeft,
   mdiArrowRight,
   mdiMusicNote,
-  mdiStop
+  mdiStop,
+  mdiCrown
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -161,7 +162,8 @@ const mdi: MdiIconsMapping = {
   'arrow-left': mdiArrowLeft,
   'arrow-right': mdiArrowRight,
   'music-note': mdiMusicNote,
-  stop: mdiStop
+  stop: mdiStop,
+  crown: mdiCrown
 }
 
 export default mdi
