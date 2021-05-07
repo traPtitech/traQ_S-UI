@@ -16,13 +16,16 @@
       />
     </div>
     <transition-group name="timeline" tag="div">
-      <activity-element
-        v-for="message in timeline"
-        :key="message.id"
-        :class="$style.element"
-        :type="isPerChannel ? 'channel' : 'message'"
-        :message="message"
-      />
+      <template v-if="timeline.length > 0">
+        <activity-element
+          v-for="message in timeline"
+          :key="message.id"
+          :class="$style.element"
+          :type="isPerChannel ? 'channel' : 'message'"
+          :message="message"
+        />
+      </template>
+      <empty-state v-else>メッセージがありません</empty-state>
     </transition-group>
   </div>
 </template>
@@ -33,6 +36,7 @@ import store from '@/store'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 import useActivityStream from './use/activityStream'
+import EmptyState from '@/components/UI/EmptyState.vue'
 
 const useActivityMode = () => {
   // 反転していることに注意
@@ -56,7 +60,8 @@ export default defineComponent({
   name: 'Activity',
   components: {
     ToggleButton,
-    ActivityElement
+    ActivityElement,
+    EmptyState
   },
   setup() {
     const { timeline } = useActivityStream()
