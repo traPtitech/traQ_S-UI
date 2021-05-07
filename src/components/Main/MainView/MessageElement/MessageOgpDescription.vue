@@ -77,6 +77,7 @@ export default defineComponent({
   -webkit-box-orient: vertical;
   overflow: hidden;
   -webkit-line-clamp: 2;
+  word-break: break-all;
 }
 .description {
   @include color-ui-secondary;
@@ -85,6 +86,7 @@ export default defineComponent({
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-all;
 }
 .hostname {
   @include color-ui-secondary;

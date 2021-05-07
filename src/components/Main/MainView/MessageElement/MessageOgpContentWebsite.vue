@@ -46,15 +46,16 @@ export default defineComponent({
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  width: 35rem;
+  width: 40rem;
   max-width: 100%;
 }
 .image {
   height: 100%;
-  max-height: 8rem;
+  max-height: 10rem;
 }
 .description {
+  max-width: 100%;
   padding: 1rem;
-  flex: 1 1 12rem;
+  flex: 1 1 15rem;
 }
 </style>
