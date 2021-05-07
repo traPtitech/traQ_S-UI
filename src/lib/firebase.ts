@@ -30,8 +30,7 @@ const setupFirebase = async () => {
   return fb
 }
 
-// TODO: いい感じにする
-const ignoredChannels = ['#general', '#random']
+const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
 
 const notify = async (
   title: string,

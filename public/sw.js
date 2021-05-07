@@ -105,9 +105,7 @@ const postMessage = (channelId, text) =>
 {
   importScripts('/config.js')
   const appName = self.traQConfig.name || 'traQ'
-
-  // TODO: いい感じにする
-  const ignoredChannels = ['#general', '#random']
+  const ignoredChannels = self.traQConfig.inlineReplyDisableChannels || []
 
   const showNotification = data => {
     const title = data.title

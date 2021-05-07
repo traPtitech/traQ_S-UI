@@ -101,6 +101,12 @@ export type Config = Readonly<{
    * 省略時は`false`
    */
   showWidgetCopyButton?: boolean
+  /**
+   * 通知でのインライン返信を無効化するチャンネル
+   * 省略時はどのチャンネルも無効化しない
+   * @example ['#general', '#random']
+   */
+  inlineReplyDisableChannels?: string[]
 }>
 
 declare global {
