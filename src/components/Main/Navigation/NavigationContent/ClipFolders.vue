@@ -7,12 +7,15 @@
         </button>
       </template>
       <template #default>
-        <clip-folders-element
-          v-for="clipFolder in clipFolders"
-          :key="clipFolder.id"
-          :clip-folder="clipFolder"
-          :class="$style.element"
-        />
+        <template v-if="clipFolders.length > 0">
+          <clip-folders-element
+            v-for="clipFolder in clipFolders"
+            :key="clipFolder.id"
+            :clip-folder="clipFolder"
+            :class="$style.element"
+          />
+        </template>
+        <empty-state v-else>クリップフォルダがありません</empty-state>
       </template>
     </navigation-content-container>
   </div>
@@ -24,13 +27,15 @@ import store from '@/store'
 import Icon from '@/components/UI/Icon.vue'
 import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
 import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
+import EmptyState from '@/components/UI/EmptyState.vue'
 
 export default defineComponent({
   name: 'ClipFolders',
   components: {
     Icon,
     NavigationContentContainer,
-    ClipFoldersElement
+    ClipFoldersElement,
+    EmptyState
   },
   setup() {
     const clipFolders = computed(() => [
