@@ -424,7 +424,7 @@ export const actions = defineActions({
     return stamp
   },
   /**
-   * unicodeスタンプが更新されたときの考慮は存在しない
+   * unicodeスタンプが更新されたときは手動で設定からキャッシュの削除をする必要がある
    */
   async fetchStamps(
     context,

@@ -1,4 +1,4 @@
-import { createStore, get, set } from 'idb-keyval'
+import { createStore, get, set, del } from 'idb-keyval'
 import { Stamp } from '@traptitech/traq'
 
 const store = createStore('traQ_S-cache', 'stamps')
@@ -16,4 +16,8 @@ export const getUnicodeStamps = async () => {
 
 export const setUnicodeStamps = async (stamps: Stamp[]) => {
   await set(UNICODE_STAMPS_KEY, stamps, store)
+}
+
+export const deleteUnicodeStamps = async () => {
+  await del(UNICODE_STAMPS_KEY, store)
 }

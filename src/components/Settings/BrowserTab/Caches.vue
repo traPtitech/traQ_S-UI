@@ -21,12 +21,17 @@
       <form-button
         :class="$style.button"
         label="ファイルの本体一覧"
-        @click="clearMainCache"
+        @click="clearFileCache"
       />
       <form-button
         :class="$style.button"
         label="ファイルのサムネイル一覧"
-        @click="clearMainCache"
+        @click="clearThumbnailCache"
+      />
+      <form-button
+        :class="$style.button"
+        label="ユニコードスタンプ"
+        @click="clearUnicodeStampCache"
       />
     </div>
   </div>
@@ -38,6 +43,8 @@ import FormButton from '@/components/UI/FormButton.vue'
 import useToastStore from '@/providers/toastStore'
 import { wait } from '@/lib/util/timer'
 import { checkStorageManagerSupport } from '@/lib/util/browser'
+import { deleteUnicodeStamps } from '@/lib/stampCache'
+import store from '@/store'
 
 declare global {
   interface StorageEstimate {
@@ -108,13 +115,19 @@ export default defineComponent({
       setCacheData()
       showToast()
     }
+    const clearUnicodeStampCache = async () => {
+      await deleteUnicodeStamps()
+      await store.dispatch.entities.fetchStamps({ ignoreCache: true })
+      showToast()
+    }
 
     return {
       cacheData,
       formatBytes,
       clearMainCache,
       clearFileCache,
-      clearThumbnailCache
+      clearThumbnailCache,
+      clearUnicodeStampCache
     }
   }
 })
@@ -131,6 +144,7 @@ export default defineComponent({
   margin-bottom: 8px;
 }
 .button {
+  margin-top: 8px;
   margin-right: 8px;
 }
 </style>
