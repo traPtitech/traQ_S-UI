@@ -1,5 +1,5 @@
 import { SetupContext, Ref, watchEffect, watch } from 'vue'
-import { FileId } from '@/types/entity-ids'
+import { ExternalUrl, FileId } from '@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useRoute } from 'vue-router'
 
@@ -11,7 +11,8 @@ const useElementRenderObserver = (
     message?: Message
   }>,
   embeddingsState: Readonly<{
-    fileIds: Readonly<FileId[]>
+    fileIds: readonly FileId[]
+    externalUrls: readonly ExternalUrl[]
   }>,
   context: SetupContext
 ) => {
@@ -52,10 +53,16 @@ const useElementRenderObserver = (
   const stop = watchEffect(
     async () => {
       if (
-        (props.isEntryMessage || embeddingsState.fileIds.length > 0) &&
+        (props.isEntryMessage ||
+          embeddingsState.fileIds.length > 0 ||
+          embeddingsState.externalUrls.length > 0) &&
         bodyRef.value
       ) {
-        // 添付ファイルがある場合か、エントリーメッセージは高さ監視をする
+        /*
+          添付ファイル/外部URLがある場合か
+          エントリーメッセージは
+          高さ監視をする
+        */
         resizeObserver.observe(bodyRef.value, { box: 'border-box' })
       }
     },
