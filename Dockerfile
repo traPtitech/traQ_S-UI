@@ -20,6 +20,7 @@ RUN chmod 755 /startup.sh
 
 COPY --from=build /app/dist /usr/share/caddy
 
+ENV APP_NAME traQ
 ENV THEME_COLOR #0D67EA
 
 # 設定上書き処理用に、.brを消して、元の設定を別のディレクトリに保存しておく

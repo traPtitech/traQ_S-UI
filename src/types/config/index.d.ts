@@ -1,5 +1,10 @@
 export type Config = Readonly<{
   /**
+   * アプリ名
+   * 省略時、空文字列時は`'traQ'`
+   */
+  name?: string
+  /**
    * Firebase用設定
    * 省略時は通知機能を無効化
    */

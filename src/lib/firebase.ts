@@ -7,6 +7,8 @@ import router from '@/router'
 import { isIOSApp } from './util/browser'
 import { ChannelId, DMChannelId } from '@/types/entity-ids'
 
+const appName = window.traQConfig.name || 'traQ'
+
 const loadFirebase = async () => {
   const firebase = (await import('firebase/app')).default
   await import('firebase/messaging')
@@ -139,7 +141,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   if (Notification?.permission === 'default') {
     const permission = await Notification.requestPermission()
     if (permission === 'granted') {
-      notify('ようこそtraQへ！！')
+      notify(`ようこそ${appName}へ！！`)
     }
   }
 
@@ -177,7 +179,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
     const notification = await notify(
-      payload.data.title || 'traQ',
+      payload.data.title || appName,
       payload.data
     )
     if (!notification) return
