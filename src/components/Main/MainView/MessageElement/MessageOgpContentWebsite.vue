@@ -1,6 +1,11 @@
 <template>
   <a :href="url" :class="$style.container" target="_blank">
-    <div v-if="imageUrl" :class="$style.image" :style="styles.image"></div>
+    <img
+      v-if="imageUrl"
+      :src="imageUrl"
+      draggable="false"
+      :class="$style.image"
+    />
     <message-ogp-description
       :class="$style.description"
       :url="url"
@@ -11,16 +16,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent } from 'vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
-import { makeStyles } from '@/lib/styles'
-
-const useStyles = (props: { imageUrl?: string }) =>
-  reactive({
-    image: makeStyles(() => ({
-      backgroundImage: props.imageUrl ? `url("${props.imageUrl}")` : ''
-    }))
-  })
 
 export default defineComponent({
   name: 'MessageOgpContentWebSite',
@@ -39,10 +36,6 @@ export default defineComponent({
       type: String,
       default: ''
     }
-  },
-  setup(props) {
-    const styles = useStyles(props)
-    return { styles }
   }
 })
 </script>
@@ -50,21 +43,18 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   width: 35rem;
   max-width: 100%;
 }
 .image {
-  width: 10rem;
-  max-width: 25vw;
-  flex-shrink: 0;
-  flex-grow: 0;
-  background: {
-    size: cover;
-    repeat: no-repeat;
-    position: center;
-  }
+  height: 100%;
+  max-height: 8rem;
 }
 .description {
   padding: 1rem;
+  flex: 1 1 12rem;
 }
 </style>

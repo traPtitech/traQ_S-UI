@@ -67,8 +67,6 @@ export default defineComponent({
 .container {
   @include background-secondary;
   display: block;
-  width: 100%;
-  min-width: 0;
 }
 .title {
   @include color-ui-primary;
