@@ -18,7 +18,7 @@
   "dependencies": {
     "@mdi/js": "^5.9.55",
     "@traptitech/traq": "^3.6.6-0",
-    "@traptitech/traq-markdown-it": "^5.2.5",
+    "@traptitech/traq-markdown-it": "^5.2.6",
     "@types/autosize": "^3.0.7",
     "@types/pica": "^5.1.2",
     "autosize": "^4.0.2",
