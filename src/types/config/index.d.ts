@@ -1,5 +1,10 @@
 export type Config = Readonly<{
   /**
+   * アプリ名
+   * 省略時、空文字列時は`'traQ'`
+   */
+  name?: string
+  /**
    * Firebase用設定
    * 省略時は通知機能を無効化
    */
@@ -96,6 +101,12 @@ export type Config = Readonly<{
    * 省略時は`false`
    */
   showWidgetCopyButton?: boolean
+  /**
+   * 通知でのインライン返信を無効化するチャンネル
+   * 省略時はどのチャンネルも無効化しない
+   * @example ['#general', '#random']
+   */
+  inlineReplyDisableChannels?: string[]
 }>
 
 declare global {

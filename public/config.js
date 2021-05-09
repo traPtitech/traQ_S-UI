@@ -106,7 +106,8 @@
     isRootChannelSelectableAsParentChannel: false,
     showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
-    showWidgetCopyButton: true
+    showWidgetCopyButton: true,
+    inlineReplyDisableChannels: ['#general', '#random']
   }
 
   self.traQConfig = config

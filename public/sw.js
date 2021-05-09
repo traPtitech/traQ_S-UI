@@ -103,12 +103,13 @@ const postMessage = (channelId, text) =>
 /* 通知関係 */
 // refs src/lib/firebase.ts showNotification()
 {
-  // TODO: いい感じにする
-  const ignoredChannels = ['#general', '#random']
+  importScripts('/config.js')
+  const appName = self.traQConfig.name || 'traQ'
+  const ignoredChannels = self.traQConfig.inlineReplyDisableChannels || []
 
   const showNotification = data => {
     const title = data.title
-    const notificationTitle = title || 'traQ'
+    const notificationTitle = title || appName
     const notificationOptions = data
     notificationOptions.data = data
     notificationOptions.renotify = true
@@ -200,7 +201,6 @@ const postMessage = (channelId, text) =>
     )
   })
 
-  importScripts('/config.js')
   if (self.traQConfig.firebase !== undefined) {
     importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js')
     importScripts(
