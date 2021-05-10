@@ -62,9 +62,6 @@ const usePaste = (channelId: Ref<ChannelId>) => {
   )
 
   const onPaste = (event: ClipboardEvent) => {
-    // メッセージ編集の場合などは無視
-    if (channelId.value === '') return
-
     const dt = event?.clipboardData
     if (dt) {
       Array.from(dt.files).forEach(file => {
