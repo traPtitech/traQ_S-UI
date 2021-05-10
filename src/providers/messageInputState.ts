@@ -165,18 +165,21 @@ export const getAttachmentFile = async (file: File) => {
 
   const resizable = canResize(file.type)
 
-  let resizedFile = file
-  if (resizable) {
-    const res = await resize(file)
-    if (res === 'cannot resize') {
-      throw new Error('画像が大きいためサムネイルは生成されません')
-    } else if (res === 'error') {
-      throw new Error('画像の形式が不正なためサムネイルは生成されません')
-    } else if (res) {
-      resizedFile = res
-    }
+  if (!resizable) {
+    return file
   }
-  return resizedFile
+
+  const res = await resize(file)
+  if (res === 'cannot resize') {
+    throw new Error('画像が大きいためサムネイルは生成されません')
+  }
+  if (res === 'error') {
+    throw new Error('画像の形式が不正なためサムネイルは生成されません')
+  }
+  if (!res) {
+    return file
+  }
+  return res
 }
 
 export const useMessageInputStateAttachment = (
