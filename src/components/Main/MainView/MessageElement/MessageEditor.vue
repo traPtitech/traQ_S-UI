@@ -1,6 +1,7 @@
 <template>
   <div ref="containerEle" :class="$style.container">
     <message-input-key-guide :show="isModifierKeyPressed" is-edit />
+    <message-input-upload-progress v-if="isPosting" :progress="progress" />
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
@@ -33,6 +34,7 @@ import useModifierKey from '@/components/Main/MainView/MessageInput/use/modifier
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import MessageInputUploadProgress from '@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
@@ -61,16 +63,31 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
-const usePaste = (text: Ref<string>, onError: (text: string) => void) => {
+const usePaste = (
+  text: Ref<string>,
+  isPosting: Ref<boolean>,
+  progress: Ref<number>,
+  onError: (text: string) => void
+) => {
   const onPaste = (event: ClipboardEvent) => {
     const dt = event?.clipboardData
     const channelId = store.state.domain.messagesView.currentChannelId
     if (dt && channelId) {
       Array.from(dt.files).forEach(async file => {
         try {
+          isPosting.value = true
           const attachmentFile = await getAttachmentFile(file)
-          const { data } = await apis.postFile(attachmentFile, channelId)
+          const { data } = await apis.postFile(attachmentFile, channelId, {
+            /**
+             * https://github.com/axios/axios#request-config
+             */
+            onUploadProgress(e: ProgressEvent) {
+              progress.value = e.loaded / e.total
+            }
+          })
           text.value += `\n${buildFilePathForPost(data.id)}`
+          isPosting.value = false
+          progress.value = 0
         } catch (e) {
           onError(e)
         }
@@ -86,7 +103,8 @@ export default defineComponent({
     MessageInputKeyGuide,
     MessageInputTextArea,
     FormButton,
-    MessageInputInsertStampButton
+    MessageInputInsertStampButton,
+    MessageInputUploadProgress
   },
   props: {
     rawContent: {
@@ -123,7 +141,9 @@ export default defineComponent({
     }
 
     const { addErrorToast } = useToastStore()
-    const { onPaste } = usePaste(text, addErrorToast)
+    const isPosting = ref(false)
+    const progress = ref(0)
+    const { onPaste } = usePaste(text, isPosting, progress, addErrorToast)
 
     return {
       containerEle,
@@ -135,7 +155,9 @@ export default defineComponent({
       onModifierKeyUp,
       onStampClick,
       text,
-      onPaste
+      onPaste,
+      isPosting,
+      progress
     }
   }
 })
