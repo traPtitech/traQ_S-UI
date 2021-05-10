@@ -149,6 +149,36 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
 
 export default useMessageInputState
 
+export const getAttachmentFile = async (file: File) => {
+  const fileType = mimeToFileType(file.type)
+
+  if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
+    throw new Error(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
+  }
+  if (file.size > FILE_SIZE_LIMIT) {
+    throw new Error(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
+  }
+
+  if (fileType !== 'image') {
+    return file
+  }
+
+  const resizable = canResize(file.type)
+
+  let resizedFile = file
+  if (resizable) {
+    const res = await resize(file)
+    if (res === 'cannot resize') {
+      throw new Error('画像が大きいためサムネイルは生成されません')
+    } else if (res === 'error') {
+      throw new Error('画像の形式が不正なためサムネイルは生成されません')
+    } else if (res) {
+      resizedFile = res
+    }
+  }
+  return resizedFile
+}
+
 export const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
   onError: (message: string) => void
@@ -182,47 +212,27 @@ export const useMessageInputStateAttachment = (
   }
 
   const addAttachment = async (file: File) => {
-    const fileType = mimeToFileType(file.type)
+    try {
+      const fileType = mimeToFileType(file.type)
+      const attachmentFile = await getAttachmentFile(file)
+      if (fileType !== 'image') {
+        state.attachments.push({
+          type: fileType,
+          file: attachmentFile
+        })
+        return
+      }
+      const thumbnailDataUrl = await convertToDataUrl(attachmentFile)
+      if (!thumbnailDataUrl) return
 
-    if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
-      onError(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
-      return
-    }
-    if (file.size > FILE_SIZE_LIMIT) {
-      onError(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
-      return
-    }
-
-    if (fileType !== 'image') {
       state.attachments.push({
         type: fileType,
-        file
+        file: attachmentFile,
+        thumbnailDataUrl
       })
-      return
+    } catch (e) {
+      onError(e)
     }
-
-    const resizable = canResize(file.type)
-
-    let resizedFile = file
-    if (resizable) {
-      const res = await resize(file)
-      if (res === 'cannot resize') {
-        onError('画像が大きいためサムネイルは生成されません')
-      } else if (res === 'error') {
-        onError('画像の形式が不正なためサムネイルは生成されません')
-      } else if (res) {
-        resizedFile = res
-      }
-    }
-
-    const thumbnailDataUrl = await convertToDataUrl(resizedFile)
-    if (!thumbnailDataUrl) return
-
-    state.attachments.push({
-      type: fileType,
-      file: resizedFile,
-      thumbnailDataUrl
-    })
   }
 
   const removeAttachmentAt = (index: number) => {

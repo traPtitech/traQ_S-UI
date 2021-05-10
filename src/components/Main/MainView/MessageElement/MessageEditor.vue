@@ -4,8 +4,9 @@
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
-        v-model="state.text"
+        v-model="text"
         :class="$style.inputTextArea"
+        @paste="onPaste"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
@@ -23,16 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  Ref,
-  ref,
-  toRef,
-  watch,
-  onBeforeUnmount,
-  onBeforeMount
-} from 'vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost } from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
@@ -44,7 +36,7 @@ import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInp
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
-import useMessageInputState from '@/providers/messageInputState'
+import { getAttachmentFile } from '@/providers/messageInputState'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   const { addErrorToast } = useToastStore()
@@ -69,6 +61,25 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
+const usePaste = (text: Ref<string>, onError: (text: string) => void) => {
+  const onPaste = (event: ClipboardEvent) => {
+    const dt = event?.clipboardData
+    const channelId = store.state.domain.messagesView.currentChannelId
+    if (dt && channelId) {
+      Array.from(dt.files).forEach(async file => {
+        try {
+          const attachmentFile = await getAttachmentFile(file)
+          const { data } = await apis.postFile(attachmentFile, channelId)
+          text.value += `\n${buildFilePathForPost(data.id)}`
+        } catch (e) {
+          onError(e)
+        }
+      })
+    }
+  }
+  return { onPaste }
+}
+
 export default defineComponent({
   name: 'MessageEditor',
   components: {
@@ -88,13 +99,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { state, clearState } = useMessageInputState(ref(''))
-    onBeforeMount(() => {
-      state.text = props.rawContent
-    })
-    onBeforeUnmount(clearState)
+    const text = ref(props.rawContent)
 
-    const { editMessage, cancel } = useEditMessage(props, toRef(state, 'text'))
+    const { editMessage, cancel } = useEditMessage(props, text)
     const {
       isModifierKeyPressed,
       onModifierKeyDown,
@@ -106,7 +113,7 @@ export default defineComponent({
     }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
-      toRef(state, 'text'),
+      text,
       computed(() => textareaRef.value?.textareaAutosizeRef),
       containerEle
     )
@@ -115,16 +122,8 @@ export default defineComponent({
       toggleStampPicker()
     }
 
-    const attachmentsLength = computed(() => state.attachments.length)
-    watch(attachmentsLength, async () => {
-      const channelId = store.state.domain.messagesView.currentChannelId
-      if (!channelId || !attachmentsLength.value) return
-      const { data: file } = await apis.postFile(
-        state.attachments[attachmentsLength.value - 1].file,
-        channelId
-      )
-      state.text += `\n${buildFilePathForPost(file.id)}`
-    })
+    const { addErrorToast } = useToastStore()
+    const { onPaste } = usePaste(text, addErrorToast)
 
     return {
       containerEle,
@@ -135,7 +134,8 @@ export default defineComponent({
       onModifierKeyDown,
       onModifierKeyUp,
       onStampClick,
-      state
+      text,
+      onPaste
     }
   }
 })
