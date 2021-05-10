@@ -24,20 +24,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  SetupContext,
-  Ref,
-  computed,
-  PropType,
-  toRef
-} from 'vue'
+import { defineComponent, ref, SetupContext, computed, PropType } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '@/use/modelSyncer'
-import { useMessageInputStateAttachment } from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
 import { ChannelId } from '@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
@@ -52,14 +42,6 @@ const useFocus = (context: SetupContext) => {
   }
 
   return { onFocus, onBlur }
-}
-
-const usePaste = (context: SetupContext) => {
-  const onPaste = (event: ClipboardEvent) => {
-    context.emit('paste', event)
-  }
-
-  return { onPaste }
 }
 
 export default defineComponent({
@@ -132,7 +114,9 @@ export default defineComponent({
     }
 
     const { onFocus, onBlur: onBlurDefault } = useFocus(context)
-    const { onPaste } = usePaste(context)
+    const onPaste = (event: ClipboardEvent) => {
+      context.emit('paste', event)
+    }
 
     const onBlur = () => {
       onBlurWordSuggester()
