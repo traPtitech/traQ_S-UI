@@ -54,21 +54,11 @@ const useFocus = (context: SetupContext) => {
   return { onFocus, onBlur }
 }
 
-const usePaste = (channelId: Ref<ChannelId>) => {
-  const { addErrorToast } = useToastStore()
-  const { addAttachment } = useMessageInputStateAttachment(
-    channelId,
-    addErrorToast
-  )
-
+const usePaste = (context: SetupContext) => {
   const onPaste = (event: ClipboardEvent) => {
-    const dt = event?.clipboardData
-    if (dt) {
-      Array.from(dt.files).forEach(file => {
-        addAttachment(file)
-      })
-    }
+    context.emit('paste', event)
   }
+
   return { onPaste }
 }
 
@@ -142,7 +132,7 @@ export default defineComponent({
     }
 
     const { onFocus, onBlur: onBlurDefault } = useFocus(context)
-    const { onPaste } = usePaste(toRef(props, 'channelId'))
+    const { onPaste } = usePaste(context)
 
     const onBlur = () => {
       onBlurWordSuggester()

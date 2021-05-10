@@ -28,6 +28,7 @@
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
+          @paste="onPaste"
           @modifier-key-down="onModifierKeyDown"
           @modifier-key-up="onModifierKeyUp"
           @post-message="postMessage"
@@ -61,6 +62,7 @@ import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
 import usePostMessage from './use/postMessage'
 import useFocus from './use/focus'
+import usePaste from './use/paste'
 import useEditingStatus from './use/editingStatus'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
@@ -113,6 +115,8 @@ export default defineComponent({
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(channelId, isTextEmpty, isFocused)
 
+    const { onPaste } = usePaste(toRef(props, 'channelId'))
+
     const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
     const typingUsers = computed(
@@ -146,6 +150,7 @@ export default defineComponent({
       state,
       onFocus,
       onBlur,
+      onPaste,
       onModifierKeyDown,
       onModifierKeyUp,
       toggleStampPicker,
