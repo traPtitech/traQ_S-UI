@@ -164,7 +164,6 @@ export const getAttachmentFile = async (file: File) => {
   }
 
   const resizable = canResize(file.type)
-
   if (!resizable) {
     return file
   }
@@ -176,10 +175,7 @@ export const getAttachmentFile = async (file: File) => {
   if (res === 'error') {
     throw new Error('画像の形式が不正なためサムネイルは生成されません')
   }
-  if (!res) {
-    return file
-  }
-  return res
+  return res ?? file
 }
 
 export const useMessageInputStateAttachment = (
