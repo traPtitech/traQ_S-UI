@@ -36,7 +36,7 @@ import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInp
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
-import { getAttachmentFile } from '@/providers/messageInputState'
+import { getAttachmentFile } from '@/lib/resize'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   const { addErrorToast } = useToastStore()

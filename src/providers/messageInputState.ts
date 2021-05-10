@@ -9,25 +9,9 @@ import {
   watch
 } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import { canResize, resize } from '@/lib/resize'
+import { getAttachmentFile } from '@/lib/resize'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
 import { ChannelId } from '@/types/entity-ids'
-
-const IMAGE_SIZE_LIMIT = 20 * 1000 * 1000 // 20MB
-const FILE_SIZE_LIMIT = 30 * 1000 * 1000 // 30MB
-
-const tooLargeFileMessage =
-  window.traQConfig.tooLargeFileMessage ??
-  '大きい%sの共有には別のサービスを利用してください。'
-
-const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${tooLargeFileMessage.replace(
-  '%s',
-  '画像'
-)}`
-const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${tooLargeFileMessage.replace(
-  '%s',
-  'ファイル'
-)}`
 
 const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 
@@ -148,35 +132,6 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
 }
 
 export default useMessageInputState
-
-export const getAttachmentFile = async (file: File) => {
-  const fileType = mimeToFileType(file.type)
-
-  if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
-    throw new Error(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
-  }
-  if (file.size > FILE_SIZE_LIMIT) {
-    throw new Error(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
-  }
-
-  if (fileType !== 'image') {
-    return file
-  }
-
-  const resizable = canResize(file.type)
-  if (!resizable) {
-    return file
-  }
-
-  const res = await resize(file)
-  if (res === 'cannot resize') {
-    throw new Error('画像が大きいためサムネイルは生成されません')
-  }
-  if (res === 'error') {
-    throw new Error('画像の形式が不正なためサムネイルは生成されません')
-  }
-  return res ?? file
-}
 
 export const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
