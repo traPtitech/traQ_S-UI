@@ -10,6 +10,7 @@
         ref="textareaRef"
         v-model="text"
         :class="$style.inputTextArea"
+        :is-posting="isPosting"
         @paste="onPaste"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -75,14 +76,11 @@ const useAttachmentsEditor = (
   onError: (text: string) => void
 ) => {
   const postAttachment = async (file: File) => {
+    if (!isPosting.value) {
+      return
+    }
     const channelId = store.state.domain.messagesView.currentChannelId
     if (!channelId) return
-    if (isPosting.value) {
-      while (true) {
-        await sleep(100)
-        if (!isPosting.value) break
-      }
-    }
     isPosting.value = true
     const attachmentFile = await getAttachmentFile(file)
     const { data } = await apis.postFile(attachmentFile, channelId, {
@@ -99,9 +97,6 @@ const useAttachmentsEditor = (
   }
 
   const { addAttachment, destroy } = useAttachments(postAttachment)
-
-  const sleep = async (msec: number) =>
-    new Promise(resolve => setTimeout(resolve, msec))
 
   const onPaste = (event: ClipboardEvent) => {
     const dt = event?.clipboardData
