@@ -43,6 +43,7 @@ import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
 import { getAttachmentFile } from '@/lib/resize'
+import useAttachments from '@/components/Main/MainView/MessageInput/use/attachments'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   const { addErrorToast } = useToastStore()
@@ -67,37 +68,12 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
-const useAttachment = (
+const useAttachmentsEditor = (
   text: Ref<string>,
   isPosting: Ref<boolean>,
   progress: Ref<number>,
   onError: (text: string) => void
 ) => {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.multiple = true
-
-  const onChange = () => {
-    for (const file of input.files ?? []) {
-      postAttachment(file)
-    }
-    // `input.files = null`ではリセットできない
-    input.value = ''
-  }
-
-  input.addEventListener('change', onChange)
-
-  const startAddingAttachment = () => {
-    input.click()
-  }
-
-  const destroy = () => {
-    input.removeEventListener('change', onChange)
-  }
-
-  const sleep = async (msec: number) =>
-    new Promise(resolve => setTimeout(resolve, msec))
-
   const postAttachment = async (file: File) => {
     const channelId = store.state.domain.messagesView.currentChannelId
     if (!channelId) return
@@ -122,6 +98,11 @@ const useAttachment = (
     isPosting.value = false
   }
 
+  const { addAttachment, destroy } = useAttachments(postAttachment)
+
+  const sleep = async (msec: number) =>
+    new Promise(resolve => setTimeout(resolve, msec))
+
   const onPaste = (event: ClipboardEvent) => {
     const dt = event?.clipboardData
     if (dt) {
@@ -135,7 +116,7 @@ const useAttachment = (
     }
   }
 
-  return { onPaste, startAddingAttachment, destroy }
+  return { onPaste, startAddingAttachment: addAttachment, destroy }
 }
 
 export default defineComponent({
@@ -185,7 +166,7 @@ export default defineComponent({
     const { addErrorToast } = useToastStore()
     const isPosting = ref(false)
     const progress = ref(0)
-    const { onPaste, startAddingAttachment, destroy } = useAttachment(
+    const { onPaste, startAddingAttachment, destroy } = useAttachmentsEditor(
       text,
       isPosting,
       progress,

@@ -73,6 +73,8 @@ import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useMessageInputState from '@/providers/messageInputState'
+import useToastStore from '@/providers/toastStore'
+import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -96,7 +98,11 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
     const channelId = toRef(props, 'channelId')
     const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
-    const { addAttachment, destroy } = useAttachments(channelId)
+    const { addErrorToast } = useToastStore()
+    const {
+      addAttachment: addStateAttachment
+    } = useMessageInputStateAttachment(channelId, addErrorToast)
+    const { addAttachment, destroy } = useAttachments(addStateAttachment)
     const {
       isModifierKeyPressed,
       onModifierKeyDown,

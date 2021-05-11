@@ -48,7 +48,10 @@ import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import useMessageInputState from '@/providers/messageInputState'
+import useMessageInputState, {
+  useMessageInputStateAttachment
+} from '@/providers/messageInputState'
+import useToastStore from '@/providers/toastStore'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -65,7 +68,11 @@ export default defineComponent({
   },
   setup(props, context) {
     const { state, isEmpty } = useMessageInputState('share-target')
-    const { addAttachment, destroy } = useAttachments('share-target')
+    const { addErrorToast } = useToastStore()
+    const {
+      addAttachment: addStateAttachment
+    } = useMessageInputStateAttachment('share-target', addErrorToast)
+    const { addAttachment, destroy } = useAttachments(addStateAttachment)
 
     onBeforeUnmount(() => {
       destroy()
