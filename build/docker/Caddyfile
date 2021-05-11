@@ -10,40 +10,4 @@ header /sw.js Cache-Control "max-age=0"
 file_server
 root * /usr/share/caddy
 
-@brotli {
-    file {
-        try_files {path}.br
-    }
-    header Accept-Encoding *br*
-}
-handle @brotli {
-    header Content-Encoding br
-    rewrite {http.matchers.file.relative}
-}
-
 try_files {path} /index.html
-
-@svg {
-    file
-    path *.svg
-}
-@css {
-    file
-    path *.css
-}
-@js {
-    file
-    path *.js
-}
-@html {
-    file
-    path *.html
-}
-@htmlpath {
-    path_regexp ^[^.]*$
-}
-header @svg Content-Type image/svg+xml
-header @css Content-Type text/css
-header @js Content-Type text/javascript
-header @html Content-Type text/html
-header @htmlpath Content-Type text/html
