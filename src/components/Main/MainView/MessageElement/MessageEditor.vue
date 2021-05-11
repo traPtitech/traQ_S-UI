@@ -3,6 +3,9 @@
     <message-input-key-guide :show="isModifierKeyPressed" is-edit />
     <message-input-upload-progress v-if="isPosting" :progress="progress" />
     <div :class="$style.inputContainer">
+      <div>
+        <message-input-upload-button @click="startAddingAttachment" />
+      </div>
       <message-input-text-area
         ref="textareaRef"
         v-model="text"
@@ -25,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost } from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
@@ -35,6 +38,7 @@ import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import FormButton from '@/components/UI/FormButton.vue'
 import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import MessageInputUploadProgress from '@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
+import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
@@ -63,38 +67,66 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
-const usePaste = (
+const useAttachment = (
   text: Ref<string>,
   isPosting: Ref<boolean>,
   progress: Ref<number>,
   onError: (text: string) => void
 ) => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.multiple = true
+
+  const onChange = () => {
+    for (const file of input.files ?? []) {
+      postAttachment(file)
+    }
+    // `input.files = null`ではリセットできない
+    input.value = ''
+  }
+
+  input.addEventListener('change', onChange)
+
+  const startAddingAttachment = () => {
+    input.click()
+  }
+
+  const destroy = () => {
+    input.removeEventListener('change', onChange)
+  }
+
+  const postAttachment = async (file: File) => {
+    const channelId = store.state.domain.messagesView.currentChannelId
+    if (!channelId) return
+    isPosting.value = true
+    const attachmentFile = await getAttachmentFile(file)
+    const { data } = await apis.postFile(attachmentFile, channelId, {
+      /**
+       * https://github.com/axios/axios#request-config
+       */
+      onUploadProgress(e: ProgressEvent) {
+        progress.value = e.loaded / e.total
+      }
+    })
+    text.value += `\n${buildFilePathForPost(data.id)}`
+    isPosting.value = false
+    progress.value = 0
+  }
+
   const onPaste = (event: ClipboardEvent) => {
     const dt = event?.clipboardData
-    const channelId = store.state.domain.messagesView.currentChannelId
-    if (dt && channelId) {
+    if (dt) {
       Array.from(dt.files).forEach(async file => {
         try {
-          isPosting.value = true
-          const attachmentFile = await getAttachmentFile(file)
-          const { data } = await apis.postFile(attachmentFile, channelId, {
-            /**
-             * https://github.com/axios/axios#request-config
-             */
-            onUploadProgress(e: ProgressEvent) {
-              progress.value = e.loaded / e.total
-            }
-          })
-          text.value += `\n${buildFilePathForPost(data.id)}`
-          isPosting.value = false
-          progress.value = 0
+          await postAttachment(file)
         } catch (e) {
           onError(e)
         }
       })
     }
   }
-  return { onPaste }
+
+  return { onPaste, startAddingAttachment, destroy }
 }
 
 export default defineComponent({
@@ -104,7 +136,8 @@ export default defineComponent({
     MessageInputTextArea,
     FormButton,
     MessageInputInsertStampButton,
-    MessageInputUploadProgress
+    MessageInputUploadProgress,
+    MessageInputUploadButton
   },
   props: {
     rawContent: {
@@ -143,7 +176,13 @@ export default defineComponent({
     const { addErrorToast } = useToastStore()
     const isPosting = ref(false)
     const progress = ref(0)
-    const { onPaste } = usePaste(text, isPosting, progress, addErrorToast)
+    const { onPaste, startAddingAttachment, destroy } = useAttachment(
+      text,
+      isPosting,
+      progress,
+      addErrorToast
+    )
+    onBeforeUnmount(destroy)
 
     return {
       containerEle,
@@ -157,7 +196,8 @@ export default defineComponent({
       text,
       onPaste,
       isPosting,
-      progress
+      progress,
+      startAddingAttachment
     }
   }
 })
