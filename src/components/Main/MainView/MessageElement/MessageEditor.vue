@@ -215,11 +215,6 @@ export default defineComponent({
   margin: 0 4px;
   overflow: hidden;
 }
-.stampButton {
-  @include color-ui-secondary;
-  margin: 0 4px;
-  cursor: pointer;
-}
 .controls {
   display: grid;
   grid-template-columns: auto auto;
