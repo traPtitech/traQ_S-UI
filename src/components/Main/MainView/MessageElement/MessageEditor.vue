@@ -22,7 +22,7 @@
     </div>
     <div :class="$style.controls">
       <form-button label="キャンセル" color="secondary" @click="cancel" />
-      <form-button label="OK" @click="editMessage" />
+      <form-button label="OK" :disabled="isPosting" @click="editMessage" />
     </div>
   </div>
 </template>
@@ -95,9 +95,18 @@ const useAttachment = (
     input.removeEventListener('change', onChange)
   }
 
+  const sleep = async (msec: number) =>
+    new Promise(resolve => setTimeout(resolve, msec))
+
   const postAttachment = async (file: File) => {
     const channelId = store.state.domain.messagesView.currentChannelId
     if (!channelId) return
+    if (isPosting.value) {
+      while (true) {
+        await sleep(100)
+        if (!isPosting.value) break
+      }
+    }
     isPosting.value = true
     const attachmentFile = await getAttachmentFile(file)
     const { data } = await apis.postFile(attachmentFile, channelId, {
@@ -109,8 +118,8 @@ const useAttachment = (
       }
     })
     text.value += `\n${buildFilePathForPost(data.id)}`
-    isPosting.value = false
     progress.value = 0
+    isPosting.value = false
   }
 
   const onPaste = (event: ClipboardEvent) => {
