@@ -76,7 +76,7 @@ const useAttachmentsEditor = (
   onError: (text: string) => void
 ) => {
   const postAttachment = async (file: File) => {
-    if (!isPosting.value) {
+    if (isPosting.value) {
       return
     }
     const channelId = store.state.domain.messagesView.currentChannelId
