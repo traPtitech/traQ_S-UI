@@ -4,6 +4,7 @@
     title="スタンプを挿入"
     icon-mdi
     icon-name="emoticon-outline"
+    :disabled="disabled"
   />
 </template>
 
@@ -16,8 +17,11 @@ export default defineComponent({
   components: {
     IconButton
   },
-  setup() {
-    return {}
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   }
 })
 </script>
@@ -27,8 +31,11 @@ export default defineComponent({
   @include color-ui-secondary;
   transform: scale(1);
   transition: transform 0.1s;
-  &:hover {
+  &[aria-disabled='false']:hover {
     transform: scale(1.1);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.5;
   }
 }
 </style>

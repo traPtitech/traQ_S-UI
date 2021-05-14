@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :title="title">
+  <div :class="$style.container" :title="title" :aria-disabled="disabled">
     <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
   </div>
 </template>
@@ -22,10 +22,14 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    title: String
-  },
-  setup() {
-    return {}
+    title: {
+      type: String,
+      default: undefined
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   }
 })
 </script>
@@ -36,5 +40,8 @@ export default defineComponent({
 }
 .icon {
   cursor: pointer;
+  .container[aria-disabled='true'] & {
+    cursor: not-allowed;
+  }
 }
 </style>

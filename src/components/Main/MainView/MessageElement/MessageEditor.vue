@@ -3,9 +3,6 @@
     <message-input-key-guide :show="isModifierKeyPressed" is-edit />
     <message-input-upload-progress v-if="isPosting" :progress="progress" />
     <div :class="$style.inputContainer">
-      <div>
-        <message-input-upload-button @click="startAddingAttachment" />
-      </div>
       <message-input-text-area
         ref="textareaRef"
         v-model="text"
@@ -18,7 +15,16 @@
       />
       <!-- divで包まないとホバー時の拡大の中心位置がずれる -->
       <div>
-        <message-input-insert-stamp-button @click="onStampClick" />
+        <message-input-insert-stamp-button
+          :class="$style.iconButton"
+          :disabled="isPosting"
+          @click="onStampClick"
+        />
+        <message-input-upload-button
+          :class="$style.iconButton"
+          :disabled="isPosting"
+          @click="startAddingAttachment"
+        />
       </div>
     </div>
     <div :class="$style.controls">
@@ -209,6 +215,15 @@ export default defineComponent({
 .inputTextArea {
   margin: 0 4px;
   overflow: hidden;
+}
+.iconButton {
+  margin: 4px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .controls {
   display: grid;
