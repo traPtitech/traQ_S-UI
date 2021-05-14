@@ -1,13 +1,16 @@
 <template>
   <div ref="containerEle" :class="$style.container">
     <message-input-key-guide :show="isModifierKeyPressed" is-edit />
-    <message-input-upload-progress v-if="isPosting" :progress="progress" />
+    <message-input-upload-progress
+      v-if="isPostingAttachment"
+      :progress="attachmentPostProgress"
+    />
     <div :class="$style.inputContainer">
       <message-input-text-area
         ref="textareaRef"
         v-model="text"
         :class="$style.inputTextArea"
-        :is-posting="isPosting"
+        :is-posting="isPostingAttachment"
         @paste="onPaste"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
@@ -17,19 +20,23 @@
       <div>
         <message-input-insert-stamp-button
           :class="$style.iconButton"
-          :disabled="isPosting"
+          :disabled="isPostingAttachment"
           @click="onStampClick"
         />
         <message-input-upload-button
           :class="$style.iconButton"
-          :disabled="isPosting"
-          @click="startAddingAttachment"
+          :disabled="isPostingAttachment"
+          @click="addAttachment"
         />
       </div>
     </div>
     <div :class="$style.controls">
       <form-button label="キャンセル" color="secondary" @click="cancel" />
-      <form-button label="OK" :disabled="isPosting" @click="editMessage" />
+      <form-button
+        label="OK"
+        :disabled="isPostingAttachment"
+        @click="editMessage"
+      />
     </div>
   </div>
 </template>
@@ -75,18 +82,18 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
-const useAttachmentsEditor = (
-  text: Ref<string>,
-  isPosting: Ref<boolean>,
-  progress: Ref<number>,
-  onError: (text: string) => void
-) => {
+const useAttachmentsEditor = (text: Ref<string>) => {
+  const { addErrorToast } = useToastStore()
+
+  const isPosting = ref(false)
+  const progress = ref(0)
+
   const postAttachment = async (file: File) => {
-    if (isPosting.value) {
-      return
-    }
+    if (isPosting.value) return
+
     const channelId = store.state.domain.messagesView.currentChannelId
     if (!channelId) return
+
     isPosting.value = true
     const attachmentFile = await getAttachmentFile(file)
     const { data } = await apis.postFile(attachmentFile, channelId, {
@@ -97,7 +104,9 @@ const useAttachmentsEditor = (
         progress.value = e.loaded / e.total
       }
     })
-    text.value += `\n${buildFilePathForPost(data.id)}`
+
+    const fileUrl = buildFilePathForPost(data.id)
+    text.value = text.value !== '' ? `${text.value}\n${fileUrl}` : fileUrl
     progress.value = 0
     isPosting.value = false
   }
@@ -111,13 +120,19 @@ const useAttachmentsEditor = (
         try {
           await postAttachment(file)
         } catch (e) {
-          onError(e)
+          addErrorToast(e)
         }
       })
     }
   }
 
-  return { onPaste, startAddingAttachment: addAttachment, destroy }
+  return {
+    isPostingAttachment: isPosting,
+    attachmentPostProgress: progress,
+    onPaste,
+    addAttachment,
+    destroy
+  }
 }
 
 export default defineComponent({
@@ -164,16 +179,16 @@ export default defineComponent({
       toggleStampPicker()
     }
 
-    const { addErrorToast } = useToastStore()
-    const isPosting = ref(false)
-    const progress = ref(0)
-    const { onPaste, startAddingAttachment, destroy } = useAttachmentsEditor(
-      text,
-      isPosting,
-      progress,
-      addErrorToast
-    )
-    onBeforeUnmount(destroy)
+    const {
+      isPostingAttachment,
+      attachmentPostProgress,
+      addAttachment,
+      onPaste,
+      destroy
+    } = useAttachmentsEditor(text)
+    onBeforeUnmount(() => {
+      destroy()
+    })
 
     return {
       containerEle,
@@ -186,9 +201,9 @@ export default defineComponent({
       onStampClick,
       text,
       onPaste,
-      isPosting,
-      progress,
-      startAddingAttachment
+      isPostingAttachment,
+      attachmentPostProgress,
+      addAttachment
     }
   }
 })
