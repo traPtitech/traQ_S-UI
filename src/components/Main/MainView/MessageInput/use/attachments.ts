@@ -1,16 +1,4 @@
-import {
-  useMessageInputStateAttachment,
-  MessageInputStateKey
-} from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
-
-const useAttachments = (channelId: MessageInputStateKey) => {
-  const { addErrorToast } = useToastStore()
-  const { addAttachment } = useMessageInputStateAttachment(
-    channelId,
-    addErrorToast
-  )
-
+const useAttachments = (addAttachment: (file: File) => Promise<void>) => {
   const input = document.createElement('input')
   input.type = 'file'
   input.multiple = true

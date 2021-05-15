@@ -28,6 +28,7 @@
           :is-posting="isPosting"
           @focus="onFocus"
           @blur="onBlur"
+          @paste="onPaste"
           @modifier-key-down="onModifierKeyDown"
           @modifier-key-up="onModifierKeyUp"
           @post-message="postMessage"
@@ -61,6 +62,7 @@ import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
 import usePostMessage from './use/postMessage'
 import useFocus from './use/focus'
+import usePaste from './use/paste'
 import useEditingStatus from './use/editingStatus'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
 import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
@@ -71,6 +73,8 @@ import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import Icon from '@/components/UI/Icon.vue'
 import useMessageInputState from '@/providers/messageInputState'
+import useToastStore from '@/providers/toastStore'
+import { useMessageInputStateAttachment } from '@/providers/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -94,7 +98,11 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
     const channelId = toRef(props, 'channelId')
     const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
-    const { addAttachment, destroy } = useAttachments(channelId)
+    const { addErrorToast } = useToastStore()
+    const {
+      addAttachment: addStateAttachment
+    } = useMessageInputStateAttachment(channelId, addErrorToast)
+    const { addAttachment, destroy } = useAttachments(addStateAttachment)
     const {
       isModifierKeyPressed,
       onModifierKeyDown,
@@ -112,6 +120,8 @@ export default defineComponent({
 
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(channelId, isTextEmpty, isFocused)
+
+    const { onPaste } = usePaste(toRef(props, 'channelId'))
 
     const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
@@ -146,6 +156,7 @@ export default defineComponent({
       state,
       onFocus,
       onBlur,
+      onPaste,
       onModifierKeyDown,
       onModifierKeyUp,
       toggleStampPicker,

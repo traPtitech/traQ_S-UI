@@ -9,25 +9,9 @@ import {
   watch
 } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import { canResize, resize } from '@/lib/resize'
+import { getAttachmentFile } from '@/lib/resize'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
 import { ChannelId } from '@/types/entity-ids'
-
-const IMAGE_SIZE_LIMIT = 20 * 1000 * 1000 // 20MB
-const FILE_SIZE_LIMIT = 30 * 1000 * 1000 // 30MB
-
-const tooLargeFileMessage =
-  window.traQConfig.tooLargeFileMessage ??
-  '大きい%sの共有には別のサービスを利用してください。'
-
-const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${tooLargeFileMessage.replace(
-  '%s',
-  '画像'
-)}`
-const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${tooLargeFileMessage.replace(
-  '%s',
-  'ファイル'
-)}`
 
 const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 
@@ -182,47 +166,27 @@ export const useMessageInputStateAttachment = (
   }
 
   const addAttachment = async (file: File) => {
-    const fileType = mimeToFileType(file.type)
+    try {
+      const fileType = mimeToFileType(file.type)
+      const attachmentFile = await getAttachmentFile(file)
+      if (fileType !== 'image') {
+        state.attachments.push({
+          type: fileType,
+          file: attachmentFile
+        })
+        return
+      }
+      const thumbnailDataUrl = await convertToDataUrl(attachmentFile)
+      if (!thumbnailDataUrl) return
 
-    if (fileType === 'image' && file.size > IMAGE_SIZE_LIMIT) {
-      onError(IMAGE_MAX_SIZE_EXCEEDED_MESSAGE)
-      return
-    }
-    if (file.size > FILE_SIZE_LIMIT) {
-      onError(FILE_MAX_SIZE_EXCEEDED_MESSAGE)
-      return
-    }
-
-    if (fileType !== 'image') {
       state.attachments.push({
         type: fileType,
-        file
+        file: attachmentFile,
+        thumbnailDataUrl
       })
-      return
+    } catch (e) {
+      onError(e)
     }
-
-    const resizable = canResize(file.type)
-
-    let resizedFile = file
-    if (resizable) {
-      const res = await resize(file)
-      if (res === 'cannot resize') {
-        onError('画像が大きいためサムネイルは生成されません')
-      } else if (res === 'error') {
-        onError('画像の形式が不正なためサムネイルは生成されません')
-      } else if (res) {
-        resizedFile = res
-      }
-    }
-
-    const thumbnailDataUrl = await convertToDataUrl(resizedFile)
-    if (!thumbnailDataUrl) return
-
-    state.attachments.push({
-      type: fileType,
-      file: resizedFile,
-      thumbnailDataUrl
-    })
   }
 
   const removeAttachmentAt = (index: number) => {
