@@ -18,7 +18,8 @@ const useInsertText = (
     textareaText.value = `${pre}${text}${suf}`
 
     await nextTick()
-    textareaRef.value.selectionStart = textareaRef.value.selectionEnd = selectionIndex
+    textareaRef.value.selectionStart = textareaRef.value.selectionEnd =
+      selectionIndex
   }
 
   return { insertText }

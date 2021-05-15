@@ -30,12 +30,8 @@ export default defineComponent({
   name: 'DesktopToolBox',
   components: { Tool, UserIcon, AppList },
   setup() {
-    const {
-      tools,
-      isServicesShown,
-      closeServices,
-      toggleServices
-    } = useToolBox()
+    const { tools, isServicesShown, closeServices, toggleServices } =
+      useToolBox()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const myId = computed(() => store.getters.domain.me.myId)
 

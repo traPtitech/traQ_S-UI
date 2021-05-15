@@ -26,22 +26,18 @@ export default defineComponent({
     SearchSuggestion
   },
   setup() {
-    const {
-      closeCommandPalette,
-      commandPaletteStore: store
-    } = useCommandPaletteStore()
+    const { closeCommandPalette, commandPaletteStore: store } =
+      useCommandPaletteStore()
 
-    const supplementalViewType = computed(
-      (): SupplementalViewType => {
-        if (store.mode === 'search' && store.query.length > 0) {
-          return 'search-result'
-        }
-        if (store.mode === 'search') {
-          return 'search-suggestion'
-        }
-        return undefined
+    const supplementalViewType = computed((): SupplementalViewType => {
+      if (store.mode === 'search' && store.query.length > 0) {
+        return 'search-result'
       }
-    )
+      if (store.mode === 'search') {
+        return 'search-suggestion'
+      }
+      return undefined
+    })
 
     return { closeCommandPalette, store, supplementalViewType }
   }

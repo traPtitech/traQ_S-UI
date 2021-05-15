@@ -42,12 +42,8 @@ export const actions = defineActions({
     context,
     payload: { channelId: ChannelId; entryMessageId?: MessageId }
   ) {
-    const {
-      rootDispatch,
-      commit,
-      rootCommit,
-      rootState
-    } = mainViewActionContext(context)
+    const { rootDispatch, commit, rootCommit, rootState } =
+      mainViewActionContext(context)
     commit.setPrimaryView({
       type: 'channel',
       channelId: payload.channelId,

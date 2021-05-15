@@ -138,12 +138,8 @@ export default defineComponent({
     'change-theme': (theme: Theme) => true
   },
   setup(props, context) {
-    const {
-      editedTheme,
-      updateEditedTheme,
-      isChanged,
-      applyTheme
-    } = useEditedThemes(props, context)
+    const { editedTheme, updateEditedTheme, isChanged, applyTheme } =
+      useEditedThemes(props, context)
 
     const { isImporterOpen, onImportClick } = useImporter()
 

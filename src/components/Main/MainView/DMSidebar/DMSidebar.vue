@@ -56,13 +56,8 @@ export default defineComponent({
     }
   },
   setup() {
-    const {
-      state,
-      viewerIds,
-      togglePinnedMode,
-      openSidebar,
-      closeSidebar
-    } = useChannelSidebarCommon()
+    const { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar } =
+      useChannelSidebarCommon()
 
     return {
       state,

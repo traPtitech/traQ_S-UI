@@ -31,9 +31,8 @@ const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
     const scrollWidth = inspectingTarget.scrollWidth
     const clientWidth = inspectingTarget.clientWidth
     if (scrollWidth > clientWidth) {
-      const overflowX = getComputedStyle(inspectingTarget).getPropertyValue(
-        'overflow-x'
-      )
+      const overflowX =
+        getComputedStyle(inspectingTarget).getPropertyValue('overflow-x')
       return overflowX !== 'hidden'
     }
     if (!inspectingTarget.parentElement) {

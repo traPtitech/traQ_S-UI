@@ -132,21 +132,17 @@ export default defineComponent({
     }
 
     const containerEle = ref<HTMLDivElement>()
-    const {
-      isThisOpen: isStampPickerOpen,
-      toggleStampPicker
-    } = useStampPickerInvoker(async stampData => {
-      try {
-        await apis.addMessageStamp(props.messageId, stampData.id)
-      } catch {
-        addErrorToast('メッセージにスタンプを追加できませんでした')
-      }
-    }, containerEle)
+    const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
+      useStampPickerInvoker(async stampData => {
+        try {
+          await apis.addMessageStamp(props.messageId, stampData.id)
+        } catch {
+          addErrorToast('メッセージにスタンプを追加できませんでした')
+        }
+      }, containerEle)
 
-    const {
-      isThisContextMenuShown,
-      openContextMenu
-    } = useMessageContextMenuInvoker(props)
+    const { isThisContextMenuShown, openContextMenu } =
+      useMessageContextMenuInvoker(props)
 
     const onDotsClick = (e: MouseEvent) => {
       openContextMenu({

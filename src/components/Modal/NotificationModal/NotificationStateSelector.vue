@@ -29,10 +29,8 @@ export default defineComponent({
     NotificationStateSelectorItem
   },
   setup() {
-    const {
-      currentChannelSubscription,
-      changeSubscriptionLevel
-    } = useChannelSubscriptionState()
+    const { currentChannelSubscription, changeSubscriptionLevel } =
+      useChannelSubscriptionState()
     return { currentChannelSubscription, changeSubscriptionLevel, levels }
   }
 })

@@ -36,10 +36,8 @@ export const ephemeralNavigationTypeNameMap: Record<
   audioController: '音楽'
 }
 
-export const {
-  useNavigation,
-  useNavigationSelectorItem
-} = createNavigation<NavigationItemType>('home')
+export const { useNavigation, useNavigationSelectorItem } =
+  createNavigation<NavigationItemType>('home')
 
 export const {
   useNavigation: useEphemeralNavigation,

@@ -99,15 +99,11 @@ export default defineComponent({
     const channelId = toRef(props, 'channelId')
     const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
     const { addErrorToast } = useToastStore()
-    const {
-      addAttachment: addStateAttachment
-    } = useMessageInputStateAttachment(channelId, addErrorToast)
+    const { addAttachment: addStateAttachment } =
+      useMessageInputStateAttachment(channelId, addErrorToast)
     const { addAttachment, destroy } = useAttachments(addStateAttachment)
-    const {
-      isModifierKeyPressed,
-      onModifierKeyDown,
-      onModifierKeyUp
-    } = useModifierKey()
+    const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
+      useModifierKey()
 
     onBeforeUnmount(() => {
       destroy()
@@ -137,9 +133,10 @@ export default defineComponent({
           canPostMessage.value)
     )
 
-    const textareaRef = ref<{
-      textareaAutosizeRef: { $el: HTMLTextAreaElement }
-    }>()
+    const textareaRef =
+      ref<{
+        textareaAutosizeRef: { $el: HTMLTextAreaElement }
+      }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       toRef(state, 'text'),

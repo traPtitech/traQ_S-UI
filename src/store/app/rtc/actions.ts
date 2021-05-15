@@ -240,9 +240,8 @@ export const actions = defineActions({
     state.mixer.playFileSource('qall_start')
   },
   mute(context) {
-    const { state, commit, rootGetters, rootDispatch } = rtcActionContext(
-      context
-    )
+    const { state, commit, rootGetters, rootDispatch } =
+      rtcActionContext(context)
     const qallSession = rootGetters.domain.rtc.qallSession
     if (!state.localStream || !qallSession) {
       return
@@ -256,9 +255,8 @@ export const actions = defineActions({
     })
   },
   unmute(context) {
-    const { state, commit, rootGetters, rootDispatch } = rtcActionContext(
-      context
-    )
+    const { state, commit, rootGetters, rootDispatch } =
+      rtcActionContext(context)
     const qallSession = rootGetters.domain.rtc.qallSession
     if (!state.localStream || !qallSession) {
       return

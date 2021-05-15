@@ -61,11 +61,8 @@ export default defineComponent({
     //StampPickerEffectToggleButton
   },
   setup() {
-    const {
-      state,
-      setCurrentStampSet,
-      closeStampPicker
-    } = useStampPickerStore()
+    const { state, setCurrentStampSet, closeStampPicker } =
+      useStampPickerStore()
     const currentStampSet = computed(() => state.currentStampSet)
     const queryString = ref('')
 

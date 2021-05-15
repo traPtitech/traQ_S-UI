@@ -61,13 +61,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const {
-      state,
-      viewerIds,
-      togglePinnedMode,
-      openSidebar,
-      closeSidebar
-    } = useChannelSidebarCommon()
+    const { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar } =
+      useChannelSidebarCommon()
 
     const channelName = computed(
       () => store.state.entities.channelsMap.get(props.channelId)?.name ?? ''

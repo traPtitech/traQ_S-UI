@@ -119,10 +119,8 @@ export default defineComponent({
     isArchived: { type: Boolean, default: false }
   },
   setup(props, { emit }) {
-    const {
-      changeToNextSubscriptionLevel,
-      currentChannelSubscription
-    } = useChannelSubscriptionState()
+    const { changeToNextSubscriptionLevel, currentChannelSubscription } =
+      useChannelSubscriptionState()
 
     const isQallEnabled = computed(
       () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled

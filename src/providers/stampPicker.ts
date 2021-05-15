@@ -83,11 +83,8 @@ const useStampPickerBase = () => {
  * スタンプピッカーそのもので利用
  */
 export const useStampPickerStore = () => {
-  const {
-    stampPickerStore,
-    isStampPickerShown,
-    closeStampPicker
-  } = useStampPickerBase()
+  const { stampPickerStore, isStampPickerShown, closeStampPicker } =
+    useStampPickerBase()
 
   const setCurrentStampSet = (set: StampSet) => {
     stampPickerStore.currentStampSet = set
@@ -144,11 +141,8 @@ export const useStampPickerInvoker = (
   element: Ref<HTMLElement | undefined>,
   alignment: AlignmentPosition = 'top-right'
 ) => {
-  const {
-    stampPickerStore,
-    isStampPickerShown,
-    closeStampPicker
-  } = useStampPickerBase()
+  const { stampPickerStore, isStampPickerShown, closeStampPicker } =
+    useStampPickerBase()
 
   const isThisOpen = ref(false)
   watch(isStampPickerShown, newShown => {

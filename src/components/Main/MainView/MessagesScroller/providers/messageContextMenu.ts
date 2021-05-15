@@ -9,7 +9,8 @@ import {
 import { MessageId } from '@/types/entity-ids'
 import { Point } from '@/lib/point'
 
-const messageContextMenuStoreSymbol: InjectionKey<MessageContextMenuStore> = Symbol()
+const messageContextMenuStoreSymbol: InjectionKey<MessageContextMenuStore> =
+  Symbol()
 
 interface MessageContextMenuStore {
   target?: MessageId
@@ -47,11 +48,8 @@ const useMessageContextMenuStoreBase = () => {
 }
 
 export const useMessageContextMenuStore = () => {
-  const {
-    messageContextMenuStore,
-    isShown,
-    closeContextMenu
-  } = useMessageContextMenuStoreBase()
+  const { messageContextMenuStore, isShown, closeContextMenu } =
+    useMessageContextMenuStoreBase()
 
   return {
     state: readonly(messageContextMenuStore),
@@ -64,11 +62,8 @@ export const useMessageContextMenuInvoker = (props: {
   messageId: MessageId
   isMinimum: boolean
 }) => {
-  const {
-    messageContextMenuStore,
-    isShown,
-    closeContextMenu
-  } = useMessageContextMenuStoreBase()
+  const { messageContextMenuStore, isShown, closeContextMenu } =
+    useMessageContextMenuStoreBase()
 
   const isThisContextMenuShown = computed(
     () => messageContextMenuStore.target === props.messageId

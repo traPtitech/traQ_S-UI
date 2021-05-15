@@ -20,11 +20,11 @@ interface ExtendedMediaDevices extends MediaDevices {
 }
 
 export const getUserDisplay = async () => {
-  const rawVideo = await (navigator.mediaDevices as ExtendedMediaDevices).getDisplayMedia(
-    {
-      audio: false,
-      video: true
-    }
-  )
+  const rawVideo = await (
+    navigator.mediaDevices as ExtendedMediaDevices
+  ).getDisplayMedia({
+    audio: false,
+    video: true
+  })
   return rawVideo
 }

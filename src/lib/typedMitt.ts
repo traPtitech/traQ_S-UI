@@ -16,6 +16,5 @@ export type TypedMitt<EM extends EventMap> = {
   emit(type: '*', event?: any): void
 }
 
-export const mitt: <T extends EventMap>(
-  all?: EventHandlerMap
-) => TypedMitt<T> = all => originalMitt(all)
+export const mitt: <T extends EventMap>(all?: EventHandlerMap) => TypedMitt<T> =
+  all => originalMitt(all)
