@@ -18,6 +18,7 @@
         :is-active="isMainViewActive"
         :hide-outer="hideOuter"
         :dim-inner="isSidebarCompletelyAppeared"
+        :class="$style.mainViewWrapper"
         :style="styles.mainViewWrapper"
         @click.capture="onClickMainViewFrame"
       >
@@ -266,6 +267,9 @@ $nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
     width: 320px;
   }
 }
+.mainViewWrapper {
+  z-index: $z-index-main-view-wrapper;
+}
 .sidebarWrapper {
   @include background-secondary;
   position: absolute;
@@ -279,6 +283,7 @@ $nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
     y: auto;
   }
   contain: strict;
+  z-index: $z-index-sidebar-wrapper;
 }
 .sidebarPortal {
   width: 100%;

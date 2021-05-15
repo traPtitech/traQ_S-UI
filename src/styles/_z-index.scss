@@ -11,7 +11,10 @@ $z-index-message-loading: 2;
 $z-index-message-element-tools: 3;
 $z-index-message-element-tools-menu: 5;
 
-$z-index-message-input: 10;
+$z-index-main-view-wrapper: 10;
+$z-index-sidebar-wrapper: 11;
+
+$z-index-message-input: 15;
 // PC画面での小さい幅でサイドバーが入力欄より上に来る
 // さらにヘッダーの「…」のポップアップよりは下に来るように
 $z-index-sidebar: 20;
