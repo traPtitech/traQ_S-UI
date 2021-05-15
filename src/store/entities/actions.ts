@@ -92,7 +92,7 @@ const fetchWithCacheStrategy = async <T, R, K extends keyof Entities>(
   // キャッシュを利用する場合はこのブロックに入る
   if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
     // mapでない場合はneverになる
-    const map = (store.state.entities[mapName] as unknown) as Map<T, R>
+    const map = store.state.entities[mapName] as unknown as Map<T, R>
     const res = map.get(key)
     if (res) {
       return res
@@ -105,7 +105,7 @@ const fetchWithCacheStrategy = async <T, R, K extends keyof Entities>(
 
       // 参照が変わっているので取り直す
       // mapでない場合はneverになる
-      const map = (store.state.entities[mapName] as unknown) as Map<T, R>
+      const map = store.state.entities[mapName] as unknown as Map<T, R>
       const res = map.get(key)
       if (res) {
         return res

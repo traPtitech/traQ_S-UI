@@ -61,23 +61,25 @@ export const rawQuery = <T extends string>(extracted: ExtractedFilter<T>) =>
  * @param prefixes　プレフィックスとして認める物のリスト
  * @param prefixes　否定プレフィックス フラグ式のフィルター以外は指定する必要なし
  */
-export const makePrefixedFilterExtractor = <T extends string>(
-  type: T,
-  prefixes: string[],
-  negatePrefixes: string[] = []
-) => (q: string): ExtractedFilter<T> | string => {
-  for (const prefix of prefixes) {
-    if (q.startsWith(prefix)) {
-      return { type, prefix, body: q.substring(prefix.length), negate: false }
+export const makePrefixedFilterExtractor =
+  <T extends string>(
+    type: T,
+    prefixes: string[],
+    negatePrefixes: string[] = []
+  ) =>
+  (q: string): ExtractedFilter<T> | string => {
+    for (const prefix of prefixes) {
+      if (q.startsWith(prefix)) {
+        return { type, prefix, body: q.substring(prefix.length), negate: false }
+      }
     }
-  }
-  for (const prefix of negatePrefixes) {
-    if (q.startsWith(prefix)) {
-      return { type, prefix, body: q.substring(prefix.length), negate: true }
+    for (const prefix of negatePrefixes) {
+      if (q.startsWith(prefix)) {
+        return { type, prefix, body: q.substring(prefix.length), negate: true }
+      }
     }
+    return q
   }
-  return q
-}
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -88,24 +90,26 @@ export const makePrefixedFilterExtractor = <T extends string>(
  * @param skipCondition チェックを飛ばす条件 ':'が含まれていない など
  * @returns
  */
-export const parseToFilter = <F, T extends string>(
-  parser: (extracted: ExtractedFilter<T>) => Promise<F | undefined>,
-  extractor: FilterExtractor<T>,
-  skipCondition?: (q: string) => boolean
-) => async (q: string): Promise<F | string> => {
-  if (skipCondition?.(q)) {
-    return q
+export const parseToFilter =
+  <F, T extends string>(
+    parser: (extracted: ExtractedFilter<T>) => Promise<F | undefined>,
+    extractor: FilterExtractor<T>,
+    skipCondition?: (q: string) => boolean
+  ) =>
+  async (q: string): Promise<F | string> => {
+    if (skipCondition?.(q)) {
+      return q
+    }
+    const extracted = extractor(q)
+    if (typeof extracted === 'string') {
+      return q
+    }
+    const parsed = await parser(extracted)
+    if (!parsed) {
+      return q
+    }
+    return parsed
   }
-  const extracted = extractor(q)
-  if (typeof extracted === 'string') {
-    return q
-  }
-  const parsed = await parser(extracted)
-  if (!parsed) {
-    return q
-  }
-  return parsed
-}
 
 // パーサー実装
 

@@ -221,10 +221,8 @@ export default defineComponent({
       )
     })
 
-    const {
-      onChangeHeight,
-      onEntryMessageLoaded
-    } = useMessageScrollerElementResizeObserver(rootRef, props, state)
+    const { onChangeHeight, onEntryMessageLoaded } =
+      useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     const messageComponent = computed(() =>
       store.state.ui.mainView.primaryView.type === 'clips'

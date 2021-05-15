@@ -39,15 +39,13 @@ const useChannelMessageFetcher = (
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitMounted
-    const {
-      messages,
-      hasMore
-    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-      channelId: props.channelId,
-      limit: fetchLimit.value,
-      order: 'desc',
-      until: state.loadedMessageOldestDate
-    })
+    const { messages, hasMore } =
+      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
+        channelId: props.channelId,
+        limit: fetchLimit.value,
+        order: 'desc',
+        until: state.loadedMessageOldestDate
+      })
 
     if (!hasMore) {
       isReachedEnd.value = true
@@ -71,15 +69,13 @@ const useChannelMessageFetcher = (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
     await waitMounted
-    const {
-      messages,
-      hasMore
-    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-      channelId: props.channelId,
-      limit: fetchLimit.value,
-      order: 'asc',
-      since: state.loadedMessageLatestDate
-    })
+    const { messages, hasMore } =
+      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
+        channelId: props.channelId,
+        limit: fetchLimit.value,
+        order: 'asc',
+        since: state.loadedMessageLatestDate
+      })
 
     if (!hasMore) {
       isReachedLatest.value = true
@@ -126,15 +122,13 @@ const useChannelMessageFetcher = (
 
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
     await waitMounted
-    const {
-      messages,
-      hasMore
-    } = await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-      channelId: props.channelId,
-      limit: fetchLimit.value,
-      order: 'desc',
-      since: state.loadedMessageLatestDate
-    })
+    const { messages, hasMore } =
+      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
+        channelId: props.channelId,
+        limit: fetchLimit.value,
+        order: 'desc',
+        since: state.loadedMessageLatestDate
+      })
 
     if (!hasMore) {
       isReachedLatest.value = true

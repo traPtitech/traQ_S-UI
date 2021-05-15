@@ -159,15 +159,13 @@ export default defineComponent({
     const text = ref(props.rawContent)
 
     const { editMessage, cancel } = useEditMessage(props, text)
-    const {
-      isModifierKeyPressed,
-      onModifierKeyDown,
-      onModifierKeyUp
-    } = useModifierKey()
+    const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
+      useModifierKey()
 
-    const textareaRef = ref<{
-      textareaAutosizeRef: { $el: HTMLTextAreaElement }
-    }>()
+    const textareaRef =
+      ref<{
+        textareaAutosizeRef: { $el: HTMLTextAreaElement }
+      }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       text,

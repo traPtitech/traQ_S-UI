@@ -11,6 +11,5 @@ const createIFPromise = (
 export const unreadChannelsMapInitialFetchPromise = createIFPromise(
   'unreadChannelsMapFetched'
 )
-export const viewStatesInitialFetchPromise = createIFPromise(
-  'viewStatesFetched'
-)
+export const viewStatesInitialFetchPromise =
+  createIFPromise('viewStatesFetched')

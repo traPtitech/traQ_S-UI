@@ -40,11 +40,8 @@ export default defineComponent({
   name: 'Notification',
   components: { FormButton },
   setup() {
-    const {
-      permission,
-      status,
-      requestPermission
-    } = useNotificationPermission()
+    const { permission, status, requestPermission } =
+      useNotificationPermission()
     return { permission, status, requestPermission }
   }
 })

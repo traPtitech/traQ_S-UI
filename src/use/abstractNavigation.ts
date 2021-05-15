@@ -9,7 +9,8 @@ const createNavigation = <NavigationItemType extends string | undefined>(
       currentNavigation: defaultItem
     })
     const onNavigationChange = (type: NavigationItemType) => {
-      navigationSelectorState.currentNavigation = type as UnwrapRef<NavigationItemType>
+      navigationSelectorState.currentNavigation =
+        type as UnwrapRef<NavigationItemType>
     }
     return {
       navigationSelectorState,

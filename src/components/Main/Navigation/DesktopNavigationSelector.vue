@@ -53,9 +53,8 @@ export default defineComponent({
   },
   setup(props, context) {
     const { onNavigationItemClick } = useNavigationSelectorItem(context)
-    const {
-      onNavigationItemClick: onEphemeralNavigationItemClick
-    } = useEphemeralNavigationSelectorItem(context)
+    const { onNavigationItemClick: onEphemeralNavigationItemClick } =
+      useEphemeralNavigationSelectorItem(context)
     const { entries, ephemeralEntries } = useNavigationSelectorEntry()
     const showSeparator = computed(() => ephemeralEntries.value.length > 0)
 

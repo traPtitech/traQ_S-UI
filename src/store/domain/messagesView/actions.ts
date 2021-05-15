@@ -73,9 +73,8 @@ export const actions = defineActions({
       isDM?: boolean
     }
   ) {
-    const { state, commit, dispatch, rootState } = messagesViewActionContext(
-      context
-    )
+    const { state, commit, dispatch, rootState } =
+      messagesViewActionContext(context)
     if (state.currentChannelId === payload.channelId) return
 
     // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
@@ -146,9 +145,8 @@ export const actions = defineActions({
     commit.setPinnedMessages(res.data)
   },
   async renderMessageContent(context, messageId: string) {
-    const { commit, rootState, rootDispatch } = messagesViewActionContext(
-      context
-    )
+    const { commit, rootState, rootDispatch } =
+      messagesViewActionContext(context)
     const content =
       rootState.entities.messages.messagesMap.get(messageId)?.content ?? ''
 
@@ -298,12 +296,8 @@ export const actions = defineActions({
     context,
     shouldRetriveMessageCreateEvent: boolean
   ) {
-    const {
-      rootState,
-      rootDispatch,
-      state,
-      commit
-    } = messagesViewActionContext(context)
+    const { rootState, rootDispatch, state, commit } =
+      messagesViewActionContext(context)
     if (shouldRetriveMessageCreateEvent && state.currentChannelId) {
       // 未読を取得していないと未読を表示できないため (また既読にできないため)
       await unreadChannelsMapInitialFetchPromise

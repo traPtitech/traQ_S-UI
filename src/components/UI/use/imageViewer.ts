@@ -36,7 +36,7 @@ const clientXYToPoint = (e: { clientX: number; clientY: number }) => ({
 type TwoTouch = readonly [Touch, Touch]
 
 const touchesToPoints = <T extends readonly Touch[]>(touches: T) =>
-  (touches.map(touch => clientXYToPoint(touch)) as unknown) as {
+  touches.map(touch => clientXYToPoint(touch)) as unknown as {
     readonly [K in keyof T]: Point
   }
 

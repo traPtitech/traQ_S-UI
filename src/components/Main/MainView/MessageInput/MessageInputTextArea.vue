@@ -67,9 +67,10 @@ export default defineComponent({
   setup(props, context) {
     const value = useModelValueSyncer(props, context.emit)
 
-    const textareaAutosizeRef = ref<{
-      $el: HTMLTextAreaElement
-    }>()
+    const textareaAutosizeRef =
+      ref<{
+        $el: HTMLTextAreaElement
+      }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
     const { insertText } = useInsertText(value, textareaRef)

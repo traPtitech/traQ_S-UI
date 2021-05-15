@@ -123,9 +123,8 @@ export default defineComponent({
 
     const id = randomString()
 
-    const { isPasswordShown, togglePassword, typeWithShown } = useShowPassword(
-      props
-    )
+    const { isPasswordShown, togglePassword, typeWithShown } =
+      useShowPassword(props)
 
     return {
       onInput,

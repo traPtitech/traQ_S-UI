@@ -94,11 +94,8 @@ const useDraftConfirmer = () => {
 }
 
 const useCommandPaletteShortcutKey = () => {
-  const {
-    mode,
-    openCommandPalette,
-    closeCommandPalette
-  } = useCommandPaletteInvoker()
+  const { mode, openCommandPalette, closeCommandPalette } =
+    useCommandPaletteInvoker()
 
   const isSearchEnabled = window.traQConfig.enableSearch ?? false
 

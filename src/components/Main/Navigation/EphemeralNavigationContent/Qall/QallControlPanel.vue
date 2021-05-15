@@ -50,10 +50,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const {
-      channelIdToShortPathString,
-      channelIdToPathString
-    } = useChannelPath()
+    const { channelIdToShortPathString, channelIdToPathString } =
+      useChannelPath()
     const channelName = computed(() =>
       channelIdToShortPathString(props.channelId)
     )

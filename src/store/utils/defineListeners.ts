@@ -11,10 +11,8 @@ type DispatchOfModule<O extends StoreOrModuleOptions> = {
   dispatch: DirectActions<O>
 }
 
-type ListenerSetter<
-  Listener extends AnyMitt,
-  O extends StoreOrModuleOptions
-> = (listener: Listener, module: DispatchOfModule<O>) => void
+type ListenerSetter<Listener extends AnyMitt, O extends StoreOrModuleOptions> =
+  (listener: Listener, module: DispatchOfModule<O>) => void
 
 // storeからそのモジュールを取り出す関数
 type Reducer<O extends StoreOrModuleOptions> = (
@@ -26,13 +24,14 @@ type Reducer<O extends StoreOrModuleOptions> = (
  * @typeParam O そのモジュールのオプションの型
  * @param listenerSetter この中でlistenする
  */
-export const createDefineListeners = <O extends StoreOrModuleOptions>() => <
-  Listener extends AnyMitt
->(
-  listener: Listener,
-  listenerSetter: ListenerSetter<Listener, O>
-): ((reducer: Reducer<O>) => Promise<void>) => async reducer => {
-  // Vueの初期化が終わらないとstoreにアクセスできない
-  await waitMount
-  listenerSetter(listener, { dispatch: reducer(store.dispatch) })
-}
+export const createDefineListeners =
+  <O extends StoreOrModuleOptions>() =>
+  <Listener extends AnyMitt>(
+    listener: Listener,
+    listenerSetter: ListenerSetter<Listener, O>
+  ): ((reducer: Reducer<O>) => Promise<void>) =>
+  async reducer => {
+    // Vueの初期化が終わらないとstoreにアクセスできない
+    await waitMount
+    listenerSetter(listener, { dispatch: reducer(store.dispatch) })
+  }

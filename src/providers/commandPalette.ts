@@ -56,11 +56,8 @@ const useCommandPaletteBase = () => {
 
 /** ストアを使うコマンドパレット内のコンポーネントが用いる */
 export const useCommandPaletteStore = () => {
-  const {
-    commandPaletteStore,
-    openCommandPalette,
-    closeCommandPalette
-  } = useCommandPaletteBase()
+  const { commandPaletteStore, openCommandPalette, closeCommandPalette } =
+    useCommandPaletteBase()
 
   const isCommandPaletteShown = computed(
     () => commandPaletteStore.mode !== undefined
@@ -81,11 +78,8 @@ export const useCommandPaletteStore = () => {
 
 /** コマンドパレットを呼び出したいコンポーネントが用いる */
 export const useCommandPaletteInvoker = () => {
-  const {
-    commandPaletteStore,
-    openCommandPalette,
-    closeCommandPalette
-  } = useCommandPaletteBase()
+  const { commandPaletteStore, openCommandPalette, closeCommandPalette } =
+    useCommandPaletteBase()
 
   const mode = computed(() => commandPaletteStore.mode)
 

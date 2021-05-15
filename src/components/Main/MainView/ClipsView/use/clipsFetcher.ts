@@ -25,14 +25,12 @@ const useClipsFetcher = (
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitMounted
-    const {
-      clips,
-      hasMore
-    } = await store.dispatch.domain.messagesView.fetchMessagesInClipFolder({
-      folderId: props.clipFolderId,
-      limit: fetchLimit.value,
-      offset: state.nextLoadOffset
-    })
+    const { clips, hasMore } =
+      await store.dispatch.domain.messagesView.fetchMessagesInClipFolder({
+        folderId: props.clipFolderId,
+        limit: fetchLimit.value,
+        offset: state.nextLoadOffset
+      })
 
     if (!hasMore) {
       isReachedEnd.value = true

@@ -86,10 +86,8 @@ export default defineComponent({
     const { channelState } = useChannelState(props)
     const { starChannel, unstarChannel } = useStarChannel(props)
     const { openNotificationModal } = useNotificationModal(props)
-    const {
-      isChildChannelCreatable,
-      openChannelCreateModal
-    } = useChannelCreateModal(props)
+    const { isChildChannelCreatable, openChannelCreateModal } =
+      useChannelCreateModal(props)
     const { copyLink } = useCopy()
     const {
       hasActiveQallSession,

@@ -69,9 +69,8 @@ export default defineComponent({
   setup(props, context) {
     const { state, isEmpty } = useMessageInputState('share-target')
     const { addErrorToast } = useToastStore()
-    const {
-      addAttachment: addStateAttachment
-    } = useMessageInputStateAttachment('share-target', addErrorToast)
+    const { addAttachment: addStateAttachment } =
+      useMessageInputStateAttachment('share-target', addErrorToast)
     const { addAttachment, destroy } = useAttachments(addStateAttachment)
 
     onBeforeUnmount(() => {

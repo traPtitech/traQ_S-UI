@@ -43,10 +43,10 @@ interface EntityWithName extends Entity {
   name: string
 }
 
-const createFindFunc = (store: Record<string, EntityWithName>) => (
-  name: string
-): EntityWithName | undefined =>
-  Object.values(store).find(e => e.name.toLowerCase() === name.toLowerCase())
+const createFindFunc =
+  (store: Record<string, EntityWithName>) =>
+  (name: string): EntityWithName | undefined =>
+    Object.values(store).find(e => e.name.toLowerCase() === name.toLowerCase())
 
 const testStore: ReplaceGetters = {
   getUser: createFindFunc(users),

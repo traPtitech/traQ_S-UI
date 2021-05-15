@@ -123,10 +123,8 @@ export default defineComponent({
     const topLevelChannels = useTopLevelChannels()
     const staredChannels = useStaredChannels()
 
-    const {
-      filterStarChannel,
-      toggleStarChannelFilter
-    } = useFilterStarChannel()
+    const { filterStarChannel, toggleStarChannelFilter } =
+      useFilterStarChannel()
     const { channelListFilterState } = useChannelListFilter(
       useChannelList(filterStarChannel)
     )

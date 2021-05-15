@@ -98,17 +98,15 @@ export default defineComponent({
   },
   setup(props, context) {
     const channelsMap = computed(() => store.state.entities.channelsMap)
-    const channel = computed(
-      (): Required<PatchChannelRequest> => {
-        const c = channelsMap.value.get(props.id)
-        return {
-          name: c?.name ?? '',
-          parent: c?.parentId ?? nullUuid,
-          archived: c?.archived ?? false,
-          force: c?.force ?? false
-        }
+    const channel = computed((): Required<PatchChannelRequest> => {
+      const c = channelsMap.value.get(props.id)
+      return {
+        name: c?.name ?? '',
+        parent: c?.parentId ?? nullUuid,
+        archived: c?.archived ?? false,
+        force: c?.force ?? false
       }
-    )
+    })
     const { channelIdToPathString } = useChannelPath()
     const subtitle = computed(() => channelIdToPathString(props.id, true))
 

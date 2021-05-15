@@ -32,7 +32,7 @@ export default defineComponent({
       // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
       await rAF()
       await rAF()
-      $el.style.height = (null as unknown) as string
+      $el.style.height = null as unknown as string
     }
     return { setHeight, unsetHeight }
   }

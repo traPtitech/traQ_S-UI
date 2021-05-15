@@ -156,9 +156,8 @@ export default defineComponent({
     }
 
     const contentRef = ref<HTMLElement>()
-    const { oversized, expanded, onClickExpandButton } = useMessageExpansion(
-      contentRef
-    )
+    const { oversized, expanded, onClickExpandButton } =
+      useMessageExpansion(contentRef)
 
     const { toggleSpoilerHandler } = useSpoilerToggler()
 

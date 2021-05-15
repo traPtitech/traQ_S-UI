@@ -29,12 +29,8 @@ export default defineComponent({
   name: 'MobileToolBox',
   components: { Tool, AppList },
   setup() {
-    const {
-      tools,
-      isServicesShown,
-      closeServices,
-      toggleServices
-    } = useToolBox()
+    const { tools, isServicesShown, closeServices, toggleServices } =
+      useToolBox()
 
     return {
       tools,

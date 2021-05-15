@@ -7,7 +7,7 @@ const useTextFilter = <T, K extends keyof T>(
   // NOTE: stringでなければ呼び出しが通らないのでキャストできる
   const oneLetterItems = computed(() =>
     items.value.filter(
-      item => ((item[searchTargetKey] as unknown) as string).length === 1
+      item => (item[searchTargetKey] as unknown as string).length === 1
     )
   )
   const state = reactive({
@@ -20,17 +20,16 @@ const useTextFilter = <T, K extends keyof T>(
       if (state.query.length === 1) {
         return oneLetterItems.value.filter(
           item =>
-            ((item[searchTargetKey] as unknown) as string).toLowerCase() ===
-            query
+            (item[searchTargetKey] as unknown as string).toLowerCase() === query
         )
       }
 
       const fullMatched: T[] = []
       const matched: T[] = []
       for (const item of items.value) {
-        const keyValue = ((item[
-          searchTargetKey
-        ] as unknown) as string).toLowerCase()
+        const keyValue = (
+          item[searchTargetKey] as unknown as string
+        ).toLowerCase()
         if (keyValue === query) {
           fullMatched.push(item)
         } else if (keyValue.includes(query)) {

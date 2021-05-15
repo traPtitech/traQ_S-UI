@@ -17,12 +17,8 @@ interface ModifierKeys {
 }
 
 const hasModifierKey = (keys: ModifierKeys) => {
-  const {
-    alt,
-    ctrl,
-    shift,
-    macCtrl
-  } = store.state.app.browserSettings.modifierKey
+  const { alt, ctrl, shift, macCtrl } =
+    store.state.app.browserSettings.modifierKey
 
   if (macFlag) {
     return (

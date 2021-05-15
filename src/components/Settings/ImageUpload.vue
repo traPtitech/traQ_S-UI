@@ -59,12 +59,14 @@ export default defineComponent({
     }
   },
   setup(prop, context: SetupContext) {
-    const { image, addImage, destroy: destroyImage } = useImageUploadInternal(
-      () => {
-        // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-        context.emit('input', image.data)
-      }
-    )
+    const {
+      image,
+      addImage,
+      destroy: destroyImage
+    } = useImageUploadInternal(() => {
+      // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
+      context.emit('input', image.data)
+    })
 
     let cropper: Cropper | undefined
     const imgEle = shallowRef<HTMLImageElement>()
