@@ -13,6 +13,7 @@ export enum RouteName {
   Registration = 'registration',
   ResetPassword = 'reset-password',
   Consent = 'consent',
+  GroupManager = 'group-manager',
   Settings = 'settings',
   NotFound = 'not-found'
 }
@@ -40,6 +41,8 @@ export const isMessageScrollerRoute = (
 }
 
 const Main = () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+const GroupManager = () =>
+  import(/* webpackChunkname: "GroupManager" */ '@/views/GroupManager.vue')
 const Settings = () =>
   import(/* webpackChunkName: "NotFound" */ '@/views/Settings.vue')
 const ShareTarget = () =>
@@ -78,6 +81,11 @@ const routes: RouteRecordRaw[] = [
     path: '/clip-folders/:id',
     name: RouteName.ClipFolders,
     component: Main
+  },
+  {
+    path: '/group-manager',
+    name: RouteName.GroupManager,
+    component: GroupManager
   },
   {
     path: '/settings/:setting?',
