@@ -2,6 +2,7 @@
   <div :class="$style.container">
     <unread-d-ms />
     <user-list />
+    <group-manager-opener />
   </div>
 </template>
 
@@ -9,12 +10,14 @@
 import { defineComponent } from 'vue'
 import UnreadDMs from './UnreadDMs.vue'
 import UserList from './UserList.vue'
+import GroupManagerOpener from './GroupManagerOpener.vue'
 
 export default defineComponent({
   name: 'Users',
   components: {
     UnreadDMs,
-    UserList
+    UserList,
+    GroupManagerOpener
   }
 })
 </script>
