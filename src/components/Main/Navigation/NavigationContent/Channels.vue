@@ -21,6 +21,9 @@
             show-shortened-path
             show-topic
           />
+          <template v-else-if="filterStarChannel && staredChannels.length == 0">
+            <empty-state>お気に入りチャンネルはありません</empty-state>
+          </template>
           <channel-list
             v-else-if="filterStarChannel"
             :channels="staredChannels"
