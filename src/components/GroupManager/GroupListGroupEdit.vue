@@ -21,13 +21,20 @@
       :max-length="30"
       @update="onTypeUpdate"
     />
-    <group-admin-list :group-id="group.id" :admins="group.admins" />
-    <div :class="$style.adminList">
+    <group-admin-list
+      :class="$style.item"
+      :group-id="group.id"
+      :admins="group.admins"
+    />
+    <div :class="$style.item">
       <user-icon-ellipsis-list
         direction="row"
         :user-ids="group.members.map(m => m.id)"
         prevent-modal
       />
+    </div>
+    <div :class="[$style.item, $style.deleteButtonWrapper]">
+      <form-button label="グループを削除" color="error" @click="onDelete" />
     </div>
   </div>
 </template>
@@ -40,13 +47,15 @@ import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
 import GroupAdminList from './GroupAdminList.vue'
+import FormButton from '@/components/UI/FormButton.vue'
 
 export default defineComponent({
   name: 'GroupListGroupEdit',
   components: {
     LineEditor,
     UserIconEllipsisList,
-    GroupAdminList
+    GroupAdminList,
+    FormButton
   },
   props: {
     group: {
@@ -56,6 +65,7 @@ export default defineComponent({
   },
   setup(props) {
     const { addErrorToast } = useToastStore()
+
     const onUpdate = (key: keyof UserGroup) => async (value: string) => {
       try {
         await apis.editUserGroup(props.group.id, { [key]: value })
@@ -69,7 +79,19 @@ export default defineComponent({
     const onDescUpdate = onUpdate('description')
     const onTypeUpdate = onUpdate('type')
 
-    return { onNameUpdate, onDescUpdate, onTypeUpdate }
+    const onDelete = async () => {
+      if (!confirm('本当にこのグループを削除しますか？')) return
+
+      try {
+        await apis.deleteUserGroup(props.group.id)
+
+        // TODO: wsがつながっていないことがある
+      } catch {
+        addErrorToast('グループの削除に失敗しました')
+      }
+    }
+
+    return { onNameUpdate, onDescUpdate, onTypeUpdate, onDelete }
   }
 })
 </script>
@@ -88,5 +110,9 @@ export default defineComponent({
   &:last-child {
     margin-bottom: 0;
   }
+}
+.deleteButtonWrapper {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
