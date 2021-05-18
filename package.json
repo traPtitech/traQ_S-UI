@@ -53,7 +53,7 @@
     "@types/punycode": "^2.1.0",
     "@types/throttle-debounce": "^2.1.0",
     "@types/webappsec-credential-management": "^0.6.0",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-e2e-cypress": "^4.5.13",
