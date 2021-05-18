@@ -5,6 +5,8 @@
       :key="group.id"
       :group="group"
       :class="$style.item"
+      :is-selected="selectedId === group.id"
+      @select="onSelect"
     />
     <div v-if="groups.length <= 0" :class="$style.notFound">
       自分が管理者になっているユーザーグループはありません
@@ -13,9 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
 import GroupListGroup from './GroupListGroup.vue'
+import { UserGroupId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'GroupList',
@@ -26,13 +29,19 @@ export default defineComponent({
     store.dispatch.entities.fetchUsers()
     store.dispatch.entities.fetchUserGroups()
 
+    const selectedId = ref<UserGroupId>()
+    const onSelect = (id: UserGroupId) => {
+      selectedId.value = id
+    }
+
     const groups = computed(() =>
       [...store.state.entities.userGroupsMap.values()].filter(group => {
         const myId = store.getters.domain.me.myId
         return myId && group.admins.includes(myId)
       })
     )
-    return { groups }
+
+    return { selectedId, onSelect, groups }
   }
 })
 </script>

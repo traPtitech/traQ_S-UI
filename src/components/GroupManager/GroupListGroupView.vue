@@ -10,7 +10,12 @@
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <icon name="pencil-outline" mdi />
+      <icon
+        name="pencil-outline"
+        mdi
+        :class="$style.editIcon"
+        @click="onClickEdit"
+      />
     </div>
   </div>
 </template>
@@ -32,6 +37,12 @@ export default defineComponent({
       type: Object as PropType<UserGroup>,
       required: true
     }
+  },
+  setup(props, { emit }) {
+    const onClickEdit = () => {
+      emit('clickEdit')
+    }
+    return { onClickEdit }
   }
 })
 </script>
@@ -58,5 +69,8 @@ export default defineComponent({
 .editIconWrapper {
   @include color-ui-primary;
   grid-area: edit;
+}
+.editIcon {
+  cursor: pointer;
 }
 </style>
