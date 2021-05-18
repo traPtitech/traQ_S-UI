@@ -21,14 +21,7 @@
       :max-length="30"
       @update="onTypeUpdate"
     />
-    <div :class="$style.adminList">
-      <icon name="crown" mdi />
-      <user-icon-ellipsis-list
-        direction="row"
-        :user-ids="group.admins"
-        prevent-modal
-      />
-    </div>
+    <group-admin-list :group-id="group.id" :admins="group.admins" />
     <div :class="$style.adminList">
       <user-icon-ellipsis-list
         direction="row"
@@ -43,17 +36,17 @@
 import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
 import LineEditor from './LineEditor.vue'
-import Icon from '@/components/UI/Icon.vue'
 import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
+import GroupAdminList from './GroupAdminList.vue'
 
 export default defineComponent({
   name: 'GroupListGroupEdit',
   components: {
     LineEditor,
-    Icon,
-    UserIconEllipsisList
+    UserIconEllipsisList,
+    GroupAdminList
   },
   props: {
     group: {
