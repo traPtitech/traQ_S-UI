@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
+import { defineComponent, reactive, computed, PropType, watch } from 'vue'
 import { buildUserIconPath } from '@/lib/apis'
 import { UserId, FileId } from '@/types/entity-ids'
 import store from '@/store'
@@ -50,6 +50,14 @@ export default defineComponent({
     }
   },
   setup(props) {
+    watch(
+      () => props.userId,
+      userId => {
+        store.dispatch.entities.fetchUser({ userId })
+      },
+      { immediate: true }
+    )
+
     const user = computed(() =>
       props.userId === store.getters.domain.me.myId
         ? store.state.domain.me.detail

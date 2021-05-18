@@ -11,6 +11,7 @@
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧
       </p>
+      <group-list :class="$style.item" />
     </div>
   </div>
 </template>
@@ -20,12 +21,14 @@ import { defineComponent } from 'vue'
 import CloseButton from '@/components/UI/CloseButton.vue'
 import useClose from './use/close'
 import FormButton from '@/components/UI/FormButton.vue'
+import GroupList from './GroupList.vue'
 
 export default defineComponent({
   name: 'MobileGroupManager',
   components: {
     CloseButton,
-    FormButton
+    FormButton,
+    GroupList
   },
   setup() {
     const { close } = useClose()
@@ -37,6 +40,8 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-primary;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 }
@@ -56,7 +61,9 @@ export default defineComponent({
 }
 
 .content {
+  flex: 1;
   padding: 16px 24px;
+  overflow-y: auto;
 }
 .item {
   margin: 24px 0;
