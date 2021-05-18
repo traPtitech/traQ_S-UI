@@ -22,6 +22,16 @@
             ? modalState.current.messageId
             : undefined
         "
+        :group-id="
+          modalState.current.type === 'group-member-edit'
+            ? modalState.current.groupId
+            : undefined
+        "
+        :user-id="
+          modalState.current.type === 'group-member-edit'
+            ? modalState.current.userId
+            : undefined
+        "
       />
     </div>
   </transition>
@@ -43,7 +53,8 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   'clip-create': 'ClipCreateModal/ClipCreateModal',
   'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
   'channel-manage': 'ChannelManageModal/ChannelManageModal',
-  'group-create': 'GroupCreateModal/GroupCreateModal'
+  'group-create': 'GroupCreateModal/GroupCreateModal',
+  'group-member-edit': 'GroupMemberEditModal/GroupMemberEditModal'
 }
 
 const useModal = () => {

@@ -10,6 +10,7 @@
         :id="member.id"
         :key="member.id"
         show-edit-button
+        @edit="onEdit(member.id)"
         @delete="onDelete(member.id)"
       >
         <div :class="$style.role">{{ member.role }}</div>
@@ -26,6 +27,7 @@ import GroupUser from './GroupUser.vue'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
 import { UserGroupMember } from '@traptitech/traq'
+import store from '@/store'
 
 export default defineComponent({
   name: 'GroupMemberList',
@@ -46,6 +48,14 @@ export default defineComponent({
   setup(props) {
     const { addErrorToast } = useToastStore()
 
+    const onEdit = async (id: string) => {
+      await store.dispatch.ui.modal.pushModal({
+        type: 'group-member-edit',
+        groupId: props.groupId,
+        userId: id
+      })
+    }
+
     const onDelete = async (id: string) => {
       if (!confirm('本当にこのメンバーを削除しますか？')) return
       try {
@@ -57,7 +67,7 @@ export default defineComponent({
       }
     }
 
-    return { onDelete }
+    return { onEdit, onDelete }
   }
 })
 </script>
