@@ -4,7 +4,7 @@
     <section :class="$style.container">
       <div :class="[$style.header, $style.item]">
         <h2 :class="$style.title">ユーザーグループ管理</h2>
-        <form-button label="新規作成" />
+        <form-button label="新規作成" @click="openGroupCreateModal" />
       </div>
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧
@@ -20,6 +20,7 @@ import CloseButton from '@/components/UI/CloseButton.vue'
 import useClose from './use/close'
 import FormButton from '@/components/UI/FormButton.vue'
 import GroupList from './GroupList.vue'
+import useGroupCreateModalOpener from './use/groupCreateModalOpener'
 
 export default defineComponent({
   name: 'DesktopGroupManager',
@@ -30,7 +31,8 @@ export default defineComponent({
   },
   setup() {
     const { close } = useClose()
-    return { close }
+    const { openGroupCreateModal } = useGroupCreateModalOpener()
+    return { close, openGroupCreateModal }
   }
 })
 </script>

@@ -42,7 +42,8 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   qrcode: 'QRCodeModal/QRCodeModal',
   'clip-create': 'ClipCreateModal/ClipCreateModal',
   'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
-  'channel-manage': 'ChannelManageModal/ChannelManageModal'
+  'channel-manage': 'ChannelManageModal/ChannelManageModal',
+  'group-create': 'GroupCreateModal/GroupCreateModal'
 }
 
 const useModal = () => {
