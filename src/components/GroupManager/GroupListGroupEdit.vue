@@ -26,13 +26,11 @@
       :group-id="group.id"
       :admins="group.admins"
     />
-    <div :class="$style.item">
-      <user-icon-ellipsis-list
-        direction="row"
-        :user-ids="group.members.map(m => m.id)"
-        prevent-modal
-      />
-    </div>
+    <group-member-list
+      :class="$style.item"
+      :group-id="group.id"
+      :members="group.members"
+    />
     <div :class="[$style.item, $style.deleteButtonWrapper]">
       <form-button label="グループを削除" color="error" @click="onDelete" />
     </div>
@@ -43,18 +41,18 @@
 import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
 import LineEditor from './LineEditor.vue'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
 import GroupAdminList from './GroupAdminList.vue'
+import GroupMemberList from './GroupMemberList.vue'
 import FormButton from '@/components/UI/FormButton.vue'
 
 export default defineComponent({
   name: 'GroupListGroupEdit',
   components: {
     LineEditor,
-    UserIconEllipsisList,
     GroupAdminList,
+    GroupMemberList,
     FormButton
   },
   props: {

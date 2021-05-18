@@ -7,6 +7,13 @@
     </div>
     <div :class="$style.controls">
       <icon
+        v-if="showEditButton"
+        name="pencil-outline"
+        mdi
+        :class="$style.controlIcon"
+        @click="onClickEdit"
+      />
+      <icon
         name="close"
         mdi
         :class="$style.controlIcon"
@@ -33,16 +40,23 @@ export default defineComponent({
     id: {
       type: String as PropType<UserId>,
       required: true
+    },
+    showEditButton: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
     const user = computed(() => store.state.entities.usersMap.get(props.id))
 
+    const onClickEdit = () => {
+      emit('edit')
+    }
     const onClickDelete = () => {
       emit('delete')
     }
 
-    return { user, onClickDelete }
+    return { user, onClickEdit, onClickDelete }
   }
 })
 </script>
