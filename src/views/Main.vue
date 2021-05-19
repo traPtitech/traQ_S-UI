@@ -33,7 +33,6 @@
         <div id="sidebar-mobile" :class="$style.sidebarPortal" />
       </div>
     </div>
-    <modal-container />
     <stamp-picker-container />
     <command-palette-container />
   </div>
@@ -56,7 +55,6 @@ import useNavigationController from '@/use/navigationController'
 import MainView from '@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
 import Navigation from '@/components/Main/Navigation/Navigation.vue'
-import ModalContainer from '@/components/Modal/ModalContainer.vue'
 import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
 import CommandPaletteContainer from '@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useMainViewLayout from './use/mainViewLayout'
@@ -142,7 +140,6 @@ export default defineComponent({
     Navigation,
     MainView,
     MainViewFrame,
-    ModalContainer,
     StampPickerContainer,
     CommandPaletteContainer,
     NotFound

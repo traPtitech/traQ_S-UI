@@ -20,6 +20,10 @@ type ModalStateType =
   | 'clip-create'
   | 'clip-folder-create'
   | 'channel-manage'
+  | 'group-create'
+  | 'group-member-edit'
+  | 'group-admin-add'
+  | 'group-member-add'
 
 export type ModalState =
   | UserModalState
@@ -32,6 +36,10 @@ export type ModalState =
   | ClipCreateModalState
   | ClipFolderCreateModalState
   | ChannelManageModalState
+  | GroupCreateModalState
+  | GroupMemberEditModalState
+  | GroupAdminAddModalState
+  | GroupMemberAddModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -94,6 +102,26 @@ interface ClipFolderCreateModalState extends BaseModalState {
 interface ChannelManageModalState extends BaseModalState {
   type: 'channel-manage'
   id: ChannelId
+}
+
+interface GroupCreateModalState extends BaseModalState {
+  type: 'group-create'
+}
+
+interface GroupMemberEditModalState extends BaseModalState {
+  type: 'group-member-edit'
+  groupId: UserGroupId
+  userId: UserId
+}
+
+interface GroupAdminAddModalState extends BaseModalState {
+  type: 'group-admin-add'
+  id: UserGroupId
+}
+
+interface GroupMemberAddModalState extends BaseModalState {
+  type: 'group-member-add'
+  id: UserGroupId
 }
 
 export interface S {

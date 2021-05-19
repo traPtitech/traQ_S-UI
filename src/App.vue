@@ -5,6 +5,7 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
+    <modal-container />
     <toast-container />
   </div>
 </template>
@@ -22,6 +23,7 @@ import { provideToastStore } from '@/providers/toastStore'
 import { provideStampPickerStore } from '@/providers/stampPicker'
 import { provideMessageInputState } from '@/providers/messageInputState'
 import { provideCommandPaletteStore } from '@/providers/commandPalette'
+import ModalContainer from '@/components/Modal/ModalContainer.vue'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
@@ -157,6 +159,7 @@ const useStyleBody = (style: Ref<ThemeVariablesOrProperties>) => {
 export default defineComponent({
   name: 'App',
   components: {
+    ModalContainer,
     ToastContainer
   },
   setup() {

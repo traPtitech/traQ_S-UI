@@ -8,7 +8,9 @@
           modalState.current.type === 'tag' ||
           modalState.current.type === 'group' ||
           modalState.current.type === 'file' ||
-          modalState.current.type === 'channel-manage'
+          modalState.current.type === 'channel-manage' ||
+          modalState.current.type === 'group-admin-add' ||
+          modalState.current.type === 'group-member-add'
             ? modalState.current.id
             : undefined
         "
@@ -20,6 +22,16 @@
         :message-id="
           modalState.current.type === 'clip-create'
             ? modalState.current.messageId
+            : undefined
+        "
+        :group-id="
+          modalState.current.type === 'group-member-edit'
+            ? modalState.current.groupId
+            : undefined
+        "
+        :user-id="
+          modalState.current.type === 'group-member-edit'
+            ? modalState.current.userId
             : undefined
         "
       />
@@ -42,7 +54,11 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   qrcode: 'QRCodeModal/QRCodeModal',
   'clip-create': 'ClipCreateModal/ClipCreateModal',
   'clip-folder-create': 'ClipFolderCreateModal/ClipFolderCreateModal',
-  'channel-manage': 'ChannelManageModal/ChannelManageModal'
+  'channel-manage': 'ChannelManageModal/ChannelManageModal',
+  'group-create': 'GroupCreateModal/GroupCreateModal',
+  'group-member-edit': 'GroupMemberEditModal/GroupMemberEditModal',
+  'group-admin-add': 'GroupAdminAddModal/GroupAdminAddModal',
+  'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
 }
 
 const useModal = () => {

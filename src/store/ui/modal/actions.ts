@@ -1,6 +1,5 @@
 import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '@/store'
-import { dequal } from 'dequal'
 import { ModalState } from './state'
 import { modal } from '.'
 import router, { constructChannelPath, constructUserPath } from '@/router'
@@ -58,9 +57,7 @@ export const actions = defineActions({
   /**
    * モーダルを閉じ、履歴をひとつ戻る
    */
-  popModal: async context => {
-    const { getters, dispatch } = modalActionContext(context)
-    const { currentState } = getters
+  popModal: async () => {
     history.back()
 
     // stateの同期待ち
@@ -69,8 +66,6 @@ export const actions = defineActions({
     })
     // どのハンドラーが最後に発火するか保証されていないので一応待つ
     await wait(0)
-
-    await dispatch.collectGarbage(currentState)
   },
 
   /**
@@ -80,9 +75,7 @@ export const actions = defineActions({
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
-    const { commit, state, dispatch, getters, rootState } =
-      modalActionContext(context)
-    const { currentState } = getters
+    const { commit, state, getters, rootState } = modalActionContext(context)
     history.replaceState(
       {
         ...history.state,
@@ -104,7 +97,6 @@ export const actions = defineActions({
       // eslint-disable-next-line no-console
       console.warn(`Unexpected closeModal: ${primaryViewType}`)
     }
-    dispatch.collectGarbage(currentState)
   },
   /**
    * 全てのモーダルを閉じる
@@ -124,33 +116,6 @@ export const actions = defineActions({
       }
     } finally {
       commit.setIsClearingModal(false)
-    }
-  },
-  collectGarbage(context, modalState: ModalState) {
-    const { state } = modalActionContext(context)
-
-    const isUsed = state.modalState.some(ms => dequal(ms, modalState))
-    if (isUsed) {
-      return
-    }
-
-    switch (modalState.type) {
-      case 'user':
-      case 'tag':
-      case 'notification':
-      case 'file':
-      case 'group':
-      case 'channel-create':
-      case 'qrcode':
-      case 'clip-create':
-      case 'clip-folder-create':
-      case 'channel-manage':
-        break
-      default: {
-        const invalid: never = modalState
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        throw new Error(`Invalid Modal State type: ${(invalid as any).type}`)
-      }
     }
   }
 })

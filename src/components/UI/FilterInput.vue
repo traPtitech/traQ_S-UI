@@ -93,6 +93,7 @@ export default defineComponent({
   height: 30px;
   display: flex;
   align-items: center;
+  padding: 0 8px;
   border-radius: 4px;
   &[data-on-secondary] {
     @include background-primary;
@@ -104,12 +105,11 @@ export default defineComponent({
   }
 }
 .icon {
-  margin: 0 8px;
+  margin-right: 8px;
   flex-shrink: 0;
 }
 .input {
   @include color-ui-primary;
-  margin: 0 8px;
   width: 100%;
   &[data-disable-ime] {
     ime-mode: disabled;
