@@ -23,6 +23,7 @@ type ModalStateType =
   | 'group-create'
   | 'group-member-edit'
   | 'group-admin-add'
+  | 'group-member-add'
 
 export type ModalState =
   | UserModalState
@@ -38,6 +39,7 @@ export type ModalState =
   | GroupCreateModalState
   | GroupMemberEditModalState
   | GroupAdminAddModalState
+  | GroupMemberAddModalState
 
 interface BaseModalState {
   /** モーダル種別 */
@@ -114,6 +116,11 @@ interface GroupMemberEditModalState extends BaseModalState {
 
 interface GroupAdminAddModalState extends BaseModalState {
   type: 'group-admin-add'
+  id: UserGroupId
+}
+
+interface GroupMemberAddModalState extends BaseModalState {
+  type: 'group-member-add'
   id: UserGroupId
 }
 

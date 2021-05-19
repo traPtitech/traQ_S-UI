@@ -9,7 +9,8 @@
           modalState.current.type === 'group' ||
           modalState.current.type === 'file' ||
           modalState.current.type === 'channel-manage' ||
-          modalState.current.type === 'group-admin-add'
+          modalState.current.type === 'group-admin-add' ||
+          modalState.current.type === 'group-member-add'
             ? modalState.current.id
             : undefined
         "
@@ -56,7 +57,8 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   'channel-manage': 'ChannelManageModal/ChannelManageModal',
   'group-create': 'GroupCreateModal/GroupCreateModal',
   'group-member-edit': 'GroupMemberEditModal/GroupMemberEditModal',
-  'group-admin-add': 'GroupAdminAddModal/GroupAdminAddModal'
+  'group-admin-add': 'GroupAdminAddModal/GroupAdminAddModal',
+  'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
 }
 
 const useModal = () => {
