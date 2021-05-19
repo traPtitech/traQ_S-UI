@@ -84,7 +84,6 @@ export default defineComponent({
 <style lang="scss" module>
 .label {
   @include color-ui-primary;
-  margin-bottom: 4px;
   font-weight: bold;
 }
 .icon {

@@ -62,6 +62,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 0 8px;
 
   margin: 8px 0;
   &:first-child {

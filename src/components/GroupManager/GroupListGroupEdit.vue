@@ -97,7 +97,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-secondary;
-  padding: 8px 16px;
+  padding: 16px 24px;
   border-radius: 8px;
 }
 .item {

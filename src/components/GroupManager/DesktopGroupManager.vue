@@ -49,6 +49,7 @@ export default defineComponent({
   flex-flow: row;
   width: 100%;
   height: 100%;
+  overflow-y: auto;
 }
 .close {
   position: absolute;
@@ -59,10 +60,8 @@ export default defineComponent({
 .container {
   width: 100%;
   max-width: 720px + (140px - 32px) * 2;
-  height: 100%;
   padding: 64px 140px;
   margin: auto;
-  overflow-y: auto;
 }
 .item {
   margin: 24px 0;
