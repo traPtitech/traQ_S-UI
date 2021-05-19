@@ -1,8 +1,23 @@
 <template>
   <modal-frame title="グループ作成" icon-name="group">
-    <form-input v-model="name" :class="$style.item" label="グループ名" />
-    <form-input v-model="desc" :class="$style.item" label="説明" />
-    <form-input v-model="type" :class="$style.item" label="タイプ" />
+    <form-input
+      v-model="name"
+      :class="$style.item"
+      label="グループ名"
+      :max-length="30"
+    />
+    <form-input
+      v-model="desc"
+      :class="$style.item"
+      label="説明"
+      :max-length="100"
+    />
+    <form-input
+      v-model="type"
+      :class="$style.item"
+      label="タイプ"
+      :max-length="30"
+    />
     <form-checkbox
       v-model="addMember"
       :class="[$style.item, $style.memberCheckbox]"

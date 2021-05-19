@@ -9,7 +9,12 @@
       :exclude-ids="members"
       :class="[$style.users, $style.item]"
     />
-    <form-input v-model="role" :class="$style.item" label="役割" />
+    <form-input
+      v-model="role"
+      :class="$style.item"
+      label="役割"
+      :max-length="30"
+    />
     <div :class="$style.addButtonWrapper">
       <form-button label="追加" @click="add" />
     </div>

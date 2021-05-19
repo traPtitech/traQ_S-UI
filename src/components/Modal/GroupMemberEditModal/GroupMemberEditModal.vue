@@ -4,7 +4,12 @@
     :subtitle="`${groupName} - ${userDisplayName}`"
     icon-name="group"
   >
-    <form-input v-model="role" :class="$style.item" label="役割" />
+    <form-input
+      v-model="role"
+      :class="$style.item"
+      label="役割"
+      :max-length="30"
+    />
     <div :class="$style.editButtonWrapper">
       <form-button label="編集" @click="edit" />
     </div>
