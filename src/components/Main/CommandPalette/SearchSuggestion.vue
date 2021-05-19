@@ -15,12 +15,22 @@
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
   </div>
+  <div v-if="historySuggestions.length > 0" :class="$style.container">
+    <div :class="$style.header">過去の検索</div>
+    <search-suggestion-history-item
+      v-for="suggestion in historySuggestions"
+      :key="suggestion"
+      :insert-query="suggestion"
+      @select="onSelectSuggestionFromHistory(suggestion)"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem, {
   SuggestionItem
 } from './SearchSuggestionItem.vue'
@@ -33,9 +43,15 @@ const querySuggestions = [
   { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索' }
 ]
 
+let historySuggestions: string[] = ['1', '2']
+
 export default defineComponent({
   name: 'SearchSuggestion',
-  components: { SearchSuggestionQueryItem, SearchSuggestionItem },
+  components: {
+    SearchSuggestionQueryItem,
+    SearchSuggestionHistoryItem,
+    SearchSuggestionItem
+  },
   emits: {
     queryInsert: () => true
   },
@@ -57,15 +73,30 @@ export default defineComponent({
     const onSelectSuggestion = (item: SuggestionItem) => {
       switch (item.type) {
         case 'search':
+          const json = localStorage.getItem('searchHistory') //TODO
+          if (json) {
+            historySuggestions = JSON.parse(json)
+            historySuggestions.unshift(item.value)
+            historySuggestions = historySuggestions.slice(0, 5)
+            localStorage.setItem(
+              'searchHistories',
+              JSON.stringify(historySuggestions)
+            )
+          }
           settleQuery()
       }
+    }
+    const onSelectSuggestionFromHistory = (query: string) => {
+      store.currentInput = query
     }
     return {
       store,
       searchConfirmItem,
       querySuggestions,
+      historySuggestions,
       onSelectQuerySuggestion,
-      onSelectSuggestion
+      onSelectSuggestion,
+      onSelectSuggestionFromHistory
     }
   }
 })
