@@ -4,7 +4,11 @@
     <section :class="$style.container">
       <div :class="[$style.header, $style.item]">
         <h2 :class="$style.title">ユーザーグループ管理</h2>
-        <form-button label="新規作成" @click="openGroupCreateModal" />
+        <form-button
+          :class="$style.createButton"
+          label="新規作成"
+          @click="openGroupCreateModal"
+        />
       </div>
       <p :class="[$style.desc, $style.item]">
         自分が管理者になっているユーザーグループ一覧
@@ -54,9 +58,9 @@ export default defineComponent({
 
 .container {
   width: 100%;
-  max-width: 720px;
+  max-width: 720px + (140px - 32px) * 2;
   height: 100%;
-  padding: 64px 32px;
+  padding: 64px 140px;
   margin: auto;
   overflow-y: auto;
 }
@@ -73,12 +77,16 @@ export default defineComponent({
 .header {
   @include color-ui-primary;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .title {
   @include size-h1;
   margin-right: auto;
   font-weight: bold;
+}
+.createButton {
+  word-break: keep-all;
 }
 
 .desc {
