@@ -38,7 +38,7 @@ export default defineComponent({
     const excludeIdsSet = computed(() => new Set(props.excludeIds))
     const users = computed(() =>
       [...store.state.entities.usersMap.values()].filter(
-        u => !excludeIdsSet.value.has(u.id)
+        u => !excludeIdsSet.value.has(u.id) && !u.name.startsWith('Webhook#')
       )
     )
 
