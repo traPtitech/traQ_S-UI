@@ -55,9 +55,6 @@ export default defineComponent({
     )
 
     const edit = async () => {
-      const myId = store.getters.domain.me.myId
-      if (!myId) return
-
       try {
         await apis.editUserGroupMember(props.groupId, props.userId, {
           role: role.value
