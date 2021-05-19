@@ -19,6 +19,7 @@ import { defineComponent, computed, ref } from 'vue'
 import store from '@/store'
 import GroupListGroup from './GroupListGroup.vue'
 import { UserGroupId } from '@/types/entity-ids'
+import { UserPermission } from '@traptitech/traq'
 
 export default defineComponent({
   name: 'GroupList',
@@ -33,11 +34,18 @@ export default defineComponent({
     const onSelect = (id: UserGroupId) => {
       selectedId.value = id
     }
+    const isAllUserGroupsAdmin = computed(() =>
+      store.state.domain.me.detail?.permissions.includes(
+        UserPermission.AllUserGroupsAdmin
+      )
+    )
 
     const groups = computed(() =>
       [...store.state.entities.userGroupsMap.values()].filter(group => {
         const myId = store.getters.domain.me.myId
-        return myId && group.admins.includes(myId)
+        return (
+          isAllUserGroupsAdmin.value || (myId && group.admins.includes(myId))
+        )
       })
     )
 
