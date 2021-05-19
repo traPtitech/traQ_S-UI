@@ -80,10 +80,6 @@ export default defineComponent({
 .users {
   height: 280px;
   max-height: 100%;
-  overflow: {
-    x: hidden;
-    y: auto;
-  }
 }
 .editButtonWrapper {
   display: flex;

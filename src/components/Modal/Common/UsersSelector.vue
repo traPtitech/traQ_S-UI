@@ -1,13 +1,22 @@
 <template>
-  <div>
-    <label v-for="user in users" :key="user.id" :class="$style.user">
-      <form-checkbox-inner
-        :model-value="modelValue.has(user.id)"
-        @update:modelValue="toggle(user.id)"
-      />
-      <user-icon :user-id="user.id" prevent-modal :class="$style.userIcon" />
-      <div :class="$style.displayName">{{ user.displayName }}</div>
-    </label>
+  <div :class="$style.container">
+    <div :class="$style.search">
+      <filter-input v-model="textFilterState.query" />
+    </div>
+    <div :class="$style.list">
+      <label
+        v-for="user in textFilterState.filteredItems"
+        :key="user.id"
+        :class="$style.user"
+      >
+        <form-checkbox-inner
+          :model-value="modelValue.has(user.id)"
+          @update:modelValue="toggle(user.id)"
+        />
+        <user-icon :user-id="user.id" prevent-modal :class="$style.userIcon" />
+        <div :class="$style.displayName">{{ user.displayName }}</div>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -17,12 +26,15 @@ import store from '@/store'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import FormCheckboxInner from '@/components/UI/FormCheckboxInner.vue'
 import { UserId } from '@/types/entity-ids'
+import FilterInput from '@/components/UI/FilterInput.vue'
+import useTextFilter from '@/use/textFilter'
 
 export default defineComponent({
   name: 'UsersSelector',
   components: {
     UserIcon,
-    FormCheckboxInner
+    FormCheckboxInner,
+    FilterInput
   },
   props: {
     modelValue: {
@@ -37,10 +49,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const excludeIdsSet = computed(() => new Set(props.excludeIds))
     const users = computed(() =>
-      [...store.state.entities.usersMap.values()].filter(
+      [...store.getters.entities.activeUsersMap.values()].filter(
         u => !excludeIdsSet.value.has(u.id) && !u.name.startsWith('Webhook#')
       )
     )
+    const { textFilterState } = useTextFilter(users, 'name')
 
     const toggle = (id: string) => {
       const newModelValue = new Set(props.modelValue)
@@ -52,12 +65,23 @@ export default defineComponent({
       emit('update:modelValue', newModelValue)
     }
 
-    return { users, toggle }
+    return { textFilterState, toggle }
   }
 })
 </script>
 
 <style lang="scss" module>
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.list {
+  margin: 8px 0;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
+}
 .user {
   display: flex;
   align-items: center;
