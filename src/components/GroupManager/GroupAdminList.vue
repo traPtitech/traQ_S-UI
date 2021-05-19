@@ -2,7 +2,12 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">管理者</div>
-      <icon name="plus-circle-outline" mdi :class="$style.addIcon" />
+      <icon
+        name="plus-circle-outline"
+        mdi
+        :class="$style.addIcon"
+        @click="onClickAdd"
+      />
     </div>
     <div :class="$style.list">
       <group-user
@@ -22,6 +27,7 @@ import Icon from '@/components/UI/Icon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '@/lib/apis'
 import useToastStore from '@/providers/toastStore'
+import store from '@/store'
 
 export default defineComponent({
   name: 'GroupAdminList',
@@ -42,6 +48,13 @@ export default defineComponent({
   setup(props) {
     const { addErrorToast } = useToastStore()
 
+    const onClickAdd = () => {
+      store.dispatch.ui.modal.pushModal({
+        type: 'group-admin-add',
+        id: props.groupId
+      })
+    }
+
     const onDelete = async (id: string) => {
       if (!confirm('本当にこのグループ管理者を削除しますか？')) return
       try {
@@ -53,7 +66,7 @@ export default defineComponent({
       }
     }
 
-    return { onDelete }
+    return { onClickAdd, onDelete }
   }
 })
 </script>

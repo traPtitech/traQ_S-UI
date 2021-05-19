@@ -1,28 +1,33 @@
 <template>
-  <label :class="$style.label">
-    <form-checkbox-inner v-model="value" />
-    {{ label }}
-  </label>
+  <input
+    v-model="value"
+    type="checkbox"
+    :class="$style.checkbox"
+    v-bind="$attrs"
+  />
+  <div
+    :class="$style.pseudoCheckbox"
+    role="checkbox"
+    :aria-checked="modelValue"
+  >
+    <div :class="$style.pseudoCheckboxInner" />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useModelValueSyncer } from '@/use/modelSyncer'
-import FormCheckboxInner from './FormCheckboxInner.vue'
 
 export default defineComponent({
-  name: 'FormCheckbox',
-  components: {
-    FormCheckboxInner
-  },
+  name: 'FormCheckboxInner',
   props: {
     modelValue: {
       type: Boolean,
       default: false
     },
-    label: {
-      type: String,
-      default: ''
+    onSecondary: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
@@ -34,16 +39,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.label {
-  cursor: pointer;
-
-  border: solid 2px transparent;
-  border-radius: 4px;
-  &:focus-within {
-    border-color: $theme-accent-focus;
-  }
-}
-
 .checkbox {
   position: absolute;
   bottom: 0;
