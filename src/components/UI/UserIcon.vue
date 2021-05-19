@@ -53,6 +53,7 @@ export default defineComponent({
     watch(
       () => props.userId,
       userId => {
+        if (!userId) return
         store.dispatch.entities.fetchUser({ userId })
       },
       { immediate: true }
