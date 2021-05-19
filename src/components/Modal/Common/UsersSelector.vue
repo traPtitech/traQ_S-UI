@@ -79,5 +79,8 @@ export default defineComponent({
   @include color-ui-primary;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

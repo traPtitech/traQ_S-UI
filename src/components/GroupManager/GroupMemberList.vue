@@ -111,5 +111,6 @@ export default defineComponent({
 }
 .role {
   @include size-caption;
+  word-break: break-all;
 }
 </style>

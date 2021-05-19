@@ -2,7 +2,7 @@
   <div v-if="user" :class="$style.container">
     <user-icon :class="$style.userIcon" :user-id="id" prevent-modal />
     <div :class="$style.content">
-      <div>{{ user.displayName }}</div>
+      <div :class="$style.displayName">{{ user.displayName }}</div>
       <slot />
     </div>
     <div :class="$style.controls">
@@ -72,7 +72,13 @@ export default defineComponent({
 }
 .content {
   flex: 1;
+  min-width: 0;
   margin: 0 4px;
+}
+.displayName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .controls {
   display: flex;
