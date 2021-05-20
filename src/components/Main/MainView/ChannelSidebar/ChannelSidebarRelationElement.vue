@@ -23,7 +23,7 @@ import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarRelationElement',
-  components:{
+  components: {
     InlineMarkdown
   },
   props: {
@@ -31,11 +31,6 @@ export default defineComponent({
     topic: { type: String, default: '' },
     isCurrent: { type: Boolean, default: false },
     link: { type: String }
-  },
-  setup(props) {
-    
-    return { }
-  
   }
 })
 </script>
