@@ -9,7 +9,7 @@
       @edit-start="startEdit"
     >
       <template #default="slotProps">
-        <inline-markdown :content="slotProps.content" />
+        <inline-markdown :content="slotProps.content" accept-action />
       </template>
     </content-editor>
   </sidebar-content-container-foldable>

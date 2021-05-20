@@ -35,7 +35,7 @@
         />
         <div :class="$style.form">
           <h4>プレビュー</h4>
-          <inline-markdown :content="state.bio" />
+          <inline-markdown :content="state.bio" accept-action />
         </div>
       </div>
     </div>

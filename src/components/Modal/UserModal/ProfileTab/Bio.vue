@@ -6,6 +6,7 @@
       :aria-busy="isLoading"
       :data-is-empty="$boolAttr(isEmpty)"
       :content="content"
+      accept-action
     />
   </section>
 </template>

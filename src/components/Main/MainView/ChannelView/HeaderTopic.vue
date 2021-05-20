@@ -1,6 +1,11 @@
 <template>
   <div v-if="topic" :class="$style.container">
-    <inline-markdown :class="$style.topic" :content="topic" :title="topic" />
+    <inline-markdown
+      :class="$style.topic"
+      :content="topic"
+      :title="topic"
+      accept-action
+    />
   </div>
 </template>
 
