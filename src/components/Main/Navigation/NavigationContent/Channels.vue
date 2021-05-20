@@ -21,7 +21,7 @@
             show-shortened-path
             show-topic
           />
-          <template v-if="filterStarChannel">
+          <template v-else-if="filterStarChannel">
             <channel-list
               v-if="staredChannels.length > 0"
               :channels="staredChannels"
