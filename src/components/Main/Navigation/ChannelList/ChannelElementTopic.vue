@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    {{ topic }}
+    <inline-markdown :content="topic" :title="topic" />
   </div>
 </template>
 
@@ -8,9 +8,13 @@
 import { defineComponent, computed, PropType } from 'vue'
 import store from '@/store'
 import { ChannelId } from '@/types/entity-ids'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'ChannelElementTopic',
+  components: {
+    InlineMarkdown
+  },
   props: {
     channelId: {
       type: String as PropType<ChannelId>,

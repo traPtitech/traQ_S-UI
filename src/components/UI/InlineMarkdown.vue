@@ -2,6 +2,8 @@
   <span
     class="markdown-inline-body"
     :class="$style.content"
+    :data-accept-action="acceptAction"
+    @click="toggleSpoilerHandler"
     v-html="renderedContent"
   />
 </template>
@@ -10,6 +12,7 @@
 import { renderInline } from '@/lib/markdown/markdown'
 import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { toggleSpoiler } from '@/lib/markdown/spoiler'
 
 export default defineComponent({
   name: 'InlineMarkdown',
@@ -17,6 +20,10 @@ export default defineComponent({
     content: {
       type: String,
       default: ''
+    },
+    acceptAction: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -26,7 +33,16 @@ export default defineComponent({
     })
     const renderedContent = computed(() => rendered.value?.renderedText)
 
-    return { renderedContent }
+    const toggleSpoilerHandler = (e: MouseEvent) => {
+      if (!e.target) return
+
+      const toggled = toggleSpoiler(e.target as HTMLElement)
+      if (toggled) {
+        e.stopPropagation()
+      }
+    }
+
+    return { renderedContent, toggleSpoilerHandler }
   }
 })
 </script>
@@ -34,5 +50,8 @@ export default defineComponent({
 <style lang="scss" module>
 .content {
   word-break: break-all;
+  &[data-accept-action='false'] {
+    pointer-events: none;
+  }
 }
 </style>
