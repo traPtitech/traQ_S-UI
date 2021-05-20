@@ -12,24 +12,25 @@
       </span>
     </div>
     <div v-if="topic" :class="$style.topic">
-      {{ topic }}
+      <inline-markdown :class="$style.topic" :content="topic" :title="topic" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarRelationElement',
+  components: {
+    InlineMarkdown
+  },
   props: {
     name: { type: String, required: true },
     topic: { type: String, default: '' },
     isCurrent: { type: Boolean, default: false },
     link: { type: String }
-  },
-  setup() {
-    return {}
   }
 })
 </script>
