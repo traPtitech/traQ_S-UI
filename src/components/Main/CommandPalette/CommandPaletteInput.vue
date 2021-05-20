@@ -9,6 +9,7 @@
       v-model="store.currentInput"
       :class="$style.input"
       :placeholder="placeholder"
+      @keydown.esc="onEsc"
       @keydown.enter="onEnter"
     />
     <close-button
@@ -54,6 +55,10 @@ export default defineComponent({
       }
     )
 
+    const onEsc = () => {
+      store.currentInput = ''
+    }
+
     const onEnter = () => {
       if (store.mode === 'command') {
         // exec command
@@ -74,7 +79,7 @@ export default defineComponent({
       }
     })
 
-    return { inputRef, store, onEnter, placeholder, closeCommandPalette }
+    return { inputRef, store, onEsc, onEnter, placeholder, closeCommandPalette }
   }
 })
 </script>
