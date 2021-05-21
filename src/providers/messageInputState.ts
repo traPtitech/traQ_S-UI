@@ -9,7 +9,7 @@ import {
   watch
 } from 'vue'
 import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import { getAttachmentFile } from '@/lib/resize'
+import { getResizedFile } from '@/lib/resize'
 import { convertToDataUrl } from '@/lib/resize/dataurl'
 import { ChannelId } from '@/types/entity-ids'
 
@@ -168,7 +168,7 @@ export const useMessageInputStateAttachment = (
   const addAttachment = async (file: File) => {
     try {
       const fileType = mimeToFileType(file.type)
-      const attachmentFile = await getAttachmentFile(file)
+      const attachmentFile = await getResizedFile(file)
       if (fileType !== 'image') {
         state.attachments.push({
           type: fileType,

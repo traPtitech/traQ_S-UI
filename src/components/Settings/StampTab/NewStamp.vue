@@ -33,7 +33,7 @@ import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '@/components/UI/FormInput.vue'
 import FormButton from '@/components/UI/FormButton.vue'
-import apis from '@/lib/apis'
+import apis, { formatResizeError } from '@/lib/apis'
 import { isValidStampName } from '@/lib/validate'
 import useToastStore from '@/providers/toastStore'
 
@@ -62,7 +62,7 @@ const useStampCreate = (
       // eslint-disable-next-line no-console
       console.error('スタンプの作成に失敗しました', e)
 
-      addErrorToast('スタンプの作成に失敗しました')
+      addErrorToast(formatResizeError(e, 'スタンプの作成に失敗しました'))
     }
     isCreating.value = false
   }

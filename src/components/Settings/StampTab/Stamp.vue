@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
-import apis, { buildFilePath } from '@/lib/apis'
+import apis, { buildFilePath, formatResizeError } from '@/lib/apis'
 import store from '@/store'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
@@ -123,7 +123,7 @@ const useStampEdit = (
       // eslint-disable-next-line no-console
       console.error('スタンプの編集に失敗しました', e)
 
-      addErrorToast('スタンプの編集に失敗しました')
+      addErrorToast(formatResizeError(e, 'スタンプの編集に失敗しました'))
     }
     isEditing.value = false
   }

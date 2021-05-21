@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
-import apis, { buildFilePathForPost } from '@/lib/apis'
+import apis, { buildFilePathForPost, formatResizeError } from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
@@ -56,7 +56,7 @@ import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/Me
 import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
 import { countLength } from '@/lib/util/string'
 import useToastStore from '@/providers/toastStore'
-import { getAttachmentFile } from '@/lib/resize'
+import { getResizedFile } from '@/lib/resize'
 import useAttachments from '@/components/Main/MainView/MessageInput/use/attachments'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
@@ -95,7 +95,7 @@ const useAttachmentsEditor = (text: Ref<string>) => {
     if (!channelId) return
 
     isPosting.value = true
-    const attachmentFile = await getAttachmentFile(file)
+    const attachmentFile = await getResizedFile(file)
     const { data } = await apis.postFile(attachmentFile, channelId, {
       /**
        * https://github.com/axios/axios#request-config
@@ -120,7 +120,9 @@ const useAttachmentsEditor = (text: Ref<string>) => {
         try {
           await postAttachment(file)
         } catch (e) {
-          addErrorToast(e)
+          addErrorToast(
+            formatResizeError(e, 'ファイルのアップロードに失敗しました')
+          )
         }
       })
     }
