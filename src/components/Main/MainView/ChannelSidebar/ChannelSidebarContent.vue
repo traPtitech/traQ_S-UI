@@ -18,6 +18,10 @@
       :class="$style.sidebarItem"
       @open="emit('moveToPinned')"
     />
+    <channel-sidebar-events
+      :class="$style.sidebarItem"
+      @open="emit('moveToEvents')"
+    />
     <channel-sidebar-relation
       :channel-id="channelId"
       :class="$style.sidebarItem"
@@ -41,6 +45,7 @@ import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 import ChannelSidebarMember from './ChannelSidebarMember.vue'
 //import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
+import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
@@ -54,6 +59,7 @@ export default defineComponent({
     ChannelSidebarPinned,
     ChannelSidebarViewers,
     ChannelSidebarMember,
+    ChannelSidebarEvents,
     //ChannelSidebarEdit,
     ChannelSidebarRelation,
     ChannelSidebarQall,

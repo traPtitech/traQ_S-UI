@@ -10,12 +10,18 @@
             :viewer-ids="viewerIds"
             :pinned-messages-count="pinnedMessages.length"
             @moveToPinned="moveToPinnedPage"
+            @moveToEvents="moveToEventsPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
         v-else-if="page.type === 'pinned'"
         :pinned-messages="pinnedMessages"
+        @moveBack="moveToDefaultPage"
+      />
+      <sidebar-events-page
+        v-else-if="page.type === 'events'"
+        :channel-id="channelId"
         @moveBack="moveToDefaultPage"
       />
     </template>
@@ -26,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
@@ -34,6 +40,8 @@ import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/Main
 import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
+import SidebarEventsPage from '@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'DMSidebar',
@@ -43,9 +51,14 @@ export default defineComponent({
     SidebarPinnedPage,
     ChannelSidebarHidden,
     SidebarHeader,
-    SidebarContent
+    SidebarContent,
+    SidebarEventsPage
   },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    },
     userName: {
       type: String,
       requried: true
@@ -60,6 +73,7 @@ export default defineComponent({
       page,
       moveToDefaultPage,
       moveToPinnedPage,
+      moveToEventsPage,
       pinnedMessages,
       viewerIds,
       openSidebar,
@@ -70,6 +84,7 @@ export default defineComponent({
       page,
       moveToDefaultPage,
       moveToPinnedPage,
+      moveToEventsPage,
       pinnedMessages,
       viewerIds,
       openSidebar,

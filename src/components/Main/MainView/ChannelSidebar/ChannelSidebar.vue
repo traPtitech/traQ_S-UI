@@ -11,12 +11,18 @@
             :viewer-ids="viewerIds"
             :pinned-messages-count="pinnedMessages.length"
             @moveToPinned="moveToPinnedPage"
+            @moveToEvents="moveToEventsPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
         v-else-if="page.type === 'pinned'"
         :pinned-messages="pinnedMessages"
+        @moveBack="moveToDefaultPage"
+      />
+      <sidebar-events-page
+        v-else-if="page.type === 'events'"
+        :channel-id="channelId"
         @moveBack="moveToDefaultPage"
       />
     </template>
@@ -37,6 +43,7 @@ import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/Sideba
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import store from '@/store'
+import SidebarEventsPage from '@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
 
 export default defineComponent({
   name: 'ChannelSidebar',
@@ -46,7 +53,8 @@ export default defineComponent({
     SidebarPinnedPage,
     SidebarHeader,
     ChannelSidebarContent,
-    ChannelSidebarHidden
+    ChannelSidebarHidden,
+    SidebarEventsPage
   },
   props: {
     channelId: {
@@ -63,6 +71,7 @@ export default defineComponent({
       page,
       moveToDefaultPage,
       moveToPinnedPage,
+      moveToEventsPage,
       pinnedMessages,
       viewerIds,
       openSidebar,
@@ -77,6 +86,7 @@ export default defineComponent({
       page,
       moveToDefaultPage,
       moveToPinnedPage,
+      moveToEventsPage,
       channelName,
       pinnedMessages,
       viewerIds,
