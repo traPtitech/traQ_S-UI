@@ -5,7 +5,8 @@ import {
   MessageId,
   StampId,
   ClipFolderId,
-  StampPaletteId
+  StampPaletteId,
+  TagId
 } from '@/types/entity-ids'
 import {
   ChannelViewer,
@@ -48,7 +49,12 @@ interface UserGroupIdBody {
 export type UserJoinedEvent = UserIdBody
 export type UserUpdatedEvent = UserIdBody
 export type UserLeftEvent = UserIdBody
-export type UserTagsUpdatedEvent = UserIdBody
+
+export type UserTagsUpdatedEvent = {
+  id: UserId
+  tag_id: TagId
+}
+
 export type UserIconUpdatedEvent = UserIdBody
 export type UserOnlineEvent = UserIdBody
 export type UserOfflineEvent = UserIdBody
