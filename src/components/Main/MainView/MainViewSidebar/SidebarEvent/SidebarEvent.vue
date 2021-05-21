@@ -12,6 +12,7 @@ import { defineComponent, PropType, computed } from 'vue'
 import { ParsedChannelEvent } from '@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
 import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
+import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
 
 export default defineComponent({
   name: 'SidebarEvent',
@@ -26,6 +27,8 @@ export default defineComponent({
       switch (props.event.type) {
         case ChannelEventTypeEnum.TopicChanged:
           return SidebarEventTopicChanged
+        case ChannelEventTypeEnum.SubscribersChanged:
+          return SidebarEventSubscribersChanged
       }
       return undefined
     })
