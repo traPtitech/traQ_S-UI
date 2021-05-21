@@ -1,7 +1,7 @@
 <template>
   <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page v-if="page.type === 'default'">
+      <main-view-sidebar-page v-if="page === 'default'">
         <template #header>
           <sidebar-header icon-string="#" :text="channelName" />
         </template>
@@ -16,12 +16,12 @@
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
-        v-else-if="page.type === 'pinned'"
+        v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
         @moveBack="moveToDefaultPage"
       />
       <sidebar-events-page
-        v-else-if="page.type === 'events'"
+        v-else-if="page === 'events'"
         :channel-id="channelId"
         @moveBack="moveToDefaultPage"
       />

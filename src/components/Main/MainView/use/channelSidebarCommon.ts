@@ -2,31 +2,18 @@ import { computed, ref } from 'vue'
 import store from '@/store'
 import useSidebar from '@/use/sidebar'
 
-type ChannelSidebarPage =
-  | ChannelSidebarDefaultPage
-  | ChannelSidebarPinnedPage
-  | ChannelSidebarEventsPage
-
-type ChannelSidebarDefaultPage = {
-  type: 'default'
-}
-type ChannelSidebarPinnedPage = {
-  type: 'pinned'
-}
-type ChannelSidebarEventsPage = {
-  type: 'events'
-}
+type ChannelSidebarPage = 'default' | 'pinned' | 'events'
 
 const useChannelSidebarCommon = () => {
-  const page = ref<ChannelSidebarPage>({ type: 'default' })
+  const page = ref<ChannelSidebarPage>('default')
   const moveToDefaultPage = () => {
-    page.value = { type: 'default' }
+    page.value = 'default'
   }
   const moveToPinnedPage = () => {
-    page.value = { type: 'pinned' }
+    page.value = 'pinned'
   }
   const moveToEventsPage = () => {
-    page.value = { type: 'events' }
+    page.value = 'events'
   }
 
   const pinnedMessages = computed(
