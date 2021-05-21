@@ -16,18 +16,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watchEffect } from 'vue'
+import {
+  defineComponent,
+  computed,
+  ref,
+  watchEffect,
+  onMounted,
+  onBeforeUnmount
+} from 'vue'
 import store from '@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { Tag } from '@traptitech/traq'
 import apis from '@/lib/apis'
+import { wsListener } from '@/lib/websocket'
+import { UserTagsUpdatedEvent } from '@/lib/websocket/events'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()
-  watchEffect(async () => {
+  const fetchTag = async () => {
     tag.value = (await apis.getTag(props.id)).data
+  }
+  const onTagsUpdated = ({ tag_id }: UserTagsUpdatedEvent) => {
+    if (tag_id !== props.id) return
+    fetchTag()
+  }
+
+  watchEffect(fetchTag)
+  onMounted(() => {
+    wsListener.on('USER_TAGS_UPDATED', onTagsUpdated)
   })
+  onBeforeUnmount(() => {
+    wsListener.off('USER_TAGS_UPDATED', onTagsUpdated)
+  })
+
   return tag
 }
 
