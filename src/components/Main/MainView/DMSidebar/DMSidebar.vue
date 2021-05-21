@@ -1,22 +1,22 @@
 <template>
   <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page v-if="!state.pinnedMode">
+      <main-view-sidebar-page v-if="page.type === 'default'">
         <template #header>
           <sidebar-header icon-string="@" :text="userName" />
         </template>
         <template #content>
           <sidebar-content
             :viewer-ids="viewerIds"
-            :pinned-messages-count="state.pinnedMessages.length"
-            @pinned-mode-toggle="togglePinnedMode"
+            :pinned-messages-count="pinnedMessages.length"
+            @moveToPinned="moveToPinnedPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
-        v-else
-        :pinned-messages="state.pinnedMessages"
-        @toggle="togglePinnedMode"
+        v-else-if="page.type === 'pinned'"
+        :pinned-messages="pinnedMessages"
+        @moveBack="moveToDefaultPage"
       />
     </template>
     <template #opener>
@@ -56,12 +56,21 @@ export default defineComponent({
     }
   },
   setup() {
-    const { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar } =
-      useChannelSidebarCommon()
+    const {
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      pinnedMessages,
+      viewerIds,
+      openSidebar,
+      closeSidebar
+    } = useChannelSidebarCommon()
 
     return {
-      state,
-      togglePinnedMode,
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      pinnedMessages,
       viewerIds,
       openSidebar,
       closeSidebar

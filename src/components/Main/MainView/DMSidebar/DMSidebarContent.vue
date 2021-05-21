@@ -4,7 +4,7 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
-      @open="$emit('pinnedModeToggle')"
+      @open="$emit('moveToPinned')"
     />
   </div>
 </template>
