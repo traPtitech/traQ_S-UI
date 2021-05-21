@@ -71,7 +71,7 @@
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
 import store from '@/store'
 import { UserDetail } from '@traptitech/traq'
-import apis from '@/lib/apis'
+import apis, { formatResizeError } from '@/lib/apis'
 import useStateDiff from '@/components/Settings/use/stateDiff'
 import UserIcon from '@/components/UI/UserIcon.vue'
 import ImageUpload from '@/components/Settings/ImageUpload.vue'
@@ -136,7 +136,7 @@ const useProfileUpdate = (
       // eslint-disable-next-line no-console
       console.error('プロフィールの更新に失敗しました', e)
 
-      addErrorToast('プロフィールの更新に失敗しました')
+      addErrorToast(formatResizeError(e, 'プロフィールの更新に失敗しました'))
     }
     isUpdating.value = false
   }

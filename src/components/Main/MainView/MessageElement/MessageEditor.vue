@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
-import apis, { buildFilePathForPost } from '@/lib/apis'
+import apis, { buildFilePathForPost, formatResizeError } from '@/lib/apis'
 import store from '@/store'
 import MessageInputKeyGuide from '@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
@@ -120,7 +120,9 @@ const useAttachmentsEditor = (text: Ref<string>) => {
         try {
           await postAttachment(file)
         } catch (e) {
-          addErrorToast(e)
+          addErrorToast(
+            formatResizeError(e, 'ファイルのアップロードに失敗しました')
+          )
         }
       })
     }

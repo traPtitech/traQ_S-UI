@@ -1,6 +1,6 @@
 import { ChannelId } from '@/types/entity-ids'
 import store from '@/store'
-import apis, { buildFilePathForPost } from '@/lib/apis'
+import apis, { buildFilePathForPost, formatResizeError } from '@/lib/apis'
 import { replace as embedInternalLink } from '@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '@/use/channelPath'
 import { computed, ref, unref } from 'vue'
@@ -133,7 +133,7 @@ const usePostMessage = (
       // eslint-disable-next-line no-console
       console.error('メッセージ送信に失敗しました', e)
 
-      addErrorToast('メッセージ送信に失敗しました')
+      addErrorToast(formatResizeError(e, 'メッセージ送信に失敗しました'))
     } finally {
       isPosting.value = false
       progress.value = 0
