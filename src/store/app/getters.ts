@@ -6,4 +6,8 @@ import { moduleGetterContext } from '@/store'
 const appGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, app)
 
-export const getters = defineGetters<S>()({})
+export const getters = defineGetters<S>()({
+  getSearchHistories(state) {
+    return state.searchHistories
+  }
+})

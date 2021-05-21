@@ -1,4 +1,5 @@
 import { computed, inject, InjectionKey, provide, reactive } from 'vue'
+import store from '@/store'
 
 const commandPaletteStoreSymbol: InjectionKey<CommandPaletteStore> = Symbol()
 
@@ -67,12 +68,24 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.query = commandPaletteStore.currentInput
   }
 
+  const getHistorySuggestions = () => {
+    return store.getters.app.getSearchHistories
+  }
+
+  const settleHistorySuggestion = () => {
+    if (commandPaletteStore.currentInput) {
+      store.commit.app.addSearchHistory(commandPaletteStore.currentInput)
+    }
+  }
+
   return {
     commandPaletteStore,
     isCommandPaletteShown,
     openCommandPalette,
     closeCommandPalette,
-    settleQuery
+    settleQuery,
+    getHistorySuggestions,
+    settleHistorySuggestion
   }
 }
 

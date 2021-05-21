@@ -56,13 +56,20 @@ export default defineComponent({
     queryInsert: () => true
   },
   setup(_, context) {
-    const { commandPaletteStore: store, settleQuery } = useCommandPaletteStore()
+    const {
+      commandPaletteStore: store,
+      settleQuery,
+      getHistorySuggestions
+    } = useCommandPaletteStore()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
         type: 'search',
         value: store.currentInput
       })
     )
+    let historySuggestions = computed((): readonly string[] =>
+      getHistorySuggestions()
+    ) //FIXME readonlyのままでOK?
     const onSelectQuerySuggestion = (query: string) => {
       if (store.currentInput !== '') {
         store.currentInput += ' '
@@ -73,16 +80,6 @@ export default defineComponent({
     const onSelectSuggestion = (item: SuggestionItem) => {
       switch (item.type) {
         case 'search':
-          const json = localStorage.getItem('searchHistory') //TODO
-          if (json) {
-            historySuggestions = JSON.parse(json)
-            historySuggestions.unshift(item.value)
-            historySuggestions = historySuggestions.slice(0, 5)
-            localStorage.setItem(
-              'searchHistories',
-              JSON.stringify(historySuggestions)
-            )
-          }
           settleQuery()
       }
     }

@@ -41,6 +41,7 @@ export default defineComponent({
     const {
       commandPaletteStore: store,
       settleQuery,
+      settleHistorySuggestion,
       closeCommandPalette
     } = useCommandPaletteStore()
 
@@ -59,6 +60,7 @@ export default defineComponent({
         // exec command
       }
       if (store.mode === 'search') {
+        settleHistorySuggestion()
         settleQuery()
       }
     }
