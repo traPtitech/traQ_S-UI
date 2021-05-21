@@ -4,7 +4,12 @@
       <sidebar-header text="イベント" />
     </template>
     <template #content>
-      {{ events }}
+      <sidebar-event
+        v-for="event in events"
+        :key="event.datetime"
+        :class="$style.item"
+        :event="event"
+      />
     </template>
   </main-view-sidebar-page>
 </template>
@@ -15,12 +20,14 @@ import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/Main
 import SidebarHeader from './SidebarHeader.vue'
 import { ChannelId } from '@/types/entity-ids'
 import useChannelEvents from './use/channelEvents'
+import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 
 export default defineComponent({
   name: 'SidebarPinnedPage',
   components: {
     MainViewSidebarPage,
-    SidebarHeader
+    SidebarHeader,
+    SidebarEvent
   },
   props: {
     channelId: {
@@ -34,3 +41,15 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.item {
+  margin: 16px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+</style>
