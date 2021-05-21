@@ -70,7 +70,7 @@ const IMAGE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは20MBまでです\n${t
   '%s',
   '画像'
 )}`
-const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `画像サイズは30MBまでです\n${tooLargeFileMessage.replace(
+const FILE_MAX_SIZE_EXCEEDED_MESSAGE = `ファイルサイズは30MBまでです\n${tooLargeFileMessage.replace(
   '%s',
   'ファイル'
 )}`
