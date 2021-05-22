@@ -2,6 +2,7 @@
   <component
     :is="comp"
     v-if="comp"
+    :type="event.type"
     :datetime="event.datetime"
     :details="event.detail"
   />
@@ -13,6 +14,7 @@ import { ParsedChannelEvent } from '@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
 import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
 import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
+import SidebarEventPinnedChanged from './SidebarEventPinnedChanged.vue'
 
 export default defineComponent({
   name: 'SidebarEvent',
@@ -29,6 +31,9 @@ export default defineComponent({
           return SidebarEventTopicChanged
         case ChannelEventTypeEnum.SubscribersChanged:
           return SidebarEventSubscribersChanged
+        case ChannelEventTypeEnum.PinAdded:
+        case ChannelEventTypeEnum.PinRemoved:
+          return SidebarEventPinnedChanged
       }
       return undefined
     })
