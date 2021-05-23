@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" @click="onClick">
-    <span :class="$style.query">{{ insertQuery }}</span>
+    <span :class="$style.query">{{ label }}</span>
   </div>
 </template>
 
@@ -10,17 +10,17 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'SearchSuggestionHistoryItem',
   props: {
-    insertQuery: {
+    label: {
       type: String,
       required: true
     }
   },
   emits: {
-    select: (insertQuery: string) => true
+    select: (label: string) => true //TODO 必要？
   },
   setup(props, context) {
     const onClick = () => {
-      context.emit('select', props.insertQuery)
+      context.emit('select', props.label)
     }
     return { onClick }
   }

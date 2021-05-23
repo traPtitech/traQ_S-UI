@@ -20,7 +20,7 @@
     <search-suggestion-history-item
       v-for="suggestion in historySuggestions"
       :key="suggestion"
-      :insert-query="suggestion"
+      :label="suggestion"
       @select="onSelectSuggestionFromHistory(suggestion)"
     />
   </div>
@@ -43,8 +43,6 @@ const querySuggestions = [
   { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索' }
 ]
 
-let historySuggestions: string[] = ['1', '2']
-
 export default defineComponent({
   name: 'SearchSuggestion',
   components: {
@@ -59,7 +57,7 @@ export default defineComponent({
     const {
       commandPaletteStore: store,
       settleQuery,
-      getHistorySuggestions
+      historySuggestions
     } = useCommandPaletteStore()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
@@ -67,9 +65,6 @@ export default defineComponent({
         value: store.currentInput
       })
     )
-    let historySuggestions = computed((): readonly string[] =>
-      getHistorySuggestions()
-    ) //FIXME readonlyのままでOK?
     const onSelectQuerySuggestion = (query: string) => {
       if (store.currentInput !== '') {
         store.currentInput += ' '

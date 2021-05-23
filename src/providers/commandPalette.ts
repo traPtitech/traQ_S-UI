@@ -66,17 +66,12 @@ export const useCommandPaletteStore = () => {
 
   const settleQuery = () => {
     commandPaletteStore.query = commandPaletteStore.currentInput
-  }
-
-  const getHistorySuggestions = () => {
-    return store.getters.app.getSearchHistories
-  }
-
-  const settleHistorySuggestion = () => {
     if (commandPaletteStore.currentInput) {
       store.commit.app.addSearchHistory(commandPaletteStore.currentInput)
     }
   }
+
+  const historySuggestions = computed(() => store.state.app.searchHistories)
 
   return {
     commandPaletteStore,
@@ -84,8 +79,7 @@ export const useCommandPaletteStore = () => {
     openCommandPalette,
     closeCommandPalette,
     settleQuery,
-    getHistorySuggestions,
-    settleHistorySuggestion
+    historySuggestions
   }
 }
 
