@@ -4,18 +4,24 @@
       <sidebar-header text="イベント" />
     </template>
     <template #content>
-      <sidebar-event
-        v-for="event in events"
-        :key="event.datetime"
-        :class="$style.item"
-        :event="event"
-      />
+      <div
+        ref="containerEle"
+        :class="$style.container"
+        @scroll.passive="onScroll"
+      >
+        <sidebar-event
+          v-for="event in events"
+          :key="event.datetime"
+          :class="$style.item"
+          :event="event"
+        />
+      </div>
     </template>
   </main-view-sidebar-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, shallowRef } from 'vue'
 import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
 import { ChannelId } from '@/types/entity-ids'
@@ -36,13 +42,24 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { events } = useChannelEvents(props)
-    return { events }
+    const containerEle = shallowRef<HTMLElement>()
+    const { events, onScroll } = useChannelEvents(props, containerEle)
+    return { containerEle, events, onScroll }
   }
 })
 </script>
 
 <style lang="scss" module>
+$padding: 32px;
+.container {
+  height: calc(100% + #{$padding});
+  overflow-y: auto;
+  margin: -$padding;
+  margin-top: 0;
+  padding: $padding;
+  padding-top: 0;
+}
+
 .item {
   margin: 16px 0;
   &:first-child {
