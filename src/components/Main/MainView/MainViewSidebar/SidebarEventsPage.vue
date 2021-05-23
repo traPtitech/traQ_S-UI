@@ -15,6 +15,9 @@
           :class="$style.item"
           :event="event"
         />
+        <div v-if="events.length <= 0" :class="$style.noEvents">
+          イベントはありません
+        </div>
       </div>
     </template>
   </main-view-sidebar-page>
@@ -68,5 +71,9 @@ $padding: 32px;
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.noEvents {
+  @include color-ui-tertiary;
 }
 </style>
