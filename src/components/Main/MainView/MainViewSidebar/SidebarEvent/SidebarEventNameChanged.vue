@@ -1,14 +1,7 @@
 <template>
-  <sidebar-event-frame
-    title="トピック変更"
-    icon-name="format-title"
-    icon-mdi
-    show-chevron
-  >
-    <div :class="$style.newTopic" :data-is-empty="details.after === ''">
-      <inline-markdown
-        :content="details.after !== '' ? details.after : '未設定'"
-      />
+  <sidebar-event-frame title="チャンネル名変更" icon-name="hash" show-chevron>
+    <div :class="$style.newName" :data-is-empty="details.after === ''">
+      {{ details.after }}
     </div>
     <sidebar-event-changed-user :user-id="details.userId" />
   </sidebar-event-frame>
@@ -16,16 +9,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { TopicChangedEvent } from '@traptitech/traq'
+import { NameChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
 import SidebarEventChangedUser from './SidebarEventChangedUser.vue'
 
 export default defineComponent({
-  name: 'SidebarEventTopicChanged',
+  name: 'SidebarEventNameChanged',
   components: {
     SidebarEventFrame,
-    InlineMarkdown,
     SidebarEventChangedUser
   },
   props: {
@@ -34,7 +25,7 @@ export default defineComponent({
       required: true
     },
     details: {
-      type: Object as PropType<TopicChangedEvent>,
+      type: Object as PropType<NameChangedEvent>,
       required: true
     }
   }
@@ -42,7 +33,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.newTopic {
+.newName {
   @include color-ui-primary;
   &[data-is-empty='true'] {
     opacity: 0.5;
