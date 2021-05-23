@@ -19,6 +19,7 @@ import SidebarEventNameChanged from './SidebarEventNameChanged.vue'
 import SidebarEventParentChanged from './SidebarEventParentChanged.vue'
 import SidebarEventArchiveChanged from './SidebarEventArchiveChanged.vue'
 import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificationChanged.vue'
+import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
 
 export default defineComponent({
   name: 'SidebarEvent',
@@ -46,7 +47,12 @@ export default defineComponent({
           return SidebarEventArchiveChanged
         case ChannelEventTypeEnum.ForcedNotificationChanged:
           return SidebarEventForcedNotificationChanged
+        case ChannelEventTypeEnum.ChildCreated:
+          return SidebarEventChildCreated
       }
+      const invalid: never = props.event
+      // eslint-disable-next-line no-console
+      console.error('Unexpected event:', invalid)
       return undefined
     })
 
