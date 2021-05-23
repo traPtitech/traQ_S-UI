@@ -16,6 +16,7 @@ import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
 import SidebarEventSubscribersChanged from './SidebarEventSubscribersChanged.vue'
 import SidebarEventPinnedChanged from './SidebarEventPinnedChanged.vue'
 import SidebarEventNameChanged from './SidebarEventNameChanged.vue'
+import SidebarEventParentChanged from './SidebarEventParentChanged.vue'
 
 export default defineComponent({
   name: 'SidebarEvent',
@@ -37,6 +38,8 @@ export default defineComponent({
           return SidebarEventPinnedChanged
         case ChannelEventTypeEnum.NameChanged:
           return SidebarEventNameChanged
+        case ChannelEventTypeEnum.ParentChanged:
+          return SidebarEventParentChanged
       }
       return undefined
     })
