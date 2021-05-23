@@ -3,14 +3,14 @@
     title="トピック変更"
     icon-name="format-title"
     icon-mdi
-    show-chevron
+    :user-id="details.userId"
+    :datetime="datetime"
   >
     <div :class="$style.newTopic" :data-is-empty="details.after === ''">
       <inline-markdown
         :content="details.after !== '' ? details.after : '未設定'"
       />
     </div>
-    <sidebar-event-changed-user :user-id="details.userId" />
   </sidebar-event-frame>
 </template>
 
@@ -19,14 +19,12 @@ import { defineComponent, PropType } from 'vue'
 import { TopicChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
-import SidebarEventChangedUser from './SidebarEventChangedUser.vue'
 
 export default defineComponent({
   name: 'SidebarEventTopicChanged',
   components: {
     SidebarEventFrame,
-    InlineMarkdown,
-    SidebarEventChangedUser
+    InlineMarkdown
   },
   props: {
     datetime: {
@@ -43,7 +41,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .newTopic {
-  @include color-ui-primary;
   &[data-is-empty='true'] {
     opacity: 0.5;
   }

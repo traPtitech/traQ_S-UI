@@ -1,5 +1,10 @@
 <template>
-  <sidebar-event-frame title="購読者変更" icon-name="notified" show-chevron>
+  <sidebar-event-frame
+    title="購読者変更"
+    icon-name="notified"
+    :user-id="details.userId"
+    :datetime="datetime"
+  >
     <div v-if="details.on.length > 0">
       <div :class="$style.label">新しい購読者</div>
       <user-icon-ellipsis-list direction="row" :user-ids="details.on" />

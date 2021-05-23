@@ -1,5 +1,11 @@
 <template>
-  <sidebar-event-frame :title="title" icon-name="pin" icon-mdi>
+  <sidebar-event-frame
+    :title="title"
+    icon-name="pin"
+    icon-mdi
+    :user-id="details.userId"
+    :datetime="datetime"
+  >
     <template v-if="message">
       <user-name :user="user" />
       <render-content :content="message?.content ?? ''" line-clamp-content />

@@ -1,25 +1,32 @@
 <template>
-  <div :class="$style.container" :data-show-chevron="showChevron">
-    <div :class="$style.header">
+  <div :class="$style.container">
+    <div :class="$style.titleWrapper">
       <icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">{{ title }}</div>
-      <icon v-if="showChevron" name="chevron-right" mdi />
+    </div>
+    <div :class="$style.header">
+      <user-icon :user-id="userId" :size="20" />
+      <div :class="$style.time">{{ timeString }}</div>
     </div>
     <div :class="$style.separator" />
-    <div>
+    <div :class="$style.content">
       <slot />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
+import { UserId } from '@/types/entity-ids'
+import UserIcon from '@/components/UI/UserIcon.vue'
+import { getFullDayWithTimeString } from '@/lib/date'
 
 export default defineComponent({
   name: 'SidebarEventFrame',
   components: {
-    Icon
+    Icon,
+    UserIcon
   },
   props: {
     title: {
@@ -34,10 +41,20 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    showChevron: {
-      type: Boolean,
-      default: false
+    userId: {
+      type: String as PropType<UserId>,
+      required: true
+    },
+    datetime: {
+      type: String,
+      required: true
     }
+  },
+  setup(props) {
+    const timeString = computed(() =>
+      getFullDayWithTimeString(new Date(props.datetime))
+    )
+    return { timeString }
   }
 })
 </script>
@@ -47,24 +64,39 @@ export default defineComponent({
   @include background-primary;
   padding: 8px 20px;
   border-radius: 4px;
-  &[data-show-chevron] {
-    cursor: pointer;
-  }
 }
-.header {
+
+.titleWrapper {
   @include color-ui-primary;
   display: flex;
   align-items: center;
+  margin-bottom: 4px;
   font-weight: bold;
 }
 .title {
   flex: 1;
-  margin: 0 4px;
+  margin-left: 4px;
 }
+
+.header {
+  display: flex;
+  align-items: center;
+}
+.time {
+  @include color-ui-secondary;
+  @include size-caption;
+  margin-left: 4px;
+}
+
 .separator {
   @include background-secondary;
   width: 100%;
   height: 2px;
   margin: 4px 0;
+}
+
+.content {
+  @include color-ui-primary;
+  word-break: break-all;
 }
 </style>
