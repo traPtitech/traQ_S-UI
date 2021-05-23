@@ -37,9 +37,6 @@ export default defineComponent({
       type: Object as PropType<SubscribersChangedEvent>,
       required: true
     }
-  },
-  setup() {
-    return {}
   }
 })
 </script>
