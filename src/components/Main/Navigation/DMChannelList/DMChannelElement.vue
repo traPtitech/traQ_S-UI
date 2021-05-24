@@ -125,7 +125,7 @@ $topicLeftPadding: 40px;
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
   height: $bgHeight;
-  top: -($bgHeight - $elementHeight)/2;
+  top: -1 * math.div($bgHeight - $elementHeight, 2);
   left: 0;
   z-index: 0;
   border-top-left-radius: 100vw;

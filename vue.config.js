@@ -8,7 +8,10 @@ module.exports = {
   css: {
     loaderOptions: {
       scss: {
-        additionalData: '@import "src/styles/common.scss";'
+        additionalData: `
+          @use "sass:math";
+          @import "src/styles/common.scss";
+        `
       }
     },
     extract:
