@@ -63,8 +63,14 @@ export default defineComponent({
     ActivityElement,
     EmptyState
   },
-  setup() {
-    const { timeline } = useActivityStream()
+  props: {
+    show: {
+      type: Boolean,
+      required: true
+    }
+  },
+  setup(props) {
+    const { timeline } = useActivityStream(props)
     const { isNotAll, isPerChannel } = useActivityMode()
 
     return { isNotAll, isPerChannel, timeline }

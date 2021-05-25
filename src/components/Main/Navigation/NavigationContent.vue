@@ -8,6 +8,7 @@
     />
     <activity
       v-show="currentNavigation === 'activity'"
+      :show="currentNavigation === 'activity'"
       :class="$style.content"
     />
     <users v-show="currentNavigation === 'users'" :class="$style.content" />

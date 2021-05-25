@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, watch, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, watch, ref } from 'vue'
 import store, { originalStore } from '@/store'
 import { setTimelineStreamingState } from '@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
@@ -14,7 +14,7 @@ const getActivityTimeline = createSingleflight(
   apis.getActivityTimeline.bind(apis)
 )
 
-const useActivityStream = () => {
+const useActivityStream = (props: { show: boolean }) => {
   const mode = computed(() => store.state.app.browserSettings.activityMode)
 
   /**
@@ -45,10 +45,18 @@ const useActivityStream = () => {
     } catch (e) {}
   }
 
-  onMounted(async () => {
-    setTimelineStreamingState(mode.value.all)
-    await fetch()
-  })
+  // 一番最初に表示されたときに実行する
+  const stopWatchShow = watch(
+    () => props.show,
+    async newShow => {
+      if (!newShow) return
+      stopWatchShow()
+
+      setTimelineStreamingState(mode.value.all)
+      await fetch()
+    },
+    { immediate: true }
+  )
 
   watch(mode, (newMode, oldMode) => {
     if (newMode.all !== oldMode.all) {
