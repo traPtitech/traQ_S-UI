@@ -14,6 +14,7 @@ import {
 } from '@/lib/util/guard/embeddingOrUrl'
 import { createSingleflight } from '@/lib/async'
 import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
+import { ExternalUrl } from '@traptitech/traq-markdown-it'
 
 interface BaseGetMessagesParams {
   limit?: number
@@ -47,6 +48,19 @@ interface GetClipsParam {
 
 interface GetDirectMessagesParams extends BaseGetMessagesParams {
   userId: string
+}
+
+const ignoredHostNamesSet = new Set<string>(
+  window.traQConfig.ogpIgnoreHostNames
+)
+
+const isIncludedHost = (url: ExternalUrl) => {
+  try {
+    const hostName = new URL(url.url).hostname
+    return !ignoredHostNamesSet.has(hostName)
+  } catch {
+    return false // 不正なURL
+  }
 }
 
 export const messagesViewActionContext = (
@@ -181,6 +195,7 @@ export const actions = defineActions({
       })
     const urlPromises = rendered.embeddings
       .filter(isExternalUrl)
+      .filter(isIncludedHost)
       .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
       .map(async e => {
         try {
