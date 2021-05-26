@@ -27,7 +27,7 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (label: string) => true //TODO 必要？
+    select: (label: string) => true
   },
   setup(props, context) {
     const { removeHistorySuggestion } = useCommandPaletteStore()
