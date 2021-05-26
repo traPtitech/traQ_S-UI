@@ -14,7 +14,6 @@ export const mutations = defineMutations<S>()({
     }
   },
   removeSearchHistory(state, oldHistory: string) {
-    // return state.searchHistories.filter(history => history !== oldHistory)
     const index = state.searchHistories.indexOf(oldHistory)
     if (index !== -1) {
       state.searchHistories.splice(index, 1)
