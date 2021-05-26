@@ -16,7 +16,11 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
-      @open="emit('pinned-mode-toggle')"
+      @open="emit('moveToPinned')"
+    />
+    <channel-sidebar-events
+      :class="$style.sidebarItem"
+      @open="emit('moveToEvents')"
     />
     <channel-sidebar-relation
       :channel-id="channelId"
@@ -41,10 +45,12 @@ import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
 import ChannelSidebarMember from './ChannelSidebarMember.vue'
 //import ChannelSidebarEdit from './ChannelSidebarEdit.vue'
+import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import { UserId, ChannelId } from '@/types/entity-ids'
+import { useQallSession } from './use/channelRTCSession'
 
 export default defineComponent({
   name: 'ChannelSidebarContent',
@@ -53,28 +59,30 @@ export default defineComponent({
     ChannelSidebarPinned,
     ChannelSidebarViewers,
     ChannelSidebarMember,
+    ChannelSidebarEvents,
     //ChannelSidebarEdit,
     ChannelSidebarRelation,
     ChannelSidebarQall,
     ChannelSidebarBots
   },
   props: {
-    channelId: { type: String as PropType<ChannelId>, requried: true },
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    },
     viewerIds: {
       type: Array as PropType<UserId[]>,
       required: true
-    },
-    qallUserIds: {
-      type: Array as PropType<UserId[]>,
-      default: () => []
     },
     pinnedMessagesCount: {
       type: Number,
       default: 0
     }
   },
-  setup(_, { emit }) {
-    return { emit }
+  setup(props, { emit }) {
+    const { sessionUserIds: qallUserIds } = useQallSession(props)
+
+    return { qallUserIds, emit }
   }
 })
 </script>

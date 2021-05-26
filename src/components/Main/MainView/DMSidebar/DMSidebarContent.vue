@@ -4,8 +4,9 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
-      @open="$emit('pinnedModeToggle')"
+      @open="emit('moveToPinned')"
     />
+    <channel-sidebar-events :class="$style.item" @open="emit('moveToEvents')" />
   </div>
 </template>
 
@@ -14,12 +15,14 @@ import { defineComponent, PropType } from 'vue'
 import { UserId } from '@/types/entity-ids'
 import ChannelSidebarPinned from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
+import ChannelSidebarEvents from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue'
 
 export default defineComponent({
   name: 'DMSidebarContent',
   components: {
     ChannelSidebarPinned,
-    ChannelSidebarViewers
+    ChannelSidebarViewers,
+    ChannelSidebarEvents
   },
   props: {
     viewerIds: {
@@ -31,8 +34,8 @@ export default defineComponent({
       default: 0
     }
   },
-  setup() {
-    return {}
+  setup(props, { emit }) {
+    return { emit }
   }
 })
 </script>

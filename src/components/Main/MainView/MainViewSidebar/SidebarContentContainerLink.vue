@@ -5,9 +5,11 @@
     :large-padding="largePadding"
     @toggle="onClickLink"
   >
-    <template v-if="count !== undefined" #header-control>
+    <template #header-control>
       <div>
-        <span :class="$style.count">{{ count }}</span>
+        <span v-if="count !== undefined" :class="$style.count">{{
+          count
+        }}</span>
         <icon name="chevron-right" :class="$style.icon" mdi />
       </div>
     </template>

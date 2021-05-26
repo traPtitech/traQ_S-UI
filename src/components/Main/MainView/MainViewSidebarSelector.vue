@@ -14,6 +14,7 @@
   <d-m-sidebar
     v-else-if="viewInfo.type === 'dm'"
     :class="$style.messagesView"
+    :channel-id="viewInfo.channelId"
     :user-name="viewInfo.userName"
     :is-sidebar-opener-ready="isSidebarOpenerReady"
   />

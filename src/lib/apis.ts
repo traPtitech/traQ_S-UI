@@ -1,4 +1,18 @@
-import { Apis, Configuration } from '@traptitech/traq'
+import {
+  Apis,
+  ChannelEvent,
+  ChannelEventTypeEnum,
+  ChildCreatedEvent,
+  Configuration,
+  ForcedNotificationChangedEvent,
+  NameChangedEvent,
+  ParentChangedEvent,
+  PinAddedEvent,
+  PinRemovedEvent,
+  SubscribersChangedEvent,
+  TopicChangedEvent,
+  VisibilityChangedEvent
+} from '@traptitech/traq'
 import { FileId } from '@/types/entity-ids'
 import DEV_SERVER from '@/lib/env/devServer'
 import { AxiosError } from 'axios'
@@ -51,5 +65,34 @@ export const formatResizeError = (e: unknown, defaultMessage: string) => {
   }
   return defaultMessage
 }
+
+type BaseChannelEvent<Type, Detail> = {
+  type: Type
+  datetime: string
+  detail: Detail
+}
+
+export type ParsedChannelEvent =
+  | BaseChannelEvent<ChannelEventTypeEnum.TopicChanged, TopicChangedEvent>
+  | BaseChannelEvent<
+      ChannelEventTypeEnum.SubscribersChanged,
+      SubscribersChangedEvent
+    >
+  | BaseChannelEvent<ChannelEventTypeEnum.PinAdded, PinAddedEvent>
+  | BaseChannelEvent<ChannelEventTypeEnum.PinRemoved, PinRemovedEvent>
+  | BaseChannelEvent<ChannelEventTypeEnum.NameChanged, NameChangedEvent>
+  | BaseChannelEvent<ChannelEventTypeEnum.ParentChanged, ParentChangedEvent>
+  | BaseChannelEvent<
+      ChannelEventTypeEnum.VisibilityChanged,
+      VisibilityChangedEvent
+    >
+  | BaseChannelEvent<
+      ChannelEventTypeEnum.ForcedNotificationChanged,
+      ForcedNotificationChangedEvent
+    >
+  | BaseChannelEvent<ChannelEventTypeEnum.ChildCreated, ChildCreatedEvent>
+
+export const parseChannelEvent = (event: ChannelEvent): ParsedChannelEvent =>
+  event as ParsedChannelEvent
 
 export default apis

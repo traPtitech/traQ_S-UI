@@ -1,6 +1,11 @@
 <template>
   <div :class="$style.container" :data-is-title="$boolAttr(isTitle)">
-    <user-icon :class="$style.icon" :user-id="id" :size="isTitle ? 24 : 20" />
+    <user-icon
+      v-if="id"
+      :class="$style.icon"
+      :user-id="id"
+      :size="isTitle ? 24 : 20"
+    />
     <span :class="$style.displayName">
       {{ displayName }}
     </span>
@@ -27,7 +32,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const id = computed(() => props.user?.id ?? 'unknown')
+    const id = computed(() => props.user?.id)
     const displayName = computed(() => props.user?.displayName ?? 'unknown')
 
     return { id, displayName }

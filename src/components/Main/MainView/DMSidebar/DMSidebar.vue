@@ -1,22 +1,28 @@
 <template>
   <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page v-if="!state.pinnedMode">
+      <main-view-sidebar-page v-if="page === 'default'">
         <template #header>
           <sidebar-header icon-string="@" :text="userName" />
         </template>
         <template #content>
           <sidebar-content
             :viewer-ids="viewerIds"
-            :pinned-messages-count="state.pinnedMessages.length"
-            @pinned-mode-toggle="togglePinnedMode"
+            :pinned-messages-count="pinnedMessages.length"
+            @moveToPinned="moveToPinnedPage"
+            @moveToEvents="moveToEventsPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
-        v-else
-        :pinned-messages="state.pinnedMessages"
-        @toggle="togglePinnedMode"
+        v-else-if="page === 'pinned'"
+        :pinned-messages="pinnedMessages"
+        @moveBack="moveToDefaultPage"
+      />
+      <sidebar-events-page
+        v-else-if="page === 'events'"
+        :channel-id="channelId"
+        @moveBack="moveToDefaultPage"
       />
     </template>
     <template #opener>
@@ -26,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
 import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
@@ -34,6 +40,8 @@ import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/Main
 import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
+import SidebarEventsPage from '@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { ChannelId } from '@/types/entity-ids'
 
 export default defineComponent({
   name: 'DMSidebar',
@@ -43,9 +51,14 @@ export default defineComponent({
     SidebarPinnedPage,
     ChannelSidebarHidden,
     SidebarHeader,
-    SidebarContent
+    SidebarContent,
+    SidebarEventsPage
   },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId>,
+      required: true
+    },
     userName: {
       type: String,
       requried: true
@@ -56,12 +69,23 @@ export default defineComponent({
     }
   },
   setup() {
-    const { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar } =
-      useChannelSidebarCommon()
+    const {
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      moveToEventsPage,
+      pinnedMessages,
+      viewerIds,
+      openSidebar,
+      closeSidebar
+    } = useChannelSidebarCommon()
 
     return {
-      state,
-      togglePinnedMode,
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      moveToEventsPage,
+      pinnedMessages,
       viewerIds,
       openSidebar,
       closeSidebar

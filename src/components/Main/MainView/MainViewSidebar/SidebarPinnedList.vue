@@ -7,9 +7,12 @@
       hide-subtitle
       line-clamp-content
       :message="message"
-      :class="$style.sidebarItem"
+      :class="$style.item"
       @click="onMessageSelect(message.id)"
     />
+    <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
+      ピン留めされたメッセージはありません
+    </div>
   </div>
 </template>
 
@@ -29,7 +32,7 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(props, context) {
+  setup(props) {
     const sortedMessages = computed(() =>
       [...props.pinnedMessages]
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
@@ -52,7 +55,11 @@ export default defineComponent({
   @include background-secondary;
 }
 
-.sidebarItem {
+.item {
   margin-top: 16px;
+}
+
+.noPinned {
+  @include color-ui-tertiary;
 }
 </style>

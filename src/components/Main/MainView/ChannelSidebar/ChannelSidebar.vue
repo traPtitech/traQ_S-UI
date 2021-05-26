@@ -1,7 +1,7 @@
 <template>
   <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page v-if="!state.pinnedMode">
+      <main-view-sidebar-page v-if="page === 'default'">
         <template #header>
           <sidebar-header icon-string="#" :text="channelName" />
         </template>
@@ -9,16 +9,21 @@
           <channel-sidebar-content
             :channel-id="channelId"
             :viewer-ids="viewerIds"
-            :qall-user-ids="qallUserIds"
-            :pinned-messages-count="state.pinnedMessages.length"
-            @pinned-mode-toggle="togglePinnedMode"
+            :pinned-messages-count="pinnedMessages.length"
+            @moveToPinned="moveToPinnedPage"
+            @moveToEvents="moveToEventsPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
-        v-else
-        :pinned-messages="state.pinnedMessages"
-        @toggle="togglePinnedMode"
+        v-else-if="page === 'pinned'"
+        :pinned-messages="pinnedMessages"
+        @moveBack="moveToDefaultPage"
+      />
+      <sidebar-events-page
+        v-else-if="page === 'events'"
+        :channel-id="channelId"
+        @moveBack="moveToDefaultPage"
       />
     </template>
     <template #opener>
@@ -36,9 +41,9 @@ import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/Main
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
-import { useQallSession } from './use/channelRTCSession'
 import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import store from '@/store'
+import SidebarEventsPage from '@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
 
 export default defineComponent({
   name: 'ChannelSidebar',
@@ -48,7 +53,8 @@ export default defineComponent({
     SidebarPinnedPage,
     SidebarHeader,
     ChannelSidebarContent,
-    ChannelSidebarHidden
+    ChannelSidebarHidden,
+    SidebarEventsPage
   },
   props: {
     channelId: {
@@ -61,21 +67,29 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { state, viewerIds, togglePinnedMode, openSidebar, closeSidebar } =
-      useChannelSidebarCommon()
+    const {
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      moveToEventsPage,
+      pinnedMessages,
+      viewerIds,
+      openSidebar,
+      closeSidebar
+    } = useChannelSidebarCommon()
 
     const channelName = computed(
       () => store.state.entities.channelsMap.get(props.channelId)?.name ?? ''
     )
 
-    const { sessionUserIds: qallUserIds } = useQallSession(props)
-
     return {
-      state,
-      togglePinnedMode,
+      page,
+      moveToDefaultPage,
+      moveToPinnedPage,
+      moveToEventsPage,
       channelName,
+      pinnedMessages,
       viewerIds,
-      qallUserIds,
       openSidebar,
       closeSidebar
     }
