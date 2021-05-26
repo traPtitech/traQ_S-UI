@@ -1,23 +1,25 @@
 <template>
   <div :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
-    <close-button
-      :class="$style.closeIcon"
+    <icon
+      name="close"
+      mdi
+      :class="$style.icon"
       :size="24"
       :inner-size="12"
-      @close="removeHistorySuggestion(label)"
+      @click.stop="removeHistorySuggestion(label)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import CloseButton from '@/components/UI/CloseButton.vue'
+import Icon from '@/components/UI/Icon.vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchSuggestionHistoryItem',
-  components: { CloseButton },
+  components: { Icon },
   props: {
     label: {
       type: String,
@@ -53,11 +55,7 @@ export default defineComponent({
   @include size-body1;
   @include color-ui-primary;
 }
-.closeIcon {
-  @include color-ui-primary;
-  height: 1.5rem;
-}
-.closeIcon {
+.icon {
   opacity: 0.5;
   cursor: pointer;
   &:hover {
