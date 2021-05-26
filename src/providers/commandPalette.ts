@@ -66,7 +66,7 @@ export const useCommandPaletteStore = () => {
 
   const settleQuery = () => {
     commandPaletteStore.query = commandPaletteStore.currentInput
-    if (commandPaletteStore.currentInput) {
+    if (commandPaletteStore.currentInput !== '') {
       store.commit.app.addSearchHistory(commandPaletteStore.currentInput)
     }
   }
