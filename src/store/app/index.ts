@@ -17,7 +17,7 @@ export const app = defineDBModule({
   getters,
   mutations,
   actions,
-  path: ['app.searchHistories'], //TODO 名前
+  path: ['app.messageSearchHistories'],
   modules: {
     browserSettings,
     rtcSettings,
