@@ -71,7 +71,9 @@ export const useCommandPaletteStore = () => {
     }
   }
 
-  const historySuggestions = computed(() => store.state.app.searchHistories)
+  const historySuggestions = computed(
+    () => store.state.app.messageSearchHistories
+  )
 
   const removeHistorySuggestion = (oldHistory: string) => {
     store.commit.app.removeSearchHistory(oldHistory)

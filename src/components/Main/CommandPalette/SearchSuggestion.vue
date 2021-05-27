@@ -22,7 +22,7 @@
       :key="suggestion"
       :label="suggestion"
       @select="onSelectHistorySuggestion(suggestion)"
-      @remove="onRemoveHistorySuggestion(suggetsion)"
+      @remove="onRemoveHistorySuggestion(suggestion)"
     />
   </div>
 </template>
