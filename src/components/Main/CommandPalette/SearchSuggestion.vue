@@ -21,7 +21,8 @@
       v-for="suggestion in historySuggestions"
       :key="suggestion"
       :label="suggestion"
-      @select="onSelectSuggestionFromHistory(suggestion)"
+      @select="onSelectHistorySuggestion(suggestion)"
+      @remove="onRemoveHistorySuggestion(suggetsion)"
     />
   </div>
 </template>
@@ -57,7 +58,8 @@ export default defineComponent({
     const {
       commandPaletteStore: store,
       settleQuery,
-      historySuggestions
+      historySuggestions,
+      removeHistorySuggestion
     } = useCommandPaletteStore()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
@@ -78,8 +80,11 @@ export default defineComponent({
           settleQuery()
       }
     }
-    const onSelectSuggestionFromHistory = (query: string) => {
-      store.currentInput = query
+    const onSelectHistorySuggestion = (label: string) => {
+      store.currentInput = label
+    }
+    const onRemoveHistorySuggestion = (label: string) => {
+      removeHistorySuggestion(label)
     }
     return {
       store,
@@ -88,7 +93,8 @@ export default defineComponent({
       historySuggestions,
       onSelectQuerySuggestion,
       onSelectSuggestion,
-      onSelectSuggestionFromHistory
+      onSelectHistorySuggestion,
+      onRemoveHistorySuggestion
     }
   }
 })

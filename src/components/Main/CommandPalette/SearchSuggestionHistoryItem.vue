@@ -7,14 +7,13 @@
       :class="$style.icon"
       :size="24"
       :inner-size="12"
-      @click.stop="removeHistorySuggestion(label)"
+      @click.stop="onClose"
     />
   </div>
 </template>
 
 <script lang="ts">
 import Icon from '@/components/UI/Icon.vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -27,14 +26,17 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (label: string) => true
+    select: (label: string) => true,
+    remove: (label: string) => true
   },
   setup(props, context) {
-    const { removeHistorySuggestion } = useCommandPaletteStore()
     const onClick = () => {
       context.emit('select', props.label)
     }
-    return { onClick, removeHistorySuggestion }
+    const onClose = () => {
+      context.emit('remove', props.label)
+    }
+    return { onClick, onClose }
   }
 })
 </script>
