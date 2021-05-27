@@ -58,6 +58,7 @@ export default defineComponent({
   @include color-ui-primary;
 }
 .icon {
+  margin-left: 0.5rem;
   opacity: 0.5;
   cursor: pointer;
   &:hover {
