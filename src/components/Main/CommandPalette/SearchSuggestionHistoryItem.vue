@@ -55,6 +55,7 @@ export default defineComponent({
 .label {
   @include size-body1;
   @include color-ui-primary;
+  word-break: break-all;
 }
 .icon {
   margin-left: 0.5rem;
