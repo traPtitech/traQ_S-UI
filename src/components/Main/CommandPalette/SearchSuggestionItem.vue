@@ -90,7 +90,7 @@ export default defineComponent({
   width: 100%;
   padding: 0.5rem 0 0.5rem 1rem;
   display: grid;
-  grid-template-columns: auto max-content 1fr;
+  grid-template-columns: min-content auto min-content 1fr;
   grid-gap: 1rem;
   align-items: center;
   user-select: none;
@@ -107,9 +107,11 @@ export default defineComponent({
 .title {
   @include size-body1;
   @include color-ui-primary;
+  word-break: break-all;
 }
 .description {
   @include size-body2;
   @include color-ui-secondary;
+  word-break: keep-all;
 }
 </style>
