@@ -15,12 +15,23 @@
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
   </div>
+  <div v-if="historySuggestions.length > 0" :class="$style.container">
+    <div :class="$style.header">過去の検索</div>
+    <search-suggestion-history-item
+      v-for="suggestion in historySuggestions"
+      :key="suggestion"
+      :label="suggestion"
+      @select="onSelectHistorySuggestion(suggestion)"
+      @remove="onRemoveHistorySuggestion(suggestion)"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useCommandPaletteStore } from '@/providers/commandPalette'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem, {
   SuggestionItem
 } from './SearchSuggestionItem.vue'
@@ -35,12 +46,21 @@ const querySuggestions = [
 
 export default defineComponent({
   name: 'SearchSuggestion',
-  components: { SearchSuggestionQueryItem, SearchSuggestionItem },
+  components: {
+    SearchSuggestionQueryItem,
+    SearchSuggestionHistoryItem,
+    SearchSuggestionItem
+  },
   emits: {
     queryInsert: () => true
   },
   setup(_, context) {
-    const { commandPaletteStore: store, settleQuery } = useCommandPaletteStore()
+    const {
+      commandPaletteStore: store,
+      settleQuery,
+      historySuggestions,
+      removeHistorySuggestion
+    } = useCommandPaletteStore()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
         type: 'search',
@@ -60,12 +80,21 @@ export default defineComponent({
           settleQuery()
       }
     }
+    const onSelectHistorySuggestion = (label: string) => {
+      store.currentInput = label
+    }
+    const onRemoveHistorySuggestion = (label: string) => {
+      removeHistorySuggestion(label)
+    }
     return {
       store,
       searchConfirmItem,
       querySuggestions,
+      historySuggestions,
       onSelectQuerySuggestion,
-      onSelectSuggestion
+      onSelectSuggestion,
+      onSelectHistorySuggestion,
+      onRemoveHistorySuggestion
     }
   }
 })
