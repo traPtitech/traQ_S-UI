@@ -6,7 +6,6 @@
       mdi
       :class="$style.icon"
       :size="24"
-      :inner-size="12"
       @click.stop="onClose"
     />
   </div>
