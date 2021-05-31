@@ -233,7 +233,7 @@ $max-nav-width-display-width: 2560px;
 $nav-width-diff: $max-nav-width - $min-nav-width;
 $nav-width-display-width-diff: $max-nav-width-display-width -
   $min-nav-width-display-width;
-$nav-width-ratio: $nav-width-diff / $nav-width-display-width-diff;
+$nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 
 .homeWrapper {
   height: 100%;
