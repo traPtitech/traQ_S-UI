@@ -37,7 +37,8 @@ module.exports = {
     'vue/no-v-html': 'off',
     // TODO: 消す
     'vue/require-default-prop': 'off',
-    'vue/require-explicit-emits': 'off'
+    'vue/require-explicit-emits': 'off',
+    'vue/require-emit-validator': 'off'
   },
   overrides: [
     {
