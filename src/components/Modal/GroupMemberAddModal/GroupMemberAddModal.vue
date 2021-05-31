@@ -92,7 +92,7 @@ export default defineComponent({
   height: 240px;
   max-height: 100%;
 }
-.editButtonWrapper {
+.addButtonWrapper {
   display: flex;
   justify-content: flex-end;
 }
