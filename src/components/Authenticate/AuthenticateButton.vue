@@ -1,7 +1,7 @@
 <template>
   <button
     :class="$style.container"
-    :disabled="$boolAttr(disabled)"
+    :disabled="disabled"
     :data-type="type"
     :type="isSubmit ? 'submit' : 'button'"
   >

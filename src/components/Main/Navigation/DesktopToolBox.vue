@@ -33,7 +33,7 @@ export default defineComponent({
     const { tools, isServicesShown, closeServices, toggleServices } =
       useToolBox()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myId = computed(() => store.getters.domain.me.myId)
+    const myId = computed(() => store.getters.domain.me.myId!)
 
     return {
       tools,

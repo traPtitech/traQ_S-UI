@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" :data-is-small="small">
     <div :class="$style.valueContainer" @click="toggle">
-      {{ currentItem.title ?? '' }}
+      {{ currentItem?.title ?? '' }}
       <icon
         :class="$style.trailingIcon"
         name="rounded-triangle"

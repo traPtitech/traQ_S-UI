@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { Message } from '@traptitech/traq'
+import { ActivityTimelineMessage } from '@traptitech/traq'
 import useChannelSelect from '@/use/channelSelect'
 import MessagePanel from '@/components/UI/MessagePanel/MessagePanel.vue'
 
@@ -24,7 +24,7 @@ export default defineComponent({
       required: true
     },
     message: {
-      type: Object as PropType<Message>,
+      type: Object as PropType<ActivityTimelineMessage>,
       required: true
     }
   },

@@ -25,10 +25,13 @@ export default defineComponent({
     const botUserIds = useChannelBots(props)
     const viewStates = computed(
       () =>
-        botUserIds.value?.map(id => ({
-          user: store.state.entities.usersMap.get(id),
-          active: true
-        })) ?? []
+        botUserIds.value
+          ?.filter(id => store.state.entities.usersMap.has(id))
+          .map(id => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            user: store.state.entities.usersMap.get(id)!,
+            active: true
+          })) ?? []
     )
     return { viewStates }
   }

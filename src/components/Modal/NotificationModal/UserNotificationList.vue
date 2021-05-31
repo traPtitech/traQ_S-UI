@@ -52,7 +52,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
       .map(u => ({
         userId: u.id,
         name: u.name,
-        subscribed: subscribers.value?.has(u.id)
+        subscribed: subscribers.value?.has(u.id) ?? false
       }))
       .sort((u1, u2) => {
         const s1 = initialSubscribers.value.has(u1.userId)
