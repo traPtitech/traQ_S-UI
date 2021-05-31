@@ -4,7 +4,7 @@
       <textarea-autosize v-model="modelValue" :class="$style.editor" />
       <length-count
         :class="$style.count"
-        :val="valueReal"
+        :val="modelValue"
         :max-length="maxLength"
       />
     </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed } from 'vue'
 import Icon from '@/components/UI/Icon.vue'
 import LengthCount from '@/components/UI/LengthCount.vue'
 import { countLength } from '@/lib/util/string'
@@ -61,26 +61,23 @@ export default defineComponent({
       }
     }
 
-    const valueReal = ref(props.value ?? '')
-    const isExceeded = computed(
-      () =>
-        !!(props.maxLength && countLength(valueReal.value) > props.maxLength)
-    )
-
     const modelValue = computed({
       get: () => props.value ?? '',
       set: v => {
-        valueReal.value = v ?? ''
         context.emit('inputValue', v ?? '')
       }
     })
+
+    const isExceeded = computed(
+      () =>
+        !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
+    )
 
     return {
       content,
       isEmpty,
       onButtonClick,
       length,
-      valueReal,
       isExceeded,
       modelValue
     }
