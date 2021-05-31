@@ -82,7 +82,10 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
   return { editMessage, cancel }
 }
 
-const useAttachmentsEditor = (text: Ref<string>) => {
+const useAttachmentsEditor = (
+  props: { channelId: string },
+  text: Ref<string>
+) => {
   const { addErrorToast } = useToastStore()
 
   const isPosting = ref(false)
@@ -91,12 +94,9 @@ const useAttachmentsEditor = (text: Ref<string>) => {
   const postAttachment = async (file: File) => {
     if (isPosting.value) return
 
-    const channelId = store.state.domain.messagesView.currentChannelId
-    if (!channelId) return
-
     isPosting.value = true
     const attachmentFile = await getResizedFile(file)
-    const { data } = await apis.postFile(attachmentFile, channelId, {
+    const { data } = await apis.postFile(attachmentFile, props.channelId, {
       /**
        * https://github.com/axios/axios#request-config
        */
@@ -155,6 +155,10 @@ export default defineComponent({
     messageId: {
       type: String,
       required: true
+    },
+    channelId: {
+      type: String,
+      required: true
     }
   },
   setup(props) {
@@ -185,7 +189,7 @@ export default defineComponent({
       addAttachment,
       onPaste,
       destroy
-    } = useAttachmentsEditor(text)
+    } = useAttachmentsEditor(props, text)
     onBeforeUnmount(() => {
       destroy()
     })

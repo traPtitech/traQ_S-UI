@@ -17,6 +17,7 @@
         v-if="state.isEditing"
         :raw-content="state.rawContent"
         :message-id="messageId"
+        :channel-id="state.message.channelId"
       />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
