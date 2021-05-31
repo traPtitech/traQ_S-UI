@@ -61,7 +61,7 @@ export default defineComponent({
   width: 100%;
   max-width: 720px + (140px - 32px) * 2;
   padding: 64px 140px;
-  margin: auto;
+  margin: 0 auto;
 }
 .item {
   margin: 24px 0;

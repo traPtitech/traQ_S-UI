@@ -16,7 +16,7 @@
       :max-length="30"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button label="追加" @click="add" />
+      <form-button label="追加" :loading="isAdding" @click="add" />
     </div>
   </modal-frame>
 </template>
@@ -58,7 +58,9 @@ export default defineComponent({
     const userIds = ref(new Set<UserId>())
     const role = ref('')
 
+    const isAdding = ref(false)
     const add = async () => {
+      isAdding.value = true
       try {
         for (const userId of userIds.value) {
           await apis.addUserGroupMember(props.id, {
@@ -69,11 +71,12 @@ export default defineComponent({
       } catch {
         addErrorToast('グループメンバーの追加に失敗しました')
       }
+      isAdding.value = false
 
       await store.dispatch.ui.modal.popModal()
     }
 
-    return { groupName, members, userIds, role, add }
+    return { groupName, members, userIds, role, isAdding, add }
   }
 })
 </script>
@@ -92,7 +95,7 @@ export default defineComponent({
   height: 240px;
   max-height: 100%;
 }
-.editButtonWrapper {
+.addButtonWrapper {
   display: flex;
   justify-content: flex-end;
 }

@@ -5,8 +5,14 @@
       <icon
         name="plus-circle-outline"
         mdi
-        :class="$style.addIcon"
+        :class="$style.controlIcon"
         @click="onClickAdd"
+      />
+      <icon
+        name="close"
+        mdi
+        :class="$style.controlIcon"
+        @click="onClickDeleteAll"
       />
     </div>
     <div :class="$style.list">
@@ -60,6 +66,25 @@ export default defineComponent({
       })
     }
 
+    const onClickDeleteAll = async () => {
+      if (!confirm('本当に全メンバーを削除しますか？')) return
+
+      const ONCE = 10
+      try {
+        for (let i = 0; i < Math.ceil(props.members.length / ONCE); i++) {
+          await Promise.all(
+            props.members
+              .slice(i * ONCE, (i + 1) * ONCE)
+              .map(m => apis.removeUserGroupMember(props.groupId, m.id))
+          )
+        }
+
+        // TODO: wsがつながっていないことがある
+      } catch {
+        addErrorToast('全メンバーの削除に失敗しました')
+      }
+    }
+
     const onEdit = async (id: string) => {
       await store.dispatch.ui.modal.pushModal({
         type: 'group-member-edit',
@@ -79,7 +104,7 @@ export default defineComponent({
       }
     }
 
-    return { onClickAdd, onEdit, onDelete }
+    return { onClickAdd, onClickDeleteAll, onEdit, onDelete }
   }
 })
 </script>
@@ -95,7 +120,7 @@ export default defineComponent({
   margin-bottom: 4px;
   font-weight: bold;
 }
-.addIcon {
+.controlIcon {
   @include color-ui-primary;
   cursor: pointer;
   opacity: 0.5;
