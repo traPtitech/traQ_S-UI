@@ -59,31 +59,39 @@ export const useMessageInputStates = () => {
   return { inputChannels, hasInputChannel }
 }
 
-export type MessageInputStateKey = Ref<ChannelId> | VirtualChannelId
+export type MessageInputStateKey = Ref<ChannelId> | ChannelId | VirtualChannelId
 
-const useMessageInputStateBase = (channelId: MessageInputStateKey) => {
+const useMessageInputStateBase = () => {
   const states = inject(messageInputStateSymbol)
   if (!states) {
     throw new Error('useMessageInputState() was called without provider.')
   }
 
-  const getStore = () => states.get(unref(channelId))
-  const setStore = (v: MessageInputState) => {
+  const getStore = (cId: MessageInputStateKey) => states.get(unref(cId))
+  const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
     // 空のときは削除、空でないときはセット
     if (v && (v.text !== '' || v.attachments.length > 0)) {
       // コピーしないと参照が変わらないから上書きされる
       // toRawしちゃうとreactiveで包めなくなるので、そうはしない
-      states.set(unref(channelId), { ...v })
+      states.set(unref(cId), { ...v })
     } else {
-      states.delete(unref(channelId))
+      states.delete(unref(cId))
     }
   }
 
+  const defaultValue = { text: '', attachments: [] }
+
+  return { getStore, setStore, defaultValue }
+}
+
+const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
+  const { getStore, setStore, defaultValue } = useMessageInputStateBase()
+
   const state: MessageInputState = reactive(
-    getStore() ?? { text: '', attachments: [] }
+    getStore(channelId) ?? { ...defaultValue }
   )
   watch(
-    () => getStore(),
+    () => getStore(channelId),
     v => {
       if (v) {
         state.text = v.text
@@ -98,7 +106,7 @@ const useMessageInputStateBase = (channelId: MessageInputStateKey) => {
   watch(
     state,
     v => {
-      setStore(v)
+      setStore(channelId, v)
     },
     { deep: true }
   )
@@ -107,37 +115,59 @@ const useMessageInputStateBase = (channelId: MessageInputStateKey) => {
 }
 
 const useMessageInputState = (channelId: MessageInputStateKey) => {
-  const { state } = useMessageInputStateBase(channelId)
+  const { state } = useMessageInputStateIndividual(channelId)
 
   const isTextEmpty = computed(() => state.text === '')
   const isAttachmentEmpty = computed(() => state.attachments.length === 0)
   const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
 
-  const addTextToLast = (text: string) => {
-    state.text += state.text !== '' ? `\n${text}` : text
-  }
-
-  const clearState = () => {
-    state.text = ''
-    state.attachments = []
-  }
-
   return {
     state,
     isTextEmpty,
     isAttachmentEmpty,
-    isEmpty,
-    clearState
+    isEmpty
   }
 }
 
 export default useMessageInputState
 
+export const useMessageInputStateStatic = () => {
+  const { getStore, setStore, defaultValue } = useMessageInputStateBase()
+
+  /**
+   * リアクティブでない値を返す(channelIdや入力状態が変化しても返り値が変化しない)
+   */
+  const getMessageInputState = (channelId: MessageInputStateKey) => {
+    const cId = unref(channelId)
+    const state = getStore(cId) ?? { ...defaultValue }
+
+    const isTextEmpty = computed(() => state.text === '')
+    const isAttachmentEmpty = computed(() => state.attachments.length === 0)
+    const isEmpty = computed(() => isTextEmpty.value && isAttachmentEmpty.value)
+
+    const clearState = () => {
+      state.text = ''
+      state.attachments = []
+      setStore(cId, state)
+    }
+
+    return {
+      state,
+      isTextEmpty,
+      isAttachmentEmpty,
+      isEmpty,
+      clearState
+    }
+  }
+
+  return { getMessageInputState }
+}
+
 export const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
   onError: (message: string) => void
 ) => {
-  const { state } = useMessageInputStateBase(channelId)
+  const { state } = useMessageInputStateIndividual(channelId)
 
   const attachments = computed(() => state.attachments)
 

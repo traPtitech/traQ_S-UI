@@ -13,8 +13,9 @@ import {
   bothChannelsMapInitialFetchPromise
 } from '@/store/entities/promises'
 import useToastStore from '@/providers/toastStore'
-import useMessageInputState, {
+import {
   Attachment,
+  useMessageInputStateStatic,
   MessageInputStateKey
 } from '@/providers/messageInputState'
 
@@ -59,7 +60,7 @@ const usePostMessage = (
   channelId: MessageInputStateKey,
   inputStateKey = channelId
 ) => {
-  const { state, isEmpty, clearState } = useMessageInputState(inputStateKey)
+  const { getMessageInputState } = useMessageInputStateStatic()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
@@ -77,6 +78,11 @@ const usePostMessage = (
   const progress = ref(0)
 
   const postMessage = async () => {
+    // awaitによって変化しないようにあえてリアクティブでないものを取得する
+    const { state, isEmpty, clearState } = getMessageInputState(inputStateKey)
+    // awaitの前でunrefしておかないと別のチャンネルに投稿されうる
+    const cId = unref(channelId)
+
     if (isPosting.value || isEmpty.value) return false
 
     if (isForce.value && !confirm(confirmString.value)) {
@@ -115,15 +121,11 @@ const usePostMessage = (
     try {
       isPosting.value = true
 
-      const fileUrls = await uploadAttachments(
-        state.attachments,
-        unref(channelId),
-        p => {
-          progress.value = p
-        }
-      )
+      const fileUrls = await uploadAttachments(state.attachments, cId, p => {
+        progress.value = p
+      })
 
-      await apis.postMessage(unref(channelId), {
+      await apis.postMessage(cId, {
         content: createContent(embededText, fileUrls)
       })
 
