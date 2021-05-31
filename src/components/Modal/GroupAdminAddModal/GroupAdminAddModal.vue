@@ -11,7 +11,7 @@
       :class="[$style.users, $style.item]"
     />
     <div :class="$style.addButtonWrapper">
-      <form-button label="追加" @click="add" />
+      <form-button label="追加" :loading="isAdding" @click="add" />
     </div>
   </modal-frame>
 </template>
@@ -50,7 +50,9 @@ export default defineComponent({
 
     const userIds = ref(new Set<UserId>())
 
+    const isAdding = ref(false)
     const add = async () => {
+      isAdding.value = true
       try {
         for (const userId of userIds.value) {
           await apis.addUserGroupAdmin(props.id, { id: userId })
@@ -58,11 +60,12 @@ export default defineComponent({
       } catch {
         addErrorToast('グループ管理者の追加に失敗しました')
       }
+      isAdding.value = false
 
       await store.dispatch.ui.modal.popModal()
     }
 
-    return { groupName, admins, userIds, add }
+    return { groupName, admins, userIds, isAdding, add }
   }
 })
 </script>
