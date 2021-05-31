@@ -75,7 +75,7 @@
     "eslint": "^7.27.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-unused-imports": "^1.1.1",
-    "eslint-plugin-vue": "^7.9.0",
+    "eslint-plugin-vue": "^7.10.0",
     "fibers": "^5.0.0",
     "fonteditor-core": "^2.1.7",
     "patch-package": "^6.4.7",
