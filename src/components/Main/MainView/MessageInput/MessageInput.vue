@@ -133,10 +133,9 @@ export default defineComponent({
           canPostMessage.value)
     )
 
-    const textareaRef =
-      ref<{
-        textareaAutosizeRef: { $el: HTMLTextAreaElement }
-      }>()
+    const textareaRef = ref<{
+      textareaAutosizeRef: { $el: HTMLTextAreaElement }
+    }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       toRef(state, 'text'),

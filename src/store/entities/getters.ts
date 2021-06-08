@@ -23,10 +23,9 @@ export const getters = defineGetters<S>()({
   },
   activeUsersMap(state): Map<string, ActiveUser> {
     return new Map(
-      [...state.usersMap.entries()].filter((entry): entry is [
-        UserId,
-        ActiveUser
-      ] => isActive(entry[1]))
+      [...state.usersMap.entries()].filter(
+        (entry): entry is [UserId, ActiveUser] => isActive(entry[1])
+      )
     )
   },
 

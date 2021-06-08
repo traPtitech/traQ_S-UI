@@ -11,8 +11,10 @@ type DispatchOfModule<O extends StoreOrModuleOptions> = {
   dispatch: DirectActions<O>
 }
 
-type ListenerSetter<Listener extends AnyMitt, O extends StoreOrModuleOptions> =
-  (listener: Listener, module: DispatchOfModule<O>) => void
+type ListenerSetter<
+  Listener extends AnyMitt,
+  O extends StoreOrModuleOptions
+> = (listener: Listener, module: DispatchOfModule<O>) => void
 
 // storeからそのモジュールを取り出す関数
 type Reducer<O extends StoreOrModuleOptions> = (
