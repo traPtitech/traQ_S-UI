@@ -10,6 +10,9 @@ import { mountMitt } from '@/onMount'
 import('katex/dist/katex.css')
 
 !(async () => {
+  // iOS14.6でIndexedDBが使えないタイミングがある問題へのworkaround
+  window.indexedDB
+
   setupGlobalFuncs()
 
   const app = createApp(App)
