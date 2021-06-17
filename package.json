@@ -39,7 +39,7 @@
     "throttle-debounce": "^3.0.1",
     "v-click-outside": "^3.1.2",
     "vue": "^3.1.1",
-    "vue-router": "^4.0.8",
+    "vue-router": "^4.0.9",
     "vue-slider-component": "^4.0.0-beta.5",
     "vuex": "^4.0.1",
     "vuex-persist": "^3.1.3"
