@@ -86,6 +86,23 @@ module.exports = {
           purpose: 'maskable'
         }
       ],
+      screenshots: [
+        {
+          src: '/img/screenshots/Pixel 2 XL1.png',
+          sizes: '1439x2881',
+          type: 'image/png'
+        },
+        {
+          src: '/img/screenshots/Pixel 2 XL2.png',
+          sizes: '1439x2881',
+          type: 'image/png'
+        },
+        {
+          src: '/img/screenshots/Pixel 2 XL3.png',
+          sizes: '1439x2881',
+          type: 'image/png'
+        }
+      ],
       share_target: {
         action: '/share-target',
         method: 'GET',
