@@ -33,7 +33,7 @@
     "idb-keyval": "^5.0.6",
     "klona": "^2.0.4",
     "mitt": "^2.1.0",
-    "pica": "^7.0.0",
+    "pica": "^7.1.0",
     "shvl": "^2.0.3",
     "skyway-js": "^4.4.1",
     "throttle-debounce": "^3.0.1",
