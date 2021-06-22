@@ -86,6 +86,8 @@ module.exports = {
           purpose: 'maskable'
         }
       ],
+      description:
+        'traQ (pronounced "track") is a messenger application built for Digital Creators Club traP. traQ allows ease communication among team members by organizing contexts into tree-structured channels.',
       screenshots: [
         {
           src: '/img/screenshots/Pixel 2 XL1.png',
