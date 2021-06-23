@@ -22,7 +22,7 @@
     "@types/autosize": "^4.0.0",
     "@types/pica": "^5.1.2",
     "autosize": "^5.0.0",
-    "core-js": "^3.15.0",
+    "core-js": "^3.15.1",
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.2",
