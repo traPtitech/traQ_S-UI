@@ -21,7 +21,7 @@
     "@traptitech/traq-markdown-it": "^5.3.3",
     "@types/autosize": "^4.0.0",
     "@types/pica": "^5.1.2",
-    "autosize": "^5.0.0",
+    "autosize": "^5.0.1",
     "core-js": "^3.15.2",
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
