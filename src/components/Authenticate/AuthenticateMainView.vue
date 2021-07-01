@@ -43,17 +43,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isLogin = computed(() => props.type === 'login')
+    const needVersionFetch = computed(
+      () => props.type === 'login' || props.type === 'registration'
+    )
     // ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
-    const { externalLogin, signUpAllowed } = useVersion(isLogin)
+    const { externalLogin, signUpAllowed } = useVersion(needVersionFetch)
 
     const shouldShow = computed(
       () =>
         props.show &&
-        ((props.type === 'login' && externalLogin) ||
-          (props.type === 'registration' && signUpAllowed) ||
+        ((props.type === 'login' && externalLogin.value) ||
+          (props.type === 'registration' && signUpAllowed.value) ||
           props.type === 'consent')
     )
+
     return { shouldShow, externalLogin, signUpAllowed }
   }
 })
