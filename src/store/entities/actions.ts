@@ -49,10 +49,12 @@ export const entitiesActionContext = (
 type CacheStrategy = 'forceFetch' | 'useCache' | 'waitForAllFetch'
 
 const getUser = createSingleflight(apis.getUser.bind(apis))
-const getUserByName = createSingleflight(async (name: string) => {
-  const res = await apis.getUsers(undefined, name)
-  return { data: res.data[0] }
-})
+const getUserByName = createSingleflight(
+  async (name: string): Promise<{ data: User | undefined }> => {
+    const res = await apis.getUsers(undefined, name)
+    return { data: res.data[0] }
+  }
+)
 const getUsers = createSingleflight(apis.getUsers.bind(apis))
 const getUserGroup = createSingleflight(apis.getUserGroup.bind(apis))
 const getUserGroups = createSingleflight(apis.getUserGroups.bind(apis))
@@ -180,7 +182,7 @@ export const actions = defineActions({
 
     const [{ data: res }, isShared] = await getUserByName(username)
     // 他の取得とまとめられていた場合は既にcommitされてるためcommitしない
-    if (!isShared) {
+    if (!isShared && res) {
       commit.setUser(res)
     }
     return res
