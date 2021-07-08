@@ -6,6 +6,17 @@ interface StructData {
   id: string
 }
 
+export interface Position {
+  /**
+   * !{}の!の位置
+   */
+  start: number
+  /**
+   * !から}までの長さ
+   */
+  length: number
+}
+
 const isStructData = (data: Readonly<unknown>): data is StructData => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyData = data as any
@@ -28,9 +39,17 @@ const parse = (str: string): StructData | null => {
   }
 }
 
-const detect = (
+/**
+ * @param shortcut funcがtrueまたはfalseを返すときに即時に実行を終わるかどうか(nullのときは行わない)
+ * @returns shortcutした場合はその値、そうでない場合はnull
+ */
+export const forEachData = (
   text: string,
-  checker: (data: Readonly<StructData> | null) => boolean
+  func: (
+    data: Readonly<StructData> | null,
+    position: Position
+  ) => boolean | void,
+  shortcut: boolean | null = null
 ) => {
   let isInside = false
   let startIndex = -1
@@ -42,11 +61,16 @@ const detect = (
       } else if (!isString && text[i] === '}') {
         isInside = false
         const data = parse(text.substr(startIndex + 1, i - startIndex))
-        if (checker(data)) {
-          return true
-        } else {
-          i = startIndex + 1
+        const result = func(data, {
+          start: startIndex,
+          length: i - startIndex + 1
+        })
+        // funcはbooleanかundefinedなのでnullとは一致しない
+        if (result === shortcut) {
+          return result
         }
+
+        i = startIndex + 1
       }
     } else {
       if (i < text.length - 1 && text[i] === '!' && text[i + 1] === '{') {
@@ -57,7 +81,14 @@ const detect = (
       }
     }
   }
-  return false
+  return undefined
+}
+
+const detect = (
+  text: string,
+  checker: (data: Readonly<StructData> | null) => boolean
+) => {
+  return forEachData(text, checker, true) ?? false
 }
 
 const isMentionOfMe = (

@@ -54,6 +54,7 @@ import apis, { embeddingOrigin } from '@/lib/apis'
 import { MessageId } from '@/types/entity-ids'
 import useToastStore from '@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
+import { replaceBack } from '@/lib/markdown/internalLinkUnembedder'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -136,8 +137,9 @@ const useCopy = (props: { messageId: MessageId }) => {
     const content =
       store.state.entities.messages.messagesMap.get(props.messageId)?.content ??
       ''
+    const replacedContent = replaceBack(content)
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      navigator.clipboard.writeText(content)
+      navigator.clipboard.writeText(replacedContent)
     )
   }
   return { copyLink, copyEmbedded, copyMd }
