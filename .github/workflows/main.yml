@@ -17,12 +17,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
+          cache: npm
       - name: check npm ci
         run: npm ci
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
   lint:
     name: run lint
     runs-on: ubuntu-latest
@@ -34,12 +31,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          cache: npm
       - name: npm ci
         run: npm ci
         env:
@@ -57,12 +49,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          cache: npm
       - uses: actions/cache@v2
         with:
           path: ./public/fonts
@@ -86,12 +73,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          cache: npm
       - name: npm ci
         run: npm ci
         env:
@@ -126,12 +108,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          cache: npm
       - name: npm ci
         run: npm ci
       - name: run test:e2e
