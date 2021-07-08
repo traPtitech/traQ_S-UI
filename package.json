@@ -52,7 +52,7 @@
     "@types/node": "^14.17.4",
     "@types/punycode": "^2.1.0",
     "@types/throttle-debounce": "^2.1.0",
-    "@types/webappsec-credential-management": "^0.6.0",
+    "@types/webappsec-credential-management": "^0.6.1",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "@vue/cli-plugin-babel": "^4.5.13",
