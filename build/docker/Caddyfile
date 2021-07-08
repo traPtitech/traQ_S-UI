@@ -7,7 +7,9 @@
 encode zstd gzip
 header /sw.js Cache-Control "max-age=0"
 
-file_server
+file_server {
+    precompressed br gzip
+}
 root * /usr/share/caddy
 
 try_files {path} /index.html
