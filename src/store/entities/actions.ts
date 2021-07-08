@@ -154,6 +154,11 @@ export const actions = defineActions({
     }: { username: string; cacheStrategy?: CacheStrategy }
   ): Promise<User | undefined> {
     const { state, getters, commit } = entitiesActionContext(context)
+    // usernameが空のものは存在しないので弾く
+    if (username === '') {
+      return undefined
+    }
+
     // キャッシュを利用する場合はこのブロックに入る
     if (cacheStrategy === 'useCache' || cacheStrategy === 'waitForAllFetch') {
       const res = getters.userByName(username)

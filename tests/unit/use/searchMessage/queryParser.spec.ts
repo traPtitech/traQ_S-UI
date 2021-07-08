@@ -68,6 +68,19 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.from).toEqual(mockUserId)
   })
+  it('can parse query with empty prefixes (1)', async () => {
+    const query = 'after: in: cite:' // TODO: `from:`を追加する
+    const parsed = await parseQuery(query)
+    expect(parsed.after).toEqual(undefined)
+    expect(parsed.in).toEqual(undefined)
+    expect(parsed.from).toEqual(undefined)
+  })
+  it('can parse query with empty prefixes (2)', async () => {
+    const query = '#' // TODO: `@`を追加する
+    const parsed = await parseQuery(query)
+    expect(parsed.in).toEqual(undefined)
+    expect(parsed.from).toEqual(undefined)
+  })
   it('can parse query with message-filter (url)', async () => {
     const query = `lorem ipsum cite:${mockMessageUrl}`
     const parsed = await parseQuery(query)
