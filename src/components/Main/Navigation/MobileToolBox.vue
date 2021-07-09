@@ -4,7 +4,7 @@
       <div :class="$style.searchBar"></div>
       <tool
         v-for="tool in tools"
-        :key="tool.type"
+        :key="tool.iconName"
         :icon-name="tool.iconName"
         :icon-mdi="tool.iconMdi"
         :disabled="tool.disabled"

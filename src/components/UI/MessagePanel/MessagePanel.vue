@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { Message } from '@traptitech/traq'
+import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
@@ -59,7 +59,7 @@ export default defineComponent({
       default: false
     },
     message: {
-      type: Object as PropType<Message>,
+      type: Object as PropType<Message | ActivityTimelineMessage>,
       required: true
     },
     lineClampContent: {

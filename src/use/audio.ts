@@ -64,7 +64,7 @@ const useIsPlaying = (
     audio.value?.pause()
   }
 
-  const isPlaying = computed({
+  const isPlaying = computed<boolean>({
     get() {
       return isPlayingNative.value
     },

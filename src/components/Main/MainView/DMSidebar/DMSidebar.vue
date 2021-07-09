@@ -61,7 +61,7 @@ export default defineComponent({
     },
     userName: {
       type: String,
-      requried: true
+      required: true
     },
     isSidebarOpenerReady: {
       type: Boolean,

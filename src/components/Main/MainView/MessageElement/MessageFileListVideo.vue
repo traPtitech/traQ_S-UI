@@ -8,7 +8,7 @@
       controlsList="nodownload"
       preload="none"
       draggable="false"
-      :alt="fileMeta.name"
+      :alt="fileMeta?.name"
       :src="fileRawPath"
     />
   </div>

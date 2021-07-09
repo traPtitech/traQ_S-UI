@@ -25,10 +25,13 @@ export default defineComponent({
   },
   setup(props) {
     const viewStates = computed(() =>
-      props.qallUserIds.map(id => ({
-        user: store.state.entities.usersMap.get(id),
-        active: true
-      }))
+      props.qallUserIds
+        .filter(id => store.state.entities.usersMap.has(id))
+        .map(id => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: store.state.entities.usersMap.get(id)!,
+          active: true
+        }))
     )
     return { viewStates }
   }

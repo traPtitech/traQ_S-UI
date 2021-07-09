@@ -40,8 +40,10 @@ export default defineComponent({
     )
     const viewStates = computed(() =>
       [...(subscribers.value ?? new Set())]
+        .filter(id => store.state.entities.usersMap.has(id))
         .map(id => ({
-          user: store.getters.entities.activeUsersMap.get(id),
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: store.getters.entities.activeUsersMap.get(id)!,
           active: props.viewerIds.includes(id)
         }))
         .filter(state => state.user !== undefined)
