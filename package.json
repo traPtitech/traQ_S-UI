@@ -10,8 +10,8 @@
     "serve": "vite preview",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint --cache",
-    "lint:no-fix": "vue-cli-service lint --cache --no-fix",
+    "lint": "eslint --ext .ts,.vue --fix --cache .",
+    "lint:no-fix": "eslint --ext .ts,.vue --cache .",
     "gen-fonts": "node build/gen-mplus",
     "gen-unicode_emojis": "node build/gen-unicode_emojis",
     "postinstall": "patch-package"
