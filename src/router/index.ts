@@ -123,7 +123,7 @@ const routes: RouteRecordRaw[] = [
   }
 ]
 
-const routerHistory = createWebHistory(process.env.BASE_URL)
+const routerHistory = createWebHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
   history: routerHistory,

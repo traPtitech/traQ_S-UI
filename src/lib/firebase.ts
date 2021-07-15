@@ -146,7 +146,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   const firebase = await setupFirebase()
 
-  if (process.env.NODE_ENV !== 'production' || !navigator?.serviceWorker) {
+  if (import.meta.env.DEV || !navigator?.serviceWorker) {
     return
   }
 

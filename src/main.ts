@@ -24,7 +24,7 @@ import('katex/dist/katex.css')
 
   app.mount('#app')
 
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.MODE === 'development') {
     app.config.performance = true
   }
 
