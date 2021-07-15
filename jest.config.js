@@ -14,8 +14,21 @@ const traQConfig = {
 }
 
 module.exports = {
-  preset: '@vue/cli-plugin-unit-jest/presets/typescript-and-babel',
+  testEnvironment: 'jsdom',
+  moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
+  moduleNameMapper: {
+    '^@/(.+)': '<rootDir>/src/$1'
+  },
+  transform: {
+    '^.+\\.vue$': 'vue3-jest',
+    '^.+\\.ts$': '<rootDir>/tests/unit/envReplaceTransformer'
+  },
   globals: {
+    'vue-jest': {
+      transform: {
+        ts: '<rootDir>/tests/unit/envReplaceTransformer'
+      }
+    },
     __VERSION__: JSON.stringify('test'),
     __DEV_SERVER__: JSON.stringify('https://example.com'),
     traQConfig
