@@ -7,7 +7,7 @@ import vClickOutside from 'v-click-outside'
 import { setupGlobalFuncs } from './markdown-bridge'
 import { mountMitt } from '@/onMount'
 
-import('katex/dist/katex.css')
+import('./katexCss')
 
 !(async () => {
   // iOS14.6でIndexedDBが使えないタイミングがある問題へのworkaround
