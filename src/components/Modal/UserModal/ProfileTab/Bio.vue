@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section data-testid="usermodal-bio">
     <profile-header text="ひとこと" :class="$style.header" />
     <inline-markdown
       :class="$style.bio"

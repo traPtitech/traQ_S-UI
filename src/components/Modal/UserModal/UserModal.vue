@@ -1,5 +1,9 @@
 <template>
-  <div v-click-outside="onClickOutside" :class="$style.wrapper">
+  <div
+    v-click-outside="onClickOutside"
+    :class="$style.wrapper"
+    data-testid="usermodal"
+  >
     <close-button
       :size="isMobile ? 24 : 32"
       :class="$style.close"

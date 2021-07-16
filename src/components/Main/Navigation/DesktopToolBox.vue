@@ -9,7 +9,12 @@
       :disabled="tool.disabled"
       @click="tool.onClick"
     />
-    <user-icon :class="$style.item" :size="36" :user-id="myId" />
+    <user-icon
+      :class="$style.item"
+      :size="36"
+      :user-id="myId"
+      data-testid="my-icon-button"
+    />
     <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
       <app-list :class="$style.services" @close="closeServices" />
     </teleport>
