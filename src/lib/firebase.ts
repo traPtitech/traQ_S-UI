@@ -89,7 +89,7 @@ const setupUpdateToast = (
 
   const doCanUpdate = () => {
     onCanUpdate(async () => {
-      const registration = await navigator.serviceWorker.getRegistration()
+      const registration = await navigator.serviceWorker?.getRegistration()
       registration?.waiting?.postMessage({ type: 'SKIP_WAITING' })
     })
   }
@@ -224,7 +224,7 @@ export const deleteToken = async () => {
 export const removeNotification = async (
   channelId: ChannelId | DMChannelId
 ) => {
-  const registration = await navigator.serviceWorker.getRegistration()
+  const registration = await navigator.serviceWorker?.getRegistration()
   if (!registration) return
   const notifications = await registration.getNotifications({
     tag: `c:${channelId}`
