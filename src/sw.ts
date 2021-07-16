@@ -3,9 +3,28 @@ import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
+import { UserDetail } from '@traptitech/traq'
+import { ChannelId } from './types/entity-ids'
+import {
+  ExtendedNotificationOptions,
+  NotificationClickEvent
+} from '@/types/InlineNotificationReplies'
+import { createNotificationArgumentsCreator } from '@/lib/notification/notificationArguments'
 
-/* eslint-disable no-undef */
-// TODO: Typescript化やimportはWorkbox5にアップデート時
+declare const self: ServiceWorkerGlobalScope
+
+/**
+ * IndexedDBに保存されているStoreの状態
+ */
+type PStore = {
+  domain: {
+    me: {
+      detail: UserDetail
+    }
+  }
+}
 
 /* workbox設定 */
 {
@@ -75,18 +94,19 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 
 const getStore = async () => {
   try {
-    const dbEvent = await new Promise((resolve, reject) => {
+    const dbEvent = await new Promise<Event>((resolve, reject) => {
       const openReq = indexedDB.open('vuex')
       openReq.onsuccess = resolve
       openReq.onerror = reject
     })
-    const db = dbEvent.target.result
-    const storeEvent = await new Promise((resolve, reject) => {
+    const db = (dbEvent.target as IDBOpenDBRequest).result
+    const storeEvent = await new Promise<Event>((resolve, reject) => {
       const getReq = db.transaction('vuex').objectStore('vuex').get('vuex')
       getReq.onsuccess = resolve
       getReq.onerror = reject
     })
-    return storeEvent.target.result
+    return (storeEvent.target as IDBRequest<PStore | Record<string, never>>)
+      .result
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(`[sw] failed to get store: ${e}`)
@@ -94,7 +114,7 @@ const getStore = async () => {
   }
 }
 
-const postMessage = (channelId, text) =>
+const postMessage = (channelId: ChannelId, text: string) =>
   fetch(`/api/v3/channels/${channelId}/messages`, {
     method: 'POST',
     credentials: 'include',
@@ -106,30 +126,22 @@ const postMessage = (channelId, text) =>
 
 /* 通知関係 */
 // refs src/lib/firebase.ts showNotification()
-{
-  importScripts('/config.js')
+;(async () => {
+  // @ts-expect-error config.jsの型定義ファイルはつくらない
+  await import('/config.js')
+
   const appName = self.traQConfig.name || 'traQ'
   const ignoredChannels = self.traQConfig.inlineReplyDisableChannels || []
+  const createNotificationArguments = createNotificationArgumentsCreator(
+    appName,
+    ignoredChannels
+  )
 
-  const showNotification = data => {
-    const title = data.title
-    const notificationTitle = title || appName
-    const notificationOptions = data
-    notificationOptions.data = data
-    notificationOptions.renotify = true
-    notificationOptions.badge = '/img/icons/badge.png'
-
-    if (title && !ignoredChannels.includes(title)) {
-      const verb = title.includes('#') ? '投稿' : '返信'
-      notificationOptions.actions = [
-        {
-          action: 'reply',
-          type: 'text',
-          title: '返信',
-          placeholder: `${title}へ${verb}する...`
-        }
-      ]
-    }
+  const showNotification = (options: ExtendedNotificationOptions) => {
+    const title = options.data.title
+    const [notificationTitle, notificationOptions] =
+      createNotificationArguments(title, options)
+    notificationOptions.data = notificationOptions
 
     return self.registration
       .showNotification(notificationTitle, notificationOptions)
@@ -141,76 +153,73 @@ const postMessage = (channelId, text) =>
 
   const delay = () => new Promise(resolve => setTimeout(resolve, 0))
 
-  self.addEventListener('notificationclick', event => {
+  self.addEventListener('notificationclick', _event => {
+    const event = _event as NotificationClickEvent
     if (event.reply) {
       const data = event.notification.data
       const channelId = data.tag.slice('c:'.length)
+
       // https://crbug.com/1050352#c5
       // androidでしか通知の再度の発火は発生しない模様
-      event.waitUntil(
-        (async () => {
-          try {
-            const [store] = await Promise.all([
-              getStore(),
-              postMessage(channelId, event.reply)
-            ])
-            event.notification.close()
+      const until = async () => {
+        try {
+          const [store] = await Promise.all([
+            getStore(),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            postMessage(channelId, event.reply!)
+          ])
+          event.notification.close()
 
-            if (store && store.domain.me.detail) {
-              const me = store.domain.me.detail
-              data.body = `${me.displayName}: ${event.reply}`
-              data.icon = `/api/v3/files/${me.iconFileId}`
-            } else {
-              // eslint-disable-next-line no-console
-              console.warn('[sw] no store or me.detail found')
-              data.body = `自分: ${event.reply}`
-            }
-
-            data.silent = true
-            return showNotification(data)
-          } catch (err) {
+          if (store && store.domain.me.detail) {
+            const me = store.domain.me.detail
+            data.body = `${me.displayName}: ${event.reply}`
+            data.icon = `/api/v3/files/${me.iconFileId}`
+          } else {
             // eslint-disable-next-line no-console
-            console.error('[sw] sendReply error:', err)
-
-            return showNotification(data)
-              .then(delay)
-              .then(() => {
-                return self.registration.getNotifications({ tag: data.tag })
-              })
-              .then(notifications =>
-                notifications.forEach(notification => notification.close())
-              )
+            console.warn('[sw] no store or me.detail found')
+            data.body = `自分: ${event.reply}`
           }
-        })()
-      )
+
+          data.silent = true
+          return showNotification(data)
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('[sw] sendReply error:', err)
+
+          await showNotification(data)
+          await delay()
+
+          const notifications = await self.registration.getNotifications({
+            tag: data.tag
+          })
+          notifications.forEach(notification => notification.close())
+        }
+      }
+
+      event.waitUntil(until())
       return
     }
     event.notification.close()
 
-    event.waitUntil(
-      clients
-        .matchAll({ type: 'window', includeUncontrolled: true })
-        .then(clientsArr => {
-          if (clientsArr.length > 0) {
-            return clientsArr[0].focus().then(client =>
-              client.postMessage({
-                type: 'navigate',
-                to: event.notification.data.path
-              })
-            )
-          } else {
-            return clients.openWindow(event.notification.data.path)
-          }
+    const openChannel = async () => {
+      const clientsArr = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      })
+      if (clientsArr.length > 0) {
+        const client = await clientsArr[0].focus()
+        return client.postMessage({
+          type: 'navigate',
+          to: event.notification.data.path
         })
-    )
+      } else {
+        return self.clients.openWindow(event.notification.data.path)
+      }
+    }
+    event.waitUntil(openChannel())
   })
 
   if (self.traQConfig.firebase !== undefined) {
-    importScripts('https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js')
-    importScripts(
-      'https://www.gstatic.com/firebasejs/8.6.5/firebase-messaging.js'
-    )
-
     firebase.initializeApp(self.traQConfig.firebase)
 
     const messaging = firebase.messaging()
@@ -221,4 +230,4 @@ const postMessage = (channelId, text) =>
       }
     })
   }
-}
+})()

@@ -60,7 +60,7 @@ export default defineConfig(({ command, mode }) => ({
       strategies: 'injectManifest',
       manifest: webManifest,
       srcDir: 'src',
-      filename: 'sw.js'
+      filename: 'sw.ts'
     }),
     VuePlugin(),
     vueSvgPlugin({

@@ -32,7 +32,7 @@
       "dom",
       "dom.iterable",
       "scripthost",
-      "WebWorker.ImportScripts"
+      "WebWorker"
     ]
   },
   "include": [

@@ -113,4 +113,7 @@ declare global {
   interface Window {
     traQConfig: Config
   }
+  interface ServiceWorkerGlobalScope {
+    traQConfig: Config
+  }
 }
