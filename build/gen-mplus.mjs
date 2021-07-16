@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-console */
-const axios = require('axios')
-const postcss = require('postcss')
-const { Font, woff2 } = require('fonteditor-core')
-const fs = require('fs').promises
-const path = require('path')
+import axios from 'axios'
+import postcss from 'postcss'
+import { Font, woff2 } from 'fonteditor-core'
+import fs from 'fs/promises'
+import path from 'path'
 
 const FONT_CSS_URL =
   'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
