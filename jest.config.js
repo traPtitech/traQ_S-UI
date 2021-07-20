@@ -21,7 +21,8 @@ module.exports = {
   },
   transform: {
     '^.+\\.vue$': 'vue3-jest',
-    '^.+\\.ts$': '<rootDir>/tests/unit/envReplaceTransformer'
+    '^.+\\.ts$': '<rootDir>/tests/unit/envReplaceTransformer',
+    '^.+\\.json$': '<rootDir>/tests/unit/jsonTransformer'
   },
   globals: {
     'vue-jest': {
