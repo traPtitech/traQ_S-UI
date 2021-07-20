@@ -60,7 +60,8 @@ export default defineConfig(({ command, mode }) => ({
       strategies: 'injectManifest',
       manifest: webManifest,
       srcDir: 'src',
-      filename: 'sw.ts'
+      filename: 'sw.ts',
+      includeAssets: ['fonts/*.woff2']
     }),
     VuePlugin(),
     vueSvgPlugin({
