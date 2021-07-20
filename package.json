@@ -79,6 +79,7 @@
     "eslint-plugin-vue": "^7.14.0",
     "fibers": "^5.0.0",
     "fonteditor-core": "^2.1.8",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
     "patch-package": "^6.4.7",
     "postcss": "^8.3.5",

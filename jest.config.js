@@ -17,6 +17,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
   moduleNameMapper: {
+    '\\.mp3': 'identity-obj-proxy',
     '^/@/(.+)': '<rootDir>/src/$1'
   },
   transform: {
