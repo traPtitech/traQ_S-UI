@@ -71,7 +71,7 @@
     "axios": "^0.21.1",
     "compression-webpack-plugin": "^6.1.1",
     "csstype": "^3.0.8",
-    "cypress": "^7.7.0",
+    "cypress": "^8.0.0",
     "eslint": "^7.31.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-unused-imports": "^1.1.2",
