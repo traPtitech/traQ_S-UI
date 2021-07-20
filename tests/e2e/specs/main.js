@@ -20,12 +20,10 @@ describe('Main', () => {
 
     cy.get('.markdown-body')
 
-    cy.get(
-      '[class^=DesktopToolBox_container] [class^=UserIcon_container]'
-    ).click()
+    cy.get('[data-testid="my-icon-button"]').click()
 
-    cy.get('[class^=UserModal_content]').get(
-      '[class*=Bio_bio][aria-busy=false]'
+    cy.get('[data-testid="usermodal"]').get(
+      '[data-testid="usermodal-bio"] [aria-busy=false]'
     )
   })
 })

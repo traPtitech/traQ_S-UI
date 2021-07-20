@@ -10,7 +10,7 @@ $ npm run gen-fonts
 ## コマンド
 ### ホットリロード環境
 ```shell
-$ npm run serve
+$ npm run dev
 ```
 
 **実行前に一度`$ npm run gen-fonts`を実行する必要があります**
@@ -39,6 +39,13 @@ $ npm run gen-fonts
 フォントの生成
 リポジトリに生成物が含まれていません
 
+## ビルド成果物の確認
+```shell
+$ npm run serve
+```
+
+**実行前に`$ npm run build`を実行する必要があります**
+
 ### テスト/lint
 
 ```shell
@@ -50,13 +57,19 @@ $ npm run test:unit
 $ npm run test:e2e
 ```
 e2eテスト実行  
-`cypress.env.json`を以下の通りに作成する必要があります
+`cypress.env.json`を以下の通りに作成する必要があります  
 ```json
 {
   "username": "ユーザー名",
   "password": "パスワード"
 }
 ```
+`npm run test:e2e-headless`ではヘッドレスで実行できます  
+
+```shell
+$ npm run test:e2e:without-build
+```
+再ビルドなしでのe2eテスト実行
 
 ```shell
 $ npm run lint

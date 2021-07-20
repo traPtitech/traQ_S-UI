@@ -10,7 +10,7 @@ import {
 } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '@/lib/markdown/detector'
-import { deleteToken } from '@/lib/firebase'
+import { deleteToken } from '@/lib/notification/notification'
 import { viewStatesInitialFetchPromise } from './promises'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>

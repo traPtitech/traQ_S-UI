@@ -26,6 +26,10 @@
 import { defineComponent, shallowRef, watch } from 'vue'
 import mdi from '@/assets/mdi'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const iconModules = import.meta.glob('/src/assets/icons/*.svg')
+
 export default defineComponent({
   name: 'Icon',
   props: {
@@ -46,7 +50,7 @@ export default defineComponent({
   },
   setup(props, { attrs }) {
     const getComponent = async (name: string) => {
-      const module = await import(`@/assets/icons/${name}.svg?component`)
+      const module = await iconModules[`/src/assets/icons/${name}.svg`]()
       return module.default
     }
 

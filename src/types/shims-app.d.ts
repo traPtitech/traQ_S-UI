@@ -49,12 +49,12 @@ declare module '*.module.sass' {
 }
 
 declare module '*.svg' {
-  const src: string
-  export default src
-}
-
-declare module '*.svg?component' {
   import { Component } from 'vue'
   const content: Component
   export default content
+}
+
+declare module '*.svg?url' {
+  const src: string
+  export default src
 }

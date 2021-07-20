@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container">
     <span v-if="title" :class="$style.logoWithTitle">
-      <img src="@/assets/traq-logo.svg" :class="$style.logo" />
+      <img src="@/assets/traq-logo.svg?url" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
     </span>
     <div v-else :class="$style.fullLogo">
-      <img src="@/assets/traq-logo.svg" />
+      <img src="@/assets/traq-logo.svg?url" />
       <logo-text :class="$style.fullLogoText" />
     </div>
   </div>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import LogoText from '@/assets/traq-logo-text.svg?component'
+import LogoText from '@/assets/traq-logo-text.svg'
 
 export default defineComponent({
   name: 'AuthenticateHeader',

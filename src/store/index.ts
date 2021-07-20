@@ -7,7 +7,7 @@ import { domain } from './domain'
 import { app } from './app'
 import { ui } from './ui'
 
-const vuexStrict = process.env.NODE_ENV !== 'production'
+const vuexStrict = import.meta.env.MODE !== 'production'
 
 const persisted = new VuexPersistence({
   strictMode: vuexStrict,

@@ -6,6 +6,6 @@ export interface ExtendedNotificationOptions extends NotificationOptions {
   actions?: ExtendedNotificationAction[]
 }
 
-export interface NotificationClickEvent extends Event {
+export interface NotificationClickEvent extends NotificationEvent {
   reply?: string
 }

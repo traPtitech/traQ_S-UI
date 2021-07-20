@@ -92,7 +92,7 @@ export default defineComponent({
           .filter(name => name.startsWith('traQ_S-precache'))
           .map(name => clearCacheStorage(name))
       )
-      const registration = await navigator.serviceWorker.getRegistration()
+      const registration = await navigator.serviceWorker?.getRegistration()
       if (registration) {
         registration.unregister()
         showToast('1秒後にリロードします')

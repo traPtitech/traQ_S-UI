@@ -49,7 +49,7 @@ import {
   onBeforeUnmount
 } from 'vue'
 import { setupWebSocket } from '@/lib/websocket'
-import { connectFirebase } from '@/lib/firebase'
+import { connectFirebase } from '@/lib/notification/notification'
 import useIsMobile from '@/use/isMobile'
 import useNavigationController from '@/use/navigationController'
 import MainView from '@/components/Main/MainView/MainView.vue'

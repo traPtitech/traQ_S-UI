@@ -9,7 +9,7 @@ import {
   MyChannelViewState
 } from '@traptitech/traq'
 import { checkBadgeAPISupport } from '@/lib/util/browser'
-import { removeNotification } from '@/lib/firebase'
+import { removeNotification } from '@/lib/notification/notification'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 const updateBadge = async (
