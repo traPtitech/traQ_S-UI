@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 type State = {
   isEditing: boolean

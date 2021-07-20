@@ -1,4 +1,4 @@
-import { ChannelId, UserId } from '@/types/entity-ids'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 
 export type SessionId = string
 export type SessionType = 'qall' | 'draw'

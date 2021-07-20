@@ -17,9 +17,9 @@
 <script lang="ts">
 import { defineComponent, PropType, computed, ref } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
-import SlideDown from '@/components/UI/SlideDown.vue'
-import Icon from '@/components/UI/Icon.vue'
-import { scopeNameMap, scopePermissionsMap } from '@/lib/clientScope'
+import SlideDown from '/@/components/UI/SlideDown.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import { scopeNameMap, scopePermissionsMap } from '/@/lib/clientScope'
 
 export default defineComponent({
   name: 'ClientScope',

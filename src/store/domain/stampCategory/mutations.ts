@@ -1,5 +1,5 @@
 import { defineMutations } from 'direct-vuex'
-import { StampCategory } from '@/lib/stampCategorizer'
+import { StampCategory } from '/@/lib/stampCategorizer'
 import { S } from './state'
 
 export const mutations = defineMutations<S>()({

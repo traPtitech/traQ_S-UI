@@ -1,6 +1,6 @@
 // APIに投げる検索クエリに対する実装
-import apis from '@/lib/apis'
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import apis from '/@/lib/apis'
+import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import {
   channelParser,
   dateParser,

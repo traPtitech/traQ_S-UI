@@ -1,8 +1,8 @@
 import {
   MessageInputStateKey,
   useMessageInputStateAttachment
-} from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
+} from '/@/providers/messageInputState'
+import useToastStore from '/@/providers/toastStore'
 
 const usePaste = (channelId: MessageInputStateKey) => {
   const { addErrorToast } = useToastStore()

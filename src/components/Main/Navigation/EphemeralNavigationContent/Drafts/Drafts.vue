@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useMessageInputStates } from '@/providers/messageInputState'
+import { useMessageInputStates } from '/@/providers/messageInputState'
 import DraftsTitlePanel from './DraftsTitlePanel.vue'
 import DraftsDetailsPanel from './DraftsDetailsPanel.vue'
 

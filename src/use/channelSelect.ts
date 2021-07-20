@@ -1,5 +1,5 @@
-import { ChannelId } from '@/types/entity-ids'
-import { changeChannelById } from '@/router/channel'
+import { ChannelId } from '/@/types/entity-ids'
+import { changeChannelById } from '/@/router/channel'
 
 const useChannelSelect = () => {
   const onChannelSelect = (id: ChannelId) => {

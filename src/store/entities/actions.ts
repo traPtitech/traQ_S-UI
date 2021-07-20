@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import store, { moduleActionContext } from '@/store'
+import store, { moduleActionContext } from '/@/store'
 import { entities } from '.'
 import { entityMitt } from './mitt'
 import { ActionContext } from 'vuex'
@@ -11,9 +11,9 @@ import {
   StampPaletteId,
   UserGroupId,
   UserId
-} from '@/types/entity-ids'
-import apis from '@/lib/apis'
-import { createSingleflight } from '@/lib/async'
+} from '/@/types/entity-ids'
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/async'
 import {
   Channel,
   ClipFolder,
@@ -31,10 +31,10 @@ import {
   usersMapInitialFetchPromise
 } from './promises'
 import { AxiosResponse } from 'axios'
-import { arrayToMap } from '@/lib/util/map'
-import { getUnicodeStamps, setUnicodeStamps } from '@/lib/stampCache'
-import { dmParentUuid } from '@/lib/util/uuid'
-import { channelIdToPathString } from '@/lib/channel'
+import { arrayToMap } from '/@/lib/util/map'
+import { getUnicodeStamps, setUnicodeStamps } from '/@/lib/stampCache'
+import { dmParentUuid } from '/@/lib/util/uuid'
+import { channelIdToPathString } from '/@/lib/channel'
 
 export const entitiesActionContext = (
   context: ActionContext<unknown, unknown>

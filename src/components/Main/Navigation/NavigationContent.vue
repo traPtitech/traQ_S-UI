@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { NavigationItemType } from '@/components/Main/Navigation/use/navigationConstructor'
+import { NavigationItemType } from '/@/components/Main/Navigation/use/navigationConstructor'
 import Home from './NavigationContent/Home.vue'
 import Channels from './NavigationContent/Channels.vue'
 import Activity from './NavigationContent/Activity.vue'

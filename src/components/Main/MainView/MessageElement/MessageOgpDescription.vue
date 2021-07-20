@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import { makeStyles } from '@/lib/styles'
+import { makeStyles } from '/@/lib/styles'
 import * as CSS from 'csstype'
 
 const useStyles = (props: { lineClamp: number }) =>

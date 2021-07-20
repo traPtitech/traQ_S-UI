@@ -14,8 +14,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Toggle from '@/components/UI/Toggle.vue'
-import { useModelValueSyncer } from '@/use/modelSyncer'
+import Toggle from '/@/components/UI/Toggle.vue'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'EcoMode',

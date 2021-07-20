@@ -41,11 +41,11 @@
 import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
 import LineEditor from './LineEditor.vue'
-import apis from '@/lib/apis'
-import useToastStore from '@/providers/toastStore'
+import apis from '/@/lib/apis'
+import useToastStore from '/@/providers/toastStore'
 import GroupAdminList from './GroupAdminList.vue'
 import GroupMemberList from './GroupMemberList.vue'
-import FormButton from '@/components/UI/FormButton.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 export default defineComponent({
   name: 'GroupListGroupEdit',

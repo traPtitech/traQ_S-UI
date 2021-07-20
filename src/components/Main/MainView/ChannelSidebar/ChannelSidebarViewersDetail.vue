@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import { UserId } from '@/types/entity-ids'
-import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import store from '@/store'
-import { isDefined } from '@/lib/util/array'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { UserId } from '/@/types/entity-ids'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import store from '/@/store'
+import { isDefined } from '/@/lib/util/array'
 
 export default defineComponent({
   name: 'ChannelSidebarViewerDetail',

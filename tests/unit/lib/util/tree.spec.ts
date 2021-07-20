@@ -1,4 +1,4 @@
-import { deepSome } from '@/lib/util/tree'
+import { deepSome } from '/@/lib/util/tree'
 
 describe('deepSome', () => {
   it(`can detect false`, () => {

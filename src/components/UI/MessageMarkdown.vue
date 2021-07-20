@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import store from '@/store'
-import { MessageId } from '@/types/entity-ids'
+import store from '/@/store'
+import { MessageId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
 
 /**

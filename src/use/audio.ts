@@ -9,7 +9,7 @@ import {
 } from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
-import useAudioController from '@/providers/audioController'
+import useAudioController from '/@/providers/audioController'
 
 const toFinite = (n: number | undefined, def: number) =>
   Number.isFinite(n) ? (n as number) : def

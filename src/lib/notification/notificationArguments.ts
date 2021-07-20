@@ -1,4 +1,4 @@
-import { ExtendedNotificationOptions } from '@/types/InlineNotificationReplies'
+import { ExtendedNotificationOptions } from '/@/types/InlineNotificationReplies'
 
 export const createNotificationArgumentsCreator = (
   appName: string,

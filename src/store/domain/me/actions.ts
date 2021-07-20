@@ -1,16 +1,16 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
-import apis from '@/lib/apis'
+import { moduleActionContext } from '/@/store'
+import apis from '/@/lib/apis'
 import { me, meMitt } from './index'
-import { ChannelId, UserId } from '@/types/entity-ids'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 import {
   ChannelSubscribeLevel,
   Message,
   MyChannelViewState
 } from '@traptitech/traq'
 import { ActionContext } from 'vuex'
-import { detectMentionOfMe } from '@/lib/markdown/detector'
-import { deleteToken } from '@/lib/notification/notification'
+import { detectMentionOfMe } from '/@/lib/markdown/detector'
+import { deleteToken } from '/@/lib/notification/notification'
 import { viewStatesInitialFetchPromise } from './promises'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>

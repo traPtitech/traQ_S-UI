@@ -23,8 +23,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
-import Icon from '@/components/UI/Icon.vue'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
 export default defineComponent({
   name: 'GroupListGroupView',

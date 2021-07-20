@@ -18,9 +18,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '@/store'
-import CloseButton from '@/components/UI/CloseButton.vue'
-import FileDescription from '@/components/UI/FileDescription.vue'
+import store from '/@/store'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import FileDescription from '/@/components/UI/FileDescription.vue'
 
 export default defineComponent({
   name: 'FileModalContentHeader',

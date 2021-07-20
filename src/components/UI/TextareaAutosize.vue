@@ -18,7 +18,7 @@ import {
   nextTick
 } from 'vue'
 import autosize from 'autosize'
-import useTextModelSyncer from '@/use/textModelSyncer'
+import useTextModelSyncer from '/@/use/textModelSyncer'
 
 export default defineComponent({
   name: 'TextareaAutosize',

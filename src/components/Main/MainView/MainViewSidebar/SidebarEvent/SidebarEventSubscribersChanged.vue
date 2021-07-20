@@ -20,7 +20,7 @@
 import { defineComponent, PropType } from 'vue'
 import { SubscribersChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
 export default defineComponent({
   name: 'SidebarEventSubscribersChanged',

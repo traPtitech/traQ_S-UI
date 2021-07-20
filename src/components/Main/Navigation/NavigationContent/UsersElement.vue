@@ -13,10 +13,10 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-import store from '@/store'
-import { changeDMChannelByUsername } from '@/router/channel'
+import store from '/@/store'
+import { changeDMChannelByUsername } from '/@/router/channel'
 
 export default defineComponent({
   name: 'UsersElement',

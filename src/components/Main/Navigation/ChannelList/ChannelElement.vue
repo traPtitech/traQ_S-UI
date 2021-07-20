@@ -67,16 +67,16 @@ import {
   Ref,
   defineAsyncComponent
 } from 'vue'
-import store from '@/store'
-import { ChannelTreeNode } from '@/lib/channelTree'
-import { ChannelId } from '@/types/entity-ids'
+import store from '/@/store'
+import { ChannelTreeNode } from '/@/lib/channelTree'
+import { ChannelId } from '/@/types/entity-ids'
 import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
-import { deepSome } from '@/lib/util/tree'
+import { deepSome } from '/@/lib/util/tree'
 import { Channel } from '@traptitech/traq'
-import useHover from '@/use/hover'
+import useHover from '/@/use/hover'
 
 const useChannelClick = (
   context: SetupContext,

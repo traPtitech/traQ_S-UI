@@ -17,15 +17,15 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
-import store from '@/store'
-import apis from '@/lib/apis'
+import store from '/@/store'
+import apis from '/@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
-import { UserId, ChannelId } from '@/types/entity-ids'
-import { compareStringInsensitive } from '@/lib/util/string'
-import useChannelSubscribers from '@/use/channelSubscribers'
-import useToastStore from '@/providers/toastStore'
-import FilterInput from '@/components/UI/FilterInput.vue'
-import useTextFilter from '@/use/textFilter'
+import { UserId, ChannelId } from '/@/types/entity-ids'
+import { compareStringInsensitive } from '/@/lib/util/string'
+import useChannelSubscribers from '/@/use/channelSubscribers'
+import useToastStore from '/@/providers/toastStore'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import useTextFilter from '/@/use/textFilter'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const { addErrorToast } = useToastStore()

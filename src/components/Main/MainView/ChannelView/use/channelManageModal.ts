@@ -1,5 +1,5 @@
-import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
+import store from '/@/store'
+import { ChannelId } from '/@/types/entity-ids'
 
 const useChannelManageModal = (props: { channelId: ChannelId }) => {
   const openChannelManageModal = () => {

@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import useFileMeta from '@/use/fileMeta'
-import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
+import useFileMeta from '/@/use/fileMeta'
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 
 export default defineComponent({
   name: 'SearchResultMessageFile',

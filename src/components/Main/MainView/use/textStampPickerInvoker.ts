@@ -2,10 +2,10 @@ import {
   AlignmentPosition,
   StampSelectHandler,
   useStampPickerInvoker
-} from '@/providers/stampPicker'
-import store from '@/store'
+} from '/@/providers/stampPicker'
+import store from '/@/store'
 import { Ref, computed } from 'vue'
-import useInsertText from '@/use/insertText'
+import useInsertText from '/@/use/insertText'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,

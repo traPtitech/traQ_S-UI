@@ -1,4 +1,4 @@
-import createNavigation from '@/use/abstractNavigation'
+import createNavigation from '/@/use/abstractNavigation'
 
 export type NavigationItemType =
   | 'home'

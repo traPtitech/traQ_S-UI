@@ -18,8 +18,8 @@ import {
   onMounted,
   onUnmounted
 } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import useToastStore, { Toast } from '@/providers/toastStore'
+import Icon from '/@/components/UI/Icon.vue'
+import useToastStore, { Toast } from '/@/providers/toastStore'
 
 const iconNameMap: Record<Toast['type'], string> = {
   success: 'info',

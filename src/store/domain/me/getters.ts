@@ -1,7 +1,7 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import { StampId, ChannelId } from '@/types/entity-ids'
-import { moduleGetterContext } from '@/store'
+import { StampId, ChannelId } from '/@/types/entity-ids'
+import { moduleGetterContext } from '/@/store'
 import { me } from '.'
 import { ChannelSubscribeLevel, ChannelViewState } from '@traptitech/traq'
 

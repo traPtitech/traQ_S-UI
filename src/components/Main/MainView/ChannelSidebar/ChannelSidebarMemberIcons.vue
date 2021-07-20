@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import { User } from '@traptitech/traq'
 
 type ViewState = {

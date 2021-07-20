@@ -1,6 +1,6 @@
 import { Ref, ref, watch } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import apis from '@/lib/apis'
+import { ChannelId } from '/@/types/entity-ids'
+import apis from '/@/lib/apis'
 import { ChannelEvent } from '@traptitech/traq'
 import { throttle } from 'throttle-debounce'
 

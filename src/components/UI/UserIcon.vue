@@ -13,11 +13,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType, watch } from 'vue'
-import { buildUserIconPath } from '@/lib/apis'
-import { UserId, FileId } from '@/types/entity-ids'
-import store from '@/store'
-import { useUserModalOpener } from '@/use/modalOpener'
-import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
+import { buildUserIconPath } from '/@/lib/apis'
+import { UserId, FileId } from '/@/types/entity-ids'
+import store from '/@/store'
+import { useUserModalOpener } from '/@/use/modalOpener'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 

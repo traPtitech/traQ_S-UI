@@ -1,11 +1,11 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { entities } from './index'
-import { moduleGetterContext } from '@/store'
+import { moduleGetterContext } from '/@/store'
 import { Stamp, User, UserGroup } from '@traptitech/traq'
-import { ActiveUser, isActive } from '@/lib/user'
-import { DMChannelId, UserId } from '@/types/entity-ids'
-import { isDefined } from '@/lib/util/array'
+import { ActiveUser, isActive } from '/@/lib/user'
+import { DMChannelId, UserId } from '/@/types/entity-ids'
+import { isDefined } from '/@/lib/util/array'
 
 const initialRecentStampNames = ['ok_hand', 'thumbsup', 'eyes'] as const
 

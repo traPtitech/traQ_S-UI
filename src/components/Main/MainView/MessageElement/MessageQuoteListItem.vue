@@ -25,9 +25,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '@/store'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
+import store from '/@/store'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 

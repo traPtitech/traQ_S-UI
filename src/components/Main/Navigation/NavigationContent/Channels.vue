@@ -39,16 +39,16 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '@/store'
-import ChannelList from '@/components/Main/Navigation/ChannelList/ChannelList.vue'
-import useChannelFilter from '@/use/channelFilter'
-import { constructTree } from '@/lib/channelTree'
+import store from '/@/store'
+import ChannelList from '/@/components/Main/Navigation/ChannelList/ChannelList.vue'
+import useChannelFilter from '/@/use/channelFilter'
+import { constructTree } from '/@/lib/channelTree'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../use/buildChannel'
-import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
-import Icon from '@/components/UI/Icon.vue'
-import EmptyState from '@/components/UI/EmptyState.vue'
+import NavigationContentContainer from '/@/components/Main/Navigation/NavigationContentContainer.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)

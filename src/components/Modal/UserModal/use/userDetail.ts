@@ -1,11 +1,11 @@
-import apis from '@/lib/apis'
-import { wsListener } from '@/lib/websocket'
+import apis from '/@/lib/apis'
+import { wsListener } from '/@/lib/websocket'
 import {
   UserIconUpdatedEvent,
   UserTagsUpdatedEvent,
   UserUpdatedEvent
-} from '@/lib/websocket/events'
-import { UserId } from '@/types/entity-ids'
+} from '/@/lib/websocket/events'
+import { UserId } from '/@/types/entity-ids'
 import { UserDetail } from '@traptitech/traq'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 

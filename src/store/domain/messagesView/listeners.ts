@@ -1,6 +1,6 @@
 import { createDefineListeners } from '../../utils/defineListeners'
-import { messageMitt } from '@/store/entities/messages'
-import { wsListener } from '@/lib/websocket'
+import { messageMitt } from '/@/store/entities/messages'
+import { wsListener } from '/@/lib/websocket'
 import { messagesView } from '.'
 
 export const defineWsListeners = createDefineListeners<typeof messagesView>()(

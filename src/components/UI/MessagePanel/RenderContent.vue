@@ -24,13 +24,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, watchEffect, ref } from 'vue'
-import { renderInline } from '@/lib/markdown/markdown'
-import store from '@/store'
-import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import Icon from '@/components/UI/Icon.vue'
-import FileTypeIcon from '@/components/UI/FileTypeIcon.vue'
+import { renderInline } from '/@/lib/markdown/markdown'
+import store from '/@/store'
+import { AttachmentType, mimeToFileType } from '/@/lib/util/file'
+import Icon from '/@/components/UI/Icon.vue'
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-import { isFile } from '@/lib/util/guard/embeddingOrUrl'
+import { isFile } from '/@/lib/util/guard/embeddingOrUrl'
 
 const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
   const res: Array<[AttachmentType, boolean]> = []

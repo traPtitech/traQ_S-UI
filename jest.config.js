@@ -17,7 +17,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
   moduleNameMapper: {
-    '^@/(.+)': '<rootDir>/src/$1'
+    '^/@/(.+)': '<rootDir>/src/$1'
   },
   transform: {
     '^.+\\.vue$': 'vue3-jest',

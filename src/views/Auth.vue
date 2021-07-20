@@ -11,10 +11,10 @@ import {
   computed,
   watch
 } from 'vue'
-import store from '@/store'
-import AuthenticateMainView from '@/components/Authenticate/AuthenticateMainView.vue'
-import { RouteName } from '@/router'
-import useRedirectParam from '@/components/Authenticate/use/redirectParam'
+import store from '/@/store'
+import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
+import { RouteName } from '/@/router'
+import useRedirectParam from '/@/components/Authenticate/use/redirectParam'
 import { useRouter } from 'vue-router'
 
 export type PageType =

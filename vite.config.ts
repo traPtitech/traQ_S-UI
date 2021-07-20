@@ -15,8 +15,8 @@ const srcPath = path.resolve(__dirname, 'src').replace(/\\/g, '/')
 export default defineConfig(({ command, mode }) => ({
   resolve: {
     alias: {
-      '@': srcPath,
-      '~': path.resolve(__dirname, 'node_modules').replace(/\\/g, '/')
+      '/@': srcPath,
+      '/~': path.resolve(__dirname, 'node_modules').replace(/\\/g, '/')
     }
   },
   server: {

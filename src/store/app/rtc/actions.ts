@@ -1,17 +1,17 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
-import { ChannelId, UserId } from '@/types/entity-ids'
-import { randomString } from '@/lib/util/randomString'
-import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
+import { ChannelId, UserId } from '/@/types/entity-ids'
+import { randomString } from '/@/lib/util/randomString'
+import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer, {
   getTalkingLoundnessLevel
-} from '@/lib/audioStreamMixer'
-import { getUserAudio } from '@/lib/webrtc/userMedia'
+} from '/@/lib/audioStreamMixer'
+import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
-import { tts } from '@/lib/tts'
-import { wait } from '@/lib/util/timer'
-import { isIOSApp } from '@/lib/util/browser'
+import { tts } from '/@/lib/tts'
+import { wait } from '/@/lib/util/timer'
+import { isIOSApp } from '/@/lib/util/browser'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30

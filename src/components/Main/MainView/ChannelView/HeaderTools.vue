@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId } from '/@/types/entity-ids'
 import useQall from './use/qall'
 import usePopupMenu from './use/popupMenu'
 import useChannelState from './use/channelState'
@@ -48,10 +48,10 @@ import useChannelCreateModal from './use/channelCreateModal'
 import useChannelManageModal from './use/channelManageModal'
 import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
-import { embeddingOrigin } from '@/lib/apis'
+import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute } from 'vue-router'
-import useToastStore from '@/providers/toastStore'
-import { useCommandPaletteInvoker } from '@/providers/commandPalette'
+import useToastStore from '/@/providers/toastStore'
+import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 
 const useCopy = () => {
   const route = useRoute()

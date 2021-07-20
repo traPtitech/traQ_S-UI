@@ -13,12 +13,12 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watchEffect } from 'vue'
-import { MessageInputState } from '@/providers/messageInputState'
-import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
-import Icon from '@/components/UI/Icon.vue'
-import { renderInline } from '@/lib/markdown/markdown'
-import router from '@/router'
+import { MessageInputState } from '/@/providers/messageInputState'
+import { ChannelId } from '/@/types/entity-ids'
+import useChannelPath from '/@/use/channelPath'
+import Icon from '/@/components/UI/Icon.vue'
+import { renderInline } from '/@/lib/markdown/markdown'
+import router from '/@/router'
 
 export default defineComponent({
   name: 'InputStateChannel',

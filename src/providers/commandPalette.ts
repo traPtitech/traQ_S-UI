@@ -1,5 +1,5 @@
 import { computed, inject, InjectionKey, provide, reactive } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 
 const commandPaletteStoreSymbol: InjectionKey<CommandPaletteStore> = Symbol()
 

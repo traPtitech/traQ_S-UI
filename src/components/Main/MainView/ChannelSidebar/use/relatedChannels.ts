@@ -1,9 +1,9 @@
 import { computed } from 'vue'
-import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
+import store from '/@/store'
+import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
-import { compareStringInsensitive } from '@/lib/util/string'
-import { isDefined } from '@/lib/util/array'
+import { compareStringInsensitive } from '/@/lib/util/string'
+import { isDefined } from '/@/lib/util/array'
 
 const useRelatedChannels = (props: { channelId: ChannelId }) => {
   const compareNameInsensitive = (a: Channel, b: Channel) =>

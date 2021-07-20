@@ -12,7 +12,7 @@ import { defineComponent, computed } from 'vue'
 import MobileTabSelector from './MobileTabSelector.vue'
 import MobileTabFrame from './MobileTabFrame.vue'
 import { useRoute } from 'vue-router'
-import { RouteName } from '@/router'
+import { RouteName } from '/@/router'
 
 export default defineComponent({
   name: 'MobileSettingModal',

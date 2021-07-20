@@ -19,11 +19,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import { UserDetail } from '@traptitech/traq'
-import { UserGroupId } from '@/types/entity-ids'
-import Icon from '@/components/UI/Icon.vue'
-import { isDefined } from '@/lib/util/array'
+import { UserGroupId } from '/@/types/entity-ids'
+import Icon from '/@/components/UI/Icon.vue'
+import { isDefined } from '/@/lib/util/array'
 
 export default defineComponent({
   name: 'GroupsTab',

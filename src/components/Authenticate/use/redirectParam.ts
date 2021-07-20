@@ -1,7 +1,7 @@
 import { computed, reactive } from 'vue'
-import { getStringParam } from '@/lib/util/params'
-import { redirectToPipelineIfNeeded } from '@/router/pipeline'
-import router, { RouteName } from '@/router'
+import { getStringParam } from '/@/lib/util/params'
+import { redirectToPipelineIfNeeded } from '/@/router/pipeline'
+import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'
 
 export interface RedirectState {

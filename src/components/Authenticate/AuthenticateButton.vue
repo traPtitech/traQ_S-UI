@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 type Type = 'primary' | 'secondary'
 

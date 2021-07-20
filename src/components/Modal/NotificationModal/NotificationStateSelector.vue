@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useChannelSubscriptionState from '@/use/channelSubscriptionState'
+import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
 import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 

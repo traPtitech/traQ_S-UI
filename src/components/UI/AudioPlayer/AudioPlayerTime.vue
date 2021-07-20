@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import SemiFixedSizeText from '@/components/UI/SemiFixedSizeText.vue'
+import SemiFixedSizeText from '/@/components/UI/SemiFixedSizeText.vue'
 
 const getDisplayTime = (time: number) => {
   if (!Number.isFinite(time)) {

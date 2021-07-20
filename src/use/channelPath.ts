@@ -1,11 +1,11 @@
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import store from '@/store'
-import { constructUserPath, constructChannelPath } from '@/router'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import store from '/@/store'
+import { constructUserPath, constructChannelPath } from '/@/router'
 import {
   channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath,
   SimpleChannel
-} from '@/lib/channel'
-import { channelPathToId } from '@/lib/channelTree'
+} from '/@/lib/channel'
+import { channelPathToId } from '/@/lib/channelTree'
 
 const useChannelPath = () => {
   const channelIdToSimpleChannelPath = (

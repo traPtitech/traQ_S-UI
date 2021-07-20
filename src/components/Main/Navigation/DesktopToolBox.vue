@@ -23,11 +23,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
-import Tool from '@/components/Main/Navigation/Tool.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import useToolBox from '@/components/Main/Navigation/use/toolBox'
-import AppList from '@/components/Main/Navigation/AppList.vue'
+import store from '/@/store'
+import Tool from '/@/components/Main/Navigation/Tool.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import useToolBox from '/@/components/Main/Navigation/use/toolBox'
+import AppList from '/@/components/Main/Navigation/AppList.vue'
 
 export const teleportTargetName = 'app-list'
 

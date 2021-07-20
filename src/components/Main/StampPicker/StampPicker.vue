@@ -38,9 +38,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '@/store'
-import { StampId } from '@/types/entity-ids'
-import FilterInput from '@/components/UI/FilterInput.vue'
+import store from '/@/store'
+import { StampId } from '/@/types/entity-ids'
+import FilterInput from '/@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
 import useStampSetSelector from './use/stampSetSelector'
 import useEffectSelector from './use/effectSelector'
@@ -49,7 +49,7 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-import { useStampPickerStore } from '@/providers/stampPicker'
+import { useStampPickerStore } from '/@/providers/stampPicker'
 
 export default defineComponent({
   name: 'StampPicker',

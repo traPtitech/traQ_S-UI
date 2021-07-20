@@ -1,5 +1,5 @@
 import { FileInfo, Message, Ogp } from '@traptitech/traq'
-import { ExternalUrl, FileId, MessageId } from '@/types/entity-ids'
+import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
 
 export type S = {
   /**

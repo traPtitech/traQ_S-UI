@@ -1,4 +1,4 @@
-import { MessageId, ChannelId, ClipFolderId } from '@/types/entity-ids'
+import { MessageId, ChannelId, ClipFolderId } from '/@/types/entity-ids'
 import { Pin, ChannelViewer } from '@traptitech/traq'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 

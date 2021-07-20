@@ -75,15 +75,15 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '@/store'
-import Icon from '@/components/UI/Icon.vue'
-import Stamp from '@/components/UI/Stamp.vue'
-import { StampId, MessageId } from '@/types/entity-ids'
-import { useStampPickerInvoker } from '@/providers/stampPicker'
-import useIsMobile from '@/use/isMobile'
-import apis from '@/lib/apis'
-import { useMessageContextMenuInvoker } from '@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
-import useToastStore from '@/providers/toastStore'
+import store from '/@/store'
+import Icon from '/@/components/UI/Icon.vue'
+import Stamp from '/@/components/UI/Stamp.vue'
+import { StampId, MessageId } from '/@/types/entity-ids'
+import { useStampPickerInvoker } from '/@/providers/stampPicker'
+import useIsMobile from '/@/use/isMobile'
+import apis from '/@/lib/apis'
+import { useMessageContextMenuInvoker } from '/@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
+import useToastStore from '/@/providers/toastStore'
 
 const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
   if (recents.length >= 3) return

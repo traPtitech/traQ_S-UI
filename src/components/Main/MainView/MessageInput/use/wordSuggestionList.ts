@@ -1,14 +1,14 @@
-import store from '@/store'
-import TrieTree from '@/lib/trieTree'
+import store from '/@/store'
+import TrieTree from '/@/lib/trieTree'
 import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
 import { ref, onBeforeUnmount, computed, Ref, readonly, watchEffect } from 'vue'
-import { EntityEventMap, entityMitt } from '@/store/entities/mitt'
+import { EntityEventMap, entityMitt } from '/@/store/entities/mitt'
 import {
   getDeterminedCharacters,
   Target,
   getPrevCandidateIndex,
   getNextCandidateIndex
-} from '@/lib/suggestion'
+} from '/@/lib/suggestion'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',

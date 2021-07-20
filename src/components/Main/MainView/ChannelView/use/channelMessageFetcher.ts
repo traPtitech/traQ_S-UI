@@ -1,6 +1,6 @@
-import useMessageFetcher from '@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '@/store'
-import { ChannelId, MessageId } from '@/types/entity-ids'
+import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
+import store from '/@/store'
+import { ChannelId, MessageId } from '/@/types/entity-ids'
 import {
   reactive,
   Ref,
@@ -11,8 +11,8 @@ import {
   computed
 } from 'vue'
 import { Message } from '@traptitech/traq'
-import { wsListener } from '@/lib/websocket'
-import useFetchLimit from '@/components/Main/MainView/MessagesScroller/use/fetchLimit'
+import { wsListener } from '/@/lib/websocket'
+import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60

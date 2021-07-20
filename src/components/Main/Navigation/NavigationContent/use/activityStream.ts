@@ -1,12 +1,12 @@
 import { computed, onBeforeUnmount, watch, ref } from 'vue'
-import store, { originalStore } from '@/store'
-import { setTimelineStreamingState } from '@/lib/websocket'
+import store, { originalStore } from '/@/store'
+import { setTimelineStreamingState } from '/@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import apis from '@/lib/apis'
-import { messageMitt } from '@/store/entities/messages'
-import { ChannelId, MessageId } from '@/types/entity-ids'
-import { createSingleflight } from '@/lib/async'
-import { bothChannelsMapInitialFetchPromise } from '@/store/entities/promises'
+import apis from '/@/lib/apis'
+import { messageMitt } from '/@/store/entities/messages'
+import { ChannelId, MessageId } from '/@/types/entity-ids'
+import { createSingleflight } from '/@/lib/async'
+import { bothChannelsMapInitialFetchPromise } from '/@/store/entities/promises'
 
 export const ACTIVITY_LENGTH = 50
 

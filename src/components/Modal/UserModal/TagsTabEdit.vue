@@ -23,10 +23,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { TagId, UserId } from '@/types/entity-ids'
-import apis from '@/lib/apis'
-import Icon from '@/components/UI/Icon.vue'
-import useToastStore from '@/providers/toastStore'
+import { TagId, UserId } from '/@/types/entity-ids'
+import apis from '/@/lib/apis'
+import Icon from '/@/components/UI/Icon.vue'
+import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'TagsTabEdit',

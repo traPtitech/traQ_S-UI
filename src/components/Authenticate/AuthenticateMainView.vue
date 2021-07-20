@@ -21,8 +21,8 @@ import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
 import ConsentForm from './ConsentForm/ConsentForm.vue'
-import { PageType } from '@/views/Auth.vue'
-import useVersion from '@/use/version'
+import { PageType } from '/@/views/Auth.vue'
+import useVersion from '/@/use/version'
 
 export default defineComponent({
   name: 'AuthenticateMainView',

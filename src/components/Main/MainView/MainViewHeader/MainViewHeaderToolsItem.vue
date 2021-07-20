@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useHeaderStyle from '@/components/Main/MainView/MainViewHeader/use/headerStyle'
-import Icon from '@/components/UI/Icon.vue'
+import useHeaderStyle from '/@/components/Main/MainView/MainViewHeader/use/headerStyle'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderToolsItem',

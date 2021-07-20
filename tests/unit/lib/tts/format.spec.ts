@@ -1,4 +1,4 @@
-import { format } from '@/lib/tts/format'
+import { format } from '/@/lib/tts/format'
 import { traQMarkdownIt, Store } from '@traptitech/traq-markdown-it'
 
 const embeddingOrigin = 'https://example.com'

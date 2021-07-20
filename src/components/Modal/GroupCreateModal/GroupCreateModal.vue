@@ -32,12 +32,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormCheckbox from '@/components/UI/FormCheckbox.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import apis from '@/lib/apis'
-import store from '@/store'
-import useToastStore from '@/providers/toastStore'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis from '/@/lib/apis'
+import store from '/@/store'
+import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'GroupCreateModal',

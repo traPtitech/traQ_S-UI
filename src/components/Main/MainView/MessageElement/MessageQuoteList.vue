@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { MessageId, ChannelId, DMChannelId } from '@/types/entity-ids'
+import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageQuoteListItem from './MessageQuoteListItem.vue'
 
 export default defineComponent({

@@ -1,7 +1,7 @@
-import { FileId } from '@/types/entity-ids'
+import { FileId } from '/@/types/entity-ids'
 import { computed } from 'vue'
-import { buildFilePath } from '@/lib/apis'
-import router from '@/router'
+import { buildFilePath } from '/@/lib/apis'
+import router from '/@/router'
 
 const useFileLink = (props: { fileId: FileId }) => {
   const fileLink = computed(() => `/files/${props.fileId}`)

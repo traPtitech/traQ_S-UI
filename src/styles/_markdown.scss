@@ -5,10 +5,10 @@ $table-tr-border-color: var(--table-tr-border-color);
 $table-tr-background-color: var(--table-tr-background-color);
 $table-tr-background-color2: var(--table-tr-background-color2);
 
-@import '~/@traptitech/traq-markdown-it/src/css/markdown';
+@import '/~/@traptitech/traq-markdown-it/src/css/markdown';
 
 html:not([data-is-dark-theme]) {
-  @import '~/highlight.js/styles/atom-one-light';
+  @import '/~/highlight.js/styles/atom-one-light';
 
   --markdown-code-background-color: #f6f8fa;
   --table-td-border-color: #dfe2e5;
@@ -17,7 +17,7 @@ html:not([data-is-dark-theme]) {
   --table-tr-background-color2: #f6f8fa;
 }
 html[data-is-dark-theme] {
-  @import '~/highlight.js/styles/atom-one-dark';
+  @import '/~/highlight.js/styles/atom-one-dark';
 
   --markdown-code-background-color: #243342;
   --table-td-border-color: #191c1f;

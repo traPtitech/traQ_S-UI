@@ -11,11 +11,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import { UserId } from '@/types/entity-ids'
-import UserName from '@/components/UI/MessagePanel/UserName.vue'
-import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
-import { changeDMChannelByUsername } from '@/router/channel'
+import store from '/@/store'
+import { UserId } from '/@/types/entity-ids'
+import UserName from '/@/components/UI/MessagePanel/UserName.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+import { changeDMChannelByUsername } from '/@/router/channel'
 
 export default defineComponent({
   name: 'DMActivityElement',

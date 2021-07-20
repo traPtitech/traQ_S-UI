@@ -1,5 +1,5 @@
-import { embeddingOrigin } from '@/lib/apis'
-import { checkCredentialManagerSupport } from '@/lib/util/browser'
+import { embeddingOrigin } from '/@/lib/apis'
+import { checkCredentialManagerSupport } from '/@/lib/util/browser'
 
 const isCredentialManagerSupported = checkCredentialManagerSupport()
 

@@ -1,11 +1,11 @@
 import { ref, computed, readonly, Ref } from 'vue'
 import { Message } from '@traptitech/traq'
-import apis from '@/lib/apis'
-import { compareDateString } from '@/lib/date'
-import store from '@/store'
+import apis from '/@/lib/apis'
+import { compareDateString } from '/@/lib/date'
+import store from '/@/store'
 import useQueryParer, {
   SearchMessageSortKey
-} from '@/use/searchMessage/queryParser'
+} from '/@/use/searchMessage/queryParser'
 
 const useSortMessages = (
   messages: Ref<Message[]>,

@@ -1,8 +1,8 @@
 import { defineMutations } from 'direct-vuex'
 import { shallowReactive } from 'vue'
 import { S, ExtendedMediaStream } from './state'
-import { UserId } from '@/types/entity-ids'
-import AudioStreamMixer from '@/lib/audioStreamMixer'
+import { UserId } from '/@/types/entity-ids'
+import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
 export const mutations = defineMutations<S>()({
   setMixer(state, mixer: AudioStreamMixer) {

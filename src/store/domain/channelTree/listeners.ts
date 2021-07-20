@@ -1,5 +1,5 @@
 import { createDefineListeners } from '../../utils/defineListeners'
-import { entityMitt } from '@/store/entities/mitt'
+import { entityMitt } from '/@/store/entities/mitt'
 import { meMitt } from '../me'
 import { channelTree } from '.'
 

@@ -51,11 +51,11 @@ import {
   PropType,
   watchEffect
 } from 'vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import { Theme } from '@/types/theme'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { Theme } from '/@/types/theme'
 import { dequal } from 'dequal'
-import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import useToastStore from '@/providers/toastStore'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import useToastStore from '/@/providers/toastStore'
 
 const lightTheme = window.defaultLightTheme
 

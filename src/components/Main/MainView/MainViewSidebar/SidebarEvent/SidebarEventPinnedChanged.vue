@@ -25,9 +25,9 @@ import {
   PinRemovedEvent
 } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserName from '@/components/UI/MessagePanel/UserName.vue'
-import RenderContent from '@/components/UI/MessagePanel/RenderContent.vue'
-import store from '@/store'
+import UserName from '/@/components/UI/MessagePanel/UserName.vue'
+import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
+import store from '/@/store'
 import { AxiosError } from 'axios'
 
 export default defineComponent({

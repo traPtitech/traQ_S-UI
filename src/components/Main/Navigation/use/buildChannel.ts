@@ -1,6 +1,6 @@
-import { isDefined } from '@/lib/util/array'
-import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
+import { isDefined } from '/@/lib/util/array'
+import store from '/@/store'
+import { ChannelId } from '/@/types/entity-ids'
 
 export const buildDescendantsChannelArray = (
   id: ChannelId,

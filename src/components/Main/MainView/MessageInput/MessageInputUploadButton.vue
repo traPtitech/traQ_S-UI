@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import IconButton from '@/components/UI/IconButton.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
 
 export default defineComponent({
   name: 'MessageInputUploadButton',

@@ -36,7 +36,7 @@ import {
   ref,
   readonly
 } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 import { useRouter } from 'vue-router'
 
 const popupNavigatorButtonId = 'popup-navigation-button'

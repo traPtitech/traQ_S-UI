@@ -1,4 +1,4 @@
-import { WEBSOCKET_ENDPOINT } from '@/lib/apis'
+import { WEBSOCKET_ENDPOINT } from '/@/lib/apis'
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
 import { createWebSocketListener } from './WebSocketListener'
 

@@ -1,5 +1,5 @@
-import { setupWorkbox } from '@/sw/workbox'
-import { setupNotification } from '@/sw/notification'
+import { setupWorkbox } from '/@/sw/workbox'
+import { setupNotification } from '/@/sw/notification'
 
 setupWorkbox()
 setupNotification()

@@ -1,8 +1,8 @@
 import { watch, Ref, onMounted, computed } from 'vue'
-import { changeViewState } from '@/lib/websocket'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
+import { changeViewState } from '/@/lib/websocket'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
-import store from '@/store'
+import store from '/@/store'
 
 const useEditingStatus = (
   channelId: Ref<ChannelId | DMChannelId>,

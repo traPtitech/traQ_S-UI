@@ -1,13 +1,13 @@
-import store from '@/store'
+import store from '/@/store'
 import { computed, reactive } from 'vue'
 import {
   NavigationItemType,
   EphemeralNavigationItemType
 } from './navigationConstructor'
-import { ThemeClaim } from '@/lib/styles'
-import { isDefined } from '@/lib/util/array'
-import { useMessageInputStates } from '@/providers/messageInputState'
-import useAudioController from '@/providers/audioController'
+import { ThemeClaim } from '/@/lib/styles'
+import { isDefined } from '/@/lib/util/array'
+import { useMessageInputStates } from '/@/providers/messageInputState'
+import useAudioController from '/@/providers/audioController'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType

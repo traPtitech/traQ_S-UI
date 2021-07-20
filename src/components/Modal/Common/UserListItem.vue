@@ -23,10 +23,10 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import { useUserModalOpener } from '@/use/modalOpener'
-import Icon from '@/components/UI/Icon.vue'
+import store from '/@/store'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { useUserModalOpener } from '/@/use/modalOpener'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'UserListItem',

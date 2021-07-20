@@ -18,15 +18,15 @@
 
 <script lang="ts">
 import { defineComponent, computed, watch, ref } from 'vue'
-import FormSelector from '@/components/UI/FormSelector.vue'
-import store from '@/store'
-import { nullUuid } from '@/lib/util/uuid'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import store from '/@/store'
+import { nullUuid } from '/@/lib/util/uuid'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import usePostMessage from '@/components/Main/MainView/MessageInput/use/postMessage'
-import useChannelOptions from '@/use/channelOptions'
-import useMessageInputState from '@/providers/messageInputState'
-import { ChannelId } from '@/types/entity-ids'
+import FormButton from '/@/components/UI/FormButton.vue'
+import usePostMessage from '/@/components/Main/MainView/MessageInput/use/postMessage'
+import useChannelOptions from '/@/use/channelOptions'
+import useMessageInputState from '/@/providers/messageInputState'
+import { ChannelId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'ShareTargetForm',

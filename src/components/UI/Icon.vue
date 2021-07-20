@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef, watch } from 'vue'
-import mdi from '@/assets/mdi'
+import mdi from '/@/assets/mdi'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
+import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'

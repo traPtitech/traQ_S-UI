@@ -1,13 +1,13 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
 import { ActionContext } from 'vuex'
-import apis from '@/lib/apis'
-import { createSingleflight } from '@/lib/async'
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/async'
 import { WebRTCUserState, WebRTCUserStateSessions } from '@traptitech/traq'
 import { SessionId, UserRTCState, UserSessionState } from './state'
-import { changeRTCState } from '@/lib/websocket'
-import { ChannelId } from '@/types/entity-ids'
+import { changeRTCState } from '/@/lib/websocket'
+import { ChannelId } from '/@/types/entity-ids'
 
 export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)

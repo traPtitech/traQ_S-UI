@@ -4,11 +4,11 @@ import 'firebase/messaging'
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
-} from '@/types/InlineNotificationReplies'
-import { createNotificationArgumentsCreator } from '@/lib/notification/notificationArguments'
-import { getStore } from '@/sw/store'
-import { ChannelId } from '@/types/entity-ids'
-import { wait } from '@/lib/util/timer'
+} from '/@/types/InlineNotificationReplies'
+import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
+import { getStore } from '/@/sw/store'
+import { ChannelId } from '/@/types/entity-ids'
+import { wait } from '/@/lib/util/timer'
 
 declare const self: ServiceWorkerGlobalScope
 

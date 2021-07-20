@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import EmptyState from '@/components/UI/EmptyState.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 export default defineComponent({
   name: 'NotImplemented',

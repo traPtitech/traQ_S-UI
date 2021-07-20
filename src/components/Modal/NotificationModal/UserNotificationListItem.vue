@@ -8,10 +8,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/store'
-import { UserId } from '@/types/entity-ids'
-import Toggle from '@/components/UI/Toggle.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import store from '/@/store'
+import { UserId } from '/@/types/entity-ids'
+import Toggle from '/@/components/UI/Toggle.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export default defineComponent({
   name: 'UserNotificationListItem',

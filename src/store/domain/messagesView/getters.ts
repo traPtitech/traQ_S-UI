@@ -1,8 +1,8 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import { moduleGetterContext } from '@/store'
+import { moduleGetterContext } from '/@/store'
 import { messagesView } from './index'
-import { UserId } from '@/types/entity-ids'
+import { UserId } from '/@/types/entity-ids'
 import { ChannelViewState } from '@traptitech/traq'
 
 const getterContext = (args: [unknown, unknown, unknown, unknown]) =>

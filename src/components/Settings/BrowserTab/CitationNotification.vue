@@ -18,9 +18,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import apis from '@/lib/apis'
-import Toggle from '@/components/UI/Toggle.vue'
-import useToastStore from '@/providers/toastStore'
+import apis from '/@/lib/apis'
+import Toggle from '/@/components/UI/Toggle.vue'
+import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'CitationNotification',

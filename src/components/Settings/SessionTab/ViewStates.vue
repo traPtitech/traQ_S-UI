@@ -17,8 +17,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '@/store'
-import useChannelPath from '@/use/channelPath'
+import store from '/@/store'
+import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
   name: 'ViewStates',

@@ -1,7 +1,7 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { app } from './index'
-import { moduleGetterContext } from '@/store'
+import { moduleGetterContext } from '/@/store'
 
 const appGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, app)

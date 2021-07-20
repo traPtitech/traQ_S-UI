@@ -1,4 +1,4 @@
-import { StampCategory } from '@/lib/stampCategorizer'
+import { StampCategory } from '/@/lib/stampCategorizer'
 
 export interface S {
   traQStampCategory: Readonly<StampCategory>

@@ -2,7 +2,7 @@ import {
   ReplaceGetters,
   replace,
   Entity
-} from '@/lib/markdown/internalLinkEmbedder'
+} from '/@/lib/markdown/internalLinkEmbedder'
 
 const users = {
   'dfdff0c9-5de0-46ee-9721-2525e8bb3d44': {

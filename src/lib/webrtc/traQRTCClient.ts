@@ -1,6 +1,6 @@
 import type Peer from 'skyway-js'
 import type { SfuRoom, RoomData } from 'skyway-js'
-import apis from '@/lib/apis'
+import apis from '/@/lib/apis'
 
 const skywayApiKey = window.traQConfig.skyway?.apiKey
 

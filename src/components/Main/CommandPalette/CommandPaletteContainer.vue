@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
+import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import CommandPalette from './CommandPalette.vue'
 
 export default defineComponent({

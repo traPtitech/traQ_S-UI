@@ -18,12 +18,12 @@ import {
   useRoute,
   useRouter
 } from 'vue-router'
-import { RouteName } from '@/router'
-import { defaultSettingsName } from '@/router/settings'
-import useIsMobile from '@/use/isMobile'
-import DesktopSettingModal from '@/components/Settings/DesktopSetting.vue'
-import MobileSettingModal from '@/components/Settings/MobileSetting.vue'
-import { changeViewState } from '@/lib/websocket'
+import { RouteName } from '/@/router'
+import { defaultSettingsName } from '/@/router/settings'
+import useIsMobile from '/@/use/isMobile'
+import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
+import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
+import { changeViewState } from '/@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
 
 const useSettingsRootPathWatcher = (

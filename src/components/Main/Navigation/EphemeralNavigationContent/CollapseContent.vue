@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 const useExpanded = () => {
   const isExpanded = ref(false)

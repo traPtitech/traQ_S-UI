@@ -3,7 +3,7 @@ import {
   ChannelId,
   MessageId,
   DMChannelId
-} from '@/types/entity-ids'
+} from '/@/types/entity-ids'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {

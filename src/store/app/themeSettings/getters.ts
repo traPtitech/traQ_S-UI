@@ -1,6 +1,6 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
-import { Theme } from '@/types/theme'
+import { Theme } from '/@/types/theme'
 
 const lightTheme = window.defaultLightTheme
 const darkTheme = window.defaultDarkTheme

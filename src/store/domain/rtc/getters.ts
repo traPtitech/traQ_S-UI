@@ -1,8 +1,8 @@
 import { defineGetters } from 'direct-vuex'
 import { S, SessionType, UserRTCState, UserSessionState } from './state'
 import { rtc } from '.'
-import { moduleGetterContext } from '@/store'
-import { ChannelId, UserId } from '@/types/entity-ids'
+import { moduleGetterContext } from '/@/store'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 
 const rtcGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, rtc)

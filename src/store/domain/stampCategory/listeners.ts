@@ -1,5 +1,5 @@
 import { createDefineListeners } from '../../utils/defineListeners'
-import { entityMitt } from '@/store/entities/mitt'
+import { entityMitt } from '/@/store/entities/mitt'
 import { stampCategory } from '.'
 
 export const defineEntityListeners = createDefineListeners<

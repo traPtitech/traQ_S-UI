@@ -15,8 +15,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { Message } from '@traptitech/traq'
-import useChannelPath from '@/use/channelPath'
-import { getCreatedDate } from '@/lib/date'
+import useChannelPath from '/@/use/channelPath'
+import { getCreatedDate } from '/@/lib/date'
 
 export default defineComponent({
   name: 'MessageQuoteListItemFooter',

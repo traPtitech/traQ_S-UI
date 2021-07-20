@@ -1,14 +1,14 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '@/store'
-import router, { RouteName, constructChannelPath } from '@/router'
-import useNavigationController from '@/use/navigationController'
-import useChannelPath from '@/use/channelPath'
+import store, { originalStore } from '/@/store'
+import router, { RouteName, constructChannelPath } from '/@/router'
+import useNavigationController from '/@/use/navigationController'
+import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
 import { useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
-} from '@/store/entities/promises'
+} from '/@/store/entities/promises'
 
 type Views = 'none' | 'main' | 'not-found'
 

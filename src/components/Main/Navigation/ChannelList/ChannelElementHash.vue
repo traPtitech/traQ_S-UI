@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import NotificationIndicator from '@/components/UI/NotificationIndicator.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 export default defineComponent({
   name: 'ChannelElementHash',

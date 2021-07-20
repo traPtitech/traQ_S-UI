@@ -31,11 +31,11 @@
 import { defineComponent, ref, computed, Ref, watchEffect } from 'vue'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import apis, { formatResizeError } from '@/lib/apis'
-import { isValidStampName } from '@/lib/validate'
-import useToastStore from '@/providers/toastStore'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import { isValidStampName } from '/@/lib/validate'
+import useToastStore from '/@/providers/toastStore'
 
 /**
  * 拡張子を削る

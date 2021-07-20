@@ -1,6 +1,6 @@
 import { computed, ref, Ref } from 'vue'
-import store from '@/store'
-import { MessageId } from '@/types/entity-ids'
+import store from '/@/store'
+import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'

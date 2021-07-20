@@ -15,10 +15,10 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import useSidebar from '@/use/sidebar'
-import MainViewHeader from '@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
-import MainViewHeaderTitle from '@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
-import MainViewHeaderToolsItem from '@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import useSidebar from '/@/use/sidebar'
+import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
+import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
+import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 export default defineComponent({
   name: 'DMViewHeader',

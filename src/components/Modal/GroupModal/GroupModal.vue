@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { UserGroupMember } from '@traptitech/traq'

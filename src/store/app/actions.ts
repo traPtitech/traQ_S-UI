@@ -1,5 +1,5 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { app } from '.'
 import { ActionContext } from 'vuex'
 

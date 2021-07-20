@@ -36,15 +36,15 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
-import store from '@/store'
-import { ClipFolderId } from '@/types/entity-ids'
-import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
-import apis from '@/lib/apis'
-import FormButton from '@/components/UI/FormButton.vue'
-import router, { constructChannelPath } from '@/router'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import store from '/@/store'
+import { ClipFolderId } from '/@/types/entity-ids'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
+import apis from '/@/lib/apis'
+import FormButton from '/@/components/UI/FormButton.vue'
+import router, { constructChannelPath } from '/@/router'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const useEdit = (
   props: { clipFolderId: string },

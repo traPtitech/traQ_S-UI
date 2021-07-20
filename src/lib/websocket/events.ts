@@ -7,7 +7,7 @@ import {
   ClipFolderId,
   StampPaletteId,
   TagId
-} from '@/types/entity-ids'
+} from '/@/types/entity-ids'
 import {
   ChannelViewer,
   MyChannelViewState,

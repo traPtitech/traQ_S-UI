@@ -1,7 +1,7 @@
-import { count } from '@/lib/util/string'
-import { ChannelId } from '@/types/entity-ids'
+import { count } from '/@/lib/util/string'
+import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
-import { dmParentUuid } from '@/lib/util/uuid'
+import { dmParentUuid } from '/@/lib/util/uuid'
 import { ChannelLike } from './channelTree'
 
 const MAX_CHANNEL_DEPTH = 5

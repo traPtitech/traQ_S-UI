@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { NavigationItemType, useNavigationSelectorItem } from './use/navigation'
-import NavigationSelectorItem from '@/components/Modal/UserModal/NavigationSelectorItem.vue'
+import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue'
 
 export default defineComponent({
   name: 'NavigationSelector',

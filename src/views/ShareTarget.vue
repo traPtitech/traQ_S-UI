@@ -7,9 +7,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { getStringParam } from '@/lib/util/params'
-import ShareTargetComponent from '@/components/ShareTarget/ShareTarget.vue'
-import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
+import { getStringParam } from '/@/lib/util/params'
+import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import { useRoute } from 'vue-router'
 import useLoginCheck from './use/loginCheck'
 

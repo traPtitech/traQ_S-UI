@@ -1,4 +1,4 @@
-import { channelTreeMitt } from '@/store/domain/channelTree'
+import { channelTreeMitt } from '/@/store/domain/channelTree'
 import { browserSettings } from '.'
 import { createDefineListeners } from '../../utils/defineListeners'
 

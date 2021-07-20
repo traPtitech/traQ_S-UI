@@ -18,11 +18,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import ProfileHeader from './ProfileHeader.vue'
-import Icon from '@/components/UI/Icon.vue'
-import useChannelPath from '@/use/channelPath'
-import { changeChannelByPath } from '@/router/channel'
+import Icon from '/@/components/UI/Icon.vue'
+import useChannelPath from '/@/use/channelPath'
+import { changeChannelByPath } from '/@/router/channel'
 
 export default defineComponent({
   name: 'HomeChannel',

@@ -1,4 +1,4 @@
-import { needResize, getThumbnailDimensions } from '@/lib/resize/size'
+import { needResize, getThumbnailDimensions } from '/@/lib/resize/size'
 
 describe('needResize', () => {
   it('can detect too large width and height', () => {

@@ -19,7 +19,7 @@
 import { computed, defineComponent } from 'vue'
 import { navigations } from './use/navigation'
 import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
-import Version from '@/components/UI/Version.vue'
+import Version from '/@/components/UI/Version.vue'
 import { useRoute } from 'vue-router'
 
 export default defineComponent({

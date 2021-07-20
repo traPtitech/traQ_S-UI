@@ -14,13 +14,13 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue'
-import apis from '@/lib/apis'
+import apis from '/@/lib/apis'
 import { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
-import { OAuthClientId } from '@/types/entity-ids'
-import store from '@/store'
-import { getFullDayWithTimeString } from '@/lib/date'
-import { scopeNameMap } from '@/lib/clientScope'
-import useToastStore from '@/providers/toastStore'
+import { OAuthClientId } from '/@/types/entity-ids'
+import store from '/@/store'
+import { getFullDayWithTimeString } from '/@/lib/date'
+import { scopeNameMap } from '/@/lib/clientScope'
+import useToastStore from '/@/providers/toastStore'
 import TokenInfo from './TokenInfo.vue'
 
 export default defineComponent({

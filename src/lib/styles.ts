@@ -1,10 +1,10 @@
-import store from '@/store'
+import store from '/@/store'
 import {
   Theme,
   ThemeVariables,
   TransparentThemeVariables,
   CSSCommonVariables
-} from '@/types/theme'
+} from '/@/types/theme'
 import { computed } from 'vue'
 import * as CSS from 'csstype'
 

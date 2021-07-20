@@ -1,14 +1,14 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { mainView } from '.'
 import {
   ClipFolderId,
   ChannelId,
   MessageId,
   DMChannelId
-} from '@/types/entity-ids'
+} from '/@/types/entity-ids'
 import { ActionContext } from 'vuex'
-import { channelIdToPathString } from '@/lib/channel'
+import { channelIdToPathString } from '/@/lib/channel'
 
 export const mainViewActionContext = (
   context: ActionContext<unknown, unknown>

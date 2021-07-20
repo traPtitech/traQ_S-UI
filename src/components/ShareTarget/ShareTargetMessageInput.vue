@@ -41,17 +41,17 @@ import {
   ref,
   toRef
 } from 'vue'
-import { randomString } from '@/lib/util/randomString'
-import store from '@/store'
+import { randomString } from '/@/lib/util/randomString'
+import store from '/@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'
-import MessageInputFileList from '@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
-import MessageInputUploadButton from '@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
-import MessageInputInsertStampButton from '@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import useMessageInputState, {
   useMessageInputStateAttachment
-} from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
+} from '/@/providers/messageInputState'
+import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',

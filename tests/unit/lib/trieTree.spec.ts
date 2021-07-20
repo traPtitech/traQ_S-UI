@@ -1,4 +1,4 @@
-import TrieTree from '@/lib/trieTree'
+import TrieTree from '/@/lib/trieTree'
 
 type Word = {
   type: 'user' | 'stamp' | 'stamp-effect'

@@ -5,8 +5,8 @@ import {
   UserGroupId,
   TagId,
   MessageId
-} from '@/types/entity-ids'
-import { RouteName } from '@/router'
+} from '/@/types/entity-ids'
+import { RouteName } from '/@/router'
 
 type ModalStateType =
   | 'user'

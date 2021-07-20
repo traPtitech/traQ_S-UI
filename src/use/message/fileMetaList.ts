@@ -1,7 +1,7 @@
 import { computed, reactive } from 'vue'
-import store from '@/store'
-import { isImage, isNonPreviewable, isVideo, isAudio } from '@/lib/util/file'
-import { isDefined } from '@/lib/util/array'
+import store from '/@/store'
+import { isImage, isNonPreviewable, isVideo, isAudio } from '/@/lib/util/file'
+import { isDefined } from '/@/lib/util/array'
 
 const useFileMetaList = (props: { fileIds: string[] }) => {
   const fileMetaData = computed(() =>

@@ -4,9 +4,9 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners } from './listeners'
-import { mitt } from '@/lib/typedMitt'
+import { mitt } from '/@/lib/typedMitt'
 import { Message } from '@traptitech/traq'
-import { MessageId } from '@/types/entity-ids'
+import { MessageId } from '/@/types/entity-ids'
 
 export const messages = defineModule({
   namespaced: true,

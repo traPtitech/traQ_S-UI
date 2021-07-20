@@ -49,12 +49,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import apis, { embeddingOrigin } from '@/lib/apis'
-import { MessageId } from '@/types/entity-ids'
-import useToastStore from '@/providers/toastStore'
+import store from '/@/store'
+import apis, { embeddingOrigin } from '/@/lib/apis'
+import { MessageId } from '/@/types/entity-ids'
+import useToastStore from '/@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
-import { replaceBack } from '@/lib/markdown/internalLinkUnembedder'
+import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 
 const { showWidgetCopyButton } = window.traQConfig
 

@@ -25,10 +25,10 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
-import { UserId } from '@/types/entity-ids'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import store from '@/store'
-import Icon from '@/components/UI/Icon.vue'
+import { UserId } from '/@/types/entity-ids'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import store from '/@/store'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'GroupUser',

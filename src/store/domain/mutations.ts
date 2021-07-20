@@ -1,4 +1,4 @@
-import { UserId } from '@/types/entity-ids'
+import { UserId } from '/@/types/entity-ids'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 

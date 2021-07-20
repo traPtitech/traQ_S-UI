@@ -1,11 +1,11 @@
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
-} from '@/types/InlineNotificationReplies'
-import apis from '@/lib/apis'
-import router from '@/router'
-import { isIOSApp } from '@/lib/util/browser'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
+} from '/@/types/InlineNotificationReplies'
+import apis from '/@/lib/apis'
+import router from '/@/router'
+import { isIOSApp } from '/@/lib/util/browser'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
 import { OnCanUpdate, setupUpdateToast } from './updateToast'
 import { setupFirebase, loadFirebase } from './firebase'

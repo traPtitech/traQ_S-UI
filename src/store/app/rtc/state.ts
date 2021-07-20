@@ -1,5 +1,5 @@
-import { UserId } from '@/types/entity-ids'
-import AudioStreamMixer from '@/lib/audioStreamMixer'
+import { UserId } from '/@/types/entity-ids'
+import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
 export interface ExtendedMediaStream extends MediaStream {
   userMuted?: boolean

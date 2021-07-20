@@ -1,8 +1,8 @@
 import { reactive, ref, watch, watchEffect } from 'vue'
-import apis from '@/lib/apis'
+import apis from '/@/lib/apis'
 import useRedirectParam from './redirectParam'
 import useCredentialManager from './credentialManager'
-import store from '@/store'
+import store from '/@/store'
 
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()

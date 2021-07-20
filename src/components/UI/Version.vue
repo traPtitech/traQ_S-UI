@@ -8,8 +8,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import version from '@/lib/env/version'
-import useVersion from '@/use/version'
+import version from '/@/lib/env/version'
+import useVersion from '/@/use/version'
 
 export default defineComponent({
   name: 'Version',

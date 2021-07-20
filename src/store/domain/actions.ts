@@ -1,10 +1,10 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { domain } from '.'
 import { ActionContext } from 'vuex'
-import { UserId } from '@/types/entity-ids'
-import apis from '@/lib/apis'
-import { createSingleflight } from '@/lib/async'
+import { UserId } from '/@/types/entity-ids'
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/async'
 
 export const domainActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, domain)

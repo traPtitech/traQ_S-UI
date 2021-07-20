@@ -1,10 +1,10 @@
 import { reactive, computed, ref } from 'vue'
 import { Stamp } from '@traptitech/traq'
-import store from '@/store'
-import { compareStringInsensitive } from '@/lib/util/string'
-import { getMatchedWithPriority } from '@/lib/util/array'
+import store from '/@/store'
+import { compareStringInsensitive } from '/@/lib/util/string'
+import { getMatchedWithPriority } from '/@/lib/util/array'
 
-const emojiAltnameTable = import('@/assets/emoji_altname_table.json')
+const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')
 
 const useStampFilter = () => {
   const stamps = computed(() => [...store.state.entities.stampsMap.values()])

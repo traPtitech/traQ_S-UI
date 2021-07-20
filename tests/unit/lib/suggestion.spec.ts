@@ -4,7 +4,7 @@ import {
   getNextCandidateIndex,
   getPrevCandidateIndex,
   Target
-} from '@/lib/suggestion'
+} from '/@/lib/suggestion'
 
 describe('suggestion', () => {
   describe('getCurrentWord', () => {

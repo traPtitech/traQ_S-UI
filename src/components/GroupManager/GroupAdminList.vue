@@ -22,12 +22,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { UserGroupId, UserId } from '@/types/entity-ids'
-import Icon from '@/components/UI/Icon.vue'
+import { UserGroupId, UserId } from '/@/types/entity-ids'
+import Icon from '/@/components/UI/Icon.vue'
 import GroupUser from './GroupUser.vue'
-import apis from '@/lib/apis'
-import useToastStore from '@/providers/toastStore'
-import store from '@/store'
+import apis from '/@/lib/apis'
+import useToastStore from '/@/providers/toastStore'
+import store from '/@/store'
 
 export default defineComponent({
   name: 'GroupAdminList',

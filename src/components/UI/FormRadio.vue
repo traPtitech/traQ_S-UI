@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { useModelValueSyncer } from '@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormRadio',

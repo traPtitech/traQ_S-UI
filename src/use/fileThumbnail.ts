@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { buildFileThumbnailPath } from '@/lib/apis'
+import { buildFileThumbnailPath } from '/@/lib/apis'
 import useFileMeta from './fileMeta'
 import { ThumbnailType } from '@traptitech/traq'
 

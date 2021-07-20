@@ -12,8 +12,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import MessageOgpListItem from './MessageOgpListItem.vue'
-import store from '@/store'
-import { isDefined } from '@/lib/util/array'
+import store from '/@/store'
+import { isDefined } from '/@/lib/util/array'
 
 const useOgpData = (props: { externalUrls: string[] }) => {
   const ogpData = computed(() =>

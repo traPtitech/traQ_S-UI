@@ -1,5 +1,5 @@
-import { ChannelTree, constructTree, ChannelLike } from '@/lib/channelTree'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelTree, constructTree, ChannelLike } from '/@/lib/channelTree'
+import { ChannelId } from '/@/types/entity-ids'
 
 describe('constructTree', () => {
   it('can construct tree from entities', () => {

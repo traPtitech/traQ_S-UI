@@ -9,11 +9,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { changeViewState } from '@/lib/websocket'
+import { changeViewState } from '/@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
-import useIsMobile from '@/use/isMobile'
-import DesktopGroupManager from '@/components/GroupManager/DesktopGroupManager.vue'
-import MobileGroupManager from '@/components/GroupManager/MobileGroupManager.vue'
+import useIsMobile from '/@/use/isMobile'
+import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue'
+import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue'
 
 export default defineComponent({
   name: 'GroupManager',

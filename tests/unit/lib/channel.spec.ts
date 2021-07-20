@@ -1,6 +1,6 @@
-import { ChannelId } from '@/types/entity-ids'
-import { MatchResult, channelDeepMatching } from '@/lib/channel'
-import { ChannelLike } from '@/lib/channelTree'
+import { ChannelId } from '/@/types/entity-ids'
+import { MatchResult, channelDeepMatching } from '/@/lib/channel'
+import { ChannelLike } from '/@/lib/channelTree'
 
 describe('channelDeepMatching', () => {
   it('one empty query', () => {

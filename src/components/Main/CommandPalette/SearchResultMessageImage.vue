@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-import { makeStyles } from '@/lib/styles'
-import useFileThumbnail from '@/use/fileThumbnail'
+import { makeStyles } from '/@/lib/styles'
+import useFileThumbnail from '/@/use/fileThumbnail'
 import { defineComponent, reactive, Ref } from 'vue'
-import PlayIcon from '@/components/UI/PlayIcon.vue'
+import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 const useStyles = (path: Ref<string>) =>
   reactive({

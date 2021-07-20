@@ -26,12 +26,12 @@
 <script lang="ts">
 import { defineComponent, ref, SetupContext, computed, PropType } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
-import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import { useModelValueSyncer } from '@/use/modelSyncer'
-import { ChannelId } from '@/types/entity-ids'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { ChannelId } from '/@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
-import useInsertText from '@/use/insertText'
+import useInsertText from '/@/use/insertText'
 
 const useFocus = (context: SetupContext) => {
   const onFocus = () => {

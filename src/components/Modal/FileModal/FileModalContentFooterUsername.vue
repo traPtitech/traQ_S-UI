@@ -7,10 +7,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/store'
-import { UserId } from '@/types/entity-ids'
-import { useUserModalOpener } from '@/use/modalOpener'
-import Icon from '@/components/UI/Icon.vue'
+import store from '/@/store'
+import { UserId } from '/@/types/entity-ids'
+import { useUserModalOpener } from '/@/use/modalOpener'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'FileModalContentFooterUsername',

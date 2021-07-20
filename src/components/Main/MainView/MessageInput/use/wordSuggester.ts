@@ -1,9 +1,9 @@
 import { ComputedRef, WritableComputedRef, ref, computed, watch } from 'vue'
-import getCaretPosition from '@/lib/caretPosition'
-import { getCurrentWord, Target } from '@/lib/suggestion'
+import getCaretPosition from '/@/lib/caretPosition'
+import { getCurrentWord, Target } from '/@/lib/suggestion'
 import useWordSuggesterList, { Word } from './wordSuggestionList'
-import useInsertText from '@/use/insertText'
-import store from '@/store'
+import useInsertText from '/@/use/insertText'
+import store from '/@/store'
 
 export type WordOrConfirmedPart =
   | Word

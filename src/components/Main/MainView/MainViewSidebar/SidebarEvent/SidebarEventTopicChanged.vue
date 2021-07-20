@@ -18,7 +18,7 @@
 import { defineComponent, PropType } from 'vue'
 import { TopicChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'SidebarEventTopicChanged',

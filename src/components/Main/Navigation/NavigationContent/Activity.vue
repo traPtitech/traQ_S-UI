@@ -32,11 +32,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 import useActivityStream from './use/activityStream'
-import EmptyState from '@/components/UI/EmptyState.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 const useActivityMode = () => {
   // 反転していることに注意

@@ -37,16 +37,16 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
-import store from '@/store'
-import { MessageId } from '@/types/entity-ids'
-import useIsMobile from '@/use/isMobile'
+import store from '/@/store'
+import { MessageId } from '/@/types/entity-ids'
+import useIsMobile from '/@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
-import useEmbeddings from '@/use/message/embeddings'
+import useEmbeddings from '/@/use/message/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
-import MessageTools from '@/components/Main/MainView/MessageElement/MessageTools.vue'
-import useHover from '@/use/hover'
+import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
+import useHover from '/@/use/hover'
 
 export default defineComponent({
   name: 'MessageElement',

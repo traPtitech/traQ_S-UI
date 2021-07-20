@@ -25,10 +25,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import useChannelPath from '@/use/channelPath'
-import { constructChannelPath } from '@/router'
-import useIsMobile from '@/use/isMobile'
+import { ChannelId } from '/@/types/entity-ids'
+import useChannelPath from '/@/use/channelPath'
+import { constructChannelPath } from '/@/router'
+import useIsMobile from '/@/use/isMobile'
 
 type Props = {
   channelId: ChannelId

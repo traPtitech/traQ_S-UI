@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 export default defineComponent({
   name: 'DropdownSuggesterUserIcon',

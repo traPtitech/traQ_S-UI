@@ -13,8 +13,8 @@ import {
   TopicChangedEvent,
   VisibilityChangedEvent
 } from '@traptitech/traq'
-import { FileId } from '@/types/entity-ids'
-import DEV_SERVER from '@/lib/env/devServer'
+import { FileId } from '/@/types/entity-ids'
+import DEV_SERVER from '/@/lib/env/devServer'
 import { AxiosError } from 'axios'
 
 export const BASE_PATH = '/api/v3'

@@ -30,14 +30,14 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import apis from '@/lib/apis'
-import store from '@/store'
+import apis from '/@/lib/apis'
+import store from '/@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormTextArea from '@/components/UI/FormTextArea.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import useMaxLength from '@/use/maxLength'
-import useToastStore from '@/providers/toastStore'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormTextArea from '/@/components/UI/FormTextArea.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import useMaxLength from '/@/use/maxLength'
+import useToastStore from '/@/providers/toastStore'
 
 const useCreateClipFolder = () => {
   const { addErrorToast } = useToastStore()

@@ -5,7 +5,7 @@ import {
   StampPaletteId,
   UserGroupId,
   UserId
-} from '@/types/entity-ids'
+} from '/@/types/entity-ids'
 import {
   Channel,
   ClipFolder,

@@ -1,4 +1,4 @@
-import { StampId, ChannelId, DMChannelId } from '@/types/entity-ids'
+import { StampId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import {
   UnreadChannel,
   ChannelSubscribeLevel,

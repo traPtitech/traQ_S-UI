@@ -16,8 +16,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType, shallowRef } from 'vue'
-import { ClipFolderId } from '@/types/entity-ids'
-import MessagesScroller from '@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import { ClipFolderId } from '/@/types/entity-ids'
+import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import useClipsFetcher from './use/clipsFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 

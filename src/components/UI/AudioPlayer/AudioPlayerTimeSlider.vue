@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Slider from '@/components/UI/Slider.vue'
+import Slider from '/@/components/UI/Slider.vue'
 
 export default defineComponent({
   name: 'AudioPlayerTimeSlider',
@@ -80,7 +80,7 @@ export default defineComponent({
     $bgColor: #b7b9ba;
     $themeColor: #585859;
 
-    @import '~/vue-slider-component/lib/theme/default.scss';
+    @import '/~/vue-slider-component/lib/theme/default.scss';
   }
 }
 </style>

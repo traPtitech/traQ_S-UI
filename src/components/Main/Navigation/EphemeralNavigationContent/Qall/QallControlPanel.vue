@@ -26,9 +26,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import useChannelPath from '@/use/channelPath'
-import { constructChannelPath } from '@/router'
+import Icon from '/@/components/UI/Icon.vue'
+import useChannelPath from '/@/use/channelPath'
+import { constructChannelPath } from '/@/router'
 
 export default defineComponent({
   name: 'QallControlPanel',

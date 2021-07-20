@@ -3,8 +3,8 @@ import {
   checkLevel2InputEventsSupport,
   isMac,
   isTouchDevice
-} from '@/lib/util/browser'
-import store from '@/store'
+} from '/@/lib/util/browser'
+import store from '/@/store'
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
 const touchDeviceFlag = isTouchDevice()

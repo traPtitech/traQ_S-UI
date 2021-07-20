@@ -1,15 +1,15 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { messages } from '.'
 import { ActionContext } from 'vuex'
 import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
-import { ExternalUrl, FileId, MessageId } from '@/types/entity-ids'
-import { createSingleflight } from '@/lib/async'
-import apis from '@/lib/apis'
+import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
+import { createSingleflight } from '/@/lib/async'
+import apis from '/@/lib/apis'
 import {
   MessageStampedEvent,
   MessageUnstampedEvent
-} from '@/lib/websocket/events'
+} from '/@/lib/websocket/events'
 import { AxiosError } from 'axios'
 
 export const messagesActionContext = (

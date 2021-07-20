@@ -54,9 +54,9 @@ import {
   ref,
   toRef
 } from 'vue'
-import store from '@/store'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
-import useIsMobile from '@/use/isMobile'
+import store from '/@/store'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import useIsMobile from '/@/use/isMobile'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
@@ -71,10 +71,10 @@ import MessageInputControls from './MessageInputControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import Icon from '@/components/UI/Icon.vue'
-import useMessageInputState from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
-import { useMessageInputStateAttachment } from '@/providers/messageInputState'
+import Icon from '/@/components/UI/Icon.vue'
+import useMessageInputState from '/@/providers/messageInputState'
+import useToastStore from '/@/providers/toastStore'
+import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
 
 export default defineComponent({
   name: 'MessageInput',

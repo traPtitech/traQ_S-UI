@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import useIsMobile from '@/use/isMobile'
+import Icon from '/@/components/UI/Icon.vue'
+import useIsMobile from '/@/use/isMobile'
 
 export default defineComponent({
   name: 'LinkButton',

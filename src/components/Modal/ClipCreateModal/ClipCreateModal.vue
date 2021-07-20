@@ -17,14 +17,14 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, Ref } from 'vue'
-import store from '@/store'
-import apis from '@/lib/apis'
-import { compareString } from '@/lib/util/string'
-import { MessageId, ClipFolderId } from '@/types/entity-ids'
+import store from '/@/store'
+import apis from '/@/lib/apis'
+import { compareString } from '/@/lib/util/string'
+import { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
-import useToastStore from '@/providers/toastStore'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import useToastStore from '/@/providers/toastStore'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const useCreateClip = (
   props: { messageId: MessageId },

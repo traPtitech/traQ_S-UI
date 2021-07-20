@@ -1,6 +1,6 @@
 # icons
 
-Place svg files here, then you can use the icon with `@/components/UI/Icon.vue` component.
+Place svg files here, then you can use the icon with `/@/components/UI/Icon.vue` component.
 
 ## Note
 
