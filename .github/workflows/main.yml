@@ -109,6 +109,12 @@ jobs:
         with:
           node-version: 14.16.1
           cache: npm
+      - uses: actions/cache@v2
+        with:
+          path: ./public/fonts
+          key: font-build-${{ runner.os }}
+          restore-keys: |
+            font-build-${{ runner.os }}
       - name: npm ci
         run: npm ci
       - name: run test:e2e

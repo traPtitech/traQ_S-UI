@@ -10,7 +10,7 @@
     "serve": "vite preview",
     "test:unit": "jest --no-cache",
     "test:e2e": "npm run build && npm run test:e2e:without-build",
-    "test:e2e-headless": "npm run build && npm run test:e2e:without-build -- --headless",
+    "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:without-build -- --headless",
     "test:e2e:without-build": "node tests/e2e/run-cypress.mjs",
     "test:e2e:only-run": "cypress open",
     "test:e2e:only-run-headless": "cypress run --headless",
