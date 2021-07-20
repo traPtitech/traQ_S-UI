@@ -103,8 +103,12 @@ const openChannel = async (event: NotificationClickEvent) => {
 
 // refs src/lib/notification/notification.ts showNotification()
 export const setupNotification = async () => {
-  // @ts-expect-error config.jsの型定義ファイルはつくらない
-  await import('/config.js')
+  /*
+    - workerでのdynamic importの対応状況がよくない点
+    - viteでimportが解決されて別の場所をさしてしまう点
+    からimportScriptsを利用する
+  */
+  importScripts('/config.js')
 
   self.addEventListener('notificationclick', _event => {
     const event = _event as NotificationClickEvent
