@@ -23,7 +23,7 @@
   "dependencies": {
     "@mdi/js": "^5.9.55",
     "@traptitech/traq": "^3.7.7-2",
-    "@traptitech/traq-markdown-it": "^5.3.3",
+    "@traptitech/traq-markdown-it": "^5.3.4",
     "autosize": "^5.0.1",
     "core-js": "^3.15.2",
     "cropperjs": "^1.5.12",
