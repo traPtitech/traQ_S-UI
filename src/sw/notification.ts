@@ -12,13 +12,6 @@ import { wait } from '/@/lib/util/timer'
 
 declare const self: ServiceWorkerGlobalScope
 
-const appName = self.traQConfig.name || 'traQ'
-const ignoredChannels = self.traQConfig.inlineReplyDisableChannels || []
-const createNotificationArguments = createNotificationArgumentsCreator(
-  appName,
-  ignoredChannels
-)
-
 const postMessage = (channelId: ChannelId, text: string) =>
   fetch(`/api/v3/channels/${channelId}/messages`, {
     method: 'POST',
@@ -28,62 +21,6 @@ const postMessage = (channelId: ChannelId, text: string) =>
     },
     body: JSON.stringify({ content: text, embed: true })
   })
-
-const showNotification = (options: ExtendedNotificationOptions) => {
-  const title = options.data.title
-  const [notificationTitle, notificationOptions] = createNotificationArguments(
-    title,
-    options
-  )
-  notificationOptions.data = notificationOptions
-
-  return self.registration
-    .showNotification(notificationTitle, notificationOptions)
-    .catch(err => {
-      // eslint-disable-next-line no-console
-      console.error('[sw] showNotification error:', err)
-    })
-}
-
-const onReplyButtonClick = async (event: NotificationClickEvent) => {
-  const data = event.notification.data
-  const channelId = data.tag.slice('c:'.length)
-
-  // https://crbug.com/1050352#c5
-  // androidでしか通知の再度の発火は発生しない模様
-  try {
-    const [store] = await Promise.all([
-      getStore(),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      postMessage(channelId, event.reply!)
-    ])
-    event.notification.close()
-
-    if (store && store.domain.me.detail) {
-      const me = store.domain.me.detail
-      data.body = `${me.displayName}: ${event.reply}`
-      data.icon = `/api/v3/files/${me.iconFileId}`
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn('[sw] no store or me.detail found')
-      data.body = `自分: ${event.reply}`
-    }
-
-    data.silent = true
-    return showNotification(data)
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('[sw] sendReply error:', err)
-
-    await showNotification(data)
-    await wait(0)
-
-    const notifications = await self.registration.getNotifications({
-      tag: data.tag
-    })
-    notifications.forEach(notification => notification.close())
-  }
-}
 
 const openChannel = async (event: NotificationClickEvent) => {
   const clientsArr = await self.clients.matchAll({
@@ -109,6 +46,67 @@ export const setupNotification = async () => {
     からimportScriptsを利用する
   */
   importScripts('/config.js')
+
+  const appName = self.traQConfig.name || 'traQ'
+  const ignoredChannels = self.traQConfig.inlineReplyDisableChannels || []
+  const createNotificationArguments = createNotificationArgumentsCreator(
+    appName,
+    ignoredChannels
+  )
+
+  const showNotification = (options: ExtendedNotificationOptions) => {
+    const title = options.data.title
+    const [notificationTitle, notificationOptions] =
+      createNotificationArguments(title, options)
+    notificationOptions.data = notificationOptions
+
+    return self.registration
+      .showNotification(notificationTitle, notificationOptions)
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error('[sw] showNotification error:', err)
+      })
+  }
+
+  const onReplyButtonClick = async (event: NotificationClickEvent) => {
+    const data = event.notification.data
+    const channelId = data.tag.slice('c:'.length)
+
+    // https://crbug.com/1050352#c5
+    // androidでしか通知の再度の発火は発生しない模様
+    try {
+      const [store] = await Promise.all([
+        getStore(),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        postMessage(channelId, event.reply!)
+      ])
+      event.notification.close()
+
+      if (store && store.domain.me.detail) {
+        const me = store.domain.me.detail
+        data.body = `${me.displayName}: ${event.reply}`
+        data.icon = `/api/v3/files/${me.iconFileId}`
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('[sw] no store or me.detail found')
+        data.body = `自分: ${event.reply}`
+      }
+
+      data.silent = true
+      return showNotification(data)
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[sw] sendReply error:', err)
+
+      await showNotification(data)
+      await wait(0)
+
+      const notifications = await self.registration.getNotifications({
+        tag: data.tag
+      })
+      notifications.forEach(notification => notification.close())
+    }
+  }
 
   self.addEventListener('notificationclick', _event => {
     const event = _event as NotificationClickEvent
