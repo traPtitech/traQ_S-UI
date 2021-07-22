@@ -49,8 +49,7 @@ export default defineConfig(({ command, mode }) => ({
     __VERSION__: JSON.stringify(packageJson.version),
     __DEV_SERVER__: JSON.stringify(
       command === 'serve' ? DEV_SERVER_PROXY_HOST : ''
-    ),
-    __VUE_OPTIONS_API__: false
+    )
   },
   json: {
     stringify: true
