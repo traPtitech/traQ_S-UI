@@ -90,9 +90,13 @@ interface ChannelIdBody {
   id: ChannelId
 }
 
-export type ChannelCreatedEvent = ChannelIdBody
-export type ChannelDeletedEvent = ChannelIdBody
-export type ChannelUpdatedEvent = ChannelIdBody
+interface ChannelIdWithMembersBody extends ChannelIdBody {
+  dm_user_id?: UserId
+}
+
+export type ChannelCreatedEvent = ChannelIdWithMembersBody
+export type ChannelDeletedEvent = ChannelIdWithMembersBody
+export type ChannelUpdatedEvent = ChannelIdWithMembersBody
 export type ChannelStaredEvent = ChannelIdBody
 export type ChannelUnstaredEvent = ChannelIdBody
 

@@ -28,11 +28,11 @@ export const defineWsListeners = createDefineListeners<typeof entities>()(
       dispatch.deleteUserGroup(id)
     })
 
-    listener.on('CHANNEL_CREATED', ({ id }) => {
-      dispatch.addChannel(id)
+    listener.on('CHANNEL_CREATED', ({ id, dm_user_id }) => {
+      dispatch.addChannel({ channelId: id, dmUserId: dm_user_id })
     })
-    listener.on('CHANNEL_UPDATED', ({ id }) => {
-      dispatch.updateChannel(id)
+    listener.on('CHANNEL_UPDATED', ({ id, dm_user_id }) => {
+      dispatch.updateChannel({ channelId: id, dmUserId: dm_user_id })
     })
     listener.on('CHANNEL_DELETED', ({ id }) => {
       dispatch.deleteChannel(id)

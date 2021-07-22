@@ -33,7 +33,6 @@ import {
 import { AxiosResponse } from 'axios'
 import { arrayToMap } from '/@/lib/util/map'
 import { getUnicodeStamps, setUnicodeStamps } from '/@/lib/stampCache'
-import { dmParentUuid } from '/@/lib/util/uuid'
 import { channelIdToPathString } from '/@/lib/channel'
 
 export const entitiesActionContext = (
@@ -286,8 +285,14 @@ export const actions = defineActions({
     const { commit } = entitiesActionContext(context)
     commit.deleteChannel(channelId)
   },
-  async addChannel(context, channelId: ChannelId | DMChannelId) {
-    const { state, commit, dispatch } = entitiesActionContext(context)
+  async addChannel(
+    context,
+    {
+      channelId,
+      dmUserId
+    }: { channelId: ChannelId | DMChannelId; dmUserId?: UserId }
+  ) {
+    const { state, commit } = entitiesActionContext(context)
     if (
       state.channelsMap.has(channelId) ||
       state.dmChannelsMap.has(channelId)
@@ -295,15 +300,14 @@ export const actions = defineActions({
       return
     }
 
-    const [{ data: channel }, shared] = await getChannel(channelId)
-    if (shared) return
-
     // DMのとき
-    if (channel.parentId === dmParentUuid) {
-      // channelIdからuserIdが辿れないので全取得
-      await dispatch.fetchChannels()
+    if (dmUserId) {
+      commit.setDmChannel({ id: channelId, userId: dmUserId })
       return
     }
+
+    const [{ data: channel }, shared] = await getChannel(channelId)
+    if (shared) return
 
     // ルート直下でないチャンネル
     if (channel.parentId) {
@@ -317,23 +321,29 @@ export const actions = defineActions({
 
     entityMitt.emit('addChannel', channel)
   },
-  async updateChannel(context, channelId: ChannelId | DMChannelId) {
+  async updateChannel(
+    context,
+    {
+      channelId,
+      dmUserId
+    }: { channelId: ChannelId | DMChannelId; dmUserId?: UserId }
+  ) {
     const { state, commit, dispatch } = entitiesActionContext(context)
 
     const old = state.channelsMap.get(channelId)
     // 元々存在していなかったものが来たら追加として処理する
     if (!old) {
-      await dispatch.addChannel(channelId)
+      await dispatch.addChannel({ channelId, dmUserId })
       return
     }
+
+    // DMのときは変化しないはずなので処理しない
+    if (dmUserId) return
 
     const oldPath = channelIdToPathString(channelId, state.channelsMap)
 
     const [{ data: channel }, shared] = await getChannel(channelId)
     if (shared) return
-
-    // DMのときは変化しないはずなので処理しない
-    if (channel.parentId === dmParentUuid) return
 
     // 親チャンネルが変わったときは`children`が不整合にならないように親チャンネルの情報を更新する
     if (old.parentId !== channel.parentId) {
