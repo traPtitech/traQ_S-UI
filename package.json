@@ -79,7 +79,7 @@
     "fibers": "^5.0.0",
     "fonteditor-core": "^2.1.8",
     "patch-package": "^6.4.7",
-    "postcss": "^8.3.5",
+    "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "sass": "^1.35.2",
     "sass-loader": "^10.1.1",
