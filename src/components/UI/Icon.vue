@@ -26,9 +26,13 @@
 import { defineComponent, shallowRef, watch } from 'vue'
 import mdi from '/@/assets/mdi'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const iconModules = import.meta.glob('/src/assets/icons/*.svg')
+const iconModules0 = import.meta.glob('/src/assets/icons/*.svg')
+const iconModules1 = import.meta.glob('/src/assets/icons/*/*.svg')
+
+const iconModules = {
+  ...iconModules0,
+  ...iconModules1
+}
 
 export default defineComponent({
   name: 'Icon',

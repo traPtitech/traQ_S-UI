@@ -83,8 +83,6 @@ const useModal = () => {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
 
 export default defineComponent({
