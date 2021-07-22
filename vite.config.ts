@@ -20,6 +20,7 @@ export default defineConfig(({ command, mode }) => ({
     }
   },
   server: {
+    port: 8080,
     proxy: {
       '/api/v3': {
         target: DEV_SERVER_PROXY_HOST,
