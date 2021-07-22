@@ -1,5 +1,4 @@
-# alpineにするとnode-gypで死ぬ
-FROM node:14.16.1 as build
+FROM node:16.5.0-alpine as build
 WORKDIR /app
 
 ENV CYPRESS_INSTALL_BINARY=0
@@ -27,8 +26,8 @@ ENV THEME_COLOR #0D67EA
 RUN cd /usr/share/caddy && \
   mkdir -p /app/default && \
   mkdir -p /app/default/img && \
-  rm config.js.br defaultTheme.js.br index.html.br img/services/*.br && \
-  cp config.js defaultTheme.js index.html site.webmanifest /app/default && \
+  rm index.html.br && \
+  cp config.js defaultTheme.js index.html manifest.webmanifest /app/default && \
   cp -r img/icons img/services /app/default/img
 
 RUN mkdir -p /app/override

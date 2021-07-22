@@ -112,7 +112,7 @@ const generateFontFace = (font, filename) => {
   const fonts = await getFontsInfo()
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  await fs.rmdir('./public/fonts', { recursive: true }).catch(() => {})
+  await fs.rm('./public/fonts', { recursive: true }).catch(() => {})
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   await fs.mkdir('./public/fonts').catch(() => {})
 
