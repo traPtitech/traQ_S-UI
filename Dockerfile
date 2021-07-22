@@ -27,8 +27,8 @@ ENV THEME_COLOR #0D67EA
 RUN cd /usr/share/caddy && \
   mkdir -p /app/default && \
   mkdir -p /app/default/img && \
-  rm config.js.br defaultTheme.js.br index.html.br img/services/*.br && \
-  cp config.js defaultTheme.js index.html site.webmanifest /app/default && \
+  rm index.html.br && \
+  cp config.js defaultTheme.js index.html manifest.webmanifest /app/default && \
   cp -r img/icons img/services /app/default/img
 
 RUN mkdir -p /app/override
