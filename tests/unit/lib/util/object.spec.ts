@@ -1,4 +1,4 @@
-import { entries, overwrite, setByTuple } from '@/lib/util/object'
+import { entries, overwrite, setByTuple } from '/@/lib/util/object'
 
 describe('entries', () => {
   it('should work', () => {

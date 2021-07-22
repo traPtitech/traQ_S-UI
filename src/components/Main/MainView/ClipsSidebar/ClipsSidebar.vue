@@ -19,13 +19,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { ClipFolderId } from '@/types/entity-ids'
-import useSidebar from '@/use/sidebar'
-import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
-import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
+import { ClipFolderId } from '/@/types/entity-ids'
+import useSidebar from '/@/use/sidebar'
+import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
-import store from '@/store'
+import store from '/@/store'
 
 export default defineComponent({
   name: 'ClipsSidebar',

@@ -19,7 +19,7 @@
 import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import { WordOrConfirmedPart } from '../use/wordSuggester'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
-import StampElement from '@/components/UI/Stamp.vue'
+import StampElement from '/@/components/UI/Stamp.vue'
 
 export default defineComponent({
   name: 'DropdownSuggesterCandidate',

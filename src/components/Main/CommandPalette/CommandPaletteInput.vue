@@ -22,9 +22,9 @@
 </template>
 
 <script lang="ts">
-import CloseButton from '@/components/UI/CloseButton.vue'
-import Icon from '@/components/UI/Icon.vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
 
 export default defineComponent({

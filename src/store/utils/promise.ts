@@ -1,5 +1,5 @@
 import { watch } from 'vue'
-import { waitMount } from '@/onMount'
+import { waitMount } from '/@/onMount'
 
 export type ExtractBooleanValueKeys<T> = keyof {
   [K in keyof T as T[K] extends boolean ? K : never]: T[K]

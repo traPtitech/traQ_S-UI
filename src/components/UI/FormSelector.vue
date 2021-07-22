@@ -23,8 +23,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { randomString } from '@/lib/util/randomString'
-import { useModelValueSyncer } from '@/use/modelSyncer'
+import { randomString } from '/@/lib/util/randomString'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormSelector',

@@ -2,7 +2,7 @@ import {
   useNavigation,
   useEphemeralNavigation,
   EphemeralNavigationItemType
-} from '@/components/Main/Navigation/use/navigationConstructor'
+} from '/@/components/Main/Navigation/use/navigationConstructor'
 
 import { EphemeralNavigationSelectorEntry } from './navigationSelectorEntry'
 

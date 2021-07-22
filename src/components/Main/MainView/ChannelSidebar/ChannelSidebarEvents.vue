@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SidebarContentContainerLink from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
+import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarEvents',

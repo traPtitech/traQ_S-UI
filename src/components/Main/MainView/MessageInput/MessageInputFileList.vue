@@ -16,9 +16,9 @@ import MessageInputFileListItem from './MessageInputFileListItem.vue'
 import {
   useMessageInputStateAttachment,
   VirtualChannelId
-} from '@/providers/messageInputState'
-import { ChannelId } from '@/types/entity-ids'
-import useToastStore from '@/providers/toastStore'
+} from '/@/providers/messageInputState'
+import { ChannelId } from '/@/types/entity-ids'
+import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'MessageInputFileList',

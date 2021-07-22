@@ -54,20 +54,20 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { MessageId } from '@/types/entity-ids'
-import { RouteName } from '@/router'
+import { MessageId } from '/@/types/entity-ids'
+import { RouteName } from '/@/router'
 import {
   useCommandPaletteInvoker,
   useCommandPaletteStore
-} from '@/providers/commandPalette'
+} from '/@/providers/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
-} from '@/components/UI/PopupSelector.vue'
+} from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import LoadingSpinner from '@/components/UI/LoadingSpinner.vue'
-import { SearchMessageSortKey } from '@/use/searchMessage/queryParser'
-import Icon from '@/components/UI/Icon.vue'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+import { SearchMessageSortKey } from '/@/use/searchMessage/queryParser'
+import Icon from '/@/components/UI/Icon.vue'
 
 const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },

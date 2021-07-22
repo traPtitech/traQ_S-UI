@@ -34,13 +34,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
-import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+import NavigationContent from '/@/components/Main/Navigation/NavigationContent.vue'
+import EphemeralNavigationContent from '/@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import useNavigation from './use/navigation'
-import DesktopNavigationSelector from '@/components/Main/Navigation/DesktopNavigationSelector.vue'
+import DesktopNavigationSelector from '/@/components/Main/Navigation/DesktopNavigationSelector.vue'
 import DesktopToolBox, {
   teleportTargetName
-} from '@/components/Main/Navigation/DesktopToolBox.vue'
+} from '/@/components/Main/Navigation/DesktopToolBox.vue'
 
 export default defineComponent({
   name: 'DesktopNavigation',

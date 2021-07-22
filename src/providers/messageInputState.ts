@@ -8,10 +8,10 @@ import {
   unref,
   watch
 } from 'vue'
-import { AttachmentType, mimeToFileType } from '@/lib/util/file'
-import { getResizedFile } from '@/lib/resize'
-import { convertToDataUrl } from '@/lib/resize/dataurl'
-import { ChannelId } from '@/types/entity-ids'
+import { AttachmentType, mimeToFileType } from '/@/lib/util/file'
+import { getResizedFile } from '/@/lib/resize'
+import { convertToDataUrl } from '/@/lib/resize/dataurl'
+import { ChannelId } from '/@/types/entity-ids'
 
 const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 

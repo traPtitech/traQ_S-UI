@@ -9,8 +9,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { navigationRouteNameTitleMap } from './use/navigation'
-import Icon from '@/components/UI/Icon.vue'
-import { constructSettingsPath, SettingsRouteName } from '@/router/settings'
+import Icon from '/@/components/UI/Icon.vue'
+import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
 export default defineComponent({
   name: 'MobileTabSelectorItem',

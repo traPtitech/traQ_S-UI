@@ -6,9 +6,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import { ChannelId } from '@/types/entity-ids'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import store from '/@/store'
+import { ChannelId } from '/@/types/entity-ids'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'ChannelElementTopic',

@@ -4,9 +4,9 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineEntityListeners, defineMeListeners } from './listeners'
-import { mitt } from '@/lib/typedMitt'
-import { ChannelId } from '@/types/entity-ids'
-import router, { rewriteChannelPath } from '@/router'
+import { mitt } from '/@/lib/typedMitt'
+import { ChannelId } from '/@/types/entity-ids'
+import router, { rewriteChannelPath } from '/@/router'
 
 export const channelTree = defineModule({
   namespaced: true,

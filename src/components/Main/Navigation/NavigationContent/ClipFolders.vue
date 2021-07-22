@@ -23,11 +23,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
-import Icon from '@/components/UI/Icon.vue'
-import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
-import ClipFoldersElement from '@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
-import EmptyState from '@/components/UI/EmptyState.vue'
+import store from '/@/store'
+import Icon from '/@/components/UI/Icon.vue'
+import NavigationContentContainer from '/@/components/Main/Navigation/NavigationContentContainer.vue'
+import ClipFoldersElement from '/@/components/Main/Navigation/NavigationContent/ClipFoldersElement.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 export default defineComponent({
   name: 'ClipFolders',

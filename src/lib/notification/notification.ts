@@ -1,64 +1,41 @@
 import {
   ExtendedNotificationOptions,
   NotificationClickEvent
-} from '@/types/InlineNotificationReplies'
-import apis from './apis'
-import router from '@/router'
-import { isIOSApp } from './util/browser'
-import { ChannelId, DMChannelId } from '@/types/entity-ids'
+} from '/@/types/InlineNotificationReplies'
+import apis from '/@/lib/apis'
+import router from '/@/router'
+import { isIOSApp } from '/@/lib/util/browser'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import { createNotificationArgumentsCreator } from './notificationArguments'
+import { OnCanUpdate, setupUpdateToast } from './updateToast'
+import { setupFirebase, loadFirebase } from './firebase'
 
 const appName = window.traQConfig.name || 'traQ'
-
-const loadFirebase = async () => {
-  const firebase = (await import('firebase/app')).default
-  await import('firebase/messaging')
-  return firebase
-}
-
-const setupFirebase = async () => {
-  if (window.traQConfig.firebase === undefined) {
-    return
-  }
-
-  const fb = await loadFirebase()
-  try {
-    fb.initializeApp(window.traQConfig.firebase)
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[Firebase] failed to initialize', e)
-  }
-  return fb
-}
-
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
 
+const createNotificationArguments = createNotificationArgumentsCreator(
+  appName,
+  ignoredChannels
+)
+
 const notify = async (
-  title: string,
-  options: ExtendedNotificationOptions = {}
+  title: string | undefined,
+  options: ExtendedNotificationOptions = {},
+  withoutInput = false
 ) => {
-  if (title.startsWith('#') && !ignoredChannels.includes(title)) {
-    const verb = title.includes('#') ? '投稿' : '返信'
-    options.actions = [
-      {
-        action: 'reply',
-        type: 'text',
-        title: '返信',
-        placeholder: `${title}へ${verb}する...`
-      }
-    ]
-  }
-  if (options.tag) {
-    options.renotify = true
-  }
-  options.badge = '/img/icons/badge.png'
+  const [notificationTitle, notificationOptions] = createNotificationArguments(
+    title,
+    options,
+    withoutInput
+  )
 
   if (navigator.serviceWorker) {
     const regist = await navigator.serviceWorker.ready
-    options.data = options
-    return regist.showNotification(title, options)
+    notificationOptions.data = notificationOptions
+    return regist.showNotification(notificationTitle, notificationOptions)
   }
   if (Notification?.permission === 'granted') {
-    return new Notification(title, options)
+    return new Notification(notificationTitle, notificationOptions)
   }
   return null
 }
@@ -72,60 +49,6 @@ interface NotificationPayload {
   data: NotificationPayloadData
   from: number
   priority: string
-}
-
-/**
- * アップデートできるときに実行される関数
- * アップデートを実行するときにrunUpdateを呼び出す
- */
-type OnCanUpdate = (runUpdate: () => void) => void
-
-const setupUpdateToast = (
-  registration: ServiceWorkerRegistration,
-  onCanUpdate: OnCanUpdate
-) => {
-  // 新しいsw
-  if (!navigator.serviceWorker.controller) return
-
-  const doCanUpdate = () => {
-    onCanUpdate(async () => {
-      const registration = await navigator.serviceWorker.getRegistration()
-      registration?.waiting?.postMessage({ type: 'SKIP_WAITING' })
-    })
-  }
-
-  // swが更新完了したときにリロード
-  let reloading = false
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloading) return
-    reloading = true
-    window.location.reload()
-  })
-
-  // ほかのタブでswが更新されたとき
-  if (registration.waiting) {
-    doCanUpdate()
-    return
-  }
-
-  // swが更新できるときにトースト表示
-  const newWorker = registration.installing
-  if (newWorker) {
-    newWorker.addEventListener('statechange', () => {
-      if (newWorker.state !== 'installed') return
-      doCanUpdate()
-    })
-    return
-  }
-
-  // swが更新できるときにトースト表示
-  registration.addEventListener('updatefound', () => {
-    const newWorker = registration.installing
-    newWorker?.addEventListener('statechange', () => {
-      if (newWorker.state !== 'installed') return
-      doCanUpdate()
-    })
-  })
 }
 
 export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
@@ -146,7 +69,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   const firebase = await setupFirebase()
 
-  if (process.env.NODE_ENV !== 'production' || !navigator?.serviceWorker) {
+  if (import.meta.env.DEV || !navigator?.serviceWorker) {
     return
   }
 
@@ -177,13 +100,11 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   const messaging = firebase.messaging()
 
   messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
-    const notification = await notify(
-      payload.data.title || appName,
-      payload.data
-    )
+    const notification = await notify(payload.data.title, payload.data)
     if (!notification) return
 
-    notification.onclick = (event: NotificationClickEvent) => {
+    notification.onclick = (_event: Event) => {
+      const event = _event as NotificationClickEvent
       if (event.reply) {
         const channelID = payload.data.tag?.slice('c:'.length)
         if (channelID) {
@@ -224,7 +145,7 @@ export const deleteToken = async () => {
 export const removeNotification = async (
   channelId: ChannelId | DMChannelId
 ) => {
-  const registration = await navigator.serviceWorker.getRegistration()
+  const registration = await navigator.serviceWorker?.getRegistration()
   if (!registration) return
   const notifications = await registration.getNotifications({
     tag: `c:${channelId}`

@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
-import store from '@/store'
-import useSidebar from '@/use/sidebar'
+import store from '/@/store'
+import useSidebar from '/@/use/sidebar'
 
 type ChannelSidebarPage = 'default' | 'pinned' | 'events'
 

@@ -1,6 +1,6 @@
 // 実際のフィルタに依存しない関数群
-import store from '@/store'
-import { ChannelId, MessageId, UserId } from '@/types/entity-ids'
+import store from '/@/store'
+import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import { channelPathToId } from '../../lib/channelTree'
 
 /*

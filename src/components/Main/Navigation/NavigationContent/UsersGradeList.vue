@@ -22,9 +22,9 @@ import { defineComponent, ref, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
-import SlideDown from '@/components/UI/SlideDown.vue'
-import store from '@/store'
-import { isDefined } from '@/lib/util/array'
+import SlideDown from '/@/components/UI/SlideDown.vue'
+import store from '/@/store'
+import { isDefined } from '/@/lib/util/array'
 
 const useFolding = () => {
   const isFolding = ref(true)

@@ -2,7 +2,7 @@ import {
   formatSnakeKeysToCamelShallow,
   reduceToRecord,
   reduceToRecordOfArray
-} from '@/lib/util/record'
+} from '/@/lib/util/record'
 
 describe('reduceToRecord', () => {
   const data = [

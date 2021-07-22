@@ -11,9 +11,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import { ChannelId } from '/@/types/entity-ids'
+import store from '/@/store'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderTopic',

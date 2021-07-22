@@ -34,11 +34,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '@/store'
-import ChannelElementUnreadBadge from '@/components/Main/Navigation/ChannelList/ChannelElementUnreadBadge.vue'
-import useHover from '@/use/hover'
+import store from '/@/store'
+import ChannelElementUnreadBadge from '/@/components/Main/Navigation/ChannelList/ChannelElementUnreadBadge.vue'
+import useHover from '/@/use/hover'
 import { DMChannel } from '@traptitech/traq'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
 
 const useNotification = (props: { dmChannel: DMChannel }) => {

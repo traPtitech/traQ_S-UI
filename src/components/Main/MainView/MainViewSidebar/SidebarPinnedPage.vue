@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
 import SidebarPinnedList from './SidebarPinnedList.vue'
 import { Pin } from '@traptitech/traq'

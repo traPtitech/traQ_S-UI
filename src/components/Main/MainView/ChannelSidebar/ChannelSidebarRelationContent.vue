@@ -56,7 +56,7 @@
 import { defineComponent, reactive, PropType, computed } from 'vue'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import { Channel } from '@traptitech/traq'
-import { pickSomeAroundIndex } from '@/lib/util/array'
+import { pickSomeAroundIndex } from '/@/lib/util/array'
 
 const SIBLINGS_DEFAULT_COUNT = 5
 const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2

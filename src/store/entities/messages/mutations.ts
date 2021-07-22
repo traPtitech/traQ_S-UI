@@ -1,4 +1,4 @@
-import { FileId, MessageId } from '@/types/entity-ids'
+import { FileId, MessageId } from '/@/types/entity-ids'
 import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { messageMitt } from '.'

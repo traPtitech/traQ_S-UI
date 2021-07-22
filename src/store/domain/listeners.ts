@@ -1,5 +1,5 @@
 import { createDefineListeners } from '../utils/defineListeners'
-import { wsListener } from '@/lib/websocket'
+import { wsListener } from '/@/lib/websocket'
 import { domain } from '.'
 
 export const defineWsListeners = createDefineListeners<typeof domain>()(

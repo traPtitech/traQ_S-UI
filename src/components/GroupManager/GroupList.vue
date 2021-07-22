@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import GroupListGroup from './GroupListGroup.vue'
-import { UserGroupId } from '@/types/entity-ids'
+import { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
 
 export default defineComponent({

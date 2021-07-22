@@ -1,8 +1,8 @@
-import store from '@/store'
+import store from '/@/store'
 import {
   createInitialFetchPromise,
   ExtractBooleanValueKeys
-} from '@/store/utils/promise'
+} from '/@/store/utils/promise'
 
 const createIFPromise = (
   key: ExtractBooleanValueKeys<typeof store.state.domain.me>

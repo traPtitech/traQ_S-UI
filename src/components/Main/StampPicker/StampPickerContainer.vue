@@ -12,8 +12,11 @@
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue'
 import StampPicker from './StampPicker.vue'
-import { useStampPickerStore, AlignmentPosition } from '@/providers/stampPicker'
-import { Point } from '@/lib/point'
+import {
+  useStampPickerStore,
+  AlignmentPosition
+} from '/@/providers/stampPicker'
+import { Point } from '/@/lib/point'
 
 const useStyles = (state: {
   position: Point | undefined

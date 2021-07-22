@@ -1,9 +1,9 @@
-import store from '@/store'
+import store from '/@/store'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
-import { useCommandPaletteInvoker } from '@/providers/commandPalette'
+import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 import { useRouter } from 'vue-router'
-import { RouteName } from '@/router'
+import { RouteName } from '/@/router'
 
 interface Tool {
   iconName: string

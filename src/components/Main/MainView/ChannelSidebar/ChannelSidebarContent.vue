@@ -49,7 +49,7 @@ import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
 import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
 import ChannelSidebarQall from './ChannelSidebarQall.vue'
 import ChannelSidebarBots from './ChannelSidebarBots.vue'
-import { UserId, ChannelId } from '@/types/entity-ids'
+import { UserId, ChannelId } from '/@/types/entity-ids'
 import { useQallSession } from './use/channelRTCSession'
 
 export default defineComponent({

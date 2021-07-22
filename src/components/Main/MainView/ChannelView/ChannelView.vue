@@ -18,13 +18,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, Ref, toRef } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
+import { ChannelId } from '/@/types/entity-ids'
+import store from '/@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce, throttle } from 'throttle-debounce'
-import { useMessageInputStateAttachment } from '@/providers/messageInputState'
-import useToastStore from '@/providers/toastStore'
+import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
+import useToastStore from '/@/providers/toastStore'
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()

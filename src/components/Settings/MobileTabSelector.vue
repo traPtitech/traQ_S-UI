@@ -22,8 +22,8 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
-import CloseButton from '@/components/UI/CloseButton.vue'
-import Version from '@/components/UI/Version.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import Version from '/@/components/UI/Version.vue'
 import useSettingsNavigation, { navigations } from './use/navigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'

@@ -33,8 +33,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import FormInput from '@/components/UI/FormInput.vue'
-import Icon from '@/components/UI/Icon.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'LineEditor',

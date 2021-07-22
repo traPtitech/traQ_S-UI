@@ -1,5 +1,9 @@
 <template>
-  <div v-click-outside="onClickOutside" :class="$style.wrapper">
+  <div
+    v-click-outside="onClickOutside"
+    :class="$style.wrapper"
+    data-testid="usermodal"
+  >
     <close-button
       :size="isMobile ? 24 : 32"
       :class="$style.close"
@@ -29,14 +33,14 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
-import store from '@/store'
-import { UserId } from '@/types/entity-ids'
+import store from '/@/store'
+import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 import Feature from './Feature/Feature.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 import useUserDetail from './use/userDetail'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>

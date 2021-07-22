@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'vuex-persist'
 import { createStore, get, set, del, clear, keys } from 'idb-keyval'
-import { toRawDeep } from '@/lib/util/reactive'
+import { toRawDeep } from '/@/lib/util/reactive'
 
 const store = createStore('vuex', 'vuex')
 

@@ -1,4 +1,4 @@
-import { compareString, compareStringInsensitive } from '@/lib/util/string'
+import { compareString, compareStringInsensitive } from '/@/lib/util/string'
 
 describe('compareString', () => {
   it('can compare string', () => {

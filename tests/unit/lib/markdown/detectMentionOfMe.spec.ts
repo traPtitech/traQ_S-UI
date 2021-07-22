@@ -1,4 +1,4 @@
-import { detectMentionOfMe } from '@/lib/markdown/detector'
+import { detectMentionOfMe } from '/@/lib/markdown/detector'
 
 describe('detectMentionOfMe', () => {
   it('can detect empty false', () => {

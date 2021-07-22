@@ -1,10 +1,10 @@
-import { defineDBModule } from '@/store/defineDBModule'
+import { defineDBModule } from '/@/store/defineDBModule'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners, defineMessageListeners } from './listeners'
-import { mitt } from '@/lib/typedMitt'
+import { mitt } from '/@/lib/typedMitt'
 
 export const me = defineDBModule({
   path: ['domain.me.detail'],

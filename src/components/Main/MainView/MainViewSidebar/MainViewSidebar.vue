@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import useSidebar from '@/use/sidebar'
-import useIsMobile from '@/use/isMobile'
+import useSidebar from '/@/use/sidebar'
+import useIsMobile from '/@/use/isMobile'
 
 export default defineComponent({
   name: 'MainViewSidebar',

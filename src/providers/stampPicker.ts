@@ -10,9 +10,9 @@ import {
   InjectionKey,
   watchEffect
 } from 'vue'
-import { StampSet } from '@/components/Main/StampPicker/use/stampSetSelector'
-import { StampId } from '@/types/entity-ids'
-import { Point } from '@/lib/point'
+import { StampSet } from '/@/components/Main/StampPicker/use/stampSetSelector'
+import { StampId } from '/@/types/entity-ids'
+import { Point } from '/@/lib/point'
 import { throttle } from 'throttle-debounce'
 
 const stampPickerStoreSymbol: InjectionKey<StampPickerStore> = Symbol()

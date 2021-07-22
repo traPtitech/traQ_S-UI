@@ -1,8 +1,8 @@
 import { defineGetters } from 'direct-vuex'
 import { S } from './state'
 import { domain } from './index'
-import { moduleGetterContext } from '@/store'
-import { UserId } from '@/types/entity-ids'
+import { moduleGetterContext } from '/@/store'
+import { UserId } from '/@/types/entity-ids'
 
 const domainGetterContext = (args: [unknown, unknown, unknown, unknown]) =>
   moduleGetterContext(args, domain)

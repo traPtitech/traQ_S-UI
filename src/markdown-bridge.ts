@@ -1,5 +1,5 @@
-import store from '@/store'
-import { UserId, UserGroupId } from '@/types/entity-ids'
+import store from '/@/store'
+import { UserId, UserGroupId } from '/@/types/entity-ids'
 import { changeChannelByPath } from './router/channel'
 
 interface ExtendedWindow extends Window {

@@ -1,5 +1,5 @@
-import { destroyAudio } from '@/lib/audio'
-import { FileId } from '@/types/entity-ids'
+import { destroyAudio } from '/@/lib/audio'
+import { FileId } from '/@/types/entity-ids'
 import { provide, inject, InjectionKey, reactive, computed } from 'vue'
 
 const audioControllerSymbol: InjectionKey<AudioController> = Symbol()

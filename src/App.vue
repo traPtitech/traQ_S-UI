@@ -12,18 +12,18 @@
 
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
-import store from '@/store'
-import { makeStyles, ThemeVariablesOrProperties } from '@/lib/styles'
-import { transparentize, isDarkColor } from '@/lib/util/color'
+import store from '/@/store'
+import { makeStyles, ThemeVariablesOrProperties } from '/@/lib/styles'
+import { transparentize, isDarkColor } from '/@/lib/util/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
-import { mobileMinBreakpoint } from '@/lib/media'
-import ToastContainer from '@/components/Toast/ToastContainer.vue'
-import { provideToastStore } from '@/providers/toastStore'
-import { provideStampPickerStore } from '@/providers/stampPicker'
-import { provideMessageInputState } from '@/providers/messageInputState'
-import { provideCommandPaletteStore } from '@/providers/commandPalette'
-import ModalContainer from '@/components/Modal/ModalContainer.vue'
+import { mobileMinBreakpoint } from '/@/lib/media'
+import ToastContainer from '/@/components/Toast/ToastContainer.vue'
+import { provideToastStore } from '/@/providers/toastStore'
+import { provideStampPickerStore } from '/@/providers/stampPicker'
+import { provideMessageInputState } from '/@/providers/messageInputState'
+import { provideCommandPaletteStore } from '/@/providers/commandPalette'
+import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 
 const useWindowResizeObserver = () => {
   const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)

@@ -1,5 +1,5 @@
-import { mitt } from '@/lib/typedMitt'
-import { StampId } from '@/types/entity-ids'
+import { mitt } from '/@/lib/typedMitt'
+import { StampId } from '/@/types/entity-ids'
 import { Channel, Stamp } from '@traptitech/traq'
 
 /**

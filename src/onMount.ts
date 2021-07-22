@@ -1,4 +1,4 @@
-import { mitt } from '@/lib/typedMitt'
+import { mitt } from '/@/lib/typedMitt'
 
 export const mountMitt = mitt<{ mount: () => void }>()
 

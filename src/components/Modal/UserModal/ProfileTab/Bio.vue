@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section data-testid="usermodal-bio">
     <profile-header text="ひとこと" :class="$style.header" />
     <inline-markdown
       :class="$style.bio"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import ProfileHeader from './ProfileHeader.vue'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'Bio',

@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, defineAsyncComponent } from 'vue'
-import store from '@/store'
-import { ModalState } from '@/store/ui/modal/state'
+import store from '/@/store'
+import { ModalState } from '/@/store/ui/modal/state'
 
 const modalComponentMap: Record<ModalState['type'], string> = {
   user: 'UserModal/UserModal',
@@ -83,6 +83,8 @@ const useModal = () => {
   }
 }
 
+const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
+
 export default defineComponent({
   name: 'ModalContainer',
   setup() {
@@ -90,7 +92,9 @@ export default defineComponent({
 
     // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
     const getComponent = (path: string) =>
-      defineAsyncComponent(() => import(`@/components/Modal/${path}.vue`))
+      defineAsyncComponent(() =>
+        modalModules[`/src/components/Modal/${path}.vue`]()
+      )
 
     const component = computed(() =>
       getComponent(modalComponentMap[modalState.current.type])

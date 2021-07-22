@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import LoadingSpinner from '@/components/UI/LoadingSpinner.vue'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
 export default defineComponent({
   name: 'FormButton',

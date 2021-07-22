@@ -1,23 +1,23 @@
-import { ChannelId } from '@/types/entity-ids'
-import store from '@/store'
-import apis, { buildFilePathForPost, formatResizeError } from '@/lib/apis'
-import { replace as embedInternalLink } from '@/lib/markdown/internalLinkEmbedder'
-import useChannelPath from '@/use/channelPath'
+import { ChannelId } from '/@/types/entity-ids'
+import store from '/@/store'
+import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
+import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
+import useChannelPath from '/@/use/channelPath'
 import { computed, ref, unref } from 'vue'
-import { nullUuid } from '@/lib/util/uuid'
-import { MESSAGE_MAX_LENGTH } from '@/lib/validate'
-import { countLength } from '@/lib/util/string'
+import { nullUuid } from '/@/lib/util/uuid'
+import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
+import { countLength } from '/@/lib/util/string'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise
-} from '@/store/entities/promises'
-import useToastStore from '@/providers/toastStore'
+} from '/@/store/entities/promises'
+import useToastStore from '/@/providers/toastStore'
 import {
   Attachment,
   useMessageInputStateStatic,
   MessageInputStateKey
-} from '@/providers/messageInputState'
+} from '/@/providers/messageInputState'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,

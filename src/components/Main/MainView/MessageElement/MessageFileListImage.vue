@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileThumbnail from '@/use/fileThumbnail'
-import PlayIcon from '@/components/UI/PlayIcon.vue'
+import useFileThumbnail from '/@/use/fileThumbnail'
+import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 export default defineComponent({
   name: 'MessageFileListItem',

@@ -34,11 +34,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import Slider from '@/components/UI/Slider.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import Icon from '@/components/UI/Icon.vue'
-import { UserId } from '@/types/entity-ids'
-import store from '@/store'
+import Slider from '/@/components/UI/Slider.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import { UserId } from '/@/types/entity-ids'
+import store from '/@/store'
 
 const maxVolumeValue = 200
 

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { Attachment } from '@/providers/messageInputState'
+import { Attachment } from '/@/providers/messageInputState'
 import {
   defineComponent,
   computed,

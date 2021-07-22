@@ -1,4 +1,4 @@
-import { canResize, isJpeg } from '@/lib/resize'
+import { canResize, isJpeg } from '/@/lib/resize'
 
 describe('canResize', () => {
   it('can check png', () => {

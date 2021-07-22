@@ -1,4 +1,4 @@
-import { getStringParam } from '@/lib/util/params'
+import { getStringParam } from '/@/lib/util/params'
 
 describe('getStringParam', () => {
   it('can get string param', () => {

@@ -1,18 +1,18 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { messagesView } from './index'
-import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { ChannelViewer, ChannelViewState, Message } from '@traptitech/traq'
-import { render } from '@/lib/markdown/markdown'
-import apis from '@/lib/apis'
-import { changeViewState } from '@/lib/websocket'
+import { render } from '/@/lib/markdown/markdown'
+import apis from '/@/lib/apis'
+import { changeViewState } from '/@/lib/websocket'
 import { ActionContext } from 'vuex'
 import {
   isFile,
   isMessage,
   isExternalUrl
-} from '@/lib/util/guard/embeddingOrUrl'
-import { createSingleflight } from '@/lib/async'
+} from '/@/lib/util/guard/embeddingOrUrl'
+import { createSingleflight } from '/@/lib/async'
 import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
 import { ExternalUrl } from '@traptitech/traq-markdown-it'
 

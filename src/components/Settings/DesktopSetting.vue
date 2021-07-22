@@ -10,10 +10,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 import DesktopTabSelector from './DesktopTabSelector.vue'
 import DesktopTabFrame from './DesktopTabFrame.vue'
-import useSettingsNavigation from '@/components/Settings/use/navigation'
+import useSettingsNavigation from '/@/components/Settings/use/navigation'
 
 export default defineComponent({
   name: 'DesktopSettingModal',

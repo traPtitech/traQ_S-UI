@@ -3,8 +3,8 @@ import {
   constructStampNameIdMap,
   traQStampsToStampCategory,
   categorizeUnicodeStamps
-} from '@/lib/stampCategorizer'
-import { moduleActionContext } from '@/store'
+} from '/@/lib/stampCategorizer'
+import { moduleActionContext } from '/@/store'
 import { stampCategory } from '.'
 import { ActionContext } from 'vuex'
 import { toRaw } from 'vue'

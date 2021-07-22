@@ -1,5 +1,5 @@
 import { computed, readonly, Ref, ref, toRaw, watchEffect } from 'vue'
-import apis from '@/lib/apis'
+import apis from '/@/lib/apis'
 import { Version } from '@traptitech/traq'
 
 const useVersion = (needed: Ref<boolean> | boolean = true) => {

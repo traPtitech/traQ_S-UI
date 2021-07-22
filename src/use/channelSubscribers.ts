@@ -1,8 +1,8 @@
-import apis from '@/lib/apis'
-import { createSingleflight } from '@/lib/async'
-import { wsListener } from '@/lib/websocket'
-import { ChannelSubscribersChangedEvent } from '@/lib/websocket/events'
-import { ChannelId } from '@/types/entity-ids'
+import apis from '/@/lib/apis'
+import { createSingleflight } from '/@/lib/async'
+import { wsListener } from '/@/lib/websocket'
+import { ChannelSubscribersChangedEvent } from '/@/lib/websocket/events'
+import { ChannelId } from '/@/types/entity-ids'
 import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 
 const getChannelSubscribers = createSingleflight(

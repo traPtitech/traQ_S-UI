@@ -19,14 +19,14 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
-import useSyncedState from '@/components/Settings/use/syncedState'
-import Notification from '@/components/Settings/BrowserTab/Notification.vue'
-import CitationNotification from '@/components/Settings/BrowserTab/CitationNotification.vue'
-import Caches from '@/components/Settings/BrowserTab/Caches.vue'
-import OpenMode from '@/components/Settings/BrowserTab/OpenMode.vue'
-import SendKey from '@/components/Settings/BrowserTab/SendKey.vue'
-import EcoMode from '@/components/Settings/BrowserTab/EcoMode.vue'
+import store from '/@/store'
+import useSyncedState from '/@/components/Settings/use/syncedState'
+import Notification from '/@/components/Settings/BrowserTab/Notification.vue'
+import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
+import Caches from '/@/components/Settings/BrowserTab/Caches.vue'
+import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
+import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
+import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
 
 export default defineComponent({
   name: 'BrowserTab',

@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { User } from '@traptitech/traq'
-import OnlineIndicator from '@/components/UI/OnlineIndicator.vue'
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 export default defineComponent({
   name: 'UsersElementUserName',

@@ -1,7 +1,7 @@
-import store from '@/store'
+import store from '/@/store'
 import { computed } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import useToastStore from '@/providers/toastStore'
+import { ChannelId } from '/@/types/entity-ids'
+import useToastStore from '/@/providers/toastStore'
 
 const useQall = (props: { channelId: ChannelId }) => {
   const { addErrorToast } = useToastStore()

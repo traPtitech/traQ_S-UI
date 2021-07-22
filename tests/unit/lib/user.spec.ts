@@ -1,4 +1,4 @@
-import { isActive } from '@/lib/user'
+import { isActive } from '/@/lib/user'
 import { UserAccountState, User } from '@traptitech/traq'
 
 const baseUser: Omit<User, 'state'> = {

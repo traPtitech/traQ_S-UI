@@ -1,9 +1,9 @@
 import { computed, watch, Ref } from 'vue'
-import store from '@/store'
-import useSwipeDetector from '@/use/swipeDetector'
-import useSwipeDrawer from '@/use/swipeDrawer'
-import { MainViewComponentState } from '@/store/ui/mainView/state'
-import useIsMobile from '@/use/isMobile'
+import store from '/@/store'
+import useSwipeDetector from '/@/use/swipeDetector'
+import useSwipeDrawer from '/@/use/swipeDrawer'
+import { MainViewComponentState } from '/@/store/ui/mainView/state'
+import useIsMobile from '/@/use/isMobile'
 
 type DrawerType = 'none' | 'nav' | 'sidebar'
 

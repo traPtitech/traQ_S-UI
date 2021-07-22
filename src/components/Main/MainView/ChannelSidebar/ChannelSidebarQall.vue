@@ -6,10 +6,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '@/store'
-import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import store from '/@/store'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarQall',

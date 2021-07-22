@@ -17,12 +17,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, watchEffect, Ref } from 'vue'
-import apis from '@/lib/apis'
-import store from '@/store'
-import SidebarContentContainerFoldable from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
-import { ChannelId } from '@/types/entity-ids'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import apis from '/@/lib/apis'
+import store from '/@/store'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
+import { ChannelId } from '/@/types/entity-ids'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
   const isEditing = ref(false)

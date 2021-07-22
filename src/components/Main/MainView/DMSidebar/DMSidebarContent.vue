@@ -12,10 +12,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { UserId } from '@/types/entity-ids'
-import ChannelSidebarPinned from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
-import ChannelSidebarViewers from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
-import ChannelSidebarEvents from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue'
+import { UserId } from '/@/types/entity-ids'
+import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
+import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
+import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue'
 
 export default defineComponent({
   name: 'DMSidebarContent',

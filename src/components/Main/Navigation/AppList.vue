@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import AppListItem from '@/components/Main/Navigation/AppListItem.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import AppListItem from '/@/components/Main/Navigation/AppListItem.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'AppList',

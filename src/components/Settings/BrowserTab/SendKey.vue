@@ -46,11 +46,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { SendKey, SendKeys } from '@/store/app/browserSettings'
-import { isMac } from '@/lib/util/browser'
-import FormRadio from '@/components/UI/FormRadio.vue'
-import FormCheckbox from '@/components/UI/FormCheckbox.vue'
-import { useModelSyncer, useModelObjectSyncer } from '@/use/modelSyncer'
+import { SendKey, SendKeys } from '/@/store/app/browserSettings'
+import { isMac } from '/@/lib/util/browser'
+import FormRadio from '/@/components/UI/FormRadio.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import { useModelSyncer, useModelObjectSyncer } from '/@/use/modelSyncer'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',

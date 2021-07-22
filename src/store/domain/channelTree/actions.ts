@@ -1,11 +1,11 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { channelTree, channelTreeMitt } from '.'
 import { ActionContext } from 'vuex'
-import store from '@/store'
-import { constructTree, rootChannelId } from '@/lib/channelTree'
+import store from '/@/store'
+import { constructTree, rootChannelId } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
-import { channelIdToPathString } from '@/lib/channel'
+import { channelIdToPathString } from '/@/lib/channel'
 
 export const channelTreeActionContext = (
   context: ActionContext<unknown, unknown>

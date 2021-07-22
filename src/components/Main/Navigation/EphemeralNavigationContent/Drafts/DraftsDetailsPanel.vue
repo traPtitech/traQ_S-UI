@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import { MessageInputState } from '@/providers/messageInputState'
-import { ChannelId } from '@/types/entity-ids'
+import { MessageInputState } from '/@/providers/messageInputState'
+import { ChannelId } from '/@/types/entity-ids'
 import { defineComponent, PropType } from 'vue'
 import CollapseContent from '../CollapseContent.vue'
 import DraftsDetailsPanelChannel from './DraftsDetailsPanelChannel.vue'

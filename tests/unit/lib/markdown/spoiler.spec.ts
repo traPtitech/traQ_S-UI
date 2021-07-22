@@ -1,4 +1,4 @@
-import { toggleSpoiler } from '@/lib/markdown/spoiler'
+import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 
 describe('toggleSpoiler', () => {
   it('can toggle to shown', () => {

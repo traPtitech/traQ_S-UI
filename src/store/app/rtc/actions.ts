@@ -1,17 +1,21 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
-import { ChannelId, UserId } from '@/types/entity-ids'
-import { randomString } from '@/lib/util/randomString'
-import { client, initClient, destroyClient } from '@/lib/webrtc/traQRTCClient'
+import { ChannelId, UserId } from '/@/types/entity-ids'
+import { randomString } from '/@/lib/util/randomString'
+import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer, {
   getTalkingLoundnessLevel
-} from '@/lib/audioStreamMixer'
-import { getUserAudio } from '@/lib/webrtc/userMedia'
+} from '/@/lib/audioStreamMixer'
+import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
-import { tts } from '@/lib/tts'
-import { wait } from '@/lib/util/timer'
-import { isIOSApp } from '@/lib/util/browser'
+import { tts } from '/@/lib/tts'
+import { wait } from '/@/lib/util/timer'
+import { isIOSApp } from '/@/lib/util/browser'
+import qallStartMp3 from '/@/assets/se/qall_start.mp3'
+import qallEndMp3 from '/@/assets/se/qall_end.mp3'
+import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
+import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -115,10 +119,10 @@ export const actions = defineActions({
       promises.push(mixer.addStream(userId, stream))
     )
 
-    promises.push(mixer.addFileSource('qall_start', '/static/qall_start.mp3'))
-    promises.push(mixer.addFileSource('qall_end', '/static/qall_end.mp3'))
-    promises.push(mixer.addFileSource('qall_joined', '/static/qall_joined.mp3'))
-    promises.push(mixer.addFileSource('qall_left', '/static/qall_left.mp3'))
+    promises.push(mixer.addFileSource('qall_start', qallStartMp3))
+    promises.push(mixer.addFileSource('qall_end', qallEndMp3))
+    promises.push(mixer.addFileSource('qall_joined', qallJoinedMp3))
+    promises.push(mixer.addFileSource('qall_left', qallLeftMp3))
 
     await Promise.all(promises)
 

@@ -1,4 +1,4 @@
-import { ChannelTree } from '@/lib/channelTree'
+import { ChannelTree } from '/@/lib/channelTree'
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
 

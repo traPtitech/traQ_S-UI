@@ -26,10 +26,10 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import LengthCount from '@/components/UI/LengthCount.vue'
-import { countLength } from '@/lib/util/string'
-import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import { countLength } from '/@/lib/util/string'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 
 export default defineComponent({
   name: 'ContentEditor',

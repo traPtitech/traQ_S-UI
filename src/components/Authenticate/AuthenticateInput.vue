@@ -32,10 +32,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { randomString } from '@/lib/util/randomString'
-import Icon from '@/components/UI/Icon.vue'
-import useShowPassword from '@/use/showPassword'
-import useTextModelSyncer from '@/use/textModelSyncer'
+import { randomString } from '/@/lib/util/randomString'
+import Icon from '/@/components/UI/Icon.vue'
+import useShowPassword from '/@/use/showPassword'
+import useTextModelSyncer from '/@/use/textModelSyncer'
 
 export default defineComponent({
   name: 'AuthenticateInput',

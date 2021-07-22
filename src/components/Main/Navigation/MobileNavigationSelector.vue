@@ -31,9 +31,9 @@ import {
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
-} from '@/components/Main/Navigation/use/navigationConstructor'
+} from '/@/components/Main/Navigation/use/navigationConstructor'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
-import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
+import NavigationSelectorItem from '/@/components/Main/Navigation/NavigationSelectorItem.vue'
 
 export default defineComponent({
   name: 'MobileNavigationSelector',

@@ -32,11 +32,11 @@ import {
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
-} from '@/components/Main/Navigation/use/navigationConstructor'
+} from '/@/components/Main/Navigation/use/navigationConstructor'
 import useNavigationSelectorEntry from './use/navigationSelectorEntry'
-import NavigationSelectorItem from '@/components/Main/Navigation/NavigationSelectorItem.vue'
-import version from '@/lib/env/version'
-import PopupNavigator from '@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import NavigationSelectorItem from '/@/components/Main/Navigation/NavigationSelectorItem.vue'
+import version from '/@/lib/env/version'
+import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 
 export default defineComponent({
   name: 'NavigationSelector',

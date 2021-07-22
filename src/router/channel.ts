@@ -1,6 +1,6 @@
 import { constructChannelPath, constructUserPath, changeRouteByPath } from '.'
-import useChannelPath from '@/use/channelPath'
-import { ChannelId } from '@/types/entity-ids'
+import useChannelPath from '/@/use/channelPath'
+import { ChannelId } from '/@/types/entity-ids'
 const { channelIdToPathString } = useChannelPath()
 
 export const changeChannelByPath = (channelPath: string) => {

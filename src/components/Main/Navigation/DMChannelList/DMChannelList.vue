@@ -14,9 +14,9 @@
 import { defineComponent, PropType } from 'vue'
 import { DMChannel } from '@traptitech/traq'
 import DMChannelElement from './DMChannelElement.vue'
-import { DMChannelId } from '@/types/entity-ids'
-import store from '@/store'
-import { changeDMChannelByUsername } from '@/router/channel'
+import { DMChannelId } from '/@/types/entity-ids'
+import store from '/@/store'
+import { changeDMChannelByUsername } from '/@/router/channel'
 
 export default defineComponent({
   name: 'DMChannelList',

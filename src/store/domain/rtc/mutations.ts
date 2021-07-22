@@ -1,4 +1,4 @@
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId } from '/@/types/entity-ids'
 import { WebRTCUserState } from '@traptitech/traq'
 import { defineMutations } from 'direct-vuex'
 import { S, SessionId, SessionInfo, UserRTCState } from './state'

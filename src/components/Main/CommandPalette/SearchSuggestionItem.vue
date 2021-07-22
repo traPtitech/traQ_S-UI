@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts">
-import Icon from '@/components/UI/Icon.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import store from '@/store'
-import { ChannelId, UserId } from '@/types/entity-ids'
+import Icon from '/@/components/UI/Icon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import store from '/@/store'
+import { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
 
 export type SuggestionItem =

@@ -38,25 +38,25 @@ const pathByRouteName = (routeName: SettingsRouteName) => {
 
 const Profile = () =>
   import(
-    /* webpackChunkName: "SettingsProfile" */ '@/views/Settings/ProfileTab.vue'
+    /* webpackChunkName: "SettingsProfile" */ '/@/views/Settings/ProfileTab.vue'
   )
 const Session = () =>
   import(
-    /* webpackChunkName: "SettingsSession" */ '@/views/Settings/SessionTab.vue'
+    /* webpackChunkName: "SettingsSession" */ '/@/views/Settings/SessionTab.vue'
   )
 const Browser = () =>
   import(
-    /* webpackChunkName: "SettingsBrowser" */ '@/views/Settings/BrowserTab.vue'
+    /* webpackChunkName: "SettingsBrowser" */ '/@/views/Settings/BrowserTab.vue'
   )
 const Qall = () =>
-  import(/* webpackChunkName: "SettingsQall" */ '@/views/Settings/QallTab.vue')
+  import(/* webpackChunkName: "SettingsQall" */ '/@/views/Settings/QallTab.vue')
 const Stamp = () =>
   import(
-    /* webpackChunkName: "SettingsStamps" */ '@/views/Settings/StampTab.vue'
+    /* webpackChunkName: "SettingsStamps" */ '/@/views/Settings/StampTab.vue'
   )
 const Theme = () =>
   import(
-    /* webpackChunkName: "SettingsTheme" */ '@/views/Settings/ThemeTab.vue'
+    /* webpackChunkName: "SettingsTheme" */ '/@/views/Settings/ThemeTab.vue'
   )
 
 const createRoute = (name: SettingsRouteName, component: Component) => ({

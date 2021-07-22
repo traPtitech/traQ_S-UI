@@ -36,7 +36,7 @@ import { useRouter } from 'vue-router'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
-import apis from '@/lib/apis'
+import apis from '/@/lib/apis'
 
 const useRegister = () => {
   const router = useRouter()

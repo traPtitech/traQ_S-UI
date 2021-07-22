@@ -23,9 +23,9 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef, onMounted } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
-import { isTouchDevice } from '@/lib/util/browser'
-import useTextModelSyncer from '@/use/textModelSyncer'
+import Icon from '/@/components/UI/Icon.vue'
+import { isTouchDevice } from '/@/lib/util/browser'
+import useTextModelSyncer from '/@/use/textModelSyncer'
 
 export default defineComponent({
   name: 'FilterInput',

@@ -21,10 +21,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from 'vue'
-import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
-import { UserId } from '@/types/entity-ids'
+import { UserId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarViewers',

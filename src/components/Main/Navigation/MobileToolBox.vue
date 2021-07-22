@@ -19,9 +19,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Tool from '@/components/Main/Navigation/Tool.vue'
-import useToolBox from '@/components/Main/Navigation/use/toolBox'
-import AppList from '@/components/Main/Navigation/AppList.vue'
+import Tool from '/@/components/Main/Navigation/Tool.vue'
+import useToolBox from '/@/components/Main/Navigation/use/toolBox'
+import AppList from '/@/components/Main/Navigation/AppList.vue'
 
 export const teleportTargetName = 'app-list'
 

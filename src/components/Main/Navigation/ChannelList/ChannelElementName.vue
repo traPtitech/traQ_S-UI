@@ -21,11 +21,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import useChannelPath from '@/use/channelPath'
+import useChannelPath from '/@/use/channelPath'
 import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
-import Icon from '@/components/UI/Icon.vue'
-import UserIconEllipsisList from '@/components/UI/UserIconEllipsisList.vue'
-import { ChannelTreeNode } from '@/lib/channelTree'
+import Icon from '/@/components/UI/Icon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 
 interface TreeProps {

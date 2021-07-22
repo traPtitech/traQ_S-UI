@@ -69,25 +69,25 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import { UserDetail } from '@traptitech/traq'
-import apis, { formatResizeError } from '@/lib/apis'
-import useStateDiff from '@/components/Settings/use/stateDiff'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import ImageUpload from '@/components/Settings/ImageUpload.vue'
+import apis, { formatResizeError } from '/@/lib/apis'
+import useStateDiff from '/@/components/Settings/use/stateDiff'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
 import useImageUpload, {
   ImageUploadState
-} from '@/components/Settings/use/imageUpload'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormSelector from '@/components/UI/FormSelector.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import { nullUuid } from '@/lib/util/uuid'
-import useChannelOptions from '@/use/channelOptions'
-import FormTextArea from '@/components/UI/FormTextArea.vue'
-import useMaxLength from '@/use/maxLength'
-import { isValidTwitter } from '@/lib/validate'
-import useToastStore from '@/providers/toastStore'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+} from '/@/components/Settings/use/imageUpload'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { nullUuid } from '/@/lib/util/uuid'
+import useChannelOptions from '/@/use/channelOptions'
+import FormTextArea from '/@/components/UI/FormTextArea.vue'
+import useMaxLength from '/@/use/maxLength'
+import { isValidTwitter } from '/@/lib/validate'
+import useToastStore from '/@/providers/toastStore'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({

@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
-import store from '@/store'
-import { StampId } from '@/types/entity-ids'
-import { buildFilePath } from '@/lib/apis'
+import store from '/@/store'
+import { StampId } from '/@/types/entity-ids'
+import { buildFilePath } from '/@/lib/apis'
 
 const useStyles = (props: { size: number }) =>
   reactive({

@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import { UserId } from '@/types/entity-ids'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { UserId } from '/@/types/entity-ids'
 
 const useSizeStyles = (props: {
   direction: 'row' | 'col'

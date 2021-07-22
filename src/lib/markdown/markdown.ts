@@ -1,13 +1,13 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
-import store from '@/store'
-import useChannelPath from '@/use/channelPath'
+import store from '/@/store'
+import useChannelPath from '/@/use/channelPath'
 import { embeddingOrigin } from '../apis'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise,
   stampsMapInitialFetchPromise
-} from '@/store/entities/promises'
+} from '/@/store/entities/promises'
 
 const { channelIdToPathString } = useChannelPath()
 

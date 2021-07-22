@@ -1,4 +1,4 @@
-import { UserId } from '@/types/entity-ids'
+import { UserId } from '/@/types/entity-ids'
 
 export type S = {
   onlineUsers: Set<UserId>

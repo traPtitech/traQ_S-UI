@@ -14,12 +14,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import { ChannelId, UserId } from '@/types/entity-ids'
-import EmptyState from '@/components/UI/EmptyState.vue'
-import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import store from '/@/store'
+import { ChannelId, UserId } from '/@/types/entity-ids'
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import useChannelSubscribers from '@/use/channelSubscribers'
+import useChannelSubscribers from '/@/use/channelSubscribers'
 
 export default defineComponent({
   name: 'ChannelSidebarMember',

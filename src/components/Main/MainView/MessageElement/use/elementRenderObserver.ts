@@ -1,5 +1,5 @@
 import { SetupContext, Ref, watchEffect, watch } from 'vue'
-import { ExternalUrl, FileId } from '@/types/entity-ids'
+import { ExternalUrl, FileId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useRoute } from 'vue-router'
 

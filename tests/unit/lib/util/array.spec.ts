@@ -2,7 +2,7 @@ import {
   getMatchedWithPriority,
   pickSomeAroundIndex,
   isDefined
-} from '@/lib/util/array'
+} from '/@/lib/util/array'
 
 describe('getMatchedWithPriority', () => {
   it('can get fullMatched', () => {

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { checkMediaSessionSupport } from '@/lib/util/browser'
+import { checkMediaSessionSupport } from '/@/lib/util/browser'
 
 const usePictureInPicture = () => {
   const isMediaSessionSupported = checkMediaSessionSupport()

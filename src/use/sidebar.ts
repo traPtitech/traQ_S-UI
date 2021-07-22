@@ -1,6 +1,6 @@
 import { computed } from 'vue'
-import store from '@/store'
-import { MainViewComponentState } from '@/store/ui/mainView/state'
+import store from '/@/store'
+import { MainViewComponentState } from '/@/store/ui/mainView/state'
 
 const useSidebar = () => {
   const state = computed(

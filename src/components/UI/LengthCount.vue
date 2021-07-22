@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useMaxLength from '@/use/maxLength'
+import useMaxLength from '/@/use/maxLength'
 
 export default defineComponent({
   name: 'LengthCount',

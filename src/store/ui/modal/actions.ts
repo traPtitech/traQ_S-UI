@@ -1,12 +1,12 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { ModalState } from './state'
 import { modal } from '.'
-import router, { constructChannelPath, constructUserPath } from '@/router'
-import useCurrentChannelPath from '@/use/currentChannelPath'
+import router, { constructChannelPath, constructUserPath } from '/@/router'
+import useCurrentChannelPath from '/@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
 import { toRaw } from 'vue'
-import { wait } from '@/lib/util/timer'
+import { wait } from '/@/lib/util/timer'
 
 export const modalActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, modal)

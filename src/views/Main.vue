@@ -48,22 +48,22 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import { setupWebSocket } from '@/lib/websocket'
-import { connectFirebase } from '@/lib/firebase'
-import useIsMobile from '@/use/isMobile'
-import useNavigationController from '@/use/navigationController'
-import MainView from '@/components/Main/MainView/MainView.vue'
-import MainViewFrame from '@/components/Main/MainView/MainViewFrame.vue'
-import Navigation from '@/components/Main/Navigation/Navigation.vue'
-import StampPickerContainer from '@/components/Main/StampPicker/StampPickerContainer.vue'
-import CommandPaletteContainer from '@/components/Main/CommandPalette/CommandPaletteContainer.vue'
+import { setupWebSocket } from '/@/lib/websocket'
+import { connectFirebase } from '/@/lib/notification/notification'
+import useIsMobile from '/@/use/isMobile'
+import useNavigationController from '/@/use/navigationController'
+import MainView from '/@/components/Main/MainView/MainView.vue'
+import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
+import Navigation from '/@/components/Main/Navigation/Navigation.vue'
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
-import useToastStore from '@/providers/toastStore'
-import { useMessageInputStates } from '@/providers/messageInputState'
-import { useCommandPaletteInvoker } from '@/providers/commandPalette'
-import { provideAudioController } from '@/providers/audioController'
+import useToastStore from '/@/providers/toastStore'
+import { useMessageInputStates } from '/@/providers/messageInputState'
+import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { provideAudioController } from '/@/providers/audioController'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -131,7 +131,7 @@ const useCommandPaletteShortcutKey = () => {
 }
 
 const NotFound = defineAsyncComponent(
-  () => import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+  () => import(/* webpackChunkName: "NotFound" */ '/@/views/NotFound.vue')
 )
 
 export default defineComponent({

@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import FormButton from '@/components/UI/FormButton.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
-import store from '@/store'
+import store from '/@/store'
 
 export default defineComponent({
   name: 'Account',

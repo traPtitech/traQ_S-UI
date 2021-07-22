@@ -43,13 +43,13 @@
 import { defineComponent, computed, PropType, ref, Ref } from 'vue'
 import { MessageStamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
-import { StampId, UserId } from '@/types/entity-ids'
-import store from '@/store'
+import { StampId, UserId } from '/@/types/entity-ids'
+import store from '/@/store'
 import StampDetailElement from './StampDetailElement.vue'
-import Icon from '@/components/UI/Icon.vue'
-import apis from '@/lib/apis'
-import { useStampPickerInvoker } from '@/providers/stampPicker'
-import useToastStore from '@/providers/toastStore'
+import Icon from '/@/components/UI/Icon.vue'
+import apis from '/@/lib/apis'
+import { useStampPickerInvoker } from '/@/providers/stampPicker'
+import useToastStore from '/@/providers/toastStore'
 
 /**
  * StampIdで整理されたMessageStamp

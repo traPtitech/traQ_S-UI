@@ -4,9 +4,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '@/store'
-import { StampId } from '@/types/entity-ids'
-import { buildFilePath } from '@/lib/apis'
+import store from '/@/store'
+import { StampId } from '/@/types/entity-ids'
+import { buildFilePath } from '/@/lib/apis'
 
 export default defineComponent({
   name: 'StampPickerEffectSelector',

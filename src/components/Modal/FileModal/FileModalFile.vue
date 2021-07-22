@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import FileModalContentHeader from '@/components/Modal/FileModal/FileModalContentHeader.vue'
-import FileModalContentFooter from '@/components/Modal/FileModal/FileModalContentFooter.vue'
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 
 export default defineComponent({
   name: 'FileModalFile',

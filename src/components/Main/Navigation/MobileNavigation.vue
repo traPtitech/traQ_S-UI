@@ -43,12 +43,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NavigationContent from '@/components/Main/Navigation/NavigationContent.vue'
-import EphemeralNavigationContent from '@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+import NavigationContent from '/@/components/Main/Navigation/NavigationContent.vue'
+import EphemeralNavigationContent from '/@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import MobileToolBox, {
   teleportTargetName
-} from '@/components/Main/Navigation/MobileToolBox.vue'
-import NavigationSelector from '@/components/Main/Navigation/MobileNavigationSelector.vue'
+} from '/@/components/Main/Navigation/MobileToolBox.vue'
+import NavigationSelector from '/@/components/Main/Navigation/MobileNavigationSelector.vue'
 import useNavigation from './use/navigation'
 
 export default defineComponent({

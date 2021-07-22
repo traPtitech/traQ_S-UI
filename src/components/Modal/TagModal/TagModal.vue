@@ -24,13 +24,13 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { Tag } from '@traptitech/traq'
-import apis from '@/lib/apis'
-import { wsListener } from '@/lib/websocket'
-import { UserTagsUpdatedEvent } from '@/lib/websocket/events'
+import apis from '/@/lib/apis'
+import { wsListener } from '/@/lib/websocket'
+import { UserTagsUpdatedEvent } from '/@/lib/websocket/events'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()

@@ -36,7 +36,7 @@ import { defineComponent, computed, PropType } from 'vue'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 import { Word } from '../use/wordSuggestionList'
 import { WordOrConfirmedPart } from '../use/wordSuggester'
-import { isIOS } from '@/lib/util/browser'
+import { isIOS } from '/@/lib/util/browser'
 
 const WIDTH = 240
 const MARGIN = 8

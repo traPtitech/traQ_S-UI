@@ -1,6 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { S } from './state'
-import { ChannelId, StampId } from '@/types/entity-ids'
+import { ChannelId, StampId } from '/@/types/entity-ids'
 import {
   UnreadChannel,
   ChannelSubscribeLevel,
@@ -8,8 +8,8 @@ import {
   MyUserDetail,
   MyChannelViewState
 } from '@traptitech/traq'
-import { checkBadgeAPISupport } from '@/lib/util/browser'
-import { removeNotification } from '@/lib/firebase'
+import { checkBadgeAPISupport } from '/@/lib/util/browser'
+import { removeNotification } from '/@/lib/notification/notification'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 const updateBadge = async (

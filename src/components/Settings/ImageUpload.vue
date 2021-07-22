@@ -21,7 +21,7 @@ import {
 } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import FormButton from '@/components/UI/FormButton.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import { useImageUploadInternal } from './use/imageUpload'
 
 // スタンプ編集用の設定

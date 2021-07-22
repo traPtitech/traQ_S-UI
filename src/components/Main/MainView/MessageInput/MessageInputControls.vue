@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext } from 'vue'
-import useIsMobile from '@/use/isMobile'
+import useIsMobile from '/@/use/isMobile'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 const useClickHandlers = (
   props: { canPostMessage: boolean },

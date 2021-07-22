@@ -25,9 +25,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, shallowRef } from 'vue'
-import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
-import { ChannelId } from '@/types/entity-ids'
+import { ChannelId } from '/@/types/entity-ids'
 import useChannelEvents from './use/channelEvents'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 

@@ -6,8 +6,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
-import { UserId } from '@/types/entity-ids'
-import store from '@/store'
+import { UserId } from '/@/types/entity-ids'
+import store from '/@/store'
 
 export default defineComponent({
   name: 'MessageQuoteListItemHeader',

@@ -28,10 +28,10 @@
 
 <script lang="ts">
 import { computed, defineComponent, shallowRef } from 'vue'
-import { randomString } from '@/lib/util/randomString'
-import LengthCount from '@/components/UI/LengthCount.vue'
-import TextareaAutosize from '@/components/UI/TextareaAutosize.vue'
-import { useModelValueSyncer } from '@/use/modelSyncer'
+import { randomString } from '/@/lib/util/randomString'
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'FormInput',

@@ -1,5 +1,5 @@
 import { defineMutations } from 'direct-vuex'
-import { ChannelId, MessageId, ClipFolderId } from '@/types/entity-ids'
+import { ChannelId, MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { S } from './state'
 import { Pin, ChannelViewer, Message } from '@traptitech/traq'
 import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'

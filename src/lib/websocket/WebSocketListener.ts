@@ -1,5 +1,5 @@
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
-import { mitt, TypedMitt } from '@/lib/typedMitt'
+import { mitt, TypedMitt } from '/@/lib/typedMitt'
 import { WebSocketEvent } from './events'
 
 type WebSocketListenerEventMap = {

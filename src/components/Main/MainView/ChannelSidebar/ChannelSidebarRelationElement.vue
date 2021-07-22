@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import InlineMarkdown from '@/components/UI/InlineMarkdown.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
   name: 'ChannelSidebarRelationElement',

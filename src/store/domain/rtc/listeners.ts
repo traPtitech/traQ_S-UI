@@ -1,6 +1,6 @@
 import { createDefineListeners } from '../../utils/defineListeners'
-import { wsListener } from '@/lib/websocket'
-import { formatSnakeKeysToCamelShallow } from '@/lib/util/record'
+import { wsListener } from '/@/lib/websocket'
+import { formatSnakeKeysToCamelShallow } from '/@/lib/util/record'
 import { WebRTCUserState } from '@traptitech/traq'
 import { rtc } from '.'
 

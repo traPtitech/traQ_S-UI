@@ -33,15 +33,15 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useChannelSidebarCommon from '@/components/Main/MainView/use/channelSidebarCommon'
-import ChannelSidebarHidden from '@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
-import MainViewSidebar from '@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import MainViewSidebarPage from '@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
-import SidebarPinnedPage from '@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
-import SidebarHeader from '@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
+import useChannelSidebarCommon from '/@/components/Main/MainView/use/channelSidebarCommon'
+import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
+import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
+import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import SidebarContent from './DMSidebarContent.vue'
-import SidebarEventsPage from '@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
-import { ChannelId } from '@/types/entity-ids'
+import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { ChannelId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'DMSidebar',

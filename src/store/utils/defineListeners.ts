@@ -1,6 +1,6 @@
-import { TypedMitt } from '@/lib/typedMitt'
-import { waitMount } from '@/onMount'
-import store, { AppStore } from '@/store'
+import { TypedMitt } from '/@/lib/typedMitt'
+import { waitMount } from '/@/onMount'
+import store, { AppStore } from '/@/store'
 import { StoreOrModuleOptions } from 'direct-vuex'
 import { DirectActions } from 'direct-vuex/types/direct-types'
 

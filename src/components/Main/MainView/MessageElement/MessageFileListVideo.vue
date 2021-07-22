@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileMeta from '@/use/fileMeta'
+import useFileMeta from '/@/use/fileMeta'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 
 export default defineComponent({

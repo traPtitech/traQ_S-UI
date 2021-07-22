@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { useCommandPaletteStore } from '@/providers/commandPalette'
+import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem, {

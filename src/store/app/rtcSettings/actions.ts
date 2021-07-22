@@ -1,9 +1,9 @@
 import { defineActions } from 'direct-vuex'
-import { moduleActionContext } from '@/store'
+import { moduleActionContext } from '/@/store'
 import { rtcSettings } from './index'
 import { ActionContext } from 'vuex'
 import { S } from './state'
-import store from '@/store'
+import store from '/@/store'
 
 export const rtcSettingsActionContext = (
   context: ActionContext<unknown, unknown>

@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { buildFileWaveformPath } from '@/lib/apis'
+import { buildFileWaveformPath } from '/@/lib/apis'
 import useFileMeta from './fileMeta'
 import { ThumbnailType } from '@traptitech/traq'
 

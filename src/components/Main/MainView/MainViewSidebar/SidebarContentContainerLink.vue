@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SidebarContentContainer from '@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import Icon from '@/components/UI/Icon.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'SidebarContentContainerLink',

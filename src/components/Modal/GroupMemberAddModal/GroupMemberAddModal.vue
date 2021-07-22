@@ -24,13 +24,13 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import apis from '@/lib/apis'
-import store from '@/store'
-import useToastStore from '@/providers/toastStore'
-import { UserGroupId, UserId } from '@/types/entity-ids'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis from '/@/lib/apis'
+import store from '/@/store'
+import useToastStore from '/@/providers/toastStore'
+import { UserGroupId, UserId } from '/@/types/entity-ids'
 import UsersSelector from '../Common/UsersSelector.vue'
-import FormInput from '@/components/UI/FormInput.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 
 export default defineComponent({
   name: 'GroupMemberAddModal',

@@ -16,8 +16,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '@/store'
-import { StampId } from '@/types/entity-ids'
+import store from '/@/store'
+import { StampId } from '/@/types/entity-ids'
 import Stamp from './Stamp.vue'
 
 export default defineComponent({

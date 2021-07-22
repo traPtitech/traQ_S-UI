@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
-import { makeStyles } from '@/lib/styles'
-import Icon from '@/components/UI/Icon.vue'
+import { makeStyles } from '/@/lib/styles'
+import Icon from '/@/components/UI/Icon.vue'
 
 const usePreviewState = () => {
   const isContentShown = ref(false)

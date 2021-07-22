@@ -2,9 +2,9 @@ import {
   constructStampNameIdMap,
   categorizeUnicodeStamps,
   traQStampsToStampCategory
-} from '@/lib/stampCategorizer'
+} from '/@/lib/stampCategorizer'
 import { Stamp } from '@traptitech/traq'
-import { StampId } from '@/types/entity-ids'
+import { StampId } from '/@/types/entity-ids'
 
 describe('constructStampNameIdMap', () => {
   it('can construct', () => {

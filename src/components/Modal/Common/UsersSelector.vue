@@ -24,12 +24,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '@/store'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import FormCheckboxInner from '@/components/UI/FormCheckboxInner.vue'
-import { UserId } from '@/types/entity-ids'
-import FilterInput from '@/components/UI/FilterInput.vue'
-import useTextFilter from '@/use/textFilter'
+import store from '/@/store'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
+import { UserId } from '/@/types/entity-ids'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import useTextFilter from '/@/use/textFilter'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {
   const excludeIdsSet = computed(() => new Set(props.excludeIds))

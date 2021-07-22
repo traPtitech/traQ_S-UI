@@ -1,5 +1,5 @@
-import useQueryParer from '@/use/searchMessage/queryParser'
-import store from '@/store'
+import useQueryParer from '/@/use/searchMessage/queryParser'
+import store from '/@/store'
 
 const mockMessageId = 'message-id'
 const mockMessageUrl = `https://example.com/messages/${mockMessageId}`

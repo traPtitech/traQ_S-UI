@@ -14,7 +14,6 @@
     "baseUrl": ".",
     "types": [
       "dom-screen-wake-lock",
-      "webpack-env",
       "jest",
       "webappsec-credential-management",
       "config"
@@ -24,7 +23,7 @@
       "src/types"
     ],
     "paths": {
-      "@/*": [
+      "/@/*": [
         "src/*"
       ]
     },
@@ -33,7 +32,7 @@
       "dom",
       "dom.iterable",
       "scripthost",
-      "WebWorker.ImportScripts"
+      "WebWorker"
     ]
   },
   "include": [

@@ -26,8 +26,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
-import Icon from '@/components/UI/Icon.vue'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string

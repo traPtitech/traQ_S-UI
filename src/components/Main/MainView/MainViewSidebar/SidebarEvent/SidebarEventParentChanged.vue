@@ -13,7 +13,7 @@
 import { computed, defineComponent, PropType } from 'vue'
 import { ParentChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
-import useChannelPath from '@/use/channelPath'
+import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
   name: 'SidebarEventParentChanged',

@@ -1,5 +1,5 @@
-import store from '@/store'
-import { MainViewComponentState } from '@/store/ui/mainView/state'
+import store from '/@/store'
+import { MainViewComponentState } from '/@/store/ui/mainView/state'
 
 /**
  * モバイル用にナビゲーションの開閉を行う

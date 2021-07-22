@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '@/store'
-import NavigationContentContainer from '@/components/Main/Navigation/NavigationContentContainer.vue'
-import { isDefined } from '@/lib/util/array'
+import store from '/@/store'
+import NavigationContentContainer from '/@/components/Main/Navigation/NavigationContentContainer.vue'
+import { isDefined } from '/@/lib/util/array'
 import DMActivityElement from './DMActivityElement.vue'
 
 const useUsersWithNotification = () => {

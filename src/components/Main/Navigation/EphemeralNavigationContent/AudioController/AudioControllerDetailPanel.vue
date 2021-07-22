@@ -37,15 +37,15 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive } from 'vue'
-import { useAudioController } from '@/providers/audioController'
-import useAudio from '@/use/audio'
-import useFileMeta from '@/use/fileMeta'
-import AudioPlayerPlayButton from '@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
-import AudioPlayerStopButton from '@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
-import AudioPlayerLoopButton from '@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
-import AudioPlayerTime from '@/components/UI/AudioPlayer/AudioPlayerTime.vue'
-import AudioPlayerTimeSlider from '@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
-import AudioPlayerVolumeSlider from '@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import { useAudioController } from '/@/providers/audioController'
+import useAudio from '/@/use/audio'
+import useFileMeta from '/@/use/fileMeta'
+import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
+import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
+import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
 
 export default defineComponent({
   name: 'AudioControllerDetailPanel',

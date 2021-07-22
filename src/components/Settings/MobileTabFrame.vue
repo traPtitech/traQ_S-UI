@@ -15,8 +15,8 @@
 import { defineComponent } from 'vue'
 import useSettingsNavigation from './use/navigation'
 import TabContentTitle from './TabContentTitle.vue'
-import ReturnButton from '@/components/UI/ReturnButton.vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import ReturnButton from '/@/components/UI/ReturnButton.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'MobileTabFrame',

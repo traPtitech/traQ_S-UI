@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
-import UserIcon from '@/components/UI/UserIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export default defineComponent({
   name: 'UserName',

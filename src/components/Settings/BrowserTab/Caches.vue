@@ -39,12 +39,12 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import useToastStore from '@/providers/toastStore'
-import { wait } from '@/lib/util/timer'
-import { checkStorageManagerSupport } from '@/lib/util/browser'
-import { deleteUnicodeStamps } from '@/lib/stampCache'
-import store from '@/store'
+import FormButton from '/@/components/UI/FormButton.vue'
+import useToastStore from '/@/providers/toastStore'
+import { wait } from '/@/lib/util/timer'
+import { checkStorageManagerSupport } from '/@/lib/util/browser'
+import { deleteUnicodeStamps } from '/@/lib/stampCache'
+import store from '/@/store'
 
 declare global {
   interface StorageEstimate {
@@ -92,7 +92,7 @@ export default defineComponent({
           .filter(name => name.startsWith('traQ_S-precache'))
           .map(name => clearCacheStorage(name))
       )
-      const registration = await navigator.serviceWorker.getRegistration()
+      const registration = await navigator.serviceWorker?.getRegistration()
       if (registration) {
         registration.unregister()
         showToast('1秒後にリロードします')

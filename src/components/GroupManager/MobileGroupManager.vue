@@ -18,9 +18,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import CloseButton from '@/components/UI/CloseButton.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 import useClose from './use/close'
-import FormButton from '@/components/UI/FormButton.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import GroupList from './GroupList.vue'
 import useGroupCreateModalOpener from './use/groupCreateModalOpener'
 

@@ -40,17 +40,17 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '@/store'
-import { MessageId } from '@/types/entity-ids'
-import useIsMobile from '@/use/isMobile'
-import UserIcon from '@/components/UI/UserIcon.vue'
-import MessageMarkdown from '@/components/UI/MessageMarkdown.vue'
+import store from '/@/store'
+import { MessageId } from '/@/types/entity-ids'
+import useIsMobile from '/@/use/isMobile'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import MessageHeader from './MessageHeader.vue'
 import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
-import useEmbeddings from '@/use/message/embeddings'
+import useEmbeddings from '/@/use/message/embeddings'
 
 export default defineComponent({
   name: 'MessageContent',

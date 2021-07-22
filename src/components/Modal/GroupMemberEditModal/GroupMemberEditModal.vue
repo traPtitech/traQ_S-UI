@@ -19,12 +19,12 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '@/components/UI/FormInput.vue'
-import FormButton from '@/components/UI/FormButton.vue'
-import apis from '@/lib/apis'
-import store from '@/store'
-import useToastStore from '@/providers/toastStore'
-import { UserGroupId, UserId } from '@/types/entity-ids'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import apis from '/@/lib/apis'
+import store from '/@/store'
+import useToastStore from '/@/providers/toastStore'
+import { UserGroupId, UserId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'GroupMemberEditModal',

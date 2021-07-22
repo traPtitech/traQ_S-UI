@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useNavigationController from '@/use/navigationController'
-import PopupNavigator from '@/components/Main/PopupNavigatior/PopupNavigator.vue'
-import useIsMobile from '@/use/isMobile'
+import useNavigationController from '/@/use/navigationController'
+import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import useIsMobile from '/@/use/isMobile'
 
 export default defineComponent({
   name: 'MainViewHeader',

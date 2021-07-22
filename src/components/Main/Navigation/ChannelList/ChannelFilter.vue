@@ -15,9 +15,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import FilterInput from '@/components/UI/FilterInput.vue'
-import Icon from '@/components/UI/Icon.vue'
-import { useModelValueSyncer } from '@/use/modelSyncer'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import Icon from '/@/components/UI/Icon.vue'
+import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'ChannelFilter',

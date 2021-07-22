@@ -37,9 +37,9 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import store from '@/store'
-import useChannelPath from '@/use/channelPath'
-import Icon from '@/components/UI/Icon.vue'
+import store from '/@/store'
+import useChannelPath from '/@/use/channelPath'
+import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
   name: 'MessagePanel',

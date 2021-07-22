@@ -108,7 +108,7 @@ import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import LoginFormSaved from './LoginFormSaved.vue'
-import router, { RouteName } from '@/router'
+import router, { RouteName } from '/@/router'
 
 export default defineComponent({
   name: 'LoginForm',

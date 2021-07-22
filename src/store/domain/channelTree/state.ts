@@ -1,4 +1,4 @@
-import { ChannelTree } from '@/lib/channelTree'
+import { ChannelTree } from '/@/lib/channelTree'
 
 export interface S {
   channelTree: Readonly<ChannelTree>

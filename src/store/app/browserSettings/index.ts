@@ -1,4 +1,4 @@
-import { defineDBModule } from '@/store/defineDBModule'
+import { defineDBModule } from '/@/store/defineDBModule'
 import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'

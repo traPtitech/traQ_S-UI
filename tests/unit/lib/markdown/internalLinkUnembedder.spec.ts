@@ -1,4 +1,4 @@
-import { replaceBack } from '@/lib/markdown/internalLinkUnembedder'
+import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 
 /**
  * 置換前, 置換後

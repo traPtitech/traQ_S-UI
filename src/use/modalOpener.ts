@@ -1,7 +1,7 @@
 import { computed, Ref } from 'vue'
-import store from '@/store'
+import store from '/@/store'
 import { User } from '@traptitech/traq'
-import { UserId } from '@/types/entity-ids'
+import { UserId } from '/@/types/entity-ids'
 
 export const useUserModalOpener = (
   props: { userId?: UserId; preventModal?: boolean },

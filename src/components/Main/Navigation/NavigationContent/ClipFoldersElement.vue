@@ -10,8 +10,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ClipFolder } from '@traptitech/traq'
-import Icon from '@/components/UI/Icon.vue'
-import { constructClipFoldersPath } from '@/router'
+import Icon from '/@/components/UI/Icon.vue'
+import { constructClipFoldersPath } from '/@/router'
 
 export default defineComponent({
   name: 'ClipFoldersElement',

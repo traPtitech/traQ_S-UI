@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { FileId } from '@/types/entity-ids'
+import { FileId } from '/@/types/entity-ids'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 
 export default defineComponent({

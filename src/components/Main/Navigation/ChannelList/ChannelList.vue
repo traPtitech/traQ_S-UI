@@ -17,11 +17,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, defineAsyncComponent, ref } from 'vue'
-import { ChannelId } from '@/types/entity-ids'
-import { ChannelTreeNode } from '@/lib/channelTree'
-import useChannelSelect from '@/use/channelSelect'
+import { ChannelId } from '/@/types/entity-ids'
+import { ChannelTreeNode } from '/@/lib/channelTree'
+import useChannelSelect from '/@/use/channelSelect'
 import { Channel } from '@traptitech/traq'
-import SlideDown from '@/components/UI/SlideDown.vue'
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
 const useChannelFolding = () => {
   const foldedChannels = ref(new Set<ChannelId>())

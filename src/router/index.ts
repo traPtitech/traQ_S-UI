@@ -40,16 +40,16 @@ export const isMessageScrollerRoute = (
   )
 }
 
-const Main = () => import(/* webpackChunkname: "Main" */ '@/views/Main.vue')
+const Main = () => import(/* webpackChunkname: "Main" */ '/@/views/Main.vue')
 const GroupManager = () =>
-  import(/* webpackChunkname: "GroupManager" */ '@/views/GroupManager.vue')
+  import(/* webpackChunkname: "GroupManager" */ '/@/views/GroupManager.vue')
 const Settings = () =>
-  import(/* webpackChunkName: "NotFound" */ '@/views/Settings.vue')
+  import(/* webpackChunkName: "NotFound" */ '/@/views/Settings.vue')
 const ShareTarget = () =>
-  import(/* webpackChunkname: "ShareTarget" */ '@/views/ShareTarget.vue')
-const Auth = () => import(/* webpackChunkName: "Auth" */ '@/views/Auth.vue')
+  import(/* webpackChunkname: "ShareTarget" */ '/@/views/ShareTarget.vue')
+const Auth = () => import(/* webpackChunkName: "Auth" */ '/@/views/Auth.vue')
 const NotFound = () =>
-  import(/* webpackChunkName: "NotFound" */ '@/views/NotFound.vue')
+  import(/* webpackChunkName: "NotFound" */ '/@/views/NotFound.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -123,7 +123,7 @@ const routes: RouteRecordRaw[] = [
   }
 ]
 
-const routerHistory = createWebHistory(process.env.BASE_URL)
+const routerHistory = createWebHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
   history: routerHistory,

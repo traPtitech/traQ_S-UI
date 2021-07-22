@@ -14,9 +14,9 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
-import AuthenticateHeader from '@/components/Authenticate/AuthenticateHeader.vue'
-import useIsMobile from '@/use/isMobile'
-import { wait } from '@/lib/util/timer'
+import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
+import useIsMobile from '/@/use/isMobile'
+import { wait } from '/@/lib/util/timer'
 
 export default defineComponent({
   name: 'ShareTarget',

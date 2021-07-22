@@ -1,4 +1,4 @@
-import { WEBSOCKET_ENDPOINT } from '@/lib/apis'
+import { WEBSOCKET_ENDPOINT } from '/@/lib/apis'
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
 import { createWebSocketListener } from './WebSocketListener'
 
@@ -25,7 +25,7 @@ export const ws = new AutoReconnectWebSocket(
  * 4. Networkタブから`online`に戻す
  * 5. `reconnectWs()`をconsoleで実行
  */
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.MODE === 'development') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(window as any).closeWs = () => {
     ws.mockFail = true

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { isSettingsRouteName, SettingsRouteName } from '@/router/settings'
+import { isSettingsRouteName, SettingsRouteName } from '/@/router/settings'
 import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { navigationRouteNameTitleMap } from './use/navigation'

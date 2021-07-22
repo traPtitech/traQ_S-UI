@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import Icon from '@/components/UI/Icon.vue'
+import Icon from '/@/components/UI/Icon.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const titleMap: Record<ChannelSubscribeLevel, string> = {

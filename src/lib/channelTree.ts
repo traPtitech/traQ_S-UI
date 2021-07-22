@@ -1,7 +1,7 @@
 import { Channel } from '@traptitech/traq'
-import { ChannelId } from '@/types/entity-ids'
-import { nullUuid } from '@/lib/util/uuid'
-import { compareStringInsensitive } from '@/lib/util/string'
+import { ChannelId } from '/@/types/entity-ids'
+import { nullUuid } from '/@/lib/util/uuid'
+import { compareStringInsensitive } from '/@/lib/util/string'
 
 export const rootChannelId = nullUuid
 export type RootChannelId = typeof rootChannelId
