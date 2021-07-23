@@ -36,10 +36,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { channelIdToPathString, channelIdToLink } = useChannelPath()
+    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
     const channelPath = computed(() =>
-      channelIdToPathString(props.channelId, true)
+      channelIdToShortPathString(props.channelId, true)
     )
     const channelLink = computed(() => channelIdToLink(props.channelId))
     const hasAttachments = computed(() => props.state.attachments.length > 0)
@@ -81,5 +81,8 @@ export default defineComponent({
 .channelPath {
   @include color-ui-secondary;
   @include size-caption;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
