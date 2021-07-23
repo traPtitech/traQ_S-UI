@@ -51,6 +51,7 @@ export default defineComponent({
   cursor: pointer;
 }
 .expandIcon {
+  @include color-ui-primary;
   transform: rotate(0);
   transition: transform 0.5s;
   .expandButton[data-is-expanded] & {
