@@ -64,33 +64,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1;
-  min-height: 0;
-}
-.expandButton {
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-}
-.expandIcon {
-  transform: rotate(0);
-  transition: transform 0.5s;
-  .expandButton[data-is-expanded] & {
-    transform: rotate(0.5turn);
-  }
-}
-.list {
-  padding: 0 12px 8px 12px;
-  max-height: 120px;
-  overflow: scroll;
-  transition: 0.5s max-height ease-out;
-  &[data-is-expanded] {
-    max-height: 600px;
-  }
-}
 .slider {
   margin: 12px 0;
   &:first-child {
