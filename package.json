@@ -70,7 +70,7 @@
     "babel-jest": "^27.0.6",
     "csstype": "^3.0.8",
     "cypress": "^8.0.0",
-    "esbuild": "^0.12.15",
+    "esbuild": "^0.12.16",
     "eslint": "^7.31.0",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-prettier": "^3.4.0",
