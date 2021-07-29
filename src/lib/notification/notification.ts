@@ -51,14 +51,20 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   }
 
-  if (Notification?.permission === 'default') {
-    const permission = await requestNotificationPermission()
-    if (permission === 'granted') {
-      notify({ title: `ようこそ${appName}へ！！` })
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(`[Notification] permission ${permission}`)
+  if (Notification) {
+    if (Notification.permission === 'default') {
+      // 上でNotificationが存在していることを確認している
+      const permission = await requestNotificationPermission()
+      if (permission === 'granted') {
+        notify({ title: `ようこそ${appName}へ！！` })
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`[Notification] permission ${permission}`)
+      }
     }
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(`[Notification] Notification does not exists`)
   }
 
   const firebase = await setupFirebase()
