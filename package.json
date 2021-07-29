@@ -8,7 +8,7 @@
     "build:with-font": "npm run gen-fonts && npm run build",
     "build:may-with-font": "MAY_SKIP_FONT_GEN=1 npm run gen-fonts && npm run build",
     "serve": "vite preview",
-    "test:unit": "jest --no-cache",
+    "test:unit": "jest",
     "test:e2e": "npm run build && npm run test:e2e:without-build",
     "test:e2e-headless": "npm run build:may-with-font && npm run test:e2e:without-build -- --headless",
     "test:e2e:without-build": "node tests/e2e/run-cypress.mjs",

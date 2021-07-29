@@ -1,14 +1,12 @@
-import {
-  ExtendedNotificationOptions,
-  NotificationClickEvent
-} from '/@/types/InlineNotificationReplies'
+import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import apis from '/@/lib/apis'
 import router from '/@/router'
 import { isIOSApp } from '/@/lib/util/browser'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
 import { OnCanUpdate, setupUpdateToast } from './updateToast'
-import { setupFirebase, loadFirebase } from './firebase'
+import { setupFirebase, loadFirebase, FirebasePayloadData } from './firebase'
+import { requestNotificationPermission } from './requestPermission'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
@@ -19,12 +17,10 @@ const createNotificationArguments = createNotificationArgumentsCreator(
 )
 
 const notify = async (
-  title: string | undefined,
-  options: ExtendedNotificationOptions = {},
+  options: Partial<FirebasePayloadData>,
   withoutInput = false
 ) => {
   const [notificationTitle, notificationOptions] = createNotificationArguments(
-    title,
     options,
     withoutInput
   )
@@ -40,13 +36,8 @@ const notify = async (
   return null
 }
 
-interface NotificationPayloadData extends ExtendedNotificationOptions {
-  title?: string
-  path?: string
-  data: NotificationPayloadData
-}
 interface NotificationPayload {
-  data: NotificationPayloadData
+  data: FirebasePayloadData
   from: number
   priority: string
 }
@@ -61,9 +52,12 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   }
 
   if (Notification?.permission === 'default') {
-    const permission = await Notification.requestPermission()
+    const permission = await requestNotificationPermission()
     if (permission === 'granted') {
-      notify(`ようこそ${appName}へ！！`)
+      notify({ title: `ようこそ${appName}へ！！` })
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`[Notification] permission ${permission}`)
     }
   }
 
@@ -87,20 +81,13 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  const permission = await Notification.requestPermission()
-  if (permission !== 'granted') {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] permission ${permission}`)
-    return
-  }
-
-  if (!firebase) {
+  if (Notification?.permission !== 'granted' || !firebase) {
     return
   }
   const messaging = firebase.messaging()
 
   messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
-    const notification = await notify(payload.data.title, payload.data)
+    const notification = await notify(payload.data)
     if (!notification) return
 
     notification.onclick = (_event: Event) => {
@@ -135,7 +122,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 }
 
 export const deleteToken = async () => {
-  if (Notification.permission !== 'granted') return
+  if (Notification?.permission !== 'granted') return
 
   const firebase = await loadFirebase()
   const messaging = firebase.messaging()

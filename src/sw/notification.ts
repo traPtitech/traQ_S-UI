@@ -1,14 +1,12 @@
 import firebase from 'firebase/app'
 import 'firebase/messaging'
 
-import {
-  ExtendedNotificationOptions,
-  NotificationClickEvent
-} from '/@/types/InlineNotificationReplies'
+import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getStore } from '/@/sw/store'
 import { ChannelId } from '/@/types/entity-ids'
 import { wait } from '/@/lib/util/timer'
+import { FirebasePayloadData } from '/@/lib/notification/firebase'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -54,11 +52,10 @@ export const setupNotification = async () => {
     ignoredChannels
   )
 
-  const showNotification = (options: ExtendedNotificationOptions) => {
-    const title = options.data.title
+  const showNotification = (data: FirebasePayloadData) => {
     const [notificationTitle, notificationOptions] =
-      createNotificationArguments(title, options)
-    notificationOptions.data = notificationOptions
+      createNotificationArguments(data)
+    notificationOptions.data = data
 
     return self.registration
       .showNotification(notificationTitle, notificationOptions)
@@ -125,8 +122,9 @@ export const setupNotification = async () => {
     const messaging = firebase.messaging()
 
     messaging.onBackgroundMessage(payload => {
-      if (payload.data && payload.data.type === 'new_message') {
-        return showNotification(payload.data)
+      const payloadData = payload.data as FirebasePayloadData | undefined
+      if (payloadData && payloadData.type === 'new_message') {
+        return showNotification(payloadData)
       }
     })
   }
