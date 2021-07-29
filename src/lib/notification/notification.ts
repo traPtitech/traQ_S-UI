@@ -6,6 +6,7 @@ import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
 import { OnCanUpdate, setupUpdateToast } from './updateToast'
 import { setupFirebase, loadFirebase, FirebasePayloadData } from './firebase'
+import { requestNotificationPermission } from './requestPermission'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
@@ -51,7 +52,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   }
 
   if (Notification?.permission === 'default') {
-    const permission = await Notification.requestPermission()
+    const permission = await requestNotificationPermission()
     if (permission === 'granted') {
       notify({ title: `ようこそ${appName}へ！！` })
     } else {

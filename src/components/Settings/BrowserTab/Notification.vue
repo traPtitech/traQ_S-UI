@@ -15,6 +15,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { requestNotificationPermission } from '/@/lib/notification/requestPermission'
 
 const statusTable: Record<NotificationPermission | '', string> = {
   default: '未設定（通知は来ません）',
@@ -30,7 +31,7 @@ const useNotificationPermission = () => {
   const requestPermission = async () => {
     // permission.valueがundefinedでないときは、
     // 上の取得の仕方からNotificationが存在していることが確定している
-    permission.value = await Notification.requestPermission()
+    permission.value = await requestNotificationPermission()
   }
 
   const status = computed(() => statusTable[permission.value ?? ''])
