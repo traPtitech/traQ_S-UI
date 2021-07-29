@@ -26,7 +26,7 @@ const statusTable: Record<NotificationPermission | '', string> = {
 
 const useNotificationPermission = () => {
   const permission = ref<NotificationPermission>()
-  permission.value = Notification?.permission
+  permission.value = window.Notification?.permission
 
   const requestPermission = async () => {
     // permission.valueがundefinedでないときは、

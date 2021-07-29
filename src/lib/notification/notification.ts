@@ -33,7 +33,7 @@ const notify = async (
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
-  if (Notification?.permission === 'granted') {
+  if (window.Notification?.permission === 'granted') {
     return new Notification(notificationTitle, notificationOptions)
   }
   return null
@@ -54,7 +54,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     }
   }
 
-  if (Notification) {
+  if (window.Notification) {
     if (Notification.permission === 'default') {
       // 上でNotificationが存在していることを確認している
       const permission = await requestNotificationPermission()
@@ -90,7 +90,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  if (Notification?.permission !== 'granted' || !firebase) {
+  if (window.Notification?.permission !== 'granted' || !firebase) {
     return
   }
   const messaging = firebase.messaging()
@@ -131,7 +131,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 }
 
 export const deleteToken = async () => {
-  if (Notification?.permission !== 'granted') return
+  if (window.Notification?.permission !== 'granted') return
 
   const firebase = await loadFirebase()
   const messaging = firebase.messaging()
