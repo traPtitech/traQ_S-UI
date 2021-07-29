@@ -27,8 +27,11 @@ const notify = async (
 
   if (navigator.serviceWorker) {
     const regist = await navigator.serviceWorker.ready
-    notificationOptions.data = notificationOptions
-    return regist.showNotification(notificationTitle, notificationOptions)
+    // mac SafariだとshowNotificationが存在しない
+    if (regist.showNotification) {
+      notificationOptions.data = notificationOptions
+      return regist.showNotification(notificationTitle, notificationOptions)
+    }
   }
   if (Notification?.permission === 'granted') {
     return new Notification(notificationTitle, notificationOptions)
@@ -140,8 +143,10 @@ export const removeNotification = async (
 ) => {
   const registration = await navigator.serviceWorker?.getRegistration()
   if (!registration) return
-  const notifications = await registration.getNotifications({
+
+  // Safari(mac/iOS)ともにgetNotificationsが存在しない
+  const notifications = await registration.getNotifications?.({
     tag: `c:${channelId}`
   })
-  notifications?.forEach(notification => notification.close())
+  notifications.forEach(notification => notification.close())
 }
