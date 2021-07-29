@@ -20,14 +20,16 @@ const statusTable: Record<NotificationPermission | '', string> = {
   default: '未設定（通知は来ません）',
   granted: '許可',
   denied: '拒否',
-  '': ''
+  '': '不明'
 }
 
 const useNotificationPermission = () => {
   const permission = ref<NotificationPermission>()
-  permission.value = Notification.permission
+  permission.value = Notification?.permission
 
   const requestPermission = async () => {
+    // permission.valueがundefinedでないときは、
+    // 上の取得の仕方からNotificationが存在していることが確定している
     permission.value = await Notification.requestPermission()
   }
 

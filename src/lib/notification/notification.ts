@@ -54,6 +54,9 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     const permission = await Notification.requestPermission()
     if (permission === 'granted') {
       notify({ title: `ようこそ${appName}へ！！` })
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`[Notification] permission ${permission}`)
     }
   }
 
@@ -77,14 +80,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  const permission = await Notification.requestPermission()
-  if (permission !== 'granted') {
-    // eslint-disable-next-line no-console
-    console.warn(`[Notification] permission ${permission}`)
-    return
-  }
-
-  if (!firebase) {
+  if (Notification?.permission !== 'granted' || !firebase) {
     return
   }
   const messaging = firebase.messaging()
@@ -125,7 +121,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 }
 
 export const deleteToken = async () => {
-  if (Notification.permission !== 'granted') return
+  if (Notification?.permission !== 'granted') return
 
   const firebase = await loadFirebase()
   const messaging = firebase.messaging()
