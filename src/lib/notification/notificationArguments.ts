@@ -1,14 +1,21 @@
 import { ExtendedNotificationOptions } from '/@/types/InlineNotificationReplies'
+import { FirebasePayloadData } from './firebase'
 
 export const createNotificationArgumentsCreator = (
   appName: string,
   ignoredChannels: string[]
 ) => {
   return (
-    title: string | undefined,
-    options: ExtendedNotificationOptions,
+    data: Partial<FirebasePayloadData>,
     withoutInput = false
   ): [string, ExtendedNotificationOptions] => {
+    const title = data.title
+    const options: ExtendedNotificationOptions = {
+      body: data.body,
+      tag: data.tag,
+      icon: data.icon
+    }
+
     if (!withoutInput && title && !ignoredChannels.includes(title)) {
       const verb = title.includes('#') ? '投稿' : '返信'
       options.actions = [
