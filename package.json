@@ -75,7 +75,7 @@
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-unused-imports": "^1.1.2",
-    "eslint-plugin-vue": "^7.14.0",
+    "eslint-plugin-vue": "^7.15.0",
     "fonteditor-core": "^2.1.8",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
