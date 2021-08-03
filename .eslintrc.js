@@ -35,6 +35,13 @@ module.exports = {
     'unused-imports/no-unused-vars': 'off',
     'vue/custom-event-name-casing': ['error', 'camelCase'],
     'vue/no-v-html': 'off',
+    'vue/block-lang': [
+      'error',
+      {
+        script: { lang: 'ts' },
+        style: { lang: 'scss' }
+      }
+    ],
     // TODO: 消す
     'vue/require-default-prop': 'off',
     'vue/require-explicit-emits': 'off',
