@@ -91,11 +91,11 @@
     "vite-plugin-vue-svg": "^0.1.0",
     "vue-svg-loader": "^0.17.0-beta.2",
     "vue3-jest": "^27.0.0-alpha.1",
-    "workbox-cacheable-response": "^6.1.5",
-    "workbox-core": "^6.1.5",
-    "workbox-precaching": "^6.1.5",
-    "workbox-routing": "^6.1.5",
-    "workbox-strategies": "^6.1.5"
+    "workbox-cacheable-response": "^6.2.0",
+    "workbox-core": "^6.2.0",
+    "workbox-precaching": "^6.2.0",
+    "workbox-routing": "^6.2.0",
+    "workbox-strategies": "^6.2.0"
   },
   "engines": {
     "node": "^16.6.1",
