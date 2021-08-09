@@ -89,7 +89,6 @@
     "vite": "^2.4.4",
     "vite-plugin-pwa": "^0.10.0",
     "vite-plugin-vue-svg": "^0.1.0",
-    "vue-svg-loader": "^0.17.0-beta.2",
     "vue3-jest": "^27.0.0-alpha.1",
     "workbox-cacheable-response": "^6.2.2",
     "workbox-core": "^6.2.2",
