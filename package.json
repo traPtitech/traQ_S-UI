@@ -93,7 +93,7 @@
     "vue3-jest": "^27.0.0-alpha.1",
     "workbox-cacheable-response": "^6.2.0",
     "workbox-core": "^6.2.0",
-    "workbox-precaching": "^6.2.0",
+    "workbox-precaching": "^6.2.2",
     "workbox-routing": "^6.2.0",
     "workbox-strategies": "^6.2.0"
   },
