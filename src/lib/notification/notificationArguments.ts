@@ -13,7 +13,8 @@ export const createNotificationArgumentsCreator = (
     const options: ExtendedNotificationOptions = {
       body: data.body,
       tag: data.tag,
-      icon: data.icon
+      icon: data.icon,
+      data: data
     }
 
     if (!withoutInput && title && !ignoredChannels.includes(title)) {

@@ -29,7 +29,6 @@ const notify = async (
     const regist = await navigator.serviceWorker.ready
     // mac SafariだとshowNotificationが存在しない
     if (regist.showNotification) {
-      notificationOptions.data = notificationOptions
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
