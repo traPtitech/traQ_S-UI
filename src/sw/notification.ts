@@ -7,6 +7,7 @@ import { getStore } from '/@/sw/store'
 import { ChannelId } from '/@/types/entity-ids'
 import { wait } from '/@/lib/util/timer'
 import { FirebasePayloadData } from '/@/lib/notification/firebase'
+import { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -27,10 +28,11 @@ const openChannel = async (event: NotificationClickEvent) => {
   })
   if (clientsArr.length > 0) {
     const client = await clientsArr[0].focus()
-    return client.postMessage({
+    const message: ServiceWorkerNavigateMessage = {
       type: 'navigate',
       to: event.notification.data.path
-    })
+    }
+    return client.postMessage(message)
   } else {
     return self.clients.openWindow(event.notification.data.path)
   }

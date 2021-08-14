@@ -11,6 +11,12 @@ import { requestNotificationPermission } from './requestPermission'
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
 
+type ServiceWorkerMessage = ServiceWorkerNavigateMessage
+export type ServiceWorkerNavigateMessage = {
+  type: 'navigate'
+  to: string
+}
+
 const createNotificationArguments = createNotificationArgumentsCreator(
   appName,
   ignoredChannels
@@ -29,7 +35,6 @@ const notify = async (
     const regist = await navigator.serviceWorker.ready
     // mac SafariだとshowNotificationが存在しない
     if (regist.showNotification) {
-      notificationOptions.data = notificationOptions
       return regist.showNotification(notificationTitle, notificationOptions)
     }
   }
@@ -59,7 +64,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       // 上でNotificationが存在していることを確認している
       const permission = await requestNotificationPermission()
       if (permission === 'granted') {
-        notify({ title: `ようこそ${appName}へ！！` })
+        notify({ title: `ようこそ${appName}へ！！` }, true)
       } else {
         // eslint-disable-next-line no-console
         console.warn(`[Notification] permission ${permission}`)
@@ -76,13 +81,16 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     return
   }
 
-  navigator.serviceWorker.addEventListener('message', data => {
-    if (data.data.type === 'navigate') {
-      // 同じ場所に移動しようとした際のエラーを消す
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      router.push(data.data.to).catch(() => {})
+  navigator.serviceWorker.addEventListener(
+    'message',
+    ({ data }: MessageEvent<ServiceWorkerMessage>) => {
+      if (data.type === 'navigate') {
+        // 同じ場所に移動しようとした際のエラーを消す
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        router.push(data.to).catch(() => {})
+      }
     }
-  })
+  )
 
   const registration = await navigator.serviceWorker.register('/sw.js', {
     scope: '/'
