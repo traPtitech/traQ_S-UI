@@ -59,7 +59,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       // 上でNotificationが存在していることを確認している
       const permission = await requestNotificationPermission()
       if (permission === 'granted') {
-        notify({ title: `ようこそ${appName}へ！！` })
+        notify({ title: `ようこそ${appName}へ！！` }, true)
       } else {
         // eslint-disable-next-line no-console
         console.warn(`[Notification] permission ${permission}`)
