@@ -16,18 +16,17 @@ const useStampFilter = () => {
   const altNameTable = ref<Record<string, string>>({})
   const altNames = ref<string[]>([])
   const altNameToName = (altName: string) => altNameTable.value[altName]
-  emojiAltnameTable.then(
-    ({
+  emojiAltnameTable.then(({ default: tables }) => {
+    const {
       altNameTable: strictAltNameTable,
       unicodeTable: strictUnicodeTable
-    }) => {
-      altNameTable.value = {
-        ...strictAltNameTable,
-        ...strictUnicodeTable
-      }
-      altNames.value = [...Object.keys(altNameTable.value)]
+    } = tables
+    altNameTable.value = {
+      ...strictAltNameTable,
+      ...strictUnicodeTable
     }
-  )
+    altNames.value = [...Object.keys(altNameTable.value)]
+  })
 
   const oneLetterNames = computed(() =>
     stampNames.value.filter(name => name.length === 1)
