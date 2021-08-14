@@ -76,7 +76,7 @@ const useFilterStarChannel = () => {
 
 const useChannelList = (filterStarChannel: Ref<boolean>) => {
   return computed(() =>
-    filterStarChannel.value
+    (filterStarChannel.value
       ? [
           ...new Set(
             [...store.state.domain.me.staredChannelSet].flatMap(v =>
@@ -84,9 +84,8 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
             )
           )
         ]
-      : [...store.state.entities.channelsMap.values()].filter(
-          ch => !ch.archived
-        )
+      : [...store.state.entities.channelsMap.values()]
+    ).filter(ch => !ch.archived)
   )
 }
 
