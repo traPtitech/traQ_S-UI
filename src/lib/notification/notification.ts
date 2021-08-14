@@ -11,6 +11,12 @@ import { requestNotificationPermission } from './requestPermission'
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
 
+type ServiceWorkerMessage = ServiceWorkerNavigateMessage
+export type ServiceWorkerNavigateMessage = {
+  type: 'navigate'
+  to: string
+}
+
 const createNotificationArguments = createNotificationArgumentsCreator(
   appName,
   ignoredChannels
@@ -75,13 +81,16 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     return
   }
 
-  navigator.serviceWorker.addEventListener('message', data => {
-    if (data.data.type === 'navigate') {
-      // 同じ場所に移動しようとした際のエラーを消す
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      router.push(data.data.to).catch(() => {})
+  navigator.serviceWorker.addEventListener(
+    'message',
+    ({ data }: MessageEvent<ServiceWorkerMessage>) => {
+      if (data.type === 'navigate') {
+        // 同じ場所に移動しようとした際のエラーを消す
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        router.push(data.to).catch(() => {})
+      }
     }
-  })
+  )
 
   const registration = await navigator.serviceWorker.register('/sw.js', {
     scope: '/'
