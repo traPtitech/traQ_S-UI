@@ -5,8 +5,18 @@ import { isIOSApp } from '/@/lib/util/browser'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
 import { OnCanUpdate, setupUpdateToast } from './updateToast'
-import { setupFirebase, loadFirebase, FirebasePayloadData } from './firebase'
+import {
+  setupFirebaseApp,
+  FirebasePayloadData,
+  getFirebaseApp
+} from './firebase'
 import { requestNotificationPermission } from './requestPermission'
+import {
+  getMessaging,
+  onMessage,
+  getToken as getTokenFb,
+  deleteToken as deleteTokenFb
+} from 'firebase/messaging'
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
@@ -44,12 +54,6 @@ const notify = async (
   return null
 }
 
-interface NotificationPayload {
-  data: FirebasePayloadData
-  from: number
-  priority: string
-}
-
 export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   if (isIOSApp(window)) {
     // iOSはNotificationがないため、先にFCMトークンを登録する
@@ -75,7 +79,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
     console.warn(`[Notification] Notification does not exists`)
   }
 
-  const firebase = await setupFirebase()
+  const firebaseApp = setupFirebaseApp()
 
   if (import.meta.env.DEV || !navigator?.serviceWorker) {
     return
@@ -98,19 +102,22 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 
   setupUpdateToast(registration, onCanUpdate)
 
-  if (window.Notification?.permission !== 'granted' || !firebase) {
+  if (window.Notification?.permission !== 'granted' || !firebaseApp) {
     return
   }
-  const messaging = firebase.messaging()
+  const messaging = getMessaging(firebaseApp)
 
-  messaging.onMessage(async (payload: Readonly<NotificationPayload>) => {
-    const notification = await notify(payload.data)
+  onMessage(messaging, async payload => {
+    const data = payload.data as FirebasePayloadData | undefined
+    if (!data) return
+
+    const notification = await notify(data)
     if (!notification) return
 
     notification.onclick = (_event: Event) => {
       const event = _event as NotificationClickEvent
       if (event.reply) {
-        const channelID = payload.data.tag?.slice('c:'.length)
+        const channelID = data.tag?.slice('c:'.length)
         if (channelID) {
           apis.postMessage(channelID, {
             content: event.reply,
@@ -124,15 +131,15 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
       }
       window.focus()
 
-      if (payload.data.path) {
+      if (data.path) {
         // 同じ場所に移動しようとした際のエラーを消す
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        router.push(payload.data.path).catch(() => {})
+        router.push(data.path).catch(() => {})
       }
     }
   })
 
-  const token = await messaging.getToken({
+  const token = await getTokenFb(messaging, {
     serviceWorkerRegistration: registration
   })
   apis.registerFCMDevice({ token })
@@ -141,9 +148,9 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
 export const deleteToken = async () => {
   if (window.Notification?.permission !== 'granted') return
 
-  const firebase = await loadFirebase()
-  const messaging = firebase.messaging()
-  messaging.deleteToken()
+  const firebaseApp = getFirebaseApp()
+  const messaging = getMessaging(firebaseApp)
+  deleteTokenFb(messaging)
 }
 
 export const removeNotification = async (

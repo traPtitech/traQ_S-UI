@@ -1,30 +1,23 @@
-import type firebase from 'firebase/app'
+import { FirebaseApp, initializeApp } from 'firebase/app'
 
-let _firebase: typeof firebase | null
+let _firebaseApp: FirebaseApp | undefined
 
-export const loadFirebase = async () => {
-  if (_firebase) {
-    return _firebase
-  }
-
-  _firebase = (await import('firebase/app')).default
-  await import('firebase/messaging')
-  return _firebase
+export const getFirebaseApp = () => {
+  return _firebaseApp
 }
 
-export const setupFirebase = async () => {
+export const setupFirebaseApp = () => {
   if (window.traQConfig.firebase === undefined) {
-    return
+    return undefined
   }
 
-  const fb = await loadFirebase()
   try {
-    fb.initializeApp(window.traQConfig.firebase)
+    _firebaseApp = initializeApp(window.traQConfig.firebase)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('[Firebase] failed to initialize', e)
   }
-  return fb
+  return _firebaseApp
 }
 
 // https://github.com/traPtitech/traQ/blob/d9ddb993d379c75baef3526b382a923719bad743/service/fcm/impl.go#L106-L114

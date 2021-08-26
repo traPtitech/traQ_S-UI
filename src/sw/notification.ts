@@ -1,6 +1,5 @@
-import firebase from 'firebase/app'
-import 'firebase/messaging'
-
+import { initializeApp } from 'firebase/app'
+import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
 import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getStore } from '/@/sw/store'
@@ -119,11 +118,10 @@ export const setupNotification = async () => {
   })
 
   if (self.traQConfig.firebase !== undefined) {
-    firebase.initializeApp(self.traQConfig.firebase)
+    const firebaseApp = initializeApp(self.traQConfig.firebase)
+    const messaging = getMessaging(firebaseApp)
 
-    const messaging = firebase.messaging()
-
-    messaging.onBackgroundMessage(payload => {
+    onBackgroundMessage(messaging, payload => {
       const payloadData = payload.data as FirebasePayloadData | undefined
       if (payloadData && payloadData.type === 'new_message') {
         return showNotification(payloadData)
