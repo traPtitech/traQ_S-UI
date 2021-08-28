@@ -40,6 +40,10 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
 .header {
   margin: 40px 80px;
