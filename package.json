@@ -83,7 +83,7 @@
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "rollup-plugin-brotli": "^3.1.0",
-    "sass": "^1.38.1",
+    "sass": "^1.38.2",
     "tree-kill": "^1.2.2",
     "typescript": "^4.4.2",
     "vite": "^2.5.1",
