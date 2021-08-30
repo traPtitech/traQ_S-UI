@@ -67,7 +67,7 @@
     "@vue/test-utils": "^2.0.0-rc.12",
     "autoprefixer": "^10.3.3",
     "axios": "^0.21.1",
-    "babel-jest": "^27.0.6",
+    "babel-jest": "^27.1.0",
     "csstype": "^3.0.8",
     "cypress": "^8.3.0",
     "esbuild": "^0.12.23",
