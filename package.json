@@ -64,7 +64,7 @@
     "@vue/compiler-sfc": "^3.2.6",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vue/test-utils": "^2.0.0-rc.12",
+    "@vue/test-utils": "^2.0.0-rc.13",
     "autoprefixer": "^10.3.3",
     "axios": "^0.21.1",
     "babel-jest": "^27.1.0",
