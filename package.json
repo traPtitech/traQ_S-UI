@@ -40,7 +40,7 @@
     "skyway-js": "^4.4.1",
     "throttle-debounce": "^3.0.1",
     "v-click-outside": "^3.1.2",
-    "vue": "^3.2.6",
+    "vue": "^3.2.7",
     "vue-router": "^4.0.11",
     "vue-slider-component": "^4.0.0-beta.5",
     "vuex": "^4.0.2",
