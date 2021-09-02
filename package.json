@@ -86,7 +86,7 @@
     "sass": "^1.38.2",
     "tree-kill": "^1.2.2",
     "typescript": "^4.4.2",
-    "vite": "^2.5.2",
+    "vite": "^2.5.3",
     "vite-plugin-pwa": "^0.11.2",
     "vite-plugin-vue-svg": "^0.1.0",
     "vue3-jest": "^27.0.0-alpha.1",
