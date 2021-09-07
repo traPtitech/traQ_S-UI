@@ -60,7 +60,7 @@
     "@types/webappsec-credential-management": "^0.6.1",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
-    "@vitejs/plugin-vue": "^1.6.0",
+    "@vitejs/plugin-vue": "^1.6.1",
     "@vue/compiler-sfc": "^3.2.9",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
