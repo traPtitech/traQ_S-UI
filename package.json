@@ -78,7 +78,7 @@
     "eslint-plugin-vue": "^7.17.0",
     "fonteditor-core": "^2.1.8",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.1.0",
+    "jest": "^27.1.1",
     "patch-package": "^6.4.7",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
