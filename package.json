@@ -81,7 +81,7 @@
     "jest": "^27.1.1",
     "patch-package": "^6.4.7",
     "postcss": "^8.3.6",
-    "prettier": "^2.3.2",
+    "prettier": "^2.4.0",
     "rollup-plugin-brotli": "^3.1.0",
     "sass": "^1.39.0",
     "tree-kill": "^1.2.2",
