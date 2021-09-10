@@ -1,5 +1,5 @@
 <template>
-  <icon mdi :name="iconName" :size="size" />
+  <icon :name="iconData.name" :mdi="iconData.mdi" :size="size" />
 </template>
 
 <script lang="ts">
@@ -24,24 +24,28 @@ export default defineComponent({
     }
   },
   setup(prop) {
-    const iconName = computed(() => {
+    const iconData = computed(() => {
       switch (prop.type) {
         case 'file':
-          return 'file'
+          return { name: 'file', mdi: true }
         case 'pdf':
-          return 'file-pdf'
+          return { name: 'file-pdf', mdi: false }
         case 'slide':
-          return 'file-chart'
+          return { name: 'file-chart', mdi: true }
         case 'image':
-          return prop.isAnimatedImage ? 'image-multiple' : 'file-image'
+          return {
+            name: prop.isAnimatedImage ? 'image-multiple' : 'file-image',
+            mdi: true
+          }
         case 'video':
-          return 'file-video'
+          return { name: 'file-video', mdi: true }
         case 'audio':
-          return 'file-music'
+          return { name: 'file-music', mdi: true }
       }
-      throw new Error(`Unexpected type ${prop.type}`)
+      const check: never = prop.type
+      throw new Error(`Unexpected type ${check}`)
     })
-    return { iconName }
+    return { iconData }
   }
 })
 </script>
