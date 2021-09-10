@@ -35,6 +35,7 @@ module.exports = {
     __DEV_SERVER__: JSON.stringify('https://example.com'),
     traQConfig
   },
+  resolver: '<rootDir>/tests/unit/exportMapsResolver.js',
   coverageDirectory: './coverage/',
   collectCoverage: true,
   setupFiles: ['fake-indexeddb/auto']
