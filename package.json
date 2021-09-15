@@ -68,7 +68,7 @@
     "autoprefixer": "^10.3.4",
     "axios": "^0.21.4",
     "babel-jest": "^27.1.0",
-    "csstype": "^3.0.8",
+    "csstype": "^3.0.9",
     "cypress": "^8.3.1",
     "enhanced-resolve": "^5.8.2",
     "esbuild": "^0.12.28",
