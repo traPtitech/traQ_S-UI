@@ -66,6 +66,7 @@ export default defineComponent({
   flex: 1;
   padding: 16px 24px;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 .item {
   margin: 24px 0;

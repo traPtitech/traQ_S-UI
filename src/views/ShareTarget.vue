@@ -40,6 +40,7 @@ export default defineComponent({
   height: 100vh;
   display: flex;
   overflow: auto;
+  scrollbar-gutter: stable;
   padding: 48px 16px;
 }
 </style>

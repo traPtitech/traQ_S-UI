@@ -53,6 +53,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+  scrollbar-gutter: stable;
   padding: {
     top: 24px;
     left: 8px;

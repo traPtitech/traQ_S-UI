@@ -93,6 +93,7 @@ $ephemeralNavigationMinHeight: 64px;
     x: hidden;
     y: auto;
   }
+  scrollbar-gutter: stable;
 }
 .navigations {
   display: flex;
