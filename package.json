@@ -58,7 +58,7 @@
     "@types/punycode": "^2.1.0",
     "@types/throttle-debounce": "^2.1.0",
     "@types/webappsec-credential-management": "^0.6.2",
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.0",
     "@vitejs/plugin-vue": "^1.8.1",
     "@vue/compiler-sfc": "^3.2.12",
