@@ -276,6 +276,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
     x: hidden;
     y: auto;
   }
+  scrollbar-gutter: stable;
   contain: strict;
   z-index: $z-index-sidebar-wrapper;
 }

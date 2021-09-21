@@ -44,6 +44,7 @@ export default defineComponent({
     x: hidden;
     y: auto;
   }
+  scrollbar-gutter: stable;
 }
 .header {
   margin: 40px 80px;

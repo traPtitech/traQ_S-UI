@@ -178,6 +178,7 @@ export default defineComponent({
 }
 .resultList {
   overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 .elementContainer {
   margin-bottom: 0.5rem;

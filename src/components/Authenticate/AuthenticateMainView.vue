@@ -69,5 +69,6 @@ export default defineComponent({
   display: flex;
   overflow: auto;
   padding: 48px 24px;
+  scrollbar-gutter: stable;
 }
 </style>

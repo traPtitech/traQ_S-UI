@@ -20,14 +20,3 @@ body {
 img {
   image-orientation: from-image;
 }
-
-// スクロールバーで幅が変わることを防止
-*,
-*::before,
-*::after {
-  scrollbar-gutter: stable;
-}
-// <html>の背景色が上の設定によって見えるのを防止
-html {
-  overflow: hidden;
-}

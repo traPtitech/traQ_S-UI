@@ -57,6 +57,7 @@ $padding: 32px;
 .container {
   height: calc(100% + #{$padding});
   overflow-y: auto;
+  scrollbar-gutter: stable;
   margin: -$padding;
   margin-top: 0;
   padding: $padding;
