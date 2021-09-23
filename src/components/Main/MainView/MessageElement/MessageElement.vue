@@ -7,6 +7,7 @@
     :data-is-pinned="$boolAttr(state.isPinned)"
     :data-is-entry="$boolAttr(isEntryMessage)"
     :data-is-editing="$boolAttr(state.isEditing)"
+    :data-is-sideber-open="$boolAttr(isSidebarOpen)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -121,7 +122,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 32px;
+$messagePadding: 66px;
+$messagePaddingWithSidebar: 32px;
 $messagePaddingMobile: 16px;
 
 .body {
@@ -131,6 +133,9 @@ $messagePaddingMobile: 16px;
   overflow: hidden;
   overflow: clip;
   padding: 8px $messagePadding;
+  &[data-is-sideber-open] {
+    padding: 8px $messagePaddingWithSidebar;
+  }
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
   }
