@@ -18,6 +18,7 @@
     <message-tools
       :show="isHovered && !state.isEditing"
       :class="$style.tools"
+      :style="toolStyle"
       :message-id="messageId"
       :is-minimum="isArchived"
     />
@@ -40,12 +41,13 @@ import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
+import useSidebar from '/@/use/sidebar'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver from './use/elementRenderObserver'
 import useEmbeddings from '/@/use/message/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
-import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
+import MessageTools from './MessageTools.vue'
 import useHover from '/@/use/hover'
 
 export default defineComponent({
@@ -73,6 +75,26 @@ export default defineComponent({
   setup(props, context) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
+
+    const { isSidebarOpen } = useSidebar()
+
+    const toolsPaddingWithSidebar = '50px'
+    const toolsPadding = '16px'
+    interface PaddingStyle {
+      '--padding': string
+    }
+    const toolStyle = computed<PaddingStyle>(() => {
+      if (isSidebarOpen.value && !isMobile.value) {
+        return {
+          '--padding': toolsPadding
+        }
+      } else {
+        return {
+          '--padding': toolsPaddingWithSidebar
+        }
+      }
+    })
+
     const state = reactive({
       message: computed(() =>
         store.state.entities.messages.messagesMap.get(props.messageId)
@@ -107,6 +129,7 @@ export default defineComponent({
       embeddingsState,
       isMobile,
       isHovered,
+      toolStyle,
       onMouseEnter,
       onMouseLeave
     }
@@ -155,7 +178,7 @@ $messagePaddingMobile: 16px;
 .tools {
   position: absolute;
   top: 4px;
-  right: 16px;
+  right: var(--padding);
   z-index: $z-index-message-element-tools;
 }
 </style>
