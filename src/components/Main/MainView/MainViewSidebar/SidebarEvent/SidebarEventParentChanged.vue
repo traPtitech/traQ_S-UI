@@ -4,6 +4,7 @@
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
+    @click="onNewParent"
   >
     {{ newParentPath }}
   </sidebar-event-frame>
@@ -14,6 +15,7 @@ import { computed, defineComponent, PropType } from 'vue'
 import { ParentChangedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import useChannelPath from '/@/use/channelPath'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'SidebarEventParentChanged',
@@ -37,7 +39,12 @@ export default defineComponent({
       channelIdToPathString(props.details.after, true)
     )
 
-    return { newParentPath }
+    const router = useRouter()
+    const onNewParent = () => {
+      router.push(`/channels/${channelIdToPathString(props.details.after)}`)
+    }
+
+    return { newParentPath, onNewParent }
   }
 })
 </script>
