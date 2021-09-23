@@ -71,7 +71,7 @@
     "csstype": "^3.0.9",
     "cypress": "^8.4.1",
     "enhanced-resolve": "^5.8.3",
-    "esbuild": "^0.12.28",
+    "esbuild": "^0.13.1",
     "eslint": "^7.32.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^3.4.1",
