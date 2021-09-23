@@ -20,6 +20,7 @@
       :show="isHovered && !state.isEditing"
       :class="$style.tools"
       :data-is-mobile="$boolAttr(isMobile)"
+      :data-is-pinned="$boolAttr(state.isPinned)"
       :data-is-sideber-open="$boolAttr(isSidebarOpen)"
       :message-id="messageId"
       :is-minimum="isArchived"
@@ -169,6 +170,9 @@ $toolsPaddingSidebarClose: 50px;
 .tools {
   position: absolute;
   top: 4px;
+  &[data-is-pinned] {
+    top: 40px;
+  }
   right: $toolsPaddingSidebarClose;
   &[data-is-sideber-open]:not([data-is-mobile]) {
     right: $toolsPaddingSidebarOpen;
