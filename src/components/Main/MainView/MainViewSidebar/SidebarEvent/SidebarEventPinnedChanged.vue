@@ -5,6 +5,7 @@
     icon-mdi
     :user-id="details.userId"
     :datetime="datetime"
+    :class="$style.frame"
     @click="onMessageSelect(message)"
   >
     <template v-if="message">
@@ -103,5 +104,9 @@ export default defineComponent({
 <style lang="scss" module>
 .deletedMessage {
   opacity: 0.5;
+}
+
+.frame {
+  cursor: pointer;
 }
 </style>

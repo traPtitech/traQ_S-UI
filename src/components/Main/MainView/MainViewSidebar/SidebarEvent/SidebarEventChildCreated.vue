@@ -4,6 +4,7 @@
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
+    :class="$style.frame"
     @click="onNewChild"
   >
     {{ newChildPath }}
@@ -49,3 +50,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" module>
+.frame {
+  cursor: pointer;
+}
+</style>
