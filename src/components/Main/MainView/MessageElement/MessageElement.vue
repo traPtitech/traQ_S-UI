@@ -122,8 +122,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$messagePadding: 66px;
-$messagePaddingWithSidebar: 32px;
+$messagePaddingBase: 32px;
+$messagePaddingSidebarClose: 66px;
 $messagePaddingMobile: 16px;
 
 .body {
@@ -132,9 +132,9 @@ $messagePaddingMobile: 16px;
   min-width: 0;
   overflow: hidden;
   overflow: clip;
-  padding: 8px $messagePadding;
-  &[data-is-sideber-open] {
-    padding: 8px $messagePaddingWithSidebar;
+  padding: 8px $messagePaddingBase;
+  &:not([data-is-sideber-open]) {
+    padding: 8px $messagePaddingSidebarClose 8px $messagePaddingBase;
   }
   &[data-is-mobile] {
     padding: 8px $messagePaddingMobile;
@@ -163,15 +163,15 @@ $messagePaddingMobile: 16px;
   min-width: 0;
 }
 
-$toolsPadding: 50px;
-$toolsPaddingWithSidebar: 16px;
+$toolsPaddingSidebarOpen: 16px;
+$toolsPaddingSidebarClose: 50px;
 
 .tools {
   position: absolute;
   top: 4px;
-  right: $toolsPadding;
+  right: $toolsPaddingSidebarClose;
   &[data-is-sideber-open]:not([data-is-mobile]) {
-    right: $toolsPaddingWithSidebar;
+    right: $toolsPaddingSidebarOpen;
   }
   z-index: $z-index-message-element-tools;
 }
