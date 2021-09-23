@@ -18,7 +18,7 @@
     <message-tools
       :show="isHovered && !state.isEditing"
       :class="$style.tools"
-      :style="toolStyle"
+      :data-is-sideber-open="$boolAttr(isSidebarOpen)"
       :message-id="messageId"
       :is-minimum="isArchived"
     />
@@ -75,25 +75,7 @@ export default defineComponent({
   setup(props, context) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
-
     const { isSidebarOpen } = useSidebar()
-
-    const toolsPaddingWithSidebar = '50px'
-    const toolsPadding = '16px'
-    interface PaddingStyle {
-      '--padding': string
-    }
-    const toolStyle = computed<PaddingStyle>(() => {
-      if (isSidebarOpen.value && !isMobile.value) {
-        return {
-          '--padding': toolsPadding
-        }
-      } else {
-        return {
-          '--padding': toolsPaddingWithSidebar
-        }
-      }
-    })
 
     const state = reactive({
       message: computed(() =>
@@ -129,7 +111,7 @@ export default defineComponent({
       embeddingsState,
       isMobile,
       isHovered,
-      toolStyle,
+      isSidebarOpen,
       onMouseEnter,
       onMouseLeave
     }
@@ -175,10 +157,16 @@ $messagePaddingMobile: 16px;
   min-width: 0;
 }
 
+$toolsPadding: 50px;
+$toolsPaddingWithSidebar: 16px;
+
 .tools {
   position: absolute;
   top: 4px;
-  right: var(--padding);
+  right: $toolsPadding;
+  &[data-is-sideber-open] {
+    right: $toolsPaddingWithSidebar;
+  }
   z-index: $z-index-message-element-tools;
 }
 </style>
