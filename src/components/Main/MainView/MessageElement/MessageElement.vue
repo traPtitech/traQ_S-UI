@@ -18,6 +18,7 @@
     <message-tools
       :show="isHovered && !state.isEditing"
       :class="$style.tools"
+      :data-is-mobile="$boolAttr(isMobile)"
       :data-is-sideber-open="$boolAttr(isSidebarOpen)"
       :message-id="messageId"
       :is-minimum="isArchived"
@@ -164,7 +165,7 @@ $toolsPaddingWithSidebar: 16px;
   position: absolute;
   top: 4px;
   right: $toolsPadding;
-  &[data-is-sideber-open] {
+  &[data-is-sideber-open]:not([data-is-mobile]) {
     right: $toolsPaddingWithSidebar;
   }
   z-index: $z-index-message-element-tools;
