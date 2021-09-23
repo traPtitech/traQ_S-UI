@@ -5,6 +5,7 @@
     icon-mdi
     :user-id="details.userId"
     :datetime="datetime"
+    @click="onMessageSelect(message)"
   >
     <template v-if="message">
       <user-name :user="user" />
@@ -28,6 +29,7 @@ import SidebarEventFrame from './SidebarEventFrame.vue'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import store from '/@/store'
+import { useRouter } from 'vue-router'
 import { AxiosError } from 'axios'
 
 export default defineComponent({
@@ -85,7 +87,15 @@ export default defineComponent({
         ? store.state.entities.usersMap.get(message.value.userId)
         : undefined
     )
-    return { title, message, user }
+
+    const router = useRouter()
+    const onMessageSelect = (message: Message | null | undefined) => {
+      if (message) {
+        router.push(`/messages/${message.id}`)
+      }
+    }
+
+    return { title, message, user, onMessageSelect }
   }
 })
 </script>
