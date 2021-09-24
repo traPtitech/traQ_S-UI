@@ -6,6 +6,7 @@
     :user-id="details.userId"
     :datetime="datetime"
     :class="$style.frame"
+    :data-is-message-valid="$boolAttr(isMessageValid(message))"
     @click="onMessageSelect(message)"
   >
     <template v-if="message">
@@ -89,6 +90,10 @@ export default defineComponent({
         : undefined
     )
 
+    const isMessageValid = (message: Message | null | undefined) => {
+      return Boolean(message)
+    }
+
     const router = useRouter()
     const onMessageSelect = (message: Message | null | undefined) => {
       if (message) {
@@ -96,7 +101,7 @@ export default defineComponent({
       }
     }
 
-    return { title, message, user, onMessageSelect }
+    return { title, message, user, isMessageValid, onMessageSelect }
   }
 })
 </script>
@@ -107,6 +112,8 @@ export default defineComponent({
 }
 
 .frame {
-  cursor: pointer;
+  &[data-is-message-valid] {
+    cursor: pointer;
+  }
 }
 </style>
