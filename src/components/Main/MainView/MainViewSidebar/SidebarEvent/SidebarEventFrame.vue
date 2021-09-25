@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div :class="$style.container" :data-is-link-available="$boolAttr(link)">
     <div :class="$style.titleWrapper">
       <icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">{{ title }}</div>
@@ -48,6 +48,10 @@ export default defineComponent({
     datetime: {
       type: String,
       required: true
+    },
+    link: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -64,6 +68,10 @@ export default defineComponent({
   @include background-primary;
   padding: 8px 20px;
   border-radius: 4px;
+  cursor: auto;
+  &[data-is-link-available] {
+    cursor: pointer;
+  }
 }
 
 .titleWrapper {

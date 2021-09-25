@@ -5,8 +5,8 @@
     icon-mdi
     :user-id="details.userId"
     :datetime="datetime"
+    :link="isMessageValid(message)"
     :class="$style.frame"
-    :data-is-message-valid="$boolAttr(isMessageValid(message))"
     @click="onMessageSelect(message)"
   >
     <template v-if="message">
@@ -90,6 +90,7 @@ export default defineComponent({
         : undefined
     )
 
+    // messageがnull、undefinedの時はfalseをlinkプロパティに送る(リンク扱いしない)ようにする
     const isMessageValid = (message: Message | null | undefined) => {
       return Boolean(message)
     }
@@ -109,11 +110,5 @@ export default defineComponent({
 <style lang="scss" module>
 .deletedMessage {
   opacity: 0.5;
-}
-
-.frame {
-  &[data-is-message-valid] {
-    cursor: pointer;
-  }
 }
 </style>
