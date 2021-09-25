@@ -5,9 +5,8 @@
     icon-mdi
     :user-id="details.userId"
     :datetime="datetime"
-    :link="isMessageValid(message)"
+    :link="messageLink"
     :class="$style.frame"
-    @click="onMessageSelect(message)"
   >
     <template v-if="message">
       <user-name :user="user" />
@@ -31,7 +30,6 @@ import SidebarEventFrame from './SidebarEventFrame.vue'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import store from '/@/store'
-import { useRouter } from 'vue-router'
 import { AxiosError } from 'axios'
 
 export default defineComponent({
@@ -90,19 +88,11 @@ export default defineComponent({
         : undefined
     )
 
-    // messageがnull、undefinedの時はfalseをlinkプロパティに送る(リンク扱いしない)ようにする
-    const isMessageValid = (message: Message | null | undefined) => {
-      return Boolean(message)
-    }
+    const messageLink = computed(() =>
+      message.value ? `/messages/${message.value.id}` : undefined
+    )
 
-    const router = useRouter()
-    const onMessageSelect = (message: Message | null | undefined) => {
-      if (message) {
-        router.push(`/messages/${message.id}`)
-      }
-    }
-
-    return { title, message, user, isMessageValid, onMessageSelect }
+    return { title, message, user, messageLink }
   }
 })
 </script>

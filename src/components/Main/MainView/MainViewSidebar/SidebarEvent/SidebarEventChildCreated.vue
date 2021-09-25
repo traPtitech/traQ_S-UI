@@ -4,9 +4,8 @@
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
-    :link="true"
+    :link="newChildLink"
     :class="$style.frame"
-    @click="onNewChild"
   >
     {{ newChildPath }}
   </sidebar-event-frame>
@@ -17,7 +16,6 @@ import { computed, defineComponent, PropType } from 'vue'
 import { ChildCreatedEvent } from '@traptitech/traq'
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import useChannelPath from '/@/use/channelPath'
-import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'SidebarEventNameChanged',
@@ -35,19 +33,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { channelIdToPathString, channelIdToShortPathString } =
-      useChannelPath()
+    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
     const newChildPath = computed(() =>
       channelIdToShortPathString(props.details.channelId, true)
     )
 
-    const router = useRouter()
-    const onNewChild = () => {
-      router.push(`/channels/${channelIdToPathString(props.details.channelId)}`)
-    }
+    const newChildLink = channelIdToLink(props.details.channelId)
 
-    return { newChildPath, onNewChild }
+    return { newChildPath, newChildLink }
   }
 })
 </script>
