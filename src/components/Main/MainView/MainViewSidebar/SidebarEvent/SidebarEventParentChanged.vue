@@ -5,7 +5,6 @@
     :user-id="details.userId"
     :datetime="datetime"
     :link="newParentLink"
-    :class="$style.frame"
   >
     {{ newParentPath }}
   </sidebar-event-frame>

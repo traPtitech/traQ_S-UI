@@ -6,7 +6,6 @@
     :user-id="details.userId"
     :datetime="datetime"
     :link="messageLink"
-    :class="$style.frame"
   >
     <template v-if="message">
       <user-name :user="user" />
