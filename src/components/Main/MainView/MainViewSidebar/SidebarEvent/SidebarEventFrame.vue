@@ -77,7 +77,6 @@ export default defineComponent({
   @include background-primary;
   padding: 8px 20px;
   border-radius: 4px;
-  cursor: auto;
   &[data-is-link-available] {
     cursor: pointer;
   }
