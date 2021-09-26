@@ -38,7 +38,7 @@ export default defineComponent({
       channelIdToPathString(props.details.after, true)
     )
 
-    const newParentLink = channelIdToLink(props.details.after)
+    const newParentLink = computed(() => channelIdToLink(props.details.after))
 
     return { newParentPath, newParentLink }
   }

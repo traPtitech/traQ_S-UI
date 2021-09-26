@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :data-is-link-available="link" @click="toLink">
+  <div
+    :class="$style.container"
+    :data-is-link-available="$boolAttr(!!link)"
+    @click="toLink"
+  >
     <div :class="$style.titleWrapper">
       <icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">{{ title }}</div>

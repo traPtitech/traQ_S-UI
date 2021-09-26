@@ -17,7 +17,7 @@ import SidebarEventFrame from './SidebarEventFrame.vue'
 import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
-  name: 'SidebarEventNameChanged',
+  name: 'SidebarEventChildCreated',
   components: {
     SidebarEventFrame
   },
@@ -38,7 +38,9 @@ export default defineComponent({
       channelIdToShortPathString(props.details.channelId, true)
     )
 
-    const newChildLink = channelIdToLink(props.details.channelId)
+    const newChildLink = computed(() =>
+      channelIdToLink(props.details.channelId)
+    )
 
     return { newChildPath, newChildLink }
   }
