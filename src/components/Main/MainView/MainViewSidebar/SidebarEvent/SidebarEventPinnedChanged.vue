@@ -5,6 +5,7 @@
     icon-mdi
     :user-id="details.userId"
     :datetime="datetime"
+    :link="messageLink"
   >
     <template v-if="message">
       <user-name :user="user" />
@@ -85,7 +86,12 @@ export default defineComponent({
         ? store.state.entities.usersMap.get(message.value.userId)
         : undefined
     )
-    return { title, message, user }
+
+    const messageLink = computed(() =>
+      message.value ? `/messages/${message.value.id}` : undefined
+    )
+
+    return { title, message, user, messageLink }
   }
 })
 </script>

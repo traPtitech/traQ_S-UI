@@ -4,6 +4,7 @@
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
+    :link="newChildLink"
   >
     {{ newChildPath }}
   </sidebar-event-frame>
@@ -16,7 +17,7 @@ import SidebarEventFrame from './SidebarEventFrame.vue'
 import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
-  name: 'SidebarEventNameChanged',
+  name: 'SidebarEventChildCreated',
   components: {
     SidebarEventFrame
   },
@@ -31,11 +32,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { channelIdToShortPathString } = useChannelPath()
+    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
+
     const newChildPath = computed(() =>
       channelIdToShortPathString(props.details.channelId, true)
     )
-    return { newChildPath }
+
+    const newChildLink = computed(() =>
+      channelIdToLink(props.details.channelId)
+    )
+
+    return { newChildPath, newChildLink }
   }
 })
 </script>

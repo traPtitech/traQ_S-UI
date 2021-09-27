@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container">
+  <div
+    :class="$style.container"
+    :data-is-link-available="$boolAttr(!!link)"
+    @click="toLink"
+  >
     <div :class="$style.titleWrapper">
       <icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">{{ title }}</div>
@@ -21,6 +25,7 @@ import Icon from '/@/components/UI/Icon.vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/date'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'SidebarEventFrame',
@@ -48,13 +53,25 @@ export default defineComponent({
     datetime: {
       type: String,
       required: true
+    },
+    link: {
+      type: String,
+      default: undefined
     }
   },
   setup(props) {
     const timeString = computed(() =>
       getFullDayWithTimeString(new Date(props.datetime))
     )
-    return { timeString }
+
+    const router = useRouter()
+    const toLink = () => {
+      if (props.link) {
+        router.push(props.link)
+      }
+    }
+
+    return { timeString, toLink }
   }
 })
 </script>
@@ -64,6 +81,9 @@ export default defineComponent({
   @include background-primary;
   padding: 8px 20px;
   border-radius: 4px;
+  &[data-is-link-available] {
+    cursor: pointer;
+  }
 }
 
 .titleWrapper {

@@ -4,6 +4,7 @@
     icon-name="hash"
     :user-id="details.userId"
     :datetime="datetime"
+    :link="newParentLink"
   >
     {{ newParentPath }}
   </sidebar-event-frame>
@@ -31,13 +32,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { channelIdToPathString } = useChannelPath()
+    const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
     const newParentPath = computed(() =>
       channelIdToPathString(props.details.after, true)
     )
 
-    return { newParentPath }
+    const newParentLink = computed(() => channelIdToLink(props.details.after))
+
+    return { newParentPath, newParentLink }
   }
 })
 </script>
