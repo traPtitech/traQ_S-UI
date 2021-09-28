@@ -41,8 +41,14 @@ export default defineComponent({
       type: String,
       required: true
     },
-    title: String,
-    desc: String,
+    title: {
+      type: String,
+      default: undefined
+    },
+    desc: {
+      type: String,
+      default: undefined
+    },
     size: {
       type: Number,
       default: 24

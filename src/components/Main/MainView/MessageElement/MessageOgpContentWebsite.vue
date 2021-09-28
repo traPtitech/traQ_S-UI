@@ -27,7 +27,10 @@ export default defineComponent({
       type: String,
       required: true
     },
-    imageUrl: String,
+    imageUrl: {
+      type: String,
+      default: undefined
+    },
     title: {
       type: String,
       default: ''

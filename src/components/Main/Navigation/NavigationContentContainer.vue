@@ -19,7 +19,10 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'NavigationContentContainer',
   props: {
-    subtitle: String
+    subtitle: {
+      type: String,
+      default: undefined
+    }
   },
   setup() {
     return {}

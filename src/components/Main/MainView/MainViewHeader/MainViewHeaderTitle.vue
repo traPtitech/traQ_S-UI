@@ -22,7 +22,7 @@ export default defineComponent({
       type: Boolean,
       defualt: false
     },
-    iconName: String,
+    iconName: { type: String, default: undefined },
     title: { type: String, required: true }
   },
   setup() {

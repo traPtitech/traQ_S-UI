@@ -40,7 +40,10 @@ export default defineComponent({
       type: Object as PropType<OAuth2Client>,
       required: true
     },
-    developer: Object as PropType<User>
+    developer: {
+      type: Object as PropType<User>,
+      default: undefined
+    }
   },
   setup() {
     return {}

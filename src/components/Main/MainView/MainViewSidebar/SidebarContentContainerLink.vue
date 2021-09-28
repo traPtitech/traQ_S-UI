@@ -29,8 +29,14 @@ export default defineComponent({
     Icon
   },
   props: {
-    title: String,
-    count: Number,
+    title: {
+      type: String,
+      default: undefined
+    },
+    count: {
+      type: Number,
+      default: undefined
+    },
     largePadding: {
       type: Boolean,
       default: false

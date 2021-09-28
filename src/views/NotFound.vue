@@ -16,8 +16,14 @@ import { useRoute } from 'vue-router'
 export default defineComponent({
   name: 'NotFound',
   props: {
-    routeName: [String, Symbol],
-    routeParam: String
+    routeName: {
+      type: [String, Symbol],
+      required: true
+    },
+    routeParam: {
+      type: String,
+      required: true
+    }
   },
   setup() {
     const route = useRoute()

@@ -165,7 +165,7 @@ export default defineComponent({
     },
     isReachedEnd: { type: Boolean, required: true },
     isReachedLatest: { type: Boolean, required: true },
-    entryMessageId: { type: String as PropType<MessageId> },
+    entryMessageId: { type: String as PropType<MessageId>, default: undefined },
     isArchived: {
       type: Boolean,
       default: false

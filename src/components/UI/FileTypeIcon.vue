@@ -17,7 +17,10 @@ export default defineComponent({
       type: String as PropType<AttachmentType>,
       required: true
     },
-    size: Number,
+    size: {
+      type: Number,
+      default: undefined
+    },
     isAnimatedImage: {
       type: Boolean,
       default: false

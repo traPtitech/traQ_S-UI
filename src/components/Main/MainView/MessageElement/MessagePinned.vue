@@ -17,7 +17,10 @@ export default defineComponent({
     Icon
   },
   props: {
-    messageId: String as PropType<MessageId>
+    messageId: {
+      type: String as PropType<MessageId>,
+      required: true
+    }
   },
   setup(props) {
     const userDisplayName = computed(() => {

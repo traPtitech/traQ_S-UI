@@ -23,7 +23,10 @@ export default defineComponent({
     InlineMarkdown
   },
   props: {
-    bio: String
+    bio: {
+      type: String,
+      default: undefined
+    }
   },
   setup(props) {
     const isLoading = computed(() => props.bio === undefined)

@@ -5,13 +5,13 @@
       <p>
         <online-indicator-with-tooltip
           :user-id="user.id"
-          :last-online="detail?.lastOnline"
+          :last-online="detail?.lastOnline ?? undefined"
         />
         @{{ user.name }}
       </p>
     </div>
     <buttons
-      :home-channel-id="detail?.homeChannel"
+      :home-channel-id="detail?.homeChannel ?? undefined"
       :user-name="user.name"
       show-title
     />
@@ -35,7 +35,10 @@ export default defineComponent({
       type: Object as PropType<User>,
       required: true
     },
-    detail: Object as PropType<UserDetail>
+    detail: {
+      type: Object as PropType<UserDetail>,
+      default: undefined
+    }
   },
   setup() {
     return {}

@@ -17,7 +17,8 @@ export default defineComponent({
   components: { Icon },
   props: {
     userId: {
-      type: String as PropType<UserId>
+      type: String as PropType<UserId>,
+      default: undefined
     }
   },
   setup(props) {

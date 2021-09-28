@@ -51,7 +51,10 @@ export default defineComponent({
       type: String as PropType<NavigationItemType>,
       default: 'home' as const
     },
-    currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
+    currentEphemeralNavigation: {
+      type: String as PropType<EphemeralNavigationItemType>,
+      default: undefined
+    }
   },
   emits: {
     navigationChange: () => true,

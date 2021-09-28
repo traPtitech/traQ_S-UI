@@ -31,7 +31,10 @@ export default defineComponent({
     TagsTabAdd
   },
   props: {
-    detail: Object as PropType<UserDetail>
+    detail: {
+      type: Object as PropType<UserDetail>,
+      default: undefined
+    }
   },
   setup(props) {
     const userId = computed(() => props.detail?.id)

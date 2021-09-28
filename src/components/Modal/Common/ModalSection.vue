@@ -16,8 +16,14 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ModalSection',
   props: {
-    title: { type: String, required: true },
-    description: String
+    title: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      default: undefined
+    }
   },
   setup() {
     return {}

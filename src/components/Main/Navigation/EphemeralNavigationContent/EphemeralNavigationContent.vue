@@ -27,8 +27,14 @@ export default defineComponent({
     AudioController
   },
   props: {
-    currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>,
-    transparent: { type: Boolean, default: false }
+    currentEphemeralNavigation: {
+      type: String as PropType<EphemeralNavigationItemType>,
+      default: undefined
+    },
+    transparent: {
+      type: Boolean,
+      default: false
+    }
   },
   setup() {
     return {}
