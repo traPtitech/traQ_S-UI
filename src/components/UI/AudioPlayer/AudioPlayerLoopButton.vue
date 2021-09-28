@@ -31,6 +31,9 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    'update:loop': (_val: boolean) => true
+  },
   setup(props, { emit }) {
     const toggle = () => {
       emit('update:loop', !props.loop)

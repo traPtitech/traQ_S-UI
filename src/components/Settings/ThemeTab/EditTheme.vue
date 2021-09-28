@@ -43,14 +43,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  ref,
-  SetupContext,
-  PropType,
-  watchEffect
-} from 'vue'
+import { defineComponent, computed, ref, PropType, watchEffect } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { Theme } from '/@/types/theme'
 import { dequal } from 'dequal'
@@ -61,7 +54,7 @@ const lightTheme = window.defaultLightTheme
 
 const useEditedThemes = (
   props: { custom: Theme },
-  context: SetupContext<{ 'change-theme': (theme: Theme) => true }>
+  emit: (name: 'changeTheme', theme: Theme) => void
 ) => {
   const { addErrorToast } = useToastStore()
 
@@ -102,7 +95,7 @@ const useEditedThemes = (
     try {
       const themeObj = JSON.parse(editedTheme.value)
       if (isValidThemeJSON(themeObj)) {
-        context.emit('change-theme', themeObj)
+        emit('changeTheme', themeObj)
       } else {
         failedUpdateTheme('構文エラー')
       }
@@ -135,11 +128,11 @@ export default defineComponent({
     }
   },
   emits: {
-    'change-theme': (theme: Theme) => true
+    changeTheme: (_theme: Theme) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const { editedTheme, updateEditedTheme, isChanged, applyTheme } =
-      useEditedThemes(props, context)
+      useEditedThemes(props, emit)
 
     const { isImporterOpen, onImportClick } = useImporter()
 

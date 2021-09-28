@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" @click="$emit('click')">
+  <div :class="$style.container" @click="onClick">
     <user-name
       v-if="titleType === 'user'"
       :class="$style.item"
@@ -67,7 +67,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
+  emits: {
+    click: () => true
+  },
+  setup(props, { emit }) {
     const userState = computed(() =>
       store.state.entities.usersMap.get(props.message.userId)
     )
@@ -85,7 +88,11 @@ export default defineComponent({
       }
     })
 
-    return { userState, path }
+    const onClick = () => {
+      emit('click')
+    }
+
+    return { userState, path, onClick }
   }
 })
 </script>

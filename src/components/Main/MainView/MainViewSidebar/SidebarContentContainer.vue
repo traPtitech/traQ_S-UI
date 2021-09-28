@@ -38,6 +38,9 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    toggle: () => true
+  },
   setup(props, context) {
     const onTitleClick = () => {
       context.emit('toggle')

@@ -4,9 +4,9 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
-      @open="emit('moveToPinned')"
+      @open="moveToPinned"
     />
-    <channel-sidebar-events :class="$style.item" @open="emit('moveToEvents')" />
+    <channel-sidebar-events :class="$style.item" @click-link="moveToEvents" />
   </div>
 </template>
 
@@ -34,8 +34,19 @@ export default defineComponent({
       default: 0
     }
   },
+  emits: {
+    moveToPinned: () => true,
+    moveToEvents: () => true
+  },
   setup(props, { emit }) {
-    return { emit }
+    const moveToPinned = () => {
+      emit('moveToPinned')
+    }
+    const moveToEvents = () => {
+      emit('moveToEvents')
+    }
+
+    return { moveToPinned, moveToEvents }
   }
 })
 </script>

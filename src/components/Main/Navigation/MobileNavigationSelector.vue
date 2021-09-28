@@ -25,14 +25,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType, computed, watch } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
 } from '/@/components/Main/Navigation/use/navigationConstructor'
-import useNavigationSelectorEntry from './use/navigationSelectorEntry'
+import useNavigationSelectorEntry, {
+  EphemeralNavigationSelectorEntry
+} from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '/@/components/Main/Navigation/NavigationSelectorItem.vue'
 
 export default defineComponent({
@@ -45,10 +47,16 @@ export default defineComponent({
     },
     currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
   },
-  setup(props, context: SetupContext) {
-    const { onNavigationItemClick } = useNavigationSelectorItem(context)
+  emits: {
+    navigationChange: () => true,
+    ephemeralNavigationChange: () => true,
+    ephemeralEntryRemove: (_entry: EphemeralNavigationSelectorEntry) => true,
+    ephemeralEntryAdd: (_entry: EphemeralNavigationSelectorEntry) => true
+  },
+  setup(props, { emit }) {
+    const { onNavigationItemClick } = useNavigationSelectorItem(emit)
     const { onNavigationItemClick: onEphemeralNavigationItemClick } =
-      useEphemeralNavigationSelectorItem(context)
+      useEphemeralNavigationSelectorItem(emit)
     const { entries, ephemeralEntries } = useNavigationSelectorEntry()
     const showSeparator = computed(() => ephemeralEntries.value.length > 0)
 
@@ -56,12 +64,12 @@ export default defineComponent({
       ;(prevEntries ?? [])
         .filter(e => !entries.includes(e))
         .forEach(e => {
-          context.emit('ephemeralEntryRemove', e)
+          emit('ephemeralEntryRemove', e)
         })
       ;(entries ?? [])
         .filter(e => !prevEntries?.includes(e))
         .forEach(e => {
-          context.emit('ephemeralEntryAdd', e)
+          emit('ephemeralEntryAdd', e)
         })
     })
 

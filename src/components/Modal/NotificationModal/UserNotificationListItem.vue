@@ -29,11 +29,14 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  emits: {
+    changeNotification: (_userId: UserId, _val: boolean) => true
+  },
+  setup(props, { emit }) {
     const value = computed({
       get: () => props.subscribed,
       set: v => {
-        context.emit('changeNotification', props.userId, !props.subscribed)
+        emit('changeNotification', props.userId, !props.subscribed)
       }
     })
     const name = computed(

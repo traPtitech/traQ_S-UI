@@ -30,11 +30,14 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 export default defineComponent({
   name: 'AppList',
   components: { AppListItem, CloseButton },
-  setup(_, context) {
+  emits: {
+    close: () => true
+  },
+  setup(props, { emit }) {
     const apps = window.traQConfig.services ?? []
 
     const close = () => {
-      context.emit('close')
+      emit('close')
     }
 
     return { apps, close }

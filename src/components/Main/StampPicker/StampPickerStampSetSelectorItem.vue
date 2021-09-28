@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="$style.container"
-    :aria-selected="isActive"
-    @click="emit('click')"
-  >
+  <div :class="$style.container" :aria-selected="isActive" @click="onClick">
     <div v-if="isActive" :class="$style.indicator"></div>
     <stamp
       v-if="stampSet.type === 'palette'"
@@ -63,9 +59,15 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    click: () => true
+  },
   setup(props, { emit }) {
     const { pickThumbnail } = useStampPaletteThumbnail()
-    return { pickThumbnail, emit }
+    const onClick = () => {
+      emit('click')
+    }
+    return { pickThumbnail, onClick }
   }
 })
 </script>

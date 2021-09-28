@@ -39,6 +39,9 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    'update:currentTime': (_val: number) => true
+  },
   setup(props, { emit }) {
     const playedPercentage = computed(() =>
       props.duration === 0 ? 0 : (props.currentTime / props.duration) * 100

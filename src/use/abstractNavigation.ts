@@ -1,8 +1,11 @@
-import { reactive, SetupContext, UnwrapRef } from 'vue'
+import { reactive, UnwrapRef } from 'vue'
 
-const createNavigation = <NavigationItemType extends string | undefined>(
+const createNavigation = <
+  NavigationItemType extends string | undefined,
+  NavigationChangeEvent extends string
+>(
   defaultItem: NavigationItemType,
-  navigationChangeEvent = 'navigation-change'
+  navigationChangeEvent: NavigationChangeEvent
 ) => {
   const useNavigation = () => {
     const navigationSelectorState = reactive({
@@ -18,9 +21,11 @@ const createNavigation = <NavigationItemType extends string | undefined>(
     }
   }
 
-  const useNavigationSelectorItem = (context: SetupContext) => {
+  const useNavigationSelectorItem = (
+    emit: (event: NavigationChangeEvent, type: NavigationItemType) => void
+  ) => {
     const onNavigationItemClick = (type: NavigationItemType) => {
-      context.emit(navigationChangeEvent, type)
+      emit(navigationChangeEvent, type)
     }
     return {
       onNavigationItemClick

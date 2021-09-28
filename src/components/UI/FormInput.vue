@@ -96,8 +96,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const { onInput: onInputInternal } = useInput(context, 'update:modelValue')
+  emits: {
+    'update:modelValue': (_val: string | number) => true
+  },
+  setup(props, { emit }) {
+    const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
 
     const onInput = (e: InputEvent) => {
       if (props.useChangeEvent) return

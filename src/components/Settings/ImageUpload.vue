@@ -12,13 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  watchEffect,
-  SetupContext,
-  shallowRef
-} from 'vue'
+import { defineComponent, ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import FormButton from '/@/components/UI/FormButton.vue'
@@ -58,14 +52,18 @@ export default defineComponent({
       required: true
     }
   },
-  setup(prop, context: SetupContext) {
+  emits: {
+    input: (_blob: Blob | undefined) => true,
+    destroyed: () => true
+  },
+  setup(prop, { emit }) {
     const {
       image,
       addImage,
       destroy: destroyImage
     } = useImageUploadInternal(() => {
       // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-      context.emit('input', image.data)
+      emit('input', image.data)
     })
 
     let cropper: Cropper | undefined
@@ -82,7 +80,7 @@ export default defineComponent({
             ...cropperDefaultOptions,
             cropend: () => {
               cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                context.emit('input', blob)
+                emit('input', blob ?? undefined)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               }, image.data!.type)
             }
@@ -105,7 +103,7 @@ export default defineComponent({
     watchEffect(() => {
       if (prop.destroyFlag) {
         destroy()
-        context.emit('destroyed')
+        emit('destroyed')
       }
     })
 

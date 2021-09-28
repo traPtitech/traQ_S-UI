@@ -25,8 +25,8 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (label: string) => true,
-    remove: (label: string) => true
+    select: (_label: string) => true,
+    remove: (_label: string) => true
   },
   setup(props, context) {
     const onClick = () => {

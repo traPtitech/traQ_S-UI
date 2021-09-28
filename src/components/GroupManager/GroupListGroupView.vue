@@ -38,6 +38,9 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    clickEdit: () => true
+  },
   setup(props, { emit }) {
     const onClickEdit = () => {
       emit('clickEdit')

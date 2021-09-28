@@ -40,6 +40,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    addStamp: (_stampId: string) => true,
+    removeStamp: (_stampId: string) => true
+  },
   setup(props, context) {
     const stampName = computed(
       () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''

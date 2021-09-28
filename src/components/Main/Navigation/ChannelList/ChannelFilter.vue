@@ -6,7 +6,7 @@
     <button
       :class="$style.star"
       :aria-selected="isStared"
-      @click="$emit('toggleStarFilter')"
+      @click="toggleStarFilter"
     >
       <icon :class="$style.icon" name="star" :width="22" :height="22" mdi />
     </button>
@@ -35,9 +35,16 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    'update:modelValue': (_val: string) => true,
+    toggleStarFilter: () => true
+  },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
-    return { value }
+    const toggleStarFilter = () => {
+      emit('toggleStarFilter')
+    }
+    return { value, toggleStarFilter }
   }
 })
 </script>

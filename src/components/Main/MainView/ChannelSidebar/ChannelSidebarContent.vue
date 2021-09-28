@@ -16,11 +16,11 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.sidebarItem"
-      @open="emit('moveToPinned')"
+      @click-link="moveToPinned"
     />
     <channel-sidebar-events
       :class="$style.sidebarItem"
-      @open="emit('moveToEvents')"
+      @click-link="moveToEvents"
     />
     <channel-sidebar-relation
       :channel-id="channelId"
@@ -79,10 +79,21 @@ export default defineComponent({
       default: 0
     }
   },
+  emits: {
+    moveToPinned: () => true,
+    moveToEvents: () => true
+  },
   setup(props, { emit }) {
     const { sessionUserIds: qallUserIds } = useQallSession(props)
 
-    return { qallUserIds, emit }
+    const moveToPinned = () => {
+      emit('moveToPinned')
+    }
+    const moveToEvents = () => {
+      emit('moveToEvents')
+    }
+
+    return { qallUserIds, moveToPinned, moveToEvents }
   }
 })
 </script>

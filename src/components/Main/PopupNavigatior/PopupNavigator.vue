@@ -187,6 +187,9 @@ export default defineComponent({
   components: {
     Icon
   },
+  emits: {
+    clickIcon: () => true
+  },
   setup(props, { emit }) {
     const { isPopupNavigatorShown, movePrev, moveNext } = useNavigator(emit)
 

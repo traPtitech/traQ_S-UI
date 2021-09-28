@@ -16,7 +16,7 @@
       :enterkeyhint="enterkeyhint"
       @input="onInput"
       @keydown.esc="reset"
-      @keydown.enter="$emit('enter')"
+      @keydown.enter="enter"
     />
   </div>
 </template>
@@ -62,6 +62,10 @@ export default defineComponent({
       default: 'search'
     }
   },
+  emits: {
+    'update:modelValue': (_val: string) => true,
+    enter: () => true
+  },
   setup(props, { emit }) {
     const { value, onInput } = useTextModelSyncer(props, emit)
 
@@ -79,7 +83,11 @@ export default defineComponent({
       inputRef.value?.focus()
     }
 
-    return { value, onInput, focus, inputRef, reset }
+    const enter = () => {
+      emit('enter')
+    }
+
+    return { value, onInput, focus, inputRef, reset, enter }
   }
 })
 </script>

@@ -44,6 +44,11 @@ export default defineComponent({
     fallbackValue: { type: String, default: '未設定' },
     maxLength: { type: Number, default: undefined }
   },
+  emits: {
+    editStart: () => true,
+    editDone: () => true,
+    inputValue: (_val: string) => true
+  },
   setup(props, context) {
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue

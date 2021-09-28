@@ -33,7 +33,9 @@ import {
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
 } from '/@/components/Main/Navigation/use/navigationConstructor'
-import useNavigationSelectorEntry from './use/navigationSelectorEntry'
+import useNavigationSelectorEntry, {
+  EphemeralNavigationSelectorEntry
+} from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '/@/components/Main/Navigation/NavigationSelectorItem.vue'
 import version from '/@/lib/env/version'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
@@ -51,10 +53,16 @@ export default defineComponent({
     },
     currentEphemeralNavigation: String as PropType<EphemeralNavigationItemType>
   },
-  setup(props, context) {
-    const { onNavigationItemClick } = useNavigationSelectorItem(context)
+  emits: {
+    navigationChange: () => true,
+    ephemeralNavigationChange: () => true,
+    ephemeralEntryRemove: (_entry: EphemeralNavigationSelectorEntry) => true,
+    ephemeralEntryAdd: (_entry: EphemeralNavigationSelectorEntry) => true
+  },
+  setup(props, { emit }) {
+    const { onNavigationItemClick } = useNavigationSelectorItem(emit)
     const { onNavigationItemClick: onEphemeralNavigationItemClick } =
-      useEphemeralNavigationSelectorItem(context)
+      useEphemeralNavigationSelectorItem(emit)
     const { entries, ephemeralEntries } = useNavigationSelectorEntry()
     const showSeparator = computed(() => ephemeralEntries.value.length > 0)
 
@@ -62,12 +70,12 @@ export default defineComponent({
       ;(prevEntries ?? [])
         .filter(e => !entries.includes(e))
         .forEach(e => {
-          context.emit('ephemeralEntryRemove', e)
+          emit('ephemeralEntryRemove', e)
         })
       ;(entries ?? [])
         .filter(e => !prevEntries?.includes(e))
         .forEach(e => {
-          context.emit('ephemeralEntryAdd', e)
+          emit('ephemeralEntryAdd', e)
         })
     })
 

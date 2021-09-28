@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="$style.container"
-    :aria-selected="isActive"
-    @click="emit('click')"
-  >
+  <button :class="$style.container" :aria-selected="isActive" @click="onClick">
     <icon name="effect" />
   </button>
 </template>
@@ -20,8 +16,14 @@ export default defineComponent({
   props: {
     isActive: { type: Boolean, default: false }
   },
+  emits: {
+    click: () => true
+  },
   setup(_, { emit }) {
-    return { emit }
+    const onClick = () => {
+      emit('click')
+    }
+    return { onClick }
   }
 })
 </script>

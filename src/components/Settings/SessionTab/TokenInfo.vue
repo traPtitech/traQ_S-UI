@@ -1,7 +1,7 @@
 <template>
   <div :key="token.id" :class="$style.token">
     <div :class="$style.revoke">
-      <icon :class="$style.icon" name="close" mdi @click="$emit('revoke')" />
+      <icon :class="$style.icon" name="close" mdi @click="revoke" />
     </div>
     <div :class="$style.title">{{ token.clientName ?? '---' }}</div>
     <div :class="$style.desc">{{ token.clientDesc }}</div>
@@ -46,6 +46,15 @@ export default defineComponent({
       type: Object as PropType<TokenInfo>,
       required: true
     }
+  },
+  emits: {
+    revoke: () => true
+  },
+  setup(props, { emit }) {
+    const revoke = () => {
+      emit('revoke')
+    }
+    return { revoke }
   }
 })
 </script>

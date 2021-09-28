@@ -7,7 +7,7 @@
         mdi
         name="chevron-left"
         :class="$style.backButton"
-        @click="$emit('back')"
+        @click="back"
       />
       <slot name="header" />
       <close-button :size="28" @close="closeSidebar" />
@@ -33,10 +33,17 @@ export default defineComponent({
       default: false
     }
   },
-  setup() {
+  emits: {
+    back: () => true
+  },
+  setup(props, { emit }) {
     const { closeSidebar } = useSidebar()
 
-    return { closeSidebar }
+    const back = () => {
+      emit('back')
+    }
+
+    return { closeSidebar, back }
   }
 })
 </script>

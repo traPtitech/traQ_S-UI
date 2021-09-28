@@ -8,13 +8,13 @@
       :class="$style.button"
       type="primary"
       label="上のアカウントでログイン"
-      @click="$emit('login')"
+      @click="onLoginClick"
     />
     <authenticate-button
       :class="$style.button"
       type="secondary"
       label="ほかでログイン"
-      @click="$emit('useOther')"
+      @click="onUseOtherClick"
     />
   </div>
 </template>
@@ -33,6 +33,19 @@ export default defineComponent({
       type: Object as PropType<PasswordCredential>,
       required: true
     }
+  },
+  emits: {
+    login: () => true,
+    useOther: () => true
+  },
+  setup(props, { emit }) {
+    const onLoginClick = () => {
+      emit('login')
+    }
+    const onUseOtherClick = () => {
+      emit('login')
+    }
+    return { onLoginClick, onUseOtherClick }
   }
 })
 </script>

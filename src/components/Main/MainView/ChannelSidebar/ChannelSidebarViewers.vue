@@ -15,7 +15,7 @@
   <channel-sidebar-viewers-detail
     v-else
     :viewer-ids="viewerIds"
-    @close="toggle"
+    @toggle="toggle"
   />
 </template>
 

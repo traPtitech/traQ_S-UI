@@ -40,6 +40,7 @@ import useHover from '/@/use/hover'
 import { DMChannel } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
+import { ChannelId } from '/@/types/entity-ids'
 
 const useNotification = (props: { dmChannel: DMChannel }) => {
   const unreadChannel = computed(() =>
@@ -66,14 +67,17 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  emits: {
+    channelSelect: (_channelId: ChannelId) => true
+  },
+  setup(props, { emit }) {
     const user = computed(() =>
       store.state.entities.usersMap.get(props.dmChannel.userId)
     )
     const notificationState = useNotification(props)
 
     const onChannelClick = () => {
-      context.emit('channelSelect', props.dmChannel.id)
+      emit('channelSelect', props.dmChannel.id)
     }
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()

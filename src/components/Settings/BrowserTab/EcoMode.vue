@@ -28,6 +28,9 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    'update:modelValue': (_val: boolean) => true
+  },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
     return { value }

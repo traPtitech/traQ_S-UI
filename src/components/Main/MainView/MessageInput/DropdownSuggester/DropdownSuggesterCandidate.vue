@@ -37,7 +37,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const containerRef = ref<HTMLDivElement>()
     watchEffect(() => {
       if (!containerRef.value) return
@@ -50,7 +50,7 @@ export default defineComponent({
       }
     })
 
-    return { containerRef, emit }
+    return { containerRef }
   }
 })
 </script>

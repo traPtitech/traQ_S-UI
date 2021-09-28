@@ -33,9 +33,12 @@ export default defineComponent({
     },
     title: String
   },
-  setup(props, context) {
+  emits: {
+    'update:modelValue': (_value: boolean) => true
+  },
+  setup(props, { emit }) {
     const toggle = () => {
-      context.emit('update:modelValue', !props.modelValue)
+      emit('update:modelValue', !props.modelValue)
     }
     return { toggle }
   }

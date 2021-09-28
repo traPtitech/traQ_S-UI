@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <button :class="$style.top" @click="$emit('topToggleClick')">
+    <button :class="$style.top" @click="topToggleClick">
       <icon name="phone" mdi />
     </button>
     <div :class="$style.info">
@@ -14,11 +14,11 @@
     <button
       :class="$style.mic"
       :data-is-mute="$boolAttr(isMicMuted)"
-      @click="$emit('micClick')"
+      @click="micClick"
     >
       <icon :name="micIconName" mdi />
     </button>
-    <button :class="$style.end" @click="$emit('endQallClick')">
+    <button :class="$style.end" @click="endQallClick">
       <icon name="phone-hangup" mdi />
     </button>
   </div>
@@ -49,7 +49,12 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
+  emits: {
+    topToggleClick: () => true,
+    micClick: () => true,
+    endQallClick: () => true
+  },
+  setup(props, { emit }) {
     const { channelIdToShortPathString, channelIdToPathString } =
       useChannelPath()
     const channelName = computed(() =>
@@ -62,7 +67,25 @@ export default defineComponent({
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'
     )
-    return { channelName, channelLink, micIconName }
+
+    const topToggleClick = () => {
+      emit('topToggleClick')
+    }
+    const micClick = () => {
+      emit('micClick')
+    }
+    const endQallClick = () => {
+      emit('endQallClick')
+    }
+
+    return {
+      channelName,
+      channelLink,
+      micIconName,
+      topToggleClick,
+      micClick,
+      endQallClick
+    }
   }
 })
 </script>

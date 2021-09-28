@@ -48,7 +48,6 @@ import {
   watch,
   reactive,
   computed,
-  SetupContext,
   onMounted,
   PropType,
   Ref,
@@ -184,7 +183,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context: SetupContext) {
+  emits: {
+    requestLoadFormer: () => true,
+    requestLoadLatter: () => true
+  },
+  setup(props, { emit }) {
     provideMessageContextMenuStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)
@@ -281,13 +284,13 @@ export default defineComponent({
 
       if (props.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
-        context.emit('requestLoadFormer')
+        emit('requestLoadFormer')
       }
       if (
         scrollHeight - state.scrollTop - clientHeight < LOAD_MORE_THRESHOLD &&
         !props.isReachedLatest
       ) {
-        context.emit('requestLoadLatter')
+        emit('requestLoadLatter')
       }
     })
 

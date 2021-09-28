@@ -60,7 +60,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  SetupContext,
   computed,
   reactive,
   PropType,
@@ -79,16 +78,18 @@ import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
 
 const useChannelClick = (
-  context: SetupContext,
+  emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
+    ((event: 'channelSelect', _channelId: string) => void),
   id: ChannelId,
   isChildShown: Ref<boolean>
 ) => {
-  const onChannelNameClick = () => context.emit('channel-select', id)
+  const onChannelNameClick = () => emit('channelSelect', id)
   const onChannelHashClick = () => {
-    context.emit(
-      isChildShown.value ? 'channel-folding-toggle' : 'channel-select',
-      id
-    )
+    if (isChildShown.value) {
+      emit('channelFoldingToggle', id)
+    } else {
+      emit('channelSelect', id)
+    }
   }
   return {
     onChannelHashClick,
@@ -175,7 +176,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    channelFoldingToggle: (_channelId: ChannelId) => true,
+    channelSelect: (_channelId: ChannelId) => true
+  },
+  setup(props, { emit }) {
     const typedProps = props as TypedProps
 
     const state = reactive({
@@ -197,7 +202,7 @@ export default defineComponent({
     const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
 
     const { onChannelHashClick, onChannelNameClick } = useChannelClick(
-      context,
+      emit,
       typedProps.channel.id,
       isChildShown
     )

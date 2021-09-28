@@ -12,39 +12,39 @@
           (!isJoinedQallSession || !isJoinedWithCurrentDevice))
       "
       :data-is-active="$boolAttr(isQallSessionOpened)"
-      @click="emit('click-qall')"
+      @click="clickQall"
     />
     <header-tools-menu-item
       v-if="isChildChannelCreatable"
       icon-name="hash"
       label="子チャンネルを作成"
-      @click="emit('click-create-channel')"
+      @click="clickCreateChannel"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
       icon-name="notified-or-subscribed"
       label="通知設定"
-      @click="emit('click-notification')"
+      @click="clickNotification"
     />
     <header-tools-menu-item
       v-if="isSearchEnabled"
       icon-name="search"
       icon-mdi
       label="チャンネル内検索"
-      @click="emit('click-search')"
+      @click="clickSearch"
     />
     <header-tools-menu-item
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
-      @click="emit('click-copy-channel-link')"
+      @click="clickCopyChannelLink"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
-      @click="emit('click-manage-channel')"
+      @click="clickManageChannel"
     />
   </main-view-header-popup-frame>
 </template>
@@ -75,6 +75,14 @@ export default defineComponent({
     isChildChannelCreatable: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
+  emits: {
+    clickQall: () => true,
+    clickCreateChannel: () => true,
+    clickNotification: () => true,
+    clickSearch: () => true,
+    clickCopyChannelLink: () => true,
+    clickManageChannel: () => true
+  },
   setup(props, { emit }) {
     const { isMobile } = useIsMobile()
     const isQallEnabled = computed(
@@ -100,13 +108,38 @@ export default defineComponent({
         UserPermission.EditChannel
       )
     )
+
+    const clickQall = () => {
+      emit('clickQall')
+    }
+    const clickCreateChannel = () => {
+      emit('clickCreateChannel')
+    }
+    const clickNotification = () => {
+      emit('clickNotification')
+    }
+    const clickSearch = () => {
+      emit('clickSearch')
+    }
+    const clickCopyChannelLink = () => {
+      emit('clickCopyChannelLink')
+    }
+    const clickManageChannel = () => {
+      emit('clickManageChannel')
+    }
+
     return {
-      emit,
       isMobile,
       isQallEnabled,
       qallLabel,
       isSearchEnabled,
-      hasChannelEditPermission
+      hasChannelEditPermission,
+      clickQall,
+      clickCreateChannel,
+      clickNotification,
+      clickSearch,
+      clickCopyChannelLink,
+      clickManageChannel
     }
   }
 })

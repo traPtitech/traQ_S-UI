@@ -32,6 +32,9 @@ export default defineComponent({
       default: undefined
     }
   },
+  emits: {
+    'update:modelValue': (_val: string) => true
+  },
   setup(props, { emit }) {
     const { value, onInput } = useTextModelSyncer(props, emit)
 

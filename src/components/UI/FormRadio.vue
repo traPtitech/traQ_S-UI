@@ -44,6 +44,9 @@ export default defineComponent({
       default: ''
     }
   },
+  emits: {
+    'update:modelValue': (_val: string) => true
+  },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
     const isChecked = computed(() => props.inputValue === value.value)

@@ -14,8 +14,9 @@ export default defineComponent({
   name: 'ChannelSidebarPinned',
   components: { SidebarContentContainerLink },
   props: { pinnedMessageLength: { type: Number, default: 0 } },
-  setup(_, context) {
-    const onClick = () => context.emit('open')
+  emits: { clickLink: () => true },
+  setup(props, { emit }) {
+    const onClick = () => emit('clickLink')
     return { onClick }
   }
 })

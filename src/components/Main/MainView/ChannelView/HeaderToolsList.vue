@@ -18,7 +18,7 @@
             ? '別のデバイスでQall中'
             : undefined
         "
-        @toggle="emit('click-qall')"
+        @click="clickQall"
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -36,7 +36,7 @@
         data-state="notified"
         icon-name="notified"
         tooltip="通知チャンネル"
-        @toggle="changeToNextSubscriptionLevel"
+        @click="changeToNextSubscriptionLevel"
       />
       <header-tools-item
         v-else-if="
@@ -46,7 +46,7 @@
         data-state="subscribed"
         icon-name="subscribed"
         tooltip="未読管理チャンネル"
-        @toggle="changeToNextSubscriptionLevel"
+        @click="changeToNextSubscriptionLevel"
       />
       <header-tools-item
         v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
@@ -54,7 +54,7 @@
         data-state="none"
         icon-name="not-subscribed"
         tooltip="未購読チャンネル"
-        @toggle="changeToNextSubscriptionLevel"
+        @click="changeToNextSubscriptionLevel"
       />
     </template>
     <header-tools-item
@@ -63,18 +63,18 @@
       data-is-stared
       icon-name="star"
       tooltip="お気に入りから外す"
-      @toggle="emit('unstar-channel')"
+      @click="unstarChannel"
     />
     <header-tools-item
       v-else
       :class="$style.starIcon"
       icon-name="star-outline"
       tooltip="お気に入りに追加する"
-      @toggle="emit('star-channel')"
+      @click="starChannel"
     />
     <!--
     <header-tools-item
-      @toggle="emit('click-pin')"
+      @click="clickPin"
       :class="$style.icon"
       icon-mdi
       icon-name="pin"
@@ -86,7 +86,7 @@
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
-        @toggle="emit('click-more')"
+        @click="clickMore"
       />
     </div>
   </div>
@@ -118,6 +118,12 @@ export default defineComponent({
     isJoinedWithCurrentDevice: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false }
   },
+  emits: {
+    clickQall: () => true,
+    starChannel: () => true,
+    unstarChannel: () => true,
+    clickMore: () => true
+  },
   setup(props, { emit }) {
     const { changeToNextSubscriptionLevel, currentChannelSubscription } =
       useChannelSubscriptionState()
@@ -132,15 +138,31 @@ export default defineComponent({
 
     const { isMobile } = useIsMobile()
 
+    const clickQall = () => {
+      emit('clickQall')
+    }
+    const starChannel = () => {
+      emit('starChannel')
+    }
+    const unstarChannel = () => {
+      emit('unstarChannel')
+    }
+    const clickMore = () => {
+      emit('clickMore')
+    }
+
     return {
       qallIconName,
-      emit,
       currentChannelSubscription,
       changeToNextSubscriptionLevel,
       teleportTargetName,
       isQallEnabled,
       ChannelSubscribeLevel,
-      isMobile
+      isMobile,
+      clickQall,
+      starChannel,
+      unstarChannel,
+      clickMore
     }
   }
 })
