@@ -16,7 +16,7 @@
       <dropdown-suggester-candidate
         :candidate="confirmedPartCandidate"
         :is-selected="selectedIndex === -1"
-        @mousedown.prevent="emit('select', confirmedPartCandidate)"
+        @mousedown.prevent="select(confirmedPartCandidate)"
       />
       <div :class="$style.scroll">
         <dropdown-suggester-candidate
@@ -24,7 +24,7 @@
           :key="candidate.text"
           :candidate="candidate"
           :is-selected="selectedIndex === index"
-          @mousedown.prevent="emit('select', candidate)"
+          @mousedown.prevent="select(candidate)"
         />
       </div>
     </div>
@@ -65,7 +65,7 @@ export default defineComponent({
      * ../use/wordSuggester.tsを参照
      */
     selectedIndex: {
-      type: Number as PropType<number | null>,
+      type: null as unknown as PropType<number | null>,
       required: true
     },
     confirmedPart: {
@@ -90,11 +90,15 @@ export default defineComponent({
       })
     )
 
+    const select = (word: WordOrConfirmedPart) => {
+      emit('select', word)
+    }
+
     return {
       iOSFlag,
       styledPosition,
       confirmedPartCandidate,
-      emit
+      select
     }
   }
 })

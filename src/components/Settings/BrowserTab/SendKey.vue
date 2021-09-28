@@ -81,6 +81,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    'update:sendWithModifierKey': (_val: SendKey) => true,
+    'update:modifierKey': (_val: SendKeys) => true
+  },
   setup(props, { emit }) {
     const sendWithModifierKeyValue = useModelSyncer(
       props,

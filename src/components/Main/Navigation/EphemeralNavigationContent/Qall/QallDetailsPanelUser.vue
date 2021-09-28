@@ -16,13 +16,13 @@
       />
       <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
-    <button v-if="showTuneButton" :class="$style.button" @click="$emit('tune')">
+    <button v-if="showTuneButton" :class="$style.button" @click="tune">
       <icon mdi name="tune" :size="16" />
     </button>
     <button
       v-else-if="showTuneDoneButton"
       :class="[$style.button, $style.tuneDone]"
-      @click="$emit('tuneDone')"
+      @click="tuneDone"
     >
       <icon mdi name="check" :size="16" />
     </button>
@@ -57,7 +57,11 @@ export default defineComponent({
     showTuneDoneButton: { type: Boolean, default: false },
     micMuted: { type: Boolean, default: false }
   },
-  setup(props) {
+  emits: {
+    tune: () => true,
+    tuneDone: () => true
+  },
+  setup(props, { emit }) {
     const volume = computed(() =>
       Math.round(
         (store.state.app.rtc.userVolumeMap.get(props.userId) ?? 0) *
@@ -76,12 +80,22 @@ export default defineComponent({
         volume: value / maxVolumeValue
       })
     }
+
+    const tune = () => {
+      emit('tune')
+    }
+    const tuneDone = () => {
+      emit('tuneDone')
+    }
+
     return {
       volume,
       userName,
       talkingLevel,
       maxVolumeValue,
-      onChange
+      onChange,
+      tune,
+      tuneDone
     }
   }
 })

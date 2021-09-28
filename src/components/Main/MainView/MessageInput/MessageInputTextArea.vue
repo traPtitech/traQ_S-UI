@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, SetupContext, computed, PropType } from 'vue'
+import { defineComponent, ref, computed, PropType } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
@@ -33,12 +33,14 @@ import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
 
-const useFocus = (context: SetupContext) => {
+const useFocus = (
+  emit: ((event: 'focus') => void) & ((event: 'blur') => void)
+) => {
   const onFocus = () => {
-    context.emit('focus')
+    emit('focus')
   }
   const onBlur = () => {
-    context.emit('blur')
+    emit('blur')
   }
 
   return { onFocus, onBlur }
@@ -64,8 +66,17 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const value = useModelValueSyncer(props, context.emit)
+  emits: {
+    'update:modelValue': () => true,
+    focus: () => true,
+    blur: () => true,
+    paste: (_event: ClipboardEvent) => true,
+    postMessage: () => true,
+    modifierKeyDown: () => true,
+    modifierKeyUp: () => true
+  },
+  setup(props, { emit }) {
+    const value = useModelValueSyncer(props, emit)
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
@@ -91,7 +102,7 @@ export default defineComponent({
       onKeyDown: onKeyDownSendKeyWatcher,
       onKeyUp: onKeyUpSendKeyWatcher,
       onBlur: onBlurSendKeyWatcher
-    } = useSendKeyWatcher(context, () => {
+    } = useSendKeyWatcher(emit, () => {
       insertText('\n')
     })
 
@@ -113,9 +124,9 @@ export default defineComponent({
       onKeyUpWordSuggester(e)
     }
 
-    const { onFocus, onBlur: onBlurDefault } = useFocus(context)
+    const { onFocus, onBlur: onBlurDefault } = useFocus(emit)
     const onPaste = (event: ClipboardEvent) => {
-      context.emit('paste', event)
+      emit('paste', event)
     }
 
     const onBlur = () => {

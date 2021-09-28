@@ -46,9 +46,12 @@ export default defineComponent({
       default: 'active'
     }
   },
-  setup(props, context) {
+  emits: {
+    changeValue: (_val: number | string) => true
+  },
+  setup(props, { emit }) {
     const onChange = (val: number | string) => {
-      context.emit('changeValue', val)
+      emit('changeValue', val)
     }
     return { onChange }
   }

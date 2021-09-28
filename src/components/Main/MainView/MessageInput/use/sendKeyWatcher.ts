@@ -1,4 +1,3 @@
-import { SetupContext } from 'vue'
 import {
   checkLevel2InputEventsSupport,
   isMac,
@@ -84,12 +83,14 @@ const needBreakLineInsert = (keyEvent: KeyboardEvent) => {
 
 /**
  * contextに対して発火されるイベント
- * - `post-message`: 投稿トリガー時
- * - `modifier-key-down`: 修飾キーが押された
- * - `modifier-key-up`: 修飾キーが離された
+ * - `postMessage`: 投稿トリガー時
+ * - `modifierKeyDown`: 修飾キーが押された
+ * - `modifierKeyUp`: 修飾キーが離された
  */
 const useSendKeyWatcher = (
-  context: SetupContext,
+  emit: ((event: 'postMessage') => void) &
+    ((event: 'modifierKeyDown') => void) &
+    ((event: 'modifierKeyUp') => void),
   insertLineBreak: () => void
 ) => {
   /*
@@ -100,7 +101,7 @@ const useSendKeyWatcher = (
   const onBeforeInput = (event: InputEvent) => {
     if (!touchDeviceFlag && isSendKeyInput(event)) {
       event.preventDefault()
-      context.emit('post-message')
+      emit('postMessage')
     }
   }
 
@@ -108,7 +109,7 @@ const useSendKeyWatcher = (
     if (touchDeviceFlag) return
 
     if (withModifierKey(event) && !event.isComposing) {
-      context.emit('modifier-key-down')
+      emit('modifierKeyDown')
     }
 
     // https://github.com/traPtitech/traQ_R-UI/pull/945
@@ -125,7 +126,7 @@ const useSendKeyWatcher = (
        */
       if (sendWithModifierKey === 'modifier' && withModifierKey(event)) {
         event.preventDefault()
-        context.emit('post-message')
+        emit('postMessage')
         return
       }
 
@@ -146,7 +147,7 @@ const useSendKeyWatcher = (
         !isLevel2InputEventsSupported
       ) {
         event.preventDefault()
-        context.emit('post-message')
+        emit('postMessage')
         return
       }
     }
@@ -159,12 +160,12 @@ const useSendKeyWatcher = (
 
   const onKeyUp = (event: KeyboardEvent) => {
     if (!touchDeviceFlag && isModifierKey(event)) {
-      context.emit('modifier-key-up')
+      emit('modifierKeyUp')
     }
   }
 
   const onBlur = () => {
-    context.emit('modifier-key-up')
+    emit('modifierKeyUp')
   }
 
   return {

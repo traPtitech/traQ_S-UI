@@ -21,11 +21,11 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (insertQuery: string) => true
+    select: (_insertQuery: string) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const onClick = () => {
-      context.emit('select', props.insertQuery)
+      emit('select', props.insertQuery)
     }
     return { onClick }
   }

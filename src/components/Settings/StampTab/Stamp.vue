@@ -150,7 +150,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    startEdit: () => true,
+    endEdit: () => true
+  },
+  setup(props, { emit }) {
     const url = computed(() => buildFilePath(props.stamp.fileId))
 
     const {
@@ -167,10 +171,10 @@ export default defineComponent({
     const isNameValid = computed(() => isValidStampName(state.name))
 
     const onStartEdit = () => {
-      context.emit('startEdit')
+      emit('startEdit')
     }
     const onEndEdit = () => {
-      context.emit('endEdit')
+      emit('endEdit')
     }
 
     const { isEditing, editStamp } = useStampEdit(

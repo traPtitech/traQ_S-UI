@@ -1,10 +1,11 @@
-import { SetupContext } from 'vue'
-
 type InputElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
 
-const useInput = (context: SetupContext, eventName = 'input-value') => {
+const useInput = <EventName extends string = 'input-value'>(
+  emit: (name: EventName, value: string | number) => void,
+  eventName: EventName
+) => {
   const onInput = (event: InputEvent) =>
-    context.emit(eventName, (event.target as InputElement).value)
+    emit(eventName, (event.target as InputElement).value)
   return {
     onInput
   }

@@ -34,9 +34,9 @@ export default defineComponent({
     }
   },
   emits: {
-    select: (item: SuggestionItem) => true
+    select: (_item: SuggestionItem) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const title = computed(() => {
       switch (props.item.type) {
         case 'search':
@@ -78,7 +78,7 @@ export default defineComponent({
       return { name: '', mdi: false }
     })
     const onClick = () => {
-      context.emit('select', props.item)
+      emit('select', props.item)
     }
     return { title, description, icon, onClick }
   }

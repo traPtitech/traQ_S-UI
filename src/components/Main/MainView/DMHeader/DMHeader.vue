@@ -7,7 +7,7 @@
       <main-view-header-tools-item
         icon-mdi
         icon-name="info-outline"
-        @toggle="openSidebar"
+        @click="openSidebar"
       />
     </template>
   </main-view-header>

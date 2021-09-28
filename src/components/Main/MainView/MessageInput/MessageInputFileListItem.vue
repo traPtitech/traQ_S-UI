@@ -35,7 +35,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  emits: {
+    itemRemove: () => true
+  },
+  setup(props, { emit }) {
     const state = reactive({
       showThumbnail: computed((): boolean =>
         props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
@@ -43,7 +46,7 @@ export default defineComponent({
           : false
       )
     })
-    const onClickClose = () => context.emit('itemRemove')
+    const onClickClose = () => emit('itemRemove')
 
     return { state, onClickClose }
   }

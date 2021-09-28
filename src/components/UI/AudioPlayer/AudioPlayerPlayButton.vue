@@ -32,6 +32,9 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    'update:isPlaying': (_val: boolean) => true
+  },
   setup(props, { emit }) {
     const toggle = () => {
       emit('update:isPlaying', !props.isPlaying)

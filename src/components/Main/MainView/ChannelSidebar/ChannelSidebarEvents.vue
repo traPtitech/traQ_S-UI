@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container-link title="イベント" @click-link="onClick" />
+  <sidebar-content-container-link title="イベント" @click-link="onClickLink" />
 </template>
 
 <script lang="ts">
@@ -9,9 +9,14 @@ import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSid
 export default defineComponent({
   name: 'ChannelSidebarEvents',
   components: { SidebarContentContainerLink },
-  setup(_, context) {
-    const onClick = () => context.emit('open')
-    return { onClick }
+  emits: {
+    clickLink: () => true
+  },
+  setup(props, { emit }) {
+    const onClickLink = () => {
+      emit('clickLink')
+    }
+    return { onClickLink }
   }
 })
 </script>

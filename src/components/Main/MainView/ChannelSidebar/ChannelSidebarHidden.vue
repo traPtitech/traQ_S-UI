@@ -33,13 +33,14 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(props, context) {
+  emits: {
+    open: () => true
+  },
+  setup(props, { emit }) {
     const open = () => {
-      context.emit('open')
+      emit('open')
     }
-    return {
-      open
-    }
+    return { open }
   }
 })
 </script>

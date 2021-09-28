@@ -46,6 +46,9 @@ export default defineComponent({
     },
     label: String
   },
+  emits: {
+    'update:modelValue': (_val: string) => true
+  },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
     const id = randomString()

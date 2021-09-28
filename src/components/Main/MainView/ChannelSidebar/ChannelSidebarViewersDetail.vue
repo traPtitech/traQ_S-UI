@@ -1,5 +1,5 @@
 <template>
-  <sidebar-content-container clickable title="閲覧者" @toggle="closeDetail">
+  <sidebar-content-container clickable title="閲覧者" @toggle="toggle">
     <div v-for="user in users" :key="user.id" :class="$style.item">
       <user-icon :user-id="user.id" :size="32" />
       <div :class="$style.userName">{{ user.displayName }}</div>
@@ -24,16 +24,19 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(props, context) {
-    const closeDetail = () => {
-      context.emit('close')
+  emits: {
+    toggle: () => true
+  },
+  setup(props, { emit }) {
+    const toggle = () => {
+      emit('toggle')
     }
     const users = computed(() =>
       props.viewerIds
         .map(id => store.state.entities.usersMap.get(id))
         .filter(isDefined)
     )
-    return { closeDetail, users }
+    return { toggle, users }
   }
 })
 </script>

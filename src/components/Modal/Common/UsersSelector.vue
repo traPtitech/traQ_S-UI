@@ -78,6 +78,9 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    'update:modelValue': () => true
+  },
   setup(props, { emit }) {
     const { textFilterState, filteredUsers } = useUserFilter(props)
 

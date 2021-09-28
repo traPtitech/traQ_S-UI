@@ -2,10 +2,10 @@
   <button
     :class="$style.container"
     :data-react-hover="$boolAttr(reactHover)"
-    :data-is-white="$boolAttr(props.isWhite)"
+    :data-is-white="$boolAttr(isWhite)"
   >
     <div :class="$style.circle" :style="styles.circle" @click="onClick"></div>
-    <span v-if="props.withText" :class="$style.text">閉じる</span>
+    <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
 
@@ -39,13 +39,16 @@ export default defineComponent({
     isWhite: { type: Boolean, default: false },
     reactHover: { type: Boolean, default: true }
   },
-  setup(props, context) {
+  emits: {
+    close: () => true
+  },
+  setup(props, { emit }) {
     const styles = useStyles(props)
 
     const onClick = () => {
-      context.emit('close')
+      emit('close')
     }
-    return { styles, onClick, props }
+    return { styles, onClick }
   }
 })
 </script>

@@ -56,6 +56,9 @@ export default defineComponent({
       default: undefined
     }
   },
+  emits: {
+    update: (_value: string) => true
+  },
   setup(props, { emit }) {
     const editingValue = ref(props.value)
     watch(

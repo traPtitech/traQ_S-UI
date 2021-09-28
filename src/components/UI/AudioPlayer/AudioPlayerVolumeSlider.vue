@@ -48,11 +48,14 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    'update:volume': (_val: number) => true
+  },
+  setup(props, { emit }) {
     const roundedVolume = computed(() => Math.floor(props.volume * 100))
 
     const changeVolume = (vol: number) => {
-      context.emit('update:volume', vol)
+      emit('update:volume', vol)
     }
     return {
       roundedVolume,

@@ -54,7 +54,7 @@ export default defineComponent({
   emits: {
     queryInsert: () => true
   },
-  setup(_, context) {
+  setup(props, { emit }) {
     const {
       commandPaletteStore: store,
       settleQuery,
@@ -72,7 +72,7 @@ export default defineComponent({
         store.currentInput += ' '
       }
       store.currentInput += query
-      context.emit('queryInsert')
+      emit('queryInsert')
     }
     const onSelectSuggestion = (item: SuggestionItem) => {
       switch (item.type) {

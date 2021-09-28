@@ -46,6 +46,10 @@ export default defineComponent({
       default: false
     }
   },
+  emits: {
+    edit: () => true,
+    delete: () => true
+  },
   setup(props, { emit }) {
     const user = computed(() => store.state.entities.usersMap.get(props.id))
 

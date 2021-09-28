@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar-page show-back-button @back="$emit('moveBack')">
+  <main-view-sidebar-page show-back-button @back="moveBack">
     <template #header>
       <sidebar-header text="ピン留め" />
     </template>
@@ -28,6 +28,15 @@ export default defineComponent({
       type: Array as PropType<Pin[]>,
       default: () => []
     }
+  },
+  emits: {
+    moveBack: () => true
+  },
+  setup(props, { emit }) {
+    const moveBack = () => {
+      emit('moveBack')
+    }
+    return { moveBack }
   }
 })
 </script>

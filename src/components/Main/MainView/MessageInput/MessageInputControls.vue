@@ -15,22 +15,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from 'vue'
+import { defineComponent } from 'vue'
 import useIsMobile from '/@/use/isMobile'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import Icon from '/@/components/UI/Icon.vue'
 
 const useClickHandlers = (
   props: { canPostMessage: boolean },
-  context: SetupContext
+  emit: ((event: 'clickSend') => void) & ((event: 'clickStamp') => void)
 ) => {
   const onClickSendButton = () => {
     if (props.canPostMessage) {
-      context.emit('click-send')
+      emit('clickSend')
     }
   }
   const onClickStampButton = () => {
-    context.emit('click-stamp')
+    emit('clickStamp')
   }
   return { onClickSendButton, onClickStampButton }
 }
@@ -51,11 +51,15 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    clickSend: () => true,
+    clickStamp: () => true
+  },
+  setup(props, { emit }) {
     const { isMobile } = useIsMobile()
     const { onClickSendButton, onClickStampButton } = useClickHandlers(
       props,
-      context
+      emit
     )
     return {
       isMobile,

@@ -52,6 +52,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    'update:openMode': (_val: string) => true,
+    'update:openChannelName': (_val: string) => true
+  },
   setup(props, { emit }) {
     // 起動時チャンネルの選択に必要
     store.dispatch.entities.fetchChannels()

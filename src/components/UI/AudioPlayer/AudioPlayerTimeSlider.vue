@@ -39,13 +39,16 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    'update:currentTime': (_val: number) => true
+  },
+  setup(props, { emit }) {
     const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
     const roundedDuration = computed(() => Math.floor(props.duration))
     const disabled = computed(() => props.duration === 0)
 
     const changeTime = (time: number) => {
-      context.emit('update:currentTime', time)
+      emit('update:currentTime', time)
     }
     return {
       roundedCurrentTime,

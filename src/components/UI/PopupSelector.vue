@@ -61,12 +61,15 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, ctx) {
+  emits: {
+    'update:modelValue': (_val: string) => true
+  },
+  setup(props, { emit }) {
     const isOpen = ref(false)
     const toggle = () => (isOpen.value = !isOpen.value)
     const close = () => (isOpen.value = false)
     const onClick = (item: PopupSelectorItem) => {
-      ctx.emit('update:modelValue', item.value)
+      emit('update:modelValue', item.value)
       close()
     }
     const currentItem = computed(() =>

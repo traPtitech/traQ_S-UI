@@ -8,6 +8,7 @@ import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
 import GroupListGroupEdit from './GroupListGroupEdit.vue'
 import GroupListGroupView from './GroupListGroupView.vue'
+import { UserGroupId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'GroupListGroup',
@@ -24,6 +25,9 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
+  },
+  emits: {
+    select: (_groupId: UserGroupId) => true
   },
   setup(props, { emit }) {
     const onSelect = () => {

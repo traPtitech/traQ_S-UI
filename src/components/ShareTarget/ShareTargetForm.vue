@@ -41,7 +41,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  emits: {
+    post: () => true
+  },
+  setup(props, { emit }) {
     const homeChannelId = computed(
       () => store.state.domain.me.detail?.homeChannel ?? nullUuid
     )
@@ -76,7 +79,7 @@ export default defineComponent({
     const post = async () => {
       const posted = await postMessage()
       if (posted) {
-        context.emit('post')
+        emit('post')
       }
     }
 

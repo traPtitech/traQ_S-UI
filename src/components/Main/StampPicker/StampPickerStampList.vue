@@ -29,6 +29,10 @@ export default defineComponent({
       required: true
     }
   },
+  emits: {
+    inputStamp: (_id: StampId) => true,
+    hoverStamp: (_name: string) => true
+  },
   setup(props, context) {
     const onClickStamp = (id: StampId) => {
       context.emit('inputStamp', id)
