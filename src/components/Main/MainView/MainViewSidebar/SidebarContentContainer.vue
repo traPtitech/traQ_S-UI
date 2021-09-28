@@ -24,7 +24,10 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'SidebarContentContainer',
   props: {
-    title: String,
+    title: {
+      type: String,
+      default: undefined
+    },
     largePadding: {
       type: Boolean,
       default: false

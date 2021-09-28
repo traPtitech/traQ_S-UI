@@ -38,7 +38,10 @@ export default defineComponent({
       type: Number,
       default: 100
     },
-    tooltipFormatter: [String, Function] as PropType<TooltipFormatter>,
+    tooltipFormatter: {
+      type: [String, Function] as PropType<TooltipFormatter>,
+      default: undefined
+    },
     tooltip: {
       type: String as PropType<
         'none' | 'always' | 'hover' | 'focus' | 'active'

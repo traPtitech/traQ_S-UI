@@ -42,9 +42,7 @@ module.exports = {
         style: { lang: 'scss' }
       }
     ],
-    'vue/require-emit-validator': 'error',
-    // TODO: 消す
-    'vue/require-default-prop': 'off'
+    'vue/require-emit-validator': 'error'
   },
   overrides: [
     {

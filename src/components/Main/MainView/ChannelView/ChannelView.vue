@@ -81,7 +81,7 @@ export default defineComponent({
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String as PropType<ChannelId>
+    entryMessageId: { type: String as PropType<ChannelId>, default: undefined }
   },
   setup(props) {
     const channelMessageIds = computed(

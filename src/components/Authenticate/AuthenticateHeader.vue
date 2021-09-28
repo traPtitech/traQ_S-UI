@@ -21,7 +21,10 @@ export default defineComponent({
     LogoText
   },
   props: {
-    title: String
+    title: {
+      type: String,
+      default: undefined
+    }
   },
   setup() {
     return {}

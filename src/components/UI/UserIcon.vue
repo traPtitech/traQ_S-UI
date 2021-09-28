@@ -31,7 +31,10 @@ export default defineComponent({
       type: String as PropType<UserId>,
       required: true
     },
-    fallbackIconFileId: String as PropType<FileId>,
+    fallbackIconFileId: {
+      type: String as PropType<FileId>,
+      default: undefined
+    },
     size: {
       type: Number as PropType<IconSize>,
       default: 36

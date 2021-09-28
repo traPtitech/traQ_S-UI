@@ -52,7 +52,10 @@ export default defineComponent({
       type: String,
       required: true
     },
-    twitterId: String
+    twitterId: {
+      type: String,
+      default: undefined
+    }
   },
   setup(props) {
     const iconBackgroundColor = computed(

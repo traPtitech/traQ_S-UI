@@ -32,7 +32,7 @@ export default defineComponent({
   props: {
     homeChannelId: {
       type: String,
-      required: false
+      default: undefined
     },
     userName: {
       type: String,

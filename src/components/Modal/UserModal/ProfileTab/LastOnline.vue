@@ -16,7 +16,7 @@ export default defineComponent({
     ProfileHeader
   },
   props: {
-    lastOnline: String
+    lastOnline: { type: String, default: undefined }
   },
   setup(props) {
     const lastOnlineString = computed(() =>

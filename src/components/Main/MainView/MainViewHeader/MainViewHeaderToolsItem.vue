@@ -33,7 +33,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    tooltip: String
+    tooltip: {
+      type: String,
+      default: undefined
+    }
   },
   emits: {
     click: () => true

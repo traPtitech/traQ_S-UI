@@ -30,7 +30,7 @@ export default defineComponent({
     name: { type: String, required: true },
     topic: { type: String, default: '' },
     isCurrent: { type: Boolean, default: false },
-    link: { type: String }
+    link: { type: String, required: true }
   }
 })
 </script>

@@ -18,7 +18,10 @@ export default defineComponent({
       type: String as PropType<UserId>,
       required: true
     },
-    lastOnline: String
+    lastOnline: {
+      type: String,
+      default: undefined
+    }
   },
   setup(props) {
     const tooltip = computed(() =>

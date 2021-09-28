@@ -35,7 +35,7 @@ export default defineComponent({
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: String
+    entryMessageId: { type: String, default: undefined }
   },
   setup(props) {
     const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()

@@ -24,7 +24,8 @@ export default defineComponent({
   },
   props: {
     user: {
-      type: Object as PropType<User>
+      type: Object as PropType<User>,
+      default: undefined
     },
     isTitle: {
       type: Boolean,

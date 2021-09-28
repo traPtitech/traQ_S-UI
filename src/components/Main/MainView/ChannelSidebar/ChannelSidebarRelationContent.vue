@@ -66,7 +66,10 @@ export default defineComponent({
   name: 'ChannelSidebarRelationContent',
   components: { ChannelSidebarRelationElement },
   props: {
-    parent: Object as PropType<Channel>,
+    parent: {
+      type: Object as PropType<Channel>,
+      default: undefined
+    },
     children: {
       type: Array as PropType<Channel[]>,
       default: () => []
@@ -75,7 +78,10 @@ export default defineComponent({
       type: Array as PropType<Channel[]>,
       default: () => []
     },
-    current: Object as PropType<Channel>
+    current: {
+      type: Object as PropType<Channel>,
+      default: undefined
+    }
   },
   setup(props) {
     const state = reactive({

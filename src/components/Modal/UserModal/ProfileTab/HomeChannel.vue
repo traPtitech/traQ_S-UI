@@ -31,7 +31,7 @@ export default defineComponent({
     Icon
   },
   props: {
-    id: String as PropType<string | null>
+    id: { type: String as PropType<string | null>, default: undefined }
   },
   setup(props) {
     const isLoading = computed(() => props.id === undefined)

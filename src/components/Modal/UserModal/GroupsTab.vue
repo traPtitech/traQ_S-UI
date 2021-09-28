@@ -31,7 +31,10 @@ export default defineComponent({
     Icon
   },
   props: {
-    detail: Object as PropType<UserDetail>
+    detail: {
+      type: Object as PropType<UserDetail>,
+      default: undefined
+    }
   },
   setup(props) {
     const isLoading = computed(() => props.detail === undefined)

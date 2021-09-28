@@ -33,7 +33,7 @@ export default defineComponent({
   props: {
     tag: { type: Object as PropType<UserTag>, required: true },
     isMine: { type: Boolean, default: false },
-    userId: String as PropType<UserId>
+    userId: { type: String as PropType<UserId>, default: undefined }
   },
   setup(props) {
     const onTagClick = () => {

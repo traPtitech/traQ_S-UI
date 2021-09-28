@@ -82,15 +82,42 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    name: String,
-    autocomplete: String,
-    label: String,
-    prefix: String,
-    suffix: String,
-    min: String,
-    max: String,
-    step: String,
-    maxLength: Number,
+    name: {
+      type: String,
+      default: undefined
+    },
+    autocomplete: {
+      type: String,
+      default: undefined
+    },
+    label: {
+      type: String,
+      default: undefined
+    },
+    prefix: {
+      type: String,
+      default: undefined
+    },
+    suffix: {
+      type: String,
+      default: undefined
+    },
+    min: {
+      type: String,
+      default: undefined
+    },
+    max: {
+      type: String,
+      default: undefined
+    },
+    step: {
+      type: String,
+      default: undefined
+    },
+    maxLength: {
+      type: Number,
+      default: undefined
+    },
     useChangeEvent: {
       type: Boolean,
       default: false

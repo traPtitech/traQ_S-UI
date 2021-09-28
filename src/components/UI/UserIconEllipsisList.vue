@@ -63,8 +63,8 @@ export default defineComponent({
     borderWidth: { type: Number, default: 4 },
     iconSize: { type: Number, default: 40 },
     overlap: { type: Number, default: 12 },
-    transition: String,
-    preventModal: Boolean
+    transition: { type: String, default: undefined },
+    preventModal: { type: Boolean, default: false }
   },
   setup(props) {
     const styles = useSizeStyles(props)

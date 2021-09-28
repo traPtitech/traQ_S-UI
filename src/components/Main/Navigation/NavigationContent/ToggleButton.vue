@@ -31,7 +31,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    title: String
+    title: {
+      type: String,
+      default: undefined
+    }
   },
   emits: {
     'update:modelValue': (_value: boolean) => true

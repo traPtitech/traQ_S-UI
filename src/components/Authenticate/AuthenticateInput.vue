@@ -41,14 +41,20 @@ export default defineComponent({
   name: 'AuthenticateInput',
   components: { Icon },
   props: {
-    modelValue: { type: String, default: '' },
-    label: { type: String, default: '' },
+    modelValue: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: ''
+    },
     type: {
       type: String as PropType<'text' | 'password'>,
       default: 'text' as const
     },
     autocomplete: {
-      type: String as PropType<string | undefined>,
+      type: String,
       default: undefined
     },
     autofocus: {
@@ -59,7 +65,10 @@ export default defineComponent({
       type: String,
       default: 'off'
     },
-    enterkeyhint: String
+    enterkeyhint: {
+      type: String,
+      default: undefined
+    }
   },
   setup(props, { emit }) {
     const { value, onInput } = useTextModelSyncer(props, emit)

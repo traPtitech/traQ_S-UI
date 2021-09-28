@@ -42,7 +42,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    userId: String as PropType<UserId>,
+    userId: {
+      type: String as PropType<UserId>,
+      default: undefined
+    },
     isLocked: {
       type: Boolean,
       default: false

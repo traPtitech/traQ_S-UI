@@ -37,7 +37,10 @@ export default defineComponent({
     SlideDown
   },
   props: {
-    title: String,
+    title: {
+      type: String,
+      default: undefined
+    },
     largePadding: {
       type: Boolean,
       default: false

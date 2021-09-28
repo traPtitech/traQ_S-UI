@@ -21,7 +21,10 @@ export default defineComponent({
       type: Object as PropType<User>,
       required: true
     },
-    detail: Object as PropType<UserDetail>
+    detail: {
+      type: Object as PropType<UserDetail>,
+      default: undefined
+    }
   },
   setup() {
     const isMobile = computed(() => store.state.ui.isMobile)

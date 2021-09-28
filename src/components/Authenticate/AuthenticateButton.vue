@@ -35,8 +35,14 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    iconName: String,
-    iconMdi: { type: Boolean, default: false },
+    iconName: {
+      type: String,
+      default: undefined
+    },
+    iconMdi: {
+      type: Boolean,
+      default: false
+    },
     disabled: {
       type: Boolean,
       default: false

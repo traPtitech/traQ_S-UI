@@ -45,7 +45,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    colorClaim: Function as PropType<ThemeClaim<string>>
+    colorClaim: {
+      type: Function as PropType<ThemeClaim<string>>,
+      default: undefined
+    }
   },
   setup(props) {
     const styles = useStyles(props)

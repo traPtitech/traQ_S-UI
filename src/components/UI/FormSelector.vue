@@ -44,7 +44,10 @@ export default defineComponent({
       type: Array as PropType<Array<{ key: string; value: string | null }>>,
       required: true
     },
-    label: String
+    label: {
+      type: String,
+      default: undefined
+    }
   },
   emits: {
     'update:modelValue': (_val: string) => true
