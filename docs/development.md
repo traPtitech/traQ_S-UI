@@ -1,4 +1,3 @@
-
 ## 開発環境構築
 実行にはNode.jsが必要です
 
@@ -6,6 +5,8 @@
 $ npm i
 $ npm run gen-fonts
 ```
+
+VeturではなくVolarを導入することを推奨しています。
 
 ## コマンド
 ### ホットリロード環境
@@ -80,3 +81,8 @@ lintの実行とauto-fixによる修正
 $ npm run lint:no-fix
 ```
 lintの実行(auto-fixなし)
+
+```shell
+$ npm run type-check
+```
+型チェックの実行
