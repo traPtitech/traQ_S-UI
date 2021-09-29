@@ -4,7 +4,7 @@ import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
-import { useRoute } from 'vue-router'
+import { LocationQueryValue, useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
@@ -65,9 +65,12 @@ const useRouteWatcher = () => {
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
+      const entryMessageId = route.query['message'] as
+        | LocationQueryValue
+        | undefined
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: route.query?.message as string
+        entryMessageId: entryMessageId ?? undefined
       })
     } catch (e) {
       state.view = 'not-found'
@@ -90,10 +93,13 @@ const useRouteWatcher = () => {
 
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
+      const entryMessageId = route.query['message'] as
+        | LocationQueryValue
+        | undefined
       store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: route.query?.message as string
+        entryMessageId: entryMessageId ?? undefined
       })
       changeViewTitle('@' + user.name)
       state.view = 'main'

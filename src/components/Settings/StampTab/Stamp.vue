@@ -28,7 +28,6 @@
           :class="$style.form"
         />
         <image-upload
-          :class="$style.imageUpload"
           :destroy-flag="imageUploadState.destroyFlag"
           @input="onNewImgSet"
           @destroyed="onNewDestroyed"

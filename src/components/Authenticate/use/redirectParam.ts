@@ -20,7 +20,7 @@ const useRedirectParam = () => {
   const route = useRoute()
 
   const state: RedirectState = reactive({
-    url: computed(() => getStringParam(route.query.redirect)),
+    url: computed(() => getStringParam(route.query['redirect'])),
     isInternal: computed(() => state.url?.startsWith('/') ?? false)
   })
 

@@ -3,7 +3,6 @@
     <message-ogp-embed
       :preview-url="previewUrl"
       :embedded-url="embeddedUrl"
-      :class="$style.video"
       show-play-icon
       @click.prevent.stop
     />

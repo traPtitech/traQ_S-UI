@@ -33,7 +33,7 @@
       <icon name="arrow-expand-vertical" mdi :size="20" />全て表示
     </div>
     <div :class="$style.channelAndDate">
-      {{ channelName }} - <time :class="$style.date">{{ date }}</time>
+      {{ channelName }} - <time>{{ date }}</time>
     </div>
   </div>
 </template>

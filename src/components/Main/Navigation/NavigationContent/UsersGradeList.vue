@@ -7,12 +7,7 @@
       @click="toggleFolding"
     />
     <slide-down :class="$style.users" :is-open="!isFolding">
-      <users-element
-        v-for="user in users"
-        :key="user.id"
-        :user="user"
-        :class="$style.element"
-      />
+      <users-element v-for="user in users" :key="user.id" :user="user" />
     </slide-down>
   </div>
 </template>

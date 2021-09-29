@@ -4,7 +4,6 @@
     subtitle="メッセージを保存するフォルダを作成します"
     icon-name="bookmark"
     icon-mdi
-    :class="$style.container"
   >
     <form-input
       v-model="name.val"

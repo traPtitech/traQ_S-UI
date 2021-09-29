@@ -19,12 +19,12 @@ export default defineComponent({
     ShareTargetComponent,
     StampPickerContainer
   },
-  setup(props, context) {
+  setup(props) {
     const route = useRoute()
     const query = computed(() => route.query)
-    const title = computed(() => getStringParam(query.value.title))
-    const text = computed(() => getStringParam(query.value.text))
-    const url = computed(() => getStringParam(query.value.url))
+    const title = computed(() => getStringParam(query.value['title']))
+    const text = computed(() => getStringParam(query.value['text']))
+    const url = computed(() => getStringParam(query.value['url']))
 
     useLoginCheck()
 

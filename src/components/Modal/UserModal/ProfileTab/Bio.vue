@@ -1,6 +1,6 @@
 <template>
   <section data-testid="usermodal-bio">
-    <profile-header text="ひとこと" :class="$style.header" />
+    <profile-header text="ひとこと" />
     <inline-markdown
       :class="$style.bio"
       :aria-busy="isLoading"

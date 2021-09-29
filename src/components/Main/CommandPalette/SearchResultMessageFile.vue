@@ -4,9 +4,8 @@
       :type="fileType"
       :size="24"
       :is-animated-image="isAnimatedImage"
-      :class="$style.icon"
     />
-    <div :class="$style.name">{{ name }}</div>
+    <div>{{ name }}</div>
   </div>
 </template>
 
