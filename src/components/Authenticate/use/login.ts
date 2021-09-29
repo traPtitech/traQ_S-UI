@@ -3,6 +3,7 @@ import apis from '/@/lib/apis'
 import useRedirectParam from './redirectParam'
 import useCredentialManager from './credentialManager'
 import store from '/@/store'
+import { AxiosError } from 'axios'
 
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
@@ -51,9 +52,12 @@ const useLogin = () => {
 
       redirect()
     } catch (e) {
+      const err = e as AxiosError
+      if (!err.response) return
+
       // TODO 修正
-      const message = e.response.data.message as string
-      const status = e.response.status as number
+      const message: string = err.response.data.message
+      const status = err.response.status
       switch (message) {
         case 'name: cannot be blank; password: cannot be blank.':
           state.error = 'IDとパスワードを入力してください'
