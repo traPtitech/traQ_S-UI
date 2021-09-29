@@ -85,13 +85,15 @@ const useChannelMessageFetcher = (
       onReachedLatest()
     }
 
-    const latestMessage = messages[messages.length - 1]
-    const latestMessageDate = new Date(latestMessage.createdAt)
-    if (
-      !state.loadedMessageLatestDate ||
-      latestMessageDate > state.loadedMessageLatestDate
-    ) {
-      state.loadedMessageLatestDate = latestMessageDate
+    const latestMessage = messages[messages.length - 1] as Message | undefined
+    if (latestMessage) {
+      const latestMessageDate = new Date(latestMessage.createdAt)
+      if (
+        !state.loadedMessageLatestDate ||
+        latestMessageDate > state.loadedMessageLatestDate
+      ) {
+        state.loadedMessageLatestDate = latestMessageDate
+      }
     }
 
     return messages.map(message => message.id)
