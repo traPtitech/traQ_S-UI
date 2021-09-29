@@ -43,7 +43,7 @@ export default defineComponent({
       emit('login')
     }
     const onUseOtherClick = () => {
-      emit('login')
+      emit('useOther')
     }
     return { onLoginClick, onUseOtherClick }
   }
