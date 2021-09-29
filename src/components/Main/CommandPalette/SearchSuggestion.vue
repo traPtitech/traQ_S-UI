@@ -1,11 +1,11 @@
 <template>
-  <div v-if="store.currentInput.length > 0" :class="$style.container">
-    <search-suggestion-item
-      :item="searchConfirmItem"
-      @select="onSelectSuggestion(searchConfirmItem)"
-    />
-  </div>
   <div :class="$style.container">
+    <template v-if="store.currentInput.length > 0">
+      <search-suggestion-item
+        :item="searchConfirmItem"
+        @select="onSelectSuggestion(searchConfirmItem)"
+      />
+    </template>
     <div :class="$style.header">検索オプション</div>
     <search-suggestion-query-item
       v-for="suggestion in querySuggestions"
@@ -14,16 +14,16 @@
       :description="suggestion.description"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
-  </div>
-  <div v-if="historySuggestions.length > 0" :class="$style.container">
-    <div :class="$style.header">過去の検索</div>
-    <search-suggestion-history-item
-      v-for="suggestion in historySuggestions"
-      :key="suggestion"
-      :label="suggestion"
-      @select="onSelectHistorySuggestion(suggestion)"
-      @remove="onRemoveHistorySuggestion(suggestion)"
-    />
+    <template v-if="historySuggestions.length > 0">
+      <div :class="$style.header">過去の検索</div>
+      <search-suggestion-history-item
+        v-for="suggestion in historySuggestions"
+        :key="suggestion"
+        :label="suggestion"
+        @select="onSelectHistorySuggestion(suggestion)"
+        @remove="onRemoveHistorySuggestion(suggestion)"
+      />
+    </template>
   </div>
 </template>
 
@@ -104,6 +104,8 @@ export default defineComponent({
 .container {
   @include color-ui-primary;
   padding: 0.5rem 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 .header {
   @include color-ui-secondary;
