@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { AxiosError } from 'axios'
 import { defineComponent, reactive, onMounted, onUnmounted } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
@@ -27,7 +28,7 @@ const useQrCode = () => {
     try {
       state.url = await makeURL()
     } catch (err) {
-      state.err = err
+      state.err = (err as AxiosError).toString()
     }
   })
 

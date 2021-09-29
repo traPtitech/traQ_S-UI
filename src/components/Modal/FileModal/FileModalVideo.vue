@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.container">
+    <div v-if="fileMeta" :class="$style.container">
       <div :class="$style.header">
         <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
       </div>
@@ -35,7 +35,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { fileMeta, fileRawPath } = useFileMeta(props)
     return { fileMeta, fileRawPath }
   }

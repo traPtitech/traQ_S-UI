@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+import UserIcon, { IconSize } from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 
 const useSizeStyles = (props: {
@@ -59,9 +59,9 @@ export default defineComponent({
      */
     max: { type: Number, default: 3 },
     showCount: { type: Boolean, default: true },
-    userIds: { type: Array as PropType<UserId[]>, default: () => [] },
+    userIds: { type: Array as PropType<readonly UserId[]>, default: () => [] },
     borderWidth: { type: Number, default: 4 },
-    iconSize: { type: Number, default: 40 },
+    iconSize: { type: Number as PropType<IconSize>, default: 40 as const },
     overlap: { type: Number, default: 12 },
     transition: { type: String, default: undefined },
     preventModal: { type: Boolean, default: false }

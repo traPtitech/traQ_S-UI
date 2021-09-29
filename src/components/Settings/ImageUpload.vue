@@ -53,7 +53,7 @@ export default defineComponent({
     }
   },
   emits: {
-    input: (_blob: Blob | undefined) => true,
+    input: (_file: File) => true,
     destroyed: () => true
   },
   setup(prop, { emit }) {
@@ -62,6 +62,8 @@ export default defineComponent({
       addImage,
       destroy: destroyImage
     } = useImageUploadInternal(() => {
+      if (!image.data) return
+
       // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
       emit('input', image.data)
     })
@@ -80,7 +82,10 @@ export default defineComponent({
             ...cropperDefaultOptions,
             cropend: () => {
               cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                emit('input', blob ?? undefined)
+                if (!blob) return
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                emit('input', new File([blob], image.data!.name))
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               }, image.data!.type)
             }

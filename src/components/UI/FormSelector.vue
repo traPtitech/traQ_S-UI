@@ -10,7 +10,7 @@
       <select :id="id" v-model="value" :class="$style.select">
         <option
           v-for="option in options"
-          :key="option.value"
+          :key="option.value ?? nullSymbol"
           :value="option.value"
           :disabled="option.value === null"
         >
@@ -26,11 +26,14 @@ import { defineComponent, PropType } from 'vue'
 import { randomString } from '/@/lib/util/randomString'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
 
+const nullSymbol = Symbol('null')
+
 export default defineComponent({
   name: 'FormSelector',
   props: {
     modelValue: {
-      type: String,
+      // nullableのとき https://github.com/vuejs/vue-next/issues/3948
+      type: null as unknown as PropType<string | null>,
       default: ''
     },
     onSecondary: {
@@ -50,12 +53,12 @@ export default defineComponent({
     }
   },
   emits: {
-    'update:modelValue': (_val: string) => true
+    'update:modelValue': (_val: string | null) => true
   },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
     const id = randomString()
-    return { value, id }
+    return { value, id, nullSymbol }
   }
 })
 </script>

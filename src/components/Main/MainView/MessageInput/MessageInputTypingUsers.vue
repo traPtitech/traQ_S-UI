@@ -32,7 +32,7 @@ export default defineComponent({
   },
   props: {
     typingUsers: {
-      type: Array as PropType<UserId[]>,
+      type: Array as PropType<readonly UserId[]>,
       required: true
     }
   },

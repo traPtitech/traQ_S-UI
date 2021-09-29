@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <img
-      :ref="thumbnailRef"
+      ref="thumbnailRef"
       :class="$style.image"
       :src="imageThumbnailState.thumbnailDataUrl"
       :alt="attachment.file.name"

@@ -18,16 +18,18 @@
       </template>
       <template v-else>---</template>
     </div>
-    <div :class="$style.issuedAt">許可日時: {{ token.issuedAt }}</div>
-    <div :class="$style.scopes">許可範囲: {{ token.scopes.join(', ') }}</div>
+    <div :class="$style.issuedAt">許可日時: {{ issuedAt }}</div>
+    <div :class="$style.scopes">許可範囲: {{ scopes.join(', ') }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
 import Icon from '/@/components/UI/Icon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { getFullDayWithTimeString } from '/@/lib/date'
+import { scopeNameMap } from '/@/lib/clientScope'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string
@@ -51,10 +53,17 @@ export default defineComponent({
     revoke: () => true
   },
   setup(props, { emit }) {
+    const issuedAt = computed(() =>
+      getFullDayWithTimeString(new Date(props.token.issuedAt))
+    )
+    const scopes = computed(() =>
+      props.token.scopes.map(scope => scopeNameMap[scope])
+    )
+
     const revoke = () => {
       emit('revoke')
     }
-    return { revoke }
+    return { issuedAt, scopes, revoke }
   }
 })
 </script>

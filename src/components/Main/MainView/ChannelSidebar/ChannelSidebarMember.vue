@@ -30,7 +30,7 @@ export default defineComponent({
   },
   props: {
     channelId: { type: String as PropType<ChannelId>, required: true },
-    viewerIds: { type: Array as PropType<UserId[]>, default: () => [] }
+    viewerIds: { type: Array as PropType<readonly UserId[]>, default: () => [] }
   },
   setup(props) {
     const subscribers = useChannelSubscribers(props)

@@ -25,6 +25,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import ClipFolderElement from './ClipFolderElement.vue'
 import useToastStore from '/@/providers/toastStore'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { AxiosError } from 'axios'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -40,7 +41,7 @@ const useCreateClip = (
       isSelected.value.add(clipFolderId)
       addSuccessToast('クリップフォルダに追加しました')
     } catch (e) {
-      if (e.response.status === 409) {
+      if ((e as AxiosError).response?.status === 409) {
         isSelected.value.add(clipFolderId)
         addErrorToast('すでに追加されています')
         return

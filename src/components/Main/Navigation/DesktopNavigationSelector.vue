@@ -57,8 +57,8 @@ export default defineComponent({
     }
   },
   emits: {
-    navigationChange: () => true,
-    ephemeralNavigationChange: () => true,
+    navigationChange: (_type: NavigationItemType) => true,
+    ephemeralNavigationChange: (_type: EphemeralNavigationItemType) => true,
     ephemeralEntryRemove: (_entry: EphemeralNavigationSelectorEntry) => true,
     ephemeralEntryAdd: (_entry: EphemeralNavigationSelectorEntry) => true
   },

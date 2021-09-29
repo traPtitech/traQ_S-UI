@@ -47,7 +47,7 @@
               >
                 <p :class="$style.name">{{ name }}</p>
                 <form-input
-                  v-model="val[name]"
+                  v-model="val[name as keyof typeof val]"
                   use-change-event
                   on-secondary
                   :class="$style.input"

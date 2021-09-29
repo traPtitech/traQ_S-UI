@@ -25,7 +25,10 @@ export default defineComponent({
       default: 'profile' as const
     }
   },
-  setup(props, context) {
+  emits: {
+    navigationChange: (_type: NavigationItemType) => true
+  },
+  setup(props, { emit }) {
     const items: {
       type: NavigationItemType
       iconName: string
@@ -45,7 +48,7 @@ export default defineComponent({
         iconMdi: true
       }
     ]
-    const { onNavigationItemClick } = useNavigationSelectorItem(context)
+    const { onNavigationItemClick } = useNavigationSelectorItem(emit)
 
     return { items, onNavigationItemClick }
   }

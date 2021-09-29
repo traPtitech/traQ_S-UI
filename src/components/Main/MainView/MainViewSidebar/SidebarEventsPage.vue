@@ -10,12 +10,12 @@
         @scroll.passive="onScroll"
       >
         <sidebar-event
-          v-for="event in events"
-          :key="event.datetime"
+          v-for="parsedEvent in parsedEvents"
+          :key="parsedEvent.datetime"
           :class="$style.item"
-          :event="event"
+          :event="parsedEvent"
         />
-        <div v-if="events.length <= 0" :class="$style.noEvents">
+        <div v-if="parsedEvents.length <= 0" :class="$style.noEvents">
           イベントはありません
         </div>
       </div>
@@ -24,12 +24,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, shallowRef } from 'vue'
+import { computed, defineComponent, PropType, shallowRef } from 'vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelEvents from './use/channelEvents'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
+import { parseChannelEvent } from '/@/lib/apis'
 
 export default defineComponent({
   name: 'SidebarPinnedPage',
@@ -50,12 +51,13 @@ export default defineComponent({
   setup(props, { emit }) {
     const containerEle = shallowRef<HTMLElement>()
     const { events, onScroll } = useChannelEvents(props, containerEle)
+    const parsedEvents = computed(() => events.value.map(parseChannelEvent))
 
     const moveBack = () => {
       emit('moveBack')
     }
 
-    return { containerEle, events, onScroll, moveBack }
+    return { containerEle, parsedEvents, onScroll, moveBack }
   }
 })
 </script>
