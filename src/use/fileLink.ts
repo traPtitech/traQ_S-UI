@@ -9,7 +9,7 @@ const useFileLink = (props: { fileId: FileId }) => {
     router.push(fileLink.value)
   }
   const onFileDownloadLinkClick = () => {
-    window.open(buildFilePath(props.fileId), '_blank')
+    location.href = buildFilePath(props.fileId, true)
   }
   return { fileLink, onFileLinkClick, onFileDownloadLinkClick }
 }

@@ -21,7 +21,7 @@
       name="download"
       :size="24"
       :class="$style.dl"
-      @click="onFileDownloadLinkClick"
+      @click.prevent="onFileDownloadLinkClick"
     />
   </div>
 </template>

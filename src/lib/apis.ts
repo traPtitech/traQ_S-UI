@@ -26,7 +26,8 @@ const apis = new Apis(
   })
 )
 
-export const buildFilePath = (fileId: FileId) => `${BASE_PATH}/files/${fileId}`
+export const buildFilePath = (fileId: FileId, withDlParam = false) =>
+  `${BASE_PATH}/files/${fileId}${withDlParam ? '?dl=1' : ''}`
 
 export const buildUserIconPath = (userIconFileId: FileId) =>
   `${BASE_PATH}/files/${userIconFileId}`
