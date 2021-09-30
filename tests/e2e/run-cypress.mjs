@@ -1,5 +1,6 @@
 import { spawn } from 'child_process'
-import kill from 'tree-kill'
+import { fileURLToPath } from 'url'
+import { preview, resolveConfig } from 'vite'
 
 const runCmd = (cmd, args, options) =>
   new Promise((resolve, reject) => {
@@ -19,18 +20,14 @@ const runCmd = (cmd, args, options) =>
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const isHeadless = process.argv[2] === '--headless'
 
-const preview = spawn(npm, ['run', 'serve'])
-await new Promise((resolve, reject) => {
-  preview.stdout.pipe(process.stdout)
-  preview.stderr.pipe(process.stderr)
-  preview.on('error', reject)
-
-  preview.stdout.on('data', data => {
-    if (data.includes('review server running')) {
-      resolve()
-    }
-  })
-})
+const viteConfig = await resolveConfig(
+  {
+    root: fileURLToPath(new URL('../../', import.meta.url))
+  },
+  'serve',
+  'production'
+)
+const previewServer = await preview(viteConfig, { port: 5000 })
 
 await runCmd(npm, [
   'run',
@@ -38,7 +35,5 @@ await runCmd(npm, [
 ])
 
 if (isHeadless) {
-  preview.stdin.pause()
-  preview.stdout.pause()
-  kill(preview.pid)
+  previewServer.close()
 }
