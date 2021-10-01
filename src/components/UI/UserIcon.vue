@@ -19,7 +19,7 @@ import store from '/@/store'
 import { useUserModalOpener } from '/@/use/modalOpener'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
+export type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
 export default defineComponent({
   name: 'UserIcon',

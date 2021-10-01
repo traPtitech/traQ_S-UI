@@ -20,7 +20,7 @@ export default defineComponent({
   components: { UserIcon, SidebarContentContainer },
   props: {
     viewerIds: {
-      type: Array as PropType<UserId[]>,
+      type: Array as PropType<readonly UserId[]>,
       default: () => []
     }
   },

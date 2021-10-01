@@ -71,7 +71,7 @@ export default defineComponent({
       required: true
     },
     viewerIds: {
-      type: Array as PropType<UserId[]>,
+      type: Array as PropType<readonly UserId[]>,
       required: true
     },
     pinnedMessagesCount: {

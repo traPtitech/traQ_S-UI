@@ -50,8 +50,10 @@ export default defineComponent({
   },
   setup(props) {
     const state = reactive({
-      message: computed(() =>
-        store.state.entities.messages.messagesMap.get(props.messageId)
+      message: computed(
+        () =>
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          store.state.entities.messages.messagesMap.get(props.messageId)!
       ),
       shouldShow: computed(
         (): boolean =>

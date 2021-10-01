@@ -9,7 +9,10 @@
       :name="user.name"
       :twitter-id="detail?.twitterId"
     />
-    <last-online :class="$style.section" :last-online="detail?.lastOnline" />
+    <last-online
+      :class="$style.section"
+      :last-online="detail?.lastOnline ?? undefined"
+    />
   </div>
 </template>
 

@@ -8,11 +8,11 @@
           :key="tag.tagId"
           :class="$style.tag"
           :tag="tag"
-          :user-id="userId"
+          :user-id="detail.id"
           :is-mine="isMine"
         />
       </ul>
-      <tags-tab-add :user-id="userId" />
+      <tags-tab-add :user-id="detail.id" />
     </template>
   </div>
 </template>
@@ -37,15 +37,12 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const userId = computed(() => props.detail?.id)
-    const isMine = computed(() => userId.value === store.getters.domain.me.myId)
+    const isMine = computed(
+      () => props.detail?.id === store.getters.domain.me.myId
+    )
     const tags = computed(() => props.detail?.tags ?? [])
 
-    return {
-      userId,
-      isMine,
-      tags
-    }
+    return { isMine, tags }
   }
 })
 </script>

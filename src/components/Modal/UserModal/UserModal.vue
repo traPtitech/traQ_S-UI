@@ -79,7 +79,8 @@ export default defineComponent({
     const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
-    const user = computed(() => store.state.entities.usersMap.get(props.id))
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const user = computed(() => store.state.entities.usersMap.get(props.id)!)
 
     const { userDetail } = useUserDetail(props)
 

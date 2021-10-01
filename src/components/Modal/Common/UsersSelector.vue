@@ -79,7 +79,7 @@ export default defineComponent({
     }
   },
   emits: {
-    'update:modelValue': () => true
+    'update:modelValue': (_val: Set<UserId>) => true
   },
   setup(props, { emit }) {
     const { textFilterState, filteredUsers } = useUserFilter(props)

@@ -19,11 +19,12 @@ import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 export default defineComponent({
   name: 'Slider',
   components: {
-    VueSlider
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FIXME: 型がうまく効かないのでanyで逃げる
+    VueSlider: VueSlider as any
   },
   props: {
     value: {
-      type: [Number, String] as PropType<number | string>,
+      type: Number,
       required: true
     },
     disabled: {
@@ -46,14 +47,14 @@ export default defineComponent({
       type: String as PropType<
         'none' | 'always' | 'hover' | 'focus' | 'active'
       >,
-      default: 'active'
+      default: 'active' as const
     }
   },
   emits: {
-    changeValue: (_val: number | string) => true
+    changeValue: (_val: number) => true
   },
   setup(props, { emit }) {
-    const onChange = (val: number | string) => {
+    const onChange = (val: number) => {
       emit('changeValue', val)
     }
     return { onChange }

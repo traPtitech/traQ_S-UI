@@ -25,14 +25,14 @@ export default defineComponent({
     }
   },
   setup() {
-    const setHeight = ($el: HTMLElement) => {
-      $el.style.height = `${$el.scrollHeight}px`
+    const setHeight = ($el: Element) => {
+      ;($el as HTMLElement).style.height = `${$el.scrollHeight}px`
     }
-    const unsetHeight = async ($el: HTMLElement) => {
+    const unsetHeight = async ($el: Element) => {
       // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
       await rAF()
       await rAF()
-      $el.style.height = null as unknown as string
+      ;($el as HTMLElement).style.height = null as unknown as string
     }
     return { setHeight, unsetHeight }
   }

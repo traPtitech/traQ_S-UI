@@ -215,7 +215,9 @@ export const useMessageInputStateAttachment = (
         thumbnailDataUrl
       })
     } catch (e) {
-      onError(e)
+      if (typeof e === 'string') {
+        onError(e)
+      }
     }
   }
 

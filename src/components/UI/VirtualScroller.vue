@@ -24,7 +24,8 @@ import {
   onMounted,
   onUnmounted,
   watch,
-  nextTick
+  nextTick,
+  PropType
 } from 'vue'
 import { throttle } from 'throttle-debounce'
 
@@ -83,7 +84,8 @@ export default defineComponent({
   name: 'VirtualScroller',
   props: {
     items: {
-      type: Array,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type: Array as PropType<any[]>,
       required: true
     },
     key: {
@@ -321,8 +323,6 @@ export default defineComponent({
 }
 
 .spacer {
-}
-
-.list-item {
+  display: block;
 }
 </style>

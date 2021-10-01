@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <message-ogp-content-video
-      v-if="shouldShowVideo"
+      v-if="isVideoType && imageUrl && videoUrl"
       :url="ogpData.url"
       :title="ogpData.title"
       :description="ogpData.description"
@@ -45,14 +45,8 @@ const useOgpData = (props: { ogpData: Ogp }) => {
     const item = props.ogpData.videos?.[0]
     return ifIsHttps(item?.secureUrl ?? item?.url)
   })
-  const shouldShowVideo = computed(() => {
-    if (props.ogpData?.type?.startsWith('video')) {
-      return videoUrl.value && imageUrl.value
-    } else {
-      return false
-    }
-  })
-  return { shouldShowVideo, imageUrl, videoUrl }
+  const isVideoType = computed(() => props.ogpData?.type?.startsWith('video'))
+  return { isVideoType, imageUrl, videoUrl }
 }
 
 export default defineComponent({
@@ -68,8 +62,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { shouldShowVideo, imageUrl, videoUrl } = useOgpData(props)
-    return { shouldShowVideo, imageUrl, videoUrl }
+    const { isVideoType, imageUrl, videoUrl } = useOgpData(props)
+    return { isVideoType, imageUrl, videoUrl }
   }
 })
 </script>

@@ -56,7 +56,7 @@ export default defineComponent({
       default: true
     },
     channels: {
-      type: Array as PropType<Array<ChannelTreeNode | Channel>>,
+      type: Array as PropType<ReadonlyArray<ChannelTreeNode | Channel>>,
       required: true
     },
     ignoreChildren: {

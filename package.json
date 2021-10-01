@@ -16,6 +16,7 @@
     "test:e2e:only-run-headless": "cypress run --headless",
     "lint": "eslint --ext .ts,.vue --fix --cache .",
     "lint:no-fix": "eslint --ext .ts,.vue --cache .",
+    "type-check": "vue-tsc --noEmit",
     "gen-fonts": "node build/gen-mplus.mjs",
     "gen-unicode_emojis": "node build/gen-unicode_emojis.mjs",
     "postinstall": "patch-package"
@@ -88,6 +89,7 @@
     "vite": "^2.6.2",
     "vite-plugin-pwa": "^0.11.2",
     "vite-plugin-vue-svg": "^0.1.0",
+    "vue-tsc": "^0.3.0",
     "vue3-jest": "^27.0.0-alpha.1",
     "workbox-cacheable-response": "^6.3.0",
     "workbox-core": "^6.3.0",

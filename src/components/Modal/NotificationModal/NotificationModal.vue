@@ -11,7 +11,10 @@
       title="他ユーザーの通知設定"
       description="このチャンネルのメッセージの通知がユーザーに送られるか選択できます（通知を送る場合、未読管理も有効になります）"
     >
-      <user-notification-list :channel-id="currentChannelId" />
+      <user-notification-list
+        v-if="currentChannelId"
+        :channel-id="currentChannelId"
+      />
     </modal-section>
   </modal-frame>
 </template>

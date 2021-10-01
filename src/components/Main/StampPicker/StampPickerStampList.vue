@@ -25,7 +25,7 @@ export default defineComponent({
   },
   props: {
     stamps: {
-      type: Array as PropType<Stamp[]>,
+      type: Array as PropType<readonly Stamp[]>,
       required: true
     }
   },

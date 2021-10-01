@@ -1,17 +1,14 @@
-interface ExtendedMediaTrackConstraints extends MediaTrackConstraints {
-  echoCancellationType?: 'system' | 'browser'
-}
-
 export const getUserAudio = async (deviceId?: string) => {
-  const baseAudioConstraint: ExtendedMediaTrackConstraints = {
-    autoGainControl: true,
+  const baseAudioConstraint: MediaTrackConstraints = {
     echoCancellation: true,
+    // @ts-expect-error まだ型に追加されていないが存在する https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/autoGainControl
+    autoGainControl: true,
     noiseSuppression: true
   }
-  const constraint: MediaStreamConstraints = deviceId
-    ? { audio: { ...baseAudioConstraint, deviceId }, video: false }
-    : { audio: baseAudioConstraint, video: false }
-  const rawAudio = await navigator.mediaDevices.getUserMedia(constraint)
+  const rawAudio = await navigator.mediaDevices.getUserMedia({
+    audio: { ...baseAudioConstraint, deviceId },
+    video: false
+  })
   return rawAudio
 }
 

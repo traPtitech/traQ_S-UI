@@ -65,6 +65,7 @@ export default defineComponent({
      * ../use/wordSuggester.tsを参照
      */
     selectedIndex: {
+      // nullableのとき https://github.com/vuejs/vue-next/issues/3948
       type: null as unknown as PropType<number | null>,
       required: true
     },

@@ -18,8 +18,6 @@ import apis from '/@/lib/apis'
 import { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
 import { OAuthClientId } from '/@/types/entity-ids'
 import store from '/@/store'
-import { getFullDayWithTimeString } from '/@/lib/date'
-import { scopeNameMap } from '/@/lib/clientScope'
 import useToastStore from '/@/providers/toastStore'
 import TokenInfo from './TokenInfo.vue'
 
@@ -41,8 +39,6 @@ export default defineComponent({
           const client = clients.value.get(token.clientId)
           return {
             ...token,
-            issuedAt: getFullDayWithTimeString(new Date(token.issuedAt)),
-            scopes: token.scopes.map(scope => scopeNameMap[scope]),
             clientDesc: client?.description,
             clientName: client?.name,
             clientDeveloper: store.state.entities.usersMap.get(

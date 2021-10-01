@@ -1,4 +1,4 @@
-import { computed, ComputedRef } from 'vue'
+import { computed, WritableComputedRef } from 'vue'
 
 export const useModelSyncer = <
   P,
@@ -9,7 +9,7 @@ export const useModelSyncer = <
   emit: E,
   key: K,
   onUpdate?: (val: P[K]) => void
-): ComputedRef<P[K]> => {
+): WritableComputedRef<P[K]> => {
   const value = computed({
     get: () => props[key],
     set: v => {
@@ -32,7 +32,7 @@ export const useModelValueSyncer = <
   return useModelSyncer(props, emit, 'modelValue', onUpdate)
 }
 
-type ToSyncedRefs<T> = { [KK in keyof T]: ComputedRef<T[KK]> }
+type ToSyncedRefs<T> = { [KK in keyof T]: WritableComputedRef<T[KK]> }
 
 export const useModelObjectSyncer = <
   P,
