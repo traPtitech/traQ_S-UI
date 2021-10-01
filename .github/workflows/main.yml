@@ -38,6 +38,24 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - name: run lint
         run: npm run lint:no-fix -- --max-warnings=0
+  type-check:
+    name: run type-check
+    runs-on: ubuntu-latest
+    needs: [packages]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.0
+          cache: npm
+      - name: npm ci
+        run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+      - name: run type-check
+        run: npm run type-check
   build:
     name: run build
     runs-on: ubuntu-latest
