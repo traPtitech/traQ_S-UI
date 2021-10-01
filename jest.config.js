@@ -21,7 +21,7 @@ module.exports = {
     '^/@/(.+)': '<rootDir>/src/$1'
   },
   transform: {
-    '^.+\\.vue$': 'vue3-jest',
+    '^.+\\.vue$': '@vue/vue3-jest',
     '^.+\\.ts$': '<rootDir>/tests/unit/envReplaceAndTranspileTransformer'
   },
   globals: {
