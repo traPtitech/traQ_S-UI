@@ -5,7 +5,7 @@
       <toggle
         :model-value="value"
         :class="$style.toggle"
-        @update:modelValue="toggle"
+        @update:modelValue="toggleSetting"
       />
     </div>
     <div :class="$style.content">
@@ -36,7 +36,7 @@ export default defineComponent({
       value.value = data.notifyCitation
     })
 
-    const toggle = async () => {
+    const toggleSetting = async () => {
       try {
         await apis.changeMyNotifyCitation({ notifyCitation: !value.value })
         value.value = !value.value
@@ -45,7 +45,7 @@ export default defineComponent({
       }
     }
 
-    return { value, toggle }
+    return { value, toggleSetting }
   }
 })
 </script>

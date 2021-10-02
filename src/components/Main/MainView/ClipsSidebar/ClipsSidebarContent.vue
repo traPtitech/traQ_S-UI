@@ -86,7 +86,7 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
         else if (aDate > bDate) return 1
         else return 0
       })
-    if (clipFolders.length > 0) {
+    if (clipFolders[0]) {
       router.push(`/clip-folders/${clipFolders[0].id}`)
       return
     }

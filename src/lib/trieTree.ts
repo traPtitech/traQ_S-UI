@@ -26,8 +26,9 @@ class TrieNode {
     let self: TrieNode = this
 
     for (const char of chars) {
-      if (!self.children[char]) return
-      self = self.children[char]
+      const newSelf = self.children[char]
+      if (newSelf === undefined) return
+      self = newSelf
     }
 
     return self.getAllWords()
@@ -47,7 +48,8 @@ class TrieNode {
         self.children[char] = new TrieNode(lastInsertedId + 1)
         lastInsertedId++
       }
-      self = self.children[char]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      self = self.children[char]!
     }
 
     if (self.isWord === true) return
@@ -65,8 +67,9 @@ class TrieNode {
     let self: TrieNode = this
 
     for (const char of chars) {
-      if (self.children[char] === undefined) return
-      self = self.children[char]
+      const newSelf = self.children[char]
+      if (newSelf === undefined) return
+      self = newSelf
     }
 
     self.isWord = false

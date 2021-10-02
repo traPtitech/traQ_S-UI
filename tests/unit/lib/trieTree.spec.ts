@@ -34,7 +34,8 @@ describe('trieTree class', () => {
   })
   it('can isWord', () => {
     expect(
-      tree.root.children['@'].children['a'].children['b'].children['c'].isWord
+      tree.root.children['@']?.children['a']?.children['b']?.children['c']
+        ?.isWord
     ).toEqual(true)
   })
   it('can search', () => {

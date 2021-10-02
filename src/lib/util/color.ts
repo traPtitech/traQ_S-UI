@@ -61,9 +61,11 @@ class Color {
     const match = hex.match(/#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/)
     // 3桁はダメ
     if (!match) throw `Invalid color: ${hex}`
-    const r = parseInt(match[1], 16)
-    const g = parseInt(match[2], 16)
-    const b = parseInt(match[3], 16)
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    const r = parseInt(match[1]!, 16)
+    const g = parseInt(match[2]!, 16)
+    const b = parseInt(match[3]!, 16)
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
     return new Color(r, g, b, opacity)
   }
   static fromRgba(rgba: string) {
@@ -71,18 +73,22 @@ class Color {
       /rgba\(\s*([\d.]),\s*([\d.]),\s*([\d.]),\s*([\d.])\s*\)/
     )
     if (!match) throw `Invalid color: ${rgba}`
-    const r = parseInt(match[1], 16)
-    const g = parseInt(match[2], 16)
-    const b = parseInt(match[3], 16)
-    const a = parseInt(match[4])
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    const r = parseInt(match[1]!, 16)
+    const g = parseInt(match[2]!, 16)
+    const b = parseInt(match[3]!, 16)
+    const a = parseInt(match[4]!)
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
     return new Color(r, g, b, a)
   }
   static fromRgb(rgb: string, opacity = 1) {
     const match = rgb.match(/rgb\(\s*([\d.]),\s*([\d.]),\s*([\d.])\s*\)/)
     if (!match) throw `Invalid color: ${rgb}`
-    const r = parseInt(match[1], 16)
-    const g = parseInt(match[2], 16)
-    const b = parseInt(match[3], 16)
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    const r = parseInt(match[1]!, 16)
+    const g = parseInt(match[2]!, 16)
+    const b = parseInt(match[3]!, 16)
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
     return new Color(r, g, b, opacity)
   }
 }

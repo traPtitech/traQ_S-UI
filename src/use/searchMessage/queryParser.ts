@@ -199,7 +199,8 @@ const filterOrStringToSearchMessageQuery = (
     case 'mediaFlag':
       return {
         ...emptySearchMessageQueryObject,
-        [`has${f.value[0].toUpperCase() + f.value.slice(1)}`]: !f.negate
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        [`has${f.value[0]!.toUpperCase() + f.value.slice(1)}`]: !f.negate
       }
   }
 }

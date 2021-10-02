@@ -1,6 +1,9 @@
 <template>
   <transition name="background-shadow">
-    <div v-if="modalState.shouldShowModal" :class="$style.container">
+    <div
+      v-if="modalState.shouldShowModal && modalState.current"
+      :class="$style.container"
+    >
       <component
         :is="component"
         :id="
@@ -93,11 +96,14 @@ export default defineComponent({
     // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
     const getComponent = (path: string) =>
       defineAsyncComponent(() =>
-        modalModules[`/src/components/Modal/${path}.vue`]()
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        modalModules[`/src/components/Modal/${path}.vue`]!()
       )
 
     const component = computed(() =>
-      getComponent(modalComponentMap[modalState.current.type])
+      modalState.current
+        ? getComponent(modalComponentMap[modalState.current.type])
+        : undefined
     )
 
     return {

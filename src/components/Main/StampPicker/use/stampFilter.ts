@@ -6,6 +6,9 @@ import { getMatchedWithPriority } from '/@/lib/util/array'
 
 const emojiAltnameTable = import('/@/assets/emoji_altname_table.json')
 
+declare const altNameSymbol: unique symbol
+type AltName = string & { nominalTyping: typeof altNameSymbol }
+
 const useStampFilter = () => {
   const stamps = computed(() => [...store.state.entities.stampsMap.values()])
   const stampNames = computed(() => stamps.value.map(stamp => stamp.name))
@@ -13,9 +16,10 @@ const useStampFilter = () => {
     Object.fromEntries(stamps.value.map(stamp => [stamp.name, stamp]))
   )
 
-  const altNameTable = ref<Record<string, string>>({})
-  const altNames = ref<string[]>([])
-  const altNameToName = (altName: string) => altNameTable.value[altName]
+  const altNameTable = ref<Record<AltName, string>>({})
+  const altNames = ref<AltName[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const altNameToName = (altName: AltName) => altNameTable.value[altName]!
   emojiAltnameTable.then(({ default: tables }) => {
     const {
       altNameTable: strictAltNameTable,
@@ -25,7 +29,7 @@ const useStampFilter = () => {
       ...strictAltNameTable,
       ...strictUnicodeTable
     }
-    altNames.value = [...Object.keys(altNameTable.value)]
+    altNames.value = [...(Object.keys(altNameTable.value) as AltName[])]
   })
 
   const oneLetterNames = computed(() =>
@@ -34,7 +38,8 @@ const useStampFilter = () => {
   const oneLetterAltNames = altNames.value.filter(name => name.length === 1)
 
   const getStamps = (stampNames: Iterable<string>) => {
-    return [...new Set(stampNames)].map(name => stampsTable.value[name])
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return [...new Set(stampNames)].map(name => stampsTable.value[name]!)
   }
 
   const state = reactive({

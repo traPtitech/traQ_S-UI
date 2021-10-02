@@ -33,7 +33,7 @@ export const actions = defineActions({
     } catch {
       return false
     }
-    if (devices.length === 0 || devices[0].label === '') {
+    if (devices.length === 0 || devices[0]?.label === '') {
       return false
     }
 
@@ -47,7 +47,7 @@ export const actions = defineActions({
     if (isAlreadySet) return true
 
     // デフォルトをセットする
-    if (audioInputDevices.length > 0) {
+    if (audioInputDevices[0]) {
       commit.set({ audioInputDeviceId: audioInputDevices[0].deviceId })
       return true
     }

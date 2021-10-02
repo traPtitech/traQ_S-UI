@@ -117,12 +117,14 @@ const useMarkdownInternalHandler = () => {
 
 const useCompareDate = (props: { messageIds: MessageId[] }) => {
   const dayDiff = (index: number) => {
-    if (index === 0) {
+    if (index <= 0) {
       return true
     }
     const { messagesMap } = store.state.entities.messages
-    const pre = messagesMap.get(props.messageIds[index - 1])
-    const current = messagesMap.get(props.messageIds[index])
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const pre = messagesMap.get(props.messageIds[index - 1]!)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const current = messagesMap.get(props.messageIds[index]!)
     const preDate = new Date(pre?.createdAt ?? '')
     const currentDate = new Date(current?.createdAt ?? '')
     return preDate.toDateString() !== currentDate.toDateString()

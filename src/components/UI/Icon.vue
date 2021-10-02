@@ -68,7 +68,12 @@ export default defineComponent({
   },
   setup(props, { attrs }) {
     const getComponent = async (name: string) => {
-      const module = await iconModules[`/src/assets/icons/${name}.svg`]()
+      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
+      if (!moduleFunc) {
+        throw new Error(`存在しないアイコン名: ${name}`)
+      }
+
+      const module = await moduleFunc()
       return module.default
     }
 

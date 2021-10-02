@@ -36,7 +36,8 @@ const useStampPaletteThumbnail = () => {
     const palette = store.state.entities.stampPalettesMap.get(paletteId)
     if (!palette) return ''
     if ((palette.stamps?.length ?? 0) > 0) {
-      return palette.stamps[0]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return palette.stamps[0]!
     }
     return ''
   }

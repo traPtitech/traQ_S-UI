@@ -27,10 +27,13 @@ export const getDeterminedCharacters = (candidates: string[]) => {
   if (candidates.length <= 0) return ''
 
   candidates = candidates.map(candidate => candidate.toLocaleLowerCase())
+  if (candidates[0] === undefined) return ''
+
   const minLength = Math.min(...candidates.map(c => [...c].length))
   const confirmedPart: string[] = []
   for (let i = 0; i < minLength; i++) {
-    confirmedPart[i] = [...candidates[0]][i]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    confirmedPart[i] = [...candidates[0]][i]!
     for (const candidate of candidates) {
       if (confirmedPart[i] !== [...candidate][i]) {
         return confirmedPart.slice(0, confirmedPart.length - 1).join('')

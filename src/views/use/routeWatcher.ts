@@ -12,7 +12,7 @@ import {
 
 type Views = 'none' | 'main' | 'not-found'
 
-const getHeadIfArray = (param: string[] | string) => {
+const getHeadIfArray = (param: string[] | string | undefined) => {
   if (Array.isArray(param)) return param[0]
   return param
 }
@@ -59,7 +59,8 @@ const useRouteWatcher = () => {
     }
     try {
       const id = channelPathToId(
-        state.channelParam.split('/'),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state.channelParam!.split('/'),
         store.state.domain.channelTree.channelTree
       )
       const { channelIdToShortPathString } = useChannelPath()
@@ -110,7 +111,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToClipFolders = async () => {
-    const id = state.idParam
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const id = state.idParam!
     const clipFolder = await store.dispatch.entities.fetchClipFolder({
       clipFolderId: id,
       cacheStrategy: 'useCache'
@@ -125,7 +127,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFile = async () => {
-    const fileId = state.idParam
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const fileId = state.idParam!
     const file = await store.dispatch.entities.messages.fetchFileMetaData({
       fileId
     })
@@ -184,7 +187,8 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToMessage = async () => {
     const message = await store.dispatch.entities.messages.fetchMessage({
-      messageId: state.idParam
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      messageId: state.idParam!
     })
     if (!message?.channelId) {
       // チャンネルがなかった
@@ -276,7 +280,8 @@ const useRouteWatcher = () => {
   )
 
   const triggerRouteParamChange = () => {
-    onRouteParamChange(state.channelParam, '')
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    onRouteParamChange(state.channelParam!, '')
   }
 
   return {
