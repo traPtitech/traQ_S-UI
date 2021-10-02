@@ -26,4 +26,17 @@ describe('Main', () => {
       '[data-testid="usermodal-bio"] [aria-busy=false]'
     )
   })
+
+  it('can send message', () => {
+    cy.visit('/channels/ci-e2e-test')
+
+    const id = performance.now()
+    const message = `e2e message send test ${id}`
+
+    cy.get('[data-testid="message-input-textarea"]').type(message)
+
+    cy.get('[data-testid="message-send-button"]').click()
+
+    cy.contains('[data-testid="channel-viewport"]', message)
+  })
 })

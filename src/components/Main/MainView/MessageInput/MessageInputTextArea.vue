@@ -6,6 +6,7 @@
     :readonly="isPosting"
     placeholder="メッセージを送信"
     rows="1"
+    data-testid="message-input-textarea"
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
     @keyup="onKeyUp"

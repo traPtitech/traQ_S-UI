@@ -5,6 +5,7 @@
       :class="$style.sendButton"
       title="送信する"
       :disabled="!canPostMessage"
+      data-testid="message-send-button"
       @click="onClickSendButton"
     >
       <transition name="post">
