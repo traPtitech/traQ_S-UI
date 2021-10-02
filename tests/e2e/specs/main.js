@@ -30,7 +30,7 @@ describe('Main', () => {
   it('can send message', () => {
     cy.visit('/channels/ci-e2e-test')
 
-    const id = performance.now()
+    const id = performance.timeOrigin + performance.now()
     const message = `e2e message send test ${id}`
 
     cy.get('[data-testid="message-input-textarea"]').type(message)
