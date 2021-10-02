@@ -44,7 +44,7 @@ const Main = () => import(/* webpackChunkname: "Main" */ '/@/views/Main.vue')
 const GroupManager = () =>
   import(/* webpackChunkname: "GroupManager" */ '/@/views/GroupManager.vue')
 const Settings = () =>
-  import(/* webpackChunkName: "NotFound" */ '/@/views/Settings.vue')
+  import(/* webpackChunkName: "Settings" */ '/@/views/Settings.vue')
 const ShareTarget = () =>
   import(/* webpackChunkname: "ShareTarget" */ '/@/views/ShareTarget.vue')
 const Auth = () => import(/* webpackChunkName: "Auth" */ '/@/views/Auth.vue')
