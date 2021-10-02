@@ -8,6 +8,8 @@ import vueSvgPlugin from 'vite-plugin-vue-svg'
 import https from 'https'
 import webManifest from './webmanifest'
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
+import browserslist from 'browserslist'
+import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 
 const keepAliveAgent = new https.Agent({ keepAlive: true })
 const srcPath = path.resolve(__dirname, 'src').replace(/\\/g, '/')
@@ -35,6 +37,11 @@ export default defineConfig(({ command, mode }) => ({
         agent: keepAliveAgent
       }
     }
+  },
+  build: {
+    target: resolveToEsbuildTarget(browserslist(), {
+      printUnknownTargets: false
+    })
   },
   css: {
     preprocessorOptions: {
