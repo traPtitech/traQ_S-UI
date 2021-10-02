@@ -6,7 +6,7 @@ const useTextModelSyncer = (
   onUpdate?: (val: string) => void
 ) => {
   const value = computed(() => props.modelValue)
-  const onInput = (e: Event) => {
+  const onInput = (e: InputEvent) => {
     const text = (e.target as HTMLInputElement | HTMLTextAreaElement).value
     onUpdate?.(text)
     emit('update:modelValue', text)
