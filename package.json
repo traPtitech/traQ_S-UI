@@ -100,8 +100,5 @@
   "engines": {
     "node": "^16.9.0",
     "npm": "^7.19.1"
-  },
-  "vetur": {
-    "tags": "./vetur/tags.json"
   }
 }
