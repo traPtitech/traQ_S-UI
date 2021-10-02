@@ -78,7 +78,7 @@ const useStyles = (
     }))
   })
 
-const useDraftConfirmor = () => {
+const useDraftConfirmer = () => {
   const { hasInputChannel } = useMessageInputStates()
   window.addEventListener('beforeunload', event => {
     if (hasInputChannel.value) {
@@ -170,7 +170,7 @@ export default defineComponent({
       () => isMobile.value && isNavCompletelyAppeared.value
     )
 
-    useDraftConfirmor()
+    useDraftConfirmer()
 
     const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
     useInitialFetch(() => {
