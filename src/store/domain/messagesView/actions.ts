@@ -14,7 +14,7 @@ import {
 } from '/@/lib/util/guard/embeddingOrUrl'
 import { createSingleflight } from '/@/lib/async'
 import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
-import { ExternalUrl } from '@traptitech/traq-markdown-it'
+import type { ExternalUrl } from '@traptitech/traq-markdown-it'
 
 interface BaseGetMessagesParams {
   limit?: number

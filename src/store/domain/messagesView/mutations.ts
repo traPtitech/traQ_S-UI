@@ -2,7 +2,7 @@ import { defineMutations } from 'direct-vuex'
 import { ChannelId, MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { S } from './state'
 import { Pin, ChannelViewer, Message } from '@traptitech/traq'
-import { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
+import type { EmbeddingOrUrl } from '@traptitech/traq-markdown-it'
 
 export const mutations = defineMutations<S>()({
   setCurrentChannelId(state, currentChannelId: ChannelId) {

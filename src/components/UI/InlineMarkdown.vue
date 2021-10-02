@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { renderInline } from '/@/lib/markdown/markdown'
-import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { computed, defineComponent, ref, watchEffect } from 'vue'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 

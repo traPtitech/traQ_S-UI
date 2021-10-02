@@ -29,7 +29,7 @@ import store from '/@/store'
 import { AttachmentType, mimeToFileType } from '/@/lib/util/file'
 import Icon from '/@/components/UI/Icon.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { isFile } from '/@/lib/util/guard/embeddingOrUrl'
 
 const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {

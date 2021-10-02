@@ -1,6 +1,6 @@
 import store from '/@/store'
 import TrieTree from '/@/lib/trieTree'
-import { animeEffectSet, sizeEffectSet } from '@traptitech/traq-markdown-it'
+import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
 import { ref, onBeforeUnmount, computed, Ref, readonly, watchEffect } from 'vue'
 import { EntityEventMap, entityMitt } from '/@/store/entities/mitt'
 import {
