@@ -5,7 +5,11 @@
     @scroll.passive="handleScroll"
     @click="onClick"
   >
-    <div v-if="state.stampsInitialFetchCompleted" :class="$style.viewport">
+    <div
+      v-if="state.stampsInitialFetchCompleted"
+      :class="$style.viewport"
+      data-testid="channel-viewport"
+    >
       <messages-scroller-separator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
