@@ -4,18 +4,14 @@ import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
-import { LocationQueryValue, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from '/@/store/entities/promises'
+import { getFirstParam, getFirstQuery } from '/@/lib/util/url'
 
 type Views = 'none' | 'main' | 'not-found'
-
-const getHeadIfArray = (param: string[] | string | undefined) => {
-  if (Array.isArray(param)) return param[0]
-  return param
-}
 
 const useRouteWatcher = () => {
   const route = useRoute()
@@ -28,9 +24,9 @@ const useRouteWatcher = () => {
     currentRouteParam: computed(
       (): string => state.idParam ?? state.channelParam ?? state.userParam ?? ''
     ),
-    idParam: computed(() => getHeadIfArray(route.params['id'])),
-    channelParam: computed(() => getHeadIfArray(route.params['channel'])),
-    userParam: computed(() => getHeadIfArray(route.params['user'])),
+    idParam: computed(() => getFirstParam(route.params['id'])),
+    channelParam: computed(() => getFirstParam(route.params['channel'])),
+    userParam: computed(() => getFirstParam(route.params['user'])),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -66,12 +62,9 @@ const useRouteWatcher = () => {
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
-      const entryMessageId = route.query['message'] as
-        | LocationQueryValue
-        | undefined
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: entryMessageId ?? undefined
+        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
     } catch (e) {
       state.view = 'not-found'
@@ -94,13 +87,10 @@ const useRouteWatcher = () => {
 
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
-      const entryMessageId = route.query['message'] as
-        | LocationQueryValue
-        | undefined
       store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: entryMessageId ?? undefined
+        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
       changeViewTitle('@' + user.name)
       state.view = 'main'

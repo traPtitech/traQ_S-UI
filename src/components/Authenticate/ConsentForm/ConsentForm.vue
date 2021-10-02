@@ -40,6 +40,7 @@ import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
 import AuthenticateButton from '../AuthenticateButton.vue'
 import { useRoute } from 'vue-router'
+import { getFirstQuery } from '/@/lib/util/url'
 
 export default defineComponent({
   name: 'ConsentForm',
@@ -49,13 +50,13 @@ export default defineComponent({
     ClientScopes,
     AuthenticateButton
   },
-  setup(_, context) {
+  setup() {
     const route = useRoute()
     const { scopes: rawScopes, client_id: rawClientId } = route.query
 
     const { state, approve, deny } = useConsent({
-      scopes: !Array.isArray(rawScopes) ? rawScopes?.split(' ') : undefined,
-      clientId: typeof rawClientId === 'string' ? rawClientId : undefined
+      scopes: getFirstQuery(rawScopes)?.split(' ') ?? undefined,
+      clientId: getFirstQuery(rawClientId) ?? undefined
     })
 
     return { state, approve, deny }
