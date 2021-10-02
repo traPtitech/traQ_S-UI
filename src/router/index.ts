@@ -40,16 +40,12 @@ export const isMessageScrollerRoute = (
   )
 }
 
-const Main = () => import(/* webpackChunkname: "Main" */ '/@/views/Main.vue')
-const GroupManager = () =>
-  import(/* webpackChunkname: "GroupManager" */ '/@/views/GroupManager.vue')
-const Settings = () =>
-  import(/* webpackChunkName: "NotFound" */ '/@/views/Settings.vue')
-const ShareTarget = () =>
-  import(/* webpackChunkname: "ShareTarget" */ '/@/views/ShareTarget.vue')
-const Auth = () => import(/* webpackChunkName: "Auth" */ '/@/views/Auth.vue')
-const NotFound = () =>
-  import(/* webpackChunkName: "NotFound" */ '/@/views/NotFound.vue')
+const Main = () => import('/@/views/Main.vue')
+const GroupManager = () => import('/@/views/GroupManager.vue')
+const Settings = () => import('/@/views/Settings.vue')
+const ShareTarget = () => import('/@/views/ShareTarget.vue')
+const Auth = () => import('/@/views/Auth.vue')
+const NotFound = () => import('/@/views/NotFound.vue')
 
 const routes: RouteRecordRaw[] = [
   {

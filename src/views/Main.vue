@@ -130,9 +130,7 @@ const useCommandPaletteShortcutKey = () => {
   })
 }
 
-const NotFound = defineAsyncComponent(
-  () => import(/* webpackChunkName: "NotFound" */ '/@/views/NotFound.vue')
-)
+const NotFound = defineAsyncComponent(() => import('/@/views/NotFound.vue'))
 
 export default defineComponent({
   name: 'Main',
