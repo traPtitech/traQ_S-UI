@@ -10,19 +10,6 @@ export const defineWsListeners = createDefineListeners<typeof messagesView>()(
       dispatch.setCurrentViewers(viewers)
     })
 
-    listener.on('CLIP_FOLDER_MESSAGE_ADDED', ({ folder_id, message_id }) => {
-      dispatch.onClipFolderMessageAdded({
-        folderId: folder_id,
-        messageId: message_id
-      })
-    })
-    listener.on('CLIP_FOLDER_MESSAGE_DELETED', ({ folder_id, message_id }) => {
-      dispatch.onClipFolderMessageDeleted({
-        folderId: folder_id,
-        messageId: message_id
-      })
-    })
-
     // 再接続時の再取得はmessagesFetcherで行う
   }
 )
@@ -30,9 +17,6 @@ export const defineWsListeners = createDefineListeners<typeof messagesView>()(
 export const defineMessageListeners = createDefineListeners<
   typeof messagesView
 >()(messageMitt, (listener, { dispatch }) => {
-  listener.on('addMessage', ({ message }) => {
-    dispatch.onChannelMessageCreated(message)
-  })
   listener.on('updateMessage', message => {
     dispatch.onChannelMessageUpdated(message)
   })

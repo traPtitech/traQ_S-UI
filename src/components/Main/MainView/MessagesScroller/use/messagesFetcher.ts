@@ -1,4 +1,4 @@
-import { computed, ref, Ref } from 'vue'
+import { ref, Ref, watchEffect } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
@@ -20,10 +20,10 @@ const useMessageFetcher = (
     | undefined,
   fetchNewMessages:
     | ((isReachedLatest: Ref<boolean>) => Promise<MessageId[]>)
-    | undefined
+    | undefined,
+  onReachedLatest?: () => void | Promise<void>
 ) => {
-  // メッセージIDはwsイベントで処理されるため、storeに置く
-  const messageIds = computed(() => store.state.domain.messagesView.messageIds)
+  const messageIds = ref<MessageId[]>([])
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
   const isLoading = ref(false)
@@ -73,11 +73,9 @@ const useMessageFetcher = (
   }
 
   const reset = () => {
-    store.commit.domain.messagesView.setMessageIds([])
+    messageIds.value = []
     isReachedEnd.value = false
     isReachedLatest.value = false
-    store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(false)
-    store.commit.domain.messagesView.setMessageIds([])
     isLoading.value = false
     isInitialLoad.value = false
     lastLoadingDirection.value = 'latest'
@@ -99,10 +97,9 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'former'
-
-        store.commit.domain.messagesView.setMessageIds([
+        messageIds.value = [
           ...new Set([...newMessageIds.reverse(), ...messageIds.value])
-        ])
+        ]
       }
     )
   }
@@ -123,10 +120,7 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'latter'
-
-        store.commit.domain.messagesView.setMessageIds([
-          ...new Set([...messageIds.value, ...newMessageIds])
-        ])
+        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
       }
     )
   }
@@ -162,8 +156,7 @@ const useMessageFetcher = (
         isLoading.value = false
         isInitialLoad.value = false
         lastLoadingDirection.value = 'around'
-
-        store.commit.domain.messagesView.setMessageIds(newMessageIds)
+        messageIds.value = newMessageIds
       }
     )
   }
@@ -187,26 +180,37 @@ const useMessageFetcher = (
       newMessageIds => {
         isLoading.value = false
         lastLoadingDirection.value = 'latter'
-
-        store.commit.domain.messagesView.setMessageIds([
-          ...new Set([...messageIds.value, ...newMessageIds])
-        ])
+        messageIds.value = [...new Set([...messageIds.value, ...newMessageIds])]
       }
     )
   }
 
+  const addNewMessage = async (messageId: MessageId) => {
+    await store.dispatch.domain.messagesView.renderMessageContent(messageId)
+
+    // すでに追加済みの場合は追加しない
+    // https://github.com/traPtitech/traQ_S-UI/issues/1748
+    if (messageIds.value.includes(messageId)) return
+    messageIds.value.push(messageId)
+  }
+
   const init = () => {
-    reset()
     if (props.entryMessageId) {
       onLoadAroundMessagesRequest(props.entryMessageId)
     } else {
       isReachedLatest.value = true
-      store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(
-        true
-      )
       onLoadFormerMessagesRequest()
     }
   }
+
+  watchEffect(async () => {
+    if (isReachedLatest.value) {
+      await onReachedLatest?.()
+    }
+    store.dispatch.domain.messagesView.setReceiveLatestMessages(
+      isReachedLatest.value
+    )
+  })
 
   return {
     messageIds,
@@ -221,7 +225,8 @@ const useMessageFetcher = (
     onLoadFormerMessagesRequest,
     onLoadLatterMessagesRequest,
     onLoadAroundMessagesRequest,
-    loadNewMessages
+    loadNewMessages,
+    addNewMessage
   }
 }
 

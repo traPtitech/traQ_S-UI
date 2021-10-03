@@ -13,7 +13,6 @@ import {
   isExternalUrl
 } from '/@/lib/util/guard/embeddingOrUrl'
 import { createSingleflight } from '/@/lib/async'
-import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
 import type { ExternalUrl } from '@traptitech/traq-markdown-it'
 
 interface BaseGetMessagesParams {
@@ -77,7 +76,6 @@ export const actions = defineActions({
     commit.unsetPinnedMessages()
     commit.unsetRenderedContent()
     commit.unsetCurrentViewers()
-    commit.unsetUnreadSince()
   },
   async changeCurrentChannel(
     context,
@@ -94,18 +92,6 @@ export const actions = defineActions({
     // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
     dispatch.resetViewState()
     commit.setCurrentChannelId(payload.channelId)
-
-    // 未読を取得していないと未読を表示できないため
-    await unreadChannelsMapInitialFetchPromise
-
-    const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
-      payload.channelId
-    )
-    if (unreadChannel) {
-      // 未読表示を**追加してから**未読を削除
-      // 未読の削除は最新メッセージ読み込み完了時
-      commit.setUnreadSince(unreadChannel.since)
-    }
 
     dispatch.fetchPinnedMessages()
   },
@@ -218,14 +204,6 @@ export const actions = defineActions({
       embeddings: rendered.embeddings
     })
   },
-  async addAndRenderMessage(context, payload: { message: Message }) {
-    const { state, commit, dispatch } = messagesViewActionContext(context)
-    // すでに追加済みの場合は追加しない
-    // https://github.com/traPtitech/traQ_S-UI/issues/1748
-    if (state.messageIds.includes(payload.message.id)) return
-    await dispatch.renderMessageContent(payload.message.id)
-    commit.addMessageId(payload.message.id)
-  },
   async updateAndRenderMessageId(context, payload: { message: Message }) {
     const { dispatch } = messagesViewActionContext(context)
     await dispatch.renderMessageContent(payload.message.id)
@@ -235,12 +213,6 @@ export const actions = defineActions({
     const { commit } = messagesViewActionContext(context)
     commit.setCurrentViewers(viewers)
   },
-  onChannelMessageCreated(context, message: Message) {
-    const { state, dispatch } = messagesViewActionContext(context)
-    if (state.currentChannelId !== message.channelId) return
-    if (!state.shouldRetriveMessageCreateEvent) return
-    dispatch.addAndRenderMessage({ message })
-  },
   onChannelMessageUpdated(context, message: Message) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId !== message.channelId) return
@@ -249,7 +221,6 @@ export const actions = defineActions({
   },
   onChannelMessageDeleted(context, messageId: MessageId) {
     const { commit } = messagesViewActionContext(context)
-    commit.deleteMessageId(messageId)
     commit.removePinnedMessage(messageId)
   },
   async onChangeMessagePinned(
@@ -273,33 +244,13 @@ export const actions = defineActions({
       pinnedAt: pin.pinnedAt
     })
   },
-  async onClipFolderMessageAdded(
-    context,
-    { folderId, messageId }: { folderId: ClipFolderId; messageId: MessageId }
-  ) {
-    const { state, dispatch, rootDispatch } = messagesViewActionContext(context)
-    if (state.currentClipFolderId !== folderId) return
-
-    const message = await rootDispatch.entities.messages.fetchMessage({
-      messageId
-    })
-    await dispatch.addAndRenderMessage({ message })
-  },
-  onClipFolderMessageDeleted(
-    context,
-    { folderId, messageId }: { folderId: ClipFolderId; messageId: MessageId }
-  ) {
-    const { state, commit } = messagesViewActionContext(context)
-    if (state.currentClipFolderId !== folderId) return
-    commit.deleteMessageId(messageId)
-  },
 
   syncViewState(context) {
     const { state } = messagesViewActionContext(context)
     if (state.currentChannelId) {
       changeViewState(
         state.currentChannelId,
-        state.shouldRetriveMessageCreateEvent
+        state.receiveLatestMessages
           ? ChannelViewState.Monitoring
           : ChannelViewState.None
       )
@@ -307,28 +258,9 @@ export const actions = defineActions({
       changeViewState(null)
     }
   },
-  async setShouldRetriveMessageCreateEvent(
-    context,
-    shouldRetriveMessageCreateEvent: boolean
-  ) {
-    const { rootState, rootDispatch, state, commit } =
-      messagesViewActionContext(context)
-    if (shouldRetriveMessageCreateEvent && state.currentChannelId) {
-      // 未読を取得していないと未読を表示できないため (また既読にできないため)
-      await unreadChannelsMapInitialFetchPromise
-
-      const isUnreadChannel = rootState.domain.me.unreadChannelsMap.has(
-        state.currentChannelId
-      )
-      if (isUnreadChannel) {
-        // チャンネルを既読にする
-        // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
-        apis.readChannel(state.currentChannelId)
-        // ただし他端末で閲覧中の場合は未読に追加されないので
-        // 既読イベントが送信されてこないのでローカルでも既読にする
-        rootDispatch.domain.me.deleteUnreadChannel(state.currentChannelId)
-      }
-    }
-    commit.setShouldRetriveMessageCreateEvent(shouldRetriveMessageCreateEvent)
+  async setReceiveLatestMessages(context, receiveLatestMessages: boolean) {
+    const { commit, dispatch } = messagesViewActionContext(context)
+    commit.setReceiveLatestMessages(receiveLatestMessages)
+    dispatch.syncViewState()
   }
 })

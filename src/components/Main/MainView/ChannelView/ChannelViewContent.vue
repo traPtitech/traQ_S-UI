@@ -10,6 +10,7 @@
       :is-archived="isArchived"
       :is-loading="isLoading"
       :last-loading-direction="lastLoadingDirection"
+      :unread-since="unreadSince"
       @request-load-former="onLoadFormerMessagesRequest"
       @request-load-latter="onLoadLatterMessagesRequest"
     />
@@ -45,6 +46,7 @@ export default defineComponent({
       isReachedLatest,
       isLoading,
       lastLoadingDirection,
+      unreadSince,
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
       onLoadAroundMessagesRequest
@@ -62,6 +64,7 @@ export default defineComponent({
       isReachedLatest,
       isLoading,
       lastLoadingDirection,
+      unreadSince,
       onLoadFormerMessagesRequest,
       onLoadLatterMessagesRequest,
       onLoadAroundMessagesRequest,

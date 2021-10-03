@@ -17,23 +17,8 @@ export const mutations = defineMutations<S>()({
   unsetCurrentClipFolderId(state) {
     state.currentClipFolderId = undefined
   },
-  setMessageIds(state, messageIds: MessageId[]) {
-    state.messageIds = messageIds
-  },
-  setShouldRetriveMessageCreateEvent(
-    state,
-    shouldRetriveMessageCreateEvent: boolean
-  ) {
-    state.shouldRetriveMessageCreateEvent = shouldRetriveMessageCreateEvent
-  },
-  addMessageId(state, messageId: MessageId) {
-    state.messageIds.push(messageId)
-  },
-  deleteMessageId(state, messageId: MessageId) {
-    state.messageIds = state.messageIds.filter(id => id !== messageId)
-  },
-  unsetMessageIds(state) {
-    state.messageIds = []
+  setReceiveLatestMessages(state, receiveLatestMessages: boolean) {
+    state.receiveLatestMessages = receiveLatestMessages
   },
   setPinnedMessages(state, messages: Pin[]) {
     state.pinnedMessages = messages
@@ -92,11 +77,5 @@ export const mutations = defineMutations<S>()({
   },
   unsetEditingMessageId(state) {
     state.editingMessageId = undefined
-  },
-  setUnreadSince(state, since: string) {
-    state.unreadSince = since
-  },
-  unsetUnreadSince(state) {
-    state.unreadSince = undefined
   }
 })

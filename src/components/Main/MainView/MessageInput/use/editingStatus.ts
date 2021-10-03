@@ -14,7 +14,7 @@ const useEditingStatus = (
       !isTextEmpty.value &&
       isFocused.value &&
       // 最新メッセージ閲覧中以外は入力中にしない(入力中にすると未読に追加されなくなるため)
-      store.state.domain.messagesView.shouldRetriveMessageCreateEvent
+      store.state.domain.messagesView.receiveLatestMessages
   )
 
   const change = (isEditing: boolean) => {
