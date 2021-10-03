@@ -1,5 +1,9 @@
 <template>
-  <div v-click-outside="closeCommandPalette" :class="$style.container">
+  <div
+    v-click-outside="closeCommandPalette"
+    :class="$style.container"
+    :data-is-mobile="$boolAttr(isMobile)"
+  >
     <command-palette-input />
     <hr v-if="supplementalViewType" :class="$style.separator" />
     <search-result v-if="supplementalViewType === 'search-result'" />
@@ -15,6 +19,7 @@ import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
+import useIsMobile from '/@/use/isMobile'
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
@@ -26,6 +31,7 @@ export default defineComponent({
     SearchSuggestion
   },
   setup() {
+    const { isMobile } = useIsMobile()
     const { closeCommandPalette, commandPaletteStore: store } =
       useCommandPaletteStore()
 
@@ -39,7 +45,7 @@ export default defineComponent({
       return undefined
     })
 
-    return { closeCommandPalette, store, supplementalViewType }
+    return { isMobile, closeCommandPalette, store, supplementalViewType }
   }
 })
 </script>
@@ -48,14 +54,20 @@ export default defineComponent({
 $command-palette-max-width: min(1000px, calc(100vw - 16px));
 .container {
   @include background-primary;
-  width: 100%;
-  margin: 32px auto 24px auto;
-  max-width: $command-palette-max-width;
-  max-height: calc(100vh - 56px);
-  border-radius: 8px;
-  border: 2px solid $theme-background-secondary;
   display: grid;
-  grid-template-rows: 48px 2px 1fr;
+  grid-template-rows: min-content 2px 1fr;
+  width: 100%;
+
+  &:not([data-is-mobile]) {
+    max-width: $command-palette-max-width;
+    max-height: calc(100vh - 56px);
+    margin: 32px auto 24px auto;
+    border-radius: 8px;
+    border: 2px solid $theme-background-secondary;
+  }
+  &[data-is-mobile] {
+    height: 100%;
+  }
 }
 .separator {
   @include background-secondary;
