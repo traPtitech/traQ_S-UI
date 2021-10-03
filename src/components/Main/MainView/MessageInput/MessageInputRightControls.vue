@@ -37,7 +37,7 @@ const useClickHandlers = (
 }
 
 export default defineComponent({
-  name: 'MessageInputControls',
+  name: 'MessageInputRightControls',
   components: {
     MessageInputInsertStampButton,
     Icon
@@ -76,9 +76,8 @@ export default defineComponent({
   @include color-ui-secondary;
   display: flex;
 }
-.button,
 .sendButton {
-  @include color-ui-secondary;
+  @include color-accent-primary;
   height: 24px;
   width: 24px;
   cursor: pointer;
@@ -100,9 +99,6 @@ export default defineComponent({
   &:hover {
     transform: scale(1.1);
   }
-}
-.sendButton {
-  @include color-accent-primary;
   &[disabled] {
     @include color-ui-secondary;
     opacity: 0.5;

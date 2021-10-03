@@ -3,9 +3,11 @@
     ref="textareaAutosizeRef"
     v-model="value"
     :class="$style.container"
+    :style="style"
     :readonly="isPosting"
-    placeholder="メッセージを送信"
+    placeholder="メッセージを入力"
     rows="1"
+    :data-shrink-to-one-line="shrinkToOneLine"
     data-testid="message-input-textarea"
     @before-input="onBeforeInput"
     @keydown="onKeyDown"
@@ -33,6 +35,7 @@ import { ChannelId } from '/@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
+import { getScrollbarWidth } from '/@/lib/dom'
 
 const useFocus = (
   emit: ((event: 'focus') => void) & ((event: 'blur') => void)
@@ -63,6 +66,10 @@ export default defineComponent({
       default: ''
     },
     isPosting: {
+      type: Boolean,
+      default: false
+    },
+    shrinkToOneLine: {
       type: Boolean,
       default: false
     }
@@ -136,6 +143,11 @@ export default defineComponent({
       onBlurDefault()
     }
 
+    const scollbarWidth = getScrollbarWidth()
+    const style = {
+      '--input-scrollbar-width': `${scollbarWidth}px`
+    }
+
     return {
       value,
       onBeforeInput,
@@ -150,7 +162,8 @@ export default defineComponent({
       suggesterPosition,
       suggestedCandidates,
       selectedCandidateIndex,
-      confirmedPart
+      confirmedPart,
+      style
     }
   }
 })
@@ -159,12 +172,27 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-text-primary;
+  @include background-primary;
   width: 100%;
+  padding: 8px 16px;
+  // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
+  padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   max-height: 160px;
+  border-radius: 8px;
   &[readonly] {
     @include color-ui-secondary;
     opacity: 0.5;
     cursor: wait;
+  }
+  &[data-shrink-to-one-line='true'] {
+    // <textarea>ではtext-overflow: ellipsisが利用できない
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    // autosizeで直接スタイルが当てられているため上書きするために!importantをつける
+    overflow: hidden !important;
+    overflow: clip !important;
+    height: unset !important;
   }
 }
 </style>
