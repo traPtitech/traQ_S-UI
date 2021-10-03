@@ -13,17 +13,14 @@ export interface S {
   /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
   currentClipFolderId?: ClipFolderId
 
-  /** 現在表示対象になっている全てのメッセージID */
-  messageIds: MessageId[]
-
   pinnedMessages: Pin[]
 
   /**
-   * WebSocketの`MESSAGE_CREATED`イベントに対応する必要があるか
+   * 最新のメッセージを受信する状態かどうか
    *
    * `isReachedLatest`と同期する必要がある
    */
-  shouldRetriveMessageCreateEvent: boolean
+  receiveLatestMessages: boolean
 
   renderedContentMap: Map<MessageId, string>
 
@@ -42,11 +39,10 @@ export interface S {
 export const state: S = {
   currentChannelId: undefined,
   currentClipFolderId: undefined,
-  messageIds: [],
   pinnedMessages: [],
   renderedContentMap: new Map(),
   embeddingsMap: new Map(),
-  shouldRetriveMessageCreateEvent: false,
+  receiveLatestMessages: false,
   currentViewers: [],
   editingMessageId: undefined,
   unreadSince: undefined

@@ -7,12 +7,12 @@ import {
   watch,
   onMounted,
   onBeforeUnmount,
-  onActivated,
-  computed
+  onActivated
 } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
+import { messageMitt } from '/@/store/entities/messages'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -27,9 +27,7 @@ const useChannelMessageFetcher = (
   props: {
     channelId: ChannelId
     entryMessageId?: MessageId
-  },
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onReachedLatest = () => {}
+  }
 ) => {
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const state: State = reactive({
@@ -79,10 +77,6 @@ const useChannelMessageFetcher = (
 
     if (!hasMore) {
       isReachedLatest.value = true
-      store.dispatch.domain.messagesView.setShouldRetriveMessageCreateEvent(
-        true
-      )
-      onReachedLatest()
     }
 
     const latestMessage = messages[messages.length - 1] as Message | undefined
@@ -150,12 +144,17 @@ const useChannelMessageFetcher = (
     return messages.map(message => message.id)
   }
 
+  const onReachedLatest = async () => {
+    await store.dispatch.domain.me.deleteUnreadChannelWithSend(props.channelId)
+  }
+
   const messagesFetcher = useMessageFetcher(
     props,
     fetchFormerMessages,
     fetchLatterMessages,
     fetchAroundMessages,
-    fetchNewMessages
+    fetchNewMessages,
+    onReachedLatest
   )
 
   const reset = () => {
@@ -193,25 +192,30 @@ const useChannelMessageFetcher = (
       init()
     }
   )
-  watch(
-    // syncViewStateがshouldRetriveMessageCreateEventを利用してるので
-    // isReachedLatestだとタイミングがずれて正しい値がセットされない
-    computed(
-      () => store.state.domain.messagesView.shouldRetriveMessageCreateEvent
-    ),
-    () => {
-      store.dispatch.domain.messagesView.syncViewState()
-    }
-  )
 
   const onReconnect = () => {
     messagesFetcher.loadNewMessages()
   }
+  const onAdded = ({ message }: { message: Message }) => {
+    if (props.channelId !== message.channelId) return
+    if (!messagesFetcher.isReachedLatest) return
+
+    messagesFetcher.addNewMessage(message.id)
+  }
+  const onDeleted = (messageId: MessageId) => {
+    const index = messagesFetcher.messageIds.value.indexOf(messageId)
+    if (index === -1) return
+    messagesFetcher.messageIds.value.splice(index, 1)
+  }
   onMounted(() => {
     wsListener.on('reconnect', onReconnect)
+    messageMitt.on('addMessage', onAdded)
+    messageMitt.on('deleteMessage', onDeleted)
   })
   onBeforeUnmount(() => {
     wsListener.off('reconnect', onReconnect)
+    messageMitt.off('addMessage', onAdded)
+    messageMitt.off('deleteMessage', onDeleted)
   })
   onActivated(() => {
     messagesFetcher.loadNewMessages()

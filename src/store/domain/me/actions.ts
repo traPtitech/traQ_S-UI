@@ -11,7 +11,10 @@ import {
 import { ActionContext } from 'vuex'
 import { detectMentionOfMe } from '/@/lib/markdown/detector'
 import { deleteToken } from '/@/lib/notification/notification'
-import { viewStatesInitialFetchPromise } from './promises'
+import {
+  unreadChannelsMapInitialFetchPromise,
+  viewStatesInitialFetchPromise
+} from './promises'
 
 export const meActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, me)
@@ -68,9 +71,30 @@ export const actions = defineActions({
       )
     )
   },
+  /**
+   * 既読になったイベントを受け取ったときに利用
+   */
   deleteUnreadChannel(context, channelId: ChannelId) {
     const { commit } = meActionContext(context)
     commit.deleteUnreadChannel(channelId)
+  },
+  /**
+   * 既読にするときに利用
+   */
+  async deleteUnreadChannelWithSend(context, channelId: ChannelId) {
+    const { state, dispatch } = meActionContext(context)
+    // 未読を取得していないと未読を表示できないため (また既読にできないため)
+    await unreadChannelsMapInitialFetchPromise
+
+    const isUnreadChannel = state.unreadChannelsMap.has(channelId)
+    if (isUnreadChannel) {
+      // チャンネルを既読にする
+      // (サーバーから削除すればwsから変更を受け取ることでローカルも変更される)
+      apis.readChannel(channelId)
+      // ただし他端末で閲覧中の場合は未読に追加されないので
+      // 既読イベントが送信されてこないのでローカルでも既読にする
+      dispatch.deleteUnreadChannel(channelId)
+    }
   },
   async onMessageCreated(
     context,

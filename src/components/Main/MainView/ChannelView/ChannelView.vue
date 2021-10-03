@@ -19,7 +19,6 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, Ref, toRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/store'
 import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce, throttle } from 'throttle-debounce'
@@ -84,16 +83,11 @@ export default defineComponent({
     entryMessageId: { type: String as PropType<ChannelId>, default: undefined }
   },
   setup(props) {
-    const channelMessageIds = computed(
-      () => store.state.domain.messagesView.messageIds
-    )
-
     const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(
       toRef(props, 'channelId')
     )
 
     return {
-      channelMessageIds,
       canDrop,
       onDrop,
       onDragStart,
