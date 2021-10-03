@@ -199,7 +199,7 @@ const useChannelMessageFetcher = (
   }
   const onAdded = ({ message }: { message: Message }) => {
     if (props.channelId !== message.channelId) return
-    if (!messagesFetcher.isReachedLatest) return
+    if (!messagesFetcher.isReachedLatest.value) return
 
     messagesFetcher.addNewMessage(message.id)
   }
