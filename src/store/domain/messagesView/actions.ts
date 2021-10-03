@@ -77,7 +77,6 @@ export const actions = defineActions({
     commit.unsetPinnedMessages()
     commit.unsetRenderedContent()
     commit.unsetCurrentViewers()
-    commit.unsetUnreadSince()
   },
   async changeCurrentChannel(
     context,
@@ -94,18 +93,6 @@ export const actions = defineActions({
     // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
     dispatch.resetViewState()
     commit.setCurrentChannelId(payload.channelId)
-
-    // 未読を取得していないと未読を表示できないため
-    await unreadChannelsMapInitialFetchPromise
-
-    const unreadChannel = rootState.domain.me.unreadChannelsMap.get(
-      payload.channelId
-    )
-    if (unreadChannel) {
-      // 未読表示を**追加してから**未読を削除
-      // 未読の削除は最新メッセージ読み込み完了時
-      commit.setUnreadSince(unreadChannel.since)
-    }
 
     dispatch.fetchPinnedMessages()
   },

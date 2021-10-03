@@ -1,26 +1,15 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
 import store from '/@/store'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
-import {
-  reactive,
-  Ref,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  onActivated
-} from 'vue'
+import { Ref, watch, onMounted, onBeforeUnmount, onActivated, ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
 import { messageMitt } from '/@/store/entities/messages'
+import { unreadChannelsMapInitialFetchPromise } from '/@/store/domain/me/promises'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
-
-type State = {
-  loadedMessageLatestDate: Date | undefined
-  loadedMessageOldestDate: Date | undefined
-}
 
 const useChannelMessageFetcher = (
   scrollerEle: Ref<{ $el: HTMLDivElement } | undefined>,
@@ -30,10 +19,9 @@ const useChannelMessageFetcher = (
   }
 ) => {
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
-  const state: State = reactive({
-    loadedMessageLatestDate: undefined,
-    loadedMessageOldestDate: undefined
-  })
+  const loadedMessageLatestDate = ref<Date>()
+  const loadedMessageOldestDate = ref<Date>()
+  const unreadSince = ref()
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitMounted
@@ -42,7 +30,7 @@ const useChannelMessageFetcher = (
         channelId: props.channelId,
         limit: fetchLimit.value,
         order: 'desc',
-        until: state.loadedMessageOldestDate
+        until: loadedMessageOldestDate.value
       })
 
     if (!hasMore) {
@@ -53,10 +41,10 @@ const useChannelMessageFetcher = (
     if (oldestMessage) {
       const oldestMessageDate = new Date(oldestMessage.createdAt)
       if (
-        !state.loadedMessageOldestDate ||
-        oldestMessageDate < state.loadedMessageOldestDate
+        !loadedMessageOldestDate.value ||
+        oldestMessageDate < loadedMessageOldestDate.value
       ) {
-        state.loadedMessageOldestDate = oldestMessageDate
+        loadedMessageOldestDate.value = oldestMessageDate
       }
     }
 
@@ -72,7 +60,7 @@ const useChannelMessageFetcher = (
         channelId: props.channelId,
         limit: fetchLimit.value,
         order: 'asc',
-        since: state.loadedMessageLatestDate
+        since: loadedMessageLatestDate.value
       })
 
     if (!hasMore) {
@@ -83,10 +71,10 @@ const useChannelMessageFetcher = (
     if (latestMessage) {
       const latestMessageDate = new Date(latestMessage.createdAt)
       if (
-        !state.loadedMessageLatestDate ||
-        latestMessageDate > state.loadedMessageLatestDate
+        !loadedMessageLatestDate.value ||
+        latestMessageDate > loadedMessageLatestDate.value
       ) {
-        state.loadedMessageLatestDate = latestMessageDate
+        loadedMessageLatestDate.value = latestMessageDate
       }
     }
 
@@ -99,8 +87,8 @@ const useChannelMessageFetcher = (
     isReachedEnd: Ref<boolean>
   ) => {
     const date = new Date(entryMessage.createdAt)
-    state.loadedMessageLatestDate = date
-    state.loadedMessageOldestDate = date
+    loadedMessageLatestDate.value = date
+    loadedMessageOldestDate.value = date
 
     await waitMounted
     const [formerMessageIds, latterMessageIds] = await Promise.all([
@@ -123,7 +111,7 @@ const useChannelMessageFetcher = (
         channelId: props.channelId,
         limit: fetchLimit.value,
         order: 'desc',
-        since: state.loadedMessageLatestDate
+        since: loadedMessageLatestDate.value
       })
 
     if (!hasMore) {
@@ -134,10 +122,10 @@ const useChannelMessageFetcher = (
     if (oldestMessage) {
       const oldestMessageDate = new Date(oldestMessage.createdAt)
       if (
-        !state.loadedMessageOldestDate ||
-        oldestMessageDate < state.loadedMessageOldestDate
+        !loadedMessageOldestDate.value ||
+        oldestMessageDate < loadedMessageOldestDate.value
       ) {
-        state.loadedMessageOldestDate = oldestMessageDate
+        loadedMessageOldestDate.value = oldestMessageDate
       }
     }
 
@@ -145,6 +133,19 @@ const useChannelMessageFetcher = (
   }
 
   const onReachedLatest = async () => {
+    // 未読を取得していないと未読を表示できないため
+    await unreadChannelsMapInitialFetchPromise
+
+    const unreadChannel = store.state.domain.me.unreadChannelsMap.get(
+      props.channelId
+    )
+    if (unreadChannel) {
+      // 未読表示を**追加してから**未読を削除
+      // 未読の削除は最新メッセージ読み込み完了時
+      unreadSince.value = unreadChannel.since
+    }
+
+    // 未読の削除
     await store.dispatch.domain.me.deleteUnreadChannelWithSend(props.channelId)
   }
 
@@ -159,11 +160,11 @@ const useChannelMessageFetcher = (
 
   const reset = () => {
     messagesFetcher.reset()
-    state.loadedMessageOldestDate = undefined
-    state.loadedMessageLatestDate = undefined
+    loadedMessageOldestDate.value = undefined
+    loadedMessageLatestDate.value = undefined
   }
 
-  const init = () => {
+  const init = async () => {
     messagesFetcher.init()
     store.dispatch.domain.messagesView.syncViewState()
   }
@@ -224,7 +225,10 @@ const useChannelMessageFetcher = (
     store.dispatch.domain.messagesView.syncViewState()
   })
 
-  return messagesFetcher
+  return {
+    ...messagesFetcher,
+    unreadSince
+  }
 }
 
 export default useChannelMessageFetcher

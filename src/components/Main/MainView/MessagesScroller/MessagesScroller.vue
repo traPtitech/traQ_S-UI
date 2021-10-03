@@ -182,6 +182,10 @@ export default defineComponent({
       type: String as PropType<LoadingDirection>,
       required: true
     },
+    unreadSince: {
+      type: String,
+      default: undefined
+    },
     withoutSeparator: {
       type: Boolean,
       default: false
@@ -219,12 +223,11 @@ export default defineComponent({
     }
 
     const unreadIndex = computed(() => {
-      const unreadSince = store.state.domain.messagesView.unreadSince
-      if (!unreadSince) return -1
+      if (!props.unreadSince) return -1
       return props.messageIds.findIndex(
         id =>
           store.state.entities.messages.messagesMap.get(id)?.createdAt ===
-          unreadSince
+          props.unreadSince
       )
     })
 
