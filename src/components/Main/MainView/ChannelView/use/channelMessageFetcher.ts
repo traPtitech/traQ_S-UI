@@ -162,6 +162,7 @@ const useChannelMessageFetcher = (
     messagesFetcher.reset()
     loadedMessageOldestDate.value = undefined
     loadedMessageLatestDate.value = undefined
+    unreadSince.value = undefined
   }
 
   const init = async () => {
