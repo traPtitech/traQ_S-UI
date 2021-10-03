@@ -13,7 +13,6 @@ import {
   isExternalUrl
 } from '/@/lib/util/guard/embeddingOrUrl'
 import { createSingleflight } from '/@/lib/async'
-import { unreadChannelsMapInitialFetchPromise } from '../me/promises'
 import type { ExternalUrl } from '@traptitech/traq-markdown-it'
 
 interface BaseGetMessagesParams {
