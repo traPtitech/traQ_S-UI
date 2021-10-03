@@ -25,7 +25,7 @@ const openChannel = async (event: NotificationClickEvent) => {
     type: 'window',
     includeUncontrolled: true
   })
-  if (clientsArr.length > 0) {
+  if (clientsArr[0]) {
     const client = await clientsArr[0].focus()
     const message: ServiceWorkerNavigateMessage = {
       type: 'navigate',

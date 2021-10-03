@@ -49,18 +49,22 @@ import useChannelManageModal from './use/channelManageModal'
 import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '/@/lib/apis'
-import { useRoute } from 'vue-router'
 import useToastStore from '/@/providers/toastStore'
 import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import useChannelPath from '/@/use/channelPath'
+import { constructChannelPath } from '/@/router'
 
-const useCopy = () => {
-  const route = useRoute()
+const useCopy = (props: { channelId: ChannelId }) => {
   const { addInfoToast, addErrorToast } = useToastStore()
+  const { channelIdToPathString } = useChannelPath()
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(
-        `[#${route.params['channel']}](${embeddingOrigin}${route.path})`
-      )
+      const channelPath = channelIdToPathString(props.channelId)
+      const channelUrl = `${embeddingOrigin}${constructChannelPath(
+        channelPath
+      )}`
+
+      await navigator.clipboard.writeText(`[#${channelPath}](${channelUrl})`)
       addInfoToast('チャンネルリンクをコピーしました')
     } catch {
       addErrorToast('チャンネルリンクをコピーできませんでした')
@@ -88,7 +92,7 @@ export default defineComponent({
     const { openNotificationModal } = useNotificationModal(props)
     const { isChildChannelCreatable, openChannelCreateModal } =
       useChannelCreateModal(props)
-    const { copyLink } = useCopy()
+    const { copyLink } = useCopy(props)
     const {
       hasActiveQallSession,
       isJoinedQallSession,

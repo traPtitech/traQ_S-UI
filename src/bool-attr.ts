@@ -1,4 +1,12 @@
-import { Plugin } from 'vue'
+// eslint-disable-next-line unused-imports/no-unused-imports
+import { Plugin, ComponentCustomProperties } from 'vue'
+
+declare module '@vue/runtime-core' {
+  // see https://github.com/vuejs/vue-next/pull/982
+  interface ComponentCustomProperties {
+    $boolAttr: typeof $boolAttr
+  }
+}
 
 export const $boolAttr = (attr: boolean) => (attr ? '' : null)
 
@@ -11,10 +19,8 @@ export const $boolAttr = (attr: boolean) => (attr ? '' : null)
 
   see https://v3.vuejs.org/guide/migration/attribute-coercion.html#coercing-false-to-false-instead-of-removing-the-attribute
 */
-const boolAttr: Plugin = {
-  install: app => {
-    app.config.globalProperties.$boolAttr = $boolAttr
-  }
+const boolAttr: Plugin = app => {
+  app.config.globalProperties['$boolAttr'] = $boolAttr
 }
 
 export default boolAttr

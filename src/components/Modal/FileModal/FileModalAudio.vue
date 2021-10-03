@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.container">
-    <file-modal-content-header
-      v-if="fileMeta"
-      :file-id="fileMeta.id"
-      :class="$style.header"
-    />
+    <file-modal-content-header v-if="fileMeta" :file-id="fileMeta.id" />
     <audio
       ref="audioEle"
       controls

@@ -58,7 +58,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
 
   const touchstartHandler = (e: Readonly<TouchEvent>) => {
     if (!isEnabled.value) return
-    if (e.touches.length !== 1) return
+    if (e.touches.length !== 1 || !e.touches[0]) return
     if (isHorizontalScrollable(e)) return
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
@@ -80,6 +80,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
   const checkSwipeStarted = (e: Readonly<TouchEvent>) => {
     if (
       e.touches.length !== 1 ||
+      !e.touches[0] ||
       state.lastTouchPosX < 0 ||
       state.lastTouchPosY < 0
     ) {
@@ -110,7 +111,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
       return
     }
     e.stopPropagation()
-    if (e.touches.length !== 1) return
+    if (e.touches.length !== 1 || !e.touches[0]) return
     const x = e.touches[0].clientX
     const dx = x - state.lastTouchPosX
     state.swipeSpeedX = dx

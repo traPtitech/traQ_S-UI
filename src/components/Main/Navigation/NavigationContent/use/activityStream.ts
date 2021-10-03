@@ -121,7 +121,8 @@ const useActivityStream = (props: { show: boolean }) => {
     if (sameMessageIndex < 0) return
 
     // ガーベッジコレクタ
-    const activity = timeline.value[sameMessageIndex]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const activity = timeline.value[sameMessageIndex]!
     timeline.value.splice(sameMessageIndex, 1)
     if (timelineChannelMap.value.get(activity.channelId)?.id === activity.id) {
       timelineChannelMap.value.delete(activity.channelId)

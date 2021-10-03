@@ -33,7 +33,7 @@
       <icon name="arrow-expand-vertical" mdi :size="20" />全て表示
     </div>
     <div :class="$style.channelAndDate">
-      {{ channelName }} - <time :class="$style.date">{{ date }}</time>
+      {{ channelName }} - <time>{{ date }}</time>
     </div>
   </div>
 </template>
@@ -66,7 +66,8 @@ const maxHeight = 200
 const useHeightObserver = (contentRef: Ref<HTMLElement | undefined>) => {
   const oversized = ref(false)
   const observer = new ResizeObserver(entries => {
-    const entry = entries[0]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const entry = entries[0]!
     const { height } = entry.target.getBoundingClientRect()
     oversized.value = height >= maxHeight
   })

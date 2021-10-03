@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
 
 declare module '/@/assets/*.svg' {
-  import { Component } from 'vue'
-  const content: Component
+  import { DefineComponent } from 'vue'
+  const content: DefineComponent
   export default content
 }
 

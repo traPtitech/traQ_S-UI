@@ -13,7 +13,6 @@
       <app-list-item
         v-for="app in apps"
         :key="app.label"
-        :class="$style.item"
         :icon-path="app.iconPath"
         :label="app.label"
         :app-link="app.appLink"

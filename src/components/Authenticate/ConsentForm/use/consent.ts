@@ -28,7 +28,7 @@ const sendWithForm = (value: string) => {
   $form.hidden = true
 
   // submitがname=submitにより衝突するのを回避
-  $form.submitAlias = $form.submit
+  $form['submitAlias'] = $form.submit
 
   const $input = document.createElement('input')
   $input.name = 'submit'
@@ -37,7 +37,7 @@ const sendWithForm = (value: string) => {
 
   document.body.appendChild($form)
   // $form.submit()の衝突回避
-  $form.submitAlias()
+  $form['submitAlias']()
   $form.remove()
 }
 

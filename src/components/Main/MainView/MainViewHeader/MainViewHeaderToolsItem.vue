@@ -6,7 +6,7 @@
     :title="tooltip"
     @click="onClick"
   >
-    <icon :class="$style.icon" :mdi="iconMdi" :name="iconName" />
+    <icon :mdi="iconMdi" :name="iconName" />
   </div>
 </template>
 

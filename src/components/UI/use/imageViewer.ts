@@ -164,7 +164,8 @@ const useTouch = (
 
       if (touches.length >= 2) {
         lastMoveTouch = null
-        lastPinchTouches = pinch(touches, lastPinchTouches)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        lastPinchTouches = pinch([touches[0]!, touches[1]!], lastPinchTouches)
       } else if (touches.length >= 1) {
         lastMoveTouch = move(touches, lastMoveTouch)
         lastPinchTouches = null
@@ -172,7 +173,8 @@ const useTouch = (
     }
 
     const move = (targetTouches: TouchList, lastMoveTouch: Touch | null) => {
-      const newMoveTouch = targetTouches[0]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newMoveTouch = targetTouches[0]!
       if (lastMoveTouch === null) return newMoveTouch
 
       moveHandler(clientXYToPoint(newMoveTouch), clientXYToPoint(lastMoveTouch))
@@ -180,10 +182,9 @@ const useTouch = (
       return newMoveTouch
     }
     const pinch = (
-      targetTouches: TouchList,
+      newPinchTouches: TwoTouch,
       lastPinchTouches: TwoTouch | null
     ) => {
-      let newPinchTouches = [targetTouches[0], targetTouches[1]] as const
       if (lastPinchTouches === null) return newPinchTouches
 
       let newDistance = touchesToDistance(newPinchTouches)

@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { getStringParam } from '/@/lib/util/params'
+import { getFirstQuery } from '/@/lib/util/url'
 import { redirectToPipelineIfNeeded } from '/@/router/pipeline'
 import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'
@@ -20,7 +20,7 @@ const useRedirectParam = () => {
   const route = useRoute()
 
   const state: RedirectState = reactive({
-    url: computed(() => getStringParam(route.query.redirect)),
+    url: computed(() => getFirstQuery(route.query['redirect']) || ''),
     isInternal: computed(() => state.url?.startsWith('/') ?? false)
   })
 

@@ -2,11 +2,7 @@
   <div :class="$style.container">
     <div v-if="isEditing">
       <textarea-autosize v-model="modelValue" :class="$style.editor" />
-      <length-count
-        :class="$style.count"
-        :val="modelValue"
-        :max-length="maxLength"
-      />
+      <length-count :val="modelValue" :max-length="maxLength" />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       <slot :content="content" />

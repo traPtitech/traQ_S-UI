@@ -9,13 +9,9 @@ import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from '/@/store/entities/promises'
+import { getFirstParam, getFirstQuery } from '/@/lib/util/url'
 
 type Views = 'none' | 'main' | 'not-found'
-
-const getHeadIfArray = (param: string[] | string) => {
-  if (Array.isArray(param)) return param[0]
-  return param
-}
 
 const useRouteWatcher = () => {
   const route = useRoute()
@@ -28,9 +24,9 @@ const useRouteWatcher = () => {
     currentRouteParam: computed(
       (): string => state.idParam ?? state.channelParam ?? state.userParam ?? ''
     ),
-    idParam: computed(() => getHeadIfArray(route.params['id'])),
-    channelParam: computed(() => getHeadIfArray(route.params['channel'])),
-    userParam: computed(() => getHeadIfArray(route.params['user'])),
+    idParam: computed(() => getFirstParam(route.params['id'])),
+    channelParam: computed(() => getFirstParam(route.params['channel'])),
+    userParam: computed(() => getFirstParam(route.params['user'])),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -59,7 +55,8 @@ const useRouteWatcher = () => {
     }
     try {
       const id = channelPathToId(
-        state.channelParam.split('/'),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state.channelParam!.split('/'),
         store.state.domain.channelTree.channelTree
       )
       const { channelIdToShortPathString } = useChannelPath()
@@ -67,7 +64,7 @@ const useRouteWatcher = () => {
 
       store.dispatch.ui.mainView.changePrimaryViewToChannel({
         channelId: id,
-        entryMessageId: route.query?.message as string
+        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
     } catch (e) {
       state.view = 'not-found'
@@ -93,7 +90,7 @@ const useRouteWatcher = () => {
       store.dispatch.ui.mainView.changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
-        entryMessageId: route.query?.message as string
+        entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
       changeViewTitle('@' + user.name)
       state.view = 'main'
@@ -104,7 +101,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToClipFolders = async () => {
-    const id = state.idParam
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const id = state.idParam!
     const clipFolder = await store.dispatch.entities.fetchClipFolder({
       clipFolderId: id,
       cacheStrategy: 'useCache'
@@ -119,7 +117,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToFile = async () => {
-    const fileId = state.idParam
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const fileId = state.idParam!
     const file = await store.dispatch.entities.messages.fetchFileMetaData({
       fileId
     })
@@ -178,7 +177,8 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToMessage = async () => {
     const message = await store.dispatch.entities.messages.fetchMessage({
-      messageId: state.idParam
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      messageId: state.idParam!
     })
     if (!message?.channelId) {
       // チャンネルがなかった
@@ -270,7 +270,8 @@ const useRouteWatcher = () => {
   )
 
   const triggerRouteParamChange = () => {
-    onRouteParamChange(state.channelParam, '')
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    onRouteParamChange(state.channelParam!, '')
   }
 
   return {

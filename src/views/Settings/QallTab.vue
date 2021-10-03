@@ -102,7 +102,7 @@ const useDevicesInfo = (state: {
     } catch (e) {
       fetchFailed.value = true
     }
-    if (devices.value.length === 0 || devices.value[0].label === '') {
+    if (devices.value.length === 0 || devices.value[0]?.label === '') {
       fetchFailed.value = true
     }
   }

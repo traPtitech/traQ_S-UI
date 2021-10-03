@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef, watch } from 'vue'
+import type { Component } from 'vue'
 import mdi from '/@/assets/mdi'
 
 const iconModules0 = import.meta.glob('/src/assets/icons/*.svg')
@@ -32,7 +33,14 @@ const iconModules1 = import.meta.glob('/src/assets/icons/*/*.svg')
 const iconModules = {
   ...iconModules0,
   ...iconModules1
-}
+} as Record<
+  string,
+  () => Promise<
+    Readonly<{
+      default: Component
+    }>
+  >
+>
 
 export default defineComponent({
   name: 'Icon',
@@ -60,7 +68,12 @@ export default defineComponent({
   },
   setup(props, { attrs }) {
     const getComponent = async (name: string) => {
-      const module = await iconModules[`/src/assets/icons/${name}.svg`]()
+      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
+      if (!moduleFunc) {
+        throw new Error(`存在しないアイコン名: ${name}`)
+      }
+
+      const module = await moduleFunc()
       return module.default
     }
 

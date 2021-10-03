@@ -4,18 +4,9 @@
       v-if="currentNavigation === 'profile'"
       :user="user"
       :detail="detail"
-      :class="$style.content"
     />
-    <groups-tab
-      v-if="currentNavigation === 'groups'"
-      :detail="detail"
-      :class="$style.content"
-    />
-    <tags-tab
-      v-if="currentNavigation === 'tags'"
-      :detail="detail"
-      :class="$style.content"
-    />
+    <groups-tab v-if="currentNavigation === 'groups'" :detail="detail" />
+    <tags-tab v-if="currentNavigation === 'tags'" :detail="detail" />
   </section>
 </template>
 

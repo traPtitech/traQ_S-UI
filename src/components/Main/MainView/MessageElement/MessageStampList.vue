@@ -16,7 +16,6 @@
       <transition-group name="stamp">
         <div v-for="stamp in stampList" :key="stamp.id" :class="$style.stamp">
           <stamp-element
-            :class="$style.element"
             :stamp="stamp"
             @add-stamp="addStamp"
             @remove-stamp="removeStamp"

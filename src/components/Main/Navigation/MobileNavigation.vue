@@ -20,7 +20,6 @@
     >
       <ephemeral-navigation-content
         transparent
-        :class="$style.ephemeralNavigation"
         :current-ephemeral-navigation="
           ephemeralNavigationSelectorState.currentNavigation
         "

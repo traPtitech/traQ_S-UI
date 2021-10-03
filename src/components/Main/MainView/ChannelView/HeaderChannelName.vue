@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <router-link
-      v-if="ancestorsPath.length > 0"
+      v-if="ancestorsPath[0]"
       :to="buildChannelLink(ancestorsPath[0].path)"
       :class="$style.ancestorHash"
       >#</router-link
@@ -47,7 +47,8 @@ const usePathInfo = (props: Props) => {
     channelIdToPath(props.channelId).reduce(
       (acc, cur, idx) => [
         ...acc,
-        { name: cur, path: idx === 0 ? [cur] : [...acc[idx - 1].path, cur] }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        { name: cur, path: idx === 0 ? [cur] : [...acc[idx - 1]!.path, cur] }
       ],
       [] as ChannelPathInfo[]
     )
@@ -70,8 +71,11 @@ export default defineComponent({
     const ancestorsPath = computed(() =>
       pathInfoList.value.slice(0, pathInfoList.value.length - 1)
     )
-    const pathInfo = computed(
-      () => pathInfoList.value[pathInfoList.value.length - 1]
+    const pathInfo = computed(() =>
+      pathInfoList.value.length > 0
+        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          pathInfoList.value[pathInfoList.value.length - 1]!
+        : { name: '' }
     )
     const buildChannelLink = (path: string[]) =>
       constructChannelPath(path.join('/'))

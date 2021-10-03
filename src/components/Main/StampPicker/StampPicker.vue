@@ -81,8 +81,9 @@ export default defineComponent({
       })
     }
     const onFilterEnter = () => {
-      if (stamps.value.length <= 0) return
-      onInputStamp(stamps.value[0].id)
+      const firstStamp = stamps.value[0]
+      if (!firstStamp) return
+      onInputStamp(firstStamp.id)
     }
 
     return {

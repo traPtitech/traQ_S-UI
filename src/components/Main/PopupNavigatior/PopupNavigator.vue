@@ -94,7 +94,8 @@ const useIsLongClicking = (
   const onMouseTouchEnd = (e: MouseEvent | TouchEvent) => {
     window.clearTimeout(timer)
 
-    const point = 'changedTouches' in e ? e.changedTouches[0] : e
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const point = 'changedTouches' in e ? e.changedTouches[0]! : e
     const target = document.elementFromPoint(point.clientX, point.clientY)
     if (!isTarget(target)) {
       return

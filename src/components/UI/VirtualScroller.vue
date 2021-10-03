@@ -29,6 +29,8 @@ import {
 } from 'vue'
 import { throttle } from 'throttle-debounce'
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 const binarySearch = (arr: number[], x: number) => {
   let low = 0
   let high = Array.isArray(arr) ? arr.length - 1 : Object.keys(arr).length - 1
@@ -37,14 +39,14 @@ const binarySearch = (arr: number[], x: number) => {
     mid = Math.floor((high + low) / 2)
     if (arr[mid] === x) {
       break
-    } else if (arr[mid] > x) {
+    } else if (arr[mid]! > x) {
       high = mid - 1
     } else {
       low = mid + 1
     }
   }
   mid = Math.floor((high + low) / 2)
-  if (x <= arr[mid]) return mid
+  if (x <= arr[mid]!) return mid
   else return mid + 1
 }
 
@@ -59,8 +61,8 @@ const findStartNode = (
   while (endRange !== startRange) {
     const middle = Math.floor((endRange - startRange) / 2 + startRange)
     if (
-      nodePositions[middle] <= scrollTop &&
-      nodePositions[middle + 1] > scrollTop
+      nodePositions[middle]! <= scrollTop &&
+      nodePositions[middle + 1]! > scrollTop
     ) {
       return middle
     }
@@ -68,7 +70,7 @@ const findStartNode = (
       // edge case - start and end range are consecutive
       return endRange
     } else {
-      if (nodePositions[middle] <= scrollTop) {
+      if (nodePositions[middle]! <= scrollTop) {
         startRange = middle
       } else {
         endRange = middle
@@ -127,7 +129,7 @@ export default defineComponent({
         const displacements = []
         for (let i = 0; i < currentHeights.length; i++) {
           displacements.push(totalDisplacement)
-          totalDisplacement += currentHeights[i]
+          totalDisplacement += currentHeights[i]!
         }
         displacements.push(totalDisplacement)
 
@@ -172,11 +174,11 @@ export default defineComponent({
       const displacements = []
       for (let i = 0; i < currentHeights.length; i++) {
         displacements.push(totalDisplacement)
-        totalDisplacement += currentHeights[i]
+        totalDisplacement += currentHeights[i]!
       }
       displacements.push(totalDisplacement)
       // console.log(pageStartIndex, rollingPageHeights[pageStartIndex], heights.slice(pageStartIndex * PAGE_SIZE, (pageStartIndex + 1) * PAGE_SIZE), displacements[index]);
-      const top = displacements[index % PAGE_SIZE]
+      const top = displacements[index % PAGE_SIZE]!
       const isVisible =
         top >= state.scrollTop &&
         top <= state.scrollTop + rootRef.value.offsetHeight
@@ -190,7 +192,7 @@ export default defineComponent({
     }
     const updatePageHeights = (pageIndices: number[]) => {
       for (let i = 0; i < pageIndices.length; i++) {
-        const pageStartIndex = pageIndices[i]
+        const pageStartIndex = pageIndices[i]!
         const startIndex = pageStartIndex * PAGE_SIZE
         const endIndex = (pageStartIndex + 1) * PAGE_SIZE
         const heightsSlice = state.itemHeights.slice(startIndex, endIndex)
@@ -275,7 +277,7 @@ export default defineComponent({
       state.startIndex = state.pageStartIndex * PAGE_SIZE + startNodeIndex
       state.endIndex =
         state.startIndex + Math.floor(data.rootHeight / state.smallestRowHeight)
-      state.spacerShiftY = data.rowPositions[startNodeIndex]
+      state.spacerShiftY = data.rowPositions[startNodeIndex]!
     }
 
     watch(

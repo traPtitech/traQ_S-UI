@@ -56,7 +56,7 @@ const isStorageManagerSupported = checkStorageManagerSupport()
 const getStorageUsage = async () => {
   if (!isStorageManagerSupported) return null
 
-  return navigator.storage.estimate() as Promise<StorageEstimate>
+  return navigator.storage.estimate()
 }
 
 const confirmClear = () => window.confirm('本当に削除しますか？')

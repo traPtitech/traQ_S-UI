@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { getStringParam } from '/@/lib/util/params'
+import { getFirstQuery } from '/@/lib/util/url'
 import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import { useRoute } from 'vue-router'
@@ -19,12 +19,14 @@ export default defineComponent({
     ShareTargetComponent,
     StampPickerContainer
   },
-  setup(props, context) {
+  setup() {
     const route = useRoute()
     const query = computed(() => route.query)
-    const title = computed(() => getStringParam(query.value.title))
-    const text = computed(() => getStringParam(query.value.text))
-    const url = computed(() => getStringParam(query.value.url))
+    const title = computed(
+      () => getFirstQuery(query.value['title']) ?? undefined
+    )
+    const text = computed(() => getFirstQuery(query.value['text']) ?? undefined)
+    const url = computed(() => getFirstQuery(query.value['url']) ?? undefined)
 
     useLoginCheck()
 

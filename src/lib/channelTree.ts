@@ -77,10 +77,12 @@ export const constructTree = (
   }
   if (children.length === 1 && !isSubscribed) {
     // 子が1つの非購読チャンネル
-    const ancestorNames = children[0].skippedAncestorNames ?? []
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const child = children[0]!
+    const ancestorNames = child.skippedAncestorNames ?? []
     ancestorNames.push(channel.name)
     return {
-      ...children[0],
+      ...child,
       skippedAncestorNames: ancestorNames
     }
   }
@@ -98,7 +100,7 @@ export const channelPathToId = (
   separatedPath: readonly string[],
   channelTree: Readonly<ChannelTree | ChannelTreeNode>
 ): string => {
-  if (separatedPath.length === 0) {
+  if (separatedPath[0] === undefined) {
     throw 'channelPathToId: Empty path'
   }
 

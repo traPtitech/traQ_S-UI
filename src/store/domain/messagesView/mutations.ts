@@ -34,7 +34,8 @@ export const mutations = defineMutations<S>()({
       element => element.message.id === message.id
     )
     if (index > -1) {
-      state.pinnedMessages[index].message = message
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.pinnedMessages[index]!.message = message
     }
   },
   removePinnedMessage(state, messageId: MessageId) {
