@@ -1,27 +1,34 @@
 <template>
-  <textarea-autosize
-    ref="textareaAutosizeRef"
-    v-model="value"
-    :class="$style.container"
-    :readonly="isPosting"
-    placeholder="メッセージを送信"
-    rows="1"
-    data-testid="message-input-textarea"
-    @before-input="onBeforeInput"
-    @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    @focus="onFocus"
-    @blur="onBlur"
-    @paste="onPaste"
-  />
-  <dropdown-suggester
-    :is-shown="isSuggesterShown"
-    :position="suggesterPosition"
-    :candidates="suggestedCandidates"
-    :selected-index="selectedCandidateIndex"
-    :confirmed-part="confirmedPart"
-    @select="onSelect"
-  />
+  <div :class="$style.container">
+    <textarea-autosize
+      ref="textareaAutosizeRef"
+      v-model="value"
+      :class="$style.textarea"
+      :style="style"
+      :readonly="isPosting"
+      placeholder="メッセージを入力"
+      rows="1"
+      :data-shrink-to-one-line="shrinkToOneLine"
+      :data-is-mobile="isMobile"
+      :data-is-firefox="firefoxFlag"
+      data-testid="message-input-textarea"
+      @before-input="onBeforeInput"
+      @keydown="onKeyDown"
+      @keyup="onKeyUp"
+      @focus="onFocus"
+      @blur="onBlur"
+      @paste="onPaste"
+    />
+    <div :class="$style.over" />
+    <dropdown-suggester
+      :is-shown="isSuggesterShown"
+      :position="suggesterPosition"
+      :candidates="suggestedCandidates"
+      :selected-index="selectedCandidateIndex"
+      :confirmed-part="confirmedPart"
+      @select="onSelect"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,6 +40,11 @@ import { ChannelId } from '/@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
+import { getScrollbarWidth } from '/@/lib/dom'
+import { isFirefox } from '/@/lib/util/browser'
+import useIsMobile from '/@/use/isMobile'
+
+const firefoxFlag = isFirefox()
 
 const useFocus = (
   emit: ((event: 'focus') => void) & ((event: 'blur') => void)
@@ -65,6 +77,10 @@ export default defineComponent({
     isPosting: {
       type: Boolean,
       default: false
+    },
+    shrinkToOneLine: {
+      type: Boolean,
+      default: false
     }
   },
   emits: {
@@ -78,6 +94,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
+    const { isMobile } = useIsMobile()
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
@@ -136,8 +153,14 @@ export default defineComponent({
       onBlurDefault()
     }
 
+    const scollbarWidth = getScrollbarWidth()
+    const style = {
+      '--input-scrollbar-width': `${scollbarWidth}px`
+    }
+
     return {
       value,
+      isMobile,
       onBeforeInput,
       onKeyDown,
       onKeyUp,
@@ -146,25 +169,77 @@ export default defineComponent({
       onBlur,
       onPaste,
       onSelect,
+      firefoxFlag,
       isSuggesterShown,
       suggesterPosition,
       suggestedCandidates,
       selectedCandidateIndex,
-      confirmedPart
+      confirmedPart,
+      style
     }
   }
 })
 </script>
 
 <style lang="scss" module>
+$vertical-padding: 8px;
 .container {
-  @include color-text-primary;
+  position: relative;
+  display: flex;
   width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.textarea {
+  @include color-text-primary;
+  @include background-primary;
+  width: 100%;
+  padding: $vertical-padding 16px;
+  // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
+  padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   max-height: 160px;
   &[readonly] {
     @include color-ui-secondary;
     opacity: 0.5;
     cursor: wait;
+  }
+  &[data-is-mobile='true'] {
+    max-height: 70px;
+  }
+
+  &[data-shrink-to-one-line='true'],
+  &:placeholder-shown {
+    // Chromeでは<textarea>でtext-overflow: ellipsisが利用できない
+    // line-clampだけだと2行目が表示されるので下の.overを上に重ねることで隠す
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    &[data-is-firefox='true'] {
+      // Firefoxではline-clampが効かないのでtext-overflow: ellipsisも使う
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // autosizeで直接スタイルが当てられているため上書きするために!importantをつける
+    // overflow: clipは、Chromeではカーソル移動によるスクロールを無効化できるが、
+    // Firefoxでデザインが崩れるようになってしまうので、今のところはつけない
+    overflow: hidden !important;
+    // overflow: clip !important;
+    height: unset !important;
+  }
+}
+.over {
+  @include background-primary;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+
+  .textarea[data-shrink-to-one-line='true'] + &,
+  .textarea:placeholder-shown + & {
+    height: $vertical-padding;
   }
 }
 </style>

@@ -10,6 +10,10 @@ export const isIOS = () => {
   return ua.includes('iphone') || ua.includes('ipod') || ua.includes('ipad')
 }
 
+export const isFirefox = () => {
+  return ua.includes('firefox')
+}
+
 type iOSAppWindow = Window & {
   iOSToken: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
