@@ -1,29 +1,32 @@
 <template>
-  <textarea-autosize
-    ref="textareaAutosizeRef"
-    v-model="value"
-    :class="$style.container"
-    :style="style"
-    :readonly="isPosting"
-    placeholder="メッセージを入力"
-    rows="1"
-    :data-shrink-to-one-line="shrinkToOneLine"
-    data-testid="message-input-textarea"
-    @before-input="onBeforeInput"
-    @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    @focus="onFocus"
-    @blur="onBlur"
-    @paste="onPaste"
-  />
-  <dropdown-suggester
-    :is-shown="isSuggesterShown"
-    :position="suggesterPosition"
-    :candidates="suggestedCandidates"
-    :selected-index="selectedCandidateIndex"
-    :confirmed-part="confirmedPart"
-    @select="onSelect"
-  />
+  <div :class="$style.container">
+    <textarea-autosize
+      ref="textareaAutosizeRef"
+      v-model="value"
+      :class="$style.textarea"
+      :style="style"
+      :readonly="isPosting"
+      placeholder="メッセージを入力"
+      rows="1"
+      :data-shrink-to-one-line="shrinkToOneLine"
+      data-testid="message-input-textarea"
+      @before-input="onBeforeInput"
+      @keydown="onKeyDown"
+      @keyup="onKeyUp"
+      @focus="onFocus"
+      @blur="onBlur"
+      @paste="onPaste"
+    />
+    <div :class="$style.over" />
+    <dropdown-suggester
+      :is-shown="isSuggesterShown"
+      :position="suggesterPosition"
+      :candidates="suggestedCandidates"
+      :selected-index="selectedCandidateIndex"
+      :confirmed-part="confirmedPart"
+      @select="onSelect"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -170,22 +173,31 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+$vertical-padding: 8px;
 .container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.textarea {
   @include color-text-primary;
   @include background-primary;
   width: 100%;
-  padding: 8px 16px;
+  padding: $vertical-padding 16px;
   // 左から、余白、スタンプパレットボタン、余白、送信ボタン、スクロールバー
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   max-height: 160px;
-  border-radius: 8px;
   &[readonly] {
     @include color-ui-secondary;
     opacity: 0.5;
     cursor: wait;
   }
-  &[data-shrink-to-one-line='true'] {
+  &[data-shrink-to-one-line='true'],
+  &:placeholder-shown {
     // <textarea>ではtext-overflow: ellipsisが利用できない
+    // line-clampだけだと2行目が表示されるので下の.overを上に重ねることで隠す
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
@@ -193,6 +205,20 @@ export default defineComponent({
     overflow: hidden !important;
     overflow: clip !important;
     height: unset !important;
+  }
+}
+.over {
+  @include background-primary;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+
+  .textarea[data-shrink-to-one-line='true'] + &,
+  .textarea:placeholder-shown + & {
+    height: $vertical-padding;
   }
 }
 </style>
