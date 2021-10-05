@@ -9,6 +9,7 @@
       placeholder="メッセージを入力"
       rows="1"
       :data-shrink-to-one-line="shrinkToOneLine"
+      :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
       @before-input="onBeforeInput"
@@ -41,6 +42,7 @@ import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
 import { getScrollbarWidth } from '/@/lib/dom'
 import { isFirefox } from '/@/lib/util/browser'
+import useIsMobile from '/@/use/isMobile'
 
 const firefoxFlag = isFirefox()
 
@@ -92,6 +94,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
+    const { isMobile } = useIsMobile()
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement
@@ -157,6 +160,7 @@ export default defineComponent({
 
     return {
       value,
+      isMobile,
       onBeforeInput,
       onKeyDown,
       onKeyUp,
@@ -199,6 +203,10 @@ $vertical-padding: 8px;
     opacity: 0.5;
     cursor: wait;
   }
+  &[data-is-mobile='true'] {
+    max-height: 70px;
+  }
+
   &[data-shrink-to-one-line='true'],
   &:placeholder-shown {
     // Chromeでは<textarea>でtext-overflow: ellipsisが利用できない

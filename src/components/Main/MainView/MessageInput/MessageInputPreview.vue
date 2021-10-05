@@ -1,10 +1,15 @@
 <template>
-  <div :class="['markdown-body', $style.preview]" v-html="previewRendered" />
+  <div
+    :class="['markdown-body', $style.preview]"
+    :data-is-mobile="isMobile"
+    v-html="previewRendered"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from 'vue'
 import { render } from '/@/lib/markdown/markdown'
+import useIsMobile from '/@/use/isMobile'
 
 export default defineComponent({
   name: 'MessageInputPreview',
@@ -15,12 +20,15 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { isMobile } = useIsMobile()
+
     const previewRendered = ref('')
     watchEffect(async () => {
       const res = await render(props.text)
       previewRendered.value = res.renderedText
     })
-    return { previewRendered }
+
+    return { isMobile, previewRendered }
   }
 })
 </script>
@@ -36,5 +44,9 @@ export default defineComponent({
   overflow-wrap: break-word; // for Safari
   overflow-wrap: anywhere;
   line-break: loose;
+
+  &[data-is-mobile='true'] {
+    max-height: 70px;
+  }
 }
 </style>
