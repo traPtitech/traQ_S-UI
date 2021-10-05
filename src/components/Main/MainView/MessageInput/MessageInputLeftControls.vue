@@ -61,6 +61,7 @@ export default defineComponent({
       },
       set(v) {
         emit('update:isPreviewShown', v)
+        emit('update:isExpanded', false)
       }
     })
 

@@ -55,7 +55,8 @@ import {
   computed,
   onBeforeUnmount,
   ref,
-  toRef
+  toRef,
+  watchEffect
 } from 'vue'
 import store from '/@/store'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
@@ -123,6 +124,11 @@ export default defineComponent({
 
     const { isFocused, onFocus, onBlur } = useFocus()
     useEditingStatus(channelId, isTextEmpty, isFocused)
+    watchEffect(() => {
+      if (isFocused.value) {
+        isLeftControlsExpanded.value = false
+      }
+    })
 
     const { onPaste } = usePaste(toRef(props, 'channelId'))
 
