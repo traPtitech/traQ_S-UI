@@ -29,7 +29,7 @@
         v-model="state.text"
         :channel-id="channelId"
         :is-posting="isPosting"
-        :shrink-to-one-line="isLeftControlsExpanded"
+        :shrink-to-one-line="isMobile && isLeftControlsExpanded"
         @focus="onFocus"
         @blur="onBlur"
         @paste="onPaste"
