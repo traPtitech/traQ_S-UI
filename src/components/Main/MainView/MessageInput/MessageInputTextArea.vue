@@ -9,6 +9,7 @@
       placeholder="メッセージを入力"
       rows="1"
       :data-shrink-to-one-line="shrinkToOneLine"
+      :data-is-firefox="firefoxFlag"
       data-testid="message-input-textarea"
       @before-input="onBeforeInput"
       @keydown="onKeyDown"
@@ -39,6 +40,9 @@ import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
 import { getScrollbarWidth } from '/@/lib/dom'
+import { isFirefox } from '/@/lib/util/browser'
+
+const firefoxFlag = isFirefox()
 
 const useFocus = (
   emit: ((event: 'focus') => void) & ((event: 'blur') => void)
@@ -161,6 +165,7 @@ export default defineComponent({
       onBlur,
       onPaste,
       onSelect,
+      firefoxFlag,
       isSuggesterShown,
       suggesterPosition,
       suggestedCandidates,
@@ -196,14 +201,22 @@ $vertical-padding: 8px;
   }
   &[data-shrink-to-one-line='true'],
   &:placeholder-shown {
-    // <textarea>ではtext-overflow: ellipsisが利用できない
+    // Chromeでは<textarea>でtext-overflow: ellipsisが利用できない
     // line-clampだけだと2行目が表示されるので下の.overを上に重ねることで隠す
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    &[data-is-firefox='true'] {
+      // Firefoxではline-clampが効かないのでtext-overflow: ellipsisも使う
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     // autosizeで直接スタイルが当てられているため上書きするために!importantをつける
+    // overflow: clipは、Chromeではカーソル移動によるスクロールを無効化できるが、
+    // Firefoxでデザインが崩れるようになってしまうので、今のところはつけない
     overflow: hidden !important;
-    overflow: clip !important;
+    // overflow: clip !important;
     height: unset !important;
   }
 }
