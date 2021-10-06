@@ -8,6 +8,7 @@
       :readonly="isPosting"
       placeholder="メッセージを入力"
       rows="1"
+      :data-simple-padding="simplePadding"
       :data-shrink-to-one-line="shrinkToOneLine"
       :data-is-mobile="isMobile"
       :data-is-firefox="firefoxFlag"
@@ -75,6 +76,10 @@ export default defineComponent({
       default: ''
     },
     isPosting: {
+      type: Boolean,
+      default: false
+    },
+    simplePadding: {
       type: Boolean,
       default: false
     },
@@ -205,6 +210,9 @@ $vertical-padding: 8px;
   }
   &[data-is-mobile='true'] {
     max-height: 70px;
+  }
+  &[data-simple-padding='true'] {
+    padding-right: 16px;
   }
 
   &[data-shrink-to-one-line='true'],

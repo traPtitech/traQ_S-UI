@@ -11,6 +11,7 @@
         v-model="text"
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
+        simple-padding
         @paste="onPaste"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
