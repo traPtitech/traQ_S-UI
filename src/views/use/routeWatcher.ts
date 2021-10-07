@@ -15,7 +15,8 @@ type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
-  const { channelPathToId, channelIdToPathString } = useChannelPath()
+  const { channelPathToId, channelIdToPathString, channelIdToLink } =
+    useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
 
@@ -198,7 +199,7 @@ const useRouteWatcher = () => {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: constructChannelPath(channelIdToPathString(message.channelId)),
+        path: channelIdToLink(message.channelId),
         query: { message: message.id }
       })
     } else if (store.state.entities.dmChannelsMap.has(channelId)) {
