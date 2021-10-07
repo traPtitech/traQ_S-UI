@@ -79,7 +79,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   position: relative;
-  width: 100%;
   height: 36px;
   cursor: pointer;
   &[aria-selected='true'] {
@@ -95,13 +94,20 @@ export default defineComponent({
   left: -4px;
 }
 .paletteStamp {
-  .container:not([aria-selected='true']) & {
-    filter: grayscale(1);
+  opacity: 0.5;
+  filter: grayscale(1);
+  .container[aria-selected='true'] & {
+    opacity: 1;
+    filter: initial;
+  }
+  .container:hover & {
+    opacity: 1;
   }
 }
 .icon {
   opacity: 0.5;
-  .container[aria-selected='true'] & {
+  .container[aria-selected='true'] &,
+  .container:hover & {
     opacity: 1;
   }
 }

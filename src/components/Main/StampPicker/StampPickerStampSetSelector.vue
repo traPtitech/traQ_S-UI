@@ -53,7 +53,6 @@ export default defineComponent({
 .container {
   @include background-secondary;
   position: relative;
-  width: 100%;
   height: 36px;
 }
 .innerContainer {
@@ -66,6 +65,7 @@ export default defineComponent({
   }
 }
 .item {
+  flex-shrink: 0;
   margin: 0 4px;
   &:first-child {
     margin-left: 12px;

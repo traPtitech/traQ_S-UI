@@ -80,7 +80,8 @@ export default defineComponent({
     background: currentColor;
     opacity: 0;
   }
-  &[aria-selected='true']::after {
+  &[aria-selected='true']::after,
+  &:hover::after {
     opacity: 0.1;
   }
 }

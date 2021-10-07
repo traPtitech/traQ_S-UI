@@ -6,6 +6,7 @@
     :aria-disabled="disabled"
     @click="toggle"
   >
+    <div :class="$style.bg"></div>
     <div :class="$style.knob"></div>
   </div>
 </template>
@@ -42,18 +43,13 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-tertiary;
   position: relative;
   width: 44px;
   height: 24px;
   border-radius: 22px;
-  transition: all 0.2s ease;
+  overflow: hidden;
   cursor: pointer;
-  &[aria-checked='true'] {
-    @include background-accent-primary;
-  }
   &[aria-disabled='true'] {
-    opacity: 0.5;
     cursor: not-allowed;
   }
 }
@@ -68,6 +64,24 @@ export default defineComponent({
   transition: all 0.2s ease;
   .container[aria-checked='true'] & {
     transform: translateX(16px);
+  }
+}
+.bg {
+  @include background-tertiary;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s ease;
+  .container[aria-checked='true'] & {
+    @include background-accent-primary;
+  }
+  .container[aria-disabled='true'] & {
+    opacity: 0.5;
+  }
+  .container:hover & {
+    filter: brightness(0.95);
   }
 }
 </style>

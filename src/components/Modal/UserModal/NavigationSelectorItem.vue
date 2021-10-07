@@ -42,5 +42,8 @@ export default defineComponent({
     @include color-accent-primary;
     border-color: $theme-accent-primary;
   }
+  &:not([aria-selected='true']):hover {
+    border-color: $theme-ui-secondary;
+  }
 }
 </style>
