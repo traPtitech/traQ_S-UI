@@ -150,6 +150,7 @@ export default defineComponent({
     const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
 
     const onClick = (e: MouseEvent) => {
+      if (e.button !== 0 && e.button !== 1) return
       if (e.button === 1) {
         e.preventDefault()
       }
