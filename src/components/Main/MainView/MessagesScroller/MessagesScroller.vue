@@ -70,7 +70,7 @@ import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '/@/lib/date'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute } from '/@/router'
+import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
 import { provideMessageContextMenuStore } from './providers/messageContextMenu'
@@ -111,8 +111,14 @@ const useMarkdownInternalHandler = () => {
     // 同じタブで開かない場合は無視
     if (!shouldOpenWithRouter(event)) return
 
-    const href = new URL($a.href)
-    const linkPath = href.pathname + href.search + href.hash
+    const linkPath = $a.pathname + $a.search + $a.hash
+
+    const resolved = router.resolve(linkPath)
+    // NotFoundだけが引っかかった場合、または何も引っかからなかった場合はフロントで処理するルートではない
+    const isNotHandledWithRouter =
+      resolved.matched.filter(m => m.name !== RouteName.NotFound).length === 0
+    if (isNotHandledWithRouter) return
+
     router.push(linkPath)
   }
 
