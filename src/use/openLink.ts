@@ -35,6 +35,10 @@ export const useOpenLink = () => {
    * 中クリックやCtrlクリックでは別タブで開くようにする
    * onClickでは左クリックでしか発火しないので、onMouseDownを利用すること
    *
+   * 中クリックやCtrlクリックでの別タブを開くのはバックグラウンドで開くのに対して、
+   * この関数ではフォアグラウンドで開く(タブが切り替わる)ので、
+   * できる限りは<router-link>などによってaタグのhref属性を利用するようにすること
+   *
    * @param link originを含まない絶対パス
    * @example
    * open(e, `/messages/${message.id}`)
