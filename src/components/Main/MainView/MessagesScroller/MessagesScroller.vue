@@ -98,6 +98,9 @@ const useMarkdownInternalHandler = () => {
 
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
+    // 左クリック以外の場合はrouter.pushで行わない
+    if (event.button === 0) return
+
     const $a = event.target.closest('a[href]') as HTMLAnchorElement | null
     if (!$a || !$a.href.includes(`://${hostname}`)) return
 
