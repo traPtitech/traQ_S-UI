@@ -15,11 +15,11 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" @click="onChannelClick" />
+      <d-m-channel-element-name :name="user.name" @mousedown="onChannelClick" />
       <channel-element-unread-badge
         is-noticeable
         :unread-count="notificationState.unreadCount"
-        @click="onChannelClick"
+        @mousedown="onChannelClick"
       />
     </div>
 
@@ -68,7 +68,7 @@ export default defineComponent({
     }
   },
   emits: {
-    channelSelect: (_channelId: ChannelId) => true
+    channelSelect: (_event: MouseEvent, _channelId: ChannelId) => true
   },
   setup(props, { emit }) {
     const user = computed(() =>
@@ -76,8 +76,8 @@ export default defineComponent({
     )
     const notificationState = useNotification(props)
 
-    const onChannelClick = () => {
-      emit('channelSelect', props.dmChannel.id)
+    const onChannelClick = (e: MouseEvent) => {
+      emit('channelSelect', e, props.dmChannel.id)
     }
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()

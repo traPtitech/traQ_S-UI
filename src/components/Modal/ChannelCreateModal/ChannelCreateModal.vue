@@ -33,7 +33,6 @@ import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { changeChannelByPath } from '/@/router/channel'
 import { rootChannelId } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelOptions from '/@/use/channelOptions'
@@ -44,6 +43,8 @@ import { isValidChannelName } from '/@/lib/validate'
 import apis from '/@/lib/apis'
 import { channelTreeMitt } from '/@/store/domain/channelTree'
 import useToastStore from '/@/providers/toastStore'
+import { constructChannelPath } from '/@/router'
+import { useRouter } from 'vue-router'
 
 interface State {
   channelName: string
@@ -51,6 +52,7 @@ interface State {
 }
 
 const useCreateChannel = (state: State) => {
+  const router = useRouter()
   const { addErrorToast } = useToastStore()
 
   const obtainChannelPath = (channelId: ChannelId) =>
@@ -85,7 +87,7 @@ const useCreateChannel = (state: State) => {
       const path = await pathObtainPromise
 
       await store.dispatch.ui.modal.popModal()
-      changeChannelByPath(path)
+      router.push(constructChannelPath(path))
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネル作成に失敗しました', e)

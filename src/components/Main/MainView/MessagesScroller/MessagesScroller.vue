@@ -74,6 +74,7 @@ import { isMessageScrollerRoute } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
 import { provideMessageContextMenuStore } from './providers/messageContextMenu'
+import { useOpenLink } from '/@/use/openLink'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -82,6 +83,7 @@ type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 const useMarkdownInternalHandler = () => {
   const { hostname } = new URL(embeddingOrigin)
   const router = useRouter()
+  const { shouldOpenWithRouter } = useOpenLink()
 
   const onClick = (event: MouseEvent) => {
     if (!event.target) return
@@ -98,8 +100,6 @@ const useMarkdownInternalHandler = () => {
 
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
-    // 左クリック以外の場合はrouter.pushで行わない
-    if (event.button === 0) return
 
     const $a = event.target.closest('a[href]') as HTMLAnchorElement | null
     if (!$a || !$a.href.includes(`://${hostname}`)) return
@@ -108,10 +108,11 @@ const useMarkdownInternalHandler = () => {
     const $body = $a.closest('.markdown-body')
     if (!$body) return
 
+    // 同じタブで開かない場合は無視
+    if (!shouldOpenWithRouter(event)) return
+
     const href = new URL($a.href)
     const linkPath = href.pathname + href.search + href.hash
-
-    event.preventDefault()
     router.push(linkPath)
   }
 

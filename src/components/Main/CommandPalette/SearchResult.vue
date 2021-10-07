@@ -53,9 +53,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { MessageId } from '/@/types/entity-ids'
-import { RouteName } from '/@/router'
 import {
   useCommandPaletteInvoker,
   useCommandPaletteStore
@@ -68,6 +66,7 @@ import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/use/searchMessage/queryParser'
 import Icon from '/@/components/UI/Icon.vue'
+import { useOpenLink } from '/@/use/openLink'
 
 const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },
@@ -76,17 +75,13 @@ const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
 ]
 
 const useMessageOpener = () => {
-  const router = useRouter()
+  const { openLink } = useOpenLink()
   const { closeCommandPalette } = useCommandPaletteInvoker()
-  const openMessage = async (messageId: MessageId, openWithNewTab: boolean) => {
-    if (openWithNewTab) {
-      const url = `${location.origin}/messages/${messageId}`
-      open(url, '_blank')
-      return
-    }
 
-    closeCommandPalette()
-    router.push({ name: RouteName.Message, params: { id: messageId } })
+  const openMessage = async (e: MouseEvent, messageId: MessageId) => {
+    openLink(e, `/messages/${messageId}`, () => {
+      closeCommandPalette()
+    })
   }
   return { openMessage }
 }

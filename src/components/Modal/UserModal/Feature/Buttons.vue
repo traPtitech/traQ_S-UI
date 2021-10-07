@@ -5,7 +5,7 @@
       :title="`${showTitle ? 'DM' : ''}`"
       icon-name="email"
       icon-mdi
-      @click="onDMClick"
+      @mousedown="onDMClick"
     />
     <link-button
       v-if="homeChannelId"
@@ -13,16 +13,17 @@
       :title="`${showTitle ? 'ホーム' : ''}`"
       icon-name="home"
       icon-mdi
-      @click="onHomeChannelClick"
+      @mousedown="onHomeChannelClick"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '/@/store'
-import { changeChannelById, changeDMChannelByUsername } from '/@/router/channel'
 import LinkButton from './LinkButton.vue'
+import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
+import { constructUserPath } from '/@/router'
+import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
   name: 'Buttons',
@@ -44,18 +45,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const onDMClick = async () => {
-      const nameCache = props.userName
-      await store.dispatch.ui.modal.clearModal()
-      changeDMChannelByUsername(nameCache)
+    const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+    const { channelIdToLink } = useChannelPath()
+
+    const onDMClick = async (event: MouseEvent) => {
+      openLinkAndClearModal(event, constructUserPath(props.userName))
     }
 
-    const onHomeChannelClick = async () => {
+    const onHomeChannelClick = async (event: MouseEvent) => {
       if (!props.homeChannelId) return
-      // モーダル削除時に消えちゃうため、実体を退避
-      const idCache = props.homeChannelId
-      await store.dispatch.ui.modal.clearModal()
-      changeChannelById(idCache)
+
+      openLinkAndClearModal(event, channelIdToLink(props.homeChannelId))
     }
 
     return {

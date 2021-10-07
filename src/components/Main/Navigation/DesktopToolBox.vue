@@ -7,7 +7,7 @@
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
       :disabled="tool.disabled"
-      @click="tool.onClick"
+      @mousedown="tool.onClick"
     />
     <user-icon
       :class="$style.item"

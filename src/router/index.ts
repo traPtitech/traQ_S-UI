@@ -22,12 +22,6 @@ export const constructChannelPath = (channel: string) => `/channels/${channel}`
 export const constructUserPath = (name: string) => `/users/${name}`
 export const constructClipFoldersPath = (id: string) => `/clip-folders/${id}`
 
-export const changeRouteByPath = (path: string) => {
-  // 同じ場所に移動しようとした際のエラーを消す
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  router.push(path).catch(() => {})
-}
-
 export const isMessageScrollerRoute = (
   routeName: string | symbol | null | undefined
 ) => {

@@ -1,6 +1,6 @@
 import store from '/@/store'
 import { UserId, UserGroupId } from '/@/types/entity-ids'
-import { changeChannelByPath } from './router/channel'
+import router, { constructChannelPath } from '/@/router'
 
 interface ExtendedWindow extends Window {
   /**
@@ -62,6 +62,6 @@ export const setupGlobalFuncs = () => {
   }
 
   window.changeChannel = (channelPath: string) => {
-    changeChannelByPath(channelPath)
+    router.push(constructChannelPath(channelPath))
   }
 }
