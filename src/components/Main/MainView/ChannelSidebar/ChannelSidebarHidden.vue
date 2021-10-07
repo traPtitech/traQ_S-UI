@@ -60,6 +60,10 @@ export default defineComponent({
   margin-top: 16px;
   cursor: pointer;
   pointer-events: all;
+  transition: transform 0.1s;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 .rest {
   @include color-ui-secondary;
