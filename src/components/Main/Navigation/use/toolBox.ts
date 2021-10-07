@@ -2,24 +2,25 @@ import store from '/@/store'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
-import { useRouter } from 'vue-router'
-import { RouteName } from '/@/router'
+import { useOpenLink } from '/@/use/openLink'
 
 interface Tool {
   iconName: string
   iconMdi?: true
   disabled?: boolean
-  onClick: () => void
+  onClick: (event: MouseEvent) => void
 }
 
 const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
-  const router = useRouter()
+  const { openLink } = useOpenLink()
 
   const { openCommandPalette } = useCommandPaletteInvoker()
   const openQrCodeModal = () =>
     store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
-  const openSettings = () => router.push({ name: RouteName.Settings })
+  const openSettings = (e: MouseEvent) => {
+    openLink(e, '/settings')
+  }
 
   const tools = computed(() => {
     const tools: Tool[] = []

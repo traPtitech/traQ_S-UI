@@ -30,6 +30,7 @@ import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import store from '/@/store'
 import { AxiosError } from 'axios'
+import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
   name: 'SidebarEventPinnedChanged',
@@ -88,7 +89,7 @@ export default defineComponent({
     )
 
     const messageLink = computed(() =>
-      message.value ? `/messages/${message.value.id}` : undefined
+      message.value ? constructMessagesPath(message.value.id) : undefined
     )
 
     return { title, message, user, messageLink }

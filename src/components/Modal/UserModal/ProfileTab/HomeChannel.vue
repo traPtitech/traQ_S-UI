@@ -9,7 +9,7 @@
       <span v-else-if="isEmpty" :class="$style.text" data-is-empty>
         [未設定]
       </span>
-      <span v-else :class="[$style.text, $style.channel]" @click="onClick">
+      <span v-else :class="[$style.text, $style.channel]" @mousedown="onClick">
         #{{ channelPath }}
       </span>
     </p>
@@ -18,11 +18,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
 import ProfileHeader from './ProfileHeader.vue'
 import Icon from '/@/components/UI/Icon.vue'
 import useChannelPath from '/@/use/channelPath'
-import { changeChannelByPath } from '/@/router/channel'
+import { constructChannelPath } from '/@/router'
+import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
 
 export default defineComponent({
   name: 'HomeChannel',
@@ -34,6 +34,7 @@ export default defineComponent({
     id: { type: String as PropType<string | null>, default: undefined }
   },
   setup(props) {
+    const { openLinkAndClearModal } = useOpenLinkAndClearModal()
     const isLoading = computed(() => props.id === undefined)
     const isEmpty = computed(() =>
       props.id === undefined ? false : props.id === null
@@ -44,12 +45,10 @@ export default defineComponent({
       props.id ? channelIdToPathString(props.id) : ''
     )
 
-    const onClick = async () => {
+    const onClick = async (event: MouseEvent) => {
       if (!props.id) return
-      // モーダル削除時に消えちゃうため、実体を退避
-      const pathCache = channelPath.value
-      await store.dispatch.ui.modal.clearModal()
-      changeChannelByPath(pathCache)
+
+      openLinkAndClearModal(event, constructChannelPath(channelPath.value))
     }
 
     return {

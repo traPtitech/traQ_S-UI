@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" @click="onClick">
+  <optional-router-link :class="$style.container" :to="dmChannelPath" block>
     <user-icon
       :class="$style.icon"
       :user-id="user.id"
@@ -7,7 +7,7 @@
       :has-notification="hasNotification"
     />
     <users-element-user-name :user="user" />
-  </div>
+  </optional-router-link>
 </template>
 
 <script lang="ts">
@@ -16,11 +16,13 @@ import { User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
 import store from '/@/store'
-import { changeDMChannelByUsername } from '/@/router/channel'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { constructUserPath } from '/@/router'
 
 export default defineComponent({
   name: 'UsersElement',
   components: {
+    OptionalRouterLink,
     UsersElementUserName,
     UserIcon
   },
@@ -31,6 +33,12 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const dmChannelPath = computed(() => {
+      if (props.user.bot && props.user.name.startsWith('Webhook#')) {
+        return
+      }
+      return constructUserPath(props.user.name)
+    })
     const dmChannelId = computed(() =>
       store.getters.entities.DMChannelIdByUserId(props.user.id)
     )
@@ -38,14 +46,7 @@ export default defineComponent({
       store.state.domain.me.unreadChannelsMap.has(dmChannelId.value ?? '')
     )
 
-    const onClick = () => {
-      if (props.user.bot && props.user.name.startsWith('Webhook#')) {
-        return
-      }
-      changeDMChannelByUsername(props.user.name)
-    }
-
-    return { hasNotification, onClick }
+    return { dmChannelPath, hasNotification }
   }
 })
 </script>

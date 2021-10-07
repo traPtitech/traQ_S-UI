@@ -16,6 +16,7 @@ import {
 import { FileId } from '/@/types/entity-ids'
 import DEV_SERVER from '/@/lib/env/devServer'
 import { AxiosError } from 'axios'
+import { constructFilesPath } from '/@/router'
 
 export const BASE_PATH = '/api/v3'
 export const WEBSOCKET_ENDPOINT = '/api/v3/ws'
@@ -43,8 +44,16 @@ export const embeddingOrigin =
   (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
     ? DEV_SERVER
     : `${location.protocol}//${location.host}`
+
 export const buildFilePathForPost = (fileId: FileId) =>
-  `${embeddingOrigin}/files/${fileId}`
+  `${embeddingOrigin}${constructFilesPath(fileId)}`
+
+/**
+ * アイコンが変わったあとにすぐに変わらないので
+ * 使える場合は`buildUserIconPath`を優先して使う
+ */
+export const buildUserIconPathPublic = (username: string) =>
+  `${embeddingOrigin}${BASE_PATH}/public/icon/${username}`
 
 export const OAuthDecidePath = `${BASE_PATH}/oauth2/authorize/decide`
 

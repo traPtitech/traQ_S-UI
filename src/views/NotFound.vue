@@ -18,11 +18,11 @@ export default defineComponent({
   props: {
     routeName: {
       type: [String, Symbol],
-      required: true
+      default: undefined
     },
     routeParam: {
       type: String,
-      required: true
+      default: undefined
     }
   },
   setup() {

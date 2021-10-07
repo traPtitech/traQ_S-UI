@@ -1,4 +1,4 @@
-import { embeddingOrigin } from '/@/lib/apis'
+import { buildUserIconPathPublic } from '/@/lib/apis'
 import { checkCredentialManagerSupport } from '/@/lib/util/browser'
 
 const isCredentialManagerSupported = checkCredentialManagerSupport()
@@ -32,7 +32,7 @@ const useCredentialManager = () => {
         id: name,
         password: pass,
         name: `By password - ${name}`,
-        iconURL: `${embeddingOrigin}/api/v3/public/icon/${name}`
+        iconURL: buildUserIconPathPublic(name)
       })
       await navigator.credentials.store(passCred)
     } catch {

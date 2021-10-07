@@ -109,6 +109,7 @@ export default defineComponent({
   @include color-ui-primary;
   @include size-body1;
   width: 100%;
+  pointer-events: none;
 }
 .lineClamp {
   display: -webkit-box;
@@ -125,9 +126,6 @@ export default defineComponent({
   text-size-adjust: 100%;
   line-height: 1.2;
   word-break: break-all;
-  a {
-    pointer-events: none;
-  }
 }
 .icon + .icon,
 .icon + .content {

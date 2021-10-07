@@ -8,8 +8,7 @@ const useFileMeta = (props: { fileId: string }) => {
   const fileMeta = computed(() =>
     store.state.entities.messages.fileMetaDataMap.get(props.fileId)
   )
-  const { fileLink, onFileDownloadLinkClick, onFileLinkClick } =
-    useFileLink(props)
+  const { fileLink, onFileDownloadLinkClick } = useFileLink(props)
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''
   )
@@ -29,7 +28,6 @@ const useFileMeta = (props: { fileId: string }) => {
     fileType,
     isAnimatedImage,
     fileSize,
-    onFileLinkClick,
     onFileDownloadLinkClick
   }
 }

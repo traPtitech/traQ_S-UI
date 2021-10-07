@@ -19,9 +19,10 @@
 import { defineComponent, PropType, defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
-import useChannelSelect from '/@/use/channelSelect'
 import { Channel } from '@traptitech/traq'
 import SlideDown from '/@/components/UI/SlideDown.vue'
+import { useOpenLink } from '/@/use/openLink'
+import useChannelPath from '/@/use/channelPath'
 
 const useChannelFolding = () => {
   const foldedChannels = ref(new Set<ChannelId>())
@@ -73,8 +74,14 @@ export default defineComponent({
     }
   },
   setup() {
-    const { onChannelSelect } = useChannelSelect()
+    const { openLink } = useOpenLink()
+    const { channelIdToLink } = useChannelPath()
     const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
+
+    const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
+      openLink(event, channelIdToLink(channelId))
+    }
+
     return {
       foldedChannels,
       onChannelSelect,

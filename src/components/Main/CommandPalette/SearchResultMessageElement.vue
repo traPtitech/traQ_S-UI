@@ -121,7 +121,7 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOpen: (_messageId: MessageId, _openWithNewTab: boolean) => true
+    clickOpen: (_event: MouseEvent, _messageId: MessageId) => true
   },
   setup(props, { emit }) {
     // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
@@ -150,10 +150,7 @@ export default defineComponent({
     const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
 
     const onClick = (e: MouseEvent) => {
-      if (e.button === 1) {
-        e.preventDefault()
-      }
-      emit('clickOpen', props.message.id, e.button === 1)
+      emit('clickOpen', e, props.message.id)
     }
 
     const contentRef = ref<HTMLElement>()

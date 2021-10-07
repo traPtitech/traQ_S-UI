@@ -70,10 +70,11 @@ import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '/@/lib/date'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
-import { isMessageScrollerRoute } from '/@/router'
+import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
 import { provideMessageContextMenuStore } from './providers/messageContextMenu'
+import { useOpenLink } from '/@/use/openLink'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -82,6 +83,7 @@ type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 const useMarkdownInternalHandler = () => {
   const { hostname } = new URL(embeddingOrigin)
   const router = useRouter()
+  const { shouldOpenWithRouter } = useOpenLink()
 
   const onClick = (event: MouseEvent) => {
     if (!event.target) return
@@ -98,6 +100,7 @@ const useMarkdownInternalHandler = () => {
 
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
+
     const $a = event.target.closest('a[href]') as HTMLAnchorElement | null
     if (!$a || !$a.href.includes(`://${hostname}`)) return
 
@@ -105,10 +108,17 @@ const useMarkdownInternalHandler = () => {
     const $body = $a.closest('.markdown-body')
     if (!$body) return
 
-    const href = new URL($a.href)
-    const linkPath = href.pathname + href.search + href.hash
+    // 同じタブで開かない場合は無視
+    if (!shouldOpenWithRouter(event)) return
 
-    event.preventDefault()
+    const linkPath = $a.pathname + $a.search + $a.hash
+
+    const resolved = router.resolve(linkPath)
+    // NotFoundだけが引っかかった場合、または何も引っかからなかった場合はフロントで処理するルートではない
+    const isNotHandledWithRouter =
+      resolved.matched.filter(m => m.name !== RouteName.NotFound).length === 0
+    if (isNotHandledWithRouter) return
+
     router.push(linkPath)
   }
 

@@ -28,7 +28,6 @@
 import { defineComponent, computed } from 'vue'
 import Icon from '/@/components/UI/Icon.vue'
 import useChannelPath from '/@/use/channelPath'
-import { constructChannelPath } from '/@/router'
 
 export default defineComponent({
   name: 'QallControlPanel',
@@ -55,14 +54,11 @@ export default defineComponent({
     endQallClick: () => true
   },
   setup(props, { emit }) {
-    const { channelIdToShortPathString, channelIdToPathString } =
-      useChannelPath()
+    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
     const channelName = computed(() =>
       channelIdToShortPathString(props.channelId)
     )
-    const channelLink = computed(() =>
-      constructChannelPath(channelIdToPathString(props.channelId))
-    )
+    const channelLink = computed(() => channelIdToLink(props.channelId))
 
     const micIconName = computed(() =>
       props.isMicMuted ? 'microphone-off' : 'microphone'

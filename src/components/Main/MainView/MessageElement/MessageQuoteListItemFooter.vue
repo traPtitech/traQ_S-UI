@@ -6,7 +6,7 @@
       </router-link>
       - {{ date }}
     </span>
-    <router-link :class="$style.link" :to="`/messages/${message.id}`">
+    <router-link :class="$style.link" :to="messageLink">
       メッセージへ
     </router-link>
   </div>
@@ -17,6 +17,7 @@ import { defineComponent, PropType, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelPath from '/@/use/channelPath'
 import { getCreatedDate } from '/@/lib/date'
+import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
   name: 'MessageQuoteListItemFooter',
@@ -38,8 +39,11 @@ export default defineComponent({
     const date = computed(() =>
       props.message ? getCreatedDate(props.message.createdAt) : ''
     )
+    const messageLink = computed(() =>
+      props.message ? constructMessagesPath(props.message.id) : ''
+    )
 
-    return { channelPath, channelLink, date }
+    return { channelPath, channelLink, date, messageLink }
   }
 })
 </script>

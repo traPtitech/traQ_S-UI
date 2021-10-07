@@ -89,12 +89,13 @@
       </template>
       <template v-if="signUpAllowed">
         <authenticate-separator :class="$style.separator" />
-        <authenticate-button
-          type="secondary"
-          :class="$style.registrationButton"
-          label="新規登録"
-          @click="moveToRegistration"
-        />
+        <router-link to="/registration">
+          <authenticate-button
+            type="secondary"
+            :class="$style.registrationButton"
+            label="新規登録"
+          />
+        </router-link>
       </template>
     </template>
   </form>
@@ -108,7 +109,6 @@ import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import LoginFormSaved from './LoginFormSaved.vue'
-import router, { RouteName } from '/@/router'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -139,9 +139,6 @@ export default defineComponent({
       dontUseSaved
     } = useLogin()
     const resetLink = window.traQConfig.auth?.resetLink
-    const moveToRegistration = () => {
-      router.push(RouteName.Registration)
-    }
 
     return {
       resetLink,
@@ -150,8 +147,7 @@ export default defineComponent({
       login,
       loginWithSaved,
       loginExternal,
-      dontUseSaved,
-      moveToRegistration
+      dontUseSaved
     }
   }
 })

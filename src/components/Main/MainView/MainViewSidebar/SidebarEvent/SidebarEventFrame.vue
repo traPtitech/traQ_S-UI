@@ -1,8 +1,9 @@
 <template>
-  <div
+  <optional-router-link
     :class="$style.container"
     :data-is-link-available="$boolAttr(!!link)"
-    @click="toLink"
+    :to="link"
+    block
   >
     <div :class="$style.titleWrapper">
       <icon :name="iconName" :mdi="iconMdi" />
@@ -16,7 +17,7 @@
     <div :class="$style.content">
       <slot />
     </div>
-  </div>
+  </optional-router-link>
 </template>
 
 <script lang="ts">
@@ -25,11 +26,12 @@ import Icon from '/@/components/UI/Icon.vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/date'
-import { useRouter } from 'vue-router'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 
 export default defineComponent({
   name: 'SidebarEventFrame',
   components: {
+    OptionalRouterLink,
     Icon,
     UserIcon
   },
@@ -63,15 +65,7 @@ export default defineComponent({
     const timeString = computed(() =>
       getFullDayWithTimeString(new Date(props.datetime))
     )
-
-    const router = useRouter()
-    const toLink = () => {
-      if (props.link) {
-        router.push(props.link)
-      }
-    }
-
-    return { timeString, toLink }
+    return { timeString }
   }
 })
 </script>

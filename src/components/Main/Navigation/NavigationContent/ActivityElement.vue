@@ -1,17 +1,18 @@
 <template>
-  <message-panel
-    :message="message"
-    :title-type="titleType"
-    line-clamp-content
-    @click="onChannelSelect(message.channelId)"
-  />
+  <router-link :to="channelLink">
+    <message-panel
+      :message="message"
+      :title-type="titleType"
+      line-clamp-content
+    />
+  </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ActivityTimelineMessage } from '@traptitech/traq'
-import useChannelSelect from '/@/use/channelSelect'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
+import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -29,13 +30,14 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { onChannelSelect } = useChannelSelect()
+    const { channelIdToLink } = useChannelPath()
 
     const titleType = computed(() =>
       props.type === 'channel' ? 'channel' : 'user'
     )
+    const channelLink = computed(() => channelIdToLink(props.message.channelId))
 
-    return { onChannelSelect, titleType }
+    return { titleType, channelLink }
   }
 })
 </script>

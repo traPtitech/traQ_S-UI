@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.container" :data-is-white="$boolAttr(isWhite)">
-    <div :class="$style.channelPath" @click="onClick">{{ channelPath }}</div>
+    <div :class="$style.channelPath" @mousedown="onClick">
+      {{ channelPath }}
+    </div>
     <file-modal-content-footer-username
       :class="$style.userName"
       :user-id="user?.id"
@@ -16,7 +18,7 @@ import useFileMeta from '/@/use/fileMeta'
 import useChannelPath from '/@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { getCreatedDate } from '/@/lib/date'
-import { useRouter } from 'vue-router'
+import { useOpenLinkAndClearModal } from '../use/openLinkFromModal'
 
 export default defineComponent({
   name: 'FileModalContentFooter',
@@ -33,9 +35,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
-    const router = useRouter()
+  setup(props) {
     const { fileMeta } = useFileMeta(props)
+    const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+
     const user = computed(() =>
       store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
     )
@@ -63,11 +66,10 @@ export default defineComponent({
       }
     })
 
-    const onClick = async () => {
+    const onClick = async (event: MouseEvent) => {
       if (channelLink.value === '') return
-      const pathCache = channelLink.value
-      await store.dispatch.ui.modal.clearModal()
-      router.push(pathCache)
+
+      openLinkAndClearModal(event, channelLink.value)
     }
 
     return { channelPath, createdAt, user, onClick }

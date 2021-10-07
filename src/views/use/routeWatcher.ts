@@ -4,18 +4,20 @@ import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
-import { useRoute } from 'vue-router'
+import { LocationQuery, useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from '/@/store/entities/promises'
 import { getFirstParam, getFirstQuery } from '/@/lib/util/url'
+import { dequal } from 'dequal'
 
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
-  const { channelPathToId, channelIdToPathString } = useChannelPath()
+  const { channelPathToId, channelIdToPathString, channelIdToLink } =
+    useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
 
@@ -27,6 +29,7 @@ const useRouteWatcher = () => {
     idParam: computed(() => getFirstParam(route.params['id'])),
     channelParam: computed(() => getFirstParam(route.params['channel'])),
     userParam: computed(() => getFirstParam(route.params['user'])),
+    query: computed(() => route.query),
     view: 'none' as Views,
     isInitialView: true
   })
@@ -198,7 +201,7 @@ const useRouteWatcher = () => {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
-        path: constructChannelPath(channelIdToPathString(message.channelId)),
+        path: channelIdToLink(message.channelId),
         query: { message: message.id }
       })
     } else if (store.state.entities.dmChannelsMap.has(channelId)) {
@@ -218,9 +221,10 @@ const useRouteWatcher = () => {
     }
   }
 
+  type RouteParamWithQuery = readonly [routeParam: string, query: LocationQuery]
   const onRouteParamChange = async (
-    routeParam: string,
-    prevRouteParam: string
+    [routeParam, query]: RouteParamWithQuery,
+    [prevRouteParam, prevQuery]: RouteParamWithQuery
   ) => {
     store.commit.ui.modal.setIsOnInitialModalRoute(false)
     const routeName = state.currentRouteName
@@ -229,7 +233,7 @@ const useRouteWatcher = () => {
       return
     }
 
-    if (routeParam === prevRouteParam) {
+    if (routeParam === prevRouteParam && dequal(query, prevQuery)) {
       return
     }
 
@@ -264,14 +268,14 @@ const useRouteWatcher = () => {
     closeNav()
   }
 
-  watch(
-    computed(() => state.currentRouteParam),
+  watch<RouteParamWithQuery>(
+    () => [state.currentRouteParam, state.query] as const,
     onRouteParamChange
   )
 
   const triggerRouteParamChange = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    onRouteParamChange(state.channelParam!, '')
+    onRouteParamChange([state.channelParam!, {}], ['', {}])
   }
 
   return {

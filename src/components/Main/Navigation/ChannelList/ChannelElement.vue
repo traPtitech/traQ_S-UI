@@ -18,7 +18,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="state.isInactive"
-        @click="onChannelHashClick"
+        @mousedown="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
       />
@@ -26,19 +26,19 @@
         :channel="channel"
         :show-shortened-path="showShortenedPath"
         :is-selected="state.isSelected"
-        @click="onChannelNameClick"
+        @mousedown="onChannelNameClick"
       />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
-        @click="onChannelNameClick"
+        @mousedown="onChannelNameClick"
       />
     </div>
     <channel-element-topic
       v-if="showTopic"
       :class="$style.topic"
       :channel-id="channel.id"
-      @click="onChannelNameClick"
+      @mousedown="onChannelNameClick"
     />
 
     <!-- 子チャンネル表示 -->
@@ -79,16 +79,16 @@ import useHover from '/@/use/hover'
 
 const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
-    ((event: 'channelSelect', _channelId: string) => void),
+    ((event: 'channelSelect', _event: MouseEvent, _channelId: string) => void),
   id: ChannelId,
   isChildShown: Ref<boolean>
 ) => {
-  const onChannelNameClick = () => emit('channelSelect', id)
-  const onChannelHashClick = () => {
+  const onChannelNameClick = (e: MouseEvent) => emit('channelSelect', e, id)
+  const onChannelHashClick = (e: MouseEvent) => {
     if (isChildShown.value) {
       emit('channelFoldingToggle', id)
     } else {
-      emit('channelSelect', id)
+      emit('channelSelect', e, id)
     }
   }
   return {
@@ -178,7 +178,7 @@ export default defineComponent({
   },
   emits: {
     channelFoldingToggle: (_channelId: ChannelId) => true,
-    channelSelect: (_channelId: ChannelId) => true
+    channelSelect: (_event: MouseEvent, _channelId: ChannelId) => true
   },
   setup(props, { emit }) {
     const typedProps = props as TypedProps

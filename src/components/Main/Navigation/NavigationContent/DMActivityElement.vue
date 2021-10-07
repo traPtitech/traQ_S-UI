@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.container" @click="onClick">
+  <optional-router-link :class="$style.container" :to="dmChannelPath" block>
     <div :class="$style.title">
       <user-name :class="$style.name" :user="user" is-title />
       <notification-indicator :class="$style.indicator" />
     </div>
     <div :class="$style.separator" />
     <div :class="$style.content">DMのため非表示</div>
-  </div>
+  </optional-router-link>
 </template>
 
 <script lang="ts">
@@ -15,11 +15,13 @@ import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
-import { changeDMChannelByUsername } from '/@/router/channel'
+import { constructUserPath } from '/@/router'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 
 export default defineComponent({
   name: 'DMActivityElement',
   components: {
+    OptionalRouterLink,
     UserName,
     NotificationIndicator
   },
@@ -31,13 +33,11 @@ export default defineComponent({
   },
   setup(props) {
     const user = computed(() => store.state.entities.usersMap.get(props.userId))
+    const dmChannelPath = computed(() =>
+      user.value ? constructUserPath(user.value.name) : undefined
+    )
 
-    const onClick = () => {
-      if (!user.value) return
-      changeDMChannelByUsername(user.value.name)
-    }
-
-    return { user, onClick }
+    return { user, dmChannelPath }
   }
 })
 </script>
