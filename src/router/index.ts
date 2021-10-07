@@ -18,9 +18,13 @@ export enum RouteName {
   NotFound = 'not-found'
 }
 
-export const constructChannelPath = (channel: string) => `/channels/${channel}`
-export const constructUserPath = (name: string) => `/users/${name}`
-export const constructClipFoldersPath = (id: string) => `/clip-folders/${id}`
+export const constructChannelPath = (path: string) =>
+  `/channels/${path}` as const
+export const constructUserPath = (name: string) => `/users/${name}` as const
+export const constructMessagesPath = (id: string) => `/messages/${id}` as const
+export const constructFilesPath = (id: string) => `/files/${id}` as const
+export const constructClipFoldersPath = (id: string) =>
+  `/clip-folders/${id}` as const
 
 export const isMessageScrollerRoute = (
   routeName: string | symbol | null | undefined
@@ -53,22 +57,22 @@ const routes: RouteRecordRaw[] = [
     component: Main
   },
   {
-    path: '/users/:user',
+    path: constructUserPath(':user'),
     name: RouteName.User,
     component: Main
   },
   {
-    path: '/messages/:id',
+    path: constructMessagesPath(':id'),
     name: RouteName.Message,
     component: Main
   },
   {
-    path: '/files/:id',
+    path: constructFilesPath(':id'),
     name: RouteName.File,
     component: Main
   },
   {
-    path: '/clip-folders/:id',
+    path: constructClipFoldersPath(':id'),
     name: RouteName.ClipFolders,
     component: Main
   },

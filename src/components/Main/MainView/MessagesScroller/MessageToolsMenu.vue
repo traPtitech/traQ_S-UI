@@ -55,6 +55,7 @@ import { MessageId } from '/@/types/entity-ids'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
+import { constructMessagesPath } from '/@/router'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -122,7 +123,7 @@ const useCopy = (props: { messageId: MessageId }) => {
   const { execWithToast } = useExecWithToast()
 
   const copyLink = async () => {
-    const link = `${embeddingOrigin}/messages/${props.messageId}`
+    const link = `${embeddingOrigin}${constructMessagesPath(props.messageId)}`
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
       navigator.clipboard.writeText(link)
     )

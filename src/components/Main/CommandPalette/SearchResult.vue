@@ -67,6 +67,7 @@ import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/use/searchMessage/queryParser'
 import Icon from '/@/components/UI/Icon.vue'
 import { useOpenLink } from '/@/use/openLink'
+import { constructMessagesPath } from '/@/router'
 
 const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
   { value: 'createdAt', title: '新しい順' },
@@ -79,7 +80,7 @@ const useMessageOpener = () => {
   const { closeCommandPalette } = useCommandPaletteInvoker()
 
   const openMessage = async (e: MouseEvent, messageId: MessageId) => {
-    openLink(e, `/messages/${messageId}`, () => {
+    openLink(e, constructMessagesPath(messageId), () => {
       closeCommandPalette()
     })
   }

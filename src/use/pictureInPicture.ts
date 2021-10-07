@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { buildUserIconPath } from '/@/lib/apis'
 import { checkMediaSessionSupport } from '/@/lib/util/browser'
 
 const usePictureInPicture = () => {
@@ -14,7 +15,7 @@ const usePictureInPicture = () => {
     isPinPShown.value = true
 
     const $img = new Image()
-    $img.src = `/api/v3/files/${iconId}`
+    $img.src = buildUserIconPath(iconId)
     await $img.decode()
 
     const $canvas = document.createElement('canvas')

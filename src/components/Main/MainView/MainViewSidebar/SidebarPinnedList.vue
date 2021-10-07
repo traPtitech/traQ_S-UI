@@ -3,7 +3,7 @@
     <router-link
       v-for="message in sortedMessages"
       :key="message.id"
-      :to="`/messages/${message.id}`"
+      :to="constructMessagesPath(message.id)"
     >
       <message-panel
         title-type="user"
@@ -23,6 +23,7 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
+import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
   name: 'ChannelSidebarPinnedList',
@@ -39,7 +40,7 @@ export default defineComponent({
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
         .map(pinnedMessage => pinnedMessage.message)
     )
-    return { sortedMessages }
+    return { sortedMessages, constructMessagesPath }
   }
 })
 </script>
