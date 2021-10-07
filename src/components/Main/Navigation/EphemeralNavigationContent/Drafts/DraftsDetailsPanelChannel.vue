@@ -1,14 +1,16 @@
 <template>
-  <div :class="$style.container" @click="changeChannel">
-    <div :class="$style.state">
-      <icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
-      <div
-        :class="[$style.text, 'markdown-inline-body']"
-        v-html="renderedContent"
-      ></div>
+  <router-link :to="channelLink">
+    <div :class="$style.container">
+      <div :class="$style.state">
+        <icon v-if="hasAttachments" name="file" mdi :class="$style.icon" />
+        <div
+          :class="[$style.text, 'markdown-inline-body']"
+          v-html="renderedContent"
+        ></div>
+      </div>
+      <div :class="$style.channelPath">{{ channelPath }}</div>
     </div>
-    <div :class="$style.channelPath">{{ channelPath }}</div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -18,7 +20,6 @@ import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
 import Icon from '/@/components/UI/Icon.vue'
 import { renderInline } from '/@/lib/markdown/markdown'
-import router from '/@/router'
 
 export default defineComponent({
   name: 'InputStateChannel',
@@ -50,11 +51,7 @@ export default defineComponent({
       renderedContent.value = renderedText
     })
 
-    const changeChannel = () => {
-      router.push(channelLink.value)
-    }
-
-    return { changeChannel, channelPath, hasAttachments, renderedContent }
+    return { channelPath, channelLink, hasAttachments, renderedContent }
   }
 })
 </script>

@@ -1,15 +1,18 @@
 <template>
   <div :class="$style.container">
-    <message-panel
+    <router-link
       v-for="message in sortedMessages"
       :key="message.id"
-      title-type="user"
-      hide-subtitle
-      line-clamp-content
-      :message="message"
-      :class="$style.item"
-      @click="onMessageSelect(message.id)"
-    />
+      :to="`/messages/${message.id}`"
+    >
+      <message-panel
+        title-type="user"
+        hide-subtitle
+        line-clamp-content
+        :message="message"
+        :class="$style.item"
+      />
+    </router-link>
     <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
       ピン留めされたメッセージはありません
     </div>
@@ -20,8 +23,6 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import { MessageId } from '/@/types/entity-ids'
-import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'ChannelSidebarPinnedList',
@@ -38,13 +39,7 @@ export default defineComponent({
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
         .map(pinnedMessage => pinnedMessage.message)
     )
-
-    const router = useRouter()
-    const onMessageSelect = (messageId: MessageId) => {
-      router.push(`/messages/${messageId}`)
-    }
-
-    return { sortedMessages, onMessageSelect }
+    return { sortedMessages }
   }
 })
 </script>

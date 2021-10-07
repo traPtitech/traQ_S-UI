@@ -95,6 +95,7 @@ export default defineComponent({
 }
 
 .element {
+  display: block;
   margin: 16px 0;
 }
 </style>
