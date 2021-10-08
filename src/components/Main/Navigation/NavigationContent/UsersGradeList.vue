@@ -1,9 +1,10 @@
 <template>
-  <div :class="$style.list">
+  <div>
     <users-separator
       :name="name"
       :is-open="!isFolding"
       :has-notification="hasNotification"
+      :class="$style.separator"
       @click="toggleFolding"
     />
     <slide-down :class="$style.users" :is-open="!isFolding">
@@ -67,7 +68,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.list {
+.separator {
   cursor: pointer;
 }
 .users {

@@ -1,15 +1,13 @@
 <template>
-  <div :class="$style.container">
+  <optional-router-link :to="dmChannelPath" :class="$style.container" block>
     <user-icon
       :class="$style.icon"
       :user-id="user.id"
       :size="36"
       :has-notification="hasNotification"
     />
-    <optional-router-link :to="dmChannelPath" block>
-      <users-element-user-name :user="user" />
-    </optional-router-link>
-  </div>
+    <users-element-user-name :user="user" />
+  </optional-router-link>
 </template>
 
 <script lang="ts">
