@@ -37,28 +37,28 @@ const obtainFilesFromClipboardItems = async (items: ClipboardItems) => {
 
 const usePaste = (channelId: MessageInputStateKey) => {
   const { addErrorToast } = useToastStore()
-  const { addAttachment } = useMessageInputStateAttachment(
-    channelId,
-    addErrorToast
-  )
+  const { addAttachment, addMarkdownGeneratedFromHtml } =
+    useMessageInputStateAttachment(channelId, addErrorToast)
 
   const onPaste = async (event: ClipboardEvent) => {
     const dt = event?.clipboardData
-    if (dt) {
-      Array.from(dt.files).forEach(file => {
+    if (!dt) return
+
+    Array.from(dt.files).forEach(file => {
+      addAttachment(file)
+    })
+
+    if (dt.types.includes('image/svg+xml')) {
+      // image/svg+xmlはChromeでdt.filesに含まれていない (2021/10/09 Chrome 96.0.4664.2)
+      // そのため、async clipboard apiから取る
+      const data = await readDataFromClipboard()
+      const files = await obtainFilesFromClipboardItems(data)
+      files.forEach(file => {
         addAttachment(file)
       })
-
-      if (dt.types.includes('image/svg+xml')) {
-        // image/svg+xmlはChromeでdt.filesに含まれていない (2021/10/09 Chrome 96.0.4664.2)
-        // そのため、async clipboard apiから取る
-        const data = await readDataFromClipboard()
-        const files = await obtainFilesFromClipboardItems(data)
-        files.forEach(file => {
-          addAttachment(file)
-        })
-      }
     }
+
+    addMarkdownGeneratedFromHtml(dt, event)
   }
   return { onPaste }
 }
