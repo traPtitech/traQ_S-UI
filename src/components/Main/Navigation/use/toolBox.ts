@@ -8,6 +8,9 @@ interface Tool {
   iconName: string
   iconMdi?: true
   disabled?: boolean
+  /**
+   * clickイベントと中央クリックでのmousedownイベントで呼ばれる
+   */
   onClick: (event: MouseEvent) => void
 }
 
