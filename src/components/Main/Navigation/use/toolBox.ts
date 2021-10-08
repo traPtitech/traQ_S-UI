@@ -8,7 +8,10 @@ interface Tool {
   iconName: string
   iconMdi?: true
   disabled?: boolean
-  onClick: (event: MouseEvent) => void // clickイベント と mousedownイベント&&中央クリック で呼ばれる
+  /**
+   * clickイベントと中央クリックでのmousedownイベントで呼ばれる
+   */
+  onClick: (event: MouseEvent) => void
 }
 
 const useToolBox = () => {
