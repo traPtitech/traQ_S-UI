@@ -103,11 +103,13 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: flex;
+  min-width: 0;
   align-items: center;
   padding: 0 1rem;
 }
 .inputContainer {
   display: flex;
+  min-width: 0;
   margin: 0.75rem 0;
   flex: 1;
   .container[data-is-mobile] & {
