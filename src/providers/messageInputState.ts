@@ -193,10 +193,16 @@ export const useMessageInputStateAttachment = (
     if (!types) return
 
     // chromeだとtext/uri-listならショートカットのファイルが含まれるので、
-    // text/uri-listを優先する
+    // typeが指定されているファイルしか存在しないときはtext/uri-listを優先する
+    // typeが指定されているファイルが存在する場合は、
+    // 例えばブラウザ上の画像をドラッグドロップしたときに発生する
     if (types.includes('text/uri-list')) {
-      addTextToLast(dt.getData('text/uri-list'))
-      return
+      const hasOnlyNonTypedFiles = [...dt.files].every(file => file.type === '')
+
+      if (hasOnlyNonTypedFiles) {
+        addTextToLast(dt.getData('text/uri-list'))
+        return
+      }
     }
 
     if (types.includes('Files')) {
