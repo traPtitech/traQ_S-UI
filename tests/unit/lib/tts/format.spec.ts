@@ -4,12 +4,14 @@ import { traQMarkdownIt, Store } from '@traptitech/traq-markdown-it'
 const embeddingOrigin = 'https://example.com'
 const storeProvider: Store = {
   getChannel: id => ({ id }),
-  getChannelPath: id => '',
   getMe: () => ({ id: '' }),
   getStampByName: name => ({ name, fileId: '' }),
   getUser: id => ({ id }),
   getUserByName: name => ({ iconFileId: '' }),
-  getUserGroup: id => ({ members: [] })
+  getUserGroup: id => ({ members: [] }),
+  generateChannelHref: () => '',
+  generateUserHref: () => '',
+  generateUserGroupHref: () => ''
 }
 const md = new traQMarkdownIt(storeProvider, [], embeddingOrigin)
 const parse = (text: string) => {
