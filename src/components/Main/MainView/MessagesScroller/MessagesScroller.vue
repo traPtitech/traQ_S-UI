@@ -110,6 +110,7 @@ const useMarkdownInternalHandler = () => {
 
     // 同じタブで開かない場合は無視
     if (!shouldOpenWithRouter(event)) return
+    event.preventDefault()
 
     const linkPath = $a.pathname + $a.search + $a.hash
 
