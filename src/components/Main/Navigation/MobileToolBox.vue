@@ -8,7 +8,8 @@
         :icon-name="tool.iconName"
         :icon-mdi="tool.iconMdi"
         :disabled="tool.disabled"
-        @mousedown="tool.onClick"
+        @mousedown.middle="tool.onClick"
+        @click="tool.onClick"
       />
     </div>
     <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
