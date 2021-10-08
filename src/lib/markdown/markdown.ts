@@ -1,7 +1,7 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
 import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
-import { embeddingOrigin } from '../apis'
+import { embeddingOrigin } from '/@/lib/apis'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
@@ -9,7 +9,7 @@ import {
   stampsMapInitialFetchPromise
 } from '/@/store/entities/promises'
 
-const { channelIdToPathString } = useChannelPath()
+const { channelIdToLink } = useChannelPath()
 
 const storeProvider: Store = {
   getUser(id) {
@@ -17,9 +17,6 @@ const storeProvider: Store = {
   },
   getChannel(id) {
     return store.state.entities.channelsMap.get(id)
-  },
-  getChannelPath(id) {
-    return channelIdToPathString(id)
   },
   getUserGroup(id) {
     return store.state.entities.userGroupsMap.get(id)
@@ -32,6 +29,15 @@ const storeProvider: Store = {
   },
   getUserByName(name) {
     return store.getters.entities.userByName(name)
+  },
+  generateChannelHref(id) {
+    return `${embeddingOrigin}${channelIdToLink(id)}`
+  },
+  generateUserHref(id) {
+    return `javascript:openUserModal('${id}')`
+  },
+  generateUserGroupHref(id) {
+    return `javascript:openGroupModal('${id}')`
   }
 }
 

@@ -98,6 +98,7 @@ const useMarkdownInternalHandler = () => {
     toggleSpoiler(event.target)
   }
 
+  // チャンネルのリンク(a.message-channel-link)もこれで処理される
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
 
@@ -110,6 +111,7 @@ const useMarkdownInternalHandler = () => {
 
     // 同じタブで開かない場合は無視
     if (!shouldOpenWithRouter(event)) return
+    event.preventDefault()
 
     const linkPath = $a.pathname + $a.search + $a.hash
 

@@ -1,6 +1,5 @@
 import store from '/@/store'
 import { UserId, UserGroupId } from '/@/types/entity-ids'
-import router, { constructChannelPath } from '/@/router'
 
 interface ExtendedWindow extends Window {
   /**
@@ -16,13 +15,6 @@ interface ExtendedWindow extends Window {
    * @param userGroupId ユーザーグループID
    */
   openGroupModal(userGroupId: string): void
-
-  /**
-   * チャンネルを切り替える
-   * レンダリングされたmarkdown本文に埋め込まれるリンク(`#channel`)のクリック時に呼び出される
-   * @param channelPath チャンネルのパス(`#`は含まない、`/`区切り)
-   */
-  changeChannel(channelPath: string): void
 }
 declare const window: ExtendedWindow
 
@@ -59,9 +51,5 @@ export const setupGlobalFuncs = () => {
       type: 'group',
       id: userGroupId
     })
-  }
-
-  window.changeChannel = (channelPath: string) => {
-    router.push(constructChannelPath(channelPath))
   }
 }
