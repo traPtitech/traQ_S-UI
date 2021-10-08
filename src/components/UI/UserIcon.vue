@@ -3,7 +3,7 @@
     :role="isClickable ? 'button' : 'img'"
     :class="$style.container"
     :style="styles.container"
-    @click.stop="openModal"
+    @click.prevent.stop="openModal"
   >
     <div v-if="hasNotification" :class="$style.indicator">
       <notification-indicator :size="indicatorSize" />

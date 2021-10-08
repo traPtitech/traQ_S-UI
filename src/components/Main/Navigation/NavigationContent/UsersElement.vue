@@ -1,5 +1,5 @@
 <template>
-  <optional-router-link :class="$style.container" :to="dmChannelPath" block>
+  <optional-router-link :to="dmChannelPath" :class="$style.container" block>
     <user-icon
       :class="$style.icon"
       :user-id="user.id"
@@ -57,7 +57,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   padding: 2px;
-  cursor: pointer;
 }
 .icon {
   margin-right: 16px;
