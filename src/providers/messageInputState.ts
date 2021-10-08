@@ -176,16 +176,20 @@ export const useMessageInputStateAttachment = (
     // iOS Safariでは存在しない
     if (!types) return
 
+    // chromeだとtext/uri-listならショートカットのファイルが含まれるので、
+    // text/uri-listを優先する
+    if (types.includes('text/uri-list')) {
+      addTextToLast(dt.getData('text/uri-list'))
+      return
+    }
+
     if (types.includes('Files')) {
       Array.from(dt.files).forEach(file => {
         addAttachment(file)
       })
       return
     }
-    if (types.includes('text/uri-list')) {
-      addTextToLast(dt.getData('text/uri-list'))
-      return
-    }
+
     if (types.includes('text/plain')) {
       addTextToLast(dt.getData('text/plain'))
     }
