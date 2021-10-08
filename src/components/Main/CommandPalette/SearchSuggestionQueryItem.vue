@@ -35,7 +35,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   width: 100%;
-  padding: 0.5rem 0 0.5rem 2rem;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
   display: grid;
   grid-template-columns: 5rem 1fr;
   user-select: none;
