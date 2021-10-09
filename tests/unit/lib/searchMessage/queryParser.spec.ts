@@ -1,5 +1,8 @@
-import useQueryParer from '/@/use/searchMessage/queryParser'
-import store from '/@/store'
+import { StoreForParser } from '/@/lib/searchMessage/parserBase'
+import {
+  createQueryParser,
+  toSearchMessageParam
+} from '/@/lib/searchMessage/queryParser'
 
 const mockMessageId = 'message-id'
 const mockMessageUrl = `https://example.com/messages/${mockMessageId}`
@@ -7,32 +10,26 @@ const mockChannelId = 'channel-id'
 const mockChannelName = 'general'
 const mockUserId = 'user-id'
 const mockUserName = 'user'
-
-const { parseQuery, toSearchMessageParam } = useQueryParer()
-
-beforeAll(async () => {
-  store.commit.entities.setUser({
-    id: mockUserId,
-    name: mockUserName,
-    displayName: 'poyo',
-    iconFileId: '',
-    bot: false,
-    state: 1,
-    updatedAt: '2021-01-23T00:00:00.000Z'
-  })
-  store.commit.entities.setChannel({
-    id: mockChannelId,
-    parentId: null,
-    archived: false,
-    force: false,
-    topic: '',
-    name: mockChannelName,
-    children: []
-  })
-  await store.dispatch.domain.channelTree.constructAllTrees()
-})
+const mockCurrentChannelId = 'current-channel-id'
 
 describe('parseQuery', () => {
+  const store: StoreForParser = {
+    channelPathToId: channelPath => {
+      if (channelPath === mockChannelName) {
+        return mockChannelId
+      }
+      return undefined
+    },
+    usernameToId: async username => {
+      if (username === mockUserName) {
+        return mockUserId
+      }
+      return undefined
+    },
+    getCurrentChannelId: () => mockCurrentChannelId
+  }
+  const parseQuery = createQueryParser(store)
+
   it('can parse query without filter', async () => {
     const query = 'lorem       ipsum'
     const parsed = await parseQuery(query)

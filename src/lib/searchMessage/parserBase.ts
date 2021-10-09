@@ -82,10 +82,13 @@ export const makePrefixedFilterExtractor =
 export type StoreForParser = {
   channelPathToId: ChannelPathToId
   usernameToId: UsernameToId
+  getCurrentChannelId: () => ChannelId | undefined
 }
 
 type ChannelPathToId = (path: string) => ChannelId | undefined
-type UsernameToId = (username: string) => Promise<UserId | undefined>
+type UsernameToId =
+  | ((username: string) => UserId | undefined)
+  | ((username: string) => Promise<UserId | undefined>)
 
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
@@ -98,7 +101,6 @@ type UsernameToId = (username: string) => Promise<UserId | undefined>
  */
 export const parseToFilter =
   <F, T extends string>(
-    store: StoreForParser,
     parser: (
       store: StoreForParser,
       extracted: ExtractedFilter<T>
@@ -106,6 +108,7 @@ export const parseToFilter =
     extractor: FilterExtractor<T>,
     skipCondition?: (q: string) => boolean
   ) =>
+  (store: StoreForParser) =>
   async (q: string): Promise<F | string> => {
     if (skipCondition?.(q)) {
       return q

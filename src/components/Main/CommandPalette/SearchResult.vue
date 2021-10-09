@@ -64,7 +64,7 @@ import PopupSelector, {
 import useSearchMessages from './use/searchMessages'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
-import { SearchMessageSortKey } from '/@/use/searchMessage/queryParser'
+import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import Icon from '/@/components/UI/Icon.vue'
 import { useOpenLink } from '/@/use/openLink'
 import { constructMessagesPath } from '/@/router'
