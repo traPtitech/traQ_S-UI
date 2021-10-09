@@ -15,23 +15,24 @@
       @click-more="togglePopupMenu"
     />
     <teleport v-if="isPopupMenuShown" :to="`#${teleportTargetName}`">
-      <header-tools-menu
-        v-click-outside="closePopupMenu"
-        :class="$style.toolsMenu"
-        :show-notification-setting-btn="!channelState.forced"
-        :has-active-qall-session="hasActiveQallSession"
-        :is-qall-session-opened="isQallSessionOpened"
-        :is-joined-qall-session="isJoinedQallSession"
-        :is-joined-with-current-device="isJoinedWithCurrentDevice"
-        :is-child-channel-creatable="isChildChannelCreatable"
-        :is-archived="channelState.archived"
-        @click-notification="openNotificationModal"
-        @click-create-channel="openChannelCreateModal"
-        @click-search="openCommandPalette('search', 'in:here ')"
-        @click-copy-channel-link="copyLink"
-        @click-qall="toggleQall"
-        @click-manage-channel="openChannelManageModal"
-      />
+      <click-outside @click-outside="closePopupMenu">
+        <header-tools-menu
+          :class="$style.toolsMenu"
+          :show-notification-setting-btn="!channelState.forced"
+          :has-active-qall-session="hasActiveQallSession"
+          :is-qall-session-opened="isQallSessionOpened"
+          :is-joined-qall-session="isJoinedQallSession"
+          :is-joined-with-current-device="isJoinedWithCurrentDevice"
+          :is-child-channel-creatable="isChildChannelCreatable"
+          :is-archived="channelState.archived"
+          @click-notification="openNotificationModal"
+          @click-create-channel="openChannelCreateModal"
+          @click-search="openCommandPalette('search', 'in:here ')"
+          @click-copy-channel-link="copyLink"
+          @click-qall="toggleQall"
+          @click-manage-channel="openChannelManageModal"
+        />
+      </click-outside>
     </teleport>
   </div>
 </template>
@@ -46,6 +47,7 @@ import useStarChannel from './use/starChannel'
 import useNotificationModal from './use/notificationModal'
 import useChannelCreateModal from './use/channelCreateModal'
 import useChannelManageModal from './use/channelManageModal'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '/@/lib/apis'
@@ -76,6 +78,7 @@ const useCopy = (props: { channelId: ChannelId }) => {
 export default defineComponent({
   name: 'ChannelViewHeader',
   components: {
+    ClickOutside,
     HeaderToolsList,
     HeaderToolsMenu
   },

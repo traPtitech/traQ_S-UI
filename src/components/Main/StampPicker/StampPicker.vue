@@ -1,45 +1,47 @@
 <template>
-  <div v-click-outside="closeStampPicker" :class="$style.container">
-    <div :class="$style.inputContainer">
-      <filter-input
-        v-model="filterState.query"
-        :placeholder="placeholder"
-        disable-ime
-        focus-on-mount
-        @enter="onFilterEnter"
-      />
-      <!--
+  <click-outside @click-outside="closeStampPicker">
+    <div :class="$style.container">
+      <div :class="$style.inputContainer">
+        <filter-input
+          v-model="filterState.query"
+          :placeholder="placeholder"
+          disable-ime
+          focus-on-mount
+          @enter="onFilterEnter"
+        />
+        <!--
       <stamp-picker-effect-toggle-button
         :isActive="effectSelectorState.shouldShowEffectSelector"
         @click="toggleShowEffect"
       />
-      -->
-    </div>
-    <stamp-picker-stamp-list
-      :class="$style.stampList"
-      :stamps="stamps"
-      @input-stamp="onInputStamp"
-      @hover-stamp="onHoverStamp"
-    />
-    <!--
+      --></div>
+      <stamp-picker-stamp-list
+        :class="$style.stampList"
+        :stamps="stamps"
+        @input-stamp="onInputStamp"
+        @hover-stamp="onHoverStamp"
+      />
+      <!--
     <stamp-picker-effect-selector
       :class="$style.effectSelector"
       v-if="effectSelectorState.shouldShowEffectSelector"
     />
     -->
-    <stamp-picker-stamp-set-selector
-      :class="$style.paletteSelector"
-      :stamp-sets="stampSetState.stampSets"
-      :current-stamp-set="state.currentStampSet"
-      @stamp-set-select="setCurrentStampSet"
-    />
-  </div>
+      <stamp-picker-stamp-set-selector
+        :class="$style.paletteSelector"
+        :stamp-sets="stampSetState.stampSets"
+        :current-stamp-set="state.currentStampSet"
+        @stamp-set-select="setCurrentStampSet"
+      />
+    </div>
+  </click-outside>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
 import store from '/@/store'
 import { StampId } from '/@/types/entity-ids'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useStampList from './use/stampList'
 import useStampSetSelector from './use/stampSetSelector'
@@ -54,6 +56,7 @@ import { useStampPickerStore } from '/@/providers/stampPicker'
 export default defineComponent({
   name: 'StampPicker',
   components: {
+    ClickOutside,
     FilterInput,
     StampPickerStampList,
     StampPickerStampSetSelector

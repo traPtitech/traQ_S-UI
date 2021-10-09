@@ -8,34 +8,33 @@
         :width="small ? 20 : 24"
       />
     </div>
-    <div
-      v-if="isOpen"
-      v-click-outside="close"
-      :class="$style.selectorContainer"
-    >
-      <div
-        v-for="item in items"
-        :key="item.value"
-        :class="$style.itemContainer"
-        @click="onClick(item)"
-      >
-        <div :class="$style.item">
-          <icon
-            v-if="item.iconName"
-            :name="item.iconName"
-            :mdi="item.iconMdi"
-            :class="$style.itemIcon"
-          />
-          {{ item.title }}
+    <click-outside @click-outside="close">
+      <div v-if="isOpen" :class="$style.selectorContainer">
+        <div
+          v-for="item in items"
+          :key="item.value"
+          :class="$style.itemContainer"
+          @click="onClick(item)"
+        >
+          <div :class="$style.item">
+            <icon
+              v-if="item.iconName"
+              :name="item.iconName"
+              :mdi="item.iconMdi"
+              :class="$style.itemIcon"
+            />
+            {{ item.title }}
+          </div>
         </div>
       </div>
-    </div>
+    </click-outside>
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
 import Icon from './Icon.vue'
+import ClickOutside from './ClickOutside'
 
 export type PopupSelectorItem = {
   value: string
@@ -46,7 +45,7 @@ export type PopupSelectorItem = {
 
 export default defineComponent({
   name: 'PopupSelector',
-  components: { Icon },
+  components: { Icon, ClickOutside },
   props: {
     modelValue: {
       type: String,

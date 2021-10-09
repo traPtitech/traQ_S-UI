@@ -1,34 +1,37 @@
 <template>
-  <div v-click-outside="close" :class="$style.container">
-    <div :class="$style.header">
-      <span :class="$style.title">サービス</span>
-      <close-button
-        :class="$style.close"
-        :size="20"
-        :border-width="2"
-        @close="close"
-      />
+  <click-outside @click-outside="close">
+    <div :class="$style.container">
+      <div :class="$style.header">
+        <span :class="$style.title">サービス</span>
+        <close-button
+          :class="$style.close"
+          :size="20"
+          :border-width="2"
+          @close="close"
+        />
+      </div>
+      <div :class="$style.list">
+        <app-list-item
+          v-for="app in apps"
+          :key="app.label"
+          :icon-path="app.iconPath"
+          :label="app.label"
+          :app-link="app.appLink"
+        />
+      </div>
     </div>
-    <div :class="$style.list">
-      <app-list-item
-        v-for="app in apps"
-        :key="app.label"
-        :icon-path="app.iconPath"
-        :label="app.label"
-        :app-link="app.appLink"
-      />
-    </div>
-  </div>
+  </click-outside>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import AppListItem from '/@/components/Main/Navigation/AppListItem.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'AppList',
-  components: { AppListItem, CloseButton },
+  components: { ClickOutside, AppListItem, CloseButton },
   emits: {
     close: () => true
   },
