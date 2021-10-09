@@ -8,7 +8,7 @@ import {
   MyUserDetail,
   MyChannelViewState
 } from '@traptitech/traq'
-import { checkBadgeAPISupport } from '/@/lib/basic/browser'
+import { checkBadgeAPISupport } from '/@/lib/dom/browser'
 import { removeNotification } from '/@/lib/notification/notification'
 
 const isBadgingAPISupported = checkBadgeAPISupport()

@@ -1,5 +1,5 @@
 import { createSingleflight } from '/@/lib/basic/async'
-import { isIOSApp } from '/@/lib/basic/browser'
+import { isIOSApp } from '/@/lib/dom/browser'
 import router, { RouteName } from '/@/router'
 import store from '/@/store'
 import { onActivated, onBeforeMount, ref } from 'vue'

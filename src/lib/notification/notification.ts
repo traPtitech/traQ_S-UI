@@ -1,7 +1,7 @@
 import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import apis from '/@/lib/apis'
 import router from '/@/router'
-import { isIOSApp } from '/@/lib/basic/browser'
+import { isIOSApp } from '/@/lib/dom/browser'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { createNotificationArgumentsCreator } from './notificationArguments'
 import { OnCanUpdate, setupUpdateToast } from './updateToast'
