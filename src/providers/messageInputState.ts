@@ -12,6 +12,7 @@ import { AttachmentType, mimeToFileType } from '/@/lib/util/file'
 import { getResizedFile } from '/@/lib/resize'
 import { convertToDataUrl } from '/@/lib/resize/dataurl'
 import { ChannelId } from '/@/types/entity-ids'
+import { generateMarkdownFromHtml } from '/@/lib/markdown/fromHtml'
 
 const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 
@@ -171,10 +172,38 @@ export const useMessageInputStateAttachment = (
 
   const attachments = computed(() => state.attachments)
 
-  const addFromDataTransfer = (dt: DataTransfer) => {
+  const addMarkdownGeneratedFromHtml = async (
+    dt: DataTransfer,
+    eventToPrevent?: Event
+  ) => {
+    const html = dt.getData('text/html')
+    if (html && confirm('HTMLをマークダウンに変換して貼り付けますか？')) {
+      eventToPrevent?.preventDefault()
+
+      const markdown = await generateMarkdownFromHtml(html)
+      addTextToLast(markdown)
+      return true
+    }
+    return false
+  }
+
+  const addFromDataTransfer = async (dt: DataTransfer) => {
     const types = dt.types
     // iOS Safariでは存在しない
     if (!types) return
+
+    // chromeだとtext/uri-listならショートカットのファイルが含まれるので、
+    // typeが指定されているファイルしか存在しないときはtext/uri-listを優先する
+    // typeが指定されているファイルが存在する場合は、
+    // 例えばブラウザ上の画像をドラッグドロップしたときに発生する
+    if (types.includes('text/uri-list')) {
+      const hasOnlyNonTypedFiles = [...dt.files].every(file => file.type === '')
+
+      if (hasOnlyNonTypedFiles) {
+        addTextToLast(dt.getData('text/uri-list'))
+        return
+      }
+    }
 
     if (types.includes('Files')) {
       Array.from(dt.files).forEach(file => {
@@ -182,10 +211,12 @@ export const useMessageInputStateAttachment = (
       })
       return
     }
-    if (types.includes('text/uri-list')) {
-      addTextToLast(dt.getData('text/uri-list'))
+
+    const added = await addMarkdownGeneratedFromHtml(dt)
+    if (added) {
       return
     }
+
     if (types.includes('text/plain')) {
       addTextToLast(dt.getData('text/plain'))
     }
@@ -229,6 +260,7 @@ export const useMessageInputStateAttachment = (
 
   return {
     attachments,
+    addMarkdownGeneratedFromHtml,
     addFromDataTransfer,
     addAttachment,
     removeAttachmentAt
