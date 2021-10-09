@@ -73,8 +73,8 @@ export default defineComponent({
     }
   },
   emits: {
-    'entry-message-loaded': (_relativePos: number) => true,
-    'change-height': (_data: ChangeHeightData) => true
+    entryMessageLoaded: (_relativePos: number) => true,
+    changeHeight: (_data: ChangeHeightData) => true
   },
   setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)

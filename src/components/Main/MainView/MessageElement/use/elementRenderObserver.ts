@@ -23,8 +23,8 @@ const useElementRenderObserver = (
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
   }>,
-  emit: ((name: 'entry-message-loaded', relativePos: number) => void) &
-    ((name: 'change-height', data: ChangeHeightData) => void)
+  emit: ((name: 'entryMessageLoaded', relativePos: number) => void) &
+    ((name: 'changeHeight', data: ChangeHeightData) => void)
 ) => {
   const route = useRoute()
 
@@ -45,10 +45,10 @@ const useElementRenderObserver = (
         const parentTop =
           bodyRef.value.parentElement?.getBoundingClientRect().top ?? 0
         const { top } = bodyRef.value.getBoundingClientRect()
-        emit('entry-message-loaded', top - parentTop)
+        emit('entryMessageLoaded', top - parentTop)
       }
     } else {
-      emit('change-height', {
+      emit('changeHeight', {
         heightDiff: height - lastHeight,
         top,
         bottom,
