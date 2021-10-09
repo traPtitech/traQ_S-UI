@@ -21,7 +21,7 @@ import HeaderTopic from './HeaderTopic.vue'
 import HeaderTools from './HeaderTools.vue'
 
 export default defineComponent({
-  name: 'ChannelViewHeader',
+  name: 'Header',
   components: {
     MainViewHeader,
     HeaderTopic,

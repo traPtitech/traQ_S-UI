@@ -58,7 +58,7 @@ const usePathInfo = (props: Props) => {
 }
 
 export default defineComponent({
-  name: 'ChannelViewHeaderChannelName',
+  name: 'HeaderChannelName',
   props: {
     channelId: {
       type: String as PropType<ChannelId>,

@@ -48,7 +48,7 @@ const useQrCode = () => {
 }
 
 export default defineComponent({
-  name: 'QrCodeModal',
+  name: 'QRCodeModal',
   components: {
     ModalFrame,
     ModalSection

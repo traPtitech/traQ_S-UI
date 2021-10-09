@@ -26,7 +26,7 @@ import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
-  name: 'ChannelSidebarPinnedList',
+  name: 'SidebarPinnedList',
   components: { MessagePanel },
   props: {
     pinnedMessages: {

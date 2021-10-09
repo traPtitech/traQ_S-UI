@@ -29,7 +29,7 @@ import useMaxLength from '/@/use/maxLength'
 import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
-  name: 'TagsTab',
+  name: 'TagsTabAdd',
   components: {
     Icon,
     LengthCount

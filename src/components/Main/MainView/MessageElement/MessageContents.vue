@@ -53,7 +53,7 @@ import MessageOgpList from './MessageOgpList.vue'
 import useEmbeddings from '/@/use/message/embeddings'
 
 export default defineComponent({
-  name: 'MessageContent',
+  name: 'MessageContents',
   components: {
     UserIcon,
     MessageHeader,

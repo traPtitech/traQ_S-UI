@@ -10,7 +10,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'MessageInputTypingUsers'
+  name: 'MessageInputTypingAnimation'
 })
 </script>
 

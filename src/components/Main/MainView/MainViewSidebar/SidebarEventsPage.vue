@@ -33,7 +33,7 @@ import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 import { parseChannelEvent } from '/@/lib/apis'
 
 export default defineComponent({
-  name: 'SidebarPinnedPage',
+  name: 'SidebarEventsPage',
   components: {
     MainViewSidebarPage,
     SidebarHeader,

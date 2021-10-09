@@ -6,7 +6,12 @@
       show-play-icon
       @click.prevent.stop
     />
-    <a :href="url" target="_blank" :class="$style.description">
+    <a
+      :href="url"
+      target="_blank"
+      rel="noopener noreferrer"
+      :class="$style.description"
+    >
       <message-ogp-description
         :url="url"
         :title="title"

@@ -29,7 +29,7 @@ const iconNameMap: Record<ChannelSubscribeLevel, string> = {
 }
 
 export default defineComponent({
-  name: 'NotificationSelectorItem',
+  name: 'NotificationStateSelectorItem',
   components: {
     Icon
   },

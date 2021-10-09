@@ -4,7 +4,7 @@
       <popup-navigator
         v-if="isMobile"
         :class="$style.icon"
-        @clickIcon="openNav"
+        @click-icon="openNav"
       />
       <h2 :class="$style.headerBody">
         <slot name="header" />

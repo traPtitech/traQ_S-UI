@@ -15,7 +15,7 @@ import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import { useUserModalOpener } from '/@/use/modalOpener'
 
 export default defineComponent({
-  name: 'StampDetailListElementContent',
+  name: 'StampDetailElementContent',
   components: {
     SpinNumber
   },

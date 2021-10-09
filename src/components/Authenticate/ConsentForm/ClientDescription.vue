@@ -31,7 +31,7 @@ import { OAuth2Client, User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export default defineComponent({
-  name: 'ConsentFormClientDesc',
+  name: 'ClientDescription',
   components: {
     UserIcon
   },

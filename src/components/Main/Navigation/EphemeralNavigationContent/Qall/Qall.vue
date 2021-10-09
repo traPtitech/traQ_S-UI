@@ -18,7 +18,7 @@ import QallDetailsPanel from './QallDetailsPanel.vue'
 import store from '/@/store'
 
 export default defineComponent({
-  name: 'NavigationContentQall',
+  name: 'Qall',
   components: {
     QallControlPanel,
     QallDetailsPanel

@@ -76,7 +76,7 @@ const useCopy = (props: { channelId: ChannelId }) => {
 }
 
 export default defineComponent({
-  name: 'ChannelViewHeader',
+  name: 'HeaderTools',
   components: {
     ClickOutside,
     HeaderToolsList,

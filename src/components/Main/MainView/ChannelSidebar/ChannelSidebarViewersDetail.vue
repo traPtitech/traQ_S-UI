@@ -16,7 +16,7 @@ import store from '/@/store'
 import { isDefined } from '/@/lib/util/array'
 
 export default defineComponent({
-  name: 'ChannelSidebarViewerDetail',
+  name: 'ChannelSidebarViewersDetail',
   components: { UserIcon, SidebarContentContainer },
   props: {
     viewerIds: {

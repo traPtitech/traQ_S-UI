@@ -20,7 +20,7 @@ import { defineComponent } from 'vue'
 import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({
-  name: 'ChannelViewHeaderToolsMenuItem',
+  name: 'MainViewHeaderPopupMenuItem',
   components: {
     Icon
   },

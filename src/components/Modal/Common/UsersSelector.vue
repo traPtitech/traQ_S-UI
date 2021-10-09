@@ -4,7 +4,7 @@
       <label :class="$style.checkAll">
         <form-checkbox-inner
           :model-value="isAllChecked"
-          @update:modelValue="toggleAll"
+          @update:model-value="toggleAll"
         />
       </label>
       <filter-input v-model="textFilterState.query" :class="$style.search" />
@@ -13,7 +13,7 @@
       <label v-for="user in filteredUsers" :key="user.id" :class="$style.user">
         <form-checkbox-inner
           :model-value="modelValue.has(user.id)"
-          @update:modelValue="toggle(user.id)"
+          @update:model-value="toggle(user.id)"
         />
         <user-icon :user-id="user.id" prevent-modal :class="$style.userIcon" />
         <div :class="$style.displayName">{{ user.displayName }}</div>

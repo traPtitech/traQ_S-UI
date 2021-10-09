@@ -105,7 +105,7 @@ const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 export const teleportTargetName = 'header-popup'
 
 export default defineComponent({
-  name: 'ChannelViewHeaderTools',
+  name: 'HeaderToolsList',
   components: {
     HeaderToolsItem
   },

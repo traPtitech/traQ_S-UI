@@ -17,6 +17,7 @@ module.exports = {
     'no-debugger': 'warn',
     'no-empty': ['error', { allowEmptyCatch: true }],
     eqeqeq: 'error',
+    'vue/eqeqeq': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/member-delimiter-style': [
       'error',
@@ -32,7 +33,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': 'off',
-    'vue/custom-event-name-casing': ['error', 'camelCase'],
     'vue/no-v-html': 'off',
     'vue/block-lang': [
       'error',
@@ -41,7 +41,15 @@ module.exports = {
         style: { lang: 'scss' }
       }
     ],
-    'vue/require-emit-validator': 'error'
+    'vue/component-api-style': ['error', ['composition']],
+    'vue/component-name-in-template-casing': ['error', 'kebab-case'],
+    'vue/custom-event-name-casing': ['error', 'camelCase'],
+    'vue/v-on-event-hyphenation': ['error', 'always', { autofix: true }],
+    'vue/match-component-file-name': ['error', { extensions: ['vue'] }],
+    'vue/v-on-function-call': 'error',
+    'vue/require-emit-validator': 'error',
+    'vue/no-template-target-blank': 'error',
+    'vue/valid-next-tick': 'error'
   },
   overrides: [
     {
@@ -53,5 +61,6 @@ module.exports = {
         jest: true
       }
     }
-  ]
+  ],
+  reportUnusedDisableDirectives: true
 }

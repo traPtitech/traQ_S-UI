@@ -16,7 +16,7 @@ import Icon from '/@/components/UI/Icon.vue'
 import ModalReturnButton from './ModalReturnButton.vue'
 
 export default defineComponent({
-  name: 'CommonModalHeader',
+  name: 'ModalHeader',
   components: { Icon, ModalReturnButton },
   props: {
     iconMdi: { type: Boolean, default: false },
