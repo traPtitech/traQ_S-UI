@@ -34,10 +34,10 @@ export const getAngle = (p: Point) => (Math.atan2(p.y, p.x) * 180) / Math.PI
 /**
  * 与えられた二点から作られるベクトルとx軸のなす角を返す
  */
-export const getAngleOfLine = ([start, end]: Line) => getAngle(diff(start, end))
+export const getAngleOfLine = ([start, end]: Line) => getAngle(diff(end, start))
 
 /**
  * 与えられた二つの直線のなす角を返す
  */
 export const getAngleBetweenLines = (l1: Line, l2: Line) =>
-  getAngleOfLine(l1) - getAngleOfLine(l2)
+  getAngleOfLine(l2) - getAngleOfLine(l1)
