@@ -53,6 +53,12 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.in).toEqual(mockChannelId)
   })
+  it('can parse query with in:here', async () => {
+    const query = `lorem ipsum in:here`
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual(`lorem ipsum`)
+    expect(parsed.in).toEqual(mockCurrentChannelId)
+  })
   it('can parse query with user-filter without @', async () => {
     const query = `lorem ipsum from:${mockUserName}`
     const parsed = await parseQuery(query)
@@ -66,14 +72,14 @@ describe('parseQuery', () => {
     expect(parsed.from).toEqual(mockUserId)
   })
   it('can parse query with empty prefixes (1)', async () => {
-    const query = 'after: in: cite:' // TODO: `from:`を追加する
+    const query = 'after: in: cite: from:'
     const parsed = await parseQuery(query)
     expect(parsed.after).toEqual(undefined)
     expect(parsed.in).toEqual(undefined)
     expect(parsed.from).toEqual(undefined)
   })
   it('can parse query with empty prefixes (2)', async () => {
-    const query = '#' // TODO: `@`を追加する
+    const query = '# @'
     const parsed = await parseQuery(query)
     expect(parsed.in).toEqual(undefined)
     expect(parsed.from).toEqual(undefined)
@@ -108,8 +114,6 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.bot).toEqual(false)
   })
-  // FIXME: API呼び出しをモックしないとこのテストは実行できない
-  /*
   it('can parse query with wrong valued-filter', async () => {
     // @phantomさんは存在しないのでこのクエリはwordに入る
     const query = 'lorem ipsum from:@phantom'
@@ -117,7 +121,6 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum from:@phantom`)
     expect(parsed.from).toEqual(undefined)
   })
-  */
 })
 
 describe('toSearchMessageParam', () => {
