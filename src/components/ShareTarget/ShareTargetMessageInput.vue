@@ -66,7 +66,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const { state, isEmpty } = useMessageInputState('share-target')
     const { addErrorToast } = useToastStore()
     const { addAttachment: addStateAttachment } =

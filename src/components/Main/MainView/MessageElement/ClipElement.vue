@@ -31,7 +31,9 @@ import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
-import useElementRenderObserver from './use/elementRenderObserver'
+import useElementRenderObserver, {
+  ChangeHeightData
+} from './use/elementRenderObserver'
 import useEmbeddings from '/@/use/message/embeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
@@ -57,7 +59,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    'entry-message-loaded': (_relativePos: number) => true,
+    'change-height': (_data: ChangeHeightData) => true
+  },
+  setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const { channelIdToPathString } = useChannelPath()
@@ -83,7 +89,7 @@ export default defineComponent({
 
     const { embeddingsState } = useEmbeddings(props)
 
-    useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
+    useElementRenderObserver(bodyRef, props, state, embeddingsState, emit)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 

@@ -44,13 +44,13 @@ export default defineComponent({
   emits: {
     toggle: () => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const onTitleClick = () => {
-      context.emit('toggle')
+      emit('toggle')
     }
     const onContainerClick = () => {
       if (props.clickable) {
-        context.emit('toggle')
+        emit('toggle')
       }
     }
     return { onTitleClick, onContainerClick }

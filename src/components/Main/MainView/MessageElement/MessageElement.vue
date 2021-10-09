@@ -41,7 +41,9 @@ import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
 import MessageStampList from './MessageStampList.vue'
-import useElementRenderObserver from './use/elementRenderObserver'
+import useElementRenderObserver, {
+  ChangeHeightData
+} from './use/elementRenderObserver'
 import useEmbeddings from '/@/use/message/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
@@ -70,7 +72,11 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  emits: {
+    'entry-message-loaded': (_relativePos: number) => true,
+    'change-height': (_data: ChangeHeightData) => true
+  },
+  setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
     const state = reactive({
@@ -97,7 +103,7 @@ export default defineComponent({
 
     const { embeddingsState } = useEmbeddings(props)
 
-    useElementRenderObserver(bodyRef, props, state, embeddingsState, context)
+    useElementRenderObserver(bodyRef, props, state, embeddingsState, emit)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 

@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, SetupContext, reactive, Ref } from 'vue'
+import { defineComponent, computed, reactive, Ref } from 'vue'
 import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
@@ -50,7 +50,6 @@ import useToastStore from '/@/providers/toastStore'
 
 const useManageChannel = (
   props: { id: string },
-  context: SetupContext,
   state: PatchChannelRequest,
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
@@ -96,7 +95,7 @@ export default defineComponent({
   props: {
     id: { type: String, required: true }
   },
-  setup(props, context) {
+  setup(props) {
     const channelsMap = computed(() => store.state.entities.channelsMap)
     const channel = computed((): Required<PatchChannelRequest> => {
       const c = channelsMap.value.get(props.id)
@@ -111,12 +110,7 @@ export default defineComponent({
     const subtitle = computed(() => channelIdToPathString(props.id, true))
 
     const manageState = reactive({ ...channel.value })
-    const { manageChannel } = useManageChannel(
-      props,
-      context,
-      manageState,
-      channel
-    )
+    const { manageChannel } = useManageChannel(props, manageState, channel)
 
     const { hasDiff } = useStateDiff<PatchChannelRequest>()
     const isManageEnabled = computed(

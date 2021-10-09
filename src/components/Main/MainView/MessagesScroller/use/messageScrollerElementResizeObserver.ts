@@ -2,6 +2,7 @@ import { Ref, computed } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { LoadingDirection } from '/@/store/domain/messagesView/state'
 import store from '/@/store'
+import { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/use/elementRenderObserver'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,
@@ -23,14 +24,7 @@ const useMessageScrollerElementResizeObserver = (
     return undefined
   })
 
-  const onChangeHeight = (payload: {
-    heightDiff: number
-    top: number
-    bottom: number
-    lastTop: number
-    lastBottom: number
-    date?: string
-  }) => {
+  const onChangeHeight = (payload: ChangeHeightData) => {
     if (!rootRef.value) {
       return
     }

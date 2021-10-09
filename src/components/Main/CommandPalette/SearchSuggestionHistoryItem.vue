@@ -28,12 +28,12 @@ export default defineComponent({
     select: (_label: string) => true,
     remove: (_label: string) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const onClick = () => {
-      context.emit('select', props.label)
+      emit('select', props.label)
     }
     const onClose = () => {
-      context.emit('remove', props.label)
+      emit('remove', props.label)
     }
     return { onClick, onClose }
   }

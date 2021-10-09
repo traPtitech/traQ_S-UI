@@ -23,7 +23,7 @@ export default defineComponent({
   components: {
     FormButton
   },
-  setup(props, context) {
+  setup() {
     const router = useRouter()
 
     const onLogoutClick = async () => {

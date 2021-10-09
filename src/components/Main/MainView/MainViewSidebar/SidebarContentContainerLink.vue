@@ -45,8 +45,10 @@ export default defineComponent({
   emits: {
     clickLink: () => true
   },
-  setup(_, context) {
-    const onClickLink = () => context.emit('clickLink')
+  setup(_, { emit }) {
+    const onClickLink = () => {
+      emit('clickLink')
+    }
     return { onClickLink }
   }
 })
