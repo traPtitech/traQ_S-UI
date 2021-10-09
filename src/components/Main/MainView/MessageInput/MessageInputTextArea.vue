@@ -41,7 +41,7 @@ import { ChannelId } from '/@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
-import { getScrollbarWidth } from '/@/lib/dom'
+import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { isFirefox } from '/@/lib/util/browser'
 import useIsMobile from '/@/use/isMobile'
 

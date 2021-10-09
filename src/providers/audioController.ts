@@ -1,4 +1,4 @@
-import { destroyAudio } from '/@/lib/audio'
+import { destroyAudio } from '/@/lib/dom/audio'
 import { FileId } from '/@/types/entity-ids'
 import { provide, inject, InjectionKey, reactive, computed } from 'vue'
 
