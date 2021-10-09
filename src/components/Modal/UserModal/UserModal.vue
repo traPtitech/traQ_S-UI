@@ -1,5 +1,5 @@
 <template>
-  <click-outside @click-outside="onClickOutside">
+  <click-outside stop @click-outside="onClickOutside">
     <div :class="$style.wrapper" data-testid="usermodal">
       <close-button
         :size="isMobile ? 24 : 32"

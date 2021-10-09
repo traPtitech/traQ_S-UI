@@ -1,5 +1,5 @@
 <template>
-  <click-outside @click-outside="closeCommandPalette">
+  <click-outside stop @click-outside="closeCommandPalette">
     <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
       <command-palette-input />
       <hr v-if="supplementalViewType" :class="$style.separator" />

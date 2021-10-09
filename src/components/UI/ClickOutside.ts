@@ -26,6 +26,12 @@ const filterChildren = <T extends VNode>(vnodes: T[]) =>
  */
 export default defineComponent({
   name: 'ClickOutside',
+  props: {
+    stop: {
+      type: Boolean,
+      default: false
+    }
+  },
   emits: {
     clickOutside: (e: MouseEvent) => true
   },
@@ -41,6 +47,9 @@ export default defineComponent({
       }
 
       emit('clickOutside', e)
+      if (props.stop) {
+        e.stopPropagation()
+      }
     }
 
     onMounted(() => {

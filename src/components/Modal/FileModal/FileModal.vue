@@ -1,5 +1,5 @@
 <template>
-  <click-outside @click-outside="onClickOutside">
+  <click-outside stop @click-outside="onClickOutside">
     <div v-if="fileMeta">
       <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
       <file-modal-video

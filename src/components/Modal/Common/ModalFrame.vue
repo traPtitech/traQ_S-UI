@@ -1,5 +1,5 @@
 <template>
-  <click-outside @click-outside="onClickOutside">
+  <click-outside stop @click-outside="onClickOutside">
     <div :class="$style.container">
       <common-modal-header
         :class="$style.header"
