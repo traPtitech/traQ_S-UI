@@ -15,10 +15,7 @@ export type ChangeHeightData = Readonly<{
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
   props: { isEntryMessage: boolean },
-  state: Readonly<{
-    content: string
-    message?: Message
-  }>,
+  message: Ref<Message | undefined>,
   embeddingsState: Readonly<{
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
@@ -54,7 +51,7 @@ const useElementRenderObserver = (
         bottom,
         lastTop,
         lastBottom,
-        date: state.message?.createdAt
+        date: message.value?.createdAt
       })
     }
     lastHeight = height

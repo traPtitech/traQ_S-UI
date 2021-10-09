@@ -24,7 +24,7 @@ export interface S {
 
   renderedContentMap: Map<MessageId, string>
 
-  embeddingsMap: Map<MessageId, EmbeddingOrUrl[] | undefined>
+  embeddingsMap: Map<MessageId, EmbeddingOrUrl[]>
 
   /** チャンネルを見ている人の一覧(古い順) */
   currentViewers: ChannelViewer[]

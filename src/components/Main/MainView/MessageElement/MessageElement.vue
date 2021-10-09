@@ -1,22 +1,22 @@
 <template>
   <div
-    v-if="state.message"
+    v-if="message"
     ref="bodyRef"
     :class="$style.body"
     :data-is-mobile="$boolAttr(isMobile)"
-    :data-is-pinned="$boolAttr(state.isPinned)"
+    :data-is-pinned="$boolAttr(message.pinned)"
     :data-is-entry="$boolAttr(isEntryMessage)"
-    :data-is-editing="$boolAttr(state.isEditing)"
+    :data-is-editing="$boolAttr(isEditing)"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
     <message-pinned
-      v-if="state.message.pinned"
+      v-if="message.pinned"
       :message-id="messageId"
       :class="$style.pinned"
     />
     <message-tools
-      :show="isHovered && !state.isEditing"
+      :show="isHovered && !isEditing"
       :class="$style.tools"
       :message-id="messageId"
       :is-minimum="isArchived"
@@ -29,14 +29,14 @@
     <message-stamp-list
       :show-detail-button="isHovered"
       :message-id="messageId"
-      :stamps="state.message.stamps"
+      :stamps="message.stamps"
       :is-archived="isArchived"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
+import { defineComponent, computed, shallowRef, PropType } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
@@ -79,39 +79,25 @@ export default defineComponent({
   setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
-    const state = reactive({
-      message: computed(() =>
-        store.state.entities.messages.messagesMap.get(props.messageId)
-      ),
-      content: computed(
-        () =>
-          store.state.domain.messagesView.renderedContentMap.get(
-            props.messageId
-          ) ?? ''
-      ),
-      rawContent: computed(
-        () =>
-          store.state.entities.messages.messagesMap.get(props.messageId)
-            ?.content ?? ''
-      ),
-      isEditing: computed(
-        () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
-      ),
-      isPinned: computed((): boolean => state.message?.pinned ?? false)
-    })
+    const message = computed(() =>
+      store.state.entities.messages.messagesMap.get(props.messageId)
+    )
+    const isEditing = computed(
+      () => props.messageId === store.state.domain.messagesView.editingMessageId
+    )
 
     const { embeddingsState } = useEmbeddings(props)
 
-    useElementRenderObserver(bodyRef, props, state, embeddingsState, emit)
+    useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 
     return {
-      state,
+      message,
       bodyRef,
       embeddingsState,
       isMobile,
+      isEditing,
       isHovered,
       onMouseEnter,
       onMouseLeave
