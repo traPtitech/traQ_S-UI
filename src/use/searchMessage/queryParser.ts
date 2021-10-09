@@ -3,6 +3,7 @@ import apis from '/@/lib/apis'
 import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
 import {
   channelParser,
+  InHereToken,
   dateParser,
   ExtractedFilter,
   parseToFilter as parseToFilterBase,
@@ -11,8 +12,11 @@ import {
   makePrefixedFilterExtractor,
   messageParser,
   rawQuery,
-  userParser
+  userParser,
+  StoreForParser
 } from './parserBase'
+import store from '/@/store'
+import { channelPathToId } from '/@/lib/channelTree'
 
 /** APIに投げる型 */
 type SearchMessageQuery = Parameters<typeof apis.searchMessages>
@@ -47,7 +51,7 @@ type MediaFlagFilterKey = 'attachments' | 'image' | 'audio' | 'video'
 export type Filter =
   | { type: 'after'; raw: string; value: Date }
   | { type: 'before'; raw: string; value: Date }
-  | { type: 'in'; raw: string; value: ChannelId }
+  | { type: 'in'; raw: string; value: typeof InHereToken | ChannelId }
   | { type: 'to'; raw: string; value: UserId }
   | { type: 'from'; raw: string; value: UserId }
   | { type: 'citation'; raw: string; value: MessageId }
@@ -112,6 +116,7 @@ const mediaFlagParser: FilterParser<FilterType, MediaFlagFilterKey> =
 // parserの実装
 
 const parser = async (
+  store: StoreForParser,
   extracted: ExtractedFilter<FilterType>
 ): Promise<Filter | undefined> => {
   const type = extracted.type
@@ -124,14 +129,14 @@ const parser = async (
         : undefined
     }
     case 'in': {
-      const result = channelParser(extracted)
+      const result = channelParser(store.channelPathToId, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
     }
     case 'to':
     case 'from': {
-      const result = await userParser(extracted)
+      const result = await userParser(store.usernameToId, extracted)
       return result
         ? { type, raw: rawQuery(extracted), value: result }
         : undefined
@@ -167,8 +172,26 @@ const parser = async (
   }
 }
 
+const storeForParser: StoreForParser = {
+  channelPathToId: path => {
+    try {
+      return channelPathToId(
+        path.split('/'),
+        store.state.domain.channelTree.channelTree
+      )
+    } catch {
+      return undefined
+    }
+  },
+  usernameToId: async username => {
+    const user = await store.dispatch.entities.fetchUserByName({ username })
+    return user?.id
+  }
+}
+
 /** extractorとparserをまとめて実装を注入したもの */
 const parseQueryFragmentToFilter = parseToFilterBase(
+  storeForParser,
   parser,
   extractor,
   q => !q.includes(':') && !q.startsWith('#') && !q.startsWith('@')
@@ -190,6 +213,18 @@ const filterOrStringToSearchMessageQuery = (
         [f.type]: f.value.toISOString()
       }
     case 'in':
+      let channelId: string | undefined
+      if (f.value === InHereToken) {
+        const { primaryView } = store.state.ui.mainView
+        channelId =
+          primaryView.type === 'channel' || primaryView.type === 'dm'
+            ? primaryView.channelId
+            : undefined
+      } else {
+        channelId = f.value
+      }
+
+      return { ...emptySearchMessageQueryObject, in: channelId }
     case 'to':
     case 'from':
     case 'citation':
