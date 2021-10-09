@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import version from '/@/lib/env/version'
+import { VERSION } from '/@/lib/define'
 import useVersion from '/@/use/version'
 
 export default defineComponent({
@@ -17,7 +17,7 @@ export default defineComponent({
     const { version: serverVersionData } = useVersion()
     const serverVersion = computed(() => serverVersionData.value?.version)
     return {
-      clientVersion: version,
+      clientVersion: VERSION,
       serverVersion
     }
   }

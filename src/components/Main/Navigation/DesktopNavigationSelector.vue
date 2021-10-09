@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <popup-navigator :class="$style.logo" :title="`traQ ${version}`" />
+    <popup-navigator :class="$style.logo" :title="`traQ ${VERSION}`" />
     <navigation-selector-item
       v-for="item in entries"
       :key="item.type"
@@ -37,7 +37,7 @@ import useNavigationSelectorEntry, {
   EphemeralNavigationSelectorEntry
 } from './use/navigationSelectorEntry'
 import NavigationSelectorItem from '/@/components/Main/Navigation/NavigationSelectorItem.vue'
-import version from '/@/lib/env/version'
+import { VERSION } from '/@/lib/define'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 
 export default defineComponent({
@@ -83,7 +83,7 @@ export default defineComponent({
     })
 
     return {
-      version,
+      VERSION,
       entries,
       ephemeralEntries,
       showSeparator,

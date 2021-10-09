@@ -53,6 +53,7 @@ export default defineConfig(({ command, mode }) => ({
       }
     }
   },
+  // /@/lib/define.tsを参照
   define: {
     __VERSION__: JSON.stringify(packageJson.version),
     __DEV_SERVER__: JSON.stringify(

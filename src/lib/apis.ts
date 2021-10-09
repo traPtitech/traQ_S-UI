@@ -14,7 +14,7 @@ import {
   VisibilityChangedEvent
 } from '@traptitech/traq'
 import { FileId } from '/@/types/entity-ids'
-import DEV_SERVER from '/@/lib/env/devServer'
+import { DEV_SERVER } from '/@/lib/define'
 import { AxiosError } from 'axios'
 import { constructFilesPath } from '/@/router'
 

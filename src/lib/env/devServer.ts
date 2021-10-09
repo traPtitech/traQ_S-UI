@@ -1,1 +1,0 @@
-export default __DEV_SERVER__
