@@ -330,7 +330,7 @@ const useImageViewer = (containerEle: Ref<HTMLElement | undefined>) => {
       rewriteCenterDiff(newPoint, oldPoint)
     },
     (newDistance, oldDistance, centerPoint, rotateAngle) => {
-      rewriteRotate(state.rotate + rotateAngle)
+      rewriteRotate(state.rotate - rotateAngle)
 
       // 変化がないときは処理しない(oldDistanceを変更しないのはuseTouch内で実装)
       if (newDistance === oldDistance) return
