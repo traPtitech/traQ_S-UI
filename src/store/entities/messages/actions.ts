@@ -4,7 +4,7 @@ import { messages } from '.'
 import { ActionContext } from 'vuex'
 import { FileInfo, Message, MessageStamp, Ogp } from '@traptitech/traq'
 import { ExternalUrl, FileId, MessageId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/util/async'
+import { createSingleflight } from '/@/lib/basic/async'
 import apis from '/@/lib/apis'
 import {
   MessageStampedEvent,

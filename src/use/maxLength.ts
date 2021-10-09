@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { countLength } from '/@/lib/util/string'
+import { countLength } from '/@/lib/basic/string'
 
 const useMaxLength = (state: {
   val: string

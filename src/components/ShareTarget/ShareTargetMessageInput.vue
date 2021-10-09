@@ -41,7 +41,7 @@ import {
   ref,
   toRef
 } from 'vue'
-import { randomString } from '/@/lib/util/randomString'
+import { randomString } from '/@/lib/basic/randomString'
 import store from '/@/store'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'

@@ -7,7 +7,7 @@ import {
   InjectionKey
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { Point } from '/@/lib/point'
+import { Point } from '/@/lib/basic/point'
 
 const messageContextMenuStoreSymbol: InjectionKey<MessageContextMenuStore> =
   Symbol()

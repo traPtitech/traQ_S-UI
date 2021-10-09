@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { isSafari, isIOSApp, isPWA } from '/@/lib/util/browser'
+import { isSafari, isIOSApp, isPWA } from '/@/lib/basic/browser'
 
 export default defineComponent({
   name: 'SafariWarning',

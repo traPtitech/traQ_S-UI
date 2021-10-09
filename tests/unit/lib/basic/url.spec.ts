@@ -1,4 +1,4 @@
-import { getFirstParam, getFirstQuery } from '/@/lib/util/url'
+import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 
 describe('getFirstParam', () => {
   it('can get string param', () => {

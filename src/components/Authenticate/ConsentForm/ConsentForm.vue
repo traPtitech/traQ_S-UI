@@ -40,7 +40,7 @@ import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'
 import AuthenticateButton from '../AuthenticateButton.vue'
 import { useRoute } from 'vue-router'
-import { getFirstQuery } from '/@/lib/util/url'
+import { getFirstQuery } from '/@/lib/basic/url'
 
 export default defineComponent({
   name: 'ConsentForm',

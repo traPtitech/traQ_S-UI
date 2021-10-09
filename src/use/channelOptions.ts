@@ -1,8 +1,8 @@
 import { computed, Ref, unref } from 'vue'
 import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
-import { compareStringInsensitive } from '/@/lib/util/string'
-import { nullUuid } from '/@/lib/util/uuid'
+import { compareStringInsensitive } from '/@/lib/basic/string'
+import { nullUuid } from '/@/lib/basic/uuid'
 import { Channel } from '@traptitech/traq'
 
 const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid

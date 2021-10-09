@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { getFullDayWithTimeString } from '/@/lib/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import ProfileHeader from './ProfileHeader.vue'
 
 export default defineComponent({

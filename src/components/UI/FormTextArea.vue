@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, shallowRef } from 'vue'
-import { randomString } from '/@/lib/util/randomString'
+import { randomString } from '/@/lib/basic/randomString'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '/@/use/modelSyncer'

@@ -37,7 +37,7 @@ import useElementRenderObserver, {
 import useEmbeddings from '/@/use/message/embeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
-import { getCreatedDate } from '/@/lib/date'
+import { getCreatedDate } from '/@/lib/basic/date'
 import useChannelPath from '/@/use/channelPath'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import useHover from '/@/use/hover'

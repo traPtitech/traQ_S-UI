@@ -1,4 +1,4 @@
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
 

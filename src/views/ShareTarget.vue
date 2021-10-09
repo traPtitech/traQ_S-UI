@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { getFirstQuery } from '/@/lib/util/url'
+import { getFirstQuery } from '/@/lib/basic/url'
 import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import { useRoute } from 'vue-router'

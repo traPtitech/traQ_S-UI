@@ -41,11 +41,11 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import useToastStore from '/@/providers/toastStore'
-import { wait } from '/@/lib/util/timer'
-import { checkStorageManagerSupport } from '/@/lib/util/browser'
+import { wait } from '/@/lib/basic/timer'
+import { checkStorageManagerSupport } from '/@/lib/basic/browser'
 import { deleteUnicodeStamps } from '/@/lib/stampCache'
 import store from '/@/store'
-import { prettifyFileSize } from '/@/lib/util/file'
+import { prettifyFileSize } from '/@/lib/basic/file'
 
 declare global {
   interface StorageEstimate {

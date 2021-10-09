@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
-import { checkMediaSessionSupport } from '/@/lib/util/browser'
+import { checkMediaSessionSupport } from '/@/lib/basic/browser'
 
 const usePictureInPicture = () => {
   const isMediaSessionSupported = checkMediaSessionSupport()

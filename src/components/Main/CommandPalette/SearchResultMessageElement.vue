@@ -51,7 +51,7 @@ import {
 import Icon from '/@/components/UI/Icon.vue'
 import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { getCreatedDate } from '/@/lib/date'
+import { getCreatedDate } from '/@/lib/basic/date'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'

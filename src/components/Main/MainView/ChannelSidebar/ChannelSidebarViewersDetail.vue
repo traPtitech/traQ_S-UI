@@ -13,7 +13,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import store from '/@/store'
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 
 export default defineComponent({
   name: 'ChannelSidebarViewersDetail',

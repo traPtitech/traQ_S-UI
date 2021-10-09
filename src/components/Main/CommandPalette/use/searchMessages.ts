@@ -1,7 +1,7 @@
 import { ref, computed, readonly, Ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
-import { compareDateString } from '/@/lib/date'
+import { compareDateString } from '/@/lib/basic/date'
 import store from '/@/store'
 import useQueryParer, {
   SearchMessageSortKey

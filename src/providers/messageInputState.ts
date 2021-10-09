@@ -8,7 +8,7 @@ import {
   unref,
   watch
 } from 'vue'
-import { AttachmentType, mimeToFileType } from '/@/lib/util/file'
+import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
 import { getResizedFile } from '/@/lib/resize'
 import { convertToDataUrl } from '/@/lib/resize/dataurl'
 import { ChannelId } from '/@/types/entity-ids'

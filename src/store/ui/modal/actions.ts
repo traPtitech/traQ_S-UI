@@ -6,7 +6,7 @@ import router, { constructChannelPath, constructUserPath } from '/@/router'
 import useCurrentChannelPath from '/@/use/currentChannelPath'
 import { ActionContext } from 'vuex'
 import { toRaw } from 'vue'
-import { wait } from '/@/lib/util/timer'
+import { wait } from '/@/lib/basic/timer'
 
 export const modalActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, modal)

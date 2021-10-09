@@ -17,7 +17,7 @@ import store from '/@/store'
 import useFileMeta from '/@/use/fileMeta'
 import useChannelPath from '/@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
-import { getCreatedDate } from '/@/lib/date'
+import { getCreatedDate } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../use/openLinkFromModal'
 
 export default defineComponent({

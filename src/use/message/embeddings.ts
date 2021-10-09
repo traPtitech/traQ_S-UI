@@ -1,11 +1,7 @@
 import { computed, reactive } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
-import {
-  isFile,
-  isMessage,
-  isExternalUrl
-} from '/@/lib/util/guard/embeddingOrUrl'
+import { isFile, isMessage, isExternalUrl } from '/@/lib/guard/embeddingOrUrl'
 
 const useEmbeddings = (props: { messageId: MessageId }) => {
   const embeddingsMap = computed(() =>

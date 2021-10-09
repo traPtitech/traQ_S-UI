@@ -23,7 +23,7 @@
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import store from '/@/store'
-import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/date'
+import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import GradeBadge from './GradeBadge.vue'
 import Icon from '/@/components/UI/Icon.vue'
 

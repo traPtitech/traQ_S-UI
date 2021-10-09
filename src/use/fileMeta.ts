@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import store from '/@/store'
 import { buildFilePath } from '/@/lib/apis'
-import { mimeToFileType, prettifyFileSize } from '/@/lib/util/file'
+import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import useFileLink from '/@/use/fileLink'
 
 const useFileMeta = (props: { fileId: string }) => {

@@ -5,7 +5,7 @@ import {
   getDistance,
   getMidpoint,
   getAngleBetweenLines
-} from '/@/lib/point'
+} from '/@/lib/basic/point'
 
 const ZOOM_STEP = 1.2
 const MIN_ZOOM_LEVEL = -15

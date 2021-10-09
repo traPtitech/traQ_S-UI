@@ -12,7 +12,7 @@ import {
 } from 'vue'
 import { StampSet } from '/@/components/Main/StampPicker/use/stampSetSelector'
 import { StampId } from '/@/types/entity-ids'
-import { Point } from '/@/lib/point'
+import { Point } from '/@/lib/basic/point'
 import { throttle } from 'throttle-debounce'
 
 const stampPickerStoreSymbol: InjectionKey<StampPickerStore> = Symbol()

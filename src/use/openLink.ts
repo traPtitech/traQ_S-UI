@@ -1,5 +1,5 @@
 import { useRouter } from 'vue-router'
-import { isMac } from '/@/lib/util/browser'
+import { isMac } from '/@/lib/basic/browser'
 
 const LEFT_CLICK_BUTTON = 0
 const MIDDLE_CLICK_BUTTON = 1

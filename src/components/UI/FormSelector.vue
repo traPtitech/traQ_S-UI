@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { randomString } from '/@/lib/util/randomString'
+import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 const nullSymbol = Symbol('null')

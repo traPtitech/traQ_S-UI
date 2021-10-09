@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { AttachmentType } from '/@/lib/util/file'
+import { AttachmentType } from '/@/lib/basic/file'
 import Icon from '/@/components/UI/Icon.vue'
 
 export default defineComponent({

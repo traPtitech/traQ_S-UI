@@ -4,9 +4,9 @@ import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '/@/use/channelPath'
 import { computed, ref, unref } from 'vue'
-import { nullUuid } from '/@/lib/util/uuid'
+import { nullUuid } from '/@/lib/basic/uuid'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { countLength } from '/@/lib/util/string'
+import { countLength } from '/@/lib/basic/string'
 import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,

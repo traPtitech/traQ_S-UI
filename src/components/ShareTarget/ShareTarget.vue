@@ -16,7 +16,7 @@ import { defineComponent, computed, ref, watchEffect } from 'vue'
 import ShareTargetForm from './ShareTargetForm.vue'
 import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
 import useIsMobile from '/@/use/isMobile'
-import { wait } from '/@/lib/util/timer'
+import { wait } from '/@/lib/basic/timer'
 
 export default defineComponent({
   name: 'ShareTarget',

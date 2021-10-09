@@ -7,7 +7,7 @@ import {
   getDisplayDate,
   compareDate,
   compareDateString
-} from '/@/lib/date'
+} from '/@/lib/basic/date'
 
 const defaultDate1 = new Date('1985-12-04T15:21:34')
 const defaultDate2 = new Date('2001-04-04T05:20:34')
