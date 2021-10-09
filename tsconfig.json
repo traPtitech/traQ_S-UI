@@ -18,12 +18,7 @@
     "types": [
       "dom-screen-wake-lock",
       "jest",
-      "webappsec-credential-management",
-      "config"
-    ],
-    "typeRoots": [
-      "node_modules/@types",
-      "src/types"
+      "webappsec-credential-management"
     ],
     "paths": {
       "/@/*": [
