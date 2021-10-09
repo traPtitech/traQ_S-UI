@@ -35,7 +35,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const value = computed({
       get: () => props.subscribed,
-      set: v => {
+      set: _v => {
         emit('changeNotification', props.userId, !props.subscribed)
       }
     })

@@ -75,7 +75,7 @@ export const actions = defineActions({
    * 注意: このメソッドをhistoryにstateが乗っている状態で呼ぶとhistoryとの同期を破壊するため、直接開いたファイル画面を閉じる等以外で呼ばない
    */
   closeModal: context => {
-    const { commit, state, getters, rootState } = modalActionContext(context)
+    const { commit, state, rootState } = modalActionContext(context)
     history.replaceState(
       {
         ...history.state,

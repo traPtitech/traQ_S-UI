@@ -54,7 +54,7 @@ export const actions = defineActions({
     return false
   },
   set(context, newState: Partial<S>) {
-    const { commit, rootCommit } = rtcSettingsActionContext(context)
+    const { commit } = rtcSettingsActionContext(context)
     commit.set(newState)
 
     if (newState.masterVolume) {

@@ -45,8 +45,8 @@ export default defineComponent({
     }
   },
   emits: {
-    'update:isExpanded': (v: boolean) => true,
-    'update:isPreviewShown': (v: boolean) => true,
+    'update:isExpanded': (_v: boolean) => true,
+    'update:isPreviewShown': (_v: boolean) => true,
     clickAddAttachment: () => true
   },
   setup(props, { emit }) {

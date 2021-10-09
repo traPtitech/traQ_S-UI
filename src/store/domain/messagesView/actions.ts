@@ -85,8 +85,7 @@ export const actions = defineActions({
       isDM?: boolean
     }
   ) {
-    const { state, commit, dispatch, rootState } =
-      messagesViewActionContext(context)
+    const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentChannelId === payload.channelId) return
 
     // ここの二行は同時に実行されないとmessagesFetcherのrunWithIdentifierCheckに失敗する
