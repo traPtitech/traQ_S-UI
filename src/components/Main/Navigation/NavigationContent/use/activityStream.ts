@@ -5,7 +5,7 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { messageMitt } from '/@/store/entities/messages'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/util/async'
 import { bothChannelsMapInitialFetchPromise } from '/@/store/entities/promises'
 
 export const ACTIVITY_LENGTH = 50

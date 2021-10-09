@@ -1,4 +1,4 @@
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/util/async'
 import { isIOSApp } from '/@/lib/util/browser'
 import router, { RouteName } from '/@/router'
 import store from '/@/store'

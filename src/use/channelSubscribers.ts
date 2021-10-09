@@ -1,5 +1,5 @@
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/util/async'
 import { wsListener } from '/@/lib/websocket'
 import { ChannelSubscribersChangedEvent } from '/@/lib/websocket/events'
 import { ChannelId } from '/@/types/entity-ids'

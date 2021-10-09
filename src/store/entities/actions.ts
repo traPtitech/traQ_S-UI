@@ -13,7 +13,7 @@ import {
   UserId
 } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/util/async'
 import {
   Channel,
   ClipFolder,
