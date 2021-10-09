@@ -6,11 +6,11 @@
         使用量:
         <template v-if="cacheData.usageDetails">
           <span v-for="(usage, key) in cacheData.usageDetails" :key="key">
-            {{ formatBytes(usage) }} ({{ key }})
+            {{ prettifyFileSize(usage) }} ({{ key }})
           </span>
         </template>
         <template v-else>
-          {{ formatBytes(cacheData.usage) }}
+          {{ prettifyFileSize(cacheData.usage) }}
         </template>
       </p>
       <form-button
@@ -45,6 +45,7 @@ import { wait } from '/@/lib/util/timer'
 import { checkStorageManagerSupport } from '/@/lib/util/browser'
 import { deleteUnicodeStamps } from '/@/lib/stampCache'
 import store from '/@/store'
+import { prettifyFileSize } from '/@/lib/util/file'
 
 declare global {
   interface StorageEstimate {
@@ -63,8 +64,6 @@ const confirmClear = () => window.confirm('本当に削除しますか？')
 
 /* CacheStorageのnameはsw.jsを参照 */
 const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
-
-const formatBytes = (b: number) => `${Math.ceil(b / 1000)}kB`
 
 export default defineComponent({
   name: 'Caches',
@@ -123,7 +122,7 @@ export default defineComponent({
 
     return {
       cacheData,
-      formatBytes,
+      prettifyFileSize,
       clearMainCache,
       clearFileCache,
       clearThumbnailCache,
