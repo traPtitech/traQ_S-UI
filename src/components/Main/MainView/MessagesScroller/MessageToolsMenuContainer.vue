@@ -1,13 +1,14 @@
 <template>
   <teleport v-show="isShown" to="#message-menu-popup">
     <div ref="menuContainerRef">
-      <message-tools-menu
-        v-if="isShown"
-        v-click-outside="closeContextMenu"
-        :style="styles.toolsMenu"
-        :class="$style.toolsMenu"
-        :message-id="state.target"
-      />
+      <click-outside @click-outside="closeContextMenu">
+        <message-tools-menu
+          v-if="isShown"
+          :style="styles.toolsMenu"
+          :class="$style.toolsMenu"
+          :message-id="state.target"
+        />
+      </click-outside>
     </div>
   </teleport>
 </template>
@@ -25,6 +26,7 @@ import {
   shallowRef,
   toRef
 } from 'vue'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
@@ -61,6 +63,7 @@ const useStyles = (
 export default defineComponent({
   name: 'MessageToolsMenuContainer',
   components: {
+    ClickOutside,
     MessageToolsMenu
   },
   setup(_, context) {

@@ -1,21 +1,20 @@
 <template>
-  <div
-    v-click-outside="closeCommandPalette"
-    :class="$style.container"
-    :data-is-mobile="$boolAttr(isMobile)"
-  >
-    <command-palette-input />
-    <hr v-if="supplementalViewType" :class="$style.separator" />
-    <search-result v-if="supplementalViewType === 'search-result'" />
-    <search-suggestion
-      v-else-if="supplementalViewType === 'search-suggestion'"
-    />
-  </div>
+  <click-outside @click-outside="closeCommandPalette">
+    <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
+      <command-palette-input />
+      <hr v-if="supplementalViewType" :class="$style.separator" />
+      <search-result v-if="supplementalViewType === 'search-result'" />
+      <search-suggestion
+        v-else-if="supplementalViewType === 'search-suggestion'"
+      />
+    </div>
+  </click-outside>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useCommandPaletteStore } from '/@/providers/commandPalette'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
@@ -26,6 +25,7 @@ type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 export default defineComponent({
   name: 'CommandPalette',
   components: {
+    ClickOutside,
     CommandPaletteInput,
     SearchResult,
     SearchSuggestion

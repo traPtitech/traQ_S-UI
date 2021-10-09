@@ -1,34 +1,32 @@
 <template>
-  <div
-    v-click-outside="onClickOutside"
-    :class="$style.wrapper"
-    data-testid="usermodal"
-  >
-    <close-button
-      :size="isMobile ? 24 : 32"
-      :class="$style.close"
-      @close="onClickClear"
-    />
-    <user-icon
-      v-if="!isMobile"
-      :user-id="id"
-      prevent-modal
-      :class="$style.icon"
-      :style="styles.icon"
-    />
-    <div :class="$style.content" :style="styles.content">
-      <feature :user="user" :detail="userDetail" />
-      <navigation-selector
-        :current-navigation="currentNavigation"
-        @navigation-change="onNavigationChange"
+  <click-outside @click-outside="onClickOutside">
+    <div :class="$style.wrapper" data-testid="usermodal">
+      <close-button
+        :size="isMobile ? 24 : 32"
+        :class="$style.close"
+        @close="onClickClear"
       />
-      <navigation-content
-        :current-navigation="currentNavigation"
-        :user="user"
-        :detail="userDetail"
+      <user-icon
+        v-if="!isMobile"
+        :user-id="id"
+        prevent-modal
+        :class="$style.icon"
+        :style="styles.icon"
       />
+      <div :class="$style.content" :style="styles.content">
+        <feature :user="user" :detail="userDetail" />
+        <navigation-selector
+          :current-navigation="currentNavigation"
+          @navigation-change="onNavigationChange"
+        />
+        <navigation-content
+          :current-navigation="currentNavigation"
+          :user="user"
+          :detail="userDetail"
+        />
+      </div>
     </div>
-  </div>
+  </click-outside>
 </template>
 
 <script lang="ts">
@@ -36,6 +34,7 @@ import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
 import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import Feature from './Feature/Feature.vue'
 import NavigationSelector from './NavigationSelector.vue'
@@ -58,6 +57,7 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
 export default defineComponent({
   name: 'UserModal',
   components: {
+    ClickOutside,
     UserIcon,
     Feature,
     NavigationSelector,

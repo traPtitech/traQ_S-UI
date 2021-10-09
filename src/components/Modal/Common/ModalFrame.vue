@@ -1,31 +1,35 @@
 <template>
-  <div v-click-outside="onClickOutside" :class="$style.container">
-    <common-modal-header
-      :class="$style.header"
-      :icon-name="iconName"
-      :icon-mdi="iconMdi"
-      :title="title"
-      :return-button="returnButton"
-    >
-      <template #subtitle>
-        <template v-if="subtitle">{{ subtitle }}</template>
-        <slot v-else name="subtitle" />
-      </template>
-    </common-modal-header>
-    <div :class="$style.body">
-      <slot />
+  <click-outside @click-outside="onClickOutside">
+    <div :class="$style.container">
+      <common-modal-header
+        :class="$style.header"
+        :icon-name="iconName"
+        :icon-mdi="iconMdi"
+        :title="title"
+        :return-button="returnButton"
+      >
+        <template #subtitle>
+          <template v-if="subtitle">{{ subtitle }}</template>
+          <slot v-else name="subtitle" />
+        </template>
+      </common-modal-header>
+      <div :class="$style.body">
+        <slot />
+      </div>
     </div>
-  </div>
+  </click-outside>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import store from '/@/store'
+import ClickOutside from '/@/components/UI/ClickOutside'
 import CommonModalHeader from './ModalHeader.vue'
 
 export default defineComponent({
   name: 'ModalFrame',
   components: {
+    ClickOutside,
     CommonModalHeader
   },
   props: {
