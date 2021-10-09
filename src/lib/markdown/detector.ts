@@ -60,7 +60,8 @@ export const forEachData = (
         isString = !isString
       } else if (!isString && text[i] === '}') {
         isInside = false
-        const data = parse(text.substr(startIndex + 1, i - startIndex))
+        const jsonString = text.slice(startIndex + 1, i + 1) // `{`から`}`まで
+        const data = parse(jsonString)
         const result = func(data, {
           start: startIndex,
           length: i - startIndex + 1

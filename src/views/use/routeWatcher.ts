@@ -237,16 +237,22 @@ const useRouteWatcher = () => {
       return
     }
 
-    if (routeName === RouteName.Channel) {
-      await onRouteChangedToChannel()
-    } else if (routeName === RouteName.User) {
-      await onRouteChangedToUser()
-    } else if (routeName === RouteName.ClipFolders) {
-      await onRouteChangedToClipFolders()
-    } else if (routeName === RouteName.File) {
-      await onRouteChangedToFile()
-    } else if (routeName === RouteName.Message) {
-      await onRouteChangedToMessage()
+    switch (routeName) {
+      case RouteName.Channel:
+        await onRouteChangedToChannel()
+        break
+      case RouteName.User:
+        await onRouteChangedToUser()
+        break
+      case RouteName.ClipFolders:
+        await onRouteChangedToClipFolders()
+        break
+      case RouteName.File:
+        await onRouteChangedToFile()
+        break
+      case RouteName.Message:
+        await onRouteChangedToMessage()
+        break
     }
 
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
@@ -258,7 +264,7 @@ const useRouteWatcher = () => {
 
     if (state.isInitialView && !isOnInitialModalRoute) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      if (store.state.ui.modal.modalState.length !== 0) {
+      if (store.state.ui.modal.modalState.length > 0) {
         store.commit.ui.modal.setState([])
       }
       history.replaceState({ ...history.state, modalState: [] }, '')

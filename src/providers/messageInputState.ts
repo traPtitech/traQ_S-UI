@@ -206,7 +206,7 @@ export const useMessageInputStateAttachment = (
     }
 
     if (types.includes('Files')) {
-      Array.from(dt.files).forEach(file => {
+      ;[...dt.files].forEach(file => {
         addAttachment(file)
       })
       return

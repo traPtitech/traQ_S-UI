@@ -44,18 +44,17 @@ const usePathInfo = (props: Props) => {
 
   /** 現在のチャンネルに至るまでのフルパスたち */
   const pathInfoList = computed((): ChannelPathInfo[] =>
-    channelIdToPath(props.channelId).reduce(
-      (acc, cur, idx) => [
-        ...acc,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        { name: cur, path: idx === 0 ? [cur] : [...acc[idx - 1]!.path, cur] }
-      ],
-      [] as ChannelPathInfo[]
-    )
+    channelIdToPath(props.channelId).map((p, i, arr) => ({
+      name: p,
+      path: arr.slice(0, i)
+    }))
   )
 
   return { pathInfoList }
 }
+
+const buildChannelLink = (path: string[]) =>
+  constructChannelPath(path.join('/'))
 
 export default defineComponent({
   name: 'HeaderChannelName',
@@ -68,17 +67,14 @@ export default defineComponent({
   setup(props) {
     const { isMobile } = useIsMobile()
     const { pathInfoList } = usePathInfo(props)
-    const ancestorsPath = computed(() =>
-      pathInfoList.value.slice(0, pathInfoList.value.length - 1)
-    )
+    const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
     const pathInfo = computed(() =>
       pathInfoList.value.length > 0
         ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           pathInfoList.value[pathInfoList.value.length - 1]!
         : { name: '' }
     )
-    const buildChannelLink = (path: string[]) =>
-      constructChannelPath(path.join('/'))
+
     return {
       ancestorsPath,
       pathInfo,

@@ -166,7 +166,7 @@ const useTouch = (
         lastMoveTouch = null
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         lastPinchTouches = pinch([touches[0]!, touches[1]!], lastPinchTouches)
-      } else if (touches.length >= 1) {
+      } else if (touches.length > 0) {
         lastMoveTouch = move(touches, lastMoveTouch)
         lastPinchTouches = null
       }

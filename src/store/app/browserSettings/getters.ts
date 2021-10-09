@@ -17,7 +17,7 @@ export const getters = defineGetters<S>()({
       default: {
         const invalid: never = state.openMode
         // eslint-disable-next-line no-console
-        console.warn('Invalid app.browserSettings.openMode: ', invalid)
+        console.warn('Invalid app.browserSettings.openMode:', invalid)
         return state.openChannelName
       }
     }

@@ -119,10 +119,12 @@ export const actions = defineActions({
       promises.push(mixer.addStream(userId, stream))
     )
 
-    promises.push(mixer.addFileSource('qall_start', qallStartMp3))
-    promises.push(mixer.addFileSource('qall_end', qallEndMp3))
-    promises.push(mixer.addFileSource('qall_joined', qallJoinedMp3))
-    promises.push(mixer.addFileSource('qall_left', qallLeftMp3))
+    promises.push(
+      mixer.addFileSource('qall_start', qallStartMp3),
+      mixer.addFileSource('qall_end', qallEndMp3),
+      mixer.addFileSource('qall_joined', qallJoinedMp3),
+      mixer.addFileSource('qall_left', qallLeftMp3)
+    )
 
     await Promise.all(promises)
 

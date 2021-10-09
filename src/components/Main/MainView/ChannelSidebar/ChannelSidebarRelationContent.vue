@@ -62,6 +62,12 @@ const SIBLINGS_DEFAULT_COUNT = 5
 const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
 const CHILDREN_DEFAULT_COUNT = 3
 
+const buildChildLink = (channel: string) => `${location.pathname}/${channel}`
+const buildParentLink = () =>
+  `${location.pathname.split('/').slice(0, -1).join('/')}`
+const buildSiblingLink = (channel: string) =>
+  `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
+
 export default defineComponent({
   name: 'ChannelSidebarRelationContent',
   components: { ChannelSidebarRelationElement },
@@ -115,13 +121,6 @@ export default defineComponent({
     const siblingsRemainCount = computed(
       () => props.siblings.length - SIBLINGS_DEFAULT_COUNT
     )
-
-    const buildChildLink = (channel: string) =>
-      `${location.pathname}/${channel}`
-    const buildParentLink = () =>
-      `${location.pathname.split('/').slice(0, -1).join('/')}`
-    const buildSiblingLink = (channel: string) =>
-      `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
 
     return {
       state,

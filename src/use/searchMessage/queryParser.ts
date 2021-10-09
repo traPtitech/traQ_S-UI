@@ -171,7 +171,7 @@ const parser = async (
 const parseQueryFragmentToFilter = parseToFilterBase(
   parser,
   extractor,
-  q => q.indexOf(':') < 0 && !q.startsWith('#') && !q.startsWith('@')
+  q => !q.includes(':') && !q.startsWith('#') && !q.startsWith('@')
 )
 
 /** 実際のクエリに対応するオブジェクトへの変換 */

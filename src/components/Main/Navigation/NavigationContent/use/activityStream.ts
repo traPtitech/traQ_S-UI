@@ -42,7 +42,7 @@ const useActivityStream = (props: { show: boolean }) => {
       timelineChannelMap.value = new Map(
         res.map(message => [message.channelId, message])
       )
-    } catch (e) {}
+    } catch {}
   }
 
   // 一番最初に表示されたときに実行する
@@ -74,10 +74,11 @@ const useActivityStream = (props: { show: boolean }) => {
     if (!store.state.entities.channelsMap.has(activity.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (!mode.value.all) {
-      if (!store.getters.domain.me.isChannelSubscribed(activity.channelId)) {
-        return
-      }
+    if (
+      !mode.value.all &&
+      !store.getters.domain.me.isChannelSubscribed(activity.channelId)
+    ) {
+      return
     }
 
     // チャンネルアクティビティのとき、同じチャンネルのメッセージを消す

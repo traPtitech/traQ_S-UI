@@ -85,14 +85,18 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
 
   // state machine hooks
   watch(mState, newState => {
-    if (newState === MainViewComponentState.NavAppearingAuto) {
-      openNav()
-    } else if (newState === MainViewComponentState.NavDisappearingAuto) {
-      closeNav()
-    } else if (newState === MainViewComponentState.SidebarAppearingAuto) {
-      openSidebar()
-    } else if (newState === MainViewComponentState.SidebarDisappearingAuto) {
-      closeSidebar()
+    switch (newState) {
+      case MainViewComponentState.NavAppearingAuto:
+        openNav()
+        break
+      case MainViewComponentState.NavDisappearingAuto:
+        closeNav()
+        break
+      case MainViewComponentState.SidebarAppearingAuto:
+        openSidebar()
+        break
+      case MainViewComponentState.SidebarDisappearingAuto:
+        closeSidebar()
     }
   })
 

@@ -16,7 +16,7 @@ export const buildDescendantsChannelArray = (
   const result = [channel]
   let i = 0
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  while (result.length !== i + 1 || result[i]!.children.length !== 0) {
+  while (result.length !== i + 1 || result[i]!.children.length > 0) {
     result.push(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ...result[i]!.children.map(c => store.state.entities.channelsMap.get(c))

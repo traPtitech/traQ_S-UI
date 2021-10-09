@@ -36,7 +36,7 @@ export const provideCommandPaletteStore = () => {
 const useCommandPaletteBase = () => {
   const commandPaletteStore = inject(commandPaletteStoreSymbol)
   if (!commandPaletteStore) {
-    throw Error('useCommandPaletteStore() called without provider.')
+    throw new Error('useCommandPaletteStore() called without provider.')
   }
 
   const openCommandPalette = (mode: CommandPaletteMode, initialInput = '') => {

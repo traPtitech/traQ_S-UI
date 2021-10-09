@@ -28,6 +28,7 @@ export const constructStampNameIdMap = (stampEntities: Map<StampId, Stamp>) => {
 
   /** traQスタンプのIDリスト */
   const traQStampMap = new Map<StampName, StampId>()
+
   stampEntities.forEach(stamp => {
     if (stamp.isUnicode) {
       unicodeStampMap.set(stamp.name, stamp.id)
@@ -47,16 +48,15 @@ export const categorizeUnicodeStamps = async (
 ) => {
   const unicodeEmojis = (await import('/@/assets/unicode_emojis.json')).default
 
-  const numCategories = unicodeEmojis.length
-  const unicodeStampCategories = new Array(numCategories) as StampCategory[]
-
-  unicodeEmojis.forEach((emojiCategory, i) => {
-    const name = emojiCategory.category
-    const stampIds = emojiCategory.emojis
-      .map(emojiName => unicodeStampNameIdMap.get(emojiName))
-      .filter(isDefined)
-    unicodeStampCategories[i] = { name, stampIds }
-  })
+  const unicodeStampCategories: StampCategory[] = unicodeEmojis.map(
+    (emojiCategory, i) => {
+      const name = emojiCategory.category
+      const stampIds = emojiCategory.emojis
+        .map(emojiName => unicodeStampNameIdMap.get(emojiName))
+        .filter(isDefined)
+      return { name, stampIds }
+    }
+  )
   return unicodeStampCategories
 }
 
