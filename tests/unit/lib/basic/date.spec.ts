@@ -6,7 +6,8 @@ import {
   getDateRepresentationWithoutSameDate,
   getDisplayDate,
   compareDate,
-  compareDateString
+  compareDateString,
+  getCreatedDate
 } from '/@/lib/basic/date'
 
 const defaultDate1 = new Date('1985-12-04T15:21:34')
@@ -85,6 +86,16 @@ describe('getDisplayDate', () => {
   it('should get date string when not same date', () => {
     const dateISO2 = '2001-06-04T08:25:34'
     expect(getDisplayDate(dateISO, dateISO2)).toEqual('06/04 08:25')
+  })
+})
+
+describe('getCreatedDate', () => {
+  const today = new Date()
+  today.setHours(1)
+  today.setMinutes(23)
+
+  it('can get', () => {
+    expect(getCreatedDate(today.toISOString())).toEqual('01:23')
   })
 })
 

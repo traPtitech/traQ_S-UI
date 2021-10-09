@@ -44,6 +44,9 @@ describe('trieTree class', () => {
       { type: 'user', text: '@takashi_trap' }
     ])
   })
+  it('can search empty', () => {
+    expect(tree.search('')).toEqual([])
+  })
   it('is case insensitive', () => {
     expect(tree.search('@SAPP')).toEqual([{ type: 'user', text: '@sappi_red' }])
   })

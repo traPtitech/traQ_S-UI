@@ -1,4 +1,9 @@
-import { compareString, compareStringInsensitive } from '/@/lib/basic/string'
+import {
+  compareString,
+  compareStringInsensitive,
+  count,
+  countLength
+} from '/@/lib/basic/string'
 
 describe('compareString', () => {
   it('can compare string', () => {
@@ -27,5 +32,29 @@ describe('compareStringInsensitive', () => {
   })
   it('can compare case-insensitive string', () => {
     expect(compareStringInsensitive('a', 'A')).toEqual(0)
+  })
+})
+
+describe('count', () => {
+  it('can count ascii string', () => {
+    expect(count('aaa', 'a')).toEqual(3)
+  })
+  it('can count kanji string', () => {
+    expect(count('漢字漢字', '漢')).toEqual(2)
+  })
+  it('can count emoji', () => {
+    expect(count('😀😀😀😀😀', '😀')).toEqual(5)
+  })
+})
+
+describe('countLength', () => {
+  it('can count ascii string', () => {
+    expect(countLength('aaa')).toEqual(3)
+  })
+  it('can count kanji string', () => {
+    expect(countLength('漢字漢字')).toEqual(4)
+  })
+  it('can count emoji', () => {
+    expect(countLength('😀😀😀😀😀')).toEqual(5)
   })
 })
