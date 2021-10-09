@@ -5,7 +5,7 @@
       <toggle
         :model-value="value"
         :class="$style.toggle"
-        @update:modelValue="toggleSetting"
+        @update:model-value="toggleSetting"
       />
     </div>
     <div :class="$style.content">

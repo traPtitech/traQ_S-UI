@@ -6,8 +6,7 @@ import { useOpenLink } from '/@/use/openLink'
 
 interface Tool {
   iconName: string
-  iconMdi?: true
-  disabled?: boolean
+  iconMdi: boolean
   /**
    * clickイベントと中央クリックでのmousedownイベントで呼ばれる
    */

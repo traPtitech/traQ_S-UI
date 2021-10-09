@@ -1,7 +1,16 @@
-import { SetupContext, Ref, watchEffect, watch } from 'vue'
+import { Ref, watchEffect, watch } from 'vue'
 import { ExternalUrl, FileId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useRoute } from 'vue-router'
+
+export type ChangeHeightData = Readonly<{
+  heightDiff: number
+  top: number
+  bottom: number
+  lastTop: number
+  lastBottom: number
+  date?: string
+}>
 
 const useElementRenderObserver = (
   bodyRef: Ref<HTMLDivElement | null>,
@@ -14,7 +23,8 @@ const useElementRenderObserver = (
     fileIds: readonly FileId[]
     externalUrls: readonly ExternalUrl[]
   }>,
-  context: SetupContext
+  emit: ((name: 'entryMessageLoaded', relativePos: number) => void) &
+    ((name: 'changeHeight', data: ChangeHeightData) => void)
 ) => {
   const route = useRoute()
 
@@ -35,10 +45,10 @@ const useElementRenderObserver = (
         const parentTop =
           bodyRef.value.parentElement?.getBoundingClientRect().top ?? 0
         const { top } = bodyRef.value.getBoundingClientRect()
-        context.emit('entry-message-loaded', top - parentTop)
+        emit('entryMessageLoaded', top - parentTop)
       }
     } else {
-      context.emit('change-height', {
+      emit('changeHeight', {
         heightDiff: height - lastHeight,
         top,
         bottom,

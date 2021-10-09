@@ -34,7 +34,7 @@ import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
-  name: 'FormInput',
+  name: 'FormTextArea',
   components: {
     LengthCount,
     TextareaAutosize

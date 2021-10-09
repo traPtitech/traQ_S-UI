@@ -17,7 +17,7 @@ export const getCurrentWord = (
   const nearest = Math.max(prevAtMarkIndex, prevColonIndex, prevPeriodIndex)
   const begin = Math.max(nearest, 0)
   const end = elm.selectionEnd
-  const word = text.substring(begin, end)
+  const word = text.slice(begin, end)
   const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
   const divided = prevSpaceIndex > nearest
   return { word, begin, end, divided }
@@ -36,7 +36,7 @@ export const getDeterminedCharacters = (candidates: string[]) => {
     confirmedPart[i] = [...candidates[0]][i]!
     for (const candidate of candidates) {
       if (confirmedPart[i] !== [...candidate][i]) {
-        return confirmedPart.slice(0, confirmedPart.length - 1).join('')
+        return confirmedPart.slice(0, -1).join('')
       }
     }
   }

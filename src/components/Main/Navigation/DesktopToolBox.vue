@@ -6,7 +6,6 @@
       :class="$style.item"
       :icon-name="tool.iconName"
       :icon-mdi="tool.iconMdi"
-      :disabled="tool.disabled"
       @mousedown.middle="tool.onClick"
       @click="tool.onClick"
     />

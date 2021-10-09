@@ -86,11 +86,10 @@ const createStampList = (
 ) => {
   const map = new Map<StampId, MessageStampById>()
   props.stamps.forEach(stamp => {
-    const { stampId } = stamp
-    if (!store.state.entities.stampsMap.has(stampId)) return
+    if (!store.state.entities.stampsMap.has(stamp.stampId)) return
 
     if (!map.has(stamp.stampId)) {
-      map.set(stampId, {
+      map.set(stamp.stampId, {
         id: stamp.stampId,
         sum: stamp.count,
         myCount: stamp.userId === myId.value ? stamp.count : 0,
@@ -106,7 +105,7 @@ const createStampList = (
       })
     } else {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const s = map.get(stampId)!
+      const s = map.get(stamp.stampId)!
       s.sum += stamp.count
       s.users.push({
         id: stamp.userId,

@@ -25,7 +25,7 @@ import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserId } from '/@/types/entity-ids'
 
 export default defineComponent({
-  name: 'TagsTab',
+  name: 'TagsTabTag',
   components: {
     Icon,
     TagsTabEdit

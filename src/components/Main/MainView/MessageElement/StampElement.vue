@@ -44,7 +44,7 @@ export default defineComponent({
     addStamp: (_stampId: string) => true,
     removeStamp: (_stampId: string) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const stampName = computed(
       () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''
     )
@@ -69,9 +69,9 @@ export default defineComponent({
     const onClick = () => {
       if (state.isProgress) return
       if (state.includeMe) {
-        context.emit('removeStamp', props.stamp.id)
+        emit('removeStamp', props.stamp.id)
       } else {
-        context.emit('addStamp', props.stamp.id)
+        emit('addStamp', props.stamp.id)
       }
       state.isProgress = true
     }

@@ -9,20 +9,20 @@
           <sidebar-content
             :viewer-ids="viewerIds"
             :pinned-messages-count="pinnedMessages.length"
-            @moveToPinned="moveToPinnedPage"
-            @moveToEvents="moveToEventsPage"
+            @move-to-pinned="moveToPinnedPage"
+            @move-to-events="moveToEventsPage"
           />
         </template>
       </main-view-sidebar-page>
       <sidebar-pinned-page
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
-        @moveBack="moveToDefaultPage"
+        @move-back="moveToDefaultPage"
       />
       <sidebar-events-page
         v-else-if="page === 'events'"
         :channel-id="channelId"
-        @moveBack="moveToDefaultPage"
+        @move-back="moveToDefaultPage"
       />
     </template>
     <template #opener>

@@ -171,8 +171,6 @@ const useScrollRestoration = (
 export default defineComponent({
   name: 'MessagesScroller',
   components: {
-    MessageElement,
-    ClipElement,
     MessagesScrollerSeparator,
     MessageToolsMenuContainer
   },

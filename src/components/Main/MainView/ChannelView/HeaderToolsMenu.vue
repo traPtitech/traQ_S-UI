@@ -61,7 +61,7 @@ const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
 export default defineComponent({
-  name: 'ChannelViewHeaderToolsMenu',
+  name: 'HeaderToolsMenu',
   components: {
     MainViewHeaderPopupFrame,
     HeaderToolsMenuItem

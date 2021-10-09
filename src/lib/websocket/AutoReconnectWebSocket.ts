@@ -137,7 +137,6 @@ export default class AutoReconnectWebSocket {
     this.reconnecting = true
 
     let count = 1
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const delay = this._getDelay(count)
       await wait(delay)

@@ -64,6 +64,8 @@ const confirmClear = () => window.confirm('本当に削除しますか？')
 /* CacheStorageのnameはsw.jsを参照 */
 const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 
+const formatBytes = (b: number) => `${Math.ceil(b / 1000)}kB`
+
 export default defineComponent({
   name: 'Caches',
   components: { FormButton },
@@ -80,8 +82,6 @@ export default defineComponent({
       cacheData.value = await getStorageUsage()
     }
     onMounted(setCacheData)
-
-    const formatBytes = (b: number) => `${Math.ceil(b / 1000)}kB`
 
     const clearMainCache = async () => {
       if (!confirmClear()) return

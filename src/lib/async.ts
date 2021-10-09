@@ -25,8 +25,6 @@ export const createSingleflight = <T extends unknown[], S>(
     try {
       const res = await promise
       return [res, false]
-    } catch (e) {
-      throw e
     } finally {
       // promiseがresolveまたはrejectしたときはpromiseをmapから取り出し済みなので消してよい
       // ここで消さないと取得し直しがされない

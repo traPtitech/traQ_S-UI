@@ -14,7 +14,7 @@ import { useRoute } from 'vue-router'
 import useLoginCheck from './use/loginCheck'
 
 export default defineComponent({
-  name: 'Share',
+  name: 'ShareTarget',
   components: {
     ShareTargetComponent,
     StampPickerContainer

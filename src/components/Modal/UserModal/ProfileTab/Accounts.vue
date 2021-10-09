@@ -9,7 +9,12 @@
         :background="iconBackgroundColor"
         :class="$style.icon"
       />
-      <a :href="wikiPageLink" target="_blank" @click.stop="">
+      <a
+        :href="wikiPageLink"
+        rel="noopener noreferrer"
+        target="_blank"
+        @click.stop=""
+      >
         {{ wikiPageName }}
       </a>
     </p>
@@ -23,7 +28,12 @@
       />
       <template v-if="twitterId === undefined">Now Loading...</template>
       <template v-else>
-        <a :href="twitterLink" target="_blank" @click.stop="">
+        <a
+          :href="twitterLink"
+          rel="noopener noreferrer"
+          target="_blank"
+          @click.stop=""
+        >
           @{{ twitterId }}
         </a>
       </template>

@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 
-const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join()
+const acceptImageType = ['image/jpeg', 'image/png', 'image/gif'].join(',')
 
 export const useImageUploadInternal = (onImageSelect: () => void) => {
   const image = reactive({

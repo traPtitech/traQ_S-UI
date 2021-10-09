@@ -28,7 +28,7 @@ import useFileThumbnail from '/@/use/fileThumbnail'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 export default defineComponent({
-  name: 'MessageFileListItem',
+  name: 'MessageFileListImage',
   components: {
     PlayIcon
   },

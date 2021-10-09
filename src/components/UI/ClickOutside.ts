@@ -33,7 +33,7 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOutside: (e: MouseEvent) => true
+    clickOutside: (_e: MouseEvent) => true
   },
   setup(props, { slots, emit }) {
     const element = shallowRef<Element>()

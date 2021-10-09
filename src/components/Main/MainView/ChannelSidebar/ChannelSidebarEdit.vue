@@ -5,7 +5,7 @@
       :data-is-editing="$boolAttr(state.isEditing)"
       @click="onClick"
     >
-      <Icon
+      <icon
         mdi
         :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
         height="20"

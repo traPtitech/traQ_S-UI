@@ -16,7 +16,7 @@ import DesktopTabFrame from './DesktopTabFrame.vue'
 import useSettingsNavigation from '/@/components/Settings/use/navigation'
 
 export default defineComponent({
-  name: 'DesktopSettingModal',
+  name: 'DesktopSetting',
   components: {
     DesktopTabSelector,
     DesktopTabFrame,

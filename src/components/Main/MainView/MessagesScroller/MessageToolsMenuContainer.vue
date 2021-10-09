@@ -21,7 +21,6 @@ import {
   ref,
   Ref,
   watch,
-  SetupContext,
   nextTick,
   shallowRef,
   toRef
@@ -30,7 +29,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
-const useMenuHeight = (context: SetupContext, isShown: Ref<boolean>) => {
+const useMenuHeight = (isShown: Ref<boolean>) => {
   const height = ref(0)
   const menuContainerRef = shallowRef<HTMLDivElement | null>(null)
   watch(isShown, async newVal => {
@@ -66,17 +65,16 @@ export default defineComponent({
     ClickOutside,
     MessageToolsMenu
   },
-  setup(_, context) {
+  setup() {
     const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
     const position = toRef(state, 'position')
 
-    const { height, menuContainerRef } = useMenuHeight(context, isShown)
+    const { height, menuContainerRef } = useMenuHeight(isShown)
     const styles = useStyles(position, isShown, height)
 
     return {
       state,
       isShown,
-      height,
       menuContainerRef,
       styles,
       closeContextMenu

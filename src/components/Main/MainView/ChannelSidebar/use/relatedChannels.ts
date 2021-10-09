@@ -5,10 +5,10 @@ import { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/util/string'
 import { isDefined } from '/@/lib/util/array'
 
-const useRelatedChannels = (props: { channelId: ChannelId }) => {
-  const compareNameInsensitive = (a: Channel, b: Channel) =>
-    compareStringInsensitive(a.name, b.name)
+const compareNameInsensitive = (a: Channel, b: Channel) =>
+  compareStringInsensitive(a.name, b.name)
 
+const useRelatedChannels = (props: { channelId: ChannelId }) => {
   const getParentChildrenChannels = () =>
     parent.value?.children
       .map(v => store.state.entities.channelsMap.get(v))
@@ -18,7 +18,7 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
     store.state.entities.channelsMap.get(props.channelId)
   )
   const parent = computed(() => {
-    if (!current.value?.parentId) return undefined
+    if (!current.value?.parentId) return
     return store.state.entities.channelsMap.get(current.value.parentId)
   })
   const siblings = computed(() => {

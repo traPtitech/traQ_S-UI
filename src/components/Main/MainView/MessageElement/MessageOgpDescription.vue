@@ -30,7 +30,7 @@ const useStyles = (props: { lineClamp: number }) =>
   })
 
 export default defineComponent({
-  name: 'MessageOgpContentWebSite',
+  name: 'MessageOgpDescription',
   props: {
     url: {
       type: String,

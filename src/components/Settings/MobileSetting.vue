@@ -15,7 +15,7 @@ import { useRoute } from 'vue-router'
 import { RouteName } from '/@/router'
 
 export default defineComponent({
-  name: 'MobileSettingModal',
+  name: 'MobileSetting',
   components: {
     MobileTabSelector,
     MobileTabFrame

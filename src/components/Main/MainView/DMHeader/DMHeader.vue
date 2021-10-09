@@ -21,7 +21,7 @@ import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/Main
 import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 export default defineComponent({
-  name: 'DMViewHeader',
+  name: 'DMHeader',
   components: {
     MainViewHeader,
     MainViewHeaderTitle,

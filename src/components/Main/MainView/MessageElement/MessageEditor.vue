@@ -114,18 +114,18 @@ const useAttachmentsEditor = (
 
   const { addAttachment, destroy } = useAttachments(postAttachment)
 
-  const onPaste = (event: ClipboardEvent) => {
+  const onPaste = async (event: ClipboardEvent) => {
     const dt = event?.clipboardData
-    if (dt) {
-      Array.from(dt.files).forEach(async file => {
-        try {
-          await postAttachment(file)
-        } catch (e) {
-          addErrorToast(
-            formatResizeError(e, 'ファイルのアップロードに失敗しました')
-          )
-        }
-      })
+    if (!dt) return
+
+    for (const file of dt.files) {
+      try {
+        await postAttachment(file)
+      } catch (err) {
+        addErrorToast(
+          formatResizeError(err, 'ファイルのアップロードに失敗しました')
+        )
+      }
     }
   }
 

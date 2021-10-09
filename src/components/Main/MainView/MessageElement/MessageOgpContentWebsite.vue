@@ -1,5 +1,10 @@
 <template>
-  <a :href="url" :class="$style.container" target="_blank">
+  <a
+    :href="url"
+    :class="$style.container"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
     <img
       v-if="imageUrl"
       :src="imageUrl"
@@ -20,7 +25,7 @@ import { defineComponent } from 'vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
 
 export default defineComponent({
-  name: 'MessageOgpContentWebSite',
+  name: 'MessageOgpContentWebsite',
   components: { MessageOgpDescription },
   props: {
     url: {

@@ -55,7 +55,7 @@ const useNotification = (props: { dmChannel: DMChannel }) => {
 }
 
 export default defineComponent({
-  name: 'ChannelElement',
+  name: 'DMChannelElement',
   components: {
     UserIcon,
     DMChannelElementName,

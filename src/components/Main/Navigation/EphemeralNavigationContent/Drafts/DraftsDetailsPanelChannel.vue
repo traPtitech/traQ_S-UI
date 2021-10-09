@@ -22,7 +22,7 @@ import Icon from '/@/components/UI/Icon.vue'
 import { renderInline } from '/@/lib/markdown/markdown'
 
 export default defineComponent({
-  name: 'InputStateChannel',
+  name: 'DraftsDetailsPanelChannel',
   components: {
     Icon
   },

@@ -41,7 +41,7 @@ import version from '/@/lib/env/version'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 
 export default defineComponent({
-  name: 'NavigationSelector',
+  name: 'DesktopNavigationSelector',
   components: {
     PopupNavigator,
     NavigationSelectorItem

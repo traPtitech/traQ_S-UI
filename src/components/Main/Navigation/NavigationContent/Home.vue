@@ -24,13 +24,13 @@
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
       <channel-list
-        v-if="topLevelChannels.length !== 0"
+        v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
       <empty-state v-else>購読していません</empty-state>
     </navigation-content-container>
     <navigation-content-container
-      v-if="channelsWithRtc.length !== 0"
+      v-if="channelsWithRtc.length > 0"
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >

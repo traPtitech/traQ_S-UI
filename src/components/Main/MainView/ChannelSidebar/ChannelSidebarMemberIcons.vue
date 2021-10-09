@@ -22,7 +22,7 @@ type ViewState = {
 }
 
 export default defineComponent({
-  name: 'ChannelSidebarMember',
+  name: 'ChannelSidebarMemberIcons',
   components: { UserIcon },
   props: {
     viewerStates: {

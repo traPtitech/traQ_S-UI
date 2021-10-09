@@ -16,7 +16,7 @@ import store from '/@/store'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({
-  name: 'MainViewHeaderTopic',
+  name: 'HeaderTopic',
   components: {
     InlineMarkdown
   },

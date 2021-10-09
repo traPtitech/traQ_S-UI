@@ -36,15 +36,13 @@ const propertyNamesToCopy = [
 
 const calcMirrorStyle = (textField: HTMLInputElement | HTMLTextAreaElement) => {
   const style = window.getComputedStyle(textField)
-  const props = [...properties]
-  if (textField.nodeName.toLowerCase() === 'textarea') {
-    props.push('white-space:pre-wrap;')
-  } else {
-    props.push('white-space:nowrap;')
-  }
-  propertyNamesToCopy.forEach(name =>
-    props.push(`${name}:${style.getPropertyValue(name)};`)
-  )
+  const props = [
+    ...properties,
+    `white-space:${
+      textField.nodeName.toLowerCase() === 'textarea' ? 'pre-wrap' : 'nowrap'
+    };`,
+    propertyNamesToCopy.map(name => `${name}:${style.getPropertyValue(name)};`)
+  ]
   return props.join(' ')
 }
 
@@ -85,11 +83,11 @@ const getCaretPosition = (
   let before: Text | undefined
   let after: Text | undefined
   if (markerPosition !== null) {
-    const prefix = textField.value.substring(0, markerPosition)
+    const prefix = textField.value.slice(0, markerPosition)
     if (prefix) {
       before = document.createTextNode(prefix)
     }
-    const suffix = textField.value.substring(markerPosition)
+    const suffix = textField.value.slice(markerPosition)
     if (suffix) {
       after = document.createTextNode(suffix)
     }

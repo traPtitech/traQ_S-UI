@@ -19,8 +19,7 @@ export const reduceToRecordOfArray = <T>(array: readonly T[], key: keyof T) =>
   array.reduce((acc, cur) => {
     const ck = cur[key]
     if (typeof ck !== 'string') return acc
-    // eslint-disable-next-line no-prototype-builtins
-    if (acc.hasOwnProperty(ck)) {
+    if (Object.prototype.hasOwnProperty.call(acc, ck)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       acc[ck]!.push(cur)
       return acc

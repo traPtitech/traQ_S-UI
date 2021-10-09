@@ -4,7 +4,7 @@ import useFileMeta from './fileMeta'
 import { ThumbnailType } from '@traptitech/traq'
 
 const useFileWaveform = (props: { fileId: string }) => {
-  const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
+  const { fileMeta, fileLink } = useFileMeta(props)
   const fileWaveform = computed(() =>
     fileMeta.value?.thumbnails.find(t => t.type === ThumbnailType.Waveform)
   )

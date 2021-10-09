@@ -40,7 +40,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
+  setup(props) {
     const fileIdState = reactive({
       fileId: computed(() => props.id)
     })

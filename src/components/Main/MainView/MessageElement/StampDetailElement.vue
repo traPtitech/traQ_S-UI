@@ -20,7 +20,7 @@ import StampDetailElementContent from './StampDetailElementContent.vue'
 import { MessageStampById } from './MessageStampList.vue'
 
 export default defineComponent({
-  name: 'StampDetailListElement',
+  name: 'StampDetailElement',
   components: {
     StampDetailElementContent
   },

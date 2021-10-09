@@ -70,12 +70,12 @@ export const makePrefixedFilterExtractor =
   (q: string): ExtractedFilter<T> | string => {
     for (const prefix of prefixes) {
       if (q.startsWith(prefix)) {
-        return { type, prefix, body: q.substring(prefix.length), negate: false }
+        return { type, prefix, body: q.slice(prefix.length), negate: false }
       }
     }
     for (const prefix of negatePrefixes) {
       if (q.startsWith(prefix)) {
-        return { type, prefix, body: q.substring(prefix.length), negate: true }
+        return { type, prefix, body: q.slice(prefix.length), negate: true }
       }
     }
     return q
@@ -124,7 +124,7 @@ export const dateParser = <T extends string>(
   extracted: ExtractedFilter<T>
 ): Date | undefined => {
   const date = new Date(extracted.body)
-  if (isNaN(date.getTime())) {
+  if (Number.isNaN(date.getTime())) {
     return undefined
   }
   return date
@@ -142,7 +142,7 @@ export const channelParser = <T extends string>(
 
   const { channelTree } = store.state.domain.channelTree
   const channelName = extracted.body.startsWith('#')
-    ? extracted.body.substring(1)
+    ? extracted.body.slice(1)
     : extracted.body
   try {
     const channelId = channelPathToId(
@@ -159,7 +159,7 @@ export const userParser = async <T extends string>(
   extracted: ExtractedFilter<T>
 ): Promise<UserId | undefined> => {
   const username = extracted.body.startsWith('@')
-    ? extracted.body.substring(1)
+    ? extracted.body.slice(1)
     : extracted.body
 
   const userId = (await store.dispatch.entities.fetchUserByName({ username }))

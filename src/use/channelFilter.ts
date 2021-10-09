@@ -22,7 +22,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
         return targetChannels.value
       }
 
-      const queryArr: [string, ...string[]] = state.query.split(/[\/\\]/) as [
+      const queryArr: [string, ...string[]] = state.query.split(/[/\\]/) as [
         string,
         ...string[]
       ] // split の返り値は空配列にはならないのでキャストできる

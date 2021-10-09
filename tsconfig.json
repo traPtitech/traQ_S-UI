@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "sourceMap": true,
@@ -17,12 +18,7 @@
     "types": [
       "dom-screen-wake-lock",
       "jest",
-      "webappsec-credential-management",
-      "config"
-    ],
-    "typeRoots": [
-      "node_modules/@types",
-      "src/types"
+      "webappsec-credential-management"
     ],
     "paths": {
       "/@/*": [

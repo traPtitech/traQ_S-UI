@@ -24,7 +24,7 @@ export default defineComponent({
     }
   },
   emits: {
-    'update:modelValue': (v: boolean) => true
+    'update:modelValue': (_v: boolean) => true
   },
   setup(props, { emit }) {
     const toggle = () => {

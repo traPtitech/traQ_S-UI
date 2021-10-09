@@ -12,7 +12,7 @@ export const createInitialFetchPromise = async (
   getFetchedProperty: () => boolean
 ) => {
   await waitMount
-  return new Promise<void>(async resolve => {
+  return new Promise<void>(resolve => {
     const stop = watch(
       getFetchedProperty,
       fetched => {

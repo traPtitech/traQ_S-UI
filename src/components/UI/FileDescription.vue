@@ -52,7 +52,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, context) {
+  setup(props) {
     const {
       fileMeta,
       fileType,

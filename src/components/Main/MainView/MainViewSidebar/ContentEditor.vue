@@ -45,7 +45,7 @@ export default defineComponent({
     editDone: () => true,
     inputValue: (_val: string) => true
   },
-  setup(props, context) {
+  setup(props, { emit }) {
     const content = computed(() => {
       if (props.value === '') return props.fallbackValue
       if (props.value === undefined) return 'ロード中'
@@ -56,16 +56,16 @@ export default defineComponent({
     )
     const onButtonClick = () => {
       if (props.isEditing) {
-        context.emit('editDone')
+        emit('editDone')
       } else {
-        context.emit('editStart')
+        emit('editStart')
       }
     }
 
     const modelValue = computed({
       get: () => props.value ?? '',
       set: v => {
-        context.emit('inputValue', v ?? '')
+        emit('inputValue', v ?? '')
       }
     })
 

@@ -38,7 +38,7 @@ const useStyles = (props: { aspectRatio: number }) =>
   })
 
 export default defineComponent({
-  name: 'MessageOgpContentEmbed',
+  name: 'MessageOgpEmbed',
   components: { Icon },
   props: {
     previewUrl: {
