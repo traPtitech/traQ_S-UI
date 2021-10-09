@@ -2,8 +2,8 @@ import { computed } from 'vue'
 import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
-import { compareStringInsensitive } from '/@/lib/util/string'
-import { isDefined } from '/@/lib/util/array'
+import { compareStringInsensitive } from '/@/lib/basic/string'
+import { isDefined } from '/@/lib/basic/array'
 
 const compareNameInsensitive = (a: Channel, b: Channel) =>
   compareStringInsensitive(a.name, b.name)

@@ -51,14 +51,14 @@ import {
 import Icon from '/@/components/UI/Icon.vue'
 import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { getCreatedDate } from '/@/lib/date'
+import { getCreatedDate } from '/@/lib/basic/date'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
 import useEmbeddings from '/@/use/message/embeddings'
 import { Message } from '@traptitech/traq'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
-import { SearchMessageSortKey } from '/@/use/searchMessage/queryParser'
+import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 
 const maxHeight = 200

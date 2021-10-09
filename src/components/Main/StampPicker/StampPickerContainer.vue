@@ -16,7 +16,7 @@ import {
   useStampPickerStore,
   AlignmentPosition
 } from '/@/providers/stampPicker'
-import { Point } from '/@/lib/point'
+import { Point } from '/@/lib/basic/point'
 
 const useStyles = (state: {
   position: Point | undefined

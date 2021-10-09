@@ -13,7 +13,7 @@ import {
   UserId
 } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/basic/async'
 import {
   Channel,
   ClipFolder,
@@ -31,7 +31,7 @@ import {
   usersMapInitialFetchPromise
 } from './promises'
 import { AxiosResponse } from 'axios'
-import { arrayToMap } from '/@/lib/util/map'
+import { arrayToMap } from '/@/lib/basic/map'
 import { getUnicodeStamps, setUnicodeStamps } from '/@/lib/stampCache'
 import { channelIdToPathString } from '/@/lib/channel'
 

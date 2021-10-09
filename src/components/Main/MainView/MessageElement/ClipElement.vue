@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="state.message"
+    v-if="message"
     ref="bodyRef"
     :class="$style.body"
     :data-is-mobile="$boolAttr(isMobile)"
@@ -19,15 +19,12 @@
       :message-id="messageId"
       :is-entry-message="isEntryMessage"
     />
-    <message-quote-list-item-footer
-      :class="$style.footer"
-      :message="state.message"
-    />
+    <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, shallowRef, PropType } from 'vue'
+import { defineComponent, computed, shallowRef, PropType } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
@@ -37,8 +34,6 @@ import useElementRenderObserver, {
 import useEmbeddings from '/@/use/message/embeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
-import { getCreatedDate } from '/@/lib/date'
-import useChannelPath from '/@/use/channelPath'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import useHover from '/@/use/hover'
 
@@ -66,35 +61,18 @@ export default defineComponent({
   setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useIsMobile()
-    const { channelIdToPathString } = useChannelPath()
-    const state = reactive({
-      message: computed(() =>
-        store.state.entities.messages.messagesMap.get(props.messageId)
-      ),
-      channelPath: computed((): string =>
-        state.message
-          ? channelIdToPathString(state.message.channelId, false)
-          : ''
-      ),
-      date: computed((): string =>
-        state.message ? getCreatedDate(state.message.createdAt) : ''
-      ),
-      content: computed(
-        () =>
-          store.state.domain.messagesView.renderedContentMap.get(
-            props.messageId
-          ) ?? ''
-      )
-    })
+    const message = computed(() =>
+      store.state.entities.messages.messagesMap.get(props.messageId)
+    )
 
     const { embeddingsState } = useEmbeddings(props)
 
-    useElementRenderObserver(bodyRef, props, state, embeddingsState, emit)
+    useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
 
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 
     return {
-      state,
+      message,
       bodyRef,
       isMobile,
       isHovered,

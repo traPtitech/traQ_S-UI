@@ -1,4 +1,4 @@
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 
 let lastInsertedId = 0
 

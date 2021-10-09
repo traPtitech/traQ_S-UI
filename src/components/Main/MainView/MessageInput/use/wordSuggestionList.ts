@@ -1,5 +1,5 @@
 import store from '/@/store'
-import TrieTree from '/@/lib/trieTree'
+import TrieTree from '/@/lib/basic/trieTree'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
 import { ref, onBeforeUnmount, computed, Ref, readonly, watchEffect } from 'vue'
 import { EntityEventMap, entityMitt } from '/@/store/entities/mitt'

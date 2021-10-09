@@ -25,7 +25,7 @@ import { computed, defineComponent, PropType } from 'vue'
 import Icon from '/@/components/UI/Icon.vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { getFullDayWithTimeString } from '/@/lib/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 
 export default defineComponent({

@@ -4,7 +4,7 @@ import { domain } from '.'
 import { ActionContext } from 'vuex'
 import { UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import { createSingleflight } from '/@/lib/async'
+import { createSingleflight } from '/@/lib/basic/async'
 
 export const domainActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, domain)

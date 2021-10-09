@@ -1,11 +1,9 @@
 // 実際のフィルタに依存しない関数群
-import store from '/@/store'
 import { ChannelId, MessageId, UserId } from '/@/types/entity-ids'
-import { channelPathToId } from '../../lib/channelTree'
 
 /*
  * クエリは次のようにパースされる:
-
+ *
  *        split          extractor                              parser
  * string ----> string[] --------> (ExtractedFilter | string)[] -----> (Filter | string)[]
  *
@@ -81,6 +79,17 @@ export const makePrefixedFilterExtractor =
     return q
   }
 
+export type StoreForParser = {
+  channelPathToId: ChannelPathToId
+  usernameToId: UsernameToId
+  getCurrentChannelId: () => ChannelId | undefined
+}
+
+type ChannelPathToId = (path: string) => ChannelId | undefined
+type UsernameToId =
+  | ((username: string) => UserId | undefined)
+  | ((username: string) => Promise<UserId | undefined>)
+
 /**
  * `string`から`ExtractedFilter`を経由して実際のフィルターを作る
  * @typeParam F フィルターの型
@@ -92,10 +101,14 @@ export const makePrefixedFilterExtractor =
  */
 export const parseToFilter =
   <F, T extends string>(
-    parser: (extracted: ExtractedFilter<T>) => Promise<F | undefined>,
+    parser: (
+      store: StoreForParser,
+      extracted: ExtractedFilter<T>
+    ) => Promise<F | undefined>,
     extractor: FilterExtractor<T>,
     skipCondition?: (q: string) => boolean
   ) =>
+  (store: StoreForParser) =>
   async (q: string): Promise<F | string> => {
     if (skipCondition?.(q)) {
       return q
@@ -104,7 +117,7 @@ export const parseToFilter =
     if (typeof extracted === 'string') {
       return q
     }
-    const parsed = await parser(extracted)
+    const parsed = await parser(store, extracted)
     if (!parsed) {
       return q
     }
@@ -130,44 +143,31 @@ export const dateParser = <T extends string>(
   return date
 }
 
+export const InHereToken = Symbol('in:here')
+
 export const channelParser = <T extends string>(
+  channelPathToId: ChannelPathToId,
   extracted: ExtractedFilter<T>
-): ChannelId | undefined => {
+): ChannelId | typeof InHereToken | undefined => {
   if (extracted.body === 'here') {
-    const { primaryView } = store.state.ui.mainView
-    return primaryView.type === 'channel' || primaryView.type === 'dm'
-      ? primaryView.channelId
-      : undefined
+    return InHereToken
   }
 
-  const { channelTree } = store.state.domain.channelTree
   const channelName = extracted.body.startsWith('#')
     ? extracted.body.slice(1)
     : extracted.body
-  try {
-    const channelId = channelPathToId(
-      channelName?.split('/') ?? [],
-      channelTree
-    )
-    return channelId
-  } catch (e) {
-    return undefined
-  }
+  return channelPathToId(channelName)
 }
 
 export const userParser = async <T extends string>(
+  usernameToId: UsernameToId,
   extracted: ExtractedFilter<T>
 ): Promise<UserId | undefined> => {
   const username = extracted.body.startsWith('@')
     ? extracted.body.slice(1)
     : extracted.body
 
-  const userId = (await store.dispatch.entities.fetchUserByName({ username }))
-    ?.id
-  if (userId === undefined) {
-    return userId
-  }
-  return userId
+  return usernameToId(username)
 }
 
 export const messageParser = <T extends string>(

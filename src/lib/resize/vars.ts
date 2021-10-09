@@ -1,5 +1,5 @@
 import { Pica } from 'pica'
-import { wait } from '../util/timer'
+import { wait } from '/@/lib/basic/timer'
 
 interface ResizeVars {
   pica: Pica

@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { getFirstQuery } from '/@/lib/util/url'
+import { getFirstQuery } from '/@/lib/basic/url'
 import { redirectToPipelineIfNeeded } from '/@/router/pipeline'
 import router, { RouteName } from '/@/router'
 import { useRoute } from 'vue-router'

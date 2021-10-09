@@ -7,12 +7,8 @@ import { render } from '/@/lib/markdown/markdown'
 import apis from '/@/lib/apis'
 import { changeViewState } from '/@/lib/websocket'
 import { ActionContext } from 'vuex'
-import {
-  isFile,
-  isMessage,
-  isExternalUrl
-} from '/@/lib/util/guard/embeddingOrUrl'
-import { createSingleflight } from '/@/lib/async'
+import { isFile, isMessage, isExternalUrl } from '/@/lib/guard/embeddingOrUrl'
+import { createSingleflight } from '/@/lib/basic/async'
 import type { ExternalUrl } from '@traptitech/traq-markdown-it'
 
 interface BaseGetMessagesParams {

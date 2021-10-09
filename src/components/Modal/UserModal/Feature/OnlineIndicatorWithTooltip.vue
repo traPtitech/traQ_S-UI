@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import { getFullDayWithTimeString } from '/@/lib/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
 export default defineComponent({

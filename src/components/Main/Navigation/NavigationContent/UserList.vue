@@ -24,13 +24,13 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import store from '/@/store'
-import { compareStringInsensitive } from '/@/lib/util/string'
+import { compareStringInsensitive } from '/@/lib/basic/string'
 import NavigationContentContainer from '/@/components/Main/Navigation/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/use/textFilter'
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 import { ActiveUser } from '/@/lib/user'
 
 interface UsersGradeList {

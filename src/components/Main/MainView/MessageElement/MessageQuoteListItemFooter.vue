@@ -16,7 +16,7 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelPath from '/@/use/channelPath'
-import { getCreatedDate } from '/@/lib/date'
+import { getCreatedDate } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({

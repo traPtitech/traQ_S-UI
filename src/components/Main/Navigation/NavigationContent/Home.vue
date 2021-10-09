@@ -49,7 +49,7 @@ import store from '/@/store'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/Navigation/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/Navigation/NavigationContentContainer.vue'
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
 import DMChannelList from '/@/components/Main/Navigation/DMChannelList/DMChannelList.vue'
 

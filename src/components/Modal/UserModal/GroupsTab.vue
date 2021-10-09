@@ -23,7 +23,7 @@ import store from '/@/store'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '/@/types/entity-ids'
 import Icon from '/@/components/UI/Icon.vue'
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 
 export default defineComponent({
   name: 'GroupsTab',

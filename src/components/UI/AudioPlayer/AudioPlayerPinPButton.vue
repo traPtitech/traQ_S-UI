@@ -12,7 +12,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
-import { checkPinPSupport, isSafari } from '/@/lib/util/browser'
+import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
 
 const safariFlag = isSafari()
 const canUsePinP = checkPinPSupport() && !safariFlag

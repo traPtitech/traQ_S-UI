@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { rAF } from '/@/lib/util/timer'
+import { rAF } from '/@/lib/basic/timer'
 
 export default defineComponent({
   name: 'SlideDown',

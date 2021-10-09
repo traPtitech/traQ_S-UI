@@ -14,7 +14,7 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '/@/store'
 import { makeStyles, ThemeVariablesOrProperties } from '/@/lib/styles'
-import { transparentize, isDarkColor } from '/@/lib/util/color'
+import { transparentize, isDarkColor } from '/@/lib/basic/color'
 import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '/@/lib/media'

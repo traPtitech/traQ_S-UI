@@ -4,7 +4,7 @@ import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
 import { getStore } from '/@/sw/store'
 import { ChannelId } from '/@/types/entity-ids'
-import { wait } from '/@/lib/util/timer'
+import { wait } from '/@/lib/basic/timer'
 import { FirebasePayloadData } from '/@/lib/notification/firebase'
 import { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
 

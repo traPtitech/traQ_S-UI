@@ -1,5 +1,5 @@
 import { buildUserIconPathPublic } from '/@/lib/apis'
-import { checkCredentialManagerSupport } from '/@/lib/util/browser'
+import { checkCredentialManagerSupport } from '/@/lib/dom/browser'
 
 const isCredentialManagerSupported = checkCredentialManagerSupport()
 

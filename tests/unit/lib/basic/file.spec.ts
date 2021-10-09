@@ -5,7 +5,7 @@ import {
   isVideo,
   isNonPreviewable,
   prettifyFileSize
-} from '/@/lib/util/file'
+} from '/@/lib/basic/file'
 import { ThumbnailType } from '@traptitech/traq'
 
 describe('mimeToFileType', () => {

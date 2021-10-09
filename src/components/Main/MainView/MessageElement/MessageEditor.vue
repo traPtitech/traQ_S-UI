@@ -55,7 +55,7 @@ import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageIn
 import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
-import { countLength } from '/@/lib/util/string'
+import { countLength } from '/@/lib/basic/string'
 import useToastStore from '/@/providers/toastStore'
 import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/use/attachments'

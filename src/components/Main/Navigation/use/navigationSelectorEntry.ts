@@ -5,7 +5,7 @@ import {
   EphemeralNavigationItemType
 } from './navigationConstructor'
 import { ThemeClaim } from '/@/lib/styles'
-import { isDefined } from '/@/lib/util/array'
+import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStates } from '/@/providers/messageInputState'
 import useAudioController from '/@/providers/audioController'
 

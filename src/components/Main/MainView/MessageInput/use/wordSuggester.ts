@@ -1,5 +1,5 @@
 import { ComputedRef, WritableComputedRef, ref, computed, watch } from 'vue'
-import getCaretPosition from '/@/lib/caretPosition'
+import getCaretPosition from '/@/lib/dom/caretPosition'
 import { getCurrentWord, Target } from '/@/lib/suggestion'
 import useWordSuggesterList, { Word } from './wordSuggestionList'
 import useInsertText from '/@/use/insertText'

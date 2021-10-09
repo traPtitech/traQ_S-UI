@@ -28,7 +28,7 @@ import { computed, defineComponent, PropType } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
 import Icon from '/@/components/UI/Icon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { getFullDayWithTimeString } from '/@/lib/date'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeNameMap } from '/@/lib/clientScope'
 
 interface TokenInfo extends ActiveOAuth2Token {

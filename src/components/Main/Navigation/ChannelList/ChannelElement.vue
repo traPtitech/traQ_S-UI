@@ -73,7 +73,7 @@ import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
-import { deepSome } from '/@/lib/util/tree'
+import { deepSome } from '/@/lib/basic/tree'
 import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
 

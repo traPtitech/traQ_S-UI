@@ -9,7 +9,7 @@ import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
 } from '/@/store/entities/promises'
-import { getFirstParam, getFirstQuery } from '/@/lib/util/url'
+import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 
 type Views = 'none' | 'main' | 'not-found'
