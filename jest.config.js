@@ -35,6 +35,5 @@ module.exports = {
     traQConfig
   },
   coverageDirectory: './coverage/',
-  collectCoverage: true,
-  setupFiles: ['fake-indexeddb/auto']
+  collectCoverage: true
 }
