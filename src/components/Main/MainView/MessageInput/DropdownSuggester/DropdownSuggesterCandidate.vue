@@ -9,6 +9,10 @@
       :stamp-id="candidate.id"
       :size="24"
     />
+    <dropdown-suggester-stamp-effect
+      v-else-if="candidate.type === 'stamp-effect'"
+      :effect-name-with-dot="candidate.text"
+    />
     <div :class="$style.name">
       {{ candidate.text }}
     </div>
@@ -20,12 +24,14 @@ import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import { WordOrConfirmedPart } from '../use/wordSuggester'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import StampElement from '/@/components/UI/Stamp.vue'
+import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 
 export default defineComponent({
   name: 'DropdownSuggesterCandidate',
   components: {
     DropdownSuggesterUserIcon,
-    StampElement
+    StampElement,
+    DropdownSuggesterStampEffect
   },
   props: {
     candidate: {
