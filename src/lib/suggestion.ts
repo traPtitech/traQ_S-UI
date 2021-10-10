@@ -1,3 +1,5 @@
+import { lastIndexOf } from '/@/lib/basic/string'
+
 export type Target = {
   word: string
   begin: number
@@ -9,16 +11,12 @@ export const getCurrentWord = (
   elm: { selectionStart: number; selectionEnd: number },
   text: string
 ): Target => {
-  text = text.replace(/　/g, ' ')
   const startIndex = elm.selectionStart
-  const prevAtMarkIndex = text.lastIndexOf('@', startIndex - 1)
-  const prevColonIndex = text.lastIndexOf(':', startIndex - 1)
-  const prevPeriodIndex = text.lastIndexOf('.', startIndex - 1)
-  const nearest = Math.max(prevAtMarkIndex, prevColonIndex, prevPeriodIndex)
+  const nearest = lastIndexOf(text, ['@', ':', '.'], startIndex - 1)
   const begin = Math.max(nearest, 0)
   const end = elm.selectionEnd
   const word = text.slice(begin, end)
-  const prevSpaceIndex = text.lastIndexOf(' ', startIndex - 1)
+  const prevSpaceIndex = lastIndexOf(text, [' ', '　'], startIndex - 1)
   const divided = prevSpaceIndex > nearest
   return { word, begin, end, divided }
 }

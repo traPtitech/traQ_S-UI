@@ -29,3 +29,17 @@ export const count = (str: string, char: string) =>
  * CodePointの数をカウントする
  */
 export const countLength = (text: string) => Array.from(text).length
+
+/**
+ * `position`から前方向に検索を始め、`searchStrings`のいずれかが最後に現れたインデックスを返す
+ */
+export const lastIndexOf = (
+  target: string,
+  searchStrings: readonly [string, ...string[]],
+  position?: number
+) =>
+  Math.max(
+    ...searchStrings.map(searchString =>
+      target.lastIndexOf(searchString, position)
+    )
+  )

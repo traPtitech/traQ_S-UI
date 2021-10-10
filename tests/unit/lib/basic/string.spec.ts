@@ -2,7 +2,8 @@ import {
   compareString,
   compareStringInsensitive,
   count,
-  countLength
+  countLength,
+  lastIndexOf
 } from '/@/lib/basic/string'
 
 describe('compareString', () => {
@@ -56,5 +57,14 @@ describe('countLength', () => {
   })
   it('can count emoji', () => {
     expect(countLength('😀😀😀😀😀')).toEqual(5)
+  })
+})
+
+describe('lastIndexOf', () => {
+  it('can find without position', () => {
+    expect(lastIndexOf('target', ['t', 'r'])).toEqual(5)
+  })
+  it('can find with position', () => {
+    expect(lastIndexOf('target', ['t', 'r'], 4)).toEqual(2)
   })
 })
