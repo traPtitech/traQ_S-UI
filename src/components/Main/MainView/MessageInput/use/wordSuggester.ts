@@ -26,8 +26,7 @@ const useWordSuggester = (
   const target = ref<Target>({
     word: '',
     begin: 0,
-    end: 0,
-    divided: false
+    end: 0
   })
   /**
    * targetは補完をしたときに更新されないがこれは更新する
@@ -65,7 +64,7 @@ const useWordSuggester = (
   const updateTarget = () => {
     if (!textareaRef.value) return
     target.value = getCurrentWord(textareaRef.value, value.value)
-    if (target.value.divided || target.value.word.length < MIN_LENGTH) {
+    if (target.value.word.length < MIN_LENGTH) {
       isSuggesterShown.value = false
       return
     }

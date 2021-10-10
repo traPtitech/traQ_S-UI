@@ -4,7 +4,6 @@ export type Target = {
   word: string
   begin: number
   end: number
-  divided: boolean
 }
 
 export const getCurrentWord = (
@@ -13,12 +12,15 @@ export const getCurrentWord = (
 ): Target => {
   const startIndex = elm.selectionStart
   const nearest = lastIndexOf(text, ['@', ':', '.'], startIndex - 1)
+  const prevSpaceIndex = lastIndexOf(text, [' ', '　'], startIndex - 1)
+  if (prevSpaceIndex > nearest) {
+    return { word: '', begin: 0, end: 0 }
+  }
+
   const begin = Math.max(nearest, 0)
   const end = elm.selectionEnd
   const word = text.slice(begin, end)
-  const prevSpaceIndex = lastIndexOf(text, [' ', '　'], startIndex - 1)
-  const divided = prevSpaceIndex > nearest
-  return { word, begin, end, divided }
+  return { word, begin, end }
 }
 
 export const getDeterminedCharacters = (candidates: string[]) => {
