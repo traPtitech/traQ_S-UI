@@ -16,8 +16,7 @@ describe('suggestion', () => {
       const expected: Target = {
         word: '@te',
         begin: 0,
-        end: 3,
-        divided: false
+        end: 3
       }
       expect(actual).toEqual(expected)
     })
@@ -29,8 +28,7 @@ describe('suggestion', () => {
       const expected: Target = {
         word: '@test',
         begin: 13,
-        end: 18,
-        divided: false
+        end: 18
       }
       expect(actual).toEqual(expected)
     })
@@ -42,8 +40,7 @@ describe('suggestion', () => {
       const expected: Target = {
         word: ':te',
         begin: 9,
-        end: 12,
-        divided: false
+        end: 12
       }
       expect(actual).toEqual(expected)
     })
@@ -55,8 +52,7 @@ describe('suggestion', () => {
       const expected: Target = {
         word: '.exa',
         begin: 4,
-        end: 8,
-        divided: false
+        end: 8
       }
       expect(actual).toEqual(expected)
     })
@@ -66,10 +62,9 @@ describe('suggestion', () => {
         'this @is test sentence.'
       )
       const expected: Target = {
-        word: '@is te',
-        begin: 5,
-        end: 11,
-        divided: true
+        word: '',
+        begin: 0,
+        end: 0
       }
       expect(actual).toEqual(expected)
     })
