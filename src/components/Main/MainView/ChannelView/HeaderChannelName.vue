@@ -46,7 +46,7 @@ const usePathInfo = (props: Props) => {
   const pathInfoList = computed((): ChannelPathInfo[] =>
     channelIdToPath(props.channelId).map((p, i, arr) => ({
       name: p,
-      path: arr.slice(0, i)
+      path: arr.slice(0, i + 1)
     }))
   )
 
