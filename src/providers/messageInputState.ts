@@ -212,7 +212,15 @@ export const useMessageInputStateAttachment = (
       const hasOnlyNonTypedFiles = [...dt.files].every(file => file.type === '')
 
       if (hasOnlyNonTypedFiles) {
-        addTextToLast(dt.getData('text/uri-list'))
+        const url = dt.getData('text/uri-list')
+
+        // もし、ファイル数が1件ならショートカットファイルから名前を抽出して利用する
+        if (dt.files.length === 1 && dt.files[0]?.name) {
+          const name = dt.files[0].name.replace(/\.url$/, '')
+          addTextToLast(`[${name}](${url})`)
+          return
+        }
+        addTextToLast(url)
         return
       }
     }
