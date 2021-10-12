@@ -84,8 +84,11 @@ export default defineComponent({
               cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
                 if (!blob) return
 
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                emit('input', new File([blob], image.data!.name))
+                emit(
+                  'input',
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  new File([blob], image.data!.name, { type: blob.type })
+                )
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               }, image.data!.type)
             }
