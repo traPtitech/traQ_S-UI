@@ -58,7 +58,10 @@ const usePaste = (channelId: MessageInputStateKey) => {
       })
     }
 
-    addMarkdownGeneratedFromHtml(dt, event)
+    if (dt.types.includes('text/html')) {
+      await addMarkdownGeneratedFromHtml(dt, event)
+      return
+    }
   }
   return { onPaste }
 }
