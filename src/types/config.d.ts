@@ -73,12 +73,6 @@ export type Config = Readonly<{
     changeName: string
   }>
   /**
-   * 内部用認証機構へのリダイレクト
-   * 通常は`false`
-   * 省略時は`false`
-   */
-  pipelineEnabled?: boolean
-  /**
    * チャンネル変更権限をもっていないユーザーでも
    * チャンネル作成時に親チャンネルとしてrootを選択可能にする
    * サーバーでははじいていないので、APIをたたけば誰でも可能

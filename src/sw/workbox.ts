@@ -34,7 +34,6 @@ export const setupWorkbox = () => {
         new RegExp('/clip-folders/')
       ],
       denylist: [
-        new RegExp('/pipeline'),
         new RegExp('/widget/'),
         new RegExp('/api/'),
         new RegExp('/.well-known/')

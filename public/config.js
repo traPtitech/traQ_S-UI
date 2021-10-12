@@ -102,7 +102,6 @@
       changeLink: 'https://portal.trap.jp',
       changeName: 'traPortal'
     },
-    pipelineEnabled: true,
     isRootChannelSelectableAsParentChannel: false,
     showQrCodeButton: true,
     tooLargeFileMessage: '大きい%sの共有にはDriveを使用してください',
