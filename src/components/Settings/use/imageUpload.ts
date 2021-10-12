@@ -11,6 +11,7 @@ export const useImageUploadInternal = (onImageSelect: () => void) => {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = acceptImageType
+
   input.addEventListener('change', () => {
     if (input.files) {
       image.data = input.files[0]
@@ -22,6 +23,8 @@ export const useImageUploadInternal = (onImageSelect: () => void) => {
         image.url = URL.createObjectURL(image.data)
       }
     }
+    // `input.files = null`ではリセットできない
+    input.value = ''
   })
   input.addEventListener('change', onImageSelect, { once: true })
 
