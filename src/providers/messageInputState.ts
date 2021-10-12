@@ -164,6 +164,8 @@ export const useMessageInputStateStatic = () => {
   return { getMessageInputState }
 }
 
+const removeSpaces = (text: string) => text.replace(/\s|\\/g, '')
+
 export const useMessageInputStateAttachment = (
   channelId: MessageInputStateKey,
   onError: (message: string) => void
@@ -176,15 +178,25 @@ export const useMessageInputStateAttachment = (
     dt: DataTransfer,
     eventToPrevent?: Event
   ) => {
-    const html = dt.getData('text/html')
-    if (html && confirm('HTMLをマークダウンに変換して貼り付けますか？')) {
-      eventToPrevent?.preventDefault()
+    eventToPrevent?.preventDefault()
 
-      const markdown = await generateMarkdownFromHtml(html)
-      addTextToLast(markdown)
-      return true
+    const html = dt.getData('text/html')
+    const plainText = dt.getData('text/plain')
+    const markdown = await generateMarkdownFromHtml(html)
+
+    const isSame = removeSpaces(markdown) === removeSpaces(plainText)
+    if (isSame) {
+      addTextToLast(plainText)
+      return
     }
-    return false
+
+    if (confirm('HTMLをマークダウンに変換して貼り付けますか？')) {
+      addTextToLast(markdown)
+      return
+    }
+
+    addTextToLast(plainText)
+    return
   }
 
   const addFromDataTransfer = async (dt: DataTransfer) => {
@@ -212,8 +224,8 @@ export const useMessageInputStateAttachment = (
       return
     }
 
-    const added = await addMarkdownGeneratedFromHtml(dt)
-    if (added) {
+    if (types.includes('text/html')) {
+      await addMarkdownGeneratedFromHtml(dt)
       return
     }
 
