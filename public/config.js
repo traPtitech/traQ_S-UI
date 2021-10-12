@@ -8,7 +8,9 @@
       apiKey: 'AIzaSyDee_VkrRtByJCrCZAX3nTSDPl8AaHlWfY',
       appId: '1:993645413001:web:b253ea3776d6cf85163c58',
       projectId: 'traq-r',
-      messagingSenderId: '993645413001'
+      messagingSenderId: '993645413001',
+      vapidKey:
+        'BPHegiDotHG7TlKhoW1qvwUYjOQj1C7RgKjvw3etUJZ_4x3LWUtFVXtRANWwckJX4G2w3CVj4zwi5QNThg7DZH4'
     },
     skyway: {
       apiKey: '55fd6e68-6e1b-492b-b57d-df0273c6e217'

@@ -20,6 +20,7 @@ import {
 
 const appName = window.traQConfig.name || 'traQ'
 const ignoredChannels = window.traQConfig.inlineReplyDisableChannels ?? []
+const vapidKey = window.traQConfig.firebase?.vapidKey
 
 type ServiceWorkerMessage = ServiceWorkerNavigateMessage
 export type ServiceWorkerNavigateMessage = {
@@ -140,6 +141,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   })
 
   const token = await getTokenFb(messaging, {
+    vapidKey,
     serviceWorkerRegistration: registration
   })
   apis.registerFCMDevice({ token })

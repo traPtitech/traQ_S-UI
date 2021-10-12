@@ -7,12 +7,17 @@ export type Config = Readonly<{
   /**
    * Firebase用設定
    * 省略時は通知機能を無効化
+   * https://firebase.google.com/docs/web/learn-more#config-object
    */
   firebase?: Readonly<{
     apiKey: string
     appId: string
     projectId: string
     messagingSenderId: string
+    /**
+     * https://firebase.google.com/docs/cloud-messaging/js/client#configure_web_credentials_with_fcm
+     */
+    vapidKey: string
   }>
   /**
    * skyway用設定
