@@ -100,7 +100,7 @@
     "workbox-strategies": "^6.3.0"
   },
   "engines": {
-    "node": "^16.9.0",
+    "node": "^16.11.1",
     "npm": "^7.19.1"
   }
 }
