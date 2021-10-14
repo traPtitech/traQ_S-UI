@@ -281,6 +281,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
 .sidebarPortal {
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
 }
 .mainView {
   width: 100%;
