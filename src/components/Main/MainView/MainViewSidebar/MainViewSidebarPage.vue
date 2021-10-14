@@ -84,5 +84,6 @@ export default defineComponent({
     x: hidden;
     y: auto;
   }
+  scrollbar-gutter: stable;
 }
 </style>
