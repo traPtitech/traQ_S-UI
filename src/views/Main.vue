@@ -279,7 +279,7 @@ $nav-width-ratio: math.div($nav-width-diff, $nav-width-display-width-diff);
   z-index: $z-index-sidebar-wrapper;
 }
 .sidebarPortal {
-  width: 320px;
+  width: 100%;
   height: 100%;
 }
 .mainView {
