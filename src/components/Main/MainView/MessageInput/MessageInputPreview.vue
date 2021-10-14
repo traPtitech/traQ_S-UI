@@ -1,13 +1,24 @@
 <template>
-  <div
-    :class="['markdown-body', $style.preview]"
-    :data-is-mobile="isMobile"
-    v-html="previewRendered"
-  />
+  <div>
+    <div
+      :class="['markdown-body', $style.preview]"
+      :data-is-mobile="isMobile"
+      v-html="previewRendered"
+    />
+    <div
+      v-for="quoteMessage in quoteMessages"
+      :key="quoteMessage"
+      :class="$style.quote"
+    >
+      引用メッセージ
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
+import { EmbeddingMessage } from '@traptitech/traq-markdown-it'
 import { defineComponent, ref, watchEffect } from 'vue'
+import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import useIsMobile from '/@/use/isMobile'
 
@@ -23,12 +34,14 @@ export default defineComponent({
     const { isMobile } = useIsMobile()
 
     const previewRendered = ref('')
+    const quoteMessages = ref<EmbeddingMessage[]>([])
     watchEffect(async () => {
-      const res = await render(props.text)
-      previewRendered.value = res.renderedText
+      const { renderedText, embeddings } = await render(props.text)
+      previewRendered.value = renderedText
+      quoteMessages.value = embeddings.filter(isMessage)
     })
 
-    return { isMobile, previewRendered }
+    return { isMobile, previewRendered, quoteMessages }
   }
 })
 </script>
@@ -48,5 +61,10 @@ export default defineComponent({
   &[data-is-mobile='true'] {
     max-height: 70px;
   }
+}
+
+.quote {
+  padding-left: 16px;
+  border-left: solid 4px $theme-ui-tertiary;
 }
 </style>
