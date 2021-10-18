@@ -9,7 +9,6 @@
       v-if="state.stampsInitialFetchCompleted"
       :class="$style.viewport"
       data-testid="channel-viewport"
-      @touchmove="onTouchMove"
     >
       <messages-scroller-separator
         v-if="isReachedEnd"
@@ -76,11 +75,8 @@ import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
 import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
-import { isIOS } from '/@/lib/dom/browser'
 
 const LOAD_MORE_THRESHOLD = 10
-
-const iOSFlag = isIOS()
 
 type HTMLElementTargetMouseEvent = MouseEvent & { target: HTMLElement }
 
@@ -170,31 +166,6 @@ const useScrollRestoration = (
       }
     }
   )
-}
-
-/**
- * iOSでのoverscrollを防ぐ
- *
- * overscrollが起きるとメッセージが一生読み込まれることが発生する
- */
-const usePreventOverScrollIOS = () => {
-  let scrolling = false
-
-  const onTouchMove = (e: TouchEvent) => {
-    if (scrolling) return
-    const currentTarget = e.currentTarget as HTMLElement
-
-    scrolling = true
-
-    // overscroll時は0になる
-    if (currentTarget.scrollTop <= 0) {
-      currentTarget.scrollTop = 1
-    }
-
-    scrolling = false
-  }
-
-  return { onTouchMove: iOSFlag ? onTouchMove : undefined }
 }
 
 export default defineComponent({
@@ -344,13 +315,12 @@ export default defineComponent({
 
     const { onClick } = useMarkdownInternalHandler()
     useScrollRestoration(rootRef, state)
-    const { onTouchMove } = usePreventOverScrollIOS()
+
     const dayDiff = useCompareDate(props)
 
     return {
       state,
       onClick,
-      onTouchMove,
       rootRef,
       handleScroll,
       onChangeHeight,
