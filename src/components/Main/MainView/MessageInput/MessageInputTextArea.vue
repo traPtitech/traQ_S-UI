@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, PropType } from 'vue'
+import { defineComponent, ref, computed, PropType, toRef } from 'vue'
 import useSendKeyWatcher from './use/sendKeyWatcher'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
@@ -44,6 +44,7 @@ import useInsertText from '/@/use/insertText'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { isFirefox } from '/@/lib/dom/browser'
 import useIsMobile from '/@/use/isMobile'
+import usePaste from './use/paste'
 
 const firefoxFlag = isFirefox()
 
@@ -92,7 +93,7 @@ export default defineComponent({
     'update:modelValue': () => true,
     focus: () => true,
     blur: () => true,
-    paste: (_event: ClipboardEvent) => true,
+    addAttachments: (_files: File[]) => true,
     postMessage: () => true,
     modifierKeyDown: () => true,
     modifierKeyUp: () => true
@@ -107,6 +108,7 @@ export default defineComponent({
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
     const { insertText } = useInsertText(value, textareaRef)
+    const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
 
     const {
       onKeyUp: onKeyUpWordSuggester,
@@ -148,9 +150,6 @@ export default defineComponent({
     }
 
     const { onFocus, onBlur: onBlurDefault } = useFocus(emit)
-    const onPaste = (event: ClipboardEvent) => {
-      emit('paste', event)
-    }
 
     const onBlur = () => {
       onBlurWordSuggester()
