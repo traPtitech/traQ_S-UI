@@ -35,31 +35,34 @@ const obtainFilesFromClipboardItems = async (items: ClipboardItems) => {
   return blobs.map(blob => new File([blob], 'image.svg', { type: blob.type }))
 }
 
-const usePaste = (channelId: MessageInputStateKey) => {
+const usePaste = (
+  channelId: MessageInputStateKey,
+  emit: (name: 'addAttachments', files: File[]) => void,
+  insertText: (text: string) => Promise<void>
+) => {
   const { addErrorToast } = useToastStore()
-  const { addAttachment, addMarkdownGeneratedFromHtml } =
-    useMessageInputStateAttachment(channelId, addErrorToast)
+  const { getTextFromHtml } = useMessageInputStateAttachment(
+    channelId,
+    addErrorToast
+  )
 
   const onPaste = async (event: ClipboardEvent) => {
     const dt = event?.clipboardData
     if (!dt) return
 
-    Array.from(dt.files).forEach(file => {
-      addAttachment(file)
-    })
+    emit('addAttachments', [...dt.files])
 
     if (dt.types.includes('image/svg+xml')) {
       // image/svg+xmlはChromeでdt.filesに含まれていない (2021/10/09 Chrome 96.0.4664.2)
       // そのため、async clipboard apiから取る
       const data = await readDataFromClipboard()
       const files = await obtainFilesFromClipboardItems(data)
-      files.forEach(file => {
-        addAttachment(file)
-      })
+      emit('addAttachments', files)
     }
 
     if (dt.types.includes('text/html')) {
-      await addMarkdownGeneratedFromHtml(dt, event)
+      const text = await getTextFromHtml(dt, event)
+      await insertText(text)
       return
     }
   }

@@ -32,7 +32,7 @@
         :shrink-to-one-line="isMobile && isLeftControlsExpanded"
         @focus="onFocus"
         @blur="onBlur"
-        @paste="onPaste"
+        @add-attachments="onAddAttachments"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="postMessage"
@@ -66,7 +66,6 @@ import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
 import usePostMessage from './use/postMessage'
 import useFocus from './use/focus'
-import usePaste from './use/paste'
 import useEditingStatus from './use/editingStatus'
 import MessageInputLeftControls from './MessageInputLeftControls.vue'
 import MessageInputPreview from './MessageInputPreview.vue'
@@ -130,7 +129,11 @@ export default defineComponent({
       }
     })
 
-    const { onPaste } = usePaste(toRef(props, 'channelId'))
+    const onAddAttachments = async (files: File[]) => {
+      for (const file of files) {
+        await addStateAttachment(file)
+      }
+    }
 
     const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
@@ -167,7 +170,7 @@ export default defineComponent({
       isPreviewShown,
       onFocus,
       onBlur,
-      onPaste,
+      onAddAttachments,
       onModifierKeyDown,
       onModifierKeyUp,
       toggleStampPicker,

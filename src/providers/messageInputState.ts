@@ -174,10 +174,7 @@ export const useMessageInputStateAttachment = (
 
   const attachments = computed(() => state.attachments)
 
-  const addMarkdownGeneratedFromHtml = async (
-    dt: DataTransfer,
-    eventToPrevent?: Event
-  ) => {
+  const getTextFromHtml = async (dt: DataTransfer, eventToPrevent?: Event) => {
     eventToPrevent?.preventDefault()
 
     const html = dt.getData('text/html')
@@ -186,17 +183,13 @@ export const useMessageInputStateAttachment = (
 
     const isSame = removeSpaces(markdown) === removeSpaces(plainText)
     if (isSame) {
-      addTextToLast(plainText)
-      return
+      return plainText
     }
 
     if (confirm('HTMLをマークダウンに変換して貼り付けますか？')) {
-      addTextToLast(markdown)
-      return
+      return markdown
     }
-
-    addTextToLast(plainText)
-    return
+    return plainText
   }
 
   const addFromDataTransfer = async (dt: DataTransfer) => {
@@ -233,7 +226,8 @@ export const useMessageInputStateAttachment = (
     }
 
     if (types.includes('text/html')) {
-      await addMarkdownGeneratedFromHtml(dt)
+      const text = await getTextFromHtml(dt)
+      addTextToLast(text)
       return
     }
 
@@ -280,7 +274,7 @@ export const useMessageInputStateAttachment = (
 
   return {
     attachments,
-    addMarkdownGeneratedFromHtml,
+    getTextFromHtml,
     addFromDataTransfer,
     addAttachment,
     removeAttachmentAt

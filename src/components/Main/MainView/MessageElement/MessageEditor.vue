@@ -12,7 +12,7 @@
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
         simple-padding
-        @paste="onPaste"
+        @add-attachments="onAddAttachments"
         @modifier-key-down="onModifierKeyDown"
         @modifier-key-up="onModifierKeyUp"
         @post-message="editMessage"
@@ -113,12 +113,8 @@ const useAttachmentsEditor = (
   }
 
   const { addAttachment, destroy } = useAttachments(postAttachment)
-
-  const onPaste = async (event: ClipboardEvent) => {
-    const dt = event?.clipboardData
-    if (!dt) return
-
-    for (const file of dt.files) {
+  const onAddAttachments = async (files: File[]) => {
+    for (const file of files) {
       try {
         await postAttachment(file)
       } catch (err) {
@@ -132,7 +128,7 @@ const useAttachmentsEditor = (
   return {
     isPostingAttachment: isPosting,
     attachmentPostProgress: progress,
-    onPaste,
+    onAddAttachments,
     addAttachment,
     destroy
   }
@@ -187,7 +183,7 @@ export default defineComponent({
       isPostingAttachment,
       attachmentPostProgress,
       addAttachment,
-      onPaste,
+      onAddAttachments,
       destroy
     } = useAttachmentsEditor(props, text)
     onBeforeUnmount(() => {
@@ -204,7 +200,7 @@ export default defineComponent({
       onModifierKeyUp,
       onStampClick,
       text,
-      onPaste,
+      onAddAttachments,
       isPostingAttachment,
       attachmentPostProgress,
       addAttachment
