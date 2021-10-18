@@ -22,7 +22,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@mdi/js": "^6.2.95",
+    "@mdi/js": "^6.3.95",
     "@traptitech/traq": "^3.7.7-3",
     "@traptitech/traq-markdown-it": "^6.0.0",
     "autosize": "^5.0.1",
