@@ -16,7 +16,11 @@ const useInsertText = (
       textareaRef.value.selectionEnd = target.value.end
     }
 
-    insert(textareaRef.value, text)
+    // Windowsでの\r\nを含む文字列を貼り付けた後に
+    // Ctrl+Zでアンドゥすると、キャレットの位置がずれるので
+    // ずれないように\nに統一しておく
+    const normalizedText = text.replace(/\r\n/g, '\n')
+    insert(textareaRef.value, normalizedText)
   }
 
   return { insertText }
