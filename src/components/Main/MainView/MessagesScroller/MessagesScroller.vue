@@ -304,8 +304,7 @@ export default defineComponent({
       if (props.isLoading) return
       if (state.scrollTop < LOAD_MORE_THRESHOLD && !props.isReachedEnd) {
         // 連続読み込みを防止するために、読み込み前に慣性スクロールを止める
-        // 同じ位置だと止まらない
-        rootRef.value.scrollTop = scrollTop + 1
+        rootRef.value.scrollTo(0, scrollTop)
 
         emit('requestLoadFormer')
       }
