@@ -14,7 +14,7 @@ const useTextStampPickerInvoker = (
   positionOf: AlignmentPosition = 'bottom-right'
 ) => {
   const elementRef = computed(() => textareaRef.value?.$el)
-  const { insertText } = useInsertText(text, elementRef)
+  const { insertText } = useInsertText(elementRef)
 
   const selecterHandler: StampSelectHandler = async stampData => {
     const stampName = store.state.entities.stampsMap.get(stampData.id)?.name

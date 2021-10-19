@@ -38,7 +38,7 @@ const obtainFilesFromClipboardItems = async (items: ClipboardItems) => {
 const usePaste = (
   channelId: MessageInputStateKey,
   emit: (name: 'addAttachments', files: File[]) => void,
-  insertText: (text: string) => Promise<void>
+  insertText: (text: string) => void
 ) => {
   const { addErrorToast } = useToastStore()
   const { getTextFromHtml } = useMessageInputStateAttachment(
@@ -62,7 +62,7 @@ const usePaste = (
 
     if (dt.types.includes('text/html')) {
       const text = await getTextFromHtml(dt, event)
-      await insertText(text)
+      insertText(text)
       return
     }
   }
