@@ -25,7 +25,7 @@
         @click-add-attachment="addAttachment"
       />
       <message-input-text-area
-        ref="textareaRef"
+        ref="textareaComponentRef"
         v-model="state.text"
         :channel-id="channelId"
         :is-posting="isPosting"
@@ -149,19 +149,19 @@ export default defineComponent({
           canPostMessage.value)
     )
 
-    const textareaRef = ref<{
+    const textareaComponentRef = ref<{
       textareaAutosizeRef: { $el: HTMLTextAreaElement }
     }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       toRef(state, 'text'),
-      computed(() => textareaRef.value?.textareaAutosizeRef),
+      computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
       containerEle
     )
 
     return {
       containerEle,
-      textareaRef,
+      textareaComponentRef,
       isArchived,
       isMobile,
       typingUsers,

@@ -107,7 +107,7 @@ export default defineComponent({
     }>()
     const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
-    const { insertText } = useInsertText(value, textareaRef)
+    const { insertText } = useInsertText(textareaRef)
     const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
 
     const {

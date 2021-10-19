@@ -54,7 +54,7 @@ const useWordSuggester = (
     nextCandidateText
   } = useWordSuggesterList(target, currentInputWord, MIN_LENGTH)
 
-  const { insertText } = useInsertText(value, textareaRef, target)
+  const { insertText } = useInsertText(textareaRef, target)
   const insertTextAndMoveTarget = (text: string) => {
     insertText(text)
     target.value.end = target.value.begin + text.length

@@ -4,17 +4,16 @@ import {
   useStampPickerInvoker
 } from '/@/providers/stampPicker'
 import store from '/@/store'
-import { Ref, computed } from 'vue'
+import { Ref } from 'vue'
 import useInsertText from '/@/use/insertText'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,
-  textareaRef: Ref<{ $el: HTMLTextAreaElement } | undefined>,
+  textareaRef: Ref<HTMLTextAreaElement | undefined>,
   positionElement: Ref<HTMLElement | undefined>,
   positionOf: AlignmentPosition = 'bottom-right'
 ) => {
-  const elementRef = computed(() => textareaRef.value?.$el)
-  const { insertText } = useInsertText(text, elementRef)
+  const { insertText } = useInsertText(textareaRef)
 
   const selecterHandler: StampSelectHandler = async stampData => {
     const stampName = store.state.entities.stampsMap.get(stampData.id)?.name
@@ -26,7 +25,7 @@ const useTextStampPickerInvoker = (
         : ''
     const stampText = `:${stampName}${size}${effects}:`
 
-    if (!elementRef.value) {
+    if (!textareaRef.value) {
       text.value += stampText
       return
     }
