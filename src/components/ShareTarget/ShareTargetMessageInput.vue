@@ -79,7 +79,7 @@ export default defineComponent({
 
     const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
 
-    const textareaRef = shallowRef<HTMLTextAreaElement | null>(null)
+    const textareaRef = shallowRef<HTMLTextAreaElement>()
     const focus = () => {
       textareaRef.value?.focus()
     }
@@ -90,9 +90,7 @@ export default defineComponent({
     const wrapperEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       toRef(state, 'text'),
-      computed(() =>
-        textareaRef.value ? { $el: textareaRef.value } : undefined
-      ),
+      textareaRef,
       wrapperEle
     )
 

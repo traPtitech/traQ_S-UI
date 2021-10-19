@@ -7,7 +7,7 @@
     />
     <div :class="$style.inputContainer">
       <message-input-text-area
-        ref="textareaRef"
+        ref="textareaComponentRef"
         v-model="text"
         :class="$style.inputTextArea"
         :is-posting="isPostingAttachment"
@@ -165,13 +165,13 @@ export default defineComponent({
     const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
       useModifierKey()
 
-    const textareaRef = ref<{
+    const textareaComponentRef = ref<{
       textareaAutosizeRef: { $el: HTMLTextAreaElement }
     }>()
     const containerEle = ref<HTMLDivElement>()
     const { toggleStampPicker } = useTextStampPickerInvoker(
       text,
-      computed(() => textareaRef.value?.textareaAutosizeRef),
+      computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
       containerEle
     )
 
@@ -192,7 +192,7 @@ export default defineComponent({
 
     return {
       containerEle,
-      textareaRef,
+      textareaComponentRef,
       editMessage,
       cancel,
       isModifierKeyPressed,
