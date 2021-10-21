@@ -85,7 +85,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.1",
     "patch-package": "^6.4.7",
-    "postcss": "^8.3.9",
+    "postcss": "^8.3.10",
     "prettier": "^2.4.1",
     "rollup-plugin-brotli": "^3.1.0",
     "sass": "^1.43.2",
