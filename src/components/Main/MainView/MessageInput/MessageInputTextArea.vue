@@ -135,7 +135,7 @@ export default defineComponent({
       if (!textareaRef.value) return
       const { top, left } = textareaRef.value.getBoundingClientRect()
       return {
-        top: top + position.value.top,
+        top: top + position.value.top - textareaRef.value.scrollTop,
         left: left + position.value.left
       }
     })
