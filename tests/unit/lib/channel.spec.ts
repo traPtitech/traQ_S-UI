@@ -1,6 +1,60 @@
 import { ChannelId } from '/@/types/entity-ids'
-import { MatchResult, channelDeepMatching } from '/@/lib/channel'
+import {
+  MatchResult,
+  channelDeepMatching,
+  canCreateChildChannel,
+  channelIdToSimpleChannelPath,
+  channelIdToPathString
+} from '/@/lib/channel'
 import { ChannelLike } from '/@/lib/channelTree'
+
+describe('canCreateChildChannel', () => {
+  it('can create', () => {
+    expect(canCreateChildChannel('a/b/c', false)).toBe(true)
+  })
+  it('cannot create (omit isArchived parameter)', () => {
+    expect(canCreateChildChannel('a/b/c')).toBe(true)
+  })
+  it('cannot create (nested more than 5)', () => {
+    expect(canCreateChildChannel('a/b/c/d/e', false)).toBe(false)
+  })
+  it('cannot create (archived)', () => {
+    expect(canCreateChildChannel('a/b/c', true)).toBe(false)
+  })
+})
+
+describe('channelIdToSimpleChannelPath', () => {
+  it('should return empty array if unknown channel id was passed', () => {
+    expect(channelIdToSimpleChannelPath(unknownChannelId, channelMap)).toEqual(
+      []
+    )
+  })
+  it('should return', () => {
+    const actual = channelIdToSimpleChannelPath(
+      '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
+      channelMap
+    )
+    const expected = [
+      { id: 'e45a34fe-2d2b-1f41-83fd-3d345fdd9df0', name: 'general' },
+      { id: '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1', name: 'exective' }
+    ]
+    expect(actual).toEqual(expected)
+  })
+})
+
+describe('channelIdToPathString', () => {
+  it('should return empty string if unknown channel id was passed', () => {
+    expect(channelIdToPathString(unknownChannelId, channelMap)).toEqual('')
+  })
+  it('should return', () => {
+    const actual = channelIdToPathString(
+      '0dd14681-c0ad-1ba2-2ff3-a4ad90f773d1',
+      channelMap
+    )
+    const expected = 'general/exective'
+    expect(actual).toEqual(expected)
+  })
+})
 
 describe('channelDeepMatching', () => {
   it('one empty query', () => {
@@ -206,6 +260,8 @@ const expectResultToBeSame = (
         .filter(isNotUndefined)
     })
   )
+
+const unknownChannelId = '11111111-1111-1111-1111-111111111111'
 
 /*
 general (e45a34fe-2d2b-1f41-83fd-3d345fdd9df0)

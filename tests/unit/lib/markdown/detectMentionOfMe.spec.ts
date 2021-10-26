@@ -16,6 +16,9 @@ describe('detectMentionOfMe', () => {
   it('can detect not my group mention', () => {
     expect(detectMentionOfMe(str5, myId, myGroupIds)).toEqual(false)
   })
+  it('can detect invalid json', () => {
+    expect(detectMentionOfMe(str6, myId, myGroupIds)).toEqual(false)
+  })
 })
 
 const myId = 'e97518db-ebb8-450f-9b4a-273234e68491'
@@ -34,3 +37,4 @@ const str4 =
   '!{"type":"group","raw":"@meAndSomeone","id":"d7461966-e5d3-4c6d-9538-7c8605f45a1d"}'
 const str5 =
   '!{"type":"group","raw":"@someonesGroup","id":"d7461966-e5d3-4c6d-9538-7c9605f45a1d"}'
+const str6 = '!{invalid:json}'
