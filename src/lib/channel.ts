@@ -1,6 +1,5 @@
 import { count } from '/@/lib/basic/string'
 import { ChannelId } from '/@/types/entity-ids'
-import { Channel } from '@traptitech/traq'
 import { dmParentUuid } from '/@/lib/basic/uuid'
 import { ChannelLike } from './channelTree'
 
@@ -19,7 +18,7 @@ export type SimpleChannel = {
 
 export const channelIdToSimpleChannelPath = (
   channelId: ChannelId,
-  channelMap: ReadonlyMap<ChannelId, Channel>
+  channelMap: ReadonlyMap<ChannelId, ChannelLike>
 ): SimpleChannel[] => {
   let channel = channelMap.get(channelId)
   if (!channel) {
@@ -38,7 +37,7 @@ export const channelIdToSimpleChannelPath = (
 
 export const channelIdToPathString = (
   channelId: ChannelId,
-  channelMap: ReadonlyMap<ChannelId, Channel>
+  channelMap: ReadonlyMap<ChannelId, ChannelLike>
 ): string => {
   const simpleChannelPath = channelIdToSimpleChannelPath(channelId, channelMap)
   return simpleChannelPath.map(c => c.name).join('/')
