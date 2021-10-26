@@ -45,6 +45,25 @@ const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
   return false
 }
 
+const isInsidePositionFixed = (e: Readonly<TouchEvent>) => {
+  if (!e.target) return false
+
+  let inspectingTarget = e.target as HTMLElement
+
+  while (inspectingTarget !== e.currentTarget) {
+    const position =
+      getComputedStyle(inspectingTarget).getPropertyValue('position')
+    if (position === 'fixed') {
+      return true
+    }
+    if (!inspectingTarget.parentElement) {
+      return false
+    }
+    inspectingTarget = inspectingTarget.parentElement
+  }
+  return false
+}
+
 /**
  * x方向のスワイプを検出する
  */
@@ -62,6 +81,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
     if (!isEnabled.value) return
     if (e.touches.length !== 1 || !e.touches[0]) return
     if (isHorizontalScrollable(e)) return
+    if (isInsidePositionFixed(e)) return
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
     state.lastTouchPosX = x
