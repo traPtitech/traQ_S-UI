@@ -8,6 +8,7 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
+import { isIOS } from '/@/lib/dom/browser'
 
 /**
  * コメントや文字列のVNodeを取り除く
@@ -21,6 +22,8 @@ const filterChildren = <T extends VNode>(vnodes: T[]) =>
     return true
   })
 
+const eventName = isIOS() ? 'touchend' : 'click'
+
 /**
  * そのデフォルトスロットに指定した要素の外でクリックされたときにclickOutsideイベントを発火する
  */
@@ -33,12 +36,12 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOutside: (_e: MouseEvent) => true
+    clickOutside: (_e: MouseEvent | TouchEvent) => true
   },
   setup(props, { slots, emit }) {
     const element = shallowRef<Element>()
 
-    const onClick = (e: MouseEvent) => {
+    const onClick = (e: MouseEvent | TouchEvent) => {
       const ele = element.value
       if (!ele) return
 
@@ -53,10 +56,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      window.addEventListener('click', onClick, { capture: true })
+      window.addEventListener(eventName, onClick, { capture: true })
     })
     onBeforeUnmount(() => {
-      window.removeEventListener('click', onClick, { capture: true })
+      window.removeEventListener(eventName, onClick, { capture: true })
     })
 
     return () => {
