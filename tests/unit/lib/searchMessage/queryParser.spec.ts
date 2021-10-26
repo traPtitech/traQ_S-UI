@@ -53,6 +53,12 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.in).toEqual(mockChannelId)
   })
+  it('can parse query with in-filter (prefix: `in:#`)', async () => {
+    const query = `lorem ipsum in:#${mockChannelName}`
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual(`lorem ipsum`)
+    expect(parsed.in).toEqual(mockChannelId)
+  })
   it('can parse query with in:here', async () => {
     const query = `lorem ipsum in:here`
     const parsed = await parseQuery(query)
@@ -70,6 +76,11 @@ describe('parseQuery', () => {
     const parsed = await parseQuery(query)
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.from).toEqual(mockUserId)
+  })
+  it('can parse query with an invalid prefix', async () => {
+    const query = 'invalid:'
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual('invalid:')
   })
   it('can parse query with empty prefixes (1)', async () => {
     const query = 'after: in: cite: from:'
@@ -90,17 +101,35 @@ describe('parseQuery', () => {
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.citation).toEqual(mockMessageId)
   })
+  it('can parse query with message-filter (not a message url)', async () => {
+    const query = 'lorem ipsum cite:https://example.com/a'
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual(`lorem ipsum cite:https://example.com/a`)
+    expect(parsed.citation).toEqual(undefined)
+  })
   it('can parse query with message-filter (id)', async () => {
     const query = `lorem ipsum cite:${mockMessageId}`
     const parsed = await parseQuery(query)
     expect(parsed.word).toEqual(`lorem ipsum`)
     expect(parsed.citation).toEqual(mockMessageId)
   })
-  it('can parse query with flag-filter', async () => {
+  it('can parse query with media-flag-filter', async () => {
     const query = 'lorem has:image ipsum'
     const parsed = await parseQuery(query)
-    expect(parsed.word).toEqual(`lorem ipsum`)
+    expect(parsed.word).toEqual('lorem ipsum')
     expect(parsed.hasImage).toEqual(true)
+  })
+  it('can parse query with invalid media-flag-filter', async () => {
+    const query = 'lorem has:ipsum'
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual('lorem has:ipsum')
+    expect(parsed.hasImage).toEqual(undefined)
+  })
+  it('can parse query with invalid attr-flag-filter', async () => {
+    const query = 'lorem ipsum is:bott'
+    const parsed = await parseQuery(query)
+    expect(parsed.word).toEqual('lorem ipsum is:bott')
+    expect(parsed.bot).toEqual(undefined)
   })
   it('can parse query with negated flag-filter (not-style)', async () => {
     const query = 'lorem ipsum not:bot'
