@@ -13,7 +13,6 @@
       />
       <desktop-tool-box />
     </div>
-    <div :id="teleportTargetName" />
     <div :class="$style.navigations">
       <navigation-content
         :class="$style.navigation"
@@ -38,9 +37,7 @@ import NavigationContent from '/@/components/Main/Navigation/NavigationContent.v
 import EphemeralNavigationContent from '/@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
 import useNavigation from './use/navigation'
 import DesktopNavigationSelector from '/@/components/Main/Navigation/DesktopNavigationSelector.vue'
-import DesktopToolBox, {
-  teleportTargetName
-} from '/@/components/Main/Navigation/DesktopToolBox.vue'
+import DesktopToolBox from '/@/components/Main/Navigation/DesktopToolBox.vue'
 
 export default defineComponent({
   name: 'DesktopNavigation',
@@ -66,8 +63,7 @@ export default defineComponent({
       onNavigationChange,
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
-      onEphemeralEntryAdd,
-      teleportTargetName
+      onEphemeralEntryAdd
     }
   }
 })

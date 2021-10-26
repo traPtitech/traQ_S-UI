@@ -15,9 +15,11 @@
       :user-id="myId"
       data-testid="my-icon-button"
     />
-    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
-      <app-list :class="$style.services" @close="closeServices" />
-    </teleport>
+    <app-list
+      v-if="isServicesShown"
+      :class="$style.services"
+      @close="closeServices"
+    />
   </div>
 </template>
 
@@ -29,14 +31,11 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import useToolBox from '/@/components/Main/Navigation/use/toolBox'
 import AppList from '/@/components/Main/Navigation/AppList.vue'
 
-export const teleportTargetName = 'app-list'
-
 export default defineComponent({
   name: 'DesktopToolBox',
   components: { Tool, UserIcon, AppList },
   setup() {
-    const { tools, isServicesShown, closeServices, toggleServices } =
-      useToolBox()
+    const { tools, isServicesShown, closeServices } = useToolBox()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const myId = computed(() => store.getters.domain.me.myId!)
 
@@ -44,9 +43,7 @@ export default defineComponent({
       tools,
       isServicesShown,
       closeServices,
-      toggleServices,
-      myId,
-      teleportTargetName
+      myId
     }
   }
 })
