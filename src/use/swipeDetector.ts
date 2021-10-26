@@ -22,18 +22,20 @@ export interface SwipeDetectorState {
   isStartingSwipe: boolean
 }
 
+const scrollableOverflowValue = new Set(['scroll', 'auto', 'overlay'])
+
 const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
   if (!e.target) return false
 
   let inspectingTarget = e.target as HTMLElement
 
-  while (inspectingTarget.parentElement !== e.currentTarget) {
+  while (inspectingTarget !== e.currentTarget) {
     const scrollWidth = inspectingTarget.scrollWidth
     const clientWidth = inspectingTarget.clientWidth
     if (scrollWidth > clientWidth) {
       const overflowX =
         getComputedStyle(inspectingTarget).getPropertyValue('overflow-x')
-      return overflowX !== 'hidden'
+      return scrollableOverflowValue.has(overflowX)
     }
     if (!inspectingTarget.parentElement) {
       return false
