@@ -71,7 +71,7 @@
     "babel-jest": "^27.3.1",
     "browserslist": "^4.17.5",
     "csstype": "^3.0.9",
-    "cypress": "^8.6.0",
+    "cypress": "^8.7.0",
     "es-jest": "^1.4.1",
     "esbuild": "^0.13.9",
     "esbuild-plugin-browserslist": "^0.3.0",
