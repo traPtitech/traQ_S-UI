@@ -1,19 +1,18 @@
 <template>
-  <div>
-    <div :class="$style.container">
-      <div :class="$style.searchBar"></div>
-      <tool
-        v-for="tool in tools"
-        :key="tool.iconName"
-        :icon-name="tool.iconName"
-        :icon-mdi="tool.iconMdi"
-        @mousedown.middle="tool.onClick"
-        @click="tool.onClick"
-      />
-    </div>
-    <teleport v-if="isServicesShown" :to="`#${teleportTargetName}`">
-      <app-list :class="$style.services" @close="closeServices" />
-    </teleport>
+  <div :class="$style.container">
+    <tool
+      v-for="tool in tools"
+      :key="tool.iconName"
+      :icon-name="tool.iconName"
+      :icon-mdi="tool.iconMdi"
+      @mousedown.middle="tool.onClick"
+      @click="tool.onClick"
+    />
+    <app-list
+      v-if="isServicesShown"
+      :class="$style.services"
+      @close="closeServices"
+    />
   </div>
 </template>
 
@@ -23,21 +22,16 @@ import Tool from '/@/components/Main/Navigation/Tool.vue'
 import useToolBox from '/@/components/Main/Navigation/use/toolBox'
 import AppList from '/@/components/Main/Navigation/AppList.vue'
 
-export const teleportTargetName = 'app-list'
-
 export default defineComponent({
   name: 'MobileToolBox',
   components: { Tool, AppList },
   setup() {
-    const { tools, isServicesShown, closeServices, toggleServices } =
-      useToolBox()
+    const { tools, isServicesShown, closeServices } = useToolBox()
 
     return {
       tools,
       isServicesShown,
-      closeServices,
-      toggleServices,
-      teleportTargetName
+      closeServices
     }
   }
 })
@@ -48,12 +42,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-.searchBar {
-  flex: 1 1;
-}
-.userIcon {
-  cursor: pointer;
+  justify-content: flex-end;
 }
 
 $margin: 16px;

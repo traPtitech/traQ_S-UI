@@ -5,7 +5,7 @@
         <span :class="$style.title">サービス</span>
         <close-button
           :class="$style.close"
-          :size="20"
+          :size="32"
           :border-width="2"
           @close="close"
         />
@@ -61,6 +61,7 @@ export default defineComponent({
 .header {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-bottom: 8px;
 }
 

@@ -5,10 +5,7 @@
       $boolAttr(!!ephemeralNavigationSelectorState.currentNavigation)
     "
   >
-    <div>
-      <mobile-tool-box :class="$style.toolBox" />
-      <div :id="teleportTargetName" />
-    </div>
+    <mobile-tool-box :class="$style.toolBox" />
     <div :class="$style.content">
       <navigation-content
         :current-navigation="navigationSelectorState.currentNavigation"
@@ -44,9 +41,7 @@
 import { defineComponent } from 'vue'
 import NavigationContent from '/@/components/Main/Navigation/NavigationContent.vue'
 import EphemeralNavigationContent from '/@/components/Main/Navigation/EphemeralNavigationContent/EphemeralNavigationContent.vue'
-import MobileToolBox, {
-  teleportTargetName
-} from '/@/components/Main/Navigation/MobileToolBox.vue'
+import MobileToolBox from '/@/components/Main/Navigation/MobileToolBox.vue'
 import NavigationSelector from '/@/components/Main/Navigation/MobileNavigationSelector.vue'
 import useNavigation from './use/navigation'
 
@@ -58,7 +53,6 @@ export default defineComponent({
     NavigationSelector,
     MobileToolBox
   },
-
   setup() {
     const {
       navigationSelectorState,
@@ -75,8 +69,7 @@ export default defineComponent({
       onNavigationChange,
       onEphemeralNavigationChange,
       onEphemeralEntryRemove,
-      onEphemeralEntryAdd,
-      teleportTargetName
+      onEphemeralEntryAdd
     }
   }
 })

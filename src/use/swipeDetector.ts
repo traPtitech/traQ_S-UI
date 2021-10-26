@@ -22,18 +22,39 @@ export interface SwipeDetectorState {
   isStartingSwipe: boolean
 }
 
+const scrollableOverflowValue = new Set(['scroll', 'auto', 'overlay'])
+
 const isHorizontalScrollable = (e: Readonly<TouchEvent>) => {
   if (!e.target) return false
 
   let inspectingTarget = e.target as HTMLElement
 
-  while (inspectingTarget.parentElement !== e.currentTarget) {
+  while (inspectingTarget !== e.currentTarget) {
     const scrollWidth = inspectingTarget.scrollWidth
     const clientWidth = inspectingTarget.clientWidth
     if (scrollWidth > clientWidth) {
       const overflowX =
         getComputedStyle(inspectingTarget).getPropertyValue('overflow-x')
-      return overflowX !== 'hidden'
+      return scrollableOverflowValue.has(overflowX)
+    }
+    if (!inspectingTarget.parentElement) {
+      return false
+    }
+    inspectingTarget = inspectingTarget.parentElement
+  }
+  return false
+}
+
+const isInsidePositionFixed = (e: Readonly<TouchEvent>) => {
+  if (!e.target) return false
+
+  let inspectingTarget = e.target as HTMLElement
+
+  while (inspectingTarget !== e.currentTarget) {
+    const position =
+      getComputedStyle(inspectingTarget).getPropertyValue('position')
+    if (position === 'fixed') {
+      return true
     }
     if (!inspectingTarget.parentElement) {
       return false
@@ -60,6 +81,7 @@ const useSwipeDetector = (isEnabled: Ref<boolean>) => {
     if (!isEnabled.value) return
     if (e.touches.length !== 1 || !e.touches[0]) return
     if (isHorizontalScrollable(e)) return
+    if (isInsidePositionFixed(e)) return
     const x = e.touches[0].clientX
     const y = e.touches[0].clientY
     state.lastTouchPosX = x
