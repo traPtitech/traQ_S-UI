@@ -51,6 +51,10 @@ export const useOpenLink = () => {
     if (shouldOpenWithRouter(event)) {
       event.preventDefault()
 
+      // 下のrouter.pushによって、targetの要素が消える場合に、
+      // clickイベントが発火しないのでここで発火させる
+      event.target?.dispatchEvent(new MouseEvent('click', event))
+
       await beforeOpenWithRouter?.()
       router.push(link)
     } else if (shouldOpenWithNewTab(event)) {
