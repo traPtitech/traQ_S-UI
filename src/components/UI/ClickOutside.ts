@@ -6,7 +6,8 @@ import {
   cloneVNode,
   shallowRef,
   onMounted,
-  onBeforeUnmount
+  onBeforeUnmount,
+  ComponentPublicInstance
 } from 'vue'
 import { isIOS } from '/@/lib/dom/browser'
 
@@ -39,11 +40,13 @@ export default defineComponent({
     clickOutside: (_e: MouseEvent | TouchEvent) => true
   },
   setup(props, { slots, emit }) {
-    const element = shallowRef<Element>()
+    const element = shallowRef<Element | ComponentPublicInstance>()
 
     const onClick = (e: MouseEvent | TouchEvent) => {
-      const ele = element.value
-      if (!ele) return
+      if (!element.value) return
+
+      const ele =
+        element.value instanceof Element ? element.value : element.value.$el
 
       if (ele === e.target || e.composedPath().includes(ele)) {
         return
