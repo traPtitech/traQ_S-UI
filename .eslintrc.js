@@ -7,9 +7,8 @@ module.exports = {
     parser: '@typescript-eslint/parser'
   },
   extends: [
-    // FIXME: .vueで無効されるべきルールが無効化されない
-    // https://github.com/typescript-eslint/typescript-eslint/blob/9aea46abcf867f3512ccb0c182fa3ff8284b3c40/packages/eslint-plugin/src/configs/eslint-recommended.ts#L9
-    // 'eslint:recommended',
+    'eslint:recommended',
+    './eslint-vue-ts-recommended.js',
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended'
