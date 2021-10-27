@@ -32,7 +32,7 @@ describe('reduceToRecord', () => {
     })
   })
 
-  it('can create record of id key', () => {
+  it('can create record of id key (array)', () => {
     expect(reduceToRecordOfArray(dupData, 'id')).toEqual({
       0: [{ id: '0', name: 'a' }],
       1: [
