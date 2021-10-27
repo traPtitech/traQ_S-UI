@@ -42,6 +42,11 @@ export interface CommandPaletteStore {
    * 現在のソートキー
    */
   currentSortKey: SearchMessageSortKey
+
+  /**
+   * スクロール位置
+   */
+  currentScrollTop: number
 }
 
 const createCommandPaletteStore = () =>
@@ -52,7 +57,8 @@ const createCommandPaletteStore = () =>
     totalCount: 0,
     searchResult: [],
     currentPage: 0,
-    currentSortKey: 'createdAt'
+    currentSortKey: 'createdAt',
+    currentScrollTop: 0
   })
 
 export const provideCommandPaletteStore = () => {
@@ -125,6 +131,10 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.totalCount = 0
   }
 
+  const setCurrentScrollTop = (scrollTop: number) => {
+    commandPaletteStore.currentScrollTop = scrollTop
+  }
+
   return {
     commandPaletteStore,
     isCommandPaletteShown,
@@ -137,7 +147,8 @@ export const useCommandPaletteStore = () => {
     setTotalCount,
     setCurrentSortKey,
     setCurrentPage,
-    resetPaging
+    resetPaging,
+    setCurrentScrollTop
   }
 }
 

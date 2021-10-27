@@ -2,18 +2,14 @@
   <div v-if="fetchingSearchResult" :class="$style.empty">
     <loading-spinner :class="$style.spinner" color="ui-secondary" />
   </div>
-  <div
-    v-else-if="searchResult.length > 0"
-    ref="containerEle"
-    :class="$style.container"
-  >
+  <div v-else-if="searchResult.length > 0" :class="$style.container">
     <popup-selector
       v-model="currentSortKey"
       :items="selectorItems"
       :class="$style.sortSelector"
       small
     />
-    <div :class="$style.resultList">
+    <div ref="resultListEle" :class="$style.resultList">
       <div
         v-for="message in searchResult"
         :key="message.id"
@@ -52,7 +48,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch
+} from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import {
   useCommandPaletteInvoker,
@@ -96,7 +99,8 @@ export default defineComponent({
     Icon
   },
   setup() {
-    const { commandPaletteStore: store } = useCommandPaletteStore()
+    const { commandPaletteStore: store, setCurrentScrollTop } =
+      useCommandPaletteStore()
     const {
       executeSearchForCurrentPage,
       fetchingSearchResult,
@@ -128,17 +132,31 @@ export default defineComponent({
       }
     )
 
-    const containerEle = ref<HTMLElement | null>(null)
+    const resultListEle = ref<HTMLElement | null>(null)
     const queryEntered = computed(() => store.query.length > 0)
 
     const { openMessage } = useMessageOpener()
 
     const jumpToPage = (page: number) => {
       changePage(page)
-      if (containerEle.value) {
-        containerEle.value.scrollTop = 0
+      if (resultListEle.value) {
+        resultListEle.value.scrollTop = 0
       }
     }
+
+    // 開くときにスクロール位置を適用
+    onMounted(() => {
+      if (resultListEle.value) {
+        resultListEle.value.scrollTop = store.currentScrollTop
+      }
+    })
+
+    // 閉じるときにスクロール位置を保持
+    onBeforeUnmount(() => {
+      if (resultListEle.value) {
+        setCurrentScrollTop(resultListEle.value.scrollTop)
+      }
+    })
 
     return {
       searchResult,
@@ -154,7 +172,7 @@ export default defineComponent({
       openMessage,
       queryEntered,
 
-      containerEle
+      resultListEle
     }
   }
 })
