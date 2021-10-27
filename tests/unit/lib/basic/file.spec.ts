@@ -51,7 +51,7 @@ describe('isFileType', () => {
   it('can get filetype (5)', () => {
     expect(isAudio('text/plain')).toEqual(false)
   })
-  it('can get filetype (5)', () => {
+  it('can get filetype (6)', () => {
     expect(isVideo('text/plain')).toEqual(false)
   })
 })
@@ -142,7 +142,7 @@ describe('prettifyFileSize', () => {
   it('can prettify megabytes', () => {
     expect(prettifyFileSize(243950232)).toEqual('243.95MB')
   })
-  it('can prettify megabytes', () => {
+  it('can prettify gigabytes', () => {
     expect(prettifyFileSize(24395023423)).toEqual('24.4GB')
   })
 })

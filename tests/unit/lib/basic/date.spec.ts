@@ -64,7 +64,7 @@ describe('getDateRepresentationWithoutSameDate', () => {
       '12/06 15:21'
     )
   })
-  it('can get date with time string', () => {
+  it('can get date with time string and year', () => {
     const date2 = new Date(defaultDate1.getTime())
     date2.setFullYear(date2.getFullYear() + 2)
     expect(getDateRepresentationWithoutSameDate(date2, date)).toEqual(
