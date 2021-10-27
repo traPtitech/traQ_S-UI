@@ -109,14 +109,13 @@ export default defineComponent({
     } = useSearchMessages()
 
     watch(
-      // マウント時・クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
+      // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
       computed(
         () => [store.query, currentSortKey.value, currentPage.value] as const
       ),
       () => {
         executeSearchForCurrentPage(store.query)
-      },
-      { immediate: true }
+      }
     )
 
     watch(
