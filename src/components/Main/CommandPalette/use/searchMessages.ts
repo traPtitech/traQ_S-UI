@@ -5,6 +5,7 @@ import { compareDateString } from '/@/lib/basic/date'
 import store from '/@/store'
 import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
+import { useCommandPaletteStore } from '/@/providers/commandPalette'
 
 const useSortMessages = (
   messages: Ref<Message[]>,
@@ -34,11 +35,17 @@ const useSortMessages = (
 }
 
 const usePaging = (itemsPerPage: number) => {
+  const {
+    commandPaletteStore: store,
+    resetPaging,
+    setCurrentPage
+  } = useCommandPaletteStore()
+
   /** 現在表示しているページ、0-indexed */
-  const currentPage = ref(0)
+  const currentPage = computed(() => store.currentPage)
 
   /** 項目の総数 */
-  const totalCount = ref(0)
+  const totalCount = computed(() => store.totalCount)
 
   /** 現在のオフセット */
   const currentOffset = computed(() => currentPage.value * itemsPerPage)
@@ -51,15 +58,11 @@ const usePaging = (itemsPerPage: number) => {
 
   const pageCount = computed(() => Math.ceil(totalCount.value / itemsPerPage))
 
-  const resetPaging = () => {
-    currentPage.value = 0
-    totalCount.value = 0
-  }
   const jumpToPage = (page: number) => {
     if (totalCount.value <= 0) {
       return
     }
-    currentPage.value = Math.max(0, Math.min(page, pageCount.value - 1))
+    setCurrentPage(Math.max(0, Math.min(page, pageCount.value - 1)))
   }
 
   return {
@@ -76,6 +79,12 @@ const usePaging = (itemsPerPage: number) => {
 const useSearchMessages = () => {
   const limit = 20
   const { parseQuery, toSearchMessageParam } = useQueryParer()
+  const {
+    setSearchResult,
+    setTotalCount,
+    setCurrentSortKey,
+    commandPaletteStore
+  } = useCommandPaletteStore()
 
   const {
     currentPage,
@@ -87,16 +96,19 @@ const useSearchMessages = () => {
     jumpToPage
   } = usePaging(limit)
 
-  const currentSortKey = ref<SearchMessageSortKey>('createdAt')
+  const currentSortKey = computed({
+    get: () => commandPaletteStore.currentSortKey,
+    set: (sortKey: SearchMessageSortKey) => setCurrentSortKey(sortKey)
+  })
+
   const fetchingSearchResult = ref(false)
 
-  const searchResult = ref<Message[]>([])
+  const searchResult = computed(() => commandPaletteStore.searchResult)
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
   const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
     if (query === '') {
       resetPaging()
-      searchResult.value = []
       return
     }
 
@@ -119,8 +131,8 @@ const useSearchMessages = () => {
     )
     fetchingSearchResult.value = false
 
-    totalCount.value = res.data.totalHits ?? 0
-    searchResult.value = res.data.hits ?? []
+    setSearchResult(res.data.hits ?? [])
+    setTotalCount(res.data.totalHits ?? 0)
   }
 
   return {
