@@ -61,8 +61,9 @@ module.exports = {
         '**/tests/unit/**/*.spec.{j,t}s?(x)'
       ],
       env: {
-        jest: true
-      }
+        'jest/globals': true
+      },
+      extends: ['plugin:jest/recommended']
     }
   ],
   reportUnusedDisableDirectives: true
