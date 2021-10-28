@@ -82,6 +82,7 @@ const useCommandPaletteBase = () => {
 
   const openCommandPalette = (mode: CommandPaletteMode, initialInput = '') => {
     commandPaletteStore.mode = mode
+    if (initialInput !== '') commandPaletteStore.currentInput = initialInput
   }
   const closeCommandPalette = () => {
     commandPaletteStore.mode = undefined
