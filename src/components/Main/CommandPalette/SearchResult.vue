@@ -57,10 +57,7 @@ import {
   watch
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import {
-  useCommandPaletteInvoker,
-  useCommandPaletteStore
-} from '/@/providers/commandPalette'
+import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
@@ -99,8 +96,6 @@ export default defineComponent({
     Icon
   },
   setup() {
-    const { commandPaletteStore: store, setCurrentScrollTop } =
-      useCommandPaletteStore()
     const {
       executeSearchForCurrentPage,
       fetchingSearchResult,
@@ -109,22 +104,25 @@ export default defineComponent({
       jumpToPage: changePage,
       resetPaging,
       pageCount,
-      currentSortKey
+      currentSortKey,
+      query,
+      currentScrollTop,
+      setCurrentScrollTop
     } = useSearchMessages()
 
     watch(
       // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
       computed(
-        () => [store.query, currentSortKey.value, currentPage.value] as const
+        () => [query.value, currentSortKey.value, currentPage.value] as const
       ),
       () => {
-        executeSearchForCurrentPage(store.query)
+        executeSearchForCurrentPage(query.value)
       }
     )
 
     watch(
       // クエリの変更時・ソートキーの変更時はページングをリセット
-      computed(() => [store.query, currentSortKey.value] as const),
+      computed(() => [query.value, currentSortKey.value] as const),
       ([query, key], [oldQuery, oldKey]) => {
         if (query !== oldQuery || key !== oldKey) {
           resetPaging()
@@ -133,7 +131,7 @@ export default defineComponent({
     )
 
     const resultListEle = ref<HTMLElement | null>(null)
-    const queryEntered = computed(() => store.query.length > 0)
+    const queryEntered = computed(() => query.value.length > 0)
 
     const { openMessage } = useMessageOpener()
 
@@ -147,7 +145,7 @@ export default defineComponent({
     // 開くときにスクロール位置を適用
     onMounted(() => {
       if (resultListEle.value) {
-        resultListEle.value.scrollTop = store.currentScrollTop
+        resultListEle.value.scrollTop = currentScrollTop.value
       }
     })
 

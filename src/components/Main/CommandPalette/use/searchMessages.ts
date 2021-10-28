@@ -1,4 +1,4 @@
-import { ref, computed, readonly, Ref } from 'vue'
+import { ref, computed, readonly, ComputedRef, Ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -34,19 +34,12 @@ const useSortMessages = (
   return { sortedMessages }
 }
 
-const usePaging = (itemsPerPage: number) => {
-  const {
-    commandPaletteStore: store,
-    resetPaging,
-    setCurrentPage
-  } = useCommandPaletteStore()
-
-  /** 現在表示しているページ、0-indexed */
-  const currentPage = computed(() => store.currentPage)
-
-  /** 項目の総数 */
-  const totalCount = computed(() => store.totalCount)
-
+const usePaging = (
+  itemsPerPage: number,
+  currentPage: ComputedRef<number>,
+  totalCount: ComputedRef<number>,
+  setCurrentPage: (page: number) => void
+) => {
   /** 現在のオフセット */
   const currentOffset = computed(() => currentPage.value * itemsPerPage)
 
@@ -66,12 +59,10 @@ const usePaging = (itemsPerPage: number) => {
   }
 
   return {
-    currentPage: readonly(currentPage),
     currentOffset,
     totalCount,
     pageCount,
     showingRange,
-    resetPaging,
     jumpToPage
   }
 }
@@ -83,28 +74,44 @@ const useSearchMessages = () => {
     setSearchResult,
     setTotalCount,
     setCurrentSortKey,
+    setCurrentPage,
+    setCurrentScrollTop,
+    resetPaging,
     commandPaletteStore
   } = useCommandPaletteStore()
 
-  const {
-    currentPage,
-    currentOffset,
-    totalCount,
-    pageCount,
-    showingRange,
-    resetPaging,
-    jumpToPage
-  } = usePaging(limit)
+  const query = computed(() => commandPaletteStore.query)
+
+  /** 現在表示しているページ、0-indexed */
+  const currentPage = computed(
+    () => commandPaletteStore.searchState.currentPage
+  )
+
+  /** 項目の総数 */
+  const totalCount = computed(() => commandPaletteStore.searchState.totalCount)
 
   const currentSortKey = computed({
-    get: () => commandPaletteStore.currentSortKey,
+    get: () => commandPaletteStore.searchState.currentSortKey,
     set: (sortKey: SearchMessageSortKey) => setCurrentSortKey(sortKey)
   })
 
-  const fetchingSearchResult = ref(false)
+  const currentScrollTop = computed(
+    () => commandPaletteStore.searchState.currentScrollTop
+  )
 
-  const searchResult = computed(() => commandPaletteStore.searchResult)
+  const searchResult = computed(
+    () => commandPaletteStore.searchState.searchResult
+  )
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
+
+  const { currentOffset, pageCount, showingRange, jumpToPage } = usePaging(
+    limit,
+    currentPage,
+    totalCount,
+    setCurrentPage
+  )
+
+  const fetchingSearchResult = ref(false)
 
   const fetchAndRenderMessagesOnCurrentPageBySearch = async (query: string) => {
     if (query === '') {
@@ -136,16 +143,22 @@ const useSearchMessages = () => {
   }
 
   return {
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch,
-    fetchingSearchResult,
-    searchResult: sortedMessages,
-    currentPage,
+    setCurrentScrollTop,
+    resetPaging,
+
+    query,
+    currentPage: readonly(currentPage),
     totalCount: readonly(totalCount),
+    currentSortKey,
+    currentScrollTop,
+    searchResult: sortedMessages,
+
     pageCount,
     showingRange,
-    resetPaging,
     jumpToPage,
-    currentSortKey
+
+    fetchingSearchResult,
+    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
   }
 }
 
