@@ -7,22 +7,7 @@ const commandPaletteStoreSymbol: InjectionKey<CommandPaletteStore> = Symbol()
 
 type CommandPaletteMode = 'command' | 'search'
 
-export interface CommandPaletteStore {
-  /**
-   * 表示モード
-   */
-  mode: CommandPaletteMode | undefined
-
-  /**
-   * 決定された入力内容
-   */
-  query: string
-
-  /**
-   * 現在入力中の文字列
-   */
-  currentInput: string
-
+type SearchState = {
   /**
    * 検索結果
    */
@@ -49,16 +34,40 @@ export interface CommandPaletteStore {
   currentScrollTop: number
 }
 
+export interface CommandPaletteStore {
+  /**
+   * 表示モード
+   */
+  mode: CommandPaletteMode | undefined
+
+  /**
+   * 決定された入力内容
+   */
+  query: string
+
+  /**
+   * 現在入力中の文字列
+   */
+  currentInput: string
+
+  /**
+   * 検索の状態
+   */
+  searchState: SearchState
+}
+
 const createCommandPaletteStore = () =>
   reactive<CommandPaletteStore>({
     mode: undefined,
     query: '',
     currentInput: '',
-    totalCount: 0,
-    searchResult: [],
-    currentPage: 0,
-    currentSortKey: 'createdAt',
-    currentScrollTop: 0
+    searchState: {
+      totalCount: 0,
+      searchResult: [],
+      currentPage: 0,
+      currentSortKey: 'createdAt',
+      currentScrollTop: 0
+    }
   })
 
 export const provideCommandPaletteStore = () => {
@@ -110,29 +119,29 @@ export const useCommandPaletteStore = () => {
   }
 
   const setSearchResult = (messages: Message[]) => {
-    commandPaletteStore.searchResult = messages
+    commandPaletteStore.searchState.searchResult = messages
   }
 
   const setTotalCount = (totalCount: number) => {
-    commandPaletteStore.totalCount = totalCount
+    commandPaletteStore.searchState.totalCount = totalCount
   }
 
   const setCurrentSortKey = (sortKey: SearchMessageSortKey) => {
-    commandPaletteStore.currentSortKey = sortKey
+    commandPaletteStore.searchState.currentSortKey = sortKey
   }
 
   const setCurrentPage = (page: number) => {
-    commandPaletteStore.currentPage = page
+    commandPaletteStore.searchState.currentPage = page
   }
 
   const resetPaging = () => {
-    commandPaletteStore.currentPage = 0
-    commandPaletteStore.searchResult = []
-    commandPaletteStore.totalCount = 0
+    commandPaletteStore.searchState.currentPage = 0
+    commandPaletteStore.searchState.searchResult = []
+    commandPaletteStore.searchState.totalCount = 0
   }
 
   const setCurrentScrollTop = (scrollTop: number) => {
-    commandPaletteStore.currentScrollTop = scrollTop
+    commandPaletteStore.searchState.currentScrollTop = scrollTop
   }
 
   return {
