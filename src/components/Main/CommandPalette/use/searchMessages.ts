@@ -1,4 +1,4 @@
-import { ref, computed, readonly, ComputedRef, Ref, DeepReadonly } from 'vue'
+import { ref, computed, readonly, Ref, DeepReadonly, toRefs } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -36,8 +36,8 @@ const useSortMessages = (
 
 const usePaging = (
   itemsPerPage: number,
-  currentPage: ComputedRef<number>,
-  totalCount: ComputedRef<number>,
+  currentPage: Ref<number>,
+  totalCount: Ref<number>,
   setCurrentPage: (page: number) => void
 ) => {
   /** 現在のオフセット */
@@ -82,26 +82,15 @@ const useSearchMessages = () => {
 
   const query = computed(() => commandPaletteStore.query)
 
-  /** 現在表示しているページ、0-indexed */
-  const currentPage = computed(
-    () => commandPaletteStore.searchState.currentPage
-  )
-
-  /** 項目の総数 */
-  const totalCount = computed(() => commandPaletteStore.searchState.totalCount)
-
   const currentSortKey = computed({
     get: () => commandPaletteStore.searchState.currentSortKey,
     set: (sortKey: SearchMessageSortKey) => setCurrentSortKey(sortKey)
   })
 
-  const currentScrollTop = computed(
-    () => commandPaletteStore.searchState.currentScrollTop
+  const { searchResult, currentPage, totalCount, currentScrollTop } = toRefs(
+    commandPaletteStore.searchState
   )
 
-  const searchResult = computed(
-    () => commandPaletteStore.searchState.searchResult
-  )
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
   const { currentOffset, pageCount, showingRange, jumpToPage } = usePaging(
