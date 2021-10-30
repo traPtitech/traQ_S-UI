@@ -59,7 +59,8 @@ export default defineComponent({
       commandPaletteStore: store,
       settleQuery,
       historySuggestions,
-      removeHistorySuggestion
+      removeHistorySuggestion,
+      setCurrentInput
     } = useCommandPaletteStore()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
@@ -69,9 +70,10 @@ export default defineComponent({
     )
     const onSelectQuerySuggestion = (query: string) => {
       if (store.currentInput !== '') {
-        store.currentInput += ' '
+        setCurrentInput(` ${query}`)
+      } else {
+        setCurrentInput(query)
       }
-      store.currentInput += query
       emit('queryInsert')
     }
     const onSelectSuggestion = (item: SuggestionItem) => {
@@ -81,7 +83,7 @@ export default defineComponent({
       }
     }
     const onSelectHistorySuggestion = (label: string) => {
-      store.currentInput = label
+      setCurrentInput(label)
     }
     const onRemoveHistorySuggestion = (label: string) => {
       removeHistorySuggestion(label)

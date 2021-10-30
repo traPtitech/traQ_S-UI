@@ -50,7 +50,8 @@ export default defineComponent({
     const {
       commandPaletteStore: store,
       settleQuery,
-      closeCommandPalette
+      closeCommandPalette,
+      setCurrentInput
     } = useCommandPaletteStore()
 
     watch(
@@ -64,7 +65,7 @@ export default defineComponent({
     )
 
     const onEsc = () => {
-      store.currentInput = ''
+      setCurrentInput('')
     }
 
     const onEnter = () => {

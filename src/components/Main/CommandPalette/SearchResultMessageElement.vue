@@ -41,6 +41,7 @@
 <script lang="ts">
 import {
   computed,
+  DeepReadonly,
   defineComponent,
   onBeforeUnmount,
   onMounted,
@@ -112,7 +113,7 @@ export default defineComponent({
   },
   props: {
     message: {
-      type: Object as PropType<Message>,
+      type: Object as PropType<DeepReadonly<Message>>,
       required: true
     },
     currentSortKey: {

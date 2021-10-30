@@ -1,5 +1,12 @@
 import { Message } from '@traptitech/traq'
-import { computed, inject, InjectionKey, provide, reactive } from 'vue'
+import {
+  computed,
+  inject,
+  InjectionKey,
+  provide,
+  reactive,
+  readonly
+} from 'vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import store from '/@/store'
 
@@ -119,6 +126,10 @@ export const useCommandPaletteStore = () => {
     store.commit.app.removeSearchHistory(oldHistory)
   }
 
+  const setCurrentInput = (currentInput: string) => {
+    commandPaletteStore.currentInput = currentInput
+  }
+
   const setSearchResult = (messages: Message[]) => {
     commandPaletteStore.searchState.searchResult = messages
   }
@@ -146,13 +157,14 @@ export const useCommandPaletteStore = () => {
   }
 
   return {
-    commandPaletteStore,
+    commandPaletteStore: readonly(commandPaletteStore),
     isCommandPaletteShown,
     openCommandPalette,
     closeCommandPalette,
     settleQuery,
     historySuggestions,
     removeHistorySuggestion,
+    setCurrentInput,
     setSearchResult,
     setTotalCount,
     setCurrentSortKey,

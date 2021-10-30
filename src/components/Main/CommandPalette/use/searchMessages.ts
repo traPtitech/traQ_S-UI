@@ -1,4 +1,4 @@
-import { ref, computed, readonly, ComputedRef, Ref } from 'vue'
+import { ref, computed, readonly, ComputedRef, Ref, DeepReadonly } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -8,27 +8,27 @@ import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPaletteStore } from '/@/providers/commandPalette'
 
 const useSortMessages = (
-  messages: Ref<Message[]>,
+  messages: Ref<DeepReadonly<Message[]>>,
   currentSortKey: Ref<SearchMessageSortKey>
 ) => {
   const sortedMessages = computed(() => {
     switch (currentSortKey.value) {
       case '-createdAt':
-        return messages.value.sort((m1, m2) =>
-          compareDateString(m1.createdAt, m2.createdAt)
-        )
+        return messages.value
+          .slice()
+          .sort((m1, m2) => compareDateString(m1.createdAt, m2.createdAt))
       case 'updatedAt':
-        return messages.value.sort((m1, m2) =>
-          compareDateString(m1.updatedAt, m2.updatedAt, true)
-        )
+        return messages.value
+          .slice()
+          .sort((m1, m2) => compareDateString(m1.updatedAt, m2.updatedAt, true))
       case '-updatedAt':
-        return messages.value.sort((m1, m2) =>
-          compareDateString(m1.updatedAt, m2.updatedAt)
-        )
+        return messages.value
+          .slice()
+          .sort((m1, m2) => compareDateString(m1.updatedAt, m2.updatedAt))
       default:
-        return messages.value.sort((m1, m2) =>
-          compareDateString(m1.createdAt, m2.createdAt, true)
-        )
+        return messages.value
+          .slice()
+          .sort((m1, m2) => compareDateString(m1.createdAt, m2.createdAt, true))
     }
   })
   return { sortedMessages }
