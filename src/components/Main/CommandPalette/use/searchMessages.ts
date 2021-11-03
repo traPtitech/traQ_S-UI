@@ -84,7 +84,7 @@ const useSearchMessages = () => {
 
   const currentSortKey = computed({
     get: () => commandPaletteStore.searchState.currentSortKey,
-    set: (sortKey: SearchMessageSortKey) => setCurrentSortKey(sortKey)
+    set: sortKey => setCurrentSortKey(sortKey)
   })
 
   const { searchResult, currentPage, totalCount, currentScrollTop } = toRefs(
