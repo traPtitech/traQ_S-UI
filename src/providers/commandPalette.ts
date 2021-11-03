@@ -16,6 +16,11 @@ type CommandPaletteMode = 'command' | 'search'
 
 type SearchState = {
   /**
+   * 検索を実行したかどうか
+   */
+  executed: boolean
+
+  /**
    * 検索結果
    */
   searchResult: Message[]
@@ -69,6 +74,7 @@ const createCommandPaletteStore = () =>
     query: '',
     currentInput: '',
     searchState: {
+      executed: false,
       totalCount: 0,
       searchResult: [],
       currentPage: 0,
@@ -156,6 +162,10 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.searchState.currentScrollTop = scrollTop
   }
 
+  const setExecuted = (executed: boolean) => {
+    commandPaletteStore.searchState.executed = executed
+  }
+
   return {
     commandPaletteStore: readonly(commandPaletteStore),
     isCommandPaletteShown,
@@ -170,7 +180,8 @@ export const useCommandPaletteStore = () => {
     setCurrentSortKey,
     setCurrentPage,
     resetPaging,
-    setCurrentScrollTop
+    setCurrentScrollTop,
+    setExecuted
   }
 }
 

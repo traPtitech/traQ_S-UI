@@ -77,6 +77,7 @@ const useSearchMessages = () => {
     setCurrentPage,
     setCurrentScrollTop,
     resetPaging,
+    setExecuted,
     commandPaletteStore
   } = useCommandPaletteStore()
 
@@ -87,9 +88,8 @@ const useSearchMessages = () => {
     set: sortKey => setCurrentSortKey(sortKey)
   })
 
-  const { searchResult, currentPage, totalCount, currentScrollTop } = toRefs(
-    commandPaletteStore.searchState
-  )
+  const { executed, searchResult, currentPage, totalCount, currentScrollTop } =
+    toRefs(commandPaletteStore.searchState)
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
@@ -126,6 +126,7 @@ const useSearchMessages = () => {
       )
     )
     fetchingSearchResult.value = false
+    setExecuted(true)
 
     setSearchResult(res.data.hits ?? [])
     setTotalCount(res.data.totalHits ?? 0)
@@ -141,6 +142,7 @@ const useSearchMessages = () => {
     currentSortKey,
     currentScrollTop,
     searchResult: sortedMessages,
+    executed,
 
     pageCount,
     showingRange,

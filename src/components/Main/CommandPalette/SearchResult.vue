@@ -107,7 +107,8 @@ export default defineComponent({
       currentSortKey,
       query,
       currentScrollTop,
-      setCurrentScrollTop
+      setCurrentScrollTop,
+      executed
     } = useSearchMessages()
 
     watch(
@@ -119,6 +120,13 @@ export default defineComponent({
         executeSearchForCurrentPage(query.value)
       }
     )
+
+    onMounted(() => {
+      // 初回マウント時に取得する
+      if (!executed.value) {
+        executeSearchForCurrentPage(query.value)
+      }
+    })
 
     watch(
       // クエリの変更時・ソートキーの変更時はページングをリセット

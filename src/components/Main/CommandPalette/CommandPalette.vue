@@ -3,9 +3,9 @@
     <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
       <command-palette-input />
       <hr v-if="supplementalViewType" :class="$style.separator" />
-      <search-result v-show="supplementalViewType === 'search-result'" />
+      <search-result v-if="supplementalViewType === 'search-result'" />
       <search-suggestion
-        v-show="supplementalViewType === 'search-suggestion'"
+        v-else-if="supplementalViewType === 'search-suggestion'"
       />
     </div>
   </click-outside>
