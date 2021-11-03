@@ -1,4 +1,13 @@
-import { ref, computed, readonly, Ref, DeepReadonly, toRefs } from 'vue'
+import {
+  ref,
+  computed,
+  readonly,
+  Ref,
+  DeepReadonly,
+  toRefs,
+  onMounted,
+  onBeforeUnmount
+} from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -132,15 +141,29 @@ const useSearchMessages = () => {
     setTotalCount(res.data.totalHits ?? 0)
   }
 
+  const keepScrollPosition = (ele: Ref<HTMLElement | null>) => {
+    // 開くときにスクロール位置を適用
+    onMounted(() => {
+      if (ele.value) {
+        ele.value.scrollTop = currentScrollTop.value
+      }
+    })
+
+    // 閉じるときにスクロール位置を保持
+    onBeforeUnmount(() => {
+      if (ele.value) {
+        setCurrentScrollTop(ele.value.scrollTop)
+      }
+    })
+  }
+
   return {
-    setCurrentScrollTop,
     resetPaging,
 
     query,
     currentPage: readonly(currentPage),
     totalCount: readonly(totalCount),
     currentSortKey,
-    currentScrollTop,
     searchResult: sortedMessages,
     executed,
 
@@ -149,7 +172,8 @@ const useSearchMessages = () => {
     jumpToPage,
 
     fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
+    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch,
+    keepScrollPosition
   }
 }
 

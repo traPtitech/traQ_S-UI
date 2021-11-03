@@ -48,14 +48,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch
-} from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 import PopupSelector, {
@@ -106,9 +99,8 @@ export default defineComponent({
       pageCount,
       currentSortKey,
       query,
-      currentScrollTop,
-      setCurrentScrollTop,
-      executed
+      executed,
+      keepScrollPosition
     } = useSearchMessages()
 
     watch(
@@ -150,19 +142,7 @@ export default defineComponent({
       }
     }
 
-    // 開くときにスクロール位置を適用
-    onMounted(() => {
-      if (resultListEle.value) {
-        resultListEle.value.scrollTop = currentScrollTop.value
-      }
-    })
-
-    // 閉じるときにスクロール位置を保持
-    onBeforeUnmount(() => {
-      if (resultListEle.value) {
-        setCurrentScrollTop(resultListEle.value.scrollTop)
-      }
-    })
+    keepScrollPosition(resultListEle)
 
     return {
       searchResult,
