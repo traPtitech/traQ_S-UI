@@ -138,6 +138,10 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.currentInput = currentInput
   }
 
+  const addCurrentInput = (input: string) => {
+    commandPaletteStore.currentInput += input
+  }
+
   const setExecuted = (executed: boolean) => {
     commandPaletteStore.searchState.executed = executed
   }
@@ -178,6 +182,7 @@ export const useCommandPaletteStore = () => {
     historySuggestions,
     removeHistorySuggestion,
     setCurrentInput,
+    addCurrentInput,
     setExecuted,
     setSearchResult,
     setTotalCount,
