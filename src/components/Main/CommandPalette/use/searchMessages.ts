@@ -1,12 +1,4 @@
-import {
-  ref,
-  computed,
-  Ref,
-  DeepReadonly,
-  toRefs,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+import { ref, computed, Ref, DeepReadonly, toRefs } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
@@ -82,7 +74,6 @@ const useSearchMessages = () => {
     setTotalCount,
     setCurrentSortKey,
     setCurrentPage,
-    setCurrentScrollTop,
     resetPaging,
     setExecuted,
     commandPaletteStore
@@ -95,8 +86,9 @@ const useSearchMessages = () => {
     set: sortKey => setCurrentSortKey(sortKey)
   })
 
-  const { executed, searchResult, currentPage, totalCount, currentScrollTop } =
-    toRefs(commandPaletteStore.searchState)
+  const { executed, searchResult, currentPage, totalCount } = toRefs(
+    commandPaletteStore.searchState
+  )
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
@@ -139,22 +131,6 @@ const useSearchMessages = () => {
     setTotalCount(res.data.totalHits ?? 0)
   }
 
-  const keepScrollPosition = (ele: Ref<HTMLElement | null>) => {
-    // 開くときにスクロール位置を適用
-    onMounted(() => {
-      if (ele.value) {
-        ele.value.scrollTop = currentScrollTop.value
-      }
-    })
-
-    // 閉じるときにスクロール位置を保持
-    onBeforeUnmount(() => {
-      if (ele.value) {
-        setCurrentScrollTop(ele.value.scrollTop)
-      }
-    })
-  }
-
   return {
     resetPaging,
 
@@ -170,8 +146,7 @@ const useSearchMessages = () => {
     jumpToPage,
 
     fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch,
-    keepScrollPosition
+    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
   }
 }
 

@@ -55,6 +55,7 @@ import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
+import useKeepScrollPosition from './use/keepScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -99,8 +100,7 @@ export default defineComponent({
       pageCount,
       currentSortKey,
       query,
-      executed,
-      keepScrollPosition
+      executed
     } = useSearchMessages()
 
     watch(
@@ -142,7 +142,7 @@ export default defineComponent({
       }
     }
 
-    keepScrollPosition(resultListEle)
+    useKeepScrollPosition(resultListEle)
 
     return {
       searchResult,
