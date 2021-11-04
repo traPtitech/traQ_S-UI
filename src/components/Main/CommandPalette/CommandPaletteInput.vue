@@ -11,7 +11,7 @@
       </div>
       <input
         ref="inputRef"
-        v-model="store.currentInput"
+        v-model="currentInput"
         :class="$style.input"
         :placeholder="placeholder"
         @keydown.esc="onEsc"
@@ -64,6 +64,11 @@ export default defineComponent({
       }
     )
 
+    const currentInput = computed({
+      get: () => store.currentInput,
+      set: input => setCurrentInput(input)
+    })
+
     const onEsc = () => {
       setCurrentInput('')
     }
@@ -92,6 +97,7 @@ export default defineComponent({
       isMobile,
       inputRef,
       store,
+      currentInput,
       onEsc,
       onEnter,
       placeholder,
