@@ -167,9 +167,10 @@ export const useCommandPaletteStore = () => {
   }
 
   const resetPaging = () => {
-    commandPaletteStore.searchState.currentPage = 0
+    commandPaletteStore.searchState.executed = false
     commandPaletteStore.searchState.searchResult = []
     commandPaletteStore.searchState.totalCount = 0
+    commandPaletteStore.searchState.currentPage = 0
   }
 
   return {
