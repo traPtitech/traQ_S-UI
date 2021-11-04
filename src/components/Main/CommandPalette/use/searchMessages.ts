@@ -1,7 +1,6 @@
 import {
   ref,
   computed,
-  readonly,
   Ref,
   DeepReadonly,
   toRefs,
@@ -23,21 +22,21 @@ const useSortMessages = (
   const sortedMessages = computed(() => {
     switch (currentSortKey.value) {
       case '-createdAt':
-        return messages.value
-          .slice()
-          .sort((m1, m2) => compareDateString(m1.createdAt, m2.createdAt))
+        return [...messages.value].sort((m1, m2) =>
+          compareDateString(m1.createdAt, m2.createdAt)
+        )
       case 'updatedAt':
-        return messages.value
-          .slice()
-          .sort((m1, m2) => compareDateString(m1.updatedAt, m2.updatedAt, true))
+        return [...messages.value].sort((m1, m2) =>
+          compareDateString(m1.updatedAt, m2.updatedAt, true)
+        )
       case '-updatedAt':
-        return messages.value
-          .slice()
-          .sort((m1, m2) => compareDateString(m1.updatedAt, m2.updatedAt))
+        return [...messages.value].sort((m1, m2) =>
+          compareDateString(m1.updatedAt, m2.updatedAt)
+        )
       default:
-        return messages.value
-          .slice()
-          .sort((m1, m2) => compareDateString(m1.createdAt, m2.createdAt, true))
+        return [...messages.value].sort((m1, m2) =>
+          compareDateString(m1.createdAt, m2.createdAt, true)
+        )
     }
   })
   return { sortedMessages }
@@ -69,9 +68,8 @@ const usePaging = (
 
   return {
     currentOffset,
-    totalCount,
-    pageCount,
     showingRange,
+    pageCount,
     jumpToPage
   }
 }
@@ -137,7 +135,7 @@ const useSearchMessages = () => {
     fetchingSearchResult.value = false
     setExecuted(true)
 
-    setSearchResult(res.data.hits ?? [])
+    setSearchResult(hits)
     setTotalCount(res.data.totalHits ?? 0)
   }
 
@@ -161,8 +159,8 @@ const useSearchMessages = () => {
     resetPaging,
 
     query,
-    currentPage: readonly(currentPage),
-    totalCount: readonly(totalCount),
+    currentPage,
+    totalCount,
     currentSortKey,
     searchResult: sortedMessages,
     executed,

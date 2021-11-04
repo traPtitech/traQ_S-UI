@@ -95,7 +95,9 @@ const useCommandPaletteBase = () => {
 
   const openCommandPalette = (mode: CommandPaletteMode, initialInput = '') => {
     commandPaletteStore.mode = mode
-    if (initialInput !== '') commandPaletteStore.currentInput = initialInput
+    if (initialInput !== '') {
+      commandPaletteStore.currentInput = initialInput
+    }
   }
   const closeCommandPalette = () => {
     commandPaletteStore.mode = undefined
@@ -136,6 +138,10 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.currentInput = currentInput
   }
 
+  const setExecuted = (executed: boolean) => {
+    commandPaletteStore.searchState.executed = executed
+  }
+
   const setSearchResult = (messages: Message[]) => {
     commandPaletteStore.searchState.searchResult = messages
   }
@@ -152,36 +158,33 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.searchState.currentPage = page
   }
 
+  const setCurrentScrollTop = (scrollTop: number) => {
+    commandPaletteStore.searchState.currentScrollTop = scrollTop
+  }
+
   const resetPaging = () => {
     commandPaletteStore.searchState.currentPage = 0
     commandPaletteStore.searchState.searchResult = []
     commandPaletteStore.searchState.totalCount = 0
   }
 
-  const setCurrentScrollTop = (scrollTop: number) => {
-    commandPaletteStore.searchState.currentScrollTop = scrollTop
-  }
-
-  const setExecuted = (executed: boolean) => {
-    commandPaletteStore.searchState.executed = executed
-  }
-
   return {
     commandPaletteStore: readonly(commandPaletteStore),
-    isCommandPaletteShown,
     openCommandPalette,
     closeCommandPalette,
+
+    isCommandPaletteShown,
     settleQuery,
     historySuggestions,
     removeHistorySuggestion,
     setCurrentInput,
+    setExecuted,
     setSearchResult,
     setTotalCount,
     setCurrentSortKey,
     setCurrentPage,
-    resetPaging,
     setCurrentScrollTop,
-    setExecuted
+    resetPaging
   }
 }
 
