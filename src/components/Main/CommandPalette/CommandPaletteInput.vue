@@ -55,7 +55,7 @@ export default defineComponent({
     } = useCommandPaletteStore()
 
     watch(
-      computed(() => store.currentInput),
+      () => store.currentInput,
       () => {
         // 外から入力が変更された場合フォーカスを当てる
         if (document.activeElement !== inputRef.value) {
