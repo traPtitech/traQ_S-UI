@@ -71,11 +71,9 @@ const useSearchMessages = () => {
   const { parseQuery, toSearchMessageParam } = useQueryParer()
   const {
     setSearchResult,
-    setTotalCount,
     setCurrentSortKey,
     setCurrentPage,
     resetPaging,
-    setExecuted,
     commandPaletteStore
   } = useCommandPaletteStore()
 
@@ -128,9 +126,7 @@ const useSearchMessages = () => {
     )
     fetchingSearchResult.value = false
 
-    setExecuted(true)
-    setSearchResult(hits)
-    setTotalCount(res.data.totalHits ?? 0)
+    setSearchResult(true, hits, res.data.totalHits ?? 0)
   }
 
   return {

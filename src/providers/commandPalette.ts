@@ -142,15 +142,13 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.currentInput += input
   }
 
-  const setExecuted = (executed: boolean) => {
+  const setSearchResult = (
+    executed: boolean,
+    messages: Message[],
+    totalCount: number
+  ) => {
     commandPaletteStore.searchState.executed = executed
-  }
-
-  const setSearchResult = (messages: Message[]) => {
     commandPaletteStore.searchState.searchResult = messages
-  }
-
-  const setTotalCount = (totalCount: number) => {
     commandPaletteStore.searchState.totalCount = totalCount
   }
 
@@ -184,9 +182,7 @@ export const useCommandPaletteStore = () => {
     removeHistorySuggestion,
     setCurrentInput,
     addCurrentInput,
-    setExecuted,
     setSearchResult,
-    setTotalCount,
     setCurrentSortKey,
     setCurrentPage,
     setCurrentScrollTop,
