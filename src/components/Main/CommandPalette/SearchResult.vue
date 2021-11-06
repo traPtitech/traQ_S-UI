@@ -105,11 +105,13 @@ export default defineComponent({
 
     watch(
       // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
-      computed(
-        () => [query.value, currentSortKey.value, currentPage.value] as const
-      ),
-      () => {
-        executeSearchForCurrentPage(query.value)
+      () => [query.value, currentSortKey.value, currentPage.value] as const,
+      ([query, key], [oldQuery, oldKey]) => {
+        // クエリの変更時・ソートキーの変更時はページングをリセット
+        if (query !== oldQuery || key !== oldKey) {
+          resetPaging()
+        }
+        executeSearchForCurrentPage(query)
       }
     )
 
@@ -119,16 +121,6 @@ export default defineComponent({
         executeSearchForCurrentPage(query.value)
       }
     })
-
-    watch(
-      // クエリの変更時・ソートキーの変更時はページングをリセット
-      computed(() => [query.value, currentSortKey.value] as const),
-      ([query, key], [oldQuery, oldKey]) => {
-        if (query !== oldQuery || key !== oldKey) {
-          resetPaging()
-        }
-      }
-    )
 
     const resultListEle = ref<HTMLElement | null>(null)
     const queryEntered = computed(() => query.value.length > 0)
