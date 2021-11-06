@@ -2,18 +2,14 @@
   <div v-if="fetchingSearchResult" :class="$style.empty">
     <loading-spinner :class="$style.spinner" color="ui-secondary" />
   </div>
-  <div
-    v-else-if="searchResult.length > 0"
-    ref="containerEle"
-    :class="$style.container"
-  >
+  <div v-else-if="searchResult.length > 0" :class="$style.container">
     <popup-selector
       v-model="currentSortKey"
       :items="selectorItems"
       :class="$style.sortSelector"
       small
     />
-    <div :class="$style.resultList">
+    <div ref="resultListEle" :class="$style.resultList">
       <div
         v-for="message in searchResult"
         :key="message.id"
@@ -52,16 +48,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import {
-  useCommandPaletteInvoker,
-  useCommandPaletteStore
-} from '/@/providers/commandPalette'
+import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
+import useKeepScrollPosition from './use/keepScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -96,7 +90,6 @@ export default defineComponent({
     Icon
   },
   setup() {
-    const { commandPaletteStore: store } = useCommandPaletteStore()
     const {
       executeSearchForCurrentPage,
       fetchingSearchResult,
@@ -105,23 +98,31 @@ export default defineComponent({
       jumpToPage: changePage,
       resetPaging,
       pageCount,
-      currentSortKey
+      currentSortKey,
+      query,
+      executed
     } = useSearchMessages()
 
     watch(
-      // マウント時・クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
+      // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
       computed(
-        () => [store.query, currentSortKey.value, currentPage.value] as const
+        () => [query.value, currentSortKey.value, currentPage.value] as const
       ),
       () => {
-        executeSearchForCurrentPage(store.query)
-      },
-      { immediate: true }
+        executeSearchForCurrentPage(query.value)
+      }
     )
+
+    onMounted(() => {
+      // 初回マウント時に取得する
+      if (!executed.value) {
+        executeSearchForCurrentPage(query.value)
+      }
+    })
 
     watch(
       // クエリの変更時・ソートキーの変更時はページングをリセット
-      computed(() => [store.query, currentSortKey.value] as const),
+      computed(() => [query.value, currentSortKey.value] as const),
       ([query, key], [oldQuery, oldKey]) => {
         if (query !== oldQuery || key !== oldKey) {
           resetPaging()
@@ -129,17 +130,19 @@ export default defineComponent({
       }
     )
 
-    const containerEle = ref<HTMLElement | null>(null)
-    const queryEntered = computed(() => store.query.length > 0)
+    const resultListEle = ref<HTMLElement | null>(null)
+    const queryEntered = computed(() => query.value.length > 0)
 
     const { openMessage } = useMessageOpener()
 
     const jumpToPage = (page: number) => {
       changePage(page)
-      if (containerEle.value) {
-        containerEle.value.scrollTop = 0
+      if (resultListEle.value) {
+        resultListEle.value.scrollTop = 0
       }
     }
+
+    useKeepScrollPosition(resultListEle)
 
     return {
       searchResult,
@@ -155,7 +158,7 @@ export default defineComponent({
       openMessage,
       queryEntered,
 
-      containerEle
+      resultListEle
     }
   }
 })
