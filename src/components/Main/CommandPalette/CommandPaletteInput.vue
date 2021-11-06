@@ -66,7 +66,9 @@ export default defineComponent({
 
     const currentInput = computed({
       get: () => store.currentInput,
-      set: input => setCurrentInput(input)
+      set: input => {
+        setCurrentInput(input)
+      }
     })
 
     const onEsc = () => {

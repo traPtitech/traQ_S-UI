@@ -83,7 +83,9 @@ const useSearchMessages = () => {
 
   const currentSortKey = computed({
     get: () => commandPaletteStore.searchState.currentSortKey,
-    set: sortKey => setCurrentSortKey(sortKey)
+    set: sortKey => {
+      setCurrentSortKey(sortKey)
+    }
   })
 
   const { executed, searchResult, currentPage, totalCount } = toRefs(
@@ -125,8 +127,8 @@ const useSearchMessages = () => {
       )
     )
     fetchingSearchResult.value = false
-    setExecuted(true)
 
+    setExecuted(true)
     setSearchResult(hits)
     setTotalCount(res.data.totalHits ?? 0)
   }
