@@ -56,8 +56,8 @@ export const rawQuery = <T extends string>(extracted: ExtractedFilter<T>) =>
 /**
  * プレフィックスからextractorを作る
  *
- * @param prefixes　プレフィックスとして認める物のリスト
- * @param prefixes　否定プレフィックス フラグ式のフィルター以外は指定する必要なし
+ * @param prefixes プレフィックスとして認める物のリスト
+ * @param prefixes 否定プレフィックス フラグ式のフィルター以外は指定する必要なし
  */
 export const makePrefixedFilterExtractor =
   <T extends string>(
