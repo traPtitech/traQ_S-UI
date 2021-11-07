@@ -17,7 +17,6 @@
     "baseUrl": ".",
     "types": [
       "dom-screen-wake-lock",
-      "jest",
       "webappsec-credential-management"
     ],
     "paths": {
@@ -29,16 +28,12 @@
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost",
       "WebWorker"
     ]
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "src/**/*.vue"
   ],
   "exclude": [
     "node_modules"

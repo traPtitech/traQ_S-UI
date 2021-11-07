@@ -8,7 +8,8 @@ const traQConfig = {
     apiKey: '',
     appId: '',
     projectId: '',
-    messagingSenderId: ''
+    messagingSenderId: '',
+    vapidKey: ''
   },
   isRootChannelSelectableAsParentChannel: false
 }

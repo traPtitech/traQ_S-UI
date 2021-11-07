@@ -29,10 +29,11 @@ const viteConfig = await resolveConfig(
 )
 const previewServer = await preview(viteConfig, { port: 5000 })
 
-await runCmd(npm, [
-  'run',
-  isHeadless ? 'test:e2e:only-run-headless' : 'test:e2e:only-run'
-])
+await runCmd(
+  npm,
+  ['run', isHeadless ? 'test:e2e:only-run-headless' : 'test:e2e:only-run'],
+  { shell: false }
+)
 
 if (isHeadless) {
   previewServer.close()
