@@ -136,8 +136,10 @@ export default class AutoReconnectWebSocket {
     if (this.reconnecting) return
     this.reconnecting = true
 
-    let count = 1
-    while (true) {
+    let count = 0
+    while (!this.isOpen) {
+      count++
+
       const delay = this._getDelay(count)
       await wait(delay)
 
@@ -146,10 +148,6 @@ export default class AutoReconnectWebSocket {
       if (!this.mockFail) {
         await this._setupWs()
       }
-
-      if (this.isOpen) break
-
-      count++
     }
 
     this.reconnecting = false

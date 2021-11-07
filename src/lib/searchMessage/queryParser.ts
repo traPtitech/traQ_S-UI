@@ -193,9 +193,10 @@ const filterOrStringToSearchMessageQuery = (
         ...emptySearchMessageQueryObject,
         [f.type]: f.value.toISOString()
       }
-    case 'in':
+    case 'in': {
       const channelId = f.value === InHereToken ? currentChannelId : f.value
       return { ...emptySearchMessageQueryObject, in: channelId }
+    }
     case 'to':
     case 'from':
     case 'citation':
