@@ -18,6 +18,7 @@
     "types": [
       "dom-screen-wake-lock",
       "jest",
+      "cypress",
       "webappsec-credential-management"
     ],
     "paths": {
