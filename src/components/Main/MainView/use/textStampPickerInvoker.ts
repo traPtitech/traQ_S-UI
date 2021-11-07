@@ -15,7 +15,7 @@ const useTextStampPickerInvoker = (
 ) => {
   const { insertText } = useInsertText(textareaRef)
 
-  const selecterHandler: StampSelectHandler = async stampData => {
+  const selecterHandler: StampSelectHandler = stampData => {
     const stampName = store.state.entities.stampsMap.get(stampData.id)?.name
     if (!stampName) return
     const size = stampData.size ? `.${stampData.size}` : ''

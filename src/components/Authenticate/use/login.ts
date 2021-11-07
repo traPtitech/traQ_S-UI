@@ -79,7 +79,7 @@ const useLogin = () => {
       }
     }
   }
-  const loginExternal = async (provider: string) => {
+  const loginExternal = (provider: string) => {
     // TODO: 内部リダイレクト対応
     location.href = `/api/auth/${provider}`
   }

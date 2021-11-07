@@ -59,7 +59,7 @@ const useElementRenderObserver = (
     lastTop = top
   })
   const stop = watchEffect(
-    async () => {
+    () => {
       if (
         (props.isEntryMessage ||
           embeddingsState.fileIds.length > 0 ||

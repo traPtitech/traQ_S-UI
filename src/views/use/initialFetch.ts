@@ -2,7 +2,7 @@ import store from '/@/store'
 import { ref } from 'vue'
 import useLoginCheck from './loginCheck'
 
-const initialFetch = async () => {
+const initialFetch = () => {
   // 初回fetch
   store.dispatch.entities.fetchUsers()
   store.dispatch.entities.fetchUserGroups()

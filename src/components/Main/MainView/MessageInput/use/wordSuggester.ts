@@ -108,7 +108,7 @@ const useWordSuggester = (
       return
     }
   }
-  const onKeyUp = async (e: KeyboardEvent) => {
+  const onKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown') return
     // 文字入力後の状態をとるためkeyUpで行う必要がある
     updateTarget()
@@ -119,7 +119,7 @@ const useWordSuggester = (
     }
   }
 
-  const onSelect = async (word: WordOrConfirmedPart) => {
+  const onSelect = (word: WordOrConfirmedPart) => {
     if (word.type === 'stamp') {
       insertText(`${word.text}:`)
       store.commit.domain.me.upsertLocalStampHistory({
@@ -131,7 +131,7 @@ const useWordSuggester = (
     }
     isSuggesterShown.value = false
   }
-  const onBlur = async () => {
+  const onBlur = () => {
     isSuggesterShown.value = false
   }
 

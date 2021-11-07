@@ -20,7 +20,7 @@ describe('parseQuery', () => {
       }
       return undefined
     },
-    usernameToId: async username => {
+    usernameToId: username => {
       if (username === mockUserName) {
         return mockUserId
       }

@@ -409,7 +409,7 @@ export const actions = defineActions({
     }
     return clipFoldersMap
   },
-  async deleteClipFolders(context, clipFolderId: ClipFolderId) {
+  deleteClipFolders(context, clipFolderId: ClipFolderId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteClipFolder(clipFolderId)
   },
@@ -515,7 +515,7 @@ export const actions = defineActions({
     }
     return stampPalettesMap
   },
-  async deleteStampPalette(context, stampPaletteId: StampPaletteId) {
+  deleteStampPalette(context, stampPaletteId: StampPaletteId) {
     const { commit } = entitiesActionContext(context)
     commit.deleteStampPalette(stampPaletteId)
   }

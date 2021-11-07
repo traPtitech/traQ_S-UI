@@ -88,7 +88,7 @@ export const actions = defineActions({
     }
   },
   /** サーバーに状態を変更するリクエストを送信する */
-  async modifyRTCSession(
+  modifyRTCSession(
     context,
     payload: { sessionId: SessionId; states: string[] }
   ) {

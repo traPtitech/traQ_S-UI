@@ -28,7 +28,8 @@ const useChannelPath = () => {
     channelIdToSimpleChannelPath(id).map(c => c.name)
 
   const dmChannelIdToPathString = (id: DMChannelId, hashed = false): string =>
-    (hashed ? '@' : '') + store.getters.entities.userNameByDMChannelId(id) ?? ''
+    (hashed ? '@' : '') +
+    (store.getters.entities.userNameByDMChannelId(id) ?? '')
 
   const channelIdToPathString = (
     id: ChannelId | DMChannelId,
