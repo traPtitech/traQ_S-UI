@@ -21,7 +21,7 @@ describe('categorizeUnicodeStamps', () => {
 })
 
 describe('traQStampsToStampCategory', () => {
-  it('can transform to category', async () => {
+  it('can transform to category', () => {
     expect(traQStampsToStampCategory(traQStampNameIdMap)).toEqual(traQCategory)
   })
 })

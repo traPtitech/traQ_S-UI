@@ -73,7 +73,7 @@ export const actions = defineActions({
     commit.unsetRenderedContent()
     commit.unsetCurrentViewers()
   },
-  async changeCurrentChannel(
+  changeCurrentChannel(
     context,
     payload: {
       channelId: ChannelId
@@ -92,7 +92,7 @@ export const actions = defineActions({
   },
 
   /** クリップフォルダに移行 */
-  async changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
+  changeCurrentClipFolder(context, clipFolderId: ClipFolderId) {
     const { state, commit, dispatch } = messagesViewActionContext(context)
     if (state.currentClipFolderId === clipFolderId) return
 
@@ -256,6 +256,6 @@ export const actions = defineActions({
   async setReceiveLatestMessages(context, receiveLatestMessages: boolean) {
     const { commit, dispatch } = messagesViewActionContext(context)
     commit.setReceiveLatestMessages(receiveLatestMessages)
-    dispatch.syncViewState()
+    await dispatch.syncViewState()
   }
 })

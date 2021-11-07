@@ -162,7 +162,7 @@ export const actions = defineActions({
     payload: { channelId: ChannelId; subscriptionLevel: ChannelSubscribeLevel }
   ) {
     const { commit } = meActionContext(context)
-    apis.setChannelSubscribeLevel(payload.channelId, {
+    await apis.setChannelSubscribeLevel(payload.channelId, {
       level: payload.subscriptionLevel
     })
     commit.setSubscription(payload)

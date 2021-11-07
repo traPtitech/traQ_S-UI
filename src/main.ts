@@ -8,20 +8,18 @@ import { mountMitt } from '/@/onMount'
 
 import('./katexCss')
 
-!(async () => {
-  setupGlobalFuncs()
+setupGlobalFuncs()
 
-  const app = createApp(App)
-  app.use(router)
-  app.use(store.original)
+const app = createApp(App)
+app.use(router)
+app.use(store.original)
 
-  app.use(boolAttr)
+app.use(boolAttr)
 
-  app.mount('#app')
+app.mount('#app')
 
-  if (import.meta.env.MODE === 'development') {
-    app.config.performance = true
-  }
+if (import.meta.env.MODE === 'development') {
+  app.config.performance = true
+}
 
-  mountMitt.emit('mount')
-})()
+mountMitt.emit('mount')

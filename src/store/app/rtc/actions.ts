@@ -241,7 +241,7 @@ export const actions = defineActions({
       dispatch.unmute()
     }
 
-    await client.joinRoom(room, localStream)
+    client.joinRoom(room, localStream)
 
     state.mixer.playFileSource('qall_start')
   },

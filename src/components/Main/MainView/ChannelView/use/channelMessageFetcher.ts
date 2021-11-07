@@ -37,7 +37,7 @@ const useChannelMessageFetcher = (
       isReachedEnd.value = true
     }
 
-    const oldestMessage = messages[messages.length - 1] as Message | undefined
+    const oldestMessage = messages[messages.length - 1]
     if (oldestMessage) {
       const oldestMessageDate = new Date(oldestMessage.createdAt)
       if (
@@ -67,7 +67,7 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const latestMessage = messages[messages.length - 1] as Message | undefined
+    const latestMessage = messages[messages.length - 1]
     if (latestMessage) {
       const latestMessageDate = new Date(latestMessage.createdAt)
       if (
@@ -118,7 +118,7 @@ const useChannelMessageFetcher = (
       isReachedLatest.value = true
     }
 
-    const oldestMessage = messages[messages.length - 1] as Message | undefined
+    const oldestMessage = messages[messages.length - 1]
     if (oldestMessage) {
       const oldestMessageDate = new Date(oldestMessage.createdAt)
       if (
@@ -165,7 +165,7 @@ const useChannelMessageFetcher = (
     unreadSince.value = undefined
   }
 
-  const init = async () => {
+  const init = () => {
     messagesFetcher.init()
     store.dispatch.domain.messagesView.syncViewState()
   }

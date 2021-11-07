@@ -234,7 +234,7 @@ const useAudio = (
   )
 
   watch(
-    () => fileMeta.value?.mime + fileRawPath.value,
+    () => [fileMeta.value?.mime, fileRawPath.value],
     () => {
       if (audioArg) return
       if (!audio.value.canPlayType(fileMeta.value?.mime ?? '')) return

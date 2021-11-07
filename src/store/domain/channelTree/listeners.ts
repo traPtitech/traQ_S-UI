@@ -9,10 +9,10 @@ export const defineEntityListeners = createDefineListeners<
   listener.on('setChannels', () => {
     dispatch.onSetChannels()
   })
-  listener.on('addChannel', async channel => {
+  listener.on('addChannel', channel => {
     dispatch.onAddChannel(channel)
   })
-  listener.on('updateChannel', async ({ newChannel, oldChannel, oldPath }) => {
+  listener.on('updateChannel', ({ newChannel, oldChannel, oldPath }) => {
     // 名前も親チャンネルもアーカイブ状態も変わっていないなら構造は変わらない
     if (
       newChannel.name === oldChannel.name &&

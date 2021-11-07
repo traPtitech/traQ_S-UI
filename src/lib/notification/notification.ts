@@ -147,7 +147,7 @@ export const connectFirebase = async (onCanUpdate: OnCanUpdate) => {
   apis.registerFCMDevice({ token })
 }
 
-export const deleteToken = async () => {
+export const deleteToken = () => {
   if (window.Notification?.permission !== 'granted') return
 
   const firebaseApp = getFirebaseApp()

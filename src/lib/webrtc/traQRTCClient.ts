@@ -128,7 +128,7 @@ class traQRTCClient extends traQRTCClientBase {
    * Join to the room.
    * @param roomName a name of room to join.
    */
-  public async joinRoom(roomName: string, stream: MediaStream) {
+  public joinRoom(roomName: string, stream: MediaStream) {
     if (!this.peer || !this.peer.open) {
       throw 'connection has not been established'
     }
@@ -150,7 +150,7 @@ class traQRTCClient extends traQRTCClientBase {
     this.room = room
   }
 
-  public async setStream(stream: MediaStream) {
+  public setStream(stream: MediaStream) {
     if (!this.peer) {
       throw 'Connection is not established'
     }
@@ -200,30 +200,30 @@ class traQRTCClient extends traQRTCClientBase {
     console.error(`[RTC] ${err}`)
     this.dispatchEvent(new CustomEvent('connectionerror', { detail: { err } }))
   }
-  private async handleRoomOpen() {
+  private handleRoomOpen() {
     // eslint-disable-next-line no-console
     console.log(`[RTC] Room opened, name: ${this.roomName}`)
     this.dispatchEvent(new Event('roomopen'))
   }
-  private async handleRoomClose() {
+  private handleRoomClose() {
     // eslint-disable-next-line no-console
     console.log('[RTC] room closed')
     this.dispatchEvent(new Event('roomclose'))
   }
-  private async handleRoomPeerJoin(peerId: string) {
+  private handleRoomPeerJoin(peerId: string) {
     this.dispatchEvent(
       new CustomEvent('userjoin', { detail: { userId: peerId } })
     )
   }
-  private async handleRoomPeerLeave(peerId: string) {
+  private handleRoomPeerLeave(peerId: string) {
     this.dispatchEvent(
       new CustomEvent('userleave', { detail: { userId: peerId } })
     )
   }
-  private async handleRoomStream(stream: MediaStream & { peerId: string }) {
+  private handleRoomStream(stream: MediaStream & { peerId: string }) {
     this.dispatchEvent(new CustomEvent('streamchange', { detail: { stream } }))
   }
-  private async handleRoomData(data: RoomData) {
+  private handleRoomData(data: RoomData) {
     this.dispatchEvent(new CustomEvent('datarecieve', { detail: { data } }))
   }
 }
