@@ -1,8 +1,5 @@
 module.exports = {
   root: true,
-  env: {
-    node: true
-  },
   parserOptions: {
     parser: '@typescript-eslint/parser'
   },
@@ -55,14 +52,32 @@ module.exports = {
   },
   overrides: [
     {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
-      ],
+      // 直下のファイル
+      files: ['*.{js,mjs}'],
+      excludedFiles: ['*/**/*.{js,mjs}'],
       env: {
-        'jest/globals': true
+        node: true
       },
-      extends: ['plugin:jest/recommended']
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    },
+    {
+      files: [
+        '**/__tests__/*.{js,mjs,jsx,ts,tsx}',
+        '**/tests/unit/**/*.spec.{js,mjs,jsx,ts,tsx}'
+      ],
+      extends: ['plugin:jest/recommended'],
+      env: {
+        node: true
+      }
+    },
+    {
+      files: ['**/tests/e2e/**/*.{js,mjs,jsx,ts,tsx}'],
+      extends: ['plugin:cypress/recommended'],
+      env: {
+        node: true
+      }
     }
   ],
   reportUnusedDisableDirectives: true
