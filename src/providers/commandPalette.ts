@@ -171,6 +171,17 @@ export const useCommandPaletteStore = () => {
     commandPaletteStore.searchState.currentPage = 0
   }
 
+  const renderSearchResult = async () => {
+    store.dispatch.entities.messages.extendMessagesMap(
+      commandPaletteStore.searchState.searchResult
+    )
+    await Promise.all(
+      commandPaletteStore.searchState.searchResult.map(message =>
+        store.dispatch.domain.messagesView.renderMessageContent(message.id)
+      )
+    )
+  }
+
   return {
     commandPaletteStore: readonly(commandPaletteStore),
     openCommandPalette,
@@ -186,7 +197,8 @@ export const useCommandPaletteStore = () => {
     setCurrentSortKey,
     setCurrentPage,
     setCurrentScrollTop,
-    resetPaging
+    resetPaging,
+    renderSearchResult
   }
 }
 
