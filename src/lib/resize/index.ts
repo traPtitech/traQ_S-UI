@@ -1,8 +1,11 @@
-import { start, finish, initVars } from './vars'
-import { loadImage, resetCanvas } from './canvas'
+import { loadPica } from './pica'
+import { deleteCanvas, loadImage, resetCanvas } from './canvas'
 import { needResize, getThumbnailDimensions, Dimensions } from './size'
 import { isIOS } from '/@/lib/dom/browser'
 import { mimeToFileType } from '/@/lib/basic/file'
+import { createMutex } from '/@/lib/basic/async'
+
+const mutex = createMutex()
 
 export const canResize = (mime: string) =>
   ['image/png', 'image/jpeg'].includes(mime)
@@ -17,23 +20,35 @@ const cannotResizeWhenIOS = ({ width, height }: Readonly<Dimensions>) =>
 const resize = async (
   inputFile: Readonly<File>
 ): Promise<File | 'cannot resize' | 'error' | null> => {
-  start()
-  const { pica, $input, $output, $img } = await initVars()
+  // picaでは一つの画像を並列で処理するため、複数の画像を同時に処理しないようにする
+  await mutex.lock()
 
   const inputUrl = URL.createObjectURL(inputFile)
 
+  const pica = await loadPica()
+  const $input = document.createElement('canvas')
+  const $output = document.createElement('canvas')
+
+  const finish = <T>(result: T) => {
+    deleteCanvas($input)
+    deleteCanvas($output)
+    URL.revokeObjectURL(inputUrl)
+    mutex.unlock()
+    return result
+  }
+
   try {
-    await loadImage(inputUrl, $img)
+    const $img = await loadImage(inputUrl)
     const inputSize = {
       width: $img.width,
       height: $img.height
     }
     if (!needResize(inputSize)) {
-      return finish(null, inputUrl)
+      return finish(null)
     }
 
     if (cannotResizeWhenIOS(inputSize)) {
-      return finish('cannot resize', inputUrl)
+      return finish('cannot resize')
     }
 
     resetCanvas($input, inputSize, $img)
@@ -51,11 +66,11 @@ const resize = async (
       lastModified: inputFile.lastModified
     })
 
-    return finish(outputFile, inputUrl)
+    return finish(outputFile)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn(`Failed to generate thumbnail image: ${e}`, e)
-    return finish('error', inputUrl)
+    return finish('error')
   }
 }
 

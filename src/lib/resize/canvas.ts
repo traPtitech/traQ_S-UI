@@ -1,11 +1,12 @@
 import { Dimensions } from './size'
 
-export const loadImage = (url: string, $img: HTMLImageElement) =>
-  new Promise<void>(resolve => {
+export const loadImage = (url: string) =>
+  new Promise<HTMLImageElement>(resolve => {
+    const $img = new Image()
     $img.addEventListener(
       'load',
       () => {
-        resolve()
+        resolve($img)
       },
       { once: true }
     )
@@ -23,4 +24,9 @@ export const resetCanvas = (
   if ($img) {
     $canvas.getContext('2d')?.drawImage($img, 0, 0)
   }
+}
+
+// https://stackoverflow.com/a/52586606
+export const deleteCanvas = ($canvas: HTMLCanvasElement) => {
+  resetCanvas($canvas, { width: 0, height: 0 })
 }
