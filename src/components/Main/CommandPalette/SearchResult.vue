@@ -55,7 +55,7 @@ import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
-import useKeepScrollPosition from './use/keepScrollPosition'
+import useStoreScrollPosition from './use/storeScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -116,15 +116,21 @@ export default defineComponent({
       }
     )
 
-    onMounted(() => {
+    const resultListEle = ref<HTMLElement | null>(null)
+    const { restoreScrollPosition, storeScrollPositionBeforeUnmount } =
+      useStoreScrollPosition(resultListEle)
+
+    onMounted(async () => {
       if (!executed.value) {
-        executeSearchAndRenderCurrentPage(query.value)
+        await executeSearchAndRenderCurrentPage(query.value)
       } else {
-        renderCurrentPage()
+        await renderCurrentPage()
       }
+      restoreScrollPosition()
     })
 
-    const resultListEle = ref<HTMLElement | null>(null)
+    storeScrollPositionBeforeUnmount()
+
     const queryEntered = computed(() => query.value.length > 0)
 
     const { openMessage } = useMessageOpener()
@@ -135,8 +141,6 @@ export default defineComponent({
         resultListEle.value.scrollTop = 0
       }
     }
-
-    useKeepScrollPosition(resultListEle)
 
     return {
       searchResult,
