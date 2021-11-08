@@ -2,22 +2,22 @@ import { detectMentionOfMe } from '/@/lib/markdown/detector'
 
 describe('detectMentionOfMe', () => {
   it('can detect empty false', () => {
-    expect(detectMentionOfMe(str1, myId, myGroupIds)).toEqual(false)
+    expect(detectMentionOfMe(str1, myId, myGroupIds)).toBe(false)
   })
   it('can detect my user mention', () => {
-    expect(detectMentionOfMe(str2, myId, myGroupIds)).toEqual(true)
+    expect(detectMentionOfMe(str2, myId, myGroupIds)).toBe(true)
   })
   it('can detect not my user mention', () => {
-    expect(detectMentionOfMe(str3, myId, myGroupIds)).toEqual(false)
+    expect(detectMentionOfMe(str3, myId, myGroupIds)).toBe(false)
   })
   it('can detect my group mention', () => {
-    expect(detectMentionOfMe(str4, myId, myGroupIds)).toEqual(true)
+    expect(detectMentionOfMe(str4, myId, myGroupIds)).toBe(true)
   })
   it('can detect not my group mention', () => {
-    expect(detectMentionOfMe(str5, myId, myGroupIds)).toEqual(false)
+    expect(detectMentionOfMe(str5, myId, myGroupIds)).toBe(false)
   })
   it('can detect invalid json', () => {
-    expect(detectMentionOfMe(str6, myId, myGroupIds)).toEqual(false)
+    expect(detectMentionOfMe(str6, myId, myGroupIds)).toBe(false)
   })
 })
 

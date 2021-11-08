@@ -2,25 +2,25 @@ import { deepSome } from '/@/lib/basic/tree'
 
 describe('deepSome', () => {
   it(`can detect false`, () => {
-    expect(deepSome(tree1, isUnread)).toEqual(false)
+    expect(deepSome(tree1, isUnread)).toBe(false)
   })
   it(`can detect child`, () => {
-    expect(deepSome(tree2, isUnread)).toEqual(true)
+    expect(deepSome(tree2, isUnread)).toBe(true)
   })
   it(`can detect non first child`, () => {
-    expect(deepSome(tree3, isUnread)).toEqual(true)
+    expect(deepSome(tree3, isUnread)).toBe(true)
   })
   it(`can detect grandchild`, () => {
-    expect(deepSome(tree4, isUnread)).toEqual(true)
+    expect(deepSome(tree4, isUnread)).toBe(true)
   })
   it(`can detect parent`, () => {
-    expect(deepSome(tree5, isUnread, true)).toEqual(true)
+    expect(deepSome(tree5, isUnread, true)).toBe(true)
   })
   it(`can ignore parent`, () => {
-    expect(deepSome(tree5, isUnread, false)).toEqual(false)
+    expect(deepSome(tree5, isUnread, false)).toBe(false)
   })
   it(`can detect complex tree`, () => {
-    expect(deepSome(tree6, isUnread)).toEqual(true)
+    expect(deepSome(tree6, isUnread)).toBe(true)
   })
 })
 

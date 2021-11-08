@@ -46,7 +46,7 @@ describe('channelIdToSimpleChannelPath', () => {
 
 describe('channelIdToPathString', () => {
   it('should return empty string if unknown channel id was passed', () => {
-    expect(channelIdToPathString(unknownChannelId, channelMap)).toEqual('')
+    expect(channelIdToPathString(unknownChannelId, channelMap)).toBe('')
   })
   it('should return', () => {
     const actual = channelIdToPathString(

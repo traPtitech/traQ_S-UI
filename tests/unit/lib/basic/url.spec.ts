@@ -2,27 +2,27 @@ import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 
 describe('getFirstParam', () => {
   it('can get string param', () => {
-    expect(getFirstParam('str')).toEqual('str')
+    expect(getFirstParam('str')).toBe('str')
   })
   it('can get empty array param', () => {
-    expect(getFirstParam([])).toEqual(undefined)
+    expect(getFirstParam([])).toBeUndefined()
   })
   it('can get array param first element', () => {
-    expect(getFirstParam(['a', 'b'])).toEqual('a')
+    expect(getFirstParam(['a', 'b'])).toBe('a')
   })
 })
 
 describe('getFirstQuery', () => {
   it('can get string query', () => {
-    expect(getFirstQuery('str')).toEqual('str')
+    expect(getFirstQuery('str')).toBe('str')
   })
   it('can get empty array query', () => {
-    expect(getFirstQuery([])).toEqual(undefined)
+    expect(getFirstQuery([])).toBeUndefined()
   })
   it('can get null array query', () => {
-    expect(getFirstQuery([null])).toEqual(null)
+    expect(getFirstQuery([null])).toBeNull()
   })
   it('can get array query first element', () => {
-    expect(getFirstQuery(['a', 'b'])).toEqual('a')
+    expect(getFirstQuery(['a', 'b'])).toBe('a')
   })
 })

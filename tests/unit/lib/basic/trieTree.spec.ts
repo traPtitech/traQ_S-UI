@@ -30,13 +30,13 @@ const tree = new TrieTree<Word>(users1, users2, stamps, stampEffects, empty)
 
 describe('trieTree class', () => {
   it('can create', () => {
-    expect(Object.keys(tree.root.children).length > 0).toEqual(true)
+    expect(Object.keys(tree.root.children).length > 0).toBe(true)
   })
   it('can isWord', () => {
     expect(
       tree.root.children['@']?.children['a']?.children['b']?.children['c']
         ?.isWord
-    ).toEqual(true)
+    ).toBe(true)
   })
   it('can search', () => {
     expect(tree.search('@ta')).toEqual([
@@ -61,7 +61,7 @@ describe('trieTree class', () => {
   })
   it('cannot insert blank as a word', () => {
     tree.insert({ type: 'user', text: '' })
-    expect(tree.root.children['']).toEqual(undefined)
+    expect(tree.root.children['']).toBeUndefined()
   })
   it('can remove', () => {
     tree.remove('@ryoha')

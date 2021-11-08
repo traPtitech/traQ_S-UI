@@ -21,7 +21,7 @@ describe('destroyAudio', () => {
 
     expect($audio.src).toBe('')
     expect($audio.hasAttribute('src')).toBe(false)
-    expect(pauseMock).toBeCalledTimes(1)
-    expect(loadMock).toBeCalledTimes(1)
+    expect(pauseMock).toHaveBeenCalledTimes(1)
+    expect(loadMock).toHaveBeenCalledTimes(1)
   })
 })

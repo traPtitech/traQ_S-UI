@@ -2,16 +2,16 @@ import { needResize, getThumbnailDimensions } from '/@/lib/resize/size'
 
 describe('needResize', () => {
   it('can detect too large width and height', () => {
-    expect(needResize({ width: 3000, height: 1800 })).toEqual(true)
+    expect(needResize({ width: 3000, height: 1800 })).toBe(true)
   })
   it('can detect too large width', () => {
-    expect(needResize({ width: 3000, height: 1400 })).toEqual(true)
+    expect(needResize({ width: 3000, height: 1400 })).toBe(true)
   })
   it('can detect too large height', () => {
-    expect(needResize({ width: 2400, height: 1800 })).toEqual(true)
+    expect(needResize({ width: 2400, height: 1800 })).toBe(true)
   })
   it('can detect valid width and height', () => {
-    expect(needResize({ width: 2400, height: 1400 })).toEqual(false)
+    expect(needResize({ width: 2400, height: 1400 })).toBe(false)
   })
 })
 
