@@ -3,8 +3,13 @@ import store from '/@/store'
 import { buildFilePath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import useFileLink from '/@/use/fileLink'
+import { ChannelId, FileId } from '/@/types/entity-ids'
 
-const useFileMeta = (props: { fileId: string }) => {
+const useFileMeta = (props: {
+  fileId: FileId
+  /** 表示しているチャンネル */
+  channelId?: ChannelId
+}) => {
   const fileMeta = computed(() =>
     store.state.entities.messages.fileMetaDataMap.get(props.fileId)
   )
@@ -21,6 +26,14 @@ const useFileMeta = (props: { fileId: string }) => {
   const fileSize = computed(() =>
     fileMeta.value ? prettifyFileSize(fileMeta.value.size) : '0B'
   )
+  const canShow = computed(() => {
+    const fileChannel = fileMeta.value?.channelId
+    // DMのメッセージは同じDMチャンネルから表示されてる場合だけ表示する
+    return fileChannel
+      ? !store.state.entities.dmChannelsMap.has(fileChannel) ||
+          fileChannel === props.channelId
+      : true
+  })
   return {
     fileMeta,
     fileLink,
@@ -28,6 +41,7 @@ const useFileMeta = (props: { fileId: string }) => {
     fileType,
     isAnimatedImage,
     fileSize,
+    canShow,
     onFileDownloadLinkClick
   }
 }

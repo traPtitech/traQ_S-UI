@@ -1,25 +1,32 @@
 <template>
   <div :class="$style.container">
-    <message-file-list-item-content :file-id="fileId" />
+    <message-file-list-item-content v-if="canShow" :file-id="fileId" />
+    <div v-else :class="$style.error">表示できないファイルです</div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { FileId } from '/@/types/entity-ids'
+import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
+import useFileMeta from '/@/use/fileMeta'
 
 export default defineComponent({
   name: 'MessageFileListFile',
   components: { MessageFileListItemContent },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     fileId: {
       type: String as PropType<FileId>,
       default: ''
     }
   },
-  setup() {
-    return {}
+  setup(props) {
+    const { canShow } = useFileMeta(props)
+    return { canShow }
   }
 })
 </script>
@@ -39,5 +46,9 @@ export default defineComponent({
   }
   overflow: hidden;
   cursor: pointer;
+}
+
+.error {
+  padding: 16px 32px;
 }
 </style>

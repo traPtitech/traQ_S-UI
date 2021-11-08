@@ -4,6 +4,7 @@
       <message-file-list-image
         v-for="meta in fileMetaDataState.images"
         :key="meta.id"
+        :channel-id="channelId"
         :file-id="meta.id"
         :is-large="showLargeImage"
         :class="$style.imageItem"
@@ -12,17 +13,20 @@
     <message-file-list-video
       v-for="meta in fileMetaDataState.videos"
       :key="meta.id"
+      :channel-id="channelId"
       :file-id="meta.id"
     />
     <message-file-list-audio
       v-for="meta in fileMetaDataState.audios"
       :key="meta.id"
+      :channel-id="channelId"
       :file-id="meta.id"
     />
     <message-file-list-file
       v-for="meta in fileMetaDataState.files"
       :key="meta.id"
       :class="$style.item"
+      :channel-id="channelId"
       :file-id="meta.id"
     />
   </div>
@@ -30,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { FileId } from '/@/types/entity-ids'
+import { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 import useFileMetaList from '/@/use/message/fileMetaList'
 import MessageFileListImage from './MessageFileListImage.vue'
 import MessageFileListVideo from './MessageFileListVideo.vue'
@@ -46,6 +50,10 @@ export default defineComponent({
     MessageFileListFile
   },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     fileIds: {
       type: Array as PropType<FileId[]>,
       default: () => []
