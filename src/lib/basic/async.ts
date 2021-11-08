@@ -32,3 +32,36 @@ export const createSingleflight = <T extends unknown[], S>(
     }
   }
 }
+
+type Task<T> = {
+  promise: Promise<T>
+  resolve: (val: T) => void
+}
+
+export const createMutex = () => {
+  const queue: Task<void>[] = []
+
+  const createTask = <T>(): Task<T> => {
+    let resolve!: (v: T | PromiseLike<T>) => void
+    const promise = new Promise<T>(res => {
+      resolve = res
+    })
+    return { promise, resolve }
+  }
+
+  const lock = async () => {
+    const last = queue[queue.length - 1]
+    queue.push(createTask())
+    await last?.promise
+  }
+
+  const unlock = () => {
+    if (!queue[0]) {
+      throw new Error('mutex: tried to unlock unlocked mutex.')
+    }
+    queue[0].resolve()
+    queue.shift()
+  }
+
+  return { lock, unlock }
+}

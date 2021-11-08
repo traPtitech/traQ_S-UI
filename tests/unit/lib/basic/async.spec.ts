@@ -1,4 +1,4 @@
-import { createSingleflight } from '/@/lib/basic/async'
+import { createMutex, createSingleflight } from '/@/lib/basic/async'
 
 describe('createSingleFlight', () => {
   const createSff = () => {
@@ -80,5 +80,70 @@ describe('createSingleFlight', () => {
     expect(res2).toStrictEqual([1, false])
 
     expect(f).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('createMutex', () => {
+  it('can be called', () => {
+    const mutex = createMutex()
+    const lockPromise = mutex.lock()
+    const unlockResult = mutex.unlock()
+
+    expect(lockPromise).resolves.toBeUndefined()
+    expect(unlockResult).toBeUndefined()
+  })
+
+  it('can be called serially', async () => {
+    const mutex = createMutex()
+
+    await mutex.lock()
+    mutex.unlock()
+    await mutex.lock()
+    mutex.unlock()
+  })
+
+  it('can be called concurrently', async () => {
+    const mutex = createMutex()
+    let ran = 0
+
+    const run = async (ms: number) => {
+      await mutex.lock()
+
+      await new Promise<void>(resolve => {
+        setTimeout(() => {
+          resolve()
+        }, ms)
+      })
+
+      mutex.unlock()
+      ran++
+    }
+
+    const before = Date.now()
+
+    const p1 = run(20)
+    const p2 = run(40)
+    await Promise.all([p1, p2])
+
+    const after = Date.now()
+
+    expect(ran).toBe(2)
+    expect(after - before >= 20 + 40).toBe(true)
+  })
+
+  it('throws error when unlocking empty', () => {
+    const mutex = createMutex()
+    expect(() => {
+      mutex.unlock()
+    }).toThrow('mutex: tried to unlock unlocked mutex.')
+  })
+
+  it('throws error when unlocking unlocked', async () => {
+    const mutex = createMutex()
+    await expect(async () => {
+      await mutex.lock()
+      mutex.unlock()
+      mutex.unlock()
+    }).rejects.toThrow('mutex: tried to unlock unlocked mutex.')
   })
 })
