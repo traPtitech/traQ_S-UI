@@ -49,7 +49,8 @@
       :class="$style.timeSlider"
       :duration="duration"
     />
-    <div v-if="wasUnsupportedType" :class="$style.unsupportedError">
+    <div v-if="!canShow" :class="$style.error">表示できない音楽です</div>
+    <div v-else-if="wasUnsupportedType" :class="$style.error">
       対応していないファイル形式でした
     </div>
   </router-link>
@@ -88,7 +89,7 @@ export default defineComponent({
   },
   setup(props) {
     const { fileLink, name, fileWaveformPath } = useFileWaveform(props)
-    const { fileMeta, fileRawPath } = useFileMeta(props)
+    const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
     const {
       cantPlay,
       wasUnsupportedType,
@@ -111,6 +112,7 @@ export default defineComponent({
       fileLink,
       name,
       fileWaveformPath,
+      canShow,
 
       cantPlay,
       wasUnsupportedType,
@@ -173,7 +175,7 @@ export default defineComponent({
   padding: 4px;
   margin: 2px 4px;
 }
-.unsupportedError {
+.error {
   position: absolute;
   top: 0;
   left: 0;

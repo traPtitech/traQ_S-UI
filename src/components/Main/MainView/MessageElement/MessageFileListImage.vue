@@ -1,31 +1,35 @@
 <template>
-  <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
-    <!--
+  <template v-if="canShow">
+    <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
+      <!--
       height, widthはlayout shift対策
       https://www.mizdra.net/entry/2020/05/31/192613
     -->
-    <img
-      draggable="false"
-      :alt="name"
-      :src="fileThumbnailPath"
-      :height="fileThumbnailSize.height"
-      :width="fileThumbnailSize.width"
-    />
-    <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
-  </router-link>
-  <router-link v-else :to="fileLink" :class="$style.container">
-    <!--
+      <img
+        draggable="false"
+        :alt="name"
+        :src="fileThumbnailPath"
+        :height="fileThumbnailSize.height"
+        :width="fileThumbnailSize.width"
+      />
+      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+    </router-link>
+    <router-link v-else :to="fileLink" :class="$style.container">
+      <!--
       CSSで固定値指定なのでheight, widthはつけない
     -->
-    <img draggable="false" :alt="name" :src="fileThumbnailPath" />
-    <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
-  </router-link>
+      <img draggable="false" :alt="name" :src="fileThumbnailPath" />
+      <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
+    </router-link>
+  </template>
+  <div v-else :class="$style.container">表示できない画像です</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useFileThumbnail from '/@/use/fileThumbnail'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'MessageFileListImage',
@@ -33,12 +37,16 @@ export default defineComponent({
     PlayIcon
   },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     isLarge: {
       type: Boolean,
       default: false
     },
     fileId: {
-      type: String,
+      type: String as PropType<FileId>,
       default: ''
     }
   },
@@ -46,6 +54,7 @@ export default defineComponent({
     const {
       name,
       fileLink,
+      canShow,
       fileThumbnailPath,
       fileThumbnailSize,
       isAnimatedImage
@@ -53,6 +62,7 @@ export default defineComponent({
     return {
       name,
       fileLink,
+      canShow,
       fileThumbnailPath,
       fileThumbnailSize,
       isAnimatedImage

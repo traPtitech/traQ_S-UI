@@ -2,9 +2,10 @@ import { computed } from 'vue'
 import { buildFileThumbnailPath } from '/@/lib/apis'
 import useFileMeta from './fileMeta'
 import { ThumbnailType } from '@traptitech/traq'
+import { ChannelId, FileId } from '/@/types/entity-ids'
 
-const useFileThumbnail = (props: { fileId: string }) => {
-  const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
+const useFileThumbnail = (props: { fileId: FileId; channelId?: ChannelId }) => {
+  const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
   const fileThumbnail = computed(() =>
     fileMeta.value?.thumbnails.find(t => t.type === ThumbnailType.Image)
   )
@@ -25,6 +26,7 @@ const useFileThumbnail = (props: { fileId: string }) => {
   return {
     name,
     fileLink,
+    canShow,
     fileThumbnailPath,
     fileThumbnailSize,
     isAnimatedImage

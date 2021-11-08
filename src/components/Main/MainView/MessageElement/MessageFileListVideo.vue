@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="canShow" :class="$style.container">
     <div :class="$style.overlay">
       <message-file-list-item-content :file-id="fileId" is-white />
     </div>
@@ -12,25 +12,31 @@
       :src="fileRawPath"
     />
   </div>
+  <div v-else :class="$style.error">表示できない動画です</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useFileMeta from '/@/use/fileMeta'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
+import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'MessageFileListVideo',
   components: { MessageFileListItemContent },
   props: {
+    channelId: {
+      type: String as PropType<ChannelId | DMChannelId>,
+      required: true
+    },
     fileId: {
-      type: String,
+      type: String as PropType<FileId>,
       default: ''
     }
   },
   setup(props) {
-    const { fileMeta, fileLink, fileRawPath } = useFileMeta(props)
-    return { fileMeta, fileLink, fileRawPath }
+    const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
+    return { fileMeta, fileLink, fileRawPath, canShow }
   }
 })
 </script>
@@ -67,6 +73,17 @@ export default defineComponent({
   .container:hover & {
     backdrop-filter: blur(4px);
     opacity: 1;
+  }
+}
+
+.error {
+  padding: 16px 32px;
+  max-width: min(600px, 100%);
+  border: {
+    width: 2px;
+    style: solid;
+    radius: 6px;
+    color: $theme-ui-secondary;
   }
 }
 </style>
