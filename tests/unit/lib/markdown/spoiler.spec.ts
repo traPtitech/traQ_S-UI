@@ -7,7 +7,7 @@ describe('toggleSpoiler', () => {
 
     toggleSpoiler($spoiler)
 
-    expect($spoiler.hasAttribute('shown')).toEqual(true)
+    expect($spoiler.hasAttribute('shown')).toBe(true)
   })
   it('can toggle to unshown', () => {
     const $spoiler = document.createElement('span')
@@ -16,7 +16,7 @@ describe('toggleSpoiler', () => {
 
     toggleSpoiler($spoiler)
 
-    expect($spoiler.hasAttribute('shown')).toEqual(false)
+    expect($spoiler.hasAttribute('shown')).toBe(false)
   })
 
   it('can toggle parent to shown', () => {
@@ -27,7 +27,7 @@ describe('toggleSpoiler', () => {
 
     toggleSpoiler($child)
 
-    expect($spoiler.hasAttribute('shown')).toEqual(true)
+    expect($spoiler.hasAttribute('shown')).toBe(true)
   })
   it('can toggle parent to unshown', () => {
     const $spoiler = document.createElement('span')
@@ -38,6 +38,6 @@ describe('toggleSpoiler', () => {
 
     toggleSpoiler($child)
 
-    expect($spoiler.hasAttribute('shown')).toEqual(false)
+    expect($spoiler.hasAttribute('shown')).toBe(false)
   })
 })

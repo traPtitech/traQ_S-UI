@@ -15,7 +15,7 @@ describe('wait', () => {
     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000)
 
     jest.runAllTimers()
-    await expect(p).resolves.toBe(undefined)
+    await expect(p).resolves.toBeUndefined()
   })
 })
 

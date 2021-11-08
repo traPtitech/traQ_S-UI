@@ -12,18 +12,16 @@ const baseUser: Omit<User, 'state'> = {
 
 describe('isActive', () => {
   it('can detect active state', () => {
-    expect(isActive({ ...baseUser, state: UserAccountState.active })).toEqual(
-      true
-    )
+    expect(isActive({ ...baseUser, state: UserAccountState.active })).toBe(true)
   })
   it('can detect deactivated state', () => {
-    expect(
-      isActive({ ...baseUser, state: UserAccountState.deactivated })
-    ).toEqual(false)
+    expect(isActive({ ...baseUser, state: UserAccountState.deactivated })).toBe(
+      false
+    )
   })
   it('can detect suspended state', () => {
-    expect(
-      isActive({ ...baseUser, state: UserAccountState.suspended })
-    ).toEqual(false)
+    expect(isActive({ ...baseUser, state: UserAccountState.suspended })).toBe(
+      false
+    )
   })
 })

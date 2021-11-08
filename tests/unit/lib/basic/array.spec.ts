@@ -65,19 +65,19 @@ describe('pickSomeAroundIndex', () => {
 
 describe('isDefined', () => {
   it('can check undefined', () => {
-    expect(isDefined(undefined)).toEqual(false)
+    expect(isDefined(undefined)).toBe(false)
   })
   it('can check null', () => {
-    expect(isDefined(null)).toEqual(true)
+    expect(isDefined(null)).toBe(true)
   })
   it('can check object', () => {
-    expect(isDefined({})).toEqual(true)
+    expect(isDefined({})).toBe(true)
   })
   it('can check empty string', () => {
-    expect(isDefined('')).toEqual(true)
+    expect(isDefined('')).toBe(true)
   })
   it('can check string', () => {
-    expect(isDefined('str')).toEqual(true)
+    expect(isDefined('str')).toBe(true)
   })
 })
 

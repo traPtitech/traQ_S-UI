@@ -10,62 +10,60 @@ import { ThumbnailType } from '@traptitech/traq'
 
 describe('mimeToFileType', () => {
   it('can get filetype (1)', () => {
-    expect(mimeToFileType('image/png')).toEqual('image')
+    expect(mimeToFileType('image/png')).toBe('image')
   })
   it('can get filetype (2)', () => {
-    expect(mimeToFileType('audio/mpeg')).toEqual('audio')
+    expect(mimeToFileType('audio/mpeg')).toBe('audio')
   })
   it('can get filetype (3)', () => {
-    expect(mimeToFileType('video/webm')).toEqual('video')
+    expect(mimeToFileType('video/webm')).toBe('video')
   })
   it('can get filetype (4)', () => {
-    expect(mimeToFileType('text/plain')).toEqual('file')
+    expect(mimeToFileType('text/plain')).toBe('file')
   })
   it('can get filetype (5)', () => {
-    expect(mimeToFileType('')).toEqual('file')
+    expect(mimeToFileType('')).toBe('file')
   })
   it('can get filetype (6)', () => {
-    expect(mimeToFileType('application/pdf')).toEqual('pdf')
+    expect(mimeToFileType('application/pdf')).toBe('pdf')
   })
   it('can get filetype (7)', () => {
-    expect(mimeToFileType('application/vnd.ms-powerpoint')).toEqual('slide')
+    expect(mimeToFileType('application/vnd.ms-powerpoint')).toBe('slide')
   })
   it('can get filetype (8)', () => {
-    expect(mimeToFileType('application/vnd.sun.xml.impress')).toEqual('slide')
+    expect(mimeToFileType('application/vnd.sun.xml.impress')).toBe('slide')
   })
 })
 
 describe('isFileType', () => {
   it('can get filetype (1)', () => {
-    expect(isImage('image/png')).toEqual(true)
+    expect(isImage('image/png')).toBe(true)
   })
   it('can get filetype (2)', () => {
-    expect(isAudio('audio/mpeg')).toEqual(true)
+    expect(isAudio('audio/mpeg')).toBe(true)
   })
   it('can get filetype (3)', () => {
-    expect(isVideo('video/webm')).toEqual(true)
+    expect(isVideo('video/webm')).toBe(true)
   })
   it('can get filetype (4)', () => {
-    expect(isImage('text/plain')).toEqual(false)
+    expect(isImage('text/plain')).toBe(false)
   })
   it('can get filetype (5)', () => {
-    expect(isAudio('text/plain')).toEqual(false)
+    expect(isAudio('text/plain')).toBe(false)
   })
   it('can get filetype (6)', () => {
-    expect(isVideo('text/plain')).toEqual(false)
+    expect(isVideo('text/plain')).toBe(false)
   })
 })
 
 describe('isNonPreviewable', () => {
   it('can detect file (1)', () => {
-    expect(isNonPreviewable({ mime: 'text/plain', thumbnails: [] })).toEqual(
-      true
-    )
+    expect(isNonPreviewable({ mime: 'text/plain', thumbnails: [] })).toBe(true)
   })
   it('can detect file (2)', () => {
-    expect(
-      isNonPreviewable({ mime: 'application/pdf', thumbnails: [] })
-    ).toEqual(true)
+    expect(isNonPreviewable({ mime: 'application/pdf', thumbnails: [] })).toBe(
+      true
+    )
   })
   it('can detect file (3)', () => {
     expect(
@@ -73,7 +71,7 @@ describe('isNonPreviewable', () => {
         mime: 'application/vnd.ms-powerpoint',
         thumbnails: []
       })
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   it('can detect image file (not svg) (1)', () => {
@@ -82,12 +80,10 @@ describe('isNonPreviewable', () => {
         mime: 'image/webp',
         thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
       })
-    ).toEqual(false)
+    ).toBe(false)
   })
   it('can detect image file (not svg) (2)', () => {
-    expect(isNonPreviewable({ mime: 'image/webp', thumbnails: [] })).toEqual(
-      true
-    )
+    expect(isNonPreviewable({ mime: 'image/webp', thumbnails: [] })).toBe(true)
   })
   it('can detect svg file (1)', () => {
     expect(
@@ -95,18 +91,16 @@ describe('isNonPreviewable', () => {
         mime: 'image/svg+xml',
         thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
       })
-    ).toEqual(false)
+    ).toBe(false)
   })
   it('can detect svg file (2)', () => {
-    expect(isNonPreviewable({ mime: 'image/svg+xml', thumbnails: [] })).toEqual(
+    expect(isNonPreviewable({ mime: 'image/svg+xml', thumbnails: [] })).toBe(
       false
     )
   })
 
   it('can detect audio file (1)', () => {
-    expect(isNonPreviewable({ mime: 'audio/mpeg', thumbnails: [] })).toEqual(
-      false
-    )
+    expect(isNonPreviewable({ mime: 'audio/mpeg', thumbnails: [] })).toBe(false)
   })
   it('can detect audio file (2)', () => {
     expect(
@@ -114,13 +108,11 @@ describe('isNonPreviewable', () => {
         mime: 'audio/mpeg',
         thumbnails: [{ type: ThumbnailType.Waveform, mime: 'image/svg+xml' }]
       })
-    ).toEqual(false)
+    ).toBe(false)
   })
 
   it('can detect video file (1)', () => {
-    expect(isNonPreviewable({ mime: 'video/webm', thumbnails: [] })).toEqual(
-      false
-    )
+    expect(isNonPreviewable({ mime: 'video/webm', thumbnails: [] })).toBe(false)
   })
   it('can detect video file (2)', () => {
     expect(
@@ -128,21 +120,21 @@ describe('isNonPreviewable', () => {
         mime: 'video/webm',
         thumbnails: [{ type: ThumbnailType.Image, mime: 'image/png' }]
       })
-    ).toEqual(false)
+    ).toBe(false)
   })
 })
 
 describe('prettifyFileSize', () => {
   it('can prettify bytes', () => {
-    expect(prettifyFileSize(12)).toEqual('12B')
+    expect(prettifyFileSize(12)).toBe('12B')
   })
   it('can prettify kilobytes', () => {
-    expect(prettifyFileSize(38240)).toEqual('38.24KB')
+    expect(prettifyFileSize(38240)).toBe('38.24KB')
   })
   it('can prettify megabytes', () => {
-    expect(prettifyFileSize(243950232)).toEqual('243.95MB')
+    expect(prettifyFileSize(243950232)).toBe('243.95MB')
   })
   it('can prettify gigabytes', () => {
-    expect(prettifyFileSize(24395023423)).toEqual('24.4GB')
+    expect(prettifyFileSize(24395023423)).toBe('24.4GB')
   })
 })

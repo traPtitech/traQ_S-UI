@@ -14,16 +14,16 @@ describe('compareString', () => {
     expect(compareString(undefined, 'b')).toEqual(-1)
   })
   it('can compare string with undefined (2)', () => {
-    expect(compareString('a')).toEqual(1)
+    expect(compareString('a')).toBe(1)
   })
   it('can compare string inverted', () => {
-    expect(compareString('a', 'b', true)).toEqual(1)
+    expect(compareString('a', 'b', true)).toBe(1)
   })
   it('can compare same string', () => {
-    expect(compareString('a', 'a')).toEqual(0)
+    expect(compareString('a', 'a')).toBe(0)
   })
   it('can compare case-sensitive string', () => {
-    expect(compareString('a', 'A')).toEqual(1)
+    expect(compareString('a', 'A')).toBe(1)
   })
 })
 
@@ -32,39 +32,39 @@ describe('compareStringInsensitive', () => {
     expect(compareStringInsensitive('a', 'b')).toEqual(-1)
   })
   it('can compare case-insensitive string', () => {
-    expect(compareStringInsensitive('a', 'A')).toEqual(0)
+    expect(compareStringInsensitive('a', 'A')).toBe(0)
   })
 })
 
 describe('count', () => {
   it('can count ascii string', () => {
-    expect(count('aaa', 'a')).toEqual(3)
+    expect(count('aaa', 'a')).toBe(3)
   })
   it('can count kanji string', () => {
-    expect(count('漢字漢字', '漢')).toEqual(2)
+    expect(count('漢字漢字', '漢')).toBe(2)
   })
   it('can count emoji', () => {
-    expect(count('😀😀😀😀😀', '😀')).toEqual(5)
+    expect(count('😀😀😀😀😀', '😀')).toBe(5)
   })
 })
 
 describe('countLength', () => {
   it('can count ascii string', () => {
-    expect(countLength('aaa')).toEqual(3)
+    expect(countLength('aaa')).toBe(3)
   })
   it('can count kanji string', () => {
-    expect(countLength('漢字漢字')).toEqual(4)
+    expect(countLength('漢字漢字')).toBe(4)
   })
   it('can count emoji', () => {
-    expect(countLength('😀😀😀😀😀')).toEqual(5)
+    expect(countLength('😀😀😀😀😀')).toBe(5)
   })
 })
 
 describe('lastIndexOf', () => {
   it('can find without position', () => {
-    expect(lastIndexOf('target', ['t', 'r'])).toEqual(5)
+    expect(lastIndexOf('target', ['t', 'r'])).toBe(5)
   })
   it('can find with position', () => {
-    expect(lastIndexOf('target', ['t', 'r'], 4)).toEqual(2)
+    expect(lastIndexOf('target', ['t', 'r'], 4)).toBe(2)
   })
 })
