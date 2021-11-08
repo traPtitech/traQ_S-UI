@@ -67,7 +67,7 @@ module.exports = {
         '**/__tests__/*.{js,mjs,jsx,ts,tsx}',
         '**/tests/unit/**/*.spec.{js,mjs,jsx,ts,tsx}'
       ],
-      extends: ['plugin:jest/recommended'],
+      extends: ['plugin:jest/style'],
       env: {
         node: true
       }
