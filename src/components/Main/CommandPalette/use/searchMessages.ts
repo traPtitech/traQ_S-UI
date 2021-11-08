@@ -120,8 +120,13 @@ const useSearchMessages = () => {
     const hits = res.data.hits ?? []
 
     setSearchResult(true, hits, res.data.totalHits ?? 0)
-    await renderSearchResult()
 
+    renderMessagesOnCurrentPage()
+  }
+
+  const renderMessagesOnCurrentPage = async () => {
+    fetchingSearchResult.value = true
+    await renderSearchResult()
     fetchingSearchResult.value = false
   }
 
@@ -140,7 +145,9 @@ const useSearchMessages = () => {
     jumpToPage,
 
     fetchingSearchResult,
-    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
+    executeSearchAndRenderCurrentPage:
+      fetchAndRenderMessagesOnCurrentPageBySearch,
+    renderCurrentPage: renderMessagesOnCurrentPage
   }
 }
 

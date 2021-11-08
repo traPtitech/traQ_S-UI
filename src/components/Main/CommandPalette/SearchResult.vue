@@ -91,7 +91,8 @@ export default defineComponent({
   },
   setup() {
     const {
-      executeSearchForCurrentPage,
+      executeSearchAndRenderCurrentPage,
+      renderCurrentPage,
       fetchingSearchResult,
       searchResult,
       currentPage,
@@ -111,14 +112,15 @@ export default defineComponent({
         if (query !== oldQuery || key !== oldKey) {
           resetPaging()
         }
-        executeSearchForCurrentPage(query)
+        executeSearchAndRenderCurrentPage(query)
       }
     )
 
     onMounted(() => {
-      // 初回マウント時に取得する
       if (!executed.value) {
-        executeSearchForCurrentPage(query.value)
+        executeSearchAndRenderCurrentPage(query.value)
+      } else {
+        renderCurrentPage()
       }
     })
 
