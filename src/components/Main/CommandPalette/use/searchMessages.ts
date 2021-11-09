@@ -2,6 +2,7 @@ import { ref, computed, Ref, DeepReadonly, toRefs } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
+import store from '/@/store'
 import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPaletteStore } from '/@/providers/commandPalette'
@@ -73,21 +74,20 @@ const useSearchMessages = () => {
     setCurrentSortKey,
     setCurrentPage,
     resetPaging,
-    renderSearchResult,
-    commandPaletteStore: store
+    commandPaletteStore
   } = useCommandPaletteStore()
 
-  const query = computed(() => store.query)
+  const query = computed(() => commandPaletteStore.query)
 
   const currentSortKey = computed({
-    get: () => store.searchState.currentSortKey,
+    get: () => commandPaletteStore.searchState.currentSortKey,
     set: sortKey => {
       setCurrentSortKey(sortKey)
     }
   })
 
   const { executed, searchResult, currentPage, totalCount } = toRefs(
-    store.searchState
+    commandPaletteStore.searchState
   )
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
@@ -118,16 +118,15 @@ const useSearchMessages = () => {
       ...toSearchMessageParam(queryObject, option)
     )
     const hits = res.data.hits ?? []
+    store.dispatch.entities.messages.extendMessagesMap(hits)
+    await Promise.all(
+      hits.map(message =>
+        store.dispatch.domain.messagesView.renderMessageContent(message.id)
+      )
+    )
+    fetchingSearchResult.value = false
 
     setSearchResult(true, hits, res.data.totalHits ?? 0)
-
-    renderMessagesOnCurrentPage()
-  }
-
-  const renderMessagesOnCurrentPage = async () => {
-    fetchingSearchResult.value = true
-    await renderSearchResult()
-    fetchingSearchResult.value = false
   }
 
   return {
@@ -145,9 +144,7 @@ const useSearchMessages = () => {
     jumpToPage,
 
     fetchingSearchResult,
-    executeSearchAndRenderCurrentPage:
-      fetchAndRenderMessagesOnCurrentPageBySearch,
-    renderCurrentPage: renderMessagesOnCurrentPage
+    executeSearchForCurrentPage: fetchAndRenderMessagesOnCurrentPageBySearch
   }
 }
 

@@ -55,7 +55,7 @@ import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './use/searchMessages'
-import useStoreScrollPosition from './use/storeScrollPosition'
+import useKeepScrollPosition from './use/keepScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -91,8 +91,7 @@ export default defineComponent({
   },
   setup() {
     const {
-      executeSearchAndRenderCurrentPage,
-      renderCurrentPage,
+      executeSearchForCurrentPage,
       fetchingSearchResult,
       searchResult,
       currentPage,
@@ -112,25 +111,18 @@ export default defineComponent({
         if (query !== oldQuery || key !== oldKey) {
           resetPaging()
         }
-        executeSearchAndRenderCurrentPage(query)
+        executeSearchForCurrentPage(query)
       }
     )
 
-    const resultListEle = ref<HTMLElement | null>(null)
-    const { restoreScrollPosition, storeScrollPositionBeforeUnmount } =
-      useStoreScrollPosition(resultListEle)
-
-    onMounted(async () => {
+    onMounted(() => {
+      // 初回マウント時に取得する
       if (!executed.value) {
-        await executeSearchAndRenderCurrentPage(query.value)
-      } else {
-        await renderCurrentPage()
+        executeSearchForCurrentPage(query.value)
       }
-      restoreScrollPosition()
     })
 
-    storeScrollPositionBeforeUnmount()
-
+    const resultListEle = ref<HTMLElement | null>(null)
     const queryEntered = computed(() => query.value.length > 0)
 
     const { openMessage } = useMessageOpener()
@@ -141,6 +133,8 @@ export default defineComponent({
         resultListEle.value.scrollTop = 0
       }
     }
+
+    useKeepScrollPosition(resultListEle)
 
     return {
       searchResult,
