@@ -70,7 +70,8 @@ export const actions = defineActions({
     commit.unsetCurrentChannelId()
     commit.unsetCurrentClipFolderId()
     commit.unsetPinnedMessages()
-    commit.unsetRenderedContent()
+    // refs https://github.com/traPtitech/traQ_S-UI/pull/2804#issuecomment-963711505
+    // commit.unsetRenderedContent()
     commit.unsetCurrentViewers()
   },
   changeCurrentChannel(
