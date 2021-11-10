@@ -48,7 +48,8 @@ module.exports = {
     'vue/v-on-function-call': 'error',
     'vue/require-emit-validator': 'error',
     'vue/no-template-target-blank': 'error',
-    'vue/valid-next-tick': 'error'
+    'vue/valid-next-tick': 'error',
+    'vue/multi-word-component-names': 'off' // TODO
   },
   overrides: [
     {

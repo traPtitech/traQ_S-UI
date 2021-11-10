@@ -4,8 +4,8 @@
       <div ref="spacerRef" :class="$style.spacer" :style="styles.spacerStyle">
         <div
           v-for="(item, index) in data.visibleItems"
-          :key="item[key]"
-          :ref="item[key]"
+          :key="item[keyIndex]"
+          :ref="item[keyIndex]"
           :data-index="index"
         >
           <slot :item="item" />
@@ -90,7 +90,7 @@ export default defineComponent({
       type: Array as PropType<any[]>,
       required: true
     },
-    key: {
+    keyIndex: {
       type: String,
       required: true
     }
