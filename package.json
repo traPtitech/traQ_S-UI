@@ -75,7 +75,7 @@
     "csstype": "^3.0.9",
     "cypress": "^8.7.0",
     "es-jest": "^1.4.1",
-    "esbuild": "^0.13.12",
+    "esbuild": "^0.13.13",
     "esbuild-plugin-browserslist": "^0.3.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
