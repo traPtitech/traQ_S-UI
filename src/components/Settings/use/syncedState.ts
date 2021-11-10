@@ -4,7 +4,6 @@ import useStateDiff from './stateDiff'
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const useSyncedState = <T extends object>(
   storeState: Ref<T>,
   setFunc: (payload: Partial<T>) => void
