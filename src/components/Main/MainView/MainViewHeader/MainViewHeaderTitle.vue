@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <icon
+    <a-icon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"
@@ -12,11 +12,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderTitle',
-  components: { Icon },
+  components: { AIcon },
   props: {
     iconMdi: {
       type: Boolean,

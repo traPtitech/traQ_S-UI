@@ -8,7 +8,7 @@
       :size="20"
       :is-animated-image="isAnimatedImage"
     />
-    <icon
+    <a-icon
       v-if="hasMessage"
       :class="$style.icon"
       name="comment-quote"
@@ -27,7 +27,7 @@ import { defineComponent, computed, watchEffect, ref } from 'vue'
 import { renderInline } from '/@/lib/markdown/markdown'
 import store from '/@/store'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
@@ -53,7 +53,7 @@ export default defineComponent({
   name: 'RenderContent',
   components: {
     FileTypeIcon,
-    Icon
+    AIcon
   },
   props: {
     content: {

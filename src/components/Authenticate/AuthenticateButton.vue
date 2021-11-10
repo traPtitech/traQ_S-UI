@@ -5,7 +5,7 @@
     :data-type="type"
     :type="isSubmit ? 'submit' : 'button'"
   >
-    <icon
+    <a-icon
       v-if="iconName"
       :class="$style.icon"
       :name="iconName"
@@ -17,14 +17,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 type Type = 'primary' | 'secondary'
 
 export default defineComponent({
   name: 'AuthenticateButton',
   components: {
-    Icon
+    AIcon
   },
   props: {
     type: {

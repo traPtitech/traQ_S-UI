@@ -1,20 +1,20 @@
 <template>
   <div :class="$style.container">
     <transition-group name="toast-slide">
-      <toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
+      <a-toast v-for="toast in toasts" :key="toast.id" :toast="toast" />
     </transition-group>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Toast from './Toast.vue'
+import AToast from './AToast.vue'
 import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'ToastContainer',
   components: {
-    Toast
+    AToast
   },
   setup() {
     const { toasts } = useToastStore()

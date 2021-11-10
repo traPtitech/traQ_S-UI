@@ -1,7 +1,7 @@
 <template>
   <div :key="token.id" :class="$style.token">
     <div :class="$style.revoke">
-      <icon :class="$style.icon" name="close" mdi @click="revoke" />
+      <a-icon :class="$style.icon" name="close" mdi @click="revoke" />
     </div>
     <div :class="$style.title">{{ token.clientName ?? '---' }}</div>
     <div :class="$style.desc">{{ token.clientDesc }}</div>
@@ -26,7 +26,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeNameMap } from '/@/lib/clientScope'
@@ -41,7 +41,7 @@ export default defineComponent({
   name: 'TokenInfo',
   components: {
     UserIcon,
-    Icon
+    AIcon
   },
   props: {
     token: {

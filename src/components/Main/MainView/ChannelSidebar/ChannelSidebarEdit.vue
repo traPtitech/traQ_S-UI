@@ -5,7 +5,7 @@
       :data-is-editing="$boolAttr(state.isEditing)"
       @click="onClick"
     >
-      <icon
+      <a-icon
         mdi
         :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
         height="20"
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 type State = {
   isEditing: boolean
@@ -26,7 +26,7 @@ type State = {
 
 export default defineComponent({
   name: 'ChannelSidebarEdit',
-  components: { Icon },
+  components: { AIcon },
   setup() {
     const state: State = reactive({
       isEditing: false

@@ -2,13 +2,13 @@
   <div>
     <div :class="$style.header">
       <div :class="$style.label">メンバー</div>
-      <icon
+      <a-icon
         name="plus-circle-outline"
         mdi
         :class="$style.controlIcon"
         @click="onClickAdd"
       />
-      <icon
+      <a-icon
         name="close"
         mdi
         :class="$style.controlIcon"
@@ -33,7 +33,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { UserGroupId } from '/@/types/entity-ids'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
@@ -43,7 +43,7 @@ import store from '/@/store'
 export default defineComponent({
   name: 'GroupMemberList',
   components: {
-    Icon,
+    AIcon,
     GroupUser
   },
   props: {

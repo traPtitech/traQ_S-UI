@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.circle" :style="styles.icon">
-    <icon
+    <a-icon
       :class="$style.icon"
       :name="name"
       :mdi="mdi"
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const useStyles = (props: { background: string }) => {
   return reactive({
@@ -24,7 +24,7 @@ const useStyles = (props: { background: string }) => {
 
 export default defineComponent({
   name: 'CircleIcon',
-  components: { Icon },
+  components: { AIcon },
   props: {
     color: {
       type: String,

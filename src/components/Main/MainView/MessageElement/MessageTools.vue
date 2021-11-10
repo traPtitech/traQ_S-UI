@@ -7,7 +7,7 @@
     :data-is-minimum="$boolAttr(isMinimum)"
   >
     <template v-if="isMinimum">
-      <icon
+      <a-icon
         :class="$style.icon"
         :size="28"
         mdi
@@ -21,7 +21,7 @@
           v-if="showQuickReaction || !isMobile"
           :class="$style.quickReaction"
         >
-          <stamp
+          <a-stamp
             v-for="stamp in recentStamps"
             :key="stamp"
             :stamp-id="stamp"
@@ -37,7 +37,7 @@
         :data-hide-left-border="$boolAttr(showQuickReaction || !isMobile)"
       >
         <template v-if="isMobile">
-          <icon
+          <a-icon
             v-if="showQuickReaction"
             mdi
             name="chevron-right"
@@ -45,7 +45,7 @@
             :class="$style.icon"
             @click="toggleQuickReaction"
           />
-          <icon
+          <a-icon
             v-else
             mdi
             name="chevron-left"
@@ -54,14 +54,14 @@
             @click="toggleQuickReaction"
           />
         </template>
-        <icon
+        <a-icon
           mdi
           name="emoticon-outline"
           :size="28"
           :class="$style.icon"
           @click="toggleStampPicker"
         />
-        <icon
+        <a-icon
           :class="$style.icon"
           :size="28"
           mdi
@@ -76,8 +76,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
 import store from '/@/store'
-import Icon from '/@/components/UI/Icon.vue'
-import Stamp from '/@/components/UI/Stamp.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
 import useIsMobile from '/@/use/isMobile'
@@ -102,8 +102,8 @@ const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
 export default defineComponent({
   name: 'MessageTools',
   components: {
-    Icon,
-    Stamp
+    AIcon,
+    AStamp
   },
   props: {
     messageId: { type: String as PropType<MessageId>, required: true },

@@ -7,7 +7,7 @@
     <user-icon :class="$style.icon" :user-id="userId" :size="36" />
     <div :class="$style.desc">
       <div :class="$style.displayName">
-        <icon
+        <a-icon
           v-if="isAdmin"
           :class="$style.adminIcon"
           name="crown"
@@ -26,13 +26,13 @@ import { defineComponent, computed } from 'vue'
 import store from '/@/store'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '/@/use/modalOpener'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'UserListItem',
   components: {
     UserIcon,
-    Icon
+    AIcon
   },
   props: {
     userId: {

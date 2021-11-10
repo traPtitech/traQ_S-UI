@@ -14,15 +14,15 @@
       :class="$style.button"
       @click="onButtonClick"
     >
-      <icon v-if="isEditing" width="20" height="20" name="check" mdi />
-      <icon v-else width="20" height="20" name="pencil-outline" mdi />
+      <a-icon v-if="isEditing" width="20" height="20" name="check" mdi />
+      <a-icon v-else width="20" height="20" name="pencil-outline" mdi />
     </button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import { countLength } from '/@/lib/basic/string'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
@@ -30,7 +30,7 @@ import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 export default defineComponent({
   name: 'ContentEditor',
   components: {
-    Icon,
+    AIcon,
     LengthCount,
     TextareaAutosize
   },

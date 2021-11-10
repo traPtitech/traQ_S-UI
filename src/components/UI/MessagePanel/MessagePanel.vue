@@ -16,7 +16,7 @@
     <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
       <user-name v-if="titleType === 'channel'" :user="userState" />
       <channel-name v-if="titleType === 'user'" :path="path" />
-      <icon
+      <a-icon
         v-if="message.createdAt !== message.updatedAt"
         :class="$style.editIcon"
         :size="16"
@@ -39,7 +39,7 @@ import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
 import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MessagePanel',
@@ -47,7 +47,7 @@ export default defineComponent({
     UserName,
     ChannelName,
     RenderContent,
-    Icon
+    AIcon
   },
   props: {
     titleType: {

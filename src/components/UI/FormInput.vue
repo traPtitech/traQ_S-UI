@@ -40,7 +40,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <icon
+        <a-icon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"
@@ -54,7 +54,7 @@
 import { defineComponent, shallowRef, onMounted } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/use/input'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/use/showPassword'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import { wait } from '/@/lib/basic/timer'
@@ -62,7 +62,7 @@ import { wait } from '/@/lib/basic/timer'
 export default defineComponent({
   name: 'FormInput',
   components: {
-    Icon,
+    AIcon,
     LengthCount
   },
   props: {

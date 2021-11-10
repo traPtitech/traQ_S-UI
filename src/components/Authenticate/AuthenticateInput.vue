@@ -20,7 +20,7 @@
         :class="$style.toggle"
         @click.prevent="togglePassword"
       >
-        <icon
+        <a-icon
           :name="isPasswordShown ? 'eye-off-outline' : 'eye-outline'"
           mdi
           :class="$style.toggleIcon"
@@ -33,13 +33,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/use/showPassword'
 import useTextModelSyncer from '/@/use/textModelSyncer'
 
 export default defineComponent({
   name: 'AuthenticateInput',
-  components: { Icon },
+  components: { AIcon },
   props: {
     modelValue: {
       type: String,

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <icon
+    <a-icon
       :class="$style.icon"
       mdi
       name="chevron-double"
@@ -20,13 +20,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { UserId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'ChannelSidebarHidden',
-  components: { Icon, UserIconEllipsisList },
+  components: { AIcon, UserIconEllipsisList },
   props: {
     viewerIds: {
       type: Array as PropType<readonly UserId[]>,

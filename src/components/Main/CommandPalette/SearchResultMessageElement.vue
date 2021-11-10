@@ -30,7 +30,7 @@
       :class="$style.expandButton"
       @mousedown.stop="onClickExpandButton"
     >
-      <icon name="arrow-expand-vertical" mdi :size="20" />全て表示
+      <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
     </div>
     <div :class="$style.channelAndDate">
       {{ channelName }} - <time>{{ date }}</time>
@@ -49,7 +49,7 @@ import {
   ref,
   Ref
 } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
@@ -106,7 +106,7 @@ const useSpoilerToggler = () => {
 export default defineComponent({
   name: 'SearchResultMessageElement',
   components: {
-    Icon,
+    AIcon,
     UserIcon,
     MessageMarkdown,
     SearchResultMessageFileList

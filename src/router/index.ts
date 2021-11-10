@@ -38,12 +38,12 @@ export const isMessageScrollerRoute = (
   )
 }
 
-const Main = () => import('/@/views/Main.vue')
-const GroupManager = () => import('/@/views/GroupManager.vue')
-const Settings = () => import('/@/views/Settings.vue')
-const ShareTarget = () => import('/@/views/ShareTarget.vue')
-const Auth = () => import('/@/views/Auth.vue')
-const NotFound = () => import('/@/views/NotFound.vue')
+const Main = () => import('/@/views/MainPage.vue')
+const GroupManager = () => import('/@/views/GroupManagerPage.vue')
+const Settings = () => import('/@/views/SettingsPage.vue')
+const ShareTarget = () => import('/@/views/ShareTargetPage.vue')
+const Auth = () => import('/@/views/AuthPage.vue')
+const NotFound = () => import('/@/views/NotFoundPage.vue')
 
 const routes: RouteRecordRaw[] = [
   {

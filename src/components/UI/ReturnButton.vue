@@ -1,15 +1,15 @@
 <template>
-  <icon :size="size" mdi name="chevron-left" :class="$style.button" />
+  <a-icon :size="size" mdi name="chevron-left" :class="$style.button" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'ReturnButton',
   components: {
-    Icon
+    AIcon
   },
   props: {
     size: {

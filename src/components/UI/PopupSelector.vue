@@ -2,7 +2,7 @@
   <div :class="$style.container" :data-is-small="small">
     <div :class="$style.valueContainer" @click="toggle">
       {{ currentItem?.title ?? '' }}
-      <icon
+      <a-icon
         :class="$style.trailingIcon"
         name="rounded-triangle"
         :width="small ? 20 : 24"
@@ -17,7 +17,7 @@
           @click="onClick(item)"
         >
           <div :class="$style.item">
-            <icon
+            <a-icon
               v-if="item.iconName"
               :name="item.iconName"
               :mdi="item.iconMdi"
@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
-import Icon from './Icon.vue'
+import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
 
 export type PopupSelectorItem = {
@@ -45,7 +45,7 @@ export type PopupSelectorItem = {
 
 export default defineComponent({
   name: 'PopupSelector',
-  components: { Icon, ClickOutside },
+  components: { AIcon, ClickOutside },
   props: {
     modelValue: {
       type: String,

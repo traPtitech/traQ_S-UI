@@ -1,17 +1,17 @@
 <template>
   <button :class="$style.container" :aria-selected="isActive" @click="onClick">
-    <icon name="effect" />
+    <a-icon name="effect" />
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'StampPickerEffectToggleButton',
   components: {
-    Icon
+    AIcon
   },
   props: {
     isActive: { type: Boolean, default: false }

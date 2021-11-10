@@ -1,17 +1,17 @@
 <template>
   <div :class="$style.container">
-    <icon :class="$style.logo" name="traQ" />
+    <a-icon :class="$style.logo" name="traQ" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'NullView',
   components: {
-    Icon
+    AIcon
   },
   setup() {
     return {}

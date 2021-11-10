@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <icon
+    <a-icon
       v-if="isLocked"
       name="lock"
       mdi
@@ -8,8 +8,8 @@
       @click.stop="toggleTagState"
     />
     <div v-else :class="$style.element">
-      <icon name="close" mdi :size="20" @click.stop="removeTag" />
-      <icon
+      <a-icon name="close" mdi :size="20" @click.stop="removeTag" />
+      <a-icon
         v-if="isMine"
         name="lock-open"
         mdi
@@ -25,13 +25,13 @@
 import { defineComponent, PropType } from 'vue'
 import { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'TagsTabEdit',
   components: {
-    Icon
+    AIcon
   },
   props: {
     tagId: {

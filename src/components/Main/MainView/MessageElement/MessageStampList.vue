@@ -1,6 +1,6 @@
 <template>
   <div v-if="stamps.length > 0" :class="$style.stampWrapper">
-    <icon
+    <a-icon
       v-if="showDetailButton"
       name="rounded-triangle"
       :size="20"
@@ -32,7 +32,7 @@
         :class="$style.stampPickerOpener"
         @click="toggleStampPicker"
       >
-        <icon mdi name="plus" :size="20" />
+        <a-icon mdi name="plus" :size="20" />
       </div>
     </div>
   </div>
@@ -45,7 +45,7 @@ import StampElement from './StampElement.vue'
 import { StampId, UserId } from '/@/types/entity-ids'
 import store from '/@/store'
 import StampDetailElement from './StampDetailElement.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
 import useToastStore from '/@/providers/toastStore'
@@ -135,7 +135,7 @@ const createStampList = (
 
 export default defineComponent({
   name: 'MessageStampList',
-  components: { StampElement, StampDetailElement, Icon },
+  components: { StampElement, StampDetailElement, AIcon },
   props: {
     stamps: {
       type: Array as PropType<MessageStamp[]>,

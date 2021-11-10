@@ -14,7 +14,7 @@
         :style="styles.icon"
       />
       <div :class="$style.content" :style="styles.content">
-        <feature :user="user" :detail="userDetail" />
+        <feature-container :user="user" :detail="userDetail" />
         <navigation-selector
           :current-navigation="currentNavigation"
           @navigation-change="onNavigationChange"
@@ -36,7 +36,7 @@ import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import Feature from './Feature/Feature.vue'
+import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
 import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
@@ -59,7 +59,7 @@ export default defineComponent({
   components: {
     ClickOutside,
     UserIcon,
-    Feature,
+    FeatureContainer,
     NavigationSelector,
     NavigationContent,
     CloseButton

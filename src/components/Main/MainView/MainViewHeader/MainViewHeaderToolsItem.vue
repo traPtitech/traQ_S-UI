@@ -6,19 +6,19 @@
     :title="tooltip"
     @click="onClick"
   >
-    <icon :mdi="iconMdi" :name="iconName" />
+    <a-icon :mdi="iconMdi" :name="iconName" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useHeaderStyle from '/@/components/Main/MainView/MainViewHeader/use/headerStyle'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderToolsItem',
   components: {
-    Icon
+    AIcon
   },
   props: {
     iconName: {

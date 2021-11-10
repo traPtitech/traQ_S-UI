@@ -1,16 +1,16 @@
 <template>
   <button :class="$style.item" :aria-selected="isSelected">
-    <icon :name="iconName" :mdi="iconMdi" :size="24" />
+    <a-icon :name="iconName" :mdi="iconMdi" :size="24" />
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'NavigationSelectorItem',
-  components: { Icon },
+  components: { AIcon },
   props: {
     iconName: {
       type: String,

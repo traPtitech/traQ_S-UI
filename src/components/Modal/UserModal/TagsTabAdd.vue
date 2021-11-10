@@ -14,7 +14,7 @@
       :disabled="newTagName.length === 0 || isExceeded || adding"
       @click="addTag"
     >
-      <icon name="plus" mdi :class="$style.icon" />
+      <a-icon name="plus" mdi :class="$style.icon" />
     </button>
   </div>
 </template>
@@ -23,7 +23,7 @@
 import { defineComponent, ref, PropType, reactive } from 'vue'
 import apis from '/@/lib/apis'
 import { UserId } from '/@/types/entity-ids'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import useMaxLength from '/@/use/maxLength'
 import useToastStore from '/@/providers/toastStore'
@@ -31,7 +31,7 @@ import useToastStore from '/@/providers/toastStore'
 export default defineComponent({
   name: 'TagsTabAdd',
   components: {
-    Icon,
+    AIcon,
     LengthCount
   },
   props: {

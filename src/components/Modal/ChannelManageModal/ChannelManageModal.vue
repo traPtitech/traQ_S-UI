@@ -12,14 +12,14 @@
     />
     <label :class="$style.toggle">
       アーカイブ
-      <toggle v-model="manageState.archived" :disabled="!canToggleArchive" />
+      <a-toggle v-model="manageState.archived" :disabled="!canToggleArchive" />
     </label>
     <p v-if="!canToggleArchive" :class="$style.cantToggleArchiveMessage">
       このチャンネルはアーカイブチャンネルの子チャンネルなので、アーカイブ状態を解除できません。
     </p>
     <label :class="$style.toggle">
       強制通知
-      <toggle v-model="manageState.force" />
+      <a-toggle v-model="manageState.force" />
     </label>
     <form-button
       label="変更"
@@ -37,7 +37,7 @@ import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import Toggle from '/@/components/UI/Toggle.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
@@ -87,7 +87,7 @@ export default defineComponent({
   name: 'ChannelManageModal',
   components: {
     ModalFrame,
-    Toggle,
+    AToggle,
     FormInput,
     FormSelector,
     FormButton

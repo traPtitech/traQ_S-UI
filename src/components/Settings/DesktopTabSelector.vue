@@ -11,7 +11,7 @@
         :is-selected="currentRouteName === navigation.routeName"
       />
     </div>
-    <version :class="$style.version" />
+    <version-info :class="$style.version" />
   </section>
 </template>
 
@@ -19,12 +19,12 @@
 import { computed, defineComponent } from 'vue'
 import { navigations } from './use/navigation'
 import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
-import Version from '/@/components/UI/Version.vue'
+import VersionInfo from '/@/components/UI/VersionInfo.vue'
 import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'DesktopTabSelector',
-  components: { DesktopTabSelectorItem, Version },
+  components: { DesktopTabSelectorItem, VersionInfo },
   setup() {
     const route = useRoute()
     const currentRouteName = computed(() => route.name)

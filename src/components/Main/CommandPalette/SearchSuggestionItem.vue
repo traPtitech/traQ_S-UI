@@ -6,14 +6,14 @@
       :user-id="item.value"
       :size="20"
     />
-    <icon v-else :class="$style.icon" :mdi="icon.mdi" :name="icon.name" />
+    <a-icon v-else :class="$style.icon" :mdi="icon.mdi" :name="icon.name" />
     <span :class="$style.title">{{ title }}</span>
     <span :class="$style.description">{{ description }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import store from '/@/store'
 import { ChannelId, UserId } from '/@/types/entity-ids'
@@ -26,7 +26,7 @@ export type SuggestionItem =
 
 export default defineComponent({
   name: 'SearchSuggestionItem',
-  components: { Icon, UserIcon },
+  components: { AIcon, UserIcon },
   props: {
     item: {
       type: Object as PropType<SuggestionItem>,

@@ -2,7 +2,7 @@
   <div :class="$style.element">
     <h3 :class="$style.header">スタンプ編集</h3>
     <div :class="$style.content">
-      <stamp
+      <stamp-item
         v-for="stamp in myStamps"
         :key="stamp.id"
         :stamp="stamp"
@@ -18,12 +18,12 @@
 import { defineComponent, computed, ref } from 'vue'
 import store from '/@/store'
 import { StampId } from '/@/types/entity-ids'
-import Stamp from './Stamp.vue'
+import StampItem from './StampItem.vue'
 
 export default defineComponent({
   name: 'EditStamp',
   components: {
-    Stamp
+    StampItem
   },
   setup() {
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291

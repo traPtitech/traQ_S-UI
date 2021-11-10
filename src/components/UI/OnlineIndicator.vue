@@ -1,5 +1,5 @@
 <template>
-  <indicator
+  <indicator-dot
     :class="$style.container"
     :data-is-online="$boolAttr(isOnline)"
     :size="size"
@@ -11,12 +11,12 @@
 import { defineComponent, computed, PropType } from 'vue'
 import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
-import Indicator from './Indicator.vue'
+import IndicatorDot from './IndicatorDot.vue'
 
 export default defineComponent({
   name: 'OnlineIndicator',
   components: {
-    Indicator
+    IndicatorDot
   },
   props: {
     userId: {

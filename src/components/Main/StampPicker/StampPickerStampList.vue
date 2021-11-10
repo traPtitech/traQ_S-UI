@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <stamp-element
+    <a-stamp
       v-for="stamp in stamps"
       :key="stamp.id"
       :stamp-id="stamp.id"
@@ -16,12 +16,12 @@
 import { defineComponent, PropType } from 'vue'
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-import StampElement from '/@/components/UI/Stamp.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 
 export default defineComponent({
   name: 'StampPickerStampList',
   components: {
-    StampElement
+    AStamp
   },
   props: {
     stamps: {

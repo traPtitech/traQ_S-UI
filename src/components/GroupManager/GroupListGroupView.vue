@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <div :class="$style.name">{{ group.name }}</div>
     <div :class="$style.adminList">
-      <icon name="crown" mdi />
+      <a-icon name="crown" mdi />
       <user-icon-ellipsis-list
         direction="row"
         :user-ids="group.admins"
@@ -10,7 +10,7 @@
       />
     </div>
     <div :class="$style.editIconWrapper">
-      <icon
+      <a-icon
         name="pencil-outline"
         mdi
         :class="$style.editIcon"
@@ -23,13 +23,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { UserGroup } from '@traptitech/traq'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
 export default defineComponent({
   name: 'GroupListGroupView',
   components: {
-    Icon,
+    AIcon,
     UserIconEllipsisList
   },
   props: {

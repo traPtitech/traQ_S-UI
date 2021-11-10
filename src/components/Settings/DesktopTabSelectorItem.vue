@@ -1,6 +1,6 @@
 <template>
   <router-link :to="path" :class="$style.item" :aria-selected="isSelected">
-    <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
+    <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
     {{ title }}
   </router-link>
 </template>
@@ -8,12 +8,12 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { navigationRouteNameTitleMap } from './use/navigation'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
 export default defineComponent({
   name: 'DesktopTabSelectorItem',
-  components: { Icon },
+  components: { AIcon },
   props: {
     routeName: {
       type: String as PropType<SettingsRouteName>,

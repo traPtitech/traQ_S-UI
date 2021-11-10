@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <icon name="pin" mdi :size="16" :class="$style.pin" />
+    <a-icon name="pin" mdi :size="16" :class="$style.pin" />
     {{ userDisplayName }}さんがピン留めしました
   </div>
 </template>
@@ -9,12 +9,12 @@
 import { defineComponent, PropType, computed } from 'vue'
 import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MessagePinned',
   components: {
-    Icon
+    AIcon
   },
   props: {
     messageId: {

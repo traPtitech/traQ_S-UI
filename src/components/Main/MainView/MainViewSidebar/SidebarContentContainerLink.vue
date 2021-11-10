@@ -10,7 +10,7 @@
         <span v-if="count !== undefined" :class="$style.count">{{
           count
         }}</span>
-        <icon name="chevron-right" :class="$style.icon" mdi />
+        <a-icon name="chevron-right" :class="$style.icon" mdi />
       </div>
     </template>
     <template #default></template>
@@ -20,13 +20,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'SidebarContentContainerLink',
   components: {
     SidebarContentContainer,
-    Icon
+    AIcon
   },
   props: {
     title: {

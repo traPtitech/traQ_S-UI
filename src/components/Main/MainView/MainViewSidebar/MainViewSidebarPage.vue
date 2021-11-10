@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <icon
+      <a-icon
         v-if="showBackButton"
         :size="28"
         mdi
@@ -21,12 +21,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useSidebar from '/@/use/sidebar'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 
 export default defineComponent({
   name: 'MainViewSidebarPage',
-  components: { Icon, CloseButton },
+  components: { AIcon, CloseButton },
   props: {
     showBackButton: {
       type: Boolean,
