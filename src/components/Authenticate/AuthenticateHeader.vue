@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import LogoText from '/@/assets/traq-logo-text.svg'
+import LogoText from '/@/assets/traq-logo-text.svg?component'
 
 export default defineComponent({
   name: 'AuthenticateHeader',
