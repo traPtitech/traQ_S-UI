@@ -4,7 +4,7 @@ import packageJson from './package.json'
 import { VitePWA } from 'vite-plugin-pwa'
 import VuePlugin from '@vitejs/plugin-vue'
 import brotli from 'rollup-plugin-brotli'
-import vueSvgPlugin from 'vite-plugin-vue-svg'
+import svgLoader from 'vite-svg-loader'
 import https from 'https'
 import webManifest from './webmanifest'
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
@@ -72,13 +72,21 @@ export default defineConfig(({ command, mode }) => ({
       includeAssets: ['fonts/*.woff2']
     }),
     VuePlugin(),
-    vueSvgPlugin({
-      defaultExport: 'component',
+    svgLoader({
       svgoConfig: {
         plugins: [
-          { removeDimensions: true },
-          { removeViewBox: false },
-          { convertColors: { currentColor: true } }
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                removeViewBox: false,
+                convertColors: {
+                  currentColor: true
+                }
+              }
+            }
+          },
+          'removeDimensions'
         ]
       }
     }),
