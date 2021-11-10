@@ -2,7 +2,7 @@
   <div>
     <div :class="$style.eco">
       <h3 :class="$style.header">引用通知</h3>
-      <toggle
+      <a-toggle
         :model-value="value"
         :class="$style.toggle"
         @update:model-value="toggleSetting"
@@ -19,13 +19,13 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
-import Toggle from '/@/components/UI/Toggle.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
 import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({
   name: 'CitationNotification',
   components: {
-    Toggle
+    AToggle
   },
   setup() {
     const { addErrorToast } = useToastStore()

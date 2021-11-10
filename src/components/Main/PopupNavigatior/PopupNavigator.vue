@@ -4,7 +4,7 @@
     ref="buttonEle"
     :class="$style.navigationButton"
   >
-    <icon name="traQ" :size="28" />
+    <a-icon name="traQ" :size="28" />
     <teleport :to="`#${popupNavigatorId}`">
       <div
         v-show="isPopupNavigatorShown"
@@ -12,11 +12,11 @@
         :style="popupStyle"
       >
         <div :class="$style.popupNavigatorItem" @click="movePrev">
-          <icon name="arrow-left" mdi :class="$style.icon" />
+          <a-icon name="arrow-left" mdi :class="$style.icon" />
           戻る
         </div>
         <div :class="$style.popupNavigatorItem" @click="moveNext">
-          <icon name="arrow-right" mdi :class="$style.icon" />
+          <a-icon name="arrow-right" mdi :class="$style.icon" />
           進む
         </div>
       </div>
@@ -36,7 +36,7 @@ import {
   ref,
   readonly
 } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useRouter } from 'vue-router'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
@@ -186,7 +186,7 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
 export default defineComponent({
   name: 'PopupNavigator',
   components: {
-    Icon
+    AIcon
   },
   emits: {
     clickIcon: () => true

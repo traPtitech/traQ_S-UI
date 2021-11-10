@@ -6,7 +6,7 @@
     :data-my-count-has-incremented="$boolAttr(state.myCountHasIncremented)"
     @click="onClick"
   >
-    <stamp
+    <a-stamp
       :stamp-id="stamp.id"
       :size="20"
       without-title
@@ -28,12 +28,12 @@ import {
 } from 'vue'
 import store from '/@/store'
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
-import Stamp from '/@/components/UI/Stamp.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 import { MessageStampById } from './MessageStampList.vue'
 
 export default defineComponent({
   name: 'StampElement',
-  components: { Stamp, SpinNumber },
+  components: { AStamp, SpinNumber },
   props: {
     stamp: {
       type: Object as PropType<MessageStampById>,

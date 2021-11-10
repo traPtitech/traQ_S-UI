@@ -1,18 +1,18 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <icon :class="$style.icon" mdi :name="iconName" />
+    <a-icon :class="$style.icon" mdi :name="iconName" />
     <span>{{ folderName }}</span>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'ClipFolderElement',
   components: {
-    Icon
+    AIcon
   },
   props: {
     folderName: {

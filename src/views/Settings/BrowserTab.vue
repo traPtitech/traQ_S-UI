@@ -1,6 +1,6 @@
 <template>
   <section>
-    <notification :class="$style.element" />
+    <notification-state :class="$style.element" />
     <citation-notification :class="$style.element" />
     <open-mode
       v-model:open-mode="state.openMode"
@@ -13,7 +13,7 @@
       :class="$style.element"
     />
     <eco-mode v-model="state.ecoMode" :class="$style.element" />
-    <caches :class="$style.element" />
+    <cache-manager :class="$style.element" />
   </section>
 </template>
 
@@ -21,9 +21,9 @@
 import { defineComponent, computed } from 'vue'
 import store from '/@/store'
 import useSyncedState from '/@/components/Settings/use/syncedState'
-import Notification from '/@/components/Settings/BrowserTab/Notification.vue'
+import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
 import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
-import Caches from '/@/components/Settings/BrowserTab/Caches.vue'
+import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
 import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
@@ -31,12 +31,12 @@ import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
 export default defineComponent({
   name: 'BrowserTab',
   components: {
-    Notification,
+    NotificationState,
     CitationNotification,
     OpenMode,
     SendKey,
     EcoMode,
-    Caches
+    CacheManager
   },
   setup() {
     const browserSettings = computed(() => store.state.app.browserSettings)

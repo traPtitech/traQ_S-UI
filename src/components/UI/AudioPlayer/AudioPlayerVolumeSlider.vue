@@ -5,7 +5,7 @@
     :aria-disabled="disabled"
   >
     <div :class="$style.volumeSlider">
-      <slider
+      <a-slider
         :value="roundedVolume"
         :disabled="disabled"
         tooltip="none"
@@ -13,7 +13,7 @@
         @click.prevent
       />
     </div>
-    <icon
+    <a-icon
       :class="$style.icon"
       mdi
       :size="20"
@@ -25,14 +25,14 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
-import Slider from '/@/components/UI/Slider.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import ASlider from '/@/components/UI/ASlider.vue'
 
 export default defineComponent({
   name: 'AudioPlayerVolumeSlider',
   components: {
-    Icon,
-    Slider
+    AIcon,
+    ASlider
   },
   props: {
     volume: {

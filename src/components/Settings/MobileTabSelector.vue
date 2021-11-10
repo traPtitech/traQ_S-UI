@@ -15,7 +15,7 @@
       />
       <safari-warning :class="$style.safariWarning" />
     </div>
-    <version :class="$style.version" />
+    <version-info :class="$style.version" />
   </section>
 </template>
 
@@ -23,14 +23,19 @@
 import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import Version from '/@/components/UI/Version.vue'
+import VersionInfo from '/@/components/UI/VersionInfo.vue'
 import useSettingsNavigation, { navigations } from './use/navigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
 
 export default defineComponent({
   name: 'MobileTabSelector',
-  components: { MobileTabSelectorItem, SafariWarning, CloseButton, Version },
+  components: {
+    MobileTabSelectorItem,
+    SafariWarning,
+    CloseButton,
+    VersionInfo
+  },
   setup() {
     const route = useRoute()
     const currentRouteName = computed(() => route.name)

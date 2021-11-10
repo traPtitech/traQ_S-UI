@@ -4,7 +4,7 @@
     :aria-disabled="disabled"
     :data-show-background-on-hover="showBackgroundOnHover"
   >
-    <slider
+    <a-slider
       :value="roundedCurrentTime"
       :disabled="disabled"
       :min="0"
@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import Slider from '/@/components/UI/Slider.vue'
+import ASlider from '/@/components/UI/ASlider.vue'
 
 export default defineComponent({
   name: 'AudioPlayerTimeSlider',
   components: {
-    Slider
+    ASlider
   },
   props: {
     currentTime: {

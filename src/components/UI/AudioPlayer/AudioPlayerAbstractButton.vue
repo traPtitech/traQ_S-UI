@@ -1,17 +1,17 @@
 <template>
   <div :class="$style.container" :aria-disabled="disabled">
-    <icon :mdi="iconMdi" :name="iconName" :size="size" />
+    <a-icon :mdi="iconMdi" :name="iconName" :size="size" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'AudioPlayerAbstractButton',
   components: {
-    Icon
+    AIcon
   },
   props: {
     size: {

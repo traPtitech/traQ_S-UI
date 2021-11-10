@@ -1,7 +1,7 @@
 <template>
   <li :class="$style.tag" @click="onTagClick">
     <div :class="$style.content">
-      <icon name="tag" mdi :class="$style.icon" :size="20" />
+      <a-icon name="tag" mdi :class="$style.icon" :size="20" />
       <div :class="$style.text">
         {{ tag.tag }}
       </div>
@@ -20,14 +20,14 @@
 import { defineComponent, PropType } from 'vue'
 import store from '/@/store'
 import { UserTag } from '@traptitech/traq'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserId } from '/@/types/entity-ids'
 
 export default defineComponent({
   name: 'TagsTabTag',
   components: {
-    Icon,
+    AIcon,
     TagsTabEdit
   },
   props: {

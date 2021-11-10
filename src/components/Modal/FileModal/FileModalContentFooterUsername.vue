@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" @click="openModal">
-    <icon name="user" :size="20" />
+    <a-icon name="user" :size="20" />
     {{ user?.displayName ?? 'unknown' }}
   </div>
 </template>
@@ -10,11 +10,11 @@ import { defineComponent, PropType, computed } from 'vue'
 import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/use/modalOpener'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'FileModalContentFooterUsername',
-  components: { Icon },
+  components: { AIcon },
   props: {
     userId: {
       type: String as PropType<UserId>,

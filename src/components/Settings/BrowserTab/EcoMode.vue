@@ -2,7 +2,7 @@
   <div>
     <div :class="$style.eco">
       <h3 :class="$style.header">省エネモード</h3>
-      <toggle v-model="value" :class="$style.toggle" />
+      <a-toggle v-model="value" :class="$style.toggle" />
     </div>
     <div :class="$style.content">
       <p>
@@ -14,13 +14,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Toggle from '/@/components/UI/Toggle.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
 import { useModelValueSyncer } from '/@/use/modelSyncer'
 
 export default defineComponent({
   name: 'EcoMode',
   components: {
-    Toggle
+    AToggle
   },
   props: {
     modelValue: {

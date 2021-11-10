@@ -1,5 +1,5 @@
 <template>
-  <indicator
+  <indicator-dot
     :class="$style.container"
     :size="size"
     :border-width="borderWidth"
@@ -8,12 +8,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Indicator from './Indicator.vue'
+import IndicatorDot from './IndicatorDot.vue'
 
 export default defineComponent({
   name: 'NotificationIndicator',
   components: {
-    Indicator
+    IndicatorDot
   },
   props: {
     size: {

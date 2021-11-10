@@ -6,14 +6,14 @@
       <slot />
     </div>
     <div :class="$style.controls">
-      <icon
+      <a-icon
         v-if="showEditButton"
         name="pencil-outline"
         mdi
         :class="$style.controlIcon"
         @click="onClickEdit"
       />
-      <icon
+      <a-icon
         name="close"
         mdi
         :class="$style.controlIcon"
@@ -28,13 +28,13 @@ import { computed, defineComponent, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import store from '/@/store'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'GroupUser',
   components: {
     UserIcon,
-    Icon
+    AIcon
   },
   props: {
     id: {

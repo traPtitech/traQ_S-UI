@@ -29,7 +29,7 @@
         :aria-hidden="currentPage <= 0"
         @click="jumpToPage(currentPage - 1)"
       >
-        <icon name="chevron-left" mdi /> 戻る
+        <a-icon name="chevron-left" mdi /> 戻る
       </div>
       <span :class="$style.page">
         {{ currentPage + 1 }} / {{ pageCount }} ページ
@@ -40,7 +40,7 @@
         :aria-hidden="currentPage >= pageCount - 1"
         @click="jumpToPage(currentPage + 1)"
       >
-        次へ <icon name="chevron-right" mdi />
+        次へ <a-icon name="chevron-right" mdi />
       </div>
     </div>
   </div>
@@ -59,7 +59,7 @@ import useKeepScrollPosition from './use/keepScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useOpenLink } from '/@/use/openLink'
 import { constructMessagesPath } from '/@/router'
 
@@ -87,7 +87,7 @@ export default defineComponent({
     SearchResultMessageElement,
     PopupSelector,
     LoadingSpinner,
-    Icon
+    AIcon
   },
   setup() {
     const {

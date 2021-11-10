@@ -9,7 +9,7 @@
       @click="onClickSendButton"
     >
       <transition name="post">
-        <icon v-if="!isPosting" mdi name="send" />
+        <a-icon v-if="!isPosting" mdi name="send" />
       </transition>
     </button>
   </div>
@@ -19,7 +19,7 @@
 import { defineComponent } from 'vue'
 import useIsMobile from '/@/use/isMobile'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const useClickHandlers = (
   props: { canPostMessage: boolean },
@@ -40,7 +40,7 @@ export default defineComponent({
   name: 'MessageInputRightControls',
   components: {
     MessageInputInsertStampButton,
-    Icon
+    AIcon
   },
   props: {
     canPostMessage: {

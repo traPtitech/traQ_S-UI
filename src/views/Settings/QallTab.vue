@@ -3,7 +3,7 @@
     <div :class="$style.element">
       <div :class="$style.enable">
         <h3 :class="$style.header">RTC機能を有効にする</h3>
-        <toggle v-model="state.isEnabled" :class="$style.toggle" />
+        <a-toggle v-model="state.isEnabled" :class="$style.toggle" />
       </div>
       <p :class="$style.content">
         通話などのRTC(リアルタイムコミュニケーション)機能を有効化します<br />
@@ -41,7 +41,7 @@
       <div :class="$style.element">
         <div :class="$style.enable">
           <h3 :class="$style.header">メッセージの読み上げ</h3>
-          <toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
+          <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
         </div>
         <p :class="$style.content">
           Qallしているチャンネルに投稿されたメッセージを読み上げます
@@ -84,7 +84,7 @@
 import { defineComponent, computed, ref, watchEffect } from 'vue'
 import store from '/@/store'
 import useSyncedState from '/@/components/Settings/use/syncedState'
-import Toggle from '/@/components/UI/Toggle.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { tts } from '/@/lib/tts'
@@ -176,7 +176,7 @@ const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
 export default defineComponent({
   name: 'QallTab',
   components: {
-    Toggle,
+    AToggle,
     FormSelector,
     FormInput
   },

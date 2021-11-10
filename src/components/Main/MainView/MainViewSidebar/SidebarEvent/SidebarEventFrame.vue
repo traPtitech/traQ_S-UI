@@ -6,7 +6,7 @@
     block
   >
     <div :class="$style.titleWrapper">
-      <icon :name="iconName" :mdi="iconMdi" />
+      <a-icon :name="iconName" :mdi="iconMdi" />
       <div :class="$style.title">{{ title }}</div>
     </div>
     <div :class="$style.header">
@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
@@ -32,7 +32,7 @@ export default defineComponent({
   name: 'SidebarEventFrame',
   components: {
     OptionalRouterLink,
-    Icon,
+    AIcon,
     UserIcon
   },
   props: {

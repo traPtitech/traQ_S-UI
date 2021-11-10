@@ -16,7 +16,7 @@
     <div :class="$style.fileSize">
       {{ fileSize }}
     </div>
-    <icon
+    <a-icon
       mdi
       name="download"
       :size="24"
@@ -30,13 +30,13 @@
 import { computed, defineComponent } from 'vue'
 import useFileMeta from '/@/use/fileMeta'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'FileDescription',
   components: {
     FileTypeIcon,
-    Icon
+    AIcon
   },
   props: {
     fileId: {

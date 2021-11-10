@@ -1,9 +1,9 @@
 <template>
   <div>
     <account-state :class="$style.section" :state="user.state" />
-    <bio :class="$style.section" :bio="detail?.bio" />
+    <bio-text :class="$style.section" :bio="detail?.bio" />
     <home-channel :id="detail?.homeChannel" :class="$style.section" />
-    <accounts
+    <account-list
       :class="$style.section"
       :bot="user.bot"
       :name="user.name"
@@ -20,18 +20,18 @@
 import { defineComponent, PropType } from 'vue'
 import { User, UserDetail } from '@traptitech/traq'
 import AccountState from './AccountState.vue'
-import Bio from './Bio.vue'
+import BioText from './BioText.vue'
 import HomeChannel from './HomeChannel.vue'
-import Accounts from './Accounts.vue'
+import AccountList from './AccountList.vue'
 import LastOnline from './LastOnline.vue'
 
 export default defineComponent({
   name: 'ProfileTab',
   components: {
     AccountState,
-    Bio,
+    BioText,
     HomeChannel,
-    Accounts,
+    AccountList,
     LastOnline
   },
   props: {

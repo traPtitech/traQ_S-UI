@@ -14,7 +14,7 @@
     />
     <message-input-file-list :class="$style.fileList" :channel-id="channelId" />
     <div v-if="isArchived" :class="$style.inputContainer" data-is-archived>
-      <icon :class="$style.controls" name="archive" mdi />
+      <a-icon :class="$style.controls" name="archive" mdi />
       <div>アーカイブチャンネルのため、投稿できません</div>
     </div>
     <div v-else :class="$style.inputContainer">
@@ -75,7 +75,7 @@ import MessageInputTextArea from './MessageInputTextArea.vue'
 import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useMessageInputState from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
@@ -91,7 +91,7 @@ export default defineComponent({
     MessageInputRightControls,
     MessageInputFileList,
     MessageInputUploadProgress,
-    Icon
+    AIcon
   },
   props: {
     channelId: {

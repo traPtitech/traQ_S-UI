@@ -1,19 +1,19 @@
 <template>
   <div :class="$style.container" :aria-selected="isActive" @click="onClick">
     <div v-if="isActive" :class="$style.indicator"></div>
-    <stamp
+    <a-stamp
       v-if="stampSet.type === 'palette'"
       :stamp-id="pickThumbnail(stampSet.id)"
       :size="24"
       :class="$style.paletteStamp"
     />
-    <icon
+    <a-icon
       v-else-if="stampSet.type === 'category'"
       :name="`stampCategory/${stampSet.id}`"
       :size="24"
       :class="$style.icon"
     />
-    <icon
+    <a-icon
       v-else-if="stampSet.type === 'history'"
       mdi
       name="history"
@@ -27,8 +27,8 @@
 import { defineComponent, PropType } from 'vue'
 import store from '/@/store'
 import { StampPaletteId } from '/@/types/entity-ids'
-import Icon from '/@/components/UI/Icon.vue'
-import Stamp from '/@/components/UI/Stamp.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 import { StampSet } from './use/stampSetSelector'
 
 const useStampPaletteThumbnail = () => {
@@ -47,8 +47,8 @@ const useStampPaletteThumbnail = () => {
 export default defineComponent({
   name: 'StampPickerStampSetSelectorItem',
   components: {
-    Icon,
-    Stamp
+    AIcon,
+    AStamp
   },
   props: {
     stampSet: {

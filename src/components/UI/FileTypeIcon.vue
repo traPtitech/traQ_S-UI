@@ -1,16 +1,16 @@
 <template>
-  <icon :name="iconData.name" :mdi="iconData.mdi" :size="size" />
+  <a-icon :name="iconData.name" :mdi="iconData.mdi" :size="size" />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { AttachmentType } from '/@/lib/basic/file'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'FileTypeIcon',
   components: {
-    Icon
+    AIcon
   },
   props: {
     type: {

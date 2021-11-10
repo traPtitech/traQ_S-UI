@@ -4,7 +4,7 @@
     :data-is-disabled="$boolAttr(disabled)"
     @click="onClick"
   >
-    <icon
+    <a-icon
       :class="$style.icon"
       :name="iconName"
       :mdi="iconMdi"
@@ -17,12 +17,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MainViewHeaderPopupMenuItem',
   components: {
-    Icon
+    AIcon
   },
   props: {
     iconName: { type: String, required: true },

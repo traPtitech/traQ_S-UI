@@ -7,7 +7,7 @@
     @toggle="toggle"
   >
     <template #header-control>
-      <icon
+      <a-icon
         width="20"
         height="20"
         name="rounded-triangle"
@@ -26,14 +26,14 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 
 export default defineComponent({
   name: 'SidebarContentContainerFoldable',
   components: {
     SidebarContentContainer,
-    Icon,
+    AIcon,
     SlideDown
   },
   props: {

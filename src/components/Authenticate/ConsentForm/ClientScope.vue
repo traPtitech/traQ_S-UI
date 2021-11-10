@@ -2,7 +2,7 @@
   <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
       {{ name }}
-      <icon :class="$style.icon" name="rounded-triangle" />
+      <a-icon :class="$style.icon" name="rounded-triangle" />
     </div>
     <slide-down :is-open="isOpen">
       <ul :class="$style.permissions">
@@ -18,14 +18,14 @@
 import { defineComponent, PropType, computed, ref } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { scopeNameMap, scopePermissionsMap } from '/@/lib/clientScope'
 
 export default defineComponent({
   name: 'ClientScope',
   components: {
     SlideDown,
-    Icon
+    AIcon
   },
   props: {
     scope: {

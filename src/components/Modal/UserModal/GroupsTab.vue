@@ -9,7 +9,7 @@
           :class="$style.group"
           @click="onGroupClick(group.id)"
         >
-          <icon name="group" :class="$style.icon" :size="20" />
+          <a-icon name="group" :class="$style.icon" :size="20" />
           {{ group.name }}
         </li>
       </ul>
@@ -22,13 +22,13 @@ import { defineComponent, computed, PropType } from 'vue'
 import store from '/@/store'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '/@/types/entity-ids'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
 
 export default defineComponent({
   name: 'GroupsTab',
   components: {
-    Icon
+    AIcon
   },
   props: {
     detail: {

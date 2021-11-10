@@ -11,7 +11,7 @@
     <template v-else>
       <img :src="previewUrl" :class="$style.image" />
       <div :class="$style.icon">
-        <icon v-if="showPlayIcon" mdi name="play" :size="32" />
+        <a-icon v-if="showPlayIcon" mdi name="play" :size="32" />
       </div>
     </template>
   </div>
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
 import { makeStyles } from '/@/lib/styles'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const usePreviewState = () => {
   const isContentShown = ref(false)
@@ -39,7 +39,7 @@ const useStyles = (props: { aspectRatio: number }) =>
 
 export default defineComponent({
   name: 'MessageOgpEmbed',
-  components: { Icon },
+  components: { AIcon },
   props: {
     previewUrl: {
       type: String,

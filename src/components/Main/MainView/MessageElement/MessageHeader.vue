@@ -9,7 +9,7 @@
     >
       {{ state.date }}
     </span>
-    <icon
+    <a-icon
       v-if="createdAt !== updatedAt"
       :class="$style.editIcon"
       :size="16"
@@ -25,11 +25,11 @@ import { UserId } from '/@/types/entity-ids'
 import store from '/@/store'
 import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import GradeBadge from './GradeBadge.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MessageHeader',
-  components: { GradeBadge, Icon },
+  components: { GradeBadge, AIcon },
   props: {
     userId: {
       type: String as PropType<UserId>,

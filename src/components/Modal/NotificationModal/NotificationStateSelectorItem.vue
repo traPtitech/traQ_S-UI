@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <icon :class="$style.icon" :name="iconName" />
+    <a-icon :class="$style.icon" :name="iconName" />
     <span :class="$style.title">{{ title }}</span>
     <span :class="$style.description">{{ description }}</span>
   </div>
@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const titleMap: Record<ChannelSubscribeLevel, string> = {
@@ -31,7 +31,7 @@ const iconNameMap: Record<ChannelSubscribeLevel, string> = {
 export default defineComponent({
   name: 'NotificationStateSelectorItem',
   components: {
-    Icon
+    AIcon
   },
   props: {
     subscriptionLevel: {

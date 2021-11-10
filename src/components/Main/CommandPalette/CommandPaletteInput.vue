@@ -2,8 +2,8 @@
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
     <div :class="$style.inputContainer">
       <div :class="$style.icon">
-        <icon v-if="store.mode === 'search'" mdi name="search" />
-        <icon
+        <a-icon v-if="store.mode === 'search'" mdi name="search" />
+        <a-icon
           v-else-if="store.mode === 'command'"
           mdi
           name="code-grater-than"
@@ -29,14 +29,14 @@
 
 <script lang="ts">
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
 import useIsMobile from '/@/use/isMobile'
 
 export default defineComponent({
   name: 'CommandPaletteInput',
-  components: { Icon, CloseButton },
+  components: { AIcon, CloseButton },
   setup() {
     const { isMobile } = useIsMobile()
     const inputRef = shallowRef<HTMLInputElement | null>(null)

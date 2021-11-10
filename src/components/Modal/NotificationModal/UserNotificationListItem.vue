@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <user-icon :user-id="userId" />
     <span :class="$style.name">{{ name }}</span>
-    <toggle v-model="value" />
+    <a-toggle v-model="value" />
   </div>
 </template>
 
@@ -10,13 +10,13 @@
 import { defineComponent, PropType, computed } from 'vue'
 import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
-import Toggle from '/@/components/UI/Toggle.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export default defineComponent({
   name: 'UserNotificationListItem',
   components: {
-    Toggle,
+    AToggle,
     UserIcon
   },
   props: {

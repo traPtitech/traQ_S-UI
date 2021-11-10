@@ -1,18 +1,18 @@
 <template>
   <button :class="$style.container" @click="close">
-    <icon mdi name="close" :size="12" :class="$style.icon" />
+    <a-icon mdi name="close" :size="12" :class="$style.icon" />
     <div role="presentation" :class="$style.bg"></div>
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'MessageInputFileListItemCloseButton',
   components: {
-    Icon
+    AIcon
   },
   emits: {
     close: () => true

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container" @click="onClick">
     <span :class="$style.label">{{ label }}</span>
-    <icon
+    <a-icon
       name="close"
       mdi
       :class="$style.icon"
@@ -12,12 +12,12 @@
 </template>
 
 <script lang="ts">
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchSuggestionHistoryItem',
-  components: { Icon },
+  components: { AIcon },
   props: {
     label: {
       type: String,

@@ -3,7 +3,9 @@
     <modal-return-button v-if="returnButton" :class="$style.returnButton" />
     <div :class="$style.content">
       <h1 :class="$style.title">
-        <icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />{{ title }}
+        <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" />{{
+          title
+        }}
       </h1>
       <h2 :class="$style.subtitle"><slot name="subtitle" /></h2>
     </div>
@@ -12,12 +14,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import ModalReturnButton from './ModalReturnButton.vue'
 
 export default defineComponent({
   name: 'ModalHeader',
-  components: { Icon, ModalReturnButton },
+  components: { AIcon, ModalReturnButton },
   props: {
     iconMdi: { type: Boolean, default: false },
     iconName: { type: String, required: true },

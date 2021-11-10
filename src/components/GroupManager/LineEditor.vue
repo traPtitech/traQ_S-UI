@@ -8,7 +8,7 @@
         :max-length="maxLength"
         on-secondary
       />
-      <icon
+      <a-icon
         name="check"
         mdi
         :class="$style.icon"
@@ -20,7 +20,7 @@
       <div :class="$style.value" :data-is-empty="value === ''">
         {{ value || `${label}が設定されていません` }}
       </div>
-      <icon
+      <a-icon
         name="pencil-outline"
         mdi
         :class="$style.icon"
@@ -34,13 +34,13 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'LineEditor',
   components: {
     FormInput,
-    Icon
+    AIcon
   },
   props: {
     label: {

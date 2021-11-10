@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <span :class="$style.icon">
-      <icon mdi name="file-upload" :size="72" />
+      <a-icon mdi name="file-upload" :size="72" />
     </span>
     <p>ドロップしてファイルをアップロード</p>
     <p>またはテキストを追加</p>
@@ -10,11 +10,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'ChannelViewFileUploadOverlay',
-  components: { Icon },
+  components: { AIcon },
   setup() {
     return {}
   }

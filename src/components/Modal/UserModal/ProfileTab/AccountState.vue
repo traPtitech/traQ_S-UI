@@ -1,10 +1,10 @@
 <template>
   <section v-if="isSuspended" :class="$style.container">
-    <icon name="cancel" mdi :class="$style.icon" />
+    <a-icon name="cancel" mdi :class="$style.icon" />
     <p>このユーザーは一時的に無効になっています</p>
   </section>
   <section v-else-if="isDeactivated" :class="$style.container">
-    <icon name="snowflake" mdi :class="$style.icon" />
+    <a-icon name="snowflake" mdi :class="$style.icon" />
     <p>このユーザーは凍結されています</p>
   </section>
 </template>
@@ -12,12 +12,12 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { UserAccountState } from '@traptitech/traq'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'AccountState',
   components: {
-    Icon
+    AIcon
   },
   props: {
     state: {

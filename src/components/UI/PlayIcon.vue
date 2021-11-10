@@ -1,15 +1,15 @@
 <template>
-  <icon :class="$style.playIcon" name="play" mdi :size="36" />
+  <a-icon :class="$style.playIcon" name="play" mdi :size="36" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({
   name: 'PlayIcon',
   components: {
-    Icon
+    AIcon
   }
 })
 </script>

@@ -1,20 +1,20 @@
 <template>
   <router-link :to="path" :class="$style.item">
-    <icon :name="iconName" :mdi="iconMdi" :size="size" />
+    <a-icon :name="iconName" :mdi="iconMdi" :size="size" />
     <span :class="$style.title">{{ title }}</span>
-    <icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
+    <a-icon :class="$style.chevron" name="chevron-right" mdi :size="size" />
   </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { navigationRouteNameTitleMap } from './use/navigation'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
 export default defineComponent({
   name: 'MobileTabSelectorItem',
-  components: { Icon },
+  components: { AIcon },
   props: {
     routeName: {
       type: String as PropType<SettingsRouteName>,

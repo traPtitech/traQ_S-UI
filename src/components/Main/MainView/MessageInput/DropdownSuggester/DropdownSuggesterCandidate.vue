@@ -4,7 +4,7 @@
       v-if="candidate.type === 'user'"
       :user-id="candidate.id"
     />
-    <stamp-element
+    <a-stamp
       v-else-if="candidate.type === 'stamp'"
       :stamp-id="candidate.id"
       :size="24"
@@ -23,14 +23,14 @@
 import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import { WordOrConfirmedPart } from '../use/wordSuggester'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
-import StampElement from '/@/components/UI/Stamp.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 
 export default defineComponent({
   name: 'DropdownSuggesterCandidate',
   components: {
     DropdownSuggesterUserIcon,
-    StampElement,
+    AStamp,
     DropdownSuggesterStampEffect
   },
   props: {

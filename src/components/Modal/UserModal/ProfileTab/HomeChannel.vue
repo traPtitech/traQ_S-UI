@@ -2,7 +2,7 @@
   <section>
     <profile-header text="ホームチャンネル" />
     <p>
-      <icon name="home" mdi :class="$style.icon" />
+      <a-icon name="home" mdi :class="$style.icon" />
       <span v-if="isLoading" :class="$style.text" aria-busy="true">
         [Now loading...]
       </span>
@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import ProfileHeader from './ProfileHeader.vue'
-import Icon from '/@/components/UI/Icon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import useChannelPath from '/@/use/channelPath'
 import { constructChannelPath } from '/@/router'
 import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
@@ -28,7 +28,7 @@ export default defineComponent({
   name: 'HomeChannel',
   components: {
     ProfileHeader,
-    Icon
+    AIcon
   },
   props: {
     id: { type: String as PropType<string | null>, default: undefined }
