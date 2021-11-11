@@ -103,7 +103,7 @@ $messagePaddingMobile: 16px;
   }
   &:not([data-is-entry]):hover {
     // TODO: 色を正しくする
-    background: $theme-background-secondary;
+    @include background-secondary;
   }
 }
 

@@ -30,8 +30,8 @@ export default defineComponent({
   position: relative;
 }
 .indicator {
+  @include background-primary;
   position: absolute;
-  background: $theme-background-primary;
   top: 0;
   right: 0;
 }

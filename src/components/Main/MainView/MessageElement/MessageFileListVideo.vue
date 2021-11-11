@@ -61,9 +61,9 @@ export default defineComponent({
   }
 }
 .overlay {
+  @include background-common-overlay;
   position: absolute;
   width: 100%;
-  background: $common-background-overlay;
   cursor: pointer;
   z-index: $z-index-message-attachment-video-overlay;
   backdrop-filter: blur(0px);
