@@ -10,11 +10,12 @@
           @enter="onFilterEnter"
         />
         <!--
-      <stamp-picker-effect-toggle-button
-        :isActive="effectSelectorState.shouldShowEffectSelector"
-        @click="toggleShowEffect"
-      />
-      --></div>
+          <stamp-picker-effect-toggle-button
+            :isActive="effectSelectorState.shouldShowEffectSelector"
+            @click="toggleShowEffect"
+          />
+        -->
+      </div>
       <stamp-picker-stamp-list
         :class="$style.stampList"
         :stamps="stamps"
@@ -22,11 +23,11 @@
         @hover-stamp="onHoverStamp"
       />
       <!--
-    <stamp-picker-effect-selector
-      :class="$style.effectSelector"
-      v-if="effectSelectorState.shouldShowEffectSelector"
-    />
-    -->
+        <stamp-picker-effect-selector
+          :class="$style.effectSelector"
+          v-if="effectSelectorState.shouldShowEffectSelector"
+        />
+      -->
       <stamp-picker-stamp-set-selector
         :class="$style.paletteSelector"
         :stamp-sets="stampSetState.stampSets"

@@ -11,7 +11,6 @@ export interface Theme {
     primary: string
     secondary: string
     tertiary: string
-    secondarySub: string
   }
   ui: {
     primary: string
@@ -33,7 +32,6 @@ export interface ThemeVariables {
   '--theme-background-primary': string
   '--theme-background-secondary': string
   '--theme-background-tertiary': string
-  '--theme-background-secondarySub': string
   '--theme-ui-primary': string
   '--theme-ui-secondary': string
   '--theme-ui-tertiary': string
