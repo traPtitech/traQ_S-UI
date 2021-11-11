@@ -83,8 +83,7 @@ export const actions = defineActions({
     const topLevelChannelIds = getters.topLevelChannels.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = new Set([
-      // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
-      ...store.getters.domain.me.subscribedChannels.values(),
+      ...store.getters.domain.me.subscribedChannels,
       ...getters.forcedChannels.map(c => c.id)
     ])
     const tree = {

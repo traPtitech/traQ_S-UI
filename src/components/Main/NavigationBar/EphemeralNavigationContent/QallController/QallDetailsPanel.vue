@@ -43,8 +43,7 @@ export default defineComponent({
 
     const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() =>
-      // Readonly<Set<>>だとそのまま...するの許してくれないけど実際は可能なので代わりに.values()使う
-      [...store.getters.domain.rtc.currentSessionUsers.values()].filter(
+      [...store.getters.domain.rtc.currentSessionUsers].filter(
         id => id !== me.value
       )
     )
