@@ -27,8 +27,9 @@ import { defineComponent, shallowRef, watch } from 'vue'
 import type { Component } from 'vue'
 import mdi from '/@/assets/mdi'
 
-const iconModules0 = import.meta.glob('/src/assets/icons/*.svg?component')
-const iconModules1 = import.meta.glob('/src/assets/icons/*/*.svg?component')
+// TODO: https://github.com/vitejs/vite/issues/5304
+const iconModules0 = import.meta.glob('/src/assets/icons/*.svg')
+const iconModules1 = import.meta.glob('/src/assets/icons/*/*.svg')
 
 const iconModules = {
   ...iconModules0,
@@ -68,7 +69,7 @@ export default defineComponent({
   },
   setup(props, { attrs }) {
     const getComponent = async (name: string) => {
-      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg?component`]
+      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
       if (!moduleFunc) {
         throw new Error(`存在しないアイコン名: ${name}`)
       }
