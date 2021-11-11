@@ -77,7 +77,8 @@ import {
   mdiMusicNote,
   mdiStop,
   mdiCrown,
-  mdiFormatTitle
+  mdiFormatTitle,
+  mdiCloseCircle
 } from '@mdi/js'
 
 interface MdiIconsMapping {
@@ -89,6 +90,7 @@ const mdi: MdiIconsMapping = {
   send: mdiSend,
   file: mdiFile,
   close: mdiClose,
+  'close-circle': mdiCloseCircle,
   google: mdiGoogle,
   github: mdiGithub,
   openid: mdiOpenid,
