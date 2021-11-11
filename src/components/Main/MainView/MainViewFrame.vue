@@ -54,11 +54,11 @@ $paddingSize: 16px;
   margin: -$paddingSize 0;
 }
 .overlay {
+  @include background-common-overlay;
   opacity: 0;
   &[data-dim-inner] {
     opacity: 1;
   }
-  background: $common-background-overlay;
   position: absolute;
   height: calc(100% + #{$paddingSize * 2});
   width: 100%;

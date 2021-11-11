@@ -108,8 +108,8 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-secondary;
+  @include background-primary;
   position: absolute;
-  background: $theme-background-primary;
   transform: translateY(-100%);
   border: solid 2px $theme-background-secondary;
   border-radius: 4px;

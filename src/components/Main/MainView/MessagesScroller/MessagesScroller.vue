@@ -374,6 +374,6 @@ export default defineComponent({
 
 .dateSeparator,
 .noMoreSeparator {
-  color: $theme-ui-secondary;
+  @include color-ui-secondary;
 }
 </style>
