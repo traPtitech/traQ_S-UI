@@ -109,7 +109,6 @@ const useThemeVariables = () =>
     '--theme-background-primary': theme.background.primary,
     '--theme-background-secondary': theme.background.secondary,
     '--theme-background-tertiary': theme.background.tertiary,
-    '--theme-background-secondarySub': theme.background.secondarySub,
     '--theme-ui-primary': theme.ui.primary,
     '--theme-ui-secondary': theme.ui.secondary,
     '--theme-ui-tertiary': theme.ui.tertiary,

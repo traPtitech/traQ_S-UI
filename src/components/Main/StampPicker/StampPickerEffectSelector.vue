@@ -28,6 +28,5 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   padding: 8px;
-  background: $theme-background-secondarySub;
 }
 </style>

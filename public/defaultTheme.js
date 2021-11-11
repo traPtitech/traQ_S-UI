@@ -14,8 +14,7 @@
     background: {
       primary: '#FFFFFF',
       secondary: '#F0F2F5',
-      tertiary: '#E2E5E9',
-      secondarySub: '#FBFCFE'
+      tertiary: '#E2E5E9'
     },
     ui: {
       primary: '#49535B',
@@ -42,8 +41,7 @@
     background: {
       primary: '#242B33',
       secondary: '#1E262E',
-      tertiary: '#1A242D',
-      secondarySub: '#1E262F'
+      tertiary: '#1A242D'
     },
     ui: {
       primary: '#F2F5F8',
