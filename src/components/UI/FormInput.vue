@@ -22,8 +22,8 @@
         :max="max"
         :min="min"
         :step="step"
-        @input="onInput"
-        @change="onChange"
+        @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
+        @change="(onChange as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
       />
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}

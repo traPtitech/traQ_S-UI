@@ -1,25 +1,18 @@
 import store from '/@/store'
-import {
-  Theme,
-  ThemeVariables,
-  TransparentThemeVariables,
-  CSSCommonVariables
-} from '/@/types/theme'
-import { computed } from 'vue'
-import * as CSS from 'csstype'
+import { Theme } from '/@/types/theme'
+import { computed, CSSProperties } from 'vue'
 
-export type ThemeClaim<T> = (
-  theme: Readonly<Theme>,
-  common: typeof commonStyles
-) => T
+export type ThemeClaim<T> = (theme: Readonly<Theme>, common: CommonStyles) => T
 
-export type ThemeVariablesOrProperties =
-  | CSS.Properties
-  | ThemeVariables
-  | TransparentThemeVariables
-  | CSSCommonVariables
+export const makeStyles = (claim: ThemeClaim<CSSProperties>) => {
+  return computed(() =>
+    claim(store.getters.app.themeSettings.currentTheme, commonStyles)
+  )
+}
 
-export const makeStyles = (claim: ThemeClaim<ThemeVariablesOrProperties>) => {
+export const makeCSSVariables = (
+  claim: ThemeClaim<Record<`--${string}`, string>>
+) => {
   return computed(() =>
     claim(store.getters.app.themeSettings.currentTheme, commonStyles)
   )

@@ -34,17 +34,24 @@ const useSizeStyles = (props: {
 }) =>
   computed(() => {
     const isRow = props.direction === 'row'
+    const marginStartVal = <M extends string>(
+      m: M
+    ): { marginLeft: M } | { marginTop: M } =>
+      isRow ? { marginLeft: m } : { marginTop: m }
+
     return {
       container: {
-        flexDirection: isRow ? 'row-reverse' : 'column-reverse',
-        [isRow ? 'marginLeft' : 'marginTop']: `${props.overlap}px`
+        flexDirection: isRow
+          ? ('row-reverse' as const)
+          : ('column-reverse' as const),
+        ...marginStartVal(`${props.overlap}px`)
       },
       userIcon: {
         borderWidth: `${props.borderWidth}px`,
-        [isRow ? 'marginLeft' : 'marginTop']: `-${props.overlap}px`
+        ...marginStartVal(`-${props.overlap}px`)
       },
       count: {
-        [isRow ? 'marginLeft' : 'marginTop']: '0.25em'
+        ...marginStartVal('0.25em')
       }
     }
   })

@@ -7,7 +7,7 @@
     />
     <div
       v-for="quoteMessage in quoteMessages"
-      :key="quoteMessage"
+      :key="quoteMessage.id"
       :class="$style.quote"
     >
       引用メッセージ
