@@ -26,7 +26,7 @@
   "dependencies": {
     "@mdi/js": "^6.4.95",
     "@traptitech/traq": "^3.8.2-3",
-    "@traptitech/traq-markdown-it": "^6.0.0",
+    "@traptitech/traq-markdown-it": "^6.1.0",
     "autosize": "^5.0.1",
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
