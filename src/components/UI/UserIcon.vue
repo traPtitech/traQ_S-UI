@@ -77,7 +77,7 @@ export default defineComponent({
         backgroundImage: userIconFileId.value
           ? `url(${buildUserIconPath(userIconFileId.value)})`
           : undefined,
-        pointerEvents: props.preventModal ? 'none' : undefined
+        pointerEvents: props.preventModal ? ('none' as const) : undefined
       }))
     })
 

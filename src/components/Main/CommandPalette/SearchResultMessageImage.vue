@@ -5,14 +5,13 @@
 </template>
 
 <script lang="ts">
-import { makeStyles } from '/@/lib/styles'
 import useFileThumbnail from '/@/use/fileThumbnail'
-import { defineComponent, reactive, Ref } from 'vue'
+import { defineComponent, reactive, Ref, computed } from 'vue'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 const useStyles = (path: Ref<string>) =>
   reactive({
-    container: makeStyles(() => ({
+    container: computed(() => ({
       backgroundImage: `url(${path.value})`
     }))
   })
