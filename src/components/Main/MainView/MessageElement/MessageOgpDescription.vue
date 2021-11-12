@@ -16,17 +16,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
-import { makeStyles } from '/@/lib/styles'
-import * as CSS from 'csstype'
 
 const useStyles = (props: { lineClamp: number }) =>
   reactive({
-    description: makeStyles(
-      () =>
-        ({
-          '-webkit-line-clamp': props.lineClamp
-        } as CSS.Properties)
-    )
+    description: computed(() => ({
+      '-webkit-line-clamp': props.lineClamp
+    }))
   })
 
 export default defineComponent({

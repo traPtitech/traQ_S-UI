@@ -18,8 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
-import { makeStyles } from '/@/lib/styles'
+import { defineComponent, ref, reactive, computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const usePreviewState = () => {
@@ -32,7 +31,7 @@ const usePreviewState = () => {
 
 const useStyles = (props: { aspectRatio: number }) =>
   reactive({
-    container: makeStyles(() => ({
+    container: computed(() => ({
       paddingTop: `${props.aspectRatio * 100}%`
     }))
   })

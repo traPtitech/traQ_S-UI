@@ -11,7 +11,7 @@
         :autocomplete="autocomplete"
         :autocapitalize="autocapitalize"
         :enterkeyhint="enterkeyhint"
-        @input="onInput"
+        @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
       />
       <button
         v-if="type === 'password'"

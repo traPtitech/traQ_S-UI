@@ -70,7 +70,7 @@ export default defineComponent({
       }
     }
 
-    const role = computed(() => (props.toast.onClick ? 'button' : false))
+    const role = computed(() => (props.toast.onClick ? 'button' : undefined))
 
     const iconName = computed(() => iconNameMap[props.toast.type])
     return { onClick, iconName, role }

@@ -13,9 +13,8 @@
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '/@/store'
-import { makeStyles, ThemeVariablesOrProperties } from '/@/lib/styles'
+import { makeCSSVariables } from '/@/lib/styles'
 import { transparentize, isDarkColor } from '/@/lib/basic/color'
-import { Properties } from 'csstype'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
@@ -91,16 +90,13 @@ const useOsDarkTheme = () => {
 }
 
 const useScrollbarStyle = () =>
-  makeStyles(
-    theme =>
-      ({
-        '--scrollbar-color': transparentize(theme.ui.secondary, 0.5),
-        '--scrollbar-hover-color': transparentize(theme.ui.secondary, 0.8)
-      } as Properties)
-  )
+  makeCSSVariables(theme => ({
+    '--scrollbar-color': transparentize(theme.ui.secondary, 0.5),
+    '--scrollbar-hover-color': transparentize(theme.ui.secondary, 0.8)
+  }))
 
 const useThemeVariables = () =>
-  makeStyles((theme, common) => ({
+  makeCSSVariables((theme, common) => ({
     '--theme-accent-primary': theme.accent.primary,
     '--theme-accent-notification': theme.accent.notification,
     '--theme-accent-online': theme.accent.online,
@@ -126,7 +122,7 @@ const useThemeVariables = () =>
     '--common-drop-shadow-default': common.dropShadow.default
   }))
 const useTransparrentThemeVariables = () =>
-  makeStyles((theme, common) => ({
+  makeCSSVariables((theme, common) => ({
     '--theme-accent-primary--03': transparentize(theme.accent.primary, 0.3),
     '--theme-ui-primary--06': transparentize(theme.ui.primary, 0.6),
     '--theme-ui-secondary--05': transparentize(theme.ui.secondary, 0.5),
@@ -143,7 +139,7 @@ const useStyle = () =>
     ...useScrollbarStyle().value
   }))
 
-const useStyleBody = (style: Ref<ThemeVariablesOrProperties>) => {
+const useStyleBody = (style: Ref<Record<string, string>>) => {
   const styleText = computed(() =>
     Object.entries(style.value)
       .map(([key, value]) => `${key}:${value}`)
