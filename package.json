@@ -63,7 +63,7 @@
     "@types/turndown": "^5.0.1",
     "@types/webappsec-credential-management": "^0.6.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@typescript-eslint/parser": "^5.3.1",
+    "@typescript-eslint/parser": "^5.4.0",
     "@vitejs/plugin-vue": "^1.9.4",
     "@vue/compiler-sfc": "^3.2.22",
     "@vue/test-utils": "^2.0.0-rc.16",
