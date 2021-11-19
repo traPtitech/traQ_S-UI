@@ -1,7 +1,6 @@
 export const getUserAudio = async (deviceId?: string) => {
   const baseAudioConstraint: MediaTrackConstraints = {
     echoCancellation: true,
-    // @ts-expect-error まだ型に追加されていないが存在する https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/autoGainControl
     autoGainControl: true,
     noiseSuppression: true
   }

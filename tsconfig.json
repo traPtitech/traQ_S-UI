@@ -16,6 +16,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "serviceworker",
       "dom-screen-wake-lock",
       "webappsec-credential-management"
     ],
@@ -27,8 +28,7 @@
     "lib": [
       "esnext",
       "dom",
-      "dom.iterable",
-      "WebWorker"
+      "dom.iterable"
     ]
   },
   "include": [
