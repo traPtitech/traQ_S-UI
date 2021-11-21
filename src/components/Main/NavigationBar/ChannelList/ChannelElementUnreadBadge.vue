@@ -45,7 +45,7 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   &[data-is-noticeable] {
-    background: $theme-accent-notification;
+    background: $theme-accent-notification-background;
   }
 }
 </style>

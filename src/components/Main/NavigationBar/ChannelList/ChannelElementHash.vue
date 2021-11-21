@@ -148,9 +148,9 @@ export default defineComponent({
         }
       }
       &[data-has-notification-on-child] {
-        border-color: $theme-accent-notification;
+        border-color: $theme-accent-notification-default;
         &:hover::before {
-          background: $theme-accent-notification;
+          background: $theme-accent-notification-background;
         }
       }
       &[aria-selected='true'] {

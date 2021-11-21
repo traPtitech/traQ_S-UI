@@ -15,7 +15,10 @@ export type ResolvedTheme = {
       default: CSSColorType
       background: CSSImageType
     }
-    notification: OnlyDefault<CSSColorType>
+    notification: {
+      default: CSSColorType
+      background: CSSImageType
+    }
     online: OnlyDefault<CSSColorType>
     error: OnlyDefault<CSSColorType>
     focus: OnlyDefault<CSSColorType>
@@ -58,7 +61,10 @@ const resolveThemeAccent = (
       default: primary,
       background: primary
     })),
-    notification: resolveOnlyDefault(original.notification),
+    notification: passThroughOrResolve(original.notification, notification => ({
+      default: notification,
+      background: notification
+    })),
     online: resolveOnlyDefault(original.online),
     error: resolveOnlyDefault(original.error),
     focus: resolveOnlyDefault(original.focus)

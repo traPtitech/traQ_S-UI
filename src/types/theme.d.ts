@@ -27,7 +27,10 @@ export interface Theme {
       default: CSSColorType
       background: CSSImageType
     }>
-    notification: CSSColorTypeSimple
+    notification: MaybeCSSColorTypeSimple<{
+      default: CSSColorType
+      background: CSSImageType
+    }>
     online: CSSColorTypeSimple
     error: CSSColorTypeSimple
     focus: CSSColorTypeSimple
