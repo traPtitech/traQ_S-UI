@@ -51,7 +51,7 @@ export default defineComponent({
   vertical-align: middle;
 
   &[data-is-online] {
-    background: $theme-accent-online;
+    background: $theme-accent-online-default;
     border-color: transparent;
     opacity: 1;
   }

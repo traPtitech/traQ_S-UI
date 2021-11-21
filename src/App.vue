@@ -102,8 +102,8 @@ const useThemeVariables = () =>
     '--theme-accent-notification-default': theme.accent.notification.default,
     '--theme-accent-notification-background':
       theme.accent.notification.background,
+    '--theme-accent-online-default': theme.accent.online.default,
 
-    '--theme-accent-online': theme.accent.online,
     '--theme-accent-error': theme.accent.error,
     '--theme-accent-focus': theme.accent.focus,
     '--theme-background-primary': theme.background.primary,
