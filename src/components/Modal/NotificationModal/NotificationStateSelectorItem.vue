@@ -70,8 +70,8 @@ export default defineComponent({
     opacity: 1;
   }
   &[aria-selected='true'] {
-    color: $theme-accent-primary;
     opacity: 1;
+    @include color-accent-primary;
   }
 }
 .icon {

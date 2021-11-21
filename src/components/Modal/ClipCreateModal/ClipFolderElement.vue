@@ -45,7 +45,7 @@ export default defineComponent({
   @include color-ui-primary;
   margin-right: 8px;
   .container[aria-selected='true'] & {
-    color: $theme-accent-primary;
+    @include color-accent-primary;
   }
 }
 </style>

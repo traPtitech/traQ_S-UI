@@ -112,6 +112,7 @@ export default defineComponent({
 .body {
   @include background-tertiary;
   &[data-include-me] {
+    // TODO: overrideをやるときに書き換える
     background: $theme-accent-primary--03;
   }
   display: inline-flex;

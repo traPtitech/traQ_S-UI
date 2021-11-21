@@ -20,8 +20,15 @@
 }
 
 @mixin background-accent-primary {
-    background: $theme-accent-primary;
+    background-color: $theme-accent-primary-background;
 }
+
+@mixin color-accent-primary {
+    color: $theme-accent-primary-default;
+}
+
+// -----
+
 @mixin background-accent-error {
     background: $theme-accent-error;
 }
@@ -35,9 +42,6 @@
     background: $theme-background-tertiary;
 }
 
-@mixin color-accent-primary {
-    color: $theme-accent-primary;
-}
 @mixin color-ui-primary {
     color: $theme-ui-primary;
 }

@@ -139,13 +139,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
-  @include color-ui-primary;
-}
-.current {
-  @include color-accent-primary;
-}
-
 .channel {
   margin-left: 4px;
   padding-left: 12px;

@@ -57,7 +57,7 @@ export default defineComponent({
   &[data-color='primary'] {
     @include color-common-text-white-primary;
     @include background-accent-primary;
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-primary-default;
   }
   &[data-color='secondary'] {
     @include color-ui-secondary;

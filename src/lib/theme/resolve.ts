@@ -1,4 +1,9 @@
-import { Theme, CSSColorType, CSSColorTypeSimple } from '/@/types/theme'
+import {
+  Theme,
+  CSSColorType,
+  CSSColorTypeSimple,
+  CSSImageType
+} from '/@/types/theme'
 
 type OnlyDefault<T> = {
   default: T
@@ -6,7 +11,10 @@ type OnlyDefault<T> = {
 
 export type ResolvedTheme = {
   accent: {
-    primary: OnlyDefault<CSSColorType>
+    primary: {
+      default: CSSColorType
+      background: CSSImageType
+    }
     notification: OnlyDefault<CSSColorType>
     online: OnlyDefault<CSSColorType>
     error: OnlyDefault<CSSColorType>
@@ -32,15 +40,30 @@ const resolveOnlyDefault = (
   original: CSSColorTypeSimple
 ): OnlyDefault<CSSColorType> => ({ default: original })
 
+const passThroughOrResolve = <T>(
+  original: T | string,
+  f: (original: string) => T
+): T => {
+  if (typeof original === 'string') {
+    return f(original)
+  }
+  return original
+}
+
 const resolveThemeAccent = (
   original: Theme['accent']
-): ResolvedTheme['accent'] => ({
-  primary: resolveOnlyDefault(original.primary),
-  notification: resolveOnlyDefault(original.notification),
-  online: resolveOnlyDefault(original.online),
-  error: resolveOnlyDefault(original.error),
-  focus: resolveOnlyDefault(original.focus)
-})
+): ResolvedTheme['accent'] => {
+  return {
+    primary: passThroughOrResolve(original.primary, primary => ({
+      default: primary,
+      background: primary
+    })),
+    notification: resolveOnlyDefault(original.notification),
+    online: resolveOnlyDefault(original.online),
+    error: resolveOnlyDefault(original.error),
+    focus: resolveOnlyDefault(original.focus)
+  }
+}
 
 const resolveThemeBackground = (
   original: Theme['background']

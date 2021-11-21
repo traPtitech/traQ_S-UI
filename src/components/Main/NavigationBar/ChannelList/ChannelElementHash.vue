@@ -129,7 +129,7 @@ export default defineComponent({
       &[aria-selected='true'] {
         @include background-accent-primary;
         &:hover::before {
-          background: $theme-accent-primary;
+          @include background-accent-primary;
         }
       }
     }
@@ -155,9 +155,9 @@ export default defineComponent({
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
-        border-color: $theme-accent-primary;
+        border-color: $theme-accent-primary-default;
         &:hover::before {
-          background: $theme-accent-primary;
+          @include background-accent-primary;
         }
       }
     }

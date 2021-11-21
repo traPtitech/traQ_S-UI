@@ -74,7 +74,7 @@ export default defineComponent({
     @include background-accent-primary;
     padding: 12px 64px;
     color: white;
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-primary-default;
   }
   &[data-type='secondary'] {
     @include color-ui-secondary;

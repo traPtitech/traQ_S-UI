@@ -18,10 +18,15 @@ export type CSSColorType = string
  */
 export type CSSImageType = string
 
+export type MaybeCSSColorTypeSimple<T> = CSSColorTypeSimple | T
+
 /** traQ固有のテーマ定義 */
 export interface Theme {
   accent: {
-    primary: CSSColorTypeSimple
+    primary: MaybeCSSColorTypeSimple<{
+      default: CSSColorType
+      background: CSSImageType
+    }>
     notification: CSSColorTypeSimple
     online: CSSColorTypeSimple
     error: CSSColorTypeSimple

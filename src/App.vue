@@ -97,7 +97,9 @@ const useScrollbarStyle = () =>
 
 const useThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-accent-primary': theme.accent.primary,
+    '--theme-accent-primary-default': theme.accent.primary.default,
+    '--theme-accent-primary-background': theme.accent.primary.background,
+
     '--theme-accent-notification': theme.accent.notification,
     '--theme-accent-online': theme.accent.online,
     '--theme-accent-error': theme.accent.error,
