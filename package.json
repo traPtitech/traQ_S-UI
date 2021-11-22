@@ -78,7 +78,7 @@
     "es-jest": "^1.4.1",
     "esbuild": "^0.13.14",
     "esbuild-plugin-browserslist": "^0.3.0",
-    "eslint": "^8.2.0",
+    "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^25.2.4",
