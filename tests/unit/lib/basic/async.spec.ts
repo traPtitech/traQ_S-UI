@@ -128,7 +128,7 @@ describe('createMutex', () => {
     const after = Date.now()
 
     expect(ran).toBe(2)
-    expect(after - before >= 20 + 40).toBe(true)
+    expect(after - before).toBeGreaterThanOrEqual(20 + 40)
   })
 
   it('throws error when unlocking empty', () => {
