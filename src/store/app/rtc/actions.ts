@@ -62,7 +62,7 @@ export const actions = defineActions({
     const { rootGetters, rootState, rootDispatch } = rtcActionContext(context)
     if (
       rootGetters.domain.rtc.currentRTCState &&
-      rootGetters.domain.rtc.currentRTCState?.channelId !== payload.channelId
+      rootGetters.domain.rtc.currentRTCState.channelId !== payload.channelId
     ) {
       throw `RTC session is already open for channel ${payload.channelId}`
     }

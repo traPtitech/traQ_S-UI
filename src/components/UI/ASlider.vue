@@ -19,8 +19,7 @@ import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 export default defineComponent({
   name: 'ASlider',
   components: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- FIXME: 型がうまく効かないのでanyで逃げる
-    VueSlider: VueSlider as any
+    VueSlider
   },
   props: {
     value: {

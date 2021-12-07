@@ -14,7 +14,7 @@
       :type="disableIme ? 'url' : 'text'"
       :data-disable-ime="$boolAttr(disableIme)"
       :enterkeyhint="enterkeyhint"
-      @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
+      @input="onInput"
       @keydown.esc="reset"
       @keydown.enter="enter"
     />

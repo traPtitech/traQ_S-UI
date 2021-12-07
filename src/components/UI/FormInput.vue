@@ -22,8 +22,8 @@
         :max="max"
         :min="min"
         :step="step"
-        @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
-        @change="(onChange as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
+        @input="onInput"
+        @change="onChange"
       />
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
@@ -129,11 +129,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
 
-    const onInput = (e: InputEvent) => {
+    const onInput = (e: Event) => {
       if (props.useChangeEvent) return
       onInputInternal(e)
     }
-    const onChange = (e: InputEvent) => {
+    const onChange = (e: Event) => {
       if (!props.useChangeEvent) return
       onInputInternal(e)
     }

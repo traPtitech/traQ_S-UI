@@ -28,7 +28,7 @@ const useMessageFetcher = (
   const isReachedLatest = ref(false)
   const isLoading = ref(false)
   const isInitialLoad = ref(false)
-  const lastLoadingDirection = ref('latest' as LoadingDirection)
+  const lastLoadingDirection = ref<LoadingDirection>('latest')
 
   /**
    * 表示チャンネル/クリップフォルダによって一意に定まるもの
