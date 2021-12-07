@@ -1,8 +1,6 @@
 import { useRouter } from 'vue-router'
+import { LEFT_CLICK_BUTTON, MIDDLE_CLICK_BUTTON } from '/@/lib/dom/event'
 import { isMac } from '/@/lib/dom/browser'
-
-const LEFT_CLICK_BUTTON = 0
-const MIDDLE_CLICK_BUTTON = 1
 
 const macFlag = isMac()
 
