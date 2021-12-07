@@ -143,14 +143,6 @@ export default defineComponent({
       inputRef.value?.focus()
     }
 
-    // これをしないと初期値がおかしかった Vue 3.0.3で確認
-    onMounted(async () => {
-      await wait(0)
-      if (inputRef.value && Number.isFinite(props.modelValue)) {
-        inputRef.value.valueAsNumber = props.modelValue as number
-      }
-    })
-
     const id = randomString()
 
     const { isPasswordShown, togglePassword, typeWithShown } =
