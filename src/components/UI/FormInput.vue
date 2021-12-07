@@ -51,13 +51,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, onMounted } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/use/input'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/use/showPassword'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { wait } from '/@/lib/basic/timer'
 
 export default defineComponent({
   name: 'FormInput',
