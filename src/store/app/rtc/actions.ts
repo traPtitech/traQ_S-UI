@@ -60,8 +60,8 @@ export const actions = defineActions({
       channelId,
       sessionType
     }: { channelId: ChannelId; sessionType: SessionType }
-  ): { sessionId: SessionId; isNewSession: boolean } {
-    const { rootGetters, rootState, rootDispatch } = rtcActionContext(context)
+  ) {
+    const { rootGetters, rootDispatch } = rtcActionContext(context)
     if (
       rootGetters.domain.rtc.currentRTCState &&
       rootGetters.domain.rtc.currentRTCState.channelId !== channelId
@@ -69,14 +69,7 @@ export const actions = defineActions({
       throw `RTC session is already open for channel ${channelId}`
     }
 
-    const currentSessionIds =
-      rootState.domain.rtc.channelSessionsMap.get(channelId)
-    const currentSession = currentSessionIds
-      ? [...currentSessionIds]
-          .map(sessionId => rootState.domain.rtc.sessionInfoMap.get(sessionId))
-          .find(session => session?.type === sessionType)
-      : undefined
-    const sessionId = currentSession?.sessionId ?? `${sessionType}-${channelId}`
+    const sessionId = `${sessionType}-${channelId}` as const
 
     rootDispatch.domain.rtc.addRTCSession({
       channelId,
@@ -85,7 +78,7 @@ export const actions = defineActions({
         states: [defaultState]
       }
     })
-    return { sessionId, isNewSession: !currentSession }
+    return sessionId
   },
 
   // ---- RTC Connection ---- //
@@ -184,7 +177,7 @@ export const actions = defineActions({
     commit.clearRemoteStream()
   },
 
-  async joinVoiceChannel(context, room: string) {
+  async joinVoiceChannel(context, room: SessionId) {
     const { state, commit, dispatch, rootState } = rtcActionContext(context)
 
     while (!client) {
@@ -290,7 +283,7 @@ export const actions = defineActions({
       return
     }
 
-    const { sessionId } = await dispatch.startOrJoinRTCSession({
+    const sessionId = await dispatch.startOrJoinRTCSession({
       channelId,
       sessionType: 'qall'
     })
