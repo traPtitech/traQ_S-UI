@@ -9,7 +9,6 @@ import AudioStreamMixer, {
 import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '/@/lib/tts'
-import { wait } from '/@/lib/basic/timer'
 import { isIOSApp } from '/@/lib/dom/browser'
 import qallStartMp3 from '/@/assets/se/qall_start.mp3'
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
@@ -225,7 +224,6 @@ export const actions = defineActions({
       commit.addRemoteStream({ userId, mediaStream: stream })
 
       if (state.mixer) {
-        await wait(1000)
         await state.mixer.addStream(stream.peerId, stream)
       }
       commit.setUserVolume({ userId, volume: 0.5 })
