@@ -2,7 +2,6 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import { randomString } from '/@/lib/basic/randomString'
 import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer, {
   getTalkingLoundnessLevel
@@ -10,12 +9,12 @@ import AudioStreamMixer, {
 import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '/@/lib/tts'
-import { wait } from '/@/lib/basic/timer'
 import { isIOSApp } from '/@/lib/dom/browser'
 import qallStartMp3 from '/@/assets/se/qall_start.mp3'
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
+import { SessionId, SessionType } from '/@/store/domain/rtc/state'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -57,35 +56,29 @@ const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
 export const actions = defineActions({
   startOrJoinRTCSession(
     context,
-    payload: { channelId: ChannelId; sessionType: string }
-  ): { sessionId: string; isNewSession: boolean } {
-    const { rootGetters, rootState, rootDispatch } = rtcActionContext(context)
+    {
+      channelId,
+      sessionType
+    }: { channelId: ChannelId; sessionType: SessionType }
+  ) {
+    const { rootGetters, rootDispatch } = rtcActionContext(context)
     if (
       rootGetters.domain.rtc.currentRTCState &&
-      rootGetters.domain.rtc.currentRTCState.channelId !== payload.channelId
+      rootGetters.domain.rtc.currentRTCState.channelId !== channelId
     ) {
-      throw `RTC session is already open for channel ${payload.channelId}`
+      throw `RTC session is already open for channel ${channelId}`
     }
 
-    const currentSessionIds = rootState.domain.rtc.channelSessionsMap.get(
-      payload.channelId
-    )
-    const currentSession = currentSessionIds
-      ? [...currentSessionIds]
-          .map(sessionId => rootState.domain.rtc.sessionInfoMap.get(sessionId))
-          .find(session => session?.type === payload.sessionType)
-      : undefined
-    const sessionId =
-      currentSession?.sessionId ?? `${payload.sessionType}-${randomString()}`
+    const sessionId = `${sessionType}-${channelId}` as const
 
     rootDispatch.domain.rtc.addRTCSession({
-      channelId: payload.channelId,
+      channelId,
       state: {
         sessionId,
         states: [defaultState]
       }
     })
-    return { sessionId, isNewSession: !currentSession }
+    return sessionId
   },
 
   // ---- RTC Connection ---- //
@@ -184,7 +177,7 @@ export const actions = defineActions({
     commit.clearRemoteStream()
   },
 
-  async joinVoiceChannel(context, room: string) {
+  async joinVoiceChannel(context, room: SessionId) {
     const { state, commit, dispatch, rootState } = rtcActionContext(context)
 
     while (!client) {
@@ -224,7 +217,6 @@ export const actions = defineActions({
       commit.addRemoteStream({ userId, mediaStream: stream })
 
       if (state.mixer) {
-        await wait(1000)
         await state.mixer.addStream(stream.peerId, stream)
       }
       commit.setUserVolume({ userId, volume: 0.5 })
@@ -291,7 +283,7 @@ export const actions = defineActions({
       return
     }
 
-    const { sessionId } = await dispatch.startOrJoinRTCSession({
+    const sessionId = await dispatch.startOrJoinRTCSession({
       channelId,
       sessionType: 'qall'
     })
