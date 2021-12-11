@@ -2,7 +2,6 @@ import { defineActions } from 'direct-vuex'
 import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import { randomString } from '/@/lib/basic/randomString'
 import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer, {
   getTalkingLoundnessLevel
@@ -16,6 +15,7 @@ import qallStartMp3 from '/@/assets/se/qall_start.mp3'
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
+import { SessionId, SessionType } from '/@/store/domain/rtc/state'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -57,29 +57,30 @@ const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
 export const actions = defineActions({
   startOrJoinRTCSession(
     context,
-    payload: { channelId: ChannelId; sessionType: string }
-  ): { sessionId: string; isNewSession: boolean } {
+    {
+      channelId,
+      sessionType
+    }: { channelId: ChannelId; sessionType: SessionType }
+  ): { sessionId: SessionId; isNewSession: boolean } {
     const { rootGetters, rootState, rootDispatch } = rtcActionContext(context)
     if (
       rootGetters.domain.rtc.currentRTCState &&
-      rootGetters.domain.rtc.currentRTCState.channelId !== payload.channelId
+      rootGetters.domain.rtc.currentRTCState.channelId !== channelId
     ) {
-      throw `RTC session is already open for channel ${payload.channelId}`
+      throw `RTC session is already open for channel ${channelId}`
     }
 
-    const currentSessionIds = rootState.domain.rtc.channelSessionsMap.get(
-      payload.channelId
-    )
+    const currentSessionIds =
+      rootState.domain.rtc.channelSessionsMap.get(channelId)
     const currentSession = currentSessionIds
       ? [...currentSessionIds]
           .map(sessionId => rootState.domain.rtc.sessionInfoMap.get(sessionId))
-          .find(session => session?.type === payload.sessionType)
+          .find(session => session?.type === sessionType)
       : undefined
-    const sessionId =
-      currentSession?.sessionId ?? `${payload.sessionType}-${randomString()}`
+    const sessionId = currentSession?.sessionId ?? `${sessionType}-${channelId}`
 
     rootDispatch.domain.rtc.addRTCSession({
-      channelId: payload.channelId,
+      channelId,
       state: {
         sessionId,
         states: [defaultState]
