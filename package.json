@@ -65,7 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@typescript/lib-dom": "npm:@types/web@^0.0.47",
-    "@vitejs/plugin-vue": "^1.10.2",
+    "@vitejs/plugin-vue": "^2.0.0",
     "@vue/test-utils": "^2.0.0-rc.17",
     "@vue/vue3-jest": "^27.0.0-alpha.4",
     "autoprefixer": "^10.4.0",
