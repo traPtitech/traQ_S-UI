@@ -1,16 +1,12 @@
 import { UserId } from '/@/types/entity-ids'
 import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
-export interface ExtendedMediaStream extends MediaStream {
-  userMuted?: boolean
-}
-
 export type S = {
   /** ミキサー */
   mixer?: AudioStreamMixer
 
   /** 送信するMediaStream */
-  localStream?: ExtendedMediaStream
+  localStream?: MediaStream
 
   /** 送信するMediaStreamのAnalyzerNode */
   localAnalyzerNode?: Readonly<AnalyserNode>

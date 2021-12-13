@@ -1,6 +1,6 @@
 import { defineMutations } from 'direct-vuex'
 import { shallowReactive } from 'vue'
-import { S, ExtendedMediaStream } from './state'
+import { S } from './state'
 import { UserId } from '/@/types/entity-ids'
 import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
@@ -19,7 +19,7 @@ export const mutations = defineMutations<S>()({
       state.mixer.volume = volume
     }
   },
-  setLocalStream(state, mediaStream: ExtendedMediaStream) {
+  setLocalStream(state, mediaStream: MediaStream) {
     state.localStream = mediaStream
     state.localAnalyzerNode = state.mixer?.createAnalyzer(mediaStream)
   },
@@ -32,7 +32,6 @@ export const mutations = defineMutations<S>()({
   },
   muteLocalStream(state) {
     if (!state.localStream) return
-    state.localStream.userMuted = true
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = false
     })
@@ -40,7 +39,6 @@ export const mutations = defineMutations<S>()({
   },
   unmuteLocalStream(state) {
     if (!state.localStream) return
-    state.localStream.userMuted = true
     state.localStream.getAudioTracks().forEach(track => {
       track.enabled = true
     })
