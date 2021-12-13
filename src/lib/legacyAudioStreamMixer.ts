@@ -18,7 +18,7 @@ type WebkitWindow = Window &
     webkitAudioContext: AudioContext
   }
 
-export default class AudioStreamMixer {
+export default class LegacyAudioStreamMixer {
   private streamSourceNodeMap = new Map<string, MediaStreamAudioSourceNode>()
   private audioBufferMap = new Map<string, AudioBuffer>()
   private analyserNodeMap = new Map<string, AnalyserNode>()

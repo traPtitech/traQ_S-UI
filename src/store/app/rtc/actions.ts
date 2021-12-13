@@ -3,9 +3,9 @@ import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
-import AudioStreamMixer, {
+import LegacyAudioStreamMixer, {
   getTalkingLoundnessLevel
-} from '/@/lib/audioStreamMixer'
+} from '/@/lib/legacyAudioStreamMixer'
 import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '/@/lib/tts'
@@ -105,7 +105,9 @@ export const actions = defineActions({
 
   async initializeMixer(context) {
     const { state, commit, rootState } = rtcActionContext(context)
-    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
+    const mixer = new LegacyAudioStreamMixer(
+      rootState.app.rtcSettings.masterVolume
+    )
 
     const promises: Array<Promise<void>> = []
     state.remoteAudioStreamMap.forEach((stream, userId) =>

@@ -1,9 +1,9 @@
 import { UserId } from '/@/types/entity-ids'
-import AudioStreamMixer from '/@/lib/audioStreamMixer'
+import LegacyAudioStreamMixer from '/@/lib/legacyAudioStreamMixer'
 
 export type S = {
   /** ミキサー */
-  mixer?: AudioStreamMixer
+  mixer?: LegacyAudioStreamMixer
 
   /** 送信するMediaStream */
   localStream?: MediaStream
