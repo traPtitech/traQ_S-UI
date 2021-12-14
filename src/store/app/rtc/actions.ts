@@ -3,27 +3,31 @@ import { moduleActionContext } from '/@/store'
 import { rtc } from '.'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
-import LegacyAudioStreamMixer, {
-  getTalkingLoundnessLevel
-} from '/@/lib/legacyAudioStreamMixer'
+import AudioStreamMixer from '/@/lib/audioStreamMixer'
 import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '/@/lib/tts'
 import { isIOSApp } from '/@/lib/dom/browser'
-import qallStartMp3 from '/@/assets/se/qall_start.mp3'
-import qallEndMp3 from '/@/assets/se/qall_end.mp3'
-import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
-import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
 import { SessionId, SessionType } from '/@/store/domain/rtc/state'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
+const talkingThreshoulds = [300, 1000, 3000, 5000]
+
+const getTalkingLoudnessLevel = (level: number) => {
+  let ll = 0
+  for (const t of talkingThreshoulds) {
+    if (level < t) return ll
+    ll++
+  }
+  return ll
+}
 
 export const rtcActionContext = (context: ActionContext<unknown, unknown>) =>
   moduleActionContext(context, rtc)
 
 const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
-  const { rootGetters, state, commit, getters } = rtcActionContext(context)
+  const { rootGetters, state, commit } = rtcActionContext(context)
   const update = () => {
     const myId = rootGetters.domain.me.myId
     const userStateDiff = new Map<UserId, number>()
@@ -33,15 +37,16 @@ const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
 
       const loudness = rootGetters.domain.rtc.currentMutedUsers.has(userId)
         ? 0
-        : getters.getTalkingLoudnessLevel(userId)
+        : getTalkingLoudnessLevel(state.mixer?.getLevelOfStream(userId) ?? 0)
       if (state.talkingUsersState.get(userId) !== loudness) {
         userStateDiff.set(userId, loudness)
       }
     })
 
-    if (state.localAnalyzerNode && myId) {
-      const level = state.mixer?.getLevelOfNode(state.localAnalyzerNode) ?? 0
-      const loudness = getTalkingLoundnessLevel(level)
+    if (state.localStreamNodes && myId) {
+      const level =
+        state.mixer?.getLevelFromNode(state.localStreamNodes.analyzer) ?? 0
+      const loudness = getTalkingLoudnessLevel(level)
       if (state.talkingUsersState.get(myId) !== loudness) {
         userStateDiff.set(myId, loudness)
       }
@@ -104,26 +109,10 @@ export const actions = defineActions({
   },
 
   async initializeMixer(context) {
-    const { state, commit, rootState } = rtcActionContext(context)
-    const mixer = new LegacyAudioStreamMixer(
-      rootState.app.rtcSettings.masterVolume
-    )
-
-    const promises: Array<Promise<void>> = []
-    state.remoteAudioStreamMap.forEach((stream, userId) =>
-      promises.push(mixer.addStream(userId, stream))
-    )
-
-    promises.push(
-      mixer.addFileSource('qall_start', qallStartMp3),
-      mixer.addFileSource('qall_end', qallEndMp3),
-      mixer.addFileSource('qall_joined', qallJoinedMp3),
-      mixer.addFileSource('qall_left', qallLeftMp3)
-    )
-
-    await Promise.all(promises)
-
-    commit.setMixer(mixer)
+    const { commit, rootState } = rtcActionContext(context)
+    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
+    await mixer.initializePromise
+    commit.setMixer(mixer) // initializeが終わってからセットすること
   },
 
   async establishConnection(context) {
@@ -162,21 +151,20 @@ export const actions = defineActions({
     await client?.establishConnection()
   },
 
-  closeConnection(context) {
+  async closeConnection(context) {
     const { state, commit, dispatch } = rtcActionContext(context)
     if (!client) {
       return
     }
     if (state.mixer) {
-      state.mixer.playFileSource('qall_end')
-      state.mixer.muteAll()
+      await state.mixer.playFileSource('qall_end')
+      await state.mixer.deinitialize()
       dispatch.stopTalkStateUpdate()
     }
     client.closeConnection()
     destroyClient()
     commit.unsetMixer()
     commit.unsetLocalStream()
-    commit.clearRemoteStream()
   },
 
   async joinVoiceChannel(context, room: SessionId) {
@@ -192,22 +180,21 @@ export const actions = defineActions({
     }
     dispatch.startTalkStateUpdate()
 
-    client.addEventListener('userjoin', e => {
+    client.addEventListener('userjoin', async e => {
       const userId = e.detail.userId
       /* eslint-disable-next-line no-console */
       console.log(`[RTC] User joined, ID: ${userId}`)
-      state.mixer?.playFileSource('qall_joined')
+      await state.mixer?.playFileSource('qall_joined')
     })
 
     client.addEventListener('userleave', async e => {
       const userId = e.detail.userId
       /* eslint-disable-next-line no-console */
       console.log(`[RTC] User left, ID: ${userId}`)
-      commit.removeRemoteStream(userId)
 
       if (state.mixer) {
-        await state.mixer.removeStream(userId)
-        state.mixer.playFileSource('qall_left')
+        await state.mixer.stopAndRemoveStream(userId)
+        await state.mixer.playFileSource('qall_left')
       }
     })
 
@@ -215,11 +202,10 @@ export const actions = defineActions({
       const stream = e.detail.stream
       const userId = stream.peerId
       /* eslint-disable-next-line no-console */
-      console.log(`[RTC] Recieved stream from ${stream.peerId}`)
-      commit.addRemoteStream({ userId, mediaStream: stream })
+      console.log(`[RTC] Recieved stream from ${userId}`)
 
       if (state.mixer) {
-        await state.mixer.addStream(stream.peerId, stream)
+        await state.mixer.addAndPlayStream(stream.peerId, stream)
       }
       commit.setUserVolume({ userId, volume: 0.5 })
     })
@@ -230,14 +216,14 @@ export const actions = defineActions({
     commit.setLocalStream(localStream)
 
     if (state.isMicMuted) {
-      dispatch.mute()
+      await dispatch.mute()
     } else {
-      dispatch.unmute()
+      await dispatch.unmute()
     }
 
     client.joinRoom(room, localStream)
 
-    state.mixer.playFileSource('qall_start')
+    await state.mixer.playFileSource('qall_start')
   },
   mute(context) {
     const { state, commit, rootGetters, rootDispatch } =

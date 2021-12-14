@@ -1,12 +1,12 @@
 import { defineMutations } from 'direct-vuex'
-import { shallowReactive } from 'vue'
+import { markRaw } from 'vue'
 import { S } from './state'
 import { UserId } from '/@/types/entity-ids'
-import LegacyAudioStreamMixer from '/@/lib/legacyAudioStreamMixer'
+import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
 export const mutations = defineMutations<S>()({
-  setMixer(state, mixer: LegacyAudioStreamMixer) {
-    state.mixer = shallowReactive(mixer)
+  setMixer(state, mixer: AudioStreamMixer) {
+    state.mixer = markRaw(mixer)
   },
   unsetMixer(state) {
     state.mixer = undefined
@@ -15,20 +15,34 @@ export const mutations = defineMutations<S>()({
    * 0～1の値
    */
   setMasterVolume(state, volume: number) {
-    if (state.mixer) {
-      state.mixer.volume = volume
-    }
+    state.mixer?.setMasterVolume(volume)
+  },
+  /**
+   * @param volume 0-1で指定するボリューム (0がミュート、1がAudioStreamMixer.maxGainに相当するゲイン)
+   */
+  setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
+    state.mixer?.setStreamVolume(userId, volume)
   },
   setLocalStream(state, mediaStream: MediaStream) {
     state.localStream = mediaStream
-    state.localAnalyzerNode = state.mixer?.createAnalyzer(mediaStream)
+
+    if (!state.mixer) {
+      throw new Error('mixer should be initialized')
+    }
+
+    const source = state.mixer.context.createMediaStreamSource(mediaStream)
+    const analyzer = state.mixer.createAnalyzerNode()
+    source.connect(analyzer)
+
+    state.localStreamNodes = { source, analyzer }
   },
   unsetLocalStream(state) {
-    if (state.localStream) {
-      state.localStream.getTracks().forEach(t => t.stop())
-    }
+    state.localStream?.getTracks().forEach(t => t.stop())
+    state.localStreamNodes?.source.disconnect()
+    state.localStreamNodes?.analyzer.disconnect()
+
     state.localStream = undefined
-    state.localAnalyzerNode = undefined
+    state.localStreamNodes = undefined
   },
   muteLocalStream(state) {
     if (!state.localStream) return
@@ -43,34 +57,6 @@ export const mutations = defineMutations<S>()({
       track.enabled = true
     })
     state.isMicMuted = false
-  },
-  addRemoteStream(
-    state,
-    payload: { userId: UserId; mediaStream: MediaStream }
-  ) {
-    state.remoteAudioStreamMap.set(payload.userId, payload.mediaStream)
-  },
-  removeRemoteStream(state, userId: UserId) {
-    state.remoteAudioStreamMap
-      .get(userId)
-      ?.getTracks()
-      .forEach(t => t.stop())
-    state.remoteAudioStreamMap.delete(userId)
-  },
-  clearRemoteStream(state) {
-    state.remoteAudioStreamMap.forEach(stream =>
-      stream?.getTracks().forEach(t => t.stop())
-    )
-    state.remoteAudioStreamMap.clear()
-  },
-  /**
-   * @param volume 0-1で指定するボリューム (0がミュート、1がAudioStreamMixer.maxGainに相当するゲイン)
-   */
-  setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
-    state.userVolumeMap.set(userId, volume)
-    if (state.mixer) {
-      state.mixer.setAndSaveVolumeOf(userId, volume)
-    }
   },
   setTalkingStateUpdateId(state, id: number) {
     state.talkingStateUpdateId = id

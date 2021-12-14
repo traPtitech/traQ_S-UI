@@ -1,24 +1,21 @@
 import { UserId } from '/@/types/entity-ids'
-import LegacyAudioStreamMixer from '/@/lib/legacyAudioStreamMixer'
+import AudioStreamMixer from '/@/lib/audioStreamMixer'
 
 export type S = {
   /** ミキサー */
-  mixer?: LegacyAudioStreamMixer
+  mixer?: AudioStreamMixer
 
   /** 送信するMediaStream */
   localStream?: MediaStream
 
   /** 送信するMediaStreamのAnalyzerNode */
-  localAnalyzerNode?: Readonly<AnalyserNode>
+  localStreamNodes?: Readonly<{
+    source: MediaStreamAudioSourceNode
+    analyzer: AnalyserNode
+  }>
 
   /** マイクミュート */
   isMicMuted: boolean
-
-  /** ローカルで指定するユーザー音量のマップ */
-  userVolumeMap: Map<UserId, number>
-
-  /** 他ユーザーのオーディオ */
-  remoteAudioStreamMap: Map<UserId, MediaStream>
 
   /** 現在発話しているユーザーを判定するsetIntervalのID */
   talkingStateUpdateId: number
@@ -30,10 +27,8 @@ export type S = {
 export const state: S = {
   mixer: undefined,
   localStream: undefined,
-  localAnalyzerNode: undefined,
+  localStreamNodes: undefined,
   isMicMuted: false,
-  userVolumeMap: new Map(),
-  remoteAudioStreamMap: new Map(),
   talkingStateUpdateId: 0,
   talkingUsersState: new Map()
 }
