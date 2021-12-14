@@ -117,20 +117,23 @@ export const actions = defineActions({
 
   async establishConnection(context) {
     const { rootGetters, dispatch, rootDispatch } = rtcActionContext(context)
-    if (!rootGetters.domain.me.myId) {
+    const myId = rootGetters.domain.me.myId
+    if (!myId) {
       throw 'application not initialized'
     }
-    if (client) {
-      client.closeConnection()
-    }
-    const id = rootGetters.domain.me.myId
-    initClient(id)
+
+    client?.closeConnection()
+
+    initClient(myId)
     client?.addEventListener('connectionerror', async e => {
-      /* eslint-disable-next-line no-console */
-      console.error(`[RTC] Failed to establish connection`)
       if (e.detail.err.type === 'unavailable-id') {
-        /* eslint-disable-next-line no-console */
-        console.error(`[RTC] Peer Id already in use!`)
+        // eslint-disable-next-line no-console
+        console.error(
+          '[RTC] Failed to establish connection: Peer Id already in use!'
+        )
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('[RTC] Failed to establish connection', e.detail.err)
       }
       window.alert('接続に失敗しました')
 
@@ -169,27 +172,26 @@ export const actions = defineActions({
 
   async joinVoiceChannel(context, room: SessionId) {
     const { state, commit, dispatch, rootState } = rtcActionContext(context)
-
-    while (!client) {
-      await dispatch.establishConnection()
+    if (!client) {
+      throw new Error('client not initialized')
     }
 
     await dispatch.initializeMixer()
     if (!state.mixer) {
-      return
+      throw new Error('mixer not initialized')
     }
     dispatch.startTalkStateUpdate()
 
     client.addEventListener('userjoin', async e => {
       const userId = e.detail.userId
-      /* eslint-disable-next-line no-console */
+      // eslint-disable-next-line no-console
       console.log(`[RTC] User joined, ID: ${userId}`)
       await state.mixer?.playFileSource('qall_joined')
     })
 
     client.addEventListener('userleave', async e => {
       const userId = e.detail.userId
-      /* eslint-disable-next-line no-console */
+      // eslint-disable-next-line no-console
       console.log(`[RTC] User left, ID: ${userId}`)
 
       if (state.mixer) {
@@ -201,12 +203,10 @@ export const actions = defineActions({
     client.addEventListener('streamchange', async e => {
       const stream = e.detail.stream
       const userId = stream.peerId
-      /* eslint-disable-next-line no-console */
+      // eslint-disable-next-line no-console
       console.log(`[RTC] Recieved stream from ${userId}`)
 
-      if (state.mixer) {
-        await state.mixer.addAndPlayStream(stream.peerId, stream)
-      }
+      await state.mixer?.addAndPlayStream(stream.peerId, stream)
       commit.setUserVolume({ userId, volume: 0.5 })
     })
 
@@ -271,6 +271,7 @@ export const actions = defineActions({
       return
     }
 
+    await dispatch.establishConnection()
     const sessionId = await dispatch.startOrJoinRTCSession({
       channelId,
       sessionType: 'qall'
