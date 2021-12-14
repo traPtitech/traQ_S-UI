@@ -240,6 +240,15 @@ export const actions = defineActions({
 
     await state.mixer.playFileSource('qall_start')
   },
+  async setAudioInputDeviceId(context, audioInputDeviceId: string) {
+    const { state } = rtcActionContext(context)
+    if (!state.localStreamManager) {
+      return
+    }
+
+    await state.localStreamManager.setAudioInputDeviceId(audioInputDeviceId)
+    client?.setStream(state.localStreamManager.localStream)
+  },
   mute(context) {
     const { state, commit, rootGetters, rootDispatch } =
       rtcActionContext(context)
