@@ -4,11 +4,12 @@ import { rtc } from '.'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { client, initClient, destroyClient } from '/@/lib/webrtc/traQRTCClient'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
-import { getUserAudio } from '/@/lib/webrtc/userMedia'
 import { ActionContext } from 'vuex'
 import { tts } from '/@/lib/tts'
 import { isIOSApp } from '/@/lib/dom/browser'
 import { SessionId, SessionType } from '/@/store/domain/rtc/state'
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -43,9 +44,8 @@ const updateTalkingUserState = (context: ActionContext<unknown, unknown>) => {
       }
     })
 
-    if (state.localStreamNodes && myId) {
-      const level =
-        state.mixer?.getLevelFromNode(state.localStreamNodes.analyzer) ?? 0
+    if (state.localStreamManager && myId) {
+      const level = state.localStreamManager.getLevel()
       const loudness = getTalkingLoudnessLevel(level)
       if (state.talkingUsersState.get(myId) !== loudness) {
         userStateDiff.set(myId, loudness)
@@ -108,11 +108,24 @@ export const actions = defineActions({
     return true
   },
 
-  async initializeMixer(context) {
+  async initializeContext(context) {
     const { commit, rootState } = rtcActionContext(context)
-    const mixer = new AudioStreamMixer(rootState.app.rtcSettings.masterVolume)
-    await mixer.initializePromise
-    commit.setMixer(mixer) // initializeが終わってからセットすること
+
+    const audioContext = new ExtendedAudioContext()
+    const mixer = new AudioStreamMixer(
+      audioContext,
+      rootState.app.rtcSettings.masterVolume
+    )
+    const localStreamManager = new LocalStreamManager(
+      audioContext,
+      rootState.app.rtcSettings.audioInputDeviceId
+    )
+
+    await Promise.all([
+      mixer.initializePromise,
+      localStreamManager.initializePromise
+    ])
+    commit.setContext({ audioContext, mixer, localStreamManager }) // initializeが終わってからセットすること
   },
 
   async establishConnection(context) {
@@ -159,15 +172,19 @@ export const actions = defineActions({
     if (!client) {
       return
     }
+
     if (state.mixer) {
       await state.mixer.playFileSource('qall_end')
-      await state.mixer.deinitialize()
+      await state.audioContext?.close()
       dispatch.stopTalkStateUpdate()
     }
+    if (state.localStreamManager) {
+      state.localStreamManager.deinitialize()
+    }
+    commit.unsetContext()
+
     client.closeConnection()
     destroyClient()
-    commit.unsetMixer()
-    commit.unsetLocalStream()
   },
 
   async joinVoiceChannel(context, room: SessionId) {
@@ -176,9 +193,12 @@ export const actions = defineActions({
       throw new Error('client not initialized')
     }
 
-    await dispatch.initializeMixer()
+    await dispatch.initializeContext()
     if (!state.mixer) {
       throw new Error('mixer not initialized')
+    }
+    if (!state.localStreamManager) {
+      throw new Error('localStreamManager not initialized')
     }
     dispatch.startTalkStateUpdate()
 
@@ -210,18 +230,13 @@ export const actions = defineActions({
       commit.setUserVolume({ userId, volume: 0.5 })
     })
 
-    const localStream = await getUserAudio(
-      rootState.app.rtcSettings.audioInputDeviceId
-    )
-    commit.setLocalStream(localStream)
-
     if (state.isMicMuted) {
       await dispatch.mute()
     } else {
       await dispatch.unmute()
     }
 
-    client.joinRoom(room, localStream)
+    client.joinRoom(room, state.localStreamManager.localStream)
 
     await state.mixer.playFileSource('qall_start')
   },
@@ -229,7 +244,7 @@ export const actions = defineActions({
     const { state, commit, rootGetters, rootDispatch } =
       rtcActionContext(context)
     const qallSession = rootGetters.domain.rtc.qallSession
-    if (!state.localStream || !qallSession) {
+    if (!state.localStreamManager || !qallSession) {
       return
     }
     commit.muteLocalStream()
@@ -244,7 +259,7 @@ export const actions = defineActions({
     const { state, commit, rootGetters, rootDispatch } =
       rtcActionContext(context)
     const qallSession = rootGetters.domain.rtc.qallSession
-    if (!state.localStream || !qallSession) {
+    if (!state.localStreamManager || !qallSession) {
       return
     }
     commit.unmuteLocalStream()

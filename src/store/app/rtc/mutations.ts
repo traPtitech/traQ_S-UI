@@ -3,13 +3,30 @@ import { markRaw } from 'vue'
 import { S } from './state'
 import { UserId } from '/@/types/entity-ids'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
 
 export const mutations = defineMutations<S>()({
-  setMixer(state, mixer: AudioStreamMixer) {
+  setContext(
+    state,
+    {
+      audioContext,
+      mixer,
+      localStreamManager
+    }: {
+      audioContext: ExtendedAudioContext
+      mixer: AudioStreamMixer
+      localStreamManager: LocalStreamManager
+    }
+  ) {
+    state.audioContext = markRaw(audioContext)
     state.mixer = markRaw(mixer)
+    state.localStreamManager = markRaw(localStreamManager)
   },
-  unsetMixer(state) {
+  unsetContext(state) {
+    state.audioContext = undefined
     state.mixer = undefined
+    state.localStreamManager = undefined
   },
   /**
    * 0～1の値
@@ -23,39 +40,14 @@ export const mutations = defineMutations<S>()({
   setUserVolume(state, { userId, volume }: { userId: string; volume: number }) {
     state.mixer?.setStreamVolume(userId, volume)
   },
-  setLocalStream(state, mediaStream: MediaStream) {
-    state.localStream = mediaStream
-
-    if (!state.mixer) {
-      throw new Error('mixer should be initialized')
-    }
-
-    const source = state.mixer.context.createMediaStreamSource(mediaStream)
-    const analyzer = state.mixer.createAnalyzerNode()
-    source.connect(analyzer)
-
-    state.localStreamNodes = { source, analyzer }
-  },
-  unsetLocalStream(state) {
-    state.localStream?.getTracks().forEach(t => t.stop())
-    state.localStreamNodes?.source.disconnect()
-    state.localStreamNodes?.analyzer.disconnect()
-
-    state.localStream = undefined
-    state.localStreamNodes = undefined
-  },
   muteLocalStream(state) {
-    if (!state.localStream) return
-    state.localStream.getAudioTracks().forEach(track => {
-      track.enabled = false
-    })
+    if (!state.localStreamManager) return
+    state.localStreamManager.mute()
     state.isMicMuted = true
   },
   unmuteLocalStream(state) {
-    if (!state.localStream) return
-    state.localStream.getAudioTracks().forEach(track => {
-      track.enabled = true
-    })
+    if (!state.localStreamManager) return
+    state.localStreamManager.unmute()
     state.isMicMuted = false
   },
   setTalkingStateUpdateId(state, id: number) {

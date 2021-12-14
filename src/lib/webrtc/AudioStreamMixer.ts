@@ -2,17 +2,13 @@ import qallStartMp3 from '/@/assets/se/qall_start.mp3'
 import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
-
-type WebkitWindow = Window &
-  typeof globalThis & {
-    webkitAudioContext: AudioContext
-  }
+import ExtendedAudioContext from './ExtendedAudioContext'
 
 type StreamNodes = {
   source: MediaStreamAudioSourceNode
   streamVolumeGain: GainNode
   masterVolumeGain: GainNode
-  analyzer: AnalyserNode
+  analyser: AnalyserNode
 }
 
 export default class AudioStreamMixer {
@@ -21,8 +17,7 @@ export default class AudioStreamMixer {
     return this._initializePromise
   }
 
-  readonly context = new (window.AudioContext ||
-    (window as WebkitWindow).webkitAudioContext)()
+  readonly context: ExtendedAudioContext
   private readonly audioBufferMap = new Map<string, AudioBuffer>()
   private readonly streamMap = new Map<string, MediaStream>()
   private readonly streamNodesMap = new Map<string, StreamNodes>()
@@ -35,14 +30,10 @@ export default class AudioStreamMixer {
   private readonly maxStreamGain = 5
   private readonly maxMasterGain = 3
 
-  private readonly analyserFftSize = 128
-  private readonly frequencyUint8Array = new Uint8Array(
-    this.analyserFftSize / 2
-  )
-
-  constructor(masterVolume: number) {
+  constructor(context: ExtendedAudioContext, masterVolume: number) {
     this._initializePromise = this.initialize()
 
+    this.context = context
     this.masterVolume = masterVolume
   }
 
@@ -55,20 +46,14 @@ export default class AudioStreamMixer {
     ])
   }
 
-  async deinitialize() {
-    await this.context.close()
-  }
-
   /* stream manage methods */
 
   private async addFileSource(key: string, url: string) {
     const response = await fetch(url)
     const buffer = await response.arrayBuffer()
 
-    // TODO: Safari 14.1未満とiOS Safari 14.5未満はpromise-based syntaxに対応していない
-    this.context.decodeAudioData(buffer, decodedData => {
-      this.audioBufferMap.set(key, decodedData)
-    })
+    const decodedData = await this.context.decodeAudio(buffer)
+    this.audioBufferMap.set(key, decodedData)
   }
 
   private addStream(key: string, stream: MediaStream) {
@@ -96,34 +81,15 @@ export default class AudioStreamMixer {
 
   /* node methods */
 
-  private createBufferSourceNode(buffer: AudioBuffer) {
-    const node = this.context.createBufferSource()
-    node.buffer = buffer
-    return node
-  }
-
-  private createGainNode(volume: number, maxGain: number) {
-    const node = this.context.createGain()
-    this.setGainNodeVolume(node, volume, maxGain)
-    return node
-  }
-
-  private setGainNodeVolume(node: GainNode, volume: number, maxGain: number) {
-    node.gain.value = this.calcVolumeValue(volume, maxGain)
-  }
-
   private createMasterGainNode() {
-    return this.createGainNode(this.masterVolume, this.maxMasterGain)
+    return this.context.createGainNode(this.masterVolume, this.maxMasterGain)
   }
 
   private createStreamGainNode(key: string) {
-    return this.createGainNode(this.getStreamVolume(key), this.maxStreamGain)
-  }
-
-  createAnalyzerNode() {
-    const node = this.context.createAnalyser()
-    node.fftSize = this.analyserFftSize
-    return node
+    return this.context.createGainNode(
+      this.getStreamVolume(key),
+      this.maxStreamGain
+    )
   }
 
   /* play methods */
@@ -135,8 +101,8 @@ export default class AudioStreamMixer {
       throw new Error(`Unloaded buffer: key name of ${key}}`)
     }
 
-    const source = this.createBufferSourceNode(buffer)
-    const fileVolumeGain = this.createGainNode(
+    const source = this.context.createBufferSourceNode(buffer)
+    const fileVolumeGain = this.context.createGainNode(
       this.fileVolume,
       this.maxFileGain
     )
@@ -177,10 +143,10 @@ export default class AudioStreamMixer {
 
     const source = this.context.createMediaStreamSource(stream)
     const streamVolumeGain = this.createStreamGainNode(key)
-    const analyzer = this.createAnalyzerNode()
+    const analyser = this.context.createAnalyserNode()
     const masterVolumeGain = this.createMasterGainNode()
     source.connect(streamVolumeGain)
-    streamVolumeGain.connect(analyzer)
+    streamVolumeGain.connect(analyser)
     streamVolumeGain.connect(masterVolumeGain)
     masterVolumeGain.connect(this.context.destination)
 
@@ -193,7 +159,7 @@ export default class AudioStreamMixer {
       source,
       streamVolumeGain,
       masterVolumeGain,
-      analyzer
+      analyser
     })
   }
 
@@ -214,7 +180,7 @@ export default class AudioStreamMixer {
     nodes.source.disconnect()
     nodes.streamVolumeGain.disconnect()
     nodes.masterVolumeGain.disconnect()
-    nodes.analyzer.disconnect()
+    nodes.analyser.disconnect()
   }
 
   async addAndPlayStream(key: string, stream: MediaStream) {
@@ -240,34 +206,28 @@ export default class AudioStreamMixer {
     const nodes = this.streamNodesMap.get(key)
     if (!nodes) return
 
-    this.setGainNodeVolume(nodes.streamVolumeGain, v, this.maxStreamGain)
+    this.context.setGainNodeVolume(
+      nodes.streamVolumeGain,
+      v,
+      this.maxStreamGain
+    )
   }
 
   setMasterVolume(volume: number) {
     const v = Math.max(0, Math.min(1, volume))
 
     this.streamNodesMap.forEach(({ masterVolumeGain }) => {
-      this.setGainNodeVolume(masterVolumeGain, v, this.maxMasterGain)
+      this.context.setGainNodeVolume(masterVolumeGain, v, this.maxMasterGain)
     })
   }
 
-  private calcVolumeValue(v: number, maxGain: number): number {
-    return v ** 2 * maxGain
-  }
-
   /* analyze methods */
-
-  getLevelFromNode(node: AnalyserNode) {
-    const arr = this.frequencyUint8Array
-    node.getByteFrequencyData(arr)
-    return arr.reduce((acc, cur) => acc + cur, 0)
-  }
 
   getLevelOfStream(key: string) {
     const nodes = this.streamNodesMap.get(key)
     if (!nodes) {
       return 0
     }
-    return this.getLevelFromNode(nodes.analyzer)
+    return this.context.getLevelFromNode(nodes.analyser)
   }
 }

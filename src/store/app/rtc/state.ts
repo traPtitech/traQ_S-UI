@@ -1,18 +1,12 @@
 import { UserId } from '/@/types/entity-ids'
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
 import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
 
 export type S = {
-  /** ミキサー */
+  audioContext?: ExtendedAudioContext
   mixer?: AudioStreamMixer
-
-  /** 送信するMediaStream */
-  localStream?: MediaStream
-
-  /** 送信するMediaStreamのAnalyzerNode */
-  localStreamNodes?: Readonly<{
-    source: MediaStreamAudioSourceNode
-    analyzer: AnalyserNode
-  }>
+  localStreamManager?: LocalStreamManager
 
   /** マイクミュート */
   isMicMuted: boolean
@@ -25,9 +19,9 @@ export type S = {
 }
 
 export const state: S = {
+  audioContext: undefined,
   mixer: undefined,
-  localStream: undefined,
-  localStreamNodes: undefined,
+  localStreamManager: undefined,
   isMicMuted: false,
   talkingStateUpdateId: 0,
   talkingUsersState: new Map()
