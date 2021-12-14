@@ -70,7 +70,7 @@
     "@vue/vue3-jest": "^27.0.0-alpha.4",
     "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
-    "babel-jest": "^27.4.4",
+    "babel-jest": "^27.4.5",
     "browserslist": "^4.19.0",
     "cypress": "^9.1.1",
     "es-jest": "^1.5.0",
