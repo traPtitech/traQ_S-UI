@@ -59,6 +59,8 @@ export const actions = defineActions({
 
     if (newState.masterVolume) {
       store.commit.app.rtc.setMasterVolume(newState.masterVolume)
+    } else if (newState.audioInputDeviceId) {
+      store.dispatch.app.rtc.setAudioInputDeviceId(newState.audioInputDeviceId)
     }
   }
 })

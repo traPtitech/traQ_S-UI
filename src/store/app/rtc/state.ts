@@ -1,28 +1,15 @@
 import { UserId } from '/@/types/entity-ids'
-import AudioStreamMixer from '/@/lib/audioStreamMixer'
-
-export interface ExtendedMediaStream extends MediaStream {
-  userMuted?: boolean
-}
+import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
+import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
 
 export type S = {
-  /** ミキサー */
+  audioContext?: ExtendedAudioContext
   mixer?: AudioStreamMixer
-
-  /** 送信するMediaStream */
-  localStream?: ExtendedMediaStream
-
-  /** 送信するMediaStreamのAnalyzerNode */
-  localAnalyzerNode?: Readonly<AnalyserNode>
+  localStreamManager?: LocalStreamManager
 
   /** マイクミュート */
   isMicMuted: boolean
-
-  /** ローカルで指定するユーザー音量のマップ */
-  userVolumeMap: Map<UserId, number>
-
-  /** 他ユーザーのオーディオ */
-  remoteAudioStreamMap: Map<UserId, MediaStream>
 
   /** 現在発話しているユーザーを判定するsetIntervalのID */
   talkingStateUpdateId: number
@@ -32,12 +19,10 @@ export type S = {
 }
 
 export const state: S = {
+  audioContext: undefined,
   mixer: undefined,
-  localStream: undefined,
-  localAnalyzerNode: undefined,
+  localStreamManager: undefined,
   isMicMuted: false,
-  userVolumeMap: new Map(),
-  remoteAudioStreamMap: new Map(),
   talkingStateUpdateId: 0,
   talkingUsersState: new Map()
 }
