@@ -2,7 +2,7 @@ import { defineMutations } from 'direct-vuex'
 import { markRaw } from 'vue'
 import { S } from './state'
 import { UserId } from '/@/types/entity-ids'
-import AudioStreamMixer from '/@/lib/audioStreamMixer'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
 
 export const mutations = defineMutations<S>()({
   setMixer(state, mixer: AudioStreamMixer) {

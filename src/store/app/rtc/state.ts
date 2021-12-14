@@ -1,5 +1,5 @@
 import { UserId } from '/@/types/entity-ids'
-import AudioStreamMixer from '/@/lib/audioStreamMixer'
+import AudioStreamMixer from '/@/lib/webrtc/AudioStreamMixer'
 
 export type S = {
   /** ミキサー */
