@@ -173,11 +173,15 @@ export const actions = defineActions({
       return
     }
 
-    if (state.mixer) {
-      await state.mixer.playFileSource('qall_end')
-      await state.audioContext?.close()
-      dispatch.stopTalkStateUpdate()
-    }
+    const { audioContext } = state
+    state.mixer?.playFileSource('qall_end').then(() => {
+      // closeConnectionなどの処理をqall_endの再生が終わるのを待っていないのは
+      // これを待つと接続解除がかなり後になるため
+      // audioContextのcloseはqall_endを待たないと音がならなくなるので、
+      // これに限って待っている
+      audioContext?.close()
+    })
+    dispatch.stopTalkStateUpdate()
     if (state.localStreamManager) {
       state.localStreamManager.deinitialize()
     }

@@ -115,21 +115,24 @@ export default class AudioStreamMixer {
       await this.context.resume()
     }
 
-    source.addEventListener(
-      'ended',
-      () => {
-        source.disconnect()
-        fileVolumeGain.disconnect()
-        masterVolumeGain.disconnect()
+    return new Promise<void>(resolve => {
+      source.addEventListener(
+        'ended',
+        async () => {
+          source.disconnect()
+          fileVolumeGain.disconnect()
+          masterVolumeGain.disconnect()
 
-        if (suspended) {
-          this.context.suspend()
-        }
-      },
-      { once: true }
-    )
+          if (suspended) {
+            await this.context.suspend()
+          }
+          resolve()
+        },
+        { once: true }
+      )
 
-    source.start(0)
+      source.start(0)
+    })
   }
 
   async playStream(key: string) {
