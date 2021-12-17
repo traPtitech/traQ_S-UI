@@ -3,11 +3,11 @@ import qallEndMp3 from '/@/assets/se/qall_end.mp3'
 import qallJoinedMp3 from '/@/assets/se/qall_joined.mp3'
 import qallLeftMp3 from '/@/assets/se/qall_left.mp3'
 import ExtendedAudioContext from './ExtendedAudioContext'
+import NodeMerger from './NodeMerger'
 
 type StreamNodes = {
   source: MediaStreamAudioSourceNode
-  streamVolumeGain: GainNode
-  masterVolumeGain: GainNode
+  volumeGain: GainNode
   analyser: AnalyserNode
 }
 
@@ -21,6 +21,8 @@ export default class AudioStreamMixer {
   private readonly audioBufferMap = new Map<string, AudioBuffer>()
   private readonly streamMap = new Map<string, MediaStream>()
   private readonly streamNodesMap = new Map<string, StreamNodes>()
+  private readonly nodeMerger: NodeMerger
+  readonly masterVolumeGain: GainNode
 
   private masterVolume: number
   private readonly fileVolume = 0.25
@@ -35,6 +37,15 @@ export default class AudioStreamMixer {
 
     this.context = context
     this.masterVolume = masterVolume
+
+    this.nodeMerger = new NodeMerger(context)
+    this.masterVolumeGain = this.context.createGainNode(
+      this.masterVolume,
+      this.maxMasterGain
+    )
+
+    this.nodeMerger.addOutput(this.masterVolumeGain)
+    this.masterVolumeGain.connect(context.destination)
   }
 
   private async initialize() {
@@ -81,10 +92,6 @@ export default class AudioStreamMixer {
 
   /* node methods */
 
-  private createMasterGainNode() {
-    return this.context.createGainNode(this.masterVolume, this.maxMasterGain)
-  }
-
   private createStreamGainNode(key: string) {
     return this.context.createGainNode(
       this.getStreamVolume(key),
@@ -106,10 +113,8 @@ export default class AudioStreamMixer {
       this.fileVolume,
       this.maxFileGain
     )
-    const masterVolumeGain = this.createMasterGainNode()
     source.connect(fileVolumeGain)
-    fileVolumeGain.connect(masterVolumeGain)
-    masterVolumeGain.connect(this.context.destination)
+    this.nodeMerger.addInput(fileVolumeGain)
 
     if (suspended) {
       await this.context.resume()
@@ -121,7 +126,6 @@ export default class AudioStreamMixer {
         async () => {
           source.disconnect()
           fileVolumeGain.disconnect()
-          masterVolumeGain.disconnect()
 
           if (suspended) {
             await this.context.suspend()
@@ -145,13 +149,11 @@ export default class AudioStreamMixer {
     }
 
     const source = this.context.createMediaStreamSource(stream)
-    const streamVolumeGain = this.createStreamGainNode(key)
+    const volumeGain = this.createStreamGainNode(key)
     const analyser = this.context.createAnalyserNode()
-    const masterVolumeGain = this.createMasterGainNode()
-    source.connect(streamVolumeGain)
-    streamVolumeGain.connect(analyser)
-    streamVolumeGain.connect(masterVolumeGain)
-    masterVolumeGain.connect(this.context.destination)
+    source.connect(volumeGain)
+    volumeGain.connect(analyser)
+    this.nodeMerger.addInput(volumeGain)
 
     // register audio for chrome
     const audio = document.createElement('audio')
@@ -160,8 +162,7 @@ export default class AudioStreamMixer {
 
     this.streamNodesMap.set(key, {
       source,
-      streamVolumeGain,
-      masterVolumeGain,
+      volumeGain,
       analyser
     })
   }
@@ -181,8 +182,7 @@ export default class AudioStreamMixer {
       track.stop()
     })
     nodes.source.disconnect()
-    nodes.streamVolumeGain.disconnect()
-    nodes.masterVolumeGain.disconnect()
+    nodes.volumeGain.disconnect()
     nodes.analyser.disconnect()
   }
 
@@ -209,19 +209,12 @@ export default class AudioStreamMixer {
     const nodes = this.streamNodesMap.get(key)
     if (!nodes) return
 
-    this.context.setGainNodeVolume(
-      nodes.streamVolumeGain,
-      v,
-      this.maxStreamGain
-    )
+    this.context.setGainNodeVolume(nodes.volumeGain, v, this.maxStreamGain)
   }
 
   setMasterVolume(volume: number) {
     const v = Math.max(0, Math.min(1, volume))
-
-    this.streamNodesMap.forEach(({ masterVolumeGain }) => {
-      this.context.setGainNodeVolume(masterVolumeGain, v, this.maxMasterGain)
-    })
+    this.context.setGainNodeVolume(this.masterVolumeGain, v, this.maxMasterGain)
   }
 
   /* analyze methods */
