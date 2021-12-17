@@ -3,6 +3,7 @@ export interface S {
   masterVolume: number
   audioInputDeviceId: string
   audioOutputDeviceId: string
+  isNoiseReductionEnabled: boolean
   isTtsEnabled: boolean
   voiceName: string
   voicePitch: number
@@ -15,6 +16,7 @@ export const state: S = {
   masterVolume: 0.5,
   audioInputDeviceId: '',
   audioOutputDeviceId: '',
+  isNoiseReductionEnabled: false,
   isTtsEnabled: false,
   voiceName: '',
   voicePitch: 1,

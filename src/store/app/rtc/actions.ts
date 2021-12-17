@@ -10,6 +10,7 @@ import { isIOSApp } from '/@/lib/dom/browser'
 import { SessionId, SessionType } from '/@/store/domain/rtc/state'
 import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
 import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
+import { sampleRate } from '@sapphi-red/dtln-web'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -110,16 +111,17 @@ export const actions = defineActions({
 
   async initializeContext(context) {
     const { commit, rootState } = rtcActionContext(context)
+    const rtcSettingsState = rootState.app.rtcSettings
 
-    const audioContext = new ExtendedAudioContext()
+    const audioContext = new ExtendedAudioContext({ sampleRate })
     const mixer = new AudioStreamMixer(
       audioContext,
-      rootState.app.rtcSettings.masterVolume
+      rtcSettingsState.masterVolume
     )
-    const localStreamManager = new LocalStreamManager(
-      audioContext,
-      rootState.app.rtcSettings.audioInputDeviceId
-    )
+    const localStreamManager = new LocalStreamManager(audioContext, {
+      audioInputDeviceId: rtcSettingsState.audioInputDeviceId,
+      enableNoiseReduction: rtcSettingsState.isNoiseReductionEnabled
+    })
 
     await Promise.all([
       mixer.initializePromise,
@@ -240,7 +242,7 @@ export const actions = defineActions({
       await dispatch.unmute()
     }
 
-    client.joinRoom(room, state.localStreamManager.localStream)
+    client.joinRoom(room, state.localStreamManager.outputStream)
 
     await state.mixer.playFileSource('qall_start')
   },
@@ -250,8 +252,17 @@ export const actions = defineActions({
       return
     }
 
-    await state.localStreamManager.setAudioInputDeviceId(audioInputDeviceId)
-    client?.setStream(state.localStreamManager.localStream)
+    await state.localStreamManager.setAudioInputDevice(audioInputDeviceId)
+  },
+  async setIsNoiseReductionEnabled(context, isNoiseReductionEnabled: boolean) {
+    const { state } = rtcActionContext(context)
+    if (!state.localStreamManager) {
+      return
+    }
+
+    await state.localStreamManager.setEnableNoiseReduction(
+      isNoiseReductionEnabled
+    )
   },
   mute(context) {
     const { state, commit, rootGetters, rootDispatch } =
