@@ -4,6 +4,7 @@ export interface S {
   audioInputDeviceId: string
   audioOutputDeviceId: string
   isNoiseReductionEnabled: boolean
+  isEchoCancellationEnabled: boolean
   isTtsEnabled: boolean
   voiceName: string
   voicePitch: number
@@ -17,6 +18,7 @@ export const state: S = {
   audioInputDeviceId: '',
   audioOutputDeviceId: '',
   isNoiseReductionEnabled: false,
+  isEchoCancellationEnabled: false,
   isTtsEnabled: false,
   voiceName: '',
   voicePitch: 1,

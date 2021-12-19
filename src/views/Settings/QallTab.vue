@@ -53,6 +53,19 @@
       </div>
       <div :class="$style.element">
         <div :class="$style.enable">
+          <h3 :class="$style.header">エコー除去を有効にする (β)</h3>
+          <a-toggle
+            v-model="state.isEchoCancellationEnabled"
+            :class="$style.toggle"
+          />
+        </div>
+        <p :class="$style.content">
+          Qallでのエコー除去を有効にします<br />
+          スペックの低い端末では動作が不安定になる可能性があります
+        </p>
+      </div>
+      <div :class="$style.element">
+        <div :class="$style.enable">
           <h3 :class="$style.header">メッセージの読み上げ</h3>
           <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
         </div>

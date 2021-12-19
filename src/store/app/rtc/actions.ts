@@ -119,8 +119,10 @@ export const actions = defineActions({
       rtcSettingsState.masterVolume
     )
     const localStreamManager = new LocalStreamManager(audioContext, {
+      outputNode: mixer.masterVolumeGain,
       audioInputDeviceId: rtcSettingsState.audioInputDeviceId,
-      enableNoiseReduction: rtcSettingsState.isNoiseReductionEnabled
+      enableNoiseReduction: rtcSettingsState.isNoiseReductionEnabled,
+      enableEchoCancellation: rtcSettingsState.isEchoCancellationEnabled
     })
 
     await Promise.all([
@@ -262,6 +264,19 @@ export const actions = defineActions({
 
     await state.localStreamManager.setEnableNoiseReduction(
       isNoiseReductionEnabled
+    )
+  },
+  async setIsEchoCancellationEnabled(
+    context,
+    isEchoCancellationEnabled: boolean
+  ) {
+    const { state } = rtcActionContext(context)
+    if (!state.localStreamManager) {
+      return
+    }
+
+    await state.localStreamManager.setEnableNoiseReduction(
+      isEchoCancellationEnabled
     )
   },
   mute(context) {

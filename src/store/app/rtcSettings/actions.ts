@@ -65,6 +65,10 @@ export const actions = defineActions({
       store.dispatch.app.rtc.setIsNoiseReductionEnabled(
         newState.isNoiseReductionEnabled
       )
+    } else if (newState.isEchoCancellationEnabled !== undefined) {
+      store.dispatch.app.rtc.setIsEchoCancellationEnabled(
+        newState.isEchoCancellationEnabled
+      )
     }
   }
 })

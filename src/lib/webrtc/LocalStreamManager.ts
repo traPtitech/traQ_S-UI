@@ -3,8 +3,13 @@ import ExtendedAudioContext from './ExtendedAudioContext'
 import { getUserAudio } from './userMedia'
 
 type Options = {
+  /**
+   * スピーカーから出ている音
+   */
+  outputNode: AudioNode
   audioInputDeviceId: string
   enableNoiseReduction: boolean
+  enableEchoCancellation: boolean
 }
 
 export default class LocalStreamManager {
@@ -24,6 +29,8 @@ export default class LocalStreamManager {
 
   private source!: MediaStreamAudioSourceNode
   private dtlnProcessor: ScriptProcessorNode | undefined
+  private dtlnAecChannelMerger: ChannelMergerNode | undefined
+  private dtlnAecProcessor: ScriptProcessorNode | undefined
   private analyser!: AnalyserNode
   private readonly destination: MediaStreamAudioDestinationNode
 
@@ -46,10 +53,11 @@ export default class LocalStreamManager {
 
   private async setInput({
     audioInputDeviceId,
-    enableNoiseReduction
+    enableNoiseReduction,
+    enableEchoCancellation
   }: Options) {
-    if (enableNoiseReduction) {
-      await this.setupDtln()
+    if (enableNoiseReduction || enableEchoCancellation) {
+      await this.setupDtln({ enableNoiseReduction, enableEchoCancellation })
     }
 
     const newInputStream = await getUserAudio(audioInputDeviceId)
@@ -67,9 +75,22 @@ export default class LocalStreamManager {
       this.dtlnProcessor = this.dtln!.createDtlnProcessorNode(this.context, {
         channelCount: 2
       })
-      this.source.connect(this.dtlnProcessor)
-
+      lastNode.connect(this.dtlnProcessor)
       lastNode = this.dtlnProcessor
+    }
+
+    if (enableEchoCancellation) {
+      this.dtlnAecChannelMerger = this.context.createChannelMerger(2)
+      lastNode.connect(this.dtlnAecChannelMerger, 0, 0)
+      this.options.outputNode.connect(this.dtlnAecChannelMerger, 0, 1)
+      lastNode = this.dtlnAecChannelMerger
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.dtlnAecProcessor = this.dtln!.createDtlnAecProcessorNode(
+        this.context
+      )
+      lastNode.connect(this.dtlnAecProcessor)
+      lastNode = this.dtlnAecProcessor
     }
 
     lastNode.connect(this.analyser)
@@ -80,6 +101,8 @@ export default class LocalStreamManager {
     this.inputStream?.getTracks().forEach(t => t.stop())
     this.source?.disconnect()
     this.dtlnProcessor?.disconnect()
+    this.dtlnAecChannelMerger?.disconnect()
+    this.dtlnAecProcessor?.disconnect()
     this.analyser?.disconnect()
   }
 
@@ -93,6 +116,12 @@ export default class LocalStreamManager {
 
   async setEnableNoiseReduction(enableNoiseReduction: boolean) {
     this.options.enableNoiseReduction = enableNoiseReduction
+
+    await this.setInput(this.options)
+  }
+
+  async setEnableEchoCancellation(enableEchoCancellation: boolean) {
+    this.options.enableEchoCancellation = enableEchoCancellation
 
     await this.setInput(this.options)
   }
@@ -112,14 +141,28 @@ export default class LocalStreamManager {
 
   /* dtln methods */
 
-  private async setupDtln() {
-    if (this.dtln) return
+  private async setupDtln({
+    enableNoiseReduction,
+    enableEchoCancellation
+  }: Pick<Options, 'enableNoiseReduction' | 'enableEchoCancellation'>) {
+    if (!this.dtln) {
+      const dtln = await import('@sapphi-red/dtln-web')
+      await dtln.setup('/dtln-web/')
+      this.dtln = dtln
+    }
 
-    const dtln = await import('@sapphi-red/dtln-web')
-    await dtln.setup('/dtln-web/')
-    await dtln.loadModel({ path: '/dtln-web/', quant: 'f16' })
+    const promises = []
 
-    this.dtln = dtln
+    if (enableNoiseReduction) {
+      promises.push(this.dtln.loadModel({ path: '/dtln-web/', quant: 'f16' }))
+    }
+    if (enableEchoCancellation) {
+      promises.push(
+        this.dtln.loadAecModel({ path: '/dtln-web/', units: 128, quant: 'f16' })
+      )
+    }
+
+    await Promise.all(promises)
   }
 
   /* analyze methods */
