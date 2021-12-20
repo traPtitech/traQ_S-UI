@@ -12,6 +12,11 @@ type Options = {
   enableEchoCancellation: boolean
 }
 
+/**
+ * マイクからの音に対しての処理を行う
+ *
+ * @see https://github.com/traPtitech/traQ_S-UI/pull/2936#issue-805186669
+ */
 export default class LocalStreamManager {
   private _initializePromise: Promise<void>
   get initializePromise() {
