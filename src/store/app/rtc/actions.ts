@@ -10,7 +10,7 @@ import { isIOSApp } from '/@/lib/dom/browser'
 import { SessionId, SessionType } from '/@/store/domain/rtc/state'
 import ExtendedAudioContext from '/@/lib/webrtc/ExtendedAudioContext'
 import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
-import { sampleRate } from '@sapphi-red/dtln-web'
+import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -113,7 +113,9 @@ export const actions = defineActions({
     const { commit, rootState } = rtcActionContext(context)
     const rtcSettingsState = rootState.app.rtcSettings
 
-    const audioContext = new ExtendedAudioContext({ sampleRate })
+    const audioContext = new ExtendedAudioContext({
+      sampleRate: dtlnSampleRate
+    })
     const mixer = new AudioStreamMixer(
       audioContext,
       rtcSettingsState.masterVolume

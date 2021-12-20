@@ -117,10 +117,10 @@ import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { tts } from '/@/lib/tts'
 import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
-import { sampleRate } from '@sapphi-red/dtln-web'
+import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 
 const isAudioContextDtlnSampleRateIsSupported =
-  checkAudioContextSampleRateSupport(sampleRate)
+  checkAudioContextSampleRateSupport(dtlnSampleRate)
 
 const useDevicesInfo = (state: {
   isEnabled: boolean
