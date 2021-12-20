@@ -35,6 +35,7 @@ module.exports = {
     __DEV_SERVER__: JSON.stringify('https://example.com'),
     traQConfig
   },
+  collectCoverage: true,
   coverageDirectory: './coverage/',
-  collectCoverage: true
+  coveragePathIgnorePatterns: ['.mock.ts']
 }
