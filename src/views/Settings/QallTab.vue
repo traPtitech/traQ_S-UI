@@ -40,6 +40,34 @@
       </div>
       <div :class="$style.element">
         <div :class="$style.enable">
+          <h3 :class="$style.header">ノイズ抑制を有効にする (β)</h3>
+          <a-toggle
+            v-model="state.isNoiseReductionEnabled"
+            :class="$style.toggle"
+            :disabled="!isAudioContextDtlnSampleRateIsSupported"
+          />
+        </div>
+        <p :class="$style.content">
+          Qallでのノイズ抑制を有効にします<br />
+          スペックの低い端末では動作が不安定になる可能性があります
+        </p>
+      </div>
+      <div :class="$style.element">
+        <div :class="$style.enable">
+          <h3 :class="$style.header">エコー除去を有効にする (β)</h3>
+          <a-toggle
+            v-model="state.isEchoCancellationEnabled"
+            :class="$style.toggle"
+            :disabled="!isAudioContextDtlnSampleRateIsSupported"
+          />
+        </div>
+        <p :class="$style.content">
+          Qallでのエコー除去を有効にします<br />
+          スペックの低い端末では動作が不安定になる可能性があります
+        </p>
+      </div>
+      <div :class="$style.element">
+        <div :class="$style.enable">
           <h3 :class="$style.header">メッセージの読み上げ</h3>
           <a-toggle v-model="state.isTtsEnabled" :class="$style.toggle" />
         </div>
@@ -88,6 +116,11 @@ import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { tts } from '/@/lib/tts'
+import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
+import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
+
+const isAudioContextDtlnSampleRateIsSupported =
+  checkAudioContextSampleRateSupport(dtlnSampleRate)
 
 const useDevicesInfo = (state: {
   isEnabled: boolean
@@ -202,6 +235,7 @@ export default defineComponent({
       state,
       ...devicesInfo,
       audioInputDeviceOptions,
+      isAudioContextDtlnSampleRateIsSupported,
       voiceOptions
     }
   }

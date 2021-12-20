@@ -57,10 +57,18 @@ export const actions = defineActions({
     const { commit } = rtcSettingsActionContext(context)
     commit.set(newState)
 
-    if (newState.masterVolume) {
+    if (newState.masterVolume !== undefined) {
       store.commit.app.rtc.setMasterVolume(newState.masterVolume)
-    } else if (newState.audioInputDeviceId) {
+    } else if (newState.audioInputDeviceId !== undefined) {
       store.dispatch.app.rtc.setAudioInputDeviceId(newState.audioInputDeviceId)
+    } else if (newState.isNoiseReductionEnabled !== undefined) {
+      store.dispatch.app.rtc.setIsNoiseReductionEnabled(
+        newState.isNoiseReductionEnabled
+      )
+    } else if (newState.isEchoCancellationEnabled !== undefined) {
+      store.dispatch.app.rtc.setIsEchoCancellationEnabled(
+        newState.isEchoCancellationEnabled
+      )
     }
   }
 })
