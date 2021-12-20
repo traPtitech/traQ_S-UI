@@ -64,3 +64,21 @@ export const checkCredentialManagerSupport = () => {
 export const checkStorageManagerSupport = () => {
   return !!navigator.storage
 }
+
+type WebkitWindow = Window &
+  typeof globalThis & {
+    webkitOfflineAudioContext: OfflineAudioContext
+  }
+
+const _OfflineAudioContext =
+  window.OfflineAudioContext ||
+  (window as WebkitWindow).webkitOfflineAudioContext
+
+export const checkAudioContextSampleRateSupport = (sampleRate: number) => {
+  try {
+    const context = new _OfflineAudioContext(1, sampleRate, sampleRate)
+    return context.sampleRate === sampleRate // sampleRate may differ
+  } catch {
+    return false // DOM Exception
+  }
+}

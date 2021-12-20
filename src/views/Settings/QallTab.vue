@@ -44,6 +44,7 @@
           <a-toggle
             v-model="state.isNoiseReductionEnabled"
             :class="$style.toggle"
+            :disabled="!isAudioContextDtlnSampleRateIsSupported"
           />
         </div>
         <p :class="$style.content">
@@ -57,6 +58,7 @@
           <a-toggle
             v-model="state.isEchoCancellationEnabled"
             :class="$style.toggle"
+            :disabled="!isAudioContextDtlnSampleRateIsSupported"
           />
         </div>
         <p :class="$style.content">
@@ -114,6 +116,11 @@ import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import { tts } from '/@/lib/tts'
+import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
+import { sampleRate } from '@sapphi-red/dtln-web'
+
+const isAudioContextDtlnSampleRateIsSupported =
+  checkAudioContextSampleRateSupport(sampleRate)
 
 const useDevicesInfo = (state: {
   isEnabled: boolean
@@ -228,6 +235,7 @@ export default defineComponent({
       state,
       ...devicesInfo,
       audioInputDeviceOptions,
+      isAudioContextDtlnSampleRateIsSupported,
       voiceOptions
     }
   }
