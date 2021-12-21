@@ -172,7 +172,7 @@ export default class AudioStreamMixer {
     })
   }
 
-  async stopStream(key: string) {
+  stopStream(key: string) {
     const stream = this.streamMap.get(key)
     if (!stream) {
       throw new Error(`Unloaded stream: key name of ${key}}`)
@@ -197,7 +197,7 @@ export default class AudioStreamMixer {
   }
 
   async stopAndRemoveStream(key: string) {
-    await this.stopStream(key)
+    this.stopStream(key)
     await this.removeStream(key)
   }
 

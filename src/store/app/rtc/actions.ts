@@ -188,9 +188,7 @@ export const actions = defineActions({
       audioContext?.close()
     })
     dispatch.stopTalkStateUpdate()
-    if (state.localStreamManager) {
-      state.localStreamManager.deinitialize()
-    }
+    state.localStreamManager?.deinitialize()
     commit.unsetContext()
 
     client.closeConnection()
@@ -198,7 +196,7 @@ export const actions = defineActions({
   },
 
   async joinVoiceChannel(context, room: SessionId) {
-    const { state, commit, dispatch, rootState } = rtcActionContext(context)
+    const { state, commit, dispatch } = rtcActionContext(context)
     if (!client) {
       throw new Error('client not initialized')
     }
