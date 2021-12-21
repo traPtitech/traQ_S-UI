@@ -128,7 +128,7 @@ describe('createMutex', () => {
     const after = Date.now()
 
     expect(ran).toBe(2)
-    expect(after - before).toBeGreaterThanOrEqual(20 + 40)
+    expect(after - before).toBeGreaterThanOrEqual(20 + 40 - 2) // 2msまで短くなることを許容する
   })
 
   it('throws error when unlocking empty', () => {
