@@ -73,7 +73,8 @@ export const format = (
       rendered.push('\n')
     } else if (token.type === 'regexp-0') {
       // stamp
-      rendered.push(` ${token.meta.match[1]}スタンプ `)
+      const stampName = token.meta.match[0].slice(1, -1)
+      rendered.push(` ${stampName}スタンプ `)
     } else if (token.type === 'math_inline') {
       rendered.push(' 数式 ')
     } else if (token.type === 'math_block') {
