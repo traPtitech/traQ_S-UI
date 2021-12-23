@@ -320,11 +320,12 @@ export const actions = defineActions({
 
   // ---- Specific RTC Session ---- //
   async startQall(context, channelId: ChannelId) {
-    const { dispatch } = rtcActionContext(context)
+    const { state, dispatch } = rtcActionContext(context)
     if (!(await dispatch.ensureDevicePermission())) {
       return
     }
 
+    await state.closePromise
     await dispatch.establishConnection()
     const sessionId = await dispatch.startOrJoinRTCSession({
       channelId,
@@ -334,16 +335,20 @@ export const actions = defineActions({
   },
 
   async endQall(context) {
-    const { dispatch, rootGetters, rootDispatch } = rtcActionContext(context)
+    const { commit, dispatch, rootGetters, rootDispatch } =
+      rtcActionContext(context)
     const qallSession = rootGetters.domain.rtc.qallSession
     if (!qallSession) {
       throw 'something went wrong'
     }
-    await dispatch.closeConnection()
+
     rootDispatch.domain.rtc.removeRTCSession({
       sessionId: qallSession.sessionId
     })
-
     tts.stop()
+
+    const closePromise = dispatch.closeConnection()
+    commit.setClosePromise(closePromise)
+    await closePromise
   }
 })

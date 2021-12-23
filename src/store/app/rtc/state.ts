@@ -16,6 +16,8 @@ export type S = {
 
   /** 現在発話してるユーザーの声の大きさのレベル */
   talkingUsersState: Map<UserId, number>
+
+  closePromise: Promise<void>
 }
 
 export const state: S = {
@@ -24,5 +26,6 @@ export const state: S = {
   localStreamManager: undefined,
   isMicMuted: false,
   talkingStateUpdateId: 0,
-  talkingUsersState: new Map()
+  talkingUsersState: new Map(),
+  closePromise: Promise.resolve()
 }

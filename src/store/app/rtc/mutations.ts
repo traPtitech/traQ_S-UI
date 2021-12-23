@@ -57,5 +57,8 @@ export const mutations = defineMutations<S>()({
     diffState.forEach((loudnessLevel, userId) => {
       state.talkingUsersState.set(userId, loudnessLevel)
     })
+  },
+  setClosePromise(state, promise: Promise<void>) {
+    state.closePromise = promise
   }
 })

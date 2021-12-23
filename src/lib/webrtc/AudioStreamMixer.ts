@@ -89,10 +89,6 @@ export default class AudioStreamMixer {
     }
 
     this.streamMap.delete(key)
-
-    if (this.streamMap.size === 0) {
-      await this.context.suspend()
-    }
   }
 
   /* node methods */
@@ -192,6 +188,10 @@ export default class AudioStreamMixer {
   }
 
   async addAndPlayStream(key: string, stream: MediaStream) {
+    if (this.streamMap.has(key)) {
+      await this.stopAndRemoveStream(key)
+    }
+
     this.addStream(key, stream)
     await this.playStream(key)
   }
