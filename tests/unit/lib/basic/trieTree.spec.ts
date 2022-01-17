@@ -30,7 +30,7 @@ const tree = new TrieTree<Word>(users1, users2, stamps, stampEffects, empty)
 
 describe('trieTree class', () => {
   it('can create', () => {
-    expect(Object.keys(tree.root.children).length > 0).toBe(true)
+    expect(Object.keys(tree.root.children).length).toBeGreaterThan(0)
   })
   it('can isWord', () => {
     expect(
