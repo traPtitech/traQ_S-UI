@@ -73,7 +73,7 @@
     "axios": "^0.24.0",
     "babel-jest": "^27.4.6",
     "browserslist": "^4.19.1",
-    "cypress": "^9.2.1",
+    "cypress": "^9.3.1",
     "es-jest": "^1.5.0",
     "esbuild": "^0.13.15",
     "esbuild-plugin-browserslist": "^0.3.0",
