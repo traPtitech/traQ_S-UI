@@ -2,7 +2,8 @@
   <teleport v-show="isShown" to="#message-menu-popup">
     <div ref="menuContainerRef">
       <click-outside @click-outside="closeContextMenu">
-        <message-tools-menu
+        <component
+          :is="menuComponent"
           v-if="isShown"
           :style="styles.toolsMenu"
           :class="$style.toolsMenu"
@@ -23,11 +24,13 @@ import {
   watch,
   nextTick,
   shallowRef,
-  toRef
+  toRef,
+  PropType,
+  ComputedRef
 } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import MessageToolsMenu from './MessageToolsMenu.vue'
-import { useMessageContextMenuStore } from './providers/messageContextMenu'
+import MessageToolsMenu from '/@/components/Main/MainView/MessagesScroller/MessageToolsMenu.vue'
+import SidebarPinnedToolsMenu from '/@/components/Main/MainView/MainViewSidebar/SidebarPinned/SidebarPinnedToolsMenu.vue'
 
 const useMenuHeight = (isShown: Ref<boolean>) => {
   const height = ref(0)
@@ -61,18 +64,43 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageToolsMenuContainer',
-  components: {
-    ClickOutside,
-    MessageToolsMenu
+  components: { ClickOutside },
+  props: {
+    area: {
+      type: String as PropType<'main' | 'sidebar'>,
+      required: true
+    },
+    useMessageContextMenuStore: {
+      type: Function as PropType<
+        () => {
+          state: {
+            readonly target?: string | undefined
+            readonly position: {
+              readonly x: number
+              readonly y: number
+            }
+            readonly isMinimum: boolean
+          }
+          isShown: ComputedRef<boolean>
+          closeContextMenu: () => void
+        }
+      >,
+      required: true
+    }
   },
-  setup() {
-    const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
+  setup(props) {
+    const menuComponent =
+      props.area === 'main' ? MessageToolsMenu : SidebarPinnedToolsMenu
+
+    const { state, isShown, closeContextMenu } =
+      props.useMessageContextMenuStore()
     const position = toRef(state, 'position')
 
     const { height, menuContainerRef } = useMenuHeight(isShown)
     const styles = useStyles(position, isShown, height)
 
     return {
+      menuComponent,
       state,
       isShown,
       menuContainerRef,

@@ -42,7 +42,10 @@
       </div>
     </div>
     <div :class="$style.bottomSpacer"></div>
-    <message-tools-menu-container />
+    <message-tools-menu-container
+      area="main"
+      :use-message-context-menu-store="useMessageContextMenuStore"
+    />
   </div>
 </template>
 
@@ -72,8 +75,11 @@ import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
-import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
-import { provideMessageContextMenuStore } from './providers/messageContextMenu'
+import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
+import {
+  provideMessageContextMenuStore,
+  useMessageContextMenuStore
+} from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
 
 const LOAD_MORE_THRESHOLD = 10
@@ -170,10 +176,7 @@ const useScrollRestoration = (
 
 export default defineComponent({
   name: 'MessagesScroller',
-  components: {
-    MessagesScrollerSeparator,
-    MessageToolsMenuContainer
-  },
+  components: { MessagesScrollerSeparator, MessageToolsMenuContainer },
   props: {
     messageIds: {
       type: Array as PropType<MessageId[]>,
@@ -328,7 +331,8 @@ export default defineComponent({
       onEntryMessageLoaded,
       dayDiff,
       messageComponent,
-      createdDate
+      createdDate,
+      useMessageContextMenuStore
     }
   }
 })
