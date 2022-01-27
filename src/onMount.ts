@@ -1,6 +1,6 @@
-import { mitt } from '/@/lib/typedMitt'
+import mitt from 'mitt'
 
-export const mountMitt = mitt<{ mount: () => void }>()
+export const mountMitt = mitt<{ mount: void }>()
 
 /**
  * Vueが初期化されるのを待つ

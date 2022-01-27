@@ -1,4 +1,4 @@
-import { mitt } from '/@/lib/typedMitt'
+import mitt from 'mitt'
 import { StampId } from '/@/types/entity-ids'
 import { Channel, Stamp } from '@traptitech/traq'
 
@@ -7,25 +7,25 @@ import { Channel, Stamp } from '@traptitech/traq'
  * すべてaction側で発火することにしている
  */
 export type EntityEventMap = {
-  setUser: () => void
-  setUsers: () => void
-  deleteUser: () => void
+  setUser: void
+  setUsers: void
+  deleteUser: void
 
-  setUserGroup: () => void
-  setUserGroups: () => void
-  deleteUserGroup: () => void
+  setUserGroup: void
+  setUserGroups: void
+  deleteUserGroup: void
 
-  setChannels: () => void
-  addChannel: (channel: Channel) => void
-  updateChannel: (data: {
+  setChannels: void
+  addChannel: Channel
+  updateChannel: {
     newChannel: Channel
     oldChannel: Channel
     oldPath: string
-  }) => void
+  }
 
-  setStamp: (stamp: Stamp) => void
-  setStamps: () => void
-  deleteStamp: (stampId: StampId) => void
+  setStamp: Stamp
+  setStamps: void
+  deleteStamp: StampId
 }
 
 /**

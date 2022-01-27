@@ -1,11 +1,11 @@
-import { TypedMitt } from '/@/lib/typedMitt'
+import { Emitter } from 'mitt'
 import { waitMount } from '/@/onMount'
 import store, { AppStore } from '/@/store'
 import { StoreOrModuleOptions } from 'direct-vuex'
 import { DirectActions } from 'direct-vuex/types/direct-types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyMitt = Omit<TypedMitt<any>, 'emit'>
+type AnyMitt = Omit<Emitter<any>, 'emit'>
 
 type DispatchOfModule<O extends StoreOrModuleOptions> = {
   dispatch: DirectActions<O>

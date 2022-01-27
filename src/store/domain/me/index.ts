@@ -4,7 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners, defineMessageListeners } from './listeners'
-import { mitt } from '/@/lib/typedMitt'
+import mitt from 'mitt'
 
 export const me = defineDBModule({
   path: ['domain.me.detail'],
@@ -18,8 +18,8 @@ defineWsListeners(store => store.domain.me)
 defineMessageListeners(store => store.domain.me)
 
 type MeEventMap = {
-  setSubscriptions: () => void
-  updateSubscriptions: () => void
+  setSubscriptions: void
+  updateSubscriptions: void
 }
 
 export const meMitt = mitt<MeEventMap>()
