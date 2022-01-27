@@ -4,7 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineEntityListeners, defineMeListeners } from './listeners'
-import { mitt } from '/@/lib/typedMitt'
+import mitt from 'mitt'
 import { ChannelId } from '/@/types/entity-ids'
 import router, { rewriteChannelPath } from '/@/router'
 
@@ -19,8 +19,8 @@ defineEntityListeners(store => store.domain.channelTree)
 defineMeListeners(store => store.domain.channelTree)
 
 type ChannelTreeEventMap = {
-  created: (data: { id: ChannelId; path: string }) => void
-  moved: (data: { id: ChannelId; newPath: string; oldPath: string }) => void
+  created: { id: ChannelId; path: string }
+  moved: { id: ChannelId; newPath: string; oldPath: string }
 }
 
 export const channelTreeMitt = mitt<ChannelTreeEventMap>()

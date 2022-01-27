@@ -4,7 +4,7 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners } from './listeners'
-import { mitt } from '/@/lib/typedMitt'
+import mitt from 'mitt'
 import { Message } from '@traptitech/traq'
 import { MessageId } from '/@/types/entity-ids'
 
@@ -18,11 +18,11 @@ export const messages = defineModule({
 defineWsListeners(store => store.entities.messages)
 
 type MessageEventMap = {
-  reconnect: () => void
-  addMessage: (payload: { message: Message; isCiting: boolean }) => void
-  updateMessage: (message: Message) => void
-  deleteMessage: (messageId: MessageId) => void
-  changeMessagePinned: (payload: { message: Message; pinned: boolean }) => void
+  reconnect: void
+  addMessage: { message: Message; isCiting: boolean }
+  updateMessage: Message
+  deleteMessage: MessageId
+  changeMessagePinned: { message: Message; pinned: boolean }
 }
 
 export const messageMitt = mitt<MessageEventMap>()
