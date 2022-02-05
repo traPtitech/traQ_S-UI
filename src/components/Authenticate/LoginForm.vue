@@ -188,7 +188,7 @@ export default defineComponent({
   margin: 0 8px;
 }
 .error {
-  color: $theme-accent-error;
+  color: $theme-accent-error-default;
   font-weight: bold;
 }
 .registrationButton {

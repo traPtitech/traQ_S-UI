@@ -64,8 +64,8 @@ export default defineComponent({
     border-color: $theme-ui-secondary;
   }
   &[data-color='error'] {
-    color: $theme-accent-error;
-    border-color: $theme-accent-error;
+    color: $theme-accent-error-default;
+    border-color: $theme-accent-error-default;
   }
 }
 .label {

@@ -165,7 +165,7 @@ export default defineComponent({
   width: 100%;
 }
 .cantToggleArchiveMessage {
-  color: $theme-accent-error;
+  color: $theme-accent-error-default;
 }
 .button {
   display: block;

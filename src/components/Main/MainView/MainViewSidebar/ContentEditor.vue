@@ -117,7 +117,7 @@ export default defineComponent({
     opacity: 1;
   }
   &[data-is-exceeded] {
-    color: $theme-accent-error;
+    color: $theme-accent-error-default;
     cursor: default;
     opacity: 1;
   }

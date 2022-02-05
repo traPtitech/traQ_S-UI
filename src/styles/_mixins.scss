@@ -27,11 +27,12 @@
     color: $theme-accent-primary-default;
 }
 
+@mixin background-accent-error {
+    background: $theme-accent-error-default;
+}
+
 // -----
 
-@mixin background-accent-error {
-    background: $theme-accent-error;
-}
 @mixin background-primary {
     background: $theme-background-primary;
 }

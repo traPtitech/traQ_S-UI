@@ -95,7 +95,7 @@ export default defineComponent({
     @include background-accent-primary;
   }
   &[data-type='error'] {
-    background: $theme-accent-error;
+    background: $theme-accent-error-default;
   }
   &[data-type='info'] {
     background: $theme-ui-secondary;
