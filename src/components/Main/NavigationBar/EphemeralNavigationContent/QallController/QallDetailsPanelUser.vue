@@ -64,8 +64,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const volume = computed(() =>
       Math.round(
-        (store.state.app.rtc.userVolumeMap.get(props.userId) ?? 0) *
-          maxVolumeValue
+        store.getters.app.rtc.getUserVolume(props.userId) * maxVolumeValue
       )
     )
     const userName = computed(

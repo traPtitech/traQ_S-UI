@@ -102,7 +102,7 @@ const useMarkdownInternalHandler = () => {
   const internalLinkClickHandler = (event: HTMLElementTargetMouseEvent) => {
     if (!event.target) return
 
-    const $a = event.target.closest('a[href]') as HTMLAnchorElement | null
+    const $a = event.target.closest<HTMLAnchorElement>('a[href]')
     if (!$a || !$a.href.includes(`://${hostname}`)) return
 
     // markdown内でない場合(添付ファイルなど)は無視

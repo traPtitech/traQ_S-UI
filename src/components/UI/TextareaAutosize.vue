@@ -3,7 +3,7 @@
     ref="textareaEle"
     :value="value"
     :class="$style.textarea"
-    @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
+    @input="onInput"
   />
 </template>
 

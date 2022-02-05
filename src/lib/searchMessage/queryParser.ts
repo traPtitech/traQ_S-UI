@@ -88,28 +88,32 @@ const extractor: FilterExtractor<FilterType> = q => {
 
 // フィルタの内容に依存しているparser
 
-const attrFlagParser: FilterParser<FilterType, AttrFlagFilterKey> =
-  extracted => {
-    switch (extracted.body) {
-      case 'bot':
-        return extracted.body
-      default:
-        return undefined
-    }
+const attrFlagParser: FilterParser<
+  FilterType,
+  AttrFlagFilterKey
+> = extracted => {
+  switch (extracted.body) {
+    case 'bot':
+      return extracted.body
+    default:
+      return undefined
   }
+}
 
-const mediaFlagParser: FilterParser<FilterType, MediaFlagFilterKey> =
-  extracted => {
-    switch (extracted.body) {
-      case 'attachments':
-      case 'image':
-      case 'video':
-      case 'audio':
-        return extracted.body
-      default:
-        return undefined
-    }
+const mediaFlagParser: FilterParser<
+  FilterType,
+  MediaFlagFilterKey
+> = extracted => {
+  switch (extracted.body) {
+    case 'attachments':
+    case 'image':
+    case 'video':
+    case 'audio':
+      return extracted.body
+    default:
+      return undefined
   }
+}
 
 // parserの実装
 

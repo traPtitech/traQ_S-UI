@@ -76,6 +76,7 @@ import ChannelElementName from './ChannelElementName.vue'
 import { deepSome } from '/@/lib/basic/tree'
 import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
+import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 
 const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
@@ -85,7 +86,7 @@ const useChannelClick = (
 ) => {
   const onChannelNameClick = (e: MouseEvent) => emit('channelSelect', e, id)
   const onChannelHashClick = (e: MouseEvent) => {
-    if (isChildShown.value) {
+    if (isChildShown.value && e.button === LEFT_CLICK_BUTTON) {
       emit('channelFoldingToggle', id)
     } else {
       emit('channelSelect', e, id)

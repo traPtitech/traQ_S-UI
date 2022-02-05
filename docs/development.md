@@ -42,7 +42,7 @@ $ npm run gen-fonts
 
 ## ビルド成果物の確認
 ```shell
-$ npm run serve
+$ npm run preview
 ```
 
 **実行前に`$ npm run build`を実行する必要があります**

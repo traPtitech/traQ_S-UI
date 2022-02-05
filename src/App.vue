@@ -51,9 +51,10 @@ const useThemeObserver = () => {
     () => store.getters.app.themeSettings.currentTheme.accent.primary
   )
 
-  const $themeColor = document.querySelector(
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const $themeColor = document.querySelector<HTMLMetaElement>(
     'meta[name="theme-color"]'
-  ) as HTMLMetaElement
+  )!
   $themeColor.content = themeColor.value
 
   watchEffect(() => {

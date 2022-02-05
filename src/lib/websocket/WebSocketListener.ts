@@ -1,11 +1,11 @@
 import AutoReconnectWebSocket from './AutoReconnectWebSocket'
-import { mitt, TypedMitt } from '/@/lib/typedMitt'
+import mitt, { Emitter } from 'mitt'
 import { WebSocketEvent } from './events'
 
 type WebSocketListenerEventMap = {
-  [Type in keyof WebSocketEvent]: (payload: WebSocketEvent[Type]) => void
+  [Type in keyof WebSocketEvent]: WebSocketEvent[Type]
 } & {
-  reconnect: () => void
+  reconnect: void
 }
 
 export const createWebSocketListener = (ws: AutoReconnectWebSocket) => {
@@ -30,5 +30,5 @@ export const createWebSocketListener = (ws: AutoReconnectWebSocket) => {
   })
 
   // 外でemitできないようにOmitする
-  return listener as Omit<TypedMitt<WebSocketListenerEventMap>, 'emit'>
+  return listener as Omit<Emitter<WebSocketListenerEventMap>, 'emit'>
 }

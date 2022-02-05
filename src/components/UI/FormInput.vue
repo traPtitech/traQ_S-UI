@@ -22,8 +22,8 @@
         :max="max"
         :min="min"
         :step="step"
-        @input="(onInput as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
-        @change="(onChange as any /* FIXME: 型がうまくいかない (カッコでくくらないとsyntax highlightが壊れる) */)"
+        @input="onInput"
+        @change="onChange"
       />
       <span v-if="suffix" :class="$style.suffix" @click="focus">
         {{ suffix }}
@@ -51,13 +51,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, onMounted } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/use/input'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/use/showPassword'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import { wait } from '/@/lib/basic/timer'
 
 export default defineComponent({
   name: 'FormInput',
@@ -129,11 +128,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
 
-    const onInput = (e: InputEvent) => {
+    const onInput = (e: Event) => {
       if (props.useChangeEvent) return
       onInputInternal(e)
     }
-    const onChange = (e: InputEvent) => {
+    const onChange = (e: Event) => {
       if (!props.useChangeEvent) return
       onInputInternal(e)
     }
@@ -142,14 +141,6 @@ export default defineComponent({
     const focus = () => {
       inputRef.value?.focus()
     }
-
-    // これをしないと初期値がおかしかった Vue 3.0.3で確認
-    onMounted(async () => {
-      await wait(0)
-      if (inputRef.value && Number.isFinite(props.modelValue)) {
-        inputRef.value.valueAsNumber = props.modelValue as number
-      }
-    })
 
     const id = randomString()
 
