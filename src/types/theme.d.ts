@@ -36,7 +36,10 @@ export interface Theme {
     focus: CSSColorTypeSimple
   }
   background: {
-    primary: CSSColorTypeSimple
+    primary: MaybeCSSColorTypeSimple<{
+      default: CSSImageType
+      border: CSSColorType
+    }>
     secondary: CSSColorTypeSimple
     tertiary: CSSColorTypeSimple
   }

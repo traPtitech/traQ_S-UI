@@ -105,8 +105,9 @@ const useThemeVariables = () =>
     '--theme-accent-online-default': theme.accent.online.default,
     '--theme-accent-error-default': theme.accent.error.default,
     '--theme-accent-focus-default': theme.accent.focus.default,
+    '--theme-background-primary-default': theme.background.primary.default,
+    '--theme-background-primary-border': theme.background.primary.border,
 
-    '--theme-background-primary': theme.background.primary,
     '--theme-background-secondary': theme.background.secondary,
     '--theme-background-tertiary': theme.background.tertiary,
     '--theme-ui-primary': theme.ui.primary,

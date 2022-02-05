@@ -34,7 +34,7 @@
 // -----
 
 @mixin background-primary {
-    background: $theme-background-primary;
+    background: $theme-background-primary-default;
 }
 @mixin background-secondary {
     background: $theme-background-secondary;

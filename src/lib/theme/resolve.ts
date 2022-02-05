@@ -24,7 +24,10 @@ export type ResolvedTheme = {
     focus: OnlyDefault<CSSColorType>
   }
   background: {
-    primary: OnlyDefault<CSSColorType>
+    primary: {
+      default: CSSImageType
+      border: CSSColorType
+    }
     secondary: OnlyDefault<CSSColorType>
     tertiary: OnlyDefault<CSSColorType>
   }
@@ -74,7 +77,10 @@ const resolveThemeAccent = (
 const resolveThemeBackground = (
   original: Theme['background']
 ): ResolvedTheme['background'] => ({
-  primary: resolveOnlyDefault(original.primary),
+  primary: passThroughOrResolve(original.primary, primary => ({
+    default: primary,
+    border: primary
+  })),
   secondary: resolveOnlyDefault(original.secondary),
   tertiary: resolveOnlyDefault(original.tertiary)
 })

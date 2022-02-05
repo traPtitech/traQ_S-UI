@@ -27,11 +27,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
+  @include background-primary;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $theme-ui-primary;
-  background: $theme-background-primary;
   cursor: pointer;
   z-index: $z-index-message-input-file-close-button;
 
