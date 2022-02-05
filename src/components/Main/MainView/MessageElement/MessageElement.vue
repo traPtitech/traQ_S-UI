@@ -129,7 +129,7 @@ $messagePaddingMobile: 16px;
   }
   &:not([data-is-editing]):not([data-is-pinned]):not([data-is-entry]):hover {
     // TODO: 色を正しくする
-    background: $theme-background-secondary--05;
+    background: $theme-background-secondary-transparent5;
   }
 }
 

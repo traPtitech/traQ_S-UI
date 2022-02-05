@@ -31,14 +31,15 @@
     background: $theme-accent-error-default;
 }
 
-// -----
-
 @mixin background-primary {
     background: $theme-background-primary-default;
 }
 @mixin background-secondary {
-    background: $theme-background-secondary;
+    background: $theme-background-secondary-default;
 }
+
+// -----
+
 @mixin background-tertiary {
     background: $theme-background-tertiary;
 }

@@ -114,7 +114,7 @@ export default defineComponent({
       right: -4px;
     }
     &[data-is-opened] {
-      color: $theme-background-secondary;
+      color: var(--specific-channel-hash-opened);
       background: $theme-ui-primary;
       &:hover::before {
         background: $theme-ui-primary;

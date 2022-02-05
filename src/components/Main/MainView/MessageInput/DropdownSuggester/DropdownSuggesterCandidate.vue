@@ -68,7 +68,7 @@ export default defineComponent({
   cursor: pointer;
   &[aria-selected='true'],
   &:hover {
-    background-color: $theme-background-secondary;
+    @include background-secondary;
     font-weight: bold;
   }
 }

@@ -36,7 +36,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  color: $theme-background-secondary;
+  color: var(--specific-channel-unread-badge-text);
   background: $theme-ui-secondary;
   padding: 0 4px;
   min-width: 24px;

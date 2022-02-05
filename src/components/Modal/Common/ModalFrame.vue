@@ -59,7 +59,7 @@ export default defineComponent({
   border: {
     style: solid;
     width: 2px;
-    color: $theme-background-secondary;
+    color: $theme-background-secondary-border;
   }
 }
 .header {

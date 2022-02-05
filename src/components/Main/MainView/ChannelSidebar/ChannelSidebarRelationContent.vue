@@ -146,7 +146,7 @@ export default defineComponent({
   word-break: break-all;
   border-left: solid $theme-background-tertiary;
   &[data-is-children] {
-    border-left: solid $theme-background-secondary;
+    border-left: solid $theme-background-secondary-border;
   }
   &[data-is-parent]:first-child {
     margin-left: 0px;

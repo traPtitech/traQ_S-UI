@@ -7,10 +7,12 @@ $theme-accent-error-default: var(--theme-accent-error-default);
 $theme-accent-focus-default: var(--theme-accent-focus-default);
 $theme-background-primary-default: var(--theme-background-primary-default);
 $theme-background-primary-border: var(--theme-background-primary-border);
+$theme-background-secondary-default: var(--theme-background-secondary-default);
+$theme-background-secondary-border: var(--theme-background-secondary-border);
+$theme-background-secondary-transparent5: var(--theme-background-secondary-transparent5);
 
 // -----
 
-$theme-background-secondary: var(--theme-background-secondary);
 $theme-background-tertiary: var(--theme-background-tertiary);
 $theme-ui-primary: var(--theme-ui-primary);
 $theme-ui-secondary: var(--theme-ui-secondary);
@@ -21,7 +23,6 @@ $theme-text-secondary: var(--theme-text-secondary);
 $theme-accent-primary--03: var(--theme-accent-primary--03);
 $theme-ui-primary--06: var(--theme-ui-primary--06);
 $theme-ui-secondary--05: var(--theme-ui-secondary--05);
-$theme-background-secondary--05: var(--theme-background-secondary--05);
 
 $common-text-white-primary: var(--common-text-white-primary);
 $common-text-white-secondary: var(--common-text-white-secondary);

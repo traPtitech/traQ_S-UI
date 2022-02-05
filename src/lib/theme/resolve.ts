@@ -28,7 +28,11 @@ export type ResolvedTheme = {
       default: CSSImageType
       border: CSSColorType
     }
-    secondary: OnlyDefault<CSSColorType>
+    secondary: {
+      default: CSSImageType
+      border: CSSColorType
+      transparent5: CSSColorType
+    }
     tertiary: OnlyDefault<CSSColorType>
   }
   ui: {
@@ -39,6 +43,10 @@ export type ResolvedTheme = {
   text: {
     primary: OnlyDefault<CSSColorType>
     secondary: OnlyDefault<CSSColorType>
+  }
+  specific: {
+    channelHashOpened: CSSColorType
+    channelUnreadBadgeText: CSSColorType
   }
 }
 
@@ -54,6 +62,23 @@ const passThroughOrResolve = <T>(
     return f(original)
   }
   return original
+}
+
+const resolveFromFallback = <T>(
+  original: CSSColorTypeSimple | { fallback: CSSColorTypeSimple },
+  f: (fallback: string) => T
+): T => {
+  const fallback = typeof original === 'string' ? original : original.fallback
+  return f(fallback)
+}
+
+const getFallback = (
+  original: CSSColorTypeSimple | { fallback: CSSColorTypeSimple }
+) => {
+  if (typeof original === 'string') {
+    return original
+  }
+  return original.fallback
 }
 
 const resolveThemeAccent = (
@@ -81,7 +106,11 @@ const resolveThemeBackground = (
     default: primary,
     border: primary
   })),
-  secondary: resolveOnlyDefault(original.secondary),
+  secondary: resolveFromFallback(original.secondary, secondary => ({
+    default: secondary,
+    border: secondary,
+    transparent5: secondary // TODO
+  })),
   tertiary: resolveOnlyDefault(original.tertiary)
 })
 
@@ -96,11 +125,17 @@ const resolveThemeText = (original: Theme['text']): ResolvedTheme['text'] => ({
   secondary: resolveOnlyDefault(original.secondary)
 })
 
+const resolveThemeSpecific = (original: Theme): ResolvedTheme['specific'] => ({
+  channelHashOpened: getFallback(original.background.secondary),
+  channelUnreadBadgeText: getFallback(original.background.secondary)
+})
+
 export const resolveTheme = (original: Theme): ResolvedTheme => {
   return {
     accent: resolveThemeAccent(original.accent),
     background: resolveThemeBackground(original.background),
     ui: resolveThemeUi(original.ui),
-    text: resolveThemeText(original.text)
+    text: resolveThemeText(original.text),
+    specific: resolveThemeSpecific(original)
   }
 }

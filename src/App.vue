@@ -107,8 +107,14 @@ const useThemeVariables = () =>
     '--theme-accent-focus-default': theme.accent.focus.default,
     '--theme-background-primary-default': theme.background.primary.default,
     '--theme-background-primary-border': theme.background.primary.border,
+    '--theme-background-secondary-default': theme.background.secondary.default,
+    '--theme-background-secondary-border': theme.background.secondary.border,
+    '---theme-background-secondary-transparent5':
+      theme.background.secondary.transparent5,
+    '--specific-channel-hash-opened': theme.specific.channelHashOpened,
+    '--specific-channel-unread-badge-text':
+      theme.specific.channelUnreadBadgeText,
 
-    '--theme-background-secondary': theme.background.secondary,
     '--theme-background-tertiary': theme.background.tertiary,
     '--theme-ui-primary': theme.ui.primary,
     '--theme-ui-secondary': theme.ui.secondary,
