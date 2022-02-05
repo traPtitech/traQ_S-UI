@@ -166,7 +166,7 @@ export default defineComponent({
   border: solid 2px transparent;
   padding: 4px;
   &:focus-within {
-    border-color: $theme-accent-focus;
+    border-color: $theme-accent-focus-default;
   }
 }
 .import {

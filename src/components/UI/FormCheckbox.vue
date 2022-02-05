@@ -43,7 +43,7 @@ export default defineComponent({
   border: solid 2px transparent;
   border-radius: 4px;
   &:focus-within {
-    border-color: $theme-accent-focus;
+    border-color: $theme-accent-focus-default;
   }
 }
 

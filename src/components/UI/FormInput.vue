@@ -190,7 +190,7 @@ export default defineComponent({
 
   border: solid 2px transparent;
   &:focus-within {
-    border-color: $theme-accent-focus;
+    border-color: $theme-accent-focus-default;
   }
 }
 .prefix {
