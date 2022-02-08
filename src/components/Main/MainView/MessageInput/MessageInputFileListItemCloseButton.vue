@@ -28,10 +28,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include background-primary;
+  @include color-ui-primary;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $theme-ui-primary;
   cursor: pointer;
   z-index: $z-index-message-input-file-close-button;
 

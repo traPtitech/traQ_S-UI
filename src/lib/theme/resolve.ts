@@ -39,7 +39,10 @@ export type ResolvedTheme = {
     }
   }
   ui: {
-    primary: OnlyDefault<CSSColorType>
+    primary: {
+      default: CSSColorType
+      background: CSSImageType
+    }
     secondary: OnlyDefault<CSSColorType>
     tertiary: OnlyDefault<CSSColorType>
   }
@@ -121,7 +124,10 @@ const resolveThemeBackground = (
 })
 
 const resolveThemeUi = (original: Theme['ui']): ResolvedTheme['ui'] => ({
-  primary: resolveOnlyDefault(original.primary),
+  primary: passThroughOrResolve(original.primary, primary => ({
+    default: primary,
+    background: primary
+  })),
   secondary: resolveOnlyDefault(original.secondary),
   tertiary: resolveOnlyDefault(original.tertiary)
 })

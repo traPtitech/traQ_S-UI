@@ -41,11 +41,12 @@
     background: $theme-background-tertiary-default;
 }
 
+@mixin color-ui-primary {
+    color: $theme-ui-primary-default;
+}
+
 // -----
 
-@mixin color-ui-primary {
-    color: $theme-ui-primary;
-}
 @mixin color-ui-secondary {
     color: $theme-ui-secondary;
 }

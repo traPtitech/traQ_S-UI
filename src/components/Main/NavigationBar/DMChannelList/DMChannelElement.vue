@@ -140,7 +140,7 @@ $topicLeftPadding: 40px;
   display: none;
   &[data-is-hovered] {
     display: block;
-    background: $theme-ui-primary;
+    background: $theme-ui-primary-background;
   }
 }
 </style>

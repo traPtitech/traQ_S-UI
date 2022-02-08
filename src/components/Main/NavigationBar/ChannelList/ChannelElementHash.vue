@@ -115,9 +115,9 @@ export default defineComponent({
     }
     &[data-is-opened] {
       color: var(--specific-channel-hash-opened);
-      background: $theme-ui-primary;
+      background: $theme-ui-primary-background;
       &:hover::before {
-        background: $theme-ui-primary;
+        background: $theme-ui-primary-background;
         opacity: 0.5;
       }
       &[data-is-inactive] {
@@ -135,9 +135,9 @@ export default defineComponent({
     }
     &:not([data-is-opened]) {
       @include color-ui-primary;
-      border-color: $theme-ui-primary;
+      border-color: $theme-ui-primary-default;
       &:hover::before {
-        background: $theme-ui-primary;
+        background: $theme-ui-primary-background;
         opacity: 0.2;
       }
       &[data-is-inactive] {

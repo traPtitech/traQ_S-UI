@@ -127,6 +127,6 @@ export default defineComponent({
   left: -1px;
   width: 2px;
   height: 100%;
-  background: $theme-ui-primary;
+  background: $theme-ui-primary-background;
 }
 </style>

@@ -51,7 +51,10 @@ export interface Theme {
     }>
   }
   ui: {
-    primary: CSSColorTypeSimple
+    primary: MaybeCSSColorTypeSimple<{
+      default: CSSColorType
+      background: CSSImageType
+    }>
     secondary: CSSColorTypeSimple
     tertiary: CSSColorTypeSimple
   }
