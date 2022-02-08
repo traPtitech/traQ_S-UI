@@ -83,7 +83,7 @@ export default defineComponent({
   word-break: keep-all;
   padding: 4px 12px;
   margin: auto 0;
-  border: solid 2px $theme-ui-secondary;
+  border: solid 2px $theme-ui-secondary-default;
   border-radius: 18px;
   font-weight: bold;
   text-align: center;

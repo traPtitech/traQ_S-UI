@@ -61,7 +61,7 @@ export default defineComponent({
   }
   &[data-color='secondary'] {
     @include color-ui-secondary;
-    border-color: $theme-ui-secondary;
+    border-color: $theme-ui-secondary-default;
   }
   &[data-color='error'] {
     color: $theme-accent-error-default;

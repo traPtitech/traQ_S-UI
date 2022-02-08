@@ -62,13 +62,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-$dotBgColor: $theme-ui-secondary;
+$dotBgColor: $theme-ui-secondary-default;
 $dotShadow: none;
 
 $bgColor: $theme-ui-secondary--05;
-$themeColor: $theme-ui-secondary;
+$themeColor: $theme-ui-secondary-default;
 
-$tooltipBgColor: $theme-ui-secondary;
+$tooltipBgColor: $theme-ui-secondary-default;
 
 @import '/~/vue-slider-component/lib/theme/default.scss';
 </style>

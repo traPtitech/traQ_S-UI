@@ -43,7 +43,7 @@ export default defineComponent({
     border-color: $theme-accent-primary-default;
   }
   &:not([aria-selected='true']):hover {
-    border-color: $theme-ui-secondary;
+    border-color: $theme-ui-secondary-default;
   }
 }
 </style>

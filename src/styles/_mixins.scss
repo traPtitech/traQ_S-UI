@@ -44,12 +44,12 @@
 @mixin color-ui-primary {
     color: $theme-ui-primary-default;
 }
+@mixin color-ui-secondary {
+    color: $theme-ui-secondary-default;
+}
 
 // -----
 
-@mixin color-ui-secondary {
-    color: $theme-ui-secondary;
-}
 @mixin color-ui-tertiary {
     color: $theme-ui-tertiary;
 }

@@ -98,7 +98,7 @@ export default defineComponent({
     background: $theme-accent-error-default;
   }
   &[data-type='info'] {
-    background: $theme-ui-secondary;
+    background: $theme-ui-secondary-background;
   }
   &[role='button'] {
     cursor: pointer;

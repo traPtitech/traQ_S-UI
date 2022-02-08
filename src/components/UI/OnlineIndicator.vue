@@ -46,7 +46,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: inline-block;
-  border-color: $theme-ui-secondary;
+  border-color: $theme-ui-secondary-default;
   opacity: 0.5;
   vertical-align: middle;
 

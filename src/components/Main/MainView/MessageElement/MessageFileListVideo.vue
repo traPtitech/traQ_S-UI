@@ -52,7 +52,7 @@ export default defineComponent({
     width: 2px;
     style: solid;
     radius: 6px;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
   }
   video {
     display: block;
@@ -83,7 +83,7 @@ export default defineComponent({
     width: 2px;
     style: solid;
     radius: 6px;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
   }
 }
 </style>

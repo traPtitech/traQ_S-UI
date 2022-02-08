@@ -80,7 +80,7 @@ export default defineComponent({
     @include color-ui-secondary;
     @include background-primary;
     padding: 12px;
-    border-color: $theme-ui-secondary;
+    border-color: $theme-ui-secondary-default;
   }
   &[disabled] {
     cursor: not-allowed;
