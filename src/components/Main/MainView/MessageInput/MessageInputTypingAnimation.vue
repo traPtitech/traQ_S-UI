@@ -23,7 +23,7 @@ export default defineComponent({
     width: 6px;
     height: 6px;
     margin: 0 2px;
-    background: $theme-text-secondary;
+    background: $theme-text-secondary-default;
     border-radius: 50%;
     transform: scale(0);
     animation: typing-ani 0.9s ease-in-out infinite;

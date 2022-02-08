@@ -54,12 +54,11 @@
 @mixin color-text-primary {
     color: $theme-text-primary-default;
 }
+@mixin color-text-secondary {
+    color: $theme-text-secondary-default;
+}
 
 // -----
-
-@mixin color-text-secondary {
-    color: $theme-text-secondary;
-}
 
 @mixin color-common-text-white-primary {
     color: $common-text-white-primary;
