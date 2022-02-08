@@ -1,4 +1,4 @@
-import { Color, parseColor } from '/@/lib/basic/color'
+import { Color, parseColor, stringifyColor } from '/@/lib/basic/color'
 
 describe('parseColor', () => {
   const tests: ReadonlyArray<{
@@ -242,4 +242,27 @@ describe('parseColor', () => {
       expect(actual).toStrictEqual(t.expected)
     })
   }
+})
+
+describe('stringifyColor', () => {
+  it('can stringify rgb color', () => {
+    const input = {
+      type: 'rgb',
+      r: 0,
+      g: 51,
+      b: 68,
+      a: 0.2
+    } as const
+    expect(stringifyColor(input)).toBe('rgba(0, 51, 68, 0.2)')
+  })
+  it('can stringify hsl color', () => {
+    const input = {
+      type: 'hsl',
+      h: 195,
+      s: 1,
+      l: 0.13,
+      a: 0.2
+    } as const
+    expect(stringifyColor(input)).toBe('hsla(195, 100%, 13%, 0.2)')
+  })
 })
