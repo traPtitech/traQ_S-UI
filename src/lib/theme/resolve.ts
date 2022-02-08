@@ -33,7 +33,10 @@ export type ResolvedTheme = {
       border: CSSColorType
       transparent5: CSSColorType
     }
-    tertiary: OnlyDefault<CSSColorType>
+    tertiary: {
+      default: CSSImageType
+      border: CSSColorType
+    }
   }
   ui: {
     primary: OnlyDefault<CSSColorType>
@@ -111,7 +114,10 @@ const resolveThemeBackground = (
     border: secondary,
     transparent5: secondary // TODO
   })),
-  tertiary: resolveOnlyDefault(original.tertiary)
+  tertiary: passThroughOrResolve(original.tertiary, tertiary => ({
+    default: tertiary,
+    border: tertiary
+  }))
 })
 
 const resolveThemeUi = (original: Theme['ui']): ResolvedTheme['ui'] => ({

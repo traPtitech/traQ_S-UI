@@ -37,12 +37,11 @@
 @mixin background-secondary {
     background: $theme-background-secondary-default;
 }
+@mixin background-tertiary {
+    background: $theme-background-tertiary-default;
+}
 
 // -----
-
-@mixin background-tertiary {
-    background: $theme-background-tertiary;
-}
 
 @mixin color-ui-primary {
     color: $theme-ui-primary;

@@ -144,7 +144,7 @@ export default defineComponent({
   padding-left: 12px;
   font-weight: bold;
   word-break: break-all;
-  border-left: solid $theme-background-tertiary;
+  border-left: solid $theme-background-tertiary-border;
   &[data-is-children] {
     border-left: solid $theme-background-secondary-border;
   }

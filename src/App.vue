@@ -112,11 +112,12 @@ const useThemeVariables = () =>
     '--theme-background-secondary-border': theme.background.secondary.border,
     '---theme-background-secondary-transparent5':
       theme.background.secondary.transparent5,
+    '--theme-background-tertiary-default': theme.background.tertiary.default,
+    '--theme-background-tertiary-border': theme.background.tertiary.border,
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,
 
-    '--theme-background-tertiary': theme.background.tertiary,
     '--theme-ui-primary': theme.ui.primary,
     '--theme-ui-secondary': theme.ui.secondary,
     '--theme-ui-tertiary': theme.ui.tertiary,

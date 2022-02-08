@@ -45,7 +45,10 @@ export interface Theme {
       border: CSSColorType
       fallback: CSSColorTypeSimple
     }>
-    tertiary: CSSColorTypeSimple
+    tertiary: MaybeCSSColorTypeSimple<{
+      default: CSSImageType
+      border: CSSColorType
+    }>
   }
   ui: {
     primary: CSSColorTypeSimple
