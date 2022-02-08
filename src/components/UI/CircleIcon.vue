@@ -1,12 +1,6 @@
 <template>
   <div :class="$style.circle" :style="styles.icon">
-    <a-icon
-      :class="$style.icon"
-      :name="name"
-      :mdi="mdi"
-      :size="size"
-      :color="color"
-    />
+    <a-icon :class="$style.icon" :name="name" :mdi="mdi" :size="size" />
   </div>
 </template>
 
@@ -14,9 +8,10 @@
 import { defineComponent, reactive, computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
-const useStyles = (props: { background: string }) => {
+const useStyles = (props: { color: string; background: string }) => {
   return reactive({
     icon: computed(() => ({
+      color: props.color,
       background: props.background
     }))
   })
