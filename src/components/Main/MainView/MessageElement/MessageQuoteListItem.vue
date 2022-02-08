@@ -84,7 +84,7 @@ export default defineComponent({
   border: {
     left-width: 4px;
     left-style: solid;
-    color: $theme-ui-tertiary;
+    color: $theme-ui-tertiary-default;
   }
   overflow: hidden;
   &[data-is-shown] {

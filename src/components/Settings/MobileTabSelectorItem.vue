@@ -44,7 +44,7 @@ export default defineComponent({
   padding: 12px 40px;
   border-top: solid 2px;
   border-bottom: solid 2px;
-  border-color: $theme-ui-tertiary;
+  border-color: $theme-ui-tertiary-default;
   font-weight: bold;
   cursor: pointer;
 }

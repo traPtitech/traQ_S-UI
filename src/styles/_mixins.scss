@@ -47,12 +47,12 @@
 @mixin color-ui-secondary {
     color: $theme-ui-secondary-default;
 }
+@mixin color-ui-tertiary {
+    color: $theme-ui-tertiary-default;
+}
 
 // -----
 
-@mixin color-ui-tertiary {
-    color: $theme-ui-tertiary;
-}
 @mixin color-text-primary {
     color: $theme-text-primary;
 }

@@ -47,7 +47,7 @@ $headerHeight: 80px;
   width: 100%;
   flex: 0 0 $headerHeight;
   padding: 16px;
-  border-bottom: 2px solid $theme-ui-tertiary;
+  border-bottom: 2px solid $theme-ui-tertiary-default;
   contain: layout;
 }
 .icon {
