@@ -1,3 +1,4 @@
+import { transparentizeWithFallback } from '/@/lib/basic/color'
 import { resolveBasicTheme, ResolvedBasicTheme } from './basic'
 import { Theme, CSSColorType, BrowserTheme } from '/@/types/theme'
 
@@ -19,15 +20,22 @@ const resolveBrowserTheme = (
   basic: ResolvedBasicTheme
 ): BrowserTheme => ({
   themeColor: original?.themeColor ?? basic.accent.primary.default,
-  scrollbarThumb: original?.scrollbarThumb ?? basic.ui.secondary.default, // TODO: fallback transparentize 0.5
-  scrollbarThumbHover: original?.scrollbarThumb ?? basic.ui.secondary.default, // TODO: fallback transparentize 0.8
+  scrollbarThumb:
+    original?.scrollbarThumb ??
+    transparentizeWithFallback(basic.ui.secondary.fallback, 0.5),
+  scrollbarThumbHover:
+    original?.scrollbarThumb ??
+    transparentizeWithFallback(basic.ui.secondary.fallback, 0.8),
   scrollbarTrack: original?.scrollbarTrack ?? 'transparent'
 })
 
 const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
   channelHashOpened: basic.background.secondary.border,
   channelUnreadBadgeText: basic.background.secondary.border,
-  messageHoverBackground: basic.background.secondary.border // TODO: transparentize 0.5
+  messageHoverBackground: transparentizeWithFallback(
+    basic.background.secondary.fallback,
+    0.5
+  )
 })
 
 export const resolveTheme = (original: Theme): ResolvedTheme => {

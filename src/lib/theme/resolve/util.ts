@@ -17,11 +17,3 @@ export const passThroughOrResolve = <T>(
   }
   return original
 }
-
-export const resolveFromFallback = <T>(
-  original: CSSColorTypeSimple | { fallback: CSSColorTypeSimple },
-  f: (fallback: string) => T
-): T => {
-  const fallback = typeof original === 'string' ? original : original.fallback
-  return f(fallback)
-}

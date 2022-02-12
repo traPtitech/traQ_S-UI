@@ -63,6 +63,7 @@ export type BasicTheme = {
     secondary: MaybeCSSColorTypeSimple<{
       default: CSSColorType
       background: CSSImageType
+      fallback: CSSColorTypeSimple
     }>
     tertiary: CSSColorTypeSimple
   }

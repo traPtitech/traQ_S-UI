@@ -256,6 +256,17 @@ export const transparentize = (color: string, opacity: number) => {
 }
 
 /**
+ * 透過化
+ * パースに失敗したら元の色を返す
+ * @param color 色
+ * @param opacity 0～1
+ */
+export const transparentizeWithFallback = (color: string, opacity: number) => {
+  const result = transparentize(color, opacity)
+  return result ?? color
+}
+
+/**
  * その色の輝度が閾値を超えているかどうか
  * @param color 色
  * @param threshold 0～1

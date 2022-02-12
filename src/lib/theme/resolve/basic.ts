@@ -1,10 +1,10 @@
+import { OnlyDefault, passThroughOrResolve, resolveOnlyDefault } from './util'
 import {
-  OnlyDefault,
-  passThroughOrResolve,
-  resolveFromFallback,
-  resolveOnlyDefault
-} from './util'
-import { BasicTheme, CSSColorType, CSSImageType } from '/@/types/theme'
+  BasicTheme,
+  CSSColorType,
+  CSSColorTypeSimple,
+  CSSImageType
+} from '/@/types/theme'
 
 export type ResolvedBasicTheme = {
   accent: {
@@ -28,6 +28,7 @@ export type ResolvedBasicTheme = {
     secondary: {
       default: CSSImageType
       border: CSSColorType
+      fallback: CSSColorTypeSimple
     }
     tertiary: {
       default: CSSImageType
@@ -42,6 +43,7 @@ export type ResolvedBasicTheme = {
     secondary: {
       default: CSSColorType
       background: CSSImageType
+      fallback: CSSColorTypeSimple
     }
     tertiary: OnlyDefault<CSSColorType>
   }
@@ -76,9 +78,10 @@ const resolveBasicThemeBackground = (
     default: primary,
     border: primary
   })),
-  secondary: resolveFromFallback(original.secondary, secondary => ({
+  secondary: passThroughOrResolve(original.secondary, secondary => ({
     default: secondary,
-    border: secondary
+    border: secondary,
+    fallback: secondary
   })),
   tertiary: passThroughOrResolve(original.tertiary, tertiary => ({
     default: tertiary,
@@ -95,7 +98,8 @@ const resolveBasicThemeUi = (
   })),
   secondary: passThroughOrResolve(original.secondary, secondary => ({
     default: secondary,
-    background: secondary
+    background: secondary,
+    fallback: secondary
   })),
   tertiary: resolveOnlyDefault(original.tertiary)
 })
