@@ -131,6 +131,8 @@ const useThemeVariables = () =>
       theme.specific.channelUnreadBadgeText,
     '--specific-message-hover-background':
       theme.specific.messageHoverBackground,
+    '--specific-stamp-include-me-background':
+      theme.specific.stampIncludeMeBackground,
 
     '--common-text-white-primary': common.text.whitePrimary,
     '--common-text-white-secondary': common.text.whiteSecondary,
@@ -145,10 +147,6 @@ const useThemeVariables = () =>
   }))
 const useTransparrentThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-accent-primary--03': transparentize(
-      theme.basic.accent.primary,
-      0.3
-    ),
     '--theme-ui-primary--06': transparentize(theme.basic.ui.primary, 0.6),
     '--theme-ui-secondary--05': transparentize(theme.basic.ui.secondary, 0.5),
     '--theme-background-secondary--05': transparentize(

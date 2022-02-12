@@ -112,8 +112,7 @@ export default defineComponent({
 .body {
   @include background-tertiary;
   &[data-include-me] {
-    // TODO: overrideをやるときに書き換える
-    background: $theme-accent-primary--03;
+    background: var(--specific-stamp-include-me-background);
   }
   display: inline-flex;
   flex-shrink: 0;

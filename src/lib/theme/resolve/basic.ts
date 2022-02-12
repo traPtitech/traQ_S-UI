@@ -11,6 +11,7 @@ export type ResolvedBasicTheme = {
     primary: {
       default: CSSColorType
       background: CSSImageType
+      fallback: CSSColorTypeSimple
     }
     notification: {
       default: CSSColorType
@@ -59,7 +60,8 @@ const resolveBasicThemeAccent = (
   return {
     primary: passThroughOrResolve(original.primary, primary => ({
       default: primary,
-      background: primary
+      background: primary,
+      fallback: primary
     })),
     notification: passThroughOrResolve(original.notification, notification => ({
       default: notification,

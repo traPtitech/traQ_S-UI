@@ -13,6 +13,7 @@ type SpecificTheme = {
   channelHashOpened: CSSColorType
   channelUnreadBadgeText: CSSColorType
   messageHoverBackground: CSSColorType
+  stampIncludeMeBackground: CSSColorType
 }
 
 const resolveBrowserTheme = (
@@ -35,6 +36,10 @@ const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
   messageHoverBackground: transparentizeWithFallback(
     basic.background.secondary.fallback,
     0.5
+  ),
+  stampIncludeMeBackground: transparentizeWithFallback(
+    basic.accent.primary.fallback,
+    0.3
   )
 })
 
