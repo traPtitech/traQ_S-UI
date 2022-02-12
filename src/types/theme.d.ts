@@ -21,7 +21,12 @@ export type CSSImageType = string
 export type MaybeCSSColorTypeSimple<T> = CSSColorTypeSimple | T
 
 /** traQ固有のテーマ定義 */
-export interface Theme {
+export type Theme = {
+  basic: BasicTheme
+  browser?: Partial<BrowserTheme>
+}
+
+export type BasicTheme = {
   accent: {
     primary: MaybeCSSColorTypeSimple<{
       default: CSSColorType
@@ -65,6 +70,14 @@ export interface Theme {
     primary: CSSColorTypeSimple
     secondary: CSSColorTypeSimple
   }
+}
+
+export type BrowserTheme = {
+  /**
+   * @default accent.primary
+   * @see https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta/name/theme-color
+   */
+  themeColor: CSSColorType
 }
 
 declare global {

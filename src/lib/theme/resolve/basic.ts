@@ -1,15 +1,12 @@
 import {
-  Theme,
-  CSSColorType,
-  CSSColorTypeSimple,
-  CSSImageType
-} from '/@/types/theme'
+  OnlyDefault,
+  passThroughOrResolve,
+  resolveFromFallback,
+  resolveOnlyDefault
+} from './util'
+import { BasicTheme, CSSColorType, CSSImageType } from '/@/types/theme'
 
-type OnlyDefault<T> = {
-  default: T
-}
-
-export type ResolvedTheme = {
+export type ResolvedBasicTheme = {
   accent: {
     primary: {
       default: CSSColorType
@@ -53,46 +50,11 @@ export type ResolvedTheme = {
     primary: OnlyDefault<CSSColorType>
     secondary: OnlyDefault<CSSColorType>
   }
-  specific: {
-    channelHashOpened: CSSColorType
-    channelUnreadBadgeText: CSSColorType
-  }
 }
 
-const resolveOnlyDefault = (
-  original: CSSColorTypeSimple
-): OnlyDefault<CSSColorType> => ({ default: original })
-
-const passThroughOrResolve = <T>(
-  original: T | string,
-  f: (original: string) => T
-): T => {
-  if (typeof original === 'string') {
-    return f(original)
-  }
-  return original
-}
-
-const resolveFromFallback = <T>(
-  original: CSSColorTypeSimple | { fallback: CSSColorTypeSimple },
-  f: (fallback: string) => T
-): T => {
-  const fallback = typeof original === 'string' ? original : original.fallback
-  return f(fallback)
-}
-
-const getFallback = (
-  original: CSSColorTypeSimple | { fallback: CSSColorTypeSimple }
-) => {
-  if (typeof original === 'string') {
-    return original
-  }
-  return original.fallback
-}
-
-const resolveThemeAccent = (
-  original: Theme['accent']
-): ResolvedTheme['accent'] => {
+const resolveBasicThemeAccent = (
+  original: BasicTheme['accent']
+): ResolvedBasicTheme['accent'] => {
   return {
     primary: passThroughOrResolve(original.primary, primary => ({
       default: primary,
@@ -108,9 +70,9 @@ const resolveThemeAccent = (
   }
 }
 
-const resolveThemeBackground = (
-  original: Theme['background']
-): ResolvedTheme['background'] => ({
+const resolveBasicThemeBackground = (
+  original: BasicTheme['background']
+): ResolvedBasicTheme['background'] => ({
   primary: passThroughOrResolve(original.primary, primary => ({
     default: primary,
     border: primary
@@ -126,7 +88,9 @@ const resolveThemeBackground = (
   }))
 })
 
-const resolveThemeUi = (original: Theme['ui']): ResolvedTheme['ui'] => ({
+const resolveBasicThemeUi = (
+  original: BasicTheme['ui']
+): ResolvedBasicTheme['ui'] => ({
   primary: passThroughOrResolve(original.primary, primary => ({
     default: primary,
     background: primary
@@ -138,22 +102,18 @@ const resolveThemeUi = (original: Theme['ui']): ResolvedTheme['ui'] => ({
   tertiary: resolveOnlyDefault(original.tertiary)
 })
 
-const resolveThemeText = (original: Theme['text']): ResolvedTheme['text'] => ({
+const resolveBasicThemeText = (
+  original: BasicTheme['text']
+): ResolvedBasicTheme['text'] => ({
   primary: resolveOnlyDefault(original.primary),
   secondary: resolveOnlyDefault(original.secondary)
 })
 
-const resolveThemeSpecific = (original: Theme): ResolvedTheme['specific'] => ({
-  channelHashOpened: getFallback(original.background.secondary),
-  channelUnreadBadgeText: getFallback(original.background.secondary)
+export const resolveBasicTheme = (
+  original: BasicTheme
+): ResolvedBasicTheme => ({
+  accent: resolveBasicThemeAccent(original.accent),
+  background: resolveBasicThemeBackground(original.background),
+  ui: resolveBasicThemeUi(original.ui),
+  text: resolveBasicThemeText(original.text)
 })
-
-export const resolveTheme = (original: Theme): ResolvedTheme => {
-  return {
-    accent: resolveThemeAccent(original.accent),
-    background: resolveThemeBackground(original.background),
-    ui: resolveThemeUi(original.ui),
-    text: resolveThemeText(original.text),
-    specific: resolveThemeSpecific(original)
-  }
-}

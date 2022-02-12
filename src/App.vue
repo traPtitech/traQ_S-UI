@@ -48,7 +48,7 @@ const useQallConfirmer = () => {
 
 const useThemeObserver = () => {
   const themeColor = computed(
-    () => store.getters.app.themeSettings.currentTheme.accent.primary
+    () => store.getters.app.themeSettings.currentTheme.browser.themeColor
   )
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -92,35 +92,41 @@ const useOsDarkTheme = () => {
 
 const useScrollbarStyle = () =>
   makeCSSVariables(theme => ({
-    '--scrollbar-color': transparentize(theme.ui.secondary, 0.5),
-    '--scrollbar-hover-color': transparentize(theme.ui.secondary, 0.8)
+    '--scrollbar-color': transparentize(theme.basic.ui.secondary, 0.5),
+    '--scrollbar-hover-color': transparentize(theme.basic.ui.secondary, 0.8)
   }))
 
 const useThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-accent-primary-default': theme.accent.primary.default,
-    '--theme-accent-primary-background': theme.accent.primary.background,
-    '--theme-accent-notification-default': theme.accent.notification.default,
+    '--theme-accent-primary-default': theme.basic.accent.primary.default,
+    '--theme-accent-primary-background': theme.basic.accent.primary.background,
+    '--theme-accent-notification-default':
+      theme.basic.accent.notification.default,
     '--theme-accent-notification-background':
-      theme.accent.notification.background,
-    '--theme-accent-online-default': theme.accent.online.default,
-    '--theme-accent-error-default': theme.accent.error.default,
-    '--theme-accent-focus-default': theme.accent.focus.default,
-    '--theme-background-primary-default': theme.background.primary.default,
-    '--theme-background-primary-border': theme.background.primary.border,
-    '--theme-background-secondary-default': theme.background.secondary.default,
-    '--theme-background-secondary-border': theme.background.secondary.border,
+      theme.basic.accent.notification.background,
+    '--theme-accent-online-default': theme.basic.accent.online.default,
+    '--theme-accent-error-default': theme.basic.accent.error.default,
+    '--theme-accent-focus-default': theme.basic.accent.focus.default,
+    '--theme-background-primary-default':
+      theme.basic.background.primary.default,
+    '--theme-background-primary-border': theme.basic.background.primary.border,
+    '--theme-background-secondary-default':
+      theme.basic.background.secondary.default,
+    '--theme-background-secondary-border':
+      theme.basic.background.secondary.border,
     '---theme-background-secondary-transparent5':
-      theme.background.secondary.transparent5,
-    '--theme-background-tertiary-default': theme.background.tertiary.default,
-    '--theme-background-tertiary-border': theme.background.tertiary.border,
-    '--theme-ui-primary-default': theme.ui.primary.default,
-    '--theme-ui-primary-background': theme.ui.primary.background,
-    '--theme-ui-secondary-default': theme.ui.secondary.default,
-    '--theme-ui-secondary-background': theme.ui.secondary.background,
-    '--theme-ui-tertiary-default': theme.ui.tertiary.default,
-    '--theme-text-primary-default': theme.text.primary.default,
-    '--theme-text-secondary-default': theme.text.secondary.default,
+      theme.basic.background.secondary.transparent5,
+    '--theme-background-tertiary-default':
+      theme.basic.background.tertiary.default,
+    '--theme-background-tertiary-border':
+      theme.basic.background.tertiary.border,
+    '--theme-ui-primary-default': theme.basic.ui.primary.default,
+    '--theme-ui-primary-background': theme.basic.ui.primary.background,
+    '--theme-ui-secondary-default': theme.basic.ui.secondary.default,
+    '--theme-ui-secondary-background': theme.basic.ui.secondary.background,
+    '--theme-ui-tertiary-default': theme.basic.ui.tertiary.default,
+    '--theme-text-primary-default': theme.basic.text.primary.default,
+    '--theme-text-secondary-default': theme.basic.text.secondary.default,
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,
@@ -138,11 +144,14 @@ const useThemeVariables = () =>
   }))
 const useTransparrentThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-accent-primary--03': transparentize(theme.accent.primary, 0.3),
-    '--theme-ui-primary--06': transparentize(theme.ui.primary, 0.6),
-    '--theme-ui-secondary--05': transparentize(theme.ui.secondary, 0.5),
+    '--theme-accent-primary--03': transparentize(
+      theme.basic.accent.primary,
+      0.3
+    ),
+    '--theme-ui-primary--06': transparentize(theme.basic.ui.primary, 0.6),
+    '--theme-ui-secondary--05': transparentize(theme.basic.ui.secondary, 0.5),
     '--theme-background-secondary--05': transparentize(
-      theme.background.secondary,
+      theme.basic.background.secondary,
       0.5
     )
   }))
