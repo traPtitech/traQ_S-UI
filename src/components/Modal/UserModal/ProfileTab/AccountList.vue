@@ -69,10 +69,11 @@ export default defineComponent({
   },
   setup(props) {
     const iconBackgroundColor = computed(
-      () => store.getters.app.themeSettings.currentTheme.ui.primary
+      () => store.getters.app.themeSettings.currentTheme.ui.primary.default
     )
     const iconColor = computed(
-      () => store.getters.app.themeSettings.currentTheme.background.primary
+      () =>
+        store.getters.app.themeSettings.currentTheme.background.primary.border
     )
 
     const { wikiPageOrigin } = window.traQConfig
