@@ -115,8 +115,6 @@ const useThemeVariables = () =>
       theme.basic.background.secondary.default,
     '--theme-background-secondary-border':
       theme.basic.background.secondary.border,
-    '---theme-background-secondary-transparent5':
-      theme.basic.background.secondary.transparent5,
     '--theme-background-tertiary-default':
       theme.basic.background.tertiary.default,
     '--theme-background-tertiary-border':
@@ -131,6 +129,8 @@ const useThemeVariables = () =>
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,
+    '--specific-message-hover-background':
+      theme.specific.messageHoverBackground,
 
     '--common-text-white-primary': common.text.whitePrimary,
     '--common-text-white-secondary': common.text.whiteSecondary,

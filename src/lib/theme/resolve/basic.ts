@@ -28,7 +28,6 @@ export type ResolvedBasicTheme = {
     secondary: {
       default: CSSImageType
       border: CSSColorType
-      transparent5: CSSColorType
     }
     tertiary: {
       default: CSSImageType
@@ -79,8 +78,7 @@ const resolveBasicThemeBackground = (
   })),
   secondary: resolveFromFallback(original.secondary, secondary => ({
     default: secondary,
-    border: secondary,
-    transparent5: secondary // TODO
+    border: secondary
   })),
   tertiary: passThroughOrResolve(original.tertiary, tertiary => ({
     default: tertiary,

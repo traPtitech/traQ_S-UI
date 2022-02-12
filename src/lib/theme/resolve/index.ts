@@ -7,9 +7,11 @@ export type ResolvedTheme = {
   specific: SpecificTheme
 }
 
+// TODO: 数を減らす
 type SpecificTheme = {
   channelHashOpened: CSSColorType
   channelUnreadBadgeText: CSSColorType
+  messageHoverBackground: CSSColorType
 }
 
 const resolveBrowserTheme = (
@@ -24,7 +26,8 @@ const resolveBrowserTheme = (
 
 const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
   channelHashOpened: basic.background.secondary.border,
-  channelUnreadBadgeText: basic.background.secondary.border
+  channelUnreadBadgeText: basic.background.secondary.border,
+  messageHoverBackground: basic.background.secondary.border // TODO: transparentize 0.5
 })
 
 export const resolveTheme = (original: Theme): ResolvedTheme => {
