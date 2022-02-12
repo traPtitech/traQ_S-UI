@@ -16,7 +16,10 @@ const resolveBrowserTheme = (
   original: Partial<BrowserTheme> | undefined,
   basic: ResolvedBasicTheme
 ): BrowserTheme => ({
-  themeColor: original?.themeColor ?? basic.accent.primary.default
+  themeColor: original?.themeColor ?? basic.accent.primary.default,
+  scrollbarThumb: original?.scrollbarThumb ?? basic.ui.secondary.default, // TODO: fallback transparentize 0.5
+  scrollbarThumbHover: original?.scrollbarThumb ?? basic.ui.secondary.default, // TODO: fallback transparentize 0.8
+  scrollbarTrack: original?.scrollbarTrack ?? 'transparent'
 })
 
 const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({

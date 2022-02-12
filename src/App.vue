@@ -92,8 +92,9 @@ const useOsDarkTheme = () => {
 
 const useScrollbarStyle = () =>
   makeCSSVariables(theme => ({
-    '--scrollbar-color': transparentize(theme.basic.ui.secondary, 0.5),
-    '--scrollbar-hover-color': transparentize(theme.basic.ui.secondary, 0.8)
+    '--scrollbar-color': theme.browser.scrollbarThumb,
+    '--scrollbar-hover-color': theme.browser.scrollbarThumbHover,
+    '--scrollbar-track-color': theme.browser.scrollbarTrack
   }))
 
 const useThemeVariables = () =>

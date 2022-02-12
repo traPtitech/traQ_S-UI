@@ -1,10 +1,10 @@
 $scrollbar-width: 6px;
 
 * {
-  scrollbar-color: var(--scrollbar-color) transparent;
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
   transition: scrollbar-color .3s;
   &:hover, &:active {
-    scrollbar-color: var(--scrollbar-hover-color) transparent;
+    scrollbar-color: var(--scrollbar-hover-color) var(--scrollbar-track-color);
   }
 
   &::-webkit-scrollbar {
@@ -14,8 +14,9 @@ $scrollbar-width: 6px;
   scrollbar-width: thin;
 
   &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
     &:hover {
-      background: transparent
+      background: var(--scrollbar-track-color);
     }
   }
 
@@ -24,7 +25,7 @@ $scrollbar-width: 6px;
     transition: background .3s;
     border-radius: $scrollbar-width;
     &:hover {
-      background: var(--scrollbar-hover-color)
+      background: var(--scrollbar-hover-color);
     }
   }
   &::-webkit-scrollbar-corner {

@@ -78,6 +78,10 @@ export type BrowserTheme = {
    * @see https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta/name/theme-color
    */
   themeColor: CSSColorType
+
+  scrollbarThumb: CSSColorType
+  scrollbarThumbHover: CSSColorType
+  scrollbarTrack: CSSColorType
 }
 
 declare global {
