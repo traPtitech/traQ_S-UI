@@ -133,6 +133,9 @@ const useThemeVariables = () =>
       theme.specific.messageHoverBackground,
     '--specific-stamp-include-me-background':
       theme.specific.stampIncludeMeBackground,
+    '--specific-count-text': theme.specific.stampCountText,
+    '--specific-stamp-picker-opener-border':
+      theme.specific.stampPickerOpenerBorder,
 
     '--common-text-white-primary': common.text.whitePrimary,
     '--common-text-white-secondary': common.text.whiteSecondary,
@@ -147,7 +150,6 @@ const useThemeVariables = () =>
   }))
 const useTransparrentThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-ui-primary--06': transparentize(theme.basic.ui.primary, 0.6),
     '--theme-ui-secondary--05': transparentize(theme.basic.ui.secondary, 0.5),
     '--theme-background-secondary--05': transparentize(
       theme.basic.background.secondary,

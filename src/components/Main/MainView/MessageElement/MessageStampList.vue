@@ -252,9 +252,9 @@ export default defineComponent({
   display: flex;
   height: 100%;
   align-items: center;
-  border: 2px solid $theme-ui-primary--06;
+  border: 2px solid var(--specific-stamp-picker-opener-border);
   border-radius: 4px;
-  color: $theme-ui-primary--06;
+  color: var(--specific-stamp-picker-opener-border);
   cursor: pointer;
 }
 </style>

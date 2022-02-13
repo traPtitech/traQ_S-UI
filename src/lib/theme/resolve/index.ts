@@ -14,6 +14,8 @@ type SpecificTheme = {
   channelUnreadBadgeText: CSSColorType
   messageHoverBackground: CSSColorType
   stampIncludeMeBackground: CSSColorType
+  stampCountText: CSSColorType
+  stampPickerOpenerBorder: CSSColorType
 }
 
 const resolveBrowserTheme = (
@@ -40,6 +42,11 @@ const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
   stampIncludeMeBackground: transparentizeWithFallback(
     basic.accent.primary.fallback,
     0.3
+  ),
+  stampCountText: transparentizeWithFallback(basic.ui.primary.fallback, 0.6),
+  stampPickerOpenerBorder: transparentizeWithFallback(
+    basic.ui.primary.fallback,
+    0.6
   )
 })
 
