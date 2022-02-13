@@ -1,7 +1,7 @@
 // @ts-check
 ;(() => {
   /**
-   * @type {import('../src/types/theme').Theme}
+   * @type {import('../src/types/theme').BasicTheme}
    */
   const lightTheme = {
     accent: {
@@ -28,7 +28,7 @@
   }
 
   /**
-   * @type {import('../src/types/theme').Theme}
+   * @type {import('../src/types/theme').BasicTheme}
    */
   const darkTheme = {
     accent: {

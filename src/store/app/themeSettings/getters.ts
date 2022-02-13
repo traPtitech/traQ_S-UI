@@ -4,8 +4,8 @@ import { S } from './state'
 import { resolveTheme, ResolvedTheme } from '/@/lib/theme/resolve'
 import { Theme } from '/@/types/theme'
 
-const lightTheme = window.defaultLightTheme
-const darkTheme = window.defaultDarkTheme
+const lightTheme = { basic: window.defaultLightTheme }
+const darkTheme = { basic: window.defaultDarkTheme }
 
 const selectTheme = (
   type: ThemeType,

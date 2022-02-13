@@ -121,7 +121,7 @@ export type MarkdownTheme = {
 
 declare global {
   interface Window {
-    defaultLightTheme: Theme
-    defaultDarkTheme: Theme
+    defaultLightTheme: BasicTheme
+    defaultDarkTheme: BasicTheme
   }
 }
