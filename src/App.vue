@@ -14,7 +14,7 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '/@/store'
 import { makeCSSVariables } from '/@/lib/styles'
-import { transparentize, isDarkColor } from '/@/lib/basic/color'
+import { isDarkColor } from '/@/lib/basic/color'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
@@ -151,18 +151,10 @@ const useThemeVariables = () =>
     '--common-background-pin': common.background.pin,
     '--common-drop-shadow-default': common.dropShadow.default
   }))
-const useTransparrentThemeVariables = () =>
-  makeCSSVariables((theme, common) => ({
-    '--theme-background-secondary--05': transparentize(
-      theme.basic.background.secondary,
-      0.5
-    )
-  }))
 
 const useStyle = () =>
   computed(() => ({
     ...useThemeVariables().value,
-    ...useTransparrentThemeVariables().value,
     ...useScrollbarStyle().value
   }))
 
