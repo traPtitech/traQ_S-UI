@@ -1,27 +1,30 @@
 // KaTeXのCSSは遅延読み込みするのでmain.tsを参照
-$code-background-color: var(--markdown-code-background-color);
-$table-td-border-color: var(--table-td-border-color);
-$table-tr-border-color: var(--table-tr-border-color);
-$table-tr-background-color: var(--table-tr-background-color);
-$table-tr-background-color2: var(--table-tr-background-color2);
+$link-color: var(--markdown-link-text);
+$hr-color: var(--markdown-hr-text);
+$h6-color: var(--markdown-h6-text);
+$quote-text-color: var(--markdown-quote-text);
+$quote-bar-color: var(--markdown-quote-bar);
+$code-background-color: var(--markdown-code-background);
+$code-file-name-background-color: var(--markdown-code-file-name-background);
+$table-td-border-color: var(--markdown-table-td-border);
+$table-tr-border-color: var(--markdown-table-tr-border);
+$table-tr-background-color: var(--markdown-table-tr-background);
+$table-tr-background-color2: var(--markdown-table-tr-background2);
+$img-background-color: var(--markdown-img-background);
+$mark-color: var(--markdown-mark-text);
+$mark-background-color: var(--markdown-mark-background);
+$spoiler-background-color: var(--markdown-spoiler-background);
+$spoiler-shown-background-color: var(--markdown-spoiler-shown-background);
+$link-text-color: var(--markdown-embed-link-text);
+$link-background-color: var(--markdown-embed-link-background);
+$link-highlight-text-color: var(--markdown-embed-link-highlight-text);
+$link-highlight-background-color: var(--markdown-embed-link-highlight-background);
 
 @import '/~/@traptitech/traq-markdown-it/src/css/markdown';
 
-html:not([data-is-dark-theme]) {
-  @import '/~/highlight.js/styles/atom-one-light';
-
-  --markdown-code-background-color: #f6f8fa;
-  --table-td-border-color: #dfe2e5;
-  --table-tr-border-color: #c6cbd1;
-  --table-tr-background-color: #fff;
-  --table-tr-background-color2: #f6f8fa;
-}
-html[data-is-dark-theme] {
+html[data-code-highlight='light'] {
   @import '/~/highlight.js/styles/atom-one-dark';
-
-  --markdown-code-background-color: #243342;
-  --table-td-border-color: #191c1f;
-  --table-tr-border-color: #2d3239;
-  --table-tr-background-color: #243342;
-  --table-tr-background-color2: #1b2631;
+}
+html[data-code-highlight='dark'] {
+  @import '/~/highlight.js/styles/atom-one-light';
 }

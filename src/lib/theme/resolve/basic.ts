@@ -25,6 +25,7 @@ export type ResolvedBasicTheme = {
     primary: {
       default: CSSImageType
       border: CSSColorType
+      fallback: CSSColorTypeSimple
     }
     secondary: {
       default: CSSImageType
@@ -79,7 +80,8 @@ const resolveBasicThemeBackground = (
 ): ResolvedBasicTheme['background'] => ({
   primary: passThroughOrResolve(original.primary, primary => ({
     default: primary,
-    border: primary
+    border: primary,
+    fallback: primary
   })),
   secondary: passThroughOrResolve(original.secondary, secondary => ({
     default: secondary,

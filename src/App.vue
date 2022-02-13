@@ -14,7 +14,6 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '/@/store'
 import { makeCSSVariables } from '/@/lib/styles'
-import { isDarkColor } from '/@/lib/basic/color'
 import useHtmlDatasetBoolean from './use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
@@ -63,15 +62,12 @@ const useThemeObserver = () => {
     }
   })
 
-  const themeType = computed(() => store.state.app.themeSettings.type)
-  const isDark = computed(() =>
-    themeType.value === 'custom'
-      ? isDarkColor(store.state.app.themeSettings.custom.background.primary)
-      : themeType.value === 'dark' ||
-        (themeType.value === 'auto' &&
-          store.state.app.themeSettings.isOsDarkTheme)
+  const codeHighlight = computed(
+    () =>
+      store.getters.app.themeSettings.currentTheme.markdown.codeHighlight ===
+      'dark'
   )
-  useHtmlDatasetBoolean('isDarkTheme', isDark)
+  useHtmlDatasetBoolean('codeHighlight', codeHighlight)
 }
 
 const useEcoModeObserver = () => {
@@ -126,6 +122,7 @@ const useThemeVariables = () =>
     '--theme-ui-tertiary-default': theme.basic.ui.tertiary.default,
     '--theme-text-primary-default': theme.basic.text.primary.default,
     '--theme-text-secondary-default': theme.basic.text.secondary.default,
+
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,
@@ -139,6 +136,31 @@ const useThemeVariables = () =>
     '--specific-loading-spinner-gap-ui-secondary':
       theme.specific.loadingSpinnerGapUiSecondary,
     '--specific-slider-background': theme.specific.sliderBackground,
+
+    '--markdown-link-text': theme.markdown.linkText,
+    '--markdown-hr-text': theme.markdown.hrText,
+    '--markdown-h6-text': theme.markdown.h6Text,
+    '--markdown-quote-text': theme.markdown.quoteText,
+    '--markdown-quote-bar': theme.markdown.quoteBar,
+    '--markdown-code-background': theme.markdown.codeBackground,
+    '--markdown-code-file-name-background':
+      theme.markdown.codeFileNameBackground,
+    '--markdown-table-td-border': theme.markdown.tableTdBorder,
+    '--markdown-table-tr-border': theme.markdown.tableTrBorder,
+    '--markdown-table-tr-background': theme.markdown.tableTrBackground,
+    '--markdown-table-tr-background2': theme.markdown.tableTrBackground2,
+    '--markdown-img-background': theme.markdown.imgBackground,
+    '--markdown-mark-text': theme.markdown.markText,
+    '--markdown-mark-background': theme.markdown.markBackground,
+    '--markdown-spoiler-background': theme.markdown.spoilerBackground,
+    '--markdown-spoiler-shown-background':
+      theme.markdown.spoilerShownBackground,
+    '--markdown-embed-link-text': theme.markdown.embedLinkText,
+    '--markdown-embed-link-background': theme.markdown.embedLinkBackground,
+    '--markdown-embed-link-highlight-text':
+      theme.markdown.embedLinkHighlightText,
+    '--markdown-embed-link-highlight-background':
+      theme.markdown.embedLinkHighlightBackground,
 
     '--common-text-white-primary': common.text.whitePrimary,
     '--common-text-white-secondary': common.text.whiteSecondary,

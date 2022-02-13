@@ -1,11 +1,13 @@
 import { transparentizeWithFallback } from '/@/lib/basic/color'
 import { resolveBasicTheme, ResolvedBasicTheme } from './basic'
 import { Theme, CSSColorType, BrowserTheme } from '/@/types/theme'
+import { ResolvedMarkdownTheme, resolveMarkdownTheme } from './markdown'
 
 export type ResolvedTheme = {
   basic: ResolvedBasicTheme
   browser: BrowserTheme
   specific: SpecificTheme
+  markdown: ResolvedMarkdownTheme
 }
 
 // TODO: 数を減らす
@@ -62,6 +64,7 @@ export const resolveTheme = (original: Theme): ResolvedTheme => {
   return {
     basic: resolvedBasicTheme,
     browser: resolveBrowserTheme(original.browser, resolvedBasicTheme),
-    specific: resolveSpecificTheme(resolvedBasicTheme)
+    specific: resolveSpecificTheme(resolvedBasicTheme),
+    markdown: resolveMarkdownTheme(original.markdown, resolvedBasicTheme)
   }
 }

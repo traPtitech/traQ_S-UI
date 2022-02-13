@@ -24,6 +24,10 @@ export type MaybeCSSColorTypeSimple<T> = CSSColorTypeSimple | T
 export type Theme = {
   basic: BasicTheme
   browser?: Partial<BrowserTheme>
+  /**
+   * @default 'auto' background.primaryの色の明るさで自動で`'light'`か`'dark'`になる
+   */
+  markdown?: MarkdownDefaultTheme
 }
 
 export type BasicTheme = {
@@ -45,6 +49,7 @@ export type BasicTheme = {
     primary: MaybeCSSColorTypeSimple<{
       default: CSSImageType
       border: CSSColorType
+      fallback: CSSColorTypeSimple
     }>
     secondary: MaybeCSSColorTypeSimple<{
       default: CSSImageType
@@ -85,6 +90,33 @@ export type BrowserTheme = {
   scrollbarThumb: CSSColorType
   scrollbarThumbHover: CSSColorType
   scrollbarTrack: CSSColorType
+}
+
+export type MarkdownDefaultTheme = 'auto' | 'light' | 'dark'
+export type MarkdownTheme = {
+  codeHighlight: MarkdownDefaultTheme
+  linkText: CSSColorType
+  hrText: CSSColorType
+  h6Text: CSSColorType
+  quoteText: CSSColorType
+  quoteBar: CSSColorType
+  codeBackground: CSSColorType
+  codeFileNameBackground: CSSColorType
+  tableTdBorder: CSSColorType
+  tableTrBorder: CSSColorType
+  tableTrBackground: CSSColorType
+  tableTrBackground2: CSSColorType
+  imgBackground: CSSColorType
+  markText: CSSColorType
+  markBackground: CSSColorType
+  spoilerBackground: CSSColorType
+  spoilerShownBackground: CSSColorType
+  /** メンションやチャンネルリンク */
+  embedLinkText: CSSColorType
+  embedLinkBackground: CSSColorType
+  /** 自分へのメンションや自分の所属しているグループへのメンション */
+  embedLinkHighlightText: CSSColorType
+  embedLinkHighlightBackground: CSSColorType
 }
 
 declare global {
