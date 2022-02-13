@@ -251,7 +251,7 @@ export const transparentize = (color: string, opacity: number) => {
   if (c === null) {
     return c
   }
-  c.a += _opacity
+  c.a *= _opacity
   return stringifyColor(c)
 }
 
