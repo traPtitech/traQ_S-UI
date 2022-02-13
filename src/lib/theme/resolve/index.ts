@@ -16,6 +16,8 @@ type SpecificTheme = {
   stampIncludeMeBackground: CSSColorType
   stampCountText: CSSColorType
   stampPickerOpenerBorder: CSSColorType
+  loadingSpinnerGapUiSecondary: CSSColorType
+  sliderBackground: CSSColorType
 }
 
 const resolveBrowserTheme = (
@@ -47,7 +49,12 @@ const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
   stampPickerOpenerBorder: transparentizeWithFallback(
     basic.ui.primary.fallback,
     0.6
-  )
+  ),
+  loadingSpinnerGapUiSecondary: transparentizeWithFallback(
+    basic.ui.secondary.fallback,
+    0.5
+  ),
+  sliderBackground: transparentizeWithFallback(basic.ui.secondary.fallback, 0.5)
 })
 
 export const resolveTheme = (original: Theme): ResolvedTheme => {

@@ -65,7 +65,7 @@ export default defineComponent({
 $dotBgColor: $theme-ui-secondary-default;
 $dotShadow: none;
 
-$bgColor: $theme-ui-secondary--05;
+$bgColor: var(--specific-slider-background);
 $themeColor: $theme-ui-secondary-default;
 
 $tooltipBgColor: $theme-ui-secondary-default;

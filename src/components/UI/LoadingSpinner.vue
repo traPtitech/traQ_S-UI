@@ -38,7 +38,7 @@ $spinner-width: 0.35em;
   }
   &[data-color='ui-secondary'] {
     --spinner-color: $theme-ui-secondary-default;
-    --spinner-gap-color: var(--theme-ui-secondary--05);
+    --spinner-gap-color: var(--specific-loading-spinner-gap-ui-secondary);
   }
 }
 .spinner {

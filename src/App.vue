@@ -136,6 +136,9 @@ const useThemeVariables = () =>
     '--specific-count-text': theme.specific.stampCountText,
     '--specific-stamp-picker-opener-border':
       theme.specific.stampPickerOpenerBorder,
+    '--specific-loading-spinner-gap-ui-secondary':
+      theme.specific.loadingSpinnerGapUiSecondary,
+    '--specific-slider-background': theme.specific.sliderBackground,
 
     '--common-text-white-primary': common.text.whitePrimary,
     '--common-text-white-secondary': common.text.whiteSecondary,
@@ -150,7 +153,6 @@ const useThemeVariables = () =>
   }))
 const useTransparrentThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
-    '--theme-ui-secondary--05': transparentize(theme.basic.ui.secondary, 0.5),
     '--theme-background-secondary--05': transparentize(
       theme.basic.background.secondary,
       0.5
