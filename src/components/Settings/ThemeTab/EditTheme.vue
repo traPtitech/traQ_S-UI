@@ -45,7 +45,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType, watchEffect } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { Theme } from '/@/types/theme'
+import { BasicTheme, Theme, ThemeJson } from '/@/types/theme'
 import { dequal } from 'dequal'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useToastStore from '/@/providers/toastStore'
@@ -58,9 +58,10 @@ const useEditedThemes = (
 ) => {
   const { addErrorToast } = useToastStore()
 
-  const appliedThemeStringified = computed(() =>
-    JSON.stringify(props.custom, null, '\t')
-  )
+  const appliedThemeStringified = computed(() => {
+    const theme: ThemeJson = { ...props.custom, version: 2 }
+    return JSON.stringify(theme, null, '\t')
+  })
   const editedTheme = ref(appliedThemeStringified.value)
   watchEffect(() => {
     editedTheme.value = appliedThemeStringified.value
@@ -76,15 +77,20 @@ const useEditedThemes = (
     }
   })
 
+  // TODO: もっとちゃんとしたバリデーション
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isValidThemeJSON = (theme: any): theme is Theme => {
-    return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
-      Object.keys(lightTheme[category]).every(
-        colorName =>
-          theme[category] &&
-          theme[category][colorName] &&
-          typeof theme[category][colorName] === 'string'
-      )
+  const isValidThemeJSON = (theme: any): theme is ThemeJson => {
+    if (!('version' in theme) || theme.version !== 2) return false
+    if (!('basic' in theme)) return false
+
+    return (Object.keys(lightTheme) as Array<keyof BasicTheme>).every(
+      category =>
+        Object.keys(theme.basic[category]).every(
+          colorName =>
+            theme.basic[category] &&
+            theme.basic[category][colorName] &&
+            typeof theme.basic[category][colorName] === 'string'
+        )
     )
   }
   const failedUpdateTheme = (text: string) => {

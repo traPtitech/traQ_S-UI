@@ -35,7 +35,7 @@
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
             <div
-              v-for="(val, category) in state.custom"
+              v-for="(val, category) in state.custom.basic"
               :key="category"
               :class="$style.category"
             >
@@ -46,12 +46,14 @@
                 :class="$style.color"
               >
                 <p :class="$style.name">{{ name }}</p>
+                <!-- eslint-disable vue/valid-v-model -->
                 <form-input
-                  v-model="val[name as keyof typeof val]"
+                  v-model="(val[name as keyof typeof val] as string)"
                   use-change-event
                   on-secondary
                   :class="$style.input"
                 />
+                <!-- eslint-enable vue/valid-v-model -->
               </div>
             </div>
           </div>

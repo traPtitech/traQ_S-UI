@@ -10,5 +10,5 @@ export interface S {
 export const state: S = {
   type: 'auto',
   isOsDarkTheme: false,
-  custom: window.defaultLightTheme
+  custom: { basic: window.defaultLightTheme }
 }

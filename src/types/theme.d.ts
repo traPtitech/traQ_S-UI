@@ -119,6 +119,13 @@ export type MarkdownTheme = {
   embedLinkHighlightBackground: CSSColorType
 }
 
+/**
+ * インポート/エクスポートで利用するJsonの型
+ */
+export type ThemeJson = {
+  version: 2
+} & Theme
+
 declare global {
   interface Window {
     defaultLightTheme: BasicTheme
