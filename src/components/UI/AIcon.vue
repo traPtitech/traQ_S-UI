@@ -27,21 +27,27 @@ import { defineComponent, shallowRef, watch } from 'vue'
 import type { Component } from 'vue'
 import mdi from '/@/assets/mdi'
 
-// TODO: https://github.com/vitejs/vite/issues/5304
-const iconModules0 = import.meta.glob('/src/assets/icons/*.svg')
-const iconModules1 = import.meta.glob('/src/assets/icons/*/*.svg')
+type ComponentModule = {
+  default: Component
+}
+
+const iconModules0 = import.meta.glob<ComponentModule>(
+  '/src/assets/icons/*.svg',
+  {
+    assert: { type: 'component' }
+  }
+)
+const iconModules1 = import.meta.glob<ComponentModule>(
+  '/src/assets/icons/*/*.svg',
+  {
+    assert: { type: 'component' }
+  }
+)
 
 const iconModules = {
   ...iconModules0,
   ...iconModules1
-} as Record<
-  string,
-  () => Promise<
-    Readonly<{
-      default: Component
-    }>
-  >
->
+}
 
 export default defineComponent({
   name: 'AIcon',
