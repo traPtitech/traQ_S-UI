@@ -105,7 +105,7 @@ describe('resolveMarkdownTheme', () => {
       },
       expected: {
         codeHighlight: 'dark',
-        linkText: '#0366d6',
+        linkText: '#2189ff',
         hrText: '#e1e4e8',
         h6Text: '#6a737d',
         quoteText: '#6a737d',
@@ -121,9 +121,9 @@ describe('resolveMarkdownTheme', () => {
         markBackground: 'yellow',
         spoilerBackground: 'black',
         spoilerShownBackground: 'rgba(0, 0, 0, 0.1)',
-        embedLinkText: '#005BAC',
+        embedLinkText: '#4899F9',
         embedLinkBackground: 'transparent',
-        embedLinkHighlightText: '#005BAC',
+        embedLinkHighlightText: '#4899F9',
         embedLinkHighlightBackground: '#FAFFAD'
       }
     },

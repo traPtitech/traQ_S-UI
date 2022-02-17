@@ -31,6 +31,13 @@ describe('resolveTheme', () => {
   test('can resolve specific', () => {
     const actual = resolveTheme(input)
     const expected = {
+      waveformColor: '#005BAC',
+      waveformGradation:
+        'repeating-linear-gradient(90deg, #ccc, #333, #ccc 25%)',
+      navigationBarDesktopBackground: '#F0F2F5',
+      navigationBarMobileBackground: '#E2E5E9',
+      mainViewBackground: '#FFFFFF',
+      sideBarBackground: '#F0F2F5',
       channelHashOpened: '#F0F2F5',
       channelUnreadBadgeText: '#F0F2F5',
       loadingSpinnerGapUiSecondary: 'rgba(107, 125, 138, 0.5)',
