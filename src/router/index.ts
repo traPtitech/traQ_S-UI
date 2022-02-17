@@ -123,14 +123,12 @@ const router = createRouter({
   history: routerHistory,
   routes
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   // trailing slashを消す
   if (to.path !== '/' && to.path.endsWith('/')) {
-    next(to.path.slice(0, -1))
-    return
+    return to.path.slice(0, -1)
   }
-
-  next()
+  return true
 })
 
 export default router
