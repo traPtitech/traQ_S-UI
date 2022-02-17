@@ -116,8 +116,8 @@ export default defineComponent({
 .waveform {
   height: 100%;
   width: 100%;
-  background-color: $theme-accent-primary-default;
-  background-image: repeating-linear-gradient(90deg, #ccc, #333, #ccc 25%);
+  background-color: var(--specific-waveform-color);
+  background-image: var(--specific-waveform-gradation);
   background-blend-mode: overlay;
   mask-size: 100% 200%;
 }

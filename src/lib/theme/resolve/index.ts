@@ -1,17 +1,22 @@
 import { isDarkColor, transparentizeWithFallback } from '/@/lib/basic/color'
 import { resolveBasicTheme, ResolvedBasicTheme } from './basic'
-import { Theme, CSSColorType, BrowserTheme } from '/@/lib/theme/schema'
+import {
+  Theme,
+  CSSColorType,
+  BrowserTheme,
+  SpecificTheme
+} from '/@/lib/theme/schema'
 import { ResolvedMarkdownTheme, resolveMarkdownTheme } from './markdown'
 
 export type ResolvedTheme = {
   basic: ResolvedBasicTheme
   browser: BrowserTheme
-  specific: SpecificTheme
+  specific: ResolvedSpecificTheme
   markdown: ResolvedMarkdownTheme
 }
 
 // TODO: 数を減らす
-type SpecificTheme = {
+type ResolvedSpecificTheme = SpecificTheme & {
   channelHashOpened: CSSColorType
   channelUnreadBadgeText: CSSColorType
   messageHoverBackground: CSSColorType
@@ -46,7 +51,14 @@ const resolveBrowserTheme = (
   scrollbarTrack: original?.scrollbarTrack ?? 'transparent'
 })
 
-const resolveSpecificTheme = (basic: ResolvedBasicTheme): SpecificTheme => ({
+const resolveSpecificTheme = (
+  original: Partial<SpecificTheme> | undefined,
+  basic: ResolvedBasicTheme
+): ResolvedSpecificTheme => ({
+  waveformColor: original?.waveformColor ?? basic.accent.primary.default,
+  waveformGradation:
+    original?.waveformGradation ??
+    'repeating-linear-gradient(90deg, #ccc, #333, #ccc 25%)',
   channelHashOpened: basic.background.secondary.border,
   channelUnreadBadgeText: basic.background.secondary.border,
   messageHoverBackground: transparentizeWithFallback(
@@ -74,7 +86,7 @@ export const resolveTheme = (original: Theme): ResolvedTheme => {
   return {
     basic: resolvedBasicTheme,
     browser: resolveBrowserTheme(original.browser, resolvedBasicTheme),
-    specific: resolveSpecificTheme(resolvedBasicTheme),
+    specific: resolveSpecificTheme(original.specific, resolvedBasicTheme),
     markdown: resolveMarkdownTheme(original.markdown, resolvedBasicTheme)
   }
 }

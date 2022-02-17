@@ -116,6 +116,8 @@ const useThemeVariables = () =>
     '--theme-text-primary-default': theme.basic.text.primary.default,
     '--theme-text-secondary-default': theme.basic.text.secondary.default,
 
+    '--specific-waveform-color': theme.specific.waveformColor,
+    '--specific-waveform-gradation': theme.specific.waveformGradation,
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,

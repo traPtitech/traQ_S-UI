@@ -96,6 +96,14 @@ const basicThemeSchema = z.object({
   })
 })
 
+export type SpecificTheme = z.infer<typeof specificThemeSchema>
+const specificThemeSchema = z.object({
+  /** 波形表示の色 */
+  waveformColor: CSSColorTypeSchema,
+  /** 波形表示のグラデーション */
+  waveformGradation: CSSImageTypeSchema
+})
+
 export type BrowserTheme = z.infer<typeof browserThemeSchema>
 const browserThemeSchema = z.object({
   /**
@@ -176,6 +184,7 @@ export type Theme = z.infer<typeof themeSchema>
 export const themeSchema = z.object({
   version: z.literal(2),
   basic: basicThemeSchema,
+  specific: specificThemeSchema.partial().optional(),
   browser: browserThemeSchema.partial().optional(),
   markdown: z
     .union([markdownDefaultThemeSchema, extendedOptionalMarkdownThemeSchema])
