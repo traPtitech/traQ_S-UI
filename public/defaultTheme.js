@@ -1,7 +1,7 @@
 // @ts-check
 ;(() => {
   /**
-   * @type {import('../src/types/theme').Theme}
+   * @type {import('/@/types/theme').Theme}
    */
   const lightTheme = {
     version: 2,
@@ -31,7 +31,7 @@
   }
 
   /**
-   * @type {import('../src/types/theme').Theme}
+   * @type {import('/@/types/theme').Theme}
    */
   const darkTheme = {
     version: 2,

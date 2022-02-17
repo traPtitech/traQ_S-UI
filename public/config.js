@@ -1,7 +1,7 @@
 // @ts-check
 ;(() => {
   /**
-   * @type {import('../src/types/config').Config}
+   * @type {import('/@/types/config').Config}
    */
   const config = {
     firebase: {
