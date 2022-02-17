@@ -118,6 +118,13 @@ const useThemeVariables = () =>
 
     '--specific-waveform-color': theme.specific.waveformColor,
     '--specific-waveform-gradation': theme.specific.waveformGradation,
+    '--specific-navigation-bar-desktop-background':
+      theme.specific.navigationBarDesktopBackground,
+    '--specific-navigation-bar-mobile-background':
+      theme.specific.navigationBarMobileBackground,
+    '--specific-main-view-background': theme.specific.mainViewBackground,
+    '--specific-side-bar-background':
+      theme.specific.navigationBarMobileBackground,
     '--specific-channel-hash-opened': theme.specific.channelHashOpened,
     '--specific-channel-unread-badge-text':
       theme.specific.channelUnreadBadgeText,

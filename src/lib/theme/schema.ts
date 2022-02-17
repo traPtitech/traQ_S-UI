@@ -101,7 +101,16 @@ const specificThemeSchema = z.object({
   /** 波形表示の色 */
   waveformColor: CSSColorTypeSchema,
   /** 波形表示のグラデーション */
-  waveformGradation: CSSImageTypeSchema
+  waveformGradation: CSSImageTypeSchema,
+
+  /** ナビゲーションバー(左の部分)のデスクトップでの背景色 */
+  navigationBarDesktopBackground: CSSImageTypeSchema,
+  /** ナビゲーションバー(左の部分)のモバイルでの背景色 */
+  navigationBarMobileBackground: CSSImageTypeSchema,
+  /** メインビュー(真ん中の部分)の背景色 */
+  mainViewBackground: CSSImageTypeSchema,
+  /** サイドバー(右の部分)の背景色 */
+  sideBarBackground: CSSImageTypeSchema
 })
 
 export type BrowserTheme = z.infer<typeof browserThemeSchema>

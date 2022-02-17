@@ -21,12 +21,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
   @include color-ui-primary;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  background: var(--specific-main-view-background);
 }
 
 .logo {

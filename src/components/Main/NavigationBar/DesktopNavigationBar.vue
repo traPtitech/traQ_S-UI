@@ -75,10 +75,10 @@ $ephemeralNavigationMinHeight: 64px;
 
 .container {
   @include color-ui-primary;
-  @include background-secondary;
   display: flex;
   width: 100%;
   height: 100%;
+  background: var(--specific-navigation-bar-desktop-background);
 }
 .selector {
   display: flex;

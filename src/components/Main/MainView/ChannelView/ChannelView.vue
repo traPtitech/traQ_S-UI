@@ -99,12 +99,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
   @include color-ui-primary;
   display: flex;
   flex-direction: row;
   position: relative;
   height: 100%;
+  background: var(--specific-main-view-background);
 }
 
 .fileUploadOverlay {

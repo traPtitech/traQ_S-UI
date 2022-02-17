@@ -59,6 +59,17 @@ const resolveSpecificTheme = (
   waveformGradation:
     original?.waveformGradation ??
     'repeating-linear-gradient(90deg, #ccc, #333, #ccc 25%)',
+  navigationBarDesktopBackground:
+    original?.navigationBarDesktopBackground ??
+    basic.background.secondary.default,
+  navigationBarMobileBackground:
+    original?.navigationBarMobileBackground ??
+    basic.background.tertiary.default,
+  mainViewBackground:
+    original?.mainViewBackground ?? basic.background.primary.default,
+  sideBarBackground:
+    original?.sideBarBackground ?? basic.background.secondary.default,
+
   channelHashOpened: basic.background.secondary.border,
   channelUnreadBadgeText: basic.background.secondary.border,
   messageHoverBackground: transparentizeWithFallback(
