@@ -142,11 +142,27 @@ const markdownTheme = z.object({
   embedLinkHighlightBackground: CSSColorTypeSchema
 })
 
+export type ExtendedOptionalMarkdownTheme = z.infer<
+  typeof extendedOptionalMarkdownThemeSchema
+>
+const extendedOptionalMarkdownThemeSchema = z
+  .object({
+    /**
+     * 元にするテーマ
+     *
+     * 省略した場合にこのテーマの色が利用される
+     **/
+    extends: markdownDefaultThemeSchema
+  })
+  .merge(markdownTheme.partial())
+
 /** traQ固有のテーマ定義 */
 export type Theme = z.infer<typeof themeSchema>
 export const themeSchema = z.object({
   version: z.literal(2),
   basic: basicThemeSchema,
   browser: browserThemeSchema.partial().optional(),
-  markdown: markdownDefaultThemeSchema.optional()
+  markdown: z
+    .union([markdownDefaultThemeSchema, extendedOptionalMarkdownThemeSchema])
+    .optional()
 })

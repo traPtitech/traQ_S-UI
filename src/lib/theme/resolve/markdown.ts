@@ -1,12 +1,16 @@
 import { isDarkColor } from '/@/lib/basic/color'
 import { ResolvedBasicTheme } from './basic'
-import { MarkdownDefaultTheme, MarkdownTheme } from '/@/lib/theme/schema'
+import {
+  ExtendedOptionalMarkdownTheme,
+  MarkdownDefaultTheme,
+  MarkdownTheme
+} from '/@/lib/theme/schema'
 
 export type ResolvedMarkdownTheme = MarkdownTheme & {
   codeHighlight: 'light' | 'dark'
 }
 
-const defaultLightTheme: ResolvedMarkdownTheme = {
+export const defaultLightTheme: Readonly<ResolvedMarkdownTheme> = {
   codeHighlight: 'light',
   linkText: '#0366d6',
   hrText: '#e1e4e8',
@@ -30,7 +34,7 @@ const defaultLightTheme: ResolvedMarkdownTheme = {
   embedLinkHighlightBackground: '#FAFFAD'
 }
 
-const defaultDarkTheme: ResolvedMarkdownTheme = {
+export const defaultDarkTheme: Readonly<ResolvedMarkdownTheme> = {
   codeHighlight: 'dark',
   linkText: '#0366d6',
   hrText: '#e1e4e8',
@@ -55,26 +59,61 @@ const defaultDarkTheme: ResolvedMarkdownTheme = {
 }
 
 const resolveMarkdownBaseTheme = (
-  original: MarkdownDefaultTheme | undefined,
+  base: MarkdownDefaultTheme,
   basic: ResolvedBasicTheme
 ): 'light' | 'dark' => {
-  if (original === 'light' || original === 'dark') return original
-  return isDarkColor(basic.background.primary.fallback) ? 'dark' : 'light'
+  switch (base) {
+    case 'light':
+    case 'dark':
+      return base
+    case 'auto':
+      return isDarkColor(basic.background.primary.fallback) ? 'dark' : 'light'
+    default: {
+      const never: never = base
+      throw new Error(`Invalid markdown base theme: ${never}`)
+    }
+  }
 }
 
-export const resolveMarkdownTheme = (
-  original: MarkdownDefaultTheme | undefined,
+const resolveMarkdownBaseThemeValue = (
+  base: MarkdownDefaultTheme,
   basic: ResolvedBasicTheme
-): ResolvedMarkdownTheme => {
-  const base = resolveMarkdownBaseTheme(original, basic)
-  switch (base) {
+): Readonly<ResolvedMarkdownTheme> => {
+  const baseTheme = resolveMarkdownBaseTheme(base, basic)
+  switch (baseTheme) {
     case 'light':
       return defaultLightTheme
     case 'dark':
       return defaultDarkTheme
     default: {
-      const never: never = base
+      const never: never = baseTheme
       throw new Error(`Invalid markdown base theme: ${never}`)
     }
+  }
+}
+
+export const resolveMarkdownTheme = (
+  original: MarkdownDefaultTheme | ExtendedOptionalMarkdownTheme = 'auto',
+  basic: ResolvedBasicTheme
+): ResolvedMarkdownTheme => {
+  if (typeof original === 'string') {
+    return resolveMarkdownBaseThemeValue(original, basic)
+  }
+
+  const base = resolveMarkdownBaseThemeValue(original.extends, basic)
+  const codeHighlightWithoutAuto =
+    original.codeHighlight === 'auto'
+      ? base.codeHighlight
+      : original.codeHighlight
+  const originalWithoutExtend = {
+    ...original,
+    codeHighlight: codeHighlightWithoutAuto ?? base.codeHighlight,
+    extends: undefined
+  }
+  delete originalWithoutExtend.extends
+
+  return {
+    ...base,
+    ...originalWithoutExtend
   }
 }
