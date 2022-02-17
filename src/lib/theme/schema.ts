@@ -144,19 +144,9 @@ const markdownTheme = z.object({
 
 /** traQ固有のテーマ定義 */
 export type Theme = z.infer<typeof themeSchema>
-const themeSchema = z.object({
+export const themeSchema = z.object({
+  version: z.literal(2),
   basic: basicThemeSchema,
   browser: browserThemeSchema.partial().optional(),
   markdown: markdownDefaultThemeSchema.optional()
 })
-
-/**
- * インポート/エクスポートで利用するJsonの型
- */
-export type ThemeJson = z.infer<typeof themeJsonSchema>
-export const themeJsonSchema = z
-  .object({
-    version: z.literal(2)
-  })
-  .merge(themeSchema)
-  .strict()

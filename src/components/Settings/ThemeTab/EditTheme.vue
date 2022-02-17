@@ -45,7 +45,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType, watchEffect } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { Theme, ThemeJson, themeJsonSchema } from '/@/lib/theme/schema'
+import { Theme, themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useToastStore from '/@/providers/toastStore'
@@ -57,7 +57,7 @@ const useEditedThemes = (
   const { addErrorToast } = useToastStore()
 
   const appliedThemeStringified = computed(() => {
-    const theme: ThemeJson = { ...props.custom, version: 2 }
+    const theme = props.custom
     return JSON.stringify(theme, null, '\t')
   })
   const editedTheme = ref(appliedThemeStringified.value)
@@ -82,7 +82,7 @@ const useEditedThemes = (
   const applyTheme = () => {
     try {
       const themeObj = JSON.parse(editedTheme.value)
-      const res = themeJsonSchema.safeParse(themeObj)
+      const res = themeSchema.safeParse(themeObj)
       if (res.success) {
         emit('changeTheme', res.data)
       } else {

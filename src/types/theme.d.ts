@@ -1,8 +1,8 @@
-export type BasicTheme = import('/@/lib/theme/schema').BasicTheme
+export type Theme = import('/@/lib/theme/schema').Theme
 
 declare global {
   interface Window {
-    defaultLightTheme: BasicTheme
-    defaultDarkTheme: BasicTheme
+    defaultLightTheme: Theme
+    defaultDarkTheme: Theme
   }
 }
