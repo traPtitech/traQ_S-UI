@@ -1,6 +1,6 @@
 import { transparentizeWithFallback } from '/@/lib/basic/color'
 import { resolveBasicTheme, ResolvedBasicTheme } from './basic'
-import { Theme, CSSColorType, BrowserTheme } from '/@/types/theme'
+import { Theme, CSSColorType, BrowserTheme } from '/@/lib/theme/schema'
 import { ResolvedMarkdownTheme, resolveMarkdownTheme } from './markdown'
 
 export type ResolvedTheme = {

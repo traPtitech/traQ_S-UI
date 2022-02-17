@@ -2,7 +2,7 @@ import { defineGetters } from 'direct-vuex'
 import { ThemeType } from '.'
 import { S } from './state'
 import { resolveTheme, ResolvedTheme } from '/@/lib/theme/resolve'
-import { Theme } from '/@/types/theme'
+import { Theme } from '/@/lib/theme/schema'
 
 const lightTheme = { basic: window.defaultLightTheme }
 const darkTheme = { basic: window.defaultDarkTheme }

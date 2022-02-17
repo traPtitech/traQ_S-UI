@@ -45,12 +45,10 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType, watchEffect } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { BasicTheme, Theme, ThemeJson } from '/@/types/theme'
+import { Theme, ThemeJson, themeJsonSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useToastStore from '/@/providers/toastStore'
-
-const lightTheme = window.defaultLightTheme
 
 const useEditedThemes = (
   props: { custom: Theme },
@@ -77,22 +75,6 @@ const useEditedThemes = (
     }
   })
 
-  // TODO: もっとちゃんとしたバリデーション
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isValidThemeJSON = (theme: any): theme is ThemeJson => {
-    if (!('version' in theme) || theme.version !== 2) return false
-    if (!('basic' in theme)) return false
-
-    return (Object.keys(lightTheme) as Array<keyof BasicTheme>).every(
-      category =>
-        Object.keys(theme.basic[category]).every(
-          colorName =>
-            theme.basic[category] &&
-            theme.basic[category][colorName] &&
-            typeof theme.basic[category][colorName] === 'string'
-        )
-    )
-  }
   const failedUpdateTheme = (text: string) => {
     addErrorToast(`テーマの更新に失敗しました: ${text}`)
   }
@@ -100,10 +82,18 @@ const useEditedThemes = (
   const applyTheme = () => {
     try {
       const themeObj = JSON.parse(editedTheme.value)
-      if (isValidThemeJSON(themeObj)) {
-        emit('changeTheme', themeObj)
+      const res = themeJsonSchema.safeParse(themeObj)
+      if (res.success) {
+        emit('changeTheme', res.data)
       } else {
-        failedUpdateTheme('構文エラー')
+        failedUpdateTheme(
+          `構文エラー: ${res.error.issues
+            .map(
+              issue =>
+                `[${issue.code}](${issue.path.join('.')}) ${issue.message}`
+            )
+            .join()}`
+        )
       }
     } catch {
       failedUpdateTheme('無効なJSON')

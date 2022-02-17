@@ -47,6 +47,7 @@
               >
                 <p :class="$style.name">{{ name }}</p>
                 <!-- eslint-disable vue/valid-v-model -->
+                <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
                 <form-input
                   v-model="(val[name as keyof typeof val] as string)"
                   use-change-event
@@ -70,7 +71,7 @@ import { defineComponent, computed } from 'vue'
 import store from '/@/store'
 import useSyncedState from '/@/components/Settings/use/syncedState'
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
-import { Theme } from '/@/types/theme'
+import { Theme } from '/@/lib/theme/schema'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 

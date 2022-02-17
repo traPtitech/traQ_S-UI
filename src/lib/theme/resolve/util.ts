@@ -1,4 +1,4 @@
-import { CSSColorType, CSSColorTypeSimple } from '/@/types/theme'
+import { CSSColorType, CSSColorTypeSimple } from '/@/lib/theme/schema'
 
 export type OnlyDefault<T> = {
   default: T

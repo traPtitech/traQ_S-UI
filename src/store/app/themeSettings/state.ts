@@ -1,4 +1,4 @@
-import { Theme } from '/@/types/theme'
+import { Theme } from '/@/lib/theme/schema'
 import { ThemeType } from '.'
 
 export interface S {

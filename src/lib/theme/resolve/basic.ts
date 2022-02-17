@@ -4,7 +4,7 @@ import {
   CSSColorType,
   CSSColorTypeSimple,
   CSSImageType
-} from '/@/types/theme'
+} from '/@/lib/theme/schema'
 
 export type ResolvedBasicTheme = {
   accent: {

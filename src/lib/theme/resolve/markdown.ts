@@ -1,6 +1,6 @@
 import { isDarkColor } from '/@/lib/basic/color'
 import { ResolvedBasicTheme } from './basic'
-import { MarkdownDefaultTheme, MarkdownTheme } from '/@/types/theme'
+import { MarkdownDefaultTheme, MarkdownTheme } from '/@/lib/theme/schema'
 
 export type ResolvedMarkdownTheme = MarkdownTheme & {
   codeHighlight: 'light' | 'dark'
