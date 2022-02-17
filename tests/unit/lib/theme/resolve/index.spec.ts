@@ -46,10 +46,16 @@ describe('resolveTheme', () => {
   test('can resolve browser', () => {
     const actual = resolveTheme(input)
     const expected = {
+      themeColor: '#005BAC',
+      colorScheme: 'light',
+
+      selectionText: '#FFFFFF',
+      selectionBackground: 'rgba(0, 91, 172, 0.5)',
+      caret: undefined,
+
       scrollbarThumb: 'rgba(107, 125, 138, 0.5)',
       scrollbarThumbHover: 'rgba(107, 125, 138, 0.8)',
-      scrollbarTrack: 'transparent',
-      themeColor: '#005BAC'
+      scrollbarTrack: 'transparent'
     }
     expect(actual.browser).toStrictEqual(expected)
   })

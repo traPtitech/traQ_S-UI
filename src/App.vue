@@ -86,13 +86,6 @@ const useOsDarkTheme = () => {
   })
 }
 
-const useScrollbarStyle = () =>
-  makeCSSVariables(theme => ({
-    '--scrollbar-color': theme.browser.scrollbarThumb,
-    '--scrollbar-hover-color': theme.browser.scrollbarThumbHover,
-    '--scrollbar-track-color': theme.browser.scrollbarTrack
-  }))
-
 const useThemeVariables = () =>
   makeCSSVariables((theme, common) => ({
     '--theme-accent-primary-default': theme.basic.accent.primary.default,
@@ -137,6 +130,14 @@ const useThemeVariables = () =>
       theme.specific.loadingSpinnerGapUiSecondary,
     '--specific-slider-background': theme.specific.sliderBackground,
 
+    '--color-scheme': theme.browser.colorScheme,
+    '--selection-text': theme.browser.selectionText,
+    '--selection-background': theme.browser.selectionBackground,
+    '--caret': theme.browser.caret ?? 'unset',
+    '--scrollbar-color': theme.browser.scrollbarThumb,
+    '--scrollbar-hover-color': theme.browser.scrollbarThumbHover,
+    '--scrollbar-track-color': theme.browser.scrollbarTrack,
+
     '--markdown-link-text': theme.markdown.linkText,
     '--markdown-hr-text': theme.markdown.hrText,
     '--markdown-h6-text': theme.markdown.h6Text,
@@ -174,21 +175,20 @@ const useThemeVariables = () =>
     '--common-drop-shadow-default': common.dropShadow.default
   }))
 
-const useStyle = () =>
-  computed(() => ({
-    ...useThemeVariables().value,
-    ...useScrollbarStyle().value
-  }))
-
-const useStyleBody = (style: Ref<Record<string, string>>) => {
-  const styleText = computed(() =>
-    Object.entries(style.value)
-      .map(([key, value]) => `${key}:${value}`)
-      .join(';')
+const useThemeStyleTag = (style: Ref<Record<string, string>>) => {
+  const styleText = computed(
+    () =>
+      `:root {
+${Object.entries(style.value)
+  .map(([key, value]) => `${key}:${value}`)
+  .join(';')}
+}`
   )
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const themeStyleTag = document.getElementById('theme-style')!
   watchEffect(() => {
-    document.body.style.cssText = styleText.value
+    themeStyleTag.textContent = styleText.value
   })
 }
 
@@ -213,8 +213,8 @@ export default defineComponent({
     useEcoModeObserver()
     useOsDarkTheme()
 
-    const style = useStyle()
-    useStyleBody(style)
+    const themeVariables = useThemeVariables()
+    useThemeStyleTag(themeVariables)
 
     return { isMobile }
   }

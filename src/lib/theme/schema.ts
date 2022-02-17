@@ -103,9 +103,24 @@ const browserThemeSchema = z.object({
    * @see https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta/name/theme-color
    */
   themeColor: CSSColorTypeSchema,
+  /**
+   * @default undefined background.primaryの色の明るさで自動で`'light dark'`か`'dark light'`になる
+   * @see https://developer.mozilla.org/ja/docs/Web/CSS/color-scheme
+   */
+  colorScheme: z.string(),
 
+  /** 選択状態になっている部分の文字色 */
+  selectionText: CSSColorTypeSimpleSchema,
+  /** 選択状態になっている部分の背景色 */
+  selectionBackground: CSSColorTypeSchema,
+  /** キャレットの色 */
+  caret: CSSColorTypeSchema.optional(),
+
+  /** スクロールバーのサムの色 */
   scrollbarThumb: CSSColorTypeSchema,
+  /** スクロールバーのサムのホバー状態の色 */
   scrollbarThumbHover: CSSColorTypeSchema,
+  /** スクロールバーのトラックの色 */
   scrollbarTrack: CSSColorTypeSchema
 })
 

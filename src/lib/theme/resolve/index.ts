@@ -1,4 +1,4 @@
-import { transparentizeWithFallback } from '/@/lib/basic/color'
+import { isDarkColor, transparentizeWithFallback } from '/@/lib/basic/color'
 import { resolveBasicTheme, ResolvedBasicTheme } from './basic'
 import { Theme, CSSColorType, BrowserTheme } from '/@/lib/theme/schema'
 import { ResolvedMarkdownTheme, resolveMarkdownTheme } from './markdown'
@@ -27,6 +27,16 @@ const resolveBrowserTheme = (
   basic: ResolvedBasicTheme
 ): BrowserTheme => ({
   themeColor: original?.themeColor ?? basic.accent.primary.default,
+  colorScheme:
+    original?.colorScheme ??
+    (isDarkColor(basic.background.primary.fallback) ? 'dark' : 'light'),
+
+  selectionText: original?.selectionText ?? basic.background.primary.border,
+  selectionBackground:
+    original?.selectionBackground ??
+    transparentizeWithFallback(basic.accent.primary.fallback, 0.5),
+  caret: original?.caret,
+
   scrollbarThumb:
     original?.scrollbarThumb ??
     transparentizeWithFallback(basic.ui.secondary.fallback, 0.5),
