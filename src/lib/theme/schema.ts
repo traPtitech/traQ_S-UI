@@ -31,22 +31,28 @@ const CSSImageTypeSchema = z.string()
 const maybeCSSColorTypeSimple = <T extends z.ZodTypeAny>(t: T) =>
   z.union([CSSColorTypeSimpleSchema, t])
 
+/**
+ * 破壊的変更を防ぐために
+ * - fallbackを常に定義すること
+ * - fallback以外はoptionalにすること
+ */
 export type BasicTheme = z.infer<typeof basicThemeSchema>
 const basicThemeSchema = z.object({
   accent: z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSColorTypeSchema,
-        background: CSSImageTypeSchema,
+        default: CSSColorTypeSchema.optional(),
+        background: CSSImageTypeSchema.optional(),
         /** hoverしていない状態など */
-        inactive: CSSColorTypeSchema,
+        inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     notification: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSColorTypeSchema,
-        background: CSSImageTypeSchema
+        default: CSSColorTypeSchema.optional(),
+        background: CSSImageTypeSchema.optional(),
+        fallback: CSSColorTypeSchema
       })
     ),
     online: CSSColorTypeSimpleSchema,
@@ -56,41 +62,42 @@ const basicThemeSchema = z.object({
   background: z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema,
-        border: CSSColorTypeSchema,
+        default: CSSImageTypeSchema.optional(),
+        border: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     secondary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema,
-        border: CSSColorTypeSchema,
+        default: CSSImageTypeSchema.optional(),
+        border: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     tertiary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema,
-        border: CSSColorTypeSchema
+        default: CSSImageTypeSchema.optional(),
+        border: CSSColorTypeSchema.optional(),
+        fallback: CSSColorTypeSimpleSchema
       })
     )
   }),
   ui: z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSColorTypeSchema,
-        background: CSSImageTypeSchema,
+        default: CSSColorTypeSchema.optional(),
+        background: CSSImageTypeSchema.optional(),
         /** hoverしていない状態など */
-        inactive: CSSColorTypeSchema,
+        inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     secondary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSColorTypeSchema,
-        background: CSSImageTypeSchema,
+        default: CSSColorTypeSchema.optional(),
+        background: CSSImageTypeSchema.optional(),
         /** hoverしていない状態など */
-        inactive: CSSColorTypeSchema,
+        inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),

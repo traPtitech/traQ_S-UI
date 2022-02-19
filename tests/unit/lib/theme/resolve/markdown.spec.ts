@@ -14,12 +14,14 @@ const basic: ResolvedBasicTheme = {
   accent: {
     primary: {
       default: '#000000',
-      background: '#000000',
-      fallback: '#000000'
+      background: '#100000',
+      inactive: '#200000',
+      fallback: '#300000'
     },
     notification: {
       default: '#000001',
-      background: '#000001'
+      background: '#100001',
+      fallback: '#200001'
     },
     online: {
       default: '#000002'
@@ -34,29 +36,32 @@ const basic: ResolvedBasicTheme = {
   background: {
     primary: {
       default: '#000010',
-      border: '#000010',
-      fallback: '#000010'
+      border: '#100010',
+      fallback: '#200010'
     },
     secondary: {
       default: '#000011',
-      border: '#000011',
-      fallback: '#000011'
+      border: '#100011',
+      fallback: '#200011'
     },
     tertiary: {
       default: '#000012',
-      border: '#000012'
+      border: '#100012',
+      fallback: '#200012'
     }
   },
   ui: {
     primary: {
       default: '#000020',
-      background: '#000020',
-      fallback: '#000020'
+      background: '#100020',
+      inactive: '#200020',
+      fallback: '#300020'
     },
     secondary: {
       default: '#000021',
-      background: '#000021',
-      fallback: '#000021'
+      background: '#100021',
+      inactive: '#200021',
+      fallback: '#300021'
     },
     tertiary: {
       default: '#000022'

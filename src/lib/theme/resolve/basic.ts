@@ -1,10 +1,5 @@
 import { transparentizeWithFallback } from '/@/lib/basic/color'
-import {
-  OnlyDefault,
-  passThroughOrResolve,
-  resolveOnlyDefault,
-  resolveWithFallback
-} from './util'
+import { OnlyDefault, resolveOnlyDefault, resolveWithFallback } from './util'
 import {
   BasicTheme,
   CSSColorType,
@@ -23,6 +18,7 @@ export type ResolvedBasicTheme = {
     notification: {
       default: CSSColorType
       background: CSSImageType
+      fallback: CSSColorTypeSimple
     }
     online: OnlyDefault<CSSColorType>
     error: OnlyDefault<CSSColorType>
@@ -42,6 +38,7 @@ export type ResolvedBasicTheme = {
     tertiary: {
       default: CSSImageType
       border: CSSColorType
+      fallback: CSSColorTypeSimple
     }
   }
   ui: {
@@ -65,20 +62,51 @@ export type ResolvedBasicTheme = {
   }
 }
 
+const resolveWithFallbackForDefaultBorder = <
+  T extends { default?: CSSImageType; border?: CSSColorType } | undefined
+>(
+  original: T,
+  fallback: CSSColorTypeSimple
+) => ({
+  default: original?.default ?? fallback,
+  border: original?.border ?? fallback,
+  fallback
+})
+
+const resolveWithFallbackForDefaultBackgroundInactive = <
+  T extends
+    | {
+        default?: CSSColorType
+        background?: CSSImageType
+        inactive?: CSSColorType
+      }
+    | undefined
+>(
+  original: T,
+  fallback: CSSColorTypeSimple
+) => ({
+  default: original?.default ?? fallback,
+  background: original?.background ?? fallback,
+  inactive: original?.inactive ?? transparentizeWithFallback(fallback, 0.5),
+  fallback
+})
+
 const resolveBasicThemeAccent = (
   original: BasicTheme['accent']
 ): ResolvedBasicTheme['accent'] => {
   return {
-    primary: resolveWithFallback(original.primary, (original, fallback) => ({
-      default: original?.default ?? fallback,
-      background: original?.background ?? fallback,
-      inactive: transparentizeWithFallback(fallback, 0.5),
-      fallback
-    })),
-    notification: passThroughOrResolve(original.notification, notification => ({
-      default: notification,
-      background: notification
-    })),
+    primary: resolveWithFallback(
+      original.primary,
+      resolveWithFallbackForDefaultBackgroundInactive
+    ),
+    notification: resolveWithFallback(
+      original.notification,
+      (original, fallback) => ({
+        default: original?.default ?? fallback,
+        background: original?.background ?? fallback,
+        fallback
+      })
+    ),
     online: resolveOnlyDefault(original.online),
     error: resolveOnlyDefault(original.error),
     focus: resolveOnlyDefault(original.focus)
@@ -88,37 +116,31 @@ const resolveBasicThemeAccent = (
 const resolveBasicThemeBackground = (
   original: BasicTheme['background']
 ): ResolvedBasicTheme['background'] => ({
-  primary: passThroughOrResolve(original.primary, primary => ({
-    default: primary,
-    border: primary,
-    fallback: primary
-  })),
-  secondary: passThroughOrResolve(original.secondary, secondary => ({
-    default: secondary,
-    border: secondary,
-    fallback: secondary
-  })),
-  tertiary: passThroughOrResolve(original.tertiary, tertiary => ({
-    default: tertiary,
-    border: tertiary
-  }))
+  primary: resolveWithFallback(
+    original.primary,
+    resolveWithFallbackForDefaultBorder
+  ),
+  secondary: resolveWithFallback(
+    original.secondary,
+    resolveWithFallbackForDefaultBorder
+  ),
+  tertiary: resolveWithFallback(
+    original.tertiary,
+    resolveWithFallbackForDefaultBorder
+  )
 })
 
 const resolveBasicThemeUi = (
   original: BasicTheme['ui']
 ): ResolvedBasicTheme['ui'] => ({
-  primary: resolveWithFallback(original.primary, (original, fallback) => ({
-    default: original?.default ?? fallback,
-    background: original?.background ?? fallback,
-    inactive: transparentizeWithFallback(fallback, 0.5),
-    fallback
-  })),
-  secondary: resolveWithFallback(original.secondary, (original, fallback) => ({
-    default: original?.default ?? fallback,
-    background: original?.background ?? fallback,
-    inactive: transparentizeWithFallback(fallback, 0.5),
-    fallback
-  })),
+  primary: resolveWithFallback(
+    original.primary,
+    resolveWithFallbackForDefaultBackgroundInactive
+  ),
+  secondary: resolveWithFallback(
+    original.secondary,
+    resolveWithFallbackForDefaultBackgroundInactive
+  ),
   tertiary: resolveOnlyDefault(original.tertiary)
 })
 
