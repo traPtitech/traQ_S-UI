@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <message-input-file-list-item-close-button
       :class="$style.closeButton"
-      @close="onClickClose"
+      @click="onClickClose"
     />
     <message-input-file-list-item-image
       v-if="state.showThumbnail"

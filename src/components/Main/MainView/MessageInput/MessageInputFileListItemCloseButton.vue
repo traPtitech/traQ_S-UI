@@ -1,43 +1,64 @@
 <template>
-  <button :class="$style.container" @click="close">
-    <a-icon mdi name="close-circle" :size="16" />
+  <button
+    :class="$style.container"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
+    <circle-icon
+      mdi
+      name="close"
+      :size="16"
+      :color="iconColor"
+      :background="iconBackgroundColor"
+    />
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, defineComponent } from 'vue'
+import CircleIcon from '/@/components/UI/CircleIcon.vue'
+import store from '/@/store'
+import useHover from '/@/use/hover'
 
 export default defineComponent({
   name: 'MessageInputFileListItemCloseButton',
   components: {
-    AIcon
+    CircleIcon
   },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const close = () => {
-      emit('close')
-    }
-    return { close }
+  setup() {
+    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+
+    const iconBackgroundColorNotHovered = computed(
+      () =>
+        store.getters.app.themeSettings.currentTheme.basic.ui.primary.inactive
+    )
+    const iconBackgroundColorHovered = computed(
+      () =>
+        store.getters.app.themeSettings.currentTheme.basic.ui.primary.default
+    )
+
+    const iconBackgroundColor = computed(() =>
+      isHovered.value
+        ? iconBackgroundColorHovered.value
+        : iconBackgroundColorNotHovered.value
+    )
+    const iconColor = computed(
+      () =>
+        store.getters.app.themeSettings.currentTheme.basic.background.primary
+          .border
+    )
+
+    return { onMouseEnter, onMouseLeave, iconBackgroundColor, iconColor }
   }
 })
 </script>
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
-  @include color-ui-primary;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: $z-index-message-input-file-close-button;
-
-  opacity: 0.5;
-  &:hover {
-    opacity: 0.8;
-  }
 }
 </style>
