@@ -90,11 +90,11 @@ export default defineComponent({
   font-weight: bold;
 }
 .icon {
+  @include color-ui-primary-inactive;
   margin-left: 4px;
   cursor: pointer;
-  opacity: 0.5;
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
   }
 }
 
@@ -108,17 +108,17 @@ export default defineComponent({
 }
 
 .valueWrapper {
-  @include color-ui-primary;
   display: flex;
   align-items: center;
 }
 .value {
+  @include color-ui-primary;
   flex: 1;
   height: 24px;
   // inputに合わせるため4pxの倍数でない
   margin: 3px 0;
   &[data-is-empty='true'] {
-    opacity: 0.5;
+    @include color-ui-primary-inactive;
   }
 }
 </style>

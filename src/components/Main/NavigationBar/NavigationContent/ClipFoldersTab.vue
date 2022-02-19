@@ -59,11 +59,10 @@ export default defineComponent({
   margin: 8px 0;
 }
 .button {
-  @include color-ui-secondary;
-  opacity: 0.5;
+  @include color-ui-secondary-inactive;
   cursor: pointer;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 </style>

@@ -127,26 +127,27 @@ export default defineComponent({
     border-radius: 8px;
   }
 }
-.icon,
-.closeIcon {
+.icon {
+  @include color-ui-primary;
   height: 1.5rem;
-
+  margin-right: 1rem;
   .container[data-is-mobile] & {
     @include color-ui-secondary;
   }
-  .container:not([data-is-mobile]) & {
-    @include color-ui-primary;
-  }
-}
-.icon {
-  margin-right: 1rem;
 }
 .closeIcon {
   margin-left: 1.5rem;
-  opacity: 0.5;
   cursor: pointer;
+  @include color-ui-primary-inactive;
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
+  }
+
+  .container[data-is-mobile] & {
+    @include color-ui-secondary-inactive;
+    &:hover {
+      @include color-ui-secondary;
+    }
   }
 }
 .input {
@@ -156,8 +157,7 @@ export default defineComponent({
 
   .container:not([data-is-mobile]) & {
     &::placeholder {
-      @include color-ui-secondary;
-      opacity: 0.5;
+      @include color-ui-secondary-inactive;
     }
   }
 }

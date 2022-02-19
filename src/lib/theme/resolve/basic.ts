@@ -1,4 +1,10 @@
-import { OnlyDefault, passThroughOrResolve, resolveOnlyDefault } from './util'
+import { transparentizeWithFallback } from '/@/lib/basic/color'
+import {
+  OnlyDefault,
+  passThroughOrResolve,
+  resolveOnlyDefault,
+  resolveWithFallback
+} from './util'
 import {
   BasicTheme,
   CSSColorType,
@@ -11,6 +17,7 @@ export type ResolvedBasicTheme = {
     primary: {
       default: CSSColorType
       background: CSSImageType
+      inactive: CSSColorType
       fallback: CSSColorTypeSimple
     }
     notification: {
@@ -41,11 +48,13 @@ export type ResolvedBasicTheme = {
     primary: {
       default: CSSColorType
       background: CSSImageType
+      inactive: CSSColorType
       fallback: CSSColorTypeSimple
     }
     secondary: {
       default: CSSColorType
       background: CSSImageType
+      inactive: CSSColorType
       fallback: CSSColorTypeSimple
     }
     tertiary: OnlyDefault<CSSColorType>
@@ -60,10 +69,11 @@ const resolveBasicThemeAccent = (
   original: BasicTheme['accent']
 ): ResolvedBasicTheme['accent'] => {
   return {
-    primary: passThroughOrResolve(original.primary, primary => ({
-      default: primary,
-      background: primary,
-      fallback: primary
+    primary: resolveWithFallback(original.primary, (original, fallback) => ({
+      default: original?.default ?? fallback,
+      background: original?.background ?? fallback,
+      inactive: transparentizeWithFallback(fallback, 0.5),
+      fallback
     })),
     notification: passThroughOrResolve(original.notification, notification => ({
       default: notification,
@@ -97,15 +107,17 @@ const resolveBasicThemeBackground = (
 const resolveBasicThemeUi = (
   original: BasicTheme['ui']
 ): ResolvedBasicTheme['ui'] => ({
-  primary: passThroughOrResolve(original.primary, primary => ({
-    default: primary,
-    background: primary,
-    fallback: primary
+  primary: resolveWithFallback(original.primary, (original, fallback) => ({
+    default: original?.default ?? fallback,
+    background: original?.background ?? fallback,
+    inactive: transparentizeWithFallback(fallback, 0.5),
+    fallback
   })),
-  secondary: passThroughOrResolve(original.secondary, secondary => ({
-    default: secondary,
-    background: secondary,
-    fallback: secondary
+  secondary: resolveWithFallback(original.secondary, (original, fallback) => ({
+    default: original?.default ?? fallback,
+    background: original?.background ?? fallback,
+    inactive: transparentizeWithFallback(fallback, 0.5),
+    fallback
   })),
   tertiary: resolveOnlyDefault(original.tertiary)
 })

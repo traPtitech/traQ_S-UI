@@ -38,6 +38,8 @@ const basicThemeSchema = z.object({
       z.object({
         default: CSSColorTypeSchema,
         background: CSSImageTypeSchema,
+        /** hoverしていない状態など */
+        inactive: CSSColorTypeSchema,
         fallback: CSSColorTypeSimpleSchema
       })
     ),
@@ -78,6 +80,8 @@ const basicThemeSchema = z.object({
       z.object({
         default: CSSColorTypeSchema,
         background: CSSImageTypeSchema,
+        /** hoverしていない状態など */
+        inactive: CSSColorTypeSchema,
         fallback: CSSColorTypeSimpleSchema
       })
     ),
@@ -85,6 +89,8 @@ const basicThemeSchema = z.object({
       z.object({
         default: CSSColorTypeSchema,
         background: CSSImageTypeSchema,
+        /** hoverしていない状態など */
+        inactive: CSSColorTypeSchema,
         fallback: CSSColorTypeSimpleSchema
       })
     ),

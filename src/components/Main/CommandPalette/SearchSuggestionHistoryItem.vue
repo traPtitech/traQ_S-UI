@@ -58,11 +58,11 @@ export default defineComponent({
   word-break: break-all;
 }
 .icon {
+  @include color-ui-primary-inactive;
   margin-left: 0.5rem;
-  opacity: 0.5;
   cursor: pointer;
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
   }
 }
 </style>

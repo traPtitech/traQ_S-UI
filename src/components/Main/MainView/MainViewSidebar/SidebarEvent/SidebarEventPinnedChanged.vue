@@ -99,6 +99,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .deletedMessage {
-  opacity: 0.5;
+  @include color-ui-primary-inactive;
 }
 </style>

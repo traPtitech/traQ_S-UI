@@ -60,7 +60,7 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   &[data-is-disabled] {
-    opacity: 0.5;
+    @include color-ui-primary-inactive;
     cursor: not-allowed;
   }
   &[data-header-style='dark'] {

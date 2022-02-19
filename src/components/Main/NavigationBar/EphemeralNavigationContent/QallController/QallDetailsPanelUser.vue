@@ -133,17 +133,15 @@ export default defineComponent({
   }
 }
 .icon {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   height: 20px;
-  opacity: 0.5;
 }
 .button {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   height: 20px;
-  opacity: 0.5;
   cursor: pointer;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 .tuneDone {

@@ -70,11 +70,9 @@ export default defineComponent({
   cursor: pointer;
 }
 .icon {
-  @include color-ui-secondary;
-  opacity: 0.5;
+  @include color-ui-secondary-inactive;
   .star[aria-selected='true'] & {
     @include color-accent-primary;
-    opacity: 1;
   }
 }
 </style>

@@ -58,12 +58,10 @@ export default defineComponent({
 }
 
 .icon {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   vertical-align: middle;
-  opacity: 0.5;
   .container[aria-pressed='true'] & {
     @include color-accent-primary;
-    opacity: 1;
   }
 }
 </style>

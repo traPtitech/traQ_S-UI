@@ -46,14 +46,12 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   display: inline-block;
-  border-color: $theme-ui-secondary-default;
-  opacity: 0.5;
+  border-color: $theme-ui-secondary-inactive;
   vertical-align: middle;
 
   &[data-is-online] {
     background: $theme-accent-online-default;
     border-color: transparent;
-    opacity: 1;
   }
 }
 </style>

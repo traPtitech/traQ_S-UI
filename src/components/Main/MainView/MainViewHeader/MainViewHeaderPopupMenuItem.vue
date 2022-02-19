@@ -49,7 +49,7 @@ export default defineComponent({
   display: flex;
   cursor: pointer;
   &[data-is-disabled] {
-    opacity: 0.5;
+    @include color-ui-primary-inactive;
     cursor: not-allowed;
   }
 }

@@ -225,10 +225,9 @@ $radius: 4px;
   align-items: flex-end;
 
   &[data-is-archived] {
-    @include color-ui-secondary;
+    @include color-ui-secondary-inactive;
     justify-content: flex-start;
     align-items: center;
-    opacity: 0.5;
     cursor: not-allowed;
   }
 }

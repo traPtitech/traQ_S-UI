@@ -203,8 +203,7 @@ $vertical-padding: 8px;
   padding-right: calc(8px + 24px + 8px + 24px + var(--input-scrollbar-width));
   max-height: 160px;
   &[readonly] {
-    @include color-ui-secondary;
-    opacity: 0.5;
+    @include color-ui-secondary-inactive;
     cursor: wait;
   }
   &[data-is-mobile='true'] {

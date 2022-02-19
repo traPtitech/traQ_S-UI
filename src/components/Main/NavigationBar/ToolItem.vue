@@ -29,16 +29,15 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
   cursor: pointer;
-  opacity: 0.5;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 </style>

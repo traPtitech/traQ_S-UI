@@ -83,11 +83,10 @@ export default defineComponent({
   font-weight: bold;
 }
 .addIcon {
-  @include color-ui-primary;
+  @include color-ui-primary-inactive;
   cursor: pointer;
-  opacity: 0.5;
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
   }
 }
 

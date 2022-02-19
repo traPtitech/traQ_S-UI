@@ -26,6 +26,9 @@
 @mixin color-accent-primary {
     color: $theme-accent-primary-default;
 }
+@mixin color-accent-primary-inactive {
+    color: $theme-accent-primary-inactive;
+}
 
 @mixin background-accent-error {
     background: $theme-accent-error-default;
@@ -44,8 +47,14 @@
 @mixin color-ui-primary {
     color: $theme-ui-primary-default;
 }
+@mixin color-ui-primary-inactive {
+    color: $theme-ui-primary-inactive;
+}
 @mixin color-ui-secondary {
     color: $theme-ui-secondary-default;
+}
+@mixin color-ui-secondary-inactive {
+    color: $theme-ui-secondary-inactive;
 }
 @mixin color-ui-tertiary {
     color: $theme-ui-tertiary-default;

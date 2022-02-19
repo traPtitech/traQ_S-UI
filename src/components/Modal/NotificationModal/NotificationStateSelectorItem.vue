@@ -54,7 +54,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include color-ui-primary;
+  @include color-ui-primary-inactive;
   display: grid;
   grid-template:
     'icon title' 24px
@@ -64,13 +64,11 @@ export default defineComponent({
   width: 100%;
   user-select: none;
   cursor: pointer;
-  opacity: 0.5;
 
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
   }
   &[aria-selected='true'] {
-    opacity: 1;
     @include color-accent-primary;
   }
 }

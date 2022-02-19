@@ -42,7 +42,7 @@ export default defineComponent({
 <style lang="scss" module>
 .newTopic {
   &[data-is-empty='true'] {
-    opacity: 0.5;
+    @include color-ui-primary-inactive;
   }
 }
 </style>
