@@ -50,7 +50,8 @@ export default defineConfig(({ command, mode }) => ({
         additionalData: `
           @use "sass:math";
           @import "${srcPath}/styles/common.scss";
-        `
+        `,
+        charset: false
       }
     }
   },
