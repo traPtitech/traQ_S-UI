@@ -1,4 +1,11 @@
-import { Color, parseColor, stringifyColor } from '/@/lib/basic/color'
+import {
+  Color,
+  isDarkColor,
+  parseColor,
+  stringifyColor,
+  transparentize,
+  transparentizeWithFallback
+} from '/@/lib/basic/color'
 
 describe('parseColor', () => {
   const tests: ReadonlyArray<{
@@ -264,5 +271,37 @@ describe('stringifyColor', () => {
       a: 0.2
     } as const
     expect(stringifyColor(input)).toBe('hsla(195, 100%, 13%, 0.2)')
+  })
+})
+
+describe('transparentize', () => {
+  it('can transparentize color without alpha', () => {
+    const actual = transparentize('rgb(0, 0, 0)', 0.5)
+    const expected = 'rgba(0, 0, 0, 0.5)'
+    expect(actual).toBe(expected)
+  })
+  it('can transparentize color with alpha', () => {
+    const actual = transparentize('rgb(0, 0, 0, 0.5)', 0.5)
+    const expected = 'rgba(0, 0, 0, 0.25)'
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('transparentizeWithFallback', () => {
+  it('can fallback', () => {
+    const actual = transparentizeWithFallback('invalid', 0.5)
+    const expected = 'invalid'
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('isDarkColor', () => {
+  it('can detect rgb', () => {
+    const actual = isDarkColor('rgb(0,0,0)')
+    expect(actual).toBe(true)
+  })
+  it('can detect hsl', () => {
+    const actual = isDarkColor('hsl(0,0%,0%)')
+    expect(actual).toBe(true)
   })
 })
