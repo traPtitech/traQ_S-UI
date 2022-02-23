@@ -4,7 +4,7 @@ describe('createSingleFlight', () => {
   const createSff = () => {
     const counters = new Map<string, number>()
 
-    const f = jest.fn((id: string) => {
+    const f = vi.fn((id: string) => {
       return new Promise<number>(resolve => {
         setTimeout(() => {
           if (!counters.has(id)) {

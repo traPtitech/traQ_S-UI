@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite'
 import * as path from 'path'
 import packageJson from './package.json'
@@ -11,6 +13,7 @@ import webManifest from './webmanifest'
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
 import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
+import GithubActionsReporter from 'vitest-github-actions-reporter'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
@@ -55,9 +58,9 @@ export default defineConfig(({ command, mode }) => ({
   },
   // /@/lib/define.tsを参照
   define: {
-    __VERSION__: JSON.stringify(packageJson.version),
+    __VERSION__: JSON.stringify(mode === 'test' ? 'test' : packageJson.version),
     __DEV_SERVER__: JSON.stringify(
-      command === 'serve' ? DEV_SERVER_PROXY_HOST : ''
+      mode === 'development' ? DEV_SERVER_PROXY_HOST : ''
     )
   },
   json: {
@@ -99,5 +102,20 @@ export default defineConfig(({ command, mode }) => ({
       ]
     }),
     brotli()
-  ]
+  ],
+  test: {
+    include: ['tests/unit/**/*.spec.ts'],
+    globals: true,
+    setupFiles: ['tests/unit/setup.ts'],
+    environment: 'jsdom',
+    reporters: process.env.CI
+      ? new GithubActionsReporter({ hideStackTrace: true })
+      : 'default',
+    // デフォルトの設定でも動くが遅いので、より範囲を狭めて指定している
+    coverage: {
+      include: ['src/**/*'],
+      exclude: [],
+      reporter: ['text', 'lcov']
+    }
+  }
 }))

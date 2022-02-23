@@ -1,27 +1,19 @@
 import { rAF, wait } from '/@/lib/basic/timer'
 
-jest.useFakeTimers()
-
 describe('wait', () => {
-  beforeEach(() => {
-    const spy = jest.spyOn(global, 'setTimeout')
-    spy.mockClear()
-  })
-
   it('can wait', async () => {
-    const p = wait(1000)
-
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000)
-
-    jest.runAllTimers()
+    const before = Date.now()
+    const p = wait(100)
     await expect(p).resolves.toBeUndefined()
+    const after = Date.now()
+
+    expect(after - before).toBeGreaterThanOrEqual(100)
   })
 })
 
 describe('rAF', () => {
   beforeEach(() => {
-    const spy = jest.spyOn(global, 'requestAnimationFrame')
+    const spy = vi.spyOn(global, 'requestAnimationFrame')
     spy.mockClear()
   })
 
@@ -31,7 +23,6 @@ describe('rAF', () => {
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
     expect(requestAnimationFrame).toHaveBeenLastCalledWith(expect.any(Function))
 
-    jest.runAllTimers()
     await expect(p).resolves.toEqual(expect.any(Number))
   })
 })

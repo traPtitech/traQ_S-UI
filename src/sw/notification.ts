@@ -8,7 +8,7 @@ import { wait } from '/@/lib/basic/timer'
 import { FirebasePayloadData } from '/@/lib/notification/firebase'
 import { ServiceWorkerNavigateMessage } from '/@/lib/notification/notification'
 
-declare const self: ServiceWorkerGlobalScope
+declare const self: typeof globalThis
 
 const postMessage = (channelId: ChannelId, text: string) =>
   fetch(`/api/v3/channels/${channelId}/messages`, {

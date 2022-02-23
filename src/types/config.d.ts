@@ -109,10 +109,6 @@ export type Config = Readonly<{
 }>
 
 declare global {
-  interface Window {
-    traQConfig: Config
-  }
-  interface ServiceWorkerGlobalScope {
-    traQConfig: Config
-  }
+  // eslint-disable-next-line no-var
+  var traQConfig: Config
 }
