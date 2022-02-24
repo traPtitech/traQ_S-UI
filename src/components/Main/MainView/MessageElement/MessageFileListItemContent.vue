@@ -7,7 +7,7 @@
     <file-description
       :file-id="fileId"
       :is-white="isWhite"
-      :is-ellipsis="true"
+      is-ellipsis
       :class="$style.description"
     />
   </router-link>

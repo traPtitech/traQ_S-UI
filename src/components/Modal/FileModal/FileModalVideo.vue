@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <div v-if="fileMeta" :class="$style.container">
       <div :class="$style.header">
-        <file-modal-content-header :file-id="fileMeta.id" :is-white="true" />
+        <file-modal-content-header :file-id="fileMeta.id" is-white />
       </div>
       <video
         controls
@@ -11,7 +11,7 @@
         :src="fileRawPath"
       />
       <div :class="$style.footer">
-        <file-modal-content-footer :file-id="fileMeta.id" :is-white="true" />
+        <file-modal-content-footer :file-id="fileMeta.id" is-white />
       </div>
     </div>
   </div>

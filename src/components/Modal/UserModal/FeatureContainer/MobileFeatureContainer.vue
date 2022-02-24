@@ -1,6 +1,6 @@
 <template>
   <section :class="$style.feature">
-    <user-icon :user-id="user.id" :prevent-modal="true" :size="48" />
+    <user-icon :user-id="user.id" prevent-modal :size="48" />
     <div :class="$style.names">
       <h1 :class="$style.displayName">{{ user.displayName }}</h1>
       <div :class="$style.nameInfo">
