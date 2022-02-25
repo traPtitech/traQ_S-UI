@@ -70,5 +70,5 @@ $themeColor: $theme-ui-secondary;
 
 $tooltipBgColor: $theme-ui-secondary;
 
-@import '/~/vue-slider-component/lib/theme/default.scss';
+@import 'vue-slider-component/lib/theme/default.scss';
 </style>

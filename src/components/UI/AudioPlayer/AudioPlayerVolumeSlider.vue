@@ -85,7 +85,7 @@ $afterVolumeSliderWidth: 48px;
     $bgColor: #b7b9ba;
     $themeColor: #585859;
 
-    @import '/~/vue-slider-component/lib/theme/default.scss';
+    @import 'vue-slider-component/lib/theme/default.scss';
   }
 }
 .volumeSlider {

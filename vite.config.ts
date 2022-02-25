@@ -17,8 +17,7 @@ const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 export default defineConfig(({ command, mode }) => ({
   resolve: {
     alias: {
-      '/@': path.resolve(__dirname, 'src'),
-      '/~': path.resolve(__dirname, 'node_modules')
+      '/@': path.resolve(__dirname, 'src')
     }
   },
   server: {
