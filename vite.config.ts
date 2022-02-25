@@ -13,13 +13,12 @@ import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 
 const keepAliveAgent = new HttpsAgent({ keepAlive: true })
-const srcPath = path.resolve(__dirname, 'src').replace(/\\/g, '/')
 
 export default defineConfig(({ command, mode }) => ({
   resolve: {
     alias: {
-      '/@': srcPath,
-      '/~': path.resolve(__dirname, 'node_modules').replace(/\\/g, '/')
+      '/@': path.resolve(__dirname, 'src'),
+      '/~': path.resolve(__dirname, 'node_modules')
     }
   },
   server: {
@@ -49,7 +48,7 @@ export default defineConfig(({ command, mode }) => ({
       scss: {
         additionalData: `
           @use "sass:math";
-          @import "${srcPath}/styles/common.scss";
+          @import "/@/styles/common.scss";
         `,
         charset: false
       }
