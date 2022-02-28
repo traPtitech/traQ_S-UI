@@ -43,9 +43,11 @@
     </div>
     <div :class="$style.bottomSpacer"></div>
     <message-tools-menu-container
-      area="main"
+      v-show="isMenuShown"
       :use-message-context-menu-store="useMessageContextMenuStore"
-    />
+    >
+      <message-tools-menu :message-id="menuState.target" />
+    </message-tools-menu-container>
   </div>
 </template>
 
@@ -81,6 +83,7 @@ import {
   useMessageContextMenuStore
 } from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
+import MessageToolsMenu from './MessageToolsMenu.vue'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -176,7 +179,11 @@ const useScrollRestoration = (
 
 export default defineComponent({
   name: 'MessagesScroller',
-  components: { MessagesScrollerSeparator, MessageToolsMenuContainer },
+  components: {
+    MessagesScrollerSeparator,
+    MessageToolsMenuContainer,
+    MessageToolsMenu
+  },
   props: {
     messageIds: {
       type: Array as PropType<MessageId[]>,
@@ -211,7 +218,7 @@ export default defineComponent({
     requestLoadLatter: () => true
   },
   setup(props, { emit }) {
-    provideMessageContextMenuStore()
+    // provideMessageContextMenuStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
@@ -321,6 +328,11 @@ export default defineComponent({
 
     const dayDiff = useCompareDate(props)
 
+    const [menuState, isMenuShown] = (() => {
+      const { state, isShown } = useMessageContextMenuStore()
+      return [state, isShown]
+    })()
+
     return {
       state,
       onClick,
@@ -332,6 +344,8 @@ export default defineComponent({
       dayDiff,
       messageComponent,
       createdDate,
+      menuState,
+      isMenuShown,
       useMessageContextMenuStore
     }
   }

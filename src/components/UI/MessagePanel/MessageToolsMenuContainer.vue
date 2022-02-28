@@ -1,14 +1,8 @@
 <template>
-  <teleport v-show="isShown" to="#message-menu-popup">
+  <teleport to="#message-menu-popup">
     <div ref="menuContainerRef">
       <click-outside @click-outside="closeContextMenu">
-        <component
-          :is="menuComponent"
-          v-if="isShown"
-          :style="styles.toolsMenu"
-          :class="$style.toolsMenu"
-          :message-id="state.target"
-        />
+        <div :style="styles.toolsMenu" :class="$style.toolsMenu"><slot /></div>
       </click-outside>
     </div>
   </teleport>
@@ -29,8 +23,6 @@ import {
   ComputedRef
 } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import MessageToolsMenu from '/@/components/Main/MainView/MessagesScroller/MessageToolsMenu.vue'
-import SidebarPinnedToolsMenu from '/@/components/Main/MainView/MainViewSidebar/SidebarPinned/SidebarPinnedToolsMenu.vue'
 
 const useMenuHeight = (isShown: Ref<boolean>) => {
   const height = ref(0)
@@ -66,10 +58,6 @@ export default defineComponent({
   name: 'MessageToolsMenuContainer',
   components: { ClickOutside },
   props: {
-    area: {
-      type: String as PropType<'main' | 'sidebar'>,
-      required: true
-    },
     useMessageContextMenuStore: {
       type: Function as PropType<
         () => {
@@ -89,9 +77,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const menuComponent =
-      props.area === 'main' ? MessageToolsMenu : SidebarPinnedToolsMenu
-
     const { state, isShown, closeContextMenu } =
       props.useMessageContextMenuStore()
     const position = toRef(state, 'position')
@@ -100,8 +85,6 @@ export default defineComponent({
     const styles = useStyles(position, isShown, height)
 
     return {
-      menuComponent,
-      state,
       isShown,
       menuContainerRef,
       styles,

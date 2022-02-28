@@ -15,9 +15,11 @@
       ピン留めされたメッセージはありません
     </div>
     <message-tools-menu-container
-      area="sidebar"
+      v-show="isShown"
       :use-message-context-menu-store="useMessageContextMenuStore"
-    />
+    >
+      <sidebar-pinned-tools-menu :message-id="state.target" />
+    </message-tools-menu-container>
   </div>
 </template>
 
@@ -31,10 +33,15 @@ import {
   provideMessageContextMenuStore,
   useMessageContextMenuStore
 } from '../providers/messageContextMenu'
+import SidebarPinnedToolsMenu from './SidebarPinnedToolsMenu.vue'
 
 export default defineComponent({
   name: 'SidebarPinnedList',
-  components: { SidebarPinned, MessageToolsMenuContainer },
+  components: {
+    SidebarPinned,
+    MessageToolsMenuContainer,
+    SidebarPinnedToolsMenu
+  },
   props: {
     pinnedMessages: {
       type: Array as PropType<Pin[]>,
@@ -42,7 +49,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    provideMessageContextMenuStore()
+    // provideMessageContextMenuStore()
 
     const sortedMessages = computed(() =>
       [...props.pinnedMessages]
@@ -50,7 +57,15 @@ export default defineComponent({
         .map(pinnedMessage => pinnedMessage.message)
     )
 
-    return { sortedMessages, constructMessagesPath, useMessageContextMenuStore }
+    const { state, isShown } = useMessageContextMenuStore()
+
+    return {
+      sortedMessages,
+      constructMessagesPath,
+      state,
+      isShown,
+      useMessageContextMenuStore
+    }
   }
 })
 </script>
