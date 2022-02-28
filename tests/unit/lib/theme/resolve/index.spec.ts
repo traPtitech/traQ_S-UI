@@ -38,6 +38,7 @@ describe('resolveTheme', () => {
       navigationBarMobileBackground: '#E2E5E9',
       mainViewBackground: '#FFFFFF',
       sideBarBackground: '#F0F2F5',
+      stampEdgeEnable: false,
       channelHashOpened: '#F0F2F5',
       channelUnreadBadgeText: '#F0F2F5',
       loadingSpinnerGapUiSecondary: 'rgba(107, 125, 138, 0.5)',

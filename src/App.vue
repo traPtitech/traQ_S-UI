@@ -68,6 +68,11 @@ const useThemeObserver = () => {
       'dark'
   )
   useHtmlDatasetBoolean('codeHighlight', codeHighlight)
+
+  const stampEdge = computed(
+    () => store.getters.app.themeSettings.currentTheme.specific.stampEdgeEnable
+  )
+  useHtmlDatasetBoolean('stampEdge', stampEdge)
 }
 
 const useEcoModeObserver = () => {

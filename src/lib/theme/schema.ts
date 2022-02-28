@@ -104,7 +104,9 @@ const specificThemeSchema = z.object({
   navigationBarDesktopBackground: CSSImageTypeSchema,
   navigationBarMobileBackground: CSSImageTypeSchema,
   mainViewBackground: CSSImageTypeSchema,
-  sideBarBackground: CSSImageTypeSchema
+  sideBarBackground: CSSImageTypeSchema,
+
+  stampEdgeEnable: z.boolean()
 })
 
 export type BrowserTheme = z.infer<typeof browserThemeSchema>
