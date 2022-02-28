@@ -70,6 +70,8 @@ const resolveSpecificTheme = (
   sideBarBackground:
     original?.sideBarBackground ?? basic.background.secondary.default,
 
+  stampEdgeEnable: original?.stampEdgeEnable ?? false,
+
   channelHashOpened: basic.background.secondary.border,
   channelUnreadBadgeText: basic.background.secondary.border,
   messageHoverBackground: transparentizeWithFallback(

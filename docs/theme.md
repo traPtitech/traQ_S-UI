@@ -108,6 +108,12 @@ type SpecificTheme = {
   mainViewBackground: CSSImageType
   /** サイドバー(右の部分)の背景色 */
   sideBarBackground: CSSImageType
+
+  /**
+   * スタンプに縁をつけるか
+   * @default false
+   */
+  stampEdgeEnable: boolean
 }
 ```
 

@@ -1,15 +1,15 @@
 <template>
-  <img
-    v-if="imageUrl.length > 0"
-    loading="lazy"
-    :class="$style.container"
-    :style="styles.container"
-    :src="imageUrl"
-    :alt="name"
-    :title="!withoutTitle ? name : undefined"
-    draggable="false"
-  />
-  <div v-else :class="$style.container" :style="styles.container" />
+  <div :class="$style.container" :style="styles.container">
+    <img
+      v-if="imageUrl.length > 0"
+      :class="$style.img"
+      loading="lazy"
+      :src="imageUrl"
+      :alt="name"
+      :title="!withoutTitle ? name : undefined"
+      draggable="false"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -61,5 +61,14 @@ export default defineComponent({
   object-fit: contain;
   user-select: none;
   contain: content; // strictだと縦横比がうまくいかない
+}
+
+.img {
+  html[data-stamp-edge] & {
+    filter: drop-shadow(0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
+      drop-shadow(0.1px -0.1px 0 rgb(255, 255, 255, 0.1))
+      drop-shadow(-0.1px 0.1px 0 rgb(255, 255, 255, 0.1))
+      drop-shadow(-0.1px -0.1px 0 rgb(255, 255, 255, 0.1));
+  }
 }
 </style>
