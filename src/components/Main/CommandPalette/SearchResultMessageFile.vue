@@ -40,7 +40,7 @@ export default defineComponent({
   grid-template-columns: 1.5rem max-content;
   column-gap: 1rem;
   padding: 0.5rem 1rem;
-  border: 2px solid $theme-ui-secondary;
+  border: 2px solid $theme-ui-secondary-default;
   border-radius: 4px;
   overflow: hidden;
 }

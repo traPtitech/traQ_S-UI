@@ -37,7 +37,7 @@ export default defineComponent({
   @include size-caption;
   text-align: right;
   &[data-is-exceeded] {
-    color: $theme-accent-error;
+    color: $theme-accent-error-default;
   }
 }
 </style>

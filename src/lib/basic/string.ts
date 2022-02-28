@@ -43,3 +43,14 @@ export const lastIndexOf = (
       target.lastIndexOf(searchString, position)
     )
   )
+
+/**
+ * strからendを取り除いた文字列を返す
+ * endがstrの最後に存在しなかった場合は何もしない
+ */
+export const trimEnd = (str: string, end: string) => {
+  if (str.endsWith(end)) {
+    return str.slice(0, -end.length)
+  }
+  return str
+}

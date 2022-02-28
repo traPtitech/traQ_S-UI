@@ -63,7 +63,7 @@ export default defineComponent({
   border: solid 2px transparent;
   border-radius: 4px;
   &:focus-within {
-    border-color: $theme-accent-focus;
+    border-color: $theme-accent-focus-default;
   }
 }
 
@@ -80,7 +80,7 @@ export default defineComponent({
   position: relative;
   height: 13px;
   width: 13px;
-  border: solid 2px $theme-ui-primary;
+  border: solid 2px $theme-ui-primary-default;
   border-radius: 50%;
   &[aria-checked='false'] {
     opacity: 0.5;
@@ -98,7 +98,7 @@ export default defineComponent({
   margin: auto;
   border-radius: 50%;
   .pseudoRadio[aria-checked='true'] & {
-    background: $theme-ui-primary;
+    background: $theme-ui-primary-background;
   }
 }
 </style>

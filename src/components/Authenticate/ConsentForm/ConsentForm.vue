@@ -100,6 +100,6 @@ export default defineComponent({
 }
 .error {
   font-weight: bold;
-  color: $theme-accent-error;
+  color: $theme-accent-error-default;
 }
 </style>

@@ -38,7 +38,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   position: relative;
-  border: 2px solid $theme-background-secondary;
+  border: 2px solid $theme-background-secondary-border;
   border-radius: 6px; // border分
   height: 6rem;
   width: 9rem;

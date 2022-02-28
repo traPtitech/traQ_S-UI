@@ -108,10 +108,10 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include color-ui-secondary;
+  @include background-primary;
   position: absolute;
-  background: $theme-background-primary;
   transform: translateY(-100%);
-  border: solid 2px $theme-background-secondary;
+  border: solid 2px $theme-background-secondary-border;
   border-radius: 4px;
   filter: $common-drop-shadow-default;
   z-index: $z-index-word-suggester;
@@ -119,6 +119,6 @@ export default defineComponent({
 .scroll {
   overflow-y: scroll;
   max-height: 32px * 4.5;
-  border-top: 2px solid $theme-background-secondary;
+  border-top: 2px solid $theme-background-secondary-border;
 }
 </style>

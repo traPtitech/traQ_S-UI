@@ -48,7 +48,7 @@ export default defineComponent({
 
   &[aria-selected='true'] {
     @include color-accent-primary;
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-primary-default;
   }
 }
 </style>

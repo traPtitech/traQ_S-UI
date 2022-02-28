@@ -42,7 +42,7 @@ $input-border-radius: 4px;
 .bar {
   height: 100%;
   width: 100%;
-  background: $theme-ui-primary;
+  background: $theme-ui-primary-background;
   opacity: 0.3;
   transition: transform 0.1s ease;
   will-change: transform;

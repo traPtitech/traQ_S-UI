@@ -35,7 +35,7 @@
         <template v-if="state.type === 'custom'">
           <div :class="$style.setting">
             <div
-              v-for="(val, category) in state.custom"
+              v-for="(val, category) in state.custom.basic"
               :key="category"
               :class="$style.category"
             >
@@ -46,12 +46,15 @@
                 :class="$style.color"
               >
                 <p :class="$style.name">{{ name }}</p>
+                <!-- eslint-disable vue/valid-v-model -->
+                <!-- TODO: 自動適用じゃなくてバリデーションしてから適用するようにする -->
                 <form-input
-                  v-model="val[name as keyof typeof val]"
+                  v-model="(val[name as keyof typeof val] as string)"
                   use-change-event
                   on-secondary
                   :class="$style.input"
                 />
+                <!-- eslint-enable vue/valid-v-model -->
               </div>
             </div>
           </div>
@@ -68,7 +71,7 @@ import { defineComponent, computed } from 'vue'
 import store from '/@/store'
 import useSyncedState from '/@/components/Settings/use/syncedState'
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
-import { Theme } from '/@/types/theme'
+import { Theme } from '/@/lib/theme/schema'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 

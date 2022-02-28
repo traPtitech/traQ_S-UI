@@ -74,7 +74,7 @@ export default defineComponent({
   position: relative;
   border: {
     style: solid;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
     radius: 50%;
   }
   cursor: pointer;
@@ -92,7 +92,7 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     transform-origin: center;
-    background: $theme-ui-secondary;
+    background: $theme-ui-secondary-background;
   }
   &::before {
     transform: translate(-50%, -50%) rotate(-45deg);

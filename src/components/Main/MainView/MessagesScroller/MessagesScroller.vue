@@ -369,11 +369,11 @@ export default defineComponent({
 }
 
 .unreadSeparator {
-  color: $theme-accent-notification;
+  color: $theme-accent-notification-default;
 }
 
 .dateSeparator,
 .noMoreSeparator {
-  color: $theme-ui-secondary;
+  @include color-ui-secondary;
 }
 </style>

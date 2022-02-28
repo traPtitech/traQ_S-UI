@@ -94,10 +94,10 @@ export default defineComponent({
   }
 }
 .controlIcon {
+  @include color-ui-secondary-inactive;
   cursor: pointer;
-  opacity: 0.5;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 </style>

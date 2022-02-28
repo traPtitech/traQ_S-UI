@@ -94,21 +94,19 @@ export default defineComponent({
   white-space: nowrap;
 }
 .ancestor {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   @include size-body1;
-  opacity: 0.5;
   cursor: pointer;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 .ancestorSeparator {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   &[data-is-primary] {
-    @include color-ui-primary;
+    @include color-ui-primary-inactive;
   }
   @include size-body1;
-  opacity: 0.5;
   margin: 0 0.125rem;
   user-select: none;
 }
@@ -122,12 +120,12 @@ export default defineComponent({
   margin-right: 0.125rem;
 }
 .ancestorHash {
+  @include color-ui-primary-inactive;
   @include size-h1;
-  opacity: 0.5;
   margin-right: 0.125rem;
   user-select: none;
   &:hover {
-    opacity: 1;
+    @include color-ui-primary;
   }
 }
 </style>

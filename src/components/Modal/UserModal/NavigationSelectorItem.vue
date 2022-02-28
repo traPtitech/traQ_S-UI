@@ -40,10 +40,10 @@ export default defineComponent({
 
   &[aria-selected='true'] {
     @include color-accent-primary;
-    border-color: $theme-accent-primary;
+    border-color: $theme-accent-primary-default;
   }
   &:not([aria-selected='true']):hover {
-    border-color: $theme-ui-secondary;
+    border-color: $theme-ui-secondary-default;
   }
 }
 </style>

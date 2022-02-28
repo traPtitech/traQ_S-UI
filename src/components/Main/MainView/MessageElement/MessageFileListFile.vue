@@ -42,7 +42,7 @@ export default defineComponent({
     style: solid;
     width: 2px;
     radius: 4px;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
   }
   overflow: hidden;
   cursor: pointer;

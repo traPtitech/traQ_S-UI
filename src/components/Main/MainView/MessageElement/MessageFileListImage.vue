@@ -85,7 +85,7 @@ export default defineComponent({
   border: {
     width: 2px;
     style: solid;
-    color: $theme-background-secondary;
+    color: $theme-background-secondary-border;
   }
   img {
     cursor: pointer;
@@ -99,7 +99,7 @@ export default defineComponent({
   border: {
     width: 2px;
     style: solid;
-    color: $theme-background-secondary;
+    color: $theme-background-secondary-border;
   }
   max-width: 100%;
   img {

@@ -95,10 +95,11 @@ export default defineComponent({
   align-items: start;
 }
 .content {
+  @include color-ui-primary;
   word-break: break-all;
   min-width: 0;
   &[data-is-empty] {
-    opacity: 0.5;
+    @include color-ui-primary-inactive;
   }
 }
 .editor {
@@ -107,19 +108,23 @@ export default defineComponent({
   resize: none;
 }
 .button {
-  @include color-ui-primary;
+  @include color-ui-primary-inactive;
+  &:hover {
+    @include color-ui-primary;
+  }
   &[data-is-editing] {
-    @include color-accent-primary;
+    @include color-accent-primary-inactive;
+    &:hover {
+      @include color-accent-primary;
+    }
   }
   cursor: pointer;
-  opacity: 0.5;
-  &:hover {
-    opacity: 1;
-  }
   &[data-is-exceeded] {
-    color: $theme-accent-error;
+    color: $theme-accent-error-default;
     cursor: default;
-    opacity: 1;
+    &:hover {
+      color: $theme-accent-error-default;
+    }
   }
 }
 </style>

@@ -47,7 +47,7 @@ export default defineComponent({
   border-left: {
     style: solid;
     width: 2px;
-    color: $theme-ui-tertiary;
+    color: $theme-ui-tertiary-default;
   }
   [data-is-mobile] & {
     padding-left: 12px;

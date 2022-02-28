@@ -3,7 +3,8 @@ import {
   compareStringInsensitive,
   count,
   countLength,
-  lastIndexOf
+  lastIndexOf,
+  trimEnd
 } from '/@/lib/basic/string'
 
 describe('compareString', () => {
@@ -66,5 +67,14 @@ describe('lastIndexOf', () => {
   })
   it('can find with position', () => {
     expect(lastIndexOf('target', ['t', 'r'], 4)).toBe(2)
+  })
+})
+
+describe('trimEnd', () => {
+  it('should trim', () => {
+    expect(trimEnd('abcd', 'cd')).toBe('ab')
+  })
+  it('should keep', () => {
+    expect(trimEnd('abcd', 'ef')).toBe('abcd')
   })
 })

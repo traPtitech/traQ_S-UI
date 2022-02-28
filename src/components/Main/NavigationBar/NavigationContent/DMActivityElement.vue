@@ -66,6 +66,6 @@ export default defineComponent({
   margin: 4px 0;
 }
 .content {
-  opacity: 0.5;
+  @include color-ui-primary-inactive;
 }
 </style>

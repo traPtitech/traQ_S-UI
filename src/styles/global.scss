@@ -4,6 +4,11 @@
 @import './transition';
 @import './scrollbar';
 
+:root {
+  color-scheme: var(--color-scheme);
+  caret-color: var(--caret);
+}
+
 body {
   font-family: 'Inter', 'M PLUS 1p', 'Avenir', 'Helvetica Neue', 'Helvetica',
     'Arial', 'Hiragino Sans', 'ヒラギノ角ゴシック', YuGothic, 'Yu Gothic',
@@ -19,4 +24,9 @@ body {
 
 img {
   image-orientation: from-image;
+}
+
+::selection {
+  color: var(--selection-text);
+  background-color: var(--selection-background);
 }

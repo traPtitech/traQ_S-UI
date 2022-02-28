@@ -42,7 +42,7 @@ export default defineComponent({
 .container {
   @include color-ui-primary;
   &[data-is-white] {
-    color: $common-text-white-primary;
+    @include color-common-text-white-primary;
   }
   width: 100%;
 }

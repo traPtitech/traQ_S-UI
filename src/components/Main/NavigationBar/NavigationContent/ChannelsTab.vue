@@ -154,12 +154,11 @@ export default defineComponent({
   margin-bottom: 16px;
 }
 .button {
-  @include color-ui-secondary;
+  @include color-ui-secondary-inactive;
   padding-right: 16px;
-  opacity: 0.5;
   cursor: pointer;
   &:hover {
-    opacity: 1;
+    @include color-ui-secondary;
   }
 }
 </style>

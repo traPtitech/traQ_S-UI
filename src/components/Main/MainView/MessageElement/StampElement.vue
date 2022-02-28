@@ -112,7 +112,7 @@ export default defineComponent({
 .body {
   @include background-tertiary;
   &[data-include-me] {
-    background: $theme-accent-primary--03;
+    background: var(--specific-stamp-include-me-background);
   }
   display: inline-flex;
   flex-shrink: 0;
@@ -145,7 +145,7 @@ export default defineComponent({
 }
 
 .count {
-  color: $theme-ui-primary--06;
+  color: var(--specific-count-text);
   .body[data-include-me] &,
   .body:hover & {
     @include color-ui-primary;

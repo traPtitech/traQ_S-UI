@@ -184,7 +184,7 @@ export default defineComponent({
     box-shadow: 0 1px 3px 0;
   }
   &[data-is-minimum] {
-    border: solid 2px $theme-ui-tertiary;
+    border: solid 2px $theme-ui-tertiary-default;
   }
 }
 
@@ -193,7 +193,7 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
 
-  border: solid 2px $theme-ui-tertiary;
+  border: solid 2px $theme-ui-tertiary-default;
   border-radius: 4px;
   border-right: none;
   border-top-right-radius: 0;
@@ -205,7 +205,7 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
 
-  border: solid 2px $theme-ui-tertiary;
+  border: solid 2px $theme-ui-tertiary-default;
   border-radius: 4px;
   &[data-hide-left-border] {
     border-left: none;

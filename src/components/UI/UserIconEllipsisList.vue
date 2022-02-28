@@ -98,8 +98,8 @@ $countSize: 1.15rem;
 }
 
 .userIcon {
-  border: solid $theme-background-primary;
-  background-color: $theme-background-primary;
+  border: solid $theme-background-primary-border;
+  background-color: $theme-background-primary-border;
 }
 
 .count {

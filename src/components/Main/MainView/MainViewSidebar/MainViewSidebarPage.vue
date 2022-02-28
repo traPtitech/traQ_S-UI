@@ -50,12 +50,12 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-secondary;
   @include color-ui-secondary;
   display: flex;
   flex-direction: column;
   width: 320px;
   height: 100%;
+  background: var(--specific-side-bar-background);
   overflow: auto;
 }
 

@@ -45,12 +45,10 @@
 <script lang="ts">
 import { defineComponent, computed, ref, PropType, watchEffect } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { Theme } from '/@/types/theme'
+import { Theme, themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import useToastStore from '/@/providers/toastStore'
-
-const lightTheme = window.defaultLightTheme
 
 const useEditedThemes = (
   props: { custom: Theme },
@@ -58,9 +56,10 @@ const useEditedThemes = (
 ) => {
   const { addErrorToast } = useToastStore()
 
-  const appliedThemeStringified = computed(() =>
-    JSON.stringify(props.custom, null, '\t')
-  )
+  const appliedThemeStringified = computed(() => {
+    const theme = props.custom
+    return JSON.stringify(theme, null, '\t')
+  })
   const editedTheme = ref(appliedThemeStringified.value)
   watchEffect(() => {
     editedTheme.value = appliedThemeStringified.value
@@ -76,17 +75,6 @@ const useEditedThemes = (
     }
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isValidThemeJSON = (theme: any): theme is Theme => {
-    return (Object.keys(lightTheme) as Array<keyof Theme>).every(category =>
-      Object.keys(lightTheme[category]).every(
-        colorName =>
-          theme[category] &&
-          theme[category][colorName] &&
-          typeof theme[category][colorName] === 'string'
-      )
-    )
-  }
   const failedUpdateTheme = (text: string) => {
     addErrorToast(`テーマの更新に失敗しました: ${text}`)
   }
@@ -94,10 +82,18 @@ const useEditedThemes = (
   const applyTheme = () => {
     try {
       const themeObj = JSON.parse(editedTheme.value)
-      if (isValidThemeJSON(themeObj)) {
-        emit('changeTheme', themeObj)
+      const res = themeSchema.safeParse(themeObj)
+      if (res.success) {
+        emit('changeTheme', res.data)
       } else {
-        failedUpdateTheme('構文エラー')
+        failedUpdateTheme(
+          `構文エラー: ${res.error.issues
+            .map(
+              issue =>
+                `[${issue.code}](${issue.path.join('.')}) ${issue.message}`
+            )
+            .join()}`
+        )
       }
     } catch {
       failedUpdateTheme('無効なJSON')
@@ -166,7 +162,7 @@ export default defineComponent({
   border: solid 2px transparent;
   padding: 4px;
   &:focus-within {
-    border-color: $theme-accent-focus;
+    border-color: $theme-accent-focus-default;
   }
 }
 .import {

@@ -100,8 +100,7 @@ export default defineComponent({
     transform: scale(1.1);
   }
   &[disabled] {
-    @include color-ui-secondary;
-    opacity: 0.5;
+    @include color-ui-secondary-inactive;
     cursor: not-allowed;
   }
 }

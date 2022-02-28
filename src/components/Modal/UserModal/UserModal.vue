@@ -118,7 +118,7 @@ export default defineComponent({
   grid-template-columns: min-content 1fr;
   grid-template-rows: min-content 1fr;
   height: 100%;
-  border: 4px solid $theme-background-secondary;
+  border: 4px solid $theme-background-secondary-border;
   border-radius: 16px;
   overflow: hidden;
 }
@@ -131,13 +131,13 @@ export default defineComponent({
 }
 
 .icon {
-  background-color: $theme-background-secondary;
+  background-color: $theme-background-secondary-border;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: $z-index-user-modal-header;
   margin: auto;
-  border: 6px solid $theme-background-secondary;
+  border: 6px solid $theme-background-secondary-border;
 }
 </style>

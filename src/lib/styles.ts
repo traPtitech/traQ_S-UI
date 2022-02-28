@@ -1,8 +1,11 @@
 import store from '/@/store'
-import { Theme } from '/@/types/theme'
 import { computed, CSSProperties } from 'vue'
+import { ResolvedTheme } from '/@/lib/theme/resolve'
 
-export type ThemeClaim<T> = (theme: Readonly<Theme>, common: CommonStyles) => T
+export type ThemeClaim<T> = (
+  theme: Readonly<ResolvedTheme>,
+  common: CommonStyles
+) => T
 
 export const makeStyles = (claim: ThemeClaim<CSSProperties>) => {
   return computed(() =>

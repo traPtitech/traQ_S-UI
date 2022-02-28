@@ -36,8 +36,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  color: $theme-background-secondary;
-  background: $theme-ui-secondary;
+  color: var(--specific-channel-unread-badge-text);
+  background: $theme-ui-secondary-background;
   padding: 0 4px;
   min-width: 24px;
   flex-shrink: 0;
@@ -45,7 +45,7 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   &[data-is-noticeable] {
-    background: $theme-accent-notification;
+    background: $theme-accent-notification-background;
   }
 }
 </style>

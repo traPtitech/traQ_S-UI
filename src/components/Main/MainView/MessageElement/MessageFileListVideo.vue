@@ -52,7 +52,7 @@ export default defineComponent({
     width: 2px;
     style: solid;
     radius: 6px;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
   }
   video {
     display: block;
@@ -61,9 +61,9 @@ export default defineComponent({
   }
 }
 .overlay {
+  @include background-common-overlay;
   position: absolute;
   width: 100%;
-  background: $common-background-overlay;
   cursor: pointer;
   z-index: $z-index-message-attachment-video-overlay;
   backdrop-filter: blur(0px);
@@ -83,7 +83,7 @@ export default defineComponent({
     width: 2px;
     style: solid;
     radius: 6px;
-    color: $theme-ui-secondary;
+    color: $theme-ui-secondary-default;
   }
 }
 </style>

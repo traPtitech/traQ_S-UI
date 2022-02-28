@@ -139,21 +139,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.container {
-  @include color-ui-primary;
-}
-.current {
-  @include color-accent-primary;
-}
-
 .channel {
   margin-left: 4px;
   padding-left: 12px;
   font-weight: bold;
   word-break: break-all;
-  border-left: solid $theme-background-tertiary;
+  border-left: solid $theme-background-tertiary-border;
   &[data-is-children] {
-    border-left: solid $theme-background-secondary;
+    border-left: solid $theme-background-secondary-border;
   }
   &[data-is-parent]:first-child {
     margin-left: 0px;

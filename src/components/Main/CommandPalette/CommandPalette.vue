@@ -63,7 +63,7 @@ $command-palette-max-width: min(1000px, calc(100vw - 16px));
     max-height: calc(100vh - 56px);
     margin: 32px auto 24px auto;
     border-radius: 8px;
-    border: 2px solid $theme-background-secondary;
+    border: 2px solid $theme-background-secondary-border;
   }
   &[data-is-mobile] {
     height: 100%;

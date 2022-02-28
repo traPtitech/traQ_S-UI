@@ -23,7 +23,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .bar {
-  background: linear-gradient(0, $theme-ui-primary, $theme-ui-primary),
+  background: linear-gradient(
+      0,
+      $theme-ui-primary-default,
+      $theme-ui-primary-default
+    ),
     linear-gradient(45deg, #ccc, #444, #ccc);
   background-blend-mode: color;
   background-size: 400% 100%;

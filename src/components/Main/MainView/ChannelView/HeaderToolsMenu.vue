@@ -152,6 +152,6 @@ export default defineComponent({
   }
 }
 .manageChannel {
-  color: $theme-accent-error;
+  color: $theme-accent-error-default;
 }
 </style>

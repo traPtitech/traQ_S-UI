@@ -77,7 +77,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-tertiary;
   display: grid;
   grid-template:
     'toolbox' min-content
@@ -87,6 +86,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   padding: 16px;
+  background: var(--specific-navigation-bar-mobile-background);
   &[data-has-ephemeral-content] {
     grid-template:
       'toolbox' min-content

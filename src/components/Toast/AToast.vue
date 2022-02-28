@@ -81,6 +81,7 @@ export default defineComponent({
 <style lang="scss" module>
 .container {
   @include drop-shadow-default;
+  @include color-common-text-white-primary;
   display: flex;
   align-items: center;
   width: 320px;
@@ -89,23 +90,21 @@ export default defineComponent({
   padding: 8px;
   border-radius: 4px;
   pointer-events: auto;
-  color: $theme-background-primary;
   user-select: none;
   &[data-type='success'] {
     @include background-accent-primary;
   }
   &[data-type='error'] {
-    background: $theme-accent-error;
+    background: $theme-accent-error-default;
   }
   &[data-type='info'] {
-    background: $theme-ui-secondary;
+    background: $theme-ui-secondary-background;
   }
   &[role='button'] {
     cursor: pointer;
   }
 }
 .icon {
-  @include color-common-text-white-primary;
   margin: 4px;
   flex-shrink: 0;
   vertical-align: middle;

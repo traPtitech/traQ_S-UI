@@ -96,7 +96,7 @@ export default defineComponent({
     @include color-ui-primary;
     &[data-is-inactive] {
       @include color-ui-secondary;
-      border-color: $theme-ui-secondary;
+      border-color: $theme-ui-secondary-default;
     }
     &[aria-selected='true'] {
       @include color-accent-primary;
@@ -114,50 +114,50 @@ export default defineComponent({
       right: -4px;
     }
     &[data-is-opened] {
-      color: $theme-background-secondary;
-      background: $theme-ui-primary;
+      color: var(--specific-channel-hash-opened);
+      background: $theme-ui-primary-background;
       &:hover::before {
-        background: $theme-ui-primary;
+        background: $theme-ui-primary-background;
         opacity: 0.5;
       }
       &[data-is-inactive] {
-        background: $theme-ui-secondary;
+        background: $theme-ui-secondary-background;
         &:hover::before {
-          background: $theme-ui-secondary;
+          background: $theme-ui-secondary-background;
         }
       }
       &[aria-selected='true'] {
         @include background-accent-primary;
         &:hover::before {
-          background: $theme-accent-primary;
+          @include background-accent-primary;
         }
       }
     }
     &:not([data-is-opened]) {
       @include color-ui-primary;
-      border-color: $theme-ui-primary;
+      border-color: $theme-ui-primary-default;
       &:hover::before {
-        background: $theme-ui-primary;
+        background: $theme-ui-primary-background;
         opacity: 0.2;
       }
       &[data-is-inactive] {
         @include color-ui-secondary;
-        border-color: $theme-ui-secondary;
+        border-color: $theme-ui-secondary-default;
         &:hover::before {
-          background: $theme-ui-secondary;
+          background: $theme-ui-secondary-background;
         }
       }
       &[data-has-notification-on-child] {
-        border-color: $theme-accent-notification;
+        border-color: $theme-accent-notification-default;
         &:hover::before {
-          background: $theme-accent-notification;
+          background: $theme-accent-notification-background;
         }
       }
       &[aria-selected='true'] {
         @include color-accent-primary;
-        border-color: $theme-accent-primary;
+        border-color: $theme-accent-primary-default;
         &:hover::before {
-          background: $theme-accent-primary;
+          @include background-accent-primary;
         }
       }
     }

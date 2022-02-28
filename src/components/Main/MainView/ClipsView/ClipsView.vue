@@ -23,9 +23,9 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  @include background-primary;
   @include color-ui-primary;
   width: 100%;
   height: 100%;
+  background: var(--specific-main-view-background);
 }
 </style>

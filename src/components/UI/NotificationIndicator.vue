@@ -33,7 +33,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .container {
-  background: $theme-accent-notification;
-  border-color: $theme-background-secondary;
+  background: $theme-accent-notification-background;
+  border-color: $theme-background-secondary-border;
 }
 </style>

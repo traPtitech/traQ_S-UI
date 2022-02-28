@@ -65,6 +65,6 @@ export default defineComponent({
 
 .quote {
   padding-left: 16px;
-  border-left: solid 4px $theme-ui-tertiary;
+  border-left: solid 4px $theme-ui-tertiary-default;
 }
 </style>
