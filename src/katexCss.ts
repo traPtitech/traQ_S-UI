@@ -1,1 +1,1 @@
-import '/~/katex/dist/katex.css'
+import 'katex/dist/katex.css'

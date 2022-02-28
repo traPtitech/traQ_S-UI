@@ -47,7 +47,9 @@ module.exports = {
     'vue/match-component-file-name': ['error', { extensions: ['vue'] }],
     'vue/v-on-function-call': 'error',
     'vue/require-emit-validator': 'error',
-    'vue/no-template-target-blank': 'error'
+    'vue/no-template-target-blank': 'error',
+    'vue/prefer-true-attribute-shorthand': 'error',
+    'vue/prefer-import-from-vue': 'error'
   },
   overrides: [
     {

@@ -20,11 +20,11 @@ $link-background-color: var(--markdown-embed-link-background);
 $link-highlight-text-color: var(--markdown-embed-link-highlight-text);
 $link-highlight-background-color: var(--markdown-embed-link-highlight-background);
 
-@import '/~/@traptitech/traq-markdown-it/src/css/markdown';
+@import '@traptitech/traq-markdown-it/src/css/markdown';
 
 html[data-code-highlight='light'] {
-  @import '/~/highlight.js/styles/atom-one-dark';
+  @import 'highlight.js/styles/atom-one-dark';
 }
 html[data-code-highlight='dark'] {
-  @import '/~/highlight.js/styles/atom-one-light';
+  @import 'highlight.js/styles/atom-one-light';
 }

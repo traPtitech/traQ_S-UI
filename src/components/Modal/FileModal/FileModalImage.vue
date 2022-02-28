@@ -1,10 +1,7 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <file-modal-content-header
-        :file-id="fileMeta?.id ?? ''"
-        :is-white="true"
-      />
+      <file-modal-content-header :file-id="fileMeta?.id ?? ''" is-white />
     </div>
     <image-viewer
       :class="$style.img"
@@ -12,10 +9,7 @@
       :alt="fileMeta?.name ?? 'unknown'"
     />
     <div :class="$style.footer">
-      <file-modal-content-footer
-        :file-id="fileMeta?.id ?? ''"
-        :is-white="true"
-      />
+      <file-modal-content-footer :file-id="fileMeta?.id ?? ''" is-white />
     </div>
   </div>
 </template>

@@ -5,7 +5,7 @@
       <user-icon
         :user-id="detail.id"
         :size="100"
-        :prevent-modal="true"
+        prevent-modal
         :class="$style.icon"
       />
       <image-upload

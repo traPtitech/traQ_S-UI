@@ -1,25 +1,23 @@
 import { defineConfig } from 'vite'
-import path from 'path'
+import * as path from 'path'
 import packageJson from './package.json'
 import { VitePWA } from 'vite-plugin-pwa'
 import VuePlugin from '@vitejs/plugin-vue'
 import brotli from 'rollup-plugin-brotli'
 import svgLoader from 'vite-svg-loader'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import https from 'https'
+import { Agent as HttpsAgent } from 'https'
 import webManifest from './webmanifest'
 import { DEV_SERVER_PROXY_HOST } from './dev.config'
 import browserslist from 'browserslist'
 import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
 
-const keepAliveAgent = new https.Agent({ keepAlive: true })
-const srcPath = path.resolve(__dirname, 'src').replace(/\\/g, '/')
+const keepAliveAgent = new HttpsAgent({ keepAlive: true })
 
 export default defineConfig(({ command, mode }) => ({
   resolve: {
     alias: {
-      '/@': srcPath,
-      '/~': path.resolve(__dirname, 'node_modules').replace(/\\/g, '/')
+      '/@': path.resolve(__dirname, 'src')
     }
   },
   server: {
@@ -49,7 +47,7 @@ export default defineConfig(({ command, mode }) => ({
       scss: {
         additionalData: `
           @use "sass:math";
-          @import "${srcPath}/styles/common.scss";
+          @import "/@/styles/common.scss";
         `,
         charset: false
       }
