@@ -53,7 +53,9 @@ export default defineComponent({
     changeValue: (_val: number) => true
   },
   setup(props, { emit }) {
-    const onChange = (val: number) => {
+    // vue sliderの型が変
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onChange: any = (val: number) => {
       emit('changeValue', val)
     }
     return { onChange }
