@@ -1,4 +1,4 @@
 // ./tsconfig.jsonでincludesに含まれることで読み込まれる
 
-/// <reference types="jest" />
+/// <reference types="vitest/globals" />
 /// <reference types="node" />

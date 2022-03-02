@@ -1,6 +1,6 @@
 Object.defineProperty(window, 'OfflineAudioContext', {
   writable: true,
-  value: jest.fn((_numberOfChannels, _length, sampleRate) => {
+  value: vi.fn((_numberOfChannels, _length, sampleRate) => {
     if (sampleRate < 100) {
       throw new DOMException('not supported')
     } else if (sampleRate < 1000) {

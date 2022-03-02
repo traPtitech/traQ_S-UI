@@ -64,20 +64,6 @@ module.exports = {
       }
     },
     {
-      files: [
-        '**/__tests__/*.{js,mjs,jsx,ts,tsx}',
-        '**/tests/unit/**/*.spec.{js,mjs,jsx,ts,tsx}'
-      ],
-      extends: ['plugin:jest/style'],
-      env: {
-        node: true
-      },
-      rules: {
-        'jest/prefer-comparison-matcher': 'error',
-        'jest/prefer-equality-matcher': 'error'
-      }
-    },
-    {
       files: ['**/tests/e2e/**/*.{js,mjs,jsx,ts,tsx}'],
       extends: ['plugin:cypress/recommended'],
       env: {

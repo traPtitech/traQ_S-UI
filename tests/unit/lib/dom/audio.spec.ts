@@ -5,18 +5,18 @@ const dummyWavUrl =
 
 describe('destroyAudio', () => {
   it('should destroy', () => {
-    const pauseMock = jest
+    const pauseMock = vi
       .spyOn(window.HTMLMediaElement.prototype, 'pause')
       .mockImplementation(() => {
         /* empty */
       })
-    const loadMock = jest
+    const loadMock = vi
       .spyOn(window.HTMLMediaElement.prototype, 'load')
       .mockImplementation(() => {
         /* empty */
       })
 
-    const $audio = new Audio(dummyWavUrl)
+    const $audio = new window.Audio(dummyWavUrl)
     destroyAudio($audio)
 
     expect($audio.src).toBe('')

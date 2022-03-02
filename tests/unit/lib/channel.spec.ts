@@ -8,8 +8,6 @@ import {
 } from '/@/lib/channel'
 import { ChannelLike } from '/@/lib/channelTree'
 
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "expectResultToBeSame"] }] */
-
 describe('canCreateChildChannel', () => {
   it('can create', () => {
     expect(canCreateChildChannel('a/b/c', false)).toBe(true)
