@@ -99,7 +99,7 @@
     "vitest": "^0.5.9",
     "vitest-github-actions-reporter": "^0.1.6",
     "vue-tsc": "^0.32.1",
-    "workbox-cacheable-response": "^6.5.0",
+    "workbox-cacheable-response": "^6.5.1",
     "workbox-core": "^6.5.0",
     "workbox-precaching": "^6.5.0",
     "workbox-routing": "^6.5.0",
