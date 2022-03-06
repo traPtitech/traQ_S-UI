@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from 'vue'
+import { defineComponent, reactive, PropType, computed } from 'vue'
 import { commonStyles, ThemeClaim } from '/@/lib/styles'
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
@@ -59,10 +59,6 @@ export default defineComponent({
     return { styles }
   }
 })
-
-function computed(arg0: () => { color: string | undefined }): any {
-  throw new Error('Function not implemented.')
-}
 </script>
 
 <style lang="scss" module>
