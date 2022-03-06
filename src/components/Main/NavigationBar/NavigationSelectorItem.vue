@@ -13,14 +13,18 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType } from 'vue'
-import { makeStyles, ThemeClaim } from '/@/lib/styles'
+import { commonStyles, ThemeClaim } from '/@/lib/styles'
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+import store from '/@/store'
 
 const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
   return reactive({
-    container: makeStyles((theme, common) => ({
-      color: props.colorClaim?.(theme, common)
+    container: computed(() => ({
+      color: props.colorClaim?.(
+        store.getters.app.themeSettings.currentTheme,
+        commonStyles
+      )
     }))
   })
 }
@@ -55,6 +59,10 @@ export default defineComponent({
     return { styles }
   }
 })
+
+function computed(arg0: () => { color: string | undefined }): any {
+  throw new Error('Function not implemented.')
+}
 </script>
 
 <style lang="scss" module>

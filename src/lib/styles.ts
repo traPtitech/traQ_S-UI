@@ -1,25 +1,9 @@
-import store from '/@/store'
-import { computed, CSSProperties } from 'vue'
 import { ResolvedTheme } from '/@/lib/theme/resolve'
 
 export type ThemeClaim<T> = (
   theme: Readonly<ResolvedTheme>,
   common: CommonStyles
 ) => T
-
-export const makeStyles = (claim: ThemeClaim<CSSProperties>) => {
-  return computed(() =>
-    claim(store.getters.app.themeSettings.currentTheme, commonStyles)
-  )
-}
-
-export const makeCSSVariables = (
-  claim: ThemeClaim<Record<`--${string}`, string>>
-) => {
-  return computed(() =>
-    claim(store.getters.app.themeSettings.currentTheme, commonStyles)
-  )
-}
 
 /** テーマに依存しない色 */
 export const commonStyles = {
