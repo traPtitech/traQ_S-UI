@@ -1,5 +1,5 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '/@/vuex'
+import store from '/@/vuex'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
@@ -13,6 +13,7 @@ import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -31,6 +32,8 @@ const useRouteWatcher = () => {
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
+  const { defaultChannelName, loadingPromise: browserSettingsLoadingPromise } =
+    useBrowserSettings()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -46,8 +49,8 @@ const useRouteWatcher = () => {
   })
 
   const useOpenChannel = async () => {
-    await originalStore.restored
-    return computed(() => store.getters.app.browserSettings.defaultChannelName)
+    await browserSettingsLoadingPromise.value
+    return defaultChannelName
   }
 
   const onRouteChangedToIndex = async () => {

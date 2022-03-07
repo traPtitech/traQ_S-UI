@@ -16,3 +16,14 @@ export const overwrite = <T>(target: T, data: Partial<T>) => {
     setByTuple(target, tuple)
   })
 }
+
+export const hasKey = <K extends string>(
+  obj: object,
+  key: K
+): obj is { [k in K]: unknown } => key in obj
+
+export const isObjectAndHasKey = <K extends string>(
+  obj: unknown,
+  key: K
+): obj is { [k in K]: unknown } =>
+  typeof obj === 'object' && obj !== null && hasKey(obj, key)

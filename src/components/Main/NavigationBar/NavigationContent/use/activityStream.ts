@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, watch, ref } from 'vue'
+import { onBeforeUnmount, watch, ref } from 'vue'
 import store, { originalStore } from '/@/vuex'
 import { setTimelineStreamingState } from '/@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
@@ -7,6 +7,7 @@ import { messageMitt } from '/@/vuex/entities/messages'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
 import { bothChannelsMapInitialFetchPromise } from '/@/vuex/entities/promises'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -15,7 +16,7 @@ const getActivityTimeline = createSingleflight(
 )
 
 const useActivityStream = (props: { show: boolean }) => {
-  const mode = computed(() => store.state.app.browserSettings.activityMode)
+  const { activityMode: mode } = useBrowserSettings()
 
   /**
    * 新しいもの順
@@ -58,12 +59,16 @@ const useActivityStream = (props: { show: boolean }) => {
     { immediate: true }
   )
 
-  watch(mode, (newMode, oldMode) => {
-    if (newMode.all !== oldMode.all) {
-      setTimelineStreamingState(newMode.all)
-    }
-    fetch()
-  })
+  watch(
+    mode,
+    (newMode, oldMode) => {
+      if (newMode.all !== oldMode.all) {
+        setTimelineStreamingState(newMode.all)
+      }
+      fetch()
+    },
+    { deep: true }
+  )
 
   const onReconnect = async () => {
     setTimelineStreamingState(mode.value.all)

@@ -22,6 +22,7 @@ import { provideCommandPaletteStore } from '/@/providers/commandPalette'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
@@ -65,7 +66,7 @@ const useThemeObserver = () => {
 }
 
 const useEcoModeObserver = () => {
-  const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
+  const { ecoMode } = useBrowserSettings()
   useHtmlDatasetBoolean('ecoMode', ecoMode)
 }
 

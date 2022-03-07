@@ -3,7 +3,12 @@ import {
   isMac,
   isTouchDevice
 } from '/@/lib/dom/browser'
-import store from '/@/vuex'
+import {
+  SendKey,
+  SendKeys,
+  useBrowserSettings
+} from '/@/store/app/browserSettings'
+
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
 const touchDeviceFlag = isTouchDevice()
@@ -15,9 +20,8 @@ interface ModifierKeys {
   metaKey?: boolean
 }
 
-const hasModifierKey = (keys: ModifierKeys) => {
-  const { alt, ctrl, shift, macCtrl } =
-    store.state.app.browserSettings.modifierKey
+const hasModifierKey = (keys: ModifierKeys, settingsKeys: SendKeys) => {
+  const { alt, ctrl, shift, macCtrl } = settingsKeys
 
   if (macFlag) {
     return (
@@ -35,22 +39,22 @@ const hasModifierKey = (keys: ModifierKeys) => {
   )
 }
 
-const isModifierKey = (keyEvent: KeyboardEvent) => {
+const isModifierKey = (keyEvent: KeyboardEvent, settingsKeys: SendKeys) => {
   switch (keyEvent.key) {
     case 'Alt':
-      return hasModifierKey({ altKey: true })
+      return hasModifierKey({ altKey: true }, settingsKeys)
     case 'Meta':
-      return hasModifierKey({ metaKey: true })
+      return hasModifierKey({ metaKey: true }, settingsKeys)
     case 'Shift':
-      return hasModifierKey({ shiftKey: true })
+      return hasModifierKey({ shiftKey: true }, settingsKeys)
     case 'Control':
-      return hasModifierKey({ ctrlKey: true })
+      return hasModifierKey({ ctrlKey: true }, settingsKeys)
   }
   return false
 }
 
-const withModifierKey = (keyEvent: KeyboardEvent) => {
-  return hasModifierKey(keyEvent)
+const withModifierKey = (keyEvent: KeyboardEvent, settingsKeys: SendKeys) => {
+  return hasModifierKey(keyEvent, settingsKeys)
 }
 
 /**
@@ -59,10 +63,12 @@ const withModifierKey = (keyEvent: KeyboardEvent) => {
  *
  * 修飾キーなしで送信の設定の際に、送信が必要かの判定で利用
  */
-const isSendKeyInput = (inputEvent: InputEvent) => {
+const isSendKeyInput = (
+  inputEvent: InputEvent,
+  sendWithModifierKey: SendKey
+) => {
   return (
-    store.state.app.browserSettings.sendWithModifierKey === 'none' &&
-    inputEvent.inputType === 'insertLineBreak'
+    sendWithModifierKey === 'none' && inputEvent.inputType === 'insertLineBreak'
   )
 }
 
@@ -72,11 +78,15 @@ const isSendKeyInput = (inputEvent: InputEvent) => {
  *
  * 修飾キーなしで送信の設定の際に、改行の挿入が必要かの判定で利用
  */
-const needBreakLineInsert = (keyEvent: KeyboardEvent) => {
+const needBreakLineInsert = (
+  keyEvent: KeyboardEvent,
+  sendWithModifierKey: SendKey,
+  settingsModifierKeys: SendKeys
+) => {
   return (
-    store.state.app.browserSettings.sendWithModifierKey === 'none' &&
+    sendWithModifierKey === 'none' &&
     keyEvent.key === 'Enter' &&
-    withModifierKey(keyEvent) &&
+    withModifierKey(keyEvent, settingsModifierKeys) &&
     !keyEvent.isComposing
   )
 }
@@ -93,13 +103,15 @@ const useSendKeyWatcher = (
     ((event: 'modifierKeyUp') => void),
   insertLineBreak: () => void
 ) => {
+  const { sendWithModifierKey, modifierKey } = useBrowserSettings()
+
   /*
    * 修飾キーが押されている際は先に発火する`keydown`イベントで
    * 既にpreventされているため`beforeinput`イベントは発火しない
    * したがって、これが発火したときは修飾キーが押されていないことが保障されている
    */
   const onBeforeInput = (event: InputEvent) => {
-    if (!touchDeviceFlag && isSendKeyInput(event)) {
+    if (!touchDeviceFlag && isSendKeyInput(event, sendWithModifierKey.value)) {
       event.preventDefault()
       emit('postMessage')
     }
@@ -108,14 +120,12 @@ const useSendKeyWatcher = (
   const onKeyDown = (event: KeyboardEvent) => {
     if (touchDeviceFlag) return
 
-    if (withModifierKey(event) && !event.isComposing) {
+    if (withModifierKey(event, modifierKey.value) && !event.isComposing) {
       emit('modifierKeyDown')
     }
 
     // https://github.com/traPtitech/traQ_R-UI/pull/945
     if (event.key === 'Enter' && !event.isComposing) {
-      const { sendWithModifierKey } = store.state.app.browserSettings
-
       /*
        * 修飾キーありで送信の設定の際に、送信が必要かの判定
        *
@@ -124,7 +134,10 @@ const useSendKeyWatcher = (
        *       下と同じような処理をする必要がある
        *       refs https://github.com/traPtitech/traQ_R-UI/pull/945#issuecomment-509942373
        */
-      if (sendWithModifierKey === 'modifier' && withModifierKey(event)) {
+      if (
+        sendWithModifierKey.value === 'modifier' &&
+        withModifierKey(event, modifierKey.value)
+      ) {
         event.preventDefault()
         emit('postMessage')
         return
@@ -142,8 +155,8 @@ const useSendKeyWatcher = (
        * `beforeinput`で判定を行うようにする
        */
       if (
-        sendWithModifierKey === 'none' &&
-        !withModifierKey(event) &&
+        sendWithModifierKey.value === 'none' &&
+        !withModifierKey(event, modifierKey.value) &&
         !isLevel2InputEventsSupported
       ) {
         event.preventDefault()
@@ -152,14 +165,16 @@ const useSendKeyWatcher = (
       }
     }
 
-    if (needBreakLineInsert(event)) {
+    if (
+      needBreakLineInsert(event, sendWithModifierKey.value, modifierKey.value)
+    ) {
       event.preventDefault()
       insertLineBreak()
     }
   }
 
   const onKeyUp = (event: KeyboardEvent) => {
-    if (!touchDeviceFlag && isModifierKey(event)) {
+    if (!touchDeviceFlag && isModifierKey(event, modifierKey.value)) {
       emit('modifierKeyUp')
     }
   }

@@ -1,16 +1,6 @@
+import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
 import { Theme } from './schema'
 import indexedDBStorage from '/@/vuex/indexedDBStorage'
-
-const hasKey = <K extends string>(
-  obj: object,
-  key: K
-): obj is { [k in K]: unknown } => key in obj
-
-const isObjectAndHasKey = <K extends string>(
-  obj: unknown,
-  key: K
-): obj is { [k in K]: unknown } =>
-  typeof obj === 'object' && obj !== null && hasKey(obj, key)
 
 export const migrateThemeFromV1ToV2 = async () => {
   const store = await indexedDBStorage.getItem('vuex')

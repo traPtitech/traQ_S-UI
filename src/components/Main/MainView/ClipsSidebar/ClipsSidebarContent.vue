@@ -45,6 +45,7 @@ import apis from '/@/lib/apis'
 import FormButton from '/@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '/@/router'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -72,6 +73,8 @@ const useEdit = (
 }
 
 const useDelete = (props: { clipFolderId: ClipFolderId }) => {
+  const { defaultChannelName } = useBrowserSettings()
+
   const deleteClip = async () => {
     if (!window.confirm('本当に削除しますか？')) {
       return
@@ -90,9 +93,7 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       router.push(`/clip-folders/${clipFolders[0].id}`)
       return
     }
-    router.push(
-      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
-    )
+    router.push(constructChannelPath(defaultChannelName.value))
   }
   return { deleteClip }
 }

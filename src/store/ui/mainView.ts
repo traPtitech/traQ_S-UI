@@ -9,6 +9,7 @@ import {
   MessageId
 } from '/@/types/entity-ids'
 import store from '/@/vuex'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {
@@ -64,6 +65,8 @@ export enum MainViewComponentState {
 export type HeaderStyle = 'default' | 'dark'
 
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
+  const { lastOpenChannelName } = useBrowserSettings()
+
   const layout = ref<LayoutType>('single')
 
   const currentMainViewComponentState = ref(MainViewComponentState.Hidden)
@@ -150,7 +153,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       channelId,
       store.state.entities.channelsMap
     )
-    store.commit.app.browserSettings.setLastOpenChannelName(channelPath)
+    lastOpenChannelName.value = channelPath
   }
 
   const changePrimaryViewToDM = ({

@@ -79,6 +79,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import useMessageInputState from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -109,6 +110,7 @@ export default defineComponent({
     const { addAttachment, destroy } = useAttachments(addStateAttachment)
     const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
       useModifierKey()
+    const { sendWithModifierKey } = useBrowserSettings()
     const isLeftControlsExpanded = ref(false)
     const isPreviewShown = ref(false)
 
@@ -145,8 +147,7 @@ export default defineComponent({
     const showKeyGuide = computed(
       () =>
         isModifierKeyPressed.value &&
-        (store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
-          canPostMessage.value)
+        (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
     )
 
     const textareaComponentRef = ref<{

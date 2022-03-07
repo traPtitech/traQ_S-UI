@@ -50,6 +50,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useModalStore } from '/@/store/ui/modal'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -59,14 +60,10 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 }
 
 const useFilterStarChannel = () => {
-  const filterStarChannel = computed(
-    () => store.state.app.browserSettings.filterStarChannel
-  )
+  const { filterStarChannel } = useBrowserSettings()
 
   const toggleStarChannelFilter = () => {
-    store.commit.app.browserSettings.setFilterStarChannel(
-      !filterStarChannel.value
-    )
+    filterStarChannel.value = !filterStarChannel.value
   }
 
   return {
