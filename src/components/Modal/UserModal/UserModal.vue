@@ -1,10 +1,10 @@
 <template>
-  <click-outside stop @click-outside="onClickOutside">
+  <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <close-button
         :size="isMobile ? 24 : 32"
         :class="$style.close"
-        @close="onClickClear"
+        @close="clearModal"
       />
       <user-icon
         v-if="!isMobile"
@@ -41,6 +41,7 @@ import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useUserDetail from './use/userDetail'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
@@ -71,12 +72,12 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { clearModal } = useModalStore()
+
     const isMobile = computed(() => store.state.ui.isMobile)
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))
-
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -84,18 +85,15 @@ export default defineComponent({
 
     const { userDetail } = useUserDetail(props)
 
-    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
-
     return {
       isMobile,
       styles,
-      onClickClear,
       iconSize,
       user,
       userDetail,
       ...toRefs(navigationSelectorState),
       onNavigationChange,
-      onClickOutside
+      clearModal
     }
   }
 })

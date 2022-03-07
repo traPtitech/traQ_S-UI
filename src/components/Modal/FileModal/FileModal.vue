@@ -1,5 +1,5 @@
 <template>
-  <click-outside stop @click-outside="onClickOutside">
+  <click-outside stop @click-outside="clearModal">
     <div v-if="fileMeta">
       <file-modal-image v-if="fileType === 'image'" :file-id="fileMeta.id" />
       <file-modal-video
@@ -24,6 +24,7 @@ import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
 import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
 import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
 import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'FileModal',
@@ -45,8 +46,8 @@ export default defineComponent({
       fileId: computed(() => props.id)
     })
     const { fileMeta, fileType } = useFileMeta(fileIdState)
-    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
-    return { fileMeta, fileType, onClickOutside }
+    const { clearModal } = useModalStore()
+    return { fileMeta, fileType, clearModal }
   }
 })
 </script>

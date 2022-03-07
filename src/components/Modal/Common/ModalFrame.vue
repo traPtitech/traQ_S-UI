@@ -1,5 +1,5 @@
 <template>
-  <click-outside stop @click-outside="onClickOutside">
+  <click-outside stop @click-outside="clearModal">
     <div :class="$style.container">
       <common-modal-header
         :class="$style.header"
@@ -25,6 +25,7 @@ import { defineComponent } from 'vue'
 import store from '/@/vuex'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CommonModalHeader from './ModalHeader.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'ModalFrame',
@@ -40,8 +41,8 @@ export default defineComponent({
     returnButton: { type: Boolean, default: false }
   },
   setup() {
-    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
-    return { onClickOutside }
+    const { clearModal } = useModalStore()
+    return { clearModal }
   }
 })
 </script>

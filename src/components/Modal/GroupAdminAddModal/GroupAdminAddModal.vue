@@ -25,6 +25,7 @@ import store from '/@/vuex'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
 import UsersSelector from '../Common/UsersSelector.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupAdminAddModal',
@@ -41,6 +42,7 @@ export default defineComponent({
   },
   setup(props) {
     const { addErrorToast } = useToastStore()
+    const { popModal } = useModalStore()
 
     const group = computed(() =>
       store.state.entities.userGroupsMap.get(props.id)
@@ -62,7 +64,7 @@ export default defineComponent({
       }
       isAdding.value = false
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     }
 
     return { groupName, admins, userIds, isAdding, add }

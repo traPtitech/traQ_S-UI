@@ -47,12 +47,14 @@ import useChannelOptions from '/@/use/channelOptions'
 import { isValidChannelName } from '/@/lib/validate'
 import { canCreateChildChannel } from '/@/lib/channel'
 import useToastStore from '/@/providers/toastStore'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useManageChannel = (
   props: { id: string },
   state: PatchChannelRequest,
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
+  const { popModal } = useModalStore()
   const { channelIdToPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
@@ -72,7 +74,7 @@ const useManageChannel = (
       }
       await apis.editChannel(props.id, reqJson)
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)

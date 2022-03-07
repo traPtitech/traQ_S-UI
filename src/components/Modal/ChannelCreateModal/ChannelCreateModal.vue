@@ -45,6 +45,7 @@ import { channelTreeMitt } from '/@/vuex/domain/channelTree'
 import useToastStore from '/@/providers/toastStore'
 import { constructChannelPath } from '/@/router'
 import { useRouter } from 'vue-router'
+import { useModalStore } from '/@/store/ui/modal'
 
 interface State {
   channelName: string
@@ -53,6 +54,7 @@ interface State {
 
 const useCreateChannel = (state: State) => {
   const router = useRouter()
+  const { popModal } = useModalStore()
   const { addErrorToast } = useToastStore()
 
   const obtainChannelPath = (channelId: ChannelId) =>
@@ -86,7 +88,7 @@ const useCreateChannel = (state: State) => {
       await store.dispatch.entities.addChannel({ channelId: channel.id })
       const path = await pathObtainPromise
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
       router.push(constructChannelPath(path))
     } catch (e) {
       // eslint-disable-next-line no-console

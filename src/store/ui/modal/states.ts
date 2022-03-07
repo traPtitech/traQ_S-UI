@@ -1,3 +1,4 @@
+import { RouteName } from '/@/router'
 import {
   UserId,
   ChannelId,
@@ -6,7 +7,6 @@ import {
   TagId,
   MessageId
 } from '/@/types/entity-ids'
-import { RouteName } from '/@/router'
 
 type ModalStateType =
   | 'user'
@@ -122,20 +122,4 @@ interface GroupAdminAddModalState extends BaseModalState {
 interface GroupMemberAddModalState extends BaseModalState {
   type: 'group-member-add'
   id: UserGroupId
-}
-
-export interface S {
-  modalState: ModalState[]
-
-  /** ロード時からモーダルを表示していて、そこからモーダルを閉じたことがないか */
-  isOnInitialModalRoute: boolean
-
-  /** モーダルを非表示にしようとしている最中か */
-  isClearingModal: boolean
-}
-
-export const state: S = {
-  modalState: [],
-  isOnInitialModalRoute: false,
-  isClearingModal: false
 }

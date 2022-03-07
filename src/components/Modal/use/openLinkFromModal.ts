@@ -1,7 +1,9 @@
 import store from '/@/vuex'
 import { useOpenLink } from '/@/use/openLink'
+import { useModalStore } from '/@/store/ui/modal'
 
 export const useOpenLinkAndClearModal = () => {
+  const { clearModal } = useModalStore()
   const { openLink } = useOpenLink()
 
   /**
@@ -10,7 +12,7 @@ export const useOpenLinkAndClearModal = () => {
    */
   const openLinkAndClearModal = (event: MouseEvent, link: string) => {
     openLink(event, link, async () => {
-      await store.dispatch.ui.modal.clearModal()
+      await clearModal()
     })
   }
 

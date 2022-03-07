@@ -25,6 +25,7 @@ import apis from '/@/lib/apis'
 import store from '/@/vuex'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupMemberEditModal',
@@ -45,6 +46,7 @@ export default defineComponent({
   },
   setup(props) {
     const { addErrorToast } = useToastStore()
+    const { popModal } = useModalStore()
 
     const group = computed(() =>
       store.state.entities.userGroupsMap.get(props.groupId)
@@ -68,7 +70,7 @@ export default defineComponent({
         addErrorToast('グループメンバーの編集に失敗しました')
       }
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     }
 
     return { groupName, userDisplayName, role, edit }

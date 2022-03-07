@@ -38,6 +38,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
 import store from '/@/vuex'
 import useToastStore from '/@/providers/toastStore'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupCreateModal',
@@ -49,6 +50,7 @@ export default defineComponent({
   },
   setup() {
     const { addErrorToast } = useToastStore()
+    const { popModal } = useModalStore()
 
     const name = ref('')
     const desc = ref('')
@@ -72,7 +74,7 @@ export default defineComponent({
         addErrorToast('グループの作成に失敗しました')
       }
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     }
 
     return { name, desc, type, addMember, create }

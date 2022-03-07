@@ -1,9 +1,11 @@
-import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useChannelManageModal = (props: { channelId: ChannelId }) => {
+  const { pushModal } = useModalStore()
+
   const openChannelManageModal = () => {
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'channel-manage',
       id: props.channelId
     })

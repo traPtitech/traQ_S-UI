@@ -56,6 +56,7 @@ import useToastStore from '/@/providers/toastStore'
 import { useMessageContextMenuStore } from './providers/messageContextMenu'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { constructMessagesPath } from '/@/router'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -147,8 +148,10 @@ const useCopy = (props: { messageId: MessageId }) => {
 }
 
 const useShowClipCreateModal = (props: { messageId: MessageId }) => {
+  const { pushModal } = useModalStore()
+
   const showClipCreateModal = () => {
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'clip-create',
       messageId: props.messageId
     })

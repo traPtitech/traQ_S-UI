@@ -37,14 +37,16 @@ import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import useMaxLength from '/@/use/maxLength'
 import useToastStore from '/@/providers/toastStore'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useCreateClipFolder = () => {
   const { addErrorToast } = useToastStore()
+  const { clearModal } = useModalStore()
 
   const createClipFolder = async (name: string, description: string) => {
     try {
       await apis.createClipFolder({ name, description })
-      store.dispatch.ui.modal.clearModal()
+      await clearModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('クリップフォルダの作成に失敗しました', e)

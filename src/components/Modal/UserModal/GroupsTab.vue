@@ -24,6 +24,7 @@ import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupsTab',
@@ -37,6 +38,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { pushModal } = useModalStore()
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
@@ -46,7 +48,7 @@ export default defineComponent({
     )
 
     const onGroupClick = (id: UserGroupId) => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'group',
         id
       })

@@ -3,7 +3,6 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { modal } from './modal'
 
 /**
  * 通信することもIndexedDBを利用することもないストア
@@ -15,8 +14,5 @@ export const ui = defineModule({
   state,
   getters,
   mutations,
-  actions,
-  modules: {
-    modal
-  }
+  actions
 })

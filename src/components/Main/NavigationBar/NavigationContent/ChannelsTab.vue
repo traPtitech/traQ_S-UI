@@ -49,6 +49,7 @@ import { buildDescendantsChannelArray } from '../use/buildChannel'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -122,6 +123,7 @@ export default defineComponent({
     EmptyState
   },
   setup() {
+    const { pushModal } = useModalStore()
     const topLevelChannels = useTopLevelChannels()
     const staredChannels = useStaredChannels()
 
@@ -132,7 +134,7 @@ export default defineComponent({
     )
 
     const onClickButton = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'channel-create'
       })
     }

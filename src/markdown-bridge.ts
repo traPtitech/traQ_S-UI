@@ -1,5 +1,6 @@
 import store from '/@/vuex'
 import { UserId, UserGroupId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 interface ExtendedWindow extends Window {
   /**
@@ -39,7 +40,8 @@ export const setupGlobalFuncs = () => {
     const user = store.state.entities.usersMap.get(userId)
     if (user?.bot && user.name.startsWith('Webhook#')) return
 
-    store.dispatch.ui.modal.pushModal({
+    const { pushModal } = useModalStore()
+    pushModal({
       type: 'user',
       id: userId
     })
@@ -47,7 +49,9 @@ export const setupGlobalFuncs = () => {
 
   window.openGroupModal = (userGroupId: UserGroupId) => {
     if (!checkGroupExistence(userGroupId)) return
-    store.dispatch.ui.modal.pushModal({
+
+    const { pushModal } = useModalStore()
+    pushModal({
       type: 'group',
       id: userGroupId
     })

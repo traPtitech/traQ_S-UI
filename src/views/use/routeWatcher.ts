@@ -12,6 +12,7 @@ import {
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import { useModalStore } from '/@/store/ui/modal'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -28,6 +29,8 @@ const useRouteWatcher = () => {
     useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
+  const { isOnInitialModalRoute, replaceModal, clearModalState } =
+    useModalStore()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -176,12 +179,11 @@ const useRouteWatcher = () => {
       })
     }
 
-    const modalPayload = {
-      type: 'file' as const,
+    replaceModal({
+      type: 'file',
       id: fileId,
-      relatedRoute: RouteName.File as const
-    }
-    store.dispatch.ui.modal.replaceModal(modalPayload)
+      relatedRoute: RouteName.File
+    })
     changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
@@ -234,7 +236,7 @@ const useRouteWatcher = () => {
     [routeParam, query]: RouteParamWithQuery,
     [prevRouteParam, prevQuery]: RouteParamWithQuery
   ) => {
-    store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    isOnInitialModalRoute.value = false
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
@@ -264,18 +266,15 @@ const useRouteWatcher = () => {
     }
 
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
-    const isOnInitialModalRoute =
+    const isOnInitialModalRouteValue =
       state.isInitialView &&
       history.state?.modalState &&
       !!history.state?.modalState[0]?.relatedRoute
-    store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+    isOnInitialModalRoute.value = isOnInitialModalRouteValue
 
     if (state.isInitialView && !isOnInitialModalRoute) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      if (store.state.ui.modal.modalState.length > 0) {
-        store.commit.ui.modal.setState([])
-      }
-      history.replaceState({ ...history.state, modalState: [] }, '')
+      clearModalState()
     }
 
     state.isInitialView = false

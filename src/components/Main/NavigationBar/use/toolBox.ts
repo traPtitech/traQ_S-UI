@@ -1,8 +1,8 @@
-import store from '/@/vuex'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
 import { useOpenLink } from '/@/use/openLink'
+import { useModalStore } from '/@/store/ui/modal'
 
 interface Tool {
   iconName: string
@@ -16,10 +16,10 @@ interface Tool {
 const useToolBox = () => {
   const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
   const { openLink } = useOpenLink()
+  const { pushModal } = useModalStore()
 
   const { openCommandPalette } = useCommandPaletteInvoker()
-  const openQrCodeModal = () =>
-    store.dispatch.ui.modal.pushModal({ type: 'qrcode' })
+  const openQrCodeModal = () => pushModal({ type: 'qrcode' })
   const openSettings = (e: MouseEvent) => {
     openLink(e, '/settings')
   }

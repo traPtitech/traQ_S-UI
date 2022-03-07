@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.container">
     <file-description
-      :file-id="props.fileId"
-      :is-white="props.isWhite"
+      :file-id="fileId"
+      :is-white="isWhite"
       :class="$style.description"
     />
     <div :class="$style.close">
       <close-button
         :size="24"
-        :is-white="props.isWhite"
-        :react-hover="!props.isWhite"
-        @close="onClickClear"
+        :is-white="isWhite"
+        :react-hover="!isWhite"
+        @close="clearModal"
       />
     </div>
   </div>
@@ -18,9 +18,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '/@/vuex'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import FileDescription from '/@/components/UI/FileDescription.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'FileModalContentHeader',
@@ -38,12 +38,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
-    return {
-      props,
-      onClickClear
-    }
+  setup() {
+    const { clearModal } = useModalStore()
+    return { clearModal }
   }
 })
 </script>

@@ -1,40 +1,37 @@
 <template>
   <transition name="background-shadow">
-    <div
-      v-if="modalState.shouldShowModal && modalState.current"
-      :class="$style.container"
-    >
+    <div v-if="shouldShowModal && currentState" :class="$style.container">
       <component
         :is="component"
         :id="
-          modalState.current.type === 'user' ||
-          modalState.current.type === 'tag' ||
-          modalState.current.type === 'group' ||
-          modalState.current.type === 'file' ||
-          modalState.current.type === 'channel-manage' ||
-          modalState.current.type === 'group-admin-add' ||
-          modalState.current.type === 'group-member-add'
-            ? modalState.current.id
+          currentState.type === 'user' ||
+          currentState.type === 'tag' ||
+          currentState.type === 'group' ||
+          currentState.type === 'file' ||
+          currentState.type === 'channel-manage' ||
+          currentState.type === 'group-admin-add' ||
+          currentState.type === 'group-member-add'
+            ? currentState.id
             : undefined
         "
         :parent-channel-id="
-          modalState.current.type === 'channel-create'
-            ? modalState.current.parentChannelId
+          currentState.type === 'channel-create'
+            ? currentState.parentChannelId
             : undefined
         "
         :message-id="
-          modalState.current.type === 'clip-create'
-            ? modalState.current.messageId
+          currentState.type === 'clip-create'
+            ? currentState.messageId
             : undefined
         "
         :group-id="
-          modalState.current.type === 'group-member-edit'
-            ? modalState.current.groupId
+          currentState.type === 'group-member-edit'
+            ? currentState.groupId
             : undefined
         "
         :user-id="
-          modalState.current.type === 'group-member-edit'
-            ? modalState.current.userId
+          currentState.type === 'group-member-edit'
+            ? currentState.userId
             : undefined
         "
       />
@@ -43,9 +40,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, defineAsyncComponent } from 'vue'
-import store from '/@/vuex'
-import { ModalState } from '/@/vuex/ui/modal/state'
+import { defineComponent, computed, defineAsyncComponent } from 'vue'
+import { ModalState } from '/@/store/ui/modal/states'
+import { useModalStore } from '/@/store/ui/modal'
 
 const modalComponentMap: Record<ModalState['type'], string> = {
   user: 'UserModal/UserModal',
@@ -64,34 +61,12 @@ const modalComponentMap: Record<ModalState['type'], string> = {
   'group-member-add': 'GroupMemberAddModal/GroupMemberAddModal'
 }
 
-const useModal = () => {
-  const state = reactive({
-    shouldShowModal: computed(() => store.getters.ui.modal.shouldShowModal),
-    current: computed(() => store.getters.ui.modal.currentState),
-    currentJson: computed(() =>
-      JSON.stringify(store.getters.ui.modal.currentState)
-    )
-  })
-  window.addEventListener('popstate', event => {
-    // history.stateとstoreの同期をとる
-    if (event.state?.modalState) {
-      store.commit.ui.modal.setState(event.state.modalState)
-    } else {
-      store.commit.ui.modal.setState([])
-    }
-  })
-
-  return {
-    modalState: state
-  }
-}
-
 const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
 
 export default defineComponent({
   name: 'ModalContainer',
   setup() {
-    const { modalState } = useModal()
+    const { shouldShowModal, currentState } = useModalStore()
 
     // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
     const getComponent = (path: string) =>
@@ -101,13 +76,14 @@ export default defineComponent({
       )
 
     const component = computed(() =>
-      modalState.current
-        ? getComponent(modalComponentMap[modalState.current.type])
+      currentState.value
+        ? getComponent(modalComponentMap[currentState.value.type])
         : undefined
     )
 
     return {
-      modalState,
+      shouldShowModal,
+      currentState,
       component
     }
   }

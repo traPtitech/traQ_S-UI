@@ -28,6 +28,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'ClipFoldersTab',
@@ -38,11 +39,12 @@ export default defineComponent({
     EmptyState
   },
   setup() {
+    const { pushModal } = useModalStore()
     const clipFolders = computed(() => [
       ...store.state.entities.clipFoldersMap.values()
     ])
     const onClickButton = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'clip-folder-create'
       })
     }
