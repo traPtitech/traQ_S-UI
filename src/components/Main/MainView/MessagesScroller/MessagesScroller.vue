@@ -75,6 +75,7 @@ import { stampsMapInitialFetchPromise } from '/@/vuex/entities/promises'
 import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
 import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -149,20 +150,19 @@ const useScrollRestoration = (
   rootRef: Ref<HTMLElement | null>,
   state: { scrollTop: number }
 ) => {
+  const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
   watch(
     computed(() => route.name),
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        store.commit.ui.mainView.setLastScrollPosition(
-          rootRef.value?.scrollTop ?? 0
-        )
+        lastScrollPosition.value = rootRef.value?.scrollTop ?? 0
       }
       if (isMessageScrollerRoute(to)) {
-        state.scrollTop = store.state.ui.mainView.lastScrollPosition
+        state.scrollTop = lastScrollPosition.value
         await nextTick()
         rootRef.value?.scrollTo({ top: state.scrollTop })
-        store.commit.ui.mainView.setLastScrollPosition(0)
+        lastScrollPosition.value = 0
       }
     }
   )
@@ -209,11 +209,12 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     provideMessageContextMenuStore()
+    const { lastScrollPosition, primaryView } = useMainViewStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition,
+      scrollTop: lastScrollPosition.value,
       stampsInitialFetchCompleted: false
     })
 
@@ -247,9 +248,7 @@ export default defineComponent({
       useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     const messageComponent = computed(() =>
-      store.state.ui.mainView.primaryView.type === 'clips'
-        ? ClipElement
-        : MessageElement
+      primaryView.value.type === 'clips' ? ClipElement : MessageElement
     )
 
     onMounted(() => {

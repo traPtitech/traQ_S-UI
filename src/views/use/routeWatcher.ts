@@ -11,11 +11,19 @@ import {
 } from '/@/vuex/entities/promises'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
+  const {
+    primaryView,
+    changePrimaryViewToChannel,
+    changePrimaryViewToDM,
+    changePrimaryViewToClip,
+    changePrimaryViewToChannelOrDM
+  } = useMainViewStore()
   const { channelPathToId, channelIdToPathString, channelIdToLink } =
     useChannelPath()
   const { changeViewTitle } = useViewTitle()
@@ -65,7 +73,7 @@ const useRouteWatcher = () => {
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
-      store.dispatch.ui.mainView.changePrimaryViewToChannel({
+      changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
@@ -90,7 +98,7 @@ const useRouteWatcher = () => {
 
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
-      store.dispatch.ui.mainView.changePrimaryViewToDM({
+      changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
@@ -115,7 +123,7 @@ const useRouteWatcher = () => {
       return
     }
     changeViewTitle(clipFolder.name)
-    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
 
@@ -160,10 +168,10 @@ const useRouteWatcher = () => {
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
-      store.state.ui.mainView.primaryView.type === 'channel' &&
-      store.state.ui.mainView.primaryView.channelId === ''
+      primaryView.value.type === 'channel' &&
+      primaryView.value.channelId === ''
     ) {
-      store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
+      changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
     }

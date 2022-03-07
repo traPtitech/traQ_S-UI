@@ -1,14 +1,10 @@
 import { computed } from 'vue'
 import store from '/@/vuex'
-import { MainViewComponentState } from '/@/vuex/ui/mainView/state'
+import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
 
 const useSidebar = () => {
-  const state = computed(
-    () => store.state.ui.mainView.currentMainViewComponentState
-  )
-
-  /** サイドバーが開ききっているか */
-  const isSidebarOpen = computed(() => store.getters.ui.mainView.isSidebarOpen)
+  const { currentMainViewComponentState: state, isSidebarOpen } =
+    useMainViewStore()
 
   /**
    * サイドバーが表示されている必要があるか
@@ -25,18 +21,14 @@ const useSidebar = () => {
           state.value === MainViewComponentState.SidebarDisappearingAuto))
   )
   const openSidebar = () => {
-    store.commit.ui.mainView.setMainViewComponentState(
-      store.state.ui.isMobile
-        ? MainViewComponentState.SidebarAppearingAuto
-        : MainViewComponentState.SidebarShown
-    )
+    state.value = store.state.ui.isMobile
+      ? MainViewComponentState.SidebarAppearingAuto
+      : MainViewComponentState.SidebarShown
   }
   const closeSidebar = () => {
-    store.commit.ui.mainView.setMainViewComponentState(
-      store.state.ui.isMobile
-        ? MainViewComponentState.SidebarDisappearingAuto
-        : MainViewComponentState.Hidden
-    )
+    state.value = store.state.ui.isMobile
+      ? MainViewComponentState.SidebarDisappearingAuto
+      : MainViewComponentState.Hidden
   }
   return { isSidebarOpen, shouldShowSidebar, openSidebar, closeSidebar }
 }

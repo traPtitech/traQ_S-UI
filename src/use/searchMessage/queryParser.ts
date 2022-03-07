@@ -1,12 +1,16 @@
+import { Ref } from 'vue'
 import { channelPathToId } from '/@/lib/channelTree'
 import { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
+import { useMainViewStore, ViewInformation } from '/@/store/ui/mainView'
 import store from '/@/vuex'
 
-const storeForParser: StoreForParser = {
+const getStoreForParser = (
+  primaryView: Ref<ViewInformation>
+): StoreForParser => ({
   channelPathToId: path => {
     try {
       return channelPathToId(
@@ -22,15 +26,16 @@ const storeForParser: StoreForParser = {
     return user?.id
   },
   getCurrentChannelId: () => {
-    const { primaryView } = store.state.ui.mainView
-    return primaryView.type === 'channel' || primaryView.type === 'dm'
-      ? primaryView.channelId
+    return primaryView.value.type === 'channel' ||
+      primaryView.value.type === 'dm'
+      ? primaryView.value.channelId
       : undefined
   }
-}
+})
 
 const useQueryParer = () => {
-  const parseQuery = createQueryParser(storeForParser)
+  const { primaryView } = useMainViewStore()
+  const parseQuery = createQueryParser(getStoreForParser(primaryView))
 
   return { parseQuery, toSearchMessageParam }
 }

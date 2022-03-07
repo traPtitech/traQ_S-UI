@@ -87,15 +87,20 @@ export const actions = defineActions({
       ''
     )
     commit.setState(history.state.modalState)
-    const { currentChannelPathString } = useCurrentChannelPath()
-    const primaryViewType = rootState.ui.mainView.primaryView.type
-    if (primaryViewType === 'dm') {
-      router.replace(constructUserPath(currentChannelPathString.value))
-    } else if (primaryViewType === 'channel') {
-      router.replace(constructChannelPath(currentChannelPathString.value))
-    } else {
+    if (!rootState.domain.messagesView.currentChannelId) {
       // eslint-disable-next-line no-console
-      console.warn(`Unexpected closeModal: ${primaryViewType}`)
+      console.warn('Unexpected closeModal')
+      return
+    }
+
+    const { currentChannelPathString } = useCurrentChannelPath()
+    const isDM = rootState.entities.dmChannelsMap.has(
+      rootState.domain.messagesView.currentChannelId
+    )
+    if (isDM) {
+      router.replace(constructUserPath(currentChannelPathString.value))
+    } else {
+      router.replace(constructChannelPath(currentChannelPathString.value))
     }
   },
   /**

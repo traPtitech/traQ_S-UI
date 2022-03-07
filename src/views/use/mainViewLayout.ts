@@ -1,8 +1,7 @@
 import { computed, watch, Ref } from 'vue'
-import store from '/@/vuex'
 import useSwipeDetector from '/@/use/swipeDetector'
 import useSwipeDrawer from '/@/use/swipeDrawer'
-import { MainViewComponentState } from '/@/vuex/ui/mainView/state'
+import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
 import useIsMobile from '/@/use/isMobile'
 
 type DrawerType = 'none' | 'nav' | 'sidebar'
@@ -26,6 +25,7 @@ const stateMachineDrawerTypeMap: Record<MainViewComponentState, DrawerType> = {
 }
 
 const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
+  const { currentMainViewComponentState: mState } = useMainViewStore()
   const { isMobile } = useIsMobile()
   const {
     swipeDetectorState,
@@ -34,9 +34,6 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     touchendHandler
   } = useSwipeDetector(isMobile)
 
-  const mState = computed(
-    () => store.state.ui.mainView.currentMainViewComponentState
-  )
   const currentActiveDrawer = computed(
     (): DrawerType => stateMachineDrawerTypeMap[mState.value]
   )
@@ -54,12 +51,11 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     navWidth / 16,
     navWidth / 16,
     computed(() => currentActiveDrawer.value === 'sidebar'),
-    isAppearing =>
-      store.commit.ui.mainView.setMainViewComponentState(
-        isAppearing
-          ? MainViewComponentState.NavAppearing
-          : MainViewComponentState.NavDisappearing
-      )
+    isAppearing => {
+      mState.value = isAppearing
+        ? MainViewComponentState.NavAppearing
+        : MainViewComponentState.NavDisappearing
+    }
   )
 
   const {
@@ -75,12 +71,11 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
     sidebarWidth / 16,
     sidebarWidth / 16,
     computed(() => currentActiveDrawer.value === 'nav'),
-    isAppearing =>
-      store.commit.ui.mainView.setMainViewComponentState(
-        isAppearing
-          ? MainViewComponentState.SidebarAppearing
-          : MainViewComponentState.SidebarDisappearing
-      )
+    isAppearing => {
+      mState.value = isAppearing
+        ? MainViewComponentState.SidebarAppearing
+        : MainViewComponentState.SidebarDisappearing
+    }
   )
 
   // state machine hooks
@@ -102,9 +97,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
 
   watch(isMobile, newState => {
     if (newState) {
-      store.commit.ui.mainView.setMainViewComponentState(
-        MainViewComponentState.Hidden
-      )
+      mState.value = MainViewComponentState.Hidden
       return
     }
     closeNav()
@@ -133,38 +126,34 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
           mState.value === states.appearing ||
           mState.value === states.disappearing)
       ) {
-        store.commit.ui.mainView.setMainViewComponentState(states.shown)
+        mState.value = states.shown
       }
       if (!newVal && mState.value === states.shown) {
-        store.commit.ui.mainView.setMainViewComponentState(states.disappearing)
+        mState.value = states.disappearing
       }
     })
     watch(appeared, newVal => {
       if (newVal && mState.value === states.appearingWaitingTouchEnd) {
-        store.commit.ui.mainView.setMainViewComponentState(states.appearing)
+        mState.value = states.appearing
       }
       if (newVal && mState.value === states.disappearingWaitingTouchEnd) {
-        store.commit.ui.mainView.setMainViewComponentState(states.disappearing)
+        mState.value = states.disappearing
       }
       if (!newVal && mState.value === states.disappearingAuto) {
-        store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+        mState.value = states.hidden
       }
       if (!newVal && mState.value === states.appearing) {
         if (swipeDetectorState.swipeDirection === 'none') {
-          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+          mState.value = states.hidden
         } else {
-          store.commit.ui.mainView.setMainViewComponentState(
-            states.appearingWaitingTouchEnd
-          )
+          mState.value = states.appearingWaitingTouchEnd
         }
       }
       if (!newVal && mState.value === states.disappearing) {
         if (swipeDetectorState.swipeDirection === 'none') {
-          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+          mState.value = states.hidden
         } else {
-          store.commit.ui.mainView.setMainViewComponentState(
-            states.disappearingWaitingTouchEnd
-          )
+          mState.value = states.disappearingWaitingTouchEnd
         }
       }
     })
@@ -176,7 +165,7 @@ const useMainViewLayout = (navWidth: number, sidebarWidth: number) => {
           mState.value === states.appearingWaitingTouchEnd ||
           mState.value === states.disappearingWaitingTouchEnd
         ) {
-          store.commit.ui.mainView.setMainViewComponentState(states.hidden)
+          mState.value = states.hidden
         }
       }
     )
