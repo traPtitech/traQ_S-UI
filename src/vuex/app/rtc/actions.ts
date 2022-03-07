@@ -90,9 +90,10 @@ export const actions = defineActions({
   // ---- RTC Connection ---- //
   async ensureDevicePermission(context) {
     const { rootDispatch, rootState } = rtcActionContext(context)
-    if (!rootState.app.rtcSettings.isEnabled) {
-      return false
-    }
+    // TODO: piniaに移したら直す
+    // if (!rootState.app.rtcSettings.isEnabled) {
+    //   return false
+    // }
     if (
       isIOSApp(window) &&
       !(await window.webkit.messageHandlers.scriptMessageHandler.postMessage(
@@ -102,16 +103,24 @@ export const actions = defineActions({
       window.alert('設定アプリからマイクの使用を許可してください')
       return false
     }
-    if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
-      window.alert('マイクの設定に失敗しました')
-      return false
-    }
+    // TODO: piniaに移したら直す
+    // if (!(await rootDispatch.app.rtcSettings.ensureDeviceIds())) {
+    //   window.alert('マイクの設定に失敗しました')
+    //   return false
+    // }
     return true
   },
 
   async initializeContext(context) {
     const { commit, rootState } = rtcActionContext(context)
-    const rtcSettingsState = rootState.app.rtcSettings
+    // TODO: piniaに移したら直す
+    // const rtcSettingsState = rootState.app.rtcSettings
+    const rtcSettingsState = {
+      masterVolume: 1,
+      audioInputDeviceId: '',
+      isNoiseReductionEnabled: false,
+      isEchoCancellationEnabled: false
+    }
 
     const audioContext = new ExtendedAudioContext({
       sampleRate: dtlnSampleRate

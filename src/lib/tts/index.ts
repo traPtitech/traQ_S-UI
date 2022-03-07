@@ -38,7 +38,8 @@ class Tts {
   }
 
   private getVoiceRate() {
-    const defaultRate = store.state.app.rtcSettings.voiceRate
+    // TODO: piniaに移したら直す
+    const defaultRate = 1 // store.state.app.rtcSettings.voiceRate
     const size = this.queue.length
     const ratio =
       1 +
@@ -48,7 +49,8 @@ class Tts {
   }
 
   private isNeeded(channelId: ChannelId): boolean {
-    if (!store.state.app.rtcSettings.isTtsEnabled) return false
+    // TODO: piniaに移したら直す
+    // if (!store.state.app.rtcSettings.isTtsEnabled) return false
     if (!store.getters.domain.rtc.qallSession) return false
     if (store.getters.domain.rtc.currentRTCState?.channelId !== channelId) {
       return false

@@ -56,6 +56,7 @@ import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/Main
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import store from '/@/vuex'
 import { UserPermission } from '@traptitech/traq'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 const isSearchEnabled = window.traQConfig.enableSearch ?? false
@@ -84,9 +85,10 @@ export default defineComponent({
     clickManageChannel: () => true
   },
   setup(props, { emit }) {
+    const { isEnabled: isRtcEnabled } = useRtcSettings()
     const { isMobile } = useResponsiveStore()
     const isQallEnabled = computed(
-      () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled
+      () => isSkywayApikeySet && isRtcEnabled.value
     )
     const qallLabel = computed(() => {
       if (props.isQallSessionOpened) {
