@@ -71,7 +71,7 @@
     "@vue/test-utils": "^2.0.0-rc.18",
     "autoprefixer": "^10.4.2",
     "axios": "^0.26.0",
-    "browserslist": "^4.19.3",
+    "browserslist": "^4.20.0",
     "c8": "^7.11.0",
     "cypress": "^9.5.1",
     "esbuild": "^0.13.15",
