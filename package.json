@@ -36,7 +36,6 @@
     "firebase": "^9.6.6",
     "highlight.js": "^11.4.0",
     "idb-keyval": "^6.1.0",
-    "klona": "^2.0.5",
     "mitt": "^3.0.0",
     "pica": "^9.0.1",
     "shvl": "^2.0.3",
