@@ -1,5 +1,5 @@
 import { constructChannelPath } from '/@/router'
-import store from '/@/store'
+import store from '/@/vuex'
 import { useRouter } from 'vue-router'
 
 const useClose = () => {

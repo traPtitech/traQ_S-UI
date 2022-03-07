@@ -1,5 +1,5 @@
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 import { constructUserPath, constructChannelPath } from '/@/router'
 import {
   channelIdToSimpleChannelPath as libChannelIdToSimpleChannelPath,

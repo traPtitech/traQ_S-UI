@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
 import apis from '/@/lib/apis'
-import store from '/@/store'
+import store from '/@/vuex'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'

@@ -1,5 +1,5 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '/@/store'
+import store, { originalStore } from '/@/vuex'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
@@ -8,7 +8,7 @@ import { LocationQuery, useRoute } from 'vue-router'
 import {
   bothChannelsMapInitialFetchPromise,
   usersMapInitialFetchPromise
-} from '/@/store/entities/promises'
+} from '/@/vuex/entities/promises'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 

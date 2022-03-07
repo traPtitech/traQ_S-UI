@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import useChannelFilter from '/@/use/channelFilter'
 import { constructTree } from '/@/lib/channelTree'

@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useCurrentChannelPath from '/@/use/currentChannelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'

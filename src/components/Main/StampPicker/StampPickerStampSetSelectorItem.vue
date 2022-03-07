@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { StampPaletteId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'

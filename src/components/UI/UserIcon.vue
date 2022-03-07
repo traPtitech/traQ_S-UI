@@ -15,7 +15,7 @@
 import { defineComponent, reactive, computed, PropType, watch } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 import { useUserModalOpener } from '/@/use/modalOpener'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 

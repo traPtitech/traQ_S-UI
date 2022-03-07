@@ -24,7 +24,7 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { Tag } from '@traptitech/traq'

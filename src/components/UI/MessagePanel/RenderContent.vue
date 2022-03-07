@@ -25,7 +25,7 @@
 <script lang="ts">
 import { defineComponent, computed, watchEffect, ref } from 'vue'
 import { renderInline } from '/@/lib/markdown/markdown'
-import store from '/@/store'
+import store from '/@/vuex'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
 import AIcon from '/@/components/UI/AIcon.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'

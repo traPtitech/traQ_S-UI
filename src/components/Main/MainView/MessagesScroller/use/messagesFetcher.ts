@@ -1,5 +1,5 @@
 import { ref, Ref, watchEffect } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 

@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserId, UserGroupId } from '/@/types/entity-ids'
 
 interface ExtendedWindow extends Window {

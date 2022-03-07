@@ -27,7 +27,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'GroupAdminList',

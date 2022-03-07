@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { buildFilePath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import useFileLink from '/@/use/fileLink'

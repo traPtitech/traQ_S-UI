@@ -3,7 +3,7 @@ import getCaretPosition from '/@/lib/dom/caretPosition'
 import { getCurrentWord, Target } from '/@/lib/suggestion'
 import useWordSuggesterList, { Word } from './wordSuggestionList'
 import useInsertText from '/@/use/insertText'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export type WordOrConfirmedPart =
   | Word

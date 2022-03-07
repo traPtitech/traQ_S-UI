@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CommonModalHeader from './ModalHeader.vue'
 

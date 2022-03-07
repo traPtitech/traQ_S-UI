@@ -3,7 +3,7 @@ import {
   StampSelectHandler,
   useStampPickerInvoker
 } from '/@/providers/stampPicker'
-import store from '/@/store'
+import store from '/@/vuex'
 import { Ref } from 'vue'
 import useInsertText from '/@/use/insertText'
 

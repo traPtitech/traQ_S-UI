@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { ChannelId } from '/@/types/entity-ids'

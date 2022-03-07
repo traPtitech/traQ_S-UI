@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'

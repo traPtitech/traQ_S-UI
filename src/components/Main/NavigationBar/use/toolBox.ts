@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
 import { useCommandPaletteInvoker } from '/@/providers/commandPalette'

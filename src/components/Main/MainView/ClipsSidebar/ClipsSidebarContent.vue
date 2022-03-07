@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ClipFolderId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'

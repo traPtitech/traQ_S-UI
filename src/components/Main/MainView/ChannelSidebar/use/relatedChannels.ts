@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'

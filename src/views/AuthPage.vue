@@ -11,7 +11,7 @@ import {
   computed,
   watch
 } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '/@/router'
 import useRedirectParam from '/@/components/Authenticate/use/redirectParam'

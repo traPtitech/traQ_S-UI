@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 
 const useNotificationModal = (props: { channelId: ChannelId }) => {

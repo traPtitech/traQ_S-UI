@@ -1,5 +1,5 @@
 import { isDefined } from '/@/lib/basic/array'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 
 export const buildDescendantsChannelArray = (

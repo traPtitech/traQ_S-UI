@@ -1,5 +1,5 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
-import store from '/@/store'
+import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import { embeddingOrigin } from '/@/lib/apis'
 import {
@@ -7,7 +7,7 @@ import {
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise,
   stampsMapInitialFetchPromise
-} from '/@/store/entities/promises'
+} from '/@/vuex/entities/promises'
 
 const { channelIdToLink } = useChannelPath()
 

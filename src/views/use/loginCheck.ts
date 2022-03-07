@@ -1,7 +1,7 @@
 import { createSingleflight } from '/@/lib/basic/async'
 import { isIOSApp } from '/@/lib/dom/browser'
 import router, { RouteName } from '/@/router'
-import store from '/@/store'
+import store from '/@/vuex'
 import { onActivated, onBeforeMount, ref } from 'vue'
 
 /**

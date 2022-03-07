@@ -17,7 +17,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useHover from '/@/use/hover'
 
 export default defineComponent({

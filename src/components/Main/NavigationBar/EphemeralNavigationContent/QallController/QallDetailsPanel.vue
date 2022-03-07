@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 import CollapseContent from '../CollapseContent.vue'
 

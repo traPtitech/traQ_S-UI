@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useSyncedState from '/@/components/Settings/use/syncedState'
 import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
 import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'

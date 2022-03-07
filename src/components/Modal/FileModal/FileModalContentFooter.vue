@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useFileMeta from '/@/use/fileMeta'
 import useChannelPath from '/@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'

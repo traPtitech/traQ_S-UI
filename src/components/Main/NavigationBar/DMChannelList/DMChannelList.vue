@@ -15,7 +15,7 @@ import { defineComponent, PropType } from 'vue'
 import { DMChannel } from '@traptitech/traq'
 import DMChannelElement from './DMChannelElement.vue'
 import { DMChannelId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 import { useOpenLink } from '/@/use/openLink'
 import { constructUserPath } from '/@/router'
 

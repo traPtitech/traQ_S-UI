@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/use/stateDiff'

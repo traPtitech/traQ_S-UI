@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ReturnButton from '/@/components/UI/ReturnButton.vue'
 
 export default defineComponent({

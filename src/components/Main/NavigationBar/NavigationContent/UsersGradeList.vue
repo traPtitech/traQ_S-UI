@@ -19,7 +19,7 @@ import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { isDefined } from '/@/lib/basic/array'
 
 const useFolding = () => {

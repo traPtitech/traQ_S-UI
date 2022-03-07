@@ -1,6 +1,6 @@
 import { computed, ComputedRef } from 'vue'
 import { commonStyles } from '/@/lib/styles'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export const useThemeVariables = (): ComputedRef<
   Record<`--${string}`, string>

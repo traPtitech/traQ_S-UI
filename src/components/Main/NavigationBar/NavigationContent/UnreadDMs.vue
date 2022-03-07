@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import { isDefined } from '/@/lib/basic/array'
 import DMActivityElement from './DMActivityElement.vue'

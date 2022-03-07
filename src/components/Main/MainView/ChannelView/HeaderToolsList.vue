@@ -96,7 +96,7 @@
 import { defineComponent, computed } from 'vue'
 import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import useIsMobile from '/@/use/isMobile'
 

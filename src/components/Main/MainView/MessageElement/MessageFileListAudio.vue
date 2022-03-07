@@ -68,7 +68,7 @@ import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVol
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '/@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'MessageFileListAudio',

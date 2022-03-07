@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'GradeBadge',

@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'

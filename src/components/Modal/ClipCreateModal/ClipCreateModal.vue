@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, Ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import apis from '/@/lib/apis'
 import { compareString } from '/@/lib/basic/string'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'

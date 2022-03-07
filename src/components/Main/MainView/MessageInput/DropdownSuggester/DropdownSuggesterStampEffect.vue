@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 export default defineComponent({

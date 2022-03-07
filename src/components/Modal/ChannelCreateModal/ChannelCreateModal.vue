@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -41,7 +41,7 @@ import { UserPermission } from '@traptitech/traq'
 import useCanCreateChildChannel from '/@/use/canCreateChildChannel'
 import { isValidChannelName } from '/@/lib/validate'
 import apis from '/@/lib/apis'
-import { channelTreeMitt } from '/@/store/domain/channelTree'
+import { channelTreeMitt } from '/@/vuex/domain/channelTree'
 import useToastStore from '/@/providers/toastStore'
 import { constructChannelPath } from '/@/router'
 import { useRouter } from 'vue-router'

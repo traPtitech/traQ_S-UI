@@ -16,7 +16,7 @@ import { defineComponent, reactive, PropType, computed } from 'vue'
 import { commonStyles, ThemeClaim } from '/@/lib/styles'
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
   return reactive({

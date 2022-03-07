@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId, MessageId } from '/@/types/entity-ids'

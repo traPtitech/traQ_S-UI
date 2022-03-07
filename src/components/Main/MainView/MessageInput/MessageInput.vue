@@ -58,7 +58,7 @@ import {
   toRef,
   watchEffect
 } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import useIsMobile from '/@/use/isMobile'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'

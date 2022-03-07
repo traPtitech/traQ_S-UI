@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserDetail } from '@traptitech/traq'
 import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
 import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'

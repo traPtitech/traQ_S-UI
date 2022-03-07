@@ -3,7 +3,7 @@ import {
   isMac,
   isTouchDevice
 } from '/@/lib/dom/browser'
-import store from '/@/store'
+import store from '/@/vuex'
 const isLevel2InputEventsSupported = checkLevel2InputEventsSupport()
 const macFlag = isMac()
 const touchDeviceFlag = isTouchDevice()

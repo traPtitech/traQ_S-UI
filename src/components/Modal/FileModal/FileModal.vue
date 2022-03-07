@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
 import useFileMeta from '/@/use/fileMeta'
-import store from '/@/store'
+import store from '/@/vuex'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
 import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'

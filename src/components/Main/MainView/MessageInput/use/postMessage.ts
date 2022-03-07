@@ -1,5 +1,5 @@
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '/@/use/channelPath'
@@ -11,7 +11,7 @@ import {
   usersMapInitialFetchPromise,
   userGroupsMapInitialFetchPromise,
   bothChannelsMapInitialFetchPromise
-} from '/@/store/entities/promises'
+} from '/@/vuex/entities/promises'
 import useToastStore from '/@/providers/toastStore'
 import {
   Attachment,

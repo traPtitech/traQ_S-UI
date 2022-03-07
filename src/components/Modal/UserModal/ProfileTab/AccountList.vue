@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
 

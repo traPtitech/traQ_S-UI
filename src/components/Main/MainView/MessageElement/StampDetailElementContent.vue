@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import { useUserModalOpener } from '/@/use/modalOpener'

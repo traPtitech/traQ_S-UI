@@ -37,7 +37,7 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import AIcon from '/@/components/UI/AIcon.vue'
 

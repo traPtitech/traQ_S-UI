@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
 

@@ -35,7 +35,7 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useIsMobile from '/@/use/isMobile'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeaderSelector from './MainViewHeaderSelector.vue'

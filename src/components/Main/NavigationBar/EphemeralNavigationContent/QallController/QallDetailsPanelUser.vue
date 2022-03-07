@@ -38,7 +38,7 @@ import ASlider from '/@/components/UI/ASlider.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const maxVolumeValue = 200
 

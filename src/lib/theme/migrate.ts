@@ -1,5 +1,5 @@
 import { Theme } from './schema'
-import indexedDBStorage from '/@/store/indexedDBStorage'
+import indexedDBStorage from '/@/vuex/indexedDBStorage'
 
 const hasKey = <K extends string>(
   obj: object,

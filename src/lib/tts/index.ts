@@ -1,8 +1,8 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import { parse } from '../markdown/markdown'
 import { embeddingOrigin } from '../apis'
-import { messageMitt } from '/@/store/entities/messages'
+import { messageMitt } from '/@/vuex/entities/messages'
 import { Message } from '@traptitech/traq'
 import { format } from './format'
 

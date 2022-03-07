@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 
 export default defineComponent({

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import vuex from './vuex'
 import boolAttr from './bool-attr'
 import { setupGlobalFuncs } from './markdown-bridge'
 import { mountMitt } from '/@/onMount'
@@ -12,7 +12,7 @@ setupGlobalFuncs()
 
 const app = createApp(App)
 app.use(router)
-app.use(store.original)
+app.use(vuex.original)
 
 app.use(boolAttr)
 

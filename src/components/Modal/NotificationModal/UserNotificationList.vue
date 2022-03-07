@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import apis from '/@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '/@/types/entity-ids'

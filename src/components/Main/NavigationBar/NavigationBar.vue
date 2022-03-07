@@ -9,7 +9,7 @@
 import { defineComponent, computed } from 'vue'
 import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
 import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'NavigationBar',

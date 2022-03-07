@@ -42,7 +42,7 @@ import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
 
 export default defineComponent({

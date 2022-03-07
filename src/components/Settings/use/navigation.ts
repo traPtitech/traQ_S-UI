@@ -1,7 +1,7 @@
 import { SettingsRouteName } from '/@/router/settings'
 import { useRouter } from 'vue-router'
 import { constructChannelPath, RouteName } from '/@/router'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 

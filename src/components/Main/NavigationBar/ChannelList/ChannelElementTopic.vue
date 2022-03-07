@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 

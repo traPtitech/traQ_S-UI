@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
 import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'

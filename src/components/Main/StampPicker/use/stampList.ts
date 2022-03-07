@@ -1,5 +1,5 @@
 import { computed, Ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
 import useStampFilter from './stampFilter'

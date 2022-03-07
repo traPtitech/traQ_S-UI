@@ -15,7 +15,7 @@ import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { constructUserPath } from '/@/router'
 

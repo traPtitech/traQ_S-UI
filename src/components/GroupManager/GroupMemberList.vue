@@ -38,7 +38,7 @@ import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupMember } from '@traptitech/traq'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'GroupMemberList',

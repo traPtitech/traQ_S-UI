@@ -1,5 +1,5 @@
 import { computed, Ref } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { User } from '@traptitech/traq'
 import { UserId } from '/@/types/entity-ids'
 

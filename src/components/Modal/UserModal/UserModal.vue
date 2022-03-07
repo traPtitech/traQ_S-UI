@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import ClickOutside from '/@/components/UI/ClickOutside'

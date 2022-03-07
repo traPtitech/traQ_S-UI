@@ -1,5 +1,5 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '/@/store'
+import store from '/@/vuex'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import {
   reactive,

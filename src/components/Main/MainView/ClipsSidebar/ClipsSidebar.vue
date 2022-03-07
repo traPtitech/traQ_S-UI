@@ -25,7 +25,7 @@ import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainVie
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'ClipsSidebar',

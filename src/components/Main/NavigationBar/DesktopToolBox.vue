@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useToolBox from '/@/components/Main/NavigationBar/use/toolBox'

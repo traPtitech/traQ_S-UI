@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const useIsMobile = () => {
   const isMobile = computed(() => store.state.ui.isMobile)

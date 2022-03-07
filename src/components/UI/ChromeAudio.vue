@@ -43,7 +43,7 @@ import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
 import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'ChromeAudio',

@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { SendKey, SendKeys } from '/@/store/app/browserSettings'
+import { SendKey, SendKeys } from '/@/vuex/app/browserSettings'
 import { isMac } from '/@/lib/dom/browser'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'

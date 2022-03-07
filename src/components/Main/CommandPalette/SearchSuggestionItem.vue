@@ -15,7 +15,7 @@
 <script lang="ts">
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
 

@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 
 const useChannelSubscriptionState = () => {

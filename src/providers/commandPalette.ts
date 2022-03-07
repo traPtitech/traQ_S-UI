@@ -8,7 +8,7 @@ import {
   readonly
 } from 'vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const commandPaletteStoreSymbol: InjectionKey<CommandPaletteStore> = Symbol()
 

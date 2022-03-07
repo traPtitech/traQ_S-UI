@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { ref } from 'vue'
 import useLoginCheck from './loginCheck'
 

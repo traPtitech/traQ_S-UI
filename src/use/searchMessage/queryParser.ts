@@ -4,7 +4,7 @@ import {
   createQueryParser,
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
-import store from '/@/store'
+import store from '/@/vuex'
 
 const storeForParser: StoreForParser = {
   channelPathToId: path => {

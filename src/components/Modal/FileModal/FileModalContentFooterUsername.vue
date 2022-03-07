@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/use/modalOpener'
 import AIcon from '/@/components/UI/AIcon.vue'

@@ -54,7 +54,7 @@ import { defineComponent, computed } from 'vue'
 import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useIsMobile from '/@/use/isMobile'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserPermission } from '@traptitech/traq'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined

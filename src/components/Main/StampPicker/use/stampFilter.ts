@@ -1,6 +1,6 @@
 import { reactive, computed, ref } from 'vue'
 import { Stamp } from '@traptitech/traq'
-import store from '/@/store'
+import store from '/@/vuex'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { getMatchedWithPriority } from '/@/lib/basic/array'
 

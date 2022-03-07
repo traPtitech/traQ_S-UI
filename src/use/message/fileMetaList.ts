@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { isImage, isNonPreviewable, isVideo, isAudio } from '/@/lib/basic/file'
 import { isDefined } from '/@/lib/basic/array'
 

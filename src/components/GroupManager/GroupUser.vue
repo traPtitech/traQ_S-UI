@@ -27,7 +27,7 @@
 import { computed, defineComponent, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import AIcon from '/@/components/UI/AIcon.vue'
 
 export default defineComponent({

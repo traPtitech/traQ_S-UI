@@ -1,12 +1,12 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '/@/store'
+import store from '/@/vuex'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { Ref, watch, onMounted, onBeforeUnmount, onActivated, ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
-import { messageMitt } from '/@/store/entities/messages'
-import { unreadChannelsMapInitialFetchPromise } from '/@/store/domain/me/promises'
+import { messageMitt } from '/@/vuex/entities/messages'
+import { unreadChannelsMapInitialFetchPromise } from '/@/vuex/domain/me/promises'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60

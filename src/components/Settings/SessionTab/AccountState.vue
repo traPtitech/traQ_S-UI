@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
-import store from '/@/store'
+import store from '/@/vuex'
 
 export default defineComponent({
   name: 'AccountState',

@@ -46,7 +46,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import store from '/@/store'
+import store from '/@/vuex'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '/@/components/UI/FormInput.vue'

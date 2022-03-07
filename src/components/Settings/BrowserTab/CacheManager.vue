@@ -44,7 +44,7 @@ import useToastStore from '/@/providers/toastStore'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { deleteUnicodeStamps } from '/@/lib/stampCache'
-import store from '/@/store'
+import store from '/@/vuex'
 import { prettifyFileSize } from '/@/lib/basic/file'
 
 declare global {

@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'

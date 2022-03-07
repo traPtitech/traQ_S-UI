@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import IndicatorDot from './IndicatorDot.vue'
 

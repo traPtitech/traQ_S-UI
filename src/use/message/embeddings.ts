@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { isFile, isMessage, isExternalUrl } from '/@/lib/guard/embeddingOrUrl'
 

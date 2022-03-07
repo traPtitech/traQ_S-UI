@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import useSyncedState from '/@/components/Settings/use/syncedState'
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
 import { Theme } from '/@/lib/theme/schema'

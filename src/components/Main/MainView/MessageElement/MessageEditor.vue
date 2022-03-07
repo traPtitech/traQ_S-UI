@@ -45,7 +45,7 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import store from '/@/store'
+import store from '/@/vuex'
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/use/modifierKey'

@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { Channel } from '@traptitech/traq'
 import { reactive, computed, Ref } from 'vue'
 import { channelDeepMatching } from '/@/lib/channel'

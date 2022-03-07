@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { useOpenLink } from '/@/use/openLink'
 
 export const useOpenLinkAndClearModal = () => {

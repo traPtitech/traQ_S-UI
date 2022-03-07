@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
+import store from '/@/vuex'
 import { User, UserDetail } from '@traptitech/traq'
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'

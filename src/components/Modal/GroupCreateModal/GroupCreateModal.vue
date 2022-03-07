@@ -36,7 +36,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
-import store from '/@/store'
+import store from '/@/vuex'
 import useToastStore from '/@/providers/toastStore'
 
 export default defineComponent({

@@ -1,4 +1,4 @@
-import store from '/@/store'
+import store from '/@/vuex'
 import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useToastStore from '/@/providers/toastStore'

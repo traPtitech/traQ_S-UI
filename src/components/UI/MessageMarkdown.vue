@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import store from '/@/store'
+import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
 
