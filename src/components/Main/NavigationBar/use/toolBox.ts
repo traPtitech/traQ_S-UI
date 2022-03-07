@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import usePopupMenu from '../../MainView/ChannelView/use/popupMenu'
-import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useOpenLink } from '/@/use/openLink'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -18,7 +18,7 @@ const useToolBox = () => {
   const { openLink } = useOpenLink()
   const { pushModal } = useModalStore()
 
-  const { openCommandPalette } = useCommandPaletteInvoker()
+  const { openCommandPalette } = useCommandPalette()
   const openQrCodeModal = () => pushModal({ type: 'qrcode' })
   const openSettings = (e: MouseEvent) => {
     openLink(e, '/settings')

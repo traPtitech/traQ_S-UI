@@ -4,7 +4,6 @@ import indexedDBStorage from './indexedDBStorage'
 import { persistReducer } from './defineDBModule'
 import { entities } from './entities'
 import { domain } from './domain'
-import { app } from './app'
 
 const vuexStrict = import.meta.env.MODE !== 'production'
 
@@ -30,8 +29,7 @@ const {
     : {},
   modules: {
     entities,
-    domain,
-    app
+    domain
   },
   plugins: [persisted.plugin],
   strict: vuexStrict

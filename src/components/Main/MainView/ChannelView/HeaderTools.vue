@@ -52,7 +52,7 @@ import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import { embeddingOrigin } from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
-import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import useChannelPath from '/@/use/channelPath'
 import { constructChannelPath } from '/@/router'
 
@@ -104,7 +104,7 @@ export default defineComponent({
       toggleQall
     } = useQall(props)
     const { openChannelManageModal } = useChannelManageModal(props)
-    const { openCommandPalette } = useCommandPaletteInvoker()
+    const { openCommandPalette } = useCommandPalette()
     return {
       hasActiveQallSession,
       isQallSessionOpened,

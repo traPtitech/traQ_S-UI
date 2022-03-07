@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <template v-if="store.currentInput.length > 0">
+    <template v-if="currentInput.length > 0">
       <search-suggestion-item
         :item="searchConfirmItem"
         @select="onSelectSuggestion(searchConfirmItem)"
@@ -14,14 +14,14 @@
       :description="suggestion.description"
       @select="onSelectQuerySuggestion(suggestion.insertQuery)"
     />
-    <template v-if="historySuggestions.length > 0">
+    <template v-if="searchHistories.length > 0">
       <div :class="$style.header">過去の検索</div>
       <search-suggestion-history-item
-        v-for="suggestion in historySuggestions"
+        v-for="suggestion in searchHistories"
         :key="suggestion"
         :label="suggestion"
         @select="onSelectHistorySuggestion(suggestion)"
-        @remove="onRemoveHistorySuggestion(suggestion)"
+        @remove="removeSearchHistory(suggestion)"
       />
     </template>
   </div>
@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { useCommandPaletteStore } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
 import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
 import SearchSuggestionItem, {
@@ -55,25 +55,19 @@ export default defineComponent({
     queryInsert: () => true
   },
   setup(props, { emit }) {
-    const {
-      commandPaletteStore: store,
-      settleQuery,
-      historySuggestions,
-      removeHistorySuggestion,
-      setCurrentInput,
-      addCurrentInput
-    } = useCommandPaletteStore()
+    const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
+      useCommandPalette()
     const searchConfirmItem = computed(
       (): SuggestionItem => ({
         type: 'search',
-        value: store.currentInput
+        value: currentInput.value
       })
     )
     const onSelectQuerySuggestion = (query: string) => {
-      if (store.currentInput !== '') {
-        addCurrentInput(` ${query}`)
+      if (currentInput.value !== '') {
+        currentInput.value += ` ${query}`
       } else {
-        setCurrentInput(query)
+        currentInput.value = query
       }
       emit('queryInsert')
     }
@@ -84,20 +78,17 @@ export default defineComponent({
       }
     }
     const onSelectHistorySuggestion = (label: string) => {
-      setCurrentInput(label)
-    }
-    const onRemoveHistorySuggestion = (label: string) => {
-      removeHistorySuggestion(label)
+      currentInput.value = label
     }
     return {
-      store,
+      currentInput,
       searchConfirmItem,
       querySuggestions,
-      historySuggestions,
+      searchHistories,
       onSelectQuerySuggestion,
       onSelectSuggestion,
       onSelectHistorySuggestion,
-      onRemoveHistorySuggestion
+      removeSearchHistory
     }
   }
 })

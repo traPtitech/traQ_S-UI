@@ -65,7 +65,7 @@ import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStates } from '/@/providers/messageInputState'
-import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import { provideAudioController } from '/@/providers/audioController'
 
 const useStyles = (
@@ -95,8 +95,7 @@ const useDraftConfirmer = () => {
 }
 
 const useCommandPaletteShortcutKey = () => {
-  const { mode, openCommandPalette, closeCommandPalette } =
-    useCommandPaletteInvoker()
+  const { mode, openCommandPalette, closeCommandPalette } = useCommandPalette()
 
   const isSearchEnabled = window.traQConfig.enableSearch ?? false
 

@@ -17,7 +17,6 @@ import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import { provideToastStore } from '/@/providers/toastStore'
 import { provideStampPickerStore } from '/@/providers/stampPicker'
 import { provideMessageInputState } from '/@/providers/messageInputState'
-import { provideCommandPaletteStore } from '/@/providers/commandPalette'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -95,7 +94,6 @@ export default defineComponent({
     provideToastStore()
     provideStampPickerStore()
     provideMessageInputState()
-    provideCommandPaletteStore()
 
     useTts()
 

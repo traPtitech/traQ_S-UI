@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { useCommandPaletteStore } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
@@ -32,20 +32,19 @@ export default defineComponent({
   },
   setup() {
     const { isMobile } = useResponsiveStore()
-    const { closeCommandPalette, commandPaletteStore: store } =
-      useCommandPaletteStore()
+    const { mode, query, closeCommandPalette } = useCommandPalette()
 
     const supplementalViewType = computed((): SupplementalViewType => {
-      if (store.mode === 'search' && store.query.length > 0) {
+      if (mode.value === 'search' && query.value.length > 0) {
         return 'search-result'
       }
-      if (store.mode === 'search') {
+      if (mode.value === 'search') {
         return 'search-suggestion'
       }
       return undefined
     })
 
-    return { isMobile, closeCommandPalette, store, supplementalViewType }
+    return { isMobile, closeCommandPalette, supplementalViewType }
   }
 })
 </script>
