@@ -15,6 +15,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "sourceMap": true,
+    "noEmit": true,
     "baseUrl": ".",
     "types": [
       "serviceworker",
