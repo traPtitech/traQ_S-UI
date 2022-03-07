@@ -67,13 +67,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
-import useSyncedState from '/@/components/Settings/use/syncedState'
+import { defineComponent, reactive } from 'vue'
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
 import { Theme } from '/@/lib/theme/schema'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 export default defineComponent({
   name: 'ThemeTab',
@@ -83,11 +82,7 @@ export default defineComponent({
     FormInput
   },
   setup() {
-    const browserSettings = computed(() => store.state.app.themeSettings)
-    const { state } = useSyncedState(
-      browserSettings,
-      store.commit.app.themeSettings.set
-    )
+    const state = reactive(useThemeSettings())
     const changeTheme = (theme: Theme) => {
       state.custom = theme
     }

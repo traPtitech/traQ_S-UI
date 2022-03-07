@@ -43,9 +43,9 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 export default defineComponent({
   name: 'AccountList',
@@ -68,14 +68,13 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { currentTheme } = useThemeSettings()
+
     const iconBackgroundColor = computed(
-      () =>
-        store.getters.app.themeSettings.currentTheme.basic.ui.primary.default
+      () => currentTheme.value.basic.ui.primary.default
     )
     const iconColor = computed(
-      () =>
-        store.getters.app.themeSettings.currentTheme.basic.background.primary
-          .border
+      () => currentTheme.value.basic.background.primary.border
     )
 
     const { wikiPageOrigin } = window.traQConfig

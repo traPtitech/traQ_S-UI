@@ -1,12 +1,13 @@
 import { computed, ComputedRef } from 'vue'
 import { commonStyles } from '/@/lib/styles'
-import store from '/@/vuex'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 export const useThemeVariables = (): ComputedRef<
   Record<`--${string}`, string>
-> =>
-  computed(() => {
-    const theme = store.getters.app.themeSettings.currentTheme
+> => {
+  const { currentTheme } = useThemeSettings()
+  return computed(() => {
+    const theme = currentTheme.value
     const common = commonStyles
     return {
       '--theme-accent-primary-default': theme.basic.accent.primary.default,
@@ -109,3 +110,4 @@ export const useThemeVariables = (): ComputedRef<
       '--common-drop-shadow-default': common.dropShadow.default
     }
   })
+}

@@ -2,6 +2,7 @@ import { hasKey, isObjectAndHasKey } from '/@/lib/basic/object'
 import { Theme } from './schema'
 import indexedDBStorage from '/@/vuex/indexedDBStorage'
 
+// TODO: piniaに対応させる
 export const migrateThemeFromV1ToV2 = async () => {
   const store = await indexedDBStorage.getItem('vuex')
   if (!store) return

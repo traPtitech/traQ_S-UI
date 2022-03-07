@@ -17,8 +17,8 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
-import store from '/@/vuex'
 import useHover from '/@/use/hover'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 export default defineComponent({
   name: 'MessageInputFileListItemCloseButton',
@@ -26,15 +26,14 @@ export default defineComponent({
     CircleIcon
   },
   setup() {
+    const { currentTheme } = useThemeSettings()
     const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 
     const iconBackgroundColorNotHovered = computed(
-      () =>
-        store.getters.app.themeSettings.currentTheme.basic.ui.primary.inactive
+      () => currentTheme.value.basic.ui.primary.inactive
     )
     const iconBackgroundColorHovered = computed(
-      () =>
-        store.getters.app.themeSettings.currentTheme.basic.ui.primary.default
+      () => currentTheme.value.basic.ui.primary.default
     )
 
     const iconBackgroundColor = computed(() =>
@@ -43,9 +42,7 @@ export default defineComponent({
         : iconBackgroundColorNotHovered.value
     )
     const iconColor = computed(
-      () =>
-        store.getters.app.themeSettings.currentTheme.basic.background.primary
-          .border
+      () => currentTheme.value.basic.background.primary.border
     )
 
     return { onMouseEnter, onMouseLeave, iconBackgroundColor, iconColor }
