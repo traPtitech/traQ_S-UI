@@ -25,7 +25,7 @@ import { computed, defineComponent } from 'vue'
 import MessageInputUploadButton from './MessageInputUploadButton.vue'
 import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
 import IconButton from '/@/components/UI/IconButton.vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'MessageInputLeftControls',
@@ -50,7 +50,7 @@ export default defineComponent({
     clickAddAttachment: () => true
   },
   setup(props, { emit }) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const toggleExpanded = () => {
       emit('update:isExpanded', !props.isExpanded)
     }

@@ -1,10 +1,12 @@
 import { computed } from 'vue'
 import store from '/@/vuex'
 import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const useSidebar = () => {
   const { currentMainViewComponentState: state, isSidebarOpen } =
     useMainViewStore()
+  const { isMobile } = useResponsiveStore()
 
   /**
    * サイドバーが表示されている必要があるか
@@ -14,19 +16,19 @@ const useSidebar = () => {
   const shouldShowSidebar = computed(
     () =>
       state.value === MainViewComponentState.SidebarShown ||
-      (store.state.ui.isMobile &&
+      (isMobile.value &&
         (state.value === MainViewComponentState.SidebarAppearing ||
           state.value === MainViewComponentState.SidebarAppearingAuto ||
           state.value === MainViewComponentState.SidebarDisappearing ||
           state.value === MainViewComponentState.SidebarDisappearingAuto))
   )
   const openSidebar = () => {
-    state.value = store.state.ui.isMobile
+    state.value = isMobile.value
       ? MainViewComponentState.SidebarAppearingAuto
       : MainViewComponentState.SidebarShown
   }
   const closeSidebar = () => {
-    state.value = store.state.ui.isMobile
+    state.value = isMobile.value
       ? MainViewComponentState.SidebarDisappearingAuto
       : MainViewComponentState.Hidden
   }

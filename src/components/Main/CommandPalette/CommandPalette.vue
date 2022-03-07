@@ -18,7 +18,7 @@ import ClickOutside from '/@/components/UI/ClickOutside'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
 import SearchSuggestion from './SearchSuggestion.vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
@@ -31,7 +31,7 @@ export default defineComponent({
     SearchSuggestion
   },
   setup() {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const { closeCommandPalette, commandPaletteStore: store } =
       useCommandPaletteStore()
 

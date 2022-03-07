@@ -80,7 +80,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import { useMessageContextMenuInvoker } from '/@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
 import useToastStore from '/@/providers/toastStore'
@@ -151,10 +151,11 @@ export default defineComponent({
       })
     }
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const showQuickReaction = ref(!isMobile.value)
-    const toggleQuickReaction = () =>
-      (showQuickReaction.value = !showQuickReaction.value)
+    const toggleQuickReaction = () => {
+      showQuickReaction.value = !showQuickReaction.value
+    }
 
     return {
       containerEle,

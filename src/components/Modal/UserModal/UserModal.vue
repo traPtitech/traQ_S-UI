@@ -42,6 +42,7 @@ import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useUserDetail from './use/userDetail'
 import { useModalStore } from '/@/store/ui/modal'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
@@ -74,7 +75,7 @@ export default defineComponent({
   setup(props) {
     const { clearModal } = useModalStore()
 
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const { isMobile } = useResponsiveStore()
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))

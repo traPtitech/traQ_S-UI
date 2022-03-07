@@ -5,7 +5,6 @@ import { persistReducer } from './defineDBModule'
 import { entities } from './entities'
 import { domain } from './domain'
 import { app } from './app'
-import { ui } from './ui'
 
 const vuexStrict = import.meta.env.MODE !== 'production'
 
@@ -32,8 +31,7 @@ const {
   modules: {
     entities,
     domain,
-    app,
-    ui
+    app
   },
   plugins: [persisted.plugin],
   strict: vuexStrict

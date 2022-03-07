@@ -9,6 +9,7 @@ import store from '/@/vuex'
 import { User, UserDetail } from '@traptitech/traq'
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'FeatureContainer',
@@ -27,7 +28,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const { isMobile } = useResponsiveStore()
 
     return {
       isMobile

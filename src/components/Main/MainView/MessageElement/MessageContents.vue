@@ -43,7 +43,7 @@
 import { defineComponent, computed, reactive, PropType } from 'vue'
 import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import MessageHeader from './MessageHeader.vue'
@@ -75,7 +75,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const state = reactive({
       message: computed(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -39,7 +39,7 @@
 import { defineComponent, computed, shallowRef, PropType } from 'vue'
 import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver, {
   ChangeHeightData
@@ -78,7 +78,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const message = computed(() =>
       store.state.entities.messages.messagesMap.get(props.messageId)
     )

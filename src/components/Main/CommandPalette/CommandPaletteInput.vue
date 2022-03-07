@@ -32,13 +32,13 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useCommandPaletteStore } from '/@/providers/commandPalette'
 import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'CommandPaletteInput',
   components: { AIcon, CloseButton },
   setup() {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const inputRef = shallowRef<HTMLInputElement | null>(null)
     const focus = () => {
       inputRef.value?.focus()

@@ -98,7 +98,7 @@ import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import store from '/@/vuex'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -136,7 +136,7 @@ export default defineComponent({
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
     )
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     const clickQall = () => {
       emit('clickQall')

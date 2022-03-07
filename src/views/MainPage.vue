@@ -53,7 +53,7 @@ import {
 } from 'vue'
 import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import useNavigationController from '/@/use/navigationController'
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
@@ -168,7 +168,7 @@ export default defineComponent({
 
     useCommandPaletteShortcutKey()
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
     const { closeNav } = useNavigationController()
     const hideOuter = computed(

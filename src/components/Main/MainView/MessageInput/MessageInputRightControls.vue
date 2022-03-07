@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
@@ -57,7 +57,7 @@ export default defineComponent({
     clickStamp: () => true
   },
   setup(props, { emit }) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const { onClickSendButton, onClickStampButton } = useClickHandlers(
       props,
       emit

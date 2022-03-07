@@ -14,7 +14,6 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import store from '/@/vuex'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
-import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import { provideToastStore } from '/@/providers/toastStore'
 import { provideStampPickerStore } from '/@/providers/stampPicker'
@@ -22,17 +21,7 @@ import { provideMessageInputState } from '/@/providers/messageInputState'
 import { provideCommandPaletteStore } from '/@/providers/commandPalette'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
-
-const useWindowResizeObserver = () => {
-  const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
-
-  store.commit.ui.setIsMobile(queryList.matches)
-
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
-    store.commit.ui.setIsMobile(event.matches)
-  })
-}
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const useQallConfirmer = () => {
   window.addEventListener('beforeunload', event => {
@@ -120,8 +109,7 @@ export default defineComponent({
     provideMessageInputState()
     provideCommandPaletteStore()
 
-    useWindowResizeObserver()
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const { isMobile } = useResponsiveStore()
 
     useQallConfirmer()
 

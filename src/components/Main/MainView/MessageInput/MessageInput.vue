@@ -60,7 +60,7 @@ import {
 } from 'vue'
 import store from '/@/vuex'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
@@ -100,7 +100,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const channelId = toRef(props, 'channelId')
     const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
     const { addErrorToast } = useToastStore()
