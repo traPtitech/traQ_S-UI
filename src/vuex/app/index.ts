@@ -3,7 +3,6 @@ import { state } from './state'
 import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
-import { rtc } from './rtc'
 import { themeSettings } from './themeSettings'
 
 /**
@@ -17,7 +16,6 @@ export const app = defineDBModule({
   actions,
   path: ['app.messageSearchHistories'],
   modules: {
-    rtc,
     themeSettings
   }
 })

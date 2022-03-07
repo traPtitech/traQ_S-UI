@@ -5,7 +5,7 @@
       :status="status"
       :channel-id="currentChannel"
       :is-mic-muted="isMicMuted"
-      @end-qall-click="onEndQallClick"
+      @end-qall-click="endQall"
       @mic-click="onMicClick"
     />
   </div>
@@ -16,6 +16,7 @@ import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
 import store from '/@/vuex'
+import { useAppRtcStore } from '/@/store/app/rtc'
 
 export default defineComponent({
   name: 'QallController',
@@ -24,20 +25,17 @@ export default defineComponent({
     QallDetailsPanel
   },
   setup() {
+    const { isMicMuted, endQall, mute, unmute } = useAppRtcStore()
     const currentChannel = computed(() =>
       store.getters.domain.rtc.qallSession
         ? store.getters.domain.rtc.currentRTCState?.channelId
         : undefined
     )
-    const onEndQallClick = () => {
-      store.dispatch.app.rtc.endQall()
-    }
-    const isMicMuted = computed(() => store.state.app.rtc.isMicMuted)
     const onMicClick = () => {
       if (isMicMuted.value) {
-        store.dispatch.app.rtc.unmute()
+        unmute()
       } else {
-        store.dispatch.app.rtc.mute()
+        mute()
       }
     }
     const status = computed(() => '通話中')
@@ -45,7 +43,7 @@ export default defineComponent({
       currentChannel,
       status,
       isMicMuted,
-      onEndQallClick,
+      endQall,
       onMicClick
     }
   }

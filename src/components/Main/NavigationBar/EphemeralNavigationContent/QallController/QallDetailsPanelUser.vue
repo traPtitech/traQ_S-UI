@@ -39,6 +39,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 import store from '/@/vuex'
+import { useAppRtcStore } from '/@/store/app/rtc'
 
 const maxVolumeValue = 200
 
@@ -62,22 +63,18 @@ export default defineComponent({
     tuneDone: () => true
   },
   setup(props, { emit }) {
+    const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
     const volume = computed(() =>
-      Math.round(
-        store.getters.app.rtc.getUserVolume(props.userId) * maxVolumeValue
-      )
+      Math.round(getUserVolume(props.userId) * maxVolumeValue)
     )
     const userName = computed(
       () => store.state.entities.usersMap.get(props.userId)?.displayName ?? ''
     )
     const talkingLevel = computed(() =>
-      store.state.app.rtc.talkingUsersState.get(props.userId)
+      talkingUsersState.value.get(props.userId)
     )
     const onChange = (value: number) => {
-      store.commit.app.rtc.setUserVolume({
-        userId: props.userId,
-        volume: value / maxVolumeValue
-      })
+      setUserVolume(props.userId, value / maxVolumeValue)
     }
 
     const tune = () => {

@@ -113,7 +113,6 @@ import { defineComponent, computed, ref, watchEffect, reactive } from 'vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import { tts } from '/@/lib/tts'
 import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -167,7 +166,7 @@ const useDevicesInfo = () => {
 }
 
 const useVoices = () => {
-  const { isTtsEnabled, voiceName } = useRtcSettings()
+  const { voiceName } = useRtcSettings()
   const getVoicesAndSetDefault = () => {
     const voices = speechSynthesis.getVoices().filter(v => v.lang === 'ja-JP')
 
@@ -193,12 +192,6 @@ const useVoices = () => {
 
   speechSynthesis.addEventListener?.('voiceschanged', () => {
     voices.value = getVoicesAndSetDefault()
-  })
-
-  watchEffect(() => {
-    if (!isTtsEnabled.value) {
-      tts.stop()
-    }
   })
 
   return voiceOptions

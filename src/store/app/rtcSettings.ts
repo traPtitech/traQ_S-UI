@@ -1,8 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { toRefs, watch } from 'vue'
+import { toRefs } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/use/indexedDbValue'
-import store from '/@/vuex'
 
 type State = {
   isEnabled: boolean
@@ -92,27 +91,6 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     }
     return false
   }
-
-  // TODO: app/rtc側でlistenする
-  watch(state, (newState, oldState) => {
-    if (newState.masterVolume !== oldState.masterVolume) {
-      store.commit.app.rtc.setMasterVolume(newState.masterVolume)
-    } else if (newState.audioInputDeviceId !== oldState.audioInputDeviceId) {
-      store.dispatch.app.rtc.setAudioInputDeviceId(newState.audioInputDeviceId)
-    } else if (
-      newState.isNoiseReductionEnabled !== oldState.isNoiseReductionEnabled
-    ) {
-      store.dispatch.app.rtc.setIsNoiseReductionEnabled(
-        newState.isNoiseReductionEnabled
-      )
-    } else if (
-      newState.isEchoCancellationEnabled !== oldState.isEchoCancellationEnabled
-    ) {
-      store.dispatch.app.rtc.setIsEchoCancellationEnabled(
-        newState.isEchoCancellationEnabled
-      )
-    }
-  })
 
   return { ...toRefs(state), loading, loadingPromise, ensureDeviceIds }
 })

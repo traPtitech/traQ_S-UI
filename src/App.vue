@@ -23,10 +23,13 @@ import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useAppRtcStore } from '/@/store/app/rtc'
+import { useTts } from '/@/store/app/tts'
 
 const useQallConfirmer = () => {
+  const { isCurrentDevice } = useAppRtcStore()
   window.addEventListener('beforeunload', event => {
-    if (store.getters.app.rtc.isCurrentDevice) {
+    if (isCurrentDevice.value) {
       const unloadMessage = 'Qall中ですが本当に終了しますか？'
       event.preventDefault()
       event.returnValue = unloadMessage
@@ -109,6 +112,8 @@ export default defineComponent({
     provideStampPickerStore()
     provideMessageInputState()
     provideCommandPaletteStore()
+
+    useTts()
 
     const { isMobile } = useResponsiveStore()
 

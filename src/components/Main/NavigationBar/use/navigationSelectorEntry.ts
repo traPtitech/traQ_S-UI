@@ -8,6 +8,7 @@ import { ThemeClaim } from '/@/lib/styles'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStates } from '/@/providers/messageInputState'
 import useAudioController from '/@/providers/audioController'
+import { useAppRtcStore } from '/@/store/app/rtc'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -77,6 +78,7 @@ export const ephemeralItems: Record<
 }
 
 const useNavigationSelectorEntry = () => {
+  const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
   const { hasInputChannel } = useMessageInputStates()
   const { fileId } = useAudioController()
 
@@ -97,9 +99,6 @@ const useNavigationSelectorEntry = () => {
   })
   const entries = computed(() => createItems(notificationState))
 
-  const hasActiveQallSession = computed(() => {
-    return store.getters.app.rtc.isCurrentDevice
-  })
   const ephemeralEntries = computed(() =>
     [
       hasActiveQallSession.value ? ephemeralItems.qallController : undefined,
