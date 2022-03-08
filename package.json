@@ -38,7 +38,6 @@
     "idb-keyval": "^6.1.0",
     "mitt": "^3.0.0",
     "pica": "^9.0.1",
-    "shvl": "^2.0.3",
     "skyway-js": "^4.4.3",
     "text-field-edit": "^3.1.2022",
     "throttle-debounce": "^3.0.1",
@@ -48,7 +47,6 @@
     "vue-router": "^4.0.13",
     "vue-slider-component": "^4.0.0-beta.5",
     "vuex": "^4.0.2",
-    "vuex-persist": "^3.1.3",
     "zod": "^3.13.4"
   },
   "devDependencies": {
