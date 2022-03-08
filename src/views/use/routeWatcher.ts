@@ -14,6 +14,7 @@ import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -34,6 +35,7 @@ const useRouteWatcher = () => {
     useModalStore()
   const { defaultChannelName, loadingPromise: browserSettingsLoadingPromise } =
     useBrowserSettings()
+  const { channelTree } = useChannelTree()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -66,7 +68,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
@@ -74,7 +76,7 @@ const useRouteWatcher = () => {
       const id = channelPathToId(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.channelParam!.split('/'),
-        store.state.domain.channelTree.channelTree
+        channelTree.value
       )
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
@@ -148,7 +150,7 @@ const useRouteWatcher = () => {
 
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
@@ -162,10 +164,7 @@ const useRouteWatcher = () => {
     } else {
       channelPath = openChannelPath.value
       try {
-        channelId = channelPathToId(
-          channelPath.split('/'),
-          store.state.domain.channelTree.channelTree
-        )
+        channelId = channelPathToId(channelPath.split('/'), channelTree.value)
       } catch (e) {
         state.view = 'not-found'
         return
@@ -206,7 +205,7 @@ const useRouteWatcher = () => {
 
     // チャンネルIDをチャンネルパスに変換するのに必要
     await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    if (channelTree.value.children.length === 0) {
       return
     }
 

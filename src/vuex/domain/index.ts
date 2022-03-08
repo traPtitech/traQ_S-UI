@@ -4,7 +4,6 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners } from './listeners'
-import { channelTree } from './channelTree'
 import { me } from './me'
 import { messagesView } from './messagesView'
 import { rtc } from './rtc'
@@ -22,7 +21,6 @@ export const domain = defineModule({
   mutations,
   actions,
   modules: {
-    channelTree,
     me,
     messagesView,
     rtc,

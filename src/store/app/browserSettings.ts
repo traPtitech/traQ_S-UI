@@ -3,7 +3,7 @@ import { computed, toRefs } from 'vue'
 import { replacePrefix } from '/@/lib/basic/string'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/use/indexedDbValue'
-import { channelTreeMitt } from '/@/vuex/domain/channelTree'
+import { channelTreeMitt } from '/@/store/domain/channelTree'
 
 type State = {
   openMode: OpenMode

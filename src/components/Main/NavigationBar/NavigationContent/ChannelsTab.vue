@@ -51,6 +51,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -87,13 +88,12 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
   )
 }
 
-const useTopLevelChannels = () =>
-  computed(
-    () =>
-      store.state.domain.channelTree.channelTree.children.filter(
-        channel => !channel.archived
-      ) ?? []
+const useTopLevelChannels = () => {
+  const { channelTree } = useChannelTree()
+  return computed(() =>
+    channelTree.value.children.filter(channel => !channel.archived)
   )
+}
 
 const useStaredChannels = () =>
   computed(

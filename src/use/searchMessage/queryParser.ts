@@ -1,5 +1,5 @@
 import { Ref } from 'vue'
-import { channelPathToId } from '/@/lib/channelTree'
+import { channelPathToId, ChannelTree } from '/@/lib/channelTree'
 import { StoreForParser } from '/@/lib/searchMessage/parserBase'
 import {
   createQueryParser,
@@ -7,16 +7,15 @@ import {
 } from '/@/lib/searchMessage/queryParser'
 import { useMainViewStore, ViewInformation } from '/@/store/ui/mainView'
 import store from '/@/vuex'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const getStoreForParser = (
-  primaryView: Ref<ViewInformation>
+  primaryView: Ref<ViewInformation>,
+  channelTree: Ref<ChannelTree>
 ): StoreForParser => ({
   channelPathToId: path => {
     try {
-      return channelPathToId(
-        path.split('/'),
-        store.state.domain.channelTree.channelTree
-      )
+      return channelPathToId(path.split('/'), channelTree.value)
     } catch {
       return undefined
     }
@@ -34,8 +33,11 @@ const getStoreForParser = (
 })
 
 const useQueryParer = () => {
+  const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
-  const parseQuery = createQueryParser(getStoreForParser(primaryView))
+  const parseQuery = createQueryParser(
+    getStoreForParser(primaryView, channelTree)
+  )
 
   return { parseQuery, toSearchMessageParam }
 }

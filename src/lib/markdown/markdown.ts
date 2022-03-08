@@ -9,8 +9,6 @@ import {
   stampsMapInitialFetchPromise
 } from '/@/vuex/entities/promises'
 
-const { channelIdToLink } = useChannelPath()
-
 const storeProvider: Store = {
   getUser(id) {
     return store.state.entities.usersMap.get(id)
@@ -31,6 +29,7 @@ const storeProvider: Store = {
     return store.getters.entities.userByName(name)
   },
   generateChannelHref(id) {
+    const { channelIdToLink } = useChannelPath()
     return `${embeddingOrigin}${channelIdToLink(id)}`
   },
   generateUserHref(id) {

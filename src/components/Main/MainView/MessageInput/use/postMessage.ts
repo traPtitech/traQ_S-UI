@@ -18,6 +18,7 @@ import {
   useMessageInputStateStatic,
   MessageInputStateKey
 } from '/@/providers/messageInputState'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const initialFetchPromise = Promise.all([
   usersMapInitialFetchPromise,
@@ -63,6 +64,7 @@ const usePostMessage = (
   const { getMessageInputState } = useMessageInputStateStatic()
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
+  const { channelTree } = useChannelTree()
 
   const isForce = computed(
     () => store.state.entities.channelsMap.get(unref(channelId))?.force
@@ -97,10 +99,7 @@ const usePostMessage = (
       getGroup: store.getters.entities.userGroupByName,
       getChannel: path => {
         try {
-          const id = channelPathToId(
-            path.split('/'),
-            store.state.domain.channelTree.channelTree
-          )
+          const id = channelPathToId(path.split('/'), channelTree.value)
           return { id }
         } catch {
           return undefined

@@ -52,6 +52,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 export default defineComponent({
   name: 'HomeTab',
@@ -62,6 +63,8 @@ export default defineComponent({
     DMChannelList
   },
   setup() {
+    const { homeChannelTree } = useChannelTree()
+
     const homeChannelWithTree = computed(() =>
       !store.state.domain.me.detail?.homeChannel
         ? []
@@ -93,11 +96,8 @@ export default defineComponent({
         .map(unread => store.state.entities.dmChannelsMap.get(unread.channelId))
         .filter(isDefined)
     )
-    const topLevelChannels = computed(
-      () =>
-        store.state.domain.channelTree.homeChannelTree.children.filter(
-          channel => !channel.archived
-        ) ?? []
+    const topLevelChannels = computed(() =>
+      homeChannelTree.value.children.filter(channel => !channel.archived)
     )
     const channelsWithRtc = computed(() =>
       [...store.state.domain.rtc.channelSessionsMap.entries()]

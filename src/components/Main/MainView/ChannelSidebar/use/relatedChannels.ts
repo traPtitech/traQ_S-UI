@@ -4,11 +4,14 @@ import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
+import { useChannelTree } from '/@/store/domain/channelTree'
 
 const compareNameInsensitive = (a: Channel, b: Channel) =>
   compareStringInsensitive(a.name, b.name)
 
 const useRelatedChannels = (props: { channelId: ChannelId }) => {
+  const { topLevelChannels } = useChannelTree()
+
   const getParentChildrenChannels = () =>
     parent.value?.children
       .map(v => store.state.entities.channelsMap.get(v))
@@ -25,7 +28,7 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
     // ルート直下のチャンネルの場合はルート直下のチャンネル
     const sibs =
       current.value?.parentId === null
-        ? store.getters.domain.channelTree.topLevelChannels
+        ? topLevelChannels.value
         : getParentChildrenChannels()
     return (
       sibs
