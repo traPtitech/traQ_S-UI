@@ -6,7 +6,6 @@ import { actions } from './actions'
 import { defineWsListeners } from './listeners'
 import { me } from './me'
 import { messagesView } from './messagesView'
-import { stampCategory } from './stampCategory'
 
 /**
  * entitiesでないサーバーの情報を扱うstore
@@ -21,8 +20,7 @@ export const domain = defineModule({
   actions,
   modules: {
     me,
-    messagesView,
-    stampCategory
+    messagesView
   }
 })
 defineWsListeners(store => store.domain)

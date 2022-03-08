@@ -3,8 +3,11 @@ import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
 import useStampFilter from './stampFilter'
+import { useStampCategory } from '/@/store/domain/stampCategory'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
+  const { traQStampCategory, unicodeStampCategories } = useStampCategory()
+
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
       return store.getters.domain.me.recentStampIds
@@ -15,16 +18,12 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
       return stampPalette?.stamps ?? []
     }
     if (currentStampSet.value.type === 'category') {
-      const traQStampCategory =
-        store.state.domain.stampCategory.traQStampCategory
-      const unicodeStampCategories =
-        store.state.domain.stampCategory.unicodeStampCategories
       const name = currentStampSet.value.id
-      if (name === traQStampCategory.name) {
-        return traQStampCategory.stampIds
+      if (name === traQStampCategory.value.name) {
+        return traQStampCategory.value.stampIds
       }
       return (
-        unicodeStampCategories.find(
+        unicodeStampCategories.value.find(
           category => name === `unicode-${category.name}`
         )?.stampIds ?? []
       )
