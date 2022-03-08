@@ -52,6 +52,7 @@ import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
 import useEmbeddings from '/@/use/message/embeddings'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export default defineComponent({
   name: 'MessageContents',
@@ -75,6 +76,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { editingMessageId } = useMessagesView()
     const { isMobile } = useResponsiveStore()
     const state = reactive({
       message: computed(
@@ -82,10 +84,7 @@ export default defineComponent({
         () => store.state.entities.messages.messagesMap.get(props.messageId)!
       ),
       rawContent: computed((): string => state.message.content ?? ''),
-      isEditing: computed(
-        () =>
-          props.messageId === store.state.domain.messagesView.editingMessageId
-      ),
+      isEditing: computed(() => props.messageId === editingMessageId.value),
       stampDetailFoldingState: false
     })
 

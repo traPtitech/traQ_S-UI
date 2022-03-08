@@ -57,6 +57,7 @@ import { useMessageContextMenuStore } from './providers/messageContextMenu'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { constructMessagesPath } from '/@/router'
 import { useModalStore } from '/@/store/ui/modal'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -101,10 +102,11 @@ const usePinToggler = (props: { messageId: MessageId }) => {
 }
 
 const useMessageChanger = (props: { messageId: MessageId }) => {
+  const { editingMessageId } = useMessagesView()
   const { execWithToast } = useExecWithToast()
 
   const editMessage = () => {
-    store.commit.domain.messagesView.setEditingMessageId(props.messageId)
+    editingMessageId.value = props.messageId
   }
   const deleteMessage = () => {
     if (!confirm('本当にメッセージを削除しますか？')) return

@@ -80,6 +80,7 @@ import useMessageInputState from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -111,6 +112,7 @@ export default defineComponent({
     const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
       useModifierKey()
     const { sendWithModifierKey } = useBrowserSettings()
+    const { typingUsers } = useMessagesView()
     const isLeftControlsExpanded = ref(false)
     const isPreviewShown = ref(false)
 
@@ -138,10 +140,6 @@ export default defineComponent({
     }
 
     const { postMessage, isPosting, progress } = usePostMessage(channelId)
-
-    const typingUsers = computed(
-      () => store.getters.domain.messagesView.typingUsers
-    )
 
     const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
     const showKeyGuide = computed(

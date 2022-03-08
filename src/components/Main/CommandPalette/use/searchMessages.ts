@@ -6,6 +6,7 @@ import store from '/@/vuex'
 import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useSortMessages = (
   messages: Ref<DeepReadonly<Message[]>>,
@@ -70,6 +71,7 @@ const useSearchMessages = () => {
   const { parseQuery, toSearchMessageParam } = useQueryParer()
   const { query, searchState, setSearchResult, resetPaging } =
     useCommandPalette()
+  const { renderMessageContent } = useMessagesView()
 
   const currentSortKey = computed({
     get: () => searchState.value.currentSortKey,
@@ -112,11 +114,7 @@ const useSearchMessages = () => {
     )
     const hits = res.data.hits ?? []
     store.dispatch.entities.messages.extendMessagesMap(hits)
-    await Promise.all(
-      hits.map(message =>
-        store.dispatch.domain.messagesView.renderMessageContent(message.id)
-      )
-    )
+    await Promise.all(hits.map(message => renderMessageContent(message.id)))
     fetchingSearchResult.value = false
 
     setSearchResult(true, hits, res.data.totalHits ?? 0)

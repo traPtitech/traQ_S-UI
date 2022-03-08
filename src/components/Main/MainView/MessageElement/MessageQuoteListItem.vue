@@ -30,6 +30,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
@@ -49,6 +50,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { renderedContentMap } = useMessagesView()
     const state = reactive({
       message: computed(
         () =>
@@ -63,10 +65,7 @@ export default defineComponent({
             state.message.channelId === props.parentMessageChannelId)
       ),
       content: computed(
-        () =>
-          store.state.domain.messagesView.renderedContentMap.get(
-            props.messageId
-          ) ?? ''
+        () => renderedContentMap.value.get(props.messageId) ?? ''
       )
     })
     return { state }

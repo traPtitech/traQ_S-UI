@@ -10,6 +10,7 @@ import {
 } from '/@/types/entity-ids'
 import store from '/@/vuex'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {
@@ -66,6 +67,7 @@ export type HeaderStyle = 'default' | 'dark'
 
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const { lastOpenChannelName } = useBrowserSettings()
+  const messagesView = useMessagesView()
 
   const layout = ref<LayoutType>('single')
 
@@ -143,7 +145,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       channelId,
       entryMessageId
     }
-    store.dispatch.domain.messagesView.changeCurrentChannel({
+    messagesView.changeCurrentChannel({
       channelId,
       entryMessageId
     })
@@ -171,7 +173,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       userName,
       entryMessageId
     }
-    store.dispatch.domain.messagesView.changeCurrentChannel({
+    messagesView.changeCurrentChannel({
       channelId,
       entryMessageId,
       isDM: true
@@ -187,7 +189,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
       type: 'clips',
       clipFolderId
     }
-    store.dispatch.domain.messagesView.changeCurrentClipFolder(clipFolderId)
+    messagesView.changeCurrentClipFolder(clipFolderId)
   }
 
   return {

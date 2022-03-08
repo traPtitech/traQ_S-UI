@@ -59,7 +59,7 @@ import {
   shallowRef
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from '/@/vuex/domain/messagesView/state'
+import { LoadingDirection } from '/@/store/domain/messagesView'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'

@@ -10,6 +10,7 @@ import { defineComponent, PropType, computed } from 'vue'
 import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export default defineComponent({
   name: 'MessagePinned',
@@ -23,8 +24,9 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { pinnedMessages } = useMessagesView()
     const userDisplayName = computed(() => {
-      const pin = store.state.domain.messagesView.pinnedMessages.find(
+      const pin = pinnedMessages.value.find(
         v => v.message.id === props.messageId
       )
       const user = store.state.entities.usersMap.get(pin?.userId ?? '')

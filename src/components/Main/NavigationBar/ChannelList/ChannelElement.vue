@@ -77,6 +77,7 @@ import { deepSome } from '/@/lib/basic/tree'
 import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
@@ -184,6 +185,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const typedProps = props as TypedProps
 
+    const { currentChannelId } = useMessagesView()
+
     const state = reactive({
       children: computed(() =>
         typedProps.ignoreChildren
@@ -195,9 +198,7 @@ export default defineComponent({
         () => !typedProps.ignoreChildren && !typedProps.channel.active
       ),
       isSelected: computed(
-        () =>
-          store.state.domain.messagesView.currentChannelId ===
-          typedProps.channel.id
+        () => currentChannelId.value === typedProps.channel.id
       )
     })
     const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)

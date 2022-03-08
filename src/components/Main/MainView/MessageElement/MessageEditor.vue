@@ -45,7 +45,6 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import store from '/@/vuex'
 import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
 import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/use/modifierKey'
@@ -59,8 +58,10 @@ import { countLength } from '/@/lib/basic/string'
 import useToastStore from '/@/providers/toastStore'
 import { getResizedFile } from '/@/lib/resize'
 import useAttachments from '/@/components/Main/MainView/MessageInput/use/attachments'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
+  const { editingMessageId } = useMessagesView()
   const { addErrorToast } = useToastStore()
   const editMessage = async () => {
     if (countLength(text.value) > MESSAGE_MAX_LENGTH) {
@@ -72,13 +73,13 @@ const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
       await apis.editMessage(props.messageId, {
         content: text.value
       })
-      store.commit.domain.messagesView.unsetEditingMessageId()
+      editingMessageId.value = undefined
     } catch {
       addErrorToast('メッセージの編集に失敗しました')
     }
   }
   const cancel = () => {
-    store.commit.domain.messagesView.unsetEditingMessageId()
+    editingMessageId.value = undefined
   }
   return { editMessage, cancel }
 }

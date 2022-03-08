@@ -15,6 +15,7 @@ import {
   ClipFolderMessageAddedEvent,
   ClipFolderMessageDeletedEvent
 } from '/@/lib/websocket/events'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
@@ -26,6 +27,7 @@ const useClipsFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
+  const { fetchMessagesInClipFolder, syncViewState } = useMessagesView()
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const state = reactive({
     nextLoadOffset: 0
@@ -41,12 +43,11 @@ const useClipsFetcher = (
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitMounted
-    const { clips, hasMore } =
-      await store.dispatch.domain.messagesView.fetchMessagesInClipFolder({
-        folderId: props.clipFolderId,
-        limit: fetchLimit.value,
-        offset: state.nextLoadOffset
-      })
+    const { clips, hasMore } = await fetchMessagesInClipFolder({
+      folderId: props.clipFolderId,
+      limit: fetchLimit.value,
+      offset: state.nextLoadOffset
+    })
 
     if (!hasMore) {
       isReachedEnd.value = true
@@ -69,7 +70,7 @@ const useClipsFetcher = (
     reset()
     init()
 
-    store.dispatch.domain.messagesView.syncViewState()
+    syncViewState()
   })
   watch(
     () => props.clipFolderId,
@@ -84,7 +85,7 @@ const useClipsFetcher = (
 
   onActivated(() => {
     // 一応送りなおす
-    store.dispatch.domain.messagesView.syncViewState()
+    syncViewState()
   })
 
   // クリップフォルダは、wsの再接続時にうまく取得ができないので、

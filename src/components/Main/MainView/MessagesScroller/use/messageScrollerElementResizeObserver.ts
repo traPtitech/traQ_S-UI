@@ -1,6 +1,6 @@
 import { Ref, computed } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from '/@/vuex/domain/messagesView/state'
+import { LoadingDirection } from '/@/store/domain/messagesView'
 import store from '/@/vuex'
 import { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/use/elementRenderObserver'
 

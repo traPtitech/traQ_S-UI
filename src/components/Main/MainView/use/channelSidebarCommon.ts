@@ -1,10 +1,12 @@
-import { computed, ref } from 'vue'
-import store from '/@/vuex'
+import { ref } from 'vue'
 import useSidebar from '/@/use/sidebar'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 type ChannelSidebarPage = 'default' | 'pinned' | 'events'
 
 const useChannelSidebarCommon = () => {
+  const { pinnedMessages, viewingUsers: viewerIds } = useMessagesView()
+
   const page = ref<ChannelSidebarPage>('default')
   const moveToDefaultPage = () => {
     page.value = 'default'
@@ -16,12 +18,6 @@ const useChannelSidebarCommon = () => {
     page.value = 'events'
   }
 
-  const pinnedMessages = computed(
-    () => store.state.domain.messagesView.pinnedMessages
-  )
-  const viewerIds = computed(
-    () => store.getters.domain.messagesView.viewingUsers
-  )
   const { openSidebar, closeSidebar } = useSidebar()
 
   return {

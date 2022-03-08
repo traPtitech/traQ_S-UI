@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
+import { defineComponent } from 'vue'
 import useCurrentChannelPath from '/@/use/currentChannelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
 import UserNotificationList from './UserNotificationList.vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 export default defineComponent({
   name: 'NotificationModal',
@@ -37,9 +37,7 @@ export default defineComponent({
     UserNotificationList
   },
   setup() {
-    const currentChannelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
+    const { currentChannelId } = useMessagesView()
     const { currentChannelPathString } = useCurrentChannelPath()
     return { currentChannelId, currentChannelPathString }
   }

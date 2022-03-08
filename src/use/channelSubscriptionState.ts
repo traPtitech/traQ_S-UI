@@ -1,11 +1,11 @@
 import { computed } from 'vue'
 import store from '/@/vuex'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useChannelSubscriptionState = () => {
-  const currentChannelId = computed(
-    () => store.state.domain.messagesView.currentChannelId
-  )
+  const { currentChannelId } = useMessagesView()
+
   const currentChannelSubscription = computed(
     () =>
       store.state.domain.me.subscriptionMap.get(currentChannelId.value ?? '') ??

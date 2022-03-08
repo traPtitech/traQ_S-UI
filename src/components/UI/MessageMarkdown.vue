@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 /**
  * メッセージIDからレンダリング済みMarkdownを表示するだけのコンポーネント
@@ -21,11 +21,9 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { renderedContentMap } = useMessagesView()
     const content = computed(
-      () =>
-        store.state.domain.messagesView.renderedContentMap.get(
-          props.messageId
-        ) ?? ''
+      () => renderedContentMap.value.get(props.messageId) ?? ''
     )
     return { content }
   }

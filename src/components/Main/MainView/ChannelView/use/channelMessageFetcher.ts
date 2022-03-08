@@ -7,6 +7,7 @@ import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
 import { messageMitt } from '/@/vuex/entities/messages'
 import { unreadChannelsMapInitialFetchPromise } from '/@/vuex/domain/me/promises'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -18,6 +19,7 @@ const useChannelMessageFetcher = (
     entryMessageId?: MessageId
   }
 ) => {
+  const { fetchMessagesByChannelId, syncViewState } = useMessagesView()
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const loadedMessageLatestDate = ref<Date>()
   const loadedMessageOldestDate = ref<Date>()
@@ -25,13 +27,12 @@ const useChannelMessageFetcher = (
 
   const fetchFormerMessages = async (isReachedEnd: Ref<boolean>) => {
     await waitMounted
-    const { messages, hasMore } =
-      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-        channelId: props.channelId,
-        limit: fetchLimit.value,
-        order: 'desc',
-        until: loadedMessageOldestDate.value
-      })
+    const { messages, hasMore } = await fetchMessagesByChannelId({
+      channelId: props.channelId,
+      limit: fetchLimit.value,
+      order: 'desc',
+      until: loadedMessageOldestDate.value
+    })
 
     if (!hasMore) {
       isReachedEnd.value = true
@@ -55,13 +56,12 @@ const useChannelMessageFetcher = (
     isReachedLatest: Ref<boolean>
   ): Promise<ChannelId[]> => {
     await waitMounted
-    const { messages, hasMore } =
-      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-        channelId: props.channelId,
-        limit: fetchLimit.value,
-        order: 'asc',
-        since: loadedMessageLatestDate.value
-      })
+    const { messages, hasMore } = await fetchMessagesByChannelId({
+      channelId: props.channelId,
+      limit: fetchLimit.value,
+      order: 'asc',
+      since: loadedMessageLatestDate.value
+    })
 
     if (!hasMore) {
       isReachedLatest.value = true
@@ -106,13 +106,12 @@ const useChannelMessageFetcher = (
 
   const fetchNewMessages = async (isReachedLatest: Ref<boolean>) => {
     await waitMounted
-    const { messages, hasMore } =
-      await store.dispatch.domain.messagesView.fetchMessagesByChannelId({
-        channelId: props.channelId,
-        limit: fetchLimit.value,
-        order: 'desc',
-        since: loadedMessageLatestDate.value
-      })
+    const { messages, hasMore } = await fetchMessagesByChannelId({
+      channelId: props.channelId,
+      limit: fetchLimit.value,
+      order: 'desc',
+      since: loadedMessageLatestDate.value
+    })
 
     if (!hasMore) {
       isReachedLatest.value = true
@@ -167,7 +166,7 @@ const useChannelMessageFetcher = (
 
   const init = () => {
     messagesFetcher.init()
-    store.dispatch.domain.messagesView.syncViewState()
+    syncViewState()
   }
 
   onMounted(() => {
@@ -223,7 +222,7 @@ const useChannelMessageFetcher = (
     messagesFetcher.loadNewMessages()
 
     // 設定画面から戻ってきたときの場合があるので同じチャンネルでも送りなおす
-    store.dispatch.domain.messagesView.syncViewState()
+    syncViewState()
   })
 
   return {

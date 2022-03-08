@@ -1,13 +1,12 @@
 import useChannelPath from '/@/use/channelPath'
 import { computed } from 'vue'
-import store from '/@/vuex'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useCurrentChannelPath = () => {
+  const { currentChannelId } = useMessagesView()
   const { channelIdToPathString } = useChannelPath()
   const currentChannelPathString = computed(() =>
-    store.state.domain.messagesView.currentChannelId
-      ? channelIdToPathString(store.state.domain.messagesView.currentChannelId)
-      : ''
+    currentChannelId.value ? channelIdToPathString(currentChannelId.value) : ''
   )
   return { currentChannelPathString }
 }

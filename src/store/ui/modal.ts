@@ -6,8 +6,11 @@ import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useCurrentChannelPath from '/@/use/currentChannelPath'
 import store from '/@/vuex'
 import { ModalState } from '/@/store/ui/modal/states'
+import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
+  const { currentChannelId } = useMessagesView()
+
   const modalState = ref<ModalState[]>([])
   const currentState = computed(
     () => modalState.value[modalState.value.length - 1]
@@ -109,16 +112,14 @@ const useModalStorePinia = defineStore('ui/modal', () => {
       ''
     )
     modalState.value = history.state.modalState
-    if (!store.state.domain.messagesView.currentChannelId) {
+    if (!currentChannelId.value) {
       // eslint-disable-next-line no-console
       console.warn('Unexpected closeModal')
       return
     }
 
     const { currentChannelPathString } = useCurrentChannelPath()
-    const isDM = store.state.entities.dmChannelsMap.has(
-      store.state.domain.messagesView.currentChannelId
-    )
+    const isDM = store.state.entities.dmChannelsMap.has(currentChannelId.value)
     if (isDM) {
       router.replace(constructUserPath(currentChannelPathString.value))
     } else {
