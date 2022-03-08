@@ -20,6 +20,7 @@ import store from '/@/vuex'
 import GroupListGroup from './GroupListGroup.vue'
 import { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'GroupList',
@@ -27,6 +28,8 @@ export default defineComponent({
     GroupListGroup
   },
   setup() {
+    const { detail, myId } = useMeStore()
+
     store.dispatch.entities.fetchUsers()
     store.dispatch.entities.fetchUserGroups()
 
@@ -35,16 +38,15 @@ export default defineComponent({
       selectedId.value = id
     }
     const isAllUserGroupsAdmin = computed(() =>
-      store.state.domain.me.detail?.permissions.includes(
-        UserPermission.AllUserGroupsAdmin
-      )
+      detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
     )
 
     const groups = computed(() =>
       [...store.state.entities.userGroupsMap.values()].filter(group => {
-        const myId = store.getters.domain.me.myId
+        const myIdVal = myId.value
         return (
-          isAllUserGroupsAdmin.value || (myId && group.admins.includes(myId))
+          isAllUserGroupsAdmin.value ||
+          (myIdVal && group.admins.includes(myIdVal))
         )
       })
     )

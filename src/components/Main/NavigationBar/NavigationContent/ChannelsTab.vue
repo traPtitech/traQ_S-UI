@@ -52,6 +52,7 @@ import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMeStore } from '/@/store/domain/me'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -74,11 +75,12 @@ const useFilterStarChannel = () => {
 }
 
 const useChannelList = (filterStarChannel: Ref<boolean>) => {
+  const { staredChannelSet } = useMeStore()
   return computed(() =>
     (filterStarChannel.value
       ? [
           ...new Set(
-            [...store.state.domain.me.staredChannelSet].flatMap(v =>
+            [...staredChannelSet.value].flatMap(v =>
               buildDescendantsChannelArray(v, false)
             )
           )
@@ -95,8 +97,9 @@ const useTopLevelChannels = () => {
   )
 }
 
-const useStaredChannels = () =>
-  computed(
+const useStaredChannels = () => {
+  const { staredChannelSet } = useMeStore()
+  return computed(
     () =>
       constructTree(
         {
@@ -104,11 +107,12 @@ const useStaredChannels = () =>
           name: '',
           parentId: null,
           archived: false,
-          children: [...store.state.domain.me.staredChannelSet]
+          children: [...staredChannelSet.value]
         },
         store.state.entities.channelsMap
       )?.children.filter(channel => !channel.archived) ?? []
   )
+}
 
 export default defineComponent({
   name: 'ChannelsTab',

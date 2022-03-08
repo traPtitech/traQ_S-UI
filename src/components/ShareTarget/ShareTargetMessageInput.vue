@@ -52,6 +52,7 @@ import useMessageInputState, {
   useMessageInputStateAttachment
 } from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -67,6 +68,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { fetchStampHistory } = useMeStore()
     const { state, isEmpty } = useMessageInputState('share-target')
     const { addErrorToast } = useToastStore()
     const { addAttachment: addStateAttachment } =
@@ -97,7 +99,7 @@ export default defineComponent({
     // スタンプピッカーに必要
     store.dispatch.entities.fetchStamps()
     store.dispatch.entities.fetchStampPalettes()
-    store.dispatch.domain.me.fetchStampHistory()
+    fetchStampHistory()
 
     const id = randomString()
     return {

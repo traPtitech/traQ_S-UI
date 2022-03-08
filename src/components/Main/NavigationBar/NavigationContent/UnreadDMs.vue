@@ -20,10 +20,12 @@ import store from '/@/vuex'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import { isDefined } from '/@/lib/basic/array'
 import DMActivityElement from './DMActivityElement.vue'
+import { useMeStore } from '/@/store/domain/me'
 
 const useUsersWithNotification = () => {
+  const { unreadChannelsMap } = useMeStore()
   const usersWithNotification = computed(() =>
-    [...store.state.domain.me.unreadChannelsMap.values()]
+    [...unreadChannelsMap.value.values()]
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )

@@ -78,6 +78,7 @@ import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMeStore } from '/@/store/domain/me'
 
 const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
@@ -100,8 +101,9 @@ const useChannelClick = (
 }
 
 const useNotification = (props: TypedProps) => {
+  const { unreadChannelsMap } = useMeStore()
   const unreadChannel = computed(() =>
-    store.state.domain.me.unreadChannelsMap.get(props.channel.id)
+    unreadChannelsMap.value.get(props.channel.id)
   )
 
   const notificationState = reactive({
@@ -110,7 +112,7 @@ const useNotification = (props: TypedProps) => {
       props.ignoreChildren
         ? false
         : deepSome(props.channel, channel =>
-            store.state.domain.me.unreadChannelsMap.has(channel.id)
+            unreadChannelsMap.value.has(channel.id)
           )
     ),
     unreadCount: computed(() => unreadChannel.value?.count),

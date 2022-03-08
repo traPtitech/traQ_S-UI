@@ -2,12 +2,13 @@ import { reactive, ref, watch, watchEffect } from 'vue'
 import apis from '/@/lib/apis'
 import useRedirectParam from './redirectParam'
 import useCredentialManager from './credentialManager'
-import store from '/@/vuex'
 import { AxiosError } from 'axios'
+import { useMeStore } from '/@/store/domain/me'
 
 const useLogin = () => {
   const { getPass, savePass } = useCredentialManager()
   const { redirect } = useRedirectParam()
+  const { fetchMe } = useMeStore()
 
   const state = reactive({
     name: '',
@@ -48,7 +49,7 @@ const useLogin = () => {
       await apis.login(undefined, { name, password: state.pass })
       await savePass(state.name, state.pass)
 
-      await store.dispatch.domain.me.fetchMe()
+      await fetchMe()
 
       redirect()
     } catch (e) {

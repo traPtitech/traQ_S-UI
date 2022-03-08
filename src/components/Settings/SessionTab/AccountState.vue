@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
-import store from '/@/vuex'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'AccountState',
@@ -25,9 +25,10 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
+    const { logout } = useMeStore()
 
     const onLogoutClick = async () => {
-      await store.dispatch.domain.me.logout()
+      await logout()
       router.push('/login')
     }
 
@@ -38,7 +39,7 @@ export default defineComponent({
           'ログイン中のセッションを全て破棄します。（実行するとログアウトされます）'
         )
       ) {
-        await store.dispatch.domain.me.logout({ allSession: true })
+        await logout({ allSession: true })
         router.push('/login')
       }
     }

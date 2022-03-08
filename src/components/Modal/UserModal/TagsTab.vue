@@ -19,10 +19,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/vuex'
 import { UserDetail } from '@traptitech/traq'
 import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
 import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'TagsTab',
@@ -37,9 +37,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isMine = computed(
-      () => props.detail?.id === store.getters.domain.me.myId
-    )
+    const { myId } = useMeStore()
+    const isMine = computed(() => props.detail?.id === myId.value)
     const tags = computed(() => props.detail?.tags ?? [])
 
     return { isMine, tags }

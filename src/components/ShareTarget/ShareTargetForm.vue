@@ -27,6 +27,7 @@ import usePostMessage from '/@/components/Main/MainView/MessageInput/use/postMes
 import useChannelOptions from '/@/use/channelOptions'
 import useMessageInputState from '/@/providers/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'ShareTargetForm',
@@ -45,9 +46,8 @@ export default defineComponent({
     post: () => true
   },
   setup(props, { emit }) {
-    const homeChannelId = computed(
-      () => store.state.domain.me.detail?.homeChannel ?? nullUuid
-    )
+    const { detail } = useMeStore()
+    const homeChannelId = computed(() => detail.value?.homeChannel ?? nullUuid)
 
     // 投稿先チャンネルとメッセージでの置換に必要
     store.dispatch.entities.fetchChannels()

@@ -46,6 +46,7 @@ import useToastStore from '/@/providers/toastStore'
 import { constructChannelPath } from '/@/router'
 import { useRouter } from 'vue-router'
 import { useModalStore } from '/@/store/ui/modal'
+import { useMeStore } from '/@/store/domain/me'
 
 interface State {
   channelName: string
@@ -101,10 +102,10 @@ const useCreateChannel = (state: State) => {
 }
 
 const useChannelOptionsForSelector = () => {
+  const { detail } = useMeStore()
+
   const hasChannelEditPermission = computed(() =>
-    store.state.domain.me.detail?.permissions.includes(
-      UserPermission.EditChannel
-    )
+    detail.value?.permissions.includes(UserPermission.EditChannel)
   )
   const rootChannel = computed(() =>
     window.traQConfig.isRootChannelSelectableAsParentChannel ||

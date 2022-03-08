@@ -58,6 +58,7 @@ import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { constructMessagesPath } from '/@/router'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMeStore } from '/@/store/domain/me'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -170,6 +171,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { myId } = useMeStore()
     const { state, closeContextMenu } = useMessageContextMenuStore()
 
     const isPinned = computed(
@@ -179,7 +181,7 @@ export default defineComponent({
     const isMine = computed(
       () =>
         store.state.entities.messages.messagesMap.get(props.messageId)
-          ?.userId === store.getters.domain.me.myId
+          ?.userId === myId.value
     )
     const isMinimum = computed(() => state.isMinimum)
 

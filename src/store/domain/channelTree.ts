@@ -7,8 +7,8 @@ import router, { rewriteChannelPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
 import store from '/@/vuex'
-import { meMitt } from '/@/vuex/domain/me'
 import { entityMitt } from '/@/vuex/entities/mitt'
+import { useMeStore, meMitt } from '/@/store/domain/me'
 
 type ChannelTreeEventMap = {
   created: { id: ChannelId; path: string }
@@ -31,6 +31,8 @@ channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
 })
 
 const useChannelTreePinia = defineStore('domain/channelTree', () => {
+  const meStore = useMeStore()
+
   const channelTree = ref<Readonly<ChannelTree>>({ children: [] })
   const homeChannelTree = ref<Readonly<ChannelTree>>({ children: [] })
 
@@ -66,7 +68,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     const topLevelChannelIds = topLevelChannels.value.map(c => c.id)
     // TODO: 効率が悪いので改善
     const subscribedOrForceChannels = new Set([
-      ...store.getters.domain.me.subscribedChannels,
+      ...meStore.subscribedChannels.value,
       ...forcedChannels.value.map(c => c.id)
     ])
     const tree = {

@@ -4,7 +4,6 @@ import { getters } from './getters'
 import { mutations } from './mutations'
 import { actions } from './actions'
 import { defineWsListeners } from './listeners'
-import { me } from './me'
 
 /**
  * entitiesでないサーバーの情報を扱うstore
@@ -16,9 +15,6 @@ export const domain = defineModule({
   state,
   getters,
   mutations,
-  actions,
-  modules: {
-    me
-  }
+  actions
 })
 defineWsListeners(store => store.domain)

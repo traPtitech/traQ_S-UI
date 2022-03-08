@@ -88,6 +88,7 @@ import useMaxLength from '/@/use/maxLength'
 import { isValidTwitter } from '/@/lib/validate'
 import useToastStore from '/@/providers/toastStore'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useMeStore } from '/@/store/domain/me'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -168,8 +169,9 @@ export default defineComponent({
     FormTextArea
   },
   setup() {
+    const { detail: detailMayBeUndefined } = useMeStore()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const detail = computed(() => store.state.domain.me.detail!)
+    const detail = computed(() => detailMayBeUndefined.value!)
 
     // ホームチャンネルの選択+ひとことのレンダリングに必要
     store.dispatch.entities.fetchChannels()

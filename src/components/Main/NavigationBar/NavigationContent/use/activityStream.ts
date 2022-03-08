@@ -8,6 +8,7 @@ import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
 import { bothChannelsMapInitialFetchPromise } from '/@/vuex/entities/promises'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useMeStore } from '/@/store/domain/me'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -17,6 +18,7 @@ const getActivityTimeline = createSingleflight(
 
 const useActivityStream = (props: { show: boolean }) => {
   const { activityMode: mode } = useBrowserSettings()
+  const { isChannelSubscribed } = useMeStore()
 
   /**
    * 新しいもの順
@@ -79,10 +81,7 @@ const useActivityStream = (props: { show: boolean }) => {
     if (!store.state.entities.channelsMap.has(activity.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (
-      !mode.value.all &&
-      !store.getters.domain.me.isChannelSubscribed(activity.channelId)
-    ) {
+    if (!mode.value.all && !isChannelSubscribed(activity.channelId)) {
       return
     }
 

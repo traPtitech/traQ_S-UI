@@ -9,6 +9,7 @@ import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStates } from '/@/providers/messageInputState'
 import useAudioController from '/@/providers/audioController'
 import { useAppRtcStore } from '/@/store/app/rtc'
+import { useMeStore } from '/@/store/domain/me'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -79,12 +80,11 @@ export const ephemeralItems: Record<
 
 const useNavigationSelectorEntry = () => {
   const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
+  const { unreadChannelsMap } = useMeStore()
   const { hasInputChannel } = useMessageInputStates()
   const { fileId } = useAudioController()
 
-  const unreadChannels = computed(() => [
-    ...store.state.domain.me.unreadChannelsMap.values()
-  ])
+  const unreadChannels = computed(() => [...unreadChannelsMap.value.values()])
   const notificationState = reactive({
     channel: computed(() =>
       unreadChannels.value.some(c =>

@@ -18,6 +18,7 @@ import UsersElementUserName from './UsersElementUserName.vue'
 import store from '/@/vuex'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { constructUserPath } from '/@/router'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'UsersElement',
@@ -33,6 +34,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { unreadChannelsMap } = useMeStore()
+
     const dmChannelPath = computed(() => {
       if (props.user.bot && props.user.name.startsWith('Webhook#')) {
         return
@@ -43,7 +46,7 @@ export default defineComponent({
       store.getters.entities.DMChannelIdByUserId(props.user.id)
     )
     const hasNotification = computed(() =>
-      store.state.domain.me.unreadChannelsMap.has(dmChannelId.value ?? '')
+      unreadChannelsMap.value.has(dmChannelId.value ?? '')
     )
 
     return { dmChannelPath, hasNotification }

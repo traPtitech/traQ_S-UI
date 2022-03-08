@@ -11,6 +11,7 @@ import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, ClipFolderId, MessageId } from '/@/types/entity-ids'
 import store from '/@/vuex'
 import { messageMitt } from '/@/vuex/entities/messages'
+import { useMeStore } from '/@/store/domain/me'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 interface BaseGetMessagesParams {
@@ -64,6 +65,8 @@ const getPin = createSingleflight(apis.getPin.bind(apis))
 
 // FIXME: 分離
 const useMessagesViewPinia = defineStore('domain/messagesView', () => {
+  const meStore = useMeStore()
+
   /** 現在のチャンネルID、日時ベースのフェッチを行う */
   const currentChannelId = ref<ChannelId>()
   /** 現在のクリップフォルダID、オフセットベースのフェッチを行う */
@@ -97,7 +100,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
    * チャンネルで入力中の人のIDの一覧(新しい順)
    */
   const typingUsers = computed(() => {
-    const myId = store.getters.domain.me.myId
+    const myId = meStore.myId.value
     return currentViewers.value
       .filter(v => v.state === ChannelViewState.Editing && v.userId !== myId)
       .map(v => v.userId)

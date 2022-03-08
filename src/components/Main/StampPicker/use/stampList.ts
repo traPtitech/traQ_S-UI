@@ -4,13 +4,15 @@ import { StampId } from '/@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
 import useStampFilter from './stampFilter'
 import { useStampCategory } from '/@/store/domain/stampCategory'
+import { useMeStore } from '/@/store/domain/me'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
+  const { recentStampIds } = useMeStore()
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
-      return store.getters.domain.me.recentStampIds
+      return recentStampIds.value
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id

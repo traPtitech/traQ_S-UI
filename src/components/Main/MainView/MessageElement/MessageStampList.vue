@@ -49,6 +49,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
 import useToastStore from '/@/providers/toastStore'
+import { useMeStore } from '/@/store/domain/me'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -155,8 +156,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { myId, upsertLocalStampHistory } = useMeStore()
     const { addErrorToast } = useToastStore()
-    const myId = computed(() => store.getters.domain.me.myId)
     const stampList = computed(() => createStampList(props, myId))
 
     const isDetailShown = ref(false)
@@ -171,10 +172,7 @@ export default defineComponent({
         addErrorToast('メッセージにスタンプを追加できませんでした')
         return
       }
-      store.commit.domain.me.upsertLocalStampHistory({
-        stampId,
-        datetime: new Date()
-      })
+      upsertLocalStampHistory(stampId, new Date())
     }
     const removeStamp = async (stampId: StampId) => {
       await apis.removeMessageStamp(props.messageId, stampId)

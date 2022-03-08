@@ -8,6 +8,7 @@ import { changeRTCState, wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import store from '/@/vuex'
+import { useMeStore } from '/@/store/domain/me'
 
 export type SessionId = string
 export type SessionType = 'qall' | 'draw'
@@ -98,6 +99,8 @@ const postRTCState = (state: Readonly<UserRTCState> | null) => {
  * traQサーバーでのRTC状態を扱うstore
  */
 const useDomainRtcStorePinia = defineStore('domain/rtc', () => {
+  const meStore = useMeStore()
+
   /** 一度でも取得が完了したかどうか */
   const rtcStateFetched = ref(false)
   /** ユーザーのRTC状態のマップ */
@@ -120,7 +123,7 @@ const useDomainRtcStorePinia = defineStore('domain/rtc', () => {
     )
   }
   const currentRTCState = computed(() =>
-    userStateMap.value.get(store.getters.domain.me.myId ?? '')
+    userStateMap.value.get(meStore.myId.value ?? '')
   )
   const qallSession = computed(() =>
     currentRTCState.value?.sessionStates.find(

@@ -8,6 +8,7 @@ import {
   bothChannelsMapInitialFetchPromise,
   stampsMapInitialFetchPromise
 } from '/@/vuex/entities/promises'
+import { useMeStore } from '/@/store/domain/me'
 
 const storeProvider: Store = {
   getUser(id) {
@@ -20,7 +21,8 @@ const storeProvider: Store = {
     return store.state.entities.userGroupsMap.get(id)
   },
   getMe() {
-    return store.state.domain.me.detail
+    const { detail } = useMeStore()
+    return detail.value
   },
   getStampByName(name) {
     return store.getters.entities.stampByName(name)

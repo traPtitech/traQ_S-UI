@@ -21,6 +21,7 @@ import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import store from '/@/vuex'
 import { isDefined } from '/@/lib/basic/array'
+import { useMeStore } from '/@/store/domain/me'
 
 const useFolding = () => {
   const isFolding = ref(true)
@@ -49,6 +50,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { unreadChannelsMap } = useMeStore()
     const { isFolding, toggleFolding } = useFolding()
 
     const dmChannelIds = computed(() =>
@@ -57,9 +59,7 @@ export default defineComponent({
         .filter(isDefined)
     )
     const hasNotification = computed(() =>
-      dmChannelIds.value.some(id =>
-        store.state.domain.me.unreadChannelsMap.has(id)
-      )
+      dmChannelIds.value.some(id => unreadChannelsMap.value.has(id))
     )
 
     return { isFolding, toggleFolding, hasNotification }

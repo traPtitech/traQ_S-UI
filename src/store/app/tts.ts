@@ -10,6 +10,7 @@ import { format } from '/@/lib/tts/format'
 import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
 
 interface Speach {
   channelId: ChannelId
@@ -26,6 +27,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
   const appRtcStore = useAppRtcStore()
   const domainRtcStore = useDomainRtcStore()
   const rtcSettings = useRtcSettings()
+  const meStore = useMeStore()
 
   let lastSpeachPromise = Promise.resolve()
   const queue: Speach[] = []
@@ -39,7 +41,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
   }
 
   messageMitt.on('addMessage', ({ message }) => {
-    if (store.getters.domain.me.myId === message.userId) return
+    if (meStore.myId.value === message.userId) return
 
     const userDisplayName =
       store.state.entities.usersMap.get(message.userId)?.displayName ?? 'はてな'

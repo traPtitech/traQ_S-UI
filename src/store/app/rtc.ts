@@ -12,6 +12,7 @@ import { isIOSApp } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { client, destroyClient, initClient } from '/@/lib/webrtc/traQRTCClient'
 import { useDomainRtcStore, SessionId, SessionType } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -23,6 +24,7 @@ const talkingStateUpdateFPS = 30
 const useAppRtcPinia = defineStore('app/rtc', () => {
   const rtcSettings = useRtcSettings()
   const domainRtcStore = useDomainRtcStore()
+  const meStore = useMeStore()
 
   const audioContext = ref<ExtendedAudioContext>()
   const mixer = ref<AudioStreamMixer>()
@@ -60,7 +62,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   let talkingStateUpdateId = 0
   const startTalkingStateUpdate = () => {
     const id = window.setInterval(() => {
-      const myId = store.getters.domain.me.myId
+      const myId = meStore.myId.value
       const userStateDiff = new Map<UserId, number>()
 
       domainRtcStore.currentSessionUsers.value.forEach(userId => {
@@ -170,7 +172,7 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   }
 
   const establishConnection = async () => {
-    const myId = store.getters.domain.me.myId
+    const myId = meStore.myId.value
     if (!myId) {
       throw 'application not initialized'
     }

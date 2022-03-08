@@ -41,10 +41,12 @@ import { DMChannel } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
 import { ChannelId } from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
 
 const useNotification = (props: { dmChannel: DMChannel }) => {
+  const { unreadChannelsMap } = useMeStore()
   const unreadChannel = computed(() =>
-    store.state.domain.me.unreadChannelsMap.get(props.dmChannel.id)
+    unreadChannelsMap.value.get(props.dmChannel.id)
   )
 
   const notificationState = reactive({

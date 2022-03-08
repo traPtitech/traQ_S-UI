@@ -1,11 +1,11 @@
 <template>
   <collapse-content>
     <qall-details-panel-user
-      v-if="me"
-      :key="me"
+      v-if="myId"
+      :key="myId"
       :class="$style.slider"
-      :user-id="me"
-      :mic-muted="mutedUsers.has(me)"
+      :user-id="myId"
+      :mic-muted="mutedUsers.has(myId)"
       :show-tune-button="!showVolumeTune"
       :show-tune-done-button="showVolumeTune"
       disabled
@@ -25,10 +25,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/vuex'
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 import CollapseContent from '../CollapseContent.vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'QallDetailsPanel',
@@ -37,6 +37,7 @@ export default defineComponent({
     QallDetailsPanelUser
   },
   setup() {
+    const { myId } = useMeStore()
     const { currentSessionUsers, currentMutedUsers: mutedUsers } =
       useDomainRtcStore()
 
@@ -45,14 +46,13 @@ export default defineComponent({
       showVolumeTune.value = show
     }
 
-    const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() =>
-      [...currentSessionUsers.value].filter(id => id !== me.value)
+      [...currentSessionUsers.value].filter(id => id !== myId.value)
     )
 
     return {
       users,
-      me,
+      myId,
       mutedUsers,
       showVolumeTune,
       toggleVolumeTune

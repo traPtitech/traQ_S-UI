@@ -3,9 +3,9 @@ import { get, set } from 'idb-keyval'
 import { reactive, ref, watch } from 'vue'
 import { toRawDeep } from '/@/lib/basic/reactive'
 
-const dbPrefix = 'traQ_S-'
-const storeName = 'store'
-const key = 'key'
+export const dbPrefix = 'traQ_S-'
+export const storeName = 'store'
+export const key = 'key'
 
 const useIndexedDbValue = <T extends object>(
   dbName: string,

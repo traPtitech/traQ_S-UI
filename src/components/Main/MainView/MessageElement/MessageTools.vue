@@ -84,6 +84,7 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import { useMessageContextMenuInvoker } from '/@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
 import useToastStore from '/@/providers/toastStore'
+import { useMeStore } from '/@/store/domain/me'
 
 const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
   if (recents.length >= 3) return
@@ -111,10 +112,11 @@ export default defineComponent({
     show: { type: Boolean, default: false }
   },
   setup(props) {
+    const { recentStampIds, upsertLocalStampHistory } = useMeStore()
     const { addErrorToast } = useToastStore()
 
     const recentStamps = computed(() => {
-      const recents = store.getters.domain.me.recentStampIds.slice(0, 3)
+      const recents = recentStampIds.value.slice(0, 3)
       pushInitialRecentStampsIfNeeded(recents)
       return recents
     })
@@ -125,10 +127,7 @@ export default defineComponent({
         addErrorToast('メッセージにスタンプを追加できませんでした')
         return
       }
-      store.commit.domain.me.upsertLocalStampHistory({
-        stampId,
-        datetime: new Date()
-      })
+      upsertLocalStampHistory(stampId, new Date())
     }
 
     const containerEle = ref<HTMLDivElement>()

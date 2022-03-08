@@ -36,9 +36,9 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
-import store from '/@/vuex'
 import useToastStore from '/@/providers/toastStore'
 import { useModalStore } from '/@/store/ui/modal'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'GroupCreateModal',
@@ -49,6 +49,7 @@ export default defineComponent({
     FormButton
   },
   setup() {
+    const { myId } = useMeStore()
     const { addErrorToast } = useToastStore()
     const { popModal } = useModalStore()
 
@@ -58,8 +59,8 @@ export default defineComponent({
     const addMember = ref(true)
 
     const create = async () => {
-      const myId = store.getters.domain.me.myId
-      if (!myId) return
+      const myIdV = myId.value
+      if (!myIdV) return
 
       try {
         const { data: group } = await apis.createUserGroup({
@@ -68,7 +69,7 @@ export default defineComponent({
           type: type.value
         })
         if (addMember.value) {
-          await apis.addUserGroupMember(group.id, { id: myId, role: '' })
+          await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
         }
       } catch {
         addErrorToast('グループの作成に失敗しました')

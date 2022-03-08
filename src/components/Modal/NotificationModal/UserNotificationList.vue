@@ -26,8 +26,10 @@ import useChannelSubscribers from '/@/use/channelSubscribers'
 import useToastStore from '/@/providers/toastStore'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/use/textFilter'
+import { useMeStore } from '/@/store/domain/me'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
+  const { myId } = useMeStore()
   const { addErrorToast } = useToastStore()
   const subscribers = useChannelSubscribers(props)
 
@@ -41,7 +43,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   const allUsersWithoutMe = computed(() =>
     [...store.getters.entities.activeUsersMap.values()].filter(
       // BOTと自分を除外
-      u => !u.bot && u.id !== store.getters.domain.me.myId
+      u => !u.bot && u.id !== myId.value
     )
   )
 

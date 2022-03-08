@@ -2,8 +2,16 @@ import store from '/@/vuex'
 import { ref } from 'vue'
 import useLoginCheck from './loginCheck'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
 
 const useInitialFetch_ = () => {
+  const {
+    fetchUnreadChannels,
+    fetchSubscriptions,
+    fetchViewStates,
+    fetchStampHistory,
+    fetchStaredChannels
+  } = useMeStore()
   const { fetchRTCState } = useDomainRtcStore()
   return () => {
     // 初回fetch
@@ -12,14 +20,14 @@ const useInitialFetch_ = () => {
     store.dispatch.entities.fetchChannels()
     store.dispatch.entities.fetchStamps()
 
-    store.dispatch.domain.me.fetchUnreadChannels()
-    store.dispatch.domain.me.fetchSubscriptions()
-    store.dispatch.domain.me.fetchViewStates()
+    fetchUnreadChannels()
+    fetchSubscriptions()
+    fetchViewStates()
 
-    store.dispatch.domain.me.fetchStampHistory()
+    fetchStampHistory()
     store.dispatch.entities.fetchStampPalettes()
 
-    store.dispatch.domain.me.fetchStaredChannels()
+    fetchStaredChannels()
     store.dispatch.entities.fetchClipFolders()
     fetchRTCState()
   }

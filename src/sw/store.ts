@@ -1,36 +1,20 @@
-import { UserDetail } from '@traptitech/traq'
+import { promisifyRequest } from 'idb-keyval'
+import { IDBState } from '/@/store/domain/me'
+import { dbPrefix, storeName, key } from '/@/use/indexedDbValue'
 
-/**
- * IndexedDBに保存されているStoreの状態
- */
-type PStore = {
-  domain: {
-    me: {
-      detail: UserDetail
-    }
-  }
-}
-
-export const getStore = async (): Promise<
-  PStore | Record<string, never> | null
-> => {
+export const getMeStore = async () => {
   try {
-    const dbEvent = await new Promise<Event>((resolve, reject) => {
-      const openReq = indexedDB.open('vuex')
-      openReq.onsuccess = resolve
-      openReq.onerror = reject
-    })
-    const db = (dbEvent.target as IDBOpenDBRequest).result
-    const storeEvent = await new Promise<Event>((resolve, reject) => {
-      const getReq = db.transaction('vuex').objectStore('vuex').get('vuex')
-      getReq.onsuccess = resolve
-      getReq.onerror = reject
-    })
-    return (storeEvent.target as IDBRequest<PStore | Record<string, never>>)
-      .result
+    const openReq = indexedDB.open(`${dbPrefix}domain/me`)
+    const db = await promisifyRequest(openReq)
+    const getReq: IDBRequest<IDBState> = db
+      .transaction(storeName)
+      .objectStore(storeName)
+      .get(key)
+    const store = await promisifyRequest(getReq)
+    return store
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error(`[sw] failed to get store: ${e}`)
+    console.error(`[sw] failed to get me store: ${e}`)
     return null
   }
 }
