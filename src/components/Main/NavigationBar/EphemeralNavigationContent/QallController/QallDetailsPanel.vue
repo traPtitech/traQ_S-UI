@@ -28,6 +28,7 @@ import { defineComponent, computed, ref } from 'vue'
 import store from '/@/vuex'
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 import CollapseContent from '../CollapseContent.vue'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 export default defineComponent({
   name: 'QallDetailsPanel',
@@ -36,6 +37,9 @@ export default defineComponent({
     QallDetailsPanelUser
   },
   setup() {
+    const { currentSessionUsers, currentMutedUsers: mutedUsers } =
+      useDomainRtcStore()
+
     const showVolumeTune = ref(false)
     const toggleVolumeTune = (show: boolean) => {
       showVolumeTune.value = show
@@ -43,12 +47,7 @@ export default defineComponent({
 
     const me = computed(() => store.state.domain.me.detail?.id)
     const users = computed(() =>
-      [...store.getters.domain.rtc.currentSessionUsers].filter(
-        id => id !== me.value
-      )
-    )
-    const mutedUsers = computed(
-      () => store.getters.domain.rtc.currentMutedUsers
+      [...currentSessionUsers.value].filter(id => id !== me.value)
     )
 
     return {

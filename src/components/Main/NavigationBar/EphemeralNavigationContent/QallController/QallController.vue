@@ -15,8 +15,8 @@
 import { defineComponent, computed } from 'vue'
 import QallControlPanel from './QallControlPanel.vue'
 import QallDetailsPanel from './QallDetailsPanel.vue'
-import store from '/@/vuex'
 import { useAppRtcStore } from '/@/store/app/rtc'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 export default defineComponent({
   name: 'QallController',
@@ -26,10 +26,9 @@ export default defineComponent({
   },
   setup() {
     const { isMicMuted, endQall, mute, unmute } = useAppRtcStore()
+    const { qallSession, currentRTCState } = useDomainRtcStore()
     const currentChannel = computed(() =>
-      store.getters.domain.rtc.qallSession
-        ? store.getters.domain.rtc.currentRTCState?.channelId
-        : undefined
+      qallSession.value ? currentRTCState.value?.channelId : undefined
     )
     const onMicClick = () => {
       if (isMicMuted.value) {

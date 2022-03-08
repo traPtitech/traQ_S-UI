@@ -1,15 +1,16 @@
-import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import { computed } from 'vue'
-import { SessionType } from '/@/vuex/domain/rtc/state'
+import { useDomainRtcStore, SessionType } from '/@/store/domain/rtc'
 
 const useRTCSession =
   (sessionType: SessionType) => (props: { channelId: ChannelId }) => {
+    const { userStateMap, getChannelRTCSessionId } = useDomainRtcStore()
+
     const sessionId = computed(() =>
-      store.getters.domain.rtc.channelRTCSessionId(sessionType, props.channelId)
+      getChannelRTCSessionId(sessionType, props.channelId)
     )
     const sessionUserIds = computed(() =>
-      [...store.state.domain.rtc.userStateMap.entries()]
+      [...userStateMap.value.entries()]
         .filter(([_, userState]) =>
           userState.sessionStates.some(
             sessionState => sessionState.sessionId === sessionId.value

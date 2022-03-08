@@ -7,11 +7,11 @@ import LocalStreamManager from '/@/lib/webrtc/LocalStreamManager'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import store from '/@/vuex'
 import { getTalkingLoudnessLevel } from '/@/lib/webrtc/loudness'
-import { SessionId, SessionType } from '/@/vuex/domain/rtc/state'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { isIOSApp } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { client, destroyClient, initClient } from '/@/lib/webrtc/traQRTCClient'
+import { useDomainRtcStore, SessionId, SessionType } from '/@/store/domain/rtc'
 
 const defaultState = 'joined'
 const talkingStateUpdateFPS = 30
@@ -22,6 +22,7 @@ const talkingStateUpdateFPS = 30
  */
 const useAppRtcPinia = defineStore('app/rtc', () => {
   const rtcSettings = useRtcSettings()
+  const domainRtcStore = useDomainRtcStore()
 
   const audioContext = ref<ExtendedAudioContext>()
   const mixer = ref<AudioStreamMixer>()
@@ -62,10 +63,10 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
       const myId = store.getters.domain.me.myId
       const userStateDiff = new Map<UserId, number>()
 
-      store.getters.domain.rtc.currentSessionUsers.forEach(userId => {
+      domainRtcStore.currentSessionUsers.value.forEach(userId => {
         if (userId === myId) return
 
-        const loudness = store.getters.domain.rtc.currentMutedUsers.has(userId)
+        const loudness = domainRtcStore.currentMutedUsers.value.has(userId)
           ? 0
           : getTalkingLoudnessLevel(mixer.value?.getLevelOfStream(userId) ?? 0)
         if (talkingUsersState.value.get(userId) !== loudness) {
@@ -111,20 +112,17 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     sessionType: SessionType
   }) => {
     if (
-      store.getters.domain.rtc.currentRTCState &&
-      store.getters.domain.rtc.currentRTCState.channelId !== channelId
+      domainRtcStore.currentRTCState.value &&
+      domainRtcStore.currentRTCState.value.channelId !== channelId
     ) {
       throw `RTC session is already open for channel ${channelId}`
     }
 
     const sessionId = `${sessionType}-${channelId}` as const
 
-    store.dispatch.domain.rtc.addRTCSession({
-      channelId,
-      state: {
-        sessionId,
-        states: [defaultState]
-      }
+    domainRtcStore.addRTCSession(channelId, {
+      sessionId,
+      states: [defaultState]
     })
     return sessionId
   }
@@ -194,11 +192,9 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
 
       closeConnection()
       // session接続後にCredential expiredで切れる場合は退出しないといけない
-      const qallSession = store.getters.domain.rtc.qallSession
+      const qallSession = domainRtcStore.qallSession.value
       if (qallSession) {
-        store.dispatch.domain.rtc.removeRTCSession({
-          sessionId: qallSession.sessionId
-        })
+        domainRtcStore.removeRTCSession(qallSession.sessionId)
       }
     })
     client?.addEventListener('connectionclose', () => {
@@ -300,30 +296,24 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
   })
 
   const mute = () => {
-    const qallSession = store.getters.domain.rtc.qallSession
+    const qallSession = domainRtcStore.qallSession.value
     if (!localStreamManager.value || !qallSession) {
       return
     }
     muteLocalStream()
     const statesSet = new Set(qallSession.states)
     statesSet.add('micmuted')
-    store.dispatch.domain.rtc.modifyRTCSession({
-      sessionId: qallSession.sessionId,
-      states: [...statesSet]
-    })
+    domainRtcStore.modifyRTCSession(qallSession.sessionId, [...statesSet])
   }
   const unmute = () => {
-    const qallSession = store.getters.domain.rtc.qallSession
+    const qallSession = domainRtcStore.qallSession.value
     if (!localStreamManager.value || !qallSession) {
       return
     }
     unmuteLocalStream()
     const stateSet = new Set(qallSession.states)
     stateSet.delete('micmuted')
-    store.dispatch.domain.rtc.modifyRTCSession({
-      sessionId: qallSession.sessionId,
-      states: [...stateSet]
-    })
+    domainRtcStore.modifyRTCSession(qallSession.sessionId, [...stateSet])
   }
 
   const startQall = async (channelId: ChannelId) => {
@@ -339,14 +329,12 @@ const useAppRtcPinia = defineStore('app/rtc', () => {
     await joinVoiceChannel(sessionId)
   }
   const endQall = async () => {
-    const qallSession = store.getters.domain.rtc.qallSession
+    const qallSession = domainRtcStore.qallSession.value
     if (!qallSession) {
       throw 'something went wrong'
     }
 
-    store.dispatch.domain.rtc.removeRTCSession({
-      sessionId: qallSession.sessionId
-    })
+    domainRtcStore.removeRTCSession(qallSession.sessionId)
     closeConnection()
   }
 

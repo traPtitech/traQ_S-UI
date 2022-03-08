@@ -53,6 +53,7 @@ import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
 import { useChannelTree } from '/@/store/domain/channelTree'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 export default defineComponent({
   name: 'HomeTab',
@@ -64,6 +65,7 @@ export default defineComponent({
   },
   setup() {
     const { homeChannelTree } = useChannelTree()
+    const { channelSessionsMap } = useDomainRtcStore()
 
     const homeChannelWithTree = computed(() =>
       !store.state.domain.me.detail?.homeChannel
@@ -100,7 +102,7 @@ export default defineComponent({
       homeChannelTree.value.children.filter(channel => !channel.archived)
     )
     const channelsWithRtc = computed(() =>
-      [...store.state.domain.rtc.channelSessionsMap.entries()]
+      [...channelSessionsMap.value.entries()]
         .filter(([, sessionIds]) => sessionIds.size > 0)
         .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
         .filter(isDefined)

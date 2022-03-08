@@ -9,6 +9,7 @@ import { parse } from '/@/lib/markdown/markdown'
 import { format } from '/@/lib/tts/format'
 import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 interface Speach {
   channelId: ChannelId
@@ -23,6 +24,7 @@ const MAX_CHAR_COUNT = 140
 
 const useTtsPinia = defineStore('ui/tts', () => {
   const appRtcStore = useAppRtcStore()
+  const domainRtcStore = useDomainRtcStore()
   const rtcSettings = useRtcSettings()
 
   let lastSpeachPromise = Promise.resolve()
@@ -72,8 +74,8 @@ const useTtsPinia = defineStore('ui/tts', () => {
 
   const isNeeded = (channelId: ChannelId): boolean => {
     if (!rtcSettings.isTtsEnabled.value) return false
-    if (!store.getters.domain.rtc.qallSession) return false
-    if (store.getters.domain.rtc.currentRTCState?.channelId !== channelId) {
+    if (!domainRtcStore.qallSession.value) return false
+    if (domainRtcStore.currentRTCState.value?.channelId !== channelId) {
       return false
     }
     return appRtcStore.isCurrentDevice.value

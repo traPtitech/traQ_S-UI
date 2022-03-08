@@ -6,7 +6,6 @@ import { actions } from './actions'
 import { defineWsListeners } from './listeners'
 import { me } from './me'
 import { messagesView } from './messagesView'
-import { rtc } from './rtc'
 import { stampCategory } from './stampCategory'
 
 /**
@@ -23,7 +22,6 @@ export const domain = defineModule({
   modules: {
     me,
     messagesView,
-    rtc,
     stampCategory
   }
 })
