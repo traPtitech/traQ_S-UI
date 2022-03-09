@@ -42,7 +42,6 @@
       </div>
     </div>
     <div :class="$style.bottomSpacer"></div>
-    <message-tools-menu-container />
   </div>
 </template>
 
@@ -72,8 +71,6 @@ import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/vuex/entities/promises'
-import MessageToolsMenuContainer from './MessageToolsMenuContainer.vue'
-import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
@@ -171,8 +168,7 @@ const useScrollRestoration = (
 export default defineComponent({
   name: 'MessagesScroller',
   components: {
-    MessagesScrollerSeparator,
-    MessageToolsMenuContainer
+    MessagesScrollerSeparator
   },
   props: {
     messageIds: {
@@ -208,7 +204,6 @@ export default defineComponent({
     requestLoadLatter: () => true
   },
   setup(props, { emit }) {
-    provideMessageContextMenuStore()
     const { lastScrollPosition, primaryView } = useMainViewStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)

@@ -1,18 +1,11 @@
 <template>
   <div :class="$style.container">
-    <router-link
+    <sidebar-pinned-message
       v-for="message in sortedMessages"
       :key="message.id"
-      :to="constructMessagesPath(message.id)"
-    >
-      <message-panel
-        title-type="user"
-        hide-subtitle
-        line-clamp-content
-        :message="message"
-        :class="$style.item"
-      />
-    </router-link>
+      :message="message"
+      :class="$style.item"
+    />
     <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
       ピン留めされたメッセージはありません
     </div>
@@ -22,12 +15,14 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
+import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
 import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
   name: 'SidebarPinnedList',
-  components: { MessagePanel },
+  components: {
+    SidebarPinnedMessage
+  },
   props: {
     pinnedMessages: {
       type: Array as PropType<Pin[]>,
@@ -40,7 +35,11 @@ export default defineComponent({
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
         .map(pinnedMessage => pinnedMessage.message)
     )
-    return { sortedMessages, constructMessagesPath }
+
+    return {
+      sortedMessages,
+      constructMessagesPath
+    }
   }
 })
 </script>
@@ -50,8 +49,7 @@ export default defineComponent({
   @include color-ui-secondary;
   @include background-secondary;
 }
-
-.item {
+.item + .item {
   margin-top: 16px;
 }
 
