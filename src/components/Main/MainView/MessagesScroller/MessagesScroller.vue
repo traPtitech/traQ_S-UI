@@ -43,8 +43,9 @@
     </div>
     <div :class="$style.bottomSpacer"></div>
     <message-tools-menu-container
-      v-show="isMenuShown"
-      :use-message-context-menu-store="useMessageContextMenuStore"
+      v-if="isMenuShown"
+      :position="menuState.position"
+      @close-context-menu="closeContextMenu"
     >
       <message-tools-menu :message-id="menuState.target" />
     </message-tools-menu-container>
@@ -328,9 +329,9 @@ export default defineComponent({
 
     const dayDiff = useCompareDate(props)
 
-    const [menuState, isMenuShown] = (() => {
-      const { state, isShown } = useMessageContextMenuStore()
-      return [state, isShown]
+    const [menuState, isMenuShown, closeContextMenu] = (() => {
+      const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
+      return [state, isShown, closeContextMenu]
     })()
 
     return {
@@ -346,6 +347,7 @@ export default defineComponent({
       createdDate,
       menuState,
       isMenuShown,
+      closeContextMenu,
       useMessageContextMenuStore
     }
   }

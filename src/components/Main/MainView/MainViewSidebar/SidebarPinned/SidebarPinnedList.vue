@@ -15,8 +15,9 @@
       ピン留めされたメッセージはありません
     </div>
     <message-tools-menu-container
-      v-show="isShown"
-      :use-message-context-menu-store="useMessageContextMenuStore"
+      v-if="isShown"
+      :position="state.position"
+      @close-context-menu="closeContextMenu"
     >
       <sidebar-pinned-tools-menu :message-id="state.target" />
     </message-tools-menu-container>
@@ -57,13 +58,14 @@ export default defineComponent({
         .map(pinnedMessage => pinnedMessage.message)
     )
 
-    const { state, isShown } = useMessageContextMenuStore()
+    const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
 
     return {
       sortedMessages,
       constructMessagesPath,
       state,
       isShown,
+      closeContextMenu,
       useMessageContextMenuStore
     }
   }
