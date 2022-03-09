@@ -1,17 +1,27 @@
 <template>
   <div :class="$style.container">
-    <user-name
-      v-if="titleType === 'user'"
-      :class="$style.item"
-      :user="userState"
-      is-title
-    />
-    <channel-name
-      v-if="titleType === 'channel'"
-      :class="$style.item"
-      :path="path"
-      is-title
-    />
+    <div :class="$style.header">
+      <user-name
+        v-if="titleType === 'user'"
+        :class="$style.item"
+        :user="userState"
+        is-title
+      />
+      <channel-name
+        v-if="titleType === 'channel'"
+        :class="$style.item"
+        :path="path"
+        is-title
+      />
+      <a-icon
+        v-if="showContextMenuButton"
+        :class="$style.icon"
+        :size="28"
+        mdi
+        name="dots-horizontal"
+        @click.prevent="contextMenuClicked"
+      />
+    </div>
     <div :class="$style.separator" />
     <div v-if="!hideSubtitle" :class="[$style.subTitleContainer, $style.item]">
       <user-name v-if="titleType === 'channel'" :user="userState" />
@@ -65,7 +75,14 @@ export default defineComponent({
     lineClampContent: {
       type: Boolean,
       default: false
+    },
+    showContextMenuButton: {
+      type: Boolean,
+      default: false
     }
+  },
+  emits: {
+    contextMenuClicked: (_e: MouseEvent) => true
   },
   setup(props, { emit }) {
     const userState = computed(() =>
@@ -85,7 +102,11 @@ export default defineComponent({
       }
     })
 
-    return { userState, path }
+    const contextMenuClicked = (e: MouseEvent) => {
+      emit('contextMenuClicked', e)
+    }
+
+    return { userState, path, contextMenuClicked }
   }
 })
 </script>
@@ -96,6 +117,9 @@ export default defineComponent({
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
+}
+.header {
+  display: flex;
 }
 .separator {
   @include background-secondary;
@@ -114,5 +138,15 @@ export default defineComponent({
 .subTitleContainer {
   display: flex;
   align-items: center;
+}
+.icon {
+  display: block;
+  padding: 4px;
+  cursor: pointer;
+  margin-left: auto;
+  border-radius: 4px;
+  &:hover {
+    @include background-secondary;
+  }
 }
 </style>

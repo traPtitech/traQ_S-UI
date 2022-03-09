@@ -1,13 +1,8 @@
 <template>
-  <teleport v-show="isShown" to="#message-menu-popup">
+  <teleport to="#message-menu-popup">
     <div ref="menuContainerRef">
       <click-outside @click-outside="closeContextMenu">
-        <message-tools-menu
-          v-if="isShown"
-          :style="styles.toolsMenu"
-          :class="$style.toolsMenu"
-          :message-id="state.target"
-        />
+        <div :style="styles.toolsMenu" :class="$style.toolsMenu"><slot /></div>
       </click-outside>
     </div>
   </teleport>
@@ -20,19 +15,18 @@ import {
   computed,
   ref,
   Ref,
-  watch,
-  nextTick,
   shallowRef,
-  toRef
+  PropType,
+  toRef,
+  watch,
+  nextTick
 } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import MessageToolsMenu from './MessageToolsMenu.vue'
-import { useMessageContextMenuStore } from './providers/messageContextMenu'
 
-const useMenuHeight = (isShown: Ref<boolean>) => {
+const useMenuHeight = () => {
   const height = ref(0)
   const menuContainerRef = shallowRef<HTMLDivElement | null>(null)
-  watch(isShown, async newVal => {
+  watch(menuContainerRef, async newVal => {
     if (!newVal) return
     await nextTick()
     const $menu = menuContainerRef.value?.firstElementChild
@@ -43,12 +37,10 @@ const useMenuHeight = (isShown: Ref<boolean>) => {
 
 const useStyles = (
   position: Ref<{ x: number; y: number }>,
-  isShown: Ref<boolean>,
   height: Ref<number>
 ) =>
   reactive({
     toolsMenu: computed(() => {
-      if (!isShown.value) return {}
       const margin = 20
       return {
         top: `min(calc(100vh - ${height.value + margin}px), ${
@@ -61,20 +53,26 @@ const useStyles = (
 
 export default defineComponent({
   name: 'MessageToolsMenuContainer',
-  components: {
-    ClickOutside,
-    MessageToolsMenu
+  components: { ClickOutside },
+  props: {
+    position: {
+      type: Object as PropType<{ x: number; y: number }>,
+      required: true
+    }
   },
-  setup() {
-    const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
-    const position = toRef(state, 'position')
+  emits: {
+    closeContextMenu: () => true
+  },
+  setup(props, { emit }) {
+    const position = toRef(props, 'position')
+    const { height, menuContainerRef } = useMenuHeight()
+    const styles = useStyles(position, height)
 
-    const { height, menuContainerRef } = useMenuHeight(isShown)
-    const styles = useStyles(position, isShown, height)
+    const closeContextMenu = () => {
+      emit('closeContextMenu')
+    }
 
     return {
-      state,
-      isShown,
       menuContainerRef,
       styles,
       closeContextMenu

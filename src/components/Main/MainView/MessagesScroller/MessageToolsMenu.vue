@@ -215,7 +215,6 @@ export default defineComponent({
   width: max-content;
   padding: 8px 16px;
   border-radius: 4px;
-  position: absolute;
   contain: content;
 }
 

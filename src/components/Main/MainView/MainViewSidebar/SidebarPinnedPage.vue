@@ -13,8 +13,9 @@
 import { defineComponent, PropType } from 'vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
-import SidebarPinnedList from './SidebarPinnedList.vue'
+import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue'
 import { Pin } from '@traptitech/traq'
+import { provideMessageContextMenuStore } from './providers/messageContextMenu'
 
 export default defineComponent({
   name: 'SidebarPinnedPage',
@@ -33,9 +34,12 @@ export default defineComponent({
     moveBack: () => true
   },
   setup(props, { emit }) {
+    provideMessageContextMenuStore() // TODO: 後で消す
+
     const moveBack = () => {
       emit('moveBack')
     }
+
     return { moveBack }
   }
 })
