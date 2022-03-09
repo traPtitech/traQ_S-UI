@@ -326,10 +326,11 @@ export default defineComponent({
 
     const dayDiff = useCompareDate(props)
 
-    const [menuState, isMenuShown, closeContextMenu] = (() => {
-      const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
-      return [state, isShown, closeContextMenu]
-    })()
+    const {
+      state: menuState,
+      isShown: isMenuShown,
+      closeContextMenu
+    } = useMessageContextMenuStore()
 
     return {
       state,
