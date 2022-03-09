@@ -1,8 +1,10 @@
 <template>
   <teleport to="#message-menu-popup">
     <div ref="menuContainerRef">
-      <click-outside @click-outside="closeContextMenu">
-        <div :style="styles.toolsMenu" :class="$style.toolsMenu"><slot /></div>
+      <click-outside @click-outside="close">
+        <div :style="styles.toolsMenu" :class="$style.toolsMenu">
+          <slot />
+        </div>
       </click-outside>
     </div>
   </teleport>
@@ -22,6 +24,7 @@ import {
   nextTick
 } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
+import { Point } from '/@/lib/basic/point'
 
 const useMenuHeight = () => {
   const height = ref(0)
@@ -35,10 +38,7 @@ const useMenuHeight = () => {
   return { height, menuContainerRef }
 }
 
-const useStyles = (
-  position: Ref<{ x: number; y: number }>,
-  height: Ref<number>
-) =>
+const useStyles = (position: Ref<Point>, height: Ref<number>) =>
   reactive({
     toolsMenu: computed(() => {
       const margin = 20
@@ -52,30 +52,30 @@ const useStyles = (
   })
 
 export default defineComponent({
-  name: 'MessageToolsMenuContainer',
+  name: 'ContextMenuContainer',
   components: { ClickOutside },
   props: {
     position: {
-      type: Object as PropType<{ x: number; y: number }>,
+      type: Object as PropType<Point>,
       required: true
     }
   },
   emits: {
-    closeContextMenu: () => true
+    close: () => true
   },
   setup(props, { emit }) {
     const position = toRef(props, 'position')
     const { height, menuContainerRef } = useMenuHeight()
     const styles = useStyles(position, height)
 
-    const closeContextMenu = () => {
-      emit('closeContextMenu')
+    const close = () => {
+      emit('close')
     }
 
     return {
       menuContainerRef,
       styles,
-      closeContextMenu
+      close
     }
   }
 })

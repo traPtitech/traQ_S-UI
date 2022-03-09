@@ -1,50 +1,52 @@
 <template>
-  <div :class="$style.container">
-    <span
-      v-if="isPinned && !isMinimum"
-      :class="$style.text"
-      @click="withClose(removePinned)"
-    >
-      ピン留めを外す
-    </span>
-    <span
-      v-else-if="!isMinimum"
-      :class="$style.text"
-      @click="withClose(addPinned)"
-    >
-      ピン留め
-    </span>
-    <span :class="$style.text" @click="withClose(showClipCreateModal)">
-      クリップ
-    </span>
-    <span
-      v-if="isMine && !isMinimum"
-      :class="$style.text"
-      @click="withClose(editMessage)"
-    >
-      編集
-    </span>
-    <span :class="$style.text" @click="withClose(copyLink)">
-      リンクをコピー
-    </span>
-    <span
-      v-if="showWidgetCopyButton"
-      :class="$style.text"
-      @click="withClose(copyEmbedded)"
-    >
-      メッセージを埋め込む
-    </span>
-    <span :class="$style.text" @click="withClose(copyMd)">
-      Markdownをコピー
-    </span>
-    <span
-      v-if="isMine && !isMinimum"
-      :class="$style.text"
-      @click="withClose(deleteMessage)"
-    >
-      削除
-    </span>
-  </div>
+  <context-menu-container :position="position" @close="close">
+    <div :class="$style.container">
+      <span
+        v-if="isPinned && !isMinimum"
+        :class="$style.text"
+        @click="withClose(removePinned)"
+      >
+        ピン留めを外す
+      </span>
+      <span
+        v-else-if="!isMinimum"
+        :class="$style.text"
+        @click="withClose(addPinned)"
+      >
+        ピン留め
+      </span>
+      <span :class="$style.text" @click="withClose(showClipCreateModal)">
+        クリップ
+      </span>
+      <span
+        v-if="isMine && !isMinimum"
+        :class="$style.text"
+        @click="withClose(editMessage)"
+      >
+        編集
+      </span>
+      <span :class="$style.text" @click="withClose(copyLink)">
+        リンクをコピー
+      </span>
+      <span
+        v-if="showWidgetCopyButton"
+        :class="$style.text"
+        @click="withClose(copyEmbedded)"
+      >
+        メッセージを埋め込む
+      </span>
+      <span :class="$style.text" @click="withClose(copyMd)">
+        Markdownをコピー
+      </span>
+      <span
+        v-if="isMine && !isMinimum"
+        :class="$style.text"
+        @click="withClose(deleteMessage)"
+      >
+        削除
+      </span>
+    </div>
+  </context-menu-container>
 </template>
 
 <script lang="ts">
@@ -53,9 +55,10 @@ import store from '/@/store'
 import apis, { embeddingOrigin } from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 import useToastStore from '/@/providers/toastStore'
-import { useMessageContextMenuStore } from './providers/messageContextMenu'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
 import { constructMessagesPath } from '/@/router'
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
+import { Point } from '/@/lib/basic/point'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -157,16 +160,28 @@ const useShowClipCreateModal = (props: { messageId: MessageId }) => {
 }
 
 export default defineComponent({
-  name: 'MessageToolsMenu',
+  name: 'MessageContextMenu',
+  components: {
+    ContextMenuContainer
+  },
   props: {
+    position: {
+      type: Object as PropType<Point>,
+      required: true
+    },
     messageId: {
       type: String as PropType<MessageId>,
-      default: ''
+      required: true
+    },
+    isMinimum: {
+      type: Boolean,
+      default: false
     }
   },
-  setup(props) {
-    const { state, closeContextMenu } = useMessageContextMenuStore()
-
+  emits: {
+    close: () => true
+  },
+  setup(props, { emit }) {
     const isPinned = computed(
       () =>
         store.state.entities.messages.messagesMap.get(props.messageId)?.pinned
@@ -176,22 +191,24 @@ export default defineComponent({
         store.state.entities.messages.messagesMap.get(props.messageId)
           ?.userId === store.getters.domain.me.myId
     )
-    const isMinimum = computed(() => state.isMinimum)
 
     const { copyLink, copyEmbedded, copyMd } = useCopy(props)
     const { addPinned, removePinned } = usePinToggler(props)
     const { editMessage, deleteMessage } = useMessageChanger(props)
     const { showClipCreateModal } = useShowClipCreateModal(props)
+
+    const close = () => {
+      emit('close')
+    }
     const withClose = async (func: () => void | Promise<void>) => {
       await func()
-      closeContextMenu()
+      close()
     }
 
     return {
       showWidgetCopyButton,
       isPinned,
       isMine,
-      isMinimum,
       addPinned,
       removePinned,
       copyLink,
@@ -200,6 +217,7 @@ export default defineComponent({
       editMessage,
       deleteMessage,
       showClipCreateModal,
+      close,
       withClose
     }
   }

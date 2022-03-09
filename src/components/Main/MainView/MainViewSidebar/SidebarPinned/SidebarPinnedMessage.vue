@@ -1,27 +1,40 @@
 <template>
-  <router-link :to="constructMessagesPath(message.id)">
-    <message-panel
-      title-type="user"
-      hide-subtitle
-      line-clamp-content
-      :message="message"
-      show-context-menu-button
-      @context-menu-clicked="toggleContextMenu"
+  <div>
+    <router-link :to="constructMessagesPath(message.id)">
+      <message-panel
+        title-type="user"
+        hide-subtitle
+        line-clamp-content
+        :message="message"
+        show-context-menu-button
+        @click-context-menu-button="toggle"
+      />
+    </router-link>
+    <sidebar-pinned-message-context-menu
+      v-if="position"
+      :position="position"
+      :message-id="message.id"
+      :is-minimum="isArchived"
+      @close="close"
     />
-  </router-link>
+  </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
-import { useMessageContextMenuInvoker } from '../providers/messageContextMenu'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import store from '/@/store'
 import { constructMessagesPath } from '/@/router'
+import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
+import useContextMenu from '/@/use/contextMenu'
 
 export default defineComponent({
   name: 'SidebarPinnedMessage',
-  components: { MessagePanel },
+  components: {
+    MessagePanel,
+    SidebarPinnedMessageContextMenu
+  },
   props: {
     message: {
       type: Object as PropType<Message | ActivityTimelineMessage>,
@@ -29,20 +42,21 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { position, toggle, close } = useContextMenu()
+
     const isArchived = computed(
       () =>
         store.state.entities.channelsMap.get(props.message.channelId)
           ?.archived ?? false
     )
 
-    const { toggleContextMenu } = useMessageContextMenuInvoker(
-      reactive({
-        messageId: computed(() => props.message.id),
-        isMinimum: isArchived
-      })
-    )
-
-    return { constructMessagesPath, toggleContextMenu }
+    return {
+      position,
+      isArchived,
+      constructMessagesPath,
+      toggle,
+      close
+    }
   }
 })
 </script>

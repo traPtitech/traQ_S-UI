@@ -19,7 +19,7 @@
         :size="28"
         mdi
         name="dots-horizontal"
-        @click.prevent="contextMenuClicked"
+        @click.prevent="onClickContextMenuButton"
       />
     </div>
     <div :class="$style.separator" />
@@ -82,7 +82,7 @@ export default defineComponent({
     }
   },
   emits: {
-    contextMenuClicked: (_e: MouseEvent) => true
+    clickContextMenuButton: (_e: MouseEvent) => true
   },
   setup(props, { emit }) {
     const userState = computed(() =>
@@ -102,11 +102,11 @@ export default defineComponent({
       }
     })
 
-    const contextMenuClicked = (e: MouseEvent) => {
-      emit('contextMenuClicked', e)
+    const onClickContextMenuButton = (e: MouseEvent) => {
+      emit('clickContextMenuButton', e)
     }
 
-    return { userState, path, contextMenuClicked }
+    return { userState, path, onClickContextMenuButton }
   }
 })
 </script>

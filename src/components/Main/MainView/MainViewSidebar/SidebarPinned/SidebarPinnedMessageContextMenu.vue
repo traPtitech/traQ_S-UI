@@ -1,25 +1,28 @@
 <template>
-  <div :class="$style.container">
-    <span
-      v-if="!isMinimum"
-      :class="$style.text"
-      @click="withClose(removePinned)"
-    >
-      ピン留めを外す
-    </span>
-    <span :class="$style.text" @click="withClose(copyLink)">
-      リンクをコピー
-    </span>
-  </div>
+  <context-menu-container :position="position" @close="close">
+    <div :class="$style.container">
+      <span
+        v-if="!isMinimum"
+        :class="$style.text"
+        @click="withClose(removePinned)"
+      >
+        ピン留めを外す
+      </span>
+      <span :class="$style.text" @click="withClose(copyLink)">
+        リンクをコピー
+      </span>
+    </div>
+  </context-menu-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import apis, { embeddingOrigin } from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 import useToastStore from '/@/providers/toastStore'
-import { useMessageContextMenuStore } from '../providers/messageContextMenu'
 import { constructMessagesPath } from '/@/router'
+import { Point } from '/@/lib/basic/point'
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()
@@ -70,29 +73,43 @@ const useCopy = (props: { messageId: MessageId }) => {
 }
 
 export default defineComponent({
-  name: 'SidebarPinnedToolsMenu',
+  name: 'SidebarPinnedMessageContextMenu',
+  components: {
+    ContextMenuContainer
+  },
   props: {
+    position: {
+      type: Object as PropType<Point>,
+      required: true
+    },
     messageId: {
       type: String as PropType<MessageId>,
-      default: ''
+      required: true
+    },
+    isMinimum: {
+      type: Boolean,
+      default: false
     }
   },
-  setup(props) {
-    const { state, closeContextMenu } = useMessageContextMenuStore()
-
-    const isMinimum = computed(() => state.isMinimum)
-
+  emits: {
+    close: () => true
+  },
+  setup(props, { emit }) {
     const { copyLink } = useCopy(props)
     const { removePinned } = usePinToggler(props)
+
+    const close = () => {
+      emit('close')
+    }
     const withClose = async (func: () => void | Promise<void>) => {
       await func()
-      closeContextMenu()
+      close()
     }
 
     return {
-      isMinimum,
       removePinned,
       copyLink,
+      close,
       withClose
     }
   }

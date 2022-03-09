@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="show || isStampPickerOpen || isThisContextMenuShown"
+    v-if="show || isStampPickerOpen || contextMenuPosition"
     ref="containerEle"
     :class="$style.container"
     :data-is-mobile="$boolAttr(isMobile)"
@@ -70,6 +70,13 @@
         />
       </div>
     </template>
+    <message-context-menu
+      v-if="contextMenuPosition"
+      :position="contextMenuPosition"
+      :message-id="messageId"
+      :is-minimum="isMinimum"
+      @close="closeContextMenu"
+    />
   </div>
 </template>
 
@@ -82,8 +89,9 @@ import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
 import useIsMobile from '/@/use/isMobile'
 import apis from '/@/lib/apis'
-import { useMessageContextMenuInvoker } from '/@/components/Main/MainView/MessagesScroller/providers/messageContextMenu'
 import useToastStore from '/@/providers/toastStore'
+import MessageContextMenu from './MessageContextMenu.vue'
+import useContextMenu from '/@/use/contextMenu'
 
 const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
   if (recents.length >= 3) return
@@ -103,7 +111,8 @@ export default defineComponent({
   name: 'MessageTools',
   components: {
     AIcon,
-    AStamp
+    AStamp,
+    MessageContextMenu
   },
   props: {
     messageId: { type: String as PropType<MessageId>, required: true },
@@ -141,8 +150,11 @@ export default defineComponent({
         }
       }, containerEle)
 
-    const { isThisContextMenuShown, openContextMenu } =
-      useMessageContextMenuInvoker(props)
+    const {
+      position: contextMenuPosition,
+      open: openContextMenu,
+      close: closeContextMenu
+    } = useContextMenu()
 
     const onDotsClick = (e: MouseEvent) => {
       openContextMenu({
@@ -158,7 +170,6 @@ export default defineComponent({
 
     return {
       containerEle,
-      isThisContextMenuShown,
       isStampPickerOpen,
       recentStamps,
       addStamp,
@@ -166,7 +177,9 @@ export default defineComponent({
       toggleStampPicker,
       isMobile,
       showQuickReaction,
-      toggleQuickReaction
+      toggleQuickReaction,
+      contextMenuPosition,
+      closeContextMenu
     }
   }
 })
