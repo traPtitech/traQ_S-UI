@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { OpenMode } from '/@/vuex/app/browserSettings'
+import { OpenMode } from '/@/store/app/browserSettings'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import useChannelPath from '/@/use/channelPath'

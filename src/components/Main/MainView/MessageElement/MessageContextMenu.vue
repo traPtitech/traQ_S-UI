@@ -60,14 +60,18 @@ import { Point } from '/@/lib/basic/point'
 import useExecWithToast from '/@/use/contextMenu/execWithToast'
 import usePinToggler from '/@/use/contextMenu/pinToggler'
 import useCopyLink from '/@/use/contextMenu/copyLink'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMeStore } from '/@/store/domain/me'
+import { useModalStore } from '/@/store/ui/modal'
 
 const { showWidgetCopyButton } = window.traQConfig
 
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
+  const { editingMessageId } = useMessagesView()
 
   const editMessage = () => {
-    store.commit.domain.messagesView.setEditingMessageId(messageId.value)
+    editingMessageId.value = messageId.value
   }
   const deleteMessage = () => {
     if (!confirm('本当にメッセージを削除しますか？')) return
@@ -99,8 +103,9 @@ const useCopyMd = (messageId: Ref<MessageId>) => {
 }
 
 const useShowClipCreateModal = (messageId: Ref<MessageId>) => {
+  const { pushModal } = useModalStore()
   const showClipCreateModal = () => {
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'clip-create',
       messageId: messageId.value
     })
@@ -132,6 +137,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const messageId = toRef(props, 'messageId')
+    const { myId } = useMeStore()
 
     const isPinned = computed(
       () =>
@@ -140,7 +146,7 @@ export default defineComponent({
     const isMine = computed(
       () =>
         store.state.entities.messages.messagesMap.get(messageId.value)
-          ?.userId === store.getters.domain.me.myId
+          ?.userId === myId.value
     )
 
     const { copyLink, copyEmbedded } = useCopyLink(messageId)
