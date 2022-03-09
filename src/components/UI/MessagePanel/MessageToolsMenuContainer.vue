@@ -16,15 +16,22 @@ import {
   ref,
   Ref,
   shallowRef,
-  PropType
+  PropType,
+  toRef,
+  watch,
+  nextTick
 } from 'vue'
 import ClickOutside from '/@/components/UI/ClickOutside'
 
 const useMenuHeight = () => {
   const height = ref(0)
   const menuContainerRef = shallowRef<HTMLDivElement | null>(null)
-  const $menu = menuContainerRef.value?.firstElementChild
-  height.value = $menu?.clientHeight ?? 0
+  watch(menuContainerRef, async newVal => {
+    if (!newVal) return
+    await nextTick()
+    const $menu = menuContainerRef.value?.firstElementChild
+    height.value = $menu?.clientHeight ?? 0
+  })
   return { height, menuContainerRef }
 }
 
@@ -57,7 +64,7 @@ export default defineComponent({
     closeContextMenu: () => true
   },
   setup(props, { emit }) {
-    const position = ref(props.position)
+    const position = toRef(props, 'position')
     const { height, menuContainerRef } = useMenuHeight()
     const styles = useStyles(position, height)
 

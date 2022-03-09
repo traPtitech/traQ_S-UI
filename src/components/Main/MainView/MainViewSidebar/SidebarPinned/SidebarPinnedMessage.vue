@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType, reactive } from 'vue'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import { useMessageContextMenuInvoker } from '../providers/messageContextMenu'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
@@ -30,14 +30,12 @@ export default defineComponent({
           ?.archived ?? false
     )
 
-    const toggleContextMenu = computed(() => {
-      const { toggleContextMenu } = useMessageContextMenuInvoker({
+    const { toggleContextMenu } = useMessageContextMenuInvoker(
+      reactive({
         messageId: props.message.id,
         isMinimum: isArchived.value
       })
-
-      return toggleContextMenu
-    })
+    )
 
     return { toggleContextMenu }
   }
