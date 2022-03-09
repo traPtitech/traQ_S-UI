@@ -1,9 +1,12 @@
 import { Message } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
+import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/use/indexedDbValue'
+import { isObjectAndHasKey } from '/@/lib/basic/object'
+import { promisifyRequest } from 'idb-keyval'
 
 type CommandPaletteMode = 'command' | 'search'
 
@@ -63,16 +66,21 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
 
   const initialValue: IndexedDBState = { searchHistories: [] }
   const [state, loading, loadingPromise] = useIndexedDbValue(
-    'app/commandPalette',
+    'store/app/commandPalette',
     1,
     {
-      0: async (db, tx) => {
-        // TODO: migrate from vuex
-        //
-        // const vuexStore = indexedDBStorage.getItem('vuex')
-        // if (!vuexStore) return
-        // if (!isObjectAndHasKey(vuexStore, 'app')) return
-        // tx.objectStore('store').add(vuexStore.app.messageSearchHistories, 'key')
+      // migrate from vuex
+      1: async getStore => {
+        const vuexStore = await getVuexData()
+        if (!vuexStore) return
+        if (!isObjectAndHasKey(vuexStore, 'app')) return
+        if (!isObjectAndHasKey(vuexStore.app, 'messageSearchHistories')) return
+        if (!(vuexStore.app.messageSearchHistories instanceof Array)) return
+        const addReq = getStore().add(
+          vuexStore.app.messageSearchHistories,
+          'key'
+        )
+        await promisifyRequest(addReq)
       }
     },
     initialValue

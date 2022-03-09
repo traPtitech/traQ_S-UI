@@ -20,6 +20,8 @@
 - HMR対応用のコードを書く
   - [piniaのドキュメント](https://pinia.vuejs.org/cookbook/hot-module-replacement.html)を参照
   - `acceptHMRUpdate`には`convertToRefsStore`を行う前のものを渡すこと
+- IndexedDBを使う際は`useIndexedDbValue`を利用してストア名を`store/${id}`にすること
+  - 例: `ui/modal`ならば、`store/ui/modal`にする
 
 ## テンプレート
 ```ts

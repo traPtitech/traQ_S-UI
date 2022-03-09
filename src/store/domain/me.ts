@@ -59,7 +59,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   }
 
   const [state, loading, loadingPromise] = useIndexedDbValue(
-    'domain/me',
+    'store/domain/me',
     1,
     {},
     initialValue

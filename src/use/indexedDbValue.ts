@@ -3,7 +3,6 @@ import { get, set } from 'idb-keyval'
 import { reactive, ref, watch } from 'vue'
 import { toRawDeep } from '/@/lib/basic/reactive'
 
-export const dbPrefix = 'traQ_S-'
 export const storeName = 'store'
 export const key = 'key'
 
@@ -14,7 +13,7 @@ const useIndexedDbValue = <T extends object>(
   initialValue: T
 ) => {
   const store = createStoreWithMigrations(
-    `${dbPrefix}${dbName}`,
+    dbName,
     storeName,
     version,
     migrations

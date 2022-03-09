@@ -4,6 +4,9 @@ import { replacePrefix } from '/@/lib/basic/string'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/use/indexedDbValue'
 import { channelTreeMitt } from '/@/store/domain/channelTree'
+import { getVuexData } from '/@/store/utils/migrateFromVuex'
+import { isObjectAndHasKey } from '/@/lib/basic/object'
+import { promisifyRequest } from 'idb-keyval'
 
 type State = {
   openMode: OpenMode
@@ -54,17 +57,17 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
   }
 
   const [state, loading, loadingPromise] = useIndexedDbValue(
-    'app/browserSettings',
+    'store/app/browserSettings',
     1,
     {
-      0: async (db, tx) => {
-        // TODO: migrate from vuex
-        //
-        // const vuexStore = indexedDBStorage.getItem('vuex')
-        // if (!vuexStore) return
-        // if (!isObjectAndHasKey(vuexStore, 'app')) return
-        // if (!isObjectAndHasKey(vuexStore.app, 'browserSettings')) return
-        // tx.objectStore('store').add(vuexStore.app.browserSettings, 'key')
+      // migrate from vuex
+      1: async getStore => {
+        const vuexStore = await getVuexData()
+        if (!vuexStore) return
+        if (!isObjectAndHasKey(vuexStore, 'app')) return
+        if (!isObjectAndHasKey(vuexStore.app, 'browserSettings')) return
+        const addReq = getStore().add(vuexStore.app.browserSettings, 'key')
+        await promisifyRequest(addReq)
       }
     },
     initialValue

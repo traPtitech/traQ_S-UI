@@ -1,7 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { toRefs } from 'vue'
+import { getVuexData } from '/@/store/utils/migrateFromVuex'
+import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useIndexedDbValue from '/@/use/indexedDbValue'
+import { promisifyRequest } from 'idb-keyval'
 
 type State = {
   isEnabled: boolean
@@ -33,17 +36,17 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
   }
 
   const [state, loading, loadingPromise] = useIndexedDbValue(
-    'app/rtcSettings',
+    'store/app/rtcSettings',
     1,
     {
-      0: async (db, tx) => {
-        // TODO: migrate from vuex
-        //
-        // const vuexStore = indexedDBStorage.getItem('vuex')
-        // if (!vuexStore) return
-        // if (!isObjectAndHasKey(vuexStore, 'app')) return
-        // if (!isObjectAndHasKey(vuexStore.app, 'rtcSettings')) return
-        // tx.objectStore('store').add(vuexStore.app.rtcSettings, 'key')
+      // migrate from vuex
+      1: async getStore => {
+        const vuexStore = await getVuexData()
+        if (!vuexStore) return
+        if (!isObjectAndHasKey(vuexStore, 'app')) return
+        if (!isObjectAndHasKey(vuexStore.app, 'rtcSettings')) return
+        const addReq = getStore().add(vuexStore.app.rtcSettings, 'key')
+        await promisifyRequest(addReq)
       }
     },
     initialValue
