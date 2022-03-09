@@ -2,7 +2,7 @@
   <message-panel
     line-clamp-content
     :message="message"
-    :show-context-menu-button="true"
+    show-context-menu-button
     @context-menu-clicked="toggleContextMenu"
   />
 </template>
@@ -15,7 +15,7 @@ import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import store from '/@/store'
 
 export default defineComponent({
-  name: 'SidebarPinned',
+  name: 'SidebarPinnedMessage',
   components: { MessagePanel },
   props: {
     message: {

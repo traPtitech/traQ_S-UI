@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
-import SidebarPinned from './SidebarPinned.vue'
+import SidebarPinned from './SidebarPinnedMessage.vue'
 import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
 import { constructMessagesPath } from '/@/router'
 import {
