@@ -30,9 +30,13 @@ export default defineComponent({
           ?.archived ?? false
     )
 
-    const { toggleContextMenu } = useMessageContextMenuInvoker({
-      messageId: props.message.id,
-      isMinimum: isArchived.value
+    const toggleContextMenu = computed(() => {
+      const { toggleContextMenu } = useMessageContextMenuInvoker({
+        messageId: props.message.id,
+        isMinimum: isArchived.value
+      })
+
+      return toggleContextMenu
     })
 
     return { toggleContextMenu }
