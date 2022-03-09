@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '/@/vuex'
 import { UserTag } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'

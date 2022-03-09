@@ -27,7 +27,6 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
-import store from '/@/vuex'
 import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({

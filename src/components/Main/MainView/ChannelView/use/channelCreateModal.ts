@@ -1,4 +1,3 @@
-import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import { computed } from 'vue'
 import useCanCreateChildChannel from '/@/use/canCreateChildChannel'

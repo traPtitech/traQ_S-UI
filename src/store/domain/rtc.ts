@@ -7,7 +7,6 @@ import { formatSnakeKeysToCamelShallow } from '/@/lib/basic/record'
 import { changeRTCState, wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { useMeStore } from '/@/store/domain/me'
 
 export type SessionId = string

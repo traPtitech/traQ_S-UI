@@ -6,10 +6,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
 import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
-import store from '/@/vuex'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({

@@ -1,5 +1,4 @@
 import { computed } from 'vue'
-import store from '/@/vuex'
 import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 

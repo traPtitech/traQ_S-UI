@@ -1,5 +1,4 @@
 import { computed, Ref } from 'vue'
-import store from '/@/vuex'
 import { User } from '@traptitech/traq'
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'

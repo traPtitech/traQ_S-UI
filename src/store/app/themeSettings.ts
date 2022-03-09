@@ -54,7 +54,10 @@ const useThemeSettingsPinia = defineStore('ui/themeSettings', () => {
             console.info(
               '[migration(custom theme)] Skipped because it was invalid.'
             )
-          } else if (hasKey( shouldbeV1Theme, 'version') && shouldbeV1Theme.version === 2) {
+          } else if (
+            hasKey(shouldbeV1Theme, 'version') &&
+            shouldbeV1Theme.version === 2
+          ) {
             // eslint-disable-next-line no-console
             console.info(
               '[migration(custom theme)] Skipped because it was already v2.'

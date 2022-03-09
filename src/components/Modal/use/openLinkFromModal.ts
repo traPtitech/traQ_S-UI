@@ -1,4 +1,3 @@
-import store from '/@/vuex'
 import { useOpenLink } from '/@/use/openLink'
 import { useModalStore } from '/@/store/ui/modal'
 
