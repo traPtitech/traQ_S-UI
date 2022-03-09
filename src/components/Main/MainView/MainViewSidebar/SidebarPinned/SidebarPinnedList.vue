@@ -9,13 +9,6 @@
     <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
       ピン留めされたメッセージはありません
     </div>
-    <message-tools-menu-container
-      v-if="isShown"
-      :position="state.position"
-      @close-context-menu="closeContextMenu"
-    >
-      <sidebar-pinned-tools-menu :message-id="state.target" />
-    </message-tools-menu-container>
   </div>
 </template>
 
@@ -23,17 +16,12 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
 import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
-import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
 import { constructMessagesPath } from '/@/router'
-import { useMessageContextMenuStore } from '../providers/messageContextMenu'
-import SidebarPinnedToolsMenu from './SidebarPinnedToolsMenu.vue'
 
 export default defineComponent({
   name: 'SidebarPinnedList',
   components: {
-    SidebarPinnedMessage,
-    MessageToolsMenuContainer,
-    SidebarPinnedToolsMenu
+    SidebarPinnedMessage
   },
   props: {
     pinnedMessages: {
@@ -42,23 +30,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // provideMessageContextMenuStore()
-
     const sortedMessages = computed(() =>
       [...props.pinnedMessages]
         .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
         .map(pinnedMessage => pinnedMessage.message)
     )
 
-    const { state, isShown, closeContextMenu } = useMessageContextMenuStore()
-
     return {
       sortedMessages,
-      constructMessagesPath,
-      state,
-      isShown,
-      closeContextMenu,
-      useMessageContextMenuStore
+      constructMessagesPath
     }
   }
 })
@@ -68,10 +48,6 @@ export default defineComponent({
 .container {
   @include color-ui-secondary;
   @include background-secondary;
-}
-
-.item {
-  display: block;
 }
 .item + .item {
   margin-top: 16px;

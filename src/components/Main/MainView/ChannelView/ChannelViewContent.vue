@@ -26,7 +26,6 @@ import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.
 import useChannelMessageFetcher from './use/channelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 import store from '/@/store'
-import { provideMessageContextMenuStore } from '../MessagesScroller/providers/messageContextMenu'
 
 export default defineComponent({
   name: 'ChannelViewContent',
@@ -40,8 +39,6 @@ export default defineComponent({
     entryMessageId: { type: String, default: undefined }
   },
   setup(props) {
-    provideMessageContextMenuStore() // TODO: 後で消す
-
     const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
     const {
       messageIds,
