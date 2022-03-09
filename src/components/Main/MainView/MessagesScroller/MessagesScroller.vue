@@ -79,10 +79,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
-import {
-  provideMessageContextMenuStore,
-  useMessageContextMenuStore
-} from './providers/messageContextMenu'
+import { useMessageContextMenuStore } from './providers/messageContextMenu'
 import { useOpenLink } from '/@/use/openLink'
 import MessageToolsMenu from './MessageToolsMenu.vue'
 

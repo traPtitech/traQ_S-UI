@@ -30,10 +30,7 @@ import { Pin } from '@traptitech/traq'
 import SidebarPinned from './SidebarPinnedMessage.vue'
 import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
 import { constructMessagesPath } from '/@/router'
-import {
-  provideMessageContextMenuStore,
-  useMessageContextMenuStore
-} from '../providers/messageContextMenu'
+import { useMessageContextMenuStore } from '../providers/messageContextMenu'
 import SidebarPinnedToolsMenu from './SidebarPinnedToolsMenu.vue'
 
 export default defineComponent({
