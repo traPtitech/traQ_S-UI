@@ -1,16 +1,11 @@
 <template>
   <div :class="$style.container">
-    <router-link
+    <sidebar-pinned-message
       v-for="message in sortedMessages"
       :key="message.id"
-      :to="constructMessagesPath(message.id)"
-    >
-      <sidebar-pinned
-        line-clamp-content
-        :message="message"
-        :class="$style.item"
-      />
-    </router-link>
+      :message="message"
+      :class="$style.item"
+    />
     <div v-if="sortedMessages.length <= 0" :class="$style.noPinned">
       ピン留めされたメッセージはありません
     </div>
@@ -27,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { Pin } from '@traptitech/traq'
-import SidebarPinned from './SidebarPinnedMessage.vue'
+import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
 import MessageToolsMenuContainer from '/@/components/UI/MessagePanel/MessageToolsMenuContainer.vue'
 import { constructMessagesPath } from '/@/router'
 import { useMessageContextMenuStore } from '../providers/messageContextMenu'
@@ -36,7 +31,7 @@ import SidebarPinnedToolsMenu from './SidebarPinnedToolsMenu.vue'
 export default defineComponent({
   name: 'SidebarPinnedList',
   components: {
-    SidebarPinned,
+    SidebarPinnedMessage,
     MessageToolsMenuContainer,
     SidebarPinnedToolsMenu
   },
@@ -76,6 +71,9 @@ export default defineComponent({
 }
 
 .item {
+  display: block;
+}
+.item + .item {
   margin-top: 16px;
 }
 

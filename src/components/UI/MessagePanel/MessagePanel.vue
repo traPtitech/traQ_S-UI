@@ -143,7 +143,8 @@ export default defineComponent({
   display: block;
   padding: 4px;
   cursor: pointer;
-  margin: 0 0 0 auto;
+  margin-left: auto;
+  border-radius: 4px;
   &:hover {
     @include background-secondary;
   }

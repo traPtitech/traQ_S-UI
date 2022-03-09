@@ -1,10 +1,14 @@
 <template>
-  <message-panel
-    line-clamp-content
-    :message="message"
-    show-context-menu-button
-    @context-menu-clicked="toggleContextMenu"
-  />
+  <router-link :to="constructMessagesPath(message.id)">
+    <message-panel
+      title-type="user"
+      hide-subtitle
+      line-clamp-content
+      :message="message"
+      show-context-menu-button
+      @context-menu-clicked="toggleContextMenu"
+    />
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -13,6 +17,7 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import { useMessageContextMenuInvoker } from '../providers/messageContextMenu'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import store from '/@/store'
+import { constructMessagesPath } from '/@/router'
 
 export default defineComponent({
   name: 'SidebarPinnedMessage',
@@ -37,7 +42,7 @@ export default defineComponent({
       })
     )
 
-    return { toggleContextMenu }
+    return { constructMessagesPath, toggleContextMenu }
   }
 })
 </script>
