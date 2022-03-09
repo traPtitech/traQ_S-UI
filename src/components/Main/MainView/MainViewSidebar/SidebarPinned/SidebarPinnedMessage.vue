@@ -37,8 +37,8 @@ export default defineComponent({
 
     const { toggleContextMenu } = useMessageContextMenuInvoker(
       reactive({
-        messageId: props.message.id,
-        isMinimum: isArchived.value
+        messageId: computed(() => props.message.id),
+        isMinimum: isArchived
       })
     )
 
