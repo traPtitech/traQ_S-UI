@@ -50,63 +50,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { defineComponent, computed, PropType, Ref, toRef } from 'vue'
 import store from '/@/store'
-import apis, { embeddingOrigin } from '/@/lib/apis'
+import apis from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
-import useToastStore from '/@/providers/toastStore'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import { constructMessagesPath } from '/@/router'
 import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { Point } from '/@/lib/basic/point'
+import useExecWithToast from '/@/use/contextMenu/execWithToast'
+import usePinToggler from '/@/use/contextMenu/pinToggler'
+import useCopyLink from '/@/use/contextMenu/copyLink'
 
 const { showWidgetCopyButton } = window.traQConfig
 
-const useExecWithToast = () => {
-  const { addInfoToast, addErrorToast } = useToastStore()
-
-  const execWithToast = async (
-    successText: string | undefined,
-    errorText: string,
-    func: () => void | Promise<void>
-  ) => {
-    try {
-      await func()
-      if (successText) {
-        addInfoToast(successText)
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(errorText, e)
-
-      addErrorToast(errorText)
-    }
-  }
-
-  return { execWithToast }
-}
-
-const usePinToggler = (props: { messageId: MessageId }) => {
-  const { execWithToast } = useExecWithToast()
-
-  const addPinned = async () => {
-    execWithToast(undefined, 'ピン留めに失敗しました', async () => {
-      await apis.createPin(props.messageId)
-    })
-  }
-  const removePinned = async () => {
-    execWithToast(undefined, 'ピン留めの解除に失敗しました', async () => {
-      await apis.removePin(props.messageId)
-    })
-  }
-  return { addPinned, removePinned }
-}
-
-const useMessageChanger = (props: { messageId: MessageId }) => {
+const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
 
   const editMessage = () => {
-    store.commit.domain.messagesView.setEditingMessageId(props.messageId)
+    store.commit.domain.messagesView.setEditingMessageId(messageId.value)
   }
   const deleteMessage = () => {
     if (!confirm('本当にメッセージを削除しますか？')) return
@@ -115,45 +76,33 @@ const useMessageChanger = (props: { messageId: MessageId }) => {
       'メッセージを削除しました',
       'メッセージの削除に失敗しました',
       async () => {
-        await apis.deleteMessage(props.messageId)
+        await apis.deleteMessage(messageId.value)
       }
     )
   }
   return { editMessage, deleteMessage }
 }
 
-const useCopy = (props: { messageId: MessageId }) => {
+const useCopyMd = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
 
-  const copyLink = async () => {
-    const link = `${embeddingOrigin}${constructMessagesPath(props.messageId)}`
-    execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      navigator.clipboard.writeText(link)
-    )
-  }
-  const copyEmbedded = async () => {
-    const link = `<iframe src="${embeddingOrigin}/widget/?type=message&id=${props.messageId}" scrolling="no" frameborder="no" width="600"></iframe>`
-    execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      navigator.clipboard.writeText(link)
-    )
-  }
   const copyMd = async () => {
     const content =
-      store.state.entities.messages.messagesMap.get(props.messageId)?.content ??
+      store.state.entities.messages.messagesMap.get(messageId.value)?.content ??
       ''
     const replacedContent = replaceBack(content)
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
       navigator.clipboard.writeText(replacedContent)
     )
   }
-  return { copyLink, copyEmbedded, copyMd }
+  return { copyMd }
 }
 
-const useShowClipCreateModal = (props: { messageId: MessageId }) => {
+const useShowClipCreateModal = (messageId: Ref<MessageId>) => {
   const showClipCreateModal = () => {
     store.dispatch.ui.modal.pushModal({
       type: 'clip-create',
-      messageId: props.messageId
+      messageId: messageId.value
     })
   }
   return { showClipCreateModal }
@@ -182,20 +131,23 @@ export default defineComponent({
     close: () => true
   },
   setup(props, { emit }) {
+    const messageId = toRef(props, 'messageId')
+
     const isPinned = computed(
       () =>
-        store.state.entities.messages.messagesMap.get(props.messageId)?.pinned
+        store.state.entities.messages.messagesMap.get(messageId.value)?.pinned
     )
     const isMine = computed(
       () =>
-        store.state.entities.messages.messagesMap.get(props.messageId)
+        store.state.entities.messages.messagesMap.get(messageId.value)
           ?.userId === store.getters.domain.me.myId
     )
 
-    const { copyLink, copyEmbedded, copyMd } = useCopy(props)
-    const { addPinned, removePinned } = usePinToggler(props)
-    const { editMessage, deleteMessage } = useMessageChanger(props)
-    const { showClipCreateModal } = useShowClipCreateModal(props)
+    const { copyLink, copyEmbedded } = useCopyLink(messageId)
+    const { copyMd } = useCopyMd(messageId)
+    const { addPinned, removePinned } = usePinToggler(messageId)
+    const { editMessage, deleteMessage } = useMessageChanger(messageId)
+    const { showClipCreateModal } = useShowClipCreateModal(messageId)
 
     const close = () => {
       emit('close')

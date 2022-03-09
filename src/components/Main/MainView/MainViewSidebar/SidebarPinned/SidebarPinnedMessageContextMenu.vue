@@ -16,61 +16,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, toRef } from 'vue'
 import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
-import apis, { embeddingOrigin } from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
-import useToastStore from '/@/providers/toastStore'
-import { constructMessagesPath } from '/@/router'
 import { Point } from '/@/lib/basic/point'
-
-const useExecWithToast = () => {
-  const { addInfoToast, addErrorToast } = useToastStore()
-
-  const execWithToast = async (
-    successText: string | undefined,
-    errorText: string,
-    func: () => void | Promise<void>
-  ) => {
-    try {
-      await func()
-      if (successText) {
-        addInfoToast(successText)
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(errorText, e)
-
-      addErrorToast(errorText)
-    }
-  }
-
-  return { execWithToast }
-}
-
-const usePinToggler = (props: { messageId: MessageId }) => {
-  const { execWithToast } = useExecWithToast()
-
-  const removePinned = async () => {
-    execWithToast(undefined, 'ピン留めの解除に失敗しました', async () => {
-      await apis.removePin(props.messageId)
-    })
-  }
-  return { removePinned }
-}
-
-const useCopy = (props: { messageId: MessageId }) => {
-  const { execWithToast } = useExecWithToast()
-
-  const copyLink = async () => {
-    const link = `${embeddingOrigin}${constructMessagesPath(props.messageId)}`
-    execWithToast('コピーしました', 'コピーに失敗しました', () =>
-      navigator.clipboard.writeText(link)
-    )
-  }
-
-  return { copyLink }
-}
+import useCopyLink from '/@/use/contextMenu/copyLink'
+import usePinToggler from '/@/use/contextMenu/pinToggler'
 
 export default defineComponent({
   name: 'SidebarPinnedMessageContextMenu',
@@ -95,8 +46,10 @@ export default defineComponent({
     close: () => true
   },
   setup(props, { emit }) {
-    const { copyLink } = useCopy(props)
-    const { removePinned } = usePinToggler(props)
+    const messageId = toRef(props, 'messageId')
+
+    const { copyLink } = useCopyLink(messageId)
+    const { removePinned } = usePinToggler(messageId)
 
     const close = () => {
       emit('close')
