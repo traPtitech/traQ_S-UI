@@ -35,7 +35,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     voiceVolume: 1
   }
 
-  const [state, loading, loadingPromise] = useIndexedDbValue(
+  const [state, restoring, restoringPromise] = useIndexedDbValue(
     'store/app/rtcSettings',
     1,
     {
@@ -95,7 +95,7 @@ const useRtcSettingsPinia = defineStore('app/rtcSettings', () => {
     return false
   }
 
-  return { ...toRefs(state), loading, loadingPromise, ensureDeviceIds }
+  return { ...toRefs(state), ensureDeviceIds }
 })
 
 export const useRtcSettings = convertToRefsStore(useRtcSettingsPinia)

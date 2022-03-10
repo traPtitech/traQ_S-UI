@@ -65,7 +65,7 @@ const useCommandPalettePinia = defineStore('app/commandPalette', () => {
   })
 
   const initialValue: IndexedDBState = { searchHistories: [] }
-  const [state, loading, loadingPromise] = useIndexedDbValue(
+  const [state] = useIndexedDbValue(
     'store/app/commandPalette',
     1,
     {

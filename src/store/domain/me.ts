@@ -62,7 +62,8 @@ const useMeStorePinia = defineStore('domain/me', () => {
     detail: undefined
   }
 
-  const [state, loading, loadingPromise] = useIndexedDbValue(
+  // TODO: ログインチェック時にrestoreを待つ必要があるかもしれない
+  const [state, restoring, restoringPromise] = useIndexedDbValue(
     'store/domain/me',
     1,
     {},

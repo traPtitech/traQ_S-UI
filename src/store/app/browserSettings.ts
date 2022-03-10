@@ -56,7 +56,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     filterStarChannel: false
   }
 
-  const [state, loading, loadingPromise] = useIndexedDbValue(
+  const [state, restoring, restoringPromise] = useIndexedDbValue(
     'store/app/browserSettings',
     1,
     {
@@ -95,7 +95,7 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     oldName: string
     newName: string
   }) => {
-    await loadingPromise.value
+    await restoringPromise.value
 
     state.openChannelName = replacePrefix(
       state.openChannelName,
@@ -116,7 +116,12 @@ const useBrowserSettingsPinia = defineStore('app/browserSettings', () => {
     })
   })
 
-  return { ...toRefs(state), loading, loadingPromise, defaultChannelName }
+  return {
+    ...toRefs(state),
+    restoring,
+    restoringPromise,
+    defaultChannelName
+  }
 })
 
 export const useBrowserSettings = convertToRefsStore(useBrowserSettingsPinia)

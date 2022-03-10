@@ -20,8 +20,8 @@ const useIndexedDbValue = <T extends object>(
   )
 
   const value = reactive(initialValue)
-  const loading = ref(true)
-  const loadingPromise = ref(
+  const restoring = ref(true)
+  const restoringPromise = ref(
     (async () => {
       const v = await get<T | undefined>(key, store)
       if (v) {
@@ -30,14 +30,14 @@ const useIndexedDbValue = <T extends object>(
           value[key] = val
         }
       }
-      loading.value = false
+      restoring.value = false
     })()
   )
 
   watch(
     value,
     async () => {
-      if (loading.value) return
+      if (restoring.value) return
 
       // indexedDBにはproxyされたobjectは入らないのでtoRawする
       await set(key, toRawDeep(value), store)
@@ -45,7 +45,7 @@ const useIndexedDbValue = <T extends object>(
     { deep: true }
   )
 
-  return [value, loading, loadingPromise] as const
+  return [value, restoring, restoringPromise] as const
 }
 
 export default useIndexedDbValue

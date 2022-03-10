@@ -33,8 +33,10 @@ const useRouteWatcher = () => {
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
-  const { defaultChannelName, loadingPromise: browserSettingsLoadingPromise } =
-    useBrowserSettings()
+  const {
+    defaultChannelName,
+    restoringPromise: browserSettingsRestoringPromise
+  } = useBrowserSettings()
   const { channelTree } = useChannelTree()
   const {
     channelsMap,
@@ -61,7 +63,7 @@ const useRouteWatcher = () => {
   })
 
   const useOpenChannel = async () => {
-    await browserSettingsLoadingPromise.value
+    await browserSettingsRestoringPromise.value
     return defaultChannelName
   }
 

@@ -24,7 +24,7 @@ const useThemeSettingsPinia = defineStore('ui/themeSettings', () => {
     custom: lightTheme
   }
 
-  const [state, loading, loadingPromise] = useIndexedDbValue(
+  const [state] = useIndexedDbValue(
     'store/app/themeSettings',
     1,
     {
