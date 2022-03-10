@@ -51,7 +51,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, Ref, toRef } from 'vue'
-import store from '/@/vuex'
 import apis from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
@@ -63,6 +62,7 @@ import useCopyLink from '/@/use/contextMenu/copyLink'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const { showWidgetCopyButton } = window.traQConfig
 
@@ -89,11 +89,10 @@ const useMessageChanger = (messageId: Ref<MessageId>) => {
 
 const useCopyMd = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
+  const { messagesMap } = useMessagesStore()
 
   const copyMd = async () => {
-    const content =
-      store.state.entities.messages.messagesMap.get(messageId.value)?.content ??
-      ''
+    const content = messagesMap.value.get(messageId.value)?.content ?? ''
     const replacedContent = replaceBack(content)
     execWithToast('コピーしました', 'コピーに失敗しました', () =>
       navigator.clipboard.writeText(replacedContent)
@@ -138,15 +137,13 @@ export default defineComponent({
   setup(props, { emit }) {
     const messageId = toRef(props, 'messageId')
     const { myId } = useMeStore()
+    const { messagesMap } = useMessagesStore()
 
     const isPinned = computed(
-      () =>
-        store.state.entities.messages.messagesMap.get(messageId.value)?.pinned
+      () => messagesMap.value.get(messageId.value)?.pinned
     )
     const isMine = computed(
-      () =>
-        store.state.entities.messages.messagesMap.get(messageId.value)
-          ?.userId === myId.value
+      () => messagesMap.value.get(messageId.value)?.userId === myId.value
     )
 
     const { copyLink, copyEmbedded } = useCopyLink(messageId)

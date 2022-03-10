@@ -7,6 +7,7 @@ import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useSortMessages = (
   messages: Ref<DeepReadonly<Message[]>>,
@@ -72,6 +73,7 @@ const useSearchMessages = () => {
   const { query, searchState, setSearchResult, resetPaging } =
     useCommandPalette()
   const { renderMessageContent } = useMessagesView()
+  const { extendMessagesMap } = useMessagesStore()
 
   const currentSortKey = computed({
     get: () => searchState.value.currentSortKey,
@@ -113,7 +115,7 @@ const useSearchMessages = () => {
       ...toSearchMessageParam(queryObject, option)
     )
     const hits = res.data.hits ?? []
-    store.dispatch.entities.messages.extendMessagesMap(hits)
+    extendMessagesMap(hits)
     await Promise.all(hits.map(message => renderMessageContent(message.id)))
     fetchingSearchResult.value = false
 

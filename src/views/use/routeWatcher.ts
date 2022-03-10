@@ -15,6 +15,7 @@ import { useMainViewStore } from '/@/store/ui/mainView'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -27,6 +28,7 @@ const useRouteWatcher = () => {
     changePrimaryViewToClip,
     changePrimaryViewToChannelOrDM
   } = useMainViewStore()
+  const { fetchMessage, fetchFileMetaData } = useMessagesStore()
   const { channelPathToId, channelIdToPathString, channelIdToLink } =
     useChannelPath()
   const { changeViewTitle } = useViewTitle()
@@ -138,9 +140,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToFile = async () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const fileId = state.idParam!
-    const file = await store.dispatch.entities.messages.fetchFileMetaData({
-      fileId
-    })
+    const file = await fetchFileMetaData({ fileId })
 
     if (!file) {
       // ファイルがなかった
@@ -191,10 +191,8 @@ const useRouteWatcher = () => {
   }
 
   const onRouteChangedToMessage = async () => {
-    const message = await store.dispatch.entities.messages.fetchMessage({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      messageId: state.idParam!
-    })
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const message = await fetchMessage({ messageId: state.idParam! })
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'

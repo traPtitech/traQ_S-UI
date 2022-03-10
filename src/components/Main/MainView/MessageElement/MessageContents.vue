@@ -41,7 +41,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import UserIcon from '/@/components/UI/UserIcon.vue'
@@ -53,6 +52,7 @@ import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
 import useEmbeddings from '/@/use/message/embeddings'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({
   name: 'MessageContents',
@@ -78,10 +78,12 @@ export default defineComponent({
   setup(props) {
     const { editingMessageId } = useMessagesView()
     const { isMobile } = useResponsiveStore()
+    const { messagesMap } = useMessagesStore()
+
     const state = reactive({
       message: computed(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        () => store.state.entities.messages.messagesMap.get(props.messageId)!
+        () => messagesMap.value.get(props.messageId)!
       ),
       rawContent: computed((): string => state.message.content ?? ''),
       isEditing: computed(() => props.messageId === editingMessageId.value),

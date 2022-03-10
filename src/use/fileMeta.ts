@@ -4,15 +4,16 @@ import { buildFilePath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import useFileLink from '/@/use/fileLink'
 import { ChannelId, FileId } from '/@/types/entity-ids'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useFileMeta = (props: {
   fileId: FileId
   /** 表示しているチャンネル */
   channelId?: ChannelId
 }) => {
-  const fileMeta = computed(() =>
-    store.state.entities.messages.fileMetaDataMap.get(props.fileId)
-  )
+  const { fileMetaDataMap } = useMessagesStore()
+
+  const fileMeta = computed(() => fileMetaDataMap.value.get(props.fileId))
   const { fileLink, onFileDownloadLinkClick } = useFileLink(props)
   const fileRawPath = computed(() =>
     fileMeta.value ? buildFilePath(fileMeta.value.id) : ''

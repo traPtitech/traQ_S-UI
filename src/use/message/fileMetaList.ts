@@ -1,13 +1,13 @@
 import { computed, reactive } from 'vue'
-import store from '/@/vuex'
 import { isImage, isNonPreviewable, isVideo, isAudio } from '/@/lib/basic/file'
 import { isDefined } from '/@/lib/basic/array'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useFileMetaList = (props: { fileIds: string[] }) => {
+  const { fileMetaDataMap } = useMessagesStore()
+
   const fileMetaData = computed(() =>
-    props.fileIds
-      .map(id => store.state.entities.messages.fileMetaDataMap.get(id))
-      .filter(isDefined)
+    props.fileIds.map(id => fileMetaDataMap.value.get(id)).filter(isDefined)
   )
   const state = reactive({
     images: computed(() =>

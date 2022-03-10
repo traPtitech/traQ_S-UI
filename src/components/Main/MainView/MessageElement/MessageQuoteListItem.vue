@@ -31,6 +31,7 @@ import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
@@ -51,11 +52,12 @@ export default defineComponent({
   },
   setup(props) {
     const { renderedContentMap } = useMessagesView()
+    const { messagesMap } = useMessagesStore()
+
     const state = reactive({
       message: computed(
-        () =>
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          store.state.entities.messages.messagesMap.get(props.messageId)!
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        () => messagesMap.value.get(props.messageId)!
       ),
       shouldShow: computed(
         (): boolean =>

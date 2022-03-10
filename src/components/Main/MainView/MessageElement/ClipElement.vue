@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, shallowRef, PropType } from 'vue'
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
@@ -36,6 +35,7 @@ import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import useHover from '/@/use/hover'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({
   name: 'ClipElement',
@@ -59,11 +59,11 @@ export default defineComponent({
     changeHeight: (_data: ChangeHeightData) => true
   },
   setup(props, { emit }) {
+    const { messagesMap } = useMessagesStore()
+
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useResponsiveStore()
-    const message = computed(() =>
-      store.state.entities.messages.messagesMap.get(props.messageId)
-    )
+    const message = computed(() => messagesMap.value.get(props.messageId))
 
     const { embeddingsState } = useEmbeddings(props)
 

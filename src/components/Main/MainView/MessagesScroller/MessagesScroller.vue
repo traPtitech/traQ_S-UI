@@ -64,7 +64,6 @@ import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import store from '/@/vuex'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '/@/lib/basic/date'
 import { embeddingOrigin } from '/@/lib/apis'
@@ -73,6 +72,7 @@ import { isMessageScrollerRoute, RouteName } from '/@/router'
 import { stampsMapInitialFetchPromise } from '/@/vuex/entities/promises'
 import { useOpenLink } from '/@/use/openLink'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -126,15 +126,16 @@ const useMarkdownInternalHandler = () => {
 }
 
 const useCompareDate = (props: { messageIds: MessageId[] }) => {
+  const { messagesMap } = useMessagesStore()
+
   const dayDiff = (index: number) => {
     if (index <= 0) {
       return true
     }
-    const { messagesMap } = store.state.entities.messages
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const pre = messagesMap.get(props.messageIds[index - 1]!)
+    const pre = messagesMap.value.get(props.messageIds[index - 1]!)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const current = messagesMap.get(props.messageIds[index]!)
+    const current = messagesMap.value.get(props.messageIds[index]!)
     const preDate = new Date(pre?.createdAt ?? '')
     const currentDate = new Date(current?.createdAt ?? '')
     return preDate.toDateString() !== currentDate.toDateString()
@@ -205,6 +206,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { lastScrollPosition, primaryView } = useMainViewStore()
+    const { messagesMap } = useMessagesStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
@@ -222,7 +224,7 @@ export default defineComponent({
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {
-      const message = store.state.entities.messages.messagesMap.get(id)
+      const message = messagesMap.value.get(id)
       if (!message) {
         return ''
       }
@@ -233,9 +235,7 @@ export default defineComponent({
     const unreadIndex = computed(() => {
       if (!props.unreadSince) return -1
       return props.messageIds.findIndex(
-        id =>
-          store.state.entities.messages.messagesMap.get(id)?.createdAt ===
-          props.unreadSince
+        id => messagesMap.value.get(id)?.createdAt === props.unreadSince
       )
     })
 

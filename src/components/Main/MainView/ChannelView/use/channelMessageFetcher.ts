@@ -4,7 +4,7 @@ import { Ref, watch, onMounted, onBeforeUnmount, onActivated, ref } from 'vue'
 import { Message } from '@traptitech/traq'
 import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/use/fetchLimit'
-import { messageMitt } from '/@/vuex/entities/messages'
+import { messageMitt } from '/@/store/entities/messages'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMeStore } from '/@/store/domain/me'
 

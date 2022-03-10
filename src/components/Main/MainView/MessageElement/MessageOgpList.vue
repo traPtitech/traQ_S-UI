@@ -12,13 +12,15 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import MessageOgpListItem from './MessageOgpListItem.vue'
-import store from '/@/vuex'
 import { isDefined } from '/@/lib/basic/array'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useOgpData = (props: { externalUrls: string[] }) => {
+  const { ogpDataMap } = useMessagesStore()
+
   const ogpData = computed(() =>
     props.externalUrls
-      .map(url => store.state.entities.messages.ogpDataMap.get(url))
+      .map(url => ogpDataMap.value.get(url))
       .filter(isDefined)
       .filter(o => o.title)
   )

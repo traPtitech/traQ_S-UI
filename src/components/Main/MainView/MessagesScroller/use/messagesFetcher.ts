@@ -1,8 +1,8 @@
 import { ref, Ref, watchEffect } from 'vue'
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -30,6 +30,7 @@ const useMessageFetcher = (
     receiveLatestMessages,
     renderMessageContent
   } = useMessagesView()
+  const { fetchMessage } = useMessagesStore()
 
   const messageIds = ref<MessageId[]>([])
   const isReachedEnd = ref(false)
@@ -140,9 +141,7 @@ const useMessageFetcher = (
     ) {
       return
     }
-    const entryMessage = await store.dispatch.entities.messages.fetchMessage({
-      messageId
-    })
+    const entryMessage = await fetchMessage({ messageId })
     if (!entryMessage) {
       return
     }

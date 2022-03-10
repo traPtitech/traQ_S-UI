@@ -31,6 +31,7 @@ import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import store from '/@/vuex'
 import { AxiosError } from 'axios'
 import { constructMessagesPath } from '/@/router'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({
   name: 'SidebarEventPinnedChanged',
@@ -56,6 +57,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { fetchMessage } = useMessagesStore()
+
     const title = computed(() =>
       props.type === ChannelEventTypeEnum.PinAdded
         ? 'ピン留め追加'
@@ -68,7 +71,7 @@ export default defineComponent({
       () => props.details.messageId,
       async newMessageId => {
         try {
-          const m = await store.dispatch.entities.messages.fetchMessage({
+          const m = await fetchMessage({
             messageId: newMessageId
           })
           message.value = m

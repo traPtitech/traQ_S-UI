@@ -1,5 +1,4 @@
 import useMessageFetcher from '/@/components/Main/MainView/MessagesScroller/use/messagesFetcher'
-import store from '/@/vuex'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import {
   reactive,
@@ -16,6 +15,7 @@ import {
   ClipFolderMessageDeletedEvent
 } from '/@/lib/websocket/events'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 80
@@ -28,6 +28,7 @@ const useClipsFetcher = (
   }
 ) => {
   const { fetchMessagesInClipFolder, syncViewState } = useMessagesView()
+  const { fetchMessage } = useMessagesStore()
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const state = reactive({
     nextLoadOffset: 0
@@ -96,7 +97,7 @@ const useClipsFetcher = (
   }: ClipFolderMessageAddedEvent) => {
     if (props.clipFolderId !== folder_id) return
 
-    await store.dispatch.entities.messages.fetchMessage({
+    await fetchMessage({
       messageId: message_id
     })
     messagesFetcher.addNewMessage(message_id)

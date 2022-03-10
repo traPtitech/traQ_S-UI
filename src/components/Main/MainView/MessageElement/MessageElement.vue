@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, shallowRef, PropType } from 'vue'
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import MessageStampList from './MessageStampList.vue'
@@ -50,6 +49,7 @@ import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
 import useHover from '/@/use/hover'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({
   name: 'MessageElement',
@@ -81,9 +81,8 @@ export default defineComponent({
     const { editingMessageId } = useMessagesView()
     const bodyRef = shallowRef<HTMLDivElement | null>(null)
     const { isMobile } = useResponsiveStore()
-    const message = computed(() =>
-      store.state.entities.messages.messagesMap.get(props.messageId)
-    )
+    const { messagesMap } = useMessagesStore()
+    const message = computed(() => messagesMap.value.get(props.messageId))
     const isEditing = computed(() => props.messageId === editingMessageId.value)
 
     const { embeddingsState } = useEmbeddings(props)

@@ -26,6 +26,7 @@ import ClipFolderElement from './ClipFolderElement.vue'
 import useToastStore from '/@/providers/toastStore'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { AxiosError } from 'axios'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -80,9 +81,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const message = computed(() =>
-      store.state.entities.messages.messagesMap.get(props.messageId)
-    )
+    const { messagesMap } = useMessagesStore()
+
+    const message = computed(() => messagesMap.value.get(props.messageId))
     const clipFolders = computed(() => {
       const folders = [...store.state.entities.clipFoldersMap.values()]
       folders.sort((a, b) => compareString(a.name, b.name))

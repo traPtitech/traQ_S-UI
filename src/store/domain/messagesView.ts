@@ -9,8 +9,7 @@ import { render } from '/@/lib/markdown/markdown'
 import { changeViewState, wsListener } from '/@/lib/websocket'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId, ClipFolderId, MessageId } from '/@/types/entity-ids'
-import store from '/@/vuex'
-import { messageMitt } from '/@/vuex/entities/messages'
+import { messageMitt, useMessagesStore } from '/@/store/entities/messages'
 import { useMeStore } from '/@/store/domain/me'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
@@ -66,6 +65,7 @@ const getPin = createSingleflight(apis.getPin.bind(apis))
 // FIXME: 分離
 const useMessagesViewPinia = defineStore('domain/messagesView', () => {
   const meStore = useMeStore()
+  const messagesStore = useMessagesStore()
 
   /** 現在のチャンネルID、日時ベースのフェッチを行う */
   const currentChannelId = ref<ChannelId>()
@@ -167,7 +167,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
       params.offset,
       params.order
     )
-    store.dispatch.entities.messages.extendMessagesMap(data.map(c => c.message))
+    messagesStore.extendMessagesMap(data.map(c => c.message))
     return {
       clips: data,
       hasMore: headers['x-traq-more'] === 'true'
@@ -184,7 +184,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
       params.inclusive,
       params.order
     )
-    store.dispatch.entities.messages.extendMessagesMap(res.data)
+    messagesStore.extendMessagesMap(res.data)
     return {
       messages: res.data,
       hasMore: res.headers['x-traq-more'] === 'true'
@@ -199,13 +199,13 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
 
   const renderMessageContent = async (messageId: string) => {
     const content =
-      store.state.entities.messages.messagesMap.get(messageId)?.content ?? ''
+      messagesStore.messagesMap.value.get(messageId)?.content ?? ''
 
     const rendered = await render(content)
 
     const filePromises = rendered.embeddings.filter(isFile).map(async e => {
       try {
-        await store.dispatch.entities.messages.fetchFileMetaData({
+        await messagesStore.fetchFileMetaData({
           fileId: e.id
         })
       } catch {
@@ -216,7 +216,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
       .filter(isMessage)
       .map(async e => {
         try {
-          const message = await store.dispatch.entities.messages.fetchMessage({
+          const message = await messagesStore.fetchMessage({
             messageId: e.id
           })
 
@@ -233,7 +233,7 @@ const useMessagesViewPinia = defineStore('domain/messagesView', () => {
       .slice(0, 2) // OGPが得られるかにかかわらず2個に制限
       .map(async e => {
         try {
-          await store.dispatch.entities.messages.fetchOgpData({
+          await messagesStore.fetchOgpData({
             url: e.url
           })
         } catch {

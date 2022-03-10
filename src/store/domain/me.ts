@@ -17,7 +17,7 @@ import {
   removeNotification
 } from '/@/lib/notification/notification'
 import store from '/@/vuex'
-import { messageMitt } from '/@/vuex/entities/messages'
+import { messageMitt } from '/@/store/entities/messages'
 import { detectMentionOfMe } from '/@/lib/markdown/detector'
 import { wsListener } from '/@/lib/websocket'
 import apis from '/@/lib/apis'
