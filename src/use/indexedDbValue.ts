@@ -34,12 +34,16 @@ const useIndexedDbValue = <T extends object>(
     })()
   )
 
-  watch(value, async () => {
-    if (loading.value) return
+  watch(
+    value,
+    async () => {
+      if (loading.value) return
 
-    // indexedDBにはproxyされたobjectは入らないのでtoRawする
-    await set(key, toRawDeep(value), store)
-  })
+      // indexedDBにはproxyされたobjectは入らないのでtoRawする
+      await set(key, toRawDeep(value), store)
+    },
+    { deep: true }
+  )
 
   return [value, loading, loadingPromise] as const
 }
