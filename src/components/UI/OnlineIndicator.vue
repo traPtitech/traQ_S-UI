@@ -9,9 +9,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import IndicatorDot from './IndicatorDot.vue'
+import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
 export default defineComponent({
   name: 'OnlineIndicator',
@@ -33,10 +33,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    store.dispatch.domain.fetchOnlineUsers()
-    const isOnline = computed(() =>
-      store.getters.domain.isUserOnline(props.userId)
-    )
+    const { onlineUsers, fetchOnlineUsers } = useOnlineUsers()
+
+    fetchOnlineUsers()
+    const isOnline = computed(() => onlineUsers.value.has(props.userId))
 
     return { isOnline }
   }

@@ -1,6 +1,5 @@
 import { createDirectStore } from 'direct-vuex'
 import { entities } from './entities'
-import { domain } from './domain'
 
 const vuexStrict = import.meta.env.MODE !== 'production'
 
@@ -12,8 +11,7 @@ const {
   moduleGetterContext
 } = createDirectStore({
   modules: {
-    entities,
-    domain
+    entities
   },
   strict: vuexStrict
 })
