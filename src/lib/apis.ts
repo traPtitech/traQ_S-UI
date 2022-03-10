@@ -83,24 +83,33 @@ type BaseChannelEvent<Type, Detail> = {
 }
 
 export type ParsedChannelEvent =
-  | BaseChannelEvent<ChannelEventTypeEnum.TopicChanged, TopicChangedEvent>
   | BaseChannelEvent<
-      ChannelEventTypeEnum.SubscribersChanged,
+      typeof ChannelEventTypeEnum.TopicChanged,
+      TopicChangedEvent
+    >
+  | BaseChannelEvent<
+      typeof ChannelEventTypeEnum.SubscribersChanged,
       SubscribersChangedEvent
     >
-  | BaseChannelEvent<ChannelEventTypeEnum.PinAdded, PinAddedEvent>
-  | BaseChannelEvent<ChannelEventTypeEnum.PinRemoved, PinRemovedEvent>
-  | BaseChannelEvent<ChannelEventTypeEnum.NameChanged, NameChangedEvent>
-  | BaseChannelEvent<ChannelEventTypeEnum.ParentChanged, ParentChangedEvent>
+  | BaseChannelEvent<typeof ChannelEventTypeEnum.PinAdded, PinAddedEvent>
+  | BaseChannelEvent<typeof ChannelEventTypeEnum.PinRemoved, PinRemovedEvent>
+  | BaseChannelEvent<typeof ChannelEventTypeEnum.NameChanged, NameChangedEvent>
   | BaseChannelEvent<
-      ChannelEventTypeEnum.VisibilityChanged,
+      typeof ChannelEventTypeEnum.ParentChanged,
+      ParentChangedEvent
+    >
+  | BaseChannelEvent<
+      typeof ChannelEventTypeEnum.VisibilityChanged,
       VisibilityChangedEvent
     >
   | BaseChannelEvent<
-      ChannelEventTypeEnum.ForcedNotificationChanged,
+      typeof ChannelEventTypeEnum.ForcedNotificationChanged,
       ForcedNotificationChangedEvent
     >
-  | BaseChannelEvent<ChannelEventTypeEnum.ChildCreated, ChildCreatedEvent>
+  | BaseChannelEvent<
+      typeof ChannelEventTypeEnum.ChildCreated,
+      ChildCreatedEvent
+    >
 
 export const parseChannelEvent = (event: ChannelEvent): ParsedChannelEvent =>
   event as ParsedChannelEvent

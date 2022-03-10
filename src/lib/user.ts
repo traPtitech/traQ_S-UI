@@ -1,7 +1,7 @@
 import { UserAccountState, User } from '@traptitech/traq'
 
 export interface ActiveUser extends User {
-  state: UserAccountState.active
+  state: typeof UserAccountState.active
 }
 
 export const isActive = (user: Readonly<User>): user is ActiveUser =>

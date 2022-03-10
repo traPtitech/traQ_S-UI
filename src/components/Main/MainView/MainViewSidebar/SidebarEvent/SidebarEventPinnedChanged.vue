@@ -42,7 +42,8 @@ export default defineComponent({
   props: {
     type: {
       type: String as PropType<
-        ChannelEventTypeEnum.PinAdded | ChannelEventTypeEnum.PinRemoved
+        | typeof ChannelEventTypeEnum.PinAdded
+        | typeof ChannelEventTypeEnum.PinRemoved
       >,
       required: true
     },
