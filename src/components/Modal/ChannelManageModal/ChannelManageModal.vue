@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref } from 'vue'
-import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -48,6 +47,7 @@ import { isValidChannelName } from '/@/lib/validate'
 import { canCreateChildChannel } from '/@/lib/channel'
 import useToastStore from '/@/providers/toastStore'
 import { useModalStore } from '/@/store/ui/modal'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useManageChannel = (
   props: { id: string },
@@ -98,7 +98,7 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props) {
-    const channelsMap = computed(() => store.state.entities.channelsMap)
+    const { channelsMap } = useChannelsStore()
     const channel = computed((): Required<PatchChannelRequest> => {
       const c = channelsMap.value.get(props.id)
       return {

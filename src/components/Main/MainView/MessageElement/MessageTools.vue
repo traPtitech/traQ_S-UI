@@ -82,7 +82,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '/@/vuex'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
@@ -93,13 +92,16 @@ import useToastStore from '/@/providers/toastStore'
 import { useMeStore } from '/@/store/domain/me'
 import MessageContextMenu from './MessageContextMenu.vue'
 import useContextMenu from '/@/use/contextMenu'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { Stamp } from '@traptitech/traq'
 
-const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
+const pushInitialRecentStampsIfNeeded = (
+  initialRecentStamps: Stamp[],
+  recents: StampId[]
+) => {
   if (recents.length >= 3) return
 
-  const initials = store.getters.entities.initialRecentStamps.map(
-    stamp => stamp.id
-  )
+  const initials = initialRecentStamps.map(stamp => stamp.id)
   for (const s of initials) {
     if (recents.length >= 3) return
     if (recents.includes(s)) return
@@ -123,10 +125,11 @@ export default defineComponent({
   setup(props) {
     const { recentStampIds, upsertLocalStampHistory } = useMeStore()
     const { addErrorToast } = useToastStore()
+    const { initialRecentStamps } = useStampsStore()
 
     const recentStamps = computed(() => {
       const recents = recentStampIds.value.slice(0, 3)
-      pushInitialRecentStampsIfNeeded(recents)
+      pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
       return recents
     })
     const addStamp = async (stampId: StampId) => {

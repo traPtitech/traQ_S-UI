@@ -69,7 +69,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
-import store from '/@/vuex'
 import { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/use/stateDiff'
@@ -89,6 +88,10 @@ import { isValidTwitter } from '/@/lib/validate'
 import useToastStore from '/@/providers/toastStore'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 const useState = (detail: Ref<UserDetail>) => {
   const profile = computed(() => ({
@@ -174,11 +177,15 @@ export default defineComponent({
     const detail = computed(() => detailMayBeUndefined.value!)
 
     // ホームチャンネルの選択+ひとことのレンダリングに必要
-    store.dispatch.entities.fetchChannels()
+    const { fetchChannels } = useChannelsStore()
+    fetchChannels()
     // ひとことのレンダリングに必要
-    store.dispatch.entities.fetchUsers()
-    store.dispatch.entities.fetchUserGroups()
-    store.dispatch.entities.fetchStamps()
+    const { fetchUsers } = useUsersStore()
+    fetchUsers()
+    const { fetchUserGroups } = useGroupsStore()
+    fetchUserGroups()
+    const { fetchStamps } = useStampsStore()
+    fetchStamps()
 
     const { channelOptions } = useChannelOptions('--未設定--')
 

@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
-import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const useStyles = (props: { size: number }) =>
   reactive({
@@ -43,11 +43,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const name = computed(
-      () => store.state.entities.stampsMap.get(props.stampId)?.name ?? ''
-    )
+    const { stampsMap } = useStampsStore()
+
+    const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
     const imageUrl = computed(() => {
-      const fileId = store.state.entities.stampsMap.get(props.stampId)?.fileId
+      const fileId = stampsMap.value.get(props.stampId)?.fileId
       return fileId ? `${buildFilePath(fileId)}` : ''
     })
     const styles = useStyles(props)

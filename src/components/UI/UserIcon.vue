@@ -15,10 +15,10 @@
 import { defineComponent, reactive, computed, PropType, watch } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { useUserModalOpener } from '/@/use/modalOpener'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
 
 export type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 
@@ -55,12 +55,13 @@ export default defineComponent({
   },
   setup(props) {
     const { detail, myId } = useMeStore()
+    const { usersMap, fetchUser } = useUsersStore()
 
     watch(
       () => props.userId,
       userId => {
         if (!userId) return
-        store.dispatch.entities.fetchUser({ userId })
+        fetchUser({ userId })
       },
       { immediate: true }
     )
@@ -68,7 +69,7 @@ export default defineComponent({
     const user = computed(() =>
       props.userId === myId.value
         ? detail.value
-        : store.state.entities.usersMap.get(props.userId)
+        : usersMap.value.get(props.userId)
     )
     const userIconFileId = computed(
       () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''

@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '/@/vuex'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export default defineComponent({
   name: 'DropdownSuggesterStampEffect',
@@ -19,10 +19,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { initialRecentStamps } = useStampsStore()
+
     const stampName = computed(() => {
-      const initialStamps = store.getters.entities.initialRecentStamps.map(
-        stamp => stamp.name
-      )
+      const initialStamps = initialRecentStamps.value.map(stamp => stamp.name)
       return initialStamps[0]
     })
     const content = computed(() =>

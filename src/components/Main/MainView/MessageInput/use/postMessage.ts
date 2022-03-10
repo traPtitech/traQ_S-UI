@@ -1,5 +1,4 @@
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import { replace as embedInternalLink } from '/@/lib/markdown/internalLinkEmbedder'
 import useChannelPath from '/@/use/channelPath'
@@ -7,11 +6,6 @@ import { computed, ref, unref } from 'vue'
 import { nullUuid } from '/@/lib/basic/uuid'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { countLength } from '/@/lib/basic/string'
-import {
-  usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
-} from '/@/vuex/entities/promises'
 import useToastStore from '/@/providers/toastStore'
 import {
   Attachment,
@@ -19,12 +13,9 @@ import {
   MessageInputStateKey
 } from '/@/providers/messageInputState'
 import { useChannelTree } from '/@/store/domain/channelTree'
-
-const initialFetchPromise = Promise.all([
-  usersMapInitialFetchPromise,
-  userGroupsMapInitialFetchPromise,
-  bothChannelsMapInitialFetchPromise
-])
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 /**
  * @param progress アップロード進行状況 0～1
@@ -65,10 +56,12 @@ const usePostMessage = (
   const { channelPathToId, channelIdToShortPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
   const { channelTree } = useChannelTree()
+  const { bothChannelsMapInitialFetchPromise, channelsMap } = useChannelsStore()
+  const { usersMapInitialFetchPromise, findUserByName } = useUsersStore()
+  const { userGroupsMapInitialFetchPromise, getUserGroupByName } =
+    useGroupsStore()
 
-  const isForce = computed(
-    () => store.state.entities.channelsMap.get(unref(channelId))?.force
-  )
+  const isForce = computed(() => channelsMap.value.get(unref(channelId))?.force)
   const confirmString = computed(
     () =>
       `#${channelIdToShortPathString(
@@ -92,11 +85,15 @@ const usePostMessage = (
       return false
     }
 
-    await initialFetchPromise
+    await Promise.all([
+      usersMapInitialFetchPromise.value,
+      userGroupsMapInitialFetchPromise.value,
+      bothChannelsMapInitialFetchPromise.value
+    ])
 
     const embededText = embedInternalLink(state.text, {
-      getUser: store.getters.entities.userByName,
-      getGroup: store.getters.entities.userGroupByName,
+      getUser: findUserByName,
+      getGroup: getUserGroupByName,
       getChannel: path => {
         try {
           const id = channelPathToId(path.split('/'), channelTree.value)

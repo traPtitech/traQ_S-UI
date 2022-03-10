@@ -23,12 +23,12 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
 import AIcon from '/@/components/UI/AIcon.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useModalStore } from '/@/store/ui/modal'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 export default defineComponent({
   name: 'ClipFoldersTab',
@@ -40,9 +40,8 @@ export default defineComponent({
   },
   setup() {
     const { pushModal } = useModalStore()
-    const clipFolders = computed(() => [
-      ...store.state.entities.clipFoldersMap.values()
-    ])
+    const { clipFoldersMap } = useClipFoldersStore()
+    const clipFolders = computed(() => [...clipFoldersMap.value.values()])
     const onClickButton = () => {
       pushModal({
         type: 'clip-folder-create'

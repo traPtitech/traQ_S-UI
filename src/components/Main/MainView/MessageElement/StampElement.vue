@@ -26,10 +26,11 @@ import {
   PropType,
   onMounted
 } from 'vue'
-import store from '/@/vuex'
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { MessageStampById } from './MessageStampList.vue'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'StampElement',
@@ -45,8 +46,11 @@ export default defineComponent({
     removeStamp: (_stampId: string) => true
   },
   setup(props, { emit }) {
+    const { stampsMap } = useStampsStore()
+    const { usersMap } = useUsersStore()
+
     const stampName = computed(
-      () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''
+      () => stampsMap.value.get(props.stamp.id)?.name ?? ''
     )
 
     const state = reactive({
@@ -55,10 +59,7 @@ export default defineComponent({
         [
           `:${stampName.value}:`,
           ...props.stamp.users.map(
-            u =>
-              `${store.state.entities.usersMap.get(u.id)?.displayName ?? ''}(${
-                u.count
-              })`
+            u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
           )
         ].join(' ')
       ),

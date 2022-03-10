@@ -15,9 +15,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/vuex'
 import StampDetailElementContent from './StampDetailElementContent.vue'
 import { MessageStampById } from './MessageStampList.vue'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export default defineComponent({
   name: 'StampDetailElement',
@@ -31,8 +31,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { stampsMap } = useStampsStore()
+
     const stampName = computed(
-      () => store.state.entities.stampsMap.get(props.stamp.id)?.name ?? ''
+      () => stampsMap.value.get(props.stamp.id)?.name ?? ''
     )
     return { stampName }
   }

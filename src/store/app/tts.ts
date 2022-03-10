@@ -3,7 +3,6 @@ import { useAppRtcStore } from '/@/store/app/rtc'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { messageMitt } from '/@/store/entities/messages'
 import { parse } from '/@/lib/markdown/markdown'
 import { format } from '/@/lib/tts/format'
@@ -11,6 +10,7 @@ import { embeddingOrigin } from '/@/lib/apis'
 import { watchEffect } from 'vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '../entities/users'
 
 interface Speach {
   channelId: ChannelId
@@ -28,6 +28,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
   const domainRtcStore = useDomainRtcStore()
   const rtcSettings = useRtcSettings()
   const meStore = useMeStore()
+  const usersStore = useUsersStore()
 
   let lastSpeachPromise = Promise.resolve()
   const queue: Speach[] = []
@@ -44,7 +45,7 @@ const useTtsPinia = defineStore('ui/tts', () => {
     if (meStore.myId.value === message.userId) return
 
     const userDisplayName =
-      store.state.entities.usersMap.get(message.userId)?.displayName ?? 'はてな'
+      usersStore.usersMap.value.get(message.userId)?.displayName ?? 'はてな'
     addQueue({
       channelId: message.channelId,
       userDisplayName,

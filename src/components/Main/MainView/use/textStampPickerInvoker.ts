@@ -3,9 +3,9 @@ import {
   StampSelectHandler,
   useStampPickerInvoker
 } from '/@/providers/stampPicker'
-import store from '/@/vuex'
 import { Ref } from 'vue'
 import useInsertText from '/@/use/insertText'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const useTextStampPickerInvoker = (
   text: Ref<string>,
@@ -13,10 +13,11 @@ const useTextStampPickerInvoker = (
   positionElement: Ref<HTMLElement | undefined>,
   positionOf: AlignmentPosition = 'bottom-right'
 ) => {
+  const { stampsMap } = useStampsStore()
   const { insertText } = useInsertText(textareaRef)
 
   const selecterHandler: StampSelectHandler = stampData => {
-    const stampName = store.state.entities.stampsMap.get(stampData.id)?.name
+    const stampName = stampsMap.value.get(stampData.id)?.name
     if (!stampName) return
     const size = stampData.size ? `.${stampData.size}` : ''
     const effects =

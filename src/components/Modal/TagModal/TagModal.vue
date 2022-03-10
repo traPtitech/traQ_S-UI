@@ -24,13 +24,13 @@ import {
   onMounted,
   onBeforeUnmount
 } from 'vue'
-import store from '/@/vuex'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { Tag } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
 import { UserTagsUpdatedEvent } from '/@/lib/websocket/events'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useTag = (props: { id: string }) => {
   const tag = ref<Tag | null>()
@@ -66,13 +66,13 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { activeUsersMap } = useUsersStore()
+
     const tag = useTag(props)
     const tagName = computed(() => tag.value?.tag)
     const taggedUsers = computed(
       () =>
-        tag.value?.users.filter(user =>
-          store.getters.entities.activeUsersMap.has(user)
-        ) ?? []
+        tag.value?.users.filter(user => activeUsersMap.value.has(user)) ?? []
     )
     return { tagName, taggedUsers }
   }

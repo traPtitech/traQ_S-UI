@@ -16,11 +16,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/vuex'
 import GroupListGroup from './GroupListGroup.vue'
 import { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 export default defineComponent({
   name: 'GroupList',
@@ -29,9 +30,11 @@ export default defineComponent({
   },
   setup() {
     const { detail, myId } = useMeStore()
+    const { fetchUsers } = useUsersStore()
+    const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 
-    store.dispatch.entities.fetchUsers()
-    store.dispatch.entities.fetchUserGroups()
+    fetchUsers()
+    fetchUserGroups()
 
     const selectedId = ref<UserGroupId>()
     const onSelect = (id: UserGroupId) => {
@@ -42,7 +45,7 @@ export default defineComponent({
     )
 
     const groups = computed(() =>
-      [...store.state.entities.userGroupsMap.values()].filter(group => {
+      [...userGroupsMap.value.values()].filter(group => {
         const myIdVal = myId.value
         return (
           isAllUserGroupsAdmin.value ||

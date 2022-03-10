@@ -1,6 +1,7 @@
-import store from '/@/vuex'
 import { UserId, UserGroupId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
+import { useUsersStore } from '/@/store/entities/users'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 interface ExtendedWindow extends Window {
   /**
@@ -20,9 +21,11 @@ interface ExtendedWindow extends Window {
 declare const window: ExtendedWindow
 
 const checkUserExistence = async (userId: UserId) => {
-  if (store.state.entities.usersMap.has(userId)) return true
+  const { usersMap, fetchUser } = useUsersStore()
+
+  if (usersMap.value.has(userId)) return true
   try {
-    await store.dispatch.entities.fetchUser({ userId })
+    await fetchUser({ userId })
     return true
   } catch {
     return false
@@ -30,14 +33,16 @@ const checkUserExistence = async (userId: UserId) => {
 }
 
 const checkGroupExistence = (userGroupId: UserGroupId) => {
-  return store.state.entities.userGroupsMap.has(userGroupId)
+  const { userGroupsMap } = useGroupsStore()
+  return userGroupsMap.value.has(userGroupId)
 }
 
 export const setupGlobalFuncs = () => {
   window.openUserModal = async (userId: UserId) => {
     if (!(await checkUserExistence(userId))) return
 
-    const user = store.state.entities.usersMap.get(userId)
+    const { usersMap } = useUsersStore()
+    const user = usersMap.value.get(userId)
     if (user?.bot && user.name.startsWith('Webhook#')) return
 
     const { pushModal } = useModalStore()

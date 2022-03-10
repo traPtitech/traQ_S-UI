@@ -24,10 +24,10 @@
 import { computed, defineComponent, PropType } from 'vue'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import store from '/@/vuex'
 import { constructMessagesPath } from '/@/router'
 import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
 import useContextMenu from '/@/use/contextMenu'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'SidebarPinnedMessage',
@@ -43,11 +43,10 @@ export default defineComponent({
   },
   setup(props) {
     const { position, toggle, close } = useContextMenu()
+    const { channelsMap } = useChannelsStore()
 
     const isArchived = computed(
-      () =>
-        store.state.entities.channelsMap.get(props.message.channelId)
-          ?.archived ?? false
+      () => channelsMap.value.get(props.message.channelId)?.archived ?? false
     )
 
     return {

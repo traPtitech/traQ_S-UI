@@ -40,16 +40,16 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, Ref } from 'vue'
-import { MessageStamp } from '@traptitech/traq'
+import { MessageStamp, Stamp } from '@traptitech/traq'
 import StampElement from './StampElement.vue'
 import { StampId, UserId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
 import useToastStore from '/@/providers/toastStore'
 import { useMeStore } from '/@/store/domain/me'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 /**
  * StampIdで整理されたMessageStamp
@@ -83,11 +83,12 @@ export interface MessageStampById {
 
 const createStampList = (
   props: { stamps: MessageStamp[] },
+  stampsMap: Ref<Map<StampId, Stamp>>,
   myId: Ref<UserId | undefined>
 ) => {
   const map = new Map<StampId, MessageStampById>()
   props.stamps.forEach(stamp => {
-    if (!store.state.entities.stampsMap.has(stamp.stampId)) return
+    if (!stampsMap.value.has(stamp.stampId)) return
 
     if (!map.has(stamp.stampId)) {
       map.set(stamp.stampId, {
@@ -157,8 +158,9 @@ export default defineComponent({
   },
   setup(props) {
     const { myId, upsertLocalStampHistory } = useMeStore()
+    const { stampsMap } = useStampsStore()
     const { addErrorToast } = useToastStore()
-    const stampList = computed(() => createStampList(props, myId))
+    const stampList = computed(() => createStampList(props, stampsMap, myId))
 
     const isDetailShown = ref(false)
     const toggleDetail = () => {

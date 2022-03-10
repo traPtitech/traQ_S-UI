@@ -16,10 +16,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import StampItem from './StampItem.vue'
 import { useMeStore } from '/@/store/domain/me'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export default defineComponent({
   name: 'EditStamp',
@@ -28,11 +28,12 @@ export default defineComponent({
   },
   setup() {
     const { myId } = useMeStore()
+    const { stampsMap } = useStampsStore()
 
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
 
     const myStamps = computed(() =>
-      [...store.state.entities.stampsMap.values()].filter(
+      [...stampsMap.value.values()].filter(
         stamp => stamp.creatorId === myId.value
       )
     )

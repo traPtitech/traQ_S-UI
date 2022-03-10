@@ -13,7 +13,9 @@
 import { defineComponent } from 'vue'
 import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
 import EditStamp from '/@/components/Settings/StampTab/EditStamp.vue'
-import store from '/@/vuex'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'StampTab',
@@ -22,10 +24,13 @@ export default defineComponent({
     EditStamp
   },
   setup() {
-    store.dispatch.entities.fetchStamps()
-    store.dispatch.entities.fetchStampPalettes()
+    const { fetchStamps } = useStampsStore()
+    fetchStamps()
+    const { fetchStampPalettes } = useStampPalettesStore()
+    fetchStampPalettes()
     // 所有者変更に必要
-    store.dispatch.entities.fetchUsers()
+    const { fetchUsers } = useUsersStore()
+    fetchUsers()
     return {}
   }
 })

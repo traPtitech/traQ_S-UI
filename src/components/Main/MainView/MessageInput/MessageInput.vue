@@ -58,7 +58,6 @@ import {
   toRef,
   watchEffect
 } from 'vue'
-import store from '/@/vuex'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
@@ -81,6 +80,7 @@ import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -113,6 +113,7 @@ export default defineComponent({
       useModifierKey()
     const { sendWithModifierKey } = useBrowserSettings()
     const { typingUsers } = useMessagesView()
+    const { channelsMap } = useChannelsStore()
     const isLeftControlsExpanded = ref(false)
     const isPreviewShown = ref(false)
 
@@ -121,8 +122,7 @@ export default defineComponent({
     })
 
     const isArchived = computed(
-      () =>
-        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
+      () => channelsMap.value.get(props.channelId)?.archived ?? false
     )
 
     const { isFocused, onFocus, onBlur } = useFocus()

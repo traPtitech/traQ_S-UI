@@ -15,10 +15,10 @@ import { defineComponent, PropType, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import UsersElementUserName from './UsersElementUserName.vue'
-import store from '/@/vuex'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { constructUserPath } from '/@/router'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'UsersElement',
@@ -35,6 +35,7 @@ export default defineComponent({
   },
   setup(props) {
     const { unreadChannelsMap } = useMeStore()
+    const { userIdToDmChannelIdMap } = useChannelsStore()
 
     const dmChannelPath = computed(() => {
       if (props.user.bot && props.user.name.startsWith('Webhook#')) {
@@ -43,7 +44,7 @@ export default defineComponent({
       return constructUserPath(props.user.name)
     })
     const dmChannelId = computed(() =>
-      store.getters.entities.DMChannelIdByUserId(props.user.id)
+      userIdToDmChannelIdMap.value.get(props.user.id)
     )
     const hasNotification = computed(() =>
       unreadChannelsMap.value.has(dmChannelId.value ?? '')

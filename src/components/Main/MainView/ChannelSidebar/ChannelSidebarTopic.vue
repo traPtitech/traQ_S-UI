@@ -18,11 +18,11 @@
 <script lang="ts">
 import { defineComponent, ref, PropType, watchEffect, Ref } from 'vue'
 import apis from '/@/lib/apis'
-import store from '/@/vuex'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import { ChannelId } from '/@/types/entity-ids'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
   const isEditing = ref(false)
@@ -53,8 +53,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const getTopic = () =>
-      store.state.entities.channelsMap.get(props.channelId)?.topic ?? ''
+    const { channelsMap } = useChannelsStore()
+
+    const getTopic = () => channelsMap.value.get(props.channelId)?.topic ?? ''
 
     const topic = ref(getTopic())
     watchEffect(() => {

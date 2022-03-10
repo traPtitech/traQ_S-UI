@@ -25,15 +25,17 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '/@/vuex'
 import { StampPaletteId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampSet } from './use/stampSetSelector'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const useStampPaletteThumbnail = () => {
+  const { stampPalettesMap } = useStampPalettesStore()
+
   const pickThumbnail = (paletteId: StampPaletteId) => {
-    const palette = store.state.entities.stampPalettesMap.get(paletteId)
+    const palette = stampPalettesMap.value.get(paletteId)
     if (!palette) return ''
     if ((palette.stamps?.length ?? 0) > 0) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

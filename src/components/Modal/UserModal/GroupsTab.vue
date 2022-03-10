@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/vuex'
 import { UserDetail } from '@traptitech/traq'
 import { UserGroupId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useModalStore } from '/@/store/ui/modal'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 export default defineComponent({
   name: 'GroupsTab',
@@ -39,11 +39,13 @@ export default defineComponent({
   },
   setup(props) {
     const { pushModal } = useModalStore()
+    const { userGroupsMap } = useGroupsStore()
+
     const isLoading = computed(() => props.detail === undefined)
     const groups = computed(
       () =>
         props.detail?.groups
-          .map(groupId => store.state.entities.userGroupsMap.get(groupId))
+          .map(groupId => userGroupsMap.value.get(groupId))
           .filter(isDefined) ?? []
     )
 

@@ -68,7 +68,7 @@ import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVol
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '/@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
-import store from '/@/vuex'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'MessageFileListAudio',
@@ -88,6 +88,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap } = useUsersStore()
     const { fileLink, name, fileWaveformPath } = useFileWaveform(props)
     const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
     const {
@@ -103,8 +104,7 @@ export default defineComponent({
     } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = () => {
       const iconId =
-        store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
-          ?.iconFileId ?? ''
+        usersMap.value.get(fileMeta.value?.uploaderId ?? '')?.iconFileId ?? ''
       startPinP(iconId)
     }
 

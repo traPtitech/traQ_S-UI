@@ -6,7 +6,7 @@
     @click="onClick"
   >
     <div
-      v-if="state.stampsInitialFetchCompleted"
+      v-if="stampsMapFetched"
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
@@ -69,10 +69,10 @@ import { getFullDayString } from '/@/lib/basic/date'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
-import { stampsMapInitialFetchPromise } from '/@/vuex/entities/promises'
 import { useOpenLink } from '/@/use/openLink'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -208,19 +208,15 @@ export default defineComponent({
     const { lastScrollPosition, primaryView } = useMainViewStore()
     const { messagesMap } = useMessagesStore()
 
+    // メッセージスタンプ表示時にスタンプが存在していないと
+    // 場所が確保されないくてずれてしまうので、取得完了を待つ
+    const { stampsMapFetched } = useStampsStore()
+
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: lastScrollPosition.value,
-      stampsInitialFetchCompleted: false
+      scrollTop: lastScrollPosition.value
     })
-
-    // メッセージスタンプ表示時にスタンプが存在していないと
-    // 場所が確保されないくてずれてしまうので、取得完了を待つ
-    ;(async () => {
-      await stampsMapInitialFetchPromise
-      state.stampsInitialFetchCompleted = true
-    })()
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {
@@ -314,6 +310,7 @@ export default defineComponent({
 
     return {
       state,
+      stampsMapFetched,
       onClick,
       rootRef,
       handleScroll,

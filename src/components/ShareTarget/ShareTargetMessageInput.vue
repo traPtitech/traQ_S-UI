@@ -42,7 +42,6 @@ import {
   toRef
 } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import store from '/@/vuex'
 import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
@@ -53,6 +52,8 @@ import useMessageInputState, {
 } from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
 import { useMeStore } from '/@/store/domain/me'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 export default defineComponent({
   name: 'ShareTargetMessageInput',
@@ -69,6 +70,8 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchStampHistory } = useMeStore()
+    const { fetchStamps } = useStampsStore()
+    const { fetchStampPalettes } = useStampPalettesStore()
     const { state, isEmpty } = useMessageInputState('share-target')
     const { addErrorToast } = useToastStore()
     const { addAttachment: addStateAttachment } =
@@ -97,8 +100,8 @@ export default defineComponent({
     )
 
     // スタンプピッカーに必要
-    store.dispatch.entities.fetchStamps()
-    store.dispatch.entities.fetchStampPalettes()
+    fetchStamps()
+    fetchStampPalettes()
     fetchStampHistory()
 
     const id = randomString()

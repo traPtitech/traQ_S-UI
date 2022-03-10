@@ -27,8 +27,8 @@
 import { computed, defineComponent, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import store from '/@/vuex'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'GroupUser',
@@ -51,7 +51,9 @@ export default defineComponent({
     delete: () => true
   },
   setup(props, { emit }) {
-    const user = computed(() => store.state.entities.usersMap.get(props.id))
+    const { usersMap } = useUsersStore()
+
+    const user = computed(() => usersMap.value.get(props.id))
 
     const onClickEdit = () => {
       emit('edit')

@@ -53,7 +53,6 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
-import store from '/@/vuex'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
 import useEmbeddings from '/@/use/message/embeddings'
@@ -61,6 +60,7 @@ import { Message } from '@traptitech/traq'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
+import { useUsersStore } from '/@/store/entities/users'
 
 const maxHeight = 200
 
@@ -125,13 +125,13 @@ export default defineComponent({
     clickOpen: (_event: MouseEvent, _messageId: MessageId) => true
   },
   setup(props, { emit }) {
+    const { usersMap, fetchUser } = useUsersStore()
+
     // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
-    store.dispatch.entities.fetchUser({ userId: props.message.userId })
+    fetchUser({ userId: props.message.userId })
 
     const { channelIdToPathString } = useChannelPath()
-    const user = computed(() =>
-      store.state.entities.usersMap.get(props.message.userId)
-    )
+    const user = computed(() => usersMap.value.get(props.message.userId))
     const channelName = computed(() =>
       channelIdToPathString(props.message.channelId, true)
     )

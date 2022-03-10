@@ -15,9 +15,10 @@ import { defineComponent, PropType } from 'vue'
 import { DMChannel } from '@traptitech/traq'
 import DMChannelElement from './DMChannelElement.vue'
 import { DMChannelId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { useOpenLink } from '/@/use/openLink'
 import { constructUserPath } from '/@/router'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'DMChannelList',
@@ -31,12 +32,14 @@ export default defineComponent({
     }
   },
   setup() {
+    const { dmChannelsMap } = useChannelsStore()
+    const { usersMap } = useUsersStore()
     const { openLink } = useOpenLink()
 
     const onChannelSelect = (event: MouseEvent, id: DMChannelId) => {
-      const userId = store.state.entities.dmChannelsMap.get(id)?.userId
+      const userId = dmChannelsMap.value.get(id)?.userId
       if (!userId) return
-      const username = store.state.entities.usersMap.get(userId)?.name
+      const username = usersMap.value.get(userId)?.name
       if (!username) return
 
       openLink(event, constructUserPath(username))

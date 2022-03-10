@@ -16,13 +16,14 @@ import {
   deleteToken,
   removeNotification
 } from '/@/lib/notification/notification'
-import store from '/@/vuex'
 import { messageMitt } from '/@/store/entities/messages'
 import { detectMentionOfMe } from '/@/lib/markdown/detector'
 import { wsListener } from '/@/lib/websocket'
 import apis from '/@/lib/apis'
 import mitt from 'mitt'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 
@@ -54,6 +55,9 @@ export type IDBState = {
 }
 
 const useMeStorePinia = defineStore('domain/me', () => {
+  const stampsStore = useStampsStore()
+  const channelsStore = useChannelsStore()
+
   const initialValue: IDBState = {
     detail: undefined
   }
@@ -89,7 +93,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
   const stampHistoryFetched = ref(false)
   const recentStampIds = computed(() =>
     [...stampHistory.value.entries()]
-      .filter(([stampId]) => store.state.entities.stampsMap.has(stampId))
+      .filter(([stampId]) => stampsStore.stampsMap.value.has(stampId))
       .sort((e1, e2) => {
         // 日付の降順
         if (e1[1] > e2[1]) return -1
@@ -209,7 +213,7 @@ const useMeStorePinia = defineStore('domain/me', () => {
         [...subscriptionMap.value.entries()]
           .filter(
             ([id, level]) =>
-              store.state.entities.channelsMap.has(id) &&
+              channelsStore.channelsMap.value.has(id) &&
               level !== ChannelSubscribeLevel.none
           )
           .map(([id]) => id)
@@ -315,8 +319,8 @@ const useMeStorePinia = defineStore('domain/me', () => {
         myId.value ?? '',
         state.detail?.groups ?? []
       ) ||
-      !!store.state.entities.channelsMap.get(message.channelId)?.force
-    const isDM = store.state.entities.dmChannelsMap.has(message.channelId)
+      !!channelsStore.channelsMap.value.get(message.channelId)?.force
+    const isDM = channelsStore.dmChannelsMap.value.has(message.channelId)
     if (!noticeable && !isDM && !isChannelSubscribed(message.channelId)) return
 
     upsertUnreadChannel(message, noticeable)

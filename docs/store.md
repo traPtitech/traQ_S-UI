@@ -1,6 +1,11 @@
 # ストアについて
 
 ## モジュールの種類分けについて
+### `entities`
+サーバーの情報を扱う (key-value のもののみ)
+WebSocketで状態が同期される
+ほかのストアには依存しないようにする
+
 ### `domain`
 entitiesでないサーバーの情報を扱うstore
 listenersでwebsocketを受け取ったり、entitiesの変更を受け取ったりする

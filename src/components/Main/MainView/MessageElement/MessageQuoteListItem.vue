@@ -25,13 +25,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '/@/vuex'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'MessageQuoteListItem',
@@ -53,6 +53,7 @@ export default defineComponent({
   setup(props) {
     const { renderedContentMap } = useMessagesView()
     const { messagesMap } = useMessagesStore()
+    const { dmChannelsMap } = useChannelsStore()
 
     const state = reactive({
       message: computed(
@@ -63,7 +64,7 @@ export default defineComponent({
         (): boolean =>
           !!state.message &&
           // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
-          (!store.state.entities.dmChannelsMap.has(state.message.channelId) ||
+          (!dmChannelsMap.value.has(state.message.channelId) ||
             state.message.channelId === props.parentMessageChannelId)
       ),
       content: computed(

@@ -6,8 +6,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
+import { useUsersStore } from '/@/store/entities/users'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 
 export default defineComponent({
   name: 'MessageQuoteListItemHeader',
@@ -18,12 +18,14 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap, fetchUser } = useUsersStore()
+
     const state = reactive({
-      user: computed(() => store.state.entities.usersMap.get(props.userId)),
+      user: computed(() => usersMap.value.get(props.userId)),
       displayName: computed((): string => state.user?.displayName ?? 'unknown')
     })
     if (state.user === undefined) {
-      store.dispatch.entities.fetchUser({ userId: props.userId })
+      fetchUser({ userId: props.userId })
     }
 
     return { state }

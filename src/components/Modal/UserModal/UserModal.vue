@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
-import store from '/@/vuex'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import ClickOutside from '/@/components/UI/ClickOutside'
@@ -43,6 +42,7 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 import useUserDetail from './use/userDetail'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
@@ -74,15 +74,15 @@ export default defineComponent({
   },
   setup(props) {
     const { clearModal } = useModalStore()
-
     const { isMobile } = useResponsiveStore()
+    const { usersMap } = useUsersStore()
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))
 
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const user = computed(() => store.state.entities.usersMap.get(props.id)!)
+    const user = computed(() => usersMap.value.get(props.id)!)
 
     const { userDetail } = useUserDetail(props)
 

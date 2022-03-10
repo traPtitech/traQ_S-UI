@@ -20,12 +20,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/vuex'
 import { ClipFolderId } from '/@/types/entity-ids'
 import useSidebar from '/@/use/sidebar'
 import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
 import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 export default defineComponent({
   name: 'ClipsHeader',
@@ -41,9 +41,9 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { clipFoldersMap } = useClipFoldersStore()
     const clipFolderName = computed(
-      () =>
-        store.state.entities.clipFoldersMap.get(props.clipFolderId)?.name ?? ''
+      () => clipFoldersMap.value.get(props.clipFolderId)?.name ?? ''
     )
     const { openSidebar } = useSidebar()
     return {

@@ -1,14 +1,17 @@
 import { computed, Ref } from 'vue'
-import store from '/@/vuex'
 import { StampId } from '/@/types/entity-ids'
 import { StampSet } from './stampSetSelector'
 import useStampFilter from './stampFilter'
 import { useStampCategory } from '/@/store/domain/stampCategory'
 import { useMeStore } from '/@/store/domain/me'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
   const { recentStampIds } = useMeStore()
+  const { stampsMap } = useStampsStore()
+  const { stampPalettesMap } = useStampPalettesStore()
 
   const stampIds = computed((): readonly StampId[] => {
     if (currentStampSet.value.type === 'history') {
@@ -16,7 +19,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
     }
     if (currentStampSet.value.type === 'palette') {
       const id = currentStampSet.value.id
-      const stampPalette = store.state.entities.stampPalettesMap.get(id)
+      const stampPalette = stampPalettesMap.value.get(id)
       return stampPalette?.stamps ?? []
     }
     if (currentStampSet.value.type === 'category') {
@@ -37,7 +40,7 @@ const useStampList = (currentStampSet: Ref<StampSet>) => {
   const stamps = computed(() => {
     if (filterState.query === '') {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return stampIds.value.map(id => store.state.entities.stampsMap.get(id)!)
+      return stampIds.value.map(id => stampsMap.value.get(id)!)
     }
     return filterState.filteredItems
   })

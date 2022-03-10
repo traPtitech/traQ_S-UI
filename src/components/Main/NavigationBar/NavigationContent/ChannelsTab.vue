@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '/@/vuex'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import useChannelFilter from '/@/use/channelFilter'
 import { constructTree } from '/@/lib/channelTree'
@@ -53,6 +52,7 @@ import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -76,16 +76,17 @@ const useFilterStarChannel = () => {
 
 const useChannelList = (filterStarChannel: Ref<boolean>) => {
   const { staredChannelSet } = useMeStore()
+  const { channelsMap } = useChannelsStore()
   return computed(() =>
     (filterStarChannel.value
       ? [
           ...new Set(
             [...staredChannelSet.value].flatMap(v =>
-              buildDescendantsChannelArray(v, false)
+              buildDescendantsChannelArray(channelsMap.value, v, false)
             )
           )
         ]
-      : [...store.state.entities.channelsMap.values()]
+      : [...channelsMap.value.values()]
     ).filter(ch => !ch.archived)
   )
 }
@@ -99,6 +100,7 @@ const useTopLevelChannels = () => {
 
 const useStaredChannels = () => {
   const { staredChannelSet } = useMeStore()
+  const { channelsMap } = useChannelsStore()
   return computed(
     () =>
       constructTree(
@@ -109,7 +111,7 @@ const useStaredChannels = () => {
           archived: false,
           children: [...staredChannelSet.value]
         },
-        store.state.entities.channelsMap
+        channelsMap.value
       )?.children.filter(channel => !channel.archived) ?? []
   )
 }

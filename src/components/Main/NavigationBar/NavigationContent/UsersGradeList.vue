@@ -19,9 +19,9 @@ import { User } from '@traptitech/traq'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import store from '/@/vuex'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useFolding = () => {
   const isFolding = ref(true)
@@ -51,11 +51,12 @@ export default defineComponent({
   },
   setup(props) {
     const { unreadChannelsMap } = useMeStore()
+    const { userIdToDmChannelIdMap } = useChannelsStore()
     const { isFolding, toggleFolding } = useFolding()
 
     const dmChannelIds = computed(() =>
       props.users
-        .map(user => store.getters.entities.DMChannelIdByUserId(user.id))
+        .map(user => userIdToDmChannelIdMap.value.get(user.id))
         .filter(isDefined)
     )
     const hasNotification = computed(() =>

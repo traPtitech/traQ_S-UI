@@ -1,14 +1,9 @@
 import { computed, reactive, watch } from 'vue'
-import store from '/@/vuex'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
 import { LocationQuery, useRoute } from 'vue-router'
-import {
-  bothChannelsMapInitialFetchPromise,
-  usersMapInitialFetchPromise
-} from '/@/vuex/entities/promises'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
 import { useMainViewStore } from '/@/store/ui/mainView'
@@ -16,6 +11,9 @@ import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 type Views = 'none' | 'main' | 'not-found'
 
@@ -38,6 +36,16 @@ const useRouteWatcher = () => {
   const { defaultChannelName, loadingPromise: browserSettingsLoadingPromise } =
     useBrowserSettings()
   const { channelTree } = useChannelTree()
+  const {
+    channelsMap,
+    dmChannelsMap,
+    userIdToDmChannelIdMap,
+    bothChannelsMapInitialFetchPromise,
+    fetchUserDMChannel
+  } = useChannelsStore()
+  const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
+    useUsersStore()
+  const { fetchClipFolder } = useClipFoldersStore()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -69,7 +77,7 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await bothChannelsMapInitialFetchPromise.value
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -96,15 +104,15 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToUser = async () => {
     try {
-      const user = await store.dispatch.entities.fetchUserByName({
+      const user = await fetchUserByName({
         username: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
       if (!user) throw 'user not found'
 
       const dmChannelId =
-        store.getters.entities.DMChannelIdByUserId(user.id) ??
-        (await store.dispatch.entities.fetchUserDMChannel(user.id))
+        userIdToDmChannelIdMap.value.get(user.id) ??
+        (await fetchUserDMChannel(user.id))
 
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
@@ -124,7 +132,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToClipFolders = async () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const id = state.idParam!
-    const clipFolder = await store.dispatch.entities.fetchClipFolder({
+    const clipFolder = await fetchClipFolder({
       clipFolderId: id,
       cacheStrategy: 'useCache'
     })
@@ -149,7 +157,7 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await bothChannelsMapInitialFetchPromise.value
     if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
@@ -202,24 +210,24 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
+    await bothChannelsMapInitialFetchPromise.value
     if (channelTree.value.children.length === 0) {
       return
     }
 
-    if (store.state.entities.channelsMap.has(channelId)) {
+    if (channelsMap.value.has(channelId)) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
         path: channelIdToLink(message.channelId),
         query: { message: message.id }
       })
-    } else if (store.state.entities.dmChannelsMap.has(channelId)) {
+    } else if (dmChannelsMap.value.has(channelId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const dmChannel = store.state.entities.dmChannelsMap.get(channelId)!
+      const dmChannel = dmChannelsMap.value.get(channelId)!
       // ユーザーIDからユーザー名への変換に必要
-      await usersMapInitialFetchPromise
-      const user = store.state.entities.usersMap.get(dmChannel.userId)
+      await usersMapInitialFetchPromise.value
+      const user = usersMap.value.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
         params: { user: user?.name ?? '' },

@@ -8,9 +8,10 @@ import {
   DMChannelId,
   MessageId
 } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {
@@ -68,6 +69,8 @@ export type HeaderStyle = 'default' | 'dark'
 const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const { lastOpenChannelName } = useBrowserSettings()
   const messagesView = useMessagesView()
+  const channelsStore = useChannelsStore()
+  const usersStore = useUsersStore()
 
   const layout = ref<LayoutType>('single')
 
@@ -110,9 +113,9 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     channelId: ChannelId | DMChannelId
     entryMessageId?: MessageId
   }) => {
-    const DMChannel = store.state.entities.dmChannelsMap.get(channelId)
+    const DMChannel = channelsStore.dmChannelsMap.value.get(channelId)
     if (DMChannel) {
-      const user = await store.dispatch.entities.fetchUser({
+      const user = await usersStore.fetchUser({
         userId: DMChannel.userId,
         cacheStrategy: 'useCache'
       })
@@ -153,7 +156,7 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
     // 通常のチャンネルは最後に開いたチャンネルとして保持
     const channelPath = channelIdToPathString(
       channelId,
-      store.state.entities.channelsMap
+      channelsStore.channelsMap.value
     )
     lastOpenChannelName.value = channelPath
   }

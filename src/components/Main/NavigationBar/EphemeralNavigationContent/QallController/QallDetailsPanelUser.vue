@@ -38,8 +38,8 @@ import ASlider from '/@/components/UI/ASlider.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/vuex'
 import { useAppRtcStore } from '/@/store/app/rtc'
+import { useUsersStore } from '/@/store/entities/users'
 
 const maxVolumeValue = 200
 
@@ -64,11 +64,12 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
+    const { usersMap } = useUsersStore()
     const volume = computed(() =>
       Math.round(getUserVolume(props.userId) * maxVolumeValue)
     )
     const userName = computed(
-      () => store.state.entities.usersMap.get(props.userId)?.displayName ?? ''
+      () => usersMap.value.get(props.userId)?.displayName ?? ''
     )
     const talkingLevel = computed(() =>
       talkingUsersState.value.get(props.userId)

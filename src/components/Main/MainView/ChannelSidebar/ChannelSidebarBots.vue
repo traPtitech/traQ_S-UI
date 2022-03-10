@@ -6,11 +6,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/vuex'
 import { ChannelId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import useChannelBots from './use/channelBots'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'ChannelSidebarBots',
@@ -22,14 +22,16 @@ export default defineComponent({
     channelId: { type: String as PropType<ChannelId>, required: true }
   },
   setup(props) {
+    const { usersMap } = useUsersStore()
+
     const botUserIds = useChannelBots(props)
     const viewStates = computed(
       () =>
         botUserIds.value
-          ?.filter(id => store.state.entities.usersMap.has(id))
+          ?.filter(id => usersMap.value.has(id))
           .map(id => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            user: store.state.entities.usersMap.get(id)!,
+            user: usersMap.value.get(id)!,
             active: true
           })) ?? []
     )

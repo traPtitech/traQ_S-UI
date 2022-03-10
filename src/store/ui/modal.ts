@@ -4,12 +4,13 @@ import { wait } from '/@/lib/basic/timer'
 import router, { constructChannelPath, constructUserPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import useCurrentChannelPath from '/@/use/currentChannelPath'
-import store from '/@/vuex'
 import { ModalState } from '/@/store/ui/modal/states'
 import { useMessagesView } from '/@/store/domain/messagesView'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
   const { currentChannelId } = useMessagesView()
+  const channelsStore = useChannelsStore()
 
   const modalState = ref<ModalState[]>([])
   const currentState = computed(
@@ -119,7 +120,7 @@ const useModalStorePinia = defineStore('ui/modal', () => {
     }
 
     const { currentChannelPathString } = useCurrentChannelPath()
-    const isDM = store.state.entities.dmChannelsMap.has(currentChannelId.value)
+    const isDM = channelsStore.dmChannelsMap.value.has(currentChannelId.value)
     if (isDM) {
       router.replace(constructUserPath(currentChannelPathString.value))
     } else {

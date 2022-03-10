@@ -45,7 +45,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
@@ -55,6 +54,7 @@ import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChan
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'HomeTab',
@@ -68,6 +68,7 @@ export default defineComponent({
     const { homeChannelTree } = useChannelTree()
     const { channelSessionsMap } = useDomainRtcStore()
     const { detail, unreadChannelsMap } = useMeStore()
+    const { channelsMap, dmChannelsMap } = useChannelsStore()
 
     const homeChannelWithTree = computed(() =>
       !detail.value?.homeChannel
@@ -80,7 +81,7 @@ export default defineComponent({
               archived: false,
               children: [detail.value.homeChannel]
             },
-            store.state.entities.channelsMap
+            channelsMap.value
           )?.children?.filter(channel => !channel.archived) ?? []
     )
     const channelsWithNotification = computed(() =>
@@ -91,13 +92,13 @@ export default defineComponent({
           }
           return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
         })
-        .map(unread => store.state.entities.channelsMap.get(unread.channelId))
+        .map(unread => channelsMap.value.get(unread.channelId))
         .filter(isDefined)
     )
     const dmChannelsWithNotification = computed(() =>
       [...unreadChannelsMap.value.values()]
         .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
-        .map(unread => store.state.entities.dmChannelsMap.get(unread.channelId))
+        .map(unread => dmChannelsMap.value.get(unread.channelId))
         .filter(isDefined)
     )
     const topLevelChannels = computed(() =>
@@ -106,7 +107,7 @@ export default defineComponent({
     const channelsWithRtc = computed(() =>
       [...channelSessionsMap.value.entries()]
         .filter(([, sessionIds]) => sessionIds.size > 0)
-        .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
+        .map(([channelId]) => channelsMap.value.get(channelId))
         .filter(isDefined)
     )
 

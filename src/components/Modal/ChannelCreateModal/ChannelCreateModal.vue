@@ -28,7 +28,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -47,6 +46,7 @@ import { constructChannelPath } from '/@/router'
 import { useRouter } from 'vue-router'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 interface State {
   channelName: string
@@ -57,6 +57,7 @@ const useCreateChannel = (state: State) => {
   const router = useRouter()
   const { popModal } = useModalStore()
   const { addErrorToast } = useToastStore()
+  const { addChannel } = useChannelsStore()
 
   const obtainChannelPath = (channelId: ChannelId) =>
     new Promise<string>(resolve => {
@@ -86,7 +87,7 @@ const useCreateChannel = (state: State) => {
       })
 
       const pathObtainPromise = obtainChannelPath(channel.id)
-      await store.dispatch.entities.addChannel({ channelId: channel.id })
+      await addChannel({ channelId: channel.id })
       const path = await pathObtainPromise
 
       await popModal()

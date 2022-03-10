@@ -1,10 +1,10 @@
 import { computed } from 'vue'
-import store from '/@/vuex'
 import { buildFilePath } from '/@/lib/apis'
 import { mimeToFileType, prettifyFileSize } from '/@/lib/basic/file'
 import useFileLink from '/@/use/fileLink'
 import { ChannelId, FileId } from '/@/types/entity-ids'
 import { useMessagesStore } from '/@/store/entities/messages'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useFileMeta = (props: {
   fileId: FileId
@@ -12,6 +12,7 @@ const useFileMeta = (props: {
   channelId?: ChannelId
 }) => {
   const { fileMetaDataMap } = useMessagesStore()
+  const { dmChannelsMap } = useChannelsStore()
 
   const fileMeta = computed(() => fileMetaDataMap.value.get(props.fileId))
   const { fileLink, onFileDownloadLinkClick } = useFileLink(props)
@@ -31,8 +32,7 @@ const useFileMeta = (props: {
     const fileChannel = fileMeta.value?.channelId
     // DMのメッセージは同じDMチャンネルから表示されてる場合だけ表示する
     return fileChannel
-      ? !store.state.entities.dmChannelsMap.has(fileChannel) ||
-          fileChannel === props.channelId
+      ? !dmChannelsMap.value.has(fileChannel) || fileChannel === props.channelId
       : true
   })
   return {

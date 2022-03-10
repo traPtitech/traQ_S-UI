@@ -16,22 +16,21 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/vuex'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import { isDefined } from '/@/lib/basic/array'
 import DMActivityElement from './DMActivityElement.vue'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useUsersWithNotification = () => {
   const { unreadChannelsMap } = useMeStore()
+  const { dmChannelsMap } = useChannelsStore()
   const usersWithNotification = computed(() =>
     [...unreadChannelsMap.value.values()]
       .sort((a, b) =>
         Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
       )
-      .map(unread =>
-        store.state.entities.dmChannelsMap.get(unread.channelId ?? '')
-      )
+      .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
       .filter(isDefined)
       .map(({ userId }) => userId)
   )

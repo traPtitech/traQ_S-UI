@@ -6,13 +6,19 @@ import {
   toSearchMessageParam
 } from '/@/lib/searchMessage/queryParser'
 import { useMainViewStore, ViewInformation } from '/@/store/ui/mainView'
-import store from '/@/vuex'
 import { useChannelTree } from '/@/store/domain/channelTree'
+import { useUsersStore } from '/@/store/entities/users'
+import { User } from '@traptitech/traq'
 
-const getStoreForParser = (
-  primaryView: Ref<ViewInformation>,
+const getStoreForParser = ({
+  primaryView,
+  channelTree,
+  fetchUserByName
+}: {
+  primaryView: Ref<ViewInformation>
   channelTree: Ref<ChannelTree>
-): StoreForParser => ({
+  fetchUserByName: (param: { username: string }) => Promise<User | undefined>
+}): StoreForParser => ({
   channelPathToId: path => {
     try {
       return channelPathToId(path.split('/'), channelTree.value)
@@ -21,7 +27,7 @@ const getStoreForParser = (
     }
   },
   usernameToId: async username => {
-    const user = await store.dispatch.entities.fetchUserByName({ username })
+    const user = await fetchUserByName({ username })
     return user?.id
   },
   getCurrentChannelId: () => {
@@ -35,8 +41,9 @@ const getStoreForParser = (
 const useQueryParer = () => {
   const { channelTree } = useChannelTree()
   const { primaryView } = useMainViewStore()
+  const { fetchUserByName } = useUsersStore()
   const parseQuery = createQueryParser(
-    getStoreForParser(primaryView, channelTree)
+    getStoreForParser({ primaryView, channelTree, fetchUserByName })
   )
 
   return { parseQuery, toSearchMessageParam }

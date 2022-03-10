@@ -17,16 +17,17 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '/@/vuex'
 import useChannelPath from '/@/use/channelPath'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'ViewStates',
   setup() {
     const { monitoringChannels, fetchViewStates } = useMeStore()
+    const { fetchChannels } = useChannelsStore()
 
-    store.dispatch.entities.fetchChannels()
+    fetchChannels()
     fetchViewStates()
 
     const { channelIdToPathString } = useChannelPath()

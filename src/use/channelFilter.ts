@@ -1,9 +1,11 @@
-import store from '/@/vuex'
 import { Channel } from '@traptitech/traq'
 import { reactive, computed, Ref } from 'vue'
 import { channelDeepMatching } from '/@/lib/channel'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
+  const { channelsMap } = useChannelsStore()
+
   const targetChannelIds = computed(
     () => new Set(targetChannels.value.map(channel => channel.id))
   )
@@ -39,7 +41,7 @@ const useChannelFilter = (targetChannels: Ref<readonly Channel[]>) => {
       }
 
       const { perfectMatched: fullMatched, matched } = channelDeepMatching(
-        store.state.entities.channelsMap,
+        channelsMap.value,
         queryArr,
         targetChannelIds.value
       )

@@ -6,9 +6,9 @@ import { ChannelTree, constructTree, rootChannelId } from '/@/lib/channelTree'
 import router, { rewriteChannelPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/vuex'
-import { entityMitt } from '/@/vuex/entities/mitt'
+import { entityMitt } from '/@/store/entities/mitt'
 import { useMeStore, meMitt } from '/@/store/domain/me'
+import { useChannelsStore } from '../entities/channels'
 
 type ChannelTreeEventMap = {
   created: { id: ChannelId; path: string }
@@ -32,17 +32,18 @@ channelTreeMitt.on('moved', ({ oldPath, newPath }) => {
 
 const useChannelTreePinia = defineStore('domain/channelTree', () => {
   const meStore = useMeStore()
+  const channelsStore = useChannelsStore()
 
   const channelTree = ref<Readonly<ChannelTree>>({ children: [] })
   const homeChannelTree = ref<Readonly<ChannelTree>>({ children: [] })
 
   const topLevelChannels = computed(() =>
-    [...store.state.entities.channelsMap.values()].filter(
+    [...channelsStore.channelsMap.value.values()].filter(
       channel => channel.parentId === undefined || channel.parentId === null
     )
   )
   const forcedChannels = computed(() =>
-    [...store.state.entities.channelsMap.values()].filter(
+    [...channelsStore.channelsMap.value.values()].filter(
       channel => channel.force
     )
   )
@@ -59,7 +60,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
             archived: false,
             children: topLevelChannelIds
           },
-          store.state.entities.channelsMap
+          channelsStore.channelsMap.value
         )?.children ?? []
     }
     channelTree.value = tree
@@ -81,7 +82,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
             archived: false,
             children: topLevelChannelIds
           },
-          store.state.entities.channelsMap,
+          channelsStore.channelsMap.value,
           subscribedOrForceChannels
         )?.children ?? []
     }
@@ -101,7 +102,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
 
     const path = channelIdToPathString(
       channel.id,
-      store.state.entities.channelsMap
+      channelsStore.channelsMap.value
     )
     channelTreeMitt.emit('created', { id: channel.id, path })
   })
@@ -123,7 +124,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     ) {
       const newPath = channelIdToPathString(
         newChannel.id,
-        store.state.entities.channelsMap
+        channelsStore.channelsMap.value
       )
       channelTreeMitt.emit('moved', { id: newChannel.id, oldPath, newPath })
     }

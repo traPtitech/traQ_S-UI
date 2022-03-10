@@ -1,14 +1,14 @@
 import { onBeforeUnmount, watch, ref } from 'vue'
-import store, { originalStore } from '/@/vuex'
+import { originalStore } from '/@/vuex'
 import { setTimelineStreamingState } from '/@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { messageMitt } from '/@/store/entities/messages'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
-import { bothChannelsMapInitialFetchPromise } from '/@/vuex/entities/promises'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -19,6 +19,7 @@ const getActivityTimeline = createSingleflight(
 const useActivityStream = (props: { show: boolean }) => {
   const { activityMode: mode } = useBrowserSettings()
   const { isChannelSubscribed } = useMeStore()
+  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 
   /**
    * 新しいもの順
@@ -31,7 +32,7 @@ const useActivityStream = (props: { show: boolean }) => {
     await originalStore.restored
     // ログイン前に取得されるのを回避するために、チャンネル取得を待つ
     // チャンネル取得である必要性はない
-    await bothChannelsMapInitialFetchPromise
+    await bothChannelsMapInitialFetchPromise.value
 
     try {
       const [{ data: res }, shared] = await getActivityTimeline(
@@ -78,7 +79,7 @@ const useActivityStream = (props: { show: boolean }) => {
   }
   const onAddMessage = ({ message: activity }: { message: Message }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!store.state.entities.channelsMap.has(activity.channelId)) return
+    if (!channelsMap.value.has(activity.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
     if (!mode.value.all && !isChannelSubscribed(activity.channelId)) {
@@ -114,7 +115,7 @@ const useActivityStream = (props: { show: boolean }) => {
   }
   const onUpdateMessage = (activity: Message) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!store.state.entities.channelsMap.has(activity.channelId)) return
+    if (!channelsMap.value.has(activity.channelId)) return
 
     const sameMessageIndex = timeline.value.findIndex(a => a.id === activity.id)
     if (sameMessageIndex < 0) return

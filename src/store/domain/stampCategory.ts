@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, toRaw } from 'vue'
+import { useStampsStore } from '/@/store/entities/stamps'
 import {
   categorizeUnicodeStamps,
   constructStampNameIdMap,
@@ -7,10 +8,11 @@ import {
   traQStampsToStampCategory
 } from '/@/lib/stampCategorizer'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import store from '/@/vuex'
-import { entityMitt } from '/@/vuex/entities/mitt'
+import { entityMitt } from '/@/store/entities/mitt'
 
 const useStampCategoryPinia = defineStore('domain/stampCategory', () => {
+  const stampsStore = useStampsStore()
+
   const traQStampCategory = ref<Readonly<StampCategory>>({
     name: 'traq',
     stampIds: []
@@ -20,7 +22,7 @@ const useStampCategoryPinia = defineStore('domain/stampCategory', () => {
   const constructStampCategories = async () => {
     const { unicodeStampMap, traQStampMap } = constructStampNameIdMap(
       // reactiveのままだとiterateするのが遅くなるのでtoRawで生の値を取り出す
-      toRaw(store.state.entities.stampsMap)
+      toRaw(stampsStore.stampsMap.value)
     )
     traQStampCategory.value = traQStampsToStampCategory(traQStampMap)
     unicodeStampCategories.value = await categorizeUnicodeStamps(

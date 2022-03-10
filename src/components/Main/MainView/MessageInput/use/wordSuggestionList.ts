@@ -1,14 +1,16 @@
-import store from '/@/vuex'
 import TrieTree from '/@/lib/basic/trieTree'
 import { animeEffectSet, sizeEffectSet } from '/@/lib/markdown/effects'
 import { ref, onBeforeUnmount, computed, Ref, readonly, watchEffect } from 'vue'
-import { EntityEventMap, entityMitt } from '/@/vuex/entities/mitt'
+import { EntityEventMap, entityMitt } from '/@/store/entities/mitt'
 import {
   getDeterminedCharacters,
   Target,
   getPrevCandidateIndex,
   getNextCandidateIndex
 } from '/@/lib/suggestion'
+import { useUsersStore } from '/@/store/entities/users'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -35,22 +37,26 @@ type WordWithoutId = {
 export type Word = WordWithId | WordWithoutId
 
 const useCandidateTree = () => {
+  const { usersMap } = useUsersStore()
+  const { userGroupsMap } = useGroupsStore()
+  const { stampsMap } = useStampsStore()
+
   const constructTree = () =>
     new TrieTree<Word>(
       // ユーザー名とグループ名に重複あり
       // メンションはcase insensitiveでユーザー名を優先
       // 重複を許す場合、優先するものから入れる
-      store.getters.entities.allUsers.map(user => ({
+      [...usersMap.value.values()].map(user => ({
         type: 'user',
         text: '@' + user.name,
         id: user.id
       })),
-      store.getters.entities.allUserGroups.map(userGroup => ({
+      [...userGroupsMap.value.values()].map(userGroup => ({
         type: 'user-group',
         text: '@' + userGroup.name,
         id: userGroup.id
       })),
-      store.getters.entities.allStamps.map(stamp => ({
+      [...stampsMap.value.values()].map(stamp => ({
         type: 'stamp',
         text: ':' + stamp.name,
         id: stamp.id
