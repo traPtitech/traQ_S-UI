@@ -32,7 +32,6 @@
     "cropperjs": "^1.5.12",
     "deepmerge": "^4.2.2",
     "dequal": "^2.0.2",
-    "direct-vuex": "^0.12.1",
     "firebase": "^9.6.8",
     "highlight.js": "^11.4.0",
     "idb-keyval": "^6.1.0",
@@ -46,7 +45,6 @@
     "vue": "^3.2.31",
     "vue-router": "^4.0.13",
     "vue-slider-component": "^4.0.0-beta.5",
-    "vuex": "^4.0.2",
     "zod": "^3.13.4"
   },
   "devDependencies": {
