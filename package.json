@@ -46,7 +46,7 @@
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.2.31",
-    "vue-router": "^4.0.13",
+    "vue-router": "^4.0.14",
     "vue-slider-component": "^4.0.0-beta.5",
     "vuex": "^4.0.2",
     "vuex-persist": "^3.1.3",
