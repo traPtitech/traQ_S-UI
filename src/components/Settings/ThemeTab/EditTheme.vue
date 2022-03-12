@@ -48,7 +48,7 @@ import FormButton from '/@/components/UI/FormButton.vue'
 import { Theme, themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useEditedThemes = (
   props: { custom: Theme },

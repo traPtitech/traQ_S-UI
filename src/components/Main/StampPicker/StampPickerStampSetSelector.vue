@@ -38,11 +38,11 @@ export default defineComponent({
     }
   },
   emits: {
-    stampSetSelect: (_stampSet: StampSet) => true
+    'update:currentStampSet': (_stampSet: StampSet) => true
   },
   setup(props, { emit }) {
     const onStampSetSelect = (stampSet: StampSet) => {
-      emit('stampSetSelect', stampSet)
+      emit('update:currentStampSet', stampSet)
     }
     return { onStampSetSelect }
   }

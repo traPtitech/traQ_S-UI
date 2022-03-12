@@ -75,9 +75,11 @@ import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useMessageInputState from '/@/providers/messageInputState'
-import useToastStore from '/@/providers/toastStore'
-import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
+import { useToastStore } from '/@/store/ui/toast'
+import {
+  useMessageInputState,
+  useMessageInputStateAttachment
+} from '/@/store/ui/messageInputState'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'

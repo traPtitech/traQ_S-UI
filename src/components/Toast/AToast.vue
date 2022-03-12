@@ -18,7 +18,7 @@ import {
   onMounted,
   onUnmounted
 } from 'vue'
-import useToastStore, { Toast } from '/@/providers/toastStore'
+import { useToastStore, Toast } from '/@/store/ui/toast'
 import AIcon from '/@/components/UI/AIcon.vue'
 
 const iconNameMap: Record<Toast['type'], string> = {

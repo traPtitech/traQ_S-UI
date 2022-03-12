@@ -35,7 +35,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import useMaxLength from '/@/use/maxLength'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 
 const useCreateClipFolder = () => {

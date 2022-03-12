@@ -5,8 +5,8 @@ import {
 } from './navigationConstructor'
 import { ThemeClaim } from '/@/lib/styles'
 import { isDefined } from '/@/lib/basic/array'
-import { useMessageInputStates } from '/@/providers/messageInputState'
-import useAudioController from '/@/providers/audioController'
+import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
+import { useAudioController } from '/@/store/ui/audioController'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -82,7 +82,7 @@ const useNavigationSelectorEntry = () => {
   const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
   const { unreadChannelsMap } = useMeStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
-  const { hasInputChannel } = useMessageInputStates()
+  const { hasInputChannel } = useMessageInputStateBase()
   const { fileId } = useAudioController()
 
   const unreadChannels = computed(() => [...unreadChannelsMap.value.values()])

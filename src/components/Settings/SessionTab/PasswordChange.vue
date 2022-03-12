@@ -42,7 +42,7 @@ import { defineComponent, computed, reactive, Ref, ref } from 'vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 interface State {
   old: string

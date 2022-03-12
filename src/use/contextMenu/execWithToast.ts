@@ -1,4 +1,4 @@
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useExecWithToast = () => {
   const { addInfoToast, addErrorToast } = useToastStore()

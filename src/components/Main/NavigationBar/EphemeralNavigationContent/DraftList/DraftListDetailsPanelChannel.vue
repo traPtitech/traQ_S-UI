@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watchEffect } from 'vue'
-import { MessageInputState } from '/@/providers/messageInputState'
+import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
 import AIcon from '/@/components/UI/AIcon.vue'

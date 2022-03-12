@@ -6,12 +6,12 @@ import { computed, ref, unref } from 'vue'
 import { nullUuid } from '/@/lib/basic/uuid'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { countLength } from '/@/lib/basic/string'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import {
   Attachment,
   useMessageInputStateStatic,
   MessageInputStateKey
-} from '/@/providers/messageInputState'
+} from '/@/store/ui/messageInputState'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'

@@ -26,7 +26,7 @@ import { defineComponent, PropType } from 'vue'
 import { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 export default defineComponent({
   name: 'TagsTabEdit',

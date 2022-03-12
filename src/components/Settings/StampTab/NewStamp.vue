@@ -35,7 +35,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 /**
  * 拡張子を削る

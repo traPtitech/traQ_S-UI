@@ -20,7 +20,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
 import AToggle from '/@/components/UI/AToggle.vue'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 export default defineComponent({
   name: 'CitationNotification',

@@ -45,7 +45,7 @@ import useStateDiff from '/@/components/Settings/use/stateDiff'
 import useChannelOptions from '/@/use/channelOptions'
 import { isValidChannelName } from '/@/lib/validate'
 import { canCreateChildChannel } from '/@/lib/channel'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 import { useChannelsStore } from '/@/store/entities/channels'
 

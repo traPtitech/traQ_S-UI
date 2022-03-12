@@ -9,7 +9,7 @@ import {
 } from 'vue'
 import usePictureInPicture from './pictureInPicture'
 import { FileInfo } from '@traptitech/traq'
-import useAudioController from '/@/providers/audioController'
+import { useAudioController } from '/@/store/ui/audioController'
 
 const toFinite = (n: number | undefined, def: number) =>
   Number.isFinite(n) ? (n as number) : def
@@ -220,13 +220,13 @@ const useAudio = (
   fileRawPath: Ref<string>,
   audioArg?: Ref<HTMLAudioElement>
 ) => {
-  const { setAudio, setShouldDestroy } = useAudioController()
+  const { shouldDestroy, setAudio } = useAudioController()
   const { isPinPShown, showPictureInPictureWindow } = usePictureInPicture()
 
   const audio = audioArg ?? shallowRef(new Audio())
 
   onUnmounted(() => {
-    setShouldDestroy()
+    shouldDestroy.value = true
   })
 
   const cantPlay = computed(

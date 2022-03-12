@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AToast from './AToast.vue'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 export default defineComponent({
   name: 'ToastContainer',

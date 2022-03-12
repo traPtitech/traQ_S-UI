@@ -56,7 +56,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import useStateDiff from '../use/stateDiff'
 import { isValidStampName } from '/@/lib/validate'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { useUsersStore } from '/@/store/entities/users'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>

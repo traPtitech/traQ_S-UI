@@ -1,20 +1,11 @@
-import {
-  provide,
-  inject,
-  reactive,
-  computed,
-  InjectionKey,
-  Ref,
-  unref,
-  watch
-} from 'vue'
+import { defineStore, acceptHMRUpdate } from 'pinia'
+import { reactive, computed, Ref, unref, watch } from 'vue'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
+import { generateMarkdownFromHtml } from '/@/lib/markdown/fromHtml'
 import { getResizedFile } from '/@/lib/resize'
 import { convertToDataUrl } from '/@/lib/resize/dataurl'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
-import { generateMarkdownFromHtml } from '/@/lib/markdown/fromHtml'
-
-const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 
 /**
  * ChannelIdの代わりに一意となるもの
@@ -24,8 +15,6 @@ const messageInputStateSymbol: InjectionKey<MessageInputStates> = Symbol()
 const VIRTUAL_IDS = ['share-target'] as const
 export type VirtualChannelId = typeof VIRTUAL_IDS[number]
 const virtualIds: ReadonlySet<string> = new Set(VIRTUAL_IDS)
-
-type MessageInputStates = Map<ChannelId | VirtualChannelId, MessageInputState>
 
 export interface MessageInputState {
   text: string
@@ -38,35 +27,19 @@ export type Attachment = {
   thumbnailDataUrl?: string
 }
 
-const createMessageInputState = () => {
-  return reactive<MessageInputStates>(new Map())
-}
+export type MessageInputStateKey = Ref<ChannelId> | ChannelId | VirtualChannelId
 
-export const provideMessageInputState = () => {
-  provide(messageInputStateSymbol, createMessageInputState())
-}
+const defaultValue = { text: '', attachments: [] }
 
-export const useMessageInputStates = () => {
-  const states = inject(messageInputStateSymbol)
-  if (!states) {
-    throw new Error('useMessageInputState() was called without provider.')
-  }
+const useMessageInputStatePinia = defineStore('ui/messageInputState', () => {
+  const states = reactive(
+    new Map<ChannelId | VirtualChannelId, MessageInputState>()
+  )
 
   const inputChannels = computed(() =>
     [...states].filter(([id]) => !virtualIds.has(id))
   )
   const hasInputChannel = computed(() => inputChannels.value.length > 0)
-
-  return { inputChannels, hasInputChannel }
-}
-
-export type MessageInputStateKey = Ref<ChannelId> | ChannelId | VirtualChannelId
-
-const useMessageInputStateBase = () => {
-  const states = inject(messageInputStateSymbol)
-  if (!states) {
-    throw new Error('useMessageInputState() was called without provider.')
-  }
 
   const getStore = (cId: MessageInputStateKey) => states.get(unref(cId))
   const setStore = (cId: MessageInputStateKey, v: MessageInputState) => {
@@ -80,13 +53,16 @@ const useMessageInputStateBase = () => {
     }
   }
 
-  const defaultValue = { text: '', attachments: [] }
+  return { inputChannels, hasInputChannel, getStore, setStore }
+})
 
-  return { getStore, setStore, defaultValue }
-}
+// TODO: 命名規則から外れているのを直す
+export const useMessageInputStateBase = convertToRefsStore(
+  useMessageInputStatePinia
+)
 
 const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
-  const { getStore, setStore, defaultValue } = useMessageInputStateBase()
+  const { getStore, setStore } = useMessageInputStateBase()
 
   const state: MessageInputState = reactive(
     getStore(channelId) ?? { ...defaultValue }
@@ -115,7 +91,7 @@ const useMessageInputStateIndividual = (channelId: MessageInputStateKey) => {
   return { state }
 }
 
-const useMessageInputState = (channelId: MessageInputStateKey) => {
+export const useMessageInputState = (channelId: MessageInputStateKey) => {
   const { state } = useMessageInputStateIndividual(channelId)
 
   const isTextEmpty = computed(() => state.text === '')
@@ -130,10 +106,8 @@ const useMessageInputState = (channelId: MessageInputStateKey) => {
   }
 }
 
-export default useMessageInputState
-
 export const useMessageInputStateStatic = () => {
-  const { getStore, setStore, defaultValue } = useMessageInputStateBase()
+  const { getStore, setStore } = useMessageInputStateBase()
 
   /**
    * リアクティブでない値を返す(channelIdや入力状態が変化しても返り値が変化しない)
@@ -279,4 +253,10 @@ export const useMessageInputStateAttachment = (
     addAttachment,
     removeAttachmentAt
   }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(
+    acceptHMRUpdate(useMessageInputStatePinia, import.meta.hot)
+  )
 }

@@ -1,14 +1,9 @@
-import { provide, inject, reactive, computed, InjectionKey } from 'vue'
+import { defineStore, acceptHMRUpdate } from 'pinia'
+import { ref } from 'vue'
+import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 
 const DEFAULT_TOAST_TIMEOUT = 1500
 const MAX_TOAST_COUNT = 5
-
-const toastStoreSymbol: InjectionKey<ToastStore> = Symbol()
-
-interface ToastStore {
-  toasts: Toast[]
-  nextId: number
-}
 
 export interface Toast {
   /**
@@ -39,33 +34,20 @@ type ToastOption = Readonly<
   Omit<Toast, 'timeout' | 'id'> & { timeout?: number }
 >
 
-const createToastStore = () => {
-  return reactive<ToastStore>({
-    toasts: [],
-    nextId: 0
-  })
-}
-
-export const provideToastStore = () => {
-  provide(toastStoreSymbol, createToastStore())
-}
-
-const useToastStore = () => {
-  const toastStore = inject(toastStoreSymbol)
-  if (!toastStore) {
-    throw new Error('useToastStore() was called without provider.')
-  }
+const useToastStorePinia = defineStore('ui/toast', () => {
+  const toasts = ref<Toast[]>([])
+  let nextId = 0
 
   const addToast = (toast: ToastOption) => {
-    toastStore.toasts.unshift({
+    toasts.value.unshift({
       ...toast,
       timeout: toast.timeout ?? DEFAULT_TOAST_TIMEOUT,
-      id: toastStore.nextId
+      id: nextId
     })
-    toastStore.nextId++
+    nextId++
 
-    while (MAX_TOAST_COUNT < toastStore.toasts.length) {
-      toastStore.toasts.pop()
+    while (MAX_TOAST_COUNT < toasts.value.length) {
+      toasts.value.pop()
     }
   }
 
@@ -80,16 +62,16 @@ const useToastStore = () => {
   }
 
   const deleteToast = (id: number) => {
-    const index = toastStore.toasts.findIndex(toast => toast.id === id)
-    toastStore.toasts.splice(index, 1)
+    const index = toasts.value.findIndex(toast => toast.id === id)
+    toasts.value.splice(index, 1)
   }
 
   const clearToasts = () => {
-    toastStore.toasts = []
+    toasts.value = []
   }
 
   return {
-    toasts: computed(() => toastStore.toasts),
+    toasts,
     addToast,
     addSuccessToast,
     addErrorToast,
@@ -97,6 +79,10 @@ const useToastStore = () => {
     deleteToast,
     clearToasts
   }
-}
+})
 
-export default useToastStore
+export const useToastStore = convertToRefsStore(useToastStorePinia)
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useToastStorePinia, import.meta.hot))
+}

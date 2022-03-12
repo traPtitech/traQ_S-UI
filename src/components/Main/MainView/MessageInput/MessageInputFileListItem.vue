@@ -20,7 +20,7 @@ import { defineComponent, computed, reactive, PropType } from 'vue'
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { Attachment } from '/@/providers/messageInputState'
+import { Attachment } from '/@/store/ui/messageInputState'
 
 export default defineComponent({
   name: 'MessageInputFileListItem',

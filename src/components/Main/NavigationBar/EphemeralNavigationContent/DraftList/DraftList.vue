@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useMessageInputStates } from '/@/providers/messageInputState'
+import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
 import DraftListTitlePanel from './DraftListTitlePanel.vue'
 import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
 
@@ -18,7 +18,7 @@ export default defineComponent({
     DraftListTitlePanel
   },
   setup() {
-    const { inputChannels } = useMessageInputStates()
+    const { inputChannels } = useMessageInputStateBase()
     return { inputChannels }
   }
 })
