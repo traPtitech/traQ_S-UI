@@ -66,7 +66,6 @@ import useInitialFetch from './use/initialFetch'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMessageInputStates } from '/@/providers/messageInputState'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { provideAudioController } from '/@/providers/audioController'
 
 const useStyles = (
   mainViewPosition: Readonly<Ref<number>>,
@@ -147,7 +146,6 @@ export default defineComponent({
     NotFoundPage
   },
   setup() {
-    provideAudioController()
     const navWidth = 320
     const sidebarWidth = 256 + 64
     const {
