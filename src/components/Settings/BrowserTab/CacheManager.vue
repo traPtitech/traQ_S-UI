@@ -44,8 +44,8 @@ import useToastStore from '/@/providers/toastStore'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { deleteUnicodeStamps } from '/@/lib/stampCache'
-import store from '/@/store'
 import { prettifyFileSize } from '/@/lib/basic/file'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 declare global {
   interface StorageEstimate {
@@ -69,6 +69,7 @@ export default defineComponent({
   name: 'CacheManager',
   components: { FormButton },
   setup() {
+    const { fetchStamps } = useStampsStore()
     const { addSuccessToast } = useToastStore()
     const showToast = (extraMesage?: string) => {
       addSuccessToast(
@@ -116,7 +117,7 @@ export default defineComponent({
     }
     const clearUnicodeStampCache = async () => {
       await deleteUnicodeStamps()
-      await store.dispatch.entities.fetchStamps({ ignoreCache: true })
+      await fetchStamps({ ignoreCache: true })
       showToast()
     }
 

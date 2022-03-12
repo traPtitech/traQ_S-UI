@@ -17,7 +17,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
-import store from '/@/store'
 import apis from '/@/lib/apis'
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '/@/types/entity-ids'
@@ -26,9 +25,13 @@ import useChannelSubscribers from '/@/use/channelSubscribers'
 import useToastStore from '/@/providers/toastStore'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/use/textFilter'
+import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useChannelNotificationState = (props: { channelId: ChannelId }) => {
+  const { myId } = useMeStore()
   const { addErrorToast } = useToastStore()
+  const { activeUsersMap } = useUsersStore()
   const subscribers = useChannelSubscribers(props)
 
   const initialSubscribers = ref(new Set<string>())
@@ -39,9 +42,9 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   })
 
   const allUsersWithoutMe = computed(() =>
-    [...store.getters.entities.activeUsersMap.values()].filter(
+    [...activeUsersMap.value.values()].filter(
       // BOTと自分を除外
-      u => !u.bot && u.id !== store.getters.domain.me.myId
+      u => !u.bot && u.id !== myId.value
     )
   )
 

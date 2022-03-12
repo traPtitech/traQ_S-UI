@@ -17,20 +17,21 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'ViewStates',
   setup() {
-    store.dispatch.entities.fetchChannels()
-    store.dispatch.domain.me.fetchViewStates()
+    const { monitoringChannels, fetchViewStates } = useMeStore()
+    const { fetchChannels } = useChannelsStore()
+
+    fetchChannels()
+    fetchViewStates()
 
     const { channelIdToPathString } = useChannelPath()
 
-    const monitoringChannels = computed(
-      () => store.getters.domain.me.monitoringChannels
-    )
     const monitoringChanelStrings = computed(() =>
       [...monitoringChannels.value.values()].map(cId => {
         try {

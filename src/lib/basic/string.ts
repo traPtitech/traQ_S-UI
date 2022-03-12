@@ -54,3 +54,15 @@ export const trimEnd = (str: string, end: string) => {
   }
   return str
 }
+
+/**
+ * `str`が`searchValue`で始まっていたら、そこを`replaceValue`で置き換える
+ */
+export const replacePrefix = (
+  str: string,
+  searchValue: string,
+  replaceValue: string
+) => {
+  if (!str.startsWith(searchValue)) return str
+  return `${replaceValue}${str.slice(searchValue.length)}`
+}

@@ -1,27 +1,51 @@
-import store from '/@/store'
 import { ref } from 'vue'
 import useLoginCheck from './loginCheck'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
-const initialFetch = () => {
-  // 初回fetch
-  store.dispatch.entities.fetchUsers()
-  store.dispatch.entities.fetchUserGroups()
-  store.dispatch.entities.fetchChannels()
-  store.dispatch.entities.fetchStamps()
+const useInitialFetch_ = () => {
+  const { fetchUsers } = useUsersStore()
+  const { fetchUserGroups } = useGroupsStore()
+  const { fetchChannels } = useChannelsStore()
+  const { fetchStamps } = useStampsStore()
+  const { fetchStampPalettes } = useStampPalettesStore()
+  const { fetchClipFolders } = useClipFoldersStore()
+  const {
+    fetchUnreadChannels,
+    fetchSubscriptions,
+    fetchViewStates,
+    fetchStampHistory,
+    fetchStaredChannels
+  } = useMeStore()
+  const { fetchRTCState } = useDomainRtcStore()
+  return () => {
+    // 初回fetch
+    fetchUsers()
+    fetchUserGroups()
+    fetchChannels()
+    fetchStamps()
 
-  store.dispatch.domain.me.fetchUnreadChannels()
-  store.dispatch.domain.me.fetchSubscriptions()
-  store.dispatch.domain.me.fetchViewStates()
+    fetchUnreadChannels()
+    fetchSubscriptions()
+    fetchViewStates()
 
-  store.dispatch.domain.me.fetchStampHistory()
-  store.dispatch.entities.fetchStampPalettes()
+    fetchStampHistory()
+    fetchStampPalettes()
 
-  store.dispatch.domain.me.fetchStaredChannels()
-  store.dispatch.entities.fetchClipFolders()
-  store.dispatch.domain.rtc.fetchRTCState()
+    fetchStaredChannels()
+    fetchClipFolders()
+    fetchRTCState()
+  }
 }
 
 const useInitialFetch = (afterLoginCheck: () => void) => {
+  const initialFetch = useInitialFetch_()
   const initialFetchCompleted = ref(false)
 
   useLoginCheck(() => {

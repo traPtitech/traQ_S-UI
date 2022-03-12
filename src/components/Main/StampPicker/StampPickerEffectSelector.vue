@@ -4,9 +4,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '/@/store'
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export default defineComponent({
   name: 'StampPickerEffectSelector',
@@ -17,8 +17,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const fileId =
-      store.state.entities.stampsMap.get(props.stampId)?.fileId ?? ''
+    const { stampsMap } = useStampsStore()
+    const fileId = stampsMap.value.get(props.stampId)?.fileId ?? ''
     const imageUrl = fileId ? `${buildFilePath(fileId)}` : ''
     return { imageUrl }
   }

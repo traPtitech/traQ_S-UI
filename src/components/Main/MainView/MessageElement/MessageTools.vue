@@ -82,23 +82,26 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue'
-import store from '/@/store'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
+import { useMeStore } from '/@/store/domain/me'
 import MessageContextMenu from './MessageContextMenu.vue'
 import useContextMenu from '/@/use/contextMenu'
+import { useStampsStore } from '/@/store/entities/stamps'
+import { Stamp } from '@traptitech/traq'
 
-const pushInitialRecentStampsIfNeeded = (recents: StampId[]) => {
+const pushInitialRecentStampsIfNeeded = (
+  initialRecentStamps: Stamp[],
+  recents: StampId[]
+) => {
   if (recents.length >= 3) return
 
-  const initials = store.getters.entities.initialRecentStamps.map(
-    stamp => stamp.id
-  )
+  const initials = initialRecentStamps.map(stamp => stamp.id)
   for (const s of initials) {
     if (recents.length >= 3) return
     if (recents.includes(s)) return
@@ -120,11 +123,13 @@ export default defineComponent({
     show: { type: Boolean, default: false }
   },
   setup(props) {
+    const { recentStampIds, upsertLocalStampHistory } = useMeStore()
     const { addErrorToast } = useToastStore()
+    const { initialRecentStamps } = useStampsStore()
 
     const recentStamps = computed(() => {
-      const recents = store.getters.domain.me.recentStampIds.slice(0, 3)
-      pushInitialRecentStampsIfNeeded(recents)
+      const recents = recentStampIds.value.slice(0, 3)
+      pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
       return recents
     })
     const addStamp = async (stampId: StampId) => {
@@ -134,10 +139,7 @@ export default defineComponent({
         addErrorToast('メッセージにスタンプを追加できませんでした')
         return
       }
-      store.commit.domain.me.upsertLocalStampHistory({
-        stampId,
-        datetime: new Date()
-      })
+      upsertLocalStampHistory(stampId, new Date())
     }
 
     const containerEle = ref<HTMLDivElement>()
@@ -163,10 +165,11 @@ export default defineComponent({
       })
     }
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const showQuickReaction = ref(!isMobile.value)
-    const toggleQuickReaction = () =>
-      (showQuickReaction.value = !showQuickReaction.value)
+    const toggleQuickReaction = () => {
+      showQuickReaction.value = !showQuickReaction.value
+    }
 
     return {
       containerEle,

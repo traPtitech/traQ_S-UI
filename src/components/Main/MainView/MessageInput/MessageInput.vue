@@ -58,9 +58,8 @@ import {
   toRef,
   watchEffect
 } from 'vue'
-import store from '/@/store'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
 import useAttachments from './use/attachments'
 import useModifierKey from './use/modifierKey'
@@ -79,6 +78,9 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import useMessageInputState from '/@/providers/messageInputState'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'MessageInput',
@@ -100,7 +102,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const channelId = toRef(props, 'channelId')
     const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
     const { addErrorToast } = useToastStore()
@@ -109,6 +111,9 @@ export default defineComponent({
     const { addAttachment, destroy } = useAttachments(addStateAttachment)
     const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
       useModifierKey()
+    const { sendWithModifierKey } = useBrowserSettings()
+    const { typingUsers } = useMessagesView()
+    const { channelsMap } = useChannelsStore()
     const isLeftControlsExpanded = ref(false)
     const isPreviewShown = ref(false)
 
@@ -117,8 +122,7 @@ export default defineComponent({
     })
 
     const isArchived = computed(
-      () =>
-        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
+      () => channelsMap.value.get(props.channelId)?.archived ?? false
     )
 
     const { isFocused, onFocus, onBlur } = useFocus()
@@ -137,16 +141,11 @@ export default defineComponent({
 
     const { postMessage, isPosting, progress } = usePostMessage(channelId)
 
-    const typingUsers = computed(
-      () => store.getters.domain.messagesView.typingUsers
-    )
-
     const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
     const showKeyGuide = computed(
       () =>
         isModifierKeyPressed.value &&
-        (store.state.app.browserSettings.sendWithModifierKey !== 'modifier' ||
-          canPostMessage.value)
+        (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
     )
 
     const textareaComponentRef = ref<{

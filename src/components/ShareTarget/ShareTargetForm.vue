@@ -19,7 +19,6 @@
 <script lang="ts">
 import { defineComponent, computed, watch, ref } from 'vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
-import store from '/@/store'
 import { nullUuid } from '/@/lib/basic/uuid'
 import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
@@ -27,6 +26,10 @@ import usePostMessage from '/@/components/Main/MainView/MessageInput/use/postMes
 import useChannelOptions from '/@/use/channelOptions'
 import useMessageInputState from '/@/providers/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'ShareTargetForm',
@@ -45,12 +48,12 @@ export default defineComponent({
     post: () => true
   },
   setup(props, { emit }) {
-    const homeChannelId = computed(
-      () => store.state.domain.me.detail?.homeChannel ?? nullUuid
-    )
+    const { detail } = useMeStore()
+    const homeChannelId = computed(() => detail.value?.homeChannel ?? nullUuid)
 
+    const { fetchChannels } = useChannelsStore()
     // 投稿先チャンネルとメッセージでの置換に必要
-    store.dispatch.entities.fetchChannels()
+    fetchChannels()
     const { channelOptions } = useChannelOptions('-----')
 
     const channelId = ref<ChannelId>(nullUuid)
@@ -63,8 +66,10 @@ export default defineComponent({
     )
 
     // メッセージでの置換に必要
-    store.dispatch.entities.fetchUsers()
-    store.dispatch.entities.fetchUserGroups()
+    const { fetchUsers } = useUsersStore()
+    fetchUsers()
+    const { fetchUserGroups } = useGroupsStore()
+    fetchUserGroups()
 
     // FIXME: 親子関係なのにprovide-injectを乱用してるの微妙
     const { state } = useMessageInputState('share-target')

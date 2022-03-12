@@ -1,27 +1,16 @@
-import { watch } from 'vue'
-import { waitMount } from '/@/onMount'
-
-export type ExtractBooleanValueKeys<T> = keyof {
-  [K in keyof T as T[K] extends boolean ? K : never]: T[K]
-}
+import { Ref, watch } from 'vue'
 
 /**
- * 最初にgetFetchedPropertyの返り値が`true`になったときにresolveするPromiseを返す
+ * 渡したrefがfalseからtrueになったときに
+ * 解決するpromiseを返す
  */
-export const createInitialFetchPromise = async (
-  getFetchedProperty: () => boolean
-) => {
-  await waitMount
+export const useTrueChangedPromise = (r: Ref<boolean>) => {
   return new Promise<void>(resolve => {
-    const stop = watch(
-      getFetchedProperty,
-      fetched => {
-        if (fetched) {
-          resolve()
-          stop()
-        }
-      },
-      { immediate: true }
-    )
+    const stop = watch(r, (newR, oldR) => {
+      if (oldR === false && newR === true) {
+        stop()
+        resolve()
+      }
+    })
   })
 }

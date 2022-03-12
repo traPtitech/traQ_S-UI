@@ -1,7 +1,8 @@
 import { ref, Ref, watchEffect } from 'vue'
-import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import { Message } from '@traptitech/traq'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 export type LoadingDirection = 'former' | 'latter' | 'around' | 'latest'
 
@@ -23,6 +24,14 @@ const useMessageFetcher = (
     | undefined,
   onReachedLatest?: () => void | Promise<void>
 ) => {
+  const {
+    currentChannelId,
+    currentClipFolderId,
+    receiveLatestMessages,
+    renderMessageContent
+  } = useMessagesView()
+  const { fetchMessage } = useMessagesStore()
+
   const messageIds = ref<MessageId[]>([])
   const isReachedEnd = ref(false)
   const isReachedLatest = ref(false)
@@ -37,11 +46,11 @@ const useMessageFetcher = (
    * そのチェックの際に前後で変化していないかという形で利用する
    */
   const getCurrentViewIdentifier = () => {
-    const channelId = store.state.domain.messagesView.currentChannelId
+    const channelId = currentChannelId.value
     if (channelId) {
       return `ch:${channelId}`
     }
-    const clipFolderId = store.state.domain.messagesView.currentClipFolderId
+    const clipFolderId = currentClipFolderId.value
     if (clipFolderId) {
       return `cf:${clipFolderId}`
     }
@@ -66,9 +75,7 @@ const useMessageFetcher = (
 
   const renderMessageFromIds = async (messageIdsToRender: MessageId[]) => {
     await Promise.all(
-      messageIdsToRender.map(messageId =>
-        store.dispatch.domain.messagesView.renderMessageContent(messageId)
-      )
+      messageIdsToRender.map(messageId => renderMessageContent(messageId))
     )
   }
 
@@ -134,9 +141,7 @@ const useMessageFetcher = (
     ) {
       return
     }
-    const entryMessage = await store.dispatch.entities.messages.fetchMessage({
-      messageId
-    })
+    const entryMessage = await fetchMessage({ messageId })
     if (!entryMessage) {
       return
     }
@@ -186,7 +191,7 @@ const useMessageFetcher = (
   }
 
   const addNewMessage = async (messageId: MessageId) => {
-    await store.dispatch.domain.messagesView.renderMessageContent(messageId)
+    await renderMessageContent(messageId)
 
     // すでに追加済みの場合は追加しない
     // https://github.com/traPtitech/traQ_S-UI/issues/1748
@@ -207,9 +212,7 @@ const useMessageFetcher = (
     if (isReachedLatest.value) {
       await onReachedLatest?.()
     }
-    store.dispatch.domain.messagesView.setReceiveLatestMessages(
-      isReachedLatest.value
-    )
+    receiveLatestMessages.value = isReachedLatest.value
   })
 
   return {

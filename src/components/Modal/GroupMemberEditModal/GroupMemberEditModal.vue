@@ -22,9 +22,11 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
-import store from '/@/store'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'GroupMemberEditModal',
@@ -45,14 +47,15 @@ export default defineComponent({
   },
   setup(props) {
     const { addErrorToast } = useToastStore()
+    const { popModal } = useModalStore()
+    const { userGroupsMap } = useGroupsStore()
+    const { usersMap } = useUsersStore()
 
-    const group = computed(() =>
-      store.state.entities.userGroupsMap.get(props.groupId)
-    )
+    const group = computed(() => userGroupsMap.value.get(props.groupId))
 
     const groupName = computed(() => group.value?.name)
     const userDisplayName = computed(
-      () => store.state.entities.usersMap.get(props.userId)?.displayName ?? ''
+      () => usersMap.value.get(props.userId)?.displayName ?? ''
     )
 
     const role = ref(
@@ -68,7 +71,7 @@ export default defineComponent({
         addErrorToast('グループメンバーの編集に失敗しました')
       }
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     }
 
     return { groupName, userDisplayName, role, edit }

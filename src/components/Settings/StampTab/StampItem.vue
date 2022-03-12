@@ -46,7 +46,6 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import store from '/@/store'
 import ImageUpload from '../ImageUpload.vue'
 import useImageUpload, { ImageUploadState } from '../use/imageUpload'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -58,13 +57,7 @@ import { compareStringInsensitive } from '/@/lib/basic/string'
 import useStateDiff from '../use/stateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import useToastStore from '/@/providers/toastStore'
-
-const creatorOptions = computed(() =>
-  [...store.getters.entities.activeUsersMap.values()]
-    .filter(u => !u.bot)
-    .map(u => ({ key: `@${u.name}`, value: u.id }))
-    .sort((a, b) => compareStringInsensitive(a.key, b.key))
-)
+import { useUsersStore } from '/@/store/entities/users'
 
 type StampEditState = Pick<Stamp, 'name' | 'creatorId'>
 
@@ -154,7 +147,16 @@ export default defineComponent({
     endEdit: () => true
   },
   setup(props, { emit }) {
+    const { activeUsersMap } = useUsersStore()
+
     const url = computed(() => buildFilePath(props.stamp.fileId))
+
+    const creatorOptions = computed(() =>
+      [...activeUsersMap.value.values()]
+        .filter(u => !u.bot)
+        .map(u => ({ key: `@${u.name}`, value: u.id }))
+        .sort((a, b) => compareStringInsensitive(a.key, b.key))
+    )
 
     const {
       imageUploadState,

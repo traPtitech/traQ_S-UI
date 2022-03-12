@@ -4,6 +4,7 @@ import {
   count,
   countLength,
   lastIndexOf,
+  replacePrefix,
   trimEnd
 } from '/@/lib/basic/string'
 
@@ -76,5 +77,15 @@ describe('trimEnd', () => {
   })
   it('should keep', () => {
     expect(trimEnd('abcd', 'ef')).toBe('abcd')
+  })
+})
+
+describe('replacePrefix', () => {
+  it('should replace', () => {
+    expect(replacePrefix('abcde', 'ab', 'baa')).toBe('baacde')
+  })
+
+  it('should not replace', () => {
+    expect(replacePrefix('abcde', 'ba', 'abb')).toBe('abcde')
   })
 })

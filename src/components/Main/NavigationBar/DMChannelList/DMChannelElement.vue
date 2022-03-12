@@ -34,17 +34,19 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import store from '/@/store'
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import useHover from '/@/use/hover'
 import { DMChannel } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
 import { ChannelId } from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useNotification = (props: { dmChannel: DMChannel }) => {
+  const { unreadChannelsMap } = useMeStore()
   const unreadChannel = computed(() =>
-    store.state.domain.me.unreadChannelsMap.get(props.dmChannel.id)
+    unreadChannelsMap.value.get(props.dmChannel.id)
   )
 
   const notificationState = reactive({
@@ -71,9 +73,8 @@ export default defineComponent({
     channelSelect: (_event: MouseEvent, _channelId: ChannelId) => true
   },
   setup(props, { emit }) {
-    const user = computed(() =>
-      store.state.entities.usersMap.get(props.dmChannel.userId)
-    )
+    const { usersMap } = useUsersStore()
+    const user = computed(() => usersMap.value.get(props.dmChannel.userId))
     const notificationState = useNotification(props)
 
     const onChannelClick = (e: MouseEvent) => {

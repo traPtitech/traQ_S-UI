@@ -18,7 +18,7 @@
 import { defineComponent } from 'vue'
 import useNavigationController from '/@/use/navigationController'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'MainViewHeader',
@@ -26,7 +26,7 @@ export default defineComponent({
     PopupNavigator
   },
   setup() {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const { openNav } = useNavigationController()
     return { isMobile, openNav }
   }

@@ -1,7 +1,8 @@
-import { createStore, get, set, del } from 'idb-keyval'
+import { get, set, del } from 'idb-keyval'
 import { Stamp } from '@traptitech/traq'
+import { createStore } from '/@/lib/dom/idb'
 
-const store = createStore('traQ_S-cache', 'stamps')
+const store = createStore('cache', 'stamps')
 
 const UNICODE_STAMPS_KEY = 'unicode_stamps'
 

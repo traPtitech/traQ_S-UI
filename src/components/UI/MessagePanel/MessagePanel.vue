@@ -47,9 +47,9 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'MessagePanel',
@@ -85,11 +85,11 @@ export default defineComponent({
     clickContextMenuButton: (_e: MouseEvent) => true
   },
   setup(props, { emit }) {
-    const userState = computed(() =>
-      store.state.entities.usersMap.get(props.message.userId)
-    )
+    const { usersMap, fetchUser } = useUsersStore()
+
+    const userState = computed(() => usersMap.value.get(props.message.userId))
     if (userState.value === undefined) {
-      store.dispatch.entities.fetchUser({ userId: props.message.userId })
+      fetchUser({ userId: props.message.userId })
     }
 
     const { channelIdToShortPathString } = useChannelPath()

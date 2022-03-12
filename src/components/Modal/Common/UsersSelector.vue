@@ -24,17 +24,19 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
 import { UserId } from '/@/types/entity-ids'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/use/textFilter'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {
+  const { activeUsersMap } = useUsersStore()
+
   const excludeIdsSet = computed(() => new Set(props.excludeIds))
   const users = computed(() =>
-    [...store.getters.entities.activeUsersMap.values()].filter(
+    [...activeUsersMap.value.values()].filter(
       u => !excludeIdsSet.value.has(u.id) && !u.name.startsWith('Webhook#')
     )
   )

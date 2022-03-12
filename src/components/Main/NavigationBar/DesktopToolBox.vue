@@ -10,6 +10,7 @@
       @click="tool.onClick"
     />
     <user-icon
+      v-if="myId"
       :class="$style.item"
       :size="36"
       :user-id="myId"
@@ -24,20 +25,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import { defineComponent } from 'vue'
 import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import useToolBox from '/@/components/Main/NavigationBar/use/toolBox'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'DesktopToolBox',
   components: { ToolItem, UserIcon, AppList },
   setup() {
+    const { myId } = useMeStore()
     const { tools, isServicesShown, closeServices } = useToolBox()
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myId = computed(() => store.getters.domain.me.myId!)
 
     return {
       tools,

@@ -96,9 +96,9 @@
 import { defineComponent, computed } from 'vue'
 import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
-import store from '/@/store'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -125,18 +125,19 @@ export default defineComponent({
     clickMore: () => true
   },
   setup(props, { emit }) {
+    const { isEnabled: isRtcEnabled } = useRtcSettings()
     const { changeToNextSubscriptionLevel, currentChannelSubscription } =
       useChannelSubscriptionState()
 
     const isQallEnabled = computed(
-      () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled
+      () => isSkywayApikeySet && isRtcEnabled.value
     )
 
     const qallIconName = computed(() =>
       props.isJoinedQallSession ? 'phone' : 'phone-outline'
     )
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     const clickQall = () => {
       emit('clickQall')

@@ -1,5 +1,6 @@
 import { reactive, computed } from 'vue'
-import store from '/@/store'
+import { useStampCategory } from '/@/store/domain/stampCategory'
+import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 export type StampSetType = 'palette' | 'category' | 'history'
 
@@ -11,6 +12,9 @@ export type StampSet = {
 }
 
 const useStampSetSelector = () => {
+  const { traQStampCategory, unicodeStampCategories } = useStampCategory()
+  const { nonEmptyStampPaletteIds } = useStampPalettesStore()
+
   const state = reactive({
     stampSets: computed((): StampSet[] => [
       {
@@ -23,18 +27,18 @@ const useStampSetSelector = () => {
     stampCategories: computed((): StampSet[] => [
       {
         type: 'category',
-        id: store.state.domain.stampCategory.traQStampCategory.name
+        id: traQStampCategory.value.name
       },
       ...state.foldedStampSets
     ]),
     foldedStampSets: computed((): StampSet[] =>
-      store.state.domain.stampCategory.unicodeStampCategories.map(c => ({
+      unicodeStampCategories.value.map(c => ({
         type: 'category',
         id: 'unicode-' + c.name
       }))
     ),
     stampPalettes: computed((): StampSet[] =>
-      store.getters.entities.nonEmptyStampPaletteIds.map(id => ({
+      nonEmptyStampPaletteIds.value.map(id => ({
         type: 'palette',
         id
       }))

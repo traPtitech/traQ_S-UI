@@ -1,11 +1,12 @@
-import { ref, computed, Ref, DeepReadonly, toRefs } from 'vue'
+import { ref, computed, Ref, DeepReadonly } from 'vue'
 import { Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { compareDateString } from '/@/lib/basic/date'
-import store from '/@/store'
 import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { useCommandPaletteStore } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useSortMessages = (
   messages: Ref<DeepReadonly<Message[]>>,
@@ -37,8 +38,7 @@ const useSortMessages = (
 const usePaging = (
   itemsPerPage: number,
   currentPage: Ref<number>,
-  totalCount: Ref<number>,
-  setCurrentPage: (page: number) => void
+  totalCount: Ref<number>
 ) => {
   /** 現在のオフセット */
   const currentOffset = computed(() => currentPage.value * itemsPerPage)
@@ -55,7 +55,7 @@ const usePaging = (
     if (totalCount.value <= 0) {
       return
     }
-    setCurrentPage(Math.max(0, Math.min(page, pageCount.value - 1)))
+    currentPage.value = Math.max(0, Math.min(page, pageCount.value - 1))
   }
 
   return {
@@ -69,34 +69,30 @@ const usePaging = (
 const useSearchMessages = () => {
   const limit = 20
   const { parseQuery, toSearchMessageParam } = useQueryParer()
-  const {
-    setSearchResult,
-    setCurrentSortKey,
-    setCurrentPage,
-    resetPaging,
-    commandPaletteStore
-  } = useCommandPaletteStore()
-
-  const query = computed(() => commandPaletteStore.query)
+  const { query, searchState, setSearchResult, resetPaging } =
+    useCommandPalette()
+  const { renderMessageContent } = useMessagesView()
+  const { extendMessagesMap } = useMessagesStore()
 
   const currentSortKey = computed({
-    get: () => commandPaletteStore.searchState.currentSortKey,
+    get: () => searchState.value.currentSortKey,
     set: sortKey => {
-      setCurrentSortKey(sortKey)
+      searchState.value.currentSortKey = sortKey
     }
   })
 
-  const { executed, searchResult, currentPage, totalCount } = toRefs(
-    commandPaletteStore.searchState
-  )
+  // TODO: リファクタ
+  const executed = computed(() => searchState.value.executed)
+  const searchResult = computed(() => searchState.value.searchResult)
+  const currentPage = computed(() => searchState.value.currentPage)
+  const totalCount = computed(() => searchState.value.totalCount)
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
 
   const { currentOffset, pageCount, showingRange, jumpToPage } = usePaging(
     limit,
     currentPage,
-    totalCount,
-    setCurrentPage
+    totalCount
   )
 
   const fetchingSearchResult = ref(false)
@@ -118,12 +114,8 @@ const useSearchMessages = () => {
       ...toSearchMessageParam(queryObject, option)
     )
     const hits = res.data.hits ?? []
-    store.dispatch.entities.messages.extendMessagesMap(hits)
-    await Promise.all(
-      hits.map(message =>
-        store.dispatch.domain.messagesView.renderMessageContent(message.id)
-      )
-    )
+    extendMessagesMap(hits)
+    await Promise.all(hits.map(message => renderMessageContent(message.id)))
     fetchingSearchResult.value = false
 
     setSearchResult(true, hits, res.data.totalHits ?? 0)

@@ -42,8 +42,8 @@ import ChannelSidebarContent from './ChannelSidebarContent.vue'
 import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import store from '/@/store'
 import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'ChannelSidebar',
@@ -67,6 +67,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { channelsMap } = useChannelsStore()
     const {
       page,
       moveToDefaultPage,
@@ -79,7 +80,7 @@ export default defineComponent({
     } = useChannelSidebarCommon()
 
     const channelName = computed(
-      () => store.state.entities.channelsMap.get(props.channelId)?.name ?? ''
+      () => channelsMap.value.get(props.channelId)?.name ?? ''
     )
 
     return {

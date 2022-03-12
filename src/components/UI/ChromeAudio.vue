@@ -43,7 +43,7 @@ import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
 import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
-import store from '/@/store'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'ChromeAudio',
@@ -61,6 +61,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap } = useUsersStore()
     const { fileMeta, fileRawPath } = useFileMeta(props)
     const {
       cantPlay,
@@ -74,8 +75,7 @@ export default defineComponent({
     } = useAudio(fileMeta, fileRawPath)
     const startPictureInPicture = async () => {
       const iconId =
-        store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
-          ?.iconFileId ?? ''
+        usersMap.value.get(fileMeta.value?.uploaderId ?? '')?.iconFileId ?? ''
       await startPinP(iconId)
     }
 

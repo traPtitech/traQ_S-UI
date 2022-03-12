@@ -17,7 +17,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, Ref } from 'vue'
-import store from '/@/store'
 import apis from '/@/lib/apis'
 import { compareString } from '/@/lib/basic/string'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
@@ -26,6 +25,8 @@ import ClipFolderElement from './ClipFolderElement.vue'
 import useToastStore from '/@/providers/toastStore'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { AxiosError } from 'axios'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -80,11 +81,12 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const message = computed(() =>
-      store.state.entities.messages.messagesMap.get(props.messageId)
-    )
+    const { messagesMap } = useMessagesStore()
+    const { clipFoldersMap } = useClipFoldersStore()
+
+    const message = computed(() => messagesMap.value.get(props.messageId))
     const clipFolders = computed(() => {
-      const folders = [...store.state.entities.clipFoldersMap.values()]
+      const folders = [...clipFoldersMap.value.values()]
       folders.sort((a, b) => compareString(a.name, b.name))
       return folders
     })

@@ -1,9 +1,11 @@
-import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useNotificationModal = (props: { channelId: ChannelId }) => {
+  const { pushModal } = useModalStore()
+
   const openNotificationModal = () => {
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'notification',
       channelId: props.channelId
     })

@@ -6,16 +6,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
 import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
-import store from '/@/store'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'NavigationBar',
   components: { DesktopNavigationBar, MobileNavigationBar },
   setup() {
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const { isMobile } = useResponsiveStore()
     return { isMobile }
   }
 })

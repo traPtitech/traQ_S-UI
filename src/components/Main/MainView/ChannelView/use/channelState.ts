@@ -1,19 +1,19 @@
 import { computed, reactive } from 'vue'
-import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelState = (props: { channelId: ChannelId }) => {
+  const { staredChannelSet } = useMeStore()
+  const { channelsMap } = useChannelsStore()
+
   const state = reactive({
-    stared: computed(() =>
-      store.state.domain.me.staredChannelSet.has(props.channelId)
-    ),
+    stared: computed(() => staredChannelSet.value.has(props.channelId)),
     forced: computed(
-      () =>
-        store.state.entities.channelsMap.get(props.channelId)?.force ?? false
+      () => channelsMap.value.get(props.channelId)?.force ?? false
     ),
     archived: computed(
-      () =>
-        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
+      () => channelsMap.value.get(props.channelId)?.archived ?? false
     )
   })
   return { channelState: state }

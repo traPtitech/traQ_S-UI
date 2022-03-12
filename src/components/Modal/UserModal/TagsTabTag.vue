@@ -18,11 +18,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import store from '/@/store'
 import { UserTag } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'TagsTabTag',
@@ -36,8 +36,10 @@ export default defineComponent({
     userId: { type: String as PropType<UserId>, default: undefined }
   },
   setup(props) {
+    const { pushModal } = useModalStore()
+
     const onTagClick = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'tag',
         id: props.tag.tagId
       })

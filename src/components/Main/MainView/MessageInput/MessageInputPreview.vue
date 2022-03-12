@@ -20,7 +20,7 @@ import { EmbeddingMessage } from '@traptitech/traq-markdown-it'
 import { defineComponent, ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'MessageInputPreview',
@@ -31,7 +31,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     const previewRendered = ref('')
     const quoteMessages = ref<EmbeddingMessage[]>([])

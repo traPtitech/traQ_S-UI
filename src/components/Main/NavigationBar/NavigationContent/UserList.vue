@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
@@ -32,6 +31,8 @@ import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/use/textFilter'
 import { isDefined } from '/@/lib/basic/array'
 import { ActiveUser } from '/@/lib/user'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 
 interface UsersGradeList {
   gradeName: string
@@ -39,13 +40,14 @@ interface UsersGradeList {
 }
 
 const useListByGradeName = () => {
-  const userGroups = computed(() => store.getters.entities.gradeGroups)
-  const activeUsersMap = computed(() => store.getters.entities.activeUsersMap)
+  const { gradeGroups } = useGroupsStore()
+  const { activeUsersMap } = useUsersStore()
+
   const listByGradeName = computed((): UsersGradeList[] => {
     if (activeUsersMap.value.size === 0) {
       return []
     }
-    if (userGroups.value.length === 0) {
+    if (gradeGroups.value.length === 0) {
       return [
         {
           gradeName: 'Others',
@@ -60,7 +62,7 @@ const useListByGradeName = () => {
     const categorized = new Set<string>()
 
     // 学年グループ
-    for (const group of userGroups.value) {
+    for (const group of gradeGroups.value) {
       const member = group.members
         .map(member => activeUsersMap.value.get(member.id))
         .filter(isDefined)
@@ -97,9 +99,8 @@ const useListByGradeName = () => {
 }
 
 const useUserListFilter = () => {
-  const activeUsers = computed(() => [
-    ...store.getters.entities.activeUsersMap.values()
-  ])
+  const { activeUsersMap } = useUsersStore()
+  const activeUsers = computed(() => [...activeUsersMap.value.values()])
   const { textFilterState } = useTextFilter(activeUsers, 'name')
   return {
     userListFilterState: textFilterState

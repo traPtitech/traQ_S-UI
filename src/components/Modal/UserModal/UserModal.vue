@@ -1,10 +1,10 @@
 <template>
-  <click-outside stop @click-outside="onClickOutside">
+  <click-outside stop @click-outside="clearModal">
     <div :class="$style.wrapper" data-testid="usermodal">
       <close-button
         :size="isMobile ? 24 : 32"
         :class="$style.close"
-        @close="onClickClear"
+        @close="clearModal"
       />
       <user-icon
         v-if="!isMobile"
@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
-import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './use/navigation'
 import ClickOutside from '/@/components/UI/ClickOutside'
@@ -41,6 +40,9 @@ import NavigationSelector from './NavigationSelector.vue'
 import NavigationContent from './NavigationContent.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import useUserDetail from './use/userDetail'
+import { useModalStore } from '/@/store/ui/modal'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useUsersStore } from '/@/store/entities/users'
 
 const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
   reactive({
@@ -71,31 +73,28 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const isMobile = computed(() => store.state.ui.isMobile)
+    const { clearModal } = useModalStore()
+    const { isMobile } = useResponsiveStore()
+    const { usersMap } = useUsersStore()
 
     const iconSize = 160
     const styles = computed(() => useStyles(iconSize, isMobile))
 
-    const onClickClear = () => store.dispatch.ui.modal.clearModal()
-
     const { navigationSelectorState, onNavigationChange } = useNavigation()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const user = computed(() => store.state.entities.usersMap.get(props.id)!)
+    const user = computed(() => usersMap.value.get(props.id)!)
 
     const { userDetail } = useUserDetail(props)
-
-    const onClickOutside = () => store.dispatch.ui.modal.clearModal()
 
     return {
       isMobile,
       styles,
-      onClickClear,
       iconSize,
       user,
       userDetail,
       ...toRefs(navigationSelectorState),
       onNavigationChange,
-      onClickOutside
+      clearModal
     }
   }
 })

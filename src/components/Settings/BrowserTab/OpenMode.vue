@@ -33,8 +33,8 @@ import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import useChannelPath from '/@/use/channelPath'
 import useChannelOptions from '/@/use/channelOptions'
-import store from '/@/store'
 import { useModelSyncer } from '/@/use/modelSyncer'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'OpenMode',
@@ -57,8 +57,9 @@ export default defineComponent({
     'update:openChannelName': (_val: string) => true
   },
   setup(props, { emit }) {
+    const { fetchChannels } = useChannelsStore()
     // 起動時チャンネルの選択に必要
-    store.dispatch.entities.fetchChannels()
+    fetchChannels()
 
     const { channelIdToPathString } = useChannelPath()
 

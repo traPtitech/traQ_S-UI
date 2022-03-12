@@ -32,24 +32,26 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
 import useActivityStream from './use/activityStream'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useActivityMode = () => {
+  const { activityMode } = useBrowserSettings()
+
   // 反転していることに注意
   const isNotAll = computed({
-    get: () => !store.getters.app.browserSettings.isActivityModeAll,
+    get: () => !activityMode.value.all,
     set: v => {
-      store.commit.app.browserSettings.setActivityModeAll(!v)
+      activityMode.value.all = !v
     }
   })
   const isPerChannel = computed({
-    get: () => store.getters.app.browserSettings.isActivityModePerChannel,
+    get: () => activityMode.value.perChannel,
     set: v => {
-      store.commit.app.browserSettings.setActivityModePerChannel(v)
+      activityMode.value.perChannel = v
     }
   })
 

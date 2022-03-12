@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'LinkButton',
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     return { isMobile }
   }
 })

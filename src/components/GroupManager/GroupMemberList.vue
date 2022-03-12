@@ -38,7 +38,7 @@ import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupMember } from '@traptitech/traq'
-import store from '/@/store'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupMemberList',
@@ -57,10 +57,11 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { pushModal } = useModalStore()
     const { addErrorToast } = useToastStore()
 
     const onClickAdd = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'group-member-add',
         id: props.groupId
       })
@@ -85,8 +86,8 @@ export default defineComponent({
       }
     }
 
-    const onEdit = async (id: string) => {
-      await store.dispatch.ui.modal.pushModal({
+    const onEdit = (id: string) => {
+      pushModal({
         type: 'group-member-edit',
         groupId: props.groupId,
         userId: id

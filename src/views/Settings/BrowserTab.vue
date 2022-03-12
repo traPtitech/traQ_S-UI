@@ -18,15 +18,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import store from '/@/store'
-import useSyncedState from '/@/components/Settings/use/syncedState'
+import { defineComponent, reactive } from 'vue'
 import NotificationState from '/@/components/Settings/BrowserTab/NotificationState.vue'
 import CitationNotification from '/@/components/Settings/BrowserTab/CitationNotification.vue'
 import CacheManager from '/@/components/Settings/BrowserTab/CacheManager.vue'
 import OpenMode from '/@/components/Settings/BrowserTab/OpenMode.vue'
 import SendKey from '/@/components/Settings/BrowserTab/SendKey.vue'
 import EcoMode from '/@/components/Settings/BrowserTab/EcoMode.vue'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 export default defineComponent({
   name: 'BrowserTab',
@@ -39,11 +38,7 @@ export default defineComponent({
     CacheManager
   },
   setup() {
-    const browserSettings = computed(() => store.state.app.browserSettings)
-    const { state } = useSyncedState(
-      browserSettings,
-      store.commit.app.browserSettings.set
-    )
+    const state = reactive(useBrowserSettings())
     return { state }
   }
 })

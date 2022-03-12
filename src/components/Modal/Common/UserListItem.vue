@@ -23,10 +23,10 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { useUserModalOpener } from '/@/use/modalOpener'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'UserListItem',
@@ -45,7 +45,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.usersMap.get(props.userId))
+    const { usersMap } = useUsersStore()
+    const user = computed(() => usersMap.value.get(props.userId))
     const name = computed(() => user.value?.displayName)
 
     const { isClickable, openModal } = useUserModalOpener(props, user)

@@ -11,7 +11,7 @@ import { defineComponent } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { changeViewState } from '/@/lib/websocket'
 import useLoginCheck from './use/loginCheck'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue'
 import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue'
 
@@ -22,7 +22,7 @@ export default defineComponent({
     MobileGroupManager
   },
   setup() {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     onBeforeRouteUpdate(() => {
       // グループ管理画面を開いたときは閲覧チャンネルを消す

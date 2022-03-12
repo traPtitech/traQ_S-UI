@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
 import { NotificationClickEvent } from '/@/types/InlineNotificationReplies'
 import { createNotificationArgumentsCreator } from '/@/lib/notification/notificationArguments'
-import { getStore } from '/@/sw/store'
+import { getMeStore } from '/@/sw/store'
 import { ChannelId } from '/@/types/entity-ids'
 import { wait } from '/@/lib/basic/timer'
 import { FirebasePayloadData } from '/@/lib/notification/firebase'
@@ -74,14 +74,14 @@ export const setupNotification = async () => {
     // androidでしか通知の再度の発火は発生しない模様
     try {
       const [store] = await Promise.all([
-        getStore(),
+        getMeStore(),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         postMessage(channelId, event.reply!)
       ])
       event.notification.close()
 
-      if (store && store.domain.me.detail) {
-        const me = store.domain.me.detail
+      if (store?.detail) {
+        const me = store.detail
         data.body = `${me.displayName}: ${event.reply}`
         data.icon = `/api/v3/files/${me.iconFileId}`
       } else {

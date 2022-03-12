@@ -40,7 +40,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/store'
 import { StampId } from '/@/types/entity-ids'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
@@ -53,6 +52,7 @@ import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import { useStampPickerStore } from '/@/providers/stampPicker'
+import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
   name: 'StampPicker',
@@ -67,6 +67,7 @@ export default defineComponent({
   setup() {
     const { state, setCurrentStampSet, closeStampPicker } =
       useStampPickerStore()
+    const { upsertLocalStampHistory } = useMeStore()
     const currentStampSet = computed(() => state.currentStampSet)
     const queryString = ref('')
 
@@ -76,10 +77,7 @@ export default defineComponent({
     const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
     const onInputStamp = (id: StampId) => {
-      store.commit.domain.me.upsertLocalStampHistory({
-        stampId: id,
-        datetime: new Date()
-      })
+      upsertLocalStampHistory(id, new Date())
       state.selectHandler({
         id
       })

@@ -213,4 +213,4 @@ type MarkdownTheme = {
 ## マイグレーションについて
 現在のカスタムテーマはバージョン2である。
 バージョン1から自動でマイグレーションを行うようになっている。
-実装は`/@/lib/theme/migrate.ts`を参照。
+実装は`/@/store/app/themeSettings.ts`の`useIndexedDbValue`の`migrations`を参照。

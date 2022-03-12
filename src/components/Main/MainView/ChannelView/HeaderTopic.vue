@@ -12,8 +12,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import store from '/@/store'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'HeaderTopic',
@@ -27,9 +27,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const topic = computed(
-      () => store.state.entities.channelsMap.get(props.channelId)?.topic
-    )
+    const { channelsMap } = useChannelsStore()
+    const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
     return { topic }
   }
 })

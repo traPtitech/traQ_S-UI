@@ -25,12 +25,12 @@
 <script lang="ts">
 import { defineComponent, computed, watchEffect, ref } from 'vue'
 import { renderInline } from '/@/lib/markdown/markdown'
-import store from '/@/store'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
 import AIcon from '/@/components/UI/AIcon.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
   const res: Array<[AttachmentType, boolean]> = []
@@ -66,6 +66,8 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
+
     const rendered = ref<MarkdownRenderResult>()
     watchEffect(async () => {
       rendered.value = await renderInline(props.content)
@@ -76,17 +78,13 @@ export default defineComponent({
     )
 
     watchEffect(() => {
-      files.value.forEach(file =>
-        store.dispatch.entities.messages.fetchFileMetaData({ fileId: file.id })
-      )
+      files.value.forEach(file => fetchFileMetaData({ fileId: file.id }))
     })
 
     const fileTypes = computed(() =>
       getUniqueFileTypes(
         files.value.map(file => {
-          const meta = store.state.entities.messages.fileMetaDataMap.get(
-            file.id
-          )
+          const meta = fileMetaDataMap.value.get(file.id)
           return [
             meta ? mimeToFileType(meta.mime) : 'file',
             meta?.isAnimatedImage ?? false

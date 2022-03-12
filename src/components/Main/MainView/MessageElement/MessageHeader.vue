@@ -22,10 +22,10 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/store'
 import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'MessageHeader',
@@ -45,8 +45,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap, fetchUser } = useUsersStore()
+
     const state = reactive({
-      user: computed(() => store.state.entities.usersMap.get(props.userId)),
+      user: computed(() => usersMap.value.get(props.userId)),
       displayName: computed((): string => state.user?.displayName ?? 'unknown'),
       name: computed((): string => state.user?.name ?? 'unknown'),
       bot: computed((): boolean => state.user?.bot ?? false),
@@ -56,7 +58,7 @@ export default defineComponent({
       date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
     })
     if (state.user === undefined) {
-      store.dispatch.entities.fetchUser({ userId: props.userId })
+      fetchUser({ userId: props.userId })
     }
     return { state }
   }

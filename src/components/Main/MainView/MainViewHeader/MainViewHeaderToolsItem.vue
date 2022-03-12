@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useHeaderStyle from '/@/components/Main/MainView/MainViewHeader/use/headerStyle'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 export default defineComponent({
   name: 'MainViewHeaderToolsItem',
@@ -42,7 +42,7 @@ export default defineComponent({
     click: () => true
   },
   setup(props, { emit }) {
-    const { headerStyle } = useHeaderStyle()
+    const { headerStyle } = useMainViewStore()
     const onClick = () => {
       if (props.disabled) return
       emit('click')

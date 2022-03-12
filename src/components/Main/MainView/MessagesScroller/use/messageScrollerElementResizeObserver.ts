@@ -1,8 +1,8 @@
 import { Ref, computed } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from '/@/store/domain/messagesView/state'
-import store from '/@/store'
+import { LoadingDirection } from '/@/store/domain/messagesView'
 import { ChangeHeightData } from '/@/components/Main/MainView/MessageElement/use/elementRenderObserver'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const useMessageScrollerElementResizeObserver = (
   rootRef: Ref<HTMLElement | null>,
@@ -14,11 +14,11 @@ const useMessageScrollerElementResizeObserver = (
     height: number
   }
 ) => {
+  const { messagesMap } = useMessagesStore()
+
   const entryMessageDate = computed(() => {
     if (scrollerProps.entryMessageId) {
-      const message = store.state.entities.messages.messagesMap.get(
-        scrollerProps.entryMessageId
-      )
+      const message = messagesMap.value.get(scrollerProps.entryMessageId)
       return message ? new Date(message.createdAt) : undefined
     }
     return undefined

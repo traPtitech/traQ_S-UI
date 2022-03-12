@@ -12,8 +12,8 @@ import { defineComponent, PropType, computed } from 'vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import store from '/@/store'
 import { isDefined } from '/@/lib/basic/array'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'ChannelSidebarViewersDetail',
@@ -28,13 +28,13 @@ export default defineComponent({
     toggle: () => true
   },
   setup(props, { emit }) {
+    const { usersMap } = useUsersStore()
+
     const toggle = () => {
       emit('toggle')
     }
     const users = computed(() =>
-      props.viewerIds
-        .map(id => store.state.entities.usersMap.get(id))
-        .filter(isDefined)
+      props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
     )
     return { toggle, users }
   }

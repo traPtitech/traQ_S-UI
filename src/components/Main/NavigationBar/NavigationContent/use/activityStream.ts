@@ -1,12 +1,13 @@
-import { computed, onBeforeUnmount, watch, ref } from 'vue'
-import store, { originalStore } from '/@/store'
+import { onBeforeUnmount, watch, ref } from 'vue'
 import { setTimelineStreamingState } from '/@/lib/websocket'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { messageMitt } from '/@/store/entities/messages'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
-import { bothChannelsMapInitialFetchPromise } from '/@/store/entities/promises'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -15,7 +16,9 @@ const getActivityTimeline = createSingleflight(
 )
 
 const useActivityStream = (props: { show: boolean }) => {
-  const mode = computed(() => store.state.app.browserSettings.activityMode)
+  const { restoringPromise, activityMode: mode } = useBrowserSettings()
+  const { isChannelSubscribed } = useMeStore()
+  const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 
   /**
    * 新しいもの順
@@ -25,10 +28,10 @@ const useActivityStream = (props: { show: boolean }) => {
 
   const fetch = async () => {
     // 無駄な取得を減らすために保存されてる情報が復元されるのを待つ
-    await originalStore.restored
+    await restoringPromise.value
     // ログイン前に取得されるのを回避するために、チャンネル取得を待つ
     // チャンネル取得である必要性はない
-    await bothChannelsMapInitialFetchPromise
+    await bothChannelsMapInitialFetchPromise.value
 
     try {
       const [{ data: res }, shared] = await getActivityTimeline(
@@ -58,12 +61,16 @@ const useActivityStream = (props: { show: boolean }) => {
     { immediate: true }
   )
 
-  watch(mode, (newMode, oldMode) => {
-    if (newMode.all !== oldMode.all) {
-      setTimelineStreamingState(newMode.all)
-    }
-    fetch()
-  })
+  watch(
+    mode,
+    (newMode, oldMode) => {
+      if (newMode.all !== oldMode.all) {
+        setTimelineStreamingState(newMode.all)
+      }
+      fetch()
+    },
+    { deep: true }
+  )
 
   const onReconnect = async () => {
     setTimelineStreamingState(mode.value.all)
@@ -71,13 +78,10 @@ const useActivityStream = (props: { show: boolean }) => {
   }
   const onAddMessage = ({ message: activity }: { message: Message }) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!store.state.entities.channelsMap.has(activity.channelId)) return
+    if (!channelsMap.value.has(activity.channelId)) return
 
     // 購読チャンネルのみを表示するときに購読してないチャンネルのメッセージは処理しない
-    if (
-      !mode.value.all &&
-      !store.getters.domain.me.isChannelSubscribed(activity.channelId)
-    ) {
+    if (!mode.value.all && !isChannelSubscribed(activity.channelId)) {
       return
     }
 
@@ -110,7 +114,7 @@ const useActivityStream = (props: { show: boolean }) => {
   }
   const onUpdateMessage = (activity: Message) => {
     // 通常のチャンネルではない、つまりDMのときは無視
-    if (!store.state.entities.channelsMap.has(activity.channelId)) return
+    if (!channelsMap.value.has(activity.channelId)) return
 
     const sameMessageIndex = timeline.value.findIndex(a => a.id === activity.id)
     if (sameMessageIndex < 0) return

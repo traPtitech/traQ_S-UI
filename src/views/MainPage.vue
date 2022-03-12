@@ -53,7 +53,7 @@ import {
 } from 'vue'
 import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import useNavigationController from '/@/use/navigationController'
 import MainView from '/@/components/Main/MainView/MainView.vue'
 import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
@@ -65,7 +65,7 @@ import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
 import useToastStore from '/@/providers/toastStore'
 import { useMessageInputStates } from '/@/providers/messageInputState'
-import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import { provideAudioController } from '/@/providers/audioController'
 
 const useStyles = (
@@ -95,8 +95,7 @@ const useDraftConfirmer = () => {
 }
 
 const useCommandPaletteShortcutKey = () => {
-  const { mode, openCommandPalette, closeCommandPalette } =
-    useCommandPaletteInvoker()
+  const { mode, openCommandPalette, closeCommandPalette } = useCommandPalette()
 
   const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
@@ -168,7 +167,7 @@ export default defineComponent({
 
     useCommandPaletteShortcutKey()
 
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
     const { closeNav } = useNavigationController()
     const hideOuter = computed(

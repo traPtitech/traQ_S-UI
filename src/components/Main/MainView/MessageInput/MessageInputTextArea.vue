@@ -43,7 +43,7 @@ import useWordSuggester from './use/wordSuggester'
 import useInsertText from '/@/use/insertText'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { isFirefox } from '/@/lib/dom/browser'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import usePaste from './use/paste'
 
 const firefoxFlag = isFirefox()
@@ -100,7 +100,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const value = useModelValueSyncer(props, emit)
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     const textareaAutosizeRef = ref<{
       $el: HTMLTextAreaElement

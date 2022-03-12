@@ -8,10 +8,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import AToggle from '/@/components/UI/AToggle.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'UserNotificationListItem',
@@ -33,15 +33,15 @@ export default defineComponent({
     changeNotification: (_userId: UserId, _val: boolean) => true
   },
   setup(props, { emit }) {
+    const { usersMap } = useUsersStore()
+
     const value = computed({
       get: () => props.subscribed,
       set: _v => {
         emit('changeNotification', props.userId, !props.subscribed)
       }
     })
-    const name = computed(
-      () => store.state.entities.usersMap.get(props.userId)?.name ?? ''
-    )
+    const name = computed(() => usersMap.value.get(props.userId)?.name ?? '')
     return { value, name }
   }
 })

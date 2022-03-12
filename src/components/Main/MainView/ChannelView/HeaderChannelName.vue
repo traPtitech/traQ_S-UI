@@ -28,7 +28,7 @@ import { defineComponent, computed, PropType } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
 import { constructChannelPath } from '/@/router'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 type Props = {
   channelId: ChannelId
@@ -65,7 +65,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
     const { pathInfoList } = usePathInfo(props)
     const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
     const pathInfo = computed(() =>

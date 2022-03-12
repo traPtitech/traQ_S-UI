@@ -53,9 +53,10 @@
 import { defineComponent, computed } from 'vue'
 import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
-import useIsMobile from '/@/use/isMobile'
-import store from '/@/store'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
+import { useMeStore } from '/@/store/domain/me'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 const isSearchEnabled = window.traQConfig.enableSearch ?? false
@@ -84,9 +85,11 @@ export default defineComponent({
     clickManageChannel: () => true
   },
   setup(props, { emit }) {
-    const { isMobile } = useIsMobile()
+    const { detail } = useMeStore()
+    const { isEnabled: isRtcEnabled } = useRtcSettings()
+    const { isMobile } = useResponsiveStore()
     const isQallEnabled = computed(
-      () => isSkywayApikeySet && store.state.app.rtcSettings.isEnabled
+      () => isSkywayApikeySet && isRtcEnabled.value
     )
     const qallLabel = computed(() => {
       if (props.isQallSessionOpened) {
@@ -104,9 +107,7 @@ export default defineComponent({
       return 'Qallを開始'
     })
     const hasChannelEditPermission = computed(() =>
-      store.state.domain.me.detail?.permissions.includes(
-        UserPermission.EditChannel
-      )
+      detail.value?.permissions.includes(UserPermission.EditChannel)
     )
 
     const clickQall = () => {

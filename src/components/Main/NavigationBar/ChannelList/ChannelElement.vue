@@ -66,7 +66,6 @@ import {
   Ref,
   defineAsyncComponent
 } from 'vue'
-import store from '/@/store'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 import ChannelElementHash from './ChannelElementHash.vue'
@@ -77,6 +76,8 @@ import { deepSome } from '/@/lib/basic/tree'
 import { Channel } from '@traptitech/traq'
 import useHover from '/@/use/hover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useMeStore } from '/@/store/domain/me'
 
 const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
@@ -99,8 +100,9 @@ const useChannelClick = (
 }
 
 const useNotification = (props: TypedProps) => {
+  const { unreadChannelsMap } = useMeStore()
   const unreadChannel = computed(() =>
-    store.state.domain.me.unreadChannelsMap.get(props.channel.id)
+    unreadChannelsMap.value.get(props.channel.id)
   )
 
   const notificationState = reactive({
@@ -109,7 +111,7 @@ const useNotification = (props: TypedProps) => {
       props.ignoreChildren
         ? false
         : deepSome(props.channel, channel =>
-            store.state.domain.me.unreadChannelsMap.has(channel.id)
+            unreadChannelsMap.value.has(channel.id)
           )
     ),
     unreadCount: computed(() => unreadChannel.value?.count),
@@ -184,6 +186,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const typedProps = props as TypedProps
 
+    const { currentChannelId } = useMessagesView()
+
     const state = reactive({
       children: computed(() =>
         typedProps.ignoreChildren
@@ -195,9 +199,7 @@ export default defineComponent({
         () => !typedProps.ignoreChildren && !typedProps.channel.active
       ),
       isSelected: computed(
-        () =>
-          store.state.domain.messagesView.currentChannelId ===
-          typedProps.channel.id
+        () => currentChannelId.value === typedProps.channel.id
       )
     })
     const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)

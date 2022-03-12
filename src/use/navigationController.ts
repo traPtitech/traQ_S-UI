@@ -1,28 +1,27 @@
-import store from '/@/store'
-import { MainViewComponentState } from '/@/store/ui/mainView/state'
+import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 /**
  * モバイル用にナビゲーションの開閉を行う
  */
 const useNavigation = () => {
+  const { isMobile } = useResponsiveStore()
+  const { currentMainViewComponentState, isNavOpen, isNoComponentOpen } =
+    useMainViewStore()
+
   const openNav = () => {
-    if (
-      !store.state.ui.isMobile ||
-      !store.getters.ui.mainView.isNoComponentOpen
-    ) {
+    if (!isMobile.value || !isNoComponentOpen.value) {
       return
     }
-    store.commit.ui.mainView.setMainViewComponentState(
+    currentMainViewComponentState.value =
       MainViewComponentState.NavAppearingAuto
-    )
   }
   const closeNav = () => {
-    if (!store.state.ui.isMobile || !store.getters.ui.mainView.isNavOpen) {
+    if (!isMobile.value || !isNavOpen.value) {
       return
     }
-    store.commit.ui.mainView.setMainViewComponentState(
+    currentMainViewComponentState.value =
       MainViewComponentState.NavDisappearingAuto
-    )
   }
   return { openNav, closeNav }
 }

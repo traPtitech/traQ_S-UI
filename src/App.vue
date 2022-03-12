@@ -12,31 +12,23 @@
 
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
-import store from '/@/store'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
-import { mobileMinBreakpoint } from '/@/lib/media'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import { provideToastStore } from '/@/providers/toastStore'
 import { provideStampPickerStore } from '/@/providers/stampPicker'
 import { provideMessageInputState } from '/@/providers/messageInputState'
-import { provideCommandPaletteStore } from '/@/providers/commandPalette'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
-
-const useWindowResizeObserver = () => {
-  const queryList = window.matchMedia(`(max-width: ${mobileMinBreakpoint}px)`)
-
-  store.commit.ui.setIsMobile(queryList.matches)
-
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
-    store.commit.ui.setIsMobile(event.matches)
-  })
-}
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useAppRtcStore } from '/@/store/app/rtc'
+import { useTts } from '/@/store/app/tts'
+import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const useQallConfirmer = () => {
+  const { isCurrentDevice } = useAppRtcStore()
   window.addEventListener('beforeunload', event => {
-    if (store.getters.app.rtc.isCurrentDevice) {
+    if (isCurrentDevice.value) {
       const unloadMessage = 'Qall中ですが本当に終了しますか？'
       event.preventDefault()
       event.returnValue = unloadMessage
@@ -46,9 +38,8 @@ const useQallConfirmer = () => {
 }
 
 const useThemeObserver = () => {
-  const themeColor = computed(
-    () => store.getters.app.themeSettings.currentTheme.browser.themeColor
-  )
+  const { currentTheme } = useThemeSettings()
+  const themeColor = computed(() => currentTheme.value.browser.themeColor)
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const $themeColor = document.querySelector<HTMLMetaElement>(
@@ -63,32 +54,17 @@ const useThemeObserver = () => {
   })
 
   const codeHighlight = computed(
-    () =>
-      store.getters.app.themeSettings.currentTheme.markdown.codeHighlight ===
-      'dark'
+    () => currentTheme.value.markdown.codeHighlight === 'dark'
   )
   useHtmlDatasetBoolean('codeHighlight', codeHighlight)
 
-  const stampEdge = computed(
-    () => store.getters.app.themeSettings.currentTheme.specific.stampEdgeEnable
-  )
+  const stampEdge = computed(() => currentTheme.value.specific.stampEdgeEnable)
   useHtmlDatasetBoolean('stampEdge', stampEdge)
 }
 
 const useEcoModeObserver = () => {
-  const ecoMode = computed(() => store.state.app.browserSettings.ecoMode)
+  const { ecoMode } = useBrowserSettings()
   useHtmlDatasetBoolean('ecoMode', ecoMode)
-}
-
-const useOsDarkTheme = () => {
-  const queryList = window.matchMedia('(prefers-color-scheme: dark)')
-
-  store.commit.app.themeSettings.setIsOsDarkTheme(queryList.matches)
-
-  // safariではaddEventListener('change', func)が未対応なため
-  queryList.addListener((event: MediaQueryListEvent) => {
-    store.commit.app.themeSettings.setIsOsDarkTheme(event.matches)
-  })
 }
 
 const useThemeStyleTag = (style: Ref<Record<string, string>>) => {
@@ -118,16 +94,15 @@ export default defineComponent({
     provideToastStore()
     provideStampPickerStore()
     provideMessageInputState()
-    provideCommandPaletteStore()
 
-    useWindowResizeObserver()
-    const isMobile = computed(() => store.state.ui.isMobile)
+    useTts()
+
+    const { isMobile } = useResponsiveStore()
 
     useQallConfirmer()
 
     useThemeObserver()
     useEcoModeObserver()
-    useOsDarkTheme()
 
     const themeVariables = useThemeVariables()
     useThemeStyleTag(themeVariables)

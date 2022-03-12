@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
-import store from '/@/store'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import useChannelFilter from '/@/use/channelFilter'
 import { constructTree } from '/@/lib/channelTree'
@@ -49,6 +48,11 @@ import { buildDescendantsChannelArray } from '../use/buildChannel'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import { useModalStore } from '/@/store/ui/modal'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -58,14 +62,10 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 }
 
 const useFilterStarChannel = () => {
-  const filterStarChannel = computed(
-    () => store.state.app.browserSettings.filterStarChannel
-  )
+  const { filterStarChannel } = useBrowserSettings()
 
   const toggleStarChannelFilter = () => {
-    store.commit.app.browserSettings.setFilterStarChannel(
-      !filterStarChannel.value
-    )
+    filterStarChannel.value = !filterStarChannel.value
   }
 
   return {
@@ -75,30 +75,33 @@ const useFilterStarChannel = () => {
 }
 
 const useChannelList = (filterStarChannel: Ref<boolean>) => {
+  const { staredChannelSet } = useMeStore()
+  const { channelsMap } = useChannelsStore()
   return computed(() =>
     (filterStarChannel.value
       ? [
           ...new Set(
-            [...store.state.domain.me.staredChannelSet].flatMap(v =>
-              buildDescendantsChannelArray(v, false)
+            [...staredChannelSet.value].flatMap(v =>
+              buildDescendantsChannelArray(channelsMap.value, v, false)
             )
           )
         ]
-      : [...store.state.entities.channelsMap.values()]
+      : [...channelsMap.value.values()]
     ).filter(ch => !ch.archived)
   )
 }
 
-const useTopLevelChannels = () =>
-  computed(
-    () =>
-      store.state.domain.channelTree.channelTree.children.filter(
-        channel => !channel.archived
-      ) ?? []
+const useTopLevelChannels = () => {
+  const { channelTree } = useChannelTree()
+  return computed(() =>
+    channelTree.value.children.filter(channel => !channel.archived)
   )
+}
 
-const useStaredChannels = () =>
-  computed(
+const useStaredChannels = () => {
+  const { staredChannelSet } = useMeStore()
+  const { channelsMap } = useChannelsStore()
+  return computed(
     () =>
       constructTree(
         {
@@ -106,11 +109,12 @@ const useStaredChannels = () =>
           name: '',
           parentId: null,
           archived: false,
-          children: [...store.state.domain.me.staredChannelSet]
+          children: [...staredChannelSet.value]
         },
-        store.state.entities.channelsMap
+        channelsMap.value
       )?.children.filter(channel => !channel.archived) ?? []
   )
+}
 
 export default defineComponent({
   name: 'ChannelsTab',
@@ -122,6 +126,7 @@ export default defineComponent({
     EmptyState
   },
   setup() {
+    const { pushModal } = useModalStore()
     const topLevelChannels = useTopLevelChannels()
     const staredChannels = useStaredChannels()
 
@@ -132,7 +137,7 @@ export default defineComponent({
     )
 
     const onClickButton = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'channel-create'
       })
     }

@@ -21,10 +21,11 @@ import { computed, defineComponent, PropType, ref } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis from '/@/lib/apis'
-import store from '/@/store'
 import useToastStore from '/@/providers/toastStore'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
 import UsersSelector from '../Common/UsersSelector.vue'
+import { useModalStore } from '/@/store/ui/modal'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 export default defineComponent({
   name: 'GroupAdminAddModal',
@@ -41,10 +42,10 @@ export default defineComponent({
   },
   setup(props) {
     const { addErrorToast } = useToastStore()
+    const { popModal } = useModalStore()
+    const { userGroupsMap } = useGroupsStore()
 
-    const group = computed(() =>
-      store.state.entities.userGroupsMap.get(props.id)
-    )
+    const group = computed(() => userGroupsMap.value.get(props.id))
     const groupName = computed(() => group.value?.name)
     const admins = computed(() => group.value?.admins ?? [])
 
@@ -62,7 +63,7 @@ export default defineComponent({
       }
       isAdding.value = false
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     }
 
     return { groupName, admins, userIds, isAdding, add }

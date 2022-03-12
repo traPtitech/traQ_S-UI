@@ -1,12 +1,14 @@
 import { computed, Ref } from 'vue'
-import store from '/@/store'
 import { User } from '@traptitech/traq'
 import { UserId } from '/@/types/entity-ids'
+import { useModalStore } from '/@/store/ui/modal'
 
 export const useUserModalOpener = (
   props: { userId?: UserId; preventModal?: boolean },
   user: Ref<User | undefined>
 ) => {
+  const { pushModal } = useModalStore()
+
   const isClickable = computed(
     () =>
       user.value &&
@@ -20,7 +22,7 @@ export const useUserModalOpener = (
     if (!props.userId) {
       return
     }
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'user',
       id: props.userId
     })

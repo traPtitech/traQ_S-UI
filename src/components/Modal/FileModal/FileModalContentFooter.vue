@@ -13,12 +13,12 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import useFileMeta from '/@/use/fileMeta'
 import useChannelPath from '/@/use/channelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../use/openLinkFromModal'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'FileModalContentFooter',
@@ -36,11 +36,13 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap } = useUsersStore()
+
     const { fileMeta } = useFileMeta(props)
     const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 
     const user = computed(() =>
-      store.state.entities.usersMap.get(fileMeta.value?.uploaderId ?? '')
+      usersMap.value.get(fileMeta.value?.uploaderId ?? '')
     )
     const createdAt = computed(() =>
       getCreatedDate(fileMeta.value?.createdAt ?? '')

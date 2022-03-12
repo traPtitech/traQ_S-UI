@@ -14,12 +14,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import useChannelSubscribers from '/@/use/channelSubscribers'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'ChannelSidebarMember',
@@ -33,17 +34,20 @@ export default defineComponent({
     viewerIds: { type: Array as PropType<readonly UserId[]>, default: () => [] }
   },
   setup(props) {
+    const { channelsMap } = useChannelsStore()
+    const { usersMap, activeUsersMap } = useUsersStore()
+
     const subscribers = useChannelSubscribers(props)
 
     const isForceNotification = computed(
-      () => store.state.entities.channelsMap.get(props.channelId)?.force
+      () => channelsMap.value.get(props.channelId)?.force
     )
     const viewStates = computed(() =>
       [...(subscribers.value ?? new Set())]
-        .filter(id => store.state.entities.usersMap.has(id))
+        .filter(id => usersMap.value.has(id))
         .map(id => ({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          user: store.getters.entities.activeUsersMap.get(id)!,
+          user: activeUsersMap.value.get(id)!,
           active: props.viewerIds.includes(id)
         }))
         .filter(state => state.user !== undefined)

@@ -13,7 +13,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import store from '/@/store'
+import { useModalStore } from '/@/store/ui/modal'
+import { useGroupsStore } from '/@/store/entities/groups'
 
 export default defineComponent({
   name: 'GradeBadge',
@@ -28,14 +29,15 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const gradeGroup = computed(() =>
-      store.getters.entities.gradeGroupByUserId(props.userId)
-    )
+    const { pushModal } = useModalStore()
+    const { getGradeGroupsByUserId } = useGroupsStore()
+
+    const gradeGroup = computed(() => getGradeGroupsByUserId(props.userId))
     const isGrade = computed(() => !!gradeGroup.value)
 
     const onClick = () => {
       if (!gradeGroup.value) return
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'group',
         id: gradeGroup.value.id
       })

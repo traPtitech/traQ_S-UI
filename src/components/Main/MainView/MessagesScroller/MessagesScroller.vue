@@ -6,7 +6,7 @@
     @click="onClick"
   >
     <div
-      v-if="state.stampsInitialFetchCompleted"
+      v-if="stampsMapFetched"
       :class="$style.viewport"
       data-testid="channel-viewport"
     >
@@ -58,20 +58,21 @@ import {
   shallowRef
 } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { LoadingDirection } from '/@/store/domain/messagesView/state'
+import { LoadingDirection } from '/@/store/domain/messagesView'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
 import ClipElement from '/@/components/Main/MainView/MessageElement/ClipElement.vue'
 import useMessageScrollerElementResizeObserver from './use/messageScrollerElementResizeObserver'
 import { throttle } from 'throttle-debounce'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
-import store from '/@/store'
 import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 import { getFullDayString } from '/@/lib/basic/date'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useRoute, useRouter } from 'vue-router'
 import { isMessageScrollerRoute, RouteName } from '/@/router'
-import { stampsMapInitialFetchPromise } from '/@/store/entities/promises'
 import { useOpenLink } from '/@/use/openLink'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 const LOAD_MORE_THRESHOLD = 10
 
@@ -125,15 +126,16 @@ const useMarkdownInternalHandler = () => {
 }
 
 const useCompareDate = (props: { messageIds: MessageId[] }) => {
+  const { messagesMap } = useMessagesStore()
+
   const dayDiff = (index: number) => {
     if (index <= 0) {
       return true
     }
-    const { messagesMap } = store.state.entities.messages
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const pre = messagesMap.get(props.messageIds[index - 1]!)
+    const pre = messagesMap.value.get(props.messageIds[index - 1]!)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const current = messagesMap.get(props.messageIds[index]!)
+    const current = messagesMap.value.get(props.messageIds[index]!)
     const preDate = new Date(pre?.createdAt ?? '')
     const currentDate = new Date(current?.createdAt ?? '')
     return preDate.toDateString() !== currentDate.toDateString()
@@ -146,20 +148,19 @@ const useScrollRestoration = (
   rootRef: Ref<HTMLElement | null>,
   state: { scrollTop: number }
 ) => {
+  const { lastScrollPosition } = useMainViewStore()
   const route = useRoute()
   watch(
     computed(() => route.name),
     async (to, from) => {
       if (isMessageScrollerRoute(from)) {
-        store.commit.ui.mainView.setLastScrollPosition(
-          rootRef.value?.scrollTop ?? 0
-        )
+        lastScrollPosition.value = rootRef.value?.scrollTop ?? 0
       }
       if (isMessageScrollerRoute(to)) {
-        state.scrollTop = store.state.ui.mainView.lastScrollPosition
+        state.scrollTop = lastScrollPosition.value
         await nextTick()
         rootRef.value?.scrollTo({ top: state.scrollTop })
-        store.commit.ui.mainView.setLastScrollPosition(0)
+        lastScrollPosition.value = 0
       }
     }
   )
@@ -204,25 +205,22 @@ export default defineComponent({
     requestLoadLatter: () => true
   },
   setup(props, { emit }) {
-    // provideMessageContextMenuStore()
+    const { lastScrollPosition, primaryView } = useMainViewStore()
+    const { messagesMap } = useMessagesStore()
+
+    // メッセージスタンプ表示時にスタンプが存在していないと
+    // 場所が確保されないくてずれてしまうので、取得完了を待つ
+    const { stampsMapFetched } = useStampsStore()
 
     const rootRef = shallowRef<HTMLElement | null>(null)
     const state = reactive({
       height: 0,
-      scrollTop: store.state.ui.mainView.lastScrollPosition,
-      stampsInitialFetchCompleted: false
+      scrollTop: lastScrollPosition.value
     })
-
-    // メッセージスタンプ表示時にスタンプが存在していないと
-    // 場所が確保されないくてずれてしまうので、取得完了を待つ
-    ;(async () => {
-      await stampsMapInitialFetchPromise
-      state.stampsInitialFetchCompleted = true
-    })()
 
     // DaySeparatorの表示
     const createdDate = (id: MessageId) => {
-      const message = store.state.entities.messages.messagesMap.get(id)
+      const message = messagesMap.value.get(id)
       if (!message) {
         return ''
       }
@@ -233,9 +231,7 @@ export default defineComponent({
     const unreadIndex = computed(() => {
       if (!props.unreadSince) return -1
       return props.messageIds.findIndex(
-        id =>
-          store.state.entities.messages.messagesMap.get(id)?.createdAt ===
-          props.unreadSince
+        id => messagesMap.value.get(id)?.createdAt === props.unreadSince
       )
     })
 
@@ -243,9 +239,7 @@ export default defineComponent({
       useMessageScrollerElementResizeObserver(rootRef, props, state)
 
     const messageComponent = computed(() =>
-      store.state.ui.mainView.primaryView.type === 'clips'
-        ? ClipElement
-        : MessageElement
+      primaryView.value.type === 'clips' ? ClipElement : MessageElement
     )
 
     onMounted(() => {
@@ -316,6 +310,7 @@ export default defineComponent({
 
     return {
       state,
+      stampsMapFetched,
       onClick,
       rootRef,
       handleScroll,

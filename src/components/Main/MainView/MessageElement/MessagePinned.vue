@@ -7,9 +7,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import store from '/@/store'
 import { MessageId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { useMessagesView } from '/@/store/domain/messagesView'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'MessagePinned',
@@ -23,11 +24,13 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { usersMap } = useUsersStore()
+    const { pinnedMessages } = useMessagesView()
     const userDisplayName = computed(() => {
-      const pin = store.state.domain.messagesView.pinnedMessages.find(
+      const pin = pinnedMessages.value.find(
         v => v.message.id === props.messageId
       )
-      const user = store.state.entities.usersMap.get(pin?.userId ?? '')
+      const user = usersMap.value.get(pin?.userId ?? '')
       return user?.displayName
     })
     return { userDisplayName }

@@ -17,9 +17,9 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
 import { OAuthClientId } from '/@/types/entity-ids'
-import store from '/@/store'
 import useToastStore from '/@/providers/toastStore'
 import TokenInfo from './TokenInfo.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'TokenManager',
@@ -28,7 +28,8 @@ export default defineComponent({
   },
   setup() {
     const { addErrorToast } = useToastStore()
-    store.dispatch.entities.fetchUsers()
+    const { usersMap, fetchUsers } = useUsersStore()
+    fetchUsers()
 
     const tokens = ref<ActiveOAuth2Token[]>([])
     const clients = ref<Map<OAuthClientId, OAuth2Client>>(new Map())
@@ -41,9 +42,7 @@ export default defineComponent({
             ...token,
             clientDesc: client?.description,
             clientName: client?.name,
-            clientDeveloper: store.state.entities.usersMap.get(
-              client?.developerId ?? ''
-            )
+            clientDeveloper: usersMap.value.get(client?.developerId ?? '')
           }
         })
     )

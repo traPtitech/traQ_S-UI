@@ -45,13 +45,16 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'HomeTab',
@@ -62,8 +65,13 @@ export default defineComponent({
     DMChannelList
   },
   setup() {
+    const { homeChannelTree } = useChannelTree()
+    const { channelSessionsMap } = useDomainRtcStore()
+    const { detail, unreadChannelsMap } = useMeStore()
+    const { channelsMap, dmChannelsMap } = useChannelsStore()
+
     const homeChannelWithTree = computed(() =>
-      !store.state.domain.me.detail?.homeChannel
+      !detail.value?.homeChannel
         ? []
         : constructTree(
             {
@@ -71,38 +79,35 @@ export default defineComponent({
               name: '',
               parentId: null,
               archived: false,
-              children: [store.state.domain.me.detail.homeChannel]
+              children: [detail.value.homeChannel]
             },
-            store.state.entities.channelsMap
+            channelsMap.value
           )?.children?.filter(channel => !channel.archived) ?? []
     )
     const channelsWithNotification = computed(() =>
-      [...store.state.domain.me.unreadChannelsMap.values()]
+      [...unreadChannelsMap.value.values()]
         .sort((a, b) => {
           if (a.noticeable !== b.noticeable) {
             return b.noticeable ? 1 : -1
           }
           return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
         })
-        .map(unread => store.state.entities.channelsMap.get(unread.channelId))
+        .map(unread => channelsMap.value.get(unread.channelId))
         .filter(isDefined)
     )
     const dmChannelsWithNotification = computed(() =>
-      [...store.state.domain.me.unreadChannelsMap.values()]
+      [...unreadChannelsMap.value.values()]
         .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
-        .map(unread => store.state.entities.dmChannelsMap.get(unread.channelId))
+        .map(unread => dmChannelsMap.value.get(unread.channelId))
         .filter(isDefined)
     )
-    const topLevelChannels = computed(
-      () =>
-        store.state.domain.channelTree.homeChannelTree.children.filter(
-          channel => !channel.archived
-        ) ?? []
+    const topLevelChannels = computed(() =>
+      homeChannelTree.value.children.filter(channel => !channel.archived)
     )
     const channelsWithRtc = computed(() =>
-      [...store.state.domain.rtc.channelSessionsMap.entries()]
+      [...channelSessionsMap.value.entries()]
         .filter(([, sessionIds]) => sessionIds.size > 0)
-        .map(([channelId]) => store.state.entities.channelsMap.get(channelId))
+        .map(([channelId]) => channelsMap.value.get(channelId))
         .filter(isDefined)
     )
 

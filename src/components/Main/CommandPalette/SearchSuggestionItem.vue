@@ -15,9 +15,10 @@
 <script lang="ts">
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import store from '/@/store'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed, defineComponent, PropType } from 'vue'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
 
 export type SuggestionItem =
   | { type: 'search'; value: string }
@@ -37,16 +38,17 @@ export default defineComponent({
     select: (_item: SuggestionItem) => true
   },
   setup(props, { emit }) {
+    const { channelsMap } = useChannelsStore()
+    const { usersMap } = useUsersStore()
+
     const title = computed(() => {
       switch (props.item.type) {
         case 'search':
           return props.item.value
         case 'channel':
-          return (
-            store.state.entities.channelsMap.get(props.item.value)?.name ?? ''
-          )
+          return channelsMap.value.get(props.item.value)?.name ?? ''
         case 'user':
-          return store.state.entities.usersMap.get(props.item.value)?.name ?? ''
+          return usersMap.value.get(props.item.value)?.name ?? ''
       }
       return ''
     })
@@ -55,14 +57,9 @@ export default defineComponent({
         case 'search':
           return 'Enterで検索'
         case 'channel':
-          return (
-            store.state.entities.channelsMap.get(props.item.value)?.topic ?? ''
-          )
+          return channelsMap.value.get(props.item.value)?.topic ?? ''
         case 'user':
-          return (
-            store.state.entities.usersMap.get(props.item.value)?.displayName ??
-            ''
-          )
+          return usersMap.value.get(props.item.value)?.displayName ?? ''
       }
       return ''
     })

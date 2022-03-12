@@ -2,44 +2,36 @@
   <div :class="$style.container">
     <main-view-header-selector
       :class="$style.headerContainer"
-      :view-info="state.primary"
+      :view-info="primaryView"
     />
     <main-view-sidebar-selector
-      :view-info="state.primary"
+      :view-info="primaryView"
       :is-sidebar-opener-ready="isMounted"
     />
-    <div :class="$style.layoutContainer" :data-layout="state.layout">
+    <div :class="$style.layoutContainer" :data-layout="layout">
       <div :class="$style.primaryContainer">
         <main-view-component-selector
           :class="[$style.componentContainer, $style.primary]"
-          :view-info="state.primary"
+          :view-info="primaryView"
         />
         <div id="sidebar" :class="$style.sidebar" />
       </div>
       <div id="sidebar-opener" :class="$style.hidden" />
       <main-view-component-selector
-        v-if="state.secondary"
+        v-if="secondaryView"
         :class="[$style.componentContainer, $style.secondary]"
-        :view-info="state.secondary"
+        :view-info="secondaryView"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  ref,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
-import store from '/@/store'
-import useIsMobile from '/@/use/isMobile'
+import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
 import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
 import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
+import { useMainViewStore } from '/@/store/ui/mainView'
 
 export default defineComponent({
   name: 'MainView',
@@ -49,15 +41,7 @@ export default defineComponent({
     MainViewSidebarSelector
   },
   setup() {
-    const state = reactive({
-      layout: computed(() => store.state.ui.mainView.layout),
-      primary: computed(() => store.state.ui.mainView.primaryView),
-      secondary: computed(() => store.state.ui.mainView.secondaryView)
-    })
-    const channelId = computed(
-      () => store.state.domain.messagesView.currentChannelId
-    )
-    const { isMobile } = useIsMobile()
+    const { layout, primaryView, secondaryView } = useMainViewStore()
 
     const isMounted = ref(false)
     onMounted(() => {
@@ -68,9 +52,9 @@ export default defineComponent({
     })
 
     return {
-      state,
-      channelId,
-      isMobile,
+      layout,
+      primaryView,
+      secondaryView,
       isMounted
     }
   }

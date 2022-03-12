@@ -109,23 +109,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watchEffect } from 'vue'
-import store from '/@/store'
-import useSyncedState from '/@/components/Settings/use/syncedState'
+import { defineComponent, computed, ref, watchEffect, reactive } from 'vue'
 import AToggle from '/@/components/UI/AToggle.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
-import { tts } from '/@/lib/tts'
 import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
+import { useRtcSettings } from '/@/store/app/rtcSettings'
 
 const isAudioContextDtlnSampleRateIsSupported =
   checkAudioContextSampleRateSupport(dtlnSampleRate)
 
-const useDevicesInfo = (state: {
-  isEnabled: boolean
-  audioInputDeviceId: string
-}) => {
+const useDevicesInfo = () => {
+  const { isEnabled, ensureDeviceIds } = useRtcSettings()
   const devices = ref<MediaDeviceInfo[]>([])
   const fetchFailed = ref(false)
 
@@ -140,13 +136,13 @@ const useDevicesInfo = (state: {
     }
   }
 
-  if (state.isEnabled) {
+  if (isEnabled.value) {
     fetchDeviceList()
   }
 
   watchEffect(() => {
-    if (state.isEnabled) {
-      store.dispatch.app.rtcSettings.ensureDeviceIds()
+    if (isEnabled.value) {
+      ensureDeviceIds()
     }
   })
 
@@ -169,16 +165,17 @@ const useDevicesInfo = (state: {
   }
 }
 
-const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
+const useVoices = () => {
+  const { voiceName } = useRtcSettings()
   const getVoicesAndSetDefault = () => {
     const voices = speechSynthesis.getVoices().filter(v => v.lang === 'ja-JP')
 
-    const isAlreadySet = voices.some(v => v.name === state.voiceName)
+    const isAlreadySet = voices.some(v => v.name === voiceName.value)
     if (!isAlreadySet) {
       // デフォルトをセットする
       const defaultVoice = voices.find(v => v.default) || voices[0]
       if (defaultVoice) {
-        state.voiceName = defaultVoice.name
+        voiceName.value = defaultVoice.name
       }
     }
 
@@ -197,12 +194,6 @@ const useVoices = (state: { isTtsEnabled: boolean; voiceName: string }) => {
     voices.value = getVoicesAndSetDefault()
   })
 
-  watchEffect(() => {
-    if (!state.isTtsEnabled) {
-      tts.stop()
-    }
-  })
-
   return voiceOptions
 }
 
@@ -214,13 +205,9 @@ export default defineComponent({
     FormInput
   },
   setup() {
-    const rtcSettings = computed(() => store.state.app.rtcSettings)
-    const { state } = useSyncedState(
-      rtcSettings,
-      store.dispatch.app.rtcSettings.set
-    )
+    const state = reactive(useRtcSettings())
 
-    const devicesInfo = useDevicesInfo(state)
+    const devicesInfo = useDevicesInfo()
 
     const audioInputDeviceOptions = computed(() =>
       devicesInfo.audioInputDevices.value.map(d => ({
@@ -229,7 +216,7 @@ export default defineComponent({
       }))
     )
 
-    const voiceOptions = useVoices(state)
+    const voiceOptions = useVoices()
 
     return {
       state,

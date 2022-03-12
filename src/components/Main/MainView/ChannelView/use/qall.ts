@@ -1,40 +1,39 @@
-import store from '/@/store'
 import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useToastStore from '/@/providers/toastStore'
+import { useAppRtcStore } from '/@/store/app/rtc'
+import { useDomainRtcStore } from '/@/store/domain/rtc'
 
 const useQall = (props: { channelId: ChannelId }) => {
+  const {
+    isCurrentDevice: isJoinedWithCurrentDevice,
+    startQall,
+    endQall
+  } = useAppRtcStore()
+  const { sessionInfoMap, qallSession, currentRTCState } = useDomainRtcStore()
   const { addErrorToast } = useToastStore()
 
   const isQallSessionOpened = computed(() =>
-    [...store.state.domain.rtc.sessionInfoMap.values()].some(
+    [...sessionInfoMap.value.values()].some(
       s => s?.channelId === props.channelId && s?.type === 'qall'
     )
   )
-  const hasActiveQallSession = computed(() => {
-    return !!store.getters.domain.rtc.qallSession
-  })
+  const hasActiveQallSession = computed(() => !!qallSession.value)
   const isJoinedQallSession = computed(
     () =>
       hasActiveQallSession.value &&
-      store.getters.domain.rtc.currentRTCState?.channelId === props.channelId
-  )
-  const isJoinedWithCurrentDevice = computed(
-    () => store.getters.app.rtc.isCurrentDevice
+      currentRTCState.value?.channelId === props.channelId
   )
 
-  const startQallOnCurrentChannel = () => {
+  const startQallOnCurrentChannel = async () => {
     try {
-      store.dispatch.app.rtc.startQall(props.channelId)
+      await startQall(props.channelId)
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Qallの開始に失敗しました', e)
 
       addErrorToast('Qallの開始に失敗しました')
     }
-  }
-  const endQall = () => {
-    store.dispatch.app.rtc.endQall()
   }
   const toggleQall = () => {
     if (isJoinedQallSession.value) {

@@ -22,10 +22,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 import { UserGroupMember } from '@traptitech/traq'
+import { useGroupsStore } from '/@/store/entities/groups'
+import { useUsersStore } from '/@/store/entities/users'
 
 type UserGroupMemberOrAdmin = UserGroupMember & {
   isMember: boolean
@@ -45,9 +46,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const group = computed(() =>
-      store.state.entities.userGroupsMap.get(props.id)
-    )
+    const { activeUsersMap } = useUsersStore()
+    const { userGroupsMap } = useGroupsStore()
+
+    const group = computed(() => userGroupsMap.value.get(props.id))
 
     const name = computed(() => group.value?.name)
     const users = computed((): UserGroupMemberOrAdmin[] => {
@@ -63,7 +65,7 @@ export default defineComponent({
         ...group.value.members
           .filter(m => !adminIds.has(m.id))
           .map(m => ({ ...m, isMember: true, isAdmin: false }))
-      ].filter(m => store.getters.entities.activeUsersMap.has(m.id))
+      ].filter(m => activeUsersMap.value.has(m.id))
     })
 
     return { name, users }

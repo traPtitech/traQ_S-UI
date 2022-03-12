@@ -11,11 +11,11 @@ import {
   computed,
   watch
 } from 'vue'
-import store from '/@/store'
 import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '/@/router'
 import useRedirectParam from '/@/components/Authenticate/use/redirectParam'
 import { useRouter } from 'vue-router'
+import { useMeStore } from '/@/store/domain/me'
 
 export type PageType =
   | RouteName.Login
@@ -25,6 +25,7 @@ export type PageType =
 
 const usePageSwitch = (props: { type: PageType }) => {
   const router = useRouter()
+  const { detail, fetchMe } = useMeStore()
   const { redirect } = useRedirectParam()
   const state = reactive({
     show: false
@@ -33,8 +34,8 @@ const usePageSwitch = (props: { type: PageType }) => {
   const isConsent = computed(() => props.type === 'consent')
 
   const updateState = async () => {
-    await store.dispatch.domain.me.fetchMe()
-    const isLoggedIn = store.state.domain.me.detail !== undefined
+    await fetchMe()
+    const isLoggedIn = detail.value !== undefined
 
     if (isConsent.value) {
       if (isLoggedIn) {

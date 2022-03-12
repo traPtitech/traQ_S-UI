@@ -16,9 +16,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import store from '/@/store'
 import { StampId } from '/@/types/entity-ids'
 import StampItem from './StampItem.vue'
+import { useMeStore } from '/@/store/domain/me'
+import { useStampsStore } from '/@/store/entities/stamps'
 
 export default defineComponent({
   name: 'EditStamp',
@@ -26,12 +27,14 @@ export default defineComponent({
     StampItem
   },
   setup() {
+    const { myId } = useMeStore()
+    const { stampsMap } = useStampsStore()
+
     // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const myUserId = computed(() => store.getters.domain.me.myId!)
+
     const myStamps = computed(() =>
-      [...store.state.entities.stampsMap.values()].filter(
-        stamp => stamp.creatorId === myUserId.value
+      [...stampsMap.value.values()].filter(
+        stamp => stamp.creatorId === myId.value
       )
     )
 

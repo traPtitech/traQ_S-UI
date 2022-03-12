@@ -1,8 +1,10 @@
-import store from '/@/store'
+import { useModalStore } from '/@/store/ui/modal'
 
 const useGroupCreateModalOpener = () => {
+  const { pushModal } = useModalStore()
+
   const openGroupCreateModal = () => {
-    store.dispatch.ui.modal.pushModal({
+    pushModal({
       type: 'group-create'
     })
   }

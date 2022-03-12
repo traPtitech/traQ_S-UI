@@ -27,7 +27,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
 import useToastStore from '/@/providers/toastStore'
-import store from '/@/store'
+import { useModalStore } from '/@/store/ui/modal'
 
 export default defineComponent({
   name: 'GroupAdminList',
@@ -46,10 +46,11 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { pushModal } = useModalStore()
     const { addErrorToast } = useToastStore()
 
     const onClickAdd = () => {
-      store.dispatch.ui.modal.pushModal({
+      pushModal({
         type: 'group-admin-add',
         id: props.groupId
       })

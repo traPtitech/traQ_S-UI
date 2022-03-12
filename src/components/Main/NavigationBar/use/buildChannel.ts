@@ -1,16 +1,17 @@
 import { isDefined } from '/@/lib/basic/array'
-import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
+import { Channel } from '@traptitech/traq'
 
 export const buildDescendantsChannelArray = (
+  channelsMap: Map<ChannelId, Channel>,
   id: ChannelId,
   containArchive: boolean
 ) => {
-  if (!store.state.entities.channelsMap.has(id)) {
+  if (!channelsMap.has(id)) {
     throw `channelIdToPath: No channel: ${id}`
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const channel = store.state.entities.channelsMap.get(id)!
+  const channel = channelsMap.get(id)!
   if (channel.archived) return []
 
   const result = [channel]
@@ -19,7 +20,7 @@ export const buildDescendantsChannelArray = (
   while (result.length !== i + 1 || result[i]!.children.length > 0) {
     result.push(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ...result[i]!.children.map(c => store.state.entities.channelsMap.get(c))
+      ...result[i]!.children.map(c => channelsMap.get(c))
         .filter(isDefined)
         .filter(ch => (containArchive ? !ch.archived : ch))
     )

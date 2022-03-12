@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, Ref } from 'vue'
-import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -47,12 +46,15 @@ import useChannelOptions from '/@/use/channelOptions'
 import { isValidChannelName } from '/@/lib/validate'
 import { canCreateChildChannel } from '/@/lib/channel'
 import useToastStore from '/@/providers/toastStore'
+import { useModalStore } from '/@/store/ui/modal'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const useManageChannel = (
   props: { id: string },
   state: PatchChannelRequest,
   oldState: Ref<Required<PatchChannelRequest>>
 ) => {
+  const { popModal } = useModalStore()
   const { channelIdToPathString } = useChannelPath()
   const { addErrorToast } = useToastStore()
 
@@ -72,7 +74,7 @@ const useManageChannel = (
       }
       await apis.editChannel(props.id, reqJson)
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('チャンネルの変更に失敗しました', e)
@@ -96,7 +98,7 @@ export default defineComponent({
     id: { type: String, required: true }
   },
   setup(props) {
-    const channelsMap = computed(() => store.state.entities.channelsMap)
+    const { channelsMap } = useChannelsStore()
     const channel = computed((): Required<PatchChannelRequest> => {
       const c = channelsMap.value.get(props.id)
       return {

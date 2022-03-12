@@ -50,7 +50,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { useCommandPaletteInvoker } from '/@/providers/commandPalette'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
@@ -71,7 +71,7 @@ const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
 
 const useMessageOpener = () => {
   const { openLink } = useOpenLink()
-  const { closeCommandPalette } = useCommandPaletteInvoker()
+  const { closeCommandPalette } = useCommandPalette()
 
   const openMessage = async (e: MouseEvent, messageId: MessageId) => {
     openLink(e, constructMessagesPath(messageId), () => {

@@ -28,9 +28,10 @@ import {
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
-import store from '/@/store'
 import { AxiosError } from 'axios'
 import { constructMessagesPath } from '/@/router'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'SidebarEventPinnedChanged',
@@ -57,6 +58,9 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const { fetchMessage } = useMessagesStore()
+    const { usersMap } = useUsersStore()
+
     const title = computed(() =>
       props.type === ChannelEventTypeEnum.PinAdded
         ? 'ピン留め追加'
@@ -69,7 +73,7 @@ export default defineComponent({
       () => props.details.messageId,
       async newMessageId => {
         try {
-          const m = await store.dispatch.entities.messages.fetchMessage({
+          const m = await fetchMessage({
             messageId: newMessageId
           })
           message.value = m
@@ -84,9 +88,7 @@ export default defineComponent({
     )
 
     const user = computed(() =>
-      message.value
-        ? store.state.entities.usersMap.get(message.value.userId)
-        : undefined
+      message.value ? usersMap.value.get(message.value.userId) : undefined
     )
 
     const messageLink = computed(() =>

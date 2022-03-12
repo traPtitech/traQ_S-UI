@@ -1,25 +1,53 @@
 import { computed, reactive, watch } from 'vue'
-import store, { originalStore } from '/@/store'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
 import useViewTitle from './viewTitle'
 import { LocationQuery, useRoute } from 'vue-router'
-import {
-  bothChannelsMapInitialFetchPromise,
-  usersMapInitialFetchPromise
-} from '/@/store/entities/promises'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import { useModalStore } from '/@/store/ui/modal'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useMessagesStore } from '/@/store/entities/messages'
+import { useChannelsStore } from '/@/store/entities/channels'
+import { useUsersStore } from '/@/store/entities/users'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 type Views = 'none' | 'main' | 'not-found'
 
 const useRouteWatcher = () => {
   const route = useRoute()
+  const {
+    primaryView,
+    changePrimaryViewToChannel,
+    changePrimaryViewToDM,
+    changePrimaryViewToClip,
+    changePrimaryViewToChannelOrDM
+  } = useMainViewStore()
+  const { fetchMessage, fetchFileMetaData } = useMessagesStore()
   const { channelPathToId, channelIdToPathString, channelIdToLink } =
     useChannelPath()
   const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
+  const { isOnInitialModalRoute, replaceModal, clearModalState } =
+    useModalStore()
+  const {
+    defaultChannelName,
+    restoringPromise: browserSettingsRestoringPromise
+  } = useBrowserSettings()
+  const { channelTree } = useChannelTree()
+  const {
+    channelsMap,
+    dmChannelsMap,
+    userIdToDmChannelIdMap,
+    bothChannelsMapInitialFetchPromise,
+    fetchUserDMChannel
+  } = useChannelsStore()
+  const { usersMap, usersMapInitialFetchPromise, fetchUserByName } =
+    useUsersStore()
+  const { fetchClipFolder } = useClipFoldersStore()
 
   const state = reactive({
     currentRouteName: computed(() => route.name ?? ''),
@@ -35,8 +63,8 @@ const useRouteWatcher = () => {
   })
 
   const useOpenChannel = async () => {
-    await originalStore.restored
-    return computed(() => store.getters.app.browserSettings.defaultChannelName)
+    await browserSettingsRestoringPromise.value
+    return defaultChannelName
   }
 
   const onRouteChangedToIndex = async () => {
@@ -51,8 +79,8 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToChannel = async () => {
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    await bothChannelsMapInitialFetchPromise.value
+    if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
@@ -60,12 +88,12 @@ const useRouteWatcher = () => {
       const id = channelPathToId(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.channelParam!.split('/'),
-        store.state.domain.channelTree.channelTree
+        channelTree.value
       )
       const { channelIdToShortPathString } = useChannelPath()
       changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
-      store.dispatch.ui.mainView.changePrimaryViewToChannel({
+      changePrimaryViewToChannel({
         channelId: id,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
@@ -78,19 +106,19 @@ const useRouteWatcher = () => {
 
   const onRouteChangedToUser = async () => {
     try {
-      const user = await store.dispatch.entities.fetchUserByName({
+      const user = await fetchUserByName({
         username: state.currentRouteParam,
         cacheStrategy: 'useCache'
       })
       if (!user) throw 'user not found'
 
       const dmChannelId =
-        store.getters.entities.DMChannelIdByUserId(user.id) ??
-        (await store.dispatch.entities.fetchUserDMChannel(user.id))
+        userIdToDmChannelIdMap.value.get(user.id) ??
+        (await fetchUserDMChannel(user.id))
 
       if (!dmChannelId) throw 'failed to fetch DM channel ID'
 
-      store.dispatch.ui.mainView.changePrimaryViewToDM({
+      changePrimaryViewToDM({
         channelId: dmChannelId,
         userName: user.name,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
@@ -106,7 +134,7 @@ const useRouteWatcher = () => {
   const onRouteChangedToClipFolders = async () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const id = state.idParam!
-    const clipFolder = await store.dispatch.entities.fetchClipFolder({
+    const clipFolder = await fetchClipFolder({
       clipFolderId: id,
       cacheStrategy: 'useCache'
     })
@@ -115,16 +143,14 @@ const useRouteWatcher = () => {
       return
     }
     changeViewTitle(clipFolder.name)
-    store.dispatch.ui.mainView.changePrimaryViewToClip({ clipFolderId: id })
+    changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
 
   const onRouteChangedToFile = async () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const fileId = state.idParam!
-    const file = await store.dispatch.entities.messages.fetchFileMetaData({
-      fileId
-    })
+    const file = await fetchFileMetaData({ fileId })
 
     if (!file) {
       // ファイルがなかった
@@ -133,8 +159,8 @@ const useRouteWatcher = () => {
     }
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    await bothChannelsMapInitialFetchPromise.value
+    if (channelTree.value.children.length === 0) {
       // まだチャンネルツリーが構築されていない
       return
     }
@@ -148,10 +174,7 @@ const useRouteWatcher = () => {
     } else {
       channelPath = openChannelPath.value
       try {
-        channelId = channelPathToId(
-          channelPath.split('/'),
-          store.state.domain.channelTree.channelTree
-        )
+        channelId = channelPathToId(channelPath.split('/'), channelTree.value)
       } catch (e) {
         state.view = 'not-found'
         return
@@ -160,29 +183,26 @@ const useRouteWatcher = () => {
 
     // チャンネルが表示されていないときはそのファイルのチャンネルを表示する
     if (
-      store.state.ui.mainView.primaryView.type === 'channel' &&
-      store.state.ui.mainView.primaryView.channelId === ''
+      primaryView.value.type === 'channel' &&
+      primaryView.value.channelId === ''
     ) {
-      store.dispatch.ui.mainView.changePrimaryViewToChannelOrDM({
+      changePrimaryViewToChannelOrDM({
         channelId: channelId
       })
     }
 
-    const modalPayload = {
-      type: 'file' as const,
+    replaceModal({
+      type: 'file',
       id: fileId,
-      relatedRoute: RouteName.File as const
-    }
-    store.dispatch.ui.modal.replaceModal(modalPayload)
+      relatedRoute: RouteName.File
+    })
     changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
 
   const onRouteChangedToMessage = async () => {
-    const message = await store.dispatch.entities.messages.fetchMessage({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      messageId: state.idParam!
-    })
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const message = await fetchMessage({ messageId: state.idParam! })
     if (!message?.channelId) {
       // チャンネルがなかった
       state.view = 'not-found'
@@ -192,24 +212,24 @@ const useRouteWatcher = () => {
     const channelId = message.channelId
 
     // チャンネルIDをチャンネルパスに変換するのに必要
-    await bothChannelsMapInitialFetchPromise
-    if (store.state.domain.channelTree.channelTree.children.length === 0) {
+    await bothChannelsMapInitialFetchPromise.value
+    if (channelTree.value.children.length === 0) {
       return
     }
 
-    if (store.state.entities.channelsMap.has(channelId)) {
+    if (channelsMap.value.has(channelId)) {
       // paramsでchannelPathを指定すると/がエンコードされてバグる
       // https://github.com/traPtitech/traQ_S-UI/issues/1611
       router.replace({
         path: channelIdToLink(message.channelId),
         query: { message: message.id }
       })
-    } else if (store.state.entities.dmChannelsMap.has(channelId)) {
+    } else if (dmChannelsMap.value.has(channelId)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const dmChannel = store.state.entities.dmChannelsMap.get(channelId)!
+      const dmChannel = dmChannelsMap.value.get(channelId)!
       // ユーザーIDからユーザー名への変換に必要
-      await usersMapInitialFetchPromise
-      const user = store.state.entities.usersMap.get(dmChannel.userId)
+      await usersMapInitialFetchPromise.value
+      const user = usersMap.value.get(dmChannel.userId)
       router.replace({
         name: RouteName.User,
         params: { user: user?.name ?? '' },
@@ -226,7 +246,7 @@ const useRouteWatcher = () => {
     [routeParam, query]: RouteParamWithQuery,
     [prevRouteParam, prevQuery]: RouteParamWithQuery
   ) => {
-    store.commit.ui.modal.setIsOnInitialModalRoute(false)
+    isOnInitialModalRoute.value = false
     const routeName = state.currentRouteName
     if (routeName === RouteName.Index) {
       await onRouteChangedToIndex()
@@ -256,18 +276,15 @@ const useRouteWatcher = () => {
     }
 
     // ファイルURLを踏むなどして、アクセス時点のURLでモーダルを表示する場合
-    const isOnInitialModalRoute =
+    const isOnInitialModalRouteValue =
       state.isInitialView &&
       history.state?.modalState &&
       !!history.state?.modalState[0]?.relatedRoute
-    store.commit.ui.modal.setIsOnInitialModalRoute(isOnInitialModalRoute)
+    isOnInitialModalRoute.value = isOnInitialModalRouteValue
 
     if (state.isInitialView && !isOnInitialModalRoute) {
       // 初回表示かつモーダルを表示する必要がない状態なので、stateをクリア
-      if (store.state.ui.modal.modalState.length > 0) {
-        store.commit.ui.modal.setState([])
-      }
-      history.replaceState({ ...history.state, modalState: [] }, '')
+      clearModalState()
     }
 
     state.isInitialView = false

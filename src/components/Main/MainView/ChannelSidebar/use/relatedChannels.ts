@@ -1,31 +1,33 @@
 import { computed } from 'vue'
-import store from '/@/store'
 import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
+import { useChannelTree } from '/@/store/domain/channelTree'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const compareNameInsensitive = (a: Channel, b: Channel) =>
   compareStringInsensitive(a.name, b.name)
 
 const useRelatedChannels = (props: { channelId: ChannelId }) => {
+  const { channelsMap } = useChannelsStore()
+  const { topLevelChannels } = useChannelTree()
+
   const getParentChildrenChannels = () =>
     parent.value?.children
-      .map(v => store.state.entities.channelsMap.get(v))
+      .map(v => channelsMap.value.get(v))
       .filter(isDefined) ?? []
 
-  const current = computed(() =>
-    store.state.entities.channelsMap.get(props.channelId)
-  )
+  const current = computed(() => channelsMap.value.get(props.channelId))
   const parent = computed(() => {
     if (!current.value?.parentId) return
-    return store.state.entities.channelsMap.get(current.value.parentId)
+    return channelsMap.value.get(current.value.parentId)
   })
   const siblings = computed(() => {
     // ルート直下のチャンネルの場合はルート直下のチャンネル
     const sibs =
       current.value?.parentId === null
-        ? store.getters.domain.channelTree.topLevelChannels
+        ? topLevelChannels.value
         : getParentChildrenChannels()
     return (
       sibs
@@ -36,7 +38,7 @@ const useRelatedChannels = (props: { channelId: ChannelId }) => {
   })
   const children = computed(() =>
     current.value?.children
-      .map(id => store.state.entities.channelsMap.get(id))
+      .map(id => channelsMap.value.get(id))
       .filter(isDefined)
       .filter(el => !el.archived)
       .sort(compareNameInsensitive)

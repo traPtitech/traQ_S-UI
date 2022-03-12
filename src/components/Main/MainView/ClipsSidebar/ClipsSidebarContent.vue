@@ -36,7 +36,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, reactive } from 'vue'
-import store from '/@/store'
 import { ClipFolderId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
@@ -45,6 +44,8 @@ import apis from '/@/lib/apis'
 import FormButton from '/@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '/@/router'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 const useEdit = (
   props: { clipFolderId: string },
@@ -72,12 +73,15 @@ const useEdit = (
 }
 
 const useDelete = (props: { clipFolderId: ClipFolderId }) => {
+  const { clipFoldersMap } = useClipFoldersStore()
+  const { defaultChannelName } = useBrowserSettings()
+
   const deleteClip = async () => {
     if (!window.confirm('本当に削除しますか？')) {
       return
     }
     await apis.deleteClipFolder(props.clipFolderId)
-    const clipFolders = [...store.state.entities.clipFoldersMap.values()]
+    const clipFolders = [...clipFoldersMap.value.values()]
       .filter(v => v.id !== props.clipFolderId)
       .sort((a, b) => {
         const aDate = new Date(a.createdAt)
@@ -90,9 +94,7 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
       router.push(`/clip-folders/${clipFolders[0].id}`)
       return
     }
-    router.push(
-      constructChannelPath(store.getters.app.browserSettings.defaultChannelName)
-    )
+    router.push(constructChannelPath(defaultChannelName.value))
   }
   return { deleteClip }
 }
@@ -110,8 +112,10 @@ export default defineComponent({
     clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
   },
   setup(props) {
+    const { clipFoldersMap } = useClipFoldersStore()
+
     const clipFolder = computed(() =>
-      store.state.entities.clipFoldersMap.get(props.clipFolderId)
+      clipFoldersMap.value.get(props.clipFolderId)
     )
     const name = computed(() => clipFolder.value?.name ?? '')
     const description = computed(() => clipFolder.value?.description ?? '')

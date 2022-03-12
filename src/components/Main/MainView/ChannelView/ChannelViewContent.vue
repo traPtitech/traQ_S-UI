@@ -25,7 +25,7 @@ import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/Messa
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
 import useChannelMessageFetcher from './use/channelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
-import store from '/@/store'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({
   name: 'ChannelViewContent',
@@ -39,6 +39,8 @@ export default defineComponent({
     entryMessageId: { type: String, default: undefined }
   },
   setup(props) {
+    const { channelsMap } = useChannelsStore()
+
     const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
     const {
       messageIds,
@@ -53,8 +55,7 @@ export default defineComponent({
     } = useChannelMessageFetcher(scrollerEle, props)
 
     const isArchived = computed(
-      () =>
-        store.state.entities.channelsMap.get(props.channelId)?.archived ?? false
+      () => channelsMap.value.get(props.channelId)?.archived ?? false
     )
 
     return {

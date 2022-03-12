@@ -11,12 +11,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import store from '/@/store'
 import { UserId } from '/@/types/entity-ids'
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { constructUserPath } from '/@/router'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({
   name: 'DMActivityElement',
@@ -32,7 +32,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const user = computed(() => store.state.entities.usersMap.get(props.userId))
+    const { usersMap } = useUsersStore()
+    const user = computed(() => usersMap.value.get(props.userId))
     const dmChannelPath = computed(() =>
       user.value ? constructUserPath(user.value.name) : undefined
     )

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import store from '/@/store'
+import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 export default defineComponent({
   name: 'MessageInputKeyGuide',
@@ -21,9 +21,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const sendWithModifierKey = computed(
-      () => store.state.app.browserSettings.sendWithModifierKey
-    )
+    const { sendWithModifierKey } = useBrowserSettings()
     const sendText = computed(() => (props.isEdit ? '保存' : '送信'))
 
     return { sendWithModifierKey, sendText }

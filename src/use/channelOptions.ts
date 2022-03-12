@@ -1,9 +1,9 @@
 import { computed, Ref, unref } from 'vue'
-import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { nullUuid } from '/@/lib/basic/uuid'
 import { Channel } from '@traptitech/traq'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 const channelToChannelId = (channel?: Channel) => channel?.id ?? nullUuid
 
@@ -15,6 +15,7 @@ const useChannelOptions = (
   nullKeyName: Ref<string | undefined> | string | undefined,
   channelToVal: (channel?: Channel) => string = channelToChannelId
 ) => {
+  const { channelsMap } = useChannelsStore()
   const { channelIdToPathString } = useChannelPath()
 
   const nullVal = computed(() => {
@@ -28,7 +29,7 @@ const useChannelOptions = (
   })
 
   const channelOptions = computed(() => {
-    const channels = [...store.state.entities.channelsMap.values()]
+    const channels = [...channelsMap.value.values()]
       .map(channel => ({
         key: channelIdToPathString(channel.id, true),
         value: channelToVal(channel)

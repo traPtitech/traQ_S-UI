@@ -28,7 +28,6 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import store from '/@/store'
 import useChannelPath from '/@/use/channelPath'
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
@@ -45,6 +44,9 @@ import { channelTreeMitt } from '/@/store/domain/channelTree'
 import useToastStore from '/@/providers/toastStore'
 import { constructChannelPath } from '/@/router'
 import { useRouter } from 'vue-router'
+import { useModalStore } from '/@/store/ui/modal'
+import { useMeStore } from '/@/store/domain/me'
+import { useChannelsStore } from '/@/store/entities/channels'
 
 interface State {
   channelName: string
@@ -53,7 +55,9 @@ interface State {
 
 const useCreateChannel = (state: State) => {
   const router = useRouter()
+  const { popModal } = useModalStore()
   const { addErrorToast } = useToastStore()
+  const { addChannel } = useChannelsStore()
 
   const obtainChannelPath = (channelId: ChannelId) =>
     new Promise<string>(resolve => {
@@ -83,10 +87,10 @@ const useCreateChannel = (state: State) => {
       })
 
       const pathObtainPromise = obtainChannelPath(channel.id)
-      await store.dispatch.entities.addChannel({ channelId: channel.id })
+      await addChannel({ channelId: channel.id })
       const path = await pathObtainPromise
 
-      await store.dispatch.ui.modal.popModal()
+      await popModal()
       router.push(constructChannelPath(path))
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -99,10 +103,10 @@ const useCreateChannel = (state: State) => {
 }
 
 const useChannelOptionsForSelector = () => {
+  const { detail } = useMeStore()
+
   const hasChannelEditPermission = computed(() =>
-    store.state.domain.me.detail?.permissions.includes(
-      UserPermission.EditChannel
-    )
+    detail.value?.permissions.includes(UserPermission.EditChannel)
   )
   const rootChannel = computed(() =>
     window.traQConfig.isRootChannelSelectableAsParentChannel ||

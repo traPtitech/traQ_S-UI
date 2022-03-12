@@ -11,7 +11,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import useSidebar from '/@/use/sidebar'
-import useIsMobile from '/@/use/isMobile'
+import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({
   name: 'MainViewSidebar',
@@ -23,7 +23,7 @@ export default defineComponent({
   },
   setup() {
     const { shouldShowSidebar } = useSidebar()
-    const { isMobile } = useIsMobile()
+    const { isMobile } = useResponsiveStore()
 
     const portalTarget = computed(() =>
       isMobile.value ? '#sidebar-mobile' : '#sidebar'
