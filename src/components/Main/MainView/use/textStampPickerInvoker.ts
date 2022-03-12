@@ -2,7 +2,7 @@ import {
   AlignmentPosition,
   StampSelectHandler,
   useStampPickerInvoker
-} from '/@/providers/stampPicker'
+} from '/@/store/ui/stampPicker'
 import { Ref } from 'vue'
 import useInsertText from '/@/use/insertText'
 import { useStampsStore } from '/@/store/entities/stamps'

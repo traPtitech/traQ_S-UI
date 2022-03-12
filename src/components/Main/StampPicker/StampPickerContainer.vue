@@ -10,52 +10,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import { defineComponent, reactive, computed, Ref } from 'vue'
 import StampPicker from './StampPicker.vue'
-import {
-  useStampPickerStore,
-  AlignmentPosition
-} from '/@/providers/stampPicker'
+import { useStampPicker, AlignmentPosition } from '/@/store/ui/stampPicker'
 import { Point } from '/@/lib/basic/point'
 
-const useStyles = (state: {
-  position: Point | undefined
-  alignment: AlignmentPosition
-}) =>
+const useStyles = (
+  position: Ref<Point | undefined>,
+  alignment: Ref<AlignmentPosition>
+) =>
   reactive({
     stampPicker: computed(() => {
-      if (!state.position) return {}
+      if (!position.value) return {}
       const height = 320
       const width = 340
       const margin = 16
-      if (state.alignment === 'top-left') {
+      if (alignment.value === 'top-left') {
         return {
-          top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
-          left: `${state.position.x}px`
+          top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
+          left: `${position.value.x}px`
         }
       }
 
       const left = `min(${Math.max(
-        state.position.x,
+        position.value.x,
         width + margin
       )}px, calc(100vw - ${margin}px))`
-      if (state.alignment === 'top-right') {
+      if (alignment.value === 'top-right') {
         return {
-          top: `min(calc(100vh - ${height + margin}px), ${state.position.y}px)`,
+          top: `min(calc(100vh - ${height + margin}px), ${position.value.y}px)`,
           left,
           transform: 'translateX(-100%)'
         }
       }
-      if (state.alignment === 'bottom-right') {
+      if (alignment.value === 'bottom-right') {
         return {
           bottom: `min(calc(100vh - ${height + margin}px), calc(100vh - ${
-            state.position.y
+            position.value.y
           }px))`,
           left,
           transform: 'translateX(-100%)'
         }
       }
-      throw new Error(`Unexpected alignment value: ${state.alignment}`)
+      throw new Error(`Unexpected alignment value: ${alignment.value}`)
     })
   })
 
@@ -65,8 +62,8 @@ export default defineComponent({
     StampPicker
   },
   setup() {
-    const { state, isStampPickerShown } = useStampPickerStore()
-    const styles = useStyles(state)
+    const { position, alignment, isStampPickerShown } = useStampPicker()
+    const styles = useStyles(position, alignment)
     return { isStampPickerShown, styles }
   }
 })

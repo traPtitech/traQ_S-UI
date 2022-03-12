@@ -14,7 +14,6 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
-import { provideStampPickerStore } from '/@/providers/stampPicker'
 import { provideMessageInputState } from '/@/providers/messageInputState'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
@@ -90,7 +89,6 @@ export default defineComponent({
     ToastContainer
   },
   setup() {
-    provideStampPickerStore()
     provideMessageInputState()
 
     useTts()

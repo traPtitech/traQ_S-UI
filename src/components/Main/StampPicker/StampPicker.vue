@@ -29,17 +29,16 @@
         />
       -->
       <stamp-picker-stamp-set-selector
+        v-model:current-stamp-set="currentStampSet"
         :class="$style.paletteSelector"
         :stamp-sets="stampSetState.stampSets"
-        :current-stamp-set="state.currentStampSet"
-        @stamp-set-select="setCurrentStampSet"
       />
     </div>
   </click-outside>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { StampId } from '/@/types/entity-ids'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
@@ -51,7 +50,7 @@ import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
-import { useStampPickerStore } from '/@/providers/stampPicker'
+import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useMeStore } from '/@/store/domain/me'
 
 export default defineComponent({
@@ -65,11 +64,9 @@ export default defineComponent({
     //StampPickerEffectToggleButton
   },
   setup() {
-    const { state, setCurrentStampSet, closeStampPicker } =
-      useStampPickerStore()
+    const { selectHandler, currentStampSet, closeStampPicker } =
+      useStampPicker()
     const { upsertLocalStampHistory } = useMeStore()
-    const currentStampSet = computed(() => state.currentStampSet)
-    const queryString = ref('')
 
     const { stamps, filterState } = useStampList(currentStampSet)
     const { stampSetState } = useStampSetSelector()
@@ -78,9 +75,7 @@ export default defineComponent({
 
     const onInputStamp = (id: StampId) => {
       upsertLocalStampHistory(id, new Date())
-      state.selectHandler({
-        id
-      })
+      selectHandler.value({ id })
     }
     const onFilterEnter = () => {
       const firstStamp = stamps.value[0]
@@ -89,19 +84,17 @@ export default defineComponent({
     }
 
     return {
-      state,
+      currentStampSet,
       stampSetState,
       effectSelectorState,
       stamps,
-      queryString,
       filterState,
       placeholder,
       onFilterEnter,
       onInputStamp,
       onHoverStamp,
       closeStampPicker,
-      toggleShowEffect,
-      setCurrentStampSet
+      toggleShowEffect
     }
   }
 })
