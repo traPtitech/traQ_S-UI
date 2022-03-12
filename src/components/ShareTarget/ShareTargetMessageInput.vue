@@ -47,9 +47,10 @@ import useAttachments from '../Main/MainView/MessageInput/use/attachments'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import useMessageInputState, {
+import {
+  useMessageInputState,
   useMessageInputStateAttachment
-} from '/@/providers/messageInputState'
+} from '/@/store/ui/messageInputState'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'

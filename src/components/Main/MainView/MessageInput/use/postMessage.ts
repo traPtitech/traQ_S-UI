@@ -11,7 +11,7 @@ import {
   Attachment,
   useMessageInputStateStatic,
   MessageInputStateKey
-} from '/@/providers/messageInputState'
+} from '/@/store/ui/messageInputState'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'

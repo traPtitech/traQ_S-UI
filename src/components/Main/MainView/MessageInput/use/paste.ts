@@ -1,7 +1,7 @@
 import {
   MessageInputStateKey,
   useMessageInputStateAttachment
-} from '/@/providers/messageInputState'
+} from '/@/store/ui/messageInputState'
 import { useToastStore } from '/@/store/ui/toast'
 
 const readDataFromClipboard = async () => {

@@ -14,7 +14,6 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
-import { provideMessageInputState } from '/@/providers/messageInputState'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/use/theme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -89,8 +88,6 @@ export default defineComponent({
     ToastContainer
   },
   setup() {
-    provideMessageInputState()
-
     useTts()
 
     const { isMobile } = useResponsiveStore()

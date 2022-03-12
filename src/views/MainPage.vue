@@ -64,7 +64,7 @@ import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
 import { useToastStore } from '/@/store/ui/toast'
-import { useMessageInputStates } from '/@/providers/messageInputState'
+import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const useStyles = (
@@ -81,7 +81,7 @@ const useStyles = (
   })
 
 const useDraftConfirmer = () => {
-  const { hasInputChannel } = useMessageInputStates()
+  const { hasInputChannel } = useMessageInputStateBase()
   window.addEventListener('beforeunload', event => {
     if (hasInputChannel.value) {
       const unloadMessage =
