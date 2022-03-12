@@ -36,7 +36,7 @@ import { UserGroupId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
 import apis from '/@/lib/apis'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupMember } from '@traptitech/traq'
 import { useModalStore } from '/@/store/ui/modal'
 

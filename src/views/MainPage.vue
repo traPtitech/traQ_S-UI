@@ -63,7 +63,7 @@ import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPa
 import useMainViewLayout from './use/mainViewLayout'
 import useRouteWatcher from './use/routeWatcher'
 import useInitialFetch from './use/initialFetch'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { useMessageInputStates } from '/@/providers/messageInputState'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { provideAudioController } from '/@/providers/audioController'

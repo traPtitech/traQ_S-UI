@@ -23,7 +23,7 @@ import ChannelViewContent from './ChannelViewContent.vue'
 import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce, throttle } from 'throttle-debounce'
 import { useMessageInputStateAttachment } from '/@/providers/messageInputState'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 const useDragDrop = (channelId: Ref<ChannelId>) => {
   const { addErrorToast } = useToastStore()

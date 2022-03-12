@@ -18,7 +18,7 @@ import {
   VirtualChannelId
 } from '/@/providers/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 export default defineComponent({
   name: 'MessageInputFileList',

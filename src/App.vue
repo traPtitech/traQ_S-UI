@@ -14,7 +14,6 @@
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
 import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
-import { provideToastStore } from '/@/providers/toastStore'
 import { provideStampPickerStore } from '/@/providers/stampPicker'
 import { provideMessageInputState } from '/@/providers/messageInputState'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
@@ -91,7 +90,6 @@ export default defineComponent({
     ToastContainer
   },
   setup() {
-    provideToastStore()
     provideStampPickerStore()
     provideMessageInputState()
 

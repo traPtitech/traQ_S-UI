@@ -17,7 +17,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
 import { OAuthClientId } from '/@/types/entity-ids'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import TokenInfo from './TokenInfo.vue'
 import { useUsersStore } from '/@/store/entities/users'
 

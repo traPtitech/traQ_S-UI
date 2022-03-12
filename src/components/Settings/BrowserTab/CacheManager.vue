@@ -40,7 +40,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
 import { deleteUnicodeStamps } from '/@/lib/stampCache'

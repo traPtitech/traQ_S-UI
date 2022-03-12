@@ -2,7 +2,7 @@ import {
   MessageInputStateKey,
   useMessageInputStateAttachment
 } from '/@/providers/messageInputState'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 
 const readDataFromClipboard = async () => {
   if (!navigator.permissions?.query) return []

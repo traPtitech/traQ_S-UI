@@ -47,7 +47,7 @@ import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/providers/stampPicker'
-import useToastStore from '/@/providers/toastStore'
+import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 
