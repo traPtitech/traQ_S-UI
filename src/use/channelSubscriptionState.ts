@@ -1,20 +1,19 @@
-import { computed } from 'vue'
+import { computed, Ref } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMeStore } from '/@/store/domain/me'
+import { ChannelId } from '/@/types/entity-ids'
 
-const useChannelSubscriptionState = () => {
-  const { currentChannelId } = useMessagesView()
+const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
   const { subscriptionMap, changeSubscriptionLevel: changeLevel } = useMeStore()
 
   const currentChannelSubscription = computed(
     () =>
-      subscriptionMap.value.get(currentChannelId.value ?? '') ??
+      subscriptionMap.value.get(channelId.value ?? '') ??
       ChannelSubscribeLevel.none
   )
   const changeSubscriptionLevel = (level: ChannelSubscribeLevel) => {
-    if (!currentChannelId.value) return
-    changeLevel(currentChannelId.value, level)
+    if (!channelId.value) return
+    changeLevel(channelId.value, level)
   }
   const changeToNextSubscriptionLevel = () => {
     const level =

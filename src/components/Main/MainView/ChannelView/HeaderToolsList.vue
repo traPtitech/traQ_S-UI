@@ -93,12 +93,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, PropType, toRef } from 'vue'
 import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
+import { ChannelId } from '/@/types/entity-ids'
 
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
@@ -110,6 +111,7 @@ export default defineComponent({
     HeaderToolsItem
   },
   props: {
+    channelId: { type: String as PropType<ChannelId>, required: true },
     isStared: { type: Boolean, default: false },
     isForcedChannel: { type: Boolean, default: false },
     hasActiveQallSession: { type: Boolean, default: false },
@@ -127,7 +129,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const { isEnabled: isRtcEnabled } = useRtcSettings()
     const { changeToNextSubscriptionLevel, currentChannelSubscription } =
-      useChannelSubscriptionState()
+      useChannelSubscriptionState(toRef(props, 'channelId'))
 
     const isQallEnabled = computed(
       () => isSkywayApikeySet && isRtcEnabled.value
