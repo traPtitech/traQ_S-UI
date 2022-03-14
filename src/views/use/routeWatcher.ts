@@ -2,7 +2,6 @@ import { computed, reactive, watch } from 'vue'
 import router, { RouteName, constructChannelPath } from '/@/router'
 import useNavigationController from '/@/use/navigationController'
 import useChannelPath from '/@/use/channelPath'
-import useViewTitle from './viewTitle'
 import { LocationQuery, useRoute } from 'vue-router'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'
 import { dequal } from 'dequal'
@@ -29,7 +28,6 @@ const useRouteWatcher = () => {
   const { fetchMessage, fetchFileMetaData } = useMessagesStore()
   const { channelPathToId, channelIdToPathString, channelIdToLink } =
     useChannelPath()
-  const { changeViewTitle } = useViewTitle()
   const { closeNav } = useNavigationController()
   const { isOnInitialModalRoute, replaceModal, clearModalState } =
     useModalStore()
@@ -90,8 +88,6 @@ const useRouteWatcher = () => {
         state.channelParam!.split('/'),
         channelTree.value
       )
-      const { channelIdToShortPathString } = useChannelPath()
-      changeViewTitle(`#${channelIdToShortPathString(id)}`)
 
       changePrimaryViewToChannel({
         channelId: id,
@@ -123,7 +119,6 @@ const useRouteWatcher = () => {
         userName: user.name,
         entryMessageId: getFirstQuery(route.query['message']) ?? undefined
       })
-      changeViewTitle('@' + user.name)
       state.view = 'main'
     } catch {
       state.view = 'not-found'
@@ -142,7 +137,6 @@ const useRouteWatcher = () => {
       state.view = 'not-found'
       return
     }
-    changeViewTitle(clipFolder.name)
     changePrimaryViewToClip({ clipFolderId: id })
     state.view = 'main'
   }
@@ -196,7 +190,6 @@ const useRouteWatcher = () => {
       id: fileId,
       relatedRoute: RouteName.File
     })
-    changeViewTitle(`${channelPath} - ${file.name}`)
     state.view = 'main'
   }
 

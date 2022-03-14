@@ -21,6 +21,7 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
+import useDocumentTitle from '/@/use/documentTitle'
 
 const useQallConfirmer = () => {
   const { isCurrentDevice } = useAppRtcStore()
@@ -92,6 +93,7 @@ export default defineComponent({
 
     const { isMobile } = useResponsiveStore()
 
+    useDocumentTitle()
     useQallConfirmer()
 
     useThemeObserver()

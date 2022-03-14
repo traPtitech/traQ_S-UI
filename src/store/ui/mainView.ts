@@ -12,6 +12,8 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
+import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import useChannelPath from '/@/use/channelPath'
 
 export type ViewType = 'channel' | 'qall' | 'clips' | 'dm'
 export interface ViewInformationBase {
@@ -71,6 +73,9 @@ const useMainViewStorePinia = defineStore('ui/mainView', () => {
   const messagesView = useMessagesView()
   const channelsStore = useChannelsStore()
   const usersStore = useUsersStore()
+  const clipFoldersStore = useClipFoldersStore()
+
+  const { channelIdToShortPathString } = useChannelPath()
 
   const layout = ref<LayoutType>('single')
 
