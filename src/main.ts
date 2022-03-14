@@ -5,7 +5,7 @@ import store from './store'
 import boolAttr from './bool-attr'
 import { setupGlobalFuncs } from './markdown-bridge'
 
-import('./katexCss')
+import('katex/dist/katex.css')
 
 setupGlobalFuncs()
 
