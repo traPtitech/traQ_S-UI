@@ -80,11 +80,16 @@ const useSearchMessages = () => {
       searchState.value.currentSortKey = sortKey
     }
   })
+  const currentPage = computed({
+    get: () => searchState.value.currentPage,
+    set: page => {
+      searchState.value.currentPage = page
+    }
+  })
 
   // TODO: リファクタ
   const executed = computed(() => searchState.value.executed)
   const searchResult = computed(() => searchState.value.searchResult)
-  const currentPage = computed(() => searchState.value.currentPage)
   const totalCount = computed(() => searchState.value.totalCount)
 
   const { sortedMessages } = useSortMessages(searchResult, currentSortKey)
