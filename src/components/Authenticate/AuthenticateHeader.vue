@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.container">
     <span v-if="title" :class="$style.logoWithTitle">
-      <img src="/@/assets/traq-logo.svg?url" :class="$style.logo" />
+      <img :src="logoUrl" :class="$style.logo" />
       <span :class="$style.title">{{ title }}</span>
     </span>
     <div v-else :class="$style.fullLogo">
-      <img src="/@/assets/traq-logo.svg?url" />
+      <img :src="logoUrl" />
       <logo-text :class="$style.fullLogoText" />
     </div>
   </div>
@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import logoUrl from '/@/assets/traq-logo.svg?url'
 import LogoText from '/@/assets/traq-logo-text.svg?component'
 
 export default defineComponent({
@@ -27,7 +28,7 @@ export default defineComponent({
     }
   },
   setup() {
-    return {}
+    return { logoUrl }
   }
 })
 </script>
