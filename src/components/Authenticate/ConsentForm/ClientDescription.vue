@@ -73,7 +73,7 @@ export default defineComponent({
 }
 .desc {
   display: grid;
-  grid-template-columns: min-content fit-content(100%);
+  grid-template-columns: min-content auto;
   grid-template-rows: repeat(2, min-content);
   grid-column-gap: 12px;
   grid-row-gap: 8px;
