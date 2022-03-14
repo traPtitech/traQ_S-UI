@@ -113,14 +113,13 @@ const useSearchMessages = () => {
       offset: currentOffset.value,
       sort: currentSortKey.value
     }
-    const res = await apis.searchMessages(
-      ...toSearchMessageParam(queryObject, option)
-    )
-    const hits = res.data.hits ?? []
+    const {
+      data: { hits, totalHits }
+    } = await apis.searchMessages(...toSearchMessageParam(queryObject, option))
     extendMessagesMap(hits)
     fetchingSearchResult.value = false
 
-    setSearchResult(true, hits, res.data.totalHits ?? 0)
+    setSearchResult(true, hits, totalHits)
   }
 
   return {
