@@ -14,6 +14,11 @@
             ? currentState.id
             : undefined
         "
+        :channel-id="
+          currentState.type === 'notification'
+            ? currentState.channelId
+            : undefined
+        "
         :parent-channel-id="
           currentState.type === 'channel-create'
             ? currentState.parentChannelId
