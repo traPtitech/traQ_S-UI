@@ -8,6 +8,7 @@
 ## 仕様
 
 - [テーマ](./theme.md)
+- [バグに見える仕様](https://github.com/traPtitech/traQ_S-UI/wiki)
 
 ## その他
 
