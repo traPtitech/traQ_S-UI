@@ -5,6 +5,12 @@ import { Font, woff2 } from 'fonteditor-core'
 import fs from 'fs/promises'
 import path from 'path'
 
+/**
+ * このスクリプトは Windows 環境におけるフォントのジャギーを解決するために存在する
+ * 行っていることはフォントからフォントヒンティングを取り除くこと
+ * @see https://github.com/traPtitech/traQ_S-UI/issues/311
+ */
+
 const FONT_CSS_URL =
   'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
 

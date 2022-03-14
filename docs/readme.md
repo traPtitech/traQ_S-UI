@@ -8,3 +8,7 @@
 ## 仕様
 
 - [テーマ](./theme.md)
+
+## その他
+
+- [`patches`について](../patches/README.md)
