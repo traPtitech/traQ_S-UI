@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import boolAttr from './bool-attr'
 import { setupGlobalFuncs } from './markdown-bridge'
+import './styles/global.scss'
 
 import('katex/dist/katex.css')
 

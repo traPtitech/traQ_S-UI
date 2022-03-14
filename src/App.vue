@@ -107,10 +107,6 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
-@import 'src/styles/global.scss';
-</style>
-
 <style lang="scss" module>
 .app {
   @include background-secondary;
