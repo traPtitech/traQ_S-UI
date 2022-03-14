@@ -5,7 +5,6 @@ import { compareDateString } from '/@/lib/basic/date'
 import useQueryParer from '/@/use/searchMessage/queryParser'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const useSortMessages = (
@@ -71,7 +70,6 @@ const useSearchMessages = () => {
   const { parseQuery, toSearchMessageParam } = useQueryParer()
   const { query, searchState, setSearchResult, resetPaging } =
     useCommandPalette()
-  const { renderMessageContent } = useMessagesView()
   const { extendMessagesMap } = useMessagesStore()
 
   const currentSortKey = computed({
@@ -115,15 +113,13 @@ const useSearchMessages = () => {
       offset: currentOffset.value,
       sort: currentSortKey.value
     }
-    const res = await apis.searchMessages(
-      ...toSearchMessageParam(queryObject, option)
-    )
-    const hits = res.data.hits ?? []
+    const {
+      data: { hits, totalHits }
+    } = await apis.searchMessages(...toSearchMessageParam(queryObject, option))
     extendMessagesMap(hits)
-    await Promise.all(hits.map(message => renderMessageContent(message.id)))
     fetchingSearchResult.value = false
 
-    setSearchResult(true, hits, res.data.totalHits ?? 0)
+    setSearchResult(true, hits, totalHits)
   }
 
   return {

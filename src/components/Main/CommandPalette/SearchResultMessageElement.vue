@@ -13,24 +13,26 @@
       <span :class="$style.userName">@{{ user?.name ?? 'unknown' }}</span>
     </div>
     <div :class="$style.contentContainer">
-      <div ref="contentRef" :class="$style.markdownContainer">
-        <message-markdown
-          :message-id="message.id"
-          @click="toggleSpoilerHandler"
-        />
+      <div :class="$style.markdownWrapper">
+        <div ref="contentRef" :class="$style.markdownContainer">
+          <search-result-message-element-content
+            :content="renderedContent"
+            @click="toggleSpoilerHandler"
+          />
+        </div>
+        <div
+          v-if="oversized && !expanded"
+          :class="$style.expandButton"
+          @mousedown.stop="onClickExpandButton"
+        >
+          <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
+        </div>
       </div>
       <search-result-message-file-list
-        :v-if="embeddingsState.fileIds.length > 0"
-        :file-ids="embeddingsState.fileIds"
+        :v-if="fileIds.length > 0"
+        :file-ids="fileIds"
         :class="$style.fileList"
       />
-    </div>
-    <div
-      v-if="oversized && !expanded"
-      :class="$style.expandButton"
-      @mousedown.stop="onClickExpandButton"
-    >
-      <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
     </div>
     <div :class="$style.channelAndDate">
       {{ channelName }} - <time>{{ date }}</time>
@@ -47,20 +49,23 @@ import {
   onMounted,
   PropType,
   ref,
-  Ref
+  Ref,
+  watchEffect
 } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/use/channelPath'
-import useEmbeddings from '/@/use/message/embeddings'
 import { Message } from '@traptitech/traq'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { useUsersStore } from '/@/store/entities/users'
+import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
+import { render } from '/@/lib/markdown/markdown'
+import { isFile } from '/@/lib/guard/embeddingOrUrl'
+import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 
 const maxHeight = 200
 
@@ -108,7 +113,7 @@ export default defineComponent({
   components: {
     AIcon,
     UserIcon,
-    MessageMarkdown,
+    SearchResultMessageElementContent,
     SearchResultMessageFileList
   },
   props: {
@@ -122,7 +127,8 @@ export default defineComponent({
     }
   },
   emits: {
-    clickOpen: (_event: MouseEvent, _messageId: MessageId) => true
+    clickOpen: (_event: MouseEvent, _messageId: MessageId) => true,
+    rendered: () => true
   },
   setup(props, { emit }) {
     const { usersMap, fetchUser } = useUsersStore()
@@ -148,7 +154,21 @@ export default defineComponent({
       return getCreatedDate(_date)
     })
 
-    const { embeddingsState } = useEmbeddings({ messageId: props.message.id })
+    const renderedResult = ref<MarkdownRenderResult>()
+    watchEffect(async () => {
+      renderedResult.value = await render(props.message.content)
+      // renderedを発火したあとにレイアウトシフトなどがおこると
+      // スクロール位置のリストアが壊れるので注意すること
+      emit('rendered')
+    })
+    const renderedContent = computed(
+      () => renderedResult.value?.renderedText ?? ''
+    )
+    const fileIds = computed(
+      () =>
+        renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ??
+        []
+    )
 
     const onClick = (e: MouseEvent) => {
       emit('clickOpen', e, props.message.id)
@@ -164,7 +184,8 @@ export default defineComponent({
       user,
       channelName,
       date,
-      embeddingsState,
+      renderedContent,
+      fileIds,
       onClick,
       expanded,
       oversized,
@@ -184,13 +205,6 @@ export default defineComponent({
     'icon content'
     'icon channelAndDate';
   grid-template-columns: 32px 1fr;
-  &[data-oversized]:not([data-expanded]) {
-    grid-template-areas:
-      'icon header'
-      'icon content'
-      'icon expandButton'
-      'icon channelAndDate';
-  }
   gap: 4px 16px;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -232,11 +246,15 @@ export default defineComponent({
 }
 
 $message-max-height: 200px;
+$expand-button-height: 32px;
 
 .contentContainer {
   @include color-ui-primary;
   grid-area: content;
   min-width: 0;
+}
+.markdownWrapper {
+  position: relative;
 }
 .markdownContainer {
   max-height: $message-max-height;
@@ -248,18 +266,18 @@ $message-max-height: 200px;
     max-height: unset;
   }
   .container[data-oversized]:not([data-expanded]) & {
-    mask-image: linear-gradient(black calc(100% - 32px), transparent 100%);
+    mask-image: linear-gradient(
+      black,
+      black calc(100% - $expand-button-height * 2),
+      rgba(0, 0, 0, 0.1) calc(100% - $expand-button-height),
+      transparent 100%
+    );
   }
 }
-.fileList {
-  margin-top: 0.5rem;
-}
-.channelAndDate {
-  @include color-ui-secondary;
-  @include size-body2;
-  grid-area: channelAndDate;
-}
 .expandButton {
+  position: absolute;
+  left: 0;
+  bottom: 0;
   @include color-ui-secondary;
   @include size-body2;
   grid-area: expandButton;
@@ -275,5 +293,13 @@ $message-max-height: 200px;
   &:hover {
     @include background-tertiary;
   }
+}
+.fileList {
+  margin-top: 0.5rem;
+}
+.channelAndDate {
+  @include color-ui-secondary;
+  @include size-body2;
+  grid-area: channelAndDate;
 }
 </style>
