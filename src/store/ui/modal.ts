@@ -3,13 +3,13 @@ import { computed, ref, toRaw } from 'vue'
 import { wait } from '/@/lib/basic/timer'
 import router, { constructChannelPath, constructUserPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useCurrentChannelPath from '/@/use/currentChannelPath'
 import { ModalState } from '/@/store/ui/modal/states'
-import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useMainViewStore } from '/@/store/ui/mainView'
+import useChannelPath from '/@/use/channelPath'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
-  const { currentChannelId } = useMessagesView()
+  const mainViewStore = useMainViewStore()
   const channelsStore = useChannelsStore()
 
   const modalState = ref<ModalState[]>([])
@@ -113,18 +113,18 @@ const useModalStorePinia = defineStore('ui/modal', () => {
       ''
     )
     modalState.value = history.state.modalState
-    if (!currentChannelId.value) {
+
+    const { channelIdToPathString } = useChannelPath()
+    const primaryView = mainViewStore.primaryView.value
+    if (primaryView.type === 'channel') {
+      router.replace(
+        constructChannelPath(channelIdToPathString(primaryView.channelId))
+      )
+    } else if (primaryView.type === 'dm') {
+      router.replace(constructUserPath(primaryView.userName))
+    } else {
       // eslint-disable-next-line no-console
       console.warn('Unexpected closeModal')
-      return
-    }
-
-    const { currentChannelPathString } = useCurrentChannelPath()
-    const isDM = channelsStore.dmChannelsMap.value.has(currentChannelId.value)
-    if (isDM) {
-      router.replace(constructUserPath(currentChannelPathString.value))
-    } else {
-      router.replace(constructChannelPath(currentChannelPathString.value))
     }
   }
 
