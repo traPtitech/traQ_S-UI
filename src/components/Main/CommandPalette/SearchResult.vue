@@ -19,6 +19,7 @@
           :message="message"
           :current-sort-key="currentSortKey"
           @click-open="openMessage"
+          @rendered="didRender(message.id)"
         />
       </div>
     </div>
@@ -134,7 +135,10 @@ export default defineComponent({
       }
     }
 
-    useKeepScrollPosition(resultListEle)
+    const { didRender } = useKeepScrollPosition(
+      resultListEle,
+      computed(() => searchResult.value.map(message => message.id))
+    )
 
     return {
       searchResult,
@@ -148,6 +152,7 @@ export default defineComponent({
       selectorItems,
 
       openMessage,
+      didRender,
       queryEntered,
 
       resultListEle

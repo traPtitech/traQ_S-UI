@@ -1,11 +1,17 @@
-import { onBeforeUnmount, onMounted, Ref } from 'vue'
+import { onBeforeUnmount, Ref } from 'vue'
+import useOnAllRendered from './allRendered'
 import { useCommandPalette } from '/@/store/app/commandPalette'
+import { MessageId } from '/@/types/entity-ids'
 
-const useKeepScrollPosition = (ele: Ref<HTMLElement | null>) => {
+const useKeepScrollPosition = (
+  ele: Ref<HTMLElement | null>,
+  list: Ref<MessageId[]>
+) => {
   const { currentScrollTop } = useCommandPalette()
+  const { didRender, onAllRendered } = useOnAllRendered(list)
 
-  // 開くときにスクロール位置を適用
-  onMounted(() => {
+  // 開くときにマークダウンが描画しおえたらスクロール位置を適用
+  onAllRendered(() => {
     if (ele.value) {
       ele.value.scrollTop = currentScrollTop.value
     }
@@ -17,6 +23,8 @@ const useKeepScrollPosition = (ele: Ref<HTMLElement | null>) => {
       currentScrollTop.value = ele.value.scrollTop
     }
   })
+
+  return { didRender }
 }
 
 export default useKeepScrollPosition
