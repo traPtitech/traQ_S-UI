@@ -2,6 +2,7 @@
   <div>
     <header-tools-list
       :class="$style.tools"
+      :channel-id="channelId"
       :is-forced-channel="channelState.forced"
       :has-active-qall-session="hasActiveQallSession"
       :is-qall-session-opened="isQallSessionOpened"

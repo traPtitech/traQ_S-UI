@@ -5,7 +5,7 @@
     icon-name="notified-or-subscribed"
   >
     <modal-section title="自分の通知設定">
-      <notification-state-selector />
+      <notification-state-selector :channel-id="channelId" />
     </modal-section>
     <modal-section
       title="他ユーザーの通知設定"
