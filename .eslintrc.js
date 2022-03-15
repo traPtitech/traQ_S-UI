@@ -32,6 +32,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': 'off',
+    'vue/require-default-prop': 'off',
     'vue/no-v-html': 'off',
     'vue/block-lang': [
       'error',
