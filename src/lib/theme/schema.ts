@@ -18,6 +18,12 @@ const CSSColorTypeSchema = z.string()
 export type CSSImageType = string
 const CSSImageTypeSchema = z.string()
 
+export type CSSImageColorType = z.infer<typeof CSSImageColorTypeSchema>
+const CSSImageColorTypeSchema = z.union([
+  CSSColorTypeSchema,
+  CSSImageTypeSchema
+])
+
 const maybeCSSColorTypeSimple = <T extends z.ZodTypeAny>(t: T) =>
   z.union([CSSColorTypeSimpleSchema, t])
 
@@ -32,7 +38,7 @@ const basicThemeSchema = z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
         default: CSSColorTypeSchema.optional(),
-        background: CSSImageTypeSchema.optional(),
+        background: CSSImageColorTypeSchema.optional(),
         inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
@@ -40,7 +46,7 @@ const basicThemeSchema = z.object({
     notification: maybeCSSColorTypeSimple(
       z.object({
         default: CSSColorTypeSchema.optional(),
-        background: CSSImageTypeSchema.optional(),
+        background: CSSImageColorTypeSchema.optional(),
         fallback: CSSColorTypeSchema
       })
     ),
@@ -51,21 +57,21 @@ const basicThemeSchema = z.object({
   background: z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema.optional(),
+        default: CSSImageColorTypeSchema.optional(),
         border: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     secondary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema.optional(),
+        default: CSSImageColorTypeSchema.optional(),
         border: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
     ),
     tertiary: maybeCSSColorTypeSimple(
       z.object({
-        default: CSSImageTypeSchema.optional(),
+        default: CSSImageColorTypeSchema.optional(),
         border: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
@@ -75,7 +81,7 @@ const basicThemeSchema = z.object({
     primary: maybeCSSColorTypeSimple(
       z.object({
         default: CSSColorTypeSchema.optional(),
-        background: CSSImageTypeSchema.optional(),
+        background: CSSImageColorTypeSchema.optional(),
         inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
@@ -83,7 +89,7 @@ const basicThemeSchema = z.object({
     secondary: maybeCSSColorTypeSimple(
       z.object({
         default: CSSColorTypeSchema.optional(),
-        background: CSSImageTypeSchema.optional(),
+        background: CSSImageColorTypeSchema.optional(),
         inactive: CSSColorTypeSchema.optional(),
         fallback: CSSColorTypeSimpleSchema
       })
@@ -101,10 +107,10 @@ const specificThemeSchema = z.object({
   waveformColor: CSSColorTypeSchema,
   waveformGradation: CSSImageTypeSchema,
 
-  navigationBarDesktopBackground: CSSImageTypeSchema,
-  navigationBarMobileBackground: CSSImageTypeSchema,
-  mainViewBackground: CSSImageTypeSchema,
-  sideBarBackground: CSSImageTypeSchema,
+  navigationBarDesktopBackground: z.string(),
+  navigationBarMobileBackground: z.string(),
+  mainViewBackground: z.string(),
+  sideBarBackground: z.string(),
 
   stampEdgeEnable: z.boolean()
 })

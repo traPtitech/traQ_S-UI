@@ -15,7 +15,6 @@ export type ResolvedTheme = {
   markdown: ResolvedMarkdownTheme
 }
 
-// TODO: 数を減らす
 type ResolvedSpecificTheme = SpecificTheme & {
   channelHashOpened: CSSColorType
   channelUnreadBadgeText: CSSColorType

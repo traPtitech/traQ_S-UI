@@ -16,6 +16,9 @@
 [CSSの`<image>`](https://developer.mozilla.org/ja/docs/Web/CSS/image)。
 `linear-gradient`なども利用可能である。
 
+### `CSSImageColorType`
+CSSの`<image>`または`<color>`。
+
 ## 形式
 ```ts
 type Theme = {
@@ -37,14 +40,14 @@ type BasicTheme = {
   accent: {
     primary: CSSColorTypeSimple | {
       default?: CSSColorType
-      background?: CSSImageType
-        /** hoverしていない状態など */
+      background?: CSSImageColorType
+      /** hoverしていない状態など */
       inactive?: CSSColorType
       fallback: CSSColorTypeSimple
     }
     notification: CSSColorTypeSimple | {
       default?: CSSColorType
-      background?: CSSImageType
+      background?: CSSImageColorType
       fallback: CSSColorTypeSimple
     }
     online: CSSColorTypeSimple
@@ -53,17 +56,17 @@ type BasicTheme = {
   }
   background: {
     primary: CSSColorTypeSimple | {
-      default?: CSSImageType
+      default?: CSSImageColorType
       border?: CSSColorType
       fallback: CSSColorTypeSimple
     }
     secondary: CSSColorTypeSimple | {
-      default?: CSSImageType
+      default?: CSSImageColorType
       border?: CSSColorType
       fallback: CSSColorTypeSimple
     }
     tertiary: CSSColorTypeSimple | {
-      default?: CSSImageType
+      default?: CSSImageColorType
       border?: CSSColorType
       fallback: CSSColorTypeSimple
     }
@@ -71,15 +74,15 @@ type BasicTheme = {
   ui: {
     primary: CSSColorTypeSimple | {
       default?: CSSColorType
-      background?: CSSImageType
-        /** hoverしていない状態など */
+      background?: CSSImageColorType
+      /** hoverしていない状態など */
       inactive?: CSSColorType
       fallback: CSSColorTypeSimple
     }
     secondary: CSSColorTypeSimple | {
       default?: CSSColorType
-      background?: CSSImageType
-        /** hoverしていない状態など */
+      background?: CSSImageColorType
+      /** hoverしていない状態など */
       inactive?: CSSColorType
       fallback: CSSColorTypeSimple
     }
@@ -102,14 +105,30 @@ type SpecificTheme = {
   /** 波形表示のグラデーション */
   waveformGradation: CSSImageType
 
-  /** ナビゲーションバー(左の部分)のデスクトップでの背景色 */
-  navigationBarDesktopBackground: CSSImageType
-  /** ナビゲーションバー(左の部分)のモバイルでの背景色 */
-  navigationBarMobileBackground: CSSImageType
-  /** メインビュー(真ん中の部分)の背景色 */
-  mainViewBackground: CSSImageType
-  /** サイドバー(右の部分)の背景色 */
-  sideBarBackground: CSSImageType
+  /**
+   * ナビゲーションバー(左の部分)のデスクトップでの背景色
+   *
+   * `background`プロパティの記法が利用可能
+   */
+  navigationBarDesktopBackground: string
+  /**
+   * ナビゲーションバー(左の部分)のモバイルでの背景色
+   *
+   * `background`プロパティの記法が利用可能
+   */
+  navigationBarMobileBackground: string
+  /**
+   * メインビュー(真ん中の部分)の背景色
+   *
+   * `background`プロパティの記法が利用可能
+   */
+  mainViewBackground: string
+  /**
+   * サイドバー(右の部分)の背景色
+   *
+   * `background`プロパティの記法が利用可能
+   */
+  sideBarBackground: string
 
   /**
    * スタンプに縁をつけるか
@@ -204,7 +223,7 @@ type MarkdownTheme = {
 ## 算出処理について
 カスタムテーマから欠落している色などを算出したあとのものを`ResolvedTheme`と命名している。
 
-算出処理の流れは以下の通りである。
+算出処理の流れは以下のとおりである。
 
 1. カスタムテーマのバリデーションを行う
     - `/@/lib/theme/schema.ts`の`themeSchema`を用いて`themeSchema.safeParse`により
