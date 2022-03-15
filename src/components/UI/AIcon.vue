@@ -4,7 +4,7 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    v-bind="attrs"
+    v-bind="$attrs"
     role="img"
     :class="$style.icon"
   >
@@ -16,7 +16,7 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    v-bind="attrs"
+    v-bind="$attrs"
     role="img"
     :class="$style.icon"
   />
@@ -73,7 +73,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { attrs }) {
+  setup(props) {
     const getComponent = async (name: string) => {
       const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
       if (!moduleFunc) {
@@ -99,7 +99,7 @@ export default defineComponent({
       return mdi[name]
     }
 
-    return { svgComponent, getMdiPath, attrs }
+    return { svgComponent, getMdiPath }
   }
 })
 </script>
