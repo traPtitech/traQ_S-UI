@@ -1,5 +1,7 @@
 # カスタムテーマ機能
 
+[設定例などはこちらを参照](https://github.com/traPtitech/traQ_S-UI/wiki/%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%86%E3%83%BC%E3%83%9E)
+
 ## 基本型
 ### `CSSColorTypeSimple`
 
