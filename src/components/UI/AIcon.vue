@@ -8,7 +8,7 @@
     role="img"
     :class="$style.icon"
   >
-    <path :d="getMdiPath(name)" fill="currentColor" />
+    <path :d="path" fill="currentColor" />
   </svg>
   <component
     :is="svgComponent"
@@ -23,9 +23,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, watch } from 'vue'
+import { defineComponent, shallowRef, watch, computed } from 'vue'
 import type { Component } from 'vue'
-import mdi from '/@/assets/mdi'
+import mdiPaths from '/@/assets/mdi'
 
 type ComponentModule = {
   default: Component
@@ -95,11 +95,9 @@ export default defineComponent({
       { immediate: true }
     )
 
-    const getMdiPath = (name: string) => {
-      return mdi[name]
-    }
+    const path = computed(() => mdiPaths[props.name])
 
-    return { svgComponent, getMdiPath }
+    return { svgComponent, path }
   }
 })
 </script>
