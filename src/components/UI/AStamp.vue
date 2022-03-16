@@ -35,7 +35,7 @@ const { stampsMap } = useStampsStore()
 const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
 const imageUrl = computed(() => {
   const fileId = stampsMap.value.get(props.stampId)?.fileId
-  return fileId ? `${buildFilePath(fileId)}` : ''
+  return fileId ? buildFilePath(fileId) : ''
 })
 
 const containerStyle = computed(() => ({

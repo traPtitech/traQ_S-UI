@@ -4,7 +4,11 @@
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
   >
-    <div :class="$style.circle" :style="circleStyle" @click="onClick"></div>
+    <div
+      :class="$style.circle"
+      :style="circleStyle"
+      @click="emit('close')"
+    ></div>
     <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
@@ -43,10 +47,6 @@ const circleStyle = computed(() => ({
   '--innerSize': `${props.innerSize}px`,
   '--iconWidth': `${props.iconWidth}px`
 }))
-
-const onClick = () => {
-  emit('close')
-}
 </script>
 
 <style lang="scss" module>

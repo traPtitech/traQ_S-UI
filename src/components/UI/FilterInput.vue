@@ -16,7 +16,7 @@
       :enterkeyhint="enterkeyhint"
       @input="onInput"
       @keydown.esc="reset"
-      @keydown.enter="enter"
+      @keydown.enter="emit('enter')"
     />
   </div>
 </template>
@@ -61,17 +61,13 @@ const reset = () => {
 }
 
 const inputRef = shallowRef<HTMLInputElement | null>(null)
-onMounted(() => {
-  if (!props.focusOnMount || isTouchDevice()) return
-  inputRef.value?.focus()
-})
 const focus = () => {
   inputRef.value?.focus()
 }
-
-const enter = () => {
-  emit('enter')
-}
+onMounted(() => {
+  if (!props.focusOnMount || isTouchDevice()) return
+  focus()
+})
 </script>
 
 <style lang="scss" module>
