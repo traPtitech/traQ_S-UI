@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect, reactive } from 'vue';
+import { computed, ref, watchEffect, reactive } from 'vue'
 import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -196,9 +196,9 @@ const useVoices = () => {
 </script>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue';
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
+import AToggle from '/@/components/UI/AToggle.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
 
 const state = reactive(useRtcSettings())
 

@@ -5,16 +5,16 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue';
-import { computed } from 'vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelBots from './composables/useChannelBots'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { usersMap } = useUsersStore()
 

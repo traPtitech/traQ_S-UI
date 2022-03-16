@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref } from 'vue';
+import { computed, reactive, Ref } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
@@ -82,15 +82,15 @@ const useManageChannel = (
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import AToggle from '/@/components/UI/AToggle.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const props = defineProps<{
-    id: string
-}>();
+  id: string
+}>()
 
 const { channelsMap } = useChannelsStore()
 const channel = computed((): Required<PatchChannelRequest> => {
@@ -110,8 +110,7 @@ const { manageChannel } = useManageChannel(props, manageState, channel)
 
 const { hasDiff } = useStateDiff<PatchChannelRequest>()
 const isManageEnabled = computed(
-  () =>
-    isValidChannelName(manageState.name) && hasDiff(manageState, channel)
+  () => isValidChannelName(manageState.name) && hasDiff(manageState, channel)
 )
 
 const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')

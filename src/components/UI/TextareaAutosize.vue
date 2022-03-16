@@ -8,18 +8,18 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, toRef, watch, nextTick } from 'vue';
+import { onBeforeUnmount, onMounted, ref, toRef, watch, nextTick } from 'vue'
 import autosize from 'autosize'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 const props = defineProps<{
-    modelValue: string,
-    maxHeight?: number
-}>();
+  modelValue: string
+  maxHeight?: number
+}>()
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+}>()
 
 const { value, onInput } = useTextModelSyncer(props, emit)
 

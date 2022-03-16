@@ -20,23 +20,24 @@ type Type = 'primary' | 'secondary'
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-withDefaults(defineProps<{
-    type: Type,
-    label?: string,
-    iconName?: string,
-    iconMdi?: boolean,
-    disabled?: boolean,
+withDefaults(
+  defineProps<{
+    type: Type
+    label?: string
+    iconName?: string
+    iconMdi?: boolean
+    disabled?: boolean
     isSubmit?: boolean
-}>(), {
+  }>(),
+  {
     label: '',
     iconMdi: false,
     disabled: false,
     isSubmit: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

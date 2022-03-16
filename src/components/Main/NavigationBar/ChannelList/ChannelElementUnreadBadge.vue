@@ -9,15 +9,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-    unreadCount?: number,
+const props = withDefaults(
+  defineProps<{
+    unreadCount?: number
     isNoticeable?: boolean
-}>(), {
+  }>(),
+  {
     unreadCount: 0,
     isNoticeable: false
-});
+  }
+)
 
 const unreadCountString = computed(() => {
   if (props.unreadCount <= 0) return undefined

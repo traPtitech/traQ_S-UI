@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -28,16 +28,17 @@ const useStyles = (props: { size: number }) =>
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    stampId: StampId,
-    size?: number,
+const props = withDefaults(
+  defineProps<{
+    stampId: StampId
+    size?: number
     withoutTitle?: boolean
-}>(), {
+  }>(),
+  {
     size: 24,
     withoutTitle: false
-});
+  }
+)
 
 const { stampsMap } = useStampsStore()
 

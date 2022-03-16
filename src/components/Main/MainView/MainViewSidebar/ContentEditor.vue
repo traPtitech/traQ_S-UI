@@ -21,36 +21,37 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import LengthCount from '/@/components/UI/LengthCount.vue';
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import { computed } from 'vue'
 import { countLength } from '/@/lib/basic/string'
 
-const props = withDefaults(defineProps<{
-    value?: string,
-    isEditing?: boolean,
-    fallbackValue?: string,
+const props = withDefaults(
+  defineProps<{
+    value?: string
+    isEditing?: boolean
+    fallbackValue?: string
     maxLength?: number
-}>(), {
+  }>(),
+  {
     isEditing: false,
     fallbackValue: '未設定'
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "editStart"): void,
-    (e: "editDone"): void,
-    (e: "inputValue", _val: string): void
-}>();
+  (e: 'editStart'): void
+  (e: 'editDone'): void
+  (e: 'inputValue', _val: string): void
+}>()
 
 const content = computed(() => {
   if (props.value === '') return props.fallbackValue
   if (props.value === undefined) return 'ロード中'
   return props.value
 })
-const isEmpty = computed(
-  () => props.value === '' || props.value === undefined
-)
+const isEmpty = computed(() => props.value === '' || props.value === undefined)
 const onButtonClick = () => {
   if (props.isEditing) {
     emit('editDone')
@@ -67,8 +68,7 @@ const modelValue = computed({
 })
 
 const isExceeded = computed(
-  () =>
-    !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
+  () => !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
 )
 </script>
 

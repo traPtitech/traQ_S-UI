@@ -41,7 +41,15 @@
 </template>
 
 <script lang="ts">
-import { computed, DeepReadonly, onBeforeUnmount, onMounted, ref, Ref, watchEffect } from 'vue';
+import {
+  computed,
+  DeepReadonly,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  Ref,
+  watchEffect
+} from 'vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -96,20 +104,20 @@ const useSpoilerToggler = () => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import SearchResultMessageFileList from './SearchResultMessageFileList.vue';
-import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
+import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 
 const props = defineProps<{
-    message: DeepReadonly<Message>,
-    currentSortKey: SearchMessageSortKey
-}>();
+  message: DeepReadonly<Message>
+  currentSortKey: SearchMessageSortKey
+}>()
 
 const emit = defineEmits<{
-    (e: "clickOpen", _event: MouseEvent, _messageId: MessageId): void,
-    (e: "rendered"): void
-}>();
+  (e: 'clickOpen', _event: MouseEvent, _messageId: MessageId): void
+  (e: 'rendered'): void
+}>()
 
 const { usersMap, fetchUser } = useUsersStore()
 
@@ -141,13 +149,10 @@ watchEffect(async () => {
   // スクロール位置のリストアが壊れるので注意すること
   emit('rendered')
 })
-const renderedContent = computed(
-  () => renderedResult.value?.renderedText ?? ''
-)
+const renderedContent = computed(() => renderedResult.value?.renderedText ?? '')
 const fileIds = computed(
   () =>
-    renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ??
-    []
+    renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ?? []
 )
 
 const onClick = (e: MouseEvent) => {

@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import TokenInfo from './TokenInfo.vue';
-import { computed, onMounted, ref } from 'vue';
+import TokenInfo from './TokenInfo.vue'
+import { computed, onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { ActiveOAuth2Token, OAuth2Client } from '@traptitech/traq'
 import { OAuthClientId } from '/@/types/entity-ids'

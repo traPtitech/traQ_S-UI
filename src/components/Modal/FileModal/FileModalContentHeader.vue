@@ -17,16 +17,19 @@
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue';
-import FileDescription from '/@/components/UI/FileDescription.vue';
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import FileDescription from '/@/components/UI/FileDescription.vue'
 import { useModalStore } from '/@/store/ui/modal'
 
-withDefaults(defineProps<{
-    fileId: string,
+withDefaults(
+  defineProps<{
+    fileId: string
     isWhite?: boolean
-}>(), {
+  }>(),
+  {
     isWhite: false
-})
+  }
+)
 
 const { clearModal } = useModalStore()
 </script>

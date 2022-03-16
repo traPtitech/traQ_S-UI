@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, reactive, computed } from 'vue';
+import { watch, reactive, computed } from 'vue'
 
 const props = defineProps<{
-    value: number
-}>();
+  value: number
+}>()
 
 const state = reactive({
   val: props.value,

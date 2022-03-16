@@ -19,19 +19,22 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { UserId } from '/@/types/entity-ids'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     viewerIds?: readonly UserId[]
-}>(), {
+  }>(),
+  {
     viewerIds: () => []
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "open"): void
-}>();
+  (e: 'open'): void
+}>()
 
 const open = () => {
   emit('open')

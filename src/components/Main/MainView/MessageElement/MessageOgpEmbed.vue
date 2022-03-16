@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed } from 'vue'
 
 const usePreviewState = () => {
   const isContentShown = ref(false)
@@ -37,17 +37,20 @@ const useStyles = (props: { aspectRatio: number }) =>
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    previewUrl?: string,
-    embeddedUrl: string,
-    showPlayIcon?: boolean,
+const props = withDefaults(
+  defineProps<{
+    previewUrl?: string
+    embeddedUrl: string
+    showPlayIcon?: boolean
     aspectRatio?: number
-}>(), {
+  }>(),
+  {
     showPlayIcon: false,
     aspectRatio: 9 / 16
-});
+  }
+)
 
 const { isContentShown, showContent } = usePreviewState()
 const styles = useStyles(props)

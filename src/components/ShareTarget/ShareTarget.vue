@@ -12,26 +12,27 @@
 </template>
 
 <script lang="ts" setup>
-import ShareTargetForm from './ShareTargetForm.vue';
-import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue';
-import { computed, ref, watchEffect } from 'vue';
+import ShareTargetForm from './ShareTargetForm.vue'
+import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { wait } from '/@/lib/basic/timer'
 
-const props = withDefaults(defineProps<{
-    title?: string,
-    text?: string,
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    text?: string
     url?: string
-}>(), {
+  }>(),
+  {
     title: '',
     text: '',
     url: ''
-});
+  }
+)
 
 const defaultText = computed(() =>
-  [props.title, props.text, props.url]
-    .filter(text => text !== '')
-    .join('\n')
+  [props.title, props.text, props.url].filter(text => text !== '').join('\n')
 )
 const { isMobile } = useResponsiveStore()
 

@@ -9,13 +9,16 @@
 </template>
 
 <script lang="ts" setup>
-import IconButton from '/@/components/UI/IconButton.vue';
+import IconButton from '/@/components/UI/IconButton.vue'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     disabled?: boolean
-}>(), {
+  }>(),
+  {
     disabled: false
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

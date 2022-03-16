@@ -15,14 +15,14 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
-import ImageViewer from '/@/components/UI/ImageViewer.vue';
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import ImageViewer from '/@/components/UI/ImageViewer.vue'
 import useFileMeta from '/@/composables/useFileMeta'
 
 const props = defineProps<{
-    fileId: string
-}>();
+  fileId: string
+}>()
 
 const { fileMeta, fileRawPath } = useFileMeta(props)
 </script>

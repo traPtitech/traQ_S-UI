@@ -21,15 +21,16 @@ type ViewState = {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     viewerStates?: ViewState[]
-}>(), {
+  }>(),
+  {
     viewerStates: () => []
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

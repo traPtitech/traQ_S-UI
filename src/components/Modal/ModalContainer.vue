@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue'
 import { ModalState } from '/@/store/ui/modal/states'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -70,8 +70,6 @@ const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
 </script>
 
 <script lang="ts" setup>
-
-
 const { shouldShowModal, currentState } = useModalStore()
 
 // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？

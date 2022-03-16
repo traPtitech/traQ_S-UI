@@ -11,17 +11,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 
-const props = withDefaults(defineProps<{
-    userId: UserId,
+const props = withDefaults(
+  defineProps<{
+    userId: UserId
     isBot?: boolean
-}>(), {
+  }>(),
+  {
     isBot: false
-});
+  }
+)
 
 const { pushModal } = useModalStore()
 const { getGradeGroupsByUserId } = useGroupsStore()

@@ -16,22 +16,25 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    iconName: string,
-    iconMdi?: boolean,
-    label?: string,
+const props = withDefaults(
+  defineProps<{
+    iconName: string
+    iconMdi?: boolean
+    label?: string
     disabled?: boolean
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     label: '',
     disabled: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "click"): void
-}>();
+  (e: 'click'): void
+}>()
 
 const onClick = () => {
   if (props.disabled) return

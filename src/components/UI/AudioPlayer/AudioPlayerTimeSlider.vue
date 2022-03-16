@@ -17,20 +17,23 @@
 </template>
 
 <script lang="ts" setup>
-import ASlider from '/@/components/UI/ASlider.vue';
-import { computed } from 'vue';
+import ASlider from '/@/components/UI/ASlider.vue'
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-    currentTime: number,
-    duration: number,
+const props = withDefaults(
+  defineProps<{
+    currentTime: number
+    duration: number
     showBackgroundOnHover?: boolean
-}>(), {
+  }>(),
+  {
     showBackgroundOnHover: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:currentTime", _val: number): void
-}>();
+  (e: 'update:currentTime', _val: number): void
+}>()
 
 const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
 const roundedDuration = computed(() => Math.floor(props.duration))

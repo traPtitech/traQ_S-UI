@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { shallowRef, watch, computed } from 'vue';
+import { shallowRef, watch, computed } from 'vue'
 import type { Component } from 'vue'
 import mdiPaths from '/@/assets/mdi'
 
@@ -51,18 +51,19 @@ const iconModules = {
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    name: string,
-    title?: string,
-    desc?: string,
-    size?: number,
+const props = withDefaults(
+  defineProps<{
+    name: string
+    title?: string
+    desc?: string
+    size?: number
     mdi?: boolean
-}>(), {
+  }>(),
+  {
     size: 24,
     mdi: false
-});
+  }
+)
 
 const getComponent = async (name: string) => {
   const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]

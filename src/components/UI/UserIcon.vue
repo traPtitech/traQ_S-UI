@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed, watch } from 'vue';
+import { reactive, computed, watch } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
@@ -23,21 +23,24 @@ export type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
 </script>
 
 <script lang="ts" setup>
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-const props = withDefaults(defineProps<{
-    userId: UserId,
-    fallbackIconFileId?: FileId,
-    size?: IconSize,
-    indicatorSize?: number,
-    preventModal?: boolean,
+const props = withDefaults(
+  defineProps<{
+    userId: UserId
+    fallbackIconFileId?: FileId
+    size?: IconSize
+    indicatorSize?: number
+    preventModal?: boolean
     hasNotification?: boolean
-}>(), {
+  }>(),
+  {
     size: 36,
     indicatorSize: 10,
     preventModal: false,
     hasNotification: false
-});
+  }
+)
 
 const { detail, myId } = useMeStore()
 const { usersMap, fetchUser } = useUsersStore()
@@ -52,9 +55,7 @@ watch(
 )
 
 const user = computed(() =>
-  props.userId === myId.value
-    ? detail.value
-    : usersMap.value.get(props.userId)
+  props.userId === myId.value ? detail.value : usersMap.value.get(props.userId)
 )
 const userIconFileId = computed(
   () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''

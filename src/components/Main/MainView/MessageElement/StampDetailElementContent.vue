@@ -8,16 +8,16 @@
 </template>
 
 <script lang="ts" setup>
-import SpinNumber from '/@/components/UI/SpinNumber.vue';
-import { computed } from 'vue';
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    userId: UserId,
-    count: number
-}>();
+  userId: UserId
+  count: number
+}>()
 
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.userId))

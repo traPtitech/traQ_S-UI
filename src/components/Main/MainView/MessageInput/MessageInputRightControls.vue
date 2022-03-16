@@ -35,27 +35,27 @@ const useClickHandlers = (
 </script>
 
 <script lang="ts" setup>
-import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    canPostMessage?: boolean,
+const props = withDefaults(
+  defineProps<{
+    canPostMessage?: boolean
     isPosting?: boolean
-}>(), {
+  }>(),
+  {
     canPostMessage: false,
     isPosting: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickSend"): void,
-    (e: "clickStamp"): void
-}>();
+  (e: 'clickSend'): void
+  (e: 'clickStamp'): void
+}>()
 
 const { isMobile } = useResponsiveStore()
-const { onClickSendButton, onClickStampButton } = useClickHandlers(
-  props,
-  emit
-)
+const { onClickSendButton, onClickStampButton } = useClickHandlers(props, emit)
 </script>
 
 <style lang="scss" module>

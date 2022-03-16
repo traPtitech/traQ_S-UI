@@ -102,19 +102,22 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateInput from './AuthenticateInput.vue';
-import AuthenticateHeader from './AuthenticateHeader.vue';
-import AuthenticateButton from './AuthenticateButton.vue';
-import AuthenticateSeparator from './AuthenticateSeparator.vue';
-import LoginFormSaved from './LoginFormSaved.vue';
+import AuthenticateInput from './AuthenticateInput.vue'
+import AuthenticateHeader from './AuthenticateHeader.vue'
+import AuthenticateButton from './AuthenticateButton.vue'
+import AuthenticateSeparator from './AuthenticateSeparator.vue'
+import LoginFormSaved from './LoginFormSaved.vue'
 import useLogin from './composables/useLogin'
 
-withDefaults(defineProps<{
-    externalLogin: Set<string>,
+withDefaults(
+  defineProps<{
+    externalLogin: Set<string>
     signUpAllowed?: boolean
-}>(), {
+  }>(),
+  {
     signUpAllowed: false
-})
+  }
+)
 
 const {
   loginState,

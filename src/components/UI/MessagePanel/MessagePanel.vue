@@ -42,31 +42,34 @@
 </template>
 
 <script lang="ts" setup>
-import UserName from './UserName.vue';
-import ChannelName from './ChannelName.vue';
-import RenderContent from './RenderContent.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import UserName from './UserName.vue'
+import ChannelName from './ChannelName.vue'
+import RenderContent from './RenderContent.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
-    titleType?: 'channel' | 'user',
-    hideSubtitle?: boolean,
-    message: Message | ActivityTimelineMessage,
-    lineClampContent?: boolean,
+const props = withDefaults(
+  defineProps<{
+    titleType?: 'channel' | 'user'
+    hideSubtitle?: boolean
+    message: Message | ActivityTimelineMessage
+    lineClampContent?: boolean
     showContextMenuButton?: boolean
-}>(), {
+  }>(),
+  {
     titleType: 'channel' as const,
     hideSubtitle: false,
     lineClampContent: false,
     showContextMenuButton: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickContextMenuButton", _e: MouseEvent): void
-}>();
+  (e: 'clickContextMenuButton', _e: MouseEvent): void
+}>()
 
 const { usersMap, fetchUser } = useUsersStore()
 

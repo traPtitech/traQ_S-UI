@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import useFileThumbnail from '/@/composables/useFileThumbnail'
-import { reactive, Ref, computed } from 'vue';
+import { reactive, Ref, computed } from 'vue'
 
 const useStyles = (path: Ref<string>) =>
   reactive({
@@ -17,11 +17,11 @@ const useStyles = (path: Ref<string>) =>
 </script>
 
 <script lang="ts" setup>
-import PlayIcon from '/@/components/UI/PlayIcon.vue';
+import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 const props = defineProps<{
-    fileId: string
-}>();
+  fileId: string
+}>()
 
 const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
 const styles = useStyles(fileThumbnailPath)

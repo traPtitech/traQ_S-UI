@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import useActivityStream from './composables/useActivityStream'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
@@ -57,13 +57,13 @@ const useActivityMode = () => {
 </script>
 
 <script lang="ts" setup>
-import ActivityElement from './ActivityElement.vue';
-import ToggleButton from './ToggleButton.vue';
-import EmptyState from '/@/components/UI/EmptyState.vue';
+import ActivityElement from './ActivityElement.vue'
+import ToggleButton from './ToggleButton.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 const props = defineProps<{
-    show: boolean
-}>();
+  show: boolean
+}>()
 
 const { timeline } = useActivityStream(props)
 const { isNotAll, isPerChannel } = useActivityMode()

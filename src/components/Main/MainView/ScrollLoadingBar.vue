@@ -5,15 +5,14 @@
 </template>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     show?: boolean
-}>(), {
+  }>(),
+  {
     show: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

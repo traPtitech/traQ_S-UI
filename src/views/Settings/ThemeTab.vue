@@ -67,10 +67,10 @@
 </template>
 
 <script lang="ts" setup>
-import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue';
-import FormRadio from '/@/components/UI/FormRadio.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import { reactive } from 'vue';
+import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
+import FormRadio from '/@/components/UI/FormRadio.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import { reactive } from 'vue'
 import { Theme } from '/@/lib/theme/schema'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 

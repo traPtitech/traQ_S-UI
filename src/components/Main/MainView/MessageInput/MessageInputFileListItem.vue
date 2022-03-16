@@ -16,19 +16,19 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue';
-import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue';
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
-import { computed, reactive } from 'vue';
+import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
+import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import { computed, reactive } from 'vue'
 import { Attachment } from '/@/store/ui/messageInputState'
 
 const props = defineProps<{
-    attachment: Attachment
-}>();
+  attachment: Attachment
+}>()
 
 const emit = defineEmits<{
-    (e: "itemRemove"): void
-}>();
+  (e: 'itemRemove'): void
+}>()
 
 const state = reactive({
   showThumbnail: computed((): boolean =>

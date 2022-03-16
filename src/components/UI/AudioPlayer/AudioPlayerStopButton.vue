@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue';
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 defineProps<{
-    size: number
+  size: number
 }>()
 </script>

@@ -12,17 +12,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
 import axios from 'axios'
 
-const props = withDefaults(defineProps<{
-    iconPath: string,
-    label?: string,
+const props = withDefaults(
+  defineProps<{
+    iconPath: string
+    label?: string
     appLink?: string
-}>(), {
+  }>(),
+  {
     label: '',
     appLink: ''
-});
+  }
+)
 
 const isSvg = computed(() => {
   try {

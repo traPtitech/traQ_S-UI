@@ -12,18 +12,24 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue';
-import { NavigationItemType, useNavigationSelectorItem } from './composables/useNavigation'
+import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue'
+import {
+  NavigationItemType,
+  useNavigationSelectorItem
+} from './composables/useNavigation'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     currentNavigation?: NavigationItemType
-}>(), {
+  }>(),
+  {
     currentNavigation: 'profile' as const
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "navigationChange", _type: NavigationItemType): void
-}>();
+  (e: 'navigationChange', _type: NavigationItemType): void
+}>()
 
 const items: {
   type: NavigationItemType

@@ -22,19 +22,22 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
-    userId?: string,
+const props = withDefaults(
+  defineProps<{
+    userId?: string
     isAdmin?: boolean
-}>(), {
+  }>(),
+  {
     userId: '',
     isAdmin: false
-});
+  }
+)
 
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.userId))

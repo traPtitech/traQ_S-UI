@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -25,16 +25,16 @@ export type SuggestionItem =
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{
-    item: SuggestionItem
-}>();
+  item: SuggestionItem
+}>()
 
 const emit = defineEmits<{
-    (e: "select", _item: SuggestionItem): void
-}>();
+  (e: 'select', _item: SuggestionItem): void
+}>()
 
 const { channelsMap } = useChannelsStore()
 const { usersMap } = useUsersStore()

@@ -46,7 +46,15 @@
 </template>
 
 <script lang="ts">
-import { watch, reactive, computed, onMounted, Ref, nextTick, shallowRef } from 'vue';
+import {
+  watch,
+  reactive,
+  computed,
+  onMounted,
+  Ref,
+  nextTick,
+  shallowRef
+} from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { LoadingDirection } from '/@/store/domain/messagesView'
 import MessageElement from '/@/components/Main/MainView/MessageElement/MessageElement.vue'
@@ -157,28 +165,31 @@ const useScrollRestoration = (
 </script>
 
 <script lang="ts" setup>
-import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue';
+import MessagesScrollerSeparator from './MessagesScrollerSeparator.vue'
 
-const props = withDefaults(defineProps<{
-    messageIds: MessageId[],
-    isReachedEnd: boolean,
-    isReachedLatest: boolean,
-    entryMessageId?: MessageId,
-    isArchived?: boolean,
-    isLoading?: boolean,
-    lastLoadingDirection: LoadingDirection,
-    unreadSince?: string,
+const props = withDefaults(
+  defineProps<{
+    messageIds: MessageId[]
+    isReachedEnd: boolean
+    isReachedLatest: boolean
+    entryMessageId?: MessageId
+    isArchived?: boolean
+    isLoading?: boolean
+    lastLoadingDirection: LoadingDirection
+    unreadSince?: string
     withoutSeparator?: boolean
-}>(), {
+  }>(),
+  {
     isArchived: false,
     isLoading: false,
     withoutSeparator: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "requestLoadFormer"): void,
-    (e: "requestLoadLatter"): void
-}>();
+  (e: 'requestLoadFormer'): void
+  (e: 'requestLoadLatter'): void
+}>()
 
 const { lastScrollPosition, primaryView } = useMainViewStore()
 const { messagesMap } = useMessagesStore()

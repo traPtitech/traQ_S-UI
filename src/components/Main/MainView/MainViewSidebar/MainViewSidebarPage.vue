@@ -19,19 +19,22 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import CloseButton from '/@/components/UI/CloseButton.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 import useSidebar from '/@/composables/useSidebar'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     showBackButton?: boolean
-}>(), {
+  }>(),
+  {
     showBackButton: false
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "back"): void
-}>();
+  (e: 'back'): void
+}>()
 
 const { closeSidebar } = useSidebar()
 

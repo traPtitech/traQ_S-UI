@@ -10,21 +10,24 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    iconName: string,
-    iconMdi?: boolean,
-    modelValue?: boolean,
+const props = withDefaults(
+  defineProps<{
+    iconName: string
+    iconMdi?: boolean
+    modelValue?: boolean
     title?: string
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     modelValue: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _value: boolean): void
-}>();
+  (e: 'update:modelValue', _value: boolean): void
+}>()
 
 const toggle = () => {
   emit('update:modelValue', !props.modelValue)

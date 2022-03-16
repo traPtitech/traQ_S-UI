@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, toRef } from 'vue';
+import { computed, reactive, Ref, toRef } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
@@ -52,16 +52,16 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
 </script>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import FeatureContainer from './FeatureContainer/FeatureContainer.vue';
-import NavigationSelector from './NavigationSelector.vue';
-import NavigationContent from './NavigationContent.vue';
-import CloseButton from '/@/components/UI/CloseButton.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
+import NavigationSelector from './NavigationSelector.vue'
+import NavigationContent from './NavigationContent.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 
 const props = defineProps<{
-    id: UserId
-}>();
+  id: UserId
+}>()
 
 const { clearModal } = useModalStore()
 const { isMobile } = useResponsiveStore()

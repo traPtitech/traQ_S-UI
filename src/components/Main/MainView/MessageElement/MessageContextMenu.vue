@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { computed, Ref, toRef } from 'vue';
+import { computed, Ref, toRef } from 'vue'
 import apis from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
@@ -113,27 +113,28 @@ const useShowClipCreateModal = (messageId: Ref<MessageId>) => {
 </script>
 
 <script lang="ts" setup>
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue';
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 
-const props = withDefaults(defineProps<{
-    position: Point,
-    messageId: MessageId,
+const props = withDefaults(
+  defineProps<{
+    position: Point
+    messageId: MessageId
     isMinimum?: boolean
-}>(), {
+  }>(),
+  {
     isMinimum: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "close"): void
-}>();
+  (e: 'close'): void
+}>()
 
 const messageId = toRef(props, 'messageId')
 const { myId } = useMeStore()
 const { messagesMap } = useMessagesStore()
 
-const isPinned = computed(
-  () => messagesMap.value.get(messageId.value)?.pinned
-)
+const isPinned = computed(() => messagesMap.value.get(messageId.value)?.pinned)
 const isMine = computed(
   () => messagesMap.value.get(messageId.value)?.userId === myId.value
 )

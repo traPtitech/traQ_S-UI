@@ -2,8 +2,6 @@
   <div :class="$style.container"><slot></slot></div>
 </template>
 
-
-
 <style lang="scss" module>
 .container {
   @include background-primary;

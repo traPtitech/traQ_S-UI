@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import useSidebar from '/@/composables/useSidebar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 defineProps<{
-    isSidebarOpenerReady: boolean
+  isSidebarOpenerReady: boolean
 }>()
 
 const { shouldShowSidebar } = useSidebar()

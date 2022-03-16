@@ -12,14 +12,12 @@
 </template>
 
 <script lang="ts" setup>
-import LogoText from '/@/assets/traq-logo-text.svg?component';
+import LogoText from '/@/assets/traq-logo-text.svg?component'
 import logoUrl from '/@/assets/traq-logo.svg?url'
 
 defineProps<{
-    title?: string
+  title?: string
 }>()
-
-
 </script>
 
 <style lang="scss" module>

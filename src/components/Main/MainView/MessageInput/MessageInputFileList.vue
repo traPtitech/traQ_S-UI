@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileListItem from './MessageInputFileListItem.vue';
-import { toRef } from 'vue';
+import MessageInputFileListItem from './MessageInputFileListItem.vue'
+import { toRef } from 'vue'
 import {
   useMessageInputStateAttachment,
   VirtualChannelId
@@ -21,8 +21,8 @@ import { ChannelId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
-    channelId: ChannelId | VirtualChannelId
-}>();
+  channelId: ChannelId | VirtualChannelId
+}>()
 
 const { addErrorToast } = useToastStore()
 const { attachments, removeAttachmentAt } = useMessageInputStateAttachment(

@@ -17,14 +17,14 @@
 
 <script lang="ts" setup>
 import { EmbeddingMessage } from '@traptitech/traq-markdown-it'
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue'
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const props = defineProps<{
-    text: string
-}>();
+  text: string
+}>()
 
 const { isMobile } = useResponsiveStore()
 

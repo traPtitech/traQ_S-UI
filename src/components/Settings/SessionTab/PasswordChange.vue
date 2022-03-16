@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, reactive, Ref, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 
@@ -75,8 +75,8 @@ const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
 </script>
 
 <script lang="ts" setup>
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const { changeLink, changeName } = window.traQConfig.auth ?? {}
 const showChangeLink = changeLink !== undefined && changeName !== undefined

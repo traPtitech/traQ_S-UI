@@ -27,19 +27,22 @@
 </template>
 
 <script lang="ts" setup>
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
 
-const props = withDefaults(defineProps<{
-    fileId: string,
-    isWhite?: boolean,
+const props = withDefaults(
+  defineProps<{
+    fileId: string
+    isWhite?: boolean
     isEllipsis?: boolean
-}>(), {
+  }>(),
+  {
     isWhite: false,
     isEllipsis: false
-});
+  }
+)
 
 const {
   fileMeta,

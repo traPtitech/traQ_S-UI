@@ -35,20 +35,23 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue';
-import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue';
-import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue';
-import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue';
-import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue';
+import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
+import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
 import useFileMeta from '/@/composables/useFileMeta'
 import useAudio from '/@/composables/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     fileId?: string
-}>(), {
+  }>(),
+  {
     fileId: ''
-});
+  }
+)
 
 const { usersMap } = useUsersStore()
 const { fileMeta, fileRawPath } = useFileMeta(props)

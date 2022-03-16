@@ -36,13 +36,13 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue';
-import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue';
-import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue';
-import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue';
-import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue';
-import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue';
-import { computed, reactive } from 'vue';
+import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
+import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
+import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
+import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
+import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
+import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import { computed, reactive } from 'vue'
 import { useAudioController } from '/@/store/ui/audioController'
 import useAudio from '/@/composables/useAudio'
 import useFileMeta from '/@/composables/useFileMeta'

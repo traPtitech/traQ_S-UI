@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -37,8 +37,8 @@ const useUsersWithNotification = () => {
 </script>
 
 <script lang="ts" setup>
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import DMActivityElement from './DMActivityElement.vue';
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import DMActivityElement from './DMActivityElement.vue'
 
 const usersWithNotification = useUsersWithNotification()
 </script>

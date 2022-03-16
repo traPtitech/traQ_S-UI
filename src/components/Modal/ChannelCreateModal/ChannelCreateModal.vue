@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, watch, toRef } from 'vue';
+import { computed, reactive, watch, toRef } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { rootChannelId } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
@@ -123,14 +123,14 @@ const useChannelOptionsForSelector = () => {
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import FormSelector from '/@/components/UI/FormSelector.vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
 const props = defineProps<{
-    parentChannelId?: string
-}>();
+  parentChannelId?: string
+}>()
 
 const state = reactive<State>({
   channelName: '',
@@ -168,8 +168,7 @@ const newChannelPath = computed(() => {
 })
 
 const isCreateEnabled = computed(
-  () =>
-    isValidChannelName(state.channelName) && state.parentChannelId !== null
+  () => isValidChannelName(state.channelName) && state.parentChannelId !== null
 )
 </script>
 

@@ -17,26 +17,27 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-withDefaults(defineProps<{
-    hasChild?: boolean,
-    isSelected?: boolean,
-    isInactive?: boolean,
-    isOpened?: boolean,
-    hasNotification?: boolean,
+withDefaults(
+  defineProps<{
+    hasChild?: boolean
+    isSelected?: boolean
+    isInactive?: boolean
+    isOpened?: boolean
+    hasNotification?: boolean
     hasNotificationOnChild?: boolean
-}>(), {
+  }>(),
+  {
     hasChild: false,
     isSelected: false,
     isInactive: false,
     isOpened: false,
     hasNotification: false,
     hasNotificationOnChild: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

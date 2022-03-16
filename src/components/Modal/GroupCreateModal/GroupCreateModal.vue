@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import { ref } from 'vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'

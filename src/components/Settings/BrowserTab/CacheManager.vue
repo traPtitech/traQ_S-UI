@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
@@ -66,14 +66,12 @@ const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
 </script>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue';
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const { fetchStamps } = useStampsStore()
 const { addSuccessToast } = useToastStore()
 const showToast = (extraMesage?: string) => {
-  addSuccessToast(
-    `削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`
-  )
+  addSuccessToast(`削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`)
 }
 
 const cacheData = ref<StorageEstimate | null>(null)

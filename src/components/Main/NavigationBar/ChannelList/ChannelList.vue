@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
@@ -46,20 +46,23 @@ const ChannelElement = defineAsyncComponent(
 </script>
 
 <script lang="ts" setup>
-import SlideDown from '/@/components/UI/SlideDown.vue';
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
-withDefaults(defineProps<{
-    isShown?: boolean,
-    channels: ReadonlyArray<ChannelTreeNode | Channel>,
-    ignoreChildren?: boolean,
-    showShortenedPath?: boolean,
+withDefaults(
+  defineProps<{
+    isShown?: boolean
+    channels: ReadonlyArray<ChannelTreeNode | Channel>
+    ignoreChildren?: boolean
+    showShortenedPath?: boolean
     showTopic?: boolean
-}>(), {
+  }>(),
+  {
     isShown: true,
     ignoreChildren: false,
     showShortenedPath: false,
     showTopic: false
-})
+  }
+)
 
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()

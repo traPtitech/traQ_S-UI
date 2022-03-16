@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import UsersSelector from '../Common/UsersSelector.vue';
-import { computed, ref } from 'vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import UsersSelector from '../Common/UsersSelector.vue'
+import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
@@ -28,8 +28,8 @@ import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 
 const props = defineProps<{
-    id: UserGroupId
-}>();
+  id: UserGroupId
+}>()
 
 const { addErrorToast } = useToastStore()
 const { popModal } = useModalStore()

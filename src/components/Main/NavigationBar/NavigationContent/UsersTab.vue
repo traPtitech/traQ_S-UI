@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-import UnreadDMs from './UnreadDMs.vue';
-import UserList from './UserList.vue';
-import GroupManagerOpener from './GroupManagerOpener.vue';
+import UnreadDMs from './UnreadDMs.vue'
+import UserList from './UserList.vue'
+import GroupManagerOpener from './GroupManagerOpener.vue'
 </script>
 
 <style lang="scss" module>

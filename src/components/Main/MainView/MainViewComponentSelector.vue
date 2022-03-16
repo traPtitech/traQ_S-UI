@@ -12,14 +12,12 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelView from '/@/components/Main/MainView/ChannelView/ChannelView.vue';
-import ClipsView from '/@/components/Main/MainView/ClipsView/ClipsView.vue';
-import NullView from '/@/components/Main/MainView/NullView/NullView.vue';
+import ChannelView from '/@/components/Main/MainView/ChannelView/ChannelView.vue'
+import ClipsView from '/@/components/Main/MainView/ClipsView/ClipsView.vue'
+import NullView from '/@/components/Main/MainView/NullView/NullView.vue'
 import { ViewInformation } from '/@/store/ui/mainView'
 
 defineProps<{
-    viewInfo: ViewInformation
+  viewInfo: ViewInformation
 }>()
-
-
 </script>

@@ -13,16 +13,19 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import { computed } from 'vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 
-const props = withDefaults(defineProps<{
-    user?: User,
+const props = withDefaults(
+  defineProps<{
+    user?: User
     isTitle?: boolean
-}>(), {
+  }>(),
+  {
     isTitle: false
-});
+  }
+)
 
 const id = computed(() => props.user?.id)
 const displayName = computed(() => props.user?.displayName ?? 'unknown')

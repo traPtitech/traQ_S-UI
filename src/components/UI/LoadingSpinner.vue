@@ -10,15 +10,14 @@ const defaultSpinnerColor: SpinnerColor = 'white'
 </script>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     color?: SpinnerColor
-}>(), {
+  }>(),
+  {
     color: defaultSpinnerColor
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

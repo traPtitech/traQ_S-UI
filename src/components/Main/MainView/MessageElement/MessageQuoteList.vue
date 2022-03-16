@@ -11,17 +11,18 @@
 </template>
 
 <script lang="ts" setup>
-import MessageQuoteListItem from './MessageQuoteListItem.vue';
+import MessageQuoteListItem from './MessageQuoteListItem.vue'
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-withDefaults(defineProps<{
-    parentMessageChannelId: ChannelId | DMChannelId,
+withDefaults(
+  defineProps<{
+    parentMessageChannelId: ChannelId | DMChannelId
     messageIds?: MessageId[]
-}>(), {
+  }>(),
+  {
     messageIds: () => []
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

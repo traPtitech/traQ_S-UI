@@ -17,16 +17,16 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import ProfileHeader from './ProfileHeader.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 
 const props = defineProps<{
-    id?: string | null
-}>();
+  id?: string | null
+}>()
 
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 const isLoading = computed(() => props.id === undefined)

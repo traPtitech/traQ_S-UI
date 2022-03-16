@@ -14,15 +14,15 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue';
-import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue';
-import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue';
-import { computed } from 'vue';
+import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
+import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
+import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import { computed } from 'vue'
 import useSidebar from '/@/composables/useSidebar'
 
 const props = defineProps<{
-    userName: string
-}>();
+  userName: string
+}>()
 
 const { openSidebar } = useSidebar()
 const title = computed(() => `@ ${props.userName}`)

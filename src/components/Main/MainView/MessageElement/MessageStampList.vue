@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, Ref } from 'vue';
+import { computed, ref, Ref } from 'vue'
 import { MessageStamp, Stamp } from '@traptitech/traq'
 import { StampId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
@@ -134,19 +134,22 @@ const createStampList = (
 </script>
 
 <script lang="ts" setup>
-import StampElement from './StampElement.vue';
-import StampDetailElement from './StampDetailElement.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import StampElement from './StampElement.vue'
+import StampDetailElement from './StampDetailElement.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    stamps: MessageStamp[],
-    messageId: string,
-    showDetailButton?: boolean,
+const props = withDefaults(
+  defineProps<{
+    stamps: MessageStamp[]
+    messageId: string
+    showDetailButton?: boolean
     isArchived?: boolean
-}>(), {
+  }>(),
+  {
     showDetailButton: false,
     isArchived: false
-});
+  }
+)
 
 const { myId, upsertLocalStampHistory } = useMeStore()
 const { stampsMap } = useStampsStore()

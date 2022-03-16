@@ -6,17 +6,15 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue';
-import { computed } from 'vue';
+import ProfileHeader from './ProfileHeader.vue'
+import { computed } from 'vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 
 const props = defineProps<{
-    lastOnline?: string
-}>();
+  lastOnline?: string
+}>()
 
 const lastOnlineString = computed(() =>
-  props.lastOnline
-    ? getFullDayWithTimeString(new Date(props.lastOnline))
-    : ''
+  props.lastOnline ? getFullDayWithTimeString(new Date(props.lastOnline)) : ''
 )
 </script>

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import ReturnButton from '/@/components/UI/ReturnButton.vue';
+import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
 
 const { popOrCloseModal } = useModalStore()

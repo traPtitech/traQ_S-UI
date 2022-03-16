@@ -17,19 +17,17 @@
 </template>
 
 <script lang="ts" setup>
-import AccountState from './AccountState.vue';
-import BioText from './BioText.vue';
-import HomeChannel from './HomeChannel.vue';
-import AccountList from './AccountList.vue';
-import LastOnline from './LastOnline.vue';
+import AccountState from './AccountState.vue'
+import BioText from './BioText.vue'
+import HomeChannel from './HomeChannel.vue'
+import AccountList from './AccountList.vue'
+import LastOnline from './LastOnline.vue'
 import { User, UserDetail } from '@traptitech/traq'
 
 defineProps<{
-    user: User,
-    detail?: UserDetail
+  user: User
+  detail?: UserDetail
 }>()
-
-
 </script>
 
 <style lang="scss" module>

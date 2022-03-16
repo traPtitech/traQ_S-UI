@@ -47,7 +47,7 @@ import useStarChannel from './composables/useStarChannel'
 import useNotificationModal from './composables/useNotificationModal'
 import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
-import { teleportTargetName } from './HeaderToolsList.vue';
+import { teleportTargetName } from './HeaderToolsList.vue'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useCommandPalette } from '/@/store/app/commandPalette'
@@ -75,13 +75,13 @@ const useCopy = (props: { channelId: ChannelId }) => {
 </script>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import HeaderToolsList from './HeaderToolsList.vue';
-import HeaderToolsMenu from './HeaderToolsMenu.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import HeaderToolsList from './HeaderToolsList.vue'
+import HeaderToolsMenu from './HeaderToolsMenu.vue'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
 const { channelState } = useChannelState(props)

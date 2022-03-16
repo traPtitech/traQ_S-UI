@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import useImageViewer from './composables/useImageViewer'
 
 defineProps<{
-    src?: string
+  src?: string
 }>()
 
 const containerEle = ref<HTMLDivElement>()

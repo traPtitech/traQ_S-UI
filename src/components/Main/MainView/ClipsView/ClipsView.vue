@@ -5,14 +5,12 @@
 </template>
 
 <script lang="ts" setup>
-import ClipsViewContent from './ClipsViewContent.vue';
+import ClipsViewContent from './ClipsViewContent.vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 
 defineProps<{
-    clipFolderId: ClipFolderId
+  clipFolderId: ClipFolderId
 }>()
-
-
 </script>
 
 <style lang="scss" module>

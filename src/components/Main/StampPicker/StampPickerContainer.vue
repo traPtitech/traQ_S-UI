@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed, Ref } from 'vue';
+import { reactive, computed, Ref } from 'vue'
 import { useStampPicker, AlignmentPosition } from '/@/store/ui/stampPicker'
 import { Point } from '/@/lib/basic/point'
 
@@ -57,7 +57,7 @@ const useStyles = (
 </script>
 
 <script lang="ts" setup>
-import StampPicker from './StampPicker.vue';
+import StampPicker from './StampPicker.vue'
 
 const { position, alignment, isStampPickerShown } = useStampPicker()
 const styles = useStyles(position, alignment)

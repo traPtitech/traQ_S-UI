@@ -18,20 +18,23 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-withDefaults(defineProps<{
-    title?: string,
-    count?: number,
+withDefaults(
+  defineProps<{
+    title?: string
+    count?: number
     largePadding?: boolean
-}>(), {
+  }>(),
+  {
     largePadding: false
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickLink"): void
-}>();
+  (e: 'clickLink'): void
+}>()
 
 const onClickLink = () => {
   emit('clickLink')

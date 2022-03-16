@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 import { requestNotificationPermission } from '/@/lib/notification/requestPermission'
 
 const statusTable: Record<NotificationPermission | '', string> = {
@@ -40,10 +40,9 @@ const useNotificationPermission = () => {
 </script>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue';
+import FormButton from '/@/components/UI/FormButton.vue'
 
-const { permission, status, requestPermission } =
-  useNotificationPermission()
+const { permission, status, requestPermission } = useNotificationPermission()
 </script>
 
 <style lang="scss" module>

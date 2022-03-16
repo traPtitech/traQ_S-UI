@@ -4,8 +4,6 @@
   </div>
 </template>
 
-
-
 <style lang="scss" module>
 .Block {
   color: green;

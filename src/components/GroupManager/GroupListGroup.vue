@@ -4,21 +4,24 @@
 </template>
 
 <script lang="ts" setup>
-import GroupListGroupEdit from './GroupListGroupEdit.vue';
-import GroupListGroupView from './GroupListGroupView.vue';
+import GroupListGroupEdit from './GroupListGroupEdit.vue'
+import GroupListGroupView from './GroupListGroupView.vue'
 import { UserGroup } from '@traptitech/traq'
 import { UserGroupId } from '/@/types/entity-ids'
 
-const props = withDefaults(defineProps<{
-    group: UserGroup,
+const props = withDefaults(
+  defineProps<{
+    group: UserGroup
     isSelected?: boolean
-}>(), {
+  }>(),
+  {
     isSelected: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "select", _groupId: UserGroupId): void
-}>();
+  (e: 'select', _groupId: UserGroupId): void
+}>()
 
 const onSelect = () => {
   emit('select', props.group.id)

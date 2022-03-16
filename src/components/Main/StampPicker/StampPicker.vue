@@ -38,10 +38,10 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import FilterInput from '/@/components/UI/FilterInput.vue';
-import StampPickerStampList from './StampPickerStampList.vue';
-import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import StampPickerStampList from './StampPickerStampList.vue'
+import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
 import { StampId } from '/@/types/entity-ids'
 import useStampList from './composables/useStampList'
 import useStampSetSelector from './composables/useStampSetSelector'
@@ -52,8 +52,7 @@ import useStampFilterPlaceholder from './composables/useStampFilterPlaceholder'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useMeStore } from '/@/store/domain/me'
 
-const { selectHandler, currentStampSet, closeStampPicker } =
-  useStampPicker()
+const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
 const { upsertLocalStampHistory } = useMeStore()
 
 const { stamps, filterState } = useStampList(currentStampSet)

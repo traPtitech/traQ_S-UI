@@ -7,16 +7,16 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { navigationRouteNameTitleMap } from './composables/useNavigation'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
 const props = defineProps<{
-    routeName: SettingsRouteName,
-    iconName: string,
-    iconMdi?: boolean
-}>();
+  routeName: SettingsRouteName
+  iconName: string
+  iconMdi?: boolean
+}>()
 
 const size = 24
 const title = computed(() => navigationRouteNameTitleMap[props.routeName])

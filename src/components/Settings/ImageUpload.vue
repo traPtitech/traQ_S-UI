@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { ref, watchEffect, shallowRef } from 'vue';
+import { ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { useImageUploadInternal } from './composables/useImageUpload'
@@ -38,19 +38,22 @@ const cropperDefaultOptions = {
 </script>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue';
+import FormButton from '/@/components/UI/FormButton.vue'
 
-withDefaults(defineProps<{
-    rounded?: boolean,
+withDefaults(
+  defineProps<{
+    rounded?: boolean
     destroyFlag: boolean
-}>(), {
+  }>(),
+  {
     rounded: false
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "input", _file: File): void,
-    (e: "destroyed"): void
-}>();
+  (e: 'input', _file: File): void
+  (e: 'destroyed'): void
+}>()
 
 const {
   image,

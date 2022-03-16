@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 type Align = 'left' | 'right'
 
@@ -17,15 +17,16 @@ const useStyle = (props: { align: Align }) =>
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    actual: string,
-    placeholder: string,
+const props = withDefaults(
+  defineProps<{
+    actual: string
+    placeholder: string
     align?: Align
-}>(), {
+  }>(),
+  {
     align: 'left' as const
-});
+  }
+)
 
 const style = useStyle(props)
 </script>

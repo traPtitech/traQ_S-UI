@@ -17,17 +17,20 @@
 <script lang="ts" setup>
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: boolean,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: boolean
     onSecondary?: boolean
-}>(), {
+  }>(),
+  {
     modelValue: false,
     onSecondary: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: boolean): void
-}>();
+  (e: 'update:modelValue', _val: boolean): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 </script>

@@ -49,16 +49,16 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputLeftControls from './MessageInputLeftControls.vue';
-import MessageInputPreview from './MessageInputPreview.vue';
-import MessageInputTypingUsers from './MessageInputTypingUsers.vue';
-import MessageInputKeyGuide from './MessageInputKeyGuide.vue';
-import MessageInputTextArea from './MessageInputTextArea.vue';
-import MessageInputRightControls from './MessageInputRightControls.vue';
-import MessageInputFileList from './MessageInputFileList.vue';
-import MessageInputUploadProgress from './MessageInputUploadProgress.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed, onBeforeUnmount, ref, toRef, watchEffect } from 'vue';
+import MessageInputLeftControls from './MessageInputLeftControls.vue'
+import MessageInputPreview from './MessageInputPreview.vue'
+import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
+import MessageInputKeyGuide from './MessageInputKeyGuide.vue'
+import MessageInputTextArea from './MessageInputTextArea.vue'
+import MessageInputRightControls from './MessageInputRightControls.vue'
+import MessageInputFileList from './MessageInputFileList.vue'
+import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, onBeforeUnmount, ref, toRef, watchEffect } from 'vue'
 import { ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -77,15 +77,17 @@ import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    channelId: ChannelId | DMChannelId
-}>();
+  channelId: ChannelId | DMChannelId
+}>()
 
 const { isMobile } = useResponsiveStore()
 const channelId = toRef(props, 'channelId')
 const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
 const { addErrorToast } = useToastStore()
-const { addAttachment: addStateAttachment } =
-  useMessageInputStateAttachment(channelId, addErrorToast)
+const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
+  channelId,
+  addErrorToast
+)
 const { addAttachment, destroy } = useAttachments(addStateAttachment)
 const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
   useModifierKey()

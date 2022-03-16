@@ -32,19 +32,19 @@
 </template>
 
 <script lang="ts" setup>
-import FormInput from '/@/components/UI/FormInput.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { ref, watch } from 'vue';
+import FormInput from '/@/components/UI/FormInput.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
-    label: string,
-    value: string,
-    maxLength?: number
-}>();
+  label: string
+  value: string
+  maxLength?: number
+}>()
 
 const emit = defineEmits<{
-    (e: "update", _value: string): void
-}>();
+  (e: 'update', _value: string): void
+}>()
 
 const editingValue = ref(props.value)
 watch(

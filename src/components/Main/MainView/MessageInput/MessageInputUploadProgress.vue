@@ -5,13 +5,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     progress?: number
-}>(), {
+  }>(),
+  {
     progress: 0
-});
+  }
+)
 
 const style = computed(() => ({
   transform: `translateX(-${(1 - props.progress) * 100}%)`

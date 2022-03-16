@@ -21,17 +21,17 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { UserGroup } from '@traptitech/traq'
 
 defineProps<{
-    group: UserGroup
+  group: UserGroup
 }>()
 
 const emit = defineEmits<{
-    (e: "clickEdit"): void
-}>();
+  (e: 'clickEdit'): void
+}>()
 
 const onClickEdit = () => {
   emit('clickEdit')

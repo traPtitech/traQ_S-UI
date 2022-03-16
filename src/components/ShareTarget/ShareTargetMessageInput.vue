@@ -32,10 +32,17 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue';
-import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue';
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue';
-import { computed, onBeforeUnmount, onMounted, shallowRef, ref, toRef } from 'vue';
+import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  shallowRef,
+  ref,
+  toRef
+} from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
@@ -48,19 +55,24 @@ import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     isPosting?: boolean
-}>(), {
+  }>(),
+  {
     isPosting: false
-});
+  }
+)
 
 const { fetchStampHistory } = useMeStore()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
 const { state, isEmpty } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
-const { addAttachment: addStateAttachment } =
-  useMessageInputStateAttachment('share-target', addErrorToast)
+const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
+  'share-target',
+  addErrorToast
+)
 const { addAttachment, destroy } = useAttachments(addStateAttachment)
 
 onBeforeUnmount(() => {

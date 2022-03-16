@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewComponentSelector from './MainViewComponentSelector.vue';
-import MainViewHeaderSelector from './MainViewHeaderSelector.vue';
-import MainViewSidebarSelector from './MainViewSidebarSelector.vue';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import MainViewComponentSelector from './MainViewComponentSelector.vue'
+import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
+import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
 const { layout, primaryView, secondaryView } = useMainViewStore()

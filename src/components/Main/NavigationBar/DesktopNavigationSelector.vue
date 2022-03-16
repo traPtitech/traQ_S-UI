@@ -26,9 +26,9 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue';
-import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue';
-import { computed, watch } from 'vue';
+import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
+import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import { computed, watch } from 'vue'
 import {
   NavigationItemType,
   useNavigationSelectorItem,
@@ -40,19 +40,22 @@ import useNavigationSelectorEntry, {
 } from './composables/useNavigationSelectorEntry'
 import { VERSION } from '/@/lib/define'
 
-withDefaults(defineProps<{
-    currentNavigation?: NavigationItemType,
+withDefaults(
+  defineProps<{
+    currentNavigation?: NavigationItemType
     currentEphemeralNavigation?: EphemeralNavigationItemType
-}>(), {
+  }>(),
+  {
     currentNavigation: 'home' as const
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "navigationChange", _type: NavigationItemType): void,
-    (e: "ephemeralNavigationChange", _type: EphemeralNavigationItemType): void,
-    (e: "ephemeralEntryRemove", _entry: EphemeralNavigationSelectorEntry): void,
-    (e: "ephemeralEntryAdd", _entry: EphemeralNavigationSelectorEntry): void
-}>();
+  (e: 'navigationChange', _type: NavigationItemType): void
+  (e: 'ephemeralNavigationChange', _type: EphemeralNavigationItemType): void
+  (e: 'ephemeralEntryRemove', _entry: EphemeralNavigationSelectorEntry): void
+  (e: 'ephemeralEntryAdd', _entry: EphemeralNavigationSelectorEntry): void
+}>()
 
 const { onNavigationItemClick } = useNavigationSelectorItem(emit)
 const { onNavigationItemClick: onEphemeralNavigationItemClick } =

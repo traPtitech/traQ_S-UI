@@ -6,10 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue';
-import AudioControllerDetailPanel from './AudioControllerDetailPanel.vue';
-
-
+import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue'
+import AudioControllerDetailPanel from './AudioControllerDetailPanel.vue'
 </script>
 
 <style lang="scss" module>

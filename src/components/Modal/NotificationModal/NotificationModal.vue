@@ -17,17 +17,17 @@
 </template>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import ModalSection from '../Common/ModalSection.vue';
-import NotificationStateSelector from './NotificationStateSelector.vue';
-import UserNotificationList from './UserNotificationList.vue';
-import { computed } from 'vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import ModalSection from '../Common/ModalSection.vue'
+import NotificationStateSelector from './NotificationStateSelector.vue'
+import UserNotificationList from './UserNotificationList.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { channelIdToPathString } = useChannelPath()
 const channelPathString = computed(() =>

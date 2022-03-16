@@ -21,21 +21,24 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import CommonModalHeader from './ModalHeader.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import CommonModalHeader from './ModalHeader.vue'
 import { useModalStore } from '/@/store/ui/modal'
 
-withDefaults(defineProps<{
-    iconMdi?: boolean,
-    iconName: string,
-    title: string,
-    subtitle?: string,
+withDefaults(
+  defineProps<{
+    iconMdi?: boolean
+    iconName: string
+    title: string
+    subtitle?: string
     returnButton?: boolean
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     subtitle: '',
     returnButton: false
-})
+  }
+)
 
 const { clearModal } = useModalStore()
 </script>

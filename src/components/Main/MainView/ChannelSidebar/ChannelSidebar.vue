@@ -33,22 +33,22 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue';
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue';
-import ChannelSidebarContent from './ChannelSidebarContent.vue';
-import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue';
-import ChannelSidebarHidden from './ChannelSidebarHidden.vue';
-import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue';
-import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue';
-import { computed } from 'vue';
+import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import ChannelSidebarContent from './ChannelSidebarContent.vue'
+import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
+import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
+import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
+import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    channelId: ChannelId,
-    isSidebarOpenerReady: boolean
-}>();
+  channelId: ChannelId
+  isSidebarOpenerReady: boolean
+}>()
 
 const { channelsMap } = useChannelsStore()
 const {

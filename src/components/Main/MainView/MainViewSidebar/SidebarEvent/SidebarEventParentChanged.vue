@@ -11,15 +11,15 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue';
-import { computed } from 'vue';
+import SidebarEventFrame from './SidebarEventFrame.vue'
+import { computed } from 'vue'
 import { ParentChangedEvent } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
-    datetime: string,
-    details: ParentChangedEvent
-}>();
+  datetime: string
+  details: ParentChangedEvent
+}>()
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 

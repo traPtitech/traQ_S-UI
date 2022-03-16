@@ -45,19 +45,22 @@ const useStampPaletteThumbnail = () => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import AStamp from '/@/components/UI/AStamp.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
 
-withDefaults(defineProps<{
-    stampSet: StampSet,
+withDefaults(
+  defineProps<{
+    stampSet: StampSet
     isActive?: boolean
-}>(), {
+  }>(),
+  {
     isActive: false
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "click"): void
-}>();
+  (e: 'click'): void
+}>()
 
 const { pickThumbnail } = useStampPaletteThumbnail()
 const onClick = () => {

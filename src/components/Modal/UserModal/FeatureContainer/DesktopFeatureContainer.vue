@@ -19,16 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue';
-import LinkButtons from './LinkButtons.vue';
+import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
+import LinkButtons from './LinkButtons.vue'
 import { User, UserDetail } from '@traptitech/traq'
 
 defineProps<{
-    user: User,
-    detail?: UserDetail
+  user: User
+  detail?: UserDetail
 }>()
-
-
 </script>
 
 <style lang="scss" module>

@@ -15,15 +15,15 @@
 </template>
 
 <script lang="ts" setup>
-import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue';
-import ScrollLoadingBar from '../ScrollLoadingBar.vue';
-import { shallowRef } from 'vue';
+import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
+import ScrollLoadingBar from '../ScrollLoadingBar.vue'
+import { shallowRef } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import useClipsFetcher from './composables/useClipsFetcher'
 
 const props = defineProps<{
-    clipFolderId: ClipFolderId
-}>();
+  clipFolderId: ClipFolderId
+}>()
 
 const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
 const {

@@ -6,15 +6,15 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    userId?: UserId
-}>();
+  userId?: UserId
+}>()
 
 const { usersMap } = useUsersStore()
 

@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import DraftListTitlePanel from './DraftListTitlePanel.vue';
-import DraftListDetailsPanel from './DraftListDetailsPanel.vue';
+import DraftListTitlePanel from './DraftListTitlePanel.vue'
+import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
 import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
 
 const { inputChannels } = useMessageInputStateBase()

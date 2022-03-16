@@ -5,15 +5,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
-const props = withDefaults(defineProps<{
-    show: boolean,
+const props = withDefaults(
+  defineProps<{
+    show: boolean
     isEdit?: boolean
-}>(), {
+  }>(),
+  {
     isEdit: false
-});
+  }
+)
 
 const { sendWithModifierKey } = useBrowserSettings()
 const sendText = computed(() => (props.isEdit ? '保存' : '送信'))

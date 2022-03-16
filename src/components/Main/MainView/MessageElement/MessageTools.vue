@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -109,18 +109,21 @@ const pushInitialRecentStampsIfNeeded = (
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import AStamp from '/@/components/UI/AStamp.vue';
-import MessageContextMenu from './MessageContextMenu.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
+import MessageContextMenu from './MessageContextMenu.vue'
 
-const props = withDefaults(defineProps<{
-    messageId: MessageId,
-    isMinimum?: boolean,
+const props = withDefaults(
+  defineProps<{
+    messageId: MessageId
+    isMinimum?: boolean
     show?: boolean
-}>(), {
+  }>(),
+  {
     isMinimum: false,
     show: false
-});
+  }
+)
 
 const { recentStampIds, upsertLocalStampHistory } = useMeStore()
 const { addErrorToast } = useToastStore()

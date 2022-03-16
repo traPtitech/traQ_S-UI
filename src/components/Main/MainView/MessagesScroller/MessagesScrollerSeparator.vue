@@ -7,13 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-
-
 defineProps<{
-    title: string
+  title: string
 }>()
-
-
 </script>
 
 <style lang="scss" module>

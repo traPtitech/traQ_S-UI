@@ -15,24 +15,27 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    inputValue?: string,
-    onSecondary?: boolean,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    inputValue?: string
+    onSecondary?: boolean
     label?: string
-}>(), {
+  }>(),
+  {
     modelValue: '',
     inputValue: '',
     onSecondary: false,
     label: ''
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 const isChecked = computed(() => props.inputValue === value.value)

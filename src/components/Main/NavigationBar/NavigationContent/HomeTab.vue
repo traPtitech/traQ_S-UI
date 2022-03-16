@@ -44,11 +44,11 @@
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue';
-import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue';
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue';
-import { computed } from 'vue';
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
 import { useChannelTree } from '/@/store/domain/channelTree'

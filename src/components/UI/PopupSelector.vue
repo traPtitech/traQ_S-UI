@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 
 export type PopupSelectorItem = {
   value: string
@@ -43,21 +43,24 @@ export type PopupSelectorItem = {
 </script>
 
 <script lang="ts" setup>
-import AIcon from './AIcon.vue';
-import ClickOutside from './ClickOutside';
+import AIcon from './AIcon.vue'
+import ClickOutside from './ClickOutside'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    items: PopupSelectorItem[],
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    items: PopupSelectorItem[]
     small?: boolean
-}>(), {
+  }>(),
+  {
     modelValue: '',
     small: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+}>()
 
 const isOpen = ref(false)
 const toggle = () => (isOpen.value = !isOpen.value)

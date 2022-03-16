@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { ParsedChannelEvent } from '/@/lib/apis'
 import { ChannelEventTypeEnum } from '@traptitech/traq'
 import SidebarEventTopicChanged from './SidebarEventTopicChanged.vue'
@@ -22,8 +22,8 @@ import SidebarEventForcedNotificationChanged from './SidebarEventForcedNotificat
 import SidebarEventChildCreated from './SidebarEventChildCreated.vue'
 
 const props = defineProps<{
-    event: ParsedChannelEvent
-}>();
+  event: ParsedChannelEvent
+}>()
 
 const comp = computed(() => {
   switch (props.event.type) {

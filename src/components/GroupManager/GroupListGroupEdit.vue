@@ -38,17 +38,17 @@
 </template>
 
 <script lang="ts" setup>
-import LineEditor from './LineEditor.vue';
-import GroupAdminList from './GroupAdminList.vue';
-import GroupMemberList from './GroupMemberList.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
+import LineEditor from './LineEditor.vue'
+import GroupAdminList from './GroupAdminList.vue'
+import GroupMemberList from './GroupMemberList.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 import { UserGroup } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
-    group: UserGroup
-}>();
+  group: UserGroup
+}>()
 
 const { addErrorToast } = useToastStore()
 

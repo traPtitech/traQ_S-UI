@@ -10,14 +10,14 @@
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
-import { computed } from 'vue';
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { channelsMap } = useChannelsStore()
 const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)

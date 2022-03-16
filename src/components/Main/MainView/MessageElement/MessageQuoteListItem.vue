@@ -24,19 +24,19 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue';
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue';
-import { computed, reactive } from 'vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import { computed, reactive } from 'vue'
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    parentMessageChannelId: ChannelId | DMChannelId,
-    messageId: MessageId
-}>();
+  parentMessageChannelId: ChannelId | DMChannelId
+  messageId: MessageId
+}>()
 
 const { renderedContentMap } = useMessagesView()
 const { messagesMap } = useMessagesStore()
@@ -54,9 +54,7 @@ const state = reactive({
       (!dmChannelsMap.value.has(state.message.channelId) ||
         state.message.channelId === props.parentMessageChannelId)
   ),
-  content: computed(
-    () => renderedContentMap.value.get(props.messageId) ?? ''
-  )
+  content: computed(() => renderedContentMap.value.get(props.messageId) ?? '')
 })
 </script>
 

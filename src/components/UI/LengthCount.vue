@@ -11,12 +11,15 @@
 <script lang="ts" setup>
 import useMaxLength from '/@/composables/useMaxLength'
 
-const props = withDefaults(defineProps<{
-    val?: string,
+const props = withDefaults(
+  defineProps<{
+    val?: string
     maxLength?: number
-}>(), {
+  }>(),
+  {
     val: ''
-});
+  }
+)
 
 const { length, isExceeded } = useMaxLength(props)
 </script>

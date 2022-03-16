@@ -33,20 +33,23 @@
 </template>
 
 <script lang="ts" setup>
-import MessageFileListImage from './MessageFileListImage.vue';
-import MessageFileListVideo from './MessageFileListVideo.vue';
-import MessageFileListAudio from './MessageFileListAudio.vue';
-import MessageFileListFile from './MessageFileListFile.vue';
-import { computed } from 'vue';
+import MessageFileListImage from './MessageFileListImage.vue'
+import MessageFileListVideo from './MessageFileListVideo.vue'
+import MessageFileListAudio from './MessageFileListAudio.vue'
+import MessageFileListFile from './MessageFileListFile.vue'
+import { computed } from 'vue'
 import { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 import useFileMetaList from '/@/composables/message/useFileMetaList'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId | DMChannelId,
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId | DMChannelId
     fileIds?: FileId[]
-}>(), {
+  }>(),
+  {
     fileIds: () => []
-});
+  }
+)
 
 const { fileMetaDataState } = useFileMetaList(props)
 const showLargeImage = computed(() => fileMetaDataState.images.length === 1)

@@ -13,17 +13,15 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue';
-import HeaderChannelName from './HeaderChannelName.vue';
-import HeaderTopic from './HeaderTopic.vue';
-import HeaderTools from './HeaderTools.vue';
+import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
+import HeaderChannelName from './HeaderChannelName.vue'
+import HeaderTopic from './HeaderTopic.vue'
+import HeaderTools from './HeaderTools.vue'
 import { ChannelId } from '/@/types/entity-ids'
 
 defineProps<{
-    channelId: ChannelId
+  channelId: ChannelId
 }>()
-
-
 </script>
 
 <style lang="scss" module>

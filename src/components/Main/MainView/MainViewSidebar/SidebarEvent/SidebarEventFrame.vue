@@ -21,23 +21,26 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 
-const props = withDefaults(defineProps<{
-    title: string,
-    iconName: string,
-    iconMdi?: boolean,
-    userId: UserId,
-    datetime: string,
+const props = withDefaults(
+  defineProps<{
+    title: string
+    iconName: string
+    iconMdi?: boolean
+    userId: UserId
+    datetime: string
     link?: string
-}>(), {
+  }>(),
+  {
     iconMdi: false
-});
+  }
+)
 
 const timeString = computed(() =>
   getFullDayWithTimeString(new Date(props.datetime))

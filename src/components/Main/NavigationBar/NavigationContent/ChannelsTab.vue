@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, Ref } from 'vue';
+import { computed, Ref } from 'vue'
 import useChannelFilter from '/@/composables/useChannelFilter'
 import { constructTree } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
@@ -113,18 +113,17 @@ const useStaredChannels = () => {
 </script>
 
 <script lang="ts" setup>
-import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue';
-import ChannelFilter from '../ChannelList/ChannelFilter.vue';
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import EmptyState from '/@/components/UI/EmptyState.vue';
+import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
+import ChannelFilter from '../ChannelList/ChannelFilter.vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
 const { pushModal } = useModalStore()
 const topLevelChannels = useTopLevelChannels()
 const staredChannels = useStaredChannels()
 
-const { filterStarChannel, toggleStarChannelFilter } =
-  useFilterStarChannel()
+const { filterStarChannel, toggleStarChannelFilter } = useFilterStarChannel()
 const { channelListFilterState } = useChannelListFilter(
   useChannelList(filterStarChannel)
 )

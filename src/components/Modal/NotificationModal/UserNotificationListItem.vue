@@ -7,20 +7,20 @@
 </template>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import { computed } from 'vue';
+import AToggle from '/@/components/UI/AToggle.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    userId: UserId,
-    subscribed: boolean
-}>();
+  userId: UserId
+  subscribed: boolean
+}>()
 
 const emit = defineEmits<{
-    (e: "changeNotification", _userId: UserId, _val: boolean): void
-}>();
+  (e: 'changeNotification', _userId: UserId, _val: boolean): void
+}>()
 
 const { usersMap } = useUsersStore()
 

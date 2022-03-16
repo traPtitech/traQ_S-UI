@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import AToast from './AToast.vue';
+import AToast from './AToast.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
 const { toasts } = useToastStore()

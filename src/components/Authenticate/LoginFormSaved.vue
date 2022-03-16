@@ -20,16 +20,16 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateButton from './AuthenticateButton.vue';
+import AuthenticateButton from './AuthenticateButton.vue'
 
 defineProps<{
-    saved: PasswordCredential
+  saved: PasswordCredential
 }>()
 
 const emit = defineEmits<{
-    (e: "login"): void,
-    (e: "useOther"): void
-}>();
+  (e: 'login'): void
+  (e: 'useOther'): void
+}>()
 
 const onLoginClick = () => {
   emit('login')

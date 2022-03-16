@@ -12,20 +12,21 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-withDefaults(defineProps<{
-    name?: string,
-    isOpen?: boolean,
+withDefaults(
+  defineProps<{
+    name?: string
+    isOpen?: boolean
     hasNotification?: boolean
-}>(), {
+  }>(),
+  {
     name: '',
     isOpen: false,
     hasNotification: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

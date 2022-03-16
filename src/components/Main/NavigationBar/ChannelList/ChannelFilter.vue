@@ -14,21 +14,24 @@
 </template>
 
 <script lang="ts" setup>
-import FilterInput from '/@/components/UI/FilterInput.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import FilterInput from '/@/components/UI/FilterInput.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue: string,
+const props = withDefaults(
+  defineProps<{
+    modelValue: string
     isStared?: boolean
-}>(), {
+  }>(),
+  {
     isStared: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void,
-    (e: "toggleStarFilter"): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+  (e: 'toggleStarFilter'): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 const toggleStarFilter = () => {

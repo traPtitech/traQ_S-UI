@@ -13,22 +13,23 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import ModalReturnButton from './ModalReturnButton.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import ModalReturnButton from './ModalReturnButton.vue'
 
-withDefaults(defineProps<{
-    iconMdi?: boolean,
-    iconName: string,
-    title: string,
-    subtitle?: string,
+withDefaults(
+  defineProps<{
+    iconMdi?: boolean
+    iconName: string
+    title: string
+    subtitle?: string
     returnButton?: boolean
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     subtitle: '',
     returnButton: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

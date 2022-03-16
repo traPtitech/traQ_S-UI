@@ -4,12 +4,12 @@
 
 <script lang="ts" setup>
 import { MessageId } from '/@/types/entity-ids'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useMessagesView } from '/@/store/domain/messagesView'
 
 const props = defineProps<{
-    messageId: MessageId
-}>();
+  messageId: MessageId
+}>()
 
 const { renderedContentMap } = useMessagesView()
 const content = computed(

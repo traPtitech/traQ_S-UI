@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
@@ -20,10 +20,10 @@ type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 </script>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import CommandPaletteInput from './CommandPaletteInput.vue';
-import SearchResult from './SearchResult.vue';
-import SearchSuggestion from './SearchSuggestion.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import CommandPaletteInput from './CommandPaletteInput.vue'
+import SearchResult from './SearchResult.vue'
+import SearchSuggestion from './SearchSuggestion.vue'
 
 const { isMobile } = useResponsiveStore()
 const { mode, query, closeCommandPalette } = useCommandPalette()

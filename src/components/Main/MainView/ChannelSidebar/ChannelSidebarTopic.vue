@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { ref, watchEffect, Ref } from 'vue';
+import { ref, watchEffect, Ref } from 'vue'
 import apis from '/@/lib/apis'
 import { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -38,13 +38,13 @@ const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
 </script>
 
 <script lang="ts" setup>
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue';
-import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue';
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { channelsMap } = useChannelsStore()
 

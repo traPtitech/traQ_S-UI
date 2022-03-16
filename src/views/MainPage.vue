@@ -42,7 +42,14 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed, Ref, defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue';
+import {
+  reactive,
+  computed,
+  Ref,
+  defineAsyncComponent,
+  onMounted,
+  onBeforeUnmount
+} from 'vue'
 import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -124,11 +131,11 @@ const NotFoundPage = defineAsyncComponent(
 </script>
 
 <script lang="ts" setup>
-import MainView from '/@/components/Main/MainView/MainView.vue';
-import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue';
-import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue';
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue';
-import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue';
+import MainView from '/@/components/Main/MainView/MainView.vue'
+import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
+import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 
 const navWidth = 320
 const sidebarWidth = 256 + 64

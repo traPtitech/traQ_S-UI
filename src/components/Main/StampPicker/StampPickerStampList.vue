@@ -13,18 +13,18 @@
 </template>
 
 <script lang="ts" setup>
-import AStamp from '/@/components/UI/AStamp.vue';
+import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
 
 defineProps<{
-    stamps: readonly Stamp[]
+  stamps: readonly Stamp[]
 }>()
 
 const emit = defineEmits<{
-    (e: "inputStamp", _id: StampId): void,
-    (e: "hoverStamp", _name: string): void
-}>();
+  (e: 'inputStamp', _id: StampId): void
+  (e: 'hoverStamp', _name: string): void
+}>()
 
 const onClickStamp = (id: StampId) => {
   emit('inputStamp', id)

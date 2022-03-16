@@ -10,13 +10,13 @@
 </template>
 
 <script lang="ts" setup>
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
-import { computed } from 'vue';
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import { computed } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
 
 const props = defineProps<{
-    fileId: string
-}>();
+  fileId: string
+}>()
 
 const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
 const name = computed(() => fileMeta.value?.name ?? 'unknown')

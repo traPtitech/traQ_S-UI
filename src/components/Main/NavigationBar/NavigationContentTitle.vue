@@ -5,17 +5,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import {
   NavigationItemType,
   navigationTypeNameMap
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     currentNavigation?: NavigationItemType
-}>(), {
+  }>(),
+  {
     currentNavigation: 'home' as const
-});
+  }
+)
 
 const title = computed(() => navigationTypeNameMap[props.currentNavigation])
 </script>

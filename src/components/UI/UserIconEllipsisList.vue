@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
-import { IconSize } from '/@/components/UI/UserIcon.vue';
+import { computed } from 'vue'
+import { IconSize } from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
 
 const useSizeStyles = (props: {
@@ -58,19 +58,21 @@ const useSizeStyles = (props: {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
-const props = withDefaults(defineProps<{
-    direction: 'row' | 'col',
-    max?: number,
-    showCount?: boolean,
-    userIds?: readonly UserId[],
-    borderWidth?: number,
-    iconSize?: IconSize,
-    overlap?: number,
-    transition?: string,
+const props = withDefaults(
+  defineProps<{
+    direction: 'row' | 'col'
+    max?: number
+    showCount?: boolean
+    userIds?: readonly UserId[]
+    borderWidth?: number
+    iconSize?: IconSize
+    overlap?: number
+    transition?: string
     preventModal?: boolean
-}>(), {
+  }>(),
+  {
     max: 3,
     showCount: true,
     userIds: () => [],
@@ -78,7 +80,8 @@ const props = withDefaults(defineProps<{
     iconSize: 40 as const,
     overlap: 12,
     preventModal: false
-});
+  }
+)
 
 const styles = useSizeStyles(props)
 const visibleIconIds = computed(() =>

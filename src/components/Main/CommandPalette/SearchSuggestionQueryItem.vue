@@ -6,16 +6,14 @@
 </template>
 
 <script lang="ts" setup>
-
-
 const props = defineProps<{
-    insertQuery: string,
-    description: string
-}>();
+  insertQuery: string
+  description: string
+}>()
 
 const emit = defineEmits<{
-    (e: "select", _insertQuery: string): void
-}>();
+  (e: 'select', _insertQuery: string): void
+}>()
 
 const onClick = () => {
   emit('select', props.insertQuery)

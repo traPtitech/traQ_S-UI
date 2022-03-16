@@ -19,17 +19,15 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelSidebar from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue';
-import ClipsSidebar from '/@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue';
-import DMSidebar from '/@/components/Main/MainView/DMSidebar/DMSidebar.vue';
+import ChannelSidebar from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue'
+import ClipsSidebar from '/@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue'
+import DMSidebar from '/@/components/Main/MainView/DMSidebar/DMSidebar.vue'
 import { ViewInformation } from '/@/store/ui/mainView'
 
 defineProps<{
-    viewInfo: ViewInformation,
-    isSidebarOpenerReady: boolean
+  viewInfo: ViewInformation
+  isSidebarOpenerReady: boolean
 }>()
-
-
 </script>
 
 <style lang="scss" module>

@@ -16,7 +16,15 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import {
+  computed,
+  reactive,
+  ref,
+  onMounted,
+  onUnmounted,
+  watch,
+  nextTick
+} from 'vue'
 import { throttle } from 'throttle-debounce'
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -74,12 +82,10 @@ const PAGE_SIZE = 50
 </script>
 
 <script lang="ts" setup>
-
-
 const props = defineProps<{
-    items: any[],
-    keyIndex: string
-}>();
+  items: any[]
+  keyIndex: string
+}>()
 
 const state = reactive({
   isMounted: false,

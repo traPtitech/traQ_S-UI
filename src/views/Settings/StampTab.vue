@@ -10,8 +10,8 @@
 </template>
 
 <script lang="ts" setup>
-import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue';
-import EditStamp from '/@/components/Settings/StampTab/EditStamp.vue';
+import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
+import EditStamp from '/@/components/Settings/StampTab/EditStamp.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useUsersStore } from '/@/store/entities/users'

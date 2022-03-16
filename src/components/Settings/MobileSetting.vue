@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-import MobileTabSelector from './MobileTabSelector.vue';
-import MobileTabFrame from './MobileTabFrame.vue';
-import { computed } from 'vue';
+import MobileTabSelector from './MobileTabSelector.vue'
+import MobileTabFrame from './MobileTabFrame.vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { RouteName } from '/@/router'
 

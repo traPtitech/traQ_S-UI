@@ -3,13 +3,16 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     size?: number
-}>(), {
+  }>(),
+  {
     size: 24
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

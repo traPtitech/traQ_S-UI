@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useUsersStore } from '/@/store/entities/users'
@@ -42,29 +42,32 @@ const maxVolumeValue = 200
 </script>
 
 <script lang="ts" setup>
-import ASlider from '/@/components/UI/ASlider.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import ASlider from '/@/components/UI/ASlider.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    userId: UserId,
-    showVolumeControl?: boolean,
-    disabled?: boolean,
-    showTuneButton?: boolean,
-    showTuneDoneButton?: boolean,
+const props = withDefaults(
+  defineProps<{
+    userId: UserId
+    showVolumeControl?: boolean
+    disabled?: boolean
+    showTuneButton?: boolean
+    showTuneDoneButton?: boolean
     micMuted?: boolean
-}>(), {
+  }>(),
+  {
     showVolumeControl: false,
     disabled: false,
     showTuneButton: false,
     showTuneDoneButton: false,
     micMuted: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "tune"): void,
-    (e: "tuneDone"): void
-}>();
+  (e: 'tune'): void
+  (e: 'tuneDone'): void
+}>()
 
 const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
 const { usersMap } = useUsersStore()
@@ -74,9 +77,7 @@ const volume = computed(() =>
 const userName = computed(
   () => usersMap.value.get(props.userId)?.displayName ?? ''
 )
-const talkingLevel = computed(() =>
-  talkingUsersState.value.get(props.userId)
-)
+const talkingLevel = computed(() => talkingUsersState.value.get(props.userId))
 const onChange = (value: number) => {
   setUserVolume(props.userId, value / maxVolumeValue)
 }

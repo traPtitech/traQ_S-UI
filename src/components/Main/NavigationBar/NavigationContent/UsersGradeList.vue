@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 import { User } from '@traptitech/traq'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
@@ -31,14 +31,14 @@ const useFolding = () => {
 </script>
 
 <script lang="ts" setup>
-import UsersSeparator from './UsersSeparator.vue';
-import UsersElement from './UsersElement.vue';
-import SlideDown from '/@/components/UI/SlideDown.vue';
+import UsersSeparator from './UsersSeparator.vue'
+import UsersElement from './UsersElement.vue'
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
 const props = defineProps<{
-    name: string,
-    users: User[]
-}>();
+  name: string
+  users: User[]
+}>()
 
 const { unreadChannelsMap } = useMeStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()

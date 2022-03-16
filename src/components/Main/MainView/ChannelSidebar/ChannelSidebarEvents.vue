@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue';
+import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
 const emit = defineEmits<{
-    (e: "clickLink"): void
-}>();
+  (e: 'clickLink'): void
+}>()
 
 const onClickLink = () => {
   emit('clickLink')

@@ -19,22 +19,23 @@
 </template>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    title?: string,
-    largePadding?: boolean,
-    clickable?: boolean,
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    largePadding?: boolean
+    clickable?: boolean
     titleClickable?: boolean
-}>(), {
+  }>(),
+  {
     largePadding: false,
     clickable: false,
     titleClickable: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "toggle"): void
-}>();
+  (e: 'toggle'): void
+}>()
 
 const onTitleClick = () => {
   emit('toggle')

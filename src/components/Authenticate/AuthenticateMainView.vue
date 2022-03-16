@@ -16,21 +16,24 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateModal from './AuthenticateModal.vue';
-import LoginForm from './LoginForm.vue';
-import RegistrationForm from './RegistrationForm.vue';
-import ConsentForm from './ConsentForm/ConsentForm.vue';
-import { computed } from 'vue';
+import AuthenticateModal from './AuthenticateModal.vue'
+import LoginForm from './LoginForm.vue'
+import RegistrationForm from './RegistrationForm.vue'
+import ConsentForm from './ConsentForm/ConsentForm.vue'
+import { computed } from 'vue'
 import { PageType } from '/@/views/AuthPage.vue'
 import useVersion from '/@/composables/useVersion'
 
-const props = withDefaults(defineProps<{
-    type?: PageType,
+const props = withDefaults(
+  defineProps<{
+    type?: PageType
     show?: boolean
-}>(), {
+  }>(),
+  {
     type: 'login' as const,
     show: false
-});
+  }
+)
 
 const needVersionFetch = computed(
   () => props.type === 'login' || props.type === 'registration'

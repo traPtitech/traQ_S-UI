@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     name?: string
-}>(), {
+  }>(),
+  {
     name: ''
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

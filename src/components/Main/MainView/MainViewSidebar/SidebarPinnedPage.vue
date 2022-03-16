@@ -10,20 +10,23 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue';
-import SidebarHeader from './SidebarHeader.vue';
-import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue';
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import SidebarHeader from './SidebarHeader.vue'
+import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue'
 import { Pin } from '@traptitech/traq'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     pinnedMessages?: Pin[]
-}>(), {
+  }>(),
+  {
     pinnedMessages: () => []
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "moveBack"): void
-}>();
+  (e: 'moveBack'): void
+}>()
 
 const moveBack = () => {
   emit('moveBack')

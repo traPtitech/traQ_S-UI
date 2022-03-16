@@ -24,23 +24,26 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
-    id: UserId,
+const props = withDefaults(
+  defineProps<{
+    id: UserId
     showEditButton?: boolean
-}>(), {
+  }>(),
+  {
     showEditButton: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "edit"): void,
-    (e: "delete"): void
-}>();
+  (e: 'edit'): void
+  (e: 'delete'): void
+}>()
 
 const { usersMap } = useUsersStore()
 

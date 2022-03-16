@@ -33,8 +33,8 @@ import {
   onMounted,
   onUnmounted,
   ref,
-  readonly,
-} from 'vue';
+  readonly
+} from 'vue'
 import { useRouter } from 'vue-router'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
@@ -183,11 +183,11 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const emit = defineEmits<{
-    (e: "clickIcon"): void
-}>();
+  (e: 'clickIcon'): void
+}>()
 
 const { isPopupNavigatorShown, movePrev, moveNext } = useNavigator(emit)
 

@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import QallDetailsPanelUser from './QallDetailsPanelUser.vue';
-import CollapseContent from '../CollapseContent.vue';
-import { computed, ref } from 'vue';
+import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
+import CollapseContent from '../CollapseContent.vue'
+import { computed, ref } from 'vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 

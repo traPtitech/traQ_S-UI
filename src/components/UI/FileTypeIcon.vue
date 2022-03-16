@@ -3,17 +3,20 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { AttachmentType } from '/@/lib/basic/file'
 
-withDefaults(defineProps<{
-    type: AttachmentType,
-    size?: number,
+withDefaults(
+  defineProps<{
+    type: AttachmentType
+    size?: number
     isAnimatedImage?: boolean
-}>(), {
+  }>(),
+  {
     isAnimatedImage: false
-})
+  }
+)
 
 const iconData = computed(() => {
   switch (prop.type) {

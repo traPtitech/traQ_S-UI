@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue'
 import { Theme, themeSchema } from '/@/lib/theme/schema'
 import { dequal } from 'dequal'
 import { useToastStore } from '/@/store/ui/toast'
@@ -111,16 +111,16 @@ const useImporter = () => {
 </script>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue';
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
+import FormButton from '/@/components/UI/FormButton.vue'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 
 const props = defineProps<{
-    custom: Theme
-}>();
+  custom: Theme
+}>()
 
 const emit = defineEmits<{
-    (e: "changeTheme", _theme: Theme): void
-}>();
+  (e: 'changeTheme', _theme: Theme): void
+}>()
 
 const { editedTheme, updateEditedTheme, isChanged, applyTheme } =
   useEditedThemes(props, emit)

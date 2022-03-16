@@ -14,16 +14,19 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-withDefaults(defineProps<{
-    iconString?: string,
-    iconName?: string,
-    iconMdi?: boolean,
+withDefaults(
+  defineProps<{
+    iconString?: string
+    iconName?: string
+    iconMdi?: boolean
     text: string
-}>(), {
+  }>(),
+  {
     iconMdi: false
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

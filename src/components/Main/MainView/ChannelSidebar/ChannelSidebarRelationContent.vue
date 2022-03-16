@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
 
@@ -69,17 +69,20 @@ const buildSiblingLink = (channel: string) =>
 </script>
 
 <script lang="ts" setup>
-import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue';
+import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 
-const props = withDefaults(defineProps<{
-    parent?: Channel,
-    children?: Channel[],
-    siblings?: Channel[],
+const props = withDefaults(
+  defineProps<{
+    parent?: Channel
+    children?: Channel[]
+    siblings?: Channel[]
     current?: Channel
-}>(), {
+  }>(),
+  {
     children: () => [],
     siblings: () => []
-});
+  }
+)
 
 const state = reactive({
   isOpenSiblings: false,

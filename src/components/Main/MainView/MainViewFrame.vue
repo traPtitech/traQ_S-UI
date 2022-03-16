@@ -8,19 +8,18 @@
 </template>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
-    isActive?: boolean,
-    hideOuter?: boolean,
+withDefaults(
+  defineProps<{
+    isActive?: boolean
+    hideOuter?: boolean
     dimInner?: boolean
-}>(), {
+  }>(),
+  {
     isActive: true,
     hideOuter: false,
     dimInner: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelViewHeader from '/@/components/Main/MainView/ChannelView/ChannelViewHeader.vue';
-import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue';
-import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue';
+import ChannelViewHeader from '/@/components/Main/MainView/ChannelView/ChannelViewHeader.vue'
+import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
+import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue'
 import { ViewInformation } from '/@/store/ui/mainView'
 
 defineProps<{
-    viewInfo: ViewInformation
+  viewInfo: ViewInformation
 }>()
 </script>
 

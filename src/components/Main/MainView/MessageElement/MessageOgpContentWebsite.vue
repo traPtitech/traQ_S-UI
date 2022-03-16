@@ -21,17 +21,20 @@
 </template>
 
 <script lang="ts" setup>
-import MessageOgpDescription from './MessageOgpDescription.vue';
+import MessageOgpDescription from './MessageOgpDescription.vue'
 
-withDefaults(defineProps<{
-    url: string,
-    imageUrl?: string,
-    title?: string,
+withDefaults(
+  defineProps<{
+    url: string
+    imageUrl?: string
+    title?: string
     description?: string
-}>(), {
+  }>(),
+  {
     title: '',
     description: ''
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

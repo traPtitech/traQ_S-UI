@@ -9,19 +9,22 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue';
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-const props = withDefaults(defineProps<{
-    loop: boolean,
-    size: number,
+const props = withDefaults(
+  defineProps<{
+    loop: boolean
+    size: number
     disabled?: boolean
-}>(), {
+  }>(),
+  {
     disabled: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:loop", _val: boolean): void
-}>();
+  (e: 'update:loop', _val: boolean): void
+}>()
 
 const toggle = () => {
   emit('update:loop', !props.loop)

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { UserGroupMember } from '@traptitech/traq'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -33,12 +33,12 @@ type UserGroupMemberOrAdmin = UserGroupMember & {
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import UserListItem from '../Common/UserListItem.vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import UserListItem from '../Common/UserListItem.vue'
 
 const props = defineProps<{
-    id: string
-}>();
+  id: string
+}>()
 
 const { activeUsersMap } = useUsersStore()
 const { userGroupsMap } = useGroupsStore()

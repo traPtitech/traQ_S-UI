@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive } from 'vue';
+import { computed, reactive } from 'vue'
 
 const useStyles = (props: { lineClamp: number }) =>
   reactive({
@@ -26,18 +26,19 @@ const useStyles = (props: { lineClamp: number }) =>
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    url: string,
-    title?: string,
-    description?: string,
+const props = withDefaults(
+  defineProps<{
+    url: string
+    title?: string
+    description?: string
     lineClamp?: number
-}>(), {
+  }>(),
+  {
     title: '',
     description: '',
     lineClamp: 2
-});
+  }
+)
 
 const hostname = computed(() => {
   try {

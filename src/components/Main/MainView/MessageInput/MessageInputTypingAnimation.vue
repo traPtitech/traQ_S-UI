@@ -6,8 +6,6 @@
   </div>
 </template>
 
-
-
 <style lang="scss" module>
 .typingAnimation {
   display: flex;

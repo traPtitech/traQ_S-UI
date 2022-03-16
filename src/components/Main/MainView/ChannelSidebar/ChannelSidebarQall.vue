@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue';
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue';
-import { computed } from 'vue';
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    qallUserIds: ChannelId[]
-}>();
+  qallUserIds: ChannelId[]
+}>()
 
 const { usersMap } = useUsersStore()
 

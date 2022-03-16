@@ -11,19 +11,22 @@
 </template>
 
 <script lang="ts" setup>
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue';
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
-withDefaults(defineProps<{
-    label?: string,
-    loading?: boolean,
-    disabled?: boolean,
+withDefaults(
+  defineProps<{
+    label?: string
+    loading?: boolean
+    disabled?: boolean
     color?: 'primary' | 'secondary' | 'error'
-}>(), {
+  }>(),
+  {
     label: '',
     loading: false,
     disabled: false,
     color: 'primary' as const
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

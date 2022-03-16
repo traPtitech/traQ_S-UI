@@ -15,15 +15,15 @@
 </template>
 
 <script lang="ts" setup>
-import SlideDown from '/@/components/UI/SlideDown.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed, ref } from 'vue';
+import SlideDown from '/@/components/UI/SlideDown.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, ref } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
 import { scopeNameMap, scopePermissionsMap } from '/@/lib/clientScope'
 
 const props = defineProps<{
-    scope: OAuth2Scope
-}>();
+  scope: OAuth2Scope
+}>()
 
 const name = computed(() => scopeNameMap[props.scope])
 const permissions = computed(() => scopePermissionsMap[props.scope])

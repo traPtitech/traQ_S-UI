@@ -6,20 +6,23 @@
 </template>
 
 <script lang="ts" setup>
-import FormCheckboxInner from './FormCheckboxInner.vue';
+import FormCheckboxInner from './FormCheckboxInner.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: boolean,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: boolean
     label?: string
-}>(), {
+  }>(),
+  {
     modelValue: false,
     label: ''
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: boolean): void
-}>();
+  (e: 'update:modelValue', _val: boolean): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 </script>

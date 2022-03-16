@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts" setup>
-import QallControlPanel from './QallControlPanel.vue';
-import QallDetailsPanel from './QallDetailsPanel.vue';
-import { computed } from 'vue';
+import QallControlPanel from './QallControlPanel.vue'
+import QallDetailsPanel from './QallDetailsPanel.vue'
+import { computed } from 'vue'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 

@@ -17,15 +17,16 @@ const canUsePinP = checkPinPSupport() && !safariFlag
 </script>
 
 <script lang="ts" setup>
-import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue';
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-withDefaults(defineProps<{
-    isPinPShown: boolean,
-    size: number,
+withDefaults(
+  defineProps<{
+    isPinPShown: boolean
+    size: number
     disabled?: boolean
-}>(), {
+  }>(),
+  {
     disabled: false
-})
-
-
+  }
+)
 </script>

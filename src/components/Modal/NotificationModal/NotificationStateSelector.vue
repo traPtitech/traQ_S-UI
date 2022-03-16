@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { toRef } from 'vue';
+import { toRef } from 'vue'
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { ChannelId } from '/@/types/entity-ids'
@@ -25,11 +25,11 @@ const levels: ReadonlyArray<ChannelSubscribeLevel> = [
 </script>
 
 <script lang="ts" setup>
-import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue';
+import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { currentChannelSubscription, changeSubscriptionLevel } =
   useChannelSubscriptionState(toRef(props, 'channelId'))

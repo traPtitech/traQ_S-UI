@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, watchEffect, ref } from 'vue';
+import { computed, watchEffect, ref } from 'vue'
 import { renderInline } from '/@/lib/markdown/markdown'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
@@ -49,16 +49,19 @@ const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 
-const props = withDefaults(defineProps<{
-    content?: string,
+const props = withDefaults(
+  defineProps<{
+    content?: string
     lineClampContent?: boolean
-}>(), {
+  }>(),
+  {
     content: '',
     lineClampContent: false
-});
+  }
+)
 
 const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
 
@@ -67,9 +70,7 @@ watchEffect(async () => {
   rendered.value = await renderInline(props.content)
 })
 
-const files = computed(
-  () => rendered.value?.embeddings.filter(isFile) ?? []
-)
+const files = computed(() => rendered.value?.embeddings.filter(isFile) ?? [])
 
 watchEffect(() => {
   files.value.forEach(file => fetchFileMetaData({ fileId: file.id }))

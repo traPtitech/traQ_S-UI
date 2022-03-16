@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, Ref } from 'vue';
+import { computed, ref, Ref } from 'vue'
 import apis from '/@/lib/apis'
 import { compareString } from '/@/lib/basic/string'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
@@ -66,13 +66,13 @@ const useCreateClip = (
 </script>
 
 <script lang="ts" setup>
-import ModalFrame from '../Common/ModalFrame.vue';
-import ClipFolderElement from './ClipFolderElement.vue';
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import ModalFrame from '../Common/ModalFrame.vue'
+import ClipFolderElement from './ClipFolderElement.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const props = defineProps<{
-    messageId: string
-}>();
+  messageId: string
+}>()
 
 const { messagesMap } = useMessagesStore()
 const { clipFoldersMap } = useClipFoldersStore()

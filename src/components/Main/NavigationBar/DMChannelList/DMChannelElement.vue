@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive } from 'vue';
+import { computed, reactive } from 'vue'
 import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
 import { ChannelId } from '/@/types/entity-ids'
@@ -55,17 +55,17 @@ const useNotification = (props: { dmChannel: DMChannel }) => {
 </script>
 
 <script lang="ts" setup>
-import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import DMChannelElementName from './DMChannelElementName.vue';
+import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import DMChannelElementName from './DMChannelElementName.vue'
 
 const props = defineProps<{
-    dmChannel: DMChannel
-}>();
+  dmChannel: DMChannel
+}>()
 
 const emit = defineEmits<{
-    (e: "channelSelect", _event: MouseEvent, _channelId: ChannelId): void
-}>();
+  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
+}>()
 
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.dmChannel.userId))

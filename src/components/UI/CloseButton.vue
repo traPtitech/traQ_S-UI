@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 
 const useStyles = (props: {
   borderWidth: number
@@ -30,28 +30,29 @@ const useStyles = (props: {
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    withText?: boolean,
-    borderWidth?: number,
-    iconWidth?: number,
-    size: number,
-    innerSize?: number,
-    isWhite?: boolean,
+const props = withDefaults(
+  defineProps<{
+    withText?: boolean
+    borderWidth?: number
+    iconWidth?: number
+    size: number
+    innerSize?: number
+    isWhite?: boolean
     reactHover?: boolean
-}>(), {
+  }>(),
+  {
     withText: false,
     borderWidth: 2,
     iconWidth: 2,
     innerSize: 16,
     isWhite: false,
     reactHover: true
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "close"): void
-}>();
+  (e: 'close'): void
+}>()
 
 const styles = useStyles(props)
 

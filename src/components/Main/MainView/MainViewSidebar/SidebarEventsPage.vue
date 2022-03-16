@@ -24,21 +24,21 @@
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue';
-import SidebarHeader from './SidebarHeader.vue';
-import SidebarEvent from './SidebarEvent/SidebarEvent.vue';
-import { computed, shallowRef } from 'vue';
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import SidebarHeader from './SidebarHeader.vue'
+import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
+import { computed, shallowRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelEvents from './composables/useChannelEvents'
 import { parseChannelEvent } from '/@/lib/apis'
 
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const emit = defineEmits<{
-    (e: "moveBack"): void
-}>();
+  (e: 'moveBack'): void
+}>()
 
 const containerEle = shallowRef<HTMLElement>()
 const { events, onScroll } = useChannelEvents(props, containerEle)

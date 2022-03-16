@@ -11,16 +11,19 @@
 <script lang="ts" setup>
 import { renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 
-const props = withDefaults(defineProps<{
-    content?: string,
+const props = withDefaults(
+  defineProps<{
+    content?: string
     acceptAction?: boolean
-}>(), {
+  }>(),
+  {
     content: '',
     acceptAction: false
-});
+  }
+)
 
 const rendered = ref<MarkdownRenderResult>()
 watchEffect(async () => {

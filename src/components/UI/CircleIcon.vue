@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 
 const useStyles = (props: { color: string; background: string }) => {
   return reactive({
@@ -18,17 +18,20 @@ const useStyles = (props: { color: string; background: string }) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    color: string,
-    background: string,
-    name: string,
-    mdi?: boolean,
+const props = withDefaults(
+  defineProps<{
+    color: string
+    background: string
+    name: string
+    mdi?: boolean
     size?: number
-}>(), {
+  }>(),
+  {
     size: 24
-});
+  }
+)
 
 const styles = useStyles(props)
 </script>

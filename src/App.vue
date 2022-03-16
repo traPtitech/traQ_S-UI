@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, watchEffect, Ref } from 'vue';
+import { computed, watchEffect, Ref } from 'vue'
 import useHtmlDatasetBoolean from '/@/composables/useHtmlDatasetBoolean'
 import { useThemeVariables } from '/@/composables/useTheme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -82,8 +82,8 @@ ${Object.entries(style.value)
 </script>
 
 <script lang="ts" setup>
-import ToastContainer from '/@/components/Toast/ToastContainer.vue';
-import ModalContainer from '/@/components/Modal/ModalContainer.vue';
+import ToastContainer from '/@/components/Toast/ToastContainer.vue'
+import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 
 useTts()
 

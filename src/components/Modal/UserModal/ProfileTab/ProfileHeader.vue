@@ -3,13 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-
-
 defineProps<{
-    text: string
+  text: string
 }>()
-
-
 </script>
 
 <style lang="scss" module>

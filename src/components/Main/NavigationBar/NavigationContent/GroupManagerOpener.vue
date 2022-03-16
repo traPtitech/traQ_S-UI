@@ -10,10 +10,8 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-
-
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 </script>
 
 <style lang="scss" module>

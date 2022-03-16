@@ -3,13 +3,13 @@
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
-import { computed } from 'vue';
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { computed } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{
-    effectNameWithDot: string
-}>();
+  effectNameWithDot: string
+}>()
 
 const { initialRecentStamps } = useStampsStore()
 
@@ -18,9 +18,7 @@ const stampName = computed(() => {
   return initialStamps[0]
 })
 const content = computed(() =>
-  stampName.value
-    ? `:${stampName.value}${props.effectNameWithDot}:`
-    : undefined
+  stampName.value ? `:${stampName.value}${props.effectNameWithDot}:` : undefined
 )
 const isShown = computed(
   () =>

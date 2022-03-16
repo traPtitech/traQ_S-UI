@@ -7,17 +7,20 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue';
+import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     pinnedMessageLength?: number
-}>(), {
+  }>(),
+  {
     pinnedMessageLength: 0
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickLink"): void
-}>();
+  (e: 'clickLink'): void
+}>()
 
 const onClick = () => emit('clickLink')
 </script>

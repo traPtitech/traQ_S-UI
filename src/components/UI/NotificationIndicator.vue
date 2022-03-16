@@ -7,17 +7,18 @@
 </template>
 
 <script lang="ts" setup>
-import IndicatorDot from './IndicatorDot.vue';
+import IndicatorDot from './IndicatorDot.vue'
 
-withDefaults(defineProps<{
-    size?: number,
+withDefaults(
+  defineProps<{
+    size?: number
     borderWidth?: number
-}>(), {
+  }>(),
+  {
     size: 10,
     borderWidth: 0
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

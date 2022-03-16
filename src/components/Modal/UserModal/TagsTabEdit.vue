@@ -22,20 +22,23 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 import { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 
-const props = withDefaults(defineProps<{
-    tagId: TagId,
-    isMine?: boolean,
-    userId?: UserId,
+const props = withDefaults(
+  defineProps<{
+    tagId: TagId
+    isMine?: boolean
+    userId?: UserId
     isLocked?: boolean
-}>(), {
+  }>(),
+  {
     isMine: false,
     isLocked: false
-});
+  }
+)
 
 const { addErrorToast } = useToastStore()
 

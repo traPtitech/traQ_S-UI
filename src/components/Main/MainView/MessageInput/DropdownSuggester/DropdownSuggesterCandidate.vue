@@ -20,18 +20,21 @@
 </template>
 
 <script lang="ts" setup>
-import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue';
-import AStamp from '/@/components/UI/AStamp.vue';
-import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue';
-import { ref, watchEffect } from 'vue';
+import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
+import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
+import { ref, watchEffect } from 'vue'
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 
-const props = withDefaults(defineProps<{
-    candidate: WordOrConfirmedPart,
+const props = withDefaults(
+  defineProps<{
+    candidate: WordOrConfirmedPart
     isSelected?: boolean
-}>(), {
+  }>(),
+  {
     isSelected: false
-});
+  }
+)
 
 const containerRef = ref<HTMLDivElement>()
 watchEffect(() => {

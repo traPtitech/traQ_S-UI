@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, Ref, toRef } from 'vue';
+import { computed, ref, Ref, toRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { debounce, throttle } from 'throttle-debounce'
 import { useMessageInputStateAttachment } from '/@/store/ui/messageInputState'
@@ -72,13 +72,13 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 </script>
 
 <script lang="ts" setup>
-import ChannelViewContent from './ChannelViewContent.vue';
-import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue';
+import ChannelViewContent from './ChannelViewContent.vue'
+import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 
 const props = defineProps<{
-    channelId: ChannelId,
-    entryMessageId?: ChannelId
-}>();
+  channelId: ChannelId
+  entryMessageId?: ChannelId
+}>()
 
 const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(
   toRef(props, 'channelId')

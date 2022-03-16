@@ -19,19 +19,19 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef } from 'vue'
 import { throttle } from 'throttle-debounce'
 import useHover from '/@/composables/useHover'
 
 const props = defineProps<{
-    waveformPath: string,
-    currentTime: number,
-    duration: number
-}>();
+  waveformPath: string
+  currentTime: number
+  duration: number
+}>()
 
 const emit = defineEmits<{
-    (e: "update:currentTime", _val: number): void
-}>();
+  (e: 'update:currentTime', _val: number): void
+}>()
 
 const playedPercentage = computed(() =>
   props.duration === 0 ? 0 : (props.currentTime / props.duration) * 100
@@ -53,11 +53,7 @@ const waveformWrapperStyle = computed(() => {
 
 const selectingPosition = ref<number>()
 const waveformEle = shallowRef<HTMLDivElement>()
-const {
-  isHovered,
-  onMouseEnter,
-  onMouseLeave: onMouseLeaveHover
-} = useHover()
+const { isHovered, onMouseEnter, onMouseLeave: onMouseLeaveHover } = useHover()
 const onMouseMove = throttle(100, (e: MouseEvent) => {
   if (!waveformEle.value || !isHovered.value) return
   const left = e.pageX - waveformEle.value.getBoundingClientRect().left

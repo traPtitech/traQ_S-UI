@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { reactive } from 'vue';
+import { reactive } from 'vue'
 
 type State = {
   isEditing: boolean
@@ -25,7 +25,7 @@ type State = {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const state: State = reactive({
   isEditing: false

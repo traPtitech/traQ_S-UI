@@ -14,16 +14,19 @@
 </template>
 
 <script lang="ts" setup>
-import FileDescription from '/@/components/UI/FileDescription.vue';
+import FileDescription from '/@/components/UI/FileDescription.vue'
 import useFileMeta from '/@/composables/useFileMeta'
 
-const props = withDefaults(defineProps<{
-    fileId?: string,
+const props = withDefaults(
+  defineProps<{
+    fileId?: string
     isWhite?: boolean
-}>(), {
+  }>(),
+  {
     fileId: '',
     isWhite: false
-});
+  }
+)
 
 const { fileLink } = useFileMeta(props)
 </script>

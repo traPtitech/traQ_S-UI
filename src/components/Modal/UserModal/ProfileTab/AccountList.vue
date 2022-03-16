@@ -42,16 +42,16 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue';
-import CircleIcon from '/@/components/UI/CircleIcon.vue';
-import { computed } from 'vue';
+import ProfileHeader from './ProfileHeader.vue'
+import CircleIcon from '/@/components/UI/CircleIcon.vue'
+import { computed } from 'vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const props = defineProps<{
-    bot: boolean,
-    name: string,
-    twitterId?: string
-}>();
+  bot: boolean
+  name: string
+  twitterId?: string
+}>()
 
 const { currentTheme } = useThemeSettings()
 
@@ -66,13 +66,11 @@ const { wikiPageOrigin } = window.traQConfig
 const showWikiPageLink = wikiPageOrigin !== undefined
 const wikiPageName = computed(() => {
   if (props.bot) {
-    return `bot/${props.name.replace(/^BOT_/, '')}`;
+    return `bot/${props.name.replace(/^BOT_/, '')}`
   }
   return `user/${props.name}`
 })
-const wikiPageLink = computed(
-  () => `${wikiPageOrigin}/${wikiPageName.value}`
-)
+const wikiPageLink = computed(() => `${wikiPageOrigin}/${wikiPageName.value}`)
 const twitterLink = computed(
   () => `https://twitter.com/${props.twitterId ?? ''}`
 )

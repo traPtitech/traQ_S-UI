@@ -8,9 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import TabContentTitle from './TabContentTitle.vue';
-
-
+import TabContentTitle from './TabContentTitle.vue'
 </script>
 
 <style lang="scss" module>

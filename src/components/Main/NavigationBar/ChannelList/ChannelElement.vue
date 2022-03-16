@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, defineAsyncComponent } from 'vue';
+import { computed, reactive, Ref, defineAsyncComponent } from 'vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 import { deepSome } from '/@/lib/basic/tree'
@@ -136,28 +136,31 @@ const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
 </script>
 
 <script lang="ts" setup>
-import ChannelElementHash from './ChannelElementHash.vue';
-import ChannelElementTopic from './ChannelElementTopic.vue';
-import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue';
-import ChannelElementName from './ChannelElementName.vue';
+import ChannelElementHash from './ChannelElementHash.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
+import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
+import ChannelElementName from './ChannelElementName.vue'
 
-const props = withDefaults(defineProps<{
-    channel: ChannelTreeNode | Channel,
-    isOpened?: boolean,
-    ignoreChildren?: boolean,
-    showShortenedPath?: boolean,
+const props = withDefaults(
+  defineProps<{
+    channel: ChannelTreeNode | Channel
+    isOpened?: boolean
+    ignoreChildren?: boolean
+    showShortenedPath?: boolean
     showTopic?: boolean
-}>(), {
+  }>(),
+  {
     isOpened: false,
     ignoreChildren: false,
     showShortenedPath: false,
     showTopic: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "channelFoldingToggle", _channelId: ChannelId): void,
-    (e: "channelSelect", _event: MouseEvent, _channelId: ChannelId): void
-}>();
+  (e: 'channelFoldingToggle', _channelId: ChannelId): void
+  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
+}>()
 
 const typedProps = props as TypedProps
 

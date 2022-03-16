@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const getDisplayTime = (time: number) => {
   if (!Number.isFinite(time)) {
@@ -29,12 +29,12 @@ const getDisplayTimeMaxText = (duration: string) => duration.replace(/\d/g, '0')
 </script>
 
 <script lang="ts" setup>
-import SemiFixedSizeText from '/@/components/UI/SemiFixedSizeText.vue';
+import SemiFixedSizeText from '/@/components/UI/SemiFixedSizeText.vue'
 
 const props = defineProps<{
-    currentTime: number,
-    duration: number
-}>();
+  currentTime: number
+  duration: number
+}>()
 
 const displayCurrentTime = computed(() => getDisplayTime(props.currentTime))
 const displayDuration = computed(() => getDisplayTime(props.duration))

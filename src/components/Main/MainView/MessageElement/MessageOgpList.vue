@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
 
@@ -28,13 +28,16 @@ const useOgpData = (props: { externalUrls: string[] }) => {
 </script>
 
 <script lang="ts" setup>
-import MessageOgpListItem from './MessageOgpListItem.vue';
+import MessageOgpListItem from './MessageOgpListItem.vue'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     externalUrls?: string[]
-}>(), {
+  }>(),
+  {
     externalUrls: () => []
-});
+  }
+)
 
 const { ogpData } = useOgpData(props)
 </script>

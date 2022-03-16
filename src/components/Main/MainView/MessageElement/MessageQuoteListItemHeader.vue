@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 import { useUsersStore } from '/@/store/entities/users'
 import { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
-    userId: UserId
-}>();
+  userId: UserId
+}>()
 
 const { usersMap, fetchUser } = useUsersStore()
 

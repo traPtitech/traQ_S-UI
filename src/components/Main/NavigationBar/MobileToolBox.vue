@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue';
-import AppList from '/@/components/Main/NavigationBar/AppList.vue';
+import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
+import AppList from '/@/components/Main/NavigationBar/AppList.vue'
 import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 
 const { tools, isServicesShown, closeServices } = useToolBox()

@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import StampItem from './StampItem.vue';
-import { computed, ref } from 'vue';
+import StampItem from './StampItem.vue'
+import { computed, ref } from 'vue'
 import { StampId } from '/@/types/entity-ids'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -27,9 +27,7 @@ const { stampsMap } = useStampsStore()
 // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
 
 const myStamps = computed(() =>
-  [...stampsMap.value.values()].filter(
-    stamp => stamp.creatorId === myId.value
-  )
+  [...stampsMap.value.values()].filter(stamp => stamp.creatorId === myId.value)
 )
 
 const selectedStampId = ref<StampId | null>()

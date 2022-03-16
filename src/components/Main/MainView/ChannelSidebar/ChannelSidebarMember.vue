@@ -13,21 +13,24 @@
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue';
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue';
-import { computed } from 'vue';
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
+import { computed } from 'vue'
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import useChannelSubscribers from '/@/composables/useChannelSubscribers'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId,
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId
     viewerIds?: readonly UserId[]
-}>(), {
+  }>(),
+  {
     viewerIds: () => []
-});
+  }
+)
 
 const { channelsMap } = useChannelsStore()
 const { usersMap, activeUsersMap } = useUsersStore()

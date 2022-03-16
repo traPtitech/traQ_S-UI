@@ -11,22 +11,25 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
-const props = withDefaults(defineProps<{
-    iconName: string,
-    iconMdi?: boolean,
-    disabled?: boolean,
+const props = withDefaults(
+  defineProps<{
+    iconName: string
+    iconMdi?: boolean
+    disabled?: boolean
     tooltip?: string
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     disabled: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "click"): void
-}>();
+  (e: 'click'): void
+}>()
 
 const { headerStyle } = useMainViewStore()
 const onClick = () => {

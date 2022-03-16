@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
@@ -58,11 +58,9 @@ const buildChannelLink = (path: string[]) =>
 </script>
 
 <script lang="ts" setup>
-
-
 const props = defineProps<{
-    channelId: ChannelId
-}>();
+  channelId: ChannelId
+}>()
 
 const { isMobile } = useResponsiveStore()
 const { pathInfoList } = usePathInfo(props)

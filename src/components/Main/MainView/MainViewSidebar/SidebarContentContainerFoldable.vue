@@ -24,17 +24,20 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import SlideDown from '/@/components/UI/SlideDown.vue';
-import { ref } from 'vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import SlideDown from '/@/components/UI/SlideDown.vue'
+import { ref } from 'vue'
 
-withDefaults(defineProps<{
-    title?: string,
+withDefaults(
+  defineProps<{
+    title?: string
     largePadding?: boolean
-}>(), {
+  }>(),
+  {
     largePadding: false
-})
+  }
+)
 
 const isOpen = ref(false)
 const toggle = () => {

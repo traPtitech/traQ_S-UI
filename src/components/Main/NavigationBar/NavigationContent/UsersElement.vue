@@ -11,18 +11,18 @@
 </template>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import UsersElementUserName from './UsersElementUserName.vue';
-import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue';
-import { computed } from 'vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import UsersElementUserName from './UsersElementUserName.vue'
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 import { constructUserPath } from '/@/router'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    user: User
-}>();
+  user: User
+}>()
 
 const { unreadChannelsMap } = useMeStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()

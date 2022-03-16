@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue';
+import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
 import { useMeStore } from '/@/store/domain/me'
 

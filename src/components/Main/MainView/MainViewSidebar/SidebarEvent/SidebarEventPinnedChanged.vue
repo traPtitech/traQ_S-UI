@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue';
-import UserName from '/@/components/UI/MessagePanel/UserName.vue';
-import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue';
-import { computed, ref, watch } from 'vue';
+import SidebarEventFrame from './SidebarEventFrame.vue'
+import UserName from '/@/components/UI/MessagePanel/UserName.vue'
+import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
+import { computed, ref, watch } from 'vue'
 import {
   ChannelEventTypeEnum,
   Message,
@@ -34,19 +34,18 @@ import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    type: | typeof ChannelEventTypeEnum.PinAdded
-    | typeof ChannelEventTypeEnum.PinRemoved,
-    datetime: string,
-    details: PinAddedEvent | PinRemovedEvent
-}>();
+  type:
+    | typeof ChannelEventTypeEnum.PinAdded
+    | typeof ChannelEventTypeEnum.PinRemoved
+  datetime: string
+  details: PinAddedEvent | PinRemovedEvent
+}>()
 
 const { fetchMessage } = useMessagesStore()
 const { usersMap } = useUsersStore()
 
 const title = computed(() =>
-  props.type === ChannelEventTypeEnum.PinAdded
-    ? 'ピン留め追加'
-    : 'ピン留め解除'
+  props.type === ChannelEventTypeEnum.PinAdded ? 'ピン留め追加' : 'ピン留め解除'
 )
 
 // 削除されたメッセージは`null`

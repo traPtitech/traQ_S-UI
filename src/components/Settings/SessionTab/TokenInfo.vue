@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeNameMap } from '/@/lib/clientScope'
@@ -37,16 +37,16 @@ interface TokenInfo extends ActiveOAuth2Token {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIcon from '/@/components/UI/UserIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{
-    token: TokenInfo
-}>();
+  token: TokenInfo
+}>()
 
 const emit = defineEmits<{
-    (e: "revoke"): void
-}>();
+  (e: 'revoke'): void
+}>()
 
 const issuedAt = computed(() =>
   getFullDayWithTimeString(new Date(props.token.issuedAt))

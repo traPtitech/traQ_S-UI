@@ -22,20 +22,22 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { shallowRef, onMounted } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { shallowRef, onMounted } from 'vue'
 import { isTouchDevice } from '/@/lib/dom/browser'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    onSecondary?: boolean,
-    placeholder?: string,
-    autocapitalize?: string,
-    disableIme?: boolean,
-    focusOnMount?: boolean,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    onSecondary?: boolean
+    placeholder?: string
+    autocapitalize?: string
+    disableIme?: boolean
+    focusOnMount?: boolean
     enterkeyhint?: string
-}>(), {
+  }>(),
+  {
     modelValue: '',
     onSecondary: false,
     placeholder: '',
@@ -43,12 +45,13 @@ const props = withDefaults(defineProps<{
     disableIme: false,
     focusOnMount: false,
     enterkeyhint: 'search'
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void,
-    (e: "enter"): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+  (e: 'enter'): void
+}>()
 
 const { value, onInput } = useTextModelSyncer(props, emit)
 

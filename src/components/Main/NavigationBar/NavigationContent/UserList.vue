@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import useTextFilter from '/@/composables/useTextFilter'
 import { isDefined } from '/@/lib/basic/array'
@@ -105,10 +105,10 @@ const useUserListFilter = () => {
 </script>
 
 <script lang="ts" setup>
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import UsersElement from './UsersElement.vue';
-import UsersGradeList from './UsersGradeList.vue';
-import FilterInput from '/@/components/UI/FilterInput.vue';
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import UsersElement from './UsersElement.vue'
+import UsersGradeList from './UsersGradeList.vue'
+import FilterInput from '/@/components/UI/FilterInput.vue'
 
 const userLists = useListByGradeName()
 const { userListFilterState } = useUserListFilter()

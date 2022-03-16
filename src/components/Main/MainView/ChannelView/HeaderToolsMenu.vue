@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -61,18 +61,20 @@ const isSearchEnabled = window.traQConfig.enableSearch ?? false
 </script>
 
 <script lang="ts" setup>
-import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue';
-import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue';
+import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
+import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 
-const props = withDefaults(defineProps<{
-    showNotificationSettingBtn?: boolean,
-    hasActiveQallSession?: boolean,
-    isQallSessionOpened?: boolean,
-    isJoinedQallSession?: boolean,
-    isJoinedWithCurrentDevice?: boolean,
-    isChildChannelCreatable?: boolean,
+const props = withDefaults(
+  defineProps<{
+    showNotificationSettingBtn?: boolean
+    hasActiveQallSession?: boolean
+    isQallSessionOpened?: boolean
+    isJoinedQallSession?: boolean
+    isJoinedWithCurrentDevice?: boolean
+    isChildChannelCreatable?: boolean
     isArchived?: boolean
-}>(), {
+  }>(),
+  {
     showNotificationSettingBtn: true,
     hasActiveQallSession: false,
     isQallSessionOpened: false,
@@ -80,23 +82,22 @@ const props = withDefaults(defineProps<{
     isJoinedWithCurrentDevice: false,
     isChildChannelCreatable: false,
     isArchived: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickQall"): void,
-    (e: "clickCreateChannel"): void,
-    (e: "clickNotification"): void,
-    (e: "clickSearch"): void,
-    (e: "clickCopyChannelLink"): void,
-    (e: "clickManageChannel"): void
-}>();
+  (e: 'clickQall'): void
+  (e: 'clickCreateChannel'): void
+  (e: 'clickNotification'): void
+  (e: 'clickSearch'): void
+  (e: 'clickCopyChannelLink'): void
+  (e: 'clickManageChannel'): void
+}>()
 
 const { detail } = useMeStore()
 const { isEnabled: isRtcEnabled } = useRtcSettings()
 const { isMobile } = useResponsiveStore()
-const isQallEnabled = computed(
-  () => isSkywayApikeySet && isRtcEnabled.value
-)
+const isQallEnabled = computed(() => isSkywayApikeySet && isRtcEnabled.value)
 const qallLabel = computed(() => {
   if (props.isQallSessionOpened) {
     if (props.isJoinedWithCurrentDevice) {

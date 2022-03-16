@@ -51,39 +51,42 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import LengthCount from '/@/components/UI/LengthCount.vue';
-import { shallowRef } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import { shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/composables/useInput'
 import useShowPassword from '/@/composables/useShowPassword'
 
-const props = withDefaults(defineProps<{
-    type?: string,
-    modelValue?: string | number,
-    onSecondary?: boolean,
-    placeholder?: string,
-    name?: string,
-    autocomplete?: string,
-    label?: string,
-    prefix?: string,
-    suffix?: string,
-    min?: string,
-    max?: string,
-    step?: string,
-    maxLength?: number,
+const props = withDefaults(
+  defineProps<{
+    type?: string
+    modelValue?: string | number
+    onSecondary?: boolean
+    placeholder?: string
+    name?: string
+    autocomplete?: string
+    label?: string
+    prefix?: string
+    suffix?: string
+    min?: string
+    max?: string
+    step?: string
+    maxLength?: number
     useChangeEvent?: boolean
-}>(), {
+  }>(),
+  {
     type: 'text',
     modelValue: '',
     onSecondary: false,
     placeholder: '',
     useChangeEvent: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string | number): void
-}>();
+  (e: 'update:modelValue', _val: string | number): void
+}>()
 
 const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
 

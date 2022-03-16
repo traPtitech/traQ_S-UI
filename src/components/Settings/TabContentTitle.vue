@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { isSettingsRouteName, SettingsRouteName } from '/@/router/settings'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
@@ -24,13 +24,14 @@ const useSettingsTitle = () => {
 </script>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     isMobile?: boolean
-}>(), {
+  }>(),
+  {
     isMobile: false
-})
+  }
+)
 
 const { title } = useSettingsTitle()
 </script>

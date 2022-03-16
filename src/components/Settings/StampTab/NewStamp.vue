@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, Ref, watchEffect } from 'vue';
+import { ref, computed, Ref, watchEffect } from 'vue'
 import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
@@ -69,9 +69,9 @@ const useStampCreate = (
 </script>
 
 <script lang="ts" setup>
-import ImageUpload from '../ImageUpload.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
+import ImageUpload from '../ImageUpload.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
 const {
   imageUploadState,

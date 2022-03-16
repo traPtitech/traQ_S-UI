@@ -12,26 +12,29 @@
 </template>
 
 <script lang="ts" setup>
-import VueSlider from 'vue-slider-component';
+import VueSlider from 'vue-slider-component'
 import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 
-withDefaults(defineProps<{
-    value: number,
-    disabled?: boolean,
-    min?: number,
-    max?: number,
-    tooltipFormatter?: TooltipFormatter,
+withDefaults(
+  defineProps<{
+    value: number
+    disabled?: boolean
+    min?: number
+    max?: number
+    tooltipFormatter?: TooltipFormatter
     tooltip?: 'none' | 'always' | 'hover' | 'focus' | 'active'
-}>(), {
+  }>(),
+  {
     disabled: false,
     min: 0,
     max: 100,
     tooltip: 'active' as const
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "changeValue", _val: number): void
-}>();
+  (e: 'changeValue', _val: number): void
+}>()
 
 // vue sliderの型が変
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

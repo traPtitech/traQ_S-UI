@@ -16,7 +16,7 @@
 import { rAF } from '/@/lib/basic/timer'
 
 defineProps<{
-    isOpen: boolean
+  isOpen: boolean
 }>()
 
 const setHeight = ($el: Element) => {

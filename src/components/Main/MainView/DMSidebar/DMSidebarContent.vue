@@ -11,22 +11,25 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue';
-import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue';
-import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue';
+import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
+import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
+import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue'
 import { UserId } from '/@/types/entity-ids'
 
-withDefaults(defineProps<{
-    viewerIds: readonly UserId[],
+withDefaults(
+  defineProps<{
+    viewerIds: readonly UserId[]
     pinnedMessagesCount?: number
-}>(), {
+  }>(),
+  {
     pinnedMessagesCount: 0
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "moveToPinned"): void,
-    (e: "moveToEvents"): void
-}>();
+  (e: 'moveToPinned'): void
+  (e: 'moveToEvents'): void
+}>()
 
 const moveToPinned = () => {
   emit('moveToPinned')

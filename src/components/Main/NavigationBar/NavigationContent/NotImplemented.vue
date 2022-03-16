@@ -3,9 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import EmptyState from '/@/components/UI/EmptyState.vue';
-
-
+import EmptyState from '/@/components/UI/EmptyState.vue'
 </script>
 
 <style lang="scss" module>

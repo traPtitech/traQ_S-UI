@@ -32,10 +32,10 @@
 </template>
 
 <script lang="ts" setup>
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue';
-import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue';
-import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue';
-import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue';
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
+import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
+import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 import useNavigation from './composables/useNavigation'
 
 const {

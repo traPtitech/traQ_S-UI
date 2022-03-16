@@ -11,16 +11,19 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-withDefaults(defineProps<{
-    title?: string,
-    iconName: string,
+withDefaults(
+  defineProps<{
+    title?: string
+    iconName: string
     iconMdi: boolean
-}>(), {
+  }>(),
+  {
     title: ''
-})
+  }
+)
 
 const { isMobile } = useResponsiveStore()
 </script>

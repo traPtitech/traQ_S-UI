@@ -20,17 +20,20 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
-import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue';
-import { reactive } from 'vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
+import { reactive } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     viewerIds?: readonly UserId[]
-}>(), {
+  }>(),
+  {
     viewerIds: () => []
-})
+  }
+)
 
 const state = reactive({
   isOpenDetail: false

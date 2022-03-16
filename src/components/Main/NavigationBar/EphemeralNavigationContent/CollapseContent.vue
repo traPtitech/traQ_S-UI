@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const useExpanded = () => {
   const isExpanded = ref(false)
@@ -26,7 +26,7 @@ const useExpanded = () => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const { isExpanded, toggleExpanded } = useExpanded()
 </script>

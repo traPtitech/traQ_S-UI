@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apis from '/@/lib/apis'
 
@@ -59,9 +59,9 @@ const useRegister = () => {
 </script>
 
 <script lang="ts" setup>
-import AuthenticateInput from './AuthenticateInput.vue';
-import AuthenticateHeader from './AuthenticateHeader.vue';
-import AuthenticateButton from './AuthenticateButton.vue';
+import AuthenticateInput from './AuthenticateInput.vue'
+import AuthenticateHeader from './AuthenticateHeader.vue'
+import AuthenticateButton from './AuthenticateButton.vue'
 
 const { registerState, error, register } = useRegister()
 </script>

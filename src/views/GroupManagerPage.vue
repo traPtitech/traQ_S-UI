@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue';
-import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue';
+import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue'
+import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { changeViewState } from '/@/lib/websocket'
 import useLoginCheck from './composables/useLoginCheck'

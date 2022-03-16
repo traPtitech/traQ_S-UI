@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, toRef } from 'vue';
+import { ref, computed, toRef } from 'vue'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { ChannelId } from '/@/types/entity-ids'
@@ -61,32 +61,35 @@ const useFocus = (
 </script>
 
 <script lang="ts" setup>
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
-import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue';
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    channelId?: ChannelId,
-    isPosting?: boolean,
-    simplePadding?: boolean,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    channelId?: ChannelId
+    isPosting?: boolean
+    simplePadding?: boolean
     shrinkToOneLine?: boolean
-}>(), {
+  }>(),
+  {
     modelValue: '',
     channelId: '',
     isPosting: false,
     simplePadding: false,
     shrinkToOneLine: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue"): void,
-    (e: "focus"): void,
-    (e: "blur"): void,
-    (e: "addAttachments", _files: File[]): void,
-    (e: "postMessage"): void,
-    (e: "modifierKeyDown"): void,
-    (e: "modifierKeyUp"): void
-}>();
+  (e: 'update:modelValue'): void
+  (e: 'focus'): void
+  (e: 'blur'): void
+  (e: 'addAttachments', _files: File[]): void
+  (e: 'postMessage'): void
+  (e: 'modifierKeyDown'): void
+  (e: 'modifierKeyUp'): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 const { isMobile } = useResponsiveStore()

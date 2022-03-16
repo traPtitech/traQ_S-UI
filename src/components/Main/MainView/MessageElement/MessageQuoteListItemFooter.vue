@@ -13,15 +13,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { Message } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'
 
 const props = defineProps<{
-    message: Message
-}>();
+  message: Message
+}>()
 
 const { channelIdToPathString, channelIdToLink } = useChannelPath()
 

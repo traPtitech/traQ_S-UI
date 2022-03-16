@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue';
-import { onMounted, ref } from 'vue';
+import AToggle from '/@/components/UI/AToggle.vue'
+import { onMounted, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 

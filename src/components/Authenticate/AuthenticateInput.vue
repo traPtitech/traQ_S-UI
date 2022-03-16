@@ -31,26 +31,29 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useShowPassword from '/@/composables/useShowPassword'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    label?: string,
-    type?: 'text' | 'password',
-    autocomplete?: string,
-    autofocus?: boolean,
-    autocapitalize?: string,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    label?: string
+    type?: 'text' | 'password'
+    autocomplete?: string
+    autofocus?: boolean
+    autocapitalize?: string
     enterkeyhint?: string
-}>(), {
+  }>(),
+  {
     modelValue: '',
     label: '',
     type: 'text' as const,
     autofocus: false,
     autocapitalize: 'off'
-});
+  }
+)
 
 const { value, onInput } = useTextModelSyncer(props, emit)
 

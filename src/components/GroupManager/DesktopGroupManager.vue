@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import CloseButton from '/@/components/UI/CloseButton.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import GroupList from './GroupList.vue';
+import CloseButton from '/@/components/UI/CloseButton.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import GroupList from './GroupList.vue'
 import useClose from './composables/useClose'
 import useGroupCreateModalOpener from './composables/useGroupCreateModalOpener'
 

@@ -25,29 +25,30 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 
-const props = withDefaults(defineProps<{
-    status?: string,
-    channelId: string,
+const props = withDefaults(
+  defineProps<{
+    status?: string
+    channelId: string
     isMicMuted?: boolean
-}>(), {
+  }>(),
+  {
     status: '',
     isMicMuted: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "topToggleClick"): void,
-    (e: "micClick"): void,
-    (e: "endQallClick"): void
-}>();
+  (e: 'topToggleClick'): void
+  (e: 'micClick'): void
+  (e: 'endQallClick'): void
+}>()
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
-const channelName = computed(() =>
-  channelIdToShortPathString(props.channelId)
-)
+const channelName = computed(() => channelIdToShortPathString(props.channelId))
 const channelLink = computed(() => channelIdToLink(props.channelId))
 
 const micIconName = computed(() =>

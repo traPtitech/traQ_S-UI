@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import DMChannelElement from './DMChannelElement.vue';
+import DMChannelElement from './DMChannelElement.vue'
 import { DMChannel } from '@traptitech/traq'
 import { DMChannelId } from '/@/types/entity-ids'
 import { useOpenLink } from '/@/composables/useOpenLink'
@@ -19,11 +19,14 @@ import { constructUserPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     dmChannels?: DMChannel[]
-}>(), {
+  }>(),
+  {
     dmChannels: () => []
-})
+  }
+)
 
 const { dmChannelsMap } = useChannelsStore()
 const { usersMap } = useUsersStore()

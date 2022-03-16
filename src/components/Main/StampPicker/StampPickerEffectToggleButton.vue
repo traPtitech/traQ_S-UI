@@ -5,17 +5,20 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     isActive?: boolean
-}>(), {
+  }>(),
+  {
     isActive: false
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "click"): void
-}>();
+  (e: 'click'): void
+}>()
 
 const onClick = () => {
   emit('click')

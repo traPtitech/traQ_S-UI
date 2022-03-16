@@ -10,20 +10,18 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 import { UserAccountState } from '@traptitech/traq'
 
 const props = defineProps<{
-    state: UserAccountState
-}>();
+  state: UserAccountState
+}>()
 
 const isDeactivated = computed(
   () => props.state === UserAccountState.deactivated
 )
-const isSuspended = computed(
-  () => props.state === UserAccountState.suspended
-)
+const isSuspended = computed(() => props.state === UserAccountState.suspended)
 </script>
 
 <style lang="scss" module>

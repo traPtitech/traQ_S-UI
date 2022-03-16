@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue';
-import CloseButton from '/@/components/UI/CloseButton.vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 
 const emit = defineEmits<{
-    (e: "close"): void
-}>();
+  (e: 'close'): void
+}>()
 
 const apps = window.traQConfig.services ?? []
 

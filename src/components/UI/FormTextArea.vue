@@ -27,29 +27,32 @@
 </template>
 
 <script lang="ts" setup>
-import LengthCount from '/@/components/UI/LengthCount.vue';
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
-import { computed, shallowRef } from 'vue';
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
+import { computed, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const props = withDefaults(defineProps<{
-    modelValue?: string,
-    onSecondary?: boolean,
-    placeholder?: string,
-    name?: string,
-    label?: string,
-    maxHeight?: number,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    onSecondary?: boolean
+    placeholder?: string
+    name?: string
+    label?: string
+    maxHeight?: number
     maxLength?: number
-}>(), {
+  }>(),
+  {
     modelValue: '',
     onSecondary: false,
     placeholder: ''
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string): void
-}>();
+  (e: 'update:modelValue', _val: string): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 

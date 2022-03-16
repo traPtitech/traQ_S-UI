@@ -26,18 +26,21 @@
 </template>
 
 <script lang="ts" setup>
-import PlayIcon from '/@/components/UI/PlayIcon.vue';
+import PlayIcon from '/@/components/UI/PlayIcon.vue'
 import useFileThumbnail from '/@/composables/useFileThumbnail'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId | DMChannelId,
-    isLarge?: boolean,
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId | DMChannelId
+    isLarge?: boolean
     fileId?: FileId
-}>(), {
+  }>(),
+  {
     isLarge: false,
     fileId: ''
-});
+  }
+)
 
 const {
   name,

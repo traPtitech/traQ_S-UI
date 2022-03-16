@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { SuggestionItem } from './SearchSuggestionItem.vue';
+import { SuggestionItem } from './SearchSuggestionItem.vue'
 
 const querySuggestions = [
   { insertQuery: 'in:', description: 'チャンネル名を指定して検索' },
@@ -42,13 +42,13 @@ const querySuggestions = [
 </script>
 
 <script lang="ts" setup>
-import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue';
-import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue';
-import SearchSuggestionItem from './SearchSuggestionItem.vue';
+import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
+import SearchSuggestionItem from './SearchSuggestionItem.vue'
 
 const emit = defineEmits<{
-    (e: "queryInsert"): void
-}>();
+  (e: 'queryInsert'): void
+}>()
 
 const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
   useCommandPalette()

@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Attachment } from '/@/store/ui/messageInputState'
-import { computed, reactive, Ref, shallowRef } from 'vue';
+import { computed, reactive, Ref, shallowRef } from 'vue'
 
 const useImageThumbnail = (
   props: { attachment: Attachment },
@@ -26,11 +26,9 @@ const useImageThumbnail = (
 </script>
 
 <script lang="ts" setup>
-
-
 const props = defineProps<{
-    attachment: Attachment
-}>();
+  attachment: Attachment
+}>()
 
 const thumbnailRef = shallowRef<HTMLImageElement | null>(null)
 const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)

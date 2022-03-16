@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
-import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue';
-import EmptyState from '/@/components/UI/EmptyState.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
+import { computed } from 'vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 

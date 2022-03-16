@@ -8,8 +8,8 @@ import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{
-    stampId: StampId
-}>();
+  stampId: StampId
+}>()
 
 const { stampsMap } = useStampsStore()
 const fileId = stampsMap.value.get(props.stampId)?.fileId ?? ''

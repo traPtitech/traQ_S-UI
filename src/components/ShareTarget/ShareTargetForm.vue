@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import ShareTargetMessageInput from './ShareTargetMessageInput.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import { computed, watch, ref } from 'vue';
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import ShareTargetMessageInput from './ShareTargetMessageInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import { computed, watch, ref } from 'vue'
 import { nullUuid } from '/@/lib/basic/uuid'
 import usePostMessage from '/@/components/Main/MainView/MessageInput/composables/usePostMessage'
 import useChannelOptions from '/@/composables/useChannelOptions'
@@ -32,12 +32,12 @@ import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    defaultText: string
-}>();
+  defaultText: string
+}>()
 
 const emit = defineEmits<{
-    (e: "post"): void
-}>();
+  (e: 'post'): void
+}>()
 
 const { detail } = useMeStore()
 const homeChannelId = computed(() => detail.value?.homeChannel ?? nullUuid)

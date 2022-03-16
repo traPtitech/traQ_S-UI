@@ -11,14 +11,12 @@
 </template>
 
 <script lang="ts" setup>
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue';
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 import { User } from '@traptitech/traq'
 
 defineProps<{
-    user: User
+  user: User
 }>()
-
-
 </script>
 
 <style lang="scss" module>

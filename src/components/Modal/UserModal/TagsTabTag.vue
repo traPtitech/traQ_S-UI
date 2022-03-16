@@ -17,19 +17,22 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserTag } from '@traptitech/traq'
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 
-const props = withDefaults(defineProps<{
-    tag: UserTag,
-    isMine?: boolean,
+const props = withDefaults(
+  defineProps<{
+    tag: UserTag
+    isMine?: boolean
     userId?: UserId
-}>(), {
+  }>(),
+  {
     isMine: false
-});
+  }
+)
 
 const { pushModal } = useModalStore()
 

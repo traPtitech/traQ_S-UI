@@ -39,29 +39,32 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelSidebarTopic from './ChannelSidebarTopic.vue';
-import ChannelSidebarPinned from './ChannelSidebarPinned.vue';
-import ChannelSidebarViewers from './ChannelSidebarViewers.vue';
-import ChannelSidebarMember from './ChannelSidebarMember.vue';
-import ChannelSidebarEvents from './ChannelSidebarEvents.vue';
-import ChannelSidebarRelation from './ChannelSidebarRelation.vue';
-import ChannelSidebarQall from './ChannelSidebarQall.vue';
-import ChannelSidebarBots from './ChannelSidebarBots.vue';
+import ChannelSidebarTopic from './ChannelSidebarTopic.vue'
+import ChannelSidebarPinned from './ChannelSidebarPinned.vue'
+import ChannelSidebarViewers from './ChannelSidebarViewers.vue'
+import ChannelSidebarMember from './ChannelSidebarMember.vue'
+import ChannelSidebarEvents from './ChannelSidebarEvents.vue'
+import ChannelSidebarRelation from './ChannelSidebarRelation.vue'
+import ChannelSidebarQall from './ChannelSidebarQall.vue'
+import ChannelSidebarBots from './ChannelSidebarBots.vue'
 import { UserId, ChannelId } from '/@/types/entity-ids'
 import { useQallSession } from './composables/useChannelRTCSession'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId,
-    viewerIds: readonly UserId[],
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId
+    viewerIds: readonly UserId[]
     pinnedMessagesCount?: number
-}>(), {
+  }>(),
+  {
     pinnedMessagesCount: 0
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "moveToPinned"): void,
-    (e: "moveToEvents"): void
-}>();
+  (e: 'moveToPinned'): void
+  (e: 'moveToEvents'): void
+}>()
 
 const { sessionUserIds: qallUserIds } = useQallSession(props)
 

@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarEventFrame from './SidebarEventFrame.vue';
+import SidebarEventFrame from './SidebarEventFrame.vue'
 import { ForcedNotificationChangedEvent } from '@traptitech/traq'
 
 defineProps<{
-    datetime: string,
-    details: ForcedNotificationChangedEvent
+  datetime: string
+  details: ForcedNotificationChangedEvent
 }>()
 </script>

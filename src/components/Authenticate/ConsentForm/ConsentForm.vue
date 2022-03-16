@@ -33,10 +33,10 @@
 </template>
 
 <script lang="ts" setup>
-import AuthenticateHeader from '../AuthenticateHeader.vue';
-import ClientDescription from './ClientDescription.vue';
-import ClientScopes from './ClientScopes.vue';
-import AuthenticateButton from '../AuthenticateButton.vue';
+import AuthenticateHeader from '../AuthenticateHeader.vue'
+import ClientDescription from './ClientDescription.vue'
+import ClientScopes from './ClientScopes.vue'
+import AuthenticateButton from '../AuthenticateButton.vue'
 import useConsent from './composables/useConsent'
 import { useRoute } from 'vue-router'
 import { getFirstQuery } from '/@/lib/basic/url'

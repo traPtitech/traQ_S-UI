@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref, toRef } from 'vue';
+import { computed, reactive, Ref, ref, toRef } from 'vue'
 import { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
 import useStateDiff from '/@/components/Settings/composables/useStateDiff'
@@ -155,13 +155,13 @@ const useIsLengthValid = (state: Profile) => {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import ImageUpload from '/@/components/Settings/ImageUpload.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import FormTextArea from '/@/components/UI/FormTextArea.vue';
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormTextArea from '/@/components/UI/FormTextArea.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const { detail: detailMayBeUndefined } = useMeStore()
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

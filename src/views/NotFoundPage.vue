@@ -13,8 +13,8 @@
 import { useRoute } from 'vue-router'
 
 defineProps<{
-    routeName?: string | symbol,
-    routeParam?: string
+  routeName?: string | symbol
+  routeParam?: string
 }>()
 
 const route = useRoute()

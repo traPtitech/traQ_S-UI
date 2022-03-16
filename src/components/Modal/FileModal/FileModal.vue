@@ -16,18 +16,18 @@
 </template>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
-import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue';
-import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue';
-import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue';
-import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue';
-import { computed, reactive } from 'vue';
+import ClickOutside from '/@/components/UI/ClickOutside'
+import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
+import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
+import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
+import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
+import { computed, reactive } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
 import { useModalStore } from '/@/store/ui/modal'
 
 const props = defineProps<{
-    id: string
-}>();
+  id: string
+}>()
 
 const fileIdState = reactive({
   fileId: computed(() => props.id)

@@ -14,14 +14,14 @@
 </template>
 
 <script lang="ts" setup>
-import StampDetailElementContent from './StampDetailElementContent.vue';
-import { computed } from 'vue';
+import StampDetailElementContent from './StampDetailElementContent.vue'
+import { computed } from 'vue'
 import { MessageStampById } from './MessageStampList.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const props = defineProps<{
-    stamp: MessageStampById
-}>();
+  stamp: MessageStampById
+}>()
 
 const { stampsMap } = useStampsStore()
 

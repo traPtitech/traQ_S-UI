@@ -13,16 +13,18 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarPinnedMessage from './SidebarPinnedMessage.vue';
-import { computed } from 'vue';
+import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
+import { computed } from 'vue'
 import { Pin } from '@traptitech/traq'
-import { constructMessagesPath } from '/@/router'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     pinnedMessages?: Pin[]
-}>(), {
+  }>(),
+  {
     pinnedMessages: () => []
-});
+  }
+)
 
 const sortedMessages = computed(() =>
   [...props.pinnedMessages]

@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onBeforeUnmount, Ref, ref } from 'vue';
+import { computed, onBeforeUnmount, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
 import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
 import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
@@ -131,18 +131,18 @@ const useAttachmentsEditor = (
 </script>
 
 <script lang="ts" setup>
-import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue';
-import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue';
-import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue';
-import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue';
+import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
+import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 
 const props = defineProps<{
-    rawContent: string,
-    messageId: string,
-    channelId: string
-}>();
+  rawContent: string
+  messageId: string
+  channelId: string
+}>()
 
 const text = ref(props.rawContent)
 

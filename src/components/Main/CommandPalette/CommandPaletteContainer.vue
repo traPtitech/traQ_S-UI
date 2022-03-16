@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import CommandPalette from './CommandPalette.vue';
+import CommandPalette from './CommandPalette.vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 
 const { isCommandPaletteShown } = useCommandPalette()

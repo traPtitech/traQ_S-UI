@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
 import apis from '/@/lib/apis'
 import { UserId, ChannelId } from '/@/types/entity-ids'
 import { compareStringInsensitive } from '/@/lib/basic/string'
@@ -89,12 +89,12 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
 </script>
 
 <script lang="ts" setup>
-import UserNotificationListItem from './UserNotificationListItem.vue';
-import FilterInput from '/@/components/UI/FilterInput.vue';
+import UserNotificationListItem from './UserNotificationListItem.vue'
+import FilterInput from '/@/components/UI/FilterInput.vue'
 
 const props = defineProps<{
-    channelId: string
-}>();
+  channelId: string
+}>()
 
 const {
   textFilterState,

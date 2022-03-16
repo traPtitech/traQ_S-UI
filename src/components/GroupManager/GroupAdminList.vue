@@ -21,17 +21,17 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import GroupUser from './GroupUser.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import GroupUser from './GroupUser.vue'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 
 const props = defineProps<{
-    groupId: UserGroupId,
-    admins: UserId[]
-}>();
+  groupId: UserGroupId
+  admins: UserId[]
+}>()
 
 const { pushModal } = useModalStore()
 const { addErrorToast } = useToastStore()

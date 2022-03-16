@@ -9,15 +9,15 @@
 </template>
 
 <script lang="ts" setup>
-import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue';
-import { computed } from 'vue';
+import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
+import { computed } from 'vue'
 import { ActivityTimelineMessage } from '@traptitech/traq'
 import useChannelPath from '/@/composables/useChannelPath'
 
 const props = defineProps<{
-    type: 'channel' | 'message',
-    message: ActivityTimelineMessage
-}>();
+  type: 'channel' | 'message'
+  message: ActivityTimelineMessage
+}>()
 
 const { channelIdToLink } = useChannelPath()
 

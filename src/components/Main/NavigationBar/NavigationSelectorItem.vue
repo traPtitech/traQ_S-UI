@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 import { commonStyles, ThemeClaim } from '/@/lib/styles'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
@@ -27,20 +27,23 @@ const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
-const props = withDefaults(defineProps<{
-    iconName: string,
-    iconMdi?: boolean,
-    isSelected?: boolean,
-    hasNotification?: boolean,
+const props = withDefaults(
+  defineProps<{
+    iconName: string
+    iconMdi?: boolean
+    isSelected?: boolean
+    hasNotification?: boolean
     colorClaim?: ThemeClaim<string>
-}>(), {
+  }>(),
+  {
     iconMdi: false,
     isSelected: false,
     hasNotification: false
-});
+  }
+)
 
 const styles = useStyles(props)
 </script>

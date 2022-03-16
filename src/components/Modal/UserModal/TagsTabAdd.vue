@@ -20,17 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import LengthCount from '/@/components/UI/LengthCount.vue';
-import { ref, reactive } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import LengthCount from '/@/components/UI/LengthCount.vue'
+import { ref, reactive } from 'vue'
 import apis from '/@/lib/apis'
 import { UserId } from '/@/types/entity-ids'
 import useMaxLength from '/@/composables/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
 
 const props = defineProps<{
-    userId: UserId
-}>();
+  userId: UserId
+}>()
 
 const { addErrorToast } = useToastStore()
 

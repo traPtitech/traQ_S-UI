@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { Word } from '../composables/useWordSuggestionList'
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import { isIOS } from '/@/lib/dom/browser'
@@ -44,24 +44,27 @@ const iOSFlag = isIOS()
 </script>
 
 <script lang="ts" setup>
-import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue';
+import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
-const props = withDefaults(defineProps<{
-    isShown?: boolean,
-    position?: { top: number; left: number },
-    candidates?: Word[],
-    selectedIndex: number | null,
+const props = withDefaults(
+  defineProps<{
+    isShown?: boolean
+    position?: { top: number; left: number }
+    candidates?: Word[]
+    selectedIndex: number | null
     confirmedPart?: string
-}>(), {
+  }>(),
+  {
     isShown: false,
     position: () => ({ top: 0, left: 0 }),
     candidates: () => [],
     confirmedPart: ''
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "select", _word: WordOrConfirmedPart): void
-}>();
+  (e: 'select', _word: WordOrConfirmedPart): void
+}>()
 
 const styledPosition = computed(() => ({
   top: `${props.position.top}px`,

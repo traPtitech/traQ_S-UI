@@ -49,10 +49,10 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue';
+import { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue'
 import useSearchMessages from './composables/useSearchMessages'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
@@ -79,10 +79,10 @@ const useMessageOpener = () => {
 </script>
 
 <script lang="ts" setup>
-import PopupSelector from '/@/components/UI/PopupSelector.vue';
-import SearchResultMessageElement from './SearchResultMessageElement.vue';
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import PopupSelector from '/@/components/UI/PopupSelector.vue'
+import SearchResultMessageElement from './SearchResultMessageElement.vue'
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const {
   executeSearchForCurrentPage,

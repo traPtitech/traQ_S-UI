@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts" setup>
-import CollapseContent from '../CollapseContent.vue';
-import DraftListDetailsPanelChannel from './DraftListDetailsPanelChannel.vue';
+import CollapseContent from '../CollapseContent.vue'
+import DraftListDetailsPanelChannel from './DraftListDetailsPanelChannel.vue'
 import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
 
 defineProps<{
-    inputChannels: Array<[ChannelId, MessageInputState]>
+  inputChannels: Array<[ChannelId, MessageInputState]>
 }>()
 </script>
 

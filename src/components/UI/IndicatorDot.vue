@@ -3,15 +3,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-    size?: number,
+const props = withDefaults(
+  defineProps<{
+    size?: number
     borderWidth?: number
-}>(), {
+  }>(),
+  {
     size: 10,
     borderWidth: 0
-});
+  }
+)
 
 const style = computed(() => ({
   borderWidth: `${props.borderWidth}px`,

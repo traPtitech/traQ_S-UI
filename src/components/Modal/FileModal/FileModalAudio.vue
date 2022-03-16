@@ -20,17 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
-import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue';
-import { shallowRef } from 'vue';
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
+import { shallowRef } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
 import useFileWaveform from '/@/composables/useFileWaveform'
 import { useCurrentTime, useDuration } from '/@/composables/useAudio'
 
 const props = defineProps<{
-    fileId: string
-}>();
+  fileId: string
+}>()
 
 const { fileMeta, fileRawPath } = useFileMeta(props)
 const { fileWaveformPath } = useFileWaveform(props)

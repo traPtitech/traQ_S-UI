@@ -11,21 +11,22 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileTab from './ProfileTab/ProfileTab.vue';
-import GroupsTab from './GroupsTab.vue';
-import TagsTab from './TagsTab.vue';
+import ProfileTab from './ProfileTab/ProfileTab.vue'
+import GroupsTab from './GroupsTab.vue'
+import TagsTab from './TagsTab.vue'
 import { User, UserDetail } from '@traptitech/traq'
 import { NavigationItemType } from './composables/useNavigation'
 
-withDefaults(defineProps<{
-    currentNavigation?: NavigationItemType,
-    user: User,
+withDefaults(
+  defineProps<{
+    currentNavigation?: NavigationItemType
+    user: User
     detail?: UserDetail
-}>(), {
+  }>(),
+  {
     currentNavigation: 'profile' as const
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

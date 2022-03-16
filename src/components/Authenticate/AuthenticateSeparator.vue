@@ -9,15 +9,14 @@
 </template>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     label?: string
-}>(), {
+  }>(),
+  {
     label: ''
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

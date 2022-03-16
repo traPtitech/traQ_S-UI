@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed, toRef } from 'vue'
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -106,18 +106,20 @@ export const teleportTargetName = 'header-popup'
 </script>
 
 <script lang="ts" setup>
-import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue';
+import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId,
-    isStared?: boolean,
-    isForcedChannel?: boolean,
-    hasActiveQallSession?: boolean,
-    isQallSessionOpened?: boolean,
-    isJoinedQallSession?: boolean,
-    isJoinedWithCurrentDevice?: boolean,
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId
+    isStared?: boolean
+    isForcedChannel?: boolean
+    hasActiveQallSession?: boolean
+    isQallSessionOpened?: boolean
+    isJoinedQallSession?: boolean
+    isJoinedWithCurrentDevice?: boolean
     isArchived?: boolean
-}>(), {
+  }>(),
+  {
     isStared: false,
     isForcedChannel: false,
     hasActiveQallSession: false,
@@ -125,22 +127,21 @@ const props = withDefaults(defineProps<{
     isJoinedQallSession: false,
     isJoinedWithCurrentDevice: false,
     isArchived: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "clickQall"): void,
-    (e: "starChannel"): void,
-    (e: "unstarChannel"): void,
-    (e: "clickMore"): void
-}>();
+  (e: 'clickQall'): void
+  (e: 'starChannel'): void
+  (e: 'unstarChannel'): void
+  (e: 'clickMore'): void
+}>()
 
 const { isEnabled: isRtcEnabled } = useRtcSettings()
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
 
-const isQallEnabled = computed(
-  () => isSkywayApikeySet && isRtcEnabled.value
-)
+const isQallEnabled = computed(() => isSkywayApikeySet && isRtcEnabled.value)
 
 const qallIconName = computed(() =>
   props.isJoinedQallSession ? 'phone' : 'phone-outline'

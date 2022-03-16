@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import useTextFilter from '/@/composables/useTextFilter'
 import { useUsersStore } from '/@/store/entities/users'
@@ -62,18 +62,18 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
 </script>
 
 <script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue';
-import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue';
-import FilterInput from '/@/components/UI/FilterInput.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
+import FilterInput from '/@/components/UI/FilterInput.vue'
 
 const props = defineProps<{
-    modelValue: Set<UserId>,
-    excludeIds: UserId[]
-}>();
+  modelValue: Set<UserId>
+  excludeIds: UserId[]
+}>()
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: Set<UserId>): void
-}>();
+  (e: 'update:modelValue', _val: Set<UserId>): void
+}>()
 
 const { textFilterState, filteredUsers } = useUserFilter(props)
 

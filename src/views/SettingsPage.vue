@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Ref, ref, watch, toRef } from 'vue';
+import { Ref, ref, watch, toRef } from 'vue'
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
@@ -47,8 +47,8 @@ const useSettingsRootPathWatcher = (
 </script>
 
 <script lang="ts" setup>
-import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue';
-import MobileSettingModal from '/@/components/Settings/MobileSetting.vue';
+import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
+import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
 
 const { isMobile } = useResponsiveStore()
 

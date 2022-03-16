@@ -5,16 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-
-
-withDefaults(defineProps<{
-    path: string,
+withDefaults(
+  defineProps<{
+    path: string
     isTitle?: boolean
-}>(), {
+  }>(),
+  {
     isTitle: false
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

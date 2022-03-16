@@ -4,14 +4,14 @@
 </template>
 
 <script lang="ts" setup>
-import DesktopFeatureContainer from './DesktopFeatureContainer.vue';
-import MobileFeatureContainer from './MobileFeatureContainer.vue';
+import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
+import MobileFeatureContainer from './MobileFeatureContainer.vue'
 import { User, UserDetail } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 defineProps<{
-    user: User,
-    detail?: UserDetail
+  user: User
+  detail?: UserDetail
 }>()
 
 const { isMobile } = useResponsiveStore()

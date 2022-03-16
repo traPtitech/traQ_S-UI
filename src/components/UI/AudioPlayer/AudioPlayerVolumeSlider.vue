@@ -24,22 +24,25 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import ASlider from '/@/components/UI/ASlider.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import ASlider from '/@/components/UI/ASlider.vue'
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-    volume: number,
-    keepExpanded?: boolean,
+const props = withDefaults(
+  defineProps<{
+    volume: number
+    keepExpanded?: boolean
     disabled?: boolean
-}>(), {
+  }>(),
+  {
     keepExpanded: false,
     disabled: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:volume", _val: number): void
-}>();
+  (e: 'update:volume', _val: number): void
+}>()
 
 const roundedVolume = computed(() => Math.floor(props.volume * 100))
 

@@ -10,12 +10,15 @@
 <script lang="ts" setup>
 import { RouteLocationRaw } from 'vue-router'
 
-withDefaults(defineProps<{
-    to?: RouteLocationRaw,
+withDefaults(
+  defineProps<{
+    to?: RouteLocationRaw
     block?: boolean
-}>(), {
+  }>(),
+  {
     block: false
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

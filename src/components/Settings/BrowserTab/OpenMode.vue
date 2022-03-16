@@ -27,8 +27,8 @@
 </template>
 
 <script lang="ts" setup>
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import FormRadio from '/@/components/UI/FormRadio.vue';
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormRadio from '/@/components/UI/FormRadio.vue'
 import { OpenMode } from '/@/store/app/browserSettings'
 import useChannelPath from '/@/composables/useChannelPath'
 import useChannelOptions from '/@/composables/useChannelOptions'
@@ -36,14 +36,14 @@ import { useModelSyncer } from '/@/composables/useModelSyncer'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const props = defineProps<{
-    openMode: OpenMode,
-    openChannelName: string
-}>();
+  openMode: OpenMode
+  openChannelName: string
+}>()
 
 const emit = defineEmits<{
-    (e: "update:openMode", _val: string): void,
-    (e: "update:openChannelName", _val: string): void
-}>();
+  (e: 'update:openMode', _val: string): void
+  (e: 'update:openChannelName', _val: string): void
+}>()
 
 const { fetchChannels } = useChannelsStore()
 // 起動時チャンネルの選択に必要

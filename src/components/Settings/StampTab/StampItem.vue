@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
 import { Stamp } from '@traptitech/traq'
@@ -120,23 +120,26 @@ const useStampEdit = (
 </script>
 
 <script lang="ts" setup>
-import ImageUpload from '../ImageUpload.vue';
-import FormInput from '/@/components/UI/FormInput.vue';
-import FormSelector from '/@/components/UI/FormSelector.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
+import ImageUpload from '../ImageUpload.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-const props = withDefaults(defineProps<{
-    stamp: Stamp,
+const props = withDefaults(
+  defineProps<{
+    stamp: Stamp
     isSelected?: boolean
-}>(), {
+  }>(),
+  {
     isSelected: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "startEdit"): void,
-    (e: "endEdit"): void
-}>();
+  (e: 'startEdit'): void
+  (e: 'endEdit'): void
+}>()
 
 const { activeUsersMap } = useUsersStore()
 

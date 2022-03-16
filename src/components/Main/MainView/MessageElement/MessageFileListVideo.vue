@@ -16,16 +16,19 @@
 </template>
 
 <script lang="ts" setup>
-import MessageFileListItemContent from './MessageFileListItemContent.vue';
+import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import useFileMeta from '/@/composables/useFileMeta'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-const props = withDefaults(defineProps<{
-    channelId: ChannelId | DMChannelId,
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId | DMChannelId
     fileId?: FileId
-}>(), {
+  }>(),
+  {
     fileId: ''
-});
+  }
+)
 
 const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
 </script>

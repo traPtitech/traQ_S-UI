@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import GroupListGroup from './GroupListGroup.vue';
-import { computed, ref } from 'vue';
+import GroupListGroup from './GroupListGroup.vue'
+import { computed, ref } from 'vue'
 import { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
@@ -42,8 +42,7 @@ const groups = computed(() =>
   [...userGroupsMap.value.values()].filter(group => {
     const myIdVal = myId.value
     return (
-      isAllUserGroupsAdmin.value ||
-      (myIdVal && group.admins.includes(myIdVal))
+      isAllUserGroupsAdmin.value || (myIdVal && group.admins.includes(myIdVal))
     )
   })
 )

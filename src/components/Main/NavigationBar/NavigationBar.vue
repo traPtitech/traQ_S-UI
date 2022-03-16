@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue';
-import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue';
+import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
+import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const { isMobile } = useResponsiveStore()

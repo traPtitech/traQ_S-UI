@@ -14,20 +14,23 @@
 </template>
 
 <script lang="ts" setup>
-import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue';
+import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 import { StampSet } from './composables/useStampSetSelector'
 
-withDefaults(defineProps<{
-    currentStampSet: StampSet,
-    stampSets: StampSet[],
+withDefaults(
+  defineProps<{
+    currentStampSet: StampSet
+    stampSets: StampSet[]
     foldedStampSets?: StampSet[]
-}>(), {
+  }>(),
+  {
     foldedStampSets: () => []
-})
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:currentStampSet", _stampSet: StampSet): void
-}>();
+  (e: 'update:currentStampSet', _stampSet: StampSet): void
+}>()
 
 const onStampSetSelect = (stampSet: StampSet) => {
   emit('update:currentStampSet', stampSet)

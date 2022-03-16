@@ -19,18 +19,21 @@
 </template>
 
 <script lang="ts" setup>
-import LinkButton from './LinkButton.vue';
+import LinkButton from './LinkButton.vue'
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 import { constructUserPath } from '/@/router'
 import useChannelPath from '/@/composables/useChannelPath'
 
-const props = withDefaults(defineProps<{
-    homeChannelId?: string,
-    userName: string,
+const props = withDefaults(
+  defineProps<{
+    homeChannelId?: string
+    userName: string
     showTitle?: boolean
-}>(), {
+  }>(),
+  {
     showTitle: false
-});
+  }
+)
 
 const { openLinkAndClearModal } = useOpenLinkAndClearModal()
 const { channelIdToLink } = useChannelPath()

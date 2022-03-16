@@ -13,16 +13,16 @@
 </template>
 
 <script lang="ts" setup>
-import AToggle from '/@/components/UI/AToggle.vue';
+import AToggle from '/@/components/UI/AToggle.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const props = defineProps<{
-    modelValue: boolean
-}>();
+  modelValue: boolean
+}>()
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: boolean): void
-}>();
+  (e: 'update:modelValue', _val: boolean): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 </script>

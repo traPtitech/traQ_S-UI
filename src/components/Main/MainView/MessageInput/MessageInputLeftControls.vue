@@ -21,22 +21,22 @@
 </template>
 
 <script lang="ts" setup>
-import MessageInputUploadButton from './MessageInputUploadButton.vue';
-import MessageInputPreviewButton from './MessageInputPreviewButton.vue';
-import IconButton from '/@/components/UI/IconButton.vue';
-import { computed } from 'vue';
+import MessageInputUploadButton from './MessageInputUploadButton.vue'
+import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
+import IconButton from '/@/components/UI/IconButton.vue'
+import { computed } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 const props = defineProps<{
-    isExpanded: boolean,
-    isPreviewShown: boolean
-}>();
+  isExpanded: boolean
+  isPreviewShown: boolean
+}>()
 
 const emit = defineEmits<{
-    (e: "update:isExpanded", _v: boolean): void,
-    (e: "update:isPreviewShown", _v: boolean): void,
-    (e: "clickAddAttachment"): void
-}>();
+  (e: 'update:isExpanded', _v: boolean): void
+  (e: 'update:isPreviewShown', _v: boolean): void
+  (e: 'clickAddAttachment'): void
+}>()
 
 const { isMobile } = useResponsiveStore()
 const toggleExpanded = () => {

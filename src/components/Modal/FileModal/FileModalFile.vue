@@ -6,14 +6,12 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 
 defineProps<{
-    fileId: string
+  fileId: string
 }>()
-
-
 </script>
 
 <style lang="scss" module>

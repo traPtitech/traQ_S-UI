@@ -12,20 +12,23 @@
 </template>
 
 <script lang="ts" setup>
-import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue';
-import { computed } from 'vue';
+import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
+import { computed } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 import { useUsersStore } from '/@/store/entities/users'
 
-const props = withDefaults(defineProps<{
-    fileId: string,
+const props = withDefaults(
+  defineProps<{
+    fileId: string
     isWhite?: boolean
-}>(), {
+  }>(),
+  {
     isWhite: false
-});
+  }
+)
 
 const { usersMap } = useUsersStore()
 

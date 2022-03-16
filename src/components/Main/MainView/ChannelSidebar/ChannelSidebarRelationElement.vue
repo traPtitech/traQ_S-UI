@@ -18,17 +18,20 @@
 </template>
 
 <script lang="ts" setup>
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
-withDefaults(defineProps<{
-    name: string,
-    topic?: string,
-    isCurrent?: boolean,
+withDefaults(
+  defineProps<{
+    name: string
+    topic?: string
+    isCurrent?: boolean
     link: string
-}>(), {
+  }>(),
+  {
     topic: '',
     isCurrent: false
-})
+  }
+)
 </script>
 
 <style lang="scss" module>

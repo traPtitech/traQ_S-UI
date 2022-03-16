@@ -29,21 +29,22 @@ const nullSymbol = Symbol('null')
 </script>
 
 <script lang="ts" setup>
-
-
-const props = withDefaults(defineProps<{
-    modelValue?: string | null,
-    onSecondary?: boolean,
-    options: Array<{ key: string; value: string | null }>,
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string | null
+    onSecondary?: boolean
+    options: Array<{ key: string; value: string | null }>
     label?: string
-}>(), {
+  }>(),
+  {
     modelValue: '',
     onSecondary: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "update:modelValue", _val: string | null): void
-}>();
+  (e: 'update:modelValue', _val: string | null): void
+}>()
 
 const value = useModelValueSyncer(props, emit)
 const id = randomString()

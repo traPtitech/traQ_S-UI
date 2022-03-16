@@ -12,16 +12,16 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps<{
-    label: string
-}>();
+  label: string
+}>()
 
 const emit = defineEmits<{
-    (e: "select", _label: string): void,
-    (e: "remove", _label: string): void
-}>();
+  (e: 'select', _label: string): void
+  (e: 'remove', _label: string): void
+}>()
 
 const onClick = () => {
   emit('select', props.label)

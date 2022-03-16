@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import router, { constructChannelPath } from '/@/router'
@@ -96,21 +96,19 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
 </script>
 
 <script lang="ts" setup>
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue';
-import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue';
-import FormButton from '/@/components/UI/FormButton.vue';
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
 const props = defineProps<{
-    clipFolderId: ClipFolderId
-}>();
+  clipFolderId: ClipFolderId
+}>()
 
 const { clipFoldersMap } = useClipFoldersStore()
 
-const clipFolder = computed(() =>
-  clipFoldersMap.value.get(props.clipFolderId)
-)
+const clipFolder = computed(() => clipFoldersMap.value.get(props.clipFolderId))
 const name = computed(() => clipFolder.value?.name ?? '')
 const description = computed(() => clipFolder.value?.description ?? '')
 const state = reactive({

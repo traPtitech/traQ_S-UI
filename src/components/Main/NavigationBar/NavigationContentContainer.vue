@@ -14,13 +14,9 @@
 </template>
 
 <script lang="ts" setup>
-
-
 defineProps<{
-    subtitle?: string
+  subtitle?: string
 }>()
-
-
 </script>
 
 <style lang="scss" module>

@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { Ogp } from '@traptitech/traq'
 
 const ifIsHttps = (url: string | undefined) => {
@@ -49,12 +49,12 @@ const useOgpData = (props: { ogpData: Ogp }) => {
 </script>
 
 <script lang="ts" setup>
-import MessageOgpContentVideo from './MessageOgpContentVideo.vue';
-import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue';
+import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
+import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
 
 const props = defineProps<{
-    ogpData: Ogp
-}>();
+  ogpData: Ogp
+}>()
 
 const { isVideoType, imageUrl, videoUrl } = useOgpData(props)
 </script>

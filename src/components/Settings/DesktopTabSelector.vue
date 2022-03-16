@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue';
-import VersionInfo from '/@/components/UI/VersionInfo.vue';
-import { computed } from 'vue';
+import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
+import VersionInfo from '/@/components/UI/VersionInfo.vue'
+import { computed } from 'vue'
 import { navigations } from './composables/useNavigation'
 import { useRoute } from 'vue-router'
 

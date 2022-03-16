@@ -18,17 +18,20 @@
 </template>
 
 <script lang="ts" setup>
-import SearchResultMessageImage from './SearchResultMessageImage.vue';
-import SearchResultMessageFile from './SearchResultMessageFile.vue';
-import { computed } from 'vue';
+import SearchResultMessageImage from './SearchResultMessageImage.vue'
+import SearchResultMessageFile from './SearchResultMessageFile.vue'
+import { computed } from 'vue'
 import useFileMetaList from '/@/composables/message/useFileMetaList'
 import { FileId } from '/@/types/entity-ids'
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(
+  defineProps<{
     fileIds?: FileId[]
-}>(), {
+  }>(),
+  {
     fileIds: () => []
-});
+  }
+)
 
 const { fileMetaDataState } = useFileMetaList(props)
 const files = computed(() =>

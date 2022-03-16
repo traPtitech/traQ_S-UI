@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive } from 'vue';
+import { computed, reactive } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
 import { useQallSession } from '../../MainView/ChannelSidebar/composables/useChannelRTCSession'
 import { ChannelTreeNode } from '/@/lib/channelTree'
@@ -71,16 +71,19 @@ const useRTCState = (typedProps: TypedProps) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
-const props = withDefaults(defineProps<{
-    channel: ChannelTreeNode | Channel,
-    showShortenedPath: boolean,
+const props = withDefaults(
+  defineProps<{
+    channel: ChannelTreeNode | Channel
+    showShortenedPath: boolean
     isSelected?: boolean
-}>(), {
+  }>(),
+  {
     isSelected: false
-});
+  }
+)
 
 const typedProps = props as TypedProps
 

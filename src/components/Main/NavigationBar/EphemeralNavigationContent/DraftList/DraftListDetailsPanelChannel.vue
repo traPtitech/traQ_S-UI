@@ -14,17 +14,17 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed, ref, watchEffect } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, ref, watchEffect } from 'vue'
 import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
 
 const props = defineProps<{
-    channelId: ChannelId,
-    state: MessageInputState
-}>();
+  channelId: ChannelId
+  state: MessageInputState
+}>()
 
 const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 

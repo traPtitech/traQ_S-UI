@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useToastStore, Toast } from '/@/store/ui/toast'
 
 const iconNameMap: Record<Toast['type'], string> = {
@@ -43,11 +43,11 @@ const useAutoHide = (props: { toast: Toast }) => {
 </script>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue'
 
 const props = defineProps<{
-    toast: Toast
-}>();
+  toast: Toast
+}>()
 
 const { remove } = useAutoHide(props)
 

@@ -20,18 +20,18 @@
 </template>
 
 <script lang="ts" setup>
-import GradeBadge from './GradeBadge.vue';
-import AIcon from '/@/components/UI/AIcon.vue';
-import { reactive, computed } from 'vue';
+import GradeBadge from './GradeBadge.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+import { reactive, computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    userId: UserId,
-    createdAt: string,
-    updatedAt: string
-}>();
+  userId: UserId
+  createdAt: string
+  updatedAt: string
+}>()
 
 const { usersMap, fetchUser } = useUsersStore()
 

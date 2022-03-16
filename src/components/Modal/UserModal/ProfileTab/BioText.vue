@@ -12,13 +12,13 @@
 </template>
 
 <script lang="ts" setup>
-import ProfileHeader from './ProfileHeader.vue';
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
-import { computed } from 'vue';
+import ProfileHeader from './ProfileHeader.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
-    bio?: string
-}>();
+  bio?: string
+}>()
 
 const isLoading = computed(() => props.bio === undefined)
 const isEmpty = computed(() =>

@@ -47,7 +47,10 @@
 <script lang="ts">
 import { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { isMac } from '/@/lib/dom/browser'
-import { useModelSyncer, useModelObjectSyncer } from '/@/composables/useModelSyncer'
+import {
+  useModelSyncer,
+  useModelObjectSyncer
+} from '/@/composables/useModelSyncer'
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -64,25 +67,29 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
 </script>
 
 <script lang="ts" setup>
-import FormRadio from '/@/components/UI/FormRadio.vue';
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue';
+import FormRadio from '/@/components/UI/FormRadio.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 
 const props = defineProps<{
-    sendWithModifierKey: SendKey,
-    modifierKey: SendKeys
-}>();
+  sendWithModifierKey: SendKey
+  modifierKey: SendKeys
+}>()
 
 const emit = defineEmits<{
-    (e: "update:sendWithModifierKey", _val: SendKey): void,
-    (e: "update:modifierKey", _val: SendKeys): void
-}>();
+  (e: 'update:sendWithModifierKey', _val: SendKey): void
+  (e: 'update:modifierKey', _val: SendKeys): void
+}>()
 
 const sendWithModifierKeyValue = useModelSyncer(
   props,
   emit,
   'sendWithModifierKey'
 )
-const { shift, alt, ctrl, macCtrl } = useModelObjectSyncer(props, emit, 'modifierKey')
+const { shift, alt, ctrl, macCtrl } = useModelObjectSyncer(
+  props,
+  emit,
+  'modifierKey'
+)
 
 const macFlag = isMac()
 const getModifierKeyName = (key: keyof SendKeys) => {

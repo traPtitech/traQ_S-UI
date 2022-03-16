@@ -18,21 +18,21 @@
 </template>
 
 <script lang="ts" setup>
-import SpinNumber from '/@/components/UI/SpinNumber.vue';
-import AStamp from '/@/components/UI/AStamp.vue';
-import { reactive, computed, watch, onMounted } from 'vue';
+import SpinNumber from '/@/components/UI/SpinNumber.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { MessageStampById } from './MessageStampList.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
-    stamp: MessageStampById
-}>();
+  stamp: MessageStampById
+}>()
 
 const emit = defineEmits<{
-    (e: "addStamp", _stampId: string): void,
-    (e: "removeStamp", _stampId: string): void
-}>();
+  (e: 'addStamp', _stampId: string): void
+  (e: 'removeStamp', _stampId: string): void
+}>()
 
 const { stampsMap } = useStampsStore()
 const { usersMap } = useUsersStore()

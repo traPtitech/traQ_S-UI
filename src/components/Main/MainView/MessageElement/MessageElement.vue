@@ -36,11 +36,11 @@
 </template>
 
 <script lang="ts" setup>
-import MessageStampList from './MessageStampList.vue';
-import MessagePinned from './MessagePinned.vue';
-import MessageContents from './MessageContents.vue';
-import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue';
-import { computed, shallowRef } from 'vue';
+import MessageStampList from './MessageStampList.vue'
+import MessagePinned from './MessagePinned.vue'
+import MessageContents from './MessageContents.vue'
+import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
+import { computed, shallowRef } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
@@ -51,19 +51,22 @@ import useHover from '/@/composables/useHover'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-const props = withDefaults(defineProps<{
-    messageId: MessageId,
-    isEntryMessage?: boolean,
+const props = withDefaults(
+  defineProps<{
+    messageId: MessageId
+    isEntryMessage?: boolean
     isArchived?: boolean
-}>(), {
+  }>(),
+  {
     isEntryMessage: false,
     isArchived: false
-});
+  }
+)
 
 const emit = defineEmits<{
-    (e: "entryMessageLoaded", _relativePos: number): void,
-    (e: "changeHeight", _data: ChangeHeightData): void
-}>();
+  (e: 'entryMessageLoaded', _relativePos: number): void
+  (e: 'changeHeight', _data: ChangeHeightData): void
+}>()
 
 const { editingMessageId } = useMessagesView()
 const bodyRef = shallowRef<HTMLDivElement | null>(null)

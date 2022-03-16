@@ -19,14 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
-import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue';
-import { computed } from 'vue';
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 
 const props = defineProps<{
-    typingUsers: readonly UserId[]
-}>();
+  typingUsers: readonly UserId[]
+}>()
 
 const text = computed(
   () =>

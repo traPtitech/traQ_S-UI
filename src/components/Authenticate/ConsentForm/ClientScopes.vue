@@ -13,16 +13,17 @@
 </template>
 
 <script lang="ts" setup>
-import ClientScope from './ClientScope.vue';
+import ClientScope from './ClientScope.vue'
 import { OAuth2Scope } from '@traptitech/traq'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     scopes?: OAuth2Scope[]
-}>(), {
+  }>(),
+  {
     scopes: () => []
-})
-
-
+  }
+)
 </script>
 
 <style lang="scss" module>

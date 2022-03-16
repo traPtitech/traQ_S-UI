@@ -11,7 +11,16 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed, ref, Ref, shallowRef, toRef, watch, nextTick } from 'vue';
+import {
+  reactive,
+  computed,
+  ref,
+  Ref,
+  shallowRef,
+  toRef,
+  watch,
+  nextTick
+} from 'vue'
 import { Point } from '/@/lib/basic/point'
 
 const useMenuHeight = () => {
@@ -41,15 +50,15 @@ const useStyles = (position: Ref<Point>, height: Ref<number>) =>
 </script>
 
 <script lang="ts" setup>
-import ClickOutside from '/@/components/UI/ClickOutside';
+import ClickOutside from '/@/components/UI/ClickOutside'
 
 const props = defineProps<{
-    position: Point
-}>();
+  position: Point
+}>()
 
 const emit = defineEmits<{
-    (e: "close"): void
-}>();
+  (e: 'close'): void
+}>()
 
 const position = toRef(props, 'position')
 const { height, menuContainerRef } = useMenuHeight()

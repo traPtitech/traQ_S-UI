@@ -6,15 +6,18 @@
 </template>
 
 <script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue';
-import { computed } from 'vue';
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-    folderName: string,
+const props = withDefaults(
+  defineProps<{
+    folderName: string
     isSelected?: boolean
-}>(), {
+  }>(),
+  {
     isSelected: false
-});
+  }
+)
 
 const iconName = computed(() =>
   props.isSelected ? 'bookmark-check' : 'bookmark'
