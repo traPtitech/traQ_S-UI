@@ -27,7 +27,7 @@
 import { computed } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
-import { scopeNameMap } from '/@/lib/clientScope'
+import { scopeInfoMap } from '/@/lib/clientScope'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
@@ -49,7 +49,7 @@ const issuedAt = computed(() =>
   getFullDayWithTimeString(new Date(props.token.issuedAt))
 )
 const scopes = computed(() =>
-  props.token.scopes.map(scope => scopeNameMap[scope])
+  props.token.scopes.map(scope => scopeInfoMap[scope].name)
 )
 
 const revoke = () => {

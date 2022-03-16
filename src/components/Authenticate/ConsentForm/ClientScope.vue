@@ -1,12 +1,12 @@
 <template>
   <li :class="$style.container" :data-is-open="$boolAttr(isOpen)">
     <div :class="$style.name" @click="toggleOpen">
-      {{ name }}
+      {{ scopeInfo.name }}
       <a-icon :class="$style.icon" name="rounded-triangle" />
     </div>
     <slide-down :is-open="isOpen">
       <ul :class="$style.permissions">
-        <li v-for="permission in permissions" :key="permission">
+        <li v-for="permission in scopeInfo.permissions" :key="permission">
           {{ permission }}
         </li>
       </ul>
@@ -19,14 +19,13 @@ import SlideDown from '/@/components/UI/SlideDown.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed, ref } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
-import { scopeNameMap, scopePermissionsMap } from '/@/lib/clientScope'
+import { scopeInfoMap } from '/@/lib/clientScope'
 
 const props = defineProps<{
   scope: OAuth2Scope
 }>()
 
-const name = computed(() => scopeNameMap[props.scope])
-const permissions = computed(() => scopePermissionsMap[props.scope])
+const scopeInfo = computed(() => scopeInfoMap[props.scope])
 
 const isOpen = ref(false)
 const toggleOpen = () => {
