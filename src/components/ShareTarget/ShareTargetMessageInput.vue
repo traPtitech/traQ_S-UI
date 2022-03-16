@@ -9,7 +9,6 @@
             ref="textareaRef"
             v-model="state.text"
             :class="$style.input"
-            :is-posting="isPosting"
           />
         </div>
         <div :class="$style.controls">
@@ -35,14 +34,7 @@
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import {
-  computed,
-  onBeforeUnmount,
-  onMounted,
-  shallowRef,
-  ref,
-  toRef
-} from 'vue'
+import { onBeforeUnmount, onMounted, shallowRef, ref, toRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
@@ -55,19 +47,10 @@ import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
-const props = withDefaults(
-  defineProps<{
-    isPosting?: boolean
-  }>(),
-  {
-    isPosting: false
-  }
-)
-
 const { fetchStampHistory } = useMeStore()
 const { fetchStamps } = useStampsStore()
 const { fetchStampPalettes } = useStampPalettesStore()
-const { state, isEmpty } = useMessageInputState('share-target')
+const { state } = useMessageInputState('share-target')
 const { addErrorToast } = useToastStore()
 const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
   'share-target',
@@ -78,8 +61,6 @@ const { addAttachment, destroy } = useAttachments(addStateAttachment)
 onBeforeUnmount(() => {
   destroy()
 })
-
-const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
 
 const textareaRef = shallowRef<HTMLTextAreaElement>()
 const focus = () => {
