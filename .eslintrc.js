@@ -41,7 +41,7 @@ module.exports = {
         style: { lang: 'scss' }
       }
     ],
-    'vue/component-api-style': ['error', ['composition', 'script-setup']],
+    'vue/component-api-style': ['error', ['script-setup']],
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
     'vue/custom-event-name-casing': ['error', 'camelCase'],
     'vue/v-on-event-hyphenation': ['error', 'always', { autofix: true }],
