@@ -99,6 +99,8 @@ const textareaAutosizeRef = ref<{
 }>()
 const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
+defineExpose({ textareaAutosizeRef })
+
 const { insertText } = useInsertText(textareaRef)
 const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
 
