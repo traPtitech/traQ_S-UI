@@ -2,7 +2,7 @@
   <sidebar-content-container-link
     title="ピン留め"
     :count="pinnedMessageLength"
-    @click-link="onClick"
+    @click-link="emit('clickLink')"
   />
 </template>
 
@@ -21,6 +21,4 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'clickLink'): void
 }>()
-
-const onClick = () => emit('clickLink')
 </script>

@@ -52,19 +52,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
-
-const buildChildLink = (channel: string) => `${location.pathname}/${channel}`
-const buildParentLink = () =>
-  `${location.pathname.split('/').slice(0, -1).join('/')}`
-const buildSiblingLink = (channel: string) =>
-  `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
-</script>
-
-<script lang="ts" setup>
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 import useToggle from '/@/composables/useToggle'
 
@@ -108,6 +99,12 @@ const childrenRemainCount = computed(
 const siblingsRemainCount = computed(
   () => props.siblings.length - SIBLINGS_DEFAULT_COUNT
 )
+
+const buildChildLink = (channel: string) => `${location.pathname}/${channel}`
+const buildParentLink = () =>
+  `${location.pathname.split('/').slice(0, -1).join('/')}`
+const buildSiblingLink = (channel: string) =>
+  `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
 </script>
 
 <style lang="scss" module>

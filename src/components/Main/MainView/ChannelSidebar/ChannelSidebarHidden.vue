@@ -6,7 +6,7 @@
       name="chevron-double"
       width="28"
       height="28"
-      @click="open"
+      @click="emit('open')"
     />
     <user-icon-ellipsis-list
       direction="col"
@@ -35,10 +35,6 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'open'): void
 }>()
-
-const open = () => {
-  emit('open')
-}
 </script>
 
 <style lang="scss" module>
