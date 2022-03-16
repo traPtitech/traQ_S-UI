@@ -9,7 +9,7 @@ const useToggle = (initialValueOrRef: boolean | Ref<boolean> = false) => {
     value.value = true
   }
   const close = () => {
-    value.value = true
+    value.value = false
   }
   const toggle = () => {
     value.value = !value.value
