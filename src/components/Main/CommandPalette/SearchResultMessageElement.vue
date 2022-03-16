@@ -55,7 +55,6 @@ import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { Message } from '@traptitech/traq'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
@@ -86,18 +85,6 @@ const useMessageExpansion = (contentRef: Ref<HTMLElement | undefined>) => {
   const { value: expanded, toggle: toggleExpanded } = useToggle(false)
   return { oversized, expanded, toggleExpanded }
 }
-
-const useSpoilerToggler = () => {
-  const toggleSpoilerHandler = (event: MouseEvent) => {
-    if (!event.target) return
-    const toggled = toggleSpoiler(event.target as HTMLElement)
-    if (toggled) {
-      event.stopPropagation()
-    }
-  }
-
-  return { toggleSpoilerHandler }
-}
 </script>
 
 <script lang="ts" setup>
@@ -106,6 +93,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 import useToggle from '/@/composables/useToggle'
+import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 
 const props = defineProps<{
   message: DeepReadonly<Message>

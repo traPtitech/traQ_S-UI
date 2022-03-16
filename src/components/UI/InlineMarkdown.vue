@@ -12,7 +12,7 @@
 import { renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { computed, ref, watchEffect } from 'vue'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
+import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 
 const props = withDefaults(
   defineProps<{
@@ -31,14 +31,7 @@ watchEffect(async () => {
 })
 const renderedContent = computed(() => rendered.value?.renderedText)
 
-const toggleSpoilerHandler = (e: MouseEvent) => {
-  if (!e.target) return
-
-  const toggled = toggleSpoiler(e.target as HTMLElement)
-  if (toggled) {
-    e.stopPropagation()
-  }
-}
+const { toggleSpoilerHandler } = useSpoilerToggler()
 </script>
 
 <style lang="scss" module>
