@@ -1,7 +1,7 @@
 <template>
   <div :key="token.id" :class="$style.token">
     <div :class="$style.revoke">
-      <a-icon :class="$style.icon" name="close" mdi @click="revoke" />
+      <a-icon :class="$style.icon" name="close" mdi @click="emit('revoke')" />
     </div>
     <div :class="$style.title">{{ token.clientName ?? '---' }}</div>
     <div :class="$style.desc">{{ token.clientDesc }}</div>
@@ -51,10 +51,6 @@ const issuedAt = computed(() =>
 const scopes = computed(() =>
   props.token.scopes.map(scope => scopeInfoMap[scope].name)
 )
-
-const revoke = () => {
-  emit('revoke')
-}
 </script>
 
 <style lang="scss" module>
