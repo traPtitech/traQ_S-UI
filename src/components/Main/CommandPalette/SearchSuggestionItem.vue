@@ -12,21 +12,18 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ChannelId, UserId } from '/@/types/entity-ids'
 import { computed } from 'vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export type SuggestionItem =
   | { type: 'search'; value: string }
   | { type: 'channel'; value: ChannelId }
   | { type: 'user'; value: UserId }
-</script>
-
-<script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{
   item: SuggestionItem

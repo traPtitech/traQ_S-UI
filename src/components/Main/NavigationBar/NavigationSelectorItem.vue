@@ -1,7 +1,7 @@
 <template>
   <div
     :class="$style.container"
-    :style="styles.container"
+    :style="containerStyle"
     :aria-selected="isSelected"
   >
     <a-icon :class="$style.icon" :name="iconName" :mdi="iconMdi" :size="24" />
@@ -11,22 +11,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { reactive, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { commonStyles, ThemeClaim } from '/@/lib/styles'
 import { useThemeSettings } from '/@/store/app/themeSettings'
-
-const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
-  const { currentTheme } = useThemeSettings()
-  return reactive({
-    container: computed(() => ({
-      color: props.colorClaim?.(currentTheme.value, commonStyles)
-    }))
-  })
-}
-</script>
-
-<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
@@ -45,7 +33,10 @@ const props = withDefaults(
   }
 )
 
-const styles = useStyles(props)
+const { currentTheme } = useThemeSettings()
+const containerStyle = computed(() => ({
+  color: props.colorClaim?.(currentTheme.value, commonStyles)
+}))
 </script>
 
 <style lang="scss" module>

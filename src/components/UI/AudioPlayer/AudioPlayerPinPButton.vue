@@ -9,14 +9,8 @@
   />
 </template>
 
-<script lang="ts">
-import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
-
-const safariFlag = isSafari()
-const canUsePinP = checkPinPSupport() && !safariFlag
-</script>
-
 <script lang="ts" setup>
+import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
 withDefaults(
@@ -29,4 +23,7 @@ withDefaults(
     disabled: false
   }
 )
+
+const safariFlag = isSafari()
+const canUsePinP = checkPinPSupport() && !safariFlag
 </script>

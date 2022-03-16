@@ -11,19 +11,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { reactive, computed, watch } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 export type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
-</script>
-
-<script lang="ts" setup>
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 
 const props = withDefaults(
   defineProps<{

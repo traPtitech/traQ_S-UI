@@ -2,12 +2,12 @@
   <div :class="$style.container">
     <div
       :class="$style.content"
-      :data-is-editing="$boolAttr(state.isEditing)"
+      :data-is-editing="$boolAttr(isEditing)"
       @click="onClick"
     >
       <a-icon
         mdi
-        :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
+        :name="isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
         height="20"
         width="20"
       />
@@ -16,22 +16,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { reactive } from 'vue'
-
-type State = {
-  isEditing: boolean
-}
-</script>
-
 <script lang="ts" setup>
+import { ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
-const state: State = reactive({
-  isEditing: false
-})
+const isEditing = ref(false)
+
 const onClick = () => {
-  state.isEditing = !state.isEditing
+  isEditing.value = !isEditing.value
 }
 </script>
 

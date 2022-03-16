@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="containerStyle">
     <img
       v-if="imageUrl.length > 0"
       :class="$style.img"
@@ -12,22 +12,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { reactive, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
 
-const useStyles = (props: { size: number }) =>
-  reactive({
-    container: computed(() => ({
-      width: `${props.size}px`,
-      height: `${props.size}px`
-    }))
-  })
-</script>
-
-<script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
     stampId: StampId
@@ -47,7 +37,11 @@ const imageUrl = computed(() => {
   const fileId = stampsMap.value.get(props.stampId)?.fileId
   return fileId ? `${buildFilePath(fileId)}` : ''
 })
-const styles = useStyles(props)
+
+const containerStyle = computed(() => ({
+  width: `${props.size}px`,
+  height: `${props.size}px`
+}))
 </script>
 
 <style lang="scss" module>

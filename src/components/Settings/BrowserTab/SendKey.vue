@@ -44,13 +44,25 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { isMac } from '/@/lib/dom/browser'
 import {
   useModelSyncer,
   useModelObjectSyncer
 } from '/@/composables/useModelSyncer'
+import FormRadio from '/@/components/UI/FormRadio.vue'
+import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
+
+const props = defineProps<{
+  sendWithModifierKey: SendKey
+  modifierKey: SendKeys
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:sendWithModifierKey', _val: SendKey): void
+  (e: 'update:modifierKey', _val: SendKeys): void
+}>()
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -64,21 +76,6 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
   shift: 'Shift',
   macCtrl: 'Ctrl'
 }
-</script>
-
-<script lang="ts" setup>
-import FormRadio from '/@/components/UI/FormRadio.vue'
-import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
-
-const props = defineProps<{
-  sendWithModifierKey: SendKey
-  modifierKey: SendKeys
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:sendWithModifierKey', _val: SendKey): void
-  (e: 'update:modifierKey', _val: SendKeys): void
-}>()
 
 const sendWithModifierKeyValue = useModelSyncer(
   props,

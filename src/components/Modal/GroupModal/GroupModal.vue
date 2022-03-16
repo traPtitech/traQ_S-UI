@@ -20,19 +20,11 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { UserGroupMember } from '@traptitech/traq'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
-
-type UserGroupMemberOrAdmin = UserGroupMember & {
-  isMember: boolean
-  isAdmin: boolean
-}
-</script>
-
-<script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import UserListItem from '../Common/UserListItem.vue'
 
@@ -44,6 +36,11 @@ const { activeUsersMap } = useUsersStore()
 const { userGroupsMap } = useGroupsStore()
 
 const group = computed(() => userGroupsMap.value.get(props.id))
+
+type UserGroupMemberOrAdmin = UserGroupMember & {
+  isMember: boolean
+  isAdmin: boolean
+}
 
 const name = computed(() => group.value?.name)
 const users = computed((): UserGroupMemberOrAdmin[] => {

@@ -31,19 +31,11 @@
   </teleport>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { Word } from '../composables/useWordSuggestionList'
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import { isIOS } from '/@/lib/dom/browser'
-
-const WIDTH = 240
-const MARGIN = 8
-
-const iOSFlag = isIOS()
-</script>
-
-<script lang="ts" setup>
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
 
 const props = withDefaults(
@@ -65,6 +57,11 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'select', _word: WordOrConfirmedPart): void
 }>()
+
+const WIDTH = 240
+const MARGIN = 8
+
+const iOSFlag = isIOS()
 
 const styledPosition = computed(() => ({
   top: `${props.position.top}px`,

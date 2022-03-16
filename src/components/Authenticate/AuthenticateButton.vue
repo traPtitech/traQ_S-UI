@@ -15,12 +15,10 @@
   </button>
 </template>
 
-<script lang="ts">
-type Type = 'primary' | 'secondary'
-</script>
-
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+
+type Type = 'primary' | 'secondary'
 
 withDefaults(
   defineProps<{

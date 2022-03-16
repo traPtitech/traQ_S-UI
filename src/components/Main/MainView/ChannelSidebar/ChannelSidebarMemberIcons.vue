@@ -11,17 +11,14 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { User } from '@traptitech/traq'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 type ViewState = {
   user: User
   active: boolean
 }
-</script>
-
-<script lang="ts" setup>
-import UserIcon from '/@/components/UI/UserIcon.vue'
 
 withDefaults(
   defineProps<{

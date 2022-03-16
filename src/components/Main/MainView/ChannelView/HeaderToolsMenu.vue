@@ -49,18 +49,12 @@
   </main-view-header-popup-frame>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { useMeStore } from '/@/store/domain/me'
-
-const isSkywayApikeySet = window.traQConfig.skyway !== undefined
-const isSearchEnabled = window.traQConfig.enableSearch ?? false
-</script>
-
-<script lang="ts" setup>
 import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 
@@ -93,6 +87,9 @@ const emit = defineEmits<{
   (e: 'clickCopyChannelLink'): void
   (e: 'clickManageChannel'): void
 }>()
+
+const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
 const { detail } = useMeStore()
 const { isEnabled: isRtcEnabled } = useRtcSettings()

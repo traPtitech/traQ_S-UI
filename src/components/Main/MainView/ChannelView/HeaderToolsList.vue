@@ -93,19 +93,16 @@
 </template>
 
 <script lang="ts">
+export const teleportTargetName = 'header-popup'
+</script>
+
+<script lang="ts" setup>
 import { computed, toRef } from 'vue'
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { ChannelId } from '/@/types/entity-ids'
-
-const isSkywayApikeySet = window.traQConfig.skyway !== undefined
-
-export const teleportTargetName = 'header-popup'
-</script>
-
-<script lang="ts" setup>
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
 const props = withDefaults(
@@ -136,6 +133,8 @@ const emit = defineEmits<{
   (e: 'unstarChannel'): void
   (e: 'clickMore'): void
 }>()
+
+const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
 const { isEnabled: isRtcEnabled } = useRtcSettings()
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =

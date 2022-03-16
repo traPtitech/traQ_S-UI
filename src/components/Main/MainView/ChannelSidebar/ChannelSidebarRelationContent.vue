@@ -57,10 +57,6 @@ import { reactive, computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
 
-const SIBLINGS_DEFAULT_COUNT = 5
-const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
-const CHILDREN_DEFAULT_COUNT = 3
-
 const buildChildLink = (channel: string) => `${location.pathname}/${channel}`
 const buildParentLink = () =>
   `${location.pathname.split('/').slice(0, -1).join('/')}`
@@ -83,6 +79,10 @@ const props = withDefaults(
     siblings: () => []
   }
 )
+
+const SIBLINGS_DEFAULT_COUNT = 5
+const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
+const CHILDREN_DEFAULT_COUNT = 3
 
 const state = reactive({
   isOpenSiblings: false,

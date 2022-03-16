@@ -37,16 +37,16 @@ const useChannelFolding = () => {
     onChannelFoldingToggle
   }
 }
+</script>
+
+<script lang="ts" setup>
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
 // 型エラー・コンポーネント循環参照の回避
 const ChannelElement = defineAsyncComponent(
   () => import('./ChannelElement.vue')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as any
-</script>
-
-<script lang="ts" setup>
-import SlideDown from '/@/components/UI/SlideDown.vue'
 
 withDefaults(
   defineProps<{

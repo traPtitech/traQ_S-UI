@@ -11,11 +11,26 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
-import 'cropperjs/dist/cropper.css'
 import { useImageUploadInternal } from './composables/useImageUpload'
+import FormButton from '/@/components/UI/FormButton.vue'
+
+withDefaults(
+  defineProps<{
+    rounded?: boolean
+    destroyFlag: boolean
+  }>(),
+  {
+    rounded: false
+  }
+)
+
+const emit = defineEmits<{
+  (e: 'input', _file: File): void
+  (e: 'destroyed'): void
+}>()
 
 // スタンプ編集用の設定
 const cropperGifOptions = {
@@ -35,25 +50,6 @@ const cropperDefaultOptions = {
   autoCropArea: 1,
   dragMode: 'move' as const
 } as const
-</script>
-
-<script lang="ts" setup>
-import FormButton from '/@/components/UI/FormButton.vue'
-
-withDefaults(
-  defineProps<{
-    rounded?: boolean
-    destroyFlag: boolean
-  }>(),
-  {
-    rounded: false
-  }
-)
-
-const emit = defineEmits<{
-  (e: 'input', _file: File): void
-  (e: 'destroyed'): void
-}>()
 
 const {
   image,
@@ -115,6 +111,8 @@ watchEffect(() => {
 </script>
 
 <style lang="scss" module>
+@import 'cropperjs/dist/cropper.css';
+
 .cropper {
   width: 400px;
   height: 400px;

@@ -32,16 +32,11 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useUsersStore } from '/@/store/entities/users'
-
-const maxVolumeValue = 200
-</script>
-
-<script lang="ts" setup>
 import ASlider from '/@/components/UI/ASlider.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
@@ -68,6 +63,8 @@ const emit = defineEmits<{
   (e: 'tune'): void
   (e: 'tuneDone'): void
 }>()
+
+const maxVolumeValue = 200
 
 const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
 const { usersMap } = useUsersStore()

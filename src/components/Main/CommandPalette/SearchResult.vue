@@ -59,12 +59,6 @@ import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { constructMessagesPath } from '/@/router'
 
-const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
-  { value: 'createdAt', title: '新しい順' },
-  { value: '-createdAt', title: '古い順' },
-  { value: 'updatedAt', title: '最近更新された順' }
-]
-
 const useMessageOpener = () => {
   const { openLink } = useOpenLink()
   const { closeCommandPalette } = useCommandPalette()
@@ -83,6 +77,12 @@ import PopupSelector from '/@/components/UI/PopupSelector.vue'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+
+const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [
+  { value: 'createdAt', title: '新しい順' },
+  { value: '-createdAt', title: '古い順' },
+  { value: 'updatedAt', title: '最近更新された順' }
+]
 
 const {
   executeSearchForCurrentPage,

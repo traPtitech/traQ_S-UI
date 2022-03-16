@@ -23,22 +23,19 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeNameMap } from '/@/lib/clientScope'
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 interface TokenInfo extends ActiveOAuth2Token {
   clientName?: string
   clientDesc?: string
   clientDeveloper?: User
 }
-</script>
-
-<script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = defineProps<{
   token: TokenInfo

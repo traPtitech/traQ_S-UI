@@ -6,9 +6,20 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import AIcon from '/@/components/UI/AIcon.vue'
+
+const props = withDefaults(
+  defineProps<{
+    subscriptionLevel: ChannelSubscribeLevel
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
+  }
+)
 
 const titleMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.notified]: '通知オン',
@@ -26,20 +37,6 @@ const iconNameMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.subscribed]: 'subscribed',
   [ChannelSubscribeLevel.none]: 'not-subscribed'
 }
-</script>
-
-<script lang="ts" setup>
-import AIcon from '/@/components/UI/AIcon.vue'
-
-const props = withDefaults(
-  defineProps<{
-    subscriptionLevel: ChannelSubscribeLevel
-    isSelected?: boolean
-  }>(),
-  {
-    isSelected: false
-  }
-)
 
 const iconName = computed(() => iconNameMap[props.subscriptionLevel])
 const title = computed(() => titleMap[props.subscriptionLevel])

@@ -30,16 +30,12 @@ import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-type Props = {
-  channelId: ChannelId
-}
-
 type ChannelPathInfo = {
   name: string
   path: string[]
 }
 
-const usePathInfo = (props: Props) => {
+const usePathInfo = (props: { channelId: ChannelId }) => {
   const { channelIdToPath } = useChannelPath()
 
   /** 現在のチャンネルに至るまでのフルパスたち */

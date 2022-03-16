@@ -4,18 +4,15 @@
   </div>
 </template>
 
-<script lang="ts">
-type SpinnerColor = 'white' | 'ui-secondary'
-const defaultSpinnerColor: SpinnerColor = 'white'
-</script>
-
 <script lang="ts" setup>
+type SpinnerColor = 'white' | 'ui-secondary'
+
 withDefaults(
   defineProps<{
     color?: SpinnerColor
   }>(),
   {
-    color: defaultSpinnerColor
+    color: 'white'
   }
 )
 </script>

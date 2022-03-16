@@ -22,42 +22,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { IconSize } from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
-
-const useSizeStyles = (props: {
-  direction: 'row' | 'col'
-  borderWidth: number
-  overlap: number
-}) =>
-  computed(() => {
-    const isRow = props.direction === 'row'
-    const marginStartVal = <M extends string>(
-      m: M
-    ): { marginLeft: M } | { marginTop: M } =>
-      isRow ? { marginLeft: m } : { marginTop: m }
-
-    return {
-      container: {
-        flexDirection: isRow
-          ? ('row-reverse' as const)
-          : ('column-reverse' as const),
-        ...marginStartVal(`${props.overlap}px`)
-      },
-      userIcon: {
-        borderWidth: `${props.borderWidth}px`,
-        ...marginStartVal(`-${props.overlap}px`)
-      },
-      count: {
-        ...marginStartVal('0.25em')
-      }
-    }
-  })
-</script>
-
-<script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
 const props = withDefaults(
@@ -83,7 +51,30 @@ const props = withDefaults(
   }
 )
 
-const styles = useSizeStyles(props)
+const styles = computed(() => {
+  const isRow = props.direction === 'row'
+  const marginStartVal = <M extends string>(
+    m: M
+  ): { marginLeft: M } | { marginTop: M } =>
+    isRow ? { marginLeft: m } : { marginTop: m }
+
+  return {
+    container: {
+      flexDirection: isRow
+        ? ('row-reverse' as const)
+        : ('column-reverse' as const),
+      ...marginStartVal(`${props.overlap}px`)
+    },
+    userIcon: {
+      borderWidth: `${props.borderWidth}px`,
+      ...marginStartVal(`-${props.overlap}px`)
+    },
+    count: {
+      ...marginStartVal('0.25em')
+    }
+  }
+})
+
 const visibleIconIds = computed(() =>
   [...props.userIds].reverse().slice(0, props.max)
 )

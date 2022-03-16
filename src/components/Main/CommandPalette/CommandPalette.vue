@@ -11,15 +11,10 @@
   </click-outside>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-
-type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
-</script>
-
-<script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import SearchResult from './SearchResult.vue'
@@ -27,6 +22,8 @@ import SearchSuggestion from './SearchSuggestion.vue'
 
 const { isMobile } = useResponsiveStore()
 const { mode, query, closeCommandPalette } = useCommandPalette()
+
+type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
 
 const supplementalViewType = computed((): SupplementalViewType => {
   if (mode.value === 'search' && query.value.length > 0) {

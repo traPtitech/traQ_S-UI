@@ -31,8 +31,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue'
+import AIcon from './AIcon.vue'
+import ClickOutside from './ClickOutside'
 
 export type PopupSelectorItem = {
   value: string
@@ -40,11 +42,6 @@ export type PopupSelectorItem = {
   iconName?: string
   iconMdi?: boolean
 }
-</script>
-
-<script lang="ts" setup>
-import AIcon from './AIcon.vue'
-import ClickOutside from './ClickOutside'
 
 const props = withDefaults(
   defineProps<{

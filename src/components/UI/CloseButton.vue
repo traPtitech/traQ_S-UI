@@ -4,32 +4,14 @@
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
   >
-    <div :class="$style.circle" :style="styles.circle" @click="onClick"></div>
+    <div :class="$style.circle" :style="circleStyle" @click="onClick"></div>
     <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
 
-<script lang="ts">
-import { reactive, computed } from 'vue'
-
-const useStyles = (props: {
-  borderWidth: number
-  size: number
-  innerSize: number
-  iconWidth: number
-}) =>
-  reactive({
-    circle: computed(() => ({
-      borderWidth: `${props.borderWidth}px`,
-      width: `${props.size}px`,
-      height: `${props.size}px`,
-      '--innerSize': `${props.innerSize}px`,
-      '--iconWidth': `${props.iconWidth}px`
-    }))
-  })
-</script>
-
 <script lang="ts" setup>
+import { computed } from 'vue'
+
 const props = withDefaults(
   defineProps<{
     withText?: boolean
@@ -54,7 +36,13 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const styles = useStyles(props)
+const circleStyle = computed(() => ({
+  borderWidth: `${props.borderWidth}px`,
+  width: `${props.size}px`,
+  height: `${props.size}px`,
+  '--innerSize': `${props.innerSize}px`,
+  '--iconWidth': `${props.iconWidth}px`
+}))
 
 const onClick = () => {
   emit('close')

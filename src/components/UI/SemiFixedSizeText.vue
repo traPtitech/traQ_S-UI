@@ -5,18 +5,11 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 
 type Align = 'left' | 'right'
 
-const useStyle = (props: { align: Align }) =>
-  computed(() => ({
-    [props.align]: '0'
-  }))
-</script>
-
-<script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
     actual: string
@@ -28,7 +21,9 @@ const props = withDefaults(
   }
 )
 
-const style = useStyle(props)
+const style = computed(() => ({
+  [props.align]: '0'
+}))
 </script>
 
 <style lang="scss" module>

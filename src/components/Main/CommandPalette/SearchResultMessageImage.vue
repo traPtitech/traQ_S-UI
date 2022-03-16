@@ -1,22 +1,12 @@
 <template>
-  <div :class="$style.container" :style="styles.container">
+  <div :class="$style.container" :style="containerStyle">
     <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
   </div>
 </template>
 
-<script lang="ts">
-import useFileThumbnail from '/@/composables/useFileThumbnail'
-import { reactive, Ref, computed } from 'vue'
-
-const useStyles = (path: Ref<string>) =>
-  reactive({
-    container: computed(() => ({
-      backgroundImage: `url(${path.value})`
-    }))
-  })
-</script>
-
 <script lang="ts" setup>
+import useFileThumbnail from '/@/composables/useFileThumbnail'
+import { computed } from 'vue'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 
 const props = defineProps<{
@@ -24,7 +14,9 @@ const props = defineProps<{
 }>()
 
 const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
-const styles = useStyles(fileThumbnailPath)
+const containerStyle = computed(() => ({
+  backgroundImage: `url(${fileThumbnailPath.value})`
+}))
 </script>
 
 <style lang="scss" module>

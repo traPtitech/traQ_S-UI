@@ -27,10 +27,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { SuggestionItem } from './SearchSuggestionItem.vue'
+import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
+import SearchSuggestionItem from './SearchSuggestionItem.vue'
 
 const querySuggestions = [
   { insertQuery: 'in:', description: 'チャンネル名を指定して検索' },
@@ -39,12 +42,6 @@ const querySuggestions = [
   { insertQuery: 'before:', description: '特定の日時より前のメッセージを検索' },
   { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索' }
 ]
-</script>
-
-<script lang="ts" setup>
-import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
-import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
-import SearchSuggestionItem from './SearchSuggestionItem.vue'
 
 const emit = defineEmits<{
   (e: 'queryInsert'): void

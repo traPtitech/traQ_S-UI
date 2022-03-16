@@ -21,14 +21,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-const nullSymbol = Symbol('null')
-</script>
-
-<script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
     modelValue?: string | null
@@ -45,6 +41,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'update:modelValue', _val: string | null): void
 }>()
+
+const nullSymbol = Symbol('null')
 
 const value = useModelValueSyncer(props, emit)
 const id = randomString()
