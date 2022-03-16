@@ -13,7 +13,7 @@ const getChannelSubscribers = createSingleflight(
  * 閲覧中のチャンネルでないとwsからのイベントが来ないため変化しないので注意
  */
 const useChannelSubscribers = (props: { channelId: ChannelId }) => {
-  const subscribers = ref<Set<string> | undefined>()
+  const subscribers = ref(new Set<string>())
 
   const fetch = async () => {
     try {
@@ -22,7 +22,7 @@ const useChannelSubscribers = (props: { channelId: ChannelId }) => {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e)
-      subscribers.value = undefined
+      subscribers.value = new Set()
     }
   }
 

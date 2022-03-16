@@ -2,11 +2,11 @@
   <div :class="$style.container">
     <div
       v-for="state in viewerStates"
-      :key="state.user.id"
-      :class="[state.active ? '' : $style.notView, $style.member]"
+      :key="state.id"
+      :class="[state.inactive ? $style.notView : '', $style.member]"
     >
-      <user-icon :size="28" :user-id="state.user.id" />
-      <span :class="$style.name">{{ state.user.displayName }}</span>
+      <user-icon :size="28" :user-id="state.id" />
+      <span :class="$style.name">{{ state.displayName }}</span>
     </div>
   </div>
 </template>
@@ -15,9 +15,8 @@
 import { User } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 
-type ViewState = {
-  user: User
-  active: boolean
+type ViewState = User & {
+  inactive?: boolean
 }
 
 withDefaults(
