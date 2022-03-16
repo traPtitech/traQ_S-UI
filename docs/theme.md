@@ -86,6 +86,7 @@ type BasicTheme = {
       inactive?: CSSColorType
       fallback: CSSColorTypeSimple
     }
+    tertiary: CSSColorTypeSimple
   }
   text: {
     primary: CSSColorTypeSimple
