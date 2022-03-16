@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import {} from '/@/lib/styles'
 
 export default defineComponent({
   name: 'AuthenticateSeparator',
