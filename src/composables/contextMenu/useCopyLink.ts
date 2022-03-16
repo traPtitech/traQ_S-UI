@@ -1,5 +1,5 @@
 import { Ref } from 'vue'
-import useExecWithToast from './useExecWithToast'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import { embeddingOrigin } from '/@/lib/apis'
 import { constructMessagesPath } from '/@/router'
 import { MessageId } from '/@/types/entity-ids'

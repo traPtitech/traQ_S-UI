@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ChannelId } from '/@/types/entity-ids'
 import useQall from './composables/useQall'
 import useChannelState from './composables/useChannelState'
@@ -48,36 +48,14 @@ import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
 import { teleportTargetName } from './HeaderToolsList.vue'
 import { embeddingOrigin } from '/@/lib/apis'
-import { useToastStore } from '/@/store/ui/toast'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
-
-const useCopy = (props: { channelId: ChannelId }) => {
-  const { addInfoToast, addErrorToast } = useToastStore()
-  const { channelIdToPathString } = useChannelPath()
-  const copyLink = async () => {
-    try {
-      const channelPath = channelIdToPathString(props.channelId)
-      const channelUrl = `${embeddingOrigin}${constructChannelPath(
-        channelPath
-      )}`
-
-      await navigator.clipboard.writeText(`[#${channelPath}](${channelUrl})`)
-      addInfoToast('チャンネルリンクをコピーしました')
-    } catch {
-      addErrorToast('チャンネルリンクをコピーできませんでした')
-    }
-  }
-  return { copyLink }
-}
-</script>
-
-<script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
 import HeaderToolsList from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
 import useToggle from '/@/composables/useToggle'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -93,7 +71,24 @@ const { starChannel, unstarChannel } = useStarChannel(props)
 const { openNotificationModal } = useNotificationModal(props)
 const { isChildChannelCreatable, openChannelCreateModal } =
   useChannelCreateModal(props)
-const { copyLink } = useCopy(props)
+
+const { channelIdToPathString } = useChannelPath()
+const { execWithToast } = useExecWithToast()
+const copyLink = async () => {
+  execWithToast(
+    'チャンネルリンクをコピーしました',
+    'チャンネルリンクをコピーできませんでした',
+    async () => {
+      const channelPath = channelIdToPathString(props.channelId)
+      const channelUrl = `${embeddingOrigin}${constructChannelPath(
+        channelPath
+      )}`
+
+      await navigator.clipboard.writeText(`[#${channelPath}](${channelUrl})`)
+    }
+  )
+}
+
 const {
   hasActiveQallSession,
   isJoinedQallSession,
