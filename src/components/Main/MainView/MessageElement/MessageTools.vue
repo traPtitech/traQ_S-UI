@@ -80,7 +80,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
@@ -91,24 +91,6 @@ import { useMeStore } from '/@/store/domain/me'
 import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { Stamp } from '@traptitech/traq'
-
-const pushInitialRecentStampsIfNeeded = (
-  initialRecentStamps: Stamp[],
-  recents: StampId[]
-) => {
-  if (recents.length >= 3) return
-
-  const initials = initialRecentStamps.map(stamp => stamp.id)
-  for (const s of initials) {
-    if (recents.length >= 3) return
-    if (recents.includes(s)) return
-
-    recents.push(s)
-  }
-}
-</script>
-
-<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
@@ -129,6 +111,21 @@ const props = withDefaults(
 const { recentStampIds, upsertLocalStampHistory } = useMeStore()
 const { addErrorToast } = useToastStore()
 const { initialRecentStamps } = useStampsStore()
+
+const pushInitialRecentStampsIfNeeded = (
+  initialRecentStamps: Stamp[],
+  recents: StampId[]
+) => {
+  if (recents.length >= 3) return
+
+  const initials = initialRecentStamps.map(stamp => stamp.id)
+  for (const s of initials) {
+    if (recents.length >= 3) return
+    if (recents.includes(s)) return
+
+    recents.push(s)
+  }
+}
 
 const recentStamps = computed(() => {
   const recents = recentStampIds.value.slice(0, 3)

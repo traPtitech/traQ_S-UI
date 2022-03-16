@@ -23,3 +23,19 @@ export const getFirstQuery = (
   }
   return query ?? undefined
 }
+
+/**
+ * httpsのURLだった場合はそのURLを返し、
+ * そうでない場合はundefinedを返す
+ */
+export const ifIsHttps = (url: string | undefined) => {
+  if (url === undefined) return undefined
+
+  let urlObj: URL
+  try {
+    urlObj = new URL(url)
+  } catch {
+    return undefined
+  }
+  return urlObj.protocol === 'https:' ? url : undefined
+}

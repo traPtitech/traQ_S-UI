@@ -3,7 +3,7 @@
     clickable
     :title="title"
     :large-padding="largePadding"
-    @toggle="onClickLink"
+    @toggle="emit('clickLink')"
   >
     <template #header-control>
       <div>
@@ -35,10 +35,6 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'clickLink'): void
 }>()
-
-const onClickLink = () => {
-  emit('clickLink')
-}
 </script>
 
 <style lang="scss" module>

@@ -1,22 +1,19 @@
 <template>
-  <div v-if="state.shouldShow" :class="$style.body" data-is-shown>
+  <div v-if="shouldShow" :class="$style.body" data-is-shown>
     <user-icon
       :class="$style.userIcon"
-      :user-id="state.message.userId"
+      :user-id="message.userId"
       :size="24"
       prevent-modal
     />
     <message-quote-list-item-header
       :class="$style.messageHeader"
-      :user-id="state.message.userId"
+      :user-id="message.userId"
     />
     <div :class="$style.messageContents">
-      <div :class="['markdown-body', $style.content]" v-html="state.content" />
+      <div :class="['markdown-body', $style.content]" v-html="content" />
     </div>
-    <message-quote-list-item-footer
-      :class="$style.footer"
-      :message="state.message"
-    />
+    <message-quote-list-item-footer :class="$style.footer" :message="message" />
   </div>
   <div v-else :class="$style.body">
     存在しないか表示できないメッセージの引用です
@@ -27,7 +24,7 @@
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -42,20 +39,18 @@ const { renderedContentMap } = useMessagesView()
 const { messagesMap } = useMessagesStore()
 const { dmChannelsMap } = useChannelsStore()
 
-const state = reactive({
-  message: computed(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    () => messagesMap.value.get(props.messageId)!
-  ),
-  shouldShow: computed(
-    (): boolean =>
-      !!state.message &&
-      // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
-      (!dmChannelsMap.value.has(state.message.channelId) ||
-        state.message.channelId === props.parentMessageChannelId)
-  ),
-  content: computed(() => renderedContentMap.value.get(props.messageId) ?? '')
-})
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const message = computed(() => messagesMap.value.get(props.messageId)!)
+const shouldShow = computed(
+  () =>
+    !!message.value &&
+    // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
+    (!dmChannelsMap.value.has(message.value.channelId) ||
+      message.value.channelId === props.parentMessageChannelId)
+)
+const content = computed(
+  () => renderedContentMap.value.get(props.messageId) ?? ''
+)
 </script>
 
 <style lang="scss" module>

@@ -63,8 +63,6 @@ import { useMeStore } from '/@/store/domain/me'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-const { showWidgetCopyButton } = window.traQConfig
-
 const useMessageChanger = (messageId: Ref<MessageId>) => {
   const { execWithToast } = useExecWithToast()
   const { editingMessageId } = useMessagesView()
@@ -129,6 +127,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
+
+const { showWidgetCopyButton } = window.traQConfig
 
 const messageId = toRef(props, 'messageId')
 const { myId } = useMeStore()

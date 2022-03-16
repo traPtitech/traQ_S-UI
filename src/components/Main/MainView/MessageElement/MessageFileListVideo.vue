@@ -30,7 +30,7 @@ const props = withDefaults(
   }
 )
 
-const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
+const { fileMeta, fileRawPath, canShow } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

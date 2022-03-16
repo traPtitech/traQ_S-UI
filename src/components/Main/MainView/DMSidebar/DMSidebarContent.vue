@@ -4,9 +4,12 @@
     <channel-sidebar-pinned
       :pinned-message-length="pinnedMessagesCount"
       :class="$style.item"
-      @open="moveToPinned"
+      @open="emit('moveToPinned')"
     />
-    <channel-sidebar-events :class="$style.item" @click-link="moveToEvents" />
+    <channel-sidebar-events
+      :class="$style.item"
+      @click-link="emit('moveToEvents')"
+    />
   </div>
 </template>
 
@@ -30,13 +33,6 @@ const emit = defineEmits<{
   (e: 'moveToPinned'): void
   (e: 'moveToEvents'): void
 }>()
-
-const moveToPinned = () => {
-  emit('moveToPinned')
-}
-const moveToEvents = () => {
-  emit('moveToEvents')
-}
 </script>
 
 <style lang="scss" module>

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container" :data-is-mobile="$boolAttr(isMobile)">
-    <message-input-insert-stamp-button @click="onClickStampButton" />
+    <message-input-insert-stamp-button @click="emit('clickStamp')" />
     <button
       :class="$style.sendButton"
       title="送信する"
@@ -15,26 +15,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useResponsiveStore } from '/@/store/ui/responsive'
-
-const useClickHandlers = (
-  props: { canPostMessage: boolean },
-  emit: ((event: 'clickSend') => void) & ((event: 'clickStamp') => void)
-) => {
-  const onClickSendButton = () => {
-    if (props.canPostMessage) {
-      emit('clickSend')
-    }
-  }
-  const onClickStampButton = () => {
-    emit('clickStamp')
-  }
-  return { onClickSendButton, onClickStampButton }
-}
-</script>
-
 <script lang="ts" setup>
+import { useResponsiveStore } from '/@/store/ui/responsive'
 import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
@@ -55,7 +37,12 @@ const emit = defineEmits<{
 }>()
 
 const { isMobile } = useResponsiveStore()
-const { onClickSendButton, onClickStampButton } = useClickHandlers(props, emit)
+
+const onClickSendButton = () => {
+  if (props.canPostMessage) {
+    emit('clickSend')
+  }
+}
 </script>
 
 <style lang="scss" module>

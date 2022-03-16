@@ -1,34 +1,30 @@
 <template>
   <div :class="$style.container">
-    <user-icon
-      :class="$style.userIcon"
-      :user-id="state.message.userId"
-      :size="40"
-    />
+    <user-icon :class="$style.userIcon" :user-id="message.userId" :size="40" />
     <message-header
       :class="$style.messageHeader"
-      :user-id="state.message.userId"
-      :created-at="state.message.createdAt"
-      :updated-at="state.message.updatedAt"
+      :user-id="message.userId"
+      :created-at="message.createdAt"
+      :updated-at="message.updatedAt"
     />
     <div :class="$style.messageContents">
-      <message-markdown v-show="!state.isEditing" :message-id="messageId" />
+      <message-markdown v-show="!isEditing" :message-id="messageId" />
       <message-editor
-        v-if="state.isEditing"
-        :raw-content="state.rawContent"
+        v-if="isEditing"
+        :raw-content="message.content"
         :message-id="messageId"
-        :channel-id="state.message.channelId"
+        :channel-id="message.channelId"
       />
       <message-quote-list
         v-if="embeddingsState.quoteMessageIds.length > 0"
         :class="$style.messageEmbeddingsList"
-        :parent-message-channel-id="state.message.channelId"
+        :parent-message-channel-id="message.channelId"
         :message-ids="embeddingsState.quoteMessageIds"
       />
       <message-file-list
         v-if="embeddingsState.fileIds.length > 0"
         :class="$style.messageEmbeddingsList"
-        :channel-id="state.message.channelId"
+        :channel-id="message.channelId"
         :file-ids="embeddingsState.fileIds"
       />
       <message-ogp-list
@@ -47,9 +43,8 @@ import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -65,18 +60,11 @@ const props = withDefaults(
 )
 
 const { editingMessageId } = useMessagesView()
-const { isMobile } = useResponsiveStore()
 const { messagesMap } = useMessagesStore()
 
-const state = reactive({
-  message: computed(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    () => messagesMap.value.get(props.messageId)!
-  ),
-  rawContent: computed((): string => state.message.content ?? ''),
-  isEditing: computed(() => props.messageId === editingMessageId.value),
-  stampDetailFoldingState: false
-})
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const message = computed(() => messagesMap.value.get(props.messageId)!)
+const isEditing = computed(() => props.messageId === editingMessageId.value)
 
 const { embeddingsState } = useEmbeddings(props)
 </script>

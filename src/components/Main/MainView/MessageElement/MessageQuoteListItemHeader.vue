@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ state.displayName }}</span>
+    <span :class="$style.displayName">{{ displayName }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 import { useUsersStore } from '/@/store/entities/users'
 import { UserId } from '/@/types/entity-ids'
 
@@ -15,11 +15,9 @@ const props = defineProps<{
 
 const { usersMap, fetchUser } = useUsersStore()
 
-const state = reactive({
-  user: computed(() => usersMap.value.get(props.userId)),
-  displayName: computed((): string => state.user?.displayName ?? 'unknown')
-})
-if (state.user === undefined) {
+const user = computed(() => usersMap.value.get(props.userId))
+const displayName = computed(() => user.value?.displayName ?? 'unknown')
+if (user.value === undefined) {
   fetchUser({ userId: props.userId })
 }
 </script>

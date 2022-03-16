@@ -2,10 +2,10 @@
   <div :class="$style.container">
     <message-input-file-list-item-close-button
       :class="$style.closeButton"
-      @click="onClickClose"
+      @click="emit('itemRemove')"
     />
     <message-input-file-list-item-image
-      v-if="state.showThumbnail"
+      v-if="showThumbnail"
       :attachment="attachment"
     />
     <div v-else :class="$style.fileContainer">
@@ -19,7 +19,7 @@
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import { Attachment } from '/@/store/ui/messageInputState'
 
 const props = defineProps<{
@@ -30,14 +30,11 @@ const emit = defineEmits<{
   (e: 'itemRemove'): void
 }>()
 
-const state = reactive({
-  showThumbnail: computed((): boolean =>
-    props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
-      ? props.attachment.thumbnailDataUrl.length > 0
-      : false
-  )
-})
-const onClickClose = () => emit('itemRemove')
+const showThumbnail = computed(() =>
+  props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
+    ? props.attachment.thumbnailDataUrl.length > 0
+    : false
+)
 </script>
 
 <style lang="scss" module>

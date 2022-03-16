@@ -1,13 +1,19 @@
 <template>
   <div :class="$style.header">
-    <span :class="$style.displayName">{{ state.displayName }}</span>
-    <grade-badge :class="$style.badge" :user-id="userId" :is-bot="state.bot" />
-    <span :class="$style.name">@{{ state.name }}</span>
+    <span :class="$style.displayName">{{
+      user?.displayName ?? 'unknown'
+    }}</span>
+    <grade-badge
+      :class="$style.badge"
+      :user-id="userId"
+      :is-bot="user?.bot ?? false"
+    />
+    <span :class="$style.name">@{{ user?.name ?? 'unknown' }}</span>
     <span
       :class="$style.date"
-      :title="createdAt !== updatedAt ? state.createdDate : undefined"
+      :title="createdAt !== updatedAt ? createdDate : undefined"
     >
-      {{ state.date }}
+      {{ date }}
     </span>
     <a-icon
       v-if="createdAt !== updatedAt"
@@ -22,7 +28,7 @@
 <script lang="ts" setup>
 import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
@@ -35,19 +41,15 @@ const props = defineProps<{
 
 const { usersMap, fetchUser } = useUsersStore()
 
-const state = reactive({
-  user: computed(() => usersMap.value.get(props.userId)),
-  displayName: computed((): string => state.user?.displayName ?? 'unknown'),
-  name: computed((): string => state.user?.name ?? 'unknown'),
-  bot: computed((): boolean => state.user?.bot ?? false),
-  createdDate: computed(() =>
-    getFullDayWithTimeString(new Date(props.createdAt))
-  ),
-  date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
-})
-if (state.user === undefined) {
+const user = computed(() => usersMap.value.get(props.userId))
+if (user.value === undefined) {
   fetchUser({ userId: props.userId })
 }
+
+const createdDate = computed(() =>
+  getFullDayWithTimeString(new Date(props.createdAt))
+)
+const date = computed(() => getDisplayDate(props.createdAt, props.updatedAt))
 </script>
 
 <style lang="scss" module>

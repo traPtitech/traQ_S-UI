@@ -18,45 +18,26 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { Ogp } from '@traptitech/traq'
-
-const ifIsHttps = (url: string | undefined) => {
-  if (url === undefined) return undefined
-
-  let urlObj: URL
-  try {
-    urlObj = new URL(url)
-  } catch {
-    return undefined
-  }
-  return urlObj.protocol === 'https:' ? url : undefined
-}
-
-const useOgpData = (props: { ogpData: Ogp }) => {
-  const imageUrl = computed(() => {
-    const item = props.ogpData.images?.[0]
-    return ifIsHttps(item?.secureUrl ?? item?.url)
-  })
-  const videoUrl = computed(() => {
-    const item = props.ogpData.videos?.[0]
-    return ifIsHttps(item?.secureUrl ?? item?.url)
-  })
-  const isVideoType = computed(() => props.ogpData?.type?.startsWith('video'))
-  return { isVideoType, imageUrl, videoUrl }
-}
-</script>
-
-<script lang="ts" setup>
 import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
 import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
+import { ifIsHttps } from '/@/lib/basic/url'
 
 const props = defineProps<{
   ogpData: Ogp
 }>()
 
-const { isVideoType, imageUrl, videoUrl } = useOgpData(props)
+const imageUrl = computed(() => {
+  const item = props.ogpData.images[0]
+  return ifIsHttps(item?.secureUrl ?? item?.url)
+})
+const videoUrl = computed(() => {
+  const item = props.ogpData.videos[0]
+  return ifIsHttps(item?.secureUrl ?? item?.url)
+})
+const isVideoType = computed(() => props.ogpData.type.startsWith('video'))
 </script>
 
 <style lang="scss" module>
