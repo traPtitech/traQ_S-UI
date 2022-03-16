@@ -10,26 +10,15 @@
   </collapse-content>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import CollapseContent from '../CollapseContent.vue';
+import DraftListDetailsPanelChannel from './DraftListDetailsPanelChannel.vue';
 import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
-import { defineComponent, PropType } from 'vue'
-import CollapseContent from '../CollapseContent.vue'
-import DraftListDetailsPanelChannel from './DraftListDetailsPanelChannel.vue'
 
-export default defineComponent({
-  name: 'DraftListDetailsPanel',
-  components: {
-    CollapseContent,
-    DraftListDetailsPanelChannel
-  },
-  props: {
-    inputChannels: {
-      type: Array as PropType<Array<[ChannelId, MessageInputState]>>,
-      required: true
-    }
-  }
-})
+defineProps<{
+    inputChannels: Array<[ChannelId, MessageInputState]>
+}>()
 </script>
 
 <style lang="scss" module>

@@ -17,33 +17,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue';
+import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue';
+import { computed } from 'vue';
 import { UserDetail } from '@traptitech/traq'
-import TagsTabTag from '/@/components/Modal/UserModal/TagsTabTag.vue'
-import TagsTabAdd from '/@/components/Modal/UserModal/TagsTabAdd.vue'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'TagsTab',
-  components: {
-    TagsTabTag,
-    TagsTabAdd
-  },
-  props: {
-    detail: {
-      type: Object as PropType<UserDetail>,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const { myId } = useMeStore()
-    const isMine = computed(() => props.detail?.id === myId.value)
-    const tags = computed(() => props.detail?.tags ?? [])
+const props = defineProps<{
+    detail?: UserDetail
+}>();
 
-    return { isMine, tags }
-  }
-})
+const { myId } = useMeStore()
+const isMine = computed(() => props.detail?.id === myId.value)
+const tags = computed(() => props.detail?.tags ?? [])
 </script>
 
 <style lang="scss" module>

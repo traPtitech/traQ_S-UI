@@ -5,16 +5,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-
-export default defineComponent({
-  name: 'AudioControllerTitlePanel',
-  components: {
-    AIcon
-  }
-})
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 </script>
 
 <style lang="scss" module>

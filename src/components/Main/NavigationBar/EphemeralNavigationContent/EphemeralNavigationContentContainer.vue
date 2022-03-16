@@ -4,16 +4,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'EphemeralNavigationContentContainer',
-  props: { transparent: { type: Boolean, default: false } },
-  setup() {
-    return {}
-  }
+
+withDefaults(defineProps<{
+    transparent?: boolean
+}>(), {
+    transparent: false
 })
+
+
 </script>
 
 <style lang="scss" module>

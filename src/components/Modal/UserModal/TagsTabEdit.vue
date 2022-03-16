@@ -21,62 +21,43 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 import { TagId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
-export default defineComponent({
-  name: 'TagsTabEdit',
-  components: {
-    AIcon
-  },
-  props: {
-    tagId: {
-      type: String as PropType<TagId>,
-      required: true
-    },
-    isMine: {
-      type: Boolean,
-      default: false
-    },
-    userId: {
-      type: String as PropType<UserId>,
-      default: undefined
-    },
-    isLocked: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
+const props = withDefaults(defineProps<{
+    tagId: TagId,
+    isMine?: boolean,
+    userId?: UserId,
+    isLocked?: boolean
+}>(), {
+    isMine: false,
+    isLocked: false
+});
 
-    const removeTag = async () => {
-      if (!props.userId) return
+const { addErrorToast } = useToastStore()
 
-      if (!confirm(`本当にこのタグを削除しますか？`)) return
+const removeTag = async () => {
+  if (!props.userId) return
 
-      try {
-        await apis.removeUserTag(props.userId, props.tagId)
-      } catch {
-        addErrorToast('タグの削除に失敗しました')
-      }
-    }
+  if (!confirm(`本当にこのタグを削除しますか？`)) return
 
-    const toggleTagState = async () => {
-      try {
-        await apis.editMyUserTag(props.tagId, { isLocked: !props.isLocked })
-      } catch {
-        addErrorToast('タグのロックに失敗しました')
-      }
-    }
-
-    return { removeTag, toggleTagState }
+  try {
+    await apis.removeUserTag(props.userId, props.tagId)
+  } catch {
+    addErrorToast('タグの削除に失敗しました')
   }
-})
+}
+
+const toggleTagState = async () => {
+  try {
+    await apis.editMyUserTag(props.tagId, { isLocked: !props.isLocked })
+  } catch {
+    addErrorToast('タグのロックに失敗しました')
+  }
+}
 </script>
 
 <style lang="scss" module>

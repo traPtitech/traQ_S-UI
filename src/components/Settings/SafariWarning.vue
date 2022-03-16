@@ -11,16 +11,8 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import { isSafari, isIOSApp, isPWA } from '/@/lib/dom/browser'
 
-export default defineComponent({
-  name: 'SafariWarning',
-  setup() {
-    const showSafariWarning = isSafari() && !isIOSApp(window) && !isPWA()
-
-    return { showSafariWarning }
-  }
-})
+const showSafariWarning = isSafari() && !isIOSApp(window) && !isPWA()
 </script>

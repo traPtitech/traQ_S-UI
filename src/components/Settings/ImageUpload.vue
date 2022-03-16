@@ -12,10 +12,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect, shallowRef } from 'vue'
+import { ref, watchEffect, shallowRef } from 'vue';
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import FormButton from '/@/components/UI/FormButton.vue'
 import { useImageUploadInternal } from './composables/useImageUpload'
 
 // スタンプ編集用の設定
@@ -36,86 +35,78 @@ const cropperDefaultOptions = {
   autoCropArea: 1,
   dragMode: 'move' as const
 } as const
+</script>
 
-export default defineComponent({
-  name: 'ImageUpload',
-  components: {
-    FormButton
-  },
-  props: {
-    rounded: {
-      type: Boolean,
-      default: false
-    },
-    destroyFlag: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    input: (_file: File) => true,
-    destroyed: () => true
-  },
-  setup(prop, { emit }) {
-    const {
-      image,
-      addImage,
-      destroy: destroyImage
-    } = useImageUploadInternal(() => {
-      if (!image.data) return
+<script lang="ts" setup>
+import FormButton from '/@/components/UI/FormButton.vue';
 
-      // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-      emit('input', image.data)
-    })
+withDefaults(defineProps<{
+    rounded?: boolean,
+    destroyFlag: boolean
+}>(), {
+    rounded: false
+})
 
-    let cropper: Cropper | undefined
-    const imgEle = shallowRef<HTMLImageElement>()
-    const cropperNote = ref('')
+const emit = defineEmits<{
+    (e: "input", _file: File): void,
+    (e: "destroyed"): void
+}>();
 
-    watchEffect(() => {
-      if (!image.data || !imgEle.value) return
+const {
+  image,
+  addImage,
+  destroy: destroyImage
+} = useImageUploadInternal(() => {
+  if (!image.data) return
 
-      const isGif = image.data.type === 'image/gif'
-      const options = isGif
-        ? cropperGifOptions
-        : {
-            ...cropperDefaultOptions,
-            cropend: () => {
-              cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                if (!blob) return
+  // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
+  emit('input', image.data)
+})
 
-                emit(
-                  'input',
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  new File([blob], image.data!.name, { type: blob.type })
-                )
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              }, image.data!.type)
-            }
-          }
+let cropper: Cropper | undefined
+const imgEle = shallowRef<HTMLImageElement>()
+const cropperNote = ref('')
 
-      cropperNote.value = isGif
-        ? 'GIFは切り抜きできません'
-        : '画像の位置・サイズを編集できます'
+watchEffect(() => {
+  if (!image.data || !imgEle.value) return
 
-      if (cropper) cropper.destroy()
-      cropper = new Cropper(imgEle.value, options)
-      cropper.replace(image.url)
-    })
+  const isGif = image.data.type === 'image/gif'
+  const options = isGif
+    ? cropperGifOptions
+    : {
+        ...cropperDefaultOptions,
+        cropend: () => {
+          cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
+            if (!blob) return
 
-    const destroy = () => {
-      destroyImage()
-      if (cropper) cropper.destroy()
-    }
-
-    watchEffect(() => {
-      if (prop.destroyFlag) {
-        destroy()
-        emit('destroyed')
+            emit(
+              'input',
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              new File([blob], image.data!.name, { type: blob.type })
+            )
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          }, image.data!.type)
+        }
       }
-    })
 
-    return { imgEle, image, addImage, cropperNote, destroy }
+  cropperNote.value = isGif
+    ? 'GIFは切り抜きできません'
+    : '画像の位置・サイズを編集できます'
+
+  if (cropper) cropper.destroy()
+  cropper = new Cropper(imgEle.value, options)
+  cropper.replace(image.url)
+})
+
+const destroy = () => {
+  destroyImage()
+  if (cropper) cropper.destroy()
+}
+
+watchEffect(() => {
+  if (prop.destroyFlag) {
+    destroy()
+    emit('destroyed')
   }
 })
 </script>

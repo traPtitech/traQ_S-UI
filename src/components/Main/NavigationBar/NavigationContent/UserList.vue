@@ -22,12 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { computed } from 'vue';
 import { compareStringInsensitive } from '/@/lib/basic/string'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
-import UsersElement from './UsersElement.vue'
-import UsersGradeList from './UsersGradeList.vue'
-import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/composables/useTextFilter'
 import { isDefined } from '/@/lib/basic/array'
 import { ActiveUser } from '/@/lib/user'
@@ -106,24 +102,16 @@ const useUserListFilter = () => {
     userListFilterState: textFilterState
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'UserList',
-  components: {
-    NavigationContentContainer,
-    UsersElement,
-    UsersGradeList,
-    FilterInput
-  },
-  setup() {
-    const userLists = useListByGradeName()
-    const { userListFilterState } = useUserListFilter()
-    return {
-      userLists,
-      userListFilterState
-    }
-  }
-})
+<script lang="ts" setup>
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
+import UsersElement from './UsersElement.vue';
+import UsersGradeList from './UsersGradeList.vue';
+import FilterInput from '/@/components/UI/FilterInput.vue';
+
+const userLists = useListByGradeName()
+const { userListFilterState } = useUserListFilter()
 </script>
 
 <style lang="scss" module>

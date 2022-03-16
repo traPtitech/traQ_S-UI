@@ -7,24 +7,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import { RouteLocationRaw } from 'vue-router'
 
-export default defineComponent({
-  name: 'OptionalRouterLink',
-  props: {
-    // とりあえずこれだけ。必要になったら追加する
-    to: {
-      type: [String, Object] as PropType<RouteLocationRaw>,
-      default: undefined
-    },
-    // ここからは独自のもの
-    block: {
-      type: Boolean,
-      default: false
-    }
-  }
+withDefaults(defineProps<{
+    to?: RouteLocationRaw,
+    block?: boolean
+}>(), {
+    block: false
 })
 </script>
 

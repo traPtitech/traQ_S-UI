@@ -15,38 +15,23 @@
   </click-outside>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
+import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue';
+import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue';
+import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue';
+import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue';
+import { computed, reactive } from 'vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import FileModalImage from '/@/components/Modal/FileModal/FileModalImage.vue'
-import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
-import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
-import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'FileModal',
-  components: {
-    ClickOutside,
-    FileModalImage,
-    FileModalFile,
-    FileModalVideo,
-    FileModalAudio
-  },
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const fileIdState = reactive({
-      fileId: computed(() => props.id)
-    })
-    const { fileMeta, fileType } = useFileMeta(fileIdState)
-    const { clearModal } = useModalStore()
-    return { fileMeta, fileType, clearModal }
-  }
+const props = defineProps<{
+    id: string
+}>();
+
+const fileIdState = reactive({
+  fileId: computed(() => props.id)
 })
+const { fileMeta, fileType } = useFileMeta(fileIdState)
+const { clearModal } = useModalStore()
 </script>

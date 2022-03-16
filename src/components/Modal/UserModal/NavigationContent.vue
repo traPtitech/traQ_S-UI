@@ -10,39 +10,22 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ProfileTab from './ProfileTab/ProfileTab.vue';
+import GroupsTab from './GroupsTab.vue';
+import TagsTab from './TagsTab.vue';
 import { User, UserDetail } from '@traptitech/traq'
 import { NavigationItemType } from './composables/useNavigation'
-import ProfileTab from './ProfileTab/ProfileTab.vue'
-import GroupsTab from './GroupsTab.vue'
-import TagsTab from './TagsTab.vue'
 
-export default defineComponent({
-  name: 'NavigationContent',
-  components: {
-    ProfileTab,
-    GroupsTab,
-    TagsTab
-  },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    },
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    },
-    detail: {
-      type: Object as PropType<UserDetail>,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    currentNavigation?: NavigationItemType,
+    user: User,
+    detail?: UserDetail
+}>(), {
+    currentNavigation: 'profile' as const
 })
+
+
 </script>
 
 <style lang="scss" module>

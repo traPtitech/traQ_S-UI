@@ -10,39 +10,24 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import SidebarEventFrame from './SidebarEventFrame.vue';
+import { computed } from 'vue';
 import { ChildCreatedEvent } from '@traptitech/traq'
-import SidebarEventFrame from './SidebarEventFrame.vue'
 import useChannelPath from '/@/composables/useChannelPath'
 
-export default defineComponent({
-  name: 'SidebarEventChildCreated',
-  components: {
-    SidebarEventFrame
-  },
-  props: {
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<ChildCreatedEvent>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
+const props = defineProps<{
+    datetime: string,
+    details: ChildCreatedEvent
+}>();
 
-    const newChildPath = computed(() =>
-      channelIdToShortPathString(props.details.channelId, true)
-    )
+const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
-    const newChildLink = computed(() =>
-      channelIdToLink(props.details.channelId)
-    )
+const newChildPath = computed(() =>
+  channelIdToShortPathString(props.details.channelId, true)
+)
 
-    return { newChildPath, newChildLink }
-  }
-})
+const newChildLink = computed(() =>
+  channelIdToLink(props.details.channelId)
+)
 </script>

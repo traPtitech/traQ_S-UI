@@ -16,29 +16,15 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import SidebarEventFrame from './SidebarEventFrame.vue';
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
 import { SubscribersChangedEvent } from '@traptitech/traq'
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
-export default defineComponent({
-  name: 'SidebarEventSubscribersChanged',
-  components: {
-    SidebarEventFrame,
-    UserIconEllipsisList
-  },
-  props: {
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<SubscribersChangedEvent>,
-      required: true
-    }
-  }
-})
+defineProps<{
+    datetime: string,
+    details: SubscribersChangedEvent
+}>()
 </script>
 
 <style lang="scss" module>

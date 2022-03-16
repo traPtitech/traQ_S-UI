@@ -12,30 +12,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AToggle from '/@/components/UI/AToggle.vue'
+<script lang="ts" setup>
+import AToggle from '/@/components/UI/AToggle.vue';
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-export default defineComponent({
-  name: 'EcoMode',
-  components: {
-    AToggle
-  },
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-    return { value }
-  }
-})
+const props = defineProps<{
+    modelValue: boolean
+}>();
+
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: boolean): void
+}>();
+
+const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

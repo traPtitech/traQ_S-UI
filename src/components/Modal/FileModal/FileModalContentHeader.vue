@@ -16,33 +16,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import FileDescription from '/@/components/UI/FileDescription.vue'
+<script lang="ts" setup>
+import CloseButton from '/@/components/UI/CloseButton.vue';
+import FileDescription from '/@/components/UI/FileDescription.vue';
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'FileModalContentHeader',
-  components: {
-    CloseButton,
-    FileDescription
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    },
-    isWhite: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const { clearModal } = useModalStore()
-    return { clearModal }
-  }
+withDefaults(defineProps<{
+    fileId: string,
+    isWhite?: boolean
+}>(), {
+    isWhite: false
 })
+
+const { clearModal } = useModalStore()
 </script>
 
 <style lang="scss" module>

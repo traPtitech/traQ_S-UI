@@ -12,26 +12,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ClientScope from './ClientScope.vue';
 import { OAuth2Scope } from '@traptitech/traq'
-import ClientScope from './ClientScope.vue'
 
-export default defineComponent({
-  name: 'ClientScopes',
-  components: {
-    ClientScope
-  },
-  props: {
-    scopes: {
-      type: Array as PropType<OAuth2Scope[]>,
-      default: () => []
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    scopes?: OAuth2Scope[]
+}>(), {
+    scopes: () => []
 })
+
+
 </script>
 
 <style lang="scss" module>

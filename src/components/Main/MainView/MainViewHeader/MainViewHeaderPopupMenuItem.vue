@@ -15,32 +15,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'MainViewHeaderPopupMenuItem',
-  components: {
-    AIcon
-  },
-  props: {
-    iconName: { type: String, required: true },
-    iconMdi: { type: Boolean, default: false },
-    label: { type: String, default: '' },
-    disabled: { type: Boolean, default: false }
-  },
-  emits: {
-    click: () => true
-  },
-  setup(props, { emit }) {
-    const onClick = () => {
-      if (props.disabled) return
-      emit('click')
-    }
-    return { onClick }
-  }
-})
+const props = withDefaults(defineProps<{
+    iconName: string,
+    iconMdi?: boolean,
+    label?: string,
+    disabled?: boolean
+}>(), {
+    iconMdi: false,
+    label: '',
+    disabled: false
+});
+
+const emit = defineEmits<{
+    (e: "click"): void
+}>();
+
+const onClick = () => {
+  if (props.disabled) return
+  emit('click')
+}
 </script>
 
 <style lang="scss" module>

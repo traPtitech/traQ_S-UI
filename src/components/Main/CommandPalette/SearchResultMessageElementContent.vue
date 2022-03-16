@@ -2,18 +2,12 @@
   <div :class="['markdown-body', $style.content]" v-html="content" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'SearchResultMessageElementContent',
-  props: {
-    content: {
-      type: String,
-      required: true
-    }
-  }
-})
+
+defineProps<{
+    content: string
+}>()
 </script>
 
 <style lang="scss" module>

@@ -23,56 +23,40 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue';
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue';
+import { computed, reactive } from 'vue';
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
-import MessageQuoteListItemHeader from './MessageQuoteListItemHeader.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'MessageQuoteListItem',
-  components: {
-    UserIcon,
-    MessageQuoteListItemHeader,
-    MessageQuoteListItemFooter
-  },
-  props: {
-    parentMessageChannelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { renderedContentMap } = useMessagesView()
-    const { messagesMap } = useMessagesStore()
-    const { dmChannelsMap } = useChannelsStore()
+const props = defineProps<{
+    parentMessageChannelId: ChannelId | DMChannelId,
+    messageId: MessageId
+}>();
 
-    const state = reactive({
-      message: computed(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        () => messagesMap.value.get(props.messageId)!
-      ),
-      shouldShow: computed(
-        (): boolean =>
-          !!state.message &&
-          // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
-          (!dmChannelsMap.value.has(state.message.channelId) ||
-            state.message.channelId === props.parentMessageChannelId)
-      ),
-      content: computed(
-        () => renderedContentMap.value.get(props.messageId) ?? ''
-      )
-    })
-    return { state }
-  }
+const { renderedContentMap } = useMessagesView()
+const { messagesMap } = useMessagesStore()
+const { dmChannelsMap } = useChannelsStore()
+
+const state = reactive({
+  message: computed(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    () => messagesMap.value.get(props.messageId)!
+  ),
+  shouldShow: computed(
+    (): boolean =>
+      !!state.message &&
+      // DMのメッセージは同じDMチャンネルから引用されてる場合だけ表示する
+      (!dmChannelsMap.value.has(state.message.channelId) ||
+        state.message.channelId === props.parentMessageChannelId)
+  ),
+  content: computed(
+    () => renderedContentMap.value.get(props.messageId) ?? ''
+  )
 })
 </script>
 

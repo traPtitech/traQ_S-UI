@@ -15,34 +15,25 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { EmbeddingMessage } from '@traptitech/traq-markdown-it'
-import { defineComponent, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue';
 import { isMessage } from '/@/lib/guard/embeddingOrUrl'
 import { render } from '/@/lib/markdown/markdown'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'MessageInputPreview',
-  props: {
-    text: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { isMobile } = useResponsiveStore()
+const props = defineProps<{
+    text: string
+}>();
 
-    const previewRendered = ref('')
-    const quoteMessages = ref<EmbeddingMessage[]>([])
-    watchEffect(async () => {
-      const { renderedText, embeddings } = await render(props.text)
-      previewRendered.value = renderedText
-      quoteMessages.value = embeddings.filter(isMessage)
-    })
+const { isMobile } = useResponsiveStore()
 
-    return { isMobile, previewRendered, quoteMessages }
-  }
+const previewRendered = ref('')
+const quoteMessages = ref<EmbeddingMessage[]>([])
+watchEffect(async () => {
+  const { renderedText, embeddings } = await render(props.text)
+  previewRendered.value = renderedText
+  quoteMessages.value = embeddings.filter(isMessage)
 })
 </script>
 

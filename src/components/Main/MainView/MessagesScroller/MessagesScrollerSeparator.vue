@@ -6,18 +6,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'MessagesScrollerSeparator',
-  props: {
-    title: { type: String, required: true }
-  },
-  setup() {
-    return {}
-  }
-})
+
+defineProps<{
+    title: string
+}>()
+
+
 </script>
 
 <style lang="scss" module>

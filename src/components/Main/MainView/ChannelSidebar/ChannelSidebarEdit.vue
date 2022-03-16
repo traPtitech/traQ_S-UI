@@ -17,26 +17,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import { reactive } from 'vue';
 
 type State = {
   isEditing: boolean
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelSidebarEdit',
-  components: { AIcon },
-  setup() {
-    const state: State = reactive({
-      isEditing: false
-    })
-    const onClick = () => {
-      state.isEditing = !state.isEditing
-    }
-    return { state, onClick }
-  }
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+
+const state: State = reactive({
+  isEditing: false
 })
+const onClick = () => {
+  state.isEditing = !state.isEditing
+}
 </script>
 
 <style lang="scss" module>

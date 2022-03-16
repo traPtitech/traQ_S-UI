@@ -15,36 +15,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue';
 import useChannelPath from '/@/composables/useChannelPath'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'ViewStates',
-  setup() {
-    const { monitoringChannels, fetchViewStates } = useMeStore()
-    const { fetchChannels } = useChannelsStore()
+const { monitoringChannels, fetchViewStates } = useMeStore()
+const { fetchChannels } = useChannelsStore()
 
-    fetchChannels()
-    fetchViewStates()
+fetchChannels()
+fetchViewStates()
 
-    const { channelIdToPathString } = useChannelPath()
+const { channelIdToPathString } = useChannelPath()
 
-    const monitoringChanelStrings = computed(() =>
-      [...monitoringChannels.value.values()].map(cId => {
-        try {
-          return channelIdToPathString(cId, true)
-        } catch {
-          return ''
-        }
-      })
-    )
-
-    return { monitoringChanelStrings }
-  }
-})
+const monitoringChanelStrings = computed(() =>
+  [...monitoringChannels.value.values()].map(cId => {
+    try {
+      return channelIdToPathString(cId, true)
+    } catch {
+      return ''
+    }
+  })
+)
 </script>
 
 <style lang="scss" module>

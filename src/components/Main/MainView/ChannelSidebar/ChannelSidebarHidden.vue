@@ -18,31 +18,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue';
 import { UserId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'ChannelSidebarHidden',
-  components: { AIcon, UserIconEllipsisList },
-  props: {
-    viewerIds: {
-      type: Array as PropType<readonly UserId[]>,
-      default: () => []
-    }
-  },
-  emits: {
-    open: () => true
-  },
-  setup(props, { emit }) {
-    const open = () => {
-      emit('open')
-    }
-    return { open }
-  }
+withDefaults(defineProps<{
+    viewerIds?: readonly UserId[]
+}>(), {
+    viewerIds: () => []
 })
+
+const emit = defineEmits<{
+    (e: "open"): void
+}>();
+
+const open = () => {
+  emit('open')
+}
 </script>
 
 <style lang="scss" module>

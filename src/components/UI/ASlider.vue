@@ -11,56 +11,33 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import VueSlider from 'vue-slider-component'
+<script lang="ts" setup>
+import VueSlider from 'vue-slider-component';
 import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 
-export default defineComponent({
-  name: 'ASlider',
-  components: {
-    VueSlider
-  },
-  props: {
-    value: {
-      type: Number,
-      required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    min: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 100
-    },
-    tooltipFormatter: {
-      type: [String, Function] as PropType<TooltipFormatter>,
-      default: undefined
-    },
-    tooltip: {
-      type: String as PropType<
-        'none' | 'always' | 'hover' | 'focus' | 'active'
-      >,
-      default: 'active' as const
-    }
-  },
-  emits: {
-    changeValue: (_val: number) => true
-  },
-  setup(props, { emit }) {
-    // vue sliderの型が変
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onChange: any = (val: number) => {
-      emit('changeValue', val)
-    }
-    return { onChange }
-  }
+withDefaults(defineProps<{
+    value: number,
+    disabled?: boolean,
+    min?: number,
+    max?: number,
+    tooltipFormatter?: TooltipFormatter,
+    tooltip?: 'none' | 'always' | 'hover' | 'focus' | 'active'
+}>(), {
+    disabled: false,
+    min: 0,
+    max: 100,
+    tooltip: 'active' as const
 })
+
+const emit = defineEmits<{
+    (e: "changeValue", _val: number): void
+}>();
+
+// vue sliderの型が変
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onChange: any = (val: number) => {
+  emit('changeValue', val)
+}
 </script>
 
 <style lang="scss">

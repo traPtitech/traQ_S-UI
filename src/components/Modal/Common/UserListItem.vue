@@ -21,43 +21,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import { computed } from 'vue';
 import { useUserModalOpener } from '/@/composables/useModalOpener'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'UserListItem',
-  components: {
-    UserIcon,
-    AIcon
-  },
-  props: {
-    userId: {
-      type: String,
-      default: ''
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
-    const user = computed(() => usersMap.value.get(props.userId))
-    const name = computed(() => user.value?.displayName)
+const props = withDefaults(defineProps<{
+    userId?: string,
+    isAdmin?: boolean
+}>(), {
+    userId: '',
+    isAdmin: false
+});
 
-    const { isClickable, openModal } = useUserModalOpener(props, user)
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(props.userId))
+const name = computed(() => user.value?.displayName)
 
-    return {
-      name,
-      isClickable,
-      openModal
-    }
-  }
-})
+const { isClickable, openModal } = useUserModalOpener(props, user)
 </script>
 
 <style lang="scss" module>

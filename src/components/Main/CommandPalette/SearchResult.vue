@@ -49,18 +49,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue';
 import { MessageId } from '/@/types/entity-ids'
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import PopupSelector, {
-  PopupSelectorItem
-} from '/@/components/UI/PopupSelector.vue'
+import { PopupSelectorItem } from '/@/components/UI/PopupSelector.vue';
 import useSearchMessages from './composables/useSearchMessages'
 import useKeepScrollPosition from './composables/useKeepScrollPosition'
-import SearchResultMessageElement from './SearchResultMessageElement.vue'
-import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { constructMessagesPath } from '/@/router'
 
@@ -81,84 +76,62 @@ const useMessageOpener = () => {
   }
   return { openMessage }
 }
+</script>
 
-export default defineComponent({
-  name: 'SearchResult',
-  components: {
-    SearchResultMessageElement,
-    PopupSelector,
-    LoadingSpinner,
-    AIcon
-  },
-  setup() {
-    const {
-      executeSearchForCurrentPage,
-      fetchingSearchResult,
-      searchResult,
-      currentPage,
-      jumpToPage: changePage,
-      resetPaging,
-      pageCount,
-      currentSortKey,
-      query,
-      executed
-    } = useSearchMessages()
+<script lang="ts" setup>
+import PopupSelector from '/@/components/UI/PopupSelector.vue';
+import SearchResultMessageElement from './SearchResultMessageElement.vue';
+import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
 
-    watch(
-      // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
-      () => [query.value, currentSortKey.value, currentPage.value] as const,
-      ([query, key], [oldQuery, oldKey]) => {
-        // クエリの変更時・ソートキーの変更時はページングをリセット
-        if (query !== oldQuery || key !== oldKey) {
-          resetPaging()
-        }
-        executeSearchForCurrentPage(query)
-      }
-    )
+const {
+  executeSearchForCurrentPage,
+  fetchingSearchResult,
+  searchResult,
+  currentPage,
+  jumpToPage: changePage,
+  resetPaging,
+  pageCount,
+  currentSortKey,
+  query,
+  executed
+} = useSearchMessages()
 
-    onMounted(() => {
-      // 初回マウント時に取得する
-      if (!executed.value) {
-        executeSearchForCurrentPage(query.value)
-      }
-    })
-
-    const resultListEle = ref<HTMLElement | null>(null)
-    const queryEntered = computed(() => query.value.length > 0)
-
-    const { openMessage } = useMessageOpener()
-
-    const jumpToPage = (page: number) => {
-      changePage(page)
-      if (resultListEle.value) {
-        resultListEle.value.scrollTop = 0
-      }
+watch(
+  // クエリの変更時・ソートキーの変更時・現在のページの変更時に取得する
+  () => [query.value, currentSortKey.value, currentPage.value] as const,
+  ([query, key], [oldQuery, oldKey]) => {
+    // クエリの変更時・ソートキーの変更時はページングをリセット
+    if (query !== oldQuery || key !== oldKey) {
+      resetPaging()
     }
+    executeSearchForCurrentPage(query)
+  }
+)
 
-    const { didRender } = useKeepScrollPosition(
-      resultListEle,
-      computed(() => searchResult.value.map(message => message.id))
-    )
-
-    return {
-      searchResult,
-      fetchingSearchResult,
-
-      currentPage,
-      currentSortKey,
-      pageCount,
-      jumpToPage,
-
-      selectorItems,
-
-      openMessage,
-      didRender,
-      queryEntered,
-
-      resultListEle
-    }
+onMounted(() => {
+  // 初回マウント時に取得する
+  if (!executed.value) {
+    executeSearchForCurrentPage(query.value)
   }
 })
+
+const resultListEle = ref<HTMLElement | null>(null)
+const queryEntered = computed(() => query.value.length > 0)
+
+const { openMessage } = useMessageOpener()
+
+const jumpToPage = (page: number) => {
+  changePage(page)
+  if (resultListEle.value) {
+    resultListEle.value.scrollTop = 0
+  }
+}
+
+const { didRender } = useKeepScrollPosition(
+  resultListEle,
+  computed(() => searchResult.value.map(message => message.id))
+)
 </script>
 
 <style lang="scss" module>

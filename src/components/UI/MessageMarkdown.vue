@@ -2,32 +2,19 @@
   <div :class="['markdown-body', $style.content]" v-html="content" />
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { MessageId } from '/@/types/entity-ids'
-import { computed, defineComponent, PropType } from 'vue'
+import { computed } from 'vue';
 import { useMessagesView } from '/@/store/domain/messagesView'
 
-/**
- * メッセージIDからレンダリング済みMarkdownを表示するだけのコンポーネント
- *
- * メッセージをfetchする側でレンダリングをかける
- */
-export default defineComponent({
-  name: 'MessageMarkdown',
-  props: {
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { renderedContentMap } = useMessagesView()
-    const content = computed(
-      () => renderedContentMap.value.get(props.messageId) ?? ''
-    )
-    return { content }
-  }
-})
+const props = defineProps<{
+    messageId: MessageId
+}>();
+
+const { renderedContentMap } = useMessagesView()
+const content = computed(
+  () => renderedContentMap.value.get(props.messageId) ?? ''
+)
 </script>
 
 <style lang="scss" module>

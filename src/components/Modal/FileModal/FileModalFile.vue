@@ -5,27 +5,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+<script lang="ts" setup>
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
 
-export default defineComponent({
-  name: 'FileModalFile',
-  components: {
-    FileModalContentHeader,
-    FileModalContentFooter
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    fileId: string
+}>()
+
+
 </script>
 
 <style lang="scss" module>

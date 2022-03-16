@@ -4,33 +4,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import { reactive, computed } from 'vue';
 import { useUsersStore } from '/@/store/entities/users'
 import { UserId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'MessageQuoteListItemHeader',
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { usersMap, fetchUser } = useUsersStore()
+const props = defineProps<{
+    userId: UserId
+}>();
 
-    const state = reactive({
-      user: computed(() => usersMap.value.get(props.userId)),
-      displayName: computed((): string => state.user?.displayName ?? 'unknown')
-    })
-    if (state.user === undefined) {
-      fetchUser({ userId: props.userId })
-    }
+const { usersMap, fetchUser } = useUsersStore()
 
-    return { state }
-  }
+const state = reactive({
+  user: computed(() => usersMap.value.get(props.userId)),
+  displayName: computed((): string => state.user?.displayName ?? 'unknown')
 })
+if (state.user === undefined) {
+  fetchUser({ userId: props.userId })
+}
 </script>
 
 <style lang="scss" module>

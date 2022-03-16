@@ -10,30 +10,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import MessageQuoteListItem from './MessageQuoteListItem.vue';
 import { MessageId, ChannelId, DMChannelId } from '/@/types/entity-ids'
-import MessageQuoteListItem from './MessageQuoteListItem.vue'
 
-export default defineComponent({
-  name: 'MessageQuoteList',
-  components: {
-    MessageQuoteListItem
-  },
-  props: {
-    parentMessageChannelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    messageIds: {
-      type: Array as PropType<MessageId[]>,
-      default: () => []
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    parentMessageChannelId: ChannelId | DMChannelId,
+    messageIds?: MessageId[]
+}>(), {
+    messageIds: () => []
 })
+
+
 </script>
 
 <style lang="scss" module>

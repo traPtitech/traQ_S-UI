@@ -7,56 +7,37 @@
   />
 </template>
 
-<script lang="ts">
-import {
-  defineComponent,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  toRef,
-  watch,
-  nextTick
-} from 'vue'
+<script lang="ts" setup>
+import { onBeforeUnmount, onMounted, ref, toRef, watch, nextTick } from 'vue';
 import autosize from 'autosize'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
-export default defineComponent({
-  name: 'TextareaAutosize',
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    },
-    maxHeight: {
-      type: Number,
-      default: undefined
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true
-  },
-  setup(props, { emit }) {
-    const { value, onInput } = useTextModelSyncer(props, emit)
+const props = defineProps<{
+    modelValue: string,
+    maxHeight?: number
+}>();
 
-    const textareaEle = ref<HTMLTextAreaElement | null>(null)
-    onMounted(() => {
-      if (textareaEle.value) {
-        autosize(textareaEle.value)
-      }
-    })
-    watch(toRef(props, 'modelValue'), async () => {
-      await nextTick()
-      if (textareaEle.value) {
-        autosize.update(textareaEle.value)
-      }
-    })
-    onBeforeUnmount(() => {
-      if (textareaEle.value) {
-        autosize.destroy(textareaEle.value)
-      }
-    })
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: string): void
+}>();
 
-    return { value, onInput, textareaEle }
+const { value, onInput } = useTextModelSyncer(props, emit)
+
+const textareaEle = ref<HTMLTextAreaElement | null>(null)
+onMounted(() => {
+  if (textareaEle.value) {
+    autosize(textareaEle.value)
+  }
+})
+watch(toRef(props, 'modelValue'), async () => {
+  await nextTick()
+  if (textareaEle.value) {
+    autosize.update(textareaEle.value)
+  }
+})
+onBeforeUnmount(() => {
+  if (textareaEle.value) {
+    autosize.destroy(textareaEle.value)
   }
 })
 </script>

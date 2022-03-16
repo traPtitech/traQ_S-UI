@@ -38,16 +38,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, Ref } from 'vue'
-import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
+import { computed, Ref } from 'vue';
 import useChannelFilter from '/@/composables/useChannelFilter'
 import { constructTree } from '/@/lib/channelTree'
-import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../composables/useBuildChannel'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -115,43 +110,30 @@ const useStaredChannels = () => {
       )?.children.filter(channel => !channel.archived) ?? []
   )
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelsTab',
-  components: {
-    NavigationContentContainer,
-    ChannelList,
-    ChannelFilter,
-    AIcon,
-    EmptyState
-  },
-  setup() {
-    const { pushModal } = useModalStore()
-    const topLevelChannels = useTopLevelChannels()
-    const staredChannels = useStaredChannels()
+<script lang="ts" setup>
+import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue';
+import ChannelFilter from '../ChannelList/ChannelFilter.vue';
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import EmptyState from '/@/components/UI/EmptyState.vue';
 
-    const { filterStarChannel, toggleStarChannelFilter } =
-      useFilterStarChannel()
-    const { channelListFilterState } = useChannelListFilter(
-      useChannelList(filterStarChannel)
-    )
+const { pushModal } = useModalStore()
+const topLevelChannels = useTopLevelChannels()
+const staredChannels = useStaredChannels()
 
-    const onClickButton = () => {
-      pushModal({
-        type: 'channel-create'
-      })
-    }
+const { filterStarChannel, toggleStarChannelFilter } =
+  useFilterStarChannel()
+const { channelListFilterState } = useChannelListFilter(
+  useChannelList(filterStarChannel)
+)
 
-    return {
-      onClickButton,
-      toggleStarChannelFilter,
-      filterStarChannel,
-      channelListFilterState,
-      staredChannels,
-      topLevelChannels
-    }
-  }
-})
+const onClickButton = () => {
+  pushModal({
+    type: 'channel-create'
+  })
+}
 </script>
 
 <style lang="scss" module>

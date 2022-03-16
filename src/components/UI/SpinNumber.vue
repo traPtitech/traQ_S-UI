@@ -9,35 +9,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, watch, reactive, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import { watch, reactive, computed } from 'vue';
 
-export default defineComponent({
-  name: 'SpinNumber',
-  props: {
-    value: {
-      type: Number as PropType<number>,
-      required: true
-    }
-  },
-  setup(props) {
-    const state = reactive({
-      val: props.value,
-      reverse: false
-    })
-    watch(
-      () => props.value,
-      (newVal, oldVal) => {
-        state.val = newVal
-        state.reverse = newVal < oldVal
-      }
-    )
-    const name = computed(() =>
-      state.reverse ? 'vertical-swap-reverse' : 'vertical-swap'
-    )
-    return { state, name }
-  }
+const props = defineProps<{
+    value: number
+}>();
+
+const state = reactive({
+  val: props.value,
+  reverse: false
 })
+watch(
+  () => props.value,
+  (newVal, oldVal) => {
+    state.val = newVal
+    state.reverse = newVal < oldVal
+  }
+)
+const name = computed(() =>
+  state.reverse ? 'vertical-swap-reverse' : 'vertical-swap'
+)
 </script>
 
 <style lang="scss" module>

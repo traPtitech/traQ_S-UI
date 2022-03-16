@@ -4,21 +4,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ClipsViewContent from './ClipsViewContent.vue';
 import { ClipFolderId } from '/@/types/entity-ids'
-import ClipsViewContent from './ClipsViewContent.vue'
 
-export default defineComponent({
-  name: 'ClipsView',
-  components: { ClipsViewContent },
-  props: {
-    clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    clipFolderId: ClipFolderId
+}>()
+
+
 </script>
 
 <style lang="scss" module>

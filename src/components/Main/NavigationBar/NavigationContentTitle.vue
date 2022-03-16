@@ -4,26 +4,20 @@
   </h2>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue';
 import {
   NavigationItemType,
   navigationTypeNameMap
 } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
-export default defineComponent({
-  name: 'NavigationContentTitle',
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'home' as const
-    }
-  },
-  setup(props) {
-    const title = computed(() => navigationTypeNameMap[props.currentNavigation])
-    return { title }
-  }
-})
+const props = withDefaults(defineProps<{
+    currentNavigation?: NavigationItemType
+}>(), {
+    currentNavigation: 'home' as const
+});
+
+const title = computed(() => navigationTypeNameMap[props.currentNavigation])
 </script>
 
 <style lang="scss" module>

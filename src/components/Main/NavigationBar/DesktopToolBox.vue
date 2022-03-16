@@ -24,29 +24,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
+import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import AppList from '/@/components/Main/NavigationBar/AppList.vue';
 import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
-import AppList from '/@/components/Main/NavigationBar/AppList.vue'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'DesktopToolBox',
-  components: { ToolItem, UserIcon, AppList },
-  setup() {
-    const { myId } = useMeStore()
-    const { tools, isServicesShown, closeServices } = useToolBox()
-
-    return {
-      tools,
-      isServicesShown,
-      closeServices,
-      myId
-    }
-  }
-})
+const { myId } = useMeStore()
+const { tools, isServicesShown, closeServices } = useToolBox()
 </script>
 
 <style lang="scss" module>

@@ -31,65 +31,31 @@
   </main-view-sidebar>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue';
+import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue';
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue';
+import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue';
+import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue';
+import SidebarContent from './DMSidebarContent.vue';
+import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue';
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
-import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
-import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
-import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
-import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import SidebarContent from './DMSidebarContent.vue'
-import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
 import { ChannelId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'DMSidebar',
-  components: {
-    MainViewSidebar,
-    MainViewSidebarPage,
-    SidebarPinnedPage,
-    ChannelSidebarHidden,
-    SidebarHeader,
-    SidebarContent,
-    SidebarEventsPage
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    },
-    userName: {
-      type: String,
-      required: true
-    },
-    isSidebarOpenerReady: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const {
-      page,
-      moveToDefaultPage,
-      moveToPinnedPage,
-      moveToEventsPage,
-      pinnedMessages,
-      viewerIds,
-      openSidebar,
-      closeSidebar
-    } = useChannelSidebarCommon()
+defineProps<{
+    channelId: ChannelId,
+    userName: string,
+    isSidebarOpenerReady: boolean
+}>()
 
-    return {
-      page,
-      moveToDefaultPage,
-      moveToPinnedPage,
-      moveToEventsPage,
-      pinnedMessages,
-      viewerIds,
-      openSidebar,
-      closeSidebar
-    }
-  }
-})
+const {
+  page,
+  moveToDefaultPage,
+  moveToPinnedPage,
+  moveToEventsPage,
+  pinnedMessages,
+  viewerIds,
+  openSidebar,
+  closeSidebar
+} = useChannelSidebarCommon()
 </script>

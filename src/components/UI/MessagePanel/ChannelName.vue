@@ -4,25 +4,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'ChannelName',
-  props: {
-    path: {
-      type: String,
-      required: true
-    },
-    isTitle: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+
+withDefaults(defineProps<{
+    path: string,
+    isTitle?: boolean
+}>(), {
+    isTitle: false
 })
+
+
 </script>
 
 <style lang="scss" module>

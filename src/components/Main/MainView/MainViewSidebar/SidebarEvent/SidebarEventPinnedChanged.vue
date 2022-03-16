@@ -17,87 +17,65 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from 'vue'
+<script lang="ts" setup>
+import SidebarEventFrame from './SidebarEventFrame.vue';
+import UserName from '/@/components/UI/MessagePanel/UserName.vue';
+import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue';
+import { computed, ref, watch } from 'vue';
 import {
   ChannelEventTypeEnum,
   Message,
   PinAddedEvent,
   PinRemovedEvent
 } from '@traptitech/traq'
-import SidebarEventFrame from './SidebarEventFrame.vue'
-import UserName from '/@/components/UI/MessagePanel/UserName.vue'
-import RenderContent from '/@/components/UI/MessagePanel/RenderContent.vue'
 import { AxiosError } from 'axios'
 import { constructMessagesPath } from '/@/router'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'SidebarEventPinnedChanged',
-  components: {
-    SidebarEventFrame,
-    UserName,
-    RenderContent
-  },
-  props: {
-    type: {
-      type: String as PropType<
-        | typeof ChannelEventTypeEnum.PinAdded
-        | typeof ChannelEventTypeEnum.PinRemoved
-      >,
-      required: true
-    },
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<PinAddedEvent | PinRemovedEvent>,
-      required: true
+const props = defineProps<{
+    type: | typeof ChannelEventTypeEnum.PinAdded
+    | typeof ChannelEventTypeEnum.PinRemoved,
+    datetime: string,
+    details: PinAddedEvent | PinRemovedEvent
+}>();
+
+const { fetchMessage } = useMessagesStore()
+const { usersMap } = useUsersStore()
+
+const title = computed(() =>
+  props.type === ChannelEventTypeEnum.PinAdded
+    ? 'ピン留め追加'
+    : 'ピン留め解除'
+)
+
+// 削除されたメッセージは`null`
+const message = ref<Message | null>()
+watch(
+  () => props.details.messageId,
+  async newMessageId => {
+    try {
+      const m = await fetchMessage({
+        messageId: newMessageId
+      })
+      message.value = m
+    } catch (e: unknown) {
+      const err = e as AxiosError
+      if (err.response?.status === 404) {
+        message.value = null
+      }
     }
   },
-  setup(props) {
-    const { fetchMessage } = useMessagesStore()
-    const { usersMap } = useUsersStore()
+  { immediate: true }
+)
 
-    const title = computed(() =>
-      props.type === ChannelEventTypeEnum.PinAdded
-        ? 'ピン留め追加'
-        : 'ピン留め解除'
-    )
+const user = computed(() =>
+  message.value ? usersMap.value.get(message.value.userId) : undefined
+)
 
-    // 削除されたメッセージは`null`
-    const message = ref<Message | null>()
-    watch(
-      () => props.details.messageId,
-      async newMessageId => {
-        try {
-          const m = await fetchMessage({
-            messageId: newMessageId
-          })
-          message.value = m
-        } catch (e: unknown) {
-          const err = e as AxiosError
-          if (err.response?.status === 404) {
-            message.value = null
-          }
-        }
-      },
-      { immediate: true }
-    )
-
-    const user = computed(() =>
-      message.value ? usersMap.value.get(message.value.userId) : undefined
-    )
-
-    const messageLink = computed(() =>
-      message.value ? constructMessagesPath(message.value.id) : undefined
-    )
-
-    return { title, message, user, messageLink }
-  }
-})
+const messageLink = computed(() =>
+  message.value ? constructMessagesPath(message.value.id) : undefined
+)
 </script>
 
 <style lang="scss" module>

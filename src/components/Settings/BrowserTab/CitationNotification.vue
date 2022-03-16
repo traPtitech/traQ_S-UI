@@ -16,38 +16,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+<script lang="ts" setup>
+import AToggle from '/@/components/UI/AToggle.vue';
+import { onMounted, ref } from 'vue';
 import apis from '/@/lib/apis'
-import AToggle from '/@/components/UI/AToggle.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
-export default defineComponent({
-  name: 'CitationNotification',
-  components: {
-    AToggle
-  },
-  setup() {
-    const { addErrorToast } = useToastStore()
-    const value = ref(false)
+const { addErrorToast } = useToastStore()
+const value = ref(false)
 
-    onMounted(async () => {
-      const { data } = await apis.getMyNotifyCitation()
-      value.value = data.notifyCitation
-    })
-
-    const toggleSetting = async () => {
-      try {
-        await apis.changeMyNotifyCitation({ notifyCitation: !value.value })
-        value.value = !value.value
-      } catch {
-        addErrorToast('引用通知設定に失敗しました')
-      }
-    }
-
-    return { value, toggleSetting }
-  }
+onMounted(async () => {
+  const { data } = await apis.getMyNotifyCitation()
+  value.value = data.notifyCitation
 })
+
+const toggleSetting = async () => {
+  try {
+    await apis.changeMyNotifyCitation({ notifyCitation: !value.value })
+    value.value = !value.value
+  } catch {
+    addErrorToast('引用通知設定に失敗しました')
+  }
+}
 </script>
 
 <style lang="scss" module>

@@ -28,12 +28,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
+import { computed, reactive } from 'vue';
 import apis from '/@/lib/apis'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 import useMaxLength from '/@/composables/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
@@ -55,31 +51,25 @@ const useCreateClipFolder = () => {
   }
   return { createClipFolder }
 }
+</script>
 
-export default defineComponent({
-  name: 'ClipFolderCreateModal',
-  components: {
-    ModalFrame,
-    FormInput,
-    FormTextArea,
-    FormButton
-  },
-  setup() {
-    const name = reactive({ val: '', maxLength: 30 })
-    const description = reactive({ val: '', maxLength: 1000 })
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue';
+import FormInput from '/@/components/UI/FormInput.vue';
+import FormTextArea from '/@/components/UI/FormTextArea.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
 
-    const { isExceeded: isNameExceeded } = useMaxLength(name)
-    const { isExceeded: isDescriptionExceeded } = useMaxLength(description)
+const name = reactive({ val: '', maxLength: 30 })
+const description = reactive({ val: '', maxLength: 1000 })
 
-    const { createClipFolder } = useCreateClipFolder()
-    const isCreateEnabled = computed(
-      () =>
-        name.val !== '' && !isNameExceeded.value && !isDescriptionExceeded.value
-    )
+const { isExceeded: isNameExceeded } = useMaxLength(name)
+const { isExceeded: isDescriptionExceeded } = useMaxLength(description)
 
-    return { name, description, createClipFolder, isCreateEnabled }
-  }
-})
+const { createClipFolder } = useCreateClipFolder()
+const isCreateEnabled = computed(
+  () =>
+    name.val !== '' && !isNameExceeded.value && !isDescriptionExceeded.value
+)
 </script>
 
 <style lang="scss" module>

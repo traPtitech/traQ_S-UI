@@ -12,10 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, computed } from 'vue'
+import { reactive, computed } from 'vue';
 import { commonStyles, ThemeClaim } from '/@/lib/styles'
-import AIcon from '/@/components/UI/AIcon.vue'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
@@ -26,37 +24,25 @@ const useStyles = (props: { colorClaim?: ThemeClaim<string> }) => {
     }))
   })
 }
+</script>
 
-export default defineComponent({
-  name: 'NavigationSelectorItem',
-  components: { AIcon, NotificationIndicator },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    },
-    hasNotification: {
-      type: Boolean,
-      default: false
-    },
-    colorClaim: {
-      type: Function as PropType<ThemeClaim<string>>,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const styles = useStyles(props)
-    return { styles }
-  }
-})
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+
+const props = withDefaults(defineProps<{
+    iconName: string,
+    iconMdi?: boolean,
+    isSelected?: boolean,
+    hasNotification?: boolean,
+    colorClaim?: ThemeClaim<string>
+}>(), {
+    iconMdi: false,
+    isSelected: false,
+    hasNotification: false
+});
+
+const styles = useStyles(props)
 </script>
 
 <style lang="scss" module>

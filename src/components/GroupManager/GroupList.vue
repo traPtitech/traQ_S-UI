@@ -14,49 +14,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
-import GroupListGroup from './GroupListGroup.vue'
+<script lang="ts" setup>
+import GroupListGroup from './GroupListGroup.vue';
+import { computed, ref } from 'vue';
 import { UserGroupId } from '/@/types/entity-ids'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
 
-export default defineComponent({
-  name: 'GroupList',
-  components: {
-    GroupListGroup
-  },
-  setup() {
-    const { detail, myId } = useMeStore()
-    const { fetchUsers } = useUsersStore()
-    const { userGroupsMap, fetchUserGroups } = useGroupsStore()
+const { detail, myId } = useMeStore()
+const { fetchUsers } = useUsersStore()
+const { userGroupsMap, fetchUserGroups } = useGroupsStore()
 
-    fetchUsers()
-    fetchUserGroups()
+fetchUsers()
+fetchUserGroups()
 
-    const selectedId = ref<UserGroupId>()
-    const onSelect = (id: UserGroupId) => {
-      selectedId.value = id
-    }
-    const isAllUserGroupsAdmin = computed(() =>
-      detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
+const selectedId = ref<UserGroupId>()
+const onSelect = (id: UserGroupId) => {
+  selectedId.value = id
+}
+const isAllUserGroupsAdmin = computed(() =>
+  detail.value?.permissions.includes(UserPermission.AllUserGroupsAdmin)
+)
+
+const groups = computed(() =>
+  [...userGroupsMap.value.values()].filter(group => {
+    const myIdVal = myId.value
+    return (
+      isAllUserGroupsAdmin.value ||
+      (myIdVal && group.admins.includes(myIdVal))
     )
-
-    const groups = computed(() =>
-      [...userGroupsMap.value.values()].filter(group => {
-        const myIdVal = myId.value
-        return (
-          isAllUserGroupsAdmin.value ||
-          (myIdVal && group.admins.includes(myIdVal))
-        )
-      })
-    )
-
-    return { selectedId, onSelect, groups }
-  }
-})
+  })
+)
 </script>
 
 <style lang="scss" module>

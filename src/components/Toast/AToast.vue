@@ -11,15 +11,8 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  onMounted,
-  onUnmounted
-} from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue';
 import { useToastStore, Toast } from '/@/store/ui/toast'
-import AIcon from '/@/components/UI/AIcon.vue'
 
 const iconNameMap: Record<Toast['type'], string> = {
   success: 'info',
@@ -47,35 +40,28 @@ const useAutoHide = (props: { toast: Toast }) => {
 
   return { remove }
 }
+</script>
 
-export default defineComponent({
-  name: 'AToast',
-  components: {
-    AIcon
-  },
-  props: {
-    toast: {
-      type: Object as PropType<Toast>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { remove } = useAutoHide(props)
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-    const onClick = () => {
-      if (props.toast.onClick) {
-        props.toast.onClick()
-      } else {
-        remove()
-      }
-    }
+const props = defineProps<{
+    toast: Toast
+}>();
 
-    const role = computed(() => (props.toast.onClick ? 'button' : undefined))
+const { remove } = useAutoHide(props)
 
-    const iconName = computed(() => iconNameMap[props.toast.type])
-    return { onClick, iconName, role }
+const onClick = () => {
+  if (props.toast.onClick) {
+    props.toast.onClick()
+  } else {
+    remove()
   }
-})
+}
+
+const role = computed(() => (props.toast.onClick ? 'button' : undefined))
+
+const iconName = computed(() => iconNameMap[props.toast.type])
 </script>
 
 <style lang="scss" module>

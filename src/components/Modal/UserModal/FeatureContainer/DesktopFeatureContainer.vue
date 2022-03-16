@@ -18,32 +18,17 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue';
+import LinkButtons from './LinkButtons.vue';
 import { User, UserDetail } from '@traptitech/traq'
-import OnlineIndicatorWithTooltip from './OnlineIndicatorWithTooltip.vue'
-import LinkButtons from './LinkButtons.vue'
 
-export default defineComponent({
-  name: 'DesktopFeatureContainer',
-  components: {
-    OnlineIndicatorWithTooltip,
-    LinkButtons
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    },
-    detail: {
-      type: Object as PropType<UserDetail>,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    user: User,
+    detail?: UserDetail
+}>()
+
+
 </script>
 
 <style lang="scss" module>

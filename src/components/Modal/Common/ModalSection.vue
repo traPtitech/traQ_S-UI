@@ -10,25 +10,15 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'ModalSection',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+
+defineProps<{
+    title: string,
+    description?: string
+}>()
+
+
 </script>
 
 <style lang="scss" module>

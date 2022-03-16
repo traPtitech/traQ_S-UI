@@ -42,24 +42,11 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  Ref,
-  defineAsyncComponent,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+import { reactive, computed, Ref, defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue';
 import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useNavigationController from '/@/composables/useNavigationController'
-import MainView from '/@/components/Main/MainView/MainView.vue'
-import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue'
-import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue'
-import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
-import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
 import useInitialFetch from './composables/useInitialFetch'
@@ -134,92 +121,66 @@ const useCommandPaletteShortcutKey = () => {
 const NotFoundPage = defineAsyncComponent(
   () => import('/@/views/NotFoundPage.vue')
 )
+</script>
 
-export default defineComponent({
-  name: 'MainPage',
-  components: {
-    NavigationBar,
-    MainView,
-    MainViewFrame,
-    StampPickerContainer,
-    CommandPaletteContainer,
-    NotFoundPage
-  },
-  setup() {
-    const navWidth = 320
-    const sidebarWidth = 256 + 64
-    const {
-      touchmoveHandler,
-      touchstartHandler,
-      touchendHandler,
-      mainViewPosition,
-      sidebarPosition,
-      isNavAppeared,
-      isNavCompletelyAppeared,
-      isSidebarAppeared,
-      isSidebarCompletelyAppeared,
-      isMainViewActive,
-      currentActiveDrawer
-    } = useMainViewLayout(navWidth, sidebarWidth)
-    const { addToast } = useToastStore()
+<script lang="ts" setup>
+import MainView from '/@/components/Main/MainView/MainView.vue';
+import MainViewFrame from '/@/components/Main/MainView/MainViewFrame.vue';
+import NavigationBar from '/@/components/Main/NavigationBar/NavigationBar.vue';
+import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue';
+import CommandPaletteContainer from '/@/components/Main/CommandPalette/CommandPaletteContainer.vue';
 
-    useCommandPaletteShortcutKey()
+const navWidth = 320
+const sidebarWidth = 256 + 64
+const {
+  touchmoveHandler,
+  touchstartHandler,
+  touchendHandler,
+  mainViewPosition,
+  sidebarPosition,
+  isNavAppeared,
+  isNavCompletelyAppeared,
+  isSidebarAppeared,
+  isSidebarCompletelyAppeared,
+  isMainViewActive,
+  currentActiveDrawer
+} = useMainViewLayout(navWidth, sidebarWidth)
+const { addToast } = useToastStore()
 
-    const { isMobile } = useResponsiveStore()
-    const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
-    const { closeNav } = useNavigationController()
-    const hideOuter = computed(
-      () => isMobile.value && isNavCompletelyAppeared.value
-    )
+useCommandPaletteShortcutKey()
 
-    useDraftConfirmer()
+const { isMobile } = useResponsiveStore()
+const shouldShowNav = computed(() => !isMobile.value || isNavAppeared.value)
+const { closeNav } = useNavigationController()
+const hideOuter = computed(
+  () => isMobile.value && isNavCompletelyAppeared.value
+)
 
-    const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
-    useInitialFetch(() => {
-      setupWebSocket()
-      connectFirebase(onClick => {
-        addToast({
-          type: 'success',
-          text: 'クリックでアップデートできます',
-          timeout: 10000,
-          onClick
-        })
-      })
-      triggerRouteParamChange()
+useDraftConfirmer()
+
+const { routeWatcherState, triggerRouteParamChange } = useRouteWatcher()
+useInitialFetch(() => {
+  setupWebSocket()
+  connectFirebase(onClick => {
+    addToast({
+      type: 'success',
+      text: 'クリックでアップデートできます',
+      timeout: 10000,
+      onClick
     })
-
-    const styles = useStyles(mainViewPosition, sidebarPosition)
-
-    const onClickMainViewFrame = (e: MouseEvent) => {
-      if (!isMobile.value || !isNavCompletelyAppeared.value) {
-        return
-      }
-      e.stopPropagation()
-      closeNav()
-    }
-
-    return {
-      touchstartHandler,
-      touchmoveHandler,
-      touchendHandler,
-
-      routeWatcherState,
-
-      shouldShowNav,
-      hideOuter,
-      isNavCompletelyAppeared,
-      isSidebarCompletelyAppeared,
-      isSidebarAppeared,
-      isMainViewActive,
-      isMobile,
-
-      onClickMainViewFrame,
-
-      styles,
-      currentActiveDrawer
-    }
-  }
+  })
+  triggerRouteParamChange()
 })
+
+const styles = useStyles(mainViewPosition, sidebarPosition)
+
+const onClickMainViewFrame = (e: MouseEvent) => {
+  if (!isMobile.value || !isNavCompletelyAppeared.value) {
+    return
+  }
+  e.stopPropagation()
+  closeNav()
+}
 </script>
 
 <style lang="scss" module>

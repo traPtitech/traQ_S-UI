@@ -39,12 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref, Ref } from 'vue'
+import { computed, ref, Ref } from 'vue';
 import { MessageStamp, Stamp } from '@traptitech/traq'
-import StampElement from './StampElement.vue'
 import { StampId, UserId } from '/@/types/entity-ids'
-import StampDetailElement from './StampDetailElement.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import apis from '/@/lib/apis'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useToastStore } from '/@/store/ui/toast'
@@ -134,76 +131,58 @@ const createStampList = (
     (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
   )
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageStampList',
-  components: { StampElement, StampDetailElement, AIcon },
-  props: {
-    stamps: {
-      type: Array as PropType<MessageStamp[]>,
-      required: true
-    },
-    messageId: {
-      type: String,
-      required: true
-    },
-    showDetailButton: {
-      type: Boolean,
-      default: false
-    },
-    isArchived: {
-      type: Boolean,
-      default: false
+<script lang="ts" setup>
+import StampElement from './StampElement.vue';
+import StampDetailElement from './StampDetailElement.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+
+const props = withDefaults(defineProps<{
+    stamps: MessageStamp[],
+    messageId: string,
+    showDetailButton?: boolean,
+    isArchived?: boolean
+}>(), {
+    showDetailButton: false,
+    isArchived: false
+});
+
+const { myId, upsertLocalStampHistory } = useMeStore()
+const { stampsMap } = useStampsStore()
+const { addErrorToast } = useToastStore()
+const stampList = computed(() => createStampList(props, stampsMap, myId))
+
+const isDetailShown = ref(false)
+const toggleDetail = () => {
+  isDetailShown.value = !isDetailShown.value
+}
+
+const addStamp = async (stampId: StampId) => {
+  try {
+    await apis.addMessageStamp(props.messageId, stampId)
+  } catch {
+    addErrorToast('メッセージにスタンプを追加できませんでした')
+    return
+  }
+  upsertLocalStampHistory(stampId, new Date())
+}
+const removeStamp = async (stampId: StampId) => {
+  await apis.removeMessageStamp(props.messageId, stampId)
+}
+
+const listEle = ref<HTMLDivElement>()
+const { toggleStampPicker } = useStampPickerInvoker(
+  async stampData => {
+    try {
+      await apis.addMessageStamp(props.messageId, stampData.id)
+    } catch {
+      addErrorToast('メッセージにスタンプを追加できませんでした')
     }
   },
-  setup(props) {
-    const { myId, upsertLocalStampHistory } = useMeStore()
-    const { stampsMap } = useStampsStore()
-    const { addErrorToast } = useToastStore()
-    const stampList = computed(() => createStampList(props, stampsMap, myId))
-
-    const isDetailShown = ref(false)
-    const toggleDetail = () => {
-      isDetailShown.value = !isDetailShown.value
-    }
-
-    const addStamp = async (stampId: StampId) => {
-      try {
-        await apis.addMessageStamp(props.messageId, stampId)
-      } catch {
-        addErrorToast('メッセージにスタンプを追加できませんでした')
-        return
-      }
-      upsertLocalStampHistory(stampId, new Date())
-    }
-    const removeStamp = async (stampId: StampId) => {
-      await apis.removeMessageStamp(props.messageId, stampId)
-    }
-
-    const listEle = ref<HTMLDivElement>()
-    const { toggleStampPicker } = useStampPickerInvoker(
-      async stampData => {
-        try {
-          await apis.addMessageStamp(props.messageId, stampData.id)
-        } catch {
-          addErrorToast('メッセージにスタンプを追加できませんでした')
-        }
-      },
-      listEle,
-      'top-left'
-    )
-
-    return {
-      stampList,
-      isDetailShown,
-      toggleDetail,
-      addStamp,
-      removeStamp,
-      listEle,
-      toggleStampPicker
-    }
-  }
-})
+  listEle,
+  'top-left'
+)
 </script>
 
 <style lang="scss" module>

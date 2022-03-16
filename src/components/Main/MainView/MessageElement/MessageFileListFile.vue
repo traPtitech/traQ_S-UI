@@ -5,30 +5,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import MessageFileListItemContent from './MessageFileListItemContent.vue';
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
-import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import useFileMeta from '/@/composables/useFileMeta'
 
-export default defineComponent({
-  name: 'MessageFileListFile',
-  components: { MessageFileListItemContent },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    fileId: {
-      type: String as PropType<FileId>,
-      default: ''
-    }
-  },
-  setup(props) {
-    const { canShow } = useFileMeta(props)
-    return { canShow }
-  }
-})
+const props = withDefaults(defineProps<{
+    channelId: ChannelId | DMChannelId,
+    fileId?: FileId
+}>(), {
+    fileId: ''
+});
+
+const { canShow } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

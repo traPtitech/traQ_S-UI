@@ -7,29 +7,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'MainViewFrame',
-  props: {
-    isActive: {
-      type: Boolean,
-      default: true
-    },
-    hideOuter: {
-      type: Boolean,
-      default: false
-    },
-    dimInner: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+
+withDefaults(defineProps<{
+    isActive?: boolean,
+    hideOuter?: boolean,
+    dimInner?: boolean
+}>(), {
+    isActive: true,
+    hideOuter: false,
+    dimInner: false
 })
+
+
 </script>
 
 <style lang="scss" module>

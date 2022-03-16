@@ -17,96 +17,76 @@
   </div>
 </template>
 
-<script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  watch,
-  PropType,
-  onMounted
-} from 'vue'
-import SpinNumber from '/@/components/UI/SpinNumber.vue'
-import AStamp from '/@/components/UI/AStamp.vue'
+<script lang="ts" setup>
+import SpinNumber from '/@/components/UI/SpinNumber.vue';
+import AStamp from '/@/components/UI/AStamp.vue';
+import { reactive, computed, watch, onMounted } from 'vue';
 import { MessageStampById } from './MessageStampList.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'StampElement',
-  components: { AStamp, SpinNumber },
-  props: {
-    stamp: {
-      type: Object as PropType<MessageStampById>,
-      required: true
-    }
-  },
-  emits: {
-    addStamp: (_stampId: string) => true,
-    removeStamp: (_stampId: string) => true
-  },
-  setup(props, { emit }) {
-    const { stampsMap } = useStampsStore()
-    const { usersMap } = useUsersStore()
+const props = defineProps<{
+    stamp: MessageStampById
+}>();
 
-    const stampName = computed(
-      () => stampsMap.value.get(props.stamp.id)?.name ?? ''
-    )
+const emit = defineEmits<{
+    (e: "addStamp", _stampId: string): void,
+    (e: "removeStamp", _stampId: string): void
+}>();
 
-    const state = reactive({
-      includeMe: computed(() => props.stamp.myCount > 0),
-      tooltip: computed(() =>
-        [
-          `:${stampName.value}:`,
-          ...props.stamp.users.map(
-            u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-          )
-        ].join(' ')
-      ),
-      isProgress: false,
-      myCountHasIncremented: false
-    })
+const { stampsMap } = useStampsStore()
+const { usersMap } = useUsersStore()
 
-    const onClick = () => {
-      if (state.isProgress) return
-      if (state.includeMe) {
-        emit('removeStamp', props.stamp.id)
-      } else {
-        emit('addStamp', props.stamp.id)
-      }
-      state.isProgress = true
-    }
-    watch(
-      () => props.stamp,
-      () => {
-        state.isProgress = false
-      }
-    )
+const stampName = computed(
+  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+)
 
-    onMounted(() => {
-      if (props.stamp.myCount > 0) {
-        state.myCountHasIncremented = true
-      }
-    })
-    watch(
-      () => props.stamp.myCount,
-      (newVal, oldVal) => {
-        if (oldVal < newVal) {
-          state.myCountHasIncremented = true
-        }
-      }
-    )
-    const unsetMyCountHasIncremented = () => {
-      state.myCountHasIncremented = false
-    }
+const state = reactive({
+  includeMe: computed(() => props.stamp.myCount > 0),
+  tooltip: computed(() =>
+    [
+      `:${stampName.value}:`,
+      ...props.stamp.users.map(
+        u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
+      )
+    ].join(' ')
+  ),
+  isProgress: false,
+  myCountHasIncremented: false
+})
 
-    return {
-      state,
-      onClick,
-      unsetMyCountHasIncremented
-    }
+const onClick = () => {
+  if (state.isProgress) return
+  if (state.includeMe) {
+    emit('removeStamp', props.stamp.id)
+  } else {
+    emit('addStamp', props.stamp.id)
+  }
+  state.isProgress = true
+}
+watch(
+  () => props.stamp,
+  () => {
+    state.isProgress = false
+  }
+)
+
+onMounted(() => {
+  if (props.stamp.myCount > 0) {
+    state.myCountHasIncremented = true
   }
 })
+watch(
+  () => props.stamp.myCount,
+  (newVal, oldVal) => {
+    if (oldVal < newVal) {
+      state.myCountHasIncremented = true
+    }
+  }
+)
+const unsetMyCountHasIncremented = () => {
+  state.myCountHasIncremented = false
+}
 </script>
 
 <style lang="scss" module>

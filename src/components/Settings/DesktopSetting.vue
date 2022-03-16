@@ -8,25 +8,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import DesktopTabSelector from './DesktopTabSelector.vue'
-import DesktopTabFrame from './DesktopTabFrame.vue'
+<script lang="ts" setup>
+import CloseButton from '/@/components/UI/CloseButton.vue';
+import DesktopTabSelector from './DesktopTabSelector.vue';
+import DesktopTabFrame from './DesktopTabFrame.vue';
 import useSettingsNavigation from '/@/components/Settings/composables/useNavigation'
 
-export default defineComponent({
-  name: 'DesktopSetting',
-  components: {
-    DesktopTabSelector,
-    DesktopTabFrame,
-    CloseButton
-  },
-  setup() {
-    const { close } = useSettingsNavigation()
-    return { close }
-  }
-})
+const { close } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>

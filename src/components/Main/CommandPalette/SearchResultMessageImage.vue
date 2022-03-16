@@ -6,8 +6,7 @@
 
 <script lang="ts">
 import useFileThumbnail from '/@/composables/useFileThumbnail'
-import { defineComponent, reactive, Ref, computed } from 'vue'
-import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import { reactive, Ref, computed } from 'vue';
 
 const useStyles = (path: Ref<string>) =>
   reactive({
@@ -15,24 +14,17 @@ const useStyles = (path: Ref<string>) =>
       backgroundImage: `url(${path.value})`
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'SearchResultMessageImage',
-  components: {
-    PlayIcon
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
-    const styles = useStyles(fileThumbnailPath)
-    return { fileThumbnailPath, isAnimatedImage, styles }
-  }
-})
+<script lang="ts" setup>
+import PlayIcon from '/@/components/UI/PlayIcon.vue';
+
+const props = defineProps<{
+    fileId: string
+}>();
+
+const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
+const styles = useStyles(fileThumbnailPath)
 </script>
 
 <style lang="scss" module>

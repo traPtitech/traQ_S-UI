@@ -4,28 +4,16 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'NavigationSelectorItem',
-  components: { AIcon },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: Boolean,
-    isSelected: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    iconName: string,
+    iconMdi?: boolean,
+    isSelected: boolean
+}>()
+
+
 </script>
 
 <style lang="scss" module>

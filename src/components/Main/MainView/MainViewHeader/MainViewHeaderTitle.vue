@@ -10,25 +10,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'MainViewHeaderTitle',
-  components: { AIcon },
-  props: {
-    iconMdi: {
-      type: Boolean,
-      defualt: false
-    },
-    iconName: { type: String, default: undefined },
-    title: { type: String, required: true }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    iconMdi?: boolean,
+    iconName?: string,
+    title: string
+}>()
+
+
 </script>
 
 <style lang="scss" module>

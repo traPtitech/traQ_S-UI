@@ -33,12 +33,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, PropType, toRef } from 'vue'
+import { ref, computed, toRef } from 'vue';
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { ChannelId } from '/@/types/entity-ids'
-import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 import useWordSuggester from './composables/useWordSuggester'
 import useInsertText from '/@/composables/useInsertText'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
@@ -60,129 +58,98 @@ const useFocus = (
 
   return { onFocus, onBlur }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageInputTextArea',
-  components: {
-    TextareaAutosize,
-    DropdownSuggester
-  },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    channelId: {
-      type: String as PropType<ChannelId>,
-      default: ''
-    },
-    isPosting: {
-      type: Boolean,
-      default: false
-    },
-    simplePadding: {
-      type: Boolean,
-      default: false
-    },
-    shrinkToOneLine: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': () => true,
-    focus: () => true,
-    blur: () => true,
-    addAttachments: (_files: File[]) => true,
-    postMessage: () => true,
-    modifierKeyDown: () => true,
-    modifierKeyUp: () => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-    const { isMobile } = useResponsiveStore()
+<script lang="ts" setup>
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
+import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue';
 
-    const textareaAutosizeRef = ref<{
-      $el: HTMLTextAreaElement
-    }>()
-    const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
+const props = withDefaults(defineProps<{
+    modelValue?: string,
+    channelId?: ChannelId,
+    isPosting?: boolean,
+    simplePadding?: boolean,
+    shrinkToOneLine?: boolean
+}>(), {
+    modelValue: '',
+    channelId: '',
+    isPosting: false,
+    simplePadding: false,
+    shrinkToOneLine: false
+});
 
-    const { insertText } = useInsertText(textareaRef)
-    const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
+const emit = defineEmits<{
+    (e: "update:modelValue"): void,
+    (e: "focus"): void,
+    (e: "blur"): void,
+    (e: "addAttachments", _files: File[]): void,
+    (e: "postMessage"): void,
+    (e: "modifierKeyDown"): void,
+    (e: "modifierKeyUp"): void
+}>();
 
-    const {
-      onKeyUp: onKeyUpWordSuggester,
-      onKeyDown: onKeyDownWordSuggester,
-      onBlur: onBlurWordSuggester,
-      isSuggesterShown,
-      position,
-      suggestedCandidates,
-      selectedCandidateIndex,
-      confirmedPart,
-      onSelect
-    } = useWordSuggester(textareaRef, value)
+const value = useModelValueSyncer(props, emit)
+const { isMobile } = useResponsiveStore()
 
-    const {
-      onBeforeInput,
-      onKeyDown: onKeyDownSendKeyWatcher,
-      onKeyUp: onKeyUpSendKeyWatcher,
-      onBlur: onBlurSendKeyWatcher
-    } = useSendKeyWatcher(emit, () => {
-      insertText('\n')
-    })
+const textareaAutosizeRef = ref<{
+  $el: HTMLTextAreaElement
+}>()
+const textareaRef = computed(() => textareaAutosizeRef.value?.$el)
 
-    const suggesterPosition = computed(() => {
-      if (!textareaRef.value) return
-      const { top, left } = textareaRef.value.getBoundingClientRect()
-      return {
-        top: top + position.value.top - textareaRef.value.scrollTop,
-        left: left + position.value.left
-      }
-    })
+const { insertText } = useInsertText(textareaRef)
+const { onPaste } = usePaste(toRef(props, 'channelId'), emit, insertText)
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      onKeyDownSendKeyWatcher(e)
-      onKeyDownWordSuggester(e)
-    }
-    const onKeyUp = (e: KeyboardEvent) => {
-      onKeyUpSendKeyWatcher(e)
-      onKeyUpWordSuggester(e)
-    }
+const {
+  onKeyUp: onKeyUpWordSuggester,
+  onKeyDown: onKeyDownWordSuggester,
+  onBlur: onBlurWordSuggester,
+  isSuggesterShown,
+  position,
+  suggestedCandidates,
+  selectedCandidateIndex,
+  confirmedPart,
+  onSelect
+} = useWordSuggester(textareaRef, value)
 
-    const { onFocus, onBlur: onBlurDefault } = useFocus(emit)
+const {
+  onBeforeInput,
+  onKeyDown: onKeyDownSendKeyWatcher,
+  onKeyUp: onKeyUpSendKeyWatcher,
+  onBlur: onBlurSendKeyWatcher
+} = useSendKeyWatcher(emit, () => {
+  insertText('\n')
+})
 
-    const onBlur = () => {
-      onBlurWordSuggester()
-      onBlurSendKeyWatcher()
-      onBlurDefault()
-    }
-
-    const scollbarWidth = getScrollbarWidth()
-    const style = {
-      '--input-scrollbar-width': `${scollbarWidth}px`
-    }
-
-    return {
-      value,
-      isMobile,
-      onBeforeInput,
-      onKeyDown,
-      onKeyUp,
-      textareaAutosizeRef,
-      onFocus,
-      onBlur,
-      onPaste,
-      onSelect,
-      firefoxFlag,
-      isSuggesterShown,
-      suggesterPosition,
-      suggestedCandidates,
-      selectedCandidateIndex,
-      confirmedPart,
-      style
-    }
+const suggesterPosition = computed(() => {
+  if (!textareaRef.value) return
+  const { top, left } = textareaRef.value.getBoundingClientRect()
+  return {
+    top: top + position.value.top - textareaRef.value.scrollTop,
+    left: left + position.value.left
   }
 })
+
+const onKeyDown = (e: KeyboardEvent) => {
+  onKeyDownSendKeyWatcher(e)
+  onKeyDownWordSuggester(e)
+}
+const onKeyUp = (e: KeyboardEvent) => {
+  onKeyUpSendKeyWatcher(e)
+  onKeyUpWordSuggester(e)
+}
+
+const { onFocus, onBlur: onBlurDefault } = useFocus(emit)
+
+const onBlur = () => {
+  onBlurWordSuggester()
+  onBlurSendKeyWatcher()
+  onBlurDefault()
+}
+
+const scollbarWidth = getScrollbarWidth()
+const style = {
+  '--input-scrollbar-width': `${scollbarWidth}px`
+}
 </script>
 
 <style lang="scss" module>

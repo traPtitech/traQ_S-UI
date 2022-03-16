@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
+import { computed, reactive } from 'vue';
 
 const useStyles = (props: { lineClamp: number }) =>
   reactive({
@@ -23,39 +23,30 @@ const useStyles = (props: { lineClamp: number }) =>
       '-webkit-line-clamp': props.lineClamp
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'MessageOgpDescription',
-  props: {
-    url: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    lineClamp: {
-      type: Number,
-      default: 2
-    }
-  },
-  setup(props) {
-    const hostname = computed(() => {
-      try {
-        return new URL(props.url).hostname
-      } catch {
-        return ''
-      }
-    })
-    const styles = useStyles(props)
-    return { hostname, styles }
+<script lang="ts" setup>
+
+
+const props = withDefaults(defineProps<{
+    url: string,
+    title?: string,
+    description?: string,
+    lineClamp?: number
+}>(), {
+    title: '',
+    description: '',
+    lineClamp: 2
+});
+
+const hostname = computed(() => {
+  try {
+    return new URL(props.url).hostname
+  } catch {
+    return ''
   }
 })
+const styles = useStyles(props)
 </script>
 
 <style lang="scss" module>

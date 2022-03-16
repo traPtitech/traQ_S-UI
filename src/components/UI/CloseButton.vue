@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue';
 
 const useStyles = (props: {
   borderWidth: number
@@ -27,30 +27,37 @@ const useStyles = (props: {
       '--iconWidth': `${props.iconWidth}px`
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'CloseButton',
-  props: {
-    withText: { type: Boolean, default: false },
-    borderWidth: { type: Number, default: 2 },
-    iconWidth: { type: Number, default: 2 },
-    size: { type: Number, required: true },
-    innerSize: { type: Number, default: 16 },
-    isWhite: { type: Boolean, default: false },
-    reactHover: { type: Boolean, default: true }
-  },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const styles = useStyles(props)
+<script lang="ts" setup>
 
-    const onClick = () => {
-      emit('close')
-    }
-    return { styles, onClick }
-  }
-})
+
+const props = withDefaults(defineProps<{
+    withText?: boolean,
+    borderWidth?: number,
+    iconWidth?: number,
+    size: number,
+    innerSize?: number,
+    isWhite?: boolean,
+    reactHover?: boolean
+}>(), {
+    withText: false,
+    borderWidth: 2,
+    iconWidth: 2,
+    innerSize: 16,
+    isWhite: false,
+    reactHover: true
+});
+
+const emit = defineEmits<{
+    (e: "close"): void
+}>();
+
+const styles = useStyles(props)
+
+const onClick = () => {
+  emit('close')
+}
 </script>
 
 <style lang="scss" module>

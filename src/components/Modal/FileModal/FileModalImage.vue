@@ -14,31 +14,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
+import ImageViewer from '/@/components/UI/ImageViewer.vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
-import ImageViewer from '/@/components/UI/ImageViewer.vue'
 
-export default defineComponent({
-  name: 'FileModalImage',
-  components: {
-    FileModalContentHeader,
-    FileModalContentFooter,
-    ImageViewer
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { fileMeta, fileRawPath } = useFileMeta(props)
-    return { fileMeta, fileRawPath }
-  }
-})
+const props = defineProps<{
+    fileId: string
+}>();
+
+const { fileMeta, fileRawPath } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

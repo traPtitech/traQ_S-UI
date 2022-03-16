@@ -5,8 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import { reactive, computed } from 'vue';
 
 const useStyles = (props: { color: string; background: string }) => {
   return reactive({
@@ -16,34 +15,22 @@ const useStyles = (props: { color: string; background: string }) => {
     }))
   })
 }
+</script>
 
-export default defineComponent({
-  name: 'CircleIcon',
-  components: { AIcon },
-  props: {
-    color: {
-      type: String,
-      required: true
-    },
-    background: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    mdi: Boolean,
-    size: {
-      type: Number,
-      default: 24
-    }
-  },
-  setup(props) {
-    const styles = useStyles(props)
-    return { styles }
-  }
-})
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+
+const props = withDefaults(defineProps<{
+    color: string,
+    background: string,
+    name: string,
+    mdi?: boolean,
+    size?: number
+}>(), {
+    size: 24
+});
+
+const styles = useStyles(props)
 </script>
 
 <style lang="scss" module>

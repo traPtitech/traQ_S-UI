@@ -5,20 +5,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue'
-import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue'
+<script lang="ts" setup>
+import DesktopNavigationBar from '/@/components/Main/NavigationBar/DesktopNavigationBar.vue';
+import MobileNavigationBar from '/@/components/Main/NavigationBar/MobileNavigationBar.vue';
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'NavigationBar',
-  components: { DesktopNavigationBar, MobileNavigationBar },
-  setup() {
-    const { isMobile } = useResponsiveStore()
-    return { isMobile }
-  }
-})
+const { isMobile } = useResponsiveStore()
 </script>
 
 <style lang="scss" module>

@@ -11,33 +11,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import AIcon from '/@/components/UI/AIcon.vue'
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'SearchSuggestionHistoryItem',
-  components: { AIcon },
-  props: {
-    label: {
-      type: String,
-      required: true
-    }
-  },
-  emits: {
-    select: (_label: string) => true,
-    remove: (_label: string) => true
-  },
-  setup(props, { emit }) {
-    const onClick = () => {
-      emit('select', props.label)
-    }
-    const onClose = () => {
-      emit('remove', props.label)
-    }
-    return { onClick, onClose }
-  }
-})
+const props = defineProps<{
+    label: string
+}>();
+
+const emit = defineEmits<{
+    (e: "select", _label: string): void,
+    (e: "remove", _label: string): void
+}>();
+
+const onClick = () => {
+  emit('select', props.label)
+}
+const onClose = () => {
+  emit('remove', props.label)
+}
 </script>
 
 <style lang="scss" module>

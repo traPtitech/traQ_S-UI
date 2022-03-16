@@ -10,9 +10,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, toRef } from 'vue'
-import MessageInputFileListItem from './MessageInputFileListItem.vue'
+<script lang="ts" setup>
+import MessageInputFileListItem from './MessageInputFileListItem.vue';
+import { toRef } from 'vue';
 import {
   useMessageInputStateAttachment,
   VirtualChannelId
@@ -20,26 +20,15 @@ import {
 import { ChannelId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 
-export default defineComponent({
-  name: 'MessageInputFileList',
-  components: {
-    MessageInputFileListItem
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | VirtualChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
-    const { attachments, removeAttachmentAt } = useMessageInputStateAttachment(
-      toRef(props, 'channelId'),
-      addErrorToast
-    )
-    return { attachments, removeAttachmentAt }
-  }
-})
+const props = defineProps<{
+    channelId: ChannelId | VirtualChannelId
+}>();
+
+const { addErrorToast } = useToastStore()
+const { attachments, removeAttachmentAt } = useMessageInputStateAttachment(
+  toRef(props, 'channelId'),
+  addErrorToast
+)
 </script>
 
 <style lang="scss" module>

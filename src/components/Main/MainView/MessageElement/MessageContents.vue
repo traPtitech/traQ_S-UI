@@ -39,66 +39,43 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue';
+import MessageHeader from './MessageHeader.vue';
+import MessageEditor from './MessageEditor.vue';
+import MessageFileList from './MessageFileList.vue';
+import MessageQuoteList from './MessageQuoteList.vue';
+import MessageOgpList from './MessageOgpList.vue';
+import { computed, reactive } from 'vue';
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import MessageMarkdown from '/@/components/UI/MessageMarkdown.vue'
-import MessageHeader from './MessageHeader.vue'
-import MessageEditor from './MessageEditor.vue'
-import MessageFileList from './MessageFileList.vue'
-import MessageQuoteList from './MessageQuoteList.vue'
-import MessageOgpList from './MessageOgpList.vue'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-export default defineComponent({
-  name: 'MessageContents',
-  components: {
-    UserIcon,
-    MessageHeader,
-    MessageMarkdown,
-    MessageEditor,
-    MessageFileList,
-    MessageQuoteList,
-    MessageOgpList
-  },
-  props: {
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    },
-    isEntryMessage: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { editingMessageId } = useMessagesView()
-    const { isMobile } = useResponsiveStore()
-    const { messagesMap } = useMessagesStore()
+const props = withDefaults(defineProps<{
+    messageId: MessageId,
+    isEntryMessage?: boolean
+}>(), {
+    isEntryMessage: false
+});
 
-    const state = reactive({
-      message: computed(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        () => messagesMap.value.get(props.messageId)!
-      ),
-      rawContent: computed((): string => state.message.content ?? ''),
-      isEditing: computed(() => props.messageId === editingMessageId.value),
-      stampDetailFoldingState: false
-    })
+const { editingMessageId } = useMessagesView()
+const { isMobile } = useResponsiveStore()
+const { messagesMap } = useMessagesStore()
 
-    const { embeddingsState } = useEmbeddings(props)
-
-    return {
-      state,
-      embeddingsState,
-      isMobile
-    }
-  }
+const state = reactive({
+  message: computed(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    () => messagesMap.value.get(props.messageId)!
+  ),
+  rawContent: computed((): string => state.message.content ?? ''),
+  isEditing: computed(() => props.messageId === editingMessageId.value),
+  stampDetailFoldingState: false
 })
+
+const { embeddingsState } = useEmbeddings(props)
 </script>
 
 <style lang="scss" module>

@@ -11,10 +11,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watchEffect, Ref } from 'vue'
+import { computed, watchEffect, Ref } from 'vue';
 import useHtmlDatasetBoolean from '/@/composables/useHtmlDatasetBoolean'
-import ToastContainer from '/@/components/Toast/ToastContainer.vue'
-import ModalContainer from '/@/components/Modal/ModalContainer.vue'
 import { useThemeVariables } from '/@/composables/useTheme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
@@ -81,30 +79,24 @@ ${Object.entries(style.value)
     themeStyleTag.textContent = styleText.value
   })
 }
+</script>
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    ModalContainer,
-    ToastContainer
-  },
-  setup() {
-    useTts()
+<script lang="ts" setup>
+import ToastContainer from '/@/components/Toast/ToastContainer.vue';
+import ModalContainer from '/@/components/Modal/ModalContainer.vue';
 
-    const { isMobile } = useResponsiveStore()
+useTts()
 
-    useDocumentTitle()
-    useQallConfirmer()
+const { isMobile } = useResponsiveStore()
 
-    useThemeObserver()
-    useEcoModeObserver()
+useDocumentTitle()
+useQallConfirmer()
 
-    const themeVariables = useThemeVariables()
-    useThemeStyleTag(themeVariables)
+useThemeObserver()
+useEcoModeObserver()
 
-    return { isMobile }
-  }
-})
+const themeVariables = useThemeVariables()
+useThemeStyleTag(themeVariables)
 </script>
 
 <style lang="scss" module>

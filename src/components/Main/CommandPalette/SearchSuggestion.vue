@@ -28,13 +28,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue';
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue'
-import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue'
-import SearchSuggestionItem, {
-  SuggestionItem
-} from './SearchSuggestionItem.vue'
+import { SuggestionItem } from './SearchSuggestionItem.vue';
 
 const querySuggestions = [
   { insertQuery: 'in:', description: 'チャンネル名を指定して検索' },
@@ -43,55 +39,42 @@ const querySuggestions = [
   { insertQuery: 'before:', description: '特定の日時より前のメッセージを検索' },
   { insertQuery: 'after:', description: '特定の日時以降のメッセージを検索' }
 ]
+</script>
 
-export default defineComponent({
-  name: 'SearchSuggestion',
-  components: {
-    SearchSuggestionQueryItem,
-    SearchSuggestionHistoryItem,
-    SearchSuggestionItem
-  },
-  emits: {
-    queryInsert: () => true
-  },
-  setup(props, { emit }) {
-    const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
-      useCommandPalette()
-    const searchConfirmItem = computed(
-      (): SuggestionItem => ({
-        type: 'search',
-        value: currentInput.value
-      })
-    )
-    const onSelectQuerySuggestion = (query: string) => {
-      if (currentInput.value !== '') {
-        currentInput.value += ` ${query}`
-      } else {
-        currentInput.value = query
-      }
-      emit('queryInsert')
-    }
-    const onSelectSuggestion = (item: SuggestionItem) => {
-      switch (item.type) {
-        case 'search':
-          settleQuery()
-      }
-    }
-    const onSelectHistorySuggestion = (label: string) => {
-      currentInput.value = label
-    }
-    return {
-      currentInput,
-      searchConfirmItem,
-      querySuggestions,
-      searchHistories,
-      onSelectQuerySuggestion,
-      onSelectSuggestion,
-      onSelectHistorySuggestion,
-      removeSearchHistory
-    }
+<script lang="ts" setup>
+import SearchSuggestionQueryItem from './SearchSuggestionQueryItem.vue';
+import SearchSuggestionHistoryItem from './SearchSuggestionHistoryItem.vue';
+import SearchSuggestionItem from './SearchSuggestionItem.vue';
+
+const emit = defineEmits<{
+    (e: "queryInsert"): void
+}>();
+
+const { currentInput, searchHistories, settleQuery, removeSearchHistory } =
+  useCommandPalette()
+const searchConfirmItem = computed(
+  (): SuggestionItem => ({
+    type: 'search',
+    value: currentInput.value
+  })
+)
+const onSelectQuerySuggestion = (query: string) => {
+  if (currentInput.value !== '') {
+    currentInput.value += ` ${query}`
+  } else {
+    currentInput.value = query
   }
-})
+  emit('queryInsert')
+}
+const onSelectSuggestion = (item: SuggestionItem) => {
+  switch (item.type) {
+    case 'search':
+      settleQuery()
+  }
+}
+const onSelectHistorySuggestion = (label: string) => {
+  currentInput.value = label
+}
 </script>
 
 <style lang="scss" module>

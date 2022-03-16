@@ -16,59 +16,45 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
+import UsersSelector from '../Common/UsersSelector.vue';
+import { computed, ref } from 'vue';
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
-import UsersSelector from '../Common/UsersSelector.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 
-export default defineComponent({
-  name: 'GroupAdminAddModal',
-  components: {
-    ModalFrame,
-    FormButton,
-    UsersSelector
-  },
-  props: {
-    id: {
-      type: String as PropType<UserGroupId>,
-      required: true
+const props = defineProps<{
+    id: UserGroupId
+}>();
+
+const { addErrorToast } = useToastStore()
+const { popModal } = useModalStore()
+const { userGroupsMap } = useGroupsStore()
+
+const group = computed(() => userGroupsMap.value.get(props.id))
+const groupName = computed(() => group.value?.name)
+const admins = computed(() => group.value?.admins ?? [])
+
+const userIds = ref(new Set<UserId>())
+
+const isAdding = ref(false)
+const add = async () => {
+  isAdding.value = true
+  try {
+    for (const userId of userIds.value) {
+      await apis.addUserGroupAdmin(props.id, { id: userId })
     }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
-    const { popModal } = useModalStore()
-    const { userGroupsMap } = useGroupsStore()
-
-    const group = computed(() => userGroupsMap.value.get(props.id))
-    const groupName = computed(() => group.value?.name)
-    const admins = computed(() => group.value?.admins ?? [])
-
-    const userIds = ref(new Set<UserId>())
-
-    const isAdding = ref(false)
-    const add = async () => {
-      isAdding.value = true
-      try {
-        for (const userId of userIds.value) {
-          await apis.addUserGroupAdmin(props.id, { id: userId })
-        }
-      } catch {
-        addErrorToast('グループ管理者の追加に失敗しました')
-      }
-      isAdding.value = false
-
-      await popModal()
-    }
-
-    return { groupName, admins, userIds, isAdding, add }
+  } catch {
+    addErrorToast('グループ管理者の追加に失敗しました')
   }
-})
+  isAdding.value = false
+
+  await popModal()
+}
 </script>
 
 <style lang="scss" module>

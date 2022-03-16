@@ -31,22 +31,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import {
-  defineComponent,
-  computed,
-  onBeforeUnmount,
-  onMounted,
-  shallowRef,
-  ref,
-  toRef
-} from 'vue'
+<script lang="ts" setup>
+import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue';
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue';
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue';
+import { computed, onBeforeUnmount, onMounted, shallowRef, ref, toRef } from 'vue';
 import { randomString } from '/@/lib/basic/randomString'
 import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
 import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
-import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
-import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
 import {
   useMessageInputState,
   useMessageInputStateAttachment
@@ -56,67 +48,48 @@ import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
-export default defineComponent({
-  name: 'ShareTargetMessageInput',
-  components: {
-    MessageInputFileList,
-    MessageInputUploadButton,
-    MessageInputInsertStampButton
-  },
-  props: {
-    isPosting: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { fetchStampHistory } = useMeStore()
-    const { fetchStamps } = useStampsStore()
-    const { fetchStampPalettes } = useStampPalettesStore()
-    const { state, isEmpty } = useMessageInputState('share-target')
-    const { addErrorToast } = useToastStore()
-    const { addAttachment: addStateAttachment } =
-      useMessageInputStateAttachment('share-target', addErrorToast)
-    const { addAttachment, destroy } = useAttachments(addStateAttachment)
+const props = withDefaults(defineProps<{
+    isPosting?: boolean
+}>(), {
+    isPosting: false
+});
 
-    onBeforeUnmount(() => {
-      destroy()
-    })
+const { fetchStampHistory } = useMeStore()
+const { fetchStamps } = useStampsStore()
+const { fetchStampPalettes } = useStampPalettesStore()
+const { state, isEmpty } = useMessageInputState('share-target')
+const { addErrorToast } = useToastStore()
+const { addAttachment: addStateAttachment } =
+  useMessageInputStateAttachment('share-target', addErrorToast)
+const { addAttachment, destroy } = useAttachments(addStateAttachment)
 
-    const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
-
-    const textareaRef = shallowRef<HTMLTextAreaElement>()
-    const focus = () => {
-      textareaRef.value?.focus()
-    }
-    onMounted(() => {
-      focus()
-    })
-
-    const wrapperEle = ref<HTMLDivElement>()
-    const { toggleStampPicker } = useTextStampPickerInvoker(
-      toRef(state, 'text'),
-      textareaRef,
-      wrapperEle
-    )
-
-    // スタンプピッカーに必要
-    fetchStamps()
-    fetchStampPalettes()
-    fetchStampHistory()
-
-    const id = randomString()
-    return {
-      wrapperEle,
-      state,
-      addAttachment,
-      canPostMessage,
-      id,
-      textareaRef,
-      toggleStampPicker
-    }
-  }
+onBeforeUnmount(() => {
+  destroy()
 })
+
+const canPostMessage = computed(() => !props.isPosting && !isEmpty.value)
+
+const textareaRef = shallowRef<HTMLTextAreaElement>()
+const focus = () => {
+  textareaRef.value?.focus()
+}
+onMounted(() => {
+  focus()
+})
+
+const wrapperEle = ref<HTMLDivElement>()
+const { toggleStampPicker } = useTextStampPickerInvoker(
+  toRef(state, 'text'),
+  textareaRef,
+  wrapperEle
+)
+
+// スタンプピッカーに必要
+fetchStamps()
+fetchStampPalettes()
+fetchStampHistory()
+
+const id = randomString()
 </script>
 
 <style lang="scss" module>

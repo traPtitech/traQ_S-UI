@@ -24,8 +24,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed, watch } from 'vue'
+<script lang="ts" setup>
+import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue';
+import { computed, watch } from 'vue';
 import {
   NavigationItemType,
   useNavigationSelectorItem,
@@ -35,55 +36,38 @@ import {
 import useNavigationSelectorEntry, {
   EphemeralNavigationSelectorEntry
 } from './composables/useNavigationSelectorEntry'
-import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 
-export default defineComponent({
-  name: 'MobileNavigationSelector',
-  components: { NavigationSelectorItem },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'home' as const
-    },
-    currentEphemeralNavigation: {
-      type: String as PropType<EphemeralNavigationItemType>,
-      default: undefined
-    }
-  },
-  emits: {
-    navigationChange: (_type: NavigationItemType) => true,
-    ephemeralNavigationChange: (_type: EphemeralNavigationItemType) => true,
-    ephemeralEntryRemove: (_entry: EphemeralNavigationSelectorEntry) => true,
-    ephemeralEntryAdd: (_entry: EphemeralNavigationSelectorEntry) => true
-  },
-  setup(props, { emit }) {
-    const { onNavigationItemClick } = useNavigationSelectorItem(emit)
-    const { onNavigationItemClick: onEphemeralNavigationItemClick } =
-      useEphemeralNavigationSelectorItem(emit)
-    const { entries, ephemeralEntries } = useNavigationSelectorEntry()
-    const showSeparator = computed(() => ephemeralEntries.value.length > 0)
+withDefaults(defineProps<{
+    currentNavigation?: NavigationItemType,
+    currentEphemeralNavigation?: EphemeralNavigationItemType
+}>(), {
+    currentNavigation: 'home' as const
+})
 
-    watch(ephemeralEntries, (entries, prevEntries) => {
-      ;(prevEntries ?? [])
-        .filter(e => !entries.includes(e))
-        .forEach(e => {
-          emit('ephemeralEntryRemove', e)
-        })
-      ;(entries ?? [])
-        .filter(e => !prevEntries?.includes(e))
-        .forEach(e => {
-          emit('ephemeralEntryAdd', e)
-        })
+const emit = defineEmits<{
+    (e: "navigationChange", _type: NavigationItemType): void,
+    (e: "ephemeralNavigationChange", _type: EphemeralNavigationItemType): void,
+    (e: "ephemeralEntryRemove", _entry: EphemeralNavigationSelectorEntry): void,
+    (e: "ephemeralEntryAdd", _entry: EphemeralNavigationSelectorEntry): void
+}>();
+
+const { onNavigationItemClick } = useNavigationSelectorItem(emit)
+const { onNavigationItemClick: onEphemeralNavigationItemClick } =
+  useEphemeralNavigationSelectorItem(emit)
+const { entries, ephemeralEntries } = useNavigationSelectorEntry()
+const showSeparator = computed(() => ephemeralEntries.value.length > 0)
+
+watch(ephemeralEntries, (entries, prevEntries) => {
+  ;(prevEntries ?? [])
+    .filter(e => !entries.includes(e))
+    .forEach(e => {
+      emit('ephemeralEntryRemove', e)
     })
-
-    return {
-      entries,
-      ephemeralEntries,
-      showSeparator,
-      onNavigationItemClick,
-      onEphemeralNavigationItemClick
-    }
-  }
+  ;(entries ?? [])
+    .filter(e => !prevEntries?.includes(e))
+    .forEach(e => {
+      emit('ephemeralEntryAdd', e)
+    })
 })
 </script>
 

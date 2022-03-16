@@ -13,33 +13,16 @@
   </h2>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'SidebarHeader',
-  components: {
-    AIcon
-  },
-  props: {
-    iconString: {
-      type: String,
-      default: undefined
-    },
-    iconName: {
-      type: String,
-      default: undefined
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    text: {
-      type: String,
-      required: true
-    }
-  }
+withDefaults(defineProps<{
+    iconString?: string,
+    iconName?: string,
+    iconMdi?: boolean,
+    text: string
+}>(), {
+    iconMdi: false
 })
 </script>
 

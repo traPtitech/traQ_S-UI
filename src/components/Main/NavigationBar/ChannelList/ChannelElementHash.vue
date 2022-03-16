@@ -16,56 +16,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
 
-export default defineComponent({
-  name: 'ChannelElementHash',
-  components: {
-    AIcon,
-    NotificationIndicator
-  },
-  props: {
-    /** 子チャンネルを持っているか */
-    hasChild: {
-      type: Boolean,
-      default: false
-    },
-    /** 現在表示中のチャンネルか */
-    isSelected: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * チャンネルリストで非アクティブ表示か
-     * e.g. ホームの非購読チャンネルはアクティブでない
-     */
-    isInactive: {
-      type: Boolean,
-      default: false
-    },
-    /** 子チャンネルを展開表示しているか */
-    isOpened: {
-      type: Boolean,
-      default: false
-    },
-    /** 自分自身に通知があるか */
-    hasNotification: {
-      type: Boolean,
-      default: false
-    },
-    /** 子チャンネルに通知があるか */
-    hasNotificationOnChild: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    hasChild?: boolean,
+    isSelected?: boolean,
+    isInactive?: boolean,
+    isOpened?: boolean,
+    hasNotification?: boolean,
+    hasNotificationOnChild?: boolean
+}>(), {
+    hasChild: false,
+    isSelected: false,
+    isInactive: false,
+    isOpened: false,
+    hasNotification: false,
+    hasNotificationOnChild: false
 })
+
+
 </script>
 
 <style lang="scss" module>

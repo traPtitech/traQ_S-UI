@@ -23,11 +23,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
+import { computed } from 'vue';
 import { UserId } from '/@/types/entity-ids'
-import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/composables/useTextFilter'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -62,61 +59,51 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
 
   return { textFilterState, filteredUsers }
 }
+</script>
 
-export default defineComponent({
-  name: 'UsersSelector',
-  components: {
-    UserIcon,
-    FormCheckboxInner,
-    FilterInput
-  },
-  props: {
-    modelValue: {
-      type: Set as PropType<Set<UserId>>,
-      required: true
-    },
-    excludeIds: {
-      type: Array as PropType<UserId[]>,
-      required: true
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue';
+import FilterInput from '/@/components/UI/FilterInput.vue';
+
+const props = defineProps<{
+    modelValue: Set<UserId>,
+    excludeIds: UserId[]
+}>();
+
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: Set<UserId>): void
+}>();
+
+const { textFilterState, filteredUsers } = useUserFilter(props)
+
+const isAllChecked = computed(() =>
+  filteredUsers.value.every(user => props.modelValue.has(user.id))
+)
+
+const toggleAll = () => {
+  const newModelValue = new Set(props.modelValue)
+  if (isAllChecked.value) {
+    for (const user of filteredUsers.value) {
+      newModelValue.delete(user.id)
     }
-  },
-  emits: {
-    'update:modelValue': (_val: Set<UserId>) => true
-  },
-  setup(props, { emit }) {
-    const { textFilterState, filteredUsers } = useUserFilter(props)
-
-    const isAllChecked = computed(() =>
-      filteredUsers.value.every(user => props.modelValue.has(user.id))
-    )
-
-    const toggleAll = () => {
-      const newModelValue = new Set(props.modelValue)
-      if (isAllChecked.value) {
-        for (const user of filteredUsers.value) {
-          newModelValue.delete(user.id)
-        }
-      } else {
-        for (const user of filteredUsers.value) {
-          newModelValue.add(user.id)
-        }
-      }
-      emit('update:modelValue', newModelValue)
+  } else {
+    for (const user of filteredUsers.value) {
+      newModelValue.add(user.id)
     }
-
-    const toggle = (id: string) => {
-      const newModelValue = new Set(props.modelValue)
-      if (newModelValue.has(id)) {
-        newModelValue.delete(id)
-      } else {
-        newModelValue.add(id)
-      }
-      emit('update:modelValue', newModelValue)
-    }
-
-    return { textFilterState, filteredUsers, isAllChecked, toggleAll, toggle }
   }
-})
+  emit('update:modelValue', newModelValue)
+}
+
+const toggle = (id: string) => {
+  const newModelValue = new Set(props.modelValue)
+  if (newModelValue.has(id)) {
+    newModelValue.delete(id)
+  } else {
+    newModelValue.add(id)
+  }
+  emit('update:modelValue', newModelValue)
+}
 </script>
 
 <style lang="scss" module>

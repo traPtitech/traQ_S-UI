@@ -18,34 +18,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import CloseButton from '/@/components/UI/CloseButton.vue';
 import useSidebar from '/@/composables/useSidebar'
-import AIcon from '/@/components/UI/AIcon.vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
 
-export default defineComponent({
-  name: 'MainViewSidebarPage',
-  components: { AIcon, CloseButton },
-  props: {
-    showBackButton: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    back: () => true
-  },
-  setup(props, { emit }) {
-    const { closeSidebar } = useSidebar()
-
-    const back = () => {
-      emit('back')
-    }
-
-    return { closeSidebar, back }
-  }
+withDefaults(defineProps<{
+    showBackButton?: boolean
+}>(), {
+    showBackButton: false
 })
+
+const emit = defineEmits<{
+    (e: "back"): void
+}>();
+
+const { closeSidebar } = useSidebar()
+
+const back = () => {
+  emit('back')
+}
 </script>
 
 <style lang="scss" module>

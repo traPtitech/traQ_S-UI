@@ -93,9 +93,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, toRef } from 'vue'
+import { computed, toRef } from 'vue';
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
-import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -104,71 +103,63 @@ import { ChannelId } from '/@/types/entity-ids'
 const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 
 export const teleportTargetName = 'header-popup'
+</script>
 
-export default defineComponent({
-  name: 'HeaderToolsList',
-  components: {
-    HeaderToolsItem
-  },
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    isStared: { type: Boolean, default: false },
-    isForcedChannel: { type: Boolean, default: false },
-    hasActiveQallSession: { type: Boolean, default: false },
-    isQallSessionOpened: { type: Boolean, default: false },
-    isJoinedQallSession: { type: Boolean, default: false },
-    isJoinedWithCurrentDevice: { type: Boolean, default: false },
-    isArchived: { type: Boolean, default: false }
-  },
-  emits: {
-    clickQall: () => true,
-    starChannel: () => true,
-    unstarChannel: () => true,
-    clickMore: () => true
-  },
-  setup(props, { emit }) {
-    const { isEnabled: isRtcEnabled } = useRtcSettings()
-    const { changeToNextSubscriptionLevel, currentChannelSubscription } =
-      useChannelSubscriptionState(toRef(props, 'channelId'))
+<script lang="ts" setup>
+import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue';
 
-    const isQallEnabled = computed(
-      () => isSkywayApikeySet && isRtcEnabled.value
-    )
+const props = withDefaults(defineProps<{
+    channelId: ChannelId,
+    isStared?: boolean,
+    isForcedChannel?: boolean,
+    hasActiveQallSession?: boolean,
+    isQallSessionOpened?: boolean,
+    isJoinedQallSession?: boolean,
+    isJoinedWithCurrentDevice?: boolean,
+    isArchived?: boolean
+}>(), {
+    isStared: false,
+    isForcedChannel: false,
+    hasActiveQallSession: false,
+    isQallSessionOpened: false,
+    isJoinedQallSession: false,
+    isJoinedWithCurrentDevice: false,
+    isArchived: false
+});
 
-    const qallIconName = computed(() =>
-      props.isJoinedQallSession ? 'phone' : 'phone-outline'
-    )
+const emit = defineEmits<{
+    (e: "clickQall"): void,
+    (e: "starChannel"): void,
+    (e: "unstarChannel"): void,
+    (e: "clickMore"): void
+}>();
 
-    const { isMobile } = useResponsiveStore()
+const { isEnabled: isRtcEnabled } = useRtcSettings()
+const { changeToNextSubscriptionLevel, currentChannelSubscription } =
+  useChannelSubscriptionState(toRef(props, 'channelId'))
 
-    const clickQall = () => {
-      emit('clickQall')
-    }
-    const starChannel = () => {
-      emit('starChannel')
-    }
-    const unstarChannel = () => {
-      emit('unstarChannel')
-    }
-    const clickMore = () => {
-      emit('clickMore')
-    }
+const isQallEnabled = computed(
+  () => isSkywayApikeySet && isRtcEnabled.value
+)
 
-    return {
-      qallIconName,
-      currentChannelSubscription,
-      changeToNextSubscriptionLevel,
-      teleportTargetName,
-      isQallEnabled,
-      ChannelSubscribeLevel,
-      isMobile,
-      clickQall,
-      starChannel,
-      unstarChannel,
-      clickMore
-    }
-  }
-})
+const qallIconName = computed(() =>
+  props.isJoinedQallSession ? 'phone' : 'phone-outline'
+)
+
+const { isMobile } = useResponsiveStore()
+
+const clickQall = () => {
+  emit('clickQall')
+}
+const starChannel = () => {
+  emit('starChannel')
+}
+const unstarChannel = () => {
+  emit('unstarChannel')
+}
+const clickMore = () => {
+  emit('clickMore')
+}
 </script>
 
 <style lang="scss" module>

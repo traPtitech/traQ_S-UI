@@ -6,33 +6,21 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import { computed } from 'vue';
 import { navigationRouteNameTitleMap } from './composables/useNavigation'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
-export default defineComponent({
-  name: 'MobileTabSelectorItem',
-  components: { AIcon },
-  props: {
-    routeName: {
-      type: String as PropType<SettingsRouteName>,
-      required: true
-    },
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: Boolean
-  },
-  setup(props) {
-    const size = 24
-    const title = computed(() => navigationRouteNameTitleMap[props.routeName])
-    const path = computed(() => constructSettingsPath(props.routeName))
-    return { size, title, path }
-  }
-})
+const props = defineProps<{
+    routeName: SettingsRouteName,
+    iconName: string,
+    iconMdi?: boolean
+}>();
+
+const size = 24
+const title = computed(() => navigationRouteNameTitleMap[props.routeName])
+const path = computed(() => constructSettingsPath(props.routeName))
 </script>
 
 <style lang="scss" module>

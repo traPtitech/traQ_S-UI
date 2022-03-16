@@ -5,21 +5,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue'
-import AudioControllerDetailPanel from './AudioControllerDetailPanel.vue'
+<script lang="ts" setup>
+import AudioControllerTitlePanel from './AudioControllerTitlePanel.vue';
+import AudioControllerDetailPanel from './AudioControllerDetailPanel.vue';
 
-export default defineComponent({
-  name: 'AudioController',
-  components: {
-    AudioControllerTitlePanel,
-    AudioControllerDetailPanel
-  },
-  setup() {
-    return {}
-  }
-})
+
 </script>
 
 <style lang="scss" module>

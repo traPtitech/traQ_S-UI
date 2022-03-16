@@ -2,41 +2,29 @@
   <inline-markdown v-if="isShown && content" :content="content" />
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+<script lang="ts" setup>
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import { computed } from 'vue';
 import { useStampsStore } from '/@/store/entities/stamps'
 
-export default defineComponent({
-  name: 'DropdownSuggesterStampEffect',
-  components: {
-    InlineMarkdown
-  },
-  props: {
-    effectNameWithDot: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { initialRecentStamps } = useStampsStore()
+const props = defineProps<{
+    effectNameWithDot: string
+}>();
 
-    const stampName = computed(() => {
-      const initialStamps = initialRecentStamps.value.map(stamp => stamp.name)
-      return initialStamps[0]
-    })
-    const content = computed(() =>
-      stampName.value
-        ? `:${stampName.value}${props.effectNameWithDot}:`
-        : undefined
-    )
-    const isShown = computed(
-      () =>
-        // largeとex-largeは表示できないので何も表示しない
-        !['.large', '.ex-large'].includes(props.effectNameWithDot)
-    )
+const { initialRecentStamps } = useStampsStore()
 
-    return { isShown, content }
-  }
+const stampName = computed(() => {
+  const initialStamps = initialRecentStamps.value.map(stamp => stamp.name)
+  return initialStamps[0]
 })
+const content = computed(() =>
+  stampName.value
+    ? `:${stampName.value}${props.effectNameWithDot}:`
+    : undefined
+)
+const isShown = computed(
+  () =>
+    // largeとex-largeは表示できないので何も表示しない
+    !['.large', '.ex-large'].includes(props.effectNameWithDot)
+)
 </script>

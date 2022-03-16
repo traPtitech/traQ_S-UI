@@ -14,45 +14,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+<script lang="ts" setup>
+import StampItem from './StampItem.vue';
+import { computed, ref } from 'vue';
 import { StampId } from '/@/types/entity-ids'
-import StampItem from './StampItem.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useStampsStore } from '/@/store/entities/stamps'
 
-export default defineComponent({
-  name: 'EditStamp',
-  components: {
-    StampItem
-  },
-  setup() {
-    const { myId } = useMeStore()
-    const { stampsMap } = useStampsStore()
+const { myId } = useMeStore()
+const { stampsMap } = useStampsStore()
 
-    // TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
+// TODO: 管理者なら全部変えられるたぶん https://github.com/traPtitech/traQ_S-UI/issues/291
 
-    const myStamps = computed(() =>
-      [...stampsMap.value.values()].filter(
-        stamp => stamp.creatorId === myId.value
-      )
-    )
+const myStamps = computed(() =>
+  [...stampsMap.value.values()].filter(
+    stamp => stamp.creatorId === myId.value
+  )
+)
 
-    const selectedStampId = ref<StampId | null>()
-    const selectStamp = (id: StampId) => {
-      selectedStampId.value = id
-    }
-    const unselectStamp = () => {
-      selectedStampId.value = null
-    }
-    return {
-      myStamps,
-      selectedStampId,
-      selectStamp,
-      unselectStamp
-    }
-  }
-})
+const selectedStampId = ref<StampId | null>()
+const selectStamp = (id: StampId) => {
+  selectedStampId.value = id
+}
+const unselectStamp = () => {
+  selectedStampId.value = null
+}
 </script>
 
 <style lang="scss" module>

@@ -11,25 +11,13 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import TabContentTitle from './TabContentTitle.vue';
+import ReturnButton from '/@/components/UI/ReturnButton.vue';
+import CloseButton from '/@/components/UI/CloseButton.vue';
 import useSettingsNavigation from './composables/useNavigation'
-import TabContentTitle from './TabContentTitle.vue'
-import ReturnButton from '/@/components/UI/ReturnButton.vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
 
-export default defineComponent({
-  name: 'MobileTabFrame',
-  components: {
-    TabContentTitle,
-    ReturnButton,
-    CloseButton
-  },
-  setup() {
-    const { close, showRoot } = useSettingsNavigation()
-    return { showRoot, close }
-  }
-})
+const { close, showRoot } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>

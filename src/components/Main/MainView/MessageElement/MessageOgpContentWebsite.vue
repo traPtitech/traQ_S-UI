@@ -20,31 +20,17 @@
   </a>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import MessageOgpDescription from './MessageOgpDescription.vue'
+<script lang="ts" setup>
+import MessageOgpDescription from './MessageOgpDescription.vue';
 
-export default defineComponent({
-  name: 'MessageOgpContentWebsite',
-  components: { MessageOgpDescription },
-  props: {
-    url: {
-      type: String,
-      required: true
-    },
-    imageUrl: {
-      type: String,
-      default: undefined
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    }
-  }
+withDefaults(defineProps<{
+    url: string,
+    imageUrl?: string,
+    title?: string,
+    description?: string
+}>(), {
+    title: '',
+    description: ''
 })
 </script>
 

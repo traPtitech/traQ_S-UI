@@ -19,46 +19,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, shallowRef } from 'vue'
+<script lang="ts" setup>
+import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue';
+import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue';
+import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue';
+import { shallowRef } from 'vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
-import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
-import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import useFileWaveform from '/@/composables/useFileWaveform'
 import { useCurrentTime, useDuration } from '/@/composables/useAudio'
 
-export default defineComponent({
-  name: 'FileModalAudio',
-  components: {
-    FileModalContentHeader,
-    AudioPlayerWaveform,
-    FileModalContentFooter
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { fileMeta, fileRawPath } = useFileMeta(props)
-    const { fileWaveformPath } = useFileWaveform(props)
+const props = defineProps<{
+    fileId: string
+}>();
 
-    const audioEle = shallowRef<HTMLAudioElement>()
-    const currentTime = useCurrentTime(audioEle)
-    const duration = useDuration(audioEle)
+const { fileMeta, fileRawPath } = useFileMeta(props)
+const { fileWaveformPath } = useFileWaveform(props)
 
-    return {
-      fileMeta,
-      fileRawPath,
-      fileWaveformPath,
-      audioEle,
-      currentTime,
-      duration
-    }
-  }
-})
+const audioEle = shallowRef<HTMLAudioElement>()
+const currentTime = useCurrentTime(audioEle)
+const duration = useDuration(audioEle)
 </script>
 
 <style lang="scss" module>

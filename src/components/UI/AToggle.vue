@@ -11,34 +11,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'AToggle',
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const toggle = () => {
-      if (props.disabled) return
 
-      emit('update:modelValue', !props.modelValue)
-    }
+const props = withDefaults(defineProps<{
+    modelValue?: boolean,
+    disabled?: boolean
+}>(), {
+    modelValue: false,
+    disabled: false
+});
 
-    return { toggle }
-  }
-})
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: boolean): void
+}>();
+
+const toggle = () => {
+  if (props.disabled) return
+
+  emit('update:modelValue', !props.modelValue)
+}
 </script>
 
 <style lang="scss" module>

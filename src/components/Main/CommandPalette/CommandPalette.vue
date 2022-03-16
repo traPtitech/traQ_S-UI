@@ -12,40 +12,30 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue';
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import CommandPaletteInput from './CommandPaletteInput.vue'
-import SearchResult from './SearchResult.vue'
-import SearchSuggestion from './SearchSuggestion.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 type SupplementalViewType = 'search-result' | 'search-suggestion' | undefined
+</script>
 
-export default defineComponent({
-  name: 'CommandPalette',
-  components: {
-    ClickOutside,
-    CommandPaletteInput,
-    SearchResult,
-    SearchSuggestion
-  },
-  setup() {
-    const { isMobile } = useResponsiveStore()
-    const { mode, query, closeCommandPalette } = useCommandPalette()
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
+import CommandPaletteInput from './CommandPaletteInput.vue';
+import SearchResult from './SearchResult.vue';
+import SearchSuggestion from './SearchSuggestion.vue';
 
-    const supplementalViewType = computed((): SupplementalViewType => {
-      if (mode.value === 'search' && query.value.length > 0) {
-        return 'search-result'
-      }
-      if (mode.value === 'search') {
-        return 'search-suggestion'
-      }
-      return undefined
-    })
+const { isMobile } = useResponsiveStore()
+const { mode, query, closeCommandPalette } = useCommandPalette()
 
-    return { isMobile, closeCommandPalette, supplementalViewType }
+const supplementalViewType = computed((): SupplementalViewType => {
+  if (mode.value === 'search' && query.value.length > 0) {
+    return 'search-result'
   }
+  if (mode.value === 'search') {
+    return 'search-suggestion'
+  }
+  return undefined
 })
 </script>
 

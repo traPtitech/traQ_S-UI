@@ -11,19 +11,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  computed,
-  ref,
-  Ref,
-  shallowRef,
-  PropType,
-  toRef,
-  watch,
-  nextTick
-} from 'vue'
-import ClickOutside from '/@/components/UI/ClickOutside'
+import { reactive, computed, ref, Ref, shallowRef, toRef, watch, nextTick } from 'vue';
 import { Point } from '/@/lib/basic/point'
 
 const useMenuHeight = () => {
@@ -50,35 +38,26 @@ const useStyles = (position: Ref<Point>, height: Ref<number>) =>
       }
     })
   })
+</script>
 
-export default defineComponent({
-  name: 'ContextMenuContainer',
-  components: { ClickOutside },
-  props: {
-    position: {
-      type: Object as PropType<Point>,
-      required: true
-    }
-  },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const position = toRef(props, 'position')
-    const { height, menuContainerRef } = useMenuHeight()
-    const styles = useStyles(position, height)
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
 
-    const close = () => {
-      emit('close')
-    }
+const props = defineProps<{
+    position: Point
+}>();
 
-    return {
-      menuContainerRef,
-      styles,
-      close
-    }
-  }
-})
+const emit = defineEmits<{
+    (e: "close"): void
+}>();
+
+const position = toRef(props, 'position')
+const { height, menuContainerRef } = useMenuHeight()
+const styles = useStyles(position, height)
+
+const close = () => {
+  emit('close')
+}
 </script>
 
 <style lang="scss" module>

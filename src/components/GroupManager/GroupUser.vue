@@ -23,48 +23,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import { computed } from 'vue';
 import { UserId } from '/@/types/entity-ids'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'GroupUser',
-  components: {
-    UserIcon,
-    AIcon
-  },
-  props: {
-    id: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    showEditButton: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    edit: () => true,
-    delete: () => true
-  },
-  setup(props, { emit }) {
-    const { usersMap } = useUsersStore()
+const props = withDefaults(defineProps<{
+    id: UserId,
+    showEditButton?: boolean
+}>(), {
+    showEditButton: false
+});
 
-    const user = computed(() => usersMap.value.get(props.id))
+const emit = defineEmits<{
+    (e: "edit"): void,
+    (e: "delete"): void
+}>();
 
-    const onClickEdit = () => {
-      emit('edit')
-    }
-    const onClickDelete = () => {
-      emit('delete')
-    }
+const { usersMap } = useUsersStore()
 
-    return { user, onClickEdit, onClickDelete }
-  }
-})
+const user = computed(() => usersMap.value.get(props.id))
+
+const onClickEdit = () => {
+  emit('edit')
+}
+const onClickDelete = () => {
+  emit('delete')
+}
 </script>
 
 <style lang="scss" module>

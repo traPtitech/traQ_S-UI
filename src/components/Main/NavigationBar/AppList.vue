@@ -23,28 +23,20 @@
   </click-outside>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
+import AppListItem from '/@/components/Main/NavigationBar/AppListItem.vue';
+import CloseButton from '/@/components/UI/CloseButton.vue';
 
-export default defineComponent({
-  name: 'AppList',
-  components: { ClickOutside, AppListItem, CloseButton },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const apps = window.traQConfig.services ?? []
+const emit = defineEmits<{
+    (e: "close"): void
+}>();
 
-    const close = () => {
-      emit('close')
-    }
+const apps = window.traQConfig.services ?? []
 
-    return { apps, close }
-  }
-})
+const close = () => {
+  emit('close')
+}
 </script>
 
 <style lang="scss" module>

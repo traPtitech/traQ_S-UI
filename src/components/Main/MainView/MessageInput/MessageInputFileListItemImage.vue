@@ -11,14 +11,7 @@
 
 <script lang="ts">
 import { Attachment } from '/@/store/ui/messageInputState'
-import {
-  defineComponent,
-  computed,
-  reactive,
-  Ref,
-  PropType,
-  shallowRef
-} from 'vue'
+import { computed, reactive, Ref, shallowRef } from 'vue';
 
 const useImageThumbnail = (
   props: { attachment: Attachment },
@@ -30,21 +23,17 @@ const useImageThumbnail = (
   })
   return { imageThumbnailState: state }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageInputFileListItemImage',
-  props: {
-    attachment: {
-      type: Object as PropType<Attachment>,
-      required: true
-    }
-  },
-  setup(props) {
-    const thumbnailRef = shallowRef<HTMLImageElement | null>(null)
-    const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
-    return { thumbnailRef, imageThumbnailState }
-  }
-})
+<script lang="ts" setup>
+
+
+const props = defineProps<{
+    attachment: Attachment
+}>();
+
+const thumbnailRef = shallowRef<HTMLImageElement | null>(null)
+const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
 </script>
 
 <style lang="scss" module>

@@ -18,44 +18,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'SidebarContentContainer',
-  props: {
-    title: {
-      type: String,
-      default: undefined
-    },
-    largePadding: {
-      type: Boolean,
-      default: false
-    },
-    clickable: {
-      type: Boolean,
-      default: false
-    },
-    titleClickable: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    toggle: () => true
-  },
-  setup(props, { emit }) {
-    const onTitleClick = () => {
-      emit('toggle')
-    }
-    const onContainerClick = () => {
-      if (props.clickable) {
-        emit('toggle')
-      }
-    }
-    return { onTitleClick, onContainerClick }
+
+const props = withDefaults(defineProps<{
+    title?: string,
+    largePadding?: boolean,
+    clickable?: boolean,
+    titleClickable?: boolean
+}>(), {
+    largePadding: false,
+    clickable: false,
+    titleClickable: false
+});
+
+const emit = defineEmits<{
+    (e: "toggle"): void
+}>();
+
+const onTitleClick = () => {
+  emit('toggle')
+}
+const onContainerClick = () => {
+  if (props.clickable) {
+    emit('toggle')
   }
-})
+}
 </script>
 
 <style lang="scss" module>

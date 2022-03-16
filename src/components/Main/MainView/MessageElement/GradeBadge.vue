@@ -10,42 +10,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 
-export default defineComponent({
-  name: 'GradeBadge',
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    isBot: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { pushModal } = useModalStore()
-    const { getGradeGroupsByUserId } = useGroupsStore()
+const props = withDefaults(defineProps<{
+    userId: UserId,
+    isBot?: boolean
+}>(), {
+    isBot: false
+});
 
-    const gradeGroup = computed(() => getGradeGroupsByUserId(props.userId))
-    const isGrade = computed(() => !!gradeGroup.value)
+const { pushModal } = useModalStore()
+const { getGradeGroupsByUserId } = useGroupsStore()
 
-    const onClick = () => {
-      if (!gradeGroup.value) return
-      pushModal({
-        type: 'group',
-        id: gradeGroup.value.id
-      })
-    }
+const gradeGroup = computed(() => getGradeGroupsByUserId(props.userId))
+const isGrade = computed(() => !!gradeGroup.value)
 
-    return { gradeGroup, isGrade, onClick }
-  }
-})
+const onClick = () => {
+  if (!gradeGroup.value) return
+  pushModal({
+    type: 'group',
+    id: gradeGroup.value.id
+  })
+}
 </script>
 
 <style lang="scss" module>

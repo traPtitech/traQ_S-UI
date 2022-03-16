@@ -12,55 +12,47 @@
   </sidebar-content-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import EmptyState from '/@/components/UI/EmptyState.vue';
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
+import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue';
+import { computed } from 'vue';
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import EmptyState from '/@/components/UI/EmptyState.vue'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import useChannelSubscribers from '/@/composables/useChannelSubscribers'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'ChannelSidebarMember',
-  components: {
-    EmptyState,
-    ChannelSidebarMemberIcons,
-    SidebarContentContainer
-  },
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    viewerIds: { type: Array as PropType<readonly UserId[]>, default: () => [] }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
-    const { usersMap, activeUsersMap } = useUsersStore()
+const props = withDefaults(defineProps<{
+    channelId: ChannelId,
+    viewerIds?: readonly UserId[]
+}>(), {
+    viewerIds: () => []
+});
 
-    const subscribers = useChannelSubscribers(props)
+const { channelsMap } = useChannelsStore()
+const { usersMap, activeUsersMap } = useUsersStore()
 
-    const isForceNotification = computed(
-      () => channelsMap.value.get(props.channelId)?.force
-    )
-    const viewStates = computed(() =>
-      [...(subscribers.value ?? new Set())]
-        .filter(id => usersMap.value.has(id))
-        .map(id => ({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          user: activeUsersMap.value.get(id)!,
-          active: props.viewerIds.includes(id)
-        }))
-        .filter(state => state.user !== undefined)
-        .sort((a, b) => {
-          if (a.active === b.active) {
-            return 0
-          }
-          return a.active ? -1 : 1
-        })
-    )
-    return { subscribers, isForceNotification, viewStates }
-  }
-})
+const subscribers = useChannelSubscribers(props)
+
+const isForceNotification = computed(
+  () => channelsMap.value.get(props.channelId)?.force
+)
+const viewStates = computed(() =>
+  [...(subscribers.value ?? new Set())]
+    .filter(id => usersMap.value.has(id))
+    .map(id => ({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      user: activeUsersMap.value.get(id)!,
+      active: props.viewerIds.includes(id)
+    }))
+    .filter(state => state.user !== undefined)
+    .sort((a, b) => {
+      if (a.active === b.active) {
+        return 0
+      }
+      return a.active ? -1 : 1
+    })
+)
 </script>
 
 <style lang="scss" module></style>

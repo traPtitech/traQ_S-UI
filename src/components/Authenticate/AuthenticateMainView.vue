@@ -15,51 +15,36 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
-import AuthenticateModal from './AuthenticateModal.vue'
-import LoginForm from './LoginForm.vue'
-import RegistrationForm from './RegistrationForm.vue'
-import ConsentForm from './ConsentForm/ConsentForm.vue'
+<script lang="ts" setup>
+import AuthenticateModal from './AuthenticateModal.vue';
+import LoginForm from './LoginForm.vue';
+import RegistrationForm from './RegistrationForm.vue';
+import ConsentForm from './ConsentForm/ConsentForm.vue';
+import { computed } from 'vue';
 import { PageType } from '/@/views/AuthPage.vue'
 import useVersion from '/@/composables/useVersion'
 
-export default defineComponent({
-  name: 'AuthenticateMainView',
-  components: {
-    AuthenticateModal,
-    LoginForm,
-    RegistrationForm,
-    ConsentForm
-  },
-  props: {
-    type: {
-      type: String as PropType<PageType>,
-      default: 'login' as const
-    },
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const needVersionFetch = computed(
-      () => props.type === 'login' || props.type === 'registration'
-    )
-    // ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
-    const { externalLogin, signUpAllowed } = useVersion(needVersionFetch)
+const props = withDefaults(defineProps<{
+    type?: PageType,
+    show?: boolean
+}>(), {
+    type: 'login' as const,
+    show: false
+});
 
-    const shouldShow = computed(
-      () =>
-        props.show &&
-        ((props.type === 'login' && externalLogin.value) ||
-          (props.type === 'registration' && signUpAllowed.value) ||
-          props.type === 'consent')
-    )
+const needVersionFetch = computed(
+  () => props.type === 'login' || props.type === 'registration'
+)
+// ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
+const { externalLogin, signUpAllowed } = useVersion(needVersionFetch)
 
-    return { shouldShow, externalLogin, signUpAllowed }
-  }
-})
+const shouldShow = computed(
+  () =>
+    props.show &&
+    ((props.type === 'login' && externalLogin.value) ||
+      (props.type === 'registration' && signUpAllowed.value) ||
+      props.type === 'consent')
+)
 </script>
 
 <style lang="scss" module>

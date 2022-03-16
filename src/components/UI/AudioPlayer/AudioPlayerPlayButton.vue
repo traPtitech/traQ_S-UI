@@ -9,37 +9,22 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
+<script lang="ts" setup>
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue';
 
-export default defineComponent({
-  name: 'AudioPlayerPlayButton',
-  components: {
-    AudioPlayerAbstractButton
-  },
-  props: {
-    isPlaying: {
-      type: Boolean,
-      required: true
-    },
-    size: {
-      type: Number,
-      required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:isPlaying': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const toggle = () => {
-      emit('update:isPlaying', !props.isPlaying)
-    }
-    return { toggle }
-  }
-})
+const props = withDefaults(defineProps<{
+    isPlaying: boolean,
+    size: number,
+    disabled?: boolean
+}>(), {
+    disabled: false
+});
+
+const emit = defineEmits<{
+    (e: "update:isPlaying", _val: boolean): void
+}>();
+
+const toggle = () => {
+  emit('update:isPlaying', !props.isPlaying)
+}
 </script>

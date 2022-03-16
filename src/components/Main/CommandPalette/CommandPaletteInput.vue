@@ -23,70 +23,53 @@
   </div>
 </template>
 
-<script lang="ts">
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import CloseButton from '/@/components/UI/CloseButton.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
 import { useCommandPalette } from '/@/store/app/commandPalette'
-import { computed, defineComponent, onMounted, shallowRef, watch } from 'vue'
+import { computed, onMounted, shallowRef, watch } from 'vue';
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'CommandPaletteInput',
-  components: { AIcon, CloseButton },
-  setup() {
-    const { isMobile } = useResponsiveStore()
-    const inputRef = shallowRef<HTMLInputElement | null>(null)
-    const focus = () => {
-      inputRef.value?.focus()
-    }
-    onMounted(() => {
-      focus()
-    })
+const { isMobile } = useResponsiveStore()
+const inputRef = shallowRef<HTMLInputElement | null>(null)
+const focus = () => {
+  inputRef.value?.focus()
+}
+onMounted(() => {
+  focus()
+})
 
-    const { mode, currentInput, settleQuery, closeCommandPalette } =
-      useCommandPalette()
+const { mode, currentInput, settleQuery, closeCommandPalette } =
+  useCommandPalette()
 
-    watch(currentInput, () => {
-      // 外から入力が変更された場合フォーカスを当てる
-      if (document.activeElement !== inputRef.value) {
-        inputRef.value?.focus()
-      }
-    })
+watch(currentInput, () => {
+  // 外から入力が変更された場合フォーカスを当てる
+  if (document.activeElement !== inputRef.value) {
+    inputRef.value?.focus()
+  }
+})
 
-    const onEsc = () => {
-      currentInput.value = ''
-    }
+const onEsc = () => {
+  currentInput.value = ''
+}
 
-    const onEnter = () => {
-      if (mode.value === 'command') {
-        // exec command
-      }
-      if (mode.value === 'search') {
-        settleQuery()
-      }
-    }
+const onEnter = () => {
+  if (mode.value === 'command') {
+    // exec command
+  }
+  if (mode.value === 'search') {
+    settleQuery()
+  }
+}
 
-    const placeholder = computed(() => {
-      switch (mode.value) {
-        case 'command':
-          return 'コマンドを入力'
-        case 'search':
-          return 'メッセージを検索'
-        default:
-          return undefined
-      }
-    })
-
-    return {
-      isMobile,
-      inputRef,
-      mode,
-      currentInput,
-      onEsc,
-      onEnter,
-      placeholder,
-      closeCommandPalette
-    }
+const placeholder = computed(() => {
+  switch (mode.value) {
+    case 'command':
+      return 'コマンドを入力'
+    case 'search':
+      return 'メッセージを検索'
+    default:
+      return undefined
   }
 })
 </script>

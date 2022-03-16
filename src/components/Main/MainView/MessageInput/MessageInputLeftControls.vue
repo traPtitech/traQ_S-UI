@@ -20,63 +20,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import MessageInputUploadButton from './MessageInputUploadButton.vue'
-import MessageInputPreviewButton from './MessageInputPreviewButton.vue'
-import IconButton from '/@/components/UI/IconButton.vue'
+<script lang="ts" setup>
+import MessageInputUploadButton from './MessageInputUploadButton.vue';
+import MessageInputPreviewButton from './MessageInputPreviewButton.vue';
+import IconButton from '/@/components/UI/IconButton.vue';
+import { computed } from 'vue';
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'MessageInputLeftControls',
-  components: {
-    IconButton,
-    MessageInputUploadButton,
-    MessageInputPreviewButton
-  },
-  props: {
-    isExpanded: {
-      type: Boolean,
-      required: true
-    },
-    isPreviewShown: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    'update:isExpanded': (_v: boolean) => true,
-    'update:isPreviewShown': (_v: boolean) => true,
-    clickAddAttachment: () => true
-  },
-  setup(props, { emit }) {
-    const { isMobile } = useResponsiveStore()
-    const toggleExpanded = () => {
-      emit('update:isExpanded', !props.isExpanded)
-    }
+const props = defineProps<{
+    isExpanded: boolean,
+    isPreviewShown: boolean
+}>();
 
-    const isPreviewShownValue = computed<boolean>({
-      get() {
-        return props.isPreviewShown
-      },
-      set(v) {
-        emit('update:isPreviewShown', v)
-        emit('update:isExpanded', false)
-      }
-    })
+const emit = defineEmits<{
+    (e: "update:isExpanded", _v: boolean): void,
+    (e: "update:isPreviewShown", _v: boolean): void,
+    (e: "clickAddAttachment"): void
+}>();
 
-    const onClickAddAttachment = () => {
-      emit('clickAddAttachment')
-    }
+const { isMobile } = useResponsiveStore()
+const toggleExpanded = () => {
+  emit('update:isExpanded', !props.isExpanded)
+}
 
-    return {
-      toggleExpanded,
-      isPreviewShownValue,
-      onClickAddAttachment,
-      isMobile
-    }
+const isPreviewShownValue = computed<boolean>({
+  get() {
+    return props.isPreviewShown
+  },
+  set(v) {
+    emit('update:isPreviewShown', v)
+    emit('update:isExpanded', false)
   }
 })
+
+const onClickAddAttachment = () => {
+  emit('clickAddAttachment')
+}
 </script>
 
 <style lang="scss" module>

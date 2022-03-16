@@ -31,42 +31,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
-import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
+<script lang="ts" setup>
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue';
+import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue';
+import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue';
+import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue';
 import useNavigation from './composables/useNavigation'
-import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
-import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 
-export default defineComponent({
-  name: 'DesktopNavigationBar',
-  components: {
-    NavigationContent,
-    EphemeralNavigationContent,
-    DesktopNavigationSelector,
-    DesktopToolBox
-  },
-  setup() {
-    const {
-      navigationSelectorState,
-      ephemeralNavigationSelectorState,
-      onNavigationChange,
-      onEphemeralNavigationChange,
-      onEphemeralEntryRemove,
-      onEphemeralEntryAdd
-    } = useNavigation()
-
-    return {
-      navigationSelectorState,
-      ephemeralNavigationSelectorState,
-      onNavigationChange,
-      onEphemeralNavigationChange,
-      onEphemeralEntryRemove,
-      onEphemeralEntryAdd
-    }
-  }
-})
+const {
+  navigationSelectorState,
+  ephemeralNavigationSelectorState,
+  onNavigationChange,
+  onEphemeralNavigationChange,
+  onEphemeralEntryRemove,
+  onEphemeralEntryAdd
+} = useNavigation()
 </script>
 
 <style lang="scss" module>

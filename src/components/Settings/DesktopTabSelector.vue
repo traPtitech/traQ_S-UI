@@ -15,22 +15,15 @@
   </section>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script lang="ts" setup>
+import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue';
+import VersionInfo from '/@/components/UI/VersionInfo.vue';
+import { computed } from 'vue';
 import { navigations } from './composables/useNavigation'
-import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
-import VersionInfo from '/@/components/UI/VersionInfo.vue'
 import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'DesktopTabSelector',
-  components: { DesktopTabSelectorItem, VersionInfo },
-  setup() {
-    const route = useRoute()
-    const currentRouteName = computed(() => route.name)
-    return { currentRouteName, navigations }
-  }
-})
+const route = useRoute()
+const currentRouteName = computed(() => route.name)
 </script>
 
 <style lang="scss" module>

@@ -32,35 +32,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import AuthenticateHeader from '../AuthenticateHeader.vue';
+import ClientDescription from './ClientDescription.vue';
+import ClientScopes from './ClientScopes.vue';
+import AuthenticateButton from '../AuthenticateButton.vue';
 import useConsent from './composables/useConsent'
-import AuthenticateHeader from '../AuthenticateHeader.vue'
-import ClientDescription from './ClientDescription.vue'
-import ClientScopes from './ClientScopes.vue'
-import AuthenticateButton from '../AuthenticateButton.vue'
 import { useRoute } from 'vue-router'
 import { getFirstQuery } from '/@/lib/basic/url'
 
-export default defineComponent({
-  name: 'ConsentForm',
-  components: {
-    AuthenticateHeader,
-    ClientDescription,
-    ClientScopes,
-    AuthenticateButton
-  },
-  setup() {
-    const route = useRoute()
-    const { scopes: rawScopes, client_id: rawClientId } = route.query
+const route = useRoute()
+const { scopes: rawScopes, client_id: rawClientId } = route.query
 
-    const { state, approve, deny } = useConsent({
-      scopes: getFirstQuery(rawScopes)?.split(' ') ?? undefined,
-      clientId: getFirstQuery(rawClientId) ?? undefined
-    })
-
-    return { state, approve, deny }
-  }
+const { state, approve, deny } = useConsent({
+  scopes: getFirstQuery(rawScopes)?.split(' ') ?? undefined,
+  clientId: getFirstQuery(rawClientId) ?? undefined
 })
 </script>
 

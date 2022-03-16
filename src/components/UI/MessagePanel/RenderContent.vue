@@ -23,11 +23,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect, ref } from 'vue'
+import { computed, watchEffect, ref } from 'vue';
 import { renderInline } from '/@/lib/markdown/markdown'
 import { AttachmentType, mimeToFileType } from '/@/lib/basic/file'
-import AIcon from '/@/components/UI/AIcon.vue'
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
 import { useMessagesStore } from '/@/store/entities/messages'
@@ -48,58 +46,50 @@ const getUniqueFileTypes = (fileTypes: Array<[AttachmentType, boolean]>) => {
   }
   return res
 }
+</script>
 
-export default defineComponent({
-  name: 'RenderContent',
-  components: {
-    FileTypeIcon,
-    AIcon
-  },
-  props: {
-    content: {
-      type: String,
-      default: ''
-    },
-    lineClampContent: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
 
-    const rendered = ref<MarkdownRenderResult>()
-    watchEffect(async () => {
-      rendered.value = await renderInline(props.content)
-    })
+const props = withDefaults(defineProps<{
+    content?: string,
+    lineClampContent?: boolean
+}>(), {
+    content: '',
+    lineClampContent: false
+});
 
-    const files = computed(
-      () => rendered.value?.embeddings.filter(isFile) ?? []
-    )
+const { fileMetaDataMap, fetchFileMetaData } = useMessagesStore()
 
-    watchEffect(() => {
-      files.value.forEach(file => fetchFileMetaData({ fileId: file.id }))
-    })
-
-    const fileTypes = computed(() =>
-      getUniqueFileTypes(
-        files.value.map(file => {
-          const meta = fileMetaDataMap.value.get(file.id)
-          return [
-            meta ? mimeToFileType(meta.mime) : 'file',
-            meta?.isAnimatedImage ?? false
-          ]
-        })
-      )
-    )
-    const hasMessage = computed(() =>
-      rendered.value?.embeddings.some(e => e.type === 'message')
-    )
-    const renderedContent = computed(() => rendered.value?.renderedText)
-
-    return { fileTypes, hasMessage, renderedContent }
-  }
+const rendered = ref<MarkdownRenderResult>()
+watchEffect(async () => {
+  rendered.value = await renderInline(props.content)
 })
+
+const files = computed(
+  () => rendered.value?.embeddings.filter(isFile) ?? []
+)
+
+watchEffect(() => {
+  files.value.forEach(file => fetchFileMetaData({ fileId: file.id }))
+})
+
+const fileTypes = computed(() =>
+  getUniqueFileTypes(
+    files.value.map(file => {
+      const meta = fileMetaDataMap.value.get(file.id)
+      return [
+        meta ? mimeToFileType(meta.mime) : 'file',
+        meta?.isAnimatedImage ?? false
+      ]
+    })
+  )
+)
+const hasMessage = computed(() =>
+  rendered.value?.embeddings.some(e => e.type === 'message')
+)
+const renderedContent = computed(() => rendered.value?.renderedText)
 </script>
 
 <style lang="scss" module>

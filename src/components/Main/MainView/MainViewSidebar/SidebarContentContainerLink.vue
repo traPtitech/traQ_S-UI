@@ -17,41 +17,25 @@
   </sidebar-content-container>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'SidebarContentContainerLink',
-  components: {
-    SidebarContentContainer,
-    AIcon
-  },
-  props: {
-    title: {
-      type: String,
-      default: undefined
-    },
-    count: {
-      type: Number,
-      default: undefined
-    },
-    largePadding: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    clickLink: () => true
-  },
-  setup(_, { emit }) {
-    const onClickLink = () => {
-      emit('clickLink')
-    }
-    return { onClickLink }
-  }
+withDefaults(defineProps<{
+    title?: string,
+    count?: number,
+    largePadding?: boolean
+}>(), {
+    largePadding: false
 })
+
+const emit = defineEmits<{
+    (e: "clickLink"): void
+}>();
+
+const onClickLink = () => {
+  emit('clickLink')
+}
 </script>
 
 <style lang="scss" module>

@@ -109,10 +109,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watchEffect, reactive } from 'vue'
-import AToggle from '/@/components/UI/AToggle.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
+import { computed, ref, watchEffect, reactive } from 'vue';
 import { checkAudioContextSampleRateSupport } from '/@/lib/dom/browser'
 import { dtlnSampleRate } from '/@/lib/webrtc/dtln-web'
 import { useRtcSettings } from '/@/store/app/rtcSettings'
@@ -196,37 +193,25 @@ const useVoices = () => {
 
   return voiceOptions
 }
+</script>
 
-export default defineComponent({
-  name: 'QallTab',
-  components: {
-    AToggle,
-    FormSelector,
-    FormInput
-  },
-  setup() {
-    const state = reactive(useRtcSettings())
+<script lang="ts" setup>
+import AToggle from '/@/components/UI/AToggle.vue';
+import FormSelector from '/@/components/UI/FormSelector.vue';
+import FormInput from '/@/components/UI/FormInput.vue';
 
-    const devicesInfo = useDevicesInfo()
+const state = reactive(useRtcSettings())
 
-    const audioInputDeviceOptions = computed(() =>
-      devicesInfo.audioInputDevices.value.map(d => ({
-        key: d.label,
-        value: d.deviceId
-      }))
-    )
+const devicesInfo = useDevicesInfo()
 
-    const voiceOptions = useVoices()
+const audioInputDeviceOptions = computed(() =>
+  devicesInfo.audioInputDevices.value.map(d => ({
+    key: d.label,
+    value: d.deviceId
+  }))
+)
 
-    return {
-      state,
-      ...devicesInfo,
-      audioInputDeviceOptions,
-      isAudioContextDtlnSampleRateIsSupported,
-      voiceOptions
-    }
-  }
-})
+const voiceOptions = useVoices()
 </script>
 
 <style lang="scss" module>

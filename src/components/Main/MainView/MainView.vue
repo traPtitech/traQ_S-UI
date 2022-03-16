@@ -26,38 +26,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue'
-import MainViewComponentSelector from './MainViewComponentSelector.vue'
-import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
-import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
+<script lang="ts" setup>
+import MainViewComponentSelector from './MainViewComponentSelector.vue';
+import MainViewHeaderSelector from './MainViewHeaderSelector.vue';
+import MainViewSidebarSelector from './MainViewSidebarSelector.vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useMainViewStore } from '/@/store/ui/mainView'
 
-export default defineComponent({
-  name: 'MainView',
-  components: {
-    MainViewComponentSelector,
-    MainViewHeaderSelector,
-    MainViewSidebarSelector
-  },
-  setup() {
-    const { layout, primaryView, secondaryView } = useMainViewStore()
+const { layout, primaryView, secondaryView } = useMainViewStore()
 
-    const isMounted = ref(false)
-    onMounted(() => {
-      isMounted.value = true
-    })
-    onBeforeUnmount(() => {
-      isMounted.value = false
-    })
-
-    return {
-      layout,
-      primaryView,
-      secondaryView,
-      isMounted
-    }
-  }
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+onBeforeUnmount(() => {
+  isMounted.value = false
 })
 </script>
 

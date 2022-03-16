@@ -34,63 +34,39 @@
   <div></div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue';
+import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue';
+import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue';
+import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue';
+import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue';
 import useFileMeta from '/@/composables/useFileMeta'
 import useAudio from '/@/composables/useAudio'
-import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
-import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
-import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
-import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
-import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'ChromeAudio',
-  components: {
-    AudioPlayerPlayButton,
-    AudioPlayerTime,
-    AudioPlayerTimeSlider,
-    AudioPlayerVolumeSlider,
-    AudioPlayerPinPButton
-  },
-  props: {
-    fileId: {
-      type: String,
-      default: ''
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
-    const { fileMeta, fileRawPath } = useFileMeta(props)
-    const {
-      cantPlay,
-      wasUnsupportedType,
-      isPlaying,
-      currentTime,
-      duration,
-      volume,
-      isPinPShown,
-      startPinP
-    } = useAudio(fileMeta, fileRawPath)
-    const startPictureInPicture = async () => {
-      const iconId =
-        usersMap.value.get(fileMeta.value?.uploaderId ?? '')?.iconFileId ?? ''
-      await startPinP(iconId)
-    }
+const props = withDefaults(defineProps<{
+    fileId?: string
+}>(), {
+    fileId: ''
+});
 
-    return {
-      cantPlay,
-      wasUnsupportedType,
-      isPlaying,
-      currentTime,
-      duration,
-      volume,
-      isPinPShown,
-      startPictureInPicture
-    }
-  }
-})
+const { usersMap } = useUsersStore()
+const { fileMeta, fileRawPath } = useFileMeta(props)
+const {
+  cantPlay,
+  wasUnsupportedType,
+  isPlaying,
+  currentTime,
+  duration,
+  volume,
+  isPinPShown,
+  startPinP
+} = useAudio(fileMeta, fileRawPath)
+const startPictureInPicture = async () => {
+  const iconId =
+    usersMap.value.get(fileMeta.value?.uploaderId ?? '')?.iconFileId ?? ''
+  await startPinP(iconId)
+}
 </script>
 
 <style lang="scss" module>

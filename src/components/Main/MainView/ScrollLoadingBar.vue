@@ -4,21 +4,16 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'ScrollLoadingBar',
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+
+withDefaults(defineProps<{
+    show?: boolean
+}>(), {
+    show: false
 })
+
+
 </script>
 
 <style lang="scss" module>

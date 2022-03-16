@@ -20,70 +20,56 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import LengthCount from '/@/components/UI/LengthCount.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import LengthCount from '/@/components/UI/LengthCount.vue';
+import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue';
+import { computed } from 'vue';
 import { countLength } from '/@/lib/basic/string'
-import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 
-export default defineComponent({
-  name: 'ContentEditor',
-  components: {
-    AIcon,
-    LengthCount,
-    TextareaAutosize
-  },
-  props: {
-    value: { type: String, default: undefined },
-    isEditing: { type: Boolean, default: false },
-    fallbackValue: { type: String, default: '未設定' },
-    maxLength: { type: Number, default: undefined }
-  },
-  emits: {
-    editStart: () => true,
-    editDone: () => true,
-    inputValue: (_val: string) => true
-  },
-  setup(props, { emit }) {
-    const content = computed(() => {
-      if (props.value === '') return props.fallbackValue
-      if (props.value === undefined) return 'ロード中'
-      return props.value
-    })
-    const isEmpty = computed(
-      () => props.value === '' || props.value === undefined
-    )
-    const onButtonClick = () => {
-      if (props.isEditing) {
-        emit('editDone')
-      } else {
-        emit('editStart')
-      }
-    }
+const props = withDefaults(defineProps<{
+    value?: string,
+    isEditing?: boolean,
+    fallbackValue?: string,
+    maxLength?: number
+}>(), {
+    isEditing: false,
+    fallbackValue: '未設定'
+});
 
-    const modelValue = computed({
-      get: () => props.value ?? '',
-      set: v => {
-        emit('inputValue', v ?? '')
-      }
-    })
+const emit = defineEmits<{
+    (e: "editStart"): void,
+    (e: "editDone"): void,
+    (e: "inputValue", _val: string): void
+}>();
 
-    const isExceeded = computed(
-      () =>
-        !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
-    )
+const content = computed(() => {
+  if (props.value === '') return props.fallbackValue
+  if (props.value === undefined) return 'ロード中'
+  return props.value
+})
+const isEmpty = computed(
+  () => props.value === '' || props.value === undefined
+)
+const onButtonClick = () => {
+  if (props.isEditing) {
+    emit('editDone')
+  } else {
+    emit('editStart')
+  }
+}
 
-    return {
-      content,
-      isEmpty,
-      onButtonClick,
-      length,
-      isExceeded,
-      modelValue
-    }
+const modelValue = computed({
+  get: () => props.value ?? '',
+  set: v => {
+    emit('inputValue', v ?? '')
   }
 })
+
+const isExceeded = computed(
+  () =>
+    !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
+)
 </script>
 
 <style lang="scss" module>

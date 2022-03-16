@@ -28,11 +28,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, Ref, watchEffect } from 'vue'
-import ImageUpload from '../ImageUpload.vue'
+import { ref, computed, Ref, watchEffect } from 'vue';
 import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 import apis, { formatResizeError } from '/@/lib/apis'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
@@ -69,51 +66,37 @@ const useStampCreate = (
 
   return { isCreating, createStamp }
 }
+</script>
 
-export default defineComponent({
-  name: 'NewStamp',
-  components: {
-    ImageUpload,
-    FormInput,
-    FormButton
-  },
-  setup() {
-    const {
-      imageUploadState,
-      destroyImageUploadState,
-      onNewImgSet,
-      onNewDestroyed
-    } = useImageUpload()
+<script lang="ts" setup>
+import ImageUpload from '../ImageUpload.vue';
+import FormInput from '/@/components/UI/FormInput.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
 
-    const newStampName = ref('')
-    const isCreateEnabled = computed(
-      () =>
-        isValidStampName(newStampName.value) &&
-        imageUploadState.imgData !== undefined
-    )
-    watchEffect(() => {
-      if (imageUploadState.imgData) {
-        newStampName.value = trimExt(imageUploadState.imgData.name)
-      }
-    })
+const {
+  imageUploadState,
+  destroyImageUploadState,
+  onNewImgSet,
+  onNewDestroyed
+} = useImageUpload()
 
-    const { isCreating, createStamp } = useStampCreate(
-      newStampName,
-      imageUploadState,
-      destroyImageUploadState
-    )
-
-    return {
-      imageUploadState,
-      onNewImgSet,
-      onNewDestroyed,
-      newStampName,
-      isCreating,
-      createStamp,
-      isCreateEnabled
-    }
+const newStampName = ref('')
+const isCreateEnabled = computed(
+  () =>
+    isValidStampName(newStampName.value) &&
+    imageUploadState.imgData !== undefined
+)
+watchEffect(() => {
+  if (imageUploadState.imgData) {
+    newStampName.value = trimExt(imageUploadState.imgData.name)
   }
 })
+
+const { isCreating, createStamp } = useStampCreate(
+  newStampName,
+  imageUploadState,
+  destroyImageUploadState
+)
 </script>
 
 <style lang="scss" module>

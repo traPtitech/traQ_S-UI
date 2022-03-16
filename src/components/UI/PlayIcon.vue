@@ -2,16 +2,8 @@
   <a-icon :class="$style.playIcon" name="play" mdi :size="36" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-
-export default defineComponent({
-  name: 'PlayIcon',
-  components: {
-    AIcon
-  }
-})
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 </script>
 
 <style lang="scss" module>

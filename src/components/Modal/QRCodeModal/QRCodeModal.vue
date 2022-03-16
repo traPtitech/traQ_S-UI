@@ -12,9 +12,7 @@
 
 <script lang="ts">
 import { AxiosError } from 'axios'
-import { defineComponent, reactive, onMounted, onUnmounted } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import ModalSection from '../Common/ModalSection.vue'
+import { reactive, onMounted, onUnmounted } from 'vue';
 import apis from '/@/lib/apis'
 import useScreenWakeLock from '/@/composables/useScreenWakeLock'
 
@@ -46,20 +44,14 @@ const useQrCode = () => {
 
   return { state }
 }
+</script>
 
-export default defineComponent({
-  name: 'QRCodeModal',
-  components: {
-    ModalFrame,
-    ModalSection
-  },
-  setup() {
-    const { state } = useQrCode()
-    useScreenWakeLock()
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue';
+import ModalSection from '../Common/ModalSection.vue';
 
-    return { state }
-  }
-})
+const { state } = useQrCode()
+useScreenWakeLock()
 </script>
 
 <style lang="scss" module>

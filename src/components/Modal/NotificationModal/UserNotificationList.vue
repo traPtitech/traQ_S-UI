@@ -16,14 +16,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue';
 import apis from '/@/lib/apis'
-import UserNotificationListItem from './UserNotificationListItem.vue'
 import { UserId, ChannelId } from '/@/types/entity-ids'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import useChannelSubscribers from '/@/composables/useChannelSubscribers'
 import { useToastStore } from '/@/store/ui/toast'
-import FilterInput from '/@/components/UI/FilterInput.vue'
 import useTextFilter from '/@/composables/useTextFilter'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
@@ -88,34 +86,22 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     onChangeNotification
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'UserNotificationList',
-  components: {
-    FilterInput,
-    UserNotificationListItem
-  },
-  props: {
-    channelId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const {
-      textFilterState,
-      subscribers,
-      subscriptionStateSorted,
-      onChangeNotification
-    } = useChannelNotificationState(props)
-    return {
-      textFilterState,
-      subscribers,
-      subscriptionStateSorted,
-      onChangeNotification
-    }
-  }
-})
+<script lang="ts" setup>
+import UserNotificationListItem from './UserNotificationListItem.vue';
+import FilterInput from '/@/components/UI/FilterInput.vue';
+
+const props = defineProps<{
+    channelId: string
+}>();
+
+const {
+  textFilterState,
+  subscribers,
+  subscriptionStateSorted,
+  onChangeNotification
+} = useChannelNotificationState(props)
 </script>
 
 <style lang="scss" module>

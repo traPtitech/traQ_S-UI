@@ -18,40 +18,24 @@
   </main-view-header>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue';
+import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue';
+import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue';
+import { computed } from 'vue';
 import { ClipFolderId } from '/@/types/entity-ids'
 import useSidebar from '/@/composables/useSidebar'
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
-import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
-import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
-export default defineComponent({
-  name: 'ClipsHeader',
-  components: {
-    MainViewHeader,
-    MainViewHeaderTitle,
-    MainViewHeaderToolsItem
-  },
-  props: {
-    clipFolderId: {
-      type: String as PropType<ClipFolderId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { clipFoldersMap } = useClipFoldersStore()
-    const clipFolderName = computed(
-      () => clipFoldersMap.value.get(props.clipFolderId)?.name ?? ''
-    )
-    const { openSidebar } = useSidebar()
-    return {
-      clipFolderName,
-      openSidebar
-    }
-  }
-})
+const props = defineProps<{
+    clipFolderId: ClipFolderId
+}>();
+
+const { clipFoldersMap } = useClipFoldersStore()
+const clipFolderName = computed(
+  () => clipFoldersMap.value.get(props.clipFolderId)?.name ?? ''
+)
+const { openSidebar } = useSidebar()
 </script>
 
 <style lang="scss" module>

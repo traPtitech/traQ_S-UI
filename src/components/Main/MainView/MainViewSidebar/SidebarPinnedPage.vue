@@ -9,35 +9,23 @@
   </main-view-sidebar-page>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
-import SidebarHeader from './SidebarHeader.vue'
-import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue'
+<script lang="ts" setup>
+import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue';
+import SidebarHeader from './SidebarHeader.vue';
+import SidebarPinnedList from './SidebarPinned/SidebarPinnedList.vue';
 import { Pin } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'SidebarPinnedPage',
-  components: {
-    MainViewSidebarPage,
-    SidebarHeader,
-    SidebarPinnedList
-  },
-  props: {
-    pinnedMessages: {
-      type: Array as PropType<Pin[]>,
-      default: () => []
-    }
-  },
-  emits: {
-    moveBack: () => true
-  },
-  setup(props, { emit }) {
-    const moveBack = () => {
-      emit('moveBack')
-    }
-
-    return { moveBack }
-  }
+withDefaults(defineProps<{
+    pinnedMessages?: Pin[]
+}>(), {
+    pinnedMessages: () => []
 })
+
+const emit = defineEmits<{
+    (e: "moveBack"): void
+}>();
+
+const moveBack = () => {
+  emit('moveBack')
+}
 </script>

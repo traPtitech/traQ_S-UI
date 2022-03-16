@@ -24,10 +24,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import { computed } from 'vue';
 import { ActiveOAuth2Token, User } from '@traptitech/traq'
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import { scopeNameMap } from '/@/lib/clientScope'
 
@@ -36,36 +34,30 @@ interface TokenInfo extends ActiveOAuth2Token {
   clientDesc?: string
   clientDeveloper?: User
 }
+</script>
 
-export default defineComponent({
-  name: 'TokenInfo',
-  components: {
-    UserIcon,
-    AIcon
-  },
-  props: {
-    token: {
-      type: Object as PropType<TokenInfo>,
-      required: true
-    }
-  },
-  emits: {
-    revoke: () => true
-  },
-  setup(props, { emit }) {
-    const issuedAt = computed(() =>
-      getFullDayWithTimeString(new Date(props.token.issuedAt))
-    )
-    const scopes = computed(() =>
-      props.token.scopes.map(scope => scopeNameMap[scope])
-    )
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import UserIcon from '/@/components/UI/UserIcon.vue';
 
-    const revoke = () => {
-      emit('revoke')
-    }
-    return { issuedAt, scopes, revoke }
-  }
-})
+const props = defineProps<{
+    token: TokenInfo
+}>();
+
+const emit = defineEmits<{
+    (e: "revoke"): void
+}>();
+
+const issuedAt = computed(() =>
+  getFullDayWithTimeString(new Date(props.token.issuedAt))
+)
+const scopes = computed(() =>
+  props.token.scopes.map(scope => scopeNameMap[scope])
+)
+
+const revoke = () => {
+  emit('revoke')
+}
 </script>
 
 <style lang="scss" module>

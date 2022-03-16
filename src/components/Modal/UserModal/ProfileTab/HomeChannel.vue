@@ -16,49 +16,34 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import ProfileHeader from './ProfileHeader.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import ProfileHeader from './ProfileHeader.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import { computed } from 'vue';
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 
-export default defineComponent({
-  name: 'HomeChannel',
-  components: {
-    ProfileHeader,
-    AIcon
-  },
-  props: {
-    id: { type: String as PropType<string | null>, default: undefined }
-  },
-  setup(props) {
-    const { openLinkAndClearModal } = useOpenLinkAndClearModal()
-    const isLoading = computed(() => props.id === undefined)
-    const isEmpty = computed(() =>
-      props.id === undefined ? false : props.id === null
-    )
+const props = defineProps<{
+    id?: string | null
+}>();
 
-    const { channelIdToPathString } = useChannelPath()
-    const channelPath = computed(() =>
-      props.id ? channelIdToPathString(props.id) : ''
-    )
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+const isLoading = computed(() => props.id === undefined)
+const isEmpty = computed(() =>
+  props.id === undefined ? false : props.id === null
+)
 
-    const onClick = async (event: MouseEvent) => {
-      if (!props.id) return
+const { channelIdToPathString } = useChannelPath()
+const channelPath = computed(() =>
+  props.id ? channelIdToPathString(props.id) : ''
+)
 
-      openLinkAndClearModal(event, constructChannelPath(channelPath.value))
-    }
+const onClick = async (event: MouseEvent) => {
+  if (!props.id) return
 
-    return {
-      isLoading,
-      isEmpty,
-      channelPath,
-      onClick
-    }
-  }
-})
+  openLinkAndClearModal(event, constructChannelPath(channelPath.value))
+}
 </script>
 
 <style lang="scss" module>

@@ -22,45 +22,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const nullSymbol = Symbol('null')
+</script>
 
-export default defineComponent({
-  name: 'FormSelector',
-  props: {
-    modelValue: {
-      // nullableのとき https://github.com/vuejs/vue-next/issues/3948
-      type: null as unknown as PropType<string | null>,
-      default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * valueがnullのものはdisabled
-     */
-    options: {
-      type: Array as PropType<Array<{ key: string; value: string | null }>>,
-      required: true
-    },
-    label: {
-      type: String,
-      default: undefined
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string | null) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-    const id = randomString()
-    return { value, id, nullSymbol }
-  }
-})
+<script lang="ts" setup>
+
+
+const props = withDefaults(defineProps<{
+    modelValue?: string | null,
+    onSecondary?: boolean,
+    options: Array<{ key: string; value: string | null }>,
+    label?: string
+}>(), {
+    modelValue: '',
+    onSecondary: false
+});
+
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: string | null): void
+}>();
+
+const value = useModelValueSyncer(props, emit)
+const id = randomString()
 </script>
 
 <style lang="scss" module>

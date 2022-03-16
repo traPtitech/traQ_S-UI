@@ -21,65 +21,50 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
+import UsersSelector from '../Common/UsersSelector.vue';
+import FormInput from '/@/components/UI/FormInput.vue';
+import { computed, ref } from 'vue';
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
-import UsersSelector from '../Common/UsersSelector.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
 import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 
-export default defineComponent({
-  name: 'GroupMemberAddModal',
-  components: {
-    ModalFrame,
-    FormButton,
-    UsersSelector,
-    FormInput
-  },
-  props: {
-    id: {
-      type: String as PropType<UserGroupId>,
-      required: true
+const props = defineProps<{
+    id: UserGroupId
+}>();
+
+const { addErrorToast } = useToastStore()
+const { popModal } = useModalStore()
+const { userGroupsMap } = useGroupsStore()
+
+const group = computed(() => userGroupsMap.value.get(props.id))
+const groupName = computed(() => group.value?.name)
+const members = computed(() => group.value?.members.map(m => m.id) ?? [])
+
+const userIds = ref(new Set<UserId>())
+const role = ref('')
+
+const isAdding = ref(false)
+const add = async () => {
+  isAdding.value = true
+  try {
+    for (const userId of userIds.value) {
+      await apis.addUserGroupMember(props.id, {
+        id: userId,
+        role: role.value
+      })
     }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
-    const { popModal } = useModalStore()
-    const { userGroupsMap } = useGroupsStore()
-
-    const group = computed(() => userGroupsMap.value.get(props.id))
-    const groupName = computed(() => group.value?.name)
-    const members = computed(() => group.value?.members.map(m => m.id) ?? [])
-
-    const userIds = ref(new Set<UserId>())
-    const role = ref('')
-
-    const isAdding = ref(false)
-    const add = async () => {
-      isAdding.value = true
-      try {
-        for (const userId of userIds.value) {
-          await apis.addUserGroupMember(props.id, {
-            id: userId,
-            role: role.value
-          })
-        }
-      } catch {
-        addErrorToast('グループメンバーの追加に失敗しました')
-      }
-      isAdding.value = false
-
-      await popModal()
-    }
-
-    return { groupName, members, userIds, role, isAdding, add }
+  } catch {
+    addErrorToast('グループメンバーの追加に失敗しました')
   }
-})
+  isAdding.value = false
+
+  await popModal()
+}
 </script>
 
 <style lang="scss" module>

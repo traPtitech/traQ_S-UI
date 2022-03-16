@@ -19,44 +19,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, ref, watchEffect } from 'vue'
+<script lang="ts" setup>
+import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue';
+import AStamp from '/@/components/UI/AStamp.vue';
+import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue';
+import { ref, watchEffect } from 'vue';
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
-import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
-import AStamp from '/@/components/UI/AStamp.vue'
-import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'
 
-export default defineComponent({
-  name: 'DropdownSuggesterCandidate',
-  components: {
-    DropdownSuggesterUserIcon,
-    AStamp,
-    DropdownSuggesterStampEffect
-  },
-  props: {
-    candidate: {
-      type: Object as PropType<WordOrConfirmedPart>,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const containerRef = ref<HTMLDivElement>()
-    watchEffect(() => {
-      if (!containerRef.value) return
+const props = withDefaults(defineProps<{
+    candidate: WordOrConfirmedPart,
+    isSelected?: boolean
+}>(), {
+    isSelected: false
+});
 
-      if (props.isSelected) {
-        containerRef.value.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        })
-      }
+const containerRef = ref<HTMLDivElement>()
+watchEffect(() => {
+  if (!containerRef.value) return
+
+  if (props.isSelected) {
+    containerRef.value.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
     })
-
-    return { containerRef }
   }
 })
 </script>

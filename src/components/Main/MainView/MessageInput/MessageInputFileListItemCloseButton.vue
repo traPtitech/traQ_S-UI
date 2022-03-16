@@ -14,40 +14,30 @@
   </button>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import CircleIcon from '/@/components/UI/CircleIcon.vue'
+<script lang="ts" setup>
+import CircleIcon from '/@/components/UI/CircleIcon.vue';
+import { computed } from 'vue';
 import useHover from '/@/composables/useHover'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
-export default defineComponent({
-  name: 'MessageInputFileListItemCloseButton',
-  components: {
-    CircleIcon
-  },
-  setup() {
-    const { currentTheme } = useThemeSettings()
-    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const { currentTheme } = useThemeSettings()
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 
-    const iconBackgroundColorNotHovered = computed(
-      () => currentTheme.value.basic.ui.primary.inactive
-    )
-    const iconBackgroundColorHovered = computed(
-      () => currentTheme.value.basic.ui.primary.default
-    )
+const iconBackgroundColorNotHovered = computed(
+  () => currentTheme.value.basic.ui.primary.inactive
+)
+const iconBackgroundColorHovered = computed(
+  () => currentTheme.value.basic.ui.primary.default
+)
 
-    const iconBackgroundColor = computed(() =>
-      isHovered.value
-        ? iconBackgroundColorHovered.value
-        : iconBackgroundColorNotHovered.value
-    )
-    const iconColor = computed(
-      () => currentTheme.value.basic.background.primary.border
-    )
-
-    return { onMouseEnter, onMouseLeave, iconBackgroundColor, iconColor }
-  }
-})
+const iconBackgroundColor = computed(() =>
+  isHovered.value
+    ? iconBackgroundColorHovered.value
+    : iconBackgroundColorNotHovered.value
+)
+const iconColor = computed(
+  () => currentTheme.value.basic.background.primary.border
+)
 </script>
 
 <style lang="scss" module>

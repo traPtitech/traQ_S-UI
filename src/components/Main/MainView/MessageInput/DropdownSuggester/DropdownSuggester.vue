@@ -32,8 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
+import { computed } from 'vue';
 import { Word } from '../composables/useWordSuggestionList'
 import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import { isIOS } from '/@/lib/dom/browser'
@@ -42,67 +41,44 @@ const WIDTH = 240
 const MARGIN = 8
 
 const iOSFlag = isIOS()
+</script>
 
-export default defineComponent({
-  name: 'DropdownSuggester',
-  components: {
-    DropdownSuggesterCandidate
-  },
-  props: {
-    isShown: {
-      type: Boolean,
-      default: false
-    },
-    position: {
-      type: Object as PropType<{ top: number; left: number }>,
-      default: () => ({ top: 0, left: 0 })
-    },
-    candidates: {
-      type: Array as PropType<Word[]>,
-      default: () => []
-    },
-    /**
-     * ../composables/useWordSuggester.tsを参照
-     */
-    selectedIndex: {
-      // nullableのとき https://github.com/vuejs/vue-next/issues/3948
-      type: null as unknown as PropType<number | null>,
-      required: true
-    },
-    confirmedPart: {
-      type: String,
-      default: ''
-    }
-  },
-  emits: {
-    select: (_word: WordOrConfirmedPart) => true
-  },
-  setup(props, { emit }) {
-    const styledPosition = computed(() => ({
-      top: `${props.position.top}px`,
-      left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
-      width: `${WIDTH}px`
-    }))
+<script lang="ts" setup>
+import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue';
 
-    const confirmedPartCandidate = computed(
-      (): WordOrConfirmedPart => ({
-        type: 'confirmed-part',
-        text: props.confirmedPart
-      })
-    )
+const props = withDefaults(defineProps<{
+    isShown?: boolean,
+    position?: { top: number; left: number },
+    candidates?: Word[],
+    selectedIndex: number | null,
+    confirmedPart?: string
+}>(), {
+    isShown: false,
+    position: () => ({ top: 0, left: 0 }),
+    candidates: () => [],
+    confirmedPart: ''
+});
 
-    const select = (word: WordOrConfirmedPart) => {
-      emit('select', word)
-    }
+const emit = defineEmits<{
+    (e: "select", _word: WordOrConfirmedPart): void
+}>();
 
-    return {
-      iOSFlag,
-      styledPosition,
-      confirmedPartCandidate,
-      select
-    }
-  }
-})
+const styledPosition = computed(() => ({
+  top: `${props.position.top}px`,
+  left: `min(${props.position.left}px, calc(100vw - ${WIDTH + MARGIN}px))`,
+  width: `${WIDTH}px`
+}))
+
+const confirmedPartCandidate = computed(
+  (): WordOrConfirmedPart => ({
+    type: 'confirmed-part',
+    text: props.confirmedPart
+  })
+)
+
+const select = (word: WordOrConfirmedPart) => {
+  emit('select', word)
+}
 </script>
 
 <style lang="scss" module>

@@ -4,27 +4,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'ToolItem',
-  components: { AIcon },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    iconName: string,
+    iconMdi?: boolean
+}>(), {
+    iconMdi: false
 })
+
+
 </script>
 
 <style lang="scss" module>

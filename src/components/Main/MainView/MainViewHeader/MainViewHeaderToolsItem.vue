@@ -10,46 +10,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 import { useMainViewStore } from '/@/store/ui/mainView'
 
-export default defineComponent({
-  name: 'MainViewHeaderToolsItem',
-  components: {
-    AIcon
-  },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    tooltip: {
-      type: String,
-      default: undefined
-    }
-  },
-  emits: {
-    click: () => true
-  },
-  setup(props, { emit }) {
-    const { headerStyle } = useMainViewStore()
-    const onClick = () => {
-      if (props.disabled) return
-      emit('click')
-    }
-    return { onClick, headerStyle }
-  }
-})
+const props = withDefaults(defineProps<{
+    iconName: string,
+    iconMdi?: boolean,
+    disabled?: boolean,
+    tooltip?: string
+}>(), {
+    iconMdi: false,
+    disabled: false
+});
+
+const emit = defineEmits<{
+    (e: "click"): void
+}>();
+
+const { headerStyle } = useMainViewStore()
+const onClick = () => {
+  if (props.disabled) return
+  emit('click')
+}
 </script>
 
 <style lang="scss" module>

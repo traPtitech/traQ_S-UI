@@ -11,24 +11,15 @@
   <null-view v-else />
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ChannelView from '/@/components/Main/MainView/ChannelView/ChannelView.vue';
+import ClipsView from '/@/components/Main/MainView/ClipsView/ClipsView.vue';
+import NullView from '/@/components/Main/MainView/NullView/NullView.vue';
 import { ViewInformation } from '/@/store/ui/mainView'
-import ChannelView from '/@/components/Main/MainView/ChannelView/ChannelView.vue'
-import ClipsView from '/@/components/Main/MainView/ClipsView/ClipsView.vue'
-import NullView from '/@/components/Main/MainView/NullView/NullView.vue'
 
-export default defineComponent({
-  name: 'MainViewComponentSelector',
-  components: { ChannelView, ClipsView, NullView },
-  props: {
-    viewInfo: {
-      type: Object as PropType<ViewInformation>,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    viewInfo: ViewInformation
+}>()
+
+
 </script>

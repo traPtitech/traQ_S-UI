@@ -12,88 +12,65 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType, watch } from 'vue'
+import { reactive, computed, watch } from 'vue';
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
 import { useUserModalOpener } from '/@/composables/useModalOpener'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 
 export type IconSize = 160 | 100 | 64 | 48 | 44 | 40 | 36 | 32 | 28 | 24 | 20
+</script>
 
-export default defineComponent({
-  name: 'UserIcon',
-  components: {
-    NotificationIndicator
+<script lang="ts" setup>
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
+
+const props = withDefaults(defineProps<{
+    userId: UserId,
+    fallbackIconFileId?: FileId,
+    size?: IconSize,
+    indicatorSize?: number,
+    preventModal?: boolean,
+    hasNotification?: boolean
+}>(), {
+    size: 36,
+    indicatorSize: 10,
+    preventModal: false,
+    hasNotification: false
+});
+
+const { detail, myId } = useMeStore()
+const { usersMap, fetchUser } = useUsersStore()
+
+watch(
+  () => props.userId,
+  userId => {
+    if (!userId) return
+    fetchUser({ userId })
   },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    fallbackIconFileId: {
-      type: String as PropType<FileId>,
-      default: undefined
-    },
-    size: {
-      type: Number as PropType<IconSize>,
-      default: 36
-    },
-    indicatorSize: {
-      type: Number,
-      default: 10
-    },
-    preventModal: {
-      type: Boolean,
-      default: false
-    },
-    hasNotification: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { detail, myId } = useMeStore()
-    const { usersMap, fetchUser } = useUsersStore()
+  { immediate: true }
+)
 
-    watch(
-      () => props.userId,
-      userId => {
-        if (!userId) return
-        fetchUser({ userId })
-      },
-      { immediate: true }
-    )
-
-    const user = computed(() =>
-      props.userId === myId.value
-        ? detail.value
-        : usersMap.value.get(props.userId)
-    )
-    const userIconFileId = computed(
-      () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
-    )
-    const styles = reactive({
-      container: computed(() => ({
-        width: `${props.size}px`,
-        height: `${props.size}px`,
-        backgroundImage: userIconFileId.value
-          ? `url(${buildUserIconPath(userIconFileId.value)})`
-          : undefined,
-        pointerEvents: props.preventModal ? ('none' as const) : undefined
-      }))
-    })
-
-    const { isClickable, openModal } = useUserModalOpener(props, user)
-
-    return {
-      styles,
-      isClickable,
-      openModal
-    }
-  }
+const user = computed(() =>
+  props.userId === myId.value
+    ? detail.value
+    : usersMap.value.get(props.userId)
+)
+const userIconFileId = computed(
+  () => user.value?.iconFileId ?? props.fallbackIconFileId ?? ''
+)
+const styles = reactive({
+  container: computed(() => ({
+    width: `${props.size}px`,
+    height: `${props.size}px`,
+    backgroundImage: userIconFileId.value
+      ? `url(${buildUserIconPath(userIconFileId.value)})`
+      : undefined,
+    pointerEvents: props.preventModal ? ('none' as const) : undefined
+  }))
 })
+
+const { isClickable, openModal } = useUserModalOpener(props, user)
 </script>
 
 <style lang="scss" module>

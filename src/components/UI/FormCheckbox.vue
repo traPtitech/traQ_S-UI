@@ -5,35 +5,23 @@
   </label>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import FormCheckboxInner from './FormCheckboxInner.vue';
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
-import FormCheckboxInner from './FormCheckboxInner.vue'
 
-export default defineComponent({
-  name: 'FormCheckbox',
-  components: {
-    FormCheckboxInner
-  },
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
-    label: {
-      type: String,
-      default: ''
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
+const props = withDefaults(defineProps<{
+    modelValue?: boolean,
+    label?: string
+}>(), {
+    modelValue: false,
+    label: ''
+});
 
-    return { value }
-  }
-})
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: boolean): void
+}>();
+
+const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

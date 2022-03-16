@@ -17,21 +17,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+<script lang="ts" setup>
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
 
-export default defineComponent({
-  name: 'ChannelSidebarRelationElement',
-  components: {
-    InlineMarkdown
-  },
-  props: {
-    name: { type: String, required: true },
-    topic: { type: String, default: '' },
-    isCurrent: { type: Boolean, default: false },
-    link: { type: String, required: true }
-  }
+withDefaults(defineProps<{
+    name: string,
+    topic?: string,
+    isCurrent?: boolean,
+    link: string
+}>(), {
+    topic: '',
+    isCurrent: false
 })
 </script>
 

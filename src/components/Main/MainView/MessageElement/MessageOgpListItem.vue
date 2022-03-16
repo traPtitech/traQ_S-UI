@@ -19,10 +19,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { computed } from 'vue';
 import { Ogp } from '@traptitech/traq'
-import MessageOgpContentVideo from './MessageOgpContentVideo.vue'
-import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue'
 
 const ifIsHttps = (url: string | undefined) => {
   if (url === undefined) return undefined
@@ -48,24 +46,17 @@ const useOgpData = (props: { ogpData: Ogp }) => {
   const isVideoType = computed(() => props.ogpData?.type?.startsWith('video'))
   return { isVideoType, imageUrl, videoUrl }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageOgpListItem',
-  components: {
-    MessageOgpContentVideo,
-    MessageOgpContentWebsite
-  },
-  props: {
-    ogpData: {
-      type: Object as PropType<Ogp>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { isVideoType, imageUrl, videoUrl } = useOgpData(props)
-    return { isVideoType, imageUrl, videoUrl }
-  }
-})
+<script lang="ts" setup>
+import MessageOgpContentVideo from './MessageOgpContentVideo.vue';
+import MessageOgpContentWebsite from './MessageOgpContentWebsite.vue';
+
+const props = defineProps<{
+    ogpData: Ogp
+}>();
+
+const { isVideoType, imageUrl, videoUrl } = useOgpData(props)
 </script>
 
 <style lang="scss" module>

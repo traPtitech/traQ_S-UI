@@ -14,23 +14,15 @@
   <div v-else :class="$style.none"></div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ChannelViewHeader from '/@/components/Main/MainView/ChannelView/ChannelViewHeader.vue';
+import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue';
+import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue';
 import { ViewInformation } from '/@/store/ui/mainView'
-import ChannelViewHeader from '/@/components/Main/MainView/ChannelView/ChannelViewHeader.vue'
-import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
-import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue'
 
-export default defineComponent({
-  name: 'MainViewHeaderSelector',
-  components: { ChannelViewHeader, ClipsHeader, DMHeader },
-  props: {
-    viewInfo: {
-      type: Object as PropType<ViewInformation>,
-      required: true
-    }
-  }
-})
+defineProps<{
+    viewInfo: ViewInformation
+}>()
 </script>
 
 <style lang="scss" module>

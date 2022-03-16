@@ -18,30 +18,18 @@
   <div v-else :class="$style.none"></div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import ChannelSidebar from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue';
+import ClipsSidebar from '/@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue';
+import DMSidebar from '/@/components/Main/MainView/DMSidebar/DMSidebar.vue';
 import { ViewInformation } from '/@/store/ui/mainView'
-import ChannelSidebar from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebar.vue'
-import ClipsSidebar from '/@/components/Main/MainView/ClipsSidebar/ClipsSidebar.vue'
-import DMSidebar from '/@/components/Main/MainView/DMSidebar/DMSidebar.vue'
 
-export default defineComponent({
-  name: 'MainViewSidebarSelector',
-  components: { ChannelSidebar, ClipsSidebar, DMSidebar },
-  props: {
-    viewInfo: {
-      type: Object as PropType<ViewInformation>,
-      required: true
-    },
-    isSidebarOpenerReady: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    viewInfo: ViewInformation,
+    isSidebarOpenerReady: boolean
+}>()
+
+
 </script>
 
 <style lang="scss" module>

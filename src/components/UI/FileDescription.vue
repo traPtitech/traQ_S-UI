@@ -26,52 +26,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script lang="ts" setup>
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import { computed } from 'vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 
-export default defineComponent({
-  name: 'FileDescription',
-  components: {
-    FileTypeIcon,
-    AIcon
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    },
-    isWhite: {
-      type: Boolean,
-      default: false
-    },
-    isEllipsis: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const {
-      fileMeta,
-      fileType,
-      fileSize,
-      onFileDownloadLinkClick,
-      isAnimatedImage
-    } = useFileMeta(props)
-    const name = computed(() => fileMeta.value?.name ?? 'unknown')
+const props = withDefaults(defineProps<{
+    fileId: string,
+    isWhite?: boolean,
+    isEllipsis?: boolean
+}>(), {
+    isWhite: false,
+    isEllipsis: false
+});
 
-    return {
-      fileMeta,
-      fileType,
-      fileSize,
-      onFileDownloadLinkClick,
-      isAnimatedImage,
-      name
-    }
-  }
-})
+const {
+  fileMeta,
+  fileType,
+  fileSize,
+  onFileDownloadLinkClick,
+  isAnimatedImage
+} = useFileMeta(props)
+const name = computed(() => fileMeta.value?.name ?? 'unknown')
 </script>
 
 <style lang="scss" module>

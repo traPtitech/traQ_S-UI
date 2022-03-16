@@ -13,32 +13,19 @@
   </main-view-header>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue';
+import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue';
+import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue';
+import { computed } from 'vue';
 import useSidebar from '/@/composables/useSidebar'
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
-import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
-import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 
-export default defineComponent({
-  name: 'DMHeader',
-  components: {
-    MainViewHeader,
-    MainViewHeaderTitle,
-    MainViewHeaderToolsItem
-  },
-  props: {
-    userName: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { openSidebar } = useSidebar()
-    const title = computed(() => `@ ${props.userName}`)
-    return { openSidebar, title }
-  }
-})
+const props = defineProps<{
+    userName: string
+}>();
+
+const { openSidebar } = useSidebar()
+const title = computed(() => `@ ${props.userName}`)
 </script>
 
 <style lang="scss" module>

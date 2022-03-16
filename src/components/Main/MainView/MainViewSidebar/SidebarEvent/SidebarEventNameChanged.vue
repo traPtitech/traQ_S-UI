@@ -9,25 +9,12 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import SidebarEventFrame from './SidebarEventFrame.vue';
 import { NameChangedEvent } from '@traptitech/traq'
-import SidebarEventFrame from './SidebarEventFrame.vue'
 
-export default defineComponent({
-  name: 'SidebarEventNameChanged',
-  components: {
-    SidebarEventFrame
-  },
-  props: {
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<NameChangedEvent>,
-      required: true
-    }
-  }
-})
+defineProps<{
+    datetime: string,
+    details: NameChangedEvent
+}>()
 </script>

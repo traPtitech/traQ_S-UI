@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, watch, computed } from 'vue'
+import { shallowRef, watch, computed } from 'vue';
 import type { Component } from 'vue'
 import mdiPaths from '/@/assets/mdi'
 
@@ -48,58 +48,44 @@ const iconModules = {
   ...iconModules0,
   ...iconModules1
 }
+</script>
 
-export default defineComponent({
-  name: 'AIcon',
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: undefined
-    },
-    desc: {
-      type: String,
-      default: undefined
-    },
-    size: {
-      type: Number,
-      default: 24
-    },
-    mdi: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const getComponent = async (name: string) => {
-      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
-      if (!moduleFunc) {
-        throw new Error(`存在しないアイコン名: ${name}`)
-      }
+<script lang="ts" setup>
 
-      const module = await moduleFunc()
-      return module.default
-    }
 
-    const svgComponent = shallowRef()
-    watch(
-      () => props.name,
-      async () => {
-        if (props.mdi) return
-        const com = await getComponent(props.name)
-        svgComponent.value = com
-      },
-      { immediate: true }
-    )
+const props = withDefaults(defineProps<{
+    name: string,
+    title?: string,
+    desc?: string,
+    size?: number,
+    mdi?: boolean
+}>(), {
+    size: 24,
+    mdi: false
+});
 
-    const path = computed(() => mdiPaths[props.name])
-
-    return { svgComponent, path }
+const getComponent = async (name: string) => {
+  const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
+  if (!moduleFunc) {
+    throw new Error(`存在しないアイコン名: ${name}`)
   }
-})
+
+  const module = await moduleFunc()
+  return module.default
+}
+
+const svgComponent = shallowRef()
+watch(
+  () => props.name,
+  async () => {
+    if (props.mdi) return
+    const com = await getComponent(props.name)
+    svgComponent.value = com
+  },
+  { immediate: true }
+)
+
+const path = computed(() => mdiPaths[props.name])
 </script>
 
 <style lang="scss" module>

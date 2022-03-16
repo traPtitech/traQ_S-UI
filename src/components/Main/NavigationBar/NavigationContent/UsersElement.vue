@@ -10,49 +10,35 @@
   </optional-router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
+import UsersElementUserName from './UsersElementUserName.vue';
+import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue';
+import { computed } from 'vue';
 import { User } from '@traptitech/traq'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import UsersElementUserName from './UsersElementUserName.vue'
-import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
 import { constructUserPath } from '/@/router'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'UsersElement',
-  components: {
-    OptionalRouterLink,
-    UsersElementUserName,
-    UserIcon
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { unreadChannelsMap } = useMeStore()
-    const { userIdToDmChannelIdMap } = useChannelsStore()
+const props = defineProps<{
+    user: User
+}>();
 
-    const dmChannelPath = computed(() => {
-      if (props.user.bot && props.user.name.startsWith('Webhook#')) {
-        return
-      }
-      return constructUserPath(props.user.name)
-    })
-    const dmChannelId = computed(() =>
-      userIdToDmChannelIdMap.value.get(props.user.id)
-    )
-    const hasNotification = computed(() =>
-      unreadChannelsMap.value.has(dmChannelId.value ?? '')
-    )
+const { unreadChannelsMap } = useMeStore()
+const { userIdToDmChannelIdMap } = useChannelsStore()
 
-    return { dmChannelPath, hasNotification }
+const dmChannelPath = computed(() => {
+  if (props.user.bot && props.user.name.startsWith('Webhook#')) {
+    return
   }
+  return constructUserPath(props.user.name)
 })
+const dmChannelId = computed(() =>
+  userIdToDmChannelIdMap.value.get(props.user.id)
+)
+const hasNotification = computed(() =>
+  unreadChannelsMap.value.has(dmChannelId.value ?? '')
+)
 </script>
 
 <style lang="scss" module>

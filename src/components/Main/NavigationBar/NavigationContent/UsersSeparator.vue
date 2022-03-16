@@ -11,29 +11,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue';
 
-export default defineComponent({
-  name: 'UsersSeparator',
-  components: {
-    AIcon,
-    NotificationIndicator
-  },
-  props: {
-    name: { type: String, default: '' },
-    isOpen: { type: Boolean, default: false },
-    hasNotification: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
-  }
+withDefaults(defineProps<{
+    name?: string,
+    isOpen?: boolean,
+    hasNotification?: boolean
+}>(), {
+    name: '',
+    isOpen: false,
+    hasNotification: false
 })
+
+
 </script>
 
 <style lang="scss" module>

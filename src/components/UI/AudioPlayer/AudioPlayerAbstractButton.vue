@@ -4,33 +4,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'AudioPlayerAbstractButton',
-  components: {
-    AIcon
-  },
-  props: {
-    size: {
-      type: Number,
-      required: true
-    },
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  }
+withDefaults(defineProps<{
+    size: number,
+    iconName: string,
+    iconMdi?: boolean,
+    disabled?: boolean
+}>(), {
+    iconMdi: false,
+    disabled: false
 })
 </script>
 

@@ -38,9 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref, ref } from 'vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import { computed, reactive, Ref, ref } from 'vue';
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 
@@ -74,34 +72,20 @@ const usePasswordChange = (state: State, isValid: Ref<boolean>) => {
   }
   return { isChanging, onChangeClick }
 }
+</script>
 
-export default defineComponent({
-  name: 'PasswordChange',
-  components: {
-    FormInput,
-    FormButton
-  },
-  setup() {
-    const { changeLink, changeName } = window.traQConfig.auth ?? {}
-    const showChangeLink = changeLink !== undefined && changeName !== undefined
+<script lang="ts" setup>
+import FormInput from '/@/components/UI/FormInput.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
 
-    const state = reactive<State>({ old: '', new: '' })
-    const isValid = computed(
-      () => state.old !== '' && state.new !== '' && state.old !== state.new
-    )
-    const { isChanging, onChangeClick } = usePasswordChange(state, isValid)
+const { changeLink, changeName } = window.traQConfig.auth ?? {}
+const showChangeLink = changeLink !== undefined && changeName !== undefined
 
-    return {
-      changeLink,
-      changeName,
-      showChangeLink,
-      state,
-      isValid,
-      isChanging,
-      onChangeClick
-    }
-  }
-})
+const state = reactive<State>({ old: '', new: '' })
+const isValid = computed(
+  () => state.old !== '' && state.new !== '' && state.old !== state.new
+)
+const { isChanging, onChangeClick } = usePasswordChange(state, isValid)
 </script>
 
 <style lang="scss" module>

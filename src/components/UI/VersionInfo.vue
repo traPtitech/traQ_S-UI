@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue';
 import { VERSION } from '/@/lib/define'
 import useVersion from '/@/composables/useVersion'
 
@@ -34,22 +34,17 @@ const useManualUpdateCheck = () => {
 
   return { onClick }
 }
+</script>
 
-export default defineComponent({
-  name: 'VersionInfo',
-  setup() {
-    const { version: serverVersionData } = useVersion()
-    const serverVersion = computed(() => serverVersionData.value?.version)
+<script lang="ts" setup>
 
-    const { onClick } = useManualUpdateCheck()
 
-    return {
-      clientVersion: VERSION,
-      serverVersion,
-      onClick
-    }
-  }
-})
+const { version: serverVersionData } = useVersion()
+const serverVersion = computed(() => serverVersionData.value?.version)
+
+const { onClick } = useManualUpdateCheck()
+
+const clientVersion = VERSION;
 </script>
 
 <style lang="scss" module>

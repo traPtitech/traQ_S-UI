@@ -21,9 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import UserListItem from '../Common/UserListItem.vue'
+import { computed } from 'vue';
 import { UserGroupMember } from '@traptitech/traq'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
@@ -32,44 +30,36 @@ type UserGroupMemberOrAdmin = UserGroupMember & {
   isMember: boolean
   isAdmin: boolean
 }
+</script>
 
-export default defineComponent({
-  name: 'GroupModal',
-  components: {
-    ModalFrame,
-    UserListItem
-  },
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { activeUsersMap } = useUsersStore()
-    const { userGroupsMap } = useGroupsStore()
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue';
+import UserListItem from '../Common/UserListItem.vue';
 
-    const group = computed(() => userGroupsMap.value.get(props.id))
+const props = defineProps<{
+    id: string
+}>();
 
-    const name = computed(() => group.value?.name)
-    const users = computed((): UserGroupMemberOrAdmin[] => {
-      if (!group.value) return []
+const { activeUsersMap } = useUsersStore()
+const { userGroupsMap } = useGroupsStore()
 
-      const adminIds = new Set(group.value.admins)
-      const members = new Map(group.value.members.map(m => [m.id, m]))
-      return [
-        ...group.value.admins.map(id => {
-          const m = members.get(id)
-          return { id, role: m?.role ?? '', isMember: !!m, isAdmin: true }
-        }),
-        ...group.value.members
-          .filter(m => !adminIds.has(m.id))
-          .map(m => ({ ...m, isMember: true, isAdmin: false }))
-      ].filter(m => activeUsersMap.value.has(m.id))
-    })
+const group = computed(() => userGroupsMap.value.get(props.id))
 
-    return { name, users }
-  }
+const name = computed(() => group.value?.name)
+const users = computed((): UserGroupMemberOrAdmin[] => {
+  if (!group.value) return []
+
+  const adminIds = new Set(group.value.admins)
+  const members = new Map(group.value.members.map(m => [m.id, m]))
+  return [
+    ...group.value.admins.map(id => {
+      const m = members.get(id)
+      return { id, role: m?.role ?? '', isMember: !!m, isAdmin: true }
+    }),
+    ...group.value.members
+      .filter(m => !adminIds.has(m.id))
+      .map(m => ({ ...m, isMember: true, isAdmin: false }))
+  ].filter(m => activeUsersMap.value.has(m.id))
 })
 </script>
 

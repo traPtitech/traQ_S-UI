@@ -11,48 +11,40 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue';
 import { NavigationItemType, useNavigationSelectorItem } from './composables/useNavigation'
-import NavigationSelectorItem from '/@/components/Modal/UserModal/NavigationSelectorItem.vue'
 
-export default defineComponent({
-  name: 'NavigationSelector',
-  components: { NavigationSelectorItem },
-  props: {
-    currentNavigation: {
-      type: String as PropType<NavigationItemType>,
-      default: 'profile' as const
-    }
-  },
-  emits: {
-    navigationChange: (_type: NavigationItemType) => true
-  },
-  setup(props, { emit }) {
-    const items: {
-      type: NavigationItemType
-      iconName: string
-      iconMdi?: true
-    }[] = [
-      {
-        type: 'profile',
-        iconName: 'user'
-      },
-      {
-        type: 'groups',
-        iconName: 'group'
-      },
-      {
-        type: 'tags',
-        iconName: 'tags',
-        iconMdi: true
-      }
-    ]
-    const { onNavigationItemClick } = useNavigationSelectorItem(emit)
-
-    return { items, onNavigationItemClick }
-  }
+withDefaults(defineProps<{
+    currentNavigation?: NavigationItemType
+}>(), {
+    currentNavigation: 'profile' as const
 })
+
+const emit = defineEmits<{
+    (e: "navigationChange", _type: NavigationItemType): void
+}>();
+
+const items: {
+  type: NavigationItemType
+  iconName: string
+  iconMdi?: true
+}[] = [
+  {
+    type: 'profile',
+    iconName: 'user'
+  },
+  {
+    type: 'groups',
+    iconName: 'group'
+  },
+  {
+    type: 'tags',
+    iconName: 'tags',
+    iconMdi: true
+  }
+]
+const { onNavigationItemClick } = useNavigationSelectorItem(emit)
 </script>
 
 <style lang="scss" module>

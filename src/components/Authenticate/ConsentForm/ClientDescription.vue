@@ -25,30 +25,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue';
 import { OAuth2Client, User } from '@traptitech/traq'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 
-export default defineComponent({
-  name: 'ClientDescription',
-  components: {
-    UserIcon
-  },
-  props: {
-    client: {
-      type: Object as PropType<OAuth2Client>,
-      required: true
-    },
-    developer: {
-      type: Object as PropType<User>,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    client: OAuth2Client,
+    developer?: User
+}>()
+
+
 </script>
 
 <style lang="scss" module>

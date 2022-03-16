@@ -9,28 +9,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script lang="ts" setup>
+import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue';
+import { computed } from 'vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 
-export default defineComponent({
-  name: 'SearchResultMessageFile',
-  components: {
-    FileTypeIcon
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
-    const name = computed(() => fileMeta.value?.name ?? 'unknown')
-    return { fileType, name, isAnimatedImage }
-  }
-})
+const props = defineProps<{
+    fileId: string
+}>();
+
+const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
+const name = computed(() => fileMeta.value?.name ?? 'unknown')
 </script>
 
 <style lang="scss" module>

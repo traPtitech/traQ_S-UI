@@ -37,42 +37,21 @@
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
-import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
-import MobileToolBox from '/@/components/Main/NavigationBar/MobileToolBox.vue'
-import NavigationSelector from '/@/components/Main/NavigationBar/MobileNavigationSelector.vue'
+<script lang="ts" setup>
+import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue';
+import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue';
+import MobileToolBox from '/@/components/Main/NavigationBar/MobileToolBox.vue';
+import NavigationSelector from '/@/components/Main/NavigationBar/MobileNavigationSelector.vue';
 import useNavigation from './composables/useNavigation'
 
-export default defineComponent({
-  name: 'MobileNavigationBar',
-  components: {
-    NavigationContent,
-    EphemeralNavigationContent,
-    NavigationSelector,
-    MobileToolBox
-  },
-  setup() {
-    const {
-      navigationSelectorState,
-      ephemeralNavigationSelectorState,
-      onNavigationChange,
-      onEphemeralNavigationChange,
-      onEphemeralEntryRemove,
-      onEphemeralEntryAdd
-    } = useNavigation()
-
-    return {
-      navigationSelectorState,
-      ephemeralNavigationSelectorState,
-      onNavigationChange,
-      onEphemeralNavigationChange,
-      onEphemeralEntryRemove,
-      onEphemeralEntryAdd
-    }
-  }
-})
+const {
+  navigationSelectorState,
+  ephemeralNavigationSelectorState,
+  onNavigationChange,
+  onEphemeralNavigationChange,
+  onEphemeralEntryRemove,
+  onEphemeralEntryAdd
+} = useNavigation()
 </script>
 
 <style lang="scss" module>

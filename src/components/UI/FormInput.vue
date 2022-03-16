@@ -50,115 +50,61 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, shallowRef } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import LengthCount from '/@/components/UI/LengthCount.vue';
+import { shallowRef } from 'vue';
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/composables/useInput'
-import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/composables/useShowPassword'
-import LengthCount from '/@/components/UI/LengthCount.vue'
 
-export default defineComponent({
-  name: 'FormInput',
-  components: {
-    AIcon,
-    LengthCount
-  },
-  props: {
-    type: {
-      type: String,
-      default: 'text'
-    },
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    name: {
-      type: String,
-      default: undefined
-    },
-    autocomplete: {
-      type: String,
-      default: undefined
-    },
-    label: {
-      type: String,
-      default: undefined
-    },
-    prefix: {
-      type: String,
-      default: undefined
-    },
-    suffix: {
-      type: String,
-      default: undefined
-    },
-    min: {
-      type: String,
-      default: undefined
-    },
-    max: {
-      type: String,
-      default: undefined
-    },
-    step: {
-      type: String,
-      default: undefined
-    },
-    maxLength: {
-      type: Number,
-      default: undefined
-    },
-    useChangeEvent: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string | number) => true
-  },
-  setup(props, { emit }) {
-    const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
+const props = withDefaults(defineProps<{
+    type?: string,
+    modelValue?: string | number,
+    onSecondary?: boolean,
+    placeholder?: string,
+    name?: string,
+    autocomplete?: string,
+    label?: string,
+    prefix?: string,
+    suffix?: string,
+    min?: string,
+    max?: string,
+    step?: string,
+    maxLength?: number,
+    useChangeEvent?: boolean
+}>(), {
+    type: 'text',
+    modelValue: '',
+    onSecondary: false,
+    placeholder: '',
+    useChangeEvent: false
+});
 
-    const onInput = (e: Event) => {
-      if (props.useChangeEvent) return
-      onInputInternal(e)
-    }
-    const onChange = (e: Event) => {
-      if (!props.useChangeEvent) return
-      onInputInternal(e)
-    }
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: string | number): void
+}>();
 
-    const inputRef = shallowRef<HTMLInputElement | null>(null)
-    const focus = () => {
-      inputRef.value?.focus()
-    }
+const { onInput: onInputInternal } = useInput(emit, 'update:modelValue')
 
-    const id = randomString()
+const onInput = (e: Event) => {
+  if (props.useChangeEvent) return
+  onInputInternal(e)
+}
+const onChange = (e: Event) => {
+  if (!props.useChangeEvent) return
+  onInputInternal(e)
+}
 
-    const { isPasswordShown, togglePassword, typeWithShown } =
-      useShowPassword(props)
+const inputRef = shallowRef<HTMLInputElement | null>(null)
+const focus = () => {
+  inputRef.value?.focus()
+}
 
-    return {
-      onInput,
-      onChange,
-      id,
-      inputRef,
-      focus,
-      isPasswordShown,
-      togglePassword,
-      typeWithShown
-    }
-  }
-})
+const id = randomString()
+
+const { isPasswordShown, togglePassword, typeWithShown } =
+  useShowPassword(props)
 </script>
 
 <style lang="scss" module>

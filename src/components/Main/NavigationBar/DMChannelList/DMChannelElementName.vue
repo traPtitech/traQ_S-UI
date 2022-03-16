@@ -6,17 +6,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'DMChannelElementName',
-  props: {
-    name: {
-      type: String,
-      default: ''
-    }
-  }
+
+withDefaults(defineProps<{
+    name?: string
+}>(), {
+    name: ''
 })
 </script>
 

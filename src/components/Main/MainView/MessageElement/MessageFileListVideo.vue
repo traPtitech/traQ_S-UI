@@ -15,30 +15,19 @@
   <div v-else :class="$style.error">表示できない動画です</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import MessageFileListItemContent from './MessageFileListItemContent.vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'MessageFileListVideo',
-  components: { MessageFileListItemContent },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    fileId: {
-      type: String as PropType<FileId>,
-      default: ''
-    }
-  },
-  setup(props) {
-    const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
-    return { fileMeta, fileLink, fileRawPath, canShow }
-  }
-})
+const props = withDefaults(defineProps<{
+    channelId: ChannelId | DMChannelId,
+    fileId?: FileId
+}>(), {
+    fileId: ''
+});
+
+const { fileMeta, fileLink, fileRawPath, canShow } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

@@ -11,26 +11,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue';
 import useImageViewer from './composables/useImageViewer'
 
-export default defineComponent({
-  name: 'ImageViewer',
-  props: {
-    src: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const containerEle = ref<HTMLDivElement>()
+defineProps<{
+    src?: string
+}>()
 
-    const { styles } = useImageViewer(containerEle)
+const containerEle = ref<HTMLDivElement>()
 
-    return { containerEle, styles }
-  }
-})
+const { styles } = useImageViewer(containerEle)
 </script>
 
 <style lang="scss" module>

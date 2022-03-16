@@ -20,30 +20,24 @@
   </click-outside>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import CommonModalHeader from './ModalHeader.vue'
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
+import CommonModalHeader from './ModalHeader.vue';
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'ModalFrame',
-  components: {
-    ClickOutside,
-    CommonModalHeader
-  },
-  props: {
-    iconMdi: { type: Boolean, default: false },
-    iconName: { type: String, required: true },
-    title: { type: String, required: true },
-    subtitle: { type: String, default: '' },
-    returnButton: { type: Boolean, default: false }
-  },
-  setup() {
-    const { clearModal } = useModalStore()
-    return { clearModal }
-  }
+withDefaults(defineProps<{
+    iconMdi?: boolean,
+    iconName: string,
+    title: string,
+    subtitle?: string,
+    returnButton?: boolean
+}>(), {
+    iconMdi: false,
+    subtitle: '',
+    returnButton: false
 })
+
+const { clearModal } = useModalStore()
 </script>
 
 <style lang="scss" module>

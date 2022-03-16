@@ -6,20 +6,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import UnreadDMs from './UnreadDMs.vue'
-import UserList from './UserList.vue'
-import GroupManagerOpener from './GroupManagerOpener.vue'
-
-export default defineComponent({
-  name: 'UsersTab',
-  components: {
-    UnreadDMs,
-    UserList,
-    GroupManagerOpener
-  }
-})
+<script lang="ts" setup>
+import UnreadDMs from './UnreadDMs.vue';
+import UserList from './UserList.vue';
+import GroupManagerOpener from './GroupManagerOpener.vue';
 </script>
 
 <style lang="scss" module>

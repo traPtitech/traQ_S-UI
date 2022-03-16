@@ -11,37 +11,24 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import ProfileHeader from './ProfileHeader.vue'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+<script lang="ts" setup>
+import ProfileHeader from './ProfileHeader.vue';
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: 'BioText',
-  components: {
-    ProfileHeader,
-    InlineMarkdown
-  },
-  props: {
-    bio: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const isLoading = computed(() => props.bio === undefined)
-    const isEmpty = computed(() =>
-      props.bio === undefined ? false : props.bio === ''
-    )
+const props = defineProps<{
+    bio?: string
+}>();
 
-    const content = computed(() => {
-      if (isLoading.value) return '[Now loading...]'
-      if (isEmpty.value) return '[No bio]'
-      return props.bio
-    })
+const isLoading = computed(() => props.bio === undefined)
+const isEmpty = computed(() =>
+  props.bio === undefined ? false : props.bio === ''
+)
 
-    return { isLoading, isEmpty, content }
-  }
+const content = computed(() => {
+  if (isLoading.value) return '[Now loading...]'
+  if (isEmpty.value) return '[No bio]'
+  return props.bio
 })
 </script>
 

@@ -9,21 +9,11 @@
   </navigation-content-container>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'GroupManagerOpener',
-  components: {
-    NavigationContentContainer,
-    AIcon
-  },
-  setup() {
-    return {}
-  }
-})
+
 </script>
 
 <style lang="scss" module>

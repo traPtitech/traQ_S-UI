@@ -39,7 +39,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useQall from './composables/useQall'
 import usePopupMenu from './composables/usePopupMenu'
@@ -48,9 +47,7 @@ import useStarChannel from './composables/useStarChannel'
 import useNotificationModal from './composables/useNotificationModal'
 import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import HeaderToolsList, { teleportTargetName } from './HeaderToolsList.vue'
-import HeaderToolsMenu from './HeaderToolsMenu.vue'
+import { teleportTargetName } from './HeaderToolsList.vue';
 import { embeddingOrigin } from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useCommandPalette } from '/@/store/app/commandPalette'
@@ -75,59 +72,33 @@ const useCopy = (props: { channelId: ChannelId }) => {
   }
   return { copyLink }
 }
+</script>
 
-export default defineComponent({
-  name: 'HeaderTools',
-  components: {
-    ClickOutside,
-    HeaderToolsList,
-    HeaderToolsMenu
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
-    const { channelState } = useChannelState(props)
-    const { starChannel, unstarChannel } = useStarChannel(props)
-    const { openNotificationModal } = useNotificationModal(props)
-    const { isChildChannelCreatable, openChannelCreateModal } =
-      useChannelCreateModal(props)
-    const { copyLink } = useCopy(props)
-    const {
-      hasActiveQallSession,
-      isJoinedQallSession,
-      isQallSessionOpened,
-      isJoinedWithCurrentDevice,
-      toggleQall
-    } = useQall(props)
-    const { openChannelManageModal } = useChannelManageModal(props)
-    const { openCommandPalette } = useCommandPalette()
-    return {
-      hasActiveQallSession,
-      isQallSessionOpened,
-      isJoinedQallSession,
-      isJoinedWithCurrentDevice,
-      isPopupMenuShown,
-      channelState,
-      toggleQall,
-      starChannel,
-      unstarChannel,
-      openNotificationModal,
-      isChildChannelCreatable,
-      openChannelCreateModal,
-      openChannelManageModal,
-      openCommandPalette,
-      copyLink,
-      togglePopupMenu,
-      closePopupMenu,
-      teleportTargetName
-    }
-  }
-})
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside';
+import HeaderToolsList from './HeaderToolsList.vue';
+import HeaderToolsMenu from './HeaderToolsMenu.vue';
+
+const props = defineProps<{
+    channelId: ChannelId
+}>();
+
+const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
+const { channelState } = useChannelState(props)
+const { starChannel, unstarChannel } = useStarChannel(props)
+const { openNotificationModal } = useNotificationModal(props)
+const { isChildChannelCreatable, openChannelCreateModal } =
+  useChannelCreateModal(props)
+const { copyLink } = useCopy(props)
+const {
+  hasActiveQallSession,
+  isJoinedQallSession,
+  isQallSessionOpened,
+  isJoinedWithCurrentDevice,
+  toggleQall
+} = useQall(props)
+const { openChannelManageModal } = useChannelManageModal(props)
+const { openCommandPalette } = useCommandPalette()
 </script>
 
 <style lang="scss" module>

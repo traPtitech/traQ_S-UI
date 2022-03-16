@@ -13,29 +13,19 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import FileDescription from '/@/components/UI/FileDescription.vue';
 import useFileMeta from '/@/composables/useFileMeta'
-import FileDescription from '/@/components/UI/FileDescription.vue'
 
-export default defineComponent({
-  name: 'MessageFileListItemContent',
-  components: { FileDescription },
-  props: {
-    fileId: {
-      type: String,
-      default: ''
-    },
-    isWhite: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { fileLink } = useFileMeta(props)
-    return { fileLink }
-  }
-})
+const props = withDefaults(defineProps<{
+    fileId?: string,
+    isWhite?: boolean
+}>(), {
+    fileId: '',
+    isWhite: false
+});
+
+const { fileLink } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

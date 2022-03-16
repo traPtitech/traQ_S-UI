@@ -50,11 +50,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, Ref, toRef } from 'vue'
+import { computed, Ref, toRef } from 'vue';
 import apis from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 import { replaceBack } from '/@/lib/markdown/internalLinkUnembedder'
-import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { Point } from '/@/lib/basic/point'
 import useExecWithToast from '/@/composables/contextMenu/useExecWithToast'
 import usePinToggler from '/@/composables/contextMenu/usePinToggler'
@@ -111,72 +110,47 @@ const useShowClipCreateModal = (messageId: Ref<MessageId>) => {
   }
   return { showClipCreateModal }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageContextMenu',
-  components: {
-    ContextMenuContainer
-  },
-  props: {
-    position: {
-      type: Object as PropType<Point>,
-      required: true
-    },
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    },
-    isMinimum: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const messageId = toRef(props, 'messageId')
-    const { myId } = useMeStore()
-    const { messagesMap } = useMessagesStore()
+<script lang="ts" setup>
+import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue';
 
-    const isPinned = computed(
-      () => messagesMap.value.get(messageId.value)?.pinned
-    )
-    const isMine = computed(
-      () => messagesMap.value.get(messageId.value)?.userId === myId.value
-    )
+const props = withDefaults(defineProps<{
+    position: Point,
+    messageId: MessageId,
+    isMinimum?: boolean
+}>(), {
+    isMinimum: false
+});
 
-    const { copyLink, copyEmbedded } = useCopyLink(messageId)
-    const { copyMd } = useCopyMd(messageId)
-    const { addPinned, removePinned } = usePinToggler(messageId)
-    const { editMessage, deleteMessage } = useMessageChanger(messageId)
-    const { showClipCreateModal } = useShowClipCreateModal(messageId)
+const emit = defineEmits<{
+    (e: "close"): void
+}>();
 
-    const close = () => {
-      emit('close')
-    }
-    const withClose = async (func: () => void | Promise<void>) => {
-      await func()
-      close()
-    }
+const messageId = toRef(props, 'messageId')
+const { myId } = useMeStore()
+const { messagesMap } = useMessagesStore()
 
-    return {
-      showWidgetCopyButton,
-      isPinned,
-      isMine,
-      addPinned,
-      removePinned,
-      copyLink,
-      copyEmbedded,
-      copyMd,
-      editMessage,
-      deleteMessage,
-      showClipCreateModal,
-      close,
-      withClose
-    }
-  }
-})
+const isPinned = computed(
+  () => messagesMap.value.get(messageId.value)?.pinned
+)
+const isMine = computed(
+  () => messagesMap.value.get(messageId.value)?.userId === myId.value
+)
+
+const { copyLink, copyEmbedded } = useCopyLink(messageId)
+const { copyMd } = useCopyMd(messageId)
+const { addPinned, removePinned } = usePinToggler(messageId)
+const { editMessage, deleteMessage } = useMessageChanger(messageId)
+const { showClipCreateModal } = useShowClipCreateModal(messageId)
+
+const close = () => {
+  emit('close')
+}
+const withClose = async (func: () => void | Promise<void>) => {
+  await func()
+  close()
+}
 </script>
 
 <style lang="scss" module>

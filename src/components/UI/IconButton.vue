@@ -4,33 +4,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 
-export default defineComponent({
-  name: 'IconButton',
-  components: {
-    AIcon
-  },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: undefined
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  }
+withDefaults(defineProps<{
+    iconName: string,
+    iconMdi?: boolean,
+    title?: string,
+    disabled?: boolean
+}>(), {
+    iconMdi: false,
+    disabled: false
 })
 </script>
 

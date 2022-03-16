@@ -13,21 +13,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'NavigationContentContainer',
-  props: {
-    subtitle: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+
+defineProps<{
+    subtitle?: string
+}>()
+
+
 </script>
 
 <style lang="scss" module>

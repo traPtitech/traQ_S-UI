@@ -37,61 +37,45 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import LineEditor from './LineEditor.vue';
+import GroupAdminList from './GroupAdminList.vue';
+import GroupMemberList from './GroupMemberList.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
 import { UserGroup } from '@traptitech/traq'
-import LineEditor from './LineEditor.vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import GroupAdminList from './GroupAdminList.vue'
-import GroupMemberList from './GroupMemberList.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
 
-export default defineComponent({
-  name: 'GroupListGroupEdit',
-  components: {
-    LineEditor,
-    GroupAdminList,
-    GroupMemberList,
-    FormButton
-  },
-  props: {
-    group: {
-      type: Object as PropType<UserGroup>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
+const props = defineProps<{
+    group: UserGroup
+}>();
 
-    const onUpdate = (key: keyof UserGroup) => async (value: string) => {
-      try {
-        await apis.editUserGroup(props.group.id, { [key]: value })
+const { addErrorToast } = useToastStore()
 
-        // TODO: wsがつながっていないことがある
-      } catch {
-        addErrorToast('グループの変更に失敗しました')
-      }
-    }
-    const onNameUpdate = onUpdate('name')
-    const onDescUpdate = onUpdate('description')
-    const onTypeUpdate = onUpdate('type')
+const onUpdate = (key: keyof UserGroup) => async (value: string) => {
+  try {
+    await apis.editUserGroup(props.group.id, { [key]: value })
 
-    const onDelete = async () => {
-      if (!confirm('本当にこのグループを削除しますか？')) return
-
-      try {
-        await apis.deleteUserGroup(props.group.id)
-
-        // TODO: wsがつながっていないことがある
-      } catch {
-        addErrorToast('グループの削除に失敗しました')
-      }
-    }
-
-    return { onNameUpdate, onDescUpdate, onTypeUpdate, onDelete }
+    // TODO: wsがつながっていないことがある
+  } catch {
+    addErrorToast('グループの変更に失敗しました')
   }
-})
+}
+const onNameUpdate = onUpdate('name')
+const onDescUpdate = onUpdate('description')
+const onTypeUpdate = onUpdate('type')
+
+const onDelete = async () => {
+  if (!confirm('本当にこのグループを削除しますか？')) return
+
+  try {
+    await apis.deleteUserGroup(props.group.id)
+
+    // TODO: wsがつながっていないことがある
+  } catch {
+    addErrorToast('グループの削除に失敗しました')
+  }
+}
 </script>
 
 <style lang="scss" module>

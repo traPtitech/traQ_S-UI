@@ -16,11 +16,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, defineAsyncComponent, ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue';
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
-import SlideDown from '/@/components/UI/SlideDown.vue'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 
@@ -44,51 +43,31 @@ const ChannelElement = defineAsyncComponent(
   () => import('./ChannelElement.vue')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as any
+</script>
 
-export default defineComponent({
-  name: 'ChannelList',
-  components: {
-    ChannelElement,
-    SlideDown
-  },
-  props: {
-    isShown: {
-      type: Boolean,
-      default: true
-    },
-    channels: {
-      type: Array as PropType<ReadonlyArray<ChannelTreeNode | Channel>>,
-      required: true
-    },
-    ignoreChildren: {
-      type: Boolean,
-      default: false
-    },
-    showShortenedPath: {
-      type: Boolean,
-      default: false
-    },
-    showTopic: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const { openLink } = useOpenLink()
-    const { channelIdToLink } = useChannelPath()
-    const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
+<script lang="ts" setup>
+import SlideDown from '/@/components/UI/SlideDown.vue';
 
-    const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
-      openLink(event, channelIdToLink(channelId))
-    }
-
-    return {
-      foldedChannels,
-      onChannelSelect,
-      onChannelFoldingToggle
-    }
-  }
+withDefaults(defineProps<{
+    isShown?: boolean,
+    channels: ReadonlyArray<ChannelTreeNode | Channel>,
+    ignoreChildren?: boolean,
+    showShortenedPath?: boolean,
+    showTopic?: boolean
+}>(), {
+    isShown: true,
+    ignoreChildren: false,
+    showShortenedPath: false,
+    showTopic: false
 })
+
+const { openLink } = useOpenLink()
+const { channelIdToLink } = useChannelPath()
+const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
+
+const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
+  openLink(event, channelIdToLink(channelId))
+}
 </script>
 
 <style lang="scss" module>

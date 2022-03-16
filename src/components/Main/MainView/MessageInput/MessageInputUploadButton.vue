@@ -8,21 +8,13 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import IconButton from '/@/components/UI/IconButton.vue'
+<script lang="ts" setup>
+import IconButton from '/@/components/UI/IconButton.vue';
 
-export default defineComponent({
-  name: 'MessageInputUploadButton',
-  components: {
-    IconButton
-  },
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  }
+withDefaults(defineProps<{
+    disabled?: boolean
+}>(), {
+    disabled: false
 })
 </script>
 

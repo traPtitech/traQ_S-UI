@@ -8,21 +8,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 
-export default defineComponent({
-  name: 'AuthenticateSeparator',
-  props: {
-    label: {
-      type: String,
-      default: ''
-    }
-  },
-  setup() {
-    return {}
-  }
+
+withDefaults(defineProps<{
+    label?: string
+}>(), {
+    label: ''
 })
+
+
 </script>
 
 <style lang="scss" module>

@@ -10,26 +10,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue';
 import { User } from '@traptitech/traq'
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
-export default defineComponent({
-  name: 'UsersElementUserName',
-  components: {
-    OnlineIndicator
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+    user: User
+}>()
+
+
 </script>
 
 <style lang="scss" module>

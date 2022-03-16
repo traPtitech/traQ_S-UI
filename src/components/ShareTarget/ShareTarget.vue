@@ -11,53 +11,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref, watchEffect } from 'vue'
-import ShareTargetForm from './ShareTargetForm.vue'
-import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue'
+<script lang="ts" setup>
+import ShareTargetForm from './ShareTargetForm.vue';
+import AuthenticateHeader from '/@/components/Authenticate/AuthenticateHeader.vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { wait } from '/@/lib/basic/timer'
 
-export default defineComponent({
-  name: 'ShareTarget',
-  components: {
-    AuthenticateHeader,
-    ShareTargetForm
-  },
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    text: {
-      type: String,
-      default: ''
-    },
-    url: {
-      type: String,
-      default: ''
-    }
-  },
-  setup(props) {
-    const defaultText = computed(() =>
-      [props.title, props.text, props.url]
-        .filter(text => text !== '')
-        .join('\n')
-    )
-    const { isMobile } = useResponsiveStore()
+const props = withDefaults(defineProps<{
+    title?: string,
+    text?: string,
+    url?: string
+}>(), {
+    title: '',
+    text: '',
+    url: ''
+});
 
-    const donePost = ref(false)
-    const onPost = () => {
-      donePost.value = true
-    }
-    watchEffect(async () => {
-      if (donePost.value) {
-        await wait(1000)
-        window.close()
-      }
-    })
+const defaultText = computed(() =>
+  [props.title, props.text, props.url]
+    .filter(text => text !== '')
+    .join('\n')
+)
+const { isMobile } = useResponsiveStore()
 
-    return { defaultText, isMobile, donePost, onPost }
+const donePost = ref(false)
+const onPost = () => {
+  donePost.value = true
+}
+watchEffect(async () => {
+  if (donePost.value) {
+    await wait(1000)
+    window.close()
   }
 })
 </script>

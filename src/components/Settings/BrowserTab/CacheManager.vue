@@ -38,8 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import { onMounted, ref } from 'vue';
 import { useToastStore } from '/@/store/ui/toast'
 import { wait } from '/@/lib/basic/timer'
 import { checkStorageManagerSupport } from '/@/lib/dom/browser'
@@ -64,73 +63,62 @@ const confirmClear = () => window.confirm('本当に削除しますか？')
 
 /* CacheStorageのnameはsw.jsを参照 */
 const clearCacheStorage = (cacheName: string) => window.caches.delete(cacheName)
+</script>
 
-export default defineComponent({
-  name: 'CacheManager',
-  components: { FormButton },
-  setup() {
-    const { fetchStamps } = useStampsStore()
-    const { addSuccessToast } = useToastStore()
-    const showToast = (extraMesage?: string) => {
-      addSuccessToast(
-        `削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`
-      )
-    }
+<script lang="ts" setup>
+import FormButton from '/@/components/UI/FormButton.vue';
 
-    const cacheData = ref<StorageEstimate | null>(null)
-    const setCacheData = async () => {
-      cacheData.value = await getStorageUsage()
-    }
-    onMounted(setCacheData)
+const { fetchStamps } = useStampsStore()
+const { addSuccessToast } = useToastStore()
+const showToast = (extraMesage?: string) => {
+  addSuccessToast(
+    `削除に成功しました${extraMesage ? `: ${extraMesage}` : ''}`
+  )
+}
 
-    const clearMainCache = async () => {
-      if (!confirmClear()) return
+const cacheData = ref<StorageEstimate | null>(null)
+const setCacheData = async () => {
+  cacheData.value = await getStorageUsage()
+}
+onMounted(setCacheData)
 
-      const names = await window.caches.keys()
-      await Promise.all(
-        names
-          .filter(name => name.startsWith('traQ_S-precache'))
-          .map(name => clearCacheStorage(name))
-      )
-      const registration = await navigator.serviceWorker?.getRegistration()
-      if (registration) {
-        registration.unregister()
-        showToast('1秒後にリロードします')
-        setCacheData()
-        await wait(1000)
-        window.location.reload()
-      } else {
-        showToast()
-      }
-    }
-    const clearFileCache = async () => {
-      if (!confirmClear()) return
-      await clearCacheStorage('files-cache')
-      setCacheData()
-      showToast()
-    }
-    const clearThumbnailCache = async () => {
-      if (!confirmClear()) return
-      await clearCacheStorage('thumbnail-cache')
-      setCacheData()
-      showToast()
-    }
-    const clearUnicodeStampCache = async () => {
-      await deleteUnicodeStamps()
-      await fetchStamps({ ignoreCache: true })
-      showToast()
-    }
+const clearMainCache = async () => {
+  if (!confirmClear()) return
 
-    return {
-      cacheData,
-      prettifyFileSize,
-      clearMainCache,
-      clearFileCache,
-      clearThumbnailCache,
-      clearUnicodeStampCache
-    }
+  const names = await window.caches.keys()
+  await Promise.all(
+    names
+      .filter(name => name.startsWith('traQ_S-precache'))
+      .map(name => clearCacheStorage(name))
+  )
+  const registration = await navigator.serviceWorker?.getRegistration()
+  if (registration) {
+    registration.unregister()
+    showToast('1秒後にリロードします')
+    setCacheData()
+    await wait(1000)
+    window.location.reload()
+  } else {
+    showToast()
   }
-})
+}
+const clearFileCache = async () => {
+  if (!confirmClear()) return
+  await clearCacheStorage('files-cache')
+  setCacheData()
+  showToast()
+}
+const clearThumbnailCache = async () => {
+  if (!confirmClear()) return
+  await clearCacheStorage('thumbnail-cache')
+  setCacheData()
+  showToast()
+}
+const clearUnicodeStampCache = async () => {
+  await deleteUnicodeStamps()
+  await fetchStamps({ ignoreCache: true })
+  showToast()
+}
 </script>
 
 <style lang="scss" module>

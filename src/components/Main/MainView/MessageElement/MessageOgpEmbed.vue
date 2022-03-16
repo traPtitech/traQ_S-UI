@@ -18,8 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import { ref, reactive, computed } from 'vue';
 
 const usePreviewState = () => {
   const isContentShown = ref(false)
@@ -35,38 +34,23 @@ const useStyles = (props: { aspectRatio: number }) =>
       paddingTop: `${props.aspectRatio * 100}%`
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'MessageOgpEmbed',
-  components: { AIcon },
-  props: {
-    previewUrl: {
-      type: String,
-      default: undefined
-    },
-    embeddedUrl: {
-      type: String,
-      required: true
-    },
-    showPlayIcon: {
-      type: Boolean,
-      default: false
-    },
-    aspectRatio: {
-      type: Number,
-      default: 9 / 16
-    }
-  },
-  setup(props) {
-    const { isContentShown, showContent } = usePreviewState()
-    const styles = useStyles(props)
-    return {
-      isContentShown,
-      showContent,
-      styles
-    }
-  }
-})
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+
+const props = withDefaults(defineProps<{
+    previewUrl?: string,
+    embeddedUrl: string,
+    showPlayIcon?: boolean,
+    aspectRatio?: number
+}>(), {
+    showPlayIcon: false,
+    aspectRatio: 9 / 16
+});
+
+const { isContentShown, showContent } = usePreviewState()
+const styles = useStyles(props)
 </script>
 
 <style lang="scss" module>

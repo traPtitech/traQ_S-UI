@@ -12,31 +12,22 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import { rAF } from '/@/lib/basic/timer'
 
-export default defineComponent({
-  name: 'SlideDown',
-  props: {
-    isOpen: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const setHeight = ($el: Element) => {
-      ;($el as HTMLElement).style.height = `${$el.scrollHeight}px`
-    }
-    const unsetHeight = async ($el: Element) => {
-      // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
-      await rAF()
-      await rAF()
-      ;($el as HTMLElement).style.height = null as unknown as string
-    }
-    return { setHeight, unsetHeight }
-  }
-})
+defineProps<{
+    isOpen: boolean
+}>()
+
+const setHeight = ($el: Element) => {
+  ;($el as HTMLElement).style.height = `${$el.scrollHeight}px`
+}
+const unsetHeight = async ($el: Element) => {
+  // フレームずらさないと処理がまとめられてheightのセットがされないことにされるため
+  await rAF()
+  await rAF()
+  ;($el as HTMLElement).style.height = null as unknown as string
+}
 </script>
 
 <style lang="scss" module>

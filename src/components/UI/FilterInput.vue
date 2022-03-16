@@ -21,75 +21,54 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, shallowRef, onMounted } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import { shallowRef, onMounted } from 'vue';
 import { isTouchDevice } from '/@/lib/dom/browser'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
-export default defineComponent({
-  name: 'FilterInput',
-  components: {
-    AIcon
-  },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    autocapitalize: {
-      type: String,
-      default: 'off'
-    },
-    disableIme: {
-      type: Boolean,
-      default: false
-    },
-    focusOnMount: {
-      type: Boolean,
-      default: false
-    },
-    enterkeyhint: {
-      type: String,
-      default: 'search'
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true,
-    enter: () => true
-  },
-  setup(props, { emit }) {
-    const { value, onInput } = useTextModelSyncer(props, emit)
+const props = withDefaults(defineProps<{
+    modelValue?: string,
+    onSecondary?: boolean,
+    placeholder?: string,
+    autocapitalize?: string,
+    disableIme?: boolean,
+    focusOnMount?: boolean,
+    enterkeyhint?: string
+}>(), {
+    modelValue: '',
+    onSecondary: false,
+    placeholder: '',
+    autocapitalize: 'off',
+    disableIme: false,
+    focusOnMount: false,
+    enterkeyhint: 'search'
+});
 
-    const reset = () => {
-      // update:modelValueイベントを発火することで値を変更する
-      emit('update:modelValue', '')
-    }
+const emit = defineEmits<{
+    (e: "update:modelValue", _val: string): void,
+    (e: "enter"): void
+}>();
 
-    const inputRef = shallowRef<HTMLInputElement | null>(null)
-    onMounted(() => {
-      if (!props.focusOnMount || isTouchDevice()) return
-      inputRef.value?.focus()
-    })
-    const focus = () => {
-      inputRef.value?.focus()
-    }
+const { value, onInput } = useTextModelSyncer(props, emit)
 
-    const enter = () => {
-      emit('enter')
-    }
+const reset = () => {
+  // update:modelValueイベントを発火することで値を変更する
+  emit('update:modelValue', '')
+}
 
-    return { value, onInput, focus, inputRef, reset, enter }
-  }
+const inputRef = shallowRef<HTMLInputElement | null>(null)
+onMounted(() => {
+  if (!props.focusOnMount || isTouchDevice()) return
+  inputRef.value?.focus()
 })
+const focus = () => {
+  inputRef.value?.focus()
+}
+
+const enter = () => {
+  emit('enter')
+}
 </script>
 
 <style lang="scss" module>

@@ -23,38 +23,23 @@
   </sidebar-content-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import SlideDown from '/@/components/UI/SlideDown.vue'
+<script lang="ts" setup>
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
+import AIcon from '/@/components/UI/AIcon.vue';
+import SlideDown from '/@/components/UI/SlideDown.vue';
+import { ref } from 'vue';
 
-export default defineComponent({
-  name: 'SidebarContentContainerFoldable',
-  components: {
-    SidebarContentContainer,
-    AIcon,
-    SlideDown
-  },
-  props: {
-    title: {
-      type: String,
-      default: undefined
-    },
-    largePadding: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const isOpen = ref(false)
-    const toggle = () => {
-      isOpen.value = !isOpen.value
-    }
-
-    return { isOpen, toggle }
-  }
+withDefaults(defineProps<{
+    title?: string,
+    largePadding?: boolean
+}>(), {
+    largePadding: false
 })
+
+const isOpen = ref(false)
+const toggle = () => {
+  isOpen.value = !isOpen.value
+}
 </script>
 
 <style lang="scss" module>

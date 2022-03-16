@@ -12,37 +12,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import AStamp from '/@/components/UI/AStamp.vue';
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
-import AStamp from '/@/components/UI/AStamp.vue'
 
-export default defineComponent({
-  name: 'StampPickerStampList',
-  components: {
-    AStamp
-  },
-  props: {
-    stamps: {
-      type: Array as PropType<readonly Stamp[]>,
-      required: true
-    }
-  },
-  emits: {
-    inputStamp: (_id: StampId) => true,
-    hoverStamp: (_name: string) => true
-  },
-  setup(props, { emit }) {
-    const onClickStamp = (id: StampId) => {
-      emit('inputStamp', id)
-    }
-    const onStampHover = (name: string) => {
-      emit('hoverStamp', name)
-    }
-    return { onClickStamp, onStampHover }
-  }
-})
+defineProps<{
+    stamps: readonly Stamp[]
+}>()
+
+const emit = defineEmits<{
+    (e: "inputStamp", _id: StampId): void,
+    (e: "hoverStamp", _name: string): void
+}>();
+
+const onClickStamp = (id: StampId) => {
+  emit('inputStamp', id)
+}
+const onStampHover = (name: string) => {
+  emit('hoverStamp', name)
+}
 </script>
 
 <style lang="scss" module>

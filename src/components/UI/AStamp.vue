@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
+import { reactive, computed } from 'vue';
 import { StampId } from '/@/types/entity-ids'
 import { buildFilePath } from '/@/lib/apis'
 import { useStampsStore } from '/@/store/entities/stamps'
@@ -25,35 +25,28 @@ const useStyles = (props: { size: number }) =>
       height: `${props.size}px`
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'AStamp',
-  props: {
-    stampId: {
-      type: String as PropType<StampId>,
-      required: true
-    },
-    size: {
-      type: Number,
-      default: 24
-    },
-    withoutTitle: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { stampsMap } = useStampsStore()
+<script lang="ts" setup>
 
-    const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
-    const imageUrl = computed(() => {
-      const fileId = stampsMap.value.get(props.stampId)?.fileId
-      return fileId ? `${buildFilePath(fileId)}` : ''
-    })
-    const styles = useStyles(props)
-    return { imageUrl, name, styles }
-  }
+
+const props = withDefaults(defineProps<{
+    stampId: StampId,
+    size?: number,
+    withoutTitle?: boolean
+}>(), {
+    size: 24,
+    withoutTitle: false
+});
+
+const { stampsMap } = useStampsStore()
+
+const name = computed(() => stampsMap.value.get(props.stampId)?.name ?? '')
+const imageUrl = computed(() => {
+  const fileId = stampsMap.value.get(props.stampId)?.fileId
+  return fileId ? `${buildFilePath(fileId)}` : ''
 })
+const styles = useStyles(props)
 </script>
 
 <style lang="scss" module>

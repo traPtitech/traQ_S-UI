@@ -16,38 +16,29 @@
   </li>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
+import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue';
 import { UserTag } from '@traptitech/traq'
-import AIcon from '/@/components/UI/AIcon.vue'
-import TagsTabEdit from '/@/components/Modal/UserModal/TagsTabEdit.vue'
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'TagsTabTag',
-  components: {
-    AIcon,
-    TagsTabEdit
-  },
-  props: {
-    tag: { type: Object as PropType<UserTag>, required: true },
-    isMine: { type: Boolean, default: false },
-    userId: { type: String as PropType<UserId>, default: undefined }
-  },
-  setup(props) {
-    const { pushModal } = useModalStore()
+const props = withDefaults(defineProps<{
+    tag: UserTag,
+    isMine?: boolean,
+    userId?: UserId
+}>(), {
+    isMine: false
+});
 
-    const onTagClick = () => {
-      pushModal({
-        type: 'tag',
-        id: props.tag.tagId
-      })
-    }
+const { pushModal } = useModalStore()
 
-    return { onTagClick }
-  }
-})
+const onTagClick = () => {
+  pushModal({
+    type: 'tag',
+    id: props.tag.tagId
+  })
+}
 </script>
 
 <style lang="scss" module>

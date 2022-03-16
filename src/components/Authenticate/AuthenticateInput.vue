@@ -30,64 +30,34 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue';
 import { randomString } from '/@/lib/basic/randomString'
-import AIcon from '/@/components/UI/AIcon.vue'
 import useShowPassword from '/@/composables/useShowPassword'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
-export default defineComponent({
-  name: 'AuthenticateInput',
-  components: { AIcon },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    label: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String as PropType<'text' | 'password'>,
-      default: 'text' as const
-    },
-    autocomplete: {
-      type: String,
-      default: undefined
-    },
-    autofocus: {
-      type: Boolean,
-      default: false
-    },
-    autocapitalize: {
-      type: String,
-      default: 'off'
-    },
-    enterkeyhint: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props, { emit }) {
-    const { value, onInput } = useTextModelSyncer(props, emit)
+const props = withDefaults(defineProps<{
+    modelValue?: string,
+    label?: string,
+    type?: 'text' | 'password',
+    autocomplete?: string,
+    autofocus?: boolean,
+    autocapitalize?: string,
+    enterkeyhint?: string
+}>(), {
+    modelValue: '',
+    label: '',
+    type: 'text' as const,
+    autofocus: false,
+    autocapitalize: 'off'
+});
 
-    const id = randomString()
+const { value, onInput } = useTextModelSyncer(props, emit)
 
-    const { isPasswordShown, togglePassword, typeWithShown } =
-      useShowPassword(props)
+const id = randomString()
 
-    return {
-      value,
-      onInput,
-      id,
-      isPasswordShown,
-      togglePassword,
-      typeWithShown
-    }
-  }
-})
+const { isPasswordShown, togglePassword, typeWithShown } =
+  useShowPassword(props)
 </script>
 
 <style lang="scss" module>

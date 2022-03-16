@@ -35,15 +35,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref, reactive } from 'vue'
+import { computed, ref, reactive } from 'vue';
 import { ClipFolderId } from '/@/types/entity-ids'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import apis from '/@/lib/apis'
-import FormButton from '/@/components/UI/FormButton.vue'
 import router, { constructChannelPath } from '/@/router'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
@@ -98,61 +93,44 @@ const useDelete = (props: { clipFolderId: ClipFolderId }) => {
   }
   return { deleteClip }
 }
+</script>
 
-export default defineComponent({
-  name: 'ClipsSidebarContent',
-  components: {
-    SidebarContentContainer,
-    SidebarContentContainerFoldable,
-    ContentEditor,
-    InlineMarkdown,
-    FormButton
-  },
-  props: {
-    clipFolderId: { type: String as PropType<ClipFolderId>, required: true }
-  },
-  setup(props) {
-    const { clipFoldersMap } = useClipFoldersStore()
+<script lang="ts" setup>
+import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue';
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue';
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue';
+import FormButton from '/@/components/UI/FormButton.vue';
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue';
 
-    const clipFolder = computed(() =>
-      clipFoldersMap.value.get(props.clipFolderId)
-    )
-    const name = computed(() => clipFolder.value?.name ?? '')
-    const description = computed(() => clipFolder.value?.description ?? '')
-    const state = reactive({
-      name: clipFolder.value?.name ?? '',
-      description: clipFolder.value?.description ?? ''
-    })
-    const {
-      isEditing: isNameEditing,
-      onInput: onNameInput,
-      startEdit: startNameEdit,
-      onEditDone: onNameEditDone
-    } = useEdit(props, state, 'name')
-    const {
-      isEditing: isDesciptionEditing,
-      onInput: onDesciptionInput,
-      startEdit: startDesciptionEdit,
-      onEditDone: onDesciptionEditDone
-    } = useEdit(props, state, 'description')
+const props = defineProps<{
+    clipFolderId: ClipFolderId
+}>();
 
-    const { deleteClip } = useDelete(props)
+const { clipFoldersMap } = useClipFoldersStore()
 
-    return {
-      name,
-      description,
-      isNameEditing,
-      onNameInput,
-      startNameEdit,
-      onNameEditDone,
-      isDesciptionEditing,
-      onDesciptionInput,
-      startDesciptionEdit,
-      onDesciptionEditDone,
-      deleteClip
-    }
-  }
+const clipFolder = computed(() =>
+  clipFoldersMap.value.get(props.clipFolderId)
+)
+const name = computed(() => clipFolder.value?.name ?? '')
+const description = computed(() => clipFolder.value?.description ?? '')
+const state = reactive({
+  name: clipFolder.value?.name ?? '',
+  description: clipFolder.value?.description ?? ''
 })
+const {
+  isEditing: isNameEditing,
+  onInput: onNameInput,
+  startEdit: startNameEdit,
+  onEditDone: onNameEditDone
+} = useEdit(props, state, 'name')
+const {
+  isEditing: isDesciptionEditing,
+  onInput: onDesciptionInput,
+  startEdit: startDesciptionEdit,
+  onEditDone: onDesciptionEditDone
+} = useEdit(props, state, 'description')
+
+const { deleteClip } = useDelete(props)
 </script>
 
 <style lang="scss" module>

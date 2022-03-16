@@ -16,48 +16,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import ASlider from '/@/components/UI/ASlider.vue'
+<script lang="ts" setup>
+import ASlider from '/@/components/UI/ASlider.vue';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: 'AudioPlayerTimeSlider',
-  components: {
-    ASlider
-  },
-  props: {
-    currentTime: {
-      type: Number,
-      required: true
-    },
-    duration: {
-      type: Number,
-      required: true
-    },
-    showBackgroundOnHover: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:currentTime': (_val: number) => true
-  },
-  setup(props, { emit }) {
-    const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
-    const roundedDuration = computed(() => Math.floor(props.duration))
-    const disabled = computed(() => props.duration === 0)
+const props = withDefaults(defineProps<{
+    currentTime: number,
+    duration: number,
+    showBackgroundOnHover?: boolean
+}>(), {
+    showBackgroundOnHover: false
+});
 
-    const changeTime = (time: number) => {
-      emit('update:currentTime', time)
-    }
-    return {
-      roundedCurrentTime,
-      roundedDuration,
-      disabled,
-      changeTime
-    }
-  }
-})
+const emit = defineEmits<{
+    (e: "update:currentTime", _val: number): void
+}>();
+
+const roundedCurrentTime = computed(() => Math.floor(props.currentTime))
+const roundedDuration = computed(() => Math.floor(props.duration))
+const disabled = computed(() => props.duration === 0)
+
+const changeTime = (time: number) => {
+  emit('update:currentTime', time)
+}
 </script>
 
 <style lang="scss" module>

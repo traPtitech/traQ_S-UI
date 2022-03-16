@@ -32,39 +32,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import MessageFileListImage from './MessageFileListImage.vue';
+import MessageFileListVideo from './MessageFileListVideo.vue';
+import MessageFileListAudio from './MessageFileListAudio.vue';
+import MessageFileListFile from './MessageFileListFile.vue';
+import { computed } from 'vue';
 import { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
 import useFileMetaList from '/@/composables/message/useFileMetaList'
-import MessageFileListImage from './MessageFileListImage.vue'
-import MessageFileListVideo from './MessageFileListVideo.vue'
-import MessageFileListAudio from './MessageFileListAudio.vue'
-import MessageFileListFile from './MessageFileListFile.vue'
 
-export default defineComponent({
-  name: 'MessageFileList',
-  components: {
-    MessageFileListImage,
-    MessageFileListVideo,
-    MessageFileListAudio,
-    MessageFileListFile
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    fileIds: {
-      type: Array as PropType<FileId[]>,
-      default: () => []
-    }
-  },
-  setup(props) {
-    const { fileMetaDataState } = useFileMetaList(props)
-    const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
-    return { fileMetaDataState, showLargeImage }
-  }
-})
+const props = withDefaults(defineProps<{
+    channelId: ChannelId | DMChannelId,
+    fileIds?: FileId[]
+}>(), {
+    fileIds: () => []
+});
+
+const { fileMetaDataState } = useFileMetaList(props)
+const showLargeImage = computed(() => fileMetaDataState.images.length === 1)
 </script>
 
 <style lang="scss" module>
