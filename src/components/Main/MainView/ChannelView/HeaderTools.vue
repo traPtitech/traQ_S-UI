@@ -14,9 +14,8 @@
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
       @click-more="togglePopupMenu"
-    />
-    <teleport v-if="isPopupMenuShown" :to="`#${teleportTargetName}`">
-      <click-outside @click-outside="closePopupMenu">
+    >
+      <click-outside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
         <header-tools-menu
           :class="$style.toolsMenu"
           :show-notification-setting-btn="!channelState.forced"
@@ -34,7 +33,7 @@
           @click-manage-channel="openChannelManageModal"
         />
       </click-outside>
-    </teleport>
+    </header-tools-list>
   </div>
 </template>
 
@@ -46,7 +45,6 @@ import useStarChannel from './composables/useStarChannel'
 import useNotificationModal from './composables/useNotificationModal'
 import useChannelCreateModal from './composables/useChannelCreateModal'
 import useChannelManageModal from './composables/useChannelManageModal'
-import { teleportTargetName } from './HeaderToolsList.vue'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import useChannelPath from '/@/composables/useChannelPath'
