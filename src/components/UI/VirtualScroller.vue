@@ -83,6 +83,7 @@ const PAGE_SIZE = 50
 
 <script lang="ts" setup>
 const props = defineProps<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[]
   keyIndex: string
 }>()
