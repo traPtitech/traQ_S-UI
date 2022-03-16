@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.container" :aria-selected="isSelected">
-    <a-icon :class="$style.icon" :name="iconName" />
-    <span :class="$style.title">{{ title }}</span>
-    <span :class="$style.description">{{ description }}</span>
+    <a-icon :class="$style.icon" :name="info.icon" />
+    <span :class="$style.title">{{ info.title }}</span>
+    <span :class="$style.description">{{ info.description }}</span>
   </div>
 </template>
 
@@ -21,26 +21,29 @@ const props = withDefaults(
   }
 )
 
-const titleMap: Record<ChannelSubscribeLevel, string> = {
-  [ChannelSubscribeLevel.notified]: '通知オン',
-  [ChannelSubscribeLevel.subscribed]: '未読のみ管理',
-  [ChannelSubscribeLevel.none]: 'なし'
-}
-const descriptionMap: Record<ChannelSubscribeLevel, string> = {
-  [ChannelSubscribeLevel.notified]: '新規メッセージの通知を送信します',
-  [ChannelSubscribeLevel.subscribed]:
-    '新規メッセージの有無をチャンネルリストに表示し、通知は送信しません',
-  [ChannelSubscribeLevel.none]: '未読の管理・通知を行いません'
-}
-const iconNameMap: Record<ChannelSubscribeLevel, string> = {
-  [ChannelSubscribeLevel.notified]: 'notified',
-  [ChannelSubscribeLevel.subscribed]: 'subscribed',
-  [ChannelSubscribeLevel.none]: 'not-subscribed'
+const subscribeLevelInfoMap: Record<
+  ChannelSubscribeLevel,
+  { title: string; description: string; icon: string }
+> = {
+  [ChannelSubscribeLevel.notified]: {
+    title: '通知オン',
+    description: '新規メッセージの通知を送信します',
+    icon: 'notified'
+  },
+  [ChannelSubscribeLevel.subscribed]: {
+    title: '未読のみ管理',
+    description:
+      '新規メッセージの有無をチャンネルリストに表示し、通知は送信しません',
+    icon: 'subscribed'
+  },
+  [ChannelSubscribeLevel.none]: {
+    title: 'なし',
+    description: '未読の管理・通知を行いません',
+    icon: 'not-subscribed'
+  }
 }
 
-const iconName = computed(() => iconNameMap[props.subscriptionLevel])
-const title = computed(() => titleMap[props.subscriptionLevel])
-const description = computed(() => descriptionMap[props.subscriptionLevel])
+const info = computed(() => subscribeLevelInfoMap[props.subscriptionLevel])
 </script>
 
 <style lang="scss" module>

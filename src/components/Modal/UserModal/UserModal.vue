@@ -29,29 +29,14 @@
   </click-outside>
 </template>
 
-<script lang="ts">
-import { computed, reactive, Ref, toRef } from 'vue'
+<script lang="ts" setup>
+import { computed, reactive, toRef } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useUsersStore } from '/@/store/entities/users'
-
-const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
-  reactive({
-    content: computed(() => ({
-      paddingTop: isMobile.value ? 0 : `min(${iconSize / 2}px, 10vh)`
-    })),
-    icon: computed(() => ({
-      marginTop: `max(-${iconSize / 2}px, -10vh)`,
-      width: `min(${iconSize}px, 20vh)`,
-      height: `min(${iconSize}px, 20vh)`
-    }))
-  })
-</script>
-
-<script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
@@ -68,7 +53,16 @@ const { isMobile } = useResponsiveStore()
 const { usersMap } = useUsersStore()
 
 const iconSize = 160
-const styles = computed(() => useStyles(iconSize, isMobile))
+const styles = reactive({
+  content: computed(() => ({
+    paddingTop: isMobile.value ? 0 : `min(${iconSize / 2}px, 10vh)`
+  })),
+  icon: computed(() => ({
+    marginTop: `max(-${iconSize / 2}px, -10vh)`,
+    width: `min(${iconSize}px, 20vh)`,
+    height: `min(${iconSize}px, 20vh)`
+  }))
+})
 
 const { navigationSelectorState, onNavigationChange } = useNavigation()
 const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
