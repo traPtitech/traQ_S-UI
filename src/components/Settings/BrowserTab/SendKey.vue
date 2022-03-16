@@ -82,7 +82,7 @@ const sendWithModifierKeyValue = useModelSyncer(
   emit,
   'sendWithModifierKey'
 )
-const modifierKeyValue = useModelObjectSyncer(props, emit, 'modifierKey')
+const { shift, alt, ctrl, macCtrl } = useModelObjectSyncer(props, emit, 'modifierKey')
 
 const macFlag = isMac()
 const getModifierKeyName = (key: keyof SendKeys) => {

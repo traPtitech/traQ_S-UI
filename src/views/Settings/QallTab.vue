@@ -202,10 +202,10 @@ import FormInput from '/@/components/UI/FormInput.vue';
 
 const state = reactive(useRtcSettings())
 
-const devicesInfo = useDevicesInfo()
+const { fetchFailed, audioInputDevices } = useDevicesInfo()
 
 const audioInputDeviceOptions = computed(() =>
-  devicesInfo.audioInputDevices.value.map(d => ({
+  audioInputDevices.value.map(d => ({
     key: d.label,
     value: d.deviceId
   }))

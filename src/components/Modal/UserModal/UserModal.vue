@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, toRefs } from 'vue';
+import { computed, reactive, Ref, toRef } from 'vue';
 import { UserId } from '/@/types/entity-ids'
 import { useNavigation } from './composables/useNavigation'
 import useUserDetail from './composables/useUserDetail'
@@ -71,6 +71,8 @@ const iconSize = 160
 const styles = computed(() => useStyles(iconSize, isMobile))
 
 const { navigationSelectorState, onNavigationChange } = useNavigation()
+const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const user = computed(() => usersMap.value.get(props.id)!)
 
