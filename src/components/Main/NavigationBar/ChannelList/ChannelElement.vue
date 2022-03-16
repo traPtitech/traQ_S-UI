@@ -88,27 +88,6 @@ const useChannelClick = (
   }
 }
 
-const useNotification = (props: TypedProps) => {
-  const { unreadChannelsMap } = useMeStore()
-  const unreadChannel = computed(() =>
-    unreadChannelsMap.value.get(props.channel.id)
-  )
-
-  const notificationState = reactive({
-    hasNotification: computed(() => !!unreadChannel.value),
-    hasNotificationOnChild: computed(() =>
-      props.ignoreChildren
-        ? false
-        : deepSome(props.channel, channel =>
-            unreadChannelsMap.value.has(channel.id)
-          )
-    ),
-    unreadCount: computed(() => unreadChannel.value?.count),
-    isNoticeable: computed(() => unreadChannel.value?.noticeable)
-  })
-  return notificationState
-}
-
 interface Props {
   channel: ChannelTreeNode | Channel
   isOpened: boolean
@@ -131,8 +110,26 @@ interface IgnoreChildrenProps extends Props {
 
 type TypedProps = WithChildrenProps | IgnoreChildrenProps
 
-// 型エラー・コンポーネント循環参照の回避
-const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
+const useNotification = (props: TypedProps) => {
+  const { unreadChannelsMap } = useMeStore()
+  const unreadChannel = computed(() =>
+    unreadChannelsMap.value.get(props.channel.id)
+  )
+
+  const notificationState = reactive({
+    hasNotification: computed(() => !!unreadChannel.value),
+    hasNotificationOnChild: computed(() =>
+      props.ignoreChildren
+        ? false
+        : deepSome(props.channel, channel =>
+            unreadChannelsMap.value.has(channel.id)
+          )
+    ),
+    unreadCount: computed(() => unreadChannel.value?.count),
+    isNoticeable: computed(() => unreadChannel.value?.noticeable)
+  })
+  return notificationState
+}
 </script>
 
 <script lang="ts" setup>
@@ -140,6 +137,9 @@ import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
+
+// 型エラー・コンポーネント循環参照の回避
+const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
 
 const props = withDefaults(
   defineProps<{

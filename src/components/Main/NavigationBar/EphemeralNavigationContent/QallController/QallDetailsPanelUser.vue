@@ -16,13 +16,13 @@
       />
       <span v-else :class="$style.userName">{{ userName }}</span>
     </div>
-    <button v-if="showTuneButton" :class="$style.button" @click="tune">
+    <button v-if="showTuneButton" :class="$style.button" @click="emit('tune')">
       <a-icon mdi name="tune" :size="16" />
     </button>
     <button
       v-else-if="showTuneDoneButton"
       :class="[$style.button, $style.tuneDone]"
-      @click="tuneDone"
+      @click="emit('tuneDone')"
     >
       <a-icon mdi name="check" :size="16" />
     </button>
@@ -77,13 +77,6 @@ const userName = computed(
 const talkingLevel = computed(() => talkingUsersState.value.get(props.userId))
 const onChange = (value: number) => {
   setUserVolume(props.userId, value / maxVolumeValue)
-}
-
-const tune = () => {
-  emit('tune')
-}
-const tuneDone = () => {
-  emit('tuneDone')
 }
 </script>
 
