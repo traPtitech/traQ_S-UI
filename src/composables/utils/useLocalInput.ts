@@ -1,19 +1,22 @@
 import { Ref, ref, watch } from 'vue'
 
 /**
- * 編集中以外はリモートの値(remoteValue)に同期する
+ * localValueの値がリモートの値(remoteValue)に同期される
  * 編集後にdoUpdateを実行する
+ * syncEvenEditingがtrueのときは編集中でも同期する
  */
 const useLocalInput = <T>(
   remoteValue: Ref<T>,
-  doUpdate: (v: T) => Promise<boolean> | boolean
+  doUpdate: (v: T) => Promise<boolean> | boolean,
+  syncEvenEditing = false
 ) => {
   const localValue = ref(remoteValue.value) as Ref<T>
   const isEditing = ref(false)
 
   watch(remoteValue, newRemoteValue => {
-    if (isEditing.value) return
-    localValue.value = newRemoteValue
+    if (!isEditing.value || syncEvenEditing) {
+      localValue.value = newRemoteValue
+    }
   })
 
   watch(isEditing, async newIsEditing => {
