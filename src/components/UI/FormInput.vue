@@ -53,9 +53,9 @@
 <script lang="ts">
 import { defineComponent, shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import useInput from '/@/use/input'
+import useInput from '/@/composables/useInput'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useShowPassword from '/@/use/showPassword'
+import useShowPassword from '/@/composables/useShowPassword'
 import LengthCount from '/@/components/UI/LengthCount.vue'
 
 export default defineComponent({

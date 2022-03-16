@@ -9,7 +9,7 @@ import { defineComponent, computed, PropType } from 'vue'
 import {
   NavigationItemType,
   navigationTypeNameMap
-} from '/@/components/Main/NavigationBar/use/navigationConstructor'
+} from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 
 export default defineComponent({
   name: 'NavigationContentTitle',

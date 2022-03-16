@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 

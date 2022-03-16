@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watchEffect } from 'vue'
-import { WordOrConfirmedPart } from '../use/wordSuggester'
+import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import DropdownSuggesterUserIcon from './DropdownSuggesterUserIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import DropdownSuggesterStampEffect from './DropdownSuggesterStampEffect.vue'

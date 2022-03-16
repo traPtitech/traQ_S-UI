@@ -21,8 +21,8 @@ import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import { useOpenLink } from '/@/use/openLink'
-import useChannelPath from '/@/use/channelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const useChannelFolding = () => {
   const foldedChannels = ref(new Set<ChannelId>())

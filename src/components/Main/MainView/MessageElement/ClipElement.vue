@@ -29,12 +29,12 @@ import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
   ChangeHeightData
-} from './use/elementRenderObserver'
-import useEmbeddings from '/@/use/message/embeddings'
+} from './composables/useElementRenderObserver'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 import MessageContents from './MessageContents.vue'
 import MessageTools from './MessageTools.vue'
 import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import useHover from '/@/use/hover'
+import useHover from '/@/composables/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 export default defineComponent({

@@ -36,8 +36,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
-import useAudio from '/@/use/audio'
+import useFileMeta from '/@/composables/useFileMeta'
+import useAudio from '/@/composables/useAudio'
 import AudioPlayerPlayButton from './AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'

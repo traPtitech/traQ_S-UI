@@ -34,7 +34,7 @@ import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormTextArea from '/@/components/UI/FormTextArea.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
-import useMaxLength from '/@/use/maxLength'
+import useMaxLength from '/@/composables/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 

@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { StampSet } from './use/stampSetSelector'
+import { StampSet } from './composables/useStampSetSelector'
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
 
 export default defineComponent({

@@ -3,7 +3,7 @@ import { toRefs } from 'vue'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/use/indexedDbValue'
+import useIndexedDbValue from '/@/composables/useIndexedDbValue'
 import { promisifyRequest } from 'idb-keyval'
 
 type State = {

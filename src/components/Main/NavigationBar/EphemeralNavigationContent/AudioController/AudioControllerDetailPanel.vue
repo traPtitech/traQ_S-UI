@@ -38,8 +38,8 @@
 <script lang="ts">
 import { computed, defineComponent, reactive } from 'vue'
 import { useAudioController } from '/@/store/ui/audioController'
-import useAudio from '/@/use/audio'
-import useFileMeta from '/@/use/fileMeta'
+import useAudio from '/@/composables/useAudio'
+import useFileMeta from '/@/composables/useFileMeta'
 import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'

@@ -35,7 +35,7 @@
 import { defineComponent } from 'vue'
 import NavigationContent from '/@/components/Main/NavigationBar/NavigationContent.vue'
 import EphemeralNavigationContent from '/@/components/Main/NavigationBar/EphemeralNavigationContent/EphemeralNavigationContent.vue'
-import useNavigation from './use/navigation'
+import useNavigation from './composables/useNavigation'
 import DesktopNavigationSelector from '/@/components/Main/NavigationBar/DesktopNavigationSelector.vue'
 import DesktopToolBox from '/@/components/Main/NavigationBar/DesktopToolBox.vue'
 

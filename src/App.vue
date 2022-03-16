@@ -12,16 +12,16 @@
 
 <script lang="ts">
 import { computed, defineComponent, watchEffect, Ref } from 'vue'
-import useHtmlDatasetBoolean from '/@/use/htmlDatasetBoolean'
+import useHtmlDatasetBoolean from '/@/composables/useHtmlDatasetBoolean'
 import ToastContainer from '/@/components/Toast/ToastContainer.vue'
 import ModalContainer from '/@/components/Modal/ModalContainer.vue'
-import { useThemeVariables } from '/@/use/theme'
+import { useThemeVariables } from '/@/composables/useTheme'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useTts } from '/@/store/app/tts'
 import { useThemeSettings } from '/@/store/app/themeSettings'
-import useDocumentTitle from '/@/use/documentTitle'
+import useDocumentTitle from '/@/composables/useDocumentTitle'
 
 const useQallConfirmer = () => {
   const { isCurrentDevice } = useAppRtcStore()

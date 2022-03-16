@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 const nullSymbol = Symbol('null')
 

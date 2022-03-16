@@ -28,7 +28,7 @@ import { defineComponent, PropType } from 'vue'
 import { StampPaletteId } from '/@/types/entity-ids'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import { StampSet } from './use/stampSetSelector'
+import { StampSet } from './composables/useStampSetSelector'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const useStampPaletteThumbnail = () => {

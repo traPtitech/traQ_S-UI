@@ -9,7 +9,7 @@
 import { defineComponent, PropType } from 'vue'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
-import useFileMeta from '/@/use/fileMeta'
+import useFileMeta from '/@/composables/useFileMeta'
 
 export default defineComponent({
   name: 'MessageFileListFile',

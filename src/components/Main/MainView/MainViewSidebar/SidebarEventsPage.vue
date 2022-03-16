@@ -28,7 +28,7 @@ import { computed, defineComponent, PropType, shallowRef } from 'vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelEvents from './use/channelEvents'
+import useChannelEvents from './composables/useChannelEvents'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 import { parseChannelEvent } from '/@/lib/apis'
 

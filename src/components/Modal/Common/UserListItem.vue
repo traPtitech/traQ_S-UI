@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { useUserModalOpener } from '/@/use/modalOpener'
+import { useUserModalOpener } from '/@/composables/useModalOpener'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
 

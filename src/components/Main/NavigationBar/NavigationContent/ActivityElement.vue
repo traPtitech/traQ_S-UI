@@ -12,7 +12,7 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { ActivityTimelineMessage } from '@traptitech/traq'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 export default defineComponent({
   name: 'ActivityElement',

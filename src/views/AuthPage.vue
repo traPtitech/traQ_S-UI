@@ -13,7 +13,7 @@ import {
 } from 'vue'
 import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
 import { RouteName } from '/@/router'
-import useRedirectParam from '/@/components/Authenticate/use/redirectParam'
+import useRedirectParam from '/@/components/Authenticate/composables/useRedirectParam'
 import { useRouter } from 'vue-router'
 import { useMeStore } from '/@/store/domain/me'
 

@@ -22,7 +22,7 @@ import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
 import ConsentForm from './ConsentForm/ConsentForm.vue'
 import { PageType } from '/@/views/AuthPage.vue'
-import useVersion from '/@/use/version'
+import useVersion from '/@/composables/useVersion'
 
 export default defineComponent({
   name: 'AuthenticateMainView',

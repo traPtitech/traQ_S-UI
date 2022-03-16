@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useNavigationController from '/@/use/navigationController'
+import useNavigationController from '/@/composables/useNavigationController'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 

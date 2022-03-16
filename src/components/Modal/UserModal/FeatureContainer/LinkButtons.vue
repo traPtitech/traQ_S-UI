@@ -21,9 +21,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LinkButton from './LinkButton.vue'
-import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
+import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 import { constructUserPath } from '/@/router'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 export default defineComponent({
   name: 'LinkButtons',

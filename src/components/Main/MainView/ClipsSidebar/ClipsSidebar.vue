@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
-import useSidebar from '/@/use/sidebar'
+import useSidebar from '/@/composables/useSidebar'
 import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'

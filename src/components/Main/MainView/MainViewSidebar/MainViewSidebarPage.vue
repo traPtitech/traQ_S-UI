@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useSidebar from '/@/use/sidebar'
+import useSidebar from '/@/composables/useSidebar'
 import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 

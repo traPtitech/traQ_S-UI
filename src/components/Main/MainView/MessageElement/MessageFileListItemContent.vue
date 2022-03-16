@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+import useFileMeta from '/@/composables/useFileMeta'
 import FileDescription from '/@/components/UI/FileDescription.vue'
 
 export default defineComponent({

@@ -10,7 +10,7 @@ import {
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/use/indexedDbValue'
+import useIndexedDbValue from '/@/composables/useIndexedDbValue'
 import { checkBadgeAPISupport } from '/@/lib/dom/browser'
 import {
   deleteToken,

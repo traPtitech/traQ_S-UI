@@ -28,7 +28,7 @@ import UserIcon from '/@/components/UI/UserIcon.vue'
 import FormCheckboxInner from '/@/components/UI/FormCheckboxInner.vue'
 import { UserId } from '/@/types/entity-ids'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import useTextFilter from '/@/use/textFilter'
+import useTextFilter from '/@/composables/useTextFilter'
 import { useUsersStore } from '/@/store/entities/users'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {

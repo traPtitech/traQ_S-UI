@@ -16,7 +16,7 @@ import { defineComponent, reactive, onMounted, onUnmounted } from 'vue'
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import apis from '/@/lib/apis'
-import useScreenWakeLock from '/@/use/screenWakeLock'
+import useScreenWakeLock from '/@/composables/useScreenWakeLock'
 
 const useQrCode = () => {
   const state = reactive({

@@ -11,7 +11,7 @@ import { getFirstQuery } from '/@/lib/basic/url'
 import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
 import { useRoute } from 'vue-router'
-import useLoginCheck from './use/loginCheck'
+import useLoginCheck from './composables/useLoginCheck'
 
 export default defineComponent({
   name: 'ShareTargetPage',

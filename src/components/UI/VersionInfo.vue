@@ -9,7 +9,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watchEffect } from 'vue'
 import { VERSION } from '/@/lib/define'
-import useVersion from '/@/use/version'
+import useVersion from '/@/composables/useVersion'
 
 const useManualUpdateCheck = () => {
   const threshold = 5

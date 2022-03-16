@@ -28,7 +28,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import useTextFilter from '/@/use/textFilter'
+import useTextFilter from '/@/composables/useTextFilter'
 import { isDefined } from '/@/lib/basic/array'
 import { ActiveUser } from '/@/lib/user'
 import { useGroupsStore } from '/@/store/entities/groups'

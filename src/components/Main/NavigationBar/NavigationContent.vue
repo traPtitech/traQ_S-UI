@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { NavigationItemType } from '/@/components/Main/NavigationBar/use/navigationConstructor'
+import { NavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import NavigationContentTitle from './NavigationContentTitle.vue'
 import HomeTab from './NavigationContent/HomeTab.vue'
 import ChannelsTab from './NavigationContent/ChannelsTab.vue'

@@ -18,7 +18,7 @@
 import { defineComponent, PropType, shallowRef } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import useClipsFetcher from './use/clipsFetcher'
+import useClipsFetcher from './composables/useClipsFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 
 export default defineComponent({

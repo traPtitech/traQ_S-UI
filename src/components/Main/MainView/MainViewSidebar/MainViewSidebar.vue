@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import useSidebar from '/@/use/sidebar'
+import useSidebar from '/@/composables/useSidebar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 export default defineComponent({

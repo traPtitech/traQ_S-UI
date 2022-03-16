@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, toRef } from 'vue'
-import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
+import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'

@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
-import useFileMetaList from '/@/use/message/fileMetaList'
+import useFileMetaList from '/@/composables/message/useFileMetaList'
 import { FileId } from '/@/types/entity-ids'
 import SearchResultMessageImage from './SearchResultMessageImage.vue'
 import SearchResultMessageFile from './SearchResultMessageFile.vue'

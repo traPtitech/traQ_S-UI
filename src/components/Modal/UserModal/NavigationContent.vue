@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { User, UserDetail } from '@traptitech/traq'
-import { NavigationItemType } from './use/navigation'
+import { NavigationItemType } from './composables/useNavigation'
 import ProfileTab from './ProfileTab/ProfileTab.vue'
 import GroupsTab from './GroupsTab.vue'
 import TagsTab from './TagsTab.vue'

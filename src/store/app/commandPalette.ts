@@ -4,7 +4,7 @@ import { computed, ref, toRefs } from 'vue'
 import { getVuexData } from '/@/store/utils/migrateFromVuex'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
-import useIndexedDbValue from '/@/use/indexedDbValue'
+import useIndexedDbValue from '/@/composables/useIndexedDbValue'
 import { isObjectAndHasKey } from '/@/lib/basic/object'
 import { promisifyRequest } from 'idb-keyval'
 

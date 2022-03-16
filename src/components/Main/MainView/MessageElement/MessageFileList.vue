@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ChannelId, DMChannelId, FileId } from '/@/types/entity-ids'
-import useFileMetaList from '/@/use/message/fileMetaList'
+import useFileMetaList from '/@/composables/message/useFileMetaList'
 import MessageFileListImage from './MessageFileListImage.vue'
 import MessageFileListVideo from './MessageFileListVideo.vue'
 import MessageFileListAudio from './MessageFileListAudio.vue'

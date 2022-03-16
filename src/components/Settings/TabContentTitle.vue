@@ -8,7 +8,7 @@
 import { isSettingsRouteName, SettingsRouteName } from '/@/router/settings'
 import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { navigationRouteNameTitleMap } from './use/navigation'
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const useSettingsTitle = () => {
   const route = useRoute()

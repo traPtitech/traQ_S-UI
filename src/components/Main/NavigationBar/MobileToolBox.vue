@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import useToolBox from '/@/components/Main/NavigationBar/use/toolBox'
+import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
 
 export default defineComponent({

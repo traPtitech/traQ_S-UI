@@ -21,12 +21,12 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+import useFileMeta from '/@/composables/useFileMeta'
 import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
-import useFileWaveform from '/@/use/fileWaveform'
-import { useCurrentTime, useDuration } from '/@/use/audio'
+import useFileWaveform from '/@/composables/useFileWaveform'
+import { useCurrentTime, useDuration } from '/@/composables/useAudio'
 
 export default defineComponent({
   name: 'FileModalAudio',

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import useImageViewer from './use/imageViewer'
+import useImageViewer from './composables/useImageViewer'
 
 export default defineComponent({
   name: 'ImageViewer',

@@ -40,11 +40,11 @@
 <script lang="ts">
 import { defineComponent, computed, Ref } from 'vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
-import useChannelFilter from '/@/use/channelFilter'
+import useChannelFilter from '/@/composables/useChannelFilter'
 import { constructTree } from '/@/lib/channelTree'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import { Channel } from '@traptitech/traq'
-import { buildDescendantsChannelArray } from '../use/buildChannel'
+import { buildDescendantsChannelArray } from '../composables/useBuildChannel'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'

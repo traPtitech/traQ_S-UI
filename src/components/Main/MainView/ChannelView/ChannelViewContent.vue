@@ -23,7 +23,7 @@ import { defineComponent, PropType, computed, shallowRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import useChannelMessageFetcher from './use/channelMessageFetcher'
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 

@@ -34,7 +34,7 @@
 import { defineComponent, computed } from 'vue'
 import ActivityElement from './ActivityElement.vue'
 import ToggleButton from './ToggleButton.vue'
-import useActivityStream from './use/activityStream'
+import useActivityStream from './composables/useActivityStream'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 

@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, Ref, watchEffect } from 'vue'
 import ImageUpload from '../ImageUpload.vue'
-import useImageUpload, { ImageUploadState } from '../use/imageUpload'
+import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import apis, { formatResizeError } from '/@/lib/apis'

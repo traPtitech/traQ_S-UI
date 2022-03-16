@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { navigationRouteNameTitleMap } from './use/navigation'
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 

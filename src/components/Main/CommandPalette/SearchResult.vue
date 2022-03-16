@@ -55,13 +55,13 @@ import { useCommandPalette } from '/@/store/app/commandPalette'
 import PopupSelector, {
   PopupSelectorItem
 } from '/@/components/UI/PopupSelector.vue'
-import useSearchMessages from './use/searchMessages'
-import useKeepScrollPosition from './use/keepScrollPosition'
+import useSearchMessages from './composables/useSearchMessages'
+import useKeepScrollPosition from './composables/useKeepScrollPosition'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useOpenLink } from '/@/use/openLink'
+import { useOpenLink } from '/@/composables/useOpenLink'
 import { constructMessagesPath } from '/@/router'
 
 const selectorItems: PopupSelectorItem[] & { value: SearchMessageSortKey }[] = [

@@ -10,7 +10,7 @@
 import { defineComponent } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { changeViewState } from '/@/lib/websocket'
-import useLoginCheck from './use/loginCheck'
+import useLoginCheck from './composables/useLoginCheck'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import DesktopGroupManager from '/@/components/GroupManager/DesktopGroupManager.vue'
 import MobileGroupManager from '/@/components/GroupManager/MobileGroupManager.vue'

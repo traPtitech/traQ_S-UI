@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useLogin from './use/login'
+import useLogin from './composables/useLogin'
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'

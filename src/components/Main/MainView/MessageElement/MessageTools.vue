@@ -91,7 +91,7 @@ import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
 import MessageContextMenu from './MessageContextMenu.vue'
-import useContextMenu from '/@/use/contextMenu'
+import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { Stamp } from '@traptitech/traq'
 

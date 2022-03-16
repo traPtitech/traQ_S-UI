@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 export default defineComponent({
   name: 'FormCheckboxInner',

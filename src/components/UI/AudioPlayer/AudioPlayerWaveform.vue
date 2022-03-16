@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, shallowRef } from 'vue'
 import { throttle } from 'throttle-debounce'
-import useHover from '/@/use/hover'
+import useHover from '/@/composables/useHover'
 
 export default defineComponent({
   name: 'AudioPlayerWaveform',

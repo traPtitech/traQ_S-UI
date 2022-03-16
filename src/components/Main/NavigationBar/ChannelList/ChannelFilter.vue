@@ -17,7 +17,7 @@
 import { defineComponent } from 'vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
 export default defineComponent({
   name: 'ChannelFilter',

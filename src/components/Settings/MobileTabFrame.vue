@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useSettingsNavigation from './use/navigation'
+import useSettingsNavigation from './composables/useNavigation'
 import TabContentTitle from './TabContentTitle.vue'
 import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'

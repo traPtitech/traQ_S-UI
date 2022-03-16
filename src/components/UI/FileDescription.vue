@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+import useFileMeta from '/@/composables/useFileMeta'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 

@@ -34,17 +34,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, PropType, toRef } from 'vue'
-import useSendKeyWatcher from './use/sendKeyWatcher'
+import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import { ChannelId } from '/@/types/entity-ids'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
-import useWordSuggester from './use/wordSuggester'
-import useInsertText from '/@/use/insertText'
+import useWordSuggester from './composables/useWordSuggester'
+import useInsertText from '/@/composables/useInsertText'
 import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { isFirefox } from '/@/lib/dom/browser'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import usePaste from './use/paste'
+import usePaste from './composables/usePaste'
 
 const firefoxFlag = isFirefox()
 

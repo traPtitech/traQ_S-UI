@@ -42,8 +42,8 @@ import {
   toRef
 } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
-import useTextStampPickerInvoker from '../Main/MainView/use/textStampPickerInvoker'
-import useAttachments from '../Main/MainView/MessageInput/use/attachments'
+import useTextStampPickerInvoker from '../Main/MainView/composables/useTextStampPickerInvoker'
+import useAttachments from '../Main/MainView/MessageInput/composables/useAttachments'
 import MessageInputFileList from '/@/components/Main/MainView/MessageInput/MessageInputFileList.vue'
 import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'

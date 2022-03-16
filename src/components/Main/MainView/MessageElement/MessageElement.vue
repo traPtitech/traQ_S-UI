@@ -42,12 +42,12 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import MessageStampList from './MessageStampList.vue'
 import useElementRenderObserver, {
   ChangeHeightData
-} from './use/elementRenderObserver'
-import useEmbeddings from '/@/use/message/embeddings'
+} from './composables/useElementRenderObserver'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
-import useHover from '/@/use/hover'
+import useHover from '/@/composables/useHover'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 

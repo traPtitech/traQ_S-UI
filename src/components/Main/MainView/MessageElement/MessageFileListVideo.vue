@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+import useFileMeta from '/@/composables/useFileMeta'
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 

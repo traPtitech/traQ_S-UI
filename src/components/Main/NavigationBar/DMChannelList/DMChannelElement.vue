@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
-import useHover from '/@/use/hover'
+import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'

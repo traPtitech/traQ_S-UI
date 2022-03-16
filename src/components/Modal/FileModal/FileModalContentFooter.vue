@@ -13,11 +13,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
-import useChannelPath from '/@/use/channelPath'
+import useFileMeta from '/@/composables/useFileMeta'
+import useChannelPath from '/@/composables/useChannelPath'
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
-import { useOpenLinkAndClearModal } from '../use/openLinkFromModal'
+import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'
 import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({

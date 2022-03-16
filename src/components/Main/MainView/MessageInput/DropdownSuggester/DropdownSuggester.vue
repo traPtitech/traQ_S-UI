@@ -34,8 +34,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import DropdownSuggesterCandidate from './DropdownSuggesterCandidate.vue'
-import { Word } from '../use/wordSuggestionList'
-import { WordOrConfirmedPart } from '../use/wordSuggester'
+import { Word } from '../composables/useWordSuggestionList'
+import { WordOrConfirmedPart } from '../composables/useWordSuggester'
 import { isIOS } from '/@/lib/dom/browser'
 
 const WIDTH = 240
@@ -62,7 +62,7 @@ export default defineComponent({
       default: () => []
     },
     /**
-     * ../use/wordSuggester.tsを参照
+     * ../composables/useWordSuggester.tsを参照
      */
     selectedIndex: {
       // nullableのとき https://github.com/vuejs/vue-next/issues/3948

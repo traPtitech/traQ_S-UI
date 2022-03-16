@@ -32,10 +32,10 @@ import {
   useNavigationSelectorItem,
   useEphemeralNavigationSelectorItem,
   EphemeralNavigationItemType
-} from '/@/components/Main/NavigationBar/use/navigationConstructor'
+} from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import useNavigationSelectorEntry, {
   EphemeralNavigationSelectorEntry
-} from './use/navigationSelectorEntry'
+} from './composables/useNavigationSelectorEntry'
 import NavigationSelectorItem from '/@/components/Main/NavigationBar/NavigationSelectorItem.vue'
 import { VERSION } from '/@/lib/define'
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'

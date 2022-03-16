@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { navigations } from './use/navigation'
+import { navigations } from './composables/useNavigation'
 import DesktopTabSelectorItem from './DesktopTabSelectorItem.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
 import { useRoute } from 'vue-router'

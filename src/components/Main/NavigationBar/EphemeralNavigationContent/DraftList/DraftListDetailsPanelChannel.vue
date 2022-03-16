@@ -17,7 +17,7 @@
 import { computed, defineComponent, PropType, ref, watchEffect } from 'vue'
 import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { renderInline } from '/@/lib/markdown/markdown'
 

@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useConsent from './use/consent'
+import useConsent from './composables/useConsent'
 import AuthenticateHeader from '../AuthenticateHeader.vue'
 import ClientDescription from './ClientDescription.vue'
 import ClientScopes from './ClientScopes.vue'

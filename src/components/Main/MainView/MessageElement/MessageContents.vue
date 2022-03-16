@@ -50,7 +50,7 @@ import MessageEditor from './MessageEditor.vue'
 import MessageFileList from './MessageFileList.vue'
 import MessageQuoteList from './MessageQuoteList.vue'
 import MessageOgpList from './MessageOgpList.vue'
-import useEmbeddings from '/@/use/message/embeddings'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 

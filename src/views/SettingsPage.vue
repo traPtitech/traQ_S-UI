@@ -24,7 +24,7 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
 import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
 import { changeViewState } from '/@/lib/websocket'
-import useLoginCheck from './use/loginCheck'
+import useLoginCheck from './composables/useLoginCheck'
 
 const useSettingsRootPathWatcher = (
   isMobile: Ref<boolean>,

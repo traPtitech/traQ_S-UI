@@ -21,8 +21,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, PropType } from 'vue'
-import useChannelPath from '/@/use/channelPath'
-import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useQallSession } from '../../MainView/ChannelSidebar/composables/useChannelRTCSession'
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'

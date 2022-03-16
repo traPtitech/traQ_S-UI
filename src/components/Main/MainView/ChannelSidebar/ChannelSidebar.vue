@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelSidebarCommon from '/@/components/Main/MainView/use/channelSidebarCommon'
+import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'

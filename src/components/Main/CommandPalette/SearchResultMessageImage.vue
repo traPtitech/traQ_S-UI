@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import useFileThumbnail from '/@/use/fileThumbnail'
+import useFileThumbnail from '/@/composables/useFileThumbnail'
 import { defineComponent, reactive, Ref, computed } from 'vue'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 

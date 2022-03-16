@@ -11,7 +11,7 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
-import { useUserModalOpener } from '/@/use/modalOpener'
+import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({

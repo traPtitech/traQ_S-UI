@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/use/navigationConstructor'
+import { EphemeralNavigationItemType } from '/@/components/Main/NavigationBar/composables/useNavigationConstructor'
 import EphemeralNavigationContentContainer from './EphemeralNavigationContentContainer.vue'
 import QallController from './QallController/QallController.vue'
 import DraftList from './DraftList/DraftList.vue'

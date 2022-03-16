@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
-import useSidebar from '/@/use/sidebar'
+import useSidebar from '/@/composables/useSidebar'
 import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
 import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
 import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'

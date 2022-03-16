@@ -18,7 +18,7 @@ import { ChannelId, UserId } from '/@/types/entity-ids'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import useChannelSubscribers from '/@/use/channelSubscribers'
+import useChannelSubscribers from '/@/composables/useChannelSubscribers'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 

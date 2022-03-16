@@ -24,7 +24,7 @@ import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
-import useSettingsNavigation, { navigations } from './use/navigation'
+import useSettingsNavigation, { navigations } from './composables/useNavigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
 

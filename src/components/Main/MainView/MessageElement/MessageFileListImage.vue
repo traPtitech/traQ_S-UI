@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useFileThumbnail from '/@/use/fileThumbnail'
+import useFileThumbnail from '/@/composables/useFileThumbnail'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 

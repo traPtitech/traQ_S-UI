@@ -58,9 +58,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFileWaveform from '/@/use/fileWaveform'
-import useFileMeta from '/@/use/fileMeta'
-import useAudio from '/@/use/audio'
+import useFileWaveform from '/@/composables/useFileWaveform'
+import useFileMeta from '/@/composables/useFileMeta'
+import useAudio from '/@/composables/useAudio'
 import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'

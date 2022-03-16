@@ -25,7 +25,7 @@
 import { defineComponent, shallowRef, onMounted } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { isTouchDevice } from '/@/lib/dom/browser'
-import useTextModelSyncer from '/@/use/textModelSyncer'
+import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 export default defineComponent({
   name: 'FilterInput',

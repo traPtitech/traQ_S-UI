@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/use/modalOpener'
+import { useUserModalOpener } from '/@/composables/useModalOpener'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useUsersStore } from '/@/store/entities/users'
 

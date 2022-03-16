@@ -23,7 +23,7 @@ import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
 import UserNotificationList from './UserNotificationList.vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 export default defineComponent({
   name: 'NotificationModal',

@@ -20,8 +20,8 @@ import { defineComponent, PropType, toRef } from 'vue'
 import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
 import { MessageId } from '/@/types/entity-ids'
 import { Point } from '/@/lib/basic/point'
-import useCopyLink from '/@/use/contextMenu/copyLink'
-import usePinToggler from '/@/use/contextMenu/pinToggler'
+import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 
 export default defineComponent({
   name: 'SidebarPinnedMessageContextMenu',

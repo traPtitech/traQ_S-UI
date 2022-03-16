@@ -20,9 +20,9 @@
 import { defineComponent, computed, PropType } from 'vue'
 import ProfileHeader from './ProfileHeader.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
-import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
+import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 
 export default defineComponent({
   name: 'HomeChannel',

@@ -16,7 +16,7 @@ import { defineComponent, ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useImageUploadInternal } from './use/imageUpload'
+import { useImageUploadInternal } from './composables/useImageUpload'
 
 // スタンプ編集用の設定
 const cropperGifOptions = {

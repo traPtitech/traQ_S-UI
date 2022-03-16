@@ -9,7 +9,7 @@ import { defineComponent, computed, PropType } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
-import useChannelBots from './use/channelBots'
+import useChannelBots from './composables/useChannelBots'
 import { useUsersStore } from '/@/store/entities/users'
 
 export default defineComponent({

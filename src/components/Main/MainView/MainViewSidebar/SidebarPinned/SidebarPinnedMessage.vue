@@ -26,7 +26,7 @@ import { ActivityTimelineMessage, Message } from '@traptitech/traq'
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
 import { constructMessagesPath } from '/@/router'
 import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
-import useContextMenu from '/@/use/contextMenu'
+import useContextMenu from '/@/composables/useContextMenu'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({

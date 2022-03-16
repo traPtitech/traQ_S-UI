@@ -34,8 +34,8 @@
 import { defineComponent, PropType } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useShowPassword from '/@/use/showPassword'
-import useTextModelSyncer from '/@/use/textModelSyncer'
+import useShowPassword from '/@/composables/useShowPassword'
+import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 export default defineComponent({
   name: 'AuthenticateInput',

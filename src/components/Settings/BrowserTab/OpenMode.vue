@@ -31,9 +31,9 @@ import { defineComponent, PropType } from 'vue'
 import { OpenMode } from '/@/store/app/browserSettings'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormRadio from '/@/components/UI/FormRadio.vue'
-import useChannelPath from '/@/use/channelPath'
-import useChannelOptions from '/@/use/channelOptions'
-import { useModelSyncer } from '/@/use/modelSyncer'
+import useChannelPath from '/@/composables/useChannelPath'
+import useChannelOptions from '/@/composables/useChannelOptions'
+import { useModelSyncer } from '/@/composables/useModelSyncer'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 export default defineComponent({

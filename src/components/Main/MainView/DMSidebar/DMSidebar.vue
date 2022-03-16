@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import useChannelSidebarCommon from '/@/components/Main/MainView/use/channelSidebarCommon'
+import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import ChannelSidebarHidden from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarHidden.vue'
 import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'

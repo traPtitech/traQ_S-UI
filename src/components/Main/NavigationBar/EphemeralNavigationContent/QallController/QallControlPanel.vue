@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 export default defineComponent({
   name: 'QallControlPanel',
