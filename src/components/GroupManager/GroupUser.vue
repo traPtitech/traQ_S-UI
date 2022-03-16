@@ -11,13 +11,13 @@
         name="pencil-outline"
         mdi
         :class="$style.controlIcon"
-        @click="onClickEdit"
+        @click="emit('edit')"
       />
       <a-icon
         name="close"
         mdi
         :class="$style.controlIcon"
-        @click="onClickDelete"
+        @click="emit('delete')"
       />
     </div>
   </div>
@@ -46,15 +46,7 @@ const emit = defineEmits<{
 }>()
 
 const { usersMap } = useUsersStore()
-
 const user = computed(() => usersMap.value.get(props.id))
-
-const onClickEdit = () => {
-  emit('edit')
-}
-const onClickDelete = () => {
-  emit('delete')
-}
 </script>
 
 <style lang="scss" module>
