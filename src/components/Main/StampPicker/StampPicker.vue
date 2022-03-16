@@ -57,7 +57,8 @@ const { upsertLocalStampHistory } = useMeStore()
 
 const { stamps, filterState } = useStampList(currentStampSet)
 const { stampSetState } = useStampSetSelector()
-const { effectSelectorState, toggleShowEffect } = useEffectSelector()
+
+const { shouldShowEffectSelector, toggleShowEffect } = useEffectSelector()
 const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
 const onInputStamp = (id: StampId) => {

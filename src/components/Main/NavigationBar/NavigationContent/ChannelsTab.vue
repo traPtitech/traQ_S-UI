@@ -48,6 +48,7 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import useToggle from '/@/composables/useToggle'
 
 const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
   const { textFilterState } = useChannelFilter(channels)
@@ -58,10 +59,7 @@ const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
 
 const useFilterStarChannel = () => {
   const { filterStarChannel } = useBrowserSettings()
-
-  const toggleStarChannelFilter = () => {
-    filterStarChannel.value = !filterStarChannel.value
-  }
+  const { toggle: toggleStarChannelFilter } = useToggle(filterStarChannel)
 
   return {
     filterStarChannel,

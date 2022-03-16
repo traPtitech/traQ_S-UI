@@ -3,7 +3,7 @@
     <div
       :class="$style.content"
       :data-is-editing="$boolAttr(isEditing)"
-      @click="onClick"
+      @click="toggleIsEditing"
     >
       <a-icon
         mdi
@@ -17,14 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import useToggle from '/@/composables/useToggle'
 
-const isEditing = ref(false)
-
-const onClick = () => {
-  isEditing.value = !isEditing.value
-}
+const { value: isEditing, toggle: toggleIsEditing } = useToggle(false)
 </script>
 
 <style lang="scss" module>

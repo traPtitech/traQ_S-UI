@@ -17,9 +17,10 @@
 <script lang="ts" setup>
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { OAuth2Scope } from '@traptitech/traq'
 import { scopeInfoMap } from '/@/lib/clientScope'
+import useToggle from '/@/composables/useToggle'
 
 const props = defineProps<{
   scope: OAuth2Scope
@@ -27,10 +28,7 @@ const props = defineProps<{
 
 const scopeInfo = computed(() => scopeInfoMap[props.scope])
 
-const isOpen = ref(false)
-const toggleOpen = () => {
-  isOpen.value = !isOpen.value
-}
+const { value: isOpen, toggle: toggleOpen } = useToggle(false)
 </script>
 
 <style lang="scss" module>

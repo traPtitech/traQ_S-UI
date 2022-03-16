@@ -1,6 +1,6 @@
 <template>
   <sidebar-content-container
-    v-if="!state.isOpenDetail"
+    v-if="!isDetailOpen"
     large-padding
     clickable
     @toggle="toggle"
@@ -23,8 +23,8 @@
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
-import { reactive } from 'vue'
 import { UserId } from '/@/types/entity-ids'
+import useToggle from '/@/composables/useToggle'
 
 withDefaults(
   defineProps<{
@@ -35,10 +35,5 @@ withDefaults(
   }
 )
 
-const state = reactive({
-  isOpenDetail: false
-})
-const toggle = () => {
-  state.isOpenDetail = !state.isOpenDetail
-}
+const { value: isDetailOpen, toggle } = useToggle(false)
 </script>

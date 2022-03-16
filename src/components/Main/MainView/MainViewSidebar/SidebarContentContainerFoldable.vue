@@ -27,7 +27,7 @@
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import { ref } from 'vue'
+import useToggle from '/@/composables/useToggle'
 
 withDefaults(
   defineProps<{
@@ -39,10 +39,7 @@ withDefaults(
   }
 )
 
-const isOpen = ref(false)
-const toggle = () => {
-  isOpen.value = !isOpen.value
-}
+const { value: isOpen, toggle } = useToggle(false)
 </script>
 
 <style lang="scss" module>

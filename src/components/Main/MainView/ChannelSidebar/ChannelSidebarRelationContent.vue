@@ -31,7 +31,7 @@
             :class="$style.element"
           />
           <div
-            v-if="!state.isOpenChildren && childrenRemainCount > 0"
+            v-if="!isChildrenOpen && childrenRemainCount > 0"
             :class="$style.text"
             @click="toggleChildren"
           >
@@ -41,7 +41,7 @@
         </div>
       </template>
       <div
-        v-if="!state.isOpenSiblings && siblingsRemainCount > 0"
+        v-if="!isSiblingsOpen && siblingsRemainCount > 0"
         :class="$style.text"
         @click="toggleSiblings"
       >
@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
 
@@ -66,6 +66,7 @@ const buildSiblingLink = (channel: string) =>
 
 <script lang="ts" setup>
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = withDefaults(
   defineProps<{
@@ -84,24 +85,16 @@ const SIBLINGS_DEFAULT_COUNT = 5
 const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
 const CHILDREN_DEFAULT_COUNT = 3
 
-const state = reactive({
-  isOpenSiblings: false,
-  isOpenChildren: false
-})
-const toggleChildren = () => {
-  state.isOpenChildren = !state.isOpenChildren
-}
-const toggleSiblings = () => {
-  state.isOpenSiblings = !state.isOpenSiblings
-}
+const { value: isSiblingsOpen, toggle: toggleSiblings } = useToggle(false)
+const { value: isChildrenOpen, toggle: toggleChildren } = useToggle(false)
 
 const filteredChildren = computed(() =>
-  state.isOpenChildren
+  isChildrenOpen.value
     ? props.children
     : props.children.slice(0, CHILDREN_DEFAULT_COUNT)
 )
 const filteredSiblings = computed(() => {
-  if (state.isOpenSiblings) return props.siblings
+  if (isSiblingsOpen.value) return props.siblings
   const currentId = props.current?.id
   if (!currentId) return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
 

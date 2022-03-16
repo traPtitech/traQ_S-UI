@@ -112,6 +112,7 @@ const pushInitialRecentStampsIfNeeded = (
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = withDefaults(
   defineProps<{
@@ -168,10 +169,10 @@ const onDotsClick = (e: MouseEvent) => {
 }
 
 const { isMobile } = useResponsiveStore()
-const showQuickReaction = ref(!isMobile.value)
-const toggleQuickReaction = () => {
-  showQuickReaction.value = !showQuickReaction.value
-}
+
+const { value: showQuickReaction, toggle: toggleQuickReaction } = useToggle(
+  !isMobile.value
+)
 </script>
 
 <style lang="scss" module>

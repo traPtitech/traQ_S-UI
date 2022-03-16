@@ -13,27 +13,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const useFolding = () => {
-  const isFolding = ref(true)
-  const toggleFolding = () => {
-    isFolding.value = !isFolding.value
-  }
-
-  return { isFolding, toggleFolding }
-}
-</script>
-
-<script lang="ts" setup>
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = defineProps<{
   name: string
@@ -42,7 +31,7 @@ const props = defineProps<{
 
 const { unreadChannelsMap } = useMeStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()
-const { isFolding, toggleFolding } = useFolding()
+const { value: isFolding, toggle: toggleFolding } = useToggle(true)
 
 const dmChannelIds = computed(() =>
   props.users

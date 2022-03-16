@@ -1,10 +1,8 @@
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import useToggle from './useToggle'
 
 const useShowPassword = (props: { type: string }) => {
-  const isPasswordShown = ref(false)
-  const togglePassword = () => {
-    isPasswordShown.value = !isPasswordShown.value
-  }
+  const { value: isPasswordShown, toggle: togglePassword } = useToggle()
 
   const typeWithShown = computed(() => {
     if (props.type !== 'password') return props.type

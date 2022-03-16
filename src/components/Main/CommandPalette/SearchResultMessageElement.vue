@@ -23,7 +23,7 @@
         <div
           v-if="oversized && !expanded"
           :class="$style.expandButton"
-          @mousedown.stop="onClickExpandButton"
+          @mousedown.stop="toggleExpanded"
         >
           <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
         </div>
@@ -83,11 +83,8 @@ const useHeightObserver = (contentRef: Ref<HTMLElement | undefined>) => {
 
 const useMessageExpansion = (contentRef: Ref<HTMLElement | undefined>) => {
   const { oversized } = useHeightObserver(contentRef)
-  const expanded = ref(false)
-  const onClickExpandButton = () => {
-    expanded.value = !expanded.value
-  }
-  return { oversized, expanded, onClickExpandButton }
+  const { value: expanded, toggle: toggleExpanded } = useToggle(false)
+  return { oversized, expanded, toggleExpanded }
 }
 
 const useSpoilerToggler = () => {
@@ -108,6 +105,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = defineProps<{
   message: DeepReadonly<Message>
@@ -160,8 +158,7 @@ const onClick = (e: MouseEvent) => {
 }
 
 const contentRef = ref<HTMLElement>()
-const { oversized, expanded, onClickExpandButton } =
-  useMessageExpansion(contentRef)
+const { oversized, expanded, toggleExpanded } = useMessageExpansion(contentRef)
 
 const { toggleSpoilerHandler } = useSpoilerToggler()
 </script>
