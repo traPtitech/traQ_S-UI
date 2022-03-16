@@ -82,7 +82,7 @@ export default defineComponent({
       }
 
       const [firstChild] = filtedChildren
-      return cloneVNode(firstChild, { ref: element })
+      return cloneVNode(firstChild, { ref: element }, true)
     }
   }
 })

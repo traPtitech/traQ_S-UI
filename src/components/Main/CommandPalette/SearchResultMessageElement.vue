@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, DeepReadonly, ref, watchEffect } from 'vue'
+import { computed, DeepReadonly, ref, shallowRef, watchEffect } from 'vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
@@ -57,7 +57,7 @@ import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 import useToggle from '/@/composables/useToggle'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
-import useHeightObserver from './composables/useHeightObserver'
+import useHeightObserver from '/@/composables/dom/useHeightObserver'
 import { useMessagesStore } from '/@/store/entities/messages'
 
 const props = defineProps<{
@@ -121,7 +121,7 @@ const onClick = (e: MouseEvent) => {
 
 const maxHeight = 200
 
-const contentRef = ref<HTMLElement>()
+const contentRef = shallowRef<HTMLElement | null>(null)
 const { height } = useHeightObserver(contentRef)
 const oversized = computed(
   () => height.value !== undefined && height.value >= maxHeight
