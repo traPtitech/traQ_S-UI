@@ -26,11 +26,7 @@
     -->
   </div>
   <template v-if="isImporterOpen">
-    <textarea-autosize
-      :model-value="editedTheme"
-      :class="$style.jsonField"
-      @update:model-value="updateEditedTheme"
-    />
+    <textarea-autosize v-model="editedTheme" :class="$style.jsonField" />
     <div :class="$style.import">
       <form-button
         label="保存"
@@ -62,9 +58,6 @@ const useEditedThemes = (
   watchEffect(() => {
     editedTheme.value = appliedThemeStringified.value
   })
-  const updateEditedTheme = (theme: string) => {
-    editedTheme.value = theme
-  }
   const isChanged = computed(() => {
     try {
       return !dequal(JSON.parse(editedTheme.value), props.custom)
@@ -98,7 +91,7 @@ const useEditedThemes = (
     }
   }
 
-  return { editedTheme, updateEditedTheme, isChanged, applyTheme }
+  return { editedTheme, isChanged, applyTheme }
 }
 
 const useImporter = () => {
@@ -122,8 +115,7 @@ const emit = defineEmits<{
   (e: 'changeTheme', _theme: Theme): void
 }>()
 
-const { editedTheme, updateEditedTheme, isChanged, applyTheme } =
-  useEditedThemes(props, emit)
+const { editedTheme, isChanged, applyTheme } = useEditedThemes(props, emit)
 
 const { isImporterOpen, onImportClick } = useImporter()
 </script>
