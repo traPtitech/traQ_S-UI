@@ -23,6 +23,7 @@ import ConsentForm from './ConsentForm/ConsentForm.vue'
 import { computed } from 'vue'
 import { PageType } from '/@/views/AuthPage.vue'
 import useVersion from '/@/composables/useVersion'
+import { RouteName } from '/@/router'
 
 const props = withDefaults(
   defineProps<{
@@ -30,7 +31,7 @@ const props = withDefaults(
     show?: boolean
   }>(),
   {
-    type: 'login' as const,
+    type: RouteName.Login,
     show: false
   }
 )

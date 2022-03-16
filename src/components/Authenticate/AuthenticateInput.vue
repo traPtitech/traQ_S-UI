@@ -55,7 +55,11 @@ const props = withDefaults(
   }
 )
 
-const { value, onInput } = useTextModelSyncer(props, emit)
+const emits = defineEmits<{
+  (v: 'update:modelValue', val: string): void
+}>()
+
+const { value, onInput } = useTextModelSyncer(props, emits)
 
 const id = randomString()
 

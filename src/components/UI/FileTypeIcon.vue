@@ -7,7 +7,7 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
 import { AttachmentType } from '/@/lib/basic/file'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     type: AttachmentType
     size?: number
@@ -19,7 +19,7 @@ withDefaults(
 )
 
 const iconData = computed(() => {
-  switch (prop.type) {
+  switch (props.type) {
     case 'file':
       return { name: 'file', mdi: true }
     case 'pdf':
@@ -28,7 +28,7 @@ const iconData = computed(() => {
       return { name: 'file-chart', mdi: true }
     case 'image':
       return {
-        name: prop.isAnimatedImage ? 'image-multiple' : 'file-image',
+        name: props.isAnimatedImage ? 'image-multiple' : 'file-image',
         mdi: true
       }
     case 'video':
@@ -36,7 +36,7 @@ const iconData = computed(() => {
     case 'audio':
       return { name: 'file-music', mdi: true }
   }
-  const check: never = prop.type
+  const check: never = props.type
   throw new Error(`Unexpected type ${check}`)
 })
 </script>

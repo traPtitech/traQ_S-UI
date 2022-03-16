@@ -17,7 +17,7 @@ import Cropper from 'cropperjs'
 import { useImageUploadInternal } from './composables/useImageUpload'
 import FormButton from '/@/components/UI/FormButton.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     rounded?: boolean
     destroyFlag: boolean
@@ -103,7 +103,7 @@ const destroy = () => {
 }
 
 watchEffect(() => {
-  if (prop.destroyFlag) {
+  if (props.destroyFlag) {
     destroy()
     emit('destroyed')
   }

@@ -73,7 +73,7 @@ const props = withDefaults(
     type?: PageType
   }>(),
   {
-    type: 'login' as const
+    type: RouteName.Login
   }
 )
 
