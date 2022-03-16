@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div>
     <sidebar-pinned-message
       v-for="message in sortedMessages"
       :key="message.id"
@@ -34,15 +34,14 @@ const sortedMessages = computed(() =>
 </script>
 
 <style lang="scss" module>
-.container {
-  @include color-ui-secondary;
-  @include background-secondary;
-}
 .item + .item {
   margin-top: 16px;
 }
 
 .noPinned {
-  @include color-ui-tertiary;
+  @include color-ui-secondary;
+  @include background-secondary;
+  padding: 8px;
+  border-radius: 4px;
 }
 </style>
