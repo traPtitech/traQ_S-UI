@@ -9,9 +9,9 @@
 
 <script lang="ts" setup>
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/composables/useModalOpener'
+import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = defineProps<{
@@ -22,7 +22,7 @@ const props = defineProps<{
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.userId))
 
-const { openModal } = useUserModalOpener(props, user)
+const { openModal } = useUserModalOpener(toRef(props, 'userId'))
 </script>
 
 <style lang="scss" module>

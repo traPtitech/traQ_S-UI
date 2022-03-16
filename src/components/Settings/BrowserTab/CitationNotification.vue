@@ -18,12 +18,13 @@
 
 <script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
+import useToggle from '/@/composables/useToggle'
 
 const { addErrorToast } = useToastStore()
-const value = ref(false)
+const { value, toggle } = useToggle()
 
 onMounted(async () => {
   const { data } = await apis.getMyNotifyCitation()
@@ -33,7 +34,7 @@ onMounted(async () => {
 const toggleSetting = async () => {
   try {
     await apis.changeMyNotifyCitation({ notifyCitation: !value.value })
-    value.value = !value.value
+    toggle()
   } catch {
     addErrorToast('引用通知設定に失敗しました')
   }

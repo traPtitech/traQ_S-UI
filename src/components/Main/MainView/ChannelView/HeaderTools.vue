@@ -41,7 +41,6 @@
 <script lang="ts">
 import { ChannelId } from '/@/types/entity-ids'
 import useQall from './composables/useQall'
-import usePopupMenu from './composables/usePopupMenu'
 import useChannelState from './composables/useChannelState'
 import useStarChannel from './composables/useStarChannel'
 import useNotificationModal from './composables/useNotificationModal'
@@ -78,12 +77,17 @@ const useCopy = (props: { channelId: ChannelId }) => {
 import ClickOutside from '/@/components/UI/ClickOutside'
 import HeaderToolsList from './HeaderToolsList.vue'
 import HeaderToolsMenu from './HeaderToolsMenu.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = defineProps<{
   channelId: ChannelId
 }>()
 
-const { isPopupMenuShown, togglePopupMenu, closePopupMenu } = usePopupMenu()
+const {
+  value: isPopupMenuShown,
+  toggle: togglePopupMenu,
+  close: closePopupMenu
+} = useToggle(false)
 const { channelState } = useChannelState(props)
 const { starChannel, unstarChannel } = useStarChannel(props)
 const { openNotificationModal } = useNotificationModal(props)

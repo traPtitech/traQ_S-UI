@@ -48,7 +48,7 @@
   <div v-else-if="queryEntered" :class="$style.empty">見つかりませんでした</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useCommandPalette } from '/@/store/app/commandPalette'
@@ -58,21 +58,6 @@ import useKeepScrollPosition from './composables/useKeepScrollPosition'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { constructMessagesPath } from '/@/router'
-
-const useMessageOpener = () => {
-  const { openLink } = useOpenLink()
-  const { closeCommandPalette } = useCommandPalette()
-
-  const openMessage = async (e: MouseEvent, messageId: MessageId) => {
-    openLink(e, constructMessagesPath(messageId), () => {
-      closeCommandPalette()
-    })
-  }
-  return { openMessage }
-}
-</script>
-
-<script lang="ts" setup>
 import PopupSelector from '/@/components/UI/PopupSelector.vue'
 import SearchResultMessageElement from './SearchResultMessageElement.vue'
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
@@ -119,7 +104,13 @@ onMounted(() => {
 const resultListEle = ref<HTMLElement | null>(null)
 const queryEntered = computed(() => query.value.length > 0)
 
-const { openMessage } = useMessageOpener()
+const { openLink } = useOpenLink()
+const { closeCommandPalette } = useCommandPalette()
+const openMessage = async (e: MouseEvent, messageId: MessageId) => {
+  openLink(e, constructMessagesPath(messageId), () => {
+    closeCommandPalette()
+  })
+}
 
 const jumpToPage = (page: number) => {
   changePage(page)

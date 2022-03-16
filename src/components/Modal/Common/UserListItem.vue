@@ -14,7 +14,7 @@
           mdi
           title="管理者"
         />
-        <span>{{ name }}</span>
+        <span>{{ displayName }}</span>
       </div>
       <slot />
     </div>
@@ -24,8 +24,8 @@
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { computed } from 'vue'
-import { useUserModalOpener } from '/@/composables/useModalOpener'
+import { computed, toRef } from 'vue'
+import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(
@@ -40,10 +40,11 @@ const props = withDefaults(
 )
 
 const { usersMap } = useUsersStore()
-const user = computed(() => usersMap.value.get(props.userId))
-const name = computed(() => user.value?.displayName)
+const displayName = computed(
+  () => usersMap.value.get(props.userId)?.displayName
+)
 
-const { isClickable, openModal } = useUserModalOpener(props, user)
+const { isClickable, openModal } = useUserModalOpener(toRef(props, 'userId'))
 </script>
 
 <style lang="scss" module>

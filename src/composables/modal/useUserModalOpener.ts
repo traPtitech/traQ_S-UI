@@ -1,30 +1,34 @@
-import { computed, Ref } from 'vue'
-import { User } from '@traptitech/traq'
+import { computed, Ref, unref } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useModalStore } from '/@/store/ui/modal'
+import { useUsersStore } from '/@/store/entities/users'
 
 export const useUserModalOpener = (
-  props: { userId?: UserId; preventModal?: boolean },
-  user: Ref<User | undefined>
+  userId: Ref<UserId | undefined>,
+  preventModal: Ref<boolean> | boolean = false
 ) => {
+  const { usersMap } = useUsersStore()
   const { pushModal } = useModalStore()
+
+  const user = computed(() => usersMap.value.get(userId.value ?? ''))
 
   const isClickable = computed(
     () =>
       user.value &&
-      !props.preventModal &&
+      !unref(preventModal) &&
       !(user.value.bot && user.value.name.startsWith('Webhook#')) // Webhookはbotかつ`Webhook#`で始まるidのユーザー
   )
+
   const openModal = () => {
     if (!isClickable.value) {
       return
     }
-    if (!props.userId) {
+    if (!userId.value) {
       return
     }
     pushModal({
       type: 'user',
-      id: props.userId
+      id: userId.value
     })
   }
 

@@ -1,4 +1,4 @@
-import { computed, readonly, Ref, ref, toRaw, watchEffect } from 'vue'
+import { computed, readonly, Ref, ref, unref, watchEffect } from 'vue'
 import apis from '/@/lib/apis'
 import { Version } from '@traptitech/traq'
 
@@ -14,7 +14,7 @@ const useVersion = (needed: Ref<boolean> | boolean = true) => {
     version.value = res.data
   }
   watchEffect(() => {
-    if (toRaw(needed) && !version.value) {
+    if (unref(needed) && !version.value) {
       fetch()
     }
   })

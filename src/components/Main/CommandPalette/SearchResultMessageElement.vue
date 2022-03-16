@@ -23,7 +23,7 @@
         <div
           v-if="oversized && !expanded"
           :class="$style.expandButton"
-          @mousedown.stop="onClickExpandButton"
+          @mousedown.stop="toggleExpanded"
         >
           <a-icon name="arrow-expand-vertical" mdi :size="20" />全て表示
         </div>
@@ -40,74 +40,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import {
-  computed,
-  DeepReadonly,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  Ref,
-  watchEffect
-} from 'vue'
+<script lang="ts" setup>
+import { computed, DeepReadonly, ref, watchEffect } from 'vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { MessageId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { Message } from '@traptitech/traq'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
-import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
-
-const maxHeight = 200
-
-const useHeightObserver = (contentRef: Ref<HTMLElement | undefined>) => {
-  const oversized = ref(false)
-  const observer = new ResizeObserver(entries => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const entry = entries[0]!
-    const { height } = entry.target.getBoundingClientRect()
-    oversized.value = height >= maxHeight
-  })
-  onMounted(() => {
-    if (contentRef.value) observer.observe(contentRef.value)
-  })
-  onBeforeUnmount(() => {
-    if (contentRef.value) observer.unobserve(contentRef.value)
-  })
-
-  return { oversized }
-}
-
-const useMessageExpansion = (contentRef: Ref<HTMLElement | undefined>) => {
-  const { oversized } = useHeightObserver(contentRef)
-  const expanded = ref(false)
-  const onClickExpandButton = () => {
-    expanded.value = !expanded.value
-  }
-  return { oversized, expanded, onClickExpandButton }
-}
-
-const useSpoilerToggler = () => {
-  const toggleSpoilerHandler = (event: MouseEvent) => {
-    if (!event.target) return
-    const toggled = toggleSpoiler(event.target as HTMLElement)
-    if (toggled) {
-      event.stopPropagation()
-    }
-  }
-
-  return { toggleSpoilerHandler }
-}
-</script>
-
-<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
+import useToggle from '/@/composables/useToggle'
+import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
+import useHeightObserver from './composables/useHeightObserver'
 
 const props = defineProps<{
   message: DeepReadonly<Message>
@@ -159,9 +109,14 @@ const onClick = (e: MouseEvent) => {
   emit('clickOpen', e, props.message.id)
 }
 
+const maxHeight = 200
+
 const contentRef = ref<HTMLElement>()
-const { oversized, expanded, onClickExpandButton } =
-  useMessageExpansion(contentRef)
+const { height } = useHeightObserver(contentRef)
+const oversized = computed(
+  () => height.value !== undefined && height.value >= maxHeight
+)
+const { value: expanded, toggle: toggleExpanded } = useToggle(false)
 
 const { toggleSpoilerHandler } = useSpoilerToggler()
 </script>

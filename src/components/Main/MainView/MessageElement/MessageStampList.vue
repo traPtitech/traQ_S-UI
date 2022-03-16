@@ -137,6 +137,7 @@ const createStampList = (
 import StampElement from './StampElement.vue'
 import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = withDefaults(
   defineProps<{
@@ -156,10 +157,7 @@ const { stampsMap } = useStampsStore()
 const { addErrorToast } = useToastStore()
 const stampList = computed(() => createStampList(props, stampsMap, myId))
 
-const isDetailShown = ref(false)
-const toggleDetail = () => {
-  isDetailShown.value = !isDetailShown.value
-}
+const { value: isDetailShown, toggle: toggleDetail } = useToggle(false)
 
 const addStamp = async (stampId: StampId) => {
   try {

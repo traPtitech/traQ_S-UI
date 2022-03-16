@@ -14,7 +14,7 @@
         name="pencil-outline"
         mdi
         :class="$style.editIcon"
-        @click="onClickEdit"
+        @click="emit('clickEdit')"
       />
     </div>
   </div>
@@ -32,10 +32,6 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'clickEdit'): void
 }>()
-
-const onClickEdit = () => {
-  emit('clickEdit')
-}
 </script>
 
 <style lang="scss" module>

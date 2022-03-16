@@ -1,8 +1,8 @@
 import { computed } from 'vue'
-import usePopupMenu from '../../MainView/ChannelView/composables/usePopupMenu'
 import { useCommandPalette } from '/@/store/app/commandPalette'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import { useModalStore } from '/@/store/ui/modal'
+import useToggle from '/@/composables/useToggle'
 
 interface Tool {
   iconName: string
@@ -14,7 +14,11 @@ interface Tool {
 }
 
 const useToolBox = () => {
-  const { isPopupMenuShown, closePopupMenu, togglePopupMenu } = usePopupMenu()
+  const {
+    value: isServicesShown,
+    close: closeServices,
+    toggle: toggleServices
+  } = useToggle(false)
   const { openLink } = useOpenLink()
   const { pushModal } = useModalStore()
 
@@ -37,7 +41,7 @@ const useToolBox = () => {
       tools.push({
         iconName: 'apps',
         iconMdi: true,
-        onClick: togglePopupMenu
+        onClick: toggleServices
       })
     }
     if (window.traQConfig.showQrCodeButton) {
@@ -56,9 +60,9 @@ const useToolBox = () => {
   })
 
   return {
-    isServicesShown: isPopupMenuShown,
-    closeServices: closePopupMenu,
-    toggleServices: togglePopupMenu,
+    isServicesShown,
+    closeServices,
+    toggleServices,
     tools
   }
 }

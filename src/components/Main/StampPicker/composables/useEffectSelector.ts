@@ -1,17 +1,13 @@
-import { reactive } from 'vue'
+import useToggle from '/@/composables/useToggle'
 
 export type EffectSelectorState = {
   shouldShowEffectSelector: boolean
 }
 
 const useEffectSelector = () => {
-  const state: EffectSelectorState = reactive({
-    shouldShowEffectSelector: false
-  })
-  const toggleShowEffect = () => {
-    state.shouldShowEffectSelector = !state.shouldShowEffectSelector
-  }
-  return { effectSelectorState: state, toggleShowEffect }
+  const { value: shouldShowEffectSelector, toggle: toggleShowEffect } =
+    useToggle(false)
+  return { shouldShowEffectSelector, toggleShowEffect }
 }
 
 export default useEffectSelector

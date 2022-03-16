@@ -1,22 +1,9 @@
 import { OAuth2Scope, OAuth2Client, User } from '@traptitech/traq'
 import { OAuthClientId } from '/@/types/entity-ids'
 import apis, { OAuthDecidePath } from '/@/lib/apis'
-import { reactive } from 'vue'
+import { computed, ref, Ref } from 'vue'
 
 const validScopes = new Set<string>(Object.values(OAuth2Scope))
-
-interface ConsentParams {
-  scopes: string[] | undefined
-  clientId: OAuthClientId | undefined
-}
-
-interface State {
-  client: OAuth2Client | undefined
-  scopes: OAuth2Scope[]
-  developer: User | undefined
-  disableButton: boolean
-  error: string | undefined
-}
 
 const isValidScope = (scope: string): scope is OAuth2Scope =>
   validScopes.has(scope)
@@ -41,38 +28,37 @@ const sendWithForm = (value: string) => {
   $form.remove()
 }
 
-const useConsent = (params: ConsentParams) => {
-  const state: State = reactive({
-    client: undefined,
-    scopes: params.scopes?.filter(isValidScope) ?? [],
-    developer: undefined,
-    disableButton: false,
-    error: undefined
-  })
+const useConsent = (
+  clientId: Ref<OAuthClientId | undefined>,
+  paramScopes: Ref<string[] | undefined>
+) => {
+  const client = ref<OAuth2Client>()
+  const scopes = computed(
+    () => paramScopes.value?.filter(isValidScope) ?? client.value?.scopes ?? []
+  )
+  const developer = ref<User>()
+  const disableButton = ref(false)
+  const error = ref<string>()
 
   const fetchClient = async () => {
-    state.disableButton = false
-    if (!params.clientId) {
-      state.error = 'ClientIdが存在しません'
-      state.disableButton = true
+    disableButton.value = false
+    if (!clientId.value) {
+      error.value = 'ClientIdが存在しません'
+      disableButton.value = true
       return
     }
     try {
-      state.client = (await apis.getClient(params.clientId)).data
+      client.value = (await apis.getClient(clientId.value)).data
     } catch {
-      state.error = 'Clientの取得に失敗しました'
-      state.disableButton = true
+      error.value = 'Clientの取得に失敗しました'
+      disableButton.value = true
       return
     }
 
-    if (!params.scopes) {
-      state.scopes = state.client.scopes
-    }
-
     try {
-      state.developer = (await apis.getUser(state.client.developerId)).data
+      developer.value = (await apis.getUser(client.value.developerId)).data
     } catch {
-      state.error = '開発者情報の取得に失敗しました'
+      error.value = '開発者情報の取得に失敗しました'
       return
     }
   }
@@ -87,7 +73,7 @@ const useConsent = (params: ConsentParams) => {
 
   fetchClient()
 
-  return { state, approve, deny }
+  return { client, scopes, developer, disableButton, error, approve, deny }
 }
 
 export default useConsent

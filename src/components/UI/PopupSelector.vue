@@ -32,9 +32,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
+import useToggle from '/@/composables/useToggle'
 
 export type PopupSelectorItem = {
   value: string
@@ -59,9 +60,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: string): void
 }>()
 
-const isOpen = ref(false)
-const toggle = () => (isOpen.value = !isOpen.value)
-const close = () => (isOpen.value = false)
+const { value: isOpen, toggle, close } = useToggle()
+
 const onClick = (item: PopupSelectorItem) => {
   emit('update:modelValue', item.value)
   close()

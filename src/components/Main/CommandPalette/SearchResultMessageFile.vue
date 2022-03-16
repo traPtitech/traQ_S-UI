@@ -5,21 +5,20 @@
       :size="24"
       :is-animated-image="isAnimatedImage"
     />
-    <div>{{ name }}</div>
+    <div>{{ fileMeta?.name ?? 'unknown' }}</div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import { computed } from 'vue'
 import useFileMeta from '/@/composables/useFileMeta'
+import { FileId } from '/@/types/entity-ids'
 
 const props = defineProps<{
-  fileId: string
+  fileId: FileId
 }>()
 
 const { fileType, fileMeta, isAnimatedImage } = useFileMeta(props)
-const name = computed(() => fileMeta.value?.name ?? 'unknown')
 </script>
 
 <style lang="scss" module>

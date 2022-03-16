@@ -13,22 +13,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref } from 'vue'
-
-const useExpanded = () => {
-  const isExpanded = ref(false)
-  const toggleExpanded = () => {
-    isExpanded.value = !isExpanded.value
-  }
-  return { isExpanded, toggleExpanded }
-}
-</script>
-
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import useToggle from '/@/composables/useToggle'
 
-const { isExpanded, toggleExpanded } = useExpanded()
+const { value: isExpanded, toggle: toggleExpanded } = useToggle(false)
 </script>
 
 <style lang="scss" module>

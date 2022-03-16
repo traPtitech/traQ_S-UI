@@ -2,17 +2,17 @@
   <div :class="$style.container">
     <authenticate-header :class="$style.header" title="OAuth認可" />
     <client-description
-      v-if="state.client"
+      v-if="client"
       :class="[$style.item, $style.clientDesc]"
-      :client="state.client"
-      :developer="state.developer"
+      :client="client"
+      :developer="developer"
     />
-    <p v-if="state.client" :class="$style.item">
-      {{ state.client.name }}がtraQアカウントへのアクセスを要求しています
+    <p v-if="client" :class="$style.item">
+      {{ client.name }}がtraQアカウントへのアクセスを要求しています
     </p>
-    <client-scopes :scopes="state.scopes" />
+    <client-scopes :scopes="scopes" />
     <div :class="$style.error">
-      <span v-if="state.error">{{ state.error }}</span>
+      <span v-if="error">{{ error }}</span>
     </div>
     <div :class="$style.buttons">
       <authenticate-button
@@ -25,7 +25,7 @@
         type="primary"
         :class="$style.button"
         label="許可"
-        :disabled="state.disableButton"
+        :disabled="disableButton"
         @click="approve"
       />
     </div>
@@ -40,14 +40,18 @@ import AuthenticateButton from '../AuthenticateButton.vue'
 import useConsent from './composables/useConsent'
 import { useRoute } from 'vue-router'
 import { getFirstQuery } from '/@/lib/basic/url'
+import { computed } from 'vue'
 
 const route = useRoute()
-const { scopes: rawScopes, client_id: rawClientId } = route.query
+const paramScopes = computed(
+  () => getFirstQuery(route.query['scopes'])?.split(' ') ?? undefined
+)
+const paramClientId = computed(
+  () => getFirstQuery(route.query['client_id']) ?? undefined
+)
 
-const { state, approve, deny } = useConsent({
-  scopes: getFirstQuery(rawScopes)?.split(' ') ?? undefined,
-  clientId: getFirstQuery(rawClientId) ?? undefined
-})
+const { client, scopes, developer, disableButton, error, approve, deny } =
+  useConsent(paramClientId, paramScopes)
 </script>
 
 <style lang="scss" module>

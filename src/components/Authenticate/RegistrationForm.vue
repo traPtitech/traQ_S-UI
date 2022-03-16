@@ -30,38 +30,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import apis from '/@/lib/apis'
-
-const useRegister = () => {
-  const router = useRouter()
-  const registerState = reactive({
-    name: '',
-    password: ''
-  })
-  const error = ref('')
-
-  const register = async () => {
-    try {
-      await apis.createUser(registerState)
-      await apis.login(undefined, registerState)
-
-      router.push('/')
-    } catch (e) {
-      error.value = '' + e
-    }
-  }
-
-  return { registerState, error, register }
-}
-</script>
-
 <script lang="ts" setup>
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
+import useRegister from './composables/useRegister'
 
 const { registerState, error, register } = useRegister()
 </script>

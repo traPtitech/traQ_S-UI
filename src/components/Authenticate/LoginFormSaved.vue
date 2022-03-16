@@ -8,13 +8,13 @@
       :class="$style.button"
       type="primary"
       label="上のアカウントでログイン"
-      @click="onLoginClick"
+      @click="emit('login')"
     />
     <authenticate-button
       :class="$style.button"
       type="secondary"
       label="ほかでログイン"
-      @click="onUseOtherClick"
+      @click="emit('useOther')"
     />
   </div>
 </template>
@@ -30,13 +30,6 @@ const emit = defineEmits<{
   (e: 'login'): void
   (e: 'useOther'): void
 }>()
-
-const onLoginClick = () => {
-  emit('login')
-}
-const onUseOtherClick = () => {
-  emit('useOther')
-}
 </script>
 
 <style lang="scss" module>
