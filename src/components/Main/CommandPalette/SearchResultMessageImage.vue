@@ -8,9 +8,10 @@
 import useFileThumbnail from '/@/composables/useFileThumbnail'
 import { computed } from 'vue'
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import { FileId } from '/@/types/entity-ids'
 
 const props = defineProps<{
-  fileId: string
+  fileId: FileId
 }>()
 
 const { fileThumbnailPath, isAnimatedImage } = useFileThumbnail(props)
