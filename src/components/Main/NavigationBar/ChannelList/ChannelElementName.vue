@@ -20,11 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
-import useChannelPath from '/@/use/channelPath'
-import { useQallSession } from '../../MainView/ChannelSidebar/use/channelRTCSession'
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import { computed, reactive } from 'vue'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useQallSession } from '../../MainView/ChannelSidebar/composables/useChannelRTCSession'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 
@@ -70,36 +68,27 @@ const useRTCState = (typedProps: TypedProps) => {
 
   return { qallUserIds: sessionUserIds }
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelElementName',
-  components: {
-    AIcon,
-    UserIconEllipsisList
-  },
-  props: {
-    channel: {
-      type: Object as PropType<ChannelTreeNode | Channel>,
-      required: true
-    },
-    showShortenedPath: {
-      type: Boolean,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const typedProps = props as TypedProps
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 
-    const { pathToShow, pathTooltip } = usePath(typedProps)
-    const { qallUserIds } = useRTCState(typedProps)
-
-    return { pathToShow, pathTooltip, qallUserIds }
+const props = withDefaults(
+  defineProps<{
+    channel: ChannelTreeNode | Channel
+    showShortenedPath: boolean
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
   }
-})
+)
+
+const typedProps = props as TypedProps
+
+const { pathToShow, pathTooltip } = usePath(typedProps)
+const { qallUserIds } = useRTCState(typedProps)
 </script>
 
 <style lang="scss" module>

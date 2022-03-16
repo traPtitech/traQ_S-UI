@@ -23,43 +23,30 @@
   </main-view-sidebar-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, shallowRef } from 'vue'
+<script lang="ts" setup>
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
-import { ChannelId } from '/@/types/entity-ids'
-import useChannelEvents from './use/channelEvents'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
+import { computed, shallowRef } from 'vue'
+import { ChannelId } from '/@/types/entity-ids'
+import useChannelEvents from './composables/useChannelEvents'
 import { parseChannelEvent } from '/@/lib/apis'
 
-export default defineComponent({
-  name: 'SidebarEventsPage',
-  components: {
-    MainViewSidebarPage,
-    SidebarHeader,
-    SidebarEvent
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  emits: {
-    moveBack: () => true
-  },
-  setup(props, { emit }) {
-    const containerEle = shallowRef<HTMLElement>()
-    const { events, onScroll } = useChannelEvents(props, containerEle)
-    const parsedEvents = computed(() => events.value.map(parseChannelEvent))
+const props = defineProps<{
+  channelId: ChannelId
+}>()
 
-    const moveBack = () => {
-      emit('moveBack')
-    }
+const emit = defineEmits<{
+  (e: 'moveBack'): void
+}>()
 
-    return { containerEle, parsedEvents, onScroll, moveBack }
-  }
-})
+const containerEle = shallowRef<HTMLElement>()
+const { events, onScroll } = useChannelEvents(props, containerEle)
+const parsedEvents = computed(() => events.value.map(parseChannelEvent))
+
+const moveBack = () => {
+  emit('moveBack')
+}
 </script>
 
 <style lang="scss" module>

@@ -101,56 +101,33 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import useLogin from './use/login'
+<script lang="ts" setup>
 import AuthenticateInput from './AuthenticateInput.vue'
 import AuthenticateHeader from './AuthenticateHeader.vue'
 import AuthenticateButton from './AuthenticateButton.vue'
 import AuthenticateSeparator from './AuthenticateSeparator.vue'
 import LoginFormSaved from './LoginFormSaved.vue'
+import useLogin from './composables/useLogin'
 
-export default defineComponent({
-  name: 'LoginForm',
-  components: {
-    LoginFormSaved,
-    AuthenticateInput,
-    AuthenticateHeader,
-    AuthenticateButton,
-    AuthenticateSeparator
-  },
-  props: {
-    externalLogin: {
-      type: Set as PropType<Set<string>>,
-      required: true
-    },
-    signUpAllowed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const {
-      loginState,
-      saved,
-      login,
-      loginWithSaved,
-      loginExternal,
-      dontUseSaved
-    } = useLogin()
-    const resetLink = window.traQConfig.auth?.resetLink
-
-    return {
-      resetLink,
-      loginState,
-      saved,
-      login,
-      loginWithSaved,
-      loginExternal,
-      dontUseSaved
-    }
+withDefaults(
+  defineProps<{
+    externalLogin: Set<string>
+    signUpAllowed?: boolean
+  }>(),
+  {
+    signUpAllowed: false
   }
-})
+)
+
+const {
+  loginState,
+  saved,
+  login,
+  loginWithSaved,
+  loginExternal,
+  dontUseSaved
+} = useLogin()
+const resetLink = window.traQConfig.auth?.resetLink
 </script>
 
 <style lang="scss" module>

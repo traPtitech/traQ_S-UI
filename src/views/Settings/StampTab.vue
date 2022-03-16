@@ -9,31 +9,20 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import NewStamp from '/@/components/Settings/StampTab/NewStamp.vue'
 import EditStamp from '/@/components/Settings/StampTab/EditStamp.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'StampTab',
-  components: {
-    NewStamp,
-    EditStamp
-  },
-  setup() {
-    const { fetchStamps } = useStampsStore()
-    fetchStamps()
-    const { fetchStampPalettes } = useStampPalettesStore()
-    fetchStampPalettes()
-    // 所有者変更に必要
-    const { fetchUsers } = useUsersStore()
-    fetchUsers()
-    return {}
-  }
-})
+const { fetchStamps } = useStampsStore()
+fetchStamps()
+const { fetchStampPalettes } = useStampPalettesStore()
+fetchStampPalettes()
+// 所有者変更に必要
+const { fetchUsers } = useUsersStore()
+fetchUsers()
 </script>
 
 <style lang="scss" module>

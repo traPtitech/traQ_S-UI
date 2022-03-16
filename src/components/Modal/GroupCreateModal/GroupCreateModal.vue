@@ -29,58 +29,45 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'GroupCreateModal',
-  components: {
-    ModalFrame,
-    FormInput,
-    FormCheckbox,
-    FormButton
-  },
-  setup() {
-    const { myId } = useMeStore()
-    const { addErrorToast } = useToastStore()
-    const { popModal } = useModalStore()
+const { myId } = useMeStore()
+const { addErrorToast } = useToastStore()
+const { popModal } = useModalStore()
 
-    const name = ref('')
-    const desc = ref('')
-    const type = ref('')
-    const addMember = ref(true)
+const name = ref('')
+const desc = ref('')
+const type = ref('')
+const addMember = ref(true)
 
-    const create = async () => {
-      const myIdV = myId.value
-      if (!myIdV) return
+const create = async () => {
+  const myIdV = myId.value
+  if (!myIdV) return
 
-      try {
-        const { data: group } = await apis.createUserGroup({
-          name: name.value,
-          description: desc.value,
-          type: type.value
-        })
-        if (addMember.value) {
-          await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
-        }
-      } catch {
-        addErrorToast('グループの作成に失敗しました')
-      }
-
-      await popModal()
+  try {
+    const { data: group } = await apis.createUserGroup({
+      name: name.value,
+      description: desc.value,
+      type: type.value
+    })
+    if (addMember.value) {
+      await apis.addUserGroupMember(group.id, { id: myIdV, role: '' })
     }
-
-    return { name, desc, type, addMember, create }
+  } catch {
+    addErrorToast('グループの作成に失敗しました')
   }
-})
+
+  await popModal()
+}
 </script>
 
 <style lang="scss" module>

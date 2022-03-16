@@ -35,74 +35,51 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, shallowRef, PropType } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
+<script lang="ts" setup>
 import MessageStampList from './MessageStampList.vue'
-import useElementRenderObserver, {
-  ChangeHeightData
-} from './use/elementRenderObserver'
-import useEmbeddings from '/@/use/message/embeddings'
 import MessagePinned from './MessagePinned.vue'
 import MessageContents from './MessageContents.vue'
 import MessageTools from '/@/components/Main/MainView/MessageElement/MessageTools.vue'
-import useHover from '/@/use/hover'
+import { computed, shallowRef } from 'vue'
+import { MessageId } from '/@/types/entity-ids'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import useElementRenderObserver, {
+  ChangeHeightData
+} from './composables/useElementRenderObserver'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
+import useHover from '/@/composables/useHover'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-export default defineComponent({
-  name: 'MessageElement',
-  components: {
-    MessageContents,
-    MessageStampList,
-    MessagePinned,
-    MessageTools
-  },
-  props: {
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    },
-    isEntryMessage: {
-      type: Boolean,
-      default: false
-    },
-    isArchived: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    entryMessageLoaded: (_relativePos: number) => true,
-    changeHeight: (_data: ChangeHeightData) => true
-  },
-  setup(props, { emit }) {
-    const { editingMessageId } = useMessagesView()
-    const bodyRef = shallowRef<HTMLDivElement | null>(null)
-    const { isMobile } = useResponsiveStore()
-    const { messagesMap } = useMessagesStore()
-    const message = computed(() => messagesMap.value.get(props.messageId))
-    const isEditing = computed(() => props.messageId === editingMessageId.value)
-
-    const { embeddingsState } = useEmbeddings(props)
-
-    useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
-
-    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
-
-    return {
-      message,
-      bodyRef,
-      embeddingsState,
-      isMobile,
-      isEditing,
-      isHovered,
-      onMouseEnter,
-      onMouseLeave
-    }
+const props = withDefaults(
+  defineProps<{
+    messageId: MessageId
+    isEntryMessage?: boolean
+    isArchived?: boolean
+  }>(),
+  {
+    isEntryMessage: false,
+    isArchived: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'entryMessageLoaded', _relativePos: number): void
+  (e: 'changeHeight', _data: ChangeHeightData): void
+}>()
+
+const { editingMessageId } = useMessagesView()
+const bodyRef = shallowRef<HTMLDivElement | null>(null)
+const { isMobile } = useResponsiveStore()
+const { messagesMap } = useMessagesStore()
+const message = computed(() => messagesMap.value.get(props.messageId))
+const isEditing = computed(() => props.messageId === editingMessageId.value)
+
+const { embeddingsState } = useEmbeddings(props)
+
+useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
 
 <style lang="scss" module>

@@ -1,5 +1,5 @@
 import type { Store, traQMarkdownIt } from '@traptitech/traq-markdown-it'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { embeddingOrigin } from '/@/lib/apis'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'

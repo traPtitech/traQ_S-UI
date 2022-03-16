@@ -4,21 +4,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { useCommandPalette } from '/@/store/app/commandPalette'
+<script lang="ts" setup>
 import CommandPalette from './CommandPalette.vue'
+import { useCommandPalette } from '/@/store/app/commandPalette'
 
-export default defineComponent({
-  name: 'CommandPaletteContainer',
-  components: {
-    CommandPalette
-  },
-  setup() {
-    const { isCommandPaletteShown } = useCommandPalette()
-    return { isCommandPaletteShown }
-  }
-})
+const { isCommandPaletteShown } = useCommandPalette()
 </script>
 
 <style lang="scss" module>

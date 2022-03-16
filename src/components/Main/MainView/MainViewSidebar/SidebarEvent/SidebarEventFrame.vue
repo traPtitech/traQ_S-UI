@@ -20,54 +20,31 @@
   </optional-router-link>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import { UserId } from '/@/types/entity-ids'
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { getFullDayWithTimeString } from '/@/lib/basic/date'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
+import { getFullDayWithTimeString } from '/@/lib/basic/date'
 
-export default defineComponent({
-  name: 'SidebarEventFrame',
-  components: {
-    OptionalRouterLink,
-    AIcon,
-    UserIcon
-  },
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    datetime: {
-      type: String,
-      required: true
-    },
-    link: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const timeString = computed(() =>
-      getFullDayWithTimeString(new Date(props.datetime))
-    )
-    return { timeString }
+const props = withDefaults(
+  defineProps<{
+    title: string
+    iconName: string
+    iconMdi?: boolean
+    userId: UserId
+    datetime: string
+    link?: string
+  }>(),
+  {
+    iconMdi: false
   }
-})
+)
+
+const timeString = computed(() =>
+  getFullDayWithTimeString(new Date(props.datetime))
+)
 </script>
 
 <style lang="scss" module>

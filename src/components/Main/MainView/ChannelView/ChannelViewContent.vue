@@ -18,61 +18,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed, shallowRef } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
 import MessageInput from '/@/components/Main/MainView/MessageInput/MessageInput.vue'
-import useChannelMessageFetcher from './use/channelMessageFetcher'
 import ScrollLoadingBar from '../ScrollLoadingBar.vue'
+import { computed, shallowRef } from 'vue'
+import { ChannelId } from '/@/types/entity-ids'
+import useChannelMessageFetcher from './composables/useChannelMessageFetcher'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'ChannelViewContent',
-  components: {
-    ScrollLoadingBar,
-    MessagesScroller,
-    MessageInput
-  },
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: { type: String, default: undefined }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
+const props = defineProps<{
+  channelId: ChannelId
+  entryMessageId?: string
+}>()
 
-    const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
-    const {
-      messageIds,
-      isReachedEnd,
-      isReachedLatest,
-      isLoading,
-      lastLoadingDirection,
-      unreadSince,
-      onLoadFormerMessagesRequest,
-      onLoadLatterMessagesRequest,
-      onLoadAroundMessagesRequest
-    } = useChannelMessageFetcher(scrollerEle, props)
+const { channelsMap } = useChannelsStore()
 
-    const isArchived = computed(
-      () => channelsMap.value.get(props.channelId)?.archived ?? false
-    )
+const scrollerEle = shallowRef<{ $el: HTMLDivElement } | undefined>()
+const {
+  messageIds,
+  isReachedEnd,
+  isReachedLatest,
+  isLoading,
+  lastLoadingDirection,
+  unreadSince,
+  onLoadFormerMessagesRequest,
+  onLoadLatterMessagesRequest,
+  onLoadAroundMessagesRequest
+} = useChannelMessageFetcher(scrollerEle, props)
 
-    return {
-      scrollerEle,
-      messageIds,
-      isReachedEnd,
-      isReachedLatest,
-      isLoading,
-      lastLoadingDirection,
-      unreadSince,
-      onLoadFormerMessagesRequest,
-      onLoadLatterMessagesRequest,
-      onLoadAroundMessagesRequest,
-      isArchived
-    }
-  }
-})
+const isArchived = computed(
+  () => channelsMap.value.get(props.channelId)?.archived ?? false
+)
 </script>
 
 <style lang="scss" module>

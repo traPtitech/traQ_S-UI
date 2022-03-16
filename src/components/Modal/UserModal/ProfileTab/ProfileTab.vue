@@ -16,38 +16,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { User, UserDetail } from '@traptitech/traq'
+<script lang="ts" setup>
 import AccountState from './AccountState.vue'
 import BioText from './BioText.vue'
 import HomeChannel from './HomeChannel.vue'
 import AccountList from './AccountList.vue'
 import LastOnline from './LastOnline.vue'
+import { User, UserDetail } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'ProfileTab',
-  components: {
-    AccountState,
-    BioText,
-    HomeChannel,
-    AccountList,
-    LastOnline
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    },
-    detail: {
-      type: Object as PropType<UserDetail>,
-      default: undefined
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+defineProps<{
+  user: User
+  detail?: UserDetail
+}>()
 </script>
 
 <style lang="scss" module>

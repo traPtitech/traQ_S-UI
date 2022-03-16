@@ -8,36 +8,21 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { ActivityTimelineMessage } from '@traptitech/traq'
+<script lang="ts" setup>
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import useChannelPath from '/@/use/channelPath'
+import { computed } from 'vue'
+import { ActivityTimelineMessage } from '@traptitech/traq'
+import useChannelPath from '/@/composables/useChannelPath'
 
-export default defineComponent({
-  name: 'ActivityElement',
-  components: {
-    MessagePanel
-  },
-  props: {
-    type: {
-      type: String as PropType<'channel' | 'message'>,
-      required: true
-    },
-    message: {
-      type: Object as PropType<ActivityTimelineMessage>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelIdToLink } = useChannelPath()
+const props = defineProps<{
+  type: 'channel' | 'message'
+  message: ActivityTimelineMessage
+}>()
 
-    const titleType = computed(() =>
-      props.type === 'channel' ? 'channel' : 'user'
-    )
-    const channelLink = computed(() => channelIdToLink(props.message.channelId))
+const { channelIdToLink } = useChannelPath()
 
-    return { titleType, channelLink }
-  }
-})
+const titleType = computed(() =>
+  props.type === 'channel' ? 'channel' : 'user'
+)
+const channelLink = computed(() => channelIdToLink(props.message.channelId))
 </script>

@@ -25,50 +25,31 @@
   <div v-else :class="$style.container">表示できない画像です</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import useFileThumbnail from '/@/use/fileThumbnail'
+<script lang="ts" setup>
 import PlayIcon from '/@/components/UI/PlayIcon.vue'
+import useFileThumbnail from '/@/composables/useFileThumbnail'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'MessageFileListImage',
-  components: {
-    PlayIcon
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    },
-    isLarge: {
-      type: Boolean,
-      default: false
-    },
-    fileId: {
-      type: String as PropType<FileId>,
-      default: ''
-    }
-  },
-  setup(props) {
-    const {
-      name,
-      fileLink,
-      canShow,
-      fileThumbnailPath,
-      fileThumbnailSize,
-      isAnimatedImage
-    } = useFileThumbnail(props)
-    return {
-      name,
-      fileLink,
-      canShow,
-      fileThumbnailPath,
-      fileThumbnailSize,
-      isAnimatedImage
-    }
+const props = withDefaults(
+  defineProps<{
+    channelId: ChannelId | DMChannelId
+    isLarge?: boolean
+    fileId?: FileId
+  }>(),
+  {
+    isLarge: false,
+    fileId: ''
   }
-})
+)
+
+const {
+  name,
+  fileLink,
+  canShow,
+  fileThumbnailPath,
+  fileThumbnailSize,
+  isAnimatedImage
+} = useFileThumbnail(props)
 </script>
 
 <style lang="scss" module>

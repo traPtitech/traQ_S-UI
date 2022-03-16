@@ -19,35 +19,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import AuthenticateButton from './AuthenticateButton.vue'
 
-export default defineComponent({
-  name: 'LoginFormSaved',
-  components: {
-    AuthenticateButton
-  },
-  props: {
-    saved: {
-      type: Object as PropType<PasswordCredential>,
-      required: true
-    }
-  },
-  emits: {
-    login: () => true,
-    useOther: () => true
-  },
-  setup(props, { emit }) {
-    const onLoginClick = () => {
-      emit('login')
-    }
-    const onUseOtherClick = () => {
-      emit('useOther')
-    }
-    return { onLoginClick, onUseOtherClick }
-  }
-})
+defineProps<{
+  saved: PasswordCredential
+}>()
+
+const emit = defineEmits<{
+  (e: 'login'): void
+  (e: 'useOther'): void
+}>()
+
+const onLoginClick = () => {
+  emit('login')
+}
+const onUseOtherClick = () => {
+  emit('useOther')
+}
 </script>
 
 <style lang="scss" module>

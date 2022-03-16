@@ -7,37 +7,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
-import { useUserModalOpener } from '/@/use/modalOpener'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
+import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'StampDetailElementContent',
-  components: {
-    SpinNumber
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    count: {
-      type: Number,
-      required: true
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
-    const user = computed(() => usersMap.value.get(props.userId))
+const props = defineProps<{
+  userId: UserId
+  count: number
+}>()
 
-    const { openModal } = useUserModalOpener(props, user)
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(props.userId))
 
-    return { user, openModal }
-  }
-})
+const { openModal } = useUserModalOpener(props, user)
 </script>
 
 <style lang="scss" module>

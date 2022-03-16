@@ -5,24 +5,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
-export default defineComponent({
-  name: 'DropdownSuggesterUserIcon',
-  components: {
-    UserIcon,
-    OnlineIndicator
-  },
-  props: {
-    userId: {
-      type: String,
-      required: true
-    }
-  }
-})
+defineProps<{
+  userId: string
+}>()
 </script>
 
 <style lang="scss" module>

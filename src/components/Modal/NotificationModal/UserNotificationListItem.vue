@@ -6,45 +6,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import AToggle from '/@/components/UI/AToggle.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'UserNotificationListItem',
-  components: {
-    AToggle,
-    UserIcon
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    subscribed: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    changeNotification: (_userId: UserId, _val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const { usersMap } = useUsersStore()
+const props = defineProps<{
+  userId: UserId
+  subscribed: boolean
+}>()
 
-    const value = computed({
-      get: () => props.subscribed,
-      set: _v => {
-        emit('changeNotification', props.userId, !props.subscribed)
-      }
-    })
-    const name = computed(() => usersMap.value.get(props.userId)?.name ?? '')
-    return { value, name }
+const emit = defineEmits<{
+  (e: 'changeNotification', _userId: UserId, _val: boolean): void
+}>()
+
+const { usersMap } = useUsersStore()
+
+const value = computed({
+  get: () => props.subscribed,
+  set: _v => {
+    emit('changeNotification', props.userId, !props.subscribed)
   }
 })
+const name = computed(() => usersMap.value.get(props.userId)?.name ?? '')
 </script>
 
 <style lang="scss" module>

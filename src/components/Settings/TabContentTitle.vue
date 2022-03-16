@@ -6,9 +6,9 @@
 
 <script lang="ts">
 import { isSettingsRouteName, SettingsRouteName } from '/@/router/settings'
-import { defineComponent, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { navigationRouteNameTitleMap } from './use/navigation'
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 
 const useSettingsTitle = () => {
   const route = useRoute()
@@ -21,20 +21,19 @@ const useSettingsTitle = () => {
   )
   return { title }
 }
+</script>
 
-export default defineComponent({
-  name: 'TabContentTitle',
-  props: {
-    isMobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const { title } = useSettingsTitle()
-    return { title }
+<script lang="ts" setup>
+withDefaults(
+  defineProps<{
+    isMobile?: boolean
+  }>(),
+  {
+    isMobile: false
   }
-})
+)
+
+const { title } = useSettingsTitle()
 </script>
 
 <style lang="scss" module>

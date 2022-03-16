@@ -43,21 +43,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, Ref, ref } from 'vue'
+import { computed, onBeforeUnmount, Ref, ref } from 'vue'
 import apis, { buildFilePathForPost, formatResizeError } from '/@/lib/apis'
-import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
-import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
-import useModifierKey from '/@/components/Main/MainView/MessageInput/use/modifierKey'
-import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
-import FormButton from '/@/components/UI/FormButton.vue'
-import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
-import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
-import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
+import useModifierKey from '/@/components/Main/MainView/MessageInput/composables/useModifierKey'
+import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
 import { MESSAGE_MAX_LENGTH } from '/@/lib/validate'
 import { countLength } from '/@/lib/basic/string'
 import { useToastStore } from '/@/store/ui/toast'
 import { getResizedFile } from '/@/lib/resize'
-import useAttachments from '/@/components/Main/MainView/MessageInput/use/attachments'
+import useAttachments from '/@/components/Main/MainView/MessageInput/composables/useAttachments'
 import { useMessagesView } from '/@/store/domain/messagesView'
 
 const useEditMessage = (props: { messageId: string }, text: Ref<string>) => {
@@ -134,79 +128,51 @@ const useAttachmentsEditor = (
     destroy
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageEditor',
-  components: {
-    MessageInputKeyGuide,
-    MessageInputTextArea,
-    FormButton,
-    MessageInputInsertStampButton,
-    MessageInputUploadProgress,
-    MessageInputUploadButton
-  },
-  props: {
-    rawContent: {
-      type: String,
-      required: true
-    },
-    messageId: {
-      type: String,
-      required: true
-    },
-    channelId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const text = ref(props.rawContent)
+<script lang="ts" setup>
+import MessageInputKeyGuide from '/@/components/Main/MainView/MessageInput/MessageInputKeyGuide.vue'
+import MessageInputTextArea from '/@/components/Main/MainView/MessageInput/MessageInputTextArea.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import MessageInputInsertStampButton from '/@/components/Main/MainView/MessageInput/MessageInputInsertStampButton.vue'
+import MessageInputUploadProgress from '/@/components/Main/MainView/MessageInput/MessageInputUploadProgress.vue'
+import MessageInputUploadButton from '/@/components/Main/MainView/MessageInput/MessageInputUploadButton.vue'
 
-    const { editMessage, cancel } = useEditMessage(props, text)
-    const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
-      useModifierKey()
+const props = defineProps<{
+  rawContent: string
+  messageId: string
+  channelId: string
+}>()
 
-    const textareaComponentRef = ref<{
-      textareaAutosizeRef: { $el: HTMLTextAreaElement }
-    }>()
-    const containerEle = ref<HTMLDivElement>()
-    const { toggleStampPicker } = useTextStampPickerInvoker(
-      text,
-      computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
-      containerEle
-    )
+const text = ref(props.rawContent)
 
-    const onStampClick = () => {
-      toggleStampPicker()
-    }
+const { editMessage, cancel } = useEditMessage(props, text)
+const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
+  useModifierKey()
 
-    const {
-      isPostingAttachment,
-      attachmentPostProgress,
-      addAttachment,
-      onAddAttachments,
-      destroy
-    } = useAttachmentsEditor(props, text)
-    onBeforeUnmount(() => {
-      destroy()
-    })
+const textareaComponentRef = ref<{
+  textareaAutosizeRef: { $el: HTMLTextAreaElement }
+}>()
+const containerEle = ref<HTMLDivElement>()
+const { toggleStampPicker } = useTextStampPickerInvoker(
+  text,
+  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  containerEle
+)
 
-    return {
-      containerEle,
-      textareaComponentRef,
-      editMessage,
-      cancel,
-      isModifierKeyPressed,
-      onModifierKeyDown,
-      onModifierKeyUp,
-      onStampClick,
-      text,
-      onAddAttachments,
-      isPostingAttachment,
-      attachmentPostProgress,
-      addAttachment
-    }
-  }
+const onStampClick = () => {
+  toggleStampPicker()
+}
+
+const {
+  isPostingAttachment,
+  attachmentPostProgress,
+  addAttachment,
+  onAddAttachments,
+  destroy
+} = useAttachmentsEditor(props, text)
+onBeforeUnmount(() => {
+  destroy()
 })
 </script>
 

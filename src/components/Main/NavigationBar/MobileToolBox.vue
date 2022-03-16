@@ -16,25 +16,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import ToolItem from '/@/components/Main/NavigationBar/ToolItem.vue'
-import useToolBox from '/@/components/Main/NavigationBar/use/toolBox'
 import AppList from '/@/components/Main/NavigationBar/AppList.vue'
+import useToolBox from '/@/components/Main/NavigationBar/composables/useToolBox'
 
-export default defineComponent({
-  name: 'MobileToolBox',
-  components: { ToolItem, AppList },
-  setup() {
-    const { tools, isServicesShown, closeServices } = useToolBox()
-
-    return {
-      tools,
-      isServicesShown,
-      closeServices
-    }
-  }
-})
+const { tools, isServicesShown, closeServices } = useToolBox()
 </script>
 
 <style lang="scss" module>

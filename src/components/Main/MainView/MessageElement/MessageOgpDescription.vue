@@ -4,7 +4,7 @@
     <div
       v-if="description"
       :class="$style.description"
-      :style="styles.description"
+      :style="descriptionStyle"
     >
       {{ description }}
     </div>
@@ -14,48 +14,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
-const useStyles = (props: { lineClamp: number }) =>
-  reactive({
-    description: computed(() => ({
-      '-webkit-line-clamp': props.lineClamp
-    }))
-  })
+const props = withDefaults(
+  defineProps<{
+    url: string
+    title?: string
+    description?: string
+    lineClamp?: number
+  }>(),
+  {
+    title: '',
+    description: '',
+    lineClamp: 2
+  }
+)
 
-export default defineComponent({
-  name: 'MessageOgpDescription',
-  props: {
-    url: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    lineClamp: {
-      type: Number,
-      default: 2
-    }
-  },
-  setup(props) {
-    const hostname = computed(() => {
-      try {
-        return new URL(props.url).hostname
-      } catch {
-        return ''
-      }
-    })
-    const styles = useStyles(props)
-    return { hostname, styles }
+const hostname = computed(() => {
+  try {
+    return new URL(props.url).hostname
+  } catch {
+    return ''
   }
 })
+const descriptionStyle = computed(() => ({
+  '-webkit-line-clamp': props.lineClamp
+}))
 </script>
 
 <style lang="scss" module>

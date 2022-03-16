@@ -12,74 +12,66 @@
   </div>
 </template>
 
-<script lang="ts">
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
 import { ChannelId, UserId } from '/@/types/entity-ids'
-import { computed, defineComponent, PropType } from 'vue'
+import { computed } from 'vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 export type SuggestionItem =
   | { type: 'search'; value: string }
   | { type: 'channel'; value: ChannelId }
   | { type: 'user'; value: UserId }
 
-export default defineComponent({
-  name: 'SearchSuggestionItem',
-  components: { AIcon, UserIcon },
-  props: {
-    item: {
-      type: Object as PropType<SuggestionItem>,
-      required: true
-    }
-  },
-  emits: {
-    select: (_item: SuggestionItem) => true
-  },
-  setup(props, { emit }) {
-    const { channelsMap } = useChannelsStore()
-    const { usersMap } = useUsersStore()
+const props = defineProps<{
+  item: SuggestionItem
+}>()
 
-    const title = computed(() => {
-      switch (props.item.type) {
-        case 'search':
-          return props.item.value
-        case 'channel':
-          return channelsMap.value.get(props.item.value)?.name ?? ''
-        case 'user':
-          return usersMap.value.get(props.item.value)?.name ?? ''
-      }
-      return ''
-    })
-    const description = computed(() => {
-      switch (props.item.type) {
-        case 'search':
-          return 'Enterで検索'
-        case 'channel':
-          return channelsMap.value.get(props.item.value)?.topic ?? ''
-        case 'user':
-          return usersMap.value.get(props.item.value)?.displayName ?? ''
-      }
-      return ''
-    })
-    const icon = computed(() => {
-      switch (props.item.type) {
-        case 'search':
-          return { name: 'search', mdi: true }
-        case 'channel':
-          return { name: 'hash', mdi: false }
-        case 'user':
-          return { name: 'user', mdi: false }
-      }
-      return { name: '', mdi: false }
-    })
-    const onClick = () => {
-      emit('select', props.item)
-    }
-    return { title, description, icon, onClick }
+const emit = defineEmits<{
+  (e: 'select', _item: SuggestionItem): void
+}>()
+
+const { channelsMap } = useChannelsStore()
+const { usersMap } = useUsersStore()
+
+const title = computed(() => {
+  switch (props.item.type) {
+    case 'search':
+      return props.item.value
+    case 'channel':
+      return channelsMap.value.get(props.item.value)?.name ?? ''
+    case 'user':
+      return usersMap.value.get(props.item.value)?.name ?? ''
   }
+  return ''
 })
+const description = computed(() => {
+  switch (props.item.type) {
+    case 'search':
+      return 'Enterで検索'
+    case 'channel':
+      return channelsMap.value.get(props.item.value)?.topic ?? ''
+    case 'user':
+      return usersMap.value.get(props.item.value)?.displayName ?? ''
+  }
+  return ''
+})
+const icon = computed(() => {
+  switch (props.item.type) {
+    case 'search':
+      return { name: 'search', mdi: true }
+    case 'channel':
+      return { name: 'hash', mdi: false }
+    case 'user':
+      return { name: 'user', mdi: false }
+  }
+  return { name: '', mdi: false }
+})
+const onClick = () => {
+  emit('select', props.item)
+}
 </script>
 
 <style lang="scss" module>

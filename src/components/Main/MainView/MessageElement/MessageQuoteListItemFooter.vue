@@ -12,40 +12,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { Message } from '@traptitech/traq'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { constructMessagesPath } from '/@/router'
 
-export default defineComponent({
-  name: 'MessageQuoteListItemFooter',
-  props: {
-    message: {
-      type: Object as PropType<Message>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelIdToPathString, channelIdToLink } = useChannelPath()
+const props = defineProps<{
+  message: Message
+}>()
 
-    const channelPath = computed(() =>
-      props.message ? channelIdToPathString(props.message.channelId, true) : ''
-    )
-    const channelLink = computed(() =>
-      props.message ? channelIdToLink(props.message.channelId) : ''
-    )
-    const date = computed(() =>
-      props.message ? getCreatedDate(props.message.createdAt) : ''
-    )
-    const messageLink = computed(() =>
-      props.message ? constructMessagesPath(props.message.id) : ''
-    )
+const { channelIdToPathString, channelIdToLink } = useChannelPath()
 
-    return { channelPath, channelLink, date, messageLink }
-  }
-})
+const channelPath = computed(() =>
+  props.message ? channelIdToPathString(props.message.channelId, true) : ''
+)
+const channelLink = computed(() =>
+  props.message ? channelIdToLink(props.message.channelId) : ''
+)
+const date = computed(() =>
+  props.message ? getCreatedDate(props.message.createdAt) : ''
+)
+const messageLink = computed(() =>
+  props.message ? constructMessagesPath(props.message.id) : ''
+)
 </script>
 
 <style lang="scss" module>

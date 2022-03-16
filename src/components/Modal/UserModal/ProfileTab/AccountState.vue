@@ -9,32 +9,19 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { UserAccountState } from '@traptitech/traq'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { UserAccountState } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'AccountState',
-  components: {
-    AIcon
-  },
-  props: {
-    state: {
-      type: Number as PropType<UserAccountState>,
-      required: true
-    }
-  },
-  setup(props) {
-    const isDeactivated = computed(
-      () => props.state === UserAccountState.deactivated
-    )
-    const isSuspended = computed(
-      () => props.state === UserAccountState.suspended
-    )
-    return { isDeactivated, isSuspended }
-  }
-})
+const props = defineProps<{
+  state: UserAccountState
+}>()
+
+const isDeactivated = computed(
+  () => props.state === UserAccountState.deactivated
+)
+const isSuspended = computed(() => props.state === UserAccountState.suspended)
 </script>
 
 <style lang="scss" module>

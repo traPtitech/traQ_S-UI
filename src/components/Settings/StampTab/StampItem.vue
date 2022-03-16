@@ -44,17 +44,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, reactive, Ref, ref } from 'vue'
+import { computed, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
-import ImageUpload from '../ImageUpload.vue'
-import useImageUpload, { ImageUploadState } from '../use/imageUpload'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
 import { Stamp } from '@traptitech/traq'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
-import useStateDiff from '../use/stateDiff'
+import useStateDiff from '../composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
 import { useUsersStore } from '/@/store/entities/users'
@@ -122,89 +117,72 @@ const useStampEdit = (
 
   return { isEditing, editStamp }
 }
+</script>
 
-export default defineComponent({
-  name: 'StampItem',
-  components: {
-    FormInput,
-    FormSelector,
-    FormButton,
-    ImageUpload,
-    AIcon
-  },
-  props: {
-    stamp: {
-      type: Object as PropType<Stamp>,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    startEdit: () => true,
-    endEdit: () => true
-  },
-  setup(props, { emit }) {
-    const { activeUsersMap } = useUsersStore()
+<script lang="ts" setup>
+import ImageUpload from '../ImageUpload.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
 
-    const url = computed(() => buildFilePath(props.stamp.fileId))
-
-    const creatorOptions = computed(() =>
-      [...activeUsersMap.value.values()]
-        .filter(u => !u.bot)
-        .map(u => ({ key: `@${u.name}`, value: u.id }))
-        .sort((a, b) => compareStringInsensitive(a.key, b.key))
-    )
-
-    const {
-      imageUploadState,
-      destroyImageUploadState,
-      onNewImgSet,
-      onNewDestroyed
-    } = useImageUpload()
-
-    const { state, isStateChanged, diffKeys } = useState(props)
-    const stampChanged = computed(
-      () => isStateChanged.value || imageUploadState.imgData !== undefined
-    )
-    const isNameValid = computed(() => isValidStampName(state.name))
-
-    const onStartEdit = () => {
-      emit('startEdit')
-    }
-    const onEndEdit = () => {
-      emit('endEdit')
-    }
-
-    const { isEditing, editStamp } = useStampEdit(
-      props,
-      state,
-      imageUploadState,
-      isStateChanged,
-      diffKeys,
-      () => {
-        destroyImageUploadState()
-        onEndEdit()
-      }
-    )
-
-    return {
-      url,
-      state,
-      creatorOptions,
-      imageUploadState,
-      onNewImgSet,
-      onNewDestroyed,
-      stampChanged,
-      isNameValid,
-      isEditing,
-      editStamp,
-      onStartEdit
-    }
+const props = withDefaults(
+  defineProps<{
+    stamp: Stamp
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'startEdit'): void
+  (e: 'endEdit'): void
+}>()
+
+const { activeUsersMap } = useUsersStore()
+
+const url = computed(() => buildFilePath(props.stamp.fileId))
+
+const creatorOptions = computed(() =>
+  [...activeUsersMap.value.values()]
+    .filter(u => !u.bot)
+    .map(u => ({ key: `@${u.name}`, value: u.id }))
+    .sort((a, b) => compareStringInsensitive(a.key, b.key))
+)
+
+const {
+  imageUploadState,
+  destroyImageUploadState,
+  onNewImgSet,
+  onNewDestroyed
+} = useImageUpload()
+
+const { state, isStateChanged, diffKeys } = useState(props)
+const stampChanged = computed(
+  () => isStateChanged.value || imageUploadState.imgData !== undefined
+)
+const isNameValid = computed(() => isValidStampName(state.name))
+
+const onStartEdit = () => {
+  emit('startEdit')
+}
+const onEndEdit = () => {
+  emit('endEdit')
+}
+
+const { isEditing, editStamp } = useStampEdit(
+  props,
+  state,
+  imageUploadState,
+  isStateChanged,
+  diffKeys,
+  () => {
+    destroyImageUploadState()
+    onEndEdit()
+  }
+)
 </script>
 
 <style lang="scss" module>

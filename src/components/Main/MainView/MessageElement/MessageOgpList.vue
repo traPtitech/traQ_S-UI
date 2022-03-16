@@ -10,8 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import MessageOgpListItem from './MessageOgpListItem.vue'
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
 
@@ -26,23 +25,21 @@ const useOgpData = (props: { externalUrls: string[] }) => {
   )
   return { ogpData }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageOgpList',
-  components: {
-    MessageOgpListItem
-  },
-  props: {
-    externalUrls: {
-      type: Array as PropType<string[]>,
-      default: () => []
-    }
-  },
-  setup(props) {
-    const { ogpData } = useOgpData(props)
-    return { ogpData }
+<script lang="ts" setup>
+import MessageOgpListItem from './MessageOgpListItem.vue'
+
+const props = withDefaults(
+  defineProps<{
+    externalUrls?: string[]
+  }>(),
+  {
+    externalUrls: () => []
   }
-})
+)
+
+const { ogpData } = useOgpData(props)
 </script>
 
 <style lang="scss" module>

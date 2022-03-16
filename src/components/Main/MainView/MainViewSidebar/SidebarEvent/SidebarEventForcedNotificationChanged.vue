@@ -13,25 +13,12 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { ForcedNotificationChangedEvent } from '@traptitech/traq'
+<script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
+import { ForcedNotificationChangedEvent } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'SidebarEventForcedNotificationChanged',
-  components: {
-    SidebarEventFrame
-  },
-  props: {
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<ForcedNotificationChangedEvent>,
-      required: true
-    }
-  }
-})
+defineProps<{
+  datetime: string
+  details: ForcedNotificationChangedEvent
+}>()
 </script>

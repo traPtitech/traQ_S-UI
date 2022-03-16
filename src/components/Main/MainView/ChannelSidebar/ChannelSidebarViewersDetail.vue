@@ -7,38 +7,35 @@
   </sidebar-content-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { UserId } from '/@/types/entity-ids'
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
 import { isDefined } from '/@/lib/basic/array'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'ChannelSidebarViewersDetail',
-  components: { UserIcon, SidebarContentContainer },
-  props: {
-    viewerIds: {
-      type: Array as PropType<readonly UserId[]>,
-      default: () => []
-    }
-  },
-  emits: {
-    toggle: () => true
-  },
-  setup(props, { emit }) {
-    const { usersMap } = useUsersStore()
-
-    const toggle = () => {
-      emit('toggle')
-    }
-    const users = computed(() =>
-      props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
-    )
-    return { toggle, users }
+const props = withDefaults(
+  defineProps<{
+    viewerIds?: readonly UserId[]
+  }>(),
+  {
+    viewerIds: () => []
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'toggle'): void
+}>()
+
+const { usersMap } = useUsersStore()
+
+const toggle = () => {
+  emit('toggle')
+}
+const users = computed(() =>
+  props.viewerIds.map(id => usersMap.value.get(id)).filter(isDefined)
+)
 </script>
 
 <style lang="scss" module>

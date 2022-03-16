@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watch, toRef } from 'vue'
+import { Ref, ref, watch, toRef } from 'vue'
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
@@ -21,10 +21,8 @@ import {
 import { RouteName } from '/@/router'
 import { defaultSettingsName } from '/@/router/settings'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
-import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
 import { changeViewState } from '/@/lib/websocket'
-import useLoginCheck from './use/loginCheck'
+import useLoginCheck from './composables/useLoginCheck'
 
 const useSettingsRootPathWatcher = (
   isMobile: Ref<boolean>,
@@ -46,34 +44,28 @@ const useSettingsRootPathWatcher = (
     immediate: true
   })
 }
+</script>
 
-export default defineComponent({
-  name: 'SettingsPage',
-  components: {
-    DesktopSettingModal,
-    MobileSettingModal
-  },
-  setup() {
-    const { isMobile } = useResponsiveStore()
+<script lang="ts" setup>
+import DesktopSettingModal from '/@/components/Settings/DesktopSetting.vue'
+import MobileSettingModal from '/@/components/Settings/MobileSetting.vue'
 
-    const settingsRootShown = ref(false)
-    onBeforeRouteLeave(() => {
-      settingsRootShown.value = false
-    })
+const { isMobile } = useResponsiveStore()
 
-    useSettingsRootPathWatcher(isMobile, settingsRootShown)
-
-    onBeforeRouteUpdate(() => {
-      // 設定画面を開いたときは閲覧チャンネルを消す
-      changeViewState(null)
-    })
-
-    // ログイン必要ルート
-    const { isLoginCheckDone } = useLoginCheck()
-
-    return { isMobile, isLoginCheckDone }
-  }
+const settingsRootShown = ref(false)
+onBeforeRouteLeave(() => {
+  settingsRootShown.value = false
 })
+
+useSettingsRootPathWatcher(isMobile, settingsRootShown)
+
+onBeforeRouteUpdate(() => {
+  // 設定画面を開いたときは閲覧チャンネルを消す
+  changeViewState(null)
+})
+
+// ログイン必要ルート
+const { isLoginCheckDone } = useLoginCheck()
 </script>
 
 <style lang="scss" module>

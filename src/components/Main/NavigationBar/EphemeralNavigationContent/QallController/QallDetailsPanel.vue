@@ -23,42 +23,25 @@
   </collapse-content>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+<script lang="ts" setup>
 import QallDetailsPanelUser from './QallDetailsPanelUser.vue'
 import CollapseContent from '../CollapseContent.vue'
+import { computed, ref } from 'vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'QallDetailsPanel',
-  components: {
-    CollapseContent,
-    QallDetailsPanelUser
-  },
-  setup() {
-    const { myId } = useMeStore()
-    const { currentSessionUsers, currentMutedUsers: mutedUsers } =
-      useDomainRtcStore()
+const { myId } = useMeStore()
+const { currentSessionUsers, currentMutedUsers: mutedUsers } =
+  useDomainRtcStore()
 
-    const showVolumeTune = ref(false)
-    const toggleVolumeTune = (show: boolean) => {
-      showVolumeTune.value = show
-    }
+const showVolumeTune = ref(false)
+const toggleVolumeTune = (show: boolean) => {
+  showVolumeTune.value = show
+}
 
-    const users = computed(() =>
-      [...currentSessionUsers.value].filter(id => id !== myId.value)
-    )
-
-    return {
-      users,
-      myId,
-      mutedUsers,
-      showVolumeTune,
-      toggleVolumeTune
-    }
-  }
-})
+const users = computed(() =>
+  [...currentSessionUsers.value].filter(id => id !== myId.value)
+)
 </script>
 
 <style lang="scss" module>

@@ -12,36 +12,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { Pin } from '@traptitech/traq'
+<script lang="ts" setup>
 import SidebarPinnedMessage from './SidebarPinnedMessage.vue'
-import { constructMessagesPath } from '/@/router'
+import { computed } from 'vue'
+import { Pin } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'SidebarPinnedList',
-  components: {
-    SidebarPinnedMessage
-  },
-  props: {
-    pinnedMessages: {
-      type: Array as PropType<Pin[]>,
-      default: () => []
-    }
-  },
-  setup(props) {
-    const sortedMessages = computed(() =>
-      [...props.pinnedMessages]
-        .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
-        .map(pinnedMessage => pinnedMessage.message)
-    )
-
-    return {
-      sortedMessages,
-      constructMessagesPath
-    }
+const props = withDefaults(
+  defineProps<{
+    pinnedMessages?: Pin[]
+  }>(),
+  {
+    pinnedMessages: () => []
   }
-})
+)
+
+const sortedMessages = computed(() =>
+  [...props.pinnedMessages]
+    .sort((a, b) => Date.parse(b.pinnedAt) - Date.parse(a.pinnedAt))
+    .map(pinnedMessage => pinnedMessage.message)
+)
 </script>
 
 <style lang="scss" module>

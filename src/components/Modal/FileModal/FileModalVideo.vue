@@ -17,29 +17,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+<script lang="ts" setup>
 import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
+import useFileMeta from '/@/composables/useFileMeta'
 
-export default defineComponent({
-  name: 'FileModalVideo',
-  components: {
-    FileModalContentHeader,
-    FileModalContentFooter
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { fileMeta, fileRawPath } = useFileMeta(props)
-    return { fileMeta, fileRawPath }
-  }
-})
+const props = defineProps<{
+  fileId: string
+}>()
+
+const { fileMeta, fileRawPath } = useFileMeta(props)
 </script>
 
 <style lang="scss" module>

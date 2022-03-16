@@ -10,8 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, Ref } from 'vue'
-import StampPicker from './StampPicker.vue'
+import { reactive, computed, Ref } from 'vue'
 import { useStampPicker, AlignmentPosition } from '/@/store/ui/stampPicker'
 import { Point } from '/@/lib/basic/point'
 
@@ -55,18 +54,13 @@ const useStyles = (
       throw new Error(`Unexpected alignment value: ${alignment.value}`)
     })
   })
+</script>
 
-export default defineComponent({
-  name: 'StampPickerContainer',
-  components: {
-    StampPicker
-  },
-  setup() {
-    const { position, alignment, isStampPickerShown } = useStampPicker()
-    const styles = useStyles(position, alignment)
-    return { isStampPickerShown, styles }
-  }
-})
+<script lang="ts" setup>
+import StampPicker from './StampPicker.vue'
+
+const { position, alignment, isStampPickerShown } = useStampPicker()
+const styles = useStyles(position, alignment)
 </script>
 
 <style lang="scss" module>

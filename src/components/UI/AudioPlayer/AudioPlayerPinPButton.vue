@@ -9,35 +9,21 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
+<script lang="ts" setup>
 import { checkPinPSupport, isSafari } from '/@/lib/dom/browser'
+import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
+
+withDefaults(
+  defineProps<{
+    isPinPShown: boolean
+    size: number
+    disabled?: boolean
+  }>(),
+  {
+    disabled: false
+  }
+)
 
 const safariFlag = isSafari()
 const canUsePinP = checkPinPSupport() && !safariFlag
-
-export default defineComponent({
-  name: 'AudioPlayerPinPButton',
-  components: {
-    AudioPlayerAbstractButton
-  },
-  props: {
-    isPinPShown: {
-      type: Boolean,
-      required: true
-    },
-    size: {
-      type: Number,
-      required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return { canUsePinP }
-  }
-})
 </script>

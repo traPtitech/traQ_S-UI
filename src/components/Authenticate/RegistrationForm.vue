@@ -31,11 +31,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import AuthenticateInput from './AuthenticateInput.vue'
-import AuthenticateHeader from './AuthenticateHeader.vue'
-import AuthenticateButton from './AuthenticateButton.vue'
 import apis from '/@/lib/apis'
 
 const useRegister = () => {
@@ -59,19 +56,14 @@ const useRegister = () => {
 
   return { registerState, error, register }
 }
+</script>
 
-export default defineComponent({
-  name: 'RegistrationForm',
-  components: {
-    AuthenticateInput,
-    AuthenticateHeader,
-    AuthenticateButton
-  },
-  setup() {
-    const { registerState, error, register } = useRegister()
-    return { registerState, error, register }
-  }
-})
+<script lang="ts" setup>
+import AuthenticateInput from './AuthenticateInput.vue'
+import AuthenticateHeader from './AuthenticateHeader.vue'
+import AuthenticateButton from './AuthenticateButton.vue'
+
+const { registerState, error, register } = useRegister()
 </script>
 
 <style lang="scss" module>

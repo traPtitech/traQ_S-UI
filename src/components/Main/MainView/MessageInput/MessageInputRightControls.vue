@@ -16,10 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 
 const useClickHandlers = (
   props: { canPostMessage: boolean },
@@ -35,40 +32,30 @@ const useClickHandlers = (
   }
   return { onClickSendButton, onClickStampButton }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageInputRightControls',
-  components: {
-    MessageInputInsertStampButton,
-    AIcon
-  },
-  props: {
-    canPostMessage: {
-      type: Boolean,
-      default: false
-    },
-    isPosting: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    clickSend: () => true,
-    clickStamp: () => true
-  },
-  setup(props, { emit }) {
-    const { isMobile } = useResponsiveStore()
-    const { onClickSendButton, onClickStampButton } = useClickHandlers(
-      props,
-      emit
-    )
-    return {
-      isMobile,
-      onClickSendButton,
-      onClickStampButton
-    }
+<script lang="ts" setup>
+import MessageInputInsertStampButton from './MessageInputInsertStampButton.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+
+const props = withDefaults(
+  defineProps<{
+    canPostMessage?: boolean
+    isPosting?: boolean
+  }>(),
+  {
+    canPostMessage: false,
+    isPosting: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'clickSend'): void
+  (e: 'clickStamp'): void
+}>()
+
+const { isMobile } = useResponsiveStore()
+const { onClickSendButton, onClickStampButton } = useClickHandlers(props, emit)
 </script>
 
 <style lang="scss" module>

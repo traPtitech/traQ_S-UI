@@ -37,67 +37,38 @@
   </click-outside>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { StampId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import ClickOutside from '/@/components/UI/ClickOutside'
 import FilterInput from '/@/components/UI/FilterInput.vue'
-import useStampList from './use/stampList'
-import useStampSetSelector from './use/stampSetSelector'
-import useEffectSelector from './use/effectSelector'
-import useStampFilterPlaceholder from './use/stampFilterPlaceholder'
 import StampPickerStampList from './StampPickerStampList.vue'
 import StampPickerStampSetSelector from './StampPickerStampSetSelector.vue'
+import { StampId } from '/@/types/entity-ids'
+import useStampList from './composables/useStampList'
+import useStampSetSelector from './composables/useStampSetSelector'
+import useEffectSelector from './composables/useEffectSelector'
+import useStampFilterPlaceholder from './composables/useStampFilterPlaceholder'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'StampPicker',
-  components: {
-    ClickOutside,
-    FilterInput,
-    StampPickerStampList,
-    StampPickerStampSetSelector
-    //StampPickerEffectSelector,
-    //StampPickerEffectToggleButton
-  },
-  setup() {
-    const { selectHandler, currentStampSet, closeStampPicker } =
-      useStampPicker()
-    const { upsertLocalStampHistory } = useMeStore()
+const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
+const { upsertLocalStampHistory } = useMeStore()
 
-    const { stamps, filterState } = useStampList(currentStampSet)
-    const { stampSetState } = useStampSetSelector()
-    const { effectSelectorState, toggleShowEffect } = useEffectSelector()
-    const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
+const { stamps, filterState } = useStampList(currentStampSet)
+const { stampSetState } = useStampSetSelector()
+const { effectSelectorState, toggleShowEffect } = useEffectSelector()
+const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 
-    const onInputStamp = (id: StampId) => {
-      upsertLocalStampHistory(id, new Date())
-      selectHandler.value({ id })
-    }
-    const onFilterEnter = () => {
-      const firstStamp = stamps.value[0]
-      if (!firstStamp) return
-      onInputStamp(firstStamp.id)
-    }
-
-    return {
-      currentStampSet,
-      stampSetState,
-      effectSelectorState,
-      stamps,
-      filterState,
-      placeholder,
-      onFilterEnter,
-      onInputStamp,
-      onHoverStamp,
-      closeStampPicker,
-      toggleShowEffect
-    }
-  }
-})
+const onInputStamp = (id: StampId) => {
+  upsertLocalStampHistory(id, new Date())
+  selectHandler.value({ id })
+}
+const onFilterEnter = () => {
+  const firstStamp = stamps.value[0]
+  if (!firstStamp) return
+  onInputStamp(firstStamp.id)
+}
 </script>
 
 <style lang="scss" module>

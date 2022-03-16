@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { ModalState } from '/@/store/ui/modal/states'
 import { useModalStore } from '/@/store/ui/modal'
 
@@ -67,32 +67,23 @@ const modalComponentMap: Record<ModalState['type'], string> = {
 }
 
 const modalModules = import.meta.glob('/src/components/Modal/*/*Modal.vue')
+</script>
 
-export default defineComponent({
-  name: 'ModalContainer',
-  setup() {
-    const { shouldShowModal, currentState } = useModalStore()
+<script lang="ts" setup>
+const { shouldShowModal, currentState } = useModalStore()
 
-    // ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
-    const getComponent = (path: string) =>
-      defineAsyncComponent(() =>
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        modalModules[`/src/components/Modal/${path}.vue`]!()
-      )
+// ここでpathを束縛することでcomputed内で戻り値の関数がpathに依存していることが伝わる？
+const getComponent = (path: string) =>
+  defineAsyncComponent(() =>
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    modalModules[`/src/components/Modal/${path}.vue`]!()
+  )
 
-    const component = computed(() =>
-      currentState.value
-        ? getComponent(modalComponentMap[currentState.value.type])
-        : undefined
-    )
-
-    return {
-      shouldShowModal,
-      currentState,
-      component
-    }
-  }
-})
+const component = computed(() =>
+  currentState.value
+    ? getComponent(modalComponentMap[currentState.value.type])
+    : undefined
+)
 </script>
 
 <style lang="scss" module>

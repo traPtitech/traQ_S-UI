@@ -8,27 +8,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import useMaxLength from '/@/use/maxLength'
+<script lang="ts" setup>
+import useMaxLength from '/@/composables/useMaxLength'
 
-export default defineComponent({
-  name: 'LengthCount',
-  props: {
-    val: {
-      type: String,
-      default: ''
-    },
-    maxLength: {
-      type: Number,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const { length, isExceeded } = useMaxLength(props)
-    return { length, isExceeded }
+const props = withDefaults(
+  defineProps<{
+    val?: string
+    maxLength?: number
+  }>(),
+  {
+    val: ''
   }
-})
+)
+
+const { length, isExceeded } = useMaxLength(props)
 </script>
 
 <style lang="scss" module>

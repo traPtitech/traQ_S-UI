@@ -26,52 +26,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import useFileMeta from '/@/use/fileMeta'
+<script lang="ts" setup>
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import useFileMeta from '/@/composables/useFileMeta'
 
-export default defineComponent({
-  name: 'FileDescription',
-  components: {
-    FileTypeIcon,
-    AIcon
-  },
-  props: {
-    fileId: {
-      type: String,
-      required: true
-    },
-    isWhite: {
-      type: Boolean,
-      default: false
-    },
-    isEllipsis: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const {
-      fileMeta,
-      fileType,
-      fileSize,
-      onFileDownloadLinkClick,
-      isAnimatedImage
-    } = useFileMeta(props)
-    const name = computed(() => fileMeta.value?.name ?? 'unknown')
-
-    return {
-      fileMeta,
-      fileType,
-      fileSize,
-      onFileDownloadLinkClick,
-      isAnimatedImage,
-      name
-    }
+const props = withDefaults(
+  defineProps<{
+    fileId: string
+    isWhite?: boolean
+    isEllipsis?: boolean
+  }>(),
+  {
+    isWhite: false,
+    isEllipsis: false
   }
-})
+)
+
+const {
+  fileMeta,
+  fileType,
+  fileSize,
+  onFileDownloadLinkClick,
+  isAnimatedImage
+} = useFileMeta(props)
+const name = computed(() => fileMeta.value?.name ?? 'unknown')
 </script>
 
 <style lang="scss" module>

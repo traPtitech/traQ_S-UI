@@ -4,28 +4,25 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 
-export default defineComponent({
-  name: 'StampPickerEffectToggleButton',
-  components: {
-    AIcon
-  },
-  props: {
-    isActive: { type: Boolean, default: false }
-  },
-  emits: {
-    click: () => true
-  },
-  setup(_, { emit }) {
-    const onClick = () => {
-      emit('click')
-    }
-    return { onClick }
+withDefaults(
+  defineProps<{
+    isActive?: boolean
+  }>(),
+  {
+    isActive: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'click'): void
+}>()
+
+const onClick = () => {
+  emit('click')
+}
 </script>
 
 <style lang="scss" module>

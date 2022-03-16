@@ -9,27 +9,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'NotFoundPage',
-  props: {
-    routeName: {
-      type: [String, Symbol],
-      default: undefined
-    },
-    routeParam: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup() {
-    const route = useRoute()
-    return { route }
-  }
-})
+defineProps<{
+  routeName?: string | symbol
+  routeParam?: string
+}>()
+
+const route = useRoute()
 </script>
 
 <style lang="scss" module>

@@ -15,10 +15,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
-import DMActivityElement from './DMActivityElement.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 
@@ -36,18 +34,13 @@ const useUsersWithNotification = () => {
   )
   return usersWithNotification
 }
+</script>
 
-export default defineComponent({
-  name: 'UnreadDMs',
-  components: {
-    DMActivityElement,
-    NavigationContentContainer
-  },
-  setup() {
-    const usersWithNotification = useUsersWithNotification()
-    return { usersWithNotification }
-  }
-})
+<script lang="ts" setup>
+import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import DMActivityElement from './DMActivityElement.vue'
+
+const usersWithNotification = useUsersWithNotification()
 </script>
 
 <style lang="scss" module>

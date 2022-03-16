@@ -44,13 +44,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import { SendKey, SendKeys } from '/@/store/app/browserSettings'
 import { isMac } from '/@/lib/dom/browser'
+import {
+  useModelSyncer,
+  useModelObjectSyncer
+} from '/@/composables/useModelSyncer'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormCheckbox from '/@/components/UI/FormCheckbox.vue'
-import { useModelSyncer, useModelObjectSyncer } from '/@/use/modelSyncer'
+
+const props = defineProps<{
+  sendWithModifierKey: SendKey
+  modifierKey: SendKeys
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:sendWithModifierKey', _val: SendKey): void
+  (e: 'update:modifierKey', _val: SendKeys): void
+}>()
 
 const windowsModifierKeyTable: Record<keyof SendKeys, string> = {
   alt: 'Alt',
@@ -65,47 +77,21 @@ const macModifierKeyTable: Record<keyof SendKeys, string> = {
   macCtrl: 'Ctrl'
 }
 
-export default defineComponent({
-  name: 'SendKey',
-  components: {
-    FormRadio,
-    FormCheckbox
-  },
-  props: {
-    sendWithModifierKey: {
-      type: String as PropType<SendKey>,
-      required: true
-    },
-    modifierKey: {
-      type: Object as PropType<SendKeys>,
-      required: true
-    }
-  },
-  emits: {
-    'update:sendWithModifierKey': (_val: SendKey) => true,
-    'update:modifierKey': (_val: SendKeys) => true
-  },
-  setup(props, { emit }) {
-    const sendWithModifierKeyValue = useModelSyncer(
-      props,
-      emit,
-      'sendWithModifierKey'
-    )
-    const modifierKeyValue = useModelObjectSyncer(props, emit, 'modifierKey')
+const sendWithModifierKeyValue = useModelSyncer(
+  props,
+  emit,
+  'sendWithModifierKey'
+)
+const { shift, alt, ctrl, macCtrl } = useModelObjectSyncer(
+  props,
+  emit,
+  'modifierKey'
+)
 
-    const macFlag = isMac()
-    const getModifierKeyName = (key: keyof SendKeys) => {
-      return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
-    }
-
-    return {
-      sendWithModifierKeyValue,
-      ...modifierKeyValue,
-      macFlag,
-      getModifierKeyName
-    }
-  }
-})
+const macFlag = isMac()
+const getModifierKeyName = (key: keyof SendKeys) => {
+  return macFlag ? macModifierKeyTable[key] : windowsModifierKeyTable[key]
+}
 </script>
 
 <style lang="scss" module>

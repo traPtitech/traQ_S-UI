@@ -20,56 +20,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { UserGroupId, UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
+import { UserGroupId, UserId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'GroupAdminList',
-  components: {
-    AIcon,
-    GroupUser
-  },
-  props: {
-    groupId: {
-      type: String as PropType<UserGroupId>,
-      required: true
-    },
-    admins: {
-      type: Array as PropType<UserId[]>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { pushModal } = useModalStore()
-    const { addErrorToast } = useToastStore()
+const props = defineProps<{
+  groupId: UserGroupId
+  admins: UserId[]
+}>()
 
-    const onClickAdd = () => {
-      pushModal({
-        type: 'group-admin-add',
-        id: props.groupId
-      })
-    }
+const { pushModal } = useModalStore()
+const { addErrorToast } = useToastStore()
 
-    const onDelete = async (id: string) => {
-      if (!confirm('本当にこのグループ管理者を削除しますか？')) return
-      try {
-        await apis.removeUserGroupAdmin(props.groupId, id)
+const onClickAdd = () => {
+  pushModal({
+    type: 'group-admin-add',
+    id: props.groupId
+  })
+}
 
-        // TODO: wsがつながっていないことがある
-      } catch {
-        addErrorToast('グループ管理者の削除に失敗しました')
-      }
-    }
+const onDelete = async (id: string) => {
+  if (!confirm('本当にこのグループ管理者を削除しますか？')) return
+  try {
+    await apis.removeUserGroupAdmin(props.groupId, id)
 
-    return { onClickAdd, onDelete }
+    // TODO: wsがつながっていないことがある
+  } catch {
+    addErrorToast('グループ管理者の削除に失敗しました')
   }
-})
+}
 </script>
 
 <style lang="scss" module>

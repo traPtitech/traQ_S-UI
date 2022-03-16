@@ -16,14 +16,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, Ref } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import apis from '/@/lib/apis'
 import { compareString } from '/@/lib/basic/string'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
-import ModalFrame from '../Common/ModalFrame.vue'
-import ClipFolderElement from './ClipFolderElement.vue'
 import { useToastStore } from '/@/store/ui/toast'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { AxiosError } from 'axios'
 import { useMessagesStore } from '/@/store/entities/messages'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
@@ -66,41 +63,34 @@ const useCreateClip = (
   }
   return { toggleClip }
 }
+</script>
 
-export default defineComponent({
-  name: 'ClipCreateModal',
-  components: {
-    ModalFrame,
-    InlineMarkdown,
-    ClipFolderElement
-  },
-  props: {
-    messageId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { messagesMap } = useMessagesStore()
-    const { clipFoldersMap } = useClipFoldersStore()
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue'
+import ClipFolderElement from './ClipFolderElement.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
-    const message = computed(() => messagesMap.value.get(props.messageId))
-    const clipFolders = computed(() => {
-      const folders = [...clipFoldersMap.value.values()]
-      folders.sort((a, b) => compareString(a.name, b.name))
-      return folders
-    })
+const props = defineProps<{
+  messageId: string
+}>()
 
-    const isSelected = ref(new Set<ClipFolderId>())
-    apis.getMessageClips(props.messageId).then(res => {
-      isSelected.value = new Set(res.data.map(c => c.folderId))
-    })
+const { messagesMap } = useMessagesStore()
+const { clipFoldersMap } = useClipFoldersStore()
 
-    const messageContent = computed(() => message.value?.content ?? '')
-    const { toggleClip } = useCreateClip(props, isSelected)
-    return { messageContent, clipFolders, isSelected, toggleClip }
-  }
+const message = computed(() => messagesMap.value.get(props.messageId))
+const clipFolders = computed(() => {
+  const folders = [...clipFoldersMap.value.values()]
+  folders.sort((a, b) => compareString(a.name, b.name))
+  return folders
 })
+
+const isSelected = ref(new Set<ClipFolderId>())
+apis.getMessageClips(props.messageId).then(res => {
+  isSelected.value = new Set(res.data.map(c => c.folderId))
+})
+
+const messageContent = computed(() => message.value?.content ?? '')
+const { toggleClip } = useCreateClip(props, isSelected)
 </script>
 
 <style lang="scss" module>

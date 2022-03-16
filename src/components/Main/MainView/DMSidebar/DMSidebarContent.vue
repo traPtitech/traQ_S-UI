@@ -10,45 +10,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import ChannelSidebarPinned from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarPinned.vue'
 import ChannelSidebarViewers from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarViewers.vue'
 import ChannelSidebarEvents from '/@/components/Main/MainView/ChannelSidebar/ChannelSidebarEvents.vue'
+import { UserId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'DMSidebarContent',
-  components: {
-    ChannelSidebarPinned,
-    ChannelSidebarViewers,
-    ChannelSidebarEvents
-  },
-  props: {
-    viewerIds: {
-      type: Array as PropType<readonly UserId[]>,
-      required: true
-    },
-    pinnedMessagesCount: {
-      type: Number,
-      default: 0
-    }
-  },
-  emits: {
-    moveToPinned: () => true,
-    moveToEvents: () => true
-  },
-  setup(props, { emit }) {
-    const moveToPinned = () => {
-      emit('moveToPinned')
-    }
-    const moveToEvents = () => {
-      emit('moveToEvents')
-    }
-
-    return { moveToPinned, moveToEvents }
+withDefaults(
+  defineProps<{
+    viewerIds: readonly UserId[]
+    pinnedMessagesCount?: number
+  }>(),
+  {
+    pinnedMessagesCount: 0
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'moveToPinned'): void
+  (e: 'moveToEvents'): void
+}>()
+
+const moveToPinned = () => {
+  emit('moveToPinned')
+}
+const moveToEvents = () => {
+  emit('moveToEvents')
+}
 </script>
 
 <style lang="scss" module>

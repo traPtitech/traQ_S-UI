@@ -20,42 +20,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
-import { ActivityTimelineMessage, Message } from '@traptitech/traq'
+<script lang="ts" setup>
 import MessagePanel from '/@/components/UI/MessagePanel/MessagePanel.vue'
-import { constructMessagesPath } from '/@/router'
 import SidebarPinnedMessageContextMenu from './SidebarPinnedMessageContextMenu.vue'
-import useContextMenu from '/@/use/contextMenu'
+import { computed } from 'vue'
+import { ActivityTimelineMessage, Message } from '@traptitech/traq'
+import { constructMessagesPath } from '/@/router'
+import useContextMenu from '/@/composables/useContextMenu'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'SidebarPinnedMessage',
-  components: {
-    MessagePanel,
-    SidebarPinnedMessageContextMenu
-  },
-  props: {
-    message: {
-      type: Object as PropType<Message | ActivityTimelineMessage>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { position, toggle, close } = useContextMenu()
-    const { channelsMap } = useChannelsStore()
+const props = defineProps<{
+  message: Message | ActivityTimelineMessage
+}>()
 
-    const isArchived = computed(
-      () => channelsMap.value.get(props.message.channelId)?.archived ?? false
-    )
+const { position, toggle, close } = useContextMenu()
+const { channelsMap } = useChannelsStore()
 
-    return {
-      position,
-      isArchived,
-      constructMessagesPath,
-      toggle,
-      close
-    }
-  }
-})
+const isArchived = computed(
+  () => channelsMap.value.get(props.message.channelId)?.archived ?? false
+)
 </script>

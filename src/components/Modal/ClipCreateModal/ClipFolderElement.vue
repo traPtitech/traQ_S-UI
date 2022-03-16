@@ -5,32 +5,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'ClipFolderElement',
-  components: {
-    AIcon
-  },
-  props: {
-    folderName: {
-      type: String,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const iconName = computed(() =>
-      props.isSelected ? 'bookmark-check' : 'bookmark'
-    )
-    return { iconName }
+const props = withDefaults(
+  defineProps<{
+    folderName: string
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
   }
-})
+)
+
+const iconName = computed(() =>
+  props.isSelected ? 'bookmark-check' : 'bookmark'
+)
 </script>
 
 <style lang="scss" module>

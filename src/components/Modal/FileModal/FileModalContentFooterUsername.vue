@@ -5,32 +5,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { UserId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/use/modalOpener'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
+import { useUserModalOpener } from '/@/composables/useModalOpener'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'FileModalContentFooterUsername',
-  components: { AIcon },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
+const props = defineProps<{
+  userId?: UserId
+}>()
 
-    const user = computed(() => usersMap.value.get(props.userId ?? ''))
+const { usersMap } = useUsersStore()
 
-    const { openModal } = useUserModalOpener(props, user)
+const user = computed(() => usersMap.value.get(props.userId ?? ''))
 
-    return { user, openModal }
-  }
-})
+const { openModal } = useUserModalOpener(props, user)
 </script>
 
 <style lang="scss" module>

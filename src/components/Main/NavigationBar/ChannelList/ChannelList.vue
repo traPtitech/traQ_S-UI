@@ -16,13 +16,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, defineAsyncComponent, ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
-import SlideDown from '/@/components/UI/SlideDown.vue'
-import { useOpenLink } from '/@/use/openLink'
-import useChannelPath from '/@/use/channelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const useChannelFolding = () => {
   const foldedChannels = ref(new Set<ChannelId>())
@@ -38,6 +37,10 @@ const useChannelFolding = () => {
     onChannelFoldingToggle
   }
 }
+</script>
+
+<script lang="ts" setup>
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
 // 型エラー・コンポーネント循環参照の回避
 const ChannelElement = defineAsyncComponent(
@@ -45,50 +48,29 @@ const ChannelElement = defineAsyncComponent(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as any
 
-export default defineComponent({
-  name: 'ChannelList',
-  components: {
-    ChannelElement,
-    SlideDown
-  },
-  props: {
-    isShown: {
-      type: Boolean,
-      default: true
-    },
-    channels: {
-      type: Array as PropType<ReadonlyArray<ChannelTreeNode | Channel>>,
-      required: true
-    },
-    ignoreChildren: {
-      type: Boolean,
-      default: false
-    },
-    showShortenedPath: {
-      type: Boolean,
-      default: false
-    },
-    showTopic: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    const { openLink } = useOpenLink()
-    const { channelIdToLink } = useChannelPath()
-    const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
-
-    const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
-      openLink(event, channelIdToLink(channelId))
-    }
-
-    return {
-      foldedChannels,
-      onChannelSelect,
-      onChannelFoldingToggle
-    }
+withDefaults(
+  defineProps<{
+    isShown?: boolean
+    channels: ReadonlyArray<ChannelTreeNode | Channel>
+    ignoreChildren?: boolean
+    showShortenedPath?: boolean
+    showTopic?: boolean
+  }>(),
+  {
+    isShown: true,
+    ignoreChildren: false,
+    showShortenedPath: false,
+    showTopic: false
   }
-})
+)
+
+const { openLink } = useOpenLink()
+const { channelIdToLink } = useChannelPath()
+const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
+
+const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
+  openLink(event, channelIdToLink(channelId))
+}
 </script>
 
 <style lang="scss" module>

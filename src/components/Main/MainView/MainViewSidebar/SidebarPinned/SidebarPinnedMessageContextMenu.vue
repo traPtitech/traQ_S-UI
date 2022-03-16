@@ -15,58 +15,41 @@
   </context-menu-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, toRef } from 'vue'
+<script lang="ts" setup>
 import ContextMenuContainer from '/@/components/UI/ContextMenuContainer.vue'
+import { toRef } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { Point } from '/@/lib/basic/point'
-import useCopyLink from '/@/use/contextMenu/copyLink'
-import usePinToggler from '/@/use/contextMenu/pinToggler'
+import useCopyLink from '/@/composables/contextMenu/useCopyLink'
+import usePinToggler from '/@/composables/contextMenu/usePinToggler'
 
-export default defineComponent({
-  name: 'SidebarPinnedMessageContextMenu',
-  components: {
-    ContextMenuContainer
-  },
-  props: {
-    position: {
-      type: Object as PropType<Point>,
-      required: true
-    },
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    },
-    isMinimum: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const messageId = toRef(props, 'messageId')
-
-    const { copyLink } = useCopyLink(messageId)
-    const { removePinned } = usePinToggler(messageId)
-
-    const close = () => {
-      emit('close')
-    }
-    const withClose = async (func: () => void | Promise<void>) => {
-      await func()
-      close()
-    }
-
-    return {
-      removePinned,
-      copyLink,
-      close,
-      withClose
-    }
+const props = withDefaults(
+  defineProps<{
+    position: Point
+    messageId: MessageId
+    isMinimum?: boolean
+  }>(),
+  {
+    isMinimum: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+
+const messageId = toRef(props, 'messageId')
+
+const { copyLink } = useCopyLink(messageId)
+const { removePinned } = usePinToggler(messageId)
+
+const close = () => {
+  emit('close')
+}
+const withClose = async (func: () => void | Promise<void>) => {
+  await func()
+  close()
+}
 </script>
 
 <style lang="scss" module>

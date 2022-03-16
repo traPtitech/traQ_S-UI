@@ -6,18 +6,21 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
 
-export default defineComponent({
-  name: 'ChannelSidebarPinned',
-  components: { SidebarContentContainerLink },
-  props: { pinnedMessageLength: { type: Number, default: 0 } },
-  emits: { clickLink: () => true },
-  setup(props, { emit }) {
-    const onClick = () => emit('clickLink')
-    return { onClick }
+withDefaults(
+  defineProps<{
+    pinnedMessageLength?: number
+  }>(),
+  {
+    pinnedMessageLength: 0
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'clickLink'): void
+}>()
+
+const onClick = () => emit('clickLink')
 </script>

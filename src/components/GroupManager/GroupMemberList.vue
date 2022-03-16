@@ -30,84 +30,67 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { UserGroupId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import GroupUser from './GroupUser.vue'
+import { UserGroupId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupMember } from '@traptitech/traq'
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'GroupMemberList',
-  components: {
-    AIcon,
-    GroupUser
-  },
-  props: {
-    groupId: {
-      type: String as PropType<UserGroupId>,
-      required: true
-    },
-    members: {
-      type: Array as PropType<UserGroupMember[]>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { pushModal } = useModalStore()
-    const { addErrorToast } = useToastStore()
+const props = defineProps<{
+  groupId: UserGroupId
+  members: UserGroupMember[]
+}>()
 
-    const onClickAdd = () => {
-      pushModal({
-        type: 'group-member-add',
-        id: props.groupId
-      })
-    }
+const { pushModal } = useModalStore()
+const { addErrorToast } = useToastStore()
 
-    const onClickDeleteAll = async () => {
-      if (!confirm('本当に全メンバーを削除しますか？')) return
+const onClickAdd = () => {
+  pushModal({
+    type: 'group-member-add',
+    id: props.groupId
+  })
+}
 
-      const ONCE = 10
-      try {
-        for (let i = 0; i < Math.ceil(props.members.length / ONCE); i++) {
-          await Promise.all(
-            props.members
-              .slice(i * ONCE, (i + 1) * ONCE)
-              .map(m => apis.removeUserGroupMember(props.groupId, m.id))
-          )
-        }
+const onClickDeleteAll = async () => {
+  if (!confirm('本当に全メンバーを削除しますか？')) return
 
-        // TODO: wsがつながっていないことがある
-      } catch {
-        addErrorToast('全メンバーの削除に失敗しました')
-      }
+  const ONCE = 10
+  try {
+    for (let i = 0; i < Math.ceil(props.members.length / ONCE); i++) {
+      await Promise.all(
+        props.members
+          .slice(i * ONCE, (i + 1) * ONCE)
+          .map(m => apis.removeUserGroupMember(props.groupId, m.id))
+      )
     }
 
-    const onEdit = (id: string) => {
-      pushModal({
-        type: 'group-member-edit',
-        groupId: props.groupId,
-        userId: id
-      })
-    }
-
-    const onDelete = async (id: string) => {
-      if (!confirm('本当にこのメンバーを削除しますか？')) return
-      try {
-        await apis.removeUserGroupMember(props.groupId, id)
-
-        // TODO: wsがつながっていないことがある
-      } catch {
-        addErrorToast('メンバーの削除に失敗しました')
-      }
-    }
-
-    return { onClickAdd, onClickDeleteAll, onEdit, onDelete }
+    // TODO: wsがつながっていないことがある
+  } catch {
+    addErrorToast('全メンバーの削除に失敗しました')
   }
-})
+}
+
+const onEdit = (id: string) => {
+  pushModal({
+    type: 'group-member-edit',
+    groupId: props.groupId,
+    userId: id
+  })
+}
+
+const onDelete = async (id: string) => {
+  if (!confirm('本当にこのメンバーを削除しますか？')) return
+  try {
+    await apis.removeUserGroupMember(props.groupId, id)
+
+    // TODO: wsがつながっていないことがある
+  } catch {
+    addErrorToast('メンバーの削除に失敗しました')
+  }
+}
 </script>
 
 <style lang="scss" module>

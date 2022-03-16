@@ -4,25 +4,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'MessageInputUploadProgress',
-  props: {
-    progress: {
-      type: Number,
-      default: 0
-    }
-  },
-  setup(props) {
-    const style = computed(() => ({
-      transform: `translateX(-${(1 - props.progress) * 100}%)`
-    }))
-
-    return { style }
+const props = withDefaults(
+  defineProps<{
+    progress?: number
+  }>(),
+  {
+    progress: 0
   }
-})
+)
+
+const style = computed(() => ({
+  transform: `translateX(-${(1 - props.progress) * 100}%)`
+}))
 </script>
 
 <style lang="scss" module>

@@ -15,51 +15,40 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import AuthenticateModal from './AuthenticateModal.vue'
 import LoginForm from './LoginForm.vue'
 import RegistrationForm from './RegistrationForm.vue'
 import ConsentForm from './ConsentForm/ConsentForm.vue'
+import { computed } from 'vue'
 import { PageType } from '/@/views/AuthPage.vue'
-import useVersion from '/@/use/version'
+import useVersion from '/@/composables/useVersion'
+import { RouteName } from '/@/router'
 
-export default defineComponent({
-  name: 'AuthenticateMainView',
-  components: {
-    AuthenticateModal,
-    LoginForm,
-    RegistrationForm,
-    ConsentForm
-  },
-  props: {
-    type: {
-      type: String as PropType<PageType>,
-      default: 'login' as const
-    },
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const needVersionFetch = computed(
-      () => props.type === 'login' || props.type === 'registration'
-    )
-    // ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
-    const { externalLogin, signUpAllowed } = useVersion(needVersionFetch)
-
-    const shouldShow = computed(
-      () =>
-        props.show &&
-        ((props.type === 'login' && externalLogin.value) ||
-          (props.type === 'registration' && signUpAllowed.value) ||
-          props.type === 'consent')
-    )
-
-    return { shouldShow, externalLogin, signUpAllowed }
+const props = withDefaults(
+  defineProps<{
+    type?: PageType
+    show?: boolean
+  }>(),
+  {
+    type: RouteName.Login,
+    show: false
   }
-})
+)
+
+const needVersionFetch = computed(
+  () => props.type === 'login' || props.type === 'registration'
+)
+// ログイン画面が表示されるときにlayout shiftが起こらないように取得後に表示する
+const { externalLogin, signUpAllowed } = useVersion(needVersionFetch)
+
+const shouldShow = computed(
+  () =>
+    props.show &&
+    ((props.type === 'login' && externalLogin.value) ||
+      (props.type === 'registration' && signUpAllowed.value) ||
+      props.type === 'consent')
+)
 </script>
 
 <style lang="scss" module>

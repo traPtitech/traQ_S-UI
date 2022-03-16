@@ -16,16 +16,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  ref,
-  watchEffect,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
-import ModalFrame from '../Common/ModalFrame.vue'
-import UserListItem from '../Common/UserListItem.vue'
+import { computed, ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { Tag } from '@traptitech/traq'
 import apis from '/@/lib/apis'
 import { wsListener } from '/@/lib/websocket'
@@ -52,31 +43,23 @@ const useTag = (props: { id: string }) => {
 
   return tag
 }
+</script>
 
-export default defineComponent({
-  name: 'TagModal',
-  components: {
-    ModalFrame,
-    UserListItem
-  },
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { activeUsersMap } = useUsersStore()
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue'
+import UserListItem from '../Common/UserListItem.vue'
 
-    const tag = useTag(props)
-    const tagName = computed(() => tag.value?.tag)
-    const taggedUsers = computed(
-      () =>
-        tag.value?.users.filter(user => activeUsersMap.value.has(user)) ?? []
-    )
-    return { tagName, taggedUsers }
-  }
-})
+const props = defineProps<{
+  id: string
+}>()
+
+const { activeUsersMap } = useUsersStore()
+
+const tag = useTag(props)
+const tagName = computed(() => tag.value?.tag)
+const taggedUsers = computed(
+  () => tag.value?.users.filter(user => activeUsersMap.value.has(user)) ?? []
+)
 </script>
 
 <style lang="scss" module>

@@ -6,7 +6,7 @@ import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ModalState } from '/@/store/ui/modal/states'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useMainViewStore } from '/@/store/ui/mainView'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const useModalStorePinia = defineStore('ui/modal', () => {
   const mainViewStore = useMainViewStore()

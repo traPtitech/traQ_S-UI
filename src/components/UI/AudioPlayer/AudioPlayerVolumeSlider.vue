@@ -23,46 +23,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import ASlider from '/@/components/UI/ASlider.vue'
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'AudioPlayerVolumeSlider',
-  components: {
-    AIcon,
-    ASlider
-  },
-  props: {
-    volume: {
-      type: Number,
-      required: true
-    },
-    keepExpanded: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:volume': (_val: number) => true
-  },
-  setup(props, { emit }) {
-    const roundedVolume = computed(() => Math.floor(props.volume * 100))
-
-    const changeVolume = (vol: number) => {
-      emit('update:volume', vol)
-    }
-    return {
-      roundedVolume,
-      changeVolume
-    }
+const props = withDefaults(
+  defineProps<{
+    volume: number
+    keepExpanded?: boolean
+    disabled?: boolean
+  }>(),
+  {
+    keepExpanded: false,
+    disabled: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:volume', _val: number): void
+}>()
+
+const roundedVolume = computed(() => Math.floor(props.volume * 100))
+
+const changeVolume = (vol: number) => {
+  emit('update:volume', vol)
+}
 </script>
 
 <style lang="scss" module>

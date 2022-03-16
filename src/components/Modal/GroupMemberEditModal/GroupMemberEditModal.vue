@@ -16,11 +16,11 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
+<script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
+import { computed, ref } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { UserGroupId, UserId } from '/@/types/entity-ids'
@@ -28,55 +28,38 @@ import { useModalStore } from '/@/store/ui/modal'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'GroupMemberEditModal',
-  components: {
-    ModalFrame,
-    FormInput,
-    FormButton
-  },
-  props: {
-    groupId: {
-      type: String as PropType<UserGroupId>,
-      required: true
-    },
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
-    const { popModal } = useModalStore()
-    const { userGroupsMap } = useGroupsStore()
-    const { usersMap } = useUsersStore()
+const props = defineProps<{
+  groupId: UserGroupId
+  userId: UserId
+}>()
 
-    const group = computed(() => userGroupsMap.value.get(props.groupId))
+const { addErrorToast } = useToastStore()
+const { popModal } = useModalStore()
+const { userGroupsMap } = useGroupsStore()
+const { usersMap } = useUsersStore()
 
-    const groupName = computed(() => group.value?.name)
-    const userDisplayName = computed(
-      () => usersMap.value.get(props.userId)?.displayName ?? ''
-    )
+const group = computed(() => userGroupsMap.value.get(props.groupId))
 
-    const role = ref(
-      group.value?.members.find(m => m.id === props.userId)?.role ?? ''
-    )
+const groupName = computed(() => group.value?.name)
+const userDisplayName = computed(
+  () => usersMap.value.get(props.userId)?.displayName ?? ''
+)
 
-    const edit = async () => {
-      try {
-        await apis.editUserGroupMember(props.groupId, props.userId, {
-          role: role.value
-        })
-      } catch {
-        addErrorToast('グループメンバーの編集に失敗しました')
-      }
+const role = ref(
+  group.value?.members.find(m => m.id === props.userId)?.role ?? ''
+)
 
-      await popModal()
-    }
-
-    return { groupName, userDisplayName, role, edit }
+const edit = async () => {
+  try {
+    await apis.editUserGroupMember(props.groupId, props.userId, {
+      role: role.value
+    })
+  } catch {
+    addErrorToast('グループメンバーの編集に失敗しました')
   }
-})
+
+  await popModal()
+}
 </script>
 
 <style lang="scss" module>

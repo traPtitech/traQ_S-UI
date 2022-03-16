@@ -9,29 +9,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { computed } from 'vue'
+import { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'HeaderTopic',
-  components: {
-    InlineMarkdown
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
-    const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
-    return { topic }
-  }
-})
+const props = defineProps<{
+  channelId: ChannelId
+}>()
+
+const { channelsMap } = useChannelsStore()
+const topic = computed(() => channelsMap.value.get(props.channelId)?.topic)
 </script>
 
 <style lang="scss" module>

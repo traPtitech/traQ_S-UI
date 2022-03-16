@@ -68,25 +68,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref, ref, toRef } from 'vue'
+import { computed, reactive, Ref, ref, toRef } from 'vue'
 import { UserDetail } from '@traptitech/traq'
 import apis, { formatResizeError } from '/@/lib/apis'
-import useStateDiff from '/@/components/Settings/use/stateDiff'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import useStateDiff from '/@/components/Settings/composables/useStateDiff'
 import useImageUpload, {
   ImageUploadState
-} from '/@/components/Settings/use/imageUpload'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+} from '/@/components/Settings/composables/useImageUpload'
 import { nullUuid } from '/@/lib/basic/uuid'
-import useChannelOptions from '/@/use/channelOptions'
-import FormTextArea from '/@/components/UI/FormTextArea.vue'
-import useMaxLength from '/@/use/maxLength'
+import useChannelOptions from '/@/composables/useChannelOptions'
+import useMaxLength from '/@/composables/useMaxLength'
 import { isValidTwitter } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
@@ -159,75 +152,59 @@ const useIsLengthValid = (state: Profile) => {
   )
   return isLengthValid
 }
+</script>
 
-export default defineComponent({
-  name: 'ProfileTab',
-  components: {
-    UserIcon,
-    ImageUpload,
-    InlineMarkdown,
-    FormInput,
-    FormSelector,
-    FormButton,
-    FormTextArea
-  },
-  setup() {
-    const { detail: detailMayBeUndefined } = useMeStore()
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const detail = computed(() => detailMayBeUndefined.value!)
+<script lang="ts" setup>
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import ImageUpload from '/@/components/Settings/ImageUpload.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormTextArea from '/@/components/UI/FormTextArea.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
-    // ホームチャンネルの選択+ひとことのレンダリングに必要
-    const { fetchChannels } = useChannelsStore()
-    fetchChannels()
-    // ひとことのレンダリングに必要
-    const { fetchUsers } = useUsersStore()
-    fetchUsers()
-    const { fetchUserGroups } = useGroupsStore()
-    fetchUserGroups()
-    const { fetchStamps } = useStampsStore()
-    fetchStamps()
+const { detail: detailMayBeUndefined } = useMeStore()
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const detail = computed(() => detailMayBeUndefined.value!)
 
-    const { channelOptions } = useChannelOptions('--未設定--')
+// ホームチャンネルの選択+ひとことのレンダリングに必要
+const { fetchChannels } = useChannelsStore()
+fetchChannels()
+// ひとことのレンダリングに必要
+const { fetchUsers } = useUsersStore()
+fetchUsers()
+const { fetchUserGroups } = useGroupsStore()
+fetchUserGroups()
+const { fetchStamps } = useStampsStore()
+fetchStamps()
 
-    const {
-      imageUploadState,
-      destroyImageUploadState,
-      onNewImgSet,
-      onNewDestroyed
-    } = useImageUpload()
-    const { state, isStateChanged } = useState(detail)
-    const isChanged = computed(
-      () => isStateChanged.value || imageUploadState.imgData !== undefined
-    )
+const { channelOptions } = useChannelOptions('--未設定--')
 
-    const { isUpdating, onUpdateClick } = useProfileUpdate(
-      state,
-      imageUploadState,
-      isChanged,
-      destroyImageUploadState
-    )
-    const isLengthValid = useIsLengthValid(state)
-    const isTwitterIdValid = computed(
-      () => state.twitterId === '' || isValidTwitter(state.twitterId)
-    )
+const {
+  imageUploadState,
+  destroyImageUploadState,
+  onNewImgSet,
+  onNewDestroyed
+} = useImageUpload()
+const { state, isStateChanged } = useState(detail)
+const isChanged = computed(
+  () => isStateChanged.value || imageUploadState.imgData !== undefined
+)
 
-    const canUpdate = computed(
-      () => isChanged.value && isLengthValid.value && isTwitterIdValid.value
-    )
+const { isUpdating, onUpdateClick } = useProfileUpdate(
+  state,
+  imageUploadState,
+  isChanged,
+  destroyImageUploadState
+)
+const isLengthValid = useIsLengthValid(state)
+const isTwitterIdValid = computed(
+  () => state.twitterId === '' || isValidTwitter(state.twitterId)
+)
 
-    return {
-      detail,
-      channelOptions,
-      state,
-      imageUploadState,
-      onNewImgSet,
-      onNewDestroyed,
-      canUpdate,
-      isUpdating,
-      onUpdateClick
-    }
-  }
-})
+const canUpdate = computed(
+  () => isChanged.value && isLengthValid.value && isTwitterIdValid.value
+)
 </script>
 
 <style lang="scss" module>

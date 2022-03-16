@@ -10,44 +10,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { DMChannel } from '@traptitech/traq'
+<script lang="ts" setup>
 import DMChannelElement from './DMChannelElement.vue'
+import { DMChannel } from '@traptitech/traq'
 import { DMChannelId } from '/@/types/entity-ids'
-import { useOpenLink } from '/@/use/openLink'
+import { useOpenLink } from '/@/composables/useOpenLink'
 import { constructUserPath } from '/@/router'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'DMChannelList',
-  components: {
-    DMChannelElement
-  },
-  props: {
-    dmChannels: {
-      type: Array as PropType<DMChannel[]>,
-      default: () => []
-    }
-  },
-  setup() {
-    const { dmChannelsMap } = useChannelsStore()
-    const { usersMap } = useUsersStore()
-    const { openLink } = useOpenLink()
-
-    const onChannelSelect = (event: MouseEvent, id: DMChannelId) => {
-      const userId = dmChannelsMap.value.get(id)?.userId
-      if (!userId) return
-      const username = usersMap.value.get(userId)?.name
-      if (!username) return
-
-      openLink(event, constructUserPath(username))
-    }
-
-    return { onChannelSelect }
+withDefaults(
+  defineProps<{
+    dmChannels?: DMChannel[]
+  }>(),
+  {
+    dmChannels: () => []
   }
-})
+)
+
+const { dmChannelsMap } = useChannelsStore()
+const { usersMap } = useUsersStore()
+const { openLink } = useOpenLink()
+
+const onChannelSelect = (event: MouseEvent, id: DMChannelId) => {
+  const userId = dmChannelsMap.value.get(id)?.userId
+  if (!userId) return
+  const username = usersMap.value.get(userId)?.name
+  if (!username) return
+
+  openLink(event, constructUserPath(username))
+}
 </script>
 
 <style lang="scss" module>

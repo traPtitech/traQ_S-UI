@@ -15,47 +15,27 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 
 type Type = 'primary' | 'secondary'
 
-export default defineComponent({
-  name: 'AuthenticateButton',
-  components: {
-    AIcon
-  },
-  props: {
-    type: {
-      type: String as PropType<Type>,
-      required: true
-    },
-    label: {
-      type: String,
-      default: ''
-    },
-    iconName: {
-      type: String,
-      default: undefined
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    isSubmit: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    type: Type
+    label?: string
+    iconName?: string
+    iconMdi?: boolean
+    disabled?: boolean
+    isSubmit?: boolean
+  }>(),
+  {
+    label: '',
+    iconMdi: false,
+    disabled: false,
+    isSubmit: false
   }
-})
+)
 </script>
 
 <style lang="scss" module>

@@ -16,12 +16,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, watchEffect, Ref } from 'vue'
+import { ref, watchEffect, Ref } from 'vue'
 import apis from '/@/lib/apis'
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
-import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import { ChannelId } from '/@/types/entity-ids'
-import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
@@ -38,37 +35,24 @@ const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
   }
   return { isEditing, onInput, startEdit, onEditDone }
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelSidebarTopic',
-  components: {
-    SidebarContentContainerFoldable,
-    ContentEditor,
-    InlineMarkdown
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
+<script lang="ts" setup>
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
+import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
 
-    const getTopic = () => channelsMap.value.get(props.channelId)?.topic ?? ''
+const props = defineProps<{
+  channelId: ChannelId
+}>()
 
-    const topic = ref(getTopic())
-    watchEffect(() => {
-      topic.value = getTopic()
-    })
-    const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, topic)
-    return {
-      topic,
-      isEditing,
-      startEdit,
-      onEditDone,
-      onInput
-    }
-  }
+const { channelsMap } = useChannelsStore()
+
+const getTopic = () => channelsMap.value.get(props.channelId)?.topic ?? ''
+
+const topic = ref(getTopic())
+watchEffect(() => {
+  topic.value = getTopic()
 })
+const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, topic)
 </script>

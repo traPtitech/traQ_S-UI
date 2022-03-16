@@ -17,10 +17,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref, Ref, toRef } from 'vue'
+import { computed, ref, Ref, toRef } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import ChannelViewContent from './ChannelViewContent.vue'
-import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 import { debounce, throttle } from 'throttle-debounce'
 import { useMessageInputStateAttachment } from '/@/store/ui/messageInputState'
 import { useToastStore } from '/@/store/ui/toast'
@@ -71,30 +69,20 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
     onDragOver
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelView',
-  components: {
-    ChannelViewContent,
-    ChannelViewFileUploadOverlay
-  },
-  props: {
-    channelId: { type: String as PropType<ChannelId>, required: true },
-    entryMessageId: { type: String as PropType<ChannelId>, default: undefined }
-  },
-  setup(props) {
-    const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(
-      toRef(props, 'channelId')
-    )
+<script lang="ts" setup>
+import ChannelViewContent from './ChannelViewContent.vue'
+import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 
-    return {
-      canDrop,
-      onDrop,
-      onDragStart,
-      onDragOver
-    }
-  }
-})
+const props = defineProps<{
+  channelId: ChannelId
+  entryMessageId?: ChannelId
+}>()
+
+const { canDrop, onDrop, onDragStart, onDragOver } = useDragDrop(
+  toRef(props, 'channelId')
+)
 </script>
 
 <style lang="scss" module>

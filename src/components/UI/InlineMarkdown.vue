@@ -8,43 +8,37 @@
   />
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { renderInline } from '/@/lib/markdown/markdown'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
-import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 
-export default defineComponent({
-  name: 'InlineMarkdown',
-  props: {
-    content: {
-      type: String,
-      default: ''
-    },
-    acceptAction: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const rendered = ref<MarkdownRenderResult>()
-    watchEffect(async () => {
-      rendered.value = await renderInline(props.content)
-    })
-    const renderedContent = computed(() => rendered.value?.renderedText)
-
-    const toggleSpoilerHandler = (e: MouseEvent) => {
-      if (!e.target) return
-
-      const toggled = toggleSpoiler(e.target as HTMLElement)
-      if (toggled) {
-        e.stopPropagation()
-      }
-    }
-
-    return { renderedContent, toggleSpoilerHandler }
+const props = withDefaults(
+  defineProps<{
+    content?: string
+    acceptAction?: boolean
+  }>(),
+  {
+    content: '',
+    acceptAction: false
   }
+)
+
+const rendered = ref<MarkdownRenderResult>()
+watchEffect(async () => {
+  rendered.value = await renderInline(props.content)
 })
+const renderedContent = computed(() => rendered.value?.renderedText)
+
+const toggleSpoilerHandler = (e: MouseEvent) => {
+  if (!e.target) return
+
+  const toggled = toggleSpoiler(e.target as HTMLElement)
+  if (toggled) {
+    e.stopPropagation()
+  }
+}
 </script>
 
 <style lang="scss" module>

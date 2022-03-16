@@ -15,8 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import SemiFixedSizeText from '/@/components/UI/SemiFixedSizeText.vue'
+import { computed } from 'vue'
 
 const getDisplayTime = (time: number) => {
   if (!Number.isFinite(time)) {
@@ -27,31 +26,21 @@ const getDisplayTime = (time: number) => {
   return `${min}:${sec}`
 }
 const getDisplayTimeMaxText = (duration: string) => duration.replace(/\d/g, '0')
+</script>
 
-export default defineComponent({
-  name: 'AudioPlayerTime',
-  components: {
-    SemiFixedSizeText
-  },
-  props: {
-    currentTime: {
-      type: Number,
-      required: true
-    },
-    duration: {
-      type: Number,
-      required: true
-    }
-  },
-  setup(props) {
-    const displayCurrentTime = computed(() => getDisplayTime(props.currentTime))
-    const displayDuration = computed(() => getDisplayTime(props.duration))
-    const displayTimeMaxText = computed(() =>
-      getDisplayTimeMaxText(displayDuration.value)
-    )
-    return { displayCurrentTime, displayDuration, displayTimeMaxText }
-  }
-})
+<script lang="ts" setup>
+import SemiFixedSizeText from '/@/components/UI/SemiFixedSizeText.vue'
+
+const props = defineProps<{
+  currentTime: number
+  duration: number
+}>()
+
+const displayCurrentTime = computed(() => getDisplayTime(props.currentTime))
+const displayDuration = computed(() => getDisplayTime(props.duration))
+const displayTimeMaxText = computed(() =>
+  getDisplayTimeMaxText(displayDuration.value)
+)
 </script>
 
 <style lang="scss" module>

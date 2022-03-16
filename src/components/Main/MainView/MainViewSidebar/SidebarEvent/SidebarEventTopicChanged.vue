@@ -14,29 +14,15 @@
   </sidebar-event-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { TopicChangedEvent } from '@traptitech/traq'
+<script lang="ts" setup>
 import SidebarEventFrame from './SidebarEventFrame.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import { TopicChangedEvent } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'SidebarEventTopicChanged',
-  components: {
-    SidebarEventFrame,
-    InlineMarkdown
-  },
-  props: {
-    datetime: {
-      type: String,
-      required: true
-    },
-    details: {
-      type: Object as PropType<TopicChangedEvent>,
-      required: true
-    }
-  }
-})
+defineProps<{
+  datetime: string
+  details: TopicChangedEvent
+}>()
 </script>
 
 <style lang="scss" module>

@@ -8,28 +8,19 @@
   </teleport>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import useSidebar from '/@/use/sidebar'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import useSidebar from '/@/composables/useSidebar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'MainViewSidebar',
-  props: {
-    isSidebarOpenerReady: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const { shouldShowSidebar } = useSidebar()
-    const { isMobile } = useResponsiveStore()
+defineProps<{
+  isSidebarOpenerReady: boolean
+}>()
 
-    const portalTarget = computed(() =>
-      isMobile.value ? '#sidebar-mobile' : '#sidebar'
-    )
+const { shouldShowSidebar } = useSidebar()
+const { isMobile } = useResponsiveStore()
 
-    return { shouldShowSidebar, portalTarget }
-  }
-})
+const portalTarget = computed(() =>
+  isMobile.value ? '#sidebar-mobile' : '#sidebar'
+)
 </script>

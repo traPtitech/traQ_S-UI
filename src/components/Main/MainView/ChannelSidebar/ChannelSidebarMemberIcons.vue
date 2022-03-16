@@ -11,29 +11,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
 import { User } from '@traptitech/traq'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
 type ViewState = {
   user: User
   active: boolean
 }
 
-export default defineComponent({
-  name: 'ChannelSidebarMemberIcons',
-  components: { UserIcon },
-  props: {
-    viewerStates: {
-      type: Array as PropType<ViewState[]>,
-      default: () => []
-    }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    viewerStates?: ViewState[]
+  }>(),
+  {
+    viewerStates: () => []
   }
-})
+)
 </script>
 
 <style lang="scss" module>

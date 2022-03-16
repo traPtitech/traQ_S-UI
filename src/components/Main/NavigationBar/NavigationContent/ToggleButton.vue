@@ -9,43 +9,29 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 
-export default defineComponent({
-  name: 'ToggleButton',
-  components: {
-    AIcon
-  },
-  props: {
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      default: false
-    },
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: undefined
-    }
-  },
-  emits: {
-    'update:modelValue': (_value: boolean) => true
-  },
-  setup(props, { emit }) {
-    const toggle = () => {
-      emit('update:modelValue', !props.modelValue)
-    }
-    return { toggle }
+const props = withDefaults(
+  defineProps<{
+    iconName: string
+    iconMdi?: boolean
+    modelValue?: boolean
+    title?: string
+  }>(),
+  {
+    iconMdi: false,
+    modelValue: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _value: boolean): void
+}>()
+
+const toggle = () => {
+  emit('update:modelValue', !props.modelValue)
+}
 </script>
 
 <style lang="scss" module>

@@ -7,19 +7,8 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import TabContentTitle from './TabContentTitle.vue'
-
-export default defineComponent({
-  name: 'DesktopTabFrame',
-  components: {
-    TabContentTitle
-  },
-  setup() {
-    return {}
-  }
-})
 </script>
 
 <style lang="scss" module>

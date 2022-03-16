@@ -30,16 +30,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref, toRefs, PropType } from 'vue'
+import { computed, reactive, Ref, toRef } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import { useNavigation } from './use/navigation'
-import ClickOutside from '/@/components/UI/ClickOutside'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
-import NavigationSelector from './NavigationSelector.vue'
-import NavigationContent from './NavigationContent.vue'
-import CloseButton from '/@/components/UI/CloseButton.vue'
-import useUserDetail from './use/userDetail'
+import { useNavigation } from './composables/useNavigation'
+import useUserDetail from './composables/useUserDetail'
 import { useModalStore } from '/@/store/ui/modal'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { useUsersStore } from '/@/store/entities/users'
@@ -55,49 +49,34 @@ const useStyles = (iconSize: number, isMobile: Ref<boolean>) =>
       height: `min(${iconSize}px, 20vh)`
     }))
   })
+</script>
 
-export default defineComponent({
-  name: 'UserModal',
-  components: {
-    ClickOutside,
-    UserIcon,
-    FeatureContainer,
-    NavigationSelector,
-    NavigationContent,
-    CloseButton
-  },
-  props: {
-    id: {
-      type: String as PropType<UserId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { clearModal } = useModalStore()
-    const { isMobile } = useResponsiveStore()
-    const { usersMap } = useUsersStore()
+<script lang="ts" setup>
+import ClickOutside from '/@/components/UI/ClickOutside'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import FeatureContainer from './FeatureContainer/FeatureContainer.vue'
+import NavigationSelector from './NavigationSelector.vue'
+import NavigationContent from './NavigationContent.vue'
+import CloseButton from '/@/components/UI/CloseButton.vue'
 
-    const iconSize = 160
-    const styles = computed(() => useStyles(iconSize, isMobile))
+const props = defineProps<{
+  id: UserId
+}>()
 
-    const { navigationSelectorState, onNavigationChange } = useNavigation()
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const user = computed(() => usersMap.value.get(props.id)!)
+const { clearModal } = useModalStore()
+const { isMobile } = useResponsiveStore()
+const { usersMap } = useUsersStore()
 
-    const { userDetail } = useUserDetail(props)
+const iconSize = 160
+const styles = computed(() => useStyles(iconSize, isMobile))
 
-    return {
-      isMobile,
-      styles,
-      iconSize,
-      user,
-      userDetail,
-      ...toRefs(navigationSelectorState),
-      onNavigationChange,
-      clearModal
-    }
-  }
-})
+const { navigationSelectorState, onNavigationChange } = useNavigation()
+const currentNavigation = toRef(navigationSelectorState, 'currentNavigation')
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const user = computed(() => usersMap.value.get(props.id)!)
+
+const { userDetail } = useUserDetail(props)
 </script>
 
 <style lang="scss" module>

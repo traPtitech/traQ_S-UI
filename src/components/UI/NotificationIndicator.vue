@@ -6,29 +6,19 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import IndicatorDot from './IndicatorDot.vue'
 
-export default defineComponent({
-  name: 'NotificationIndicator',
-  components: {
-    IndicatorDot
-  },
-  props: {
-    size: {
-      type: Number,
-      default: 10
-    },
-    borderWidth: {
-      type: Number,
-      default: 0
-    }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    size?: number
+    borderWidth?: number
+  }>(),
+  {
+    size: 10,
+    borderWidth: 0
   }
-})
+)
 </script>
 
 <style lang="scss" module>

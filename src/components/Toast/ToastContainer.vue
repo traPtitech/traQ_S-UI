@@ -6,21 +6,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AToast from './AToast.vue'
 import { useToastStore } from '/@/store/ui/toast'
 
-export default defineComponent({
-  name: 'ToastContainer',
-  components: {
-    AToast
-  },
-  setup() {
-    const { toasts } = useToastStore()
-    return { toasts }
-  }
-})
+const { toasts } = useToastStore()
 </script>
 
 <style lang="scss" module>

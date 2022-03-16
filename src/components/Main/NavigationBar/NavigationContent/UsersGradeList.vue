@@ -14,11 +14,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { User } from '@traptitech/traq'
-import UsersSeparator from './UsersSeparator.vue'
-import UsersElement from './UsersElement.vue'
-import SlideDown from '/@/components/UI/SlideDown.vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
@@ -31,41 +28,30 @@ const useFolding = () => {
 
   return { isFolding, toggleFolding }
 }
+</script>
 
-export default defineComponent({
-  name: 'UsersGradeList',
-  components: {
-    UsersSeparator,
-    UsersElement,
-    SlideDown
-  },
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    users: {
-      type: Array as PropType<User[]>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { unreadChannelsMap } = useMeStore()
-    const { userIdToDmChannelIdMap } = useChannelsStore()
-    const { isFolding, toggleFolding } = useFolding()
+<script lang="ts" setup>
+import UsersSeparator from './UsersSeparator.vue'
+import UsersElement from './UsersElement.vue'
+import SlideDown from '/@/components/UI/SlideDown.vue'
 
-    const dmChannelIds = computed(() =>
-      props.users
-        .map(user => userIdToDmChannelIdMap.value.get(user.id))
-        .filter(isDefined)
-    )
-    const hasNotification = computed(() =>
-      dmChannelIds.value.some(id => unreadChannelsMap.value.has(id))
-    )
+const props = defineProps<{
+  name: string
+  users: User[]
+}>()
 
-    return { isFolding, toggleFolding, hasNotification }
-  }
-})
+const { unreadChannelsMap } = useMeStore()
+const { userIdToDmChannelIdMap } = useChannelsStore()
+const { isFolding, toggleFolding } = useFolding()
+
+const dmChannelIds = computed(() =>
+  props.users
+    .map(user => userIdToDmChannelIdMap.value.get(user.id))
+    .filter(isDefined)
+)
+const hasNotification = computed(() =>
+  dmChannelIds.value.some(id => unreadChannelsMap.value.has(id))
+)
 </script>
 
 <style lang="scss" module>

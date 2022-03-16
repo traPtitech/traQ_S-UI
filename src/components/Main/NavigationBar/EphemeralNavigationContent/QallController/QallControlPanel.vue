@@ -24,66 +24,46 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-import useChannelPath from '/@/use/channelPath'
+import { computed } from 'vue'
+import useChannelPath from '/@/composables/useChannelPath'
 
-export default defineComponent({
-  name: 'QallControlPanel',
-  components: {
-    AIcon
-  },
-  props: {
-    status: {
-      type: String,
-      default: ''
-    },
-    channelId: {
-      type: String,
-      required: true
-    },
-    isMicMuted: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    topToggleClick: () => true,
-    micClick: () => true,
-    endQallClick: () => true
-  },
-  setup(props, { emit }) {
-    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
-    const channelName = computed(() =>
-      channelIdToShortPathString(props.channelId)
-    )
-    const channelLink = computed(() => channelIdToLink(props.channelId))
-
-    const micIconName = computed(() =>
-      props.isMicMuted ? 'microphone-off' : 'microphone'
-    )
-
-    const topToggleClick = () => {
-      emit('topToggleClick')
-    }
-    const micClick = () => {
-      emit('micClick')
-    }
-    const endQallClick = () => {
-      emit('endQallClick')
-    }
-
-    return {
-      channelName,
-      channelLink,
-      micIconName,
-      topToggleClick,
-      micClick,
-      endQallClick
-    }
+const props = withDefaults(
+  defineProps<{
+    status?: string
+    channelId: string
+    isMicMuted?: boolean
+  }>(),
+  {
+    status: '',
+    isMicMuted: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'topToggleClick'): void
+  (e: 'micClick'): void
+  (e: 'endQallClick'): void
+}>()
+
+const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
+const channelName = computed(() => channelIdToShortPathString(props.channelId))
+const channelLink = computed(() => channelIdToLink(props.channelId))
+
+const micIconName = computed(() =>
+  props.isMicMuted ? 'microphone-off' : 'microphone'
+)
+
+const topToggleClick = () => {
+  emit('topToggleClick')
+}
+const micClick = () => {
+  emit('micClick')
+}
+const endQallClick = () => {
+  emit('endQallClick')
+}
 </script>
 
 <style lang="scss" module>

@@ -18,52 +18,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import LinkButton from './LinkButton.vue'
-import { useOpenLinkAndClearModal } from '../../use/openLinkFromModal'
+import { useOpenLinkAndClearModal } from '../../composables/useOpenLinkFromModal'
 import { constructUserPath } from '/@/router'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
-export default defineComponent({
-  name: 'LinkButtons',
-  components: {
-    LinkButton
-  },
-  props: {
-    homeChannelId: {
-      type: String,
-      default: undefined
-    },
-    userName: {
-      type: String,
-      required: true
-    },
-    showTitle: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { openLinkAndClearModal } = useOpenLinkAndClearModal()
-    const { channelIdToLink } = useChannelPath()
-
-    const onDMClick = async (event: MouseEvent) => {
-      openLinkAndClearModal(event, constructUserPath(props.userName))
-    }
-
-    const onHomeChannelClick = async (event: MouseEvent) => {
-      if (!props.homeChannelId) return
-
-      openLinkAndClearModal(event, channelIdToLink(props.homeChannelId))
-    }
-
-    return {
-      onDMClick,
-      onHomeChannelClick
-    }
+const props = withDefaults(
+  defineProps<{
+    homeChannelId?: string
+    userName: string
+    showTitle?: boolean
+  }>(),
+  {
+    showTitle: false
   }
-})
+)
+
+const { openLinkAndClearModal } = useOpenLinkAndClearModal()
+const { channelIdToLink } = useChannelPath()
+
+const onDMClick = async (event: MouseEvent) => {
+  openLinkAndClearModal(event, constructUserPath(props.userName))
+}
+
+const onHomeChannelClick = async (event: MouseEvent) => {
+  if (!props.homeChannelId) return
+
+  openLinkAndClearModal(event, channelIdToLink(props.homeChannelId))
+}
 </script>
 
 <style lang="scss" module>

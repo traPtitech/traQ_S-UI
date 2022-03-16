@@ -33,12 +33,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
-import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
-import useHover from '/@/use/hover'
+import { computed, reactive } from 'vue'
+import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import DMChannelElementName from './DMChannelElementName.vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
@@ -55,44 +52,30 @@ const useNotification = (props: { dmChannel: DMChannel }) => {
   })
   return notificationState
 }
+</script>
 
-export default defineComponent({
-  name: 'DMChannelElement',
-  components: {
-    UserIcon,
-    DMChannelElementName,
-    ChannelElementUnreadBadge
-  },
-  props: {
-    dmChannel: {
-      type: Object as PropType<DMChannel>,
-      required: true
-    }
-  },
-  emits: {
-    channelSelect: (_event: MouseEvent, _channelId: ChannelId) => true
-  },
-  setup(props, { emit }) {
-    const { usersMap } = useUsersStore()
-    const user = computed(() => usersMap.value.get(props.dmChannel.userId))
-    const notificationState = useNotification(props)
+<script lang="ts" setup>
+import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import DMChannelElementName from './DMChannelElementName.vue'
 
-    const onChannelClick = (e: MouseEvent) => {
-      emit('channelSelect', e, props.dmChannel.id)
-    }
+const props = defineProps<{
+  dmChannel: DMChannel
+}>()
 
-    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
+const emit = defineEmits<{
+  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
+}>()
 
-    return {
-      user,
-      notificationState,
-      onChannelClick,
-      onMouseEnter,
-      onMouseLeave,
-      isHovered
-    }
-  }
-})
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(props.dmChannel.userId))
+const notificationState = useNotification(props)
+
+const onChannelClick = (e: MouseEvent) => {
+  emit('channelSelect', e, props.dmChannel.id)
+}
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
 
 <style lang="scss" module>

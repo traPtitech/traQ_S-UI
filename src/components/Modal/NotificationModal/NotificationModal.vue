@@ -16,37 +16,23 @@
   </modal-frame>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
 import ModalFrame from '../Common/ModalFrame.vue'
 import ModalSection from '../Common/ModalSection.vue'
 import NotificationStateSelector from './NotificationStateSelector.vue'
 import UserNotificationList from './UserNotificationList.vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 
-export default defineComponent({
-  name: 'NotificationModal',
-  components: {
-    ModalFrame,
-    ModalSection,
-    NotificationStateSelector,
-    UserNotificationList
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelIdToPathString } = useChannelPath()
-    const channelPathString = computed(() =>
-      channelIdToPathString(props.channelId, true)
-    )
-    return { channelPathString }
-  }
-})
+const props = defineProps<{
+  channelId: ChannelId
+}>()
+
+const { channelIdToPathString } = useChannelPath()
+const channelPathString = computed(() =>
+  channelIdToPathString(props.channelId, true)
+)
 </script>
 
 <style lang="scss" module></style>

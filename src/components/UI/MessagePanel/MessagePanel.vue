@@ -41,74 +41,56 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { ActivityTimelineMessage, Message } from '@traptitech/traq'
+<script lang="ts" setup>
 import UserName from './UserName.vue'
 import ChannelName from './ChannelName.vue'
 import RenderContent from './RenderContent.vue'
-import useChannelPath from '/@/use/channelPath'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { ActivityTimelineMessage, Message } from '@traptitech/traq'
+import useChannelPath from '/@/composables/useChannelPath'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'MessagePanel',
-  components: {
-    UserName,
-    ChannelName,
-    RenderContent,
-    AIcon
-  },
-  props: {
-    titleType: {
-      type: String as PropType<'channel' | 'user'>,
-      default: 'channel' as const
-    },
-    hideSubtitle: {
-      type: Boolean,
-      default: false
-    },
-    message: {
-      type: Object as PropType<Message | ActivityTimelineMessage>,
-      required: true
-    },
-    lineClampContent: {
-      type: Boolean,
-      default: false
-    },
-    showContextMenuButton: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    clickContextMenuButton: (_e: MouseEvent) => true
-  },
-  setup(props, { emit }) {
-    const { usersMap, fetchUser } = useUsersStore()
+const props = withDefaults(
+  defineProps<{
+    titleType?: 'channel' | 'user'
+    hideSubtitle?: boolean
+    message: Message | ActivityTimelineMessage
+    lineClampContent?: boolean
+    showContextMenuButton?: boolean
+  }>(),
+  {
+    titleType: 'channel' as const,
+    hideSubtitle: false,
+    lineClampContent: false,
+    showContextMenuButton: false
+  }
+)
 
-    const userState = computed(() => usersMap.value.get(props.message.userId))
-    if (userState.value === undefined) {
-      fetchUser({ userId: props.message.userId })
-    }
+const emit = defineEmits<{
+  (e: 'clickContextMenuButton', _e: MouseEvent): void
+}>()
 
-    const { channelIdToShortPathString } = useChannelPath()
+const { usersMap, fetchUser } = useUsersStore()
 
-    const path = computed(() => {
-      try {
-        return channelIdToShortPathString(props.message.channelId)
-      } catch {
-        return 'unknown'
-      }
-    })
+const userState = computed(() => usersMap.value.get(props.message.userId))
+if (userState.value === undefined) {
+  fetchUser({ userId: props.message.userId })
+}
 
-    const onClickContextMenuButton = (e: MouseEvent) => {
-      emit('clickContextMenuButton', e)
-    }
+const { channelIdToShortPathString } = useChannelPath()
 
-    return { userState, path, onClickContextMenuButton }
+const path = computed(() => {
+  try {
+    return channelIdToShortPathString(props.message.channelId)
+  } catch {
+    return 'unknown'
   }
 })
+
+const onClickContextMenuButton = (e: MouseEvent) => {
+  emit('clickContextMenuButton', e)
+}
 </script>
 
 <style lang="scss" module>

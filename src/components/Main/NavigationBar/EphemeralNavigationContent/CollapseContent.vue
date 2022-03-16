@@ -14,8 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+import { ref } from 'vue'
 
 const useExpanded = () => {
   const isExpanded = ref(false)
@@ -24,18 +23,12 @@ const useExpanded = () => {
   }
   return { isExpanded, toggleExpanded }
 }
+</script>
 
-export default defineComponent({
-  name: 'CollapseContent',
-  components: {
-    AIcon
-  },
-  setup() {
-    const { isExpanded, toggleExpanded } = useExpanded()
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
 
-    return { isExpanded, toggleExpanded }
-  }
-})
+const { isExpanded, toggleExpanded } = useExpanded()
 </script>
 
 <style lang="scss" module>

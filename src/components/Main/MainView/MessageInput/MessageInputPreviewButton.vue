@@ -8,31 +8,20 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import IconButton from '/@/components/UI/IconButton.vue'
 
-export default defineComponent({
-  name: 'MessageInputPreviewButton',
-  components: {
-    IconButton
-  },
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    'update:modelValue': (_v: boolean) => true
-  },
-  setup(props, { emit }) {
-    const toggle = () => {
-      emit('update:modelValue', !props.modelValue)
-    }
-    return { toggle }
-  }
-})
+const props = defineProps<{
+  modelValue: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _v: boolean): void
+}>()
+
+const toggle = () => {
+  emit('update:modelValue', !props.modelValue)
+}
 </script>
 
 <style lang="scss" module>

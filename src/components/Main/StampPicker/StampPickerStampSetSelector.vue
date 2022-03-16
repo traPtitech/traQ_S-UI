@@ -13,40 +13,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { StampSet } from './use/stampSetSelector'
+<script lang="ts" setup>
 import StampPickerStampSetSelectorItem from './StampPickerStampSetSelectorItem.vue'
+import { StampSet } from './composables/useStampSetSelector'
 
-export default defineComponent({
-  name: 'StampPickerStampSetSelector',
-  components: {
-    StampPickerStampSetSelectorItem
-  },
-  props: {
-    currentStampSet: {
-      type: Object as PropType<StampSet>,
-      required: true
-    },
-    stampSets: {
-      type: Array as PropType<StampSet[]>,
-      required: true
-    },
-    foldedStampSets: {
-      type: Array as PropType<StampSet[]>,
-      default: () => []
-    }
-  },
-  emits: {
-    'update:currentStampSet': (_stampSet: StampSet) => true
-  },
-  setup(props, { emit }) {
-    const onStampSetSelect = (stampSet: StampSet) => {
-      emit('update:currentStampSet', stampSet)
-    }
-    return { onStampSetSelect }
+withDefaults(
+  defineProps<{
+    currentStampSet: StampSet
+    stampSets: StampSet[]
+    foldedStampSets?: StampSet[]
+  }>(),
+  {
+    foldedStampSets: () => []
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:currentStampSet', _stampSet: StampSet): void
+}>()
+
+const onStampSetSelect = (stampSet: StampSet) => {
+  emit('update:currentStampSet', stampSet)
+}
 </script>
 
 <style lang="scss" module>

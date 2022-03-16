@@ -15,42 +15,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, reactive, PropType } from 'vue'
+<script lang="ts" setup>
 import MessageInputFileListItemImage from './MessageInputFileListItemImage.vue'
 import MessageInputFileListItemCloseButton from './MessageInputFileListItemCloseButton.vue'
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
+import { computed, reactive } from 'vue'
 import { Attachment } from '/@/store/ui/messageInputState'
 
-export default defineComponent({
-  name: 'MessageInputFileListItem',
-  components: {
-    MessageInputFileListItemImage,
-    MessageInputFileListItemCloseButton,
-    FileTypeIcon
-  },
-  props: {
-    attachment: {
-      type: Object as PropType<Attachment>,
-      required: true
-    }
-  },
-  emits: {
-    itemRemove: () => true
-  },
-  setup(props, { emit }) {
-    const state = reactive({
-      showThumbnail: computed((): boolean =>
-        props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
-          ? props.attachment.thumbnailDataUrl.length > 0
-          : false
-      )
-    })
-    const onClickClose = () => emit('itemRemove')
+const props = defineProps<{
+  attachment: Attachment
+}>()
 
-    return { state, onClickClose }
-  }
+const emit = defineEmits<{
+  (e: 'itemRemove'): void
+}>()
+
+const state = reactive({
+  showThumbnail: computed((): boolean =>
+    props.attachment.type === 'image' && props.attachment.thumbnailDataUrl
+      ? props.attachment.thumbnailDataUrl.length > 0
+      : false
+  )
 })
+const onClickClose = () => emit('itemRemove')
 </script>
 
 <style lang="scss" module>

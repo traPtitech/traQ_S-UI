@@ -11,26 +11,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import logoUrl from '/@/assets/traq-logo.svg?url'
+<script lang="ts" setup>
 import LogoText from '/@/assets/traq-logo-text.svg?component'
+import logoUrl from '/@/assets/traq-logo.svg?url'
 
-export default defineComponent({
-  name: 'AuthenticateHeader',
-  components: {
-    LogoText
-  },
-  props: {
-    title: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup() {
-    return { logoUrl }
-  }
-})
+defineProps<{
+  title?: string
+}>()
 </script>
 
 <style lang="scss" module>

@@ -44,28 +44,22 @@
 import {
   computed,
   DeepReadonly,
-  defineComponent,
   onBeforeUnmount,
   onMounted,
-  PropType,
   ref,
   Ref,
   watchEffect
 } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { MessageId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { Message } from '@traptitech/traq'
-import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
 import { SearchMessageSortKey } from '/@/lib/searchMessage/queryParser'
 import { toggleSpoiler } from '/@/lib/markdown/spoiler'
 import { useUsersStore } from '/@/store/entities/users'
 import type { MarkdownRenderResult } from '@traptitech/traq-markdown-it'
 import { render } from '/@/lib/markdown/markdown'
 import { isFile } from '/@/lib/guard/embeddingOrUrl'
-import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 
 const maxHeight = 200
 
@@ -107,94 +101,69 @@ const useSpoilerToggler = () => {
 
   return { toggleSpoilerHandler }
 }
+</script>
 
-export default defineComponent({
-  name: 'SearchResultMessageElement',
-  components: {
-    AIcon,
-    UserIcon,
-    SearchResultMessageElementContent,
-    SearchResultMessageFileList
-  },
-  props: {
-    message: {
-      type: Object as PropType<DeepReadonly<Message>>,
-      required: true
-    },
-    currentSortKey: {
-      type: String as PropType<SearchMessageSortKey>,
-      required: true
-    }
-  },
-  emits: {
-    clickOpen: (_event: MouseEvent, _messageId: MessageId) => true,
-    rendered: () => true
-  },
-  setup(props, { emit }) {
-    const { usersMap, fetchUser } = useUsersStore()
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import SearchResultMessageFileList from './SearchResultMessageFileList.vue'
+import SearchResultMessageElementContent from './SearchResultMessageElementContent.vue'
 
-    // 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
-    fetchUser({ userId: props.message.userId })
+const props = defineProps<{
+  message: DeepReadonly<Message>
+  currentSortKey: SearchMessageSortKey
+}>()
 
-    const { channelIdToPathString } = useChannelPath()
-    const user = computed(() => usersMap.value.get(props.message.userId))
-    const channelName = computed(() =>
-      channelIdToPathString(props.message.channelId, true)
-    )
-    const date = computed(() => {
-      let _date: string
-      if (
-        props.currentSortKey === 'createdAt' ||
-        props.currentSortKey === '-createdAt'
-      ) {
-        _date = props.message.createdAt
-      } else {
-        _date = props.message.updatedAt
-      }
-      return getCreatedDate(_date)
-    })
+const emit = defineEmits<{
+  (e: 'clickOpen', _event: MouseEvent, _messageId: MessageId): void
+  (e: 'rendered'): void
+}>()
 
-    const renderedResult = ref<MarkdownRenderResult>()
-    watchEffect(async () => {
-      renderedResult.value = await render(props.message.content)
-      // renderedを発火したあとにレイアウトシフトなどがおこると
-      // スクロール位置のリストアが壊れるので注意すること
-      emit('rendered')
-    })
-    const renderedContent = computed(
-      () => renderedResult.value?.renderedText ?? ''
-    )
-    const fileIds = computed(
-      () =>
-        renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ??
-        []
-    )
+const { usersMap, fetchUser } = useUsersStore()
 
-    const onClick = (e: MouseEvent) => {
-      emit('clickOpen', e, props.message.id)
-    }
+// 検索によって出てきたメッセージなので、ユーザーが取得できていない場合がある
+fetchUser({ userId: props.message.userId })
 
-    const contentRef = ref<HTMLElement>()
-    const { oversized, expanded, onClickExpandButton } =
-      useMessageExpansion(contentRef)
-
-    const { toggleSpoilerHandler } = useSpoilerToggler()
-
-    return {
-      user,
-      channelName,
-      date,
-      renderedContent,
-      fileIds,
-      onClick,
-      expanded,
-      oversized,
-      onClickExpandButton,
-      contentRef,
-      toggleSpoilerHandler
-    }
+const { channelIdToPathString } = useChannelPath()
+const user = computed(() => usersMap.value.get(props.message.userId))
+const channelName = computed(() =>
+  channelIdToPathString(props.message.channelId, true)
+)
+const date = computed(() => {
+  let _date: string
+  if (
+    props.currentSortKey === 'createdAt' ||
+    props.currentSortKey === '-createdAt'
+  ) {
+    _date = props.message.createdAt
+  } else {
+    _date = props.message.updatedAt
   }
+  return getCreatedDate(_date)
 })
+
+const renderedResult = ref<MarkdownRenderResult>()
+watchEffect(async () => {
+  renderedResult.value = await render(props.message.content)
+  // renderedを発火したあとにレイアウトシフトなどがおこると
+  // スクロール位置のリストアが壊れるので注意すること
+  emit('rendered')
+})
+const renderedContent = computed(() => renderedResult.value?.renderedText ?? '')
+const fileIds = computed(
+  () =>
+    renderedResult.value?.embeddings.filter(isFile).map(file => file.id) ?? []
+)
+
+const onClick = (e: MouseEvent) => {
+  emit('clickOpen', e, props.message.id)
+}
+
+const contentRef = ref<HTMLElement>()
+const { oversized, expanded, onClickExpandButton } =
+  useMessageExpansion(contentRef)
+
+const { toggleSpoilerHandler } = useSpoilerToggler()
 </script>
 
 <style lang="scss" module>

@@ -10,34 +10,23 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
 import LoadingSpinner from '/@/components/UI/LoadingSpinner.vue'
 
-export default defineComponent({
-  name: 'FormButton',
-  components: {
-    LoadingSpinner
-  },
-  props: {
-    label: {
-      type: String,
-      default: ''
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    color: {
-      type: String as PropType<'primary' | 'secondary' | 'error'>,
-      default: 'primary' as const
-    }
+withDefaults(
+  defineProps<{
+    label?: string
+    loading?: boolean
+    disabled?: boolean
+    color?: 'primary' | 'secondary' | 'error'
+  }>(),
+  {
+    label: '',
+    loading: false,
+    disabled: false,
+    color: 'primary' as const
   }
-})
+)
 </script>
 
 <style lang="scss" module>

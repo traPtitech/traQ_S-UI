@@ -8,37 +8,25 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-export default defineComponent({
-  name: 'AudioPlayerLoopButton',
-  components: {
-    AudioPlayerAbstractButton
-  },
-  props: {
-    loop: {
-      type: Boolean,
-      required: true
-    },
-    size: {
-      type: Number,
-      required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:loop': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const toggle = () => {
-      emit('update:loop', !props.loop)
-    }
-    return { toggle }
+const props = withDefaults(
+  defineProps<{
+    loop: boolean
+    size: number
+    disabled?: boolean
+  }>(),
+  {
+    disabled: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:loop', _val: boolean): void
+}>()
+
+const toggle = () => {
+  emit('update:loop', !props.loop)
+}
 </script>

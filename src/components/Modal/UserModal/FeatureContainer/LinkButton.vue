@@ -10,35 +10,22 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'LinkButton',
-  components: {
-    AIcon
-  },
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const { isMobile } = useResponsiveStore()
-    return { isMobile }
+withDefaults(
+  defineProps<{
+    title?: string
+    iconName: string
+    iconMdi: boolean
+  }>(),
+  {
+    title: ''
   }
-})
+)
+
+const { isMobile } = useResponsiveStore()
 </script>
 
 <style lang="scss" module>

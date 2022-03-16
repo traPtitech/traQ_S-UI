@@ -26,73 +26,44 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, shallowRef } from 'vue'
-import { randomString } from '/@/lib/basic/randomString'
+<script lang="ts" setup>
 import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { computed, shallowRef } from 'vue'
+import { randomString } from '/@/lib/basic/randomString'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-export default defineComponent({
-  name: 'FormTextArea',
-  components: {
-    LengthCount,
-    TextareaAutosize
-  },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    name: {
-      type: String,
-      default: undefined
-    },
-    label: {
-      type: String,
-      default: undefined
-    },
-    maxHeight: {
-      type: Number,
-      default: undefined
-    },
-    maxLength: {
-      type: Number,
-      default: undefined
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-
-    const style = computed(() => ({ maxHeight: props.maxHeight }))
-
-    const inputRef = shallowRef<HTMLInputElement | null>(null)
-    const focus = () => {
-      inputRef.value?.focus()
-    }
-
-    const id = randomString()
-
-    return {
-      value,
-      style,
-      id,
-      inputRef,
-      focus
-    }
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    onSecondary?: boolean
+    placeholder?: string
+    name?: string
+    label?: string
+    maxHeight?: number
+    maxLength?: number
+  }>(),
+  {
+    modelValue: '',
+    onSecondary: false,
+    placeholder: ''
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _val: string): void
+}>()
+
+const value = useModelValueSyncer(props, emit)
+
+const style = computed(() => ({ maxHeight: props.maxHeight }))
+
+const inputRef = shallowRef<HTMLInputElement | null>(null)
+const focus = () => {
+  inputRef.value?.focus()
+}
+
+const id = randomString()
 </script>
 
 <style lang="scss" module>

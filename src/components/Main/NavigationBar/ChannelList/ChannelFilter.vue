@@ -13,40 +13,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-export default defineComponent({
-  name: 'ChannelFilter',
-  components: {
-    AIcon,
-    FilterInput
-  },
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    },
-    isStared: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true,
-    toggleStarFilter: () => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-    const toggleStarFilter = () => {
-      emit('toggleStarFilter')
-    }
-    return { value, toggleStarFilter }
+const props = withDefaults(
+  defineProps<{
+    modelValue: string
+    isStared?: boolean
+  }>(),
+  {
+    isStared: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _val: string): void
+  (e: 'toggleStarFilter'): void
+}>()
+
+const value = useModelValueSyncer(props, emit)
+const toggleStarFilter = () => {
+  emit('toggleStarFilter')
+}
 </script>
 
 <style lang="scss" module>

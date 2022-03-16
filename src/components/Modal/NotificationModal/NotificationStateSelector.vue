@@ -11,12 +11,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, toRef } from 'vue'
-import useChannelSubscriptionState from '/@/use/channelSubscriptionState'
-import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
+<script lang="ts" setup>
+import { toRef } from 'vue'
+import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { ChannelId } from '/@/types/entity-ids'
+import NotificationStateSelectorItem from './NotificationStateSelectorItem.vue'
+
+const props = defineProps<{
+  channelId: ChannelId
+}>()
 
 const levels: ReadonlyArray<ChannelSubscribeLevel> = [
   ChannelSubscribeLevel.none,
@@ -24,23 +28,8 @@ const levels: ReadonlyArray<ChannelSubscribeLevel> = [
   ChannelSubscribeLevel.notified
 ]
 
-export default defineComponent({
-  name: 'NotificationStateSelector',
-  components: {
-    NotificationStateSelectorItem
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { currentChannelSubscription, changeSubscriptionLevel } =
-      useChannelSubscriptionState(toRef(props, 'channelId'))
-    return { currentChannelSubscription, changeSubscriptionLevel, levels }
-  }
-})
+const { currentChannelSubscription, changeSubscriptionLevel } =
+  useChannelSubscriptionState(toRef(props, 'channelId'))
 </script>
 
 <style lang="scss" module>

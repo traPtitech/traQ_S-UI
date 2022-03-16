@@ -2,21 +2,11 @@
   <return-button @click="popOrCloseModal" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import ReturnButton from '/@/components/UI/ReturnButton.vue'
 import { useModalStore } from '/@/store/ui/modal'
 
-export default defineComponent({
-  name: 'ModalReturnButton',
-  components: {
-    ReturnButton
-  },
-  setup() {
-    const { popOrCloseModal } = useModalStore()
-    return { popOrCloseModal }
-  }
-})
+const { popOrCloseModal } = useModalStore()
 </script>
 
 <style lang="scss" module></style>

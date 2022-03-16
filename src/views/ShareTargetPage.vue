@@ -5,34 +5,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { getFirstQuery } from '/@/lib/basic/url'
+<script lang="ts" setup>
 import ShareTargetComponent from '/@/components/ShareTarget/ShareTarget.vue'
 import StampPickerContainer from '/@/components/Main/StampPicker/StampPickerContainer.vue'
+import { computed } from 'vue'
+import { getFirstQuery } from '/@/lib/basic/url'
 import { useRoute } from 'vue-router'
-import useLoginCheck from './use/loginCheck'
+import useLoginCheck from './composables/useLoginCheck'
 
-export default defineComponent({
-  name: 'ShareTargetPage',
-  components: {
-    ShareTargetComponent,
-    StampPickerContainer
-  },
-  setup() {
-    const route = useRoute()
-    const query = computed(() => route.query)
-    const title = computed(
-      () => getFirstQuery(query.value['title']) ?? undefined
-    )
-    const text = computed(() => getFirstQuery(query.value['text']) ?? undefined)
-    const url = computed(() => getFirstQuery(query.value['url']) ?? undefined)
+const route = useRoute()
+const query = computed(() => route.query)
+const title = computed(() => getFirstQuery(query.value['title']) ?? undefined)
+const text = computed(() => getFirstQuery(query.value['text']) ?? undefined)
+const url = computed(() => getFirstQuery(query.value['url']) ?? undefined)
 
-    useLoginCheck()
-
-    return { title, text, url }
-  }
-})
+useLoginCheck()
 </script>
 
 <style lang="scss" module>

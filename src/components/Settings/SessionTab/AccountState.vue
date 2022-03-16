@@ -12,40 +12,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import FormButton from '/@/components/UI/FormButton.vue'
 import { useRouter } from 'vue-router'
 import { useMeStore } from '/@/store/domain/me'
 
-export default defineComponent({
-  name: 'AccountState',
-  components: {
-    FormButton
-  },
-  setup() {
-    const router = useRouter()
-    const { logout } = useMeStore()
+const router = useRouter()
+const { logout } = useMeStore()
 
-    const onLogoutClick = async () => {
-      await logout()
-      router.push('/login')
-    }
+const onLogoutClick = async () => {
+  await logout()
+  router.push('/login')
+}
 
-    const onSessionDelete = async () => {
-      // TODO: セッション表示と特定のセッション破棄とかする？
-      if (
-        window.confirm(
-          'ログイン中のセッションを全て破棄します。（実行するとログアウトされます）'
-        )
-      ) {
-        await logout({ allSession: true })
-        router.push('/login')
-      }
-    }
-    return { onLogoutClick, onSessionDelete }
+const onSessionDelete = async () => {
+  // TODO: セッション表示と特定のセッション破棄とかする？
+  if (
+    window.confirm(
+      'ログイン中のセッションを全て破棄します。（実行するとログアウトされます）'
+    )
+  ) {
+    await logout({ allSession: true })
+    router.push('/login')
   }
-})
+}
 </script>
 
 <style lang="scss" module>

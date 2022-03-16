@@ -4,53 +4,49 @@
     :data-react-hover="$boolAttr(reactHover)"
     :data-is-white="$boolAttr(isWhite)"
   >
-    <div :class="$style.circle" :style="styles.circle" @click="onClick"></div>
+    <div :class="$style.circle" :style="circleStyle" @click="onClick"></div>
     <span v-if="withText" :class="$style.text">閉じる</span>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
-const useStyles = (props: {
-  borderWidth: number
-  size: number
-  innerSize: number
-  iconWidth: number
-}) =>
-  reactive({
-    circle: computed(() => ({
-      borderWidth: `${props.borderWidth}px`,
-      width: `${props.size}px`,
-      height: `${props.size}px`,
-      '--innerSize': `${props.innerSize}px`,
-      '--iconWidth': `${props.iconWidth}px`
-    }))
-  })
-
-export default defineComponent({
-  name: 'CloseButton',
-  props: {
-    withText: { type: Boolean, default: false },
-    borderWidth: { type: Number, default: 2 },
-    iconWidth: { type: Number, default: 2 },
-    size: { type: Number, required: true },
-    innerSize: { type: Number, default: 16 },
-    isWhite: { type: Boolean, default: false },
-    reactHover: { type: Boolean, default: true }
-  },
-  emits: {
-    close: () => true
-  },
-  setup(props, { emit }) {
-    const styles = useStyles(props)
-
-    const onClick = () => {
-      emit('close')
-    }
-    return { styles, onClick }
+const props = withDefaults(
+  defineProps<{
+    withText?: boolean
+    borderWidth?: number
+    iconWidth?: number
+    size: number
+    innerSize?: number
+    isWhite?: boolean
+    reactHover?: boolean
+  }>(),
+  {
+    withText: false,
+    borderWidth: 2,
+    iconWidth: 2,
+    innerSize: 16,
+    isWhite: false,
+    reactHover: true
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+
+const circleStyle = computed(() => ({
+  borderWidth: `${props.borderWidth}px`,
+  width: `${props.size}px`,
+  height: `${props.size}px`,
+  '--innerSize': `${props.innerSize}px`,
+  '--iconWidth': `${props.iconWidth}px`
+}))
+
+const onClick = () => {
+  emit('close')
+}
 </script>
 
 <style lang="scss" module>

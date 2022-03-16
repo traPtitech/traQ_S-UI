@@ -19,30 +19,18 @@
   </section>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import { useRoute } from 'vue-router'
+<script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
 import VersionInfo from '/@/components/UI/VersionInfo.vue'
-import useSettingsNavigation, { navigations } from './use/navigation'
 import MobileTabSelectorItem from './MobileTabSelectorItem.vue'
 import SafariWarning from './SafariWarning.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import useSettingsNavigation, { navigations } from './composables/useNavigation'
 
-export default defineComponent({
-  name: 'MobileTabSelector',
-  components: {
-    MobileTabSelectorItem,
-    SafariWarning,
-    CloseButton,
-    VersionInfo
-  },
-  setup() {
-    const route = useRoute()
-    const currentRouteName = computed(() => route.name)
-    const { close } = useSettingsNavigation()
-    return { currentRouteName, navigations, close }
-  }
-})
+const route = useRoute()
+const currentRouteName = computed(() => route.name)
+const { close } = useSettingsNavigation()
 </script>
 
 <style lang="scss" module>

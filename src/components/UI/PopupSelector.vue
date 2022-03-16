@@ -31,8 +31,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
 
@@ -43,40 +43,32 @@ export type PopupSelectorItem = {
   iconMdi?: boolean
 }
 
-export default defineComponent({
-  name: 'PopupSelector',
-  components: { AIcon, ClickOutside },
-  props: {
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    items: {
-      type: Array as PropType<PopupSelectorItem[]>,
-      required: true
-    },
-    small: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true
-  },
-  setup(props, { emit }) {
-    const isOpen = ref(false)
-    const toggle = () => (isOpen.value = !isOpen.value)
-    const close = () => (isOpen.value = false)
-    const onClick = (item: PopupSelectorItem) => {
-      emit('update:modelValue', item.value)
-      close()
-    }
-    const currentItem = computed(() =>
-      props.items.find(item => item.value === props.modelValue)
-    )
-    return { onClick, currentItem, isOpen, toggle, close }
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    items: PopupSelectorItem[]
+    small?: boolean
+  }>(),
+  {
+    modelValue: '',
+    small: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _val: string): void
+}>()
+
+const isOpen = ref(false)
+const toggle = () => (isOpen.value = !isOpen.value)
+const close = () => (isOpen.value = false)
+const onClick = (item: PopupSelectorItem) => {
+  emit('update:modelValue', item.value)
+  close()
+}
+const currentItem = computed(() =>
+  props.items.find(item => item.value === props.modelValue)
+)
 </script>
 
 <style lang="scss" module>

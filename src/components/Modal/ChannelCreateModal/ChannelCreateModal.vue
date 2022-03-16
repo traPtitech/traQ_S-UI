@@ -27,17 +27,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, watch, toRef } from 'vue'
-import useChannelPath from '/@/use/channelPath'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import { computed, reactive, watch, toRef } from 'vue'
+import useChannelPath from '/@/composables/useChannelPath'
 import { rootChannelId } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelOptions from '/@/use/channelOptions'
-import FormSelector from '/@/components/UI/FormSelector.vue'
+import useChannelOptions from '/@/composables/useChannelOptions'
 import { UserPermission } from '@traptitech/traq'
-import useCanCreateChildChannel from '/@/use/canCreateChildChannel'
+import useCanCreateChildChannel from '/@/composables/useCanCreateChildChannel'
 import { isValidChannelName } from '/@/lib/validate'
 import apis from '/@/lib/apis'
 import { channelTreeMitt } from '/@/store/domain/channelTree'
@@ -124,76 +120,56 @@ const useChannelOptionsForSelector = () => {
   )
   return { channelOptions }
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelCreateModal',
-  components: {
-    ModalFrame,
-    FormInput,
-    FormButton,
-    FormSelector
-  },
-  props: {
-    /**
-     * 指定しなかったときは親チャンネルを画面で指定可能
-     */
-    parentChannelId: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const state = reactive<State>({
-      channelName: '',
-      parentChannelId: props.parentChannelId ?? null
-    })
-    watch(
-      toRef(props, 'parentChannelId'),
-      newParentChannelId => {
-        state.parentChannelId = newParentChannelId ?? null
-      },
-      { immediate: true }
-    )
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
 
-    const { channelOptions } = useChannelOptionsForSelector()
-    const { createChannel } = useCreateChannel(state)
+const props = defineProps<{
+  parentChannelId?: string
+}>()
 
-    const { channelIdToPathString } = useChannelPath()
-    const title = computed(
-      () => (props.parentChannelId ? '子' : '') + 'チャンネルを作成'
-    )
-    const subtitle = computed(() =>
-      props.parentChannelId
-        ? `${channelIdToPathString(props.parentChannelId, true)}/`
-        : ''
-    )
-    const newChannelPath = computed(() => {
-      if (
-        state.parentChannelId === null ||
-        state.parentChannelId === rootChannelId
-      ) {
-        return `#${state.channelName}`
-      }
-      const parentChannelPath = channelIdToPathString(state.parentChannelId)
-      return `#${parentChannelPath}/${state.channelName}`
-    })
-
-    const isCreateEnabled = computed(
-      () =>
-        isValidChannelName(state.channelName) && state.parentChannelId !== null
-    )
-
-    return {
-      state,
-      channelOptions,
-      createChannel,
-      title,
-      subtitle,
-      newChannelPath,
-      isCreateEnabled
-    }
-  }
+const state = reactive<State>({
+  channelName: '',
+  parentChannelId: props.parentChannelId ?? null
 })
+watch(
+  toRef(props, 'parentChannelId'),
+  newParentChannelId => {
+    state.parentChannelId = newParentChannelId ?? null
+  },
+  { immediate: true }
+)
+
+const { channelOptions } = useChannelOptionsForSelector()
+const { createChannel } = useCreateChannel(state)
+
+const { channelIdToPathString } = useChannelPath()
+const title = computed(
+  () => (props.parentChannelId ? '子' : '') + 'チャンネルを作成'
+)
+const subtitle = computed(() =>
+  props.parentChannelId
+    ? `${channelIdToPathString(props.parentChannelId, true)}/`
+    : ''
+)
+const newChannelPath = computed(() => {
+  if (
+    state.parentChannelId === null ||
+    state.parentChannelId === rootChannelId
+  ) {
+    return `#${state.channelName}`
+  }
+  const parentChannelPath = channelIdToPathString(state.parentChannelId)
+  return `#${parentChannelPath}/${state.channelName}`
+})
+
+const isCreateEnabled = computed(
+  () => isValidChannelName(state.channelName) && state.parentChannelId !== null
+)
 </script>
 
 <style lang="scss" module>

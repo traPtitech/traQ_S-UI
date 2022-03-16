@@ -19,52 +19,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, PropType, reactive } from 'vue'
-import apis from '/@/lib/apis'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import LengthCount from '/@/components/UI/LengthCount.vue'
-import useMaxLength from '/@/use/maxLength'
+import { ref, reactive } from 'vue'
+import apis from '/@/lib/apis'
+import { UserId } from '/@/types/entity-ids'
+import useMaxLength from '/@/composables/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
 
-export default defineComponent({
-  name: 'TagsTabAdd',
-  components: {
-    AIcon,
-    LengthCount
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { addErrorToast } = useToastStore()
+const props = defineProps<{
+  userId: UserId
+}>()
 
-    const newTagName = ref('')
-    const adding = ref(false)
-    const { isExceeded } = useMaxLength(
-      reactive({ val: newTagName, maxLength: 30 })
-    )
+const { addErrorToast } = useToastStore()
 
-    const addTag = async () => {
-      adding.value = true
-      try {
-        await apis.addUserTag(props.userId, {
-          tag: newTagName.value
-        })
-        newTagName.value = ''
-      } catch {
-        addErrorToast('タグの追加に失敗しました')
-      }
-      adding.value = false
-    }
+const newTagName = ref('')
+const adding = ref(false)
+const { isExceeded } = useMaxLength(
+  reactive({ val: newTagName, maxLength: 30 })
+)
 
-    return { newTagName, isExceeded, addTag, adding }
+const addTag = async () => {
+  adding.value = true
+  try {
+    await apis.addUserTag(props.userId, {
+      tag: newTagName.value
+    })
+    newTagName.value = ''
+  } catch {
+    addErrorToast('タグの追加に失敗しました')
   }
-})
+  adding.value = false
+}
 </script>
 
 <style lang="scss" module>

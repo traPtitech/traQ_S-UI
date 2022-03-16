@@ -8,17 +8,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
-
-export default defineComponent({
-  name: 'ChannelViewFileUploadOverlay',
-  components: { AIcon },
-  setup() {
-    return {}
-  }
-})
 </script>
 
 <style lang="scss" module>

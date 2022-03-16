@@ -14,37 +14,24 @@
   </li>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed, ref } from 'vue'
-import { OAuth2Scope } from '@traptitech/traq'
+<script lang="ts" setup>
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, ref } from 'vue'
+import { OAuth2Scope } from '@traptitech/traq'
 import { scopeNameMap, scopePermissionsMap } from '/@/lib/clientScope'
 
-export default defineComponent({
-  name: 'ClientScope',
-  components: {
-    SlideDown,
-    AIcon
-  },
-  props: {
-    scope: {
-      type: String as PropType<OAuth2Scope>,
-      required: true
-    }
-  },
-  setup(props) {
-    const name = computed(() => scopeNameMap[props.scope])
-    const permissions = computed(() => scopePermissionsMap[props.scope])
+const props = defineProps<{
+  scope: OAuth2Scope
+}>()
 
-    const isOpen = ref(false)
-    const toggleOpen = () => {
-      isOpen.value = !isOpen.value
-    }
+const name = computed(() => scopeNameMap[props.scope])
+const permissions = computed(() => scopePermissionsMap[props.scope])
 
-    return { name, permissions, isOpen, toggleOpen }
-  }
-})
+const isOpen = ref(false)
+const toggleOpen = () => {
+  isOpen.value = !isOpen.value
+}
 </script>
 
 <style lang="scss" module>

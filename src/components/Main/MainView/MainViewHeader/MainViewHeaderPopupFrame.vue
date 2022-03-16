@@ -4,17 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'MainViewHeaderPopupFrame',
-  setup() {
-    return {}
-  }
-})
-</script>
-
 <style lang="scss" module>
 .container {
   @include background-primary;

@@ -31,11 +31,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import ActivityElement from './ActivityElement.vue'
-import ToggleButton from './ToggleButton.vue'
-import useActivityStream from './use/activityStream'
-import EmptyState from '/@/components/UI/EmptyState.vue'
+import { computed } from 'vue'
+import useActivityStream from './composables/useActivityStream'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
 const useActivityMode = () => {
@@ -57,27 +54,19 @@ const useActivityMode = () => {
 
   return { isNotAll, isPerChannel }
 }
+</script>
 
-export default defineComponent({
-  name: 'ActivityTab',
-  components: {
-    ToggleButton,
-    ActivityElement,
-    EmptyState
-  },
-  props: {
-    show: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup(props) {
-    const { timeline } = useActivityStream(props)
-    const { isNotAll, isPerChannel } = useActivityMode()
+<script lang="ts" setup>
+import ActivityElement from './ActivityElement.vue'
+import ToggleButton from './ToggleButton.vue'
+import EmptyState from '/@/components/UI/EmptyState.vue'
 
-    return { isNotAll, isPerChannel, timeline }
-  }
-})
+const props = defineProps<{
+  show: boolean
+}>()
+
+const { timeline } = useActivityStream(props)
+const { isNotAll, isPerChannel } = useActivityMode()
 </script>
 
 <style lang="scss" module>

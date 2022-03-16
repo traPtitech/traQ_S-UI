@@ -6,14 +6,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'MessageInputTypingAnimation'
-})
-</script>
-
 <style lang="scss" module>
 .typingAnimation {
   display: flex;

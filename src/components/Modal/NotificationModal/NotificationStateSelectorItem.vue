@@ -6,10 +6,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
+import AIcon from '/@/components/UI/AIcon.vue'
+
+const props = withDefaults(
+  defineProps<{
+    subscriptionLevel: ChannelSubscribeLevel
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
+  }
+)
 
 const titleMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.notified]: '通知オン',
@@ -28,28 +38,9 @@ const iconNameMap: Record<ChannelSubscribeLevel, string> = {
   [ChannelSubscribeLevel.none]: 'not-subscribed'
 }
 
-export default defineComponent({
-  name: 'NotificationStateSelectorItem',
-  components: {
-    AIcon
-  },
-  props: {
-    subscriptionLevel: {
-      type: Number as PropType<ChannelSubscribeLevel>,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const iconName = computed(() => iconNameMap[props.subscriptionLevel])
-    const title = computed(() => titleMap[props.subscriptionLevel])
-    const description = computed(() => descriptionMap[props.subscriptionLevel])
-    return { iconName, title, description }
-  }
-})
+const iconName = computed(() => iconNameMap[props.subscriptionLevel])
+const title = computed(() => titleMap[props.subscriptionLevel])
+const description = computed(() => descriptionMap[props.subscriptionLevel])
 </script>
 
 <style lang="scss" module>

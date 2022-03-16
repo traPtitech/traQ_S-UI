@@ -4,11 +4,11 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    v-bind="attrs"
+    v-bind="$attrs"
     role="img"
     :class="$style.icon"
   >
-    <path :d="getMdiPath(name)" fill="currentColor" />
+    <path :d="path" fill="currentColor" />
   </svg>
   <component
     :is="svgComponent"
@@ -16,16 +16,16 @@
     :width="size"
     :height="size"
     viewBox="0 0 24 24"
-    v-bind="attrs"
+    v-bind="$attrs"
     role="img"
     :class="$style.icon"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, watch } from 'vue'
+import { shallowRef, watch, computed } from 'vue'
 import type { Component } from 'vue'
-import mdi from '/@/assets/mdi'
+import mdiPaths from '/@/assets/mdi'
 
 type ComponentModule = {
   default: Component
@@ -48,60 +48,45 @@ const iconModules = {
   ...iconModules0,
   ...iconModules1
 }
+</script>
 
-export default defineComponent({
-  name: 'AIcon',
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: undefined
-    },
-    desc: {
-      type: String,
-      default: undefined
-    },
-    size: {
-      type: Number,
-      default: 24
-    },
-    mdi: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props, { attrs }) {
-    const getComponent = async (name: string) => {
-      const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
-      if (!moduleFunc) {
-        throw new Error(`存在しないアイコン名: ${name}`)
-      }
-
-      const module = await moduleFunc()
-      return module.default
-    }
-
-    const svgComponent = shallowRef()
-    watch(
-      () => props.name,
-      async () => {
-        if (props.mdi) return
-        const com = await getComponent(props.name)
-        svgComponent.value = com
-      },
-      { immediate: true }
-    )
-
-    const getMdiPath = (name: string) => {
-      return mdi[name]
-    }
-
-    return { svgComponent, getMdiPath, attrs }
+<script lang="ts" setup>
+const props = withDefaults(
+  defineProps<{
+    name: string
+    title?: string
+    desc?: string
+    size?: number
+    mdi?: boolean
+  }>(),
+  {
+    size: 24,
+    mdi: false
   }
-})
+)
+
+const getComponent = async (name: string) => {
+  const moduleFunc = iconModules[`/src/assets/icons/${name}.svg`]
+  if (!moduleFunc) {
+    throw new Error(`存在しないアイコン名: ${name}`)
+  }
+
+  const module = await moduleFunc()
+  return module.default
+}
+
+const svgComponent = shallowRef()
+watch(
+  () => props.name,
+  async () => {
+    if (props.mdi) return
+    const com = await getComponent(props.name)
+    svgComponent.value = com
+  },
+  { immediate: true }
+)
+
+const path = computed(() => mdiPaths[props.name])
 </script>
 
 <style lang="scss" module>

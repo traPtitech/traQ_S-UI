@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import {
-  defineComponent,
   reactive,
   shallowRef,
   watch,
@@ -36,7 +35,6 @@ import {
   ref,
   readonly
 } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
 import { useRouter } from 'vue-router'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
@@ -182,44 +180,30 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
     moveNext
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'PopupNavigator',
-  components: {
-    AIcon
-  },
-  emits: {
-    clickIcon: () => true
-  },
-  setup(props, { emit }) {
-    const { isPopupNavigatorShown, movePrev, moveNext } = useNavigator(emit)
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
 
-    const position = reactive({ top: 0, left: 0 })
-    const popupStyle = computed(() => ({
-      top: `${position.top}px`,
-      left: `${position.left}px`
-    }))
+const emit = defineEmits<{
+  (e: 'clickIcon'): void
+}>()
 
-    const buttonEle = shallowRef<HTMLButtonElement>()
-    watch(isPopupNavigatorShown, newIsPopupNavigatorShown => {
-      if (!newIsPopupNavigatorShown || !buttonEle.value) return
+const { isPopupNavigatorShown, movePrev, moveNext } = useNavigator(emit)
 
-      const { bottom, left } = buttonEle.value.getBoundingClientRect()
-      position.top = bottom + POPUP_MARGIN
-      position.left = left + POPUP_MARGIN
-    })
+const position = reactive({ top: 0, left: 0 })
+const popupStyle = computed(() => ({
+  top: `${position.top}px`,
+  left: `${position.left}px`
+}))
 
-    return {
-      buttonEle,
-      popupNavigatorButtonId,
-      isPopupNavigatorShown,
-      popupNavigatorId,
-      position,
-      popupStyle,
-      movePrev,
-      moveNext
-    }
-  }
+const buttonEle = shallowRef<HTMLButtonElement>()
+watch(isPopupNavigatorShown, newIsPopupNavigatorShown => {
+  if (!newIsPopupNavigatorShown || !buttonEle.value) return
+
+  const { bottom, left } = buttonEle.value.getBoundingClientRect()
+  position.top = bottom + POPUP_MARGIN
+  position.left = left + POPUP_MARGIN
 })
 </script>
 

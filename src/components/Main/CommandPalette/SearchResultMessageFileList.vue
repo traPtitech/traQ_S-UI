@@ -17,34 +17,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
-import useFileMetaList from '/@/use/message/fileMetaList'
-import { FileId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import SearchResultMessageImage from './SearchResultMessageImage.vue'
 import SearchResultMessageFile from './SearchResultMessageFile.vue'
+import { computed } from 'vue'
+import useFileMetaList from '/@/composables/message/useFileMetaList'
+import { FileId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'SearchResultMessageFileList',
-  components: { SearchResultMessageImage, SearchResultMessageFile },
-  props: {
-    fileIds: {
-      type: Array as PropType<FileId[]>,
-      default: () => []
-    }
-  },
-  setup(props) {
-    const { fileMetaDataState } = useFileMetaList(props)
-    const files = computed(() =>
-      [
-        fileMetaDataState.audios,
-        fileMetaDataState.videos,
-        fileMetaDataState.files
-      ].flat()
-    )
-    return { fileMetaDataState, files }
+const props = withDefaults(
+  defineProps<{
+    fileIds?: FileId[]
+  }>(),
+  {
+    fileIds: () => []
   }
-})
+)
+
+const { fileMetaDataState } = useFileMetaList(props)
+const files = computed(() =>
+  [
+    fileMetaDataState.audios,
+    fileMetaDataState.videos,
+    fileMetaDataState.files
+  ].flat()
+)
 </script>
 
 <style lang="scss" module>

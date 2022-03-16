@@ -5,36 +5,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { MessageId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { MessageId } from '/@/types/entity-ids'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'MessagePinned',
-  components: {
-    AIcon
-  },
-  props: {
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
-    const { pinnedMessages } = useMessagesView()
-    const userDisplayName = computed(() => {
-      const pin = pinnedMessages.value.find(
-        v => v.message.id === props.messageId
-      )
-      const user = usersMap.value.get(pin?.userId ?? '')
-      return user?.displayName
-    })
-    return { userDisplayName }
-  }
+const props = defineProps<{
+  messageId: MessageId
+}>()
+
+const { usersMap } = useUsersStore()
+const { pinnedMessages } = useMessagesView()
+const userDisplayName = computed(() => {
+  const pin = pinnedMessages.value.find(v => v.message.id === props.messageId)
+  const user = usersMap.value.get(pin?.userId ?? '')
+  return user?.displayName
 })
 </script>
 

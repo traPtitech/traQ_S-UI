@@ -18,35 +18,22 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import MessageInputTypingAnimation from './MessageInputTypingAnimation.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
 
-export default defineComponent({
-  name: 'MessageInputTypingUsers',
-  components: {
-    MessageInputTypingAnimation,
-    UserIconEllipsisList
-  },
-  props: {
-    typingUsers: {
-      type: Array as PropType<readonly UserId[]>,
-      required: true
-    }
-  },
-  setup(props) {
-    const text = computed(
-      () =>
-        `${props.typingUsers.length > 3 ? 'and others' : ''} ${
-          props.typingUsers.length === 1 ? 'is' : 'are'
-        } typing`
-    )
+const props = defineProps<{
+  typingUsers: readonly UserId[]
+}>()
 
-    return { text }
-  }
-})
+const text = computed(
+  () =>
+    `${props.typingUsers.length > 3 ? 'and others' : ''} ${
+      props.typingUsers.length === 1 ? 'is' : 'are'
+    } typing`
+)
 </script>
 
 <style lang="scss" module>

@@ -31,57 +31,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+<script lang="ts" setup>
 import FormInput from '/@/components/UI/FormInput.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { ref, watch } from 'vue'
 
-export default defineComponent({
-  name: 'LineEditor',
-  components: {
-    FormInput,
-    AIcon
-  },
-  props: {
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      type: String,
-      required: true
-    },
-    maxLength: {
-      type: Number,
-      default: undefined
-    }
-  },
-  emits: {
-    update: (_value: string) => true
-  },
-  setup(props, { emit }) {
-    const editingValue = ref(props.value)
-    watch(
-      () => props.value,
-      v => {
-        editingValue.value = v
-      }
-    )
+const props = defineProps<{
+  label: string
+  value: string
+  maxLength?: number
+}>()
 
-    const isEditing = ref(false)
-    const startEditing = () => {
-      isEditing.value = true
-    }
-    const endEditing = () => {
-      isEditing.value = false
-      if (props.value !== editingValue.value) {
-        emit('update', editingValue.value)
-      }
-    }
+const emit = defineEmits<{
+  (e: 'update', _value: string): void
+}>()
 
-    return { editingValue, isEditing, startEditing, endEditing }
+const editingValue = ref(props.value)
+watch(
+  () => props.value,
+  v => {
+    editingValue.value = v
   }
-})
+)
+
+const isEditing = ref(false)
+const startEditing = () => {
+  isEditing.value = true
+}
+const endEditing = () => {
+  isEditing.value = false
+  if (props.value !== editingValue.value) {
+    emit('update', editingValue.value)
+  }
+}
 </script>
 
 <style lang="scss" module>

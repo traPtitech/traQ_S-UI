@@ -41,66 +41,39 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import ProfileHeader from './ProfileHeader.vue'
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
+import { computed } from 'vue'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
-export default defineComponent({
-  name: 'AccountList',
-  components: {
-    ProfileHeader,
-    CircleIcon
-  },
-  props: {
-    bot: {
-      type: Boolean,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    twitterId: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const { currentTheme } = useThemeSettings()
+const props = defineProps<{
+  bot: boolean
+  name: string
+  twitterId?: string
+}>()
 
-    const iconBackgroundColor = computed(
-      () => currentTheme.value.basic.ui.primary.default
-    )
-    const iconColor = computed(
-      () => currentTheme.value.basic.background.primary.border
-    )
+const { currentTheme } = useThemeSettings()
 
-    const { wikiPageOrigin } = window.traQConfig
-    const showWikiPageLink = wikiPageOrigin !== undefined
-    const wikiPageName = computed(() => {
-      if (props.bot) {
-        return `bot/${props.name.replace(/^BOT_/, '')}`
-      }
-      return `user/${props.name}`
-    })
-    const wikiPageLink = computed(
-      () => `${wikiPageOrigin}/${wikiPageName.value}`
-    )
-    const twitterLink = computed(
-      () => `https://twitter.com/${props.twitterId ?? ''}`
-    )
-    return {
-      iconColor,
-      iconBackgroundColor,
-      showWikiPageLink,
-      wikiPageName,
-      wikiPageLink,
-      twitterLink
-    }
+const iconBackgroundColor = computed(
+  () => currentTheme.value.basic.ui.primary.default
+)
+const iconColor = computed(
+  () => currentTheme.value.basic.background.primary.border
+)
+
+const { wikiPageOrigin } = window.traQConfig
+const showWikiPageLink = wikiPageOrigin !== undefined
+const wikiPageName = computed(() => {
+  if (props.bot) {
+    return `bot/${props.name.replace(/^BOT_/, '')}`
   }
+  return `user/${props.name}`
 })
+const wikiPageLink = computed(() => `${wikiPageOrigin}/${wikiPageName.value}`)
+const twitterLink = computed(
+  () => `https://twitter.com/${props.twitterId ?? ''}`
+)
 </script>
 
 <style lang="scss" module>

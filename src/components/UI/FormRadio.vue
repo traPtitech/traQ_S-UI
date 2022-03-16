@@ -14,46 +14,31 @@
   </label>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-export default defineComponent({
-  name: 'FormRadio',
-  props: {
-    /**
-     * v-model用なので基本的には直接触らない
-     */
-    modelValue: {
-      type: String,
-      default: ''
-    },
-    /**
-     * input要素に渡されるvalue属性
-     */
-    inputValue: {
-      type: String,
-      default: ''
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    },
-    label: {
-      type: String,
-      default: ''
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: string) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-    const isChecked = computed(() => props.inputValue === value.value)
-
-    return { value, isChecked }
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string
+    inputValue?: string
+    onSecondary?: boolean
+    label?: string
+  }>(),
+  {
+    modelValue: '',
+    inputValue: '',
+    onSecondary: false,
+    label: ''
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _val: string): void
+}>()
+
+const value = useModelValueSyncer(props, emit)
+const isChecked = computed(() => props.inputValue === value.value)
 </script>
 
 <style lang="scss" module>

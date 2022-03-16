@@ -5,23 +5,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
+<script lang="ts" setup>
 import DraftListTitlePanel from './DraftListTitlePanel.vue'
 import DraftListDetailsPanel from './DraftListDetailsPanel.vue'
+import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
 
-export default defineComponent({
-  name: 'DraftList',
-  components: {
-    DraftListDetailsPanel,
-    DraftListTitlePanel
-  },
-  setup() {
-    const { inputChannels } = useMessageInputStateBase()
-    return { inputChannels }
-  }
-})
+const { inputChannels } = useMessageInputStateBase()
 </script>
 
 <style lang="scss" module>

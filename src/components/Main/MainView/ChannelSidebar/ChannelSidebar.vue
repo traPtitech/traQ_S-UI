@@ -32,10 +32,7 @@
   </main-view-sidebar>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { ChannelId } from '/@/types/entity-ids'
-import useChannelSidebarCommon from '/@/components/Main/MainView/use/channelSidebarCommon'
+<script lang="ts" setup>
 import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
 import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
@@ -43,57 +40,29 @@ import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/Sideb
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
 import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
 import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import { computed } from 'vue'
+import { ChannelId } from '/@/types/entity-ids'
+import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'ChannelSidebar',
-  components: {
-    MainViewSidebar,
-    MainViewSidebarPage,
-    SidebarPinnedPage,
-    SidebarHeader,
-    ChannelSidebarContent,
-    ChannelSidebarHidden,
-    SidebarEventsPage
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    },
-    isSidebarOpenerReady: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
-    const {
-      page,
-      moveToDefaultPage,
-      moveToPinnedPage,
-      moveToEventsPage,
-      pinnedMessages,
-      viewerIds,
-      openSidebar,
-      closeSidebar
-    } = useChannelSidebarCommon()
+const props = defineProps<{
+  channelId: ChannelId
+  isSidebarOpenerReady: boolean
+}>()
 
-    const channelName = computed(
-      () => channelsMap.value.get(props.channelId)?.name ?? ''
-    )
+const { channelsMap } = useChannelsStore()
+const {
+  page,
+  moveToDefaultPage,
+  moveToPinnedPage,
+  moveToEventsPage,
+  pinnedMessages,
+  viewerIds,
+  openSidebar,
+  closeSidebar
+} = useChannelSidebarCommon()
 
-    return {
-      page,
-      moveToDefaultPage,
-      moveToPinnedPage,
-      moveToEventsPage,
-      channelName,
-      pinnedMessages,
-      viewerIds,
-      openSidebar,
-      closeSidebar
-    }
-  }
-})
+const channelName = computed(
+  () => channelsMap.value.get(props.channelId)?.name ?? ''
+)
 </script>

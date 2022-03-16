@@ -7,30 +7,19 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { ClipFolder } from '@traptitech/traq'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { ClipFolder } from '@traptitech/traq'
 import { constructClipFoldersPath } from '/@/router'
 
-export default defineComponent({
-  name: 'ClipFoldersElement',
-  components: {
-    AIcon
-  },
-  props: {
-    clipFolder: {
-      type: Object as PropType<ClipFolder>,
-      required: true
-    }
-  },
-  setup(props) {
-    const clipFolderPath = computed(() =>
-      constructClipFoldersPath(props.clipFolder.id)
-    )
-    return { clipFolderPath }
-  }
-})
+const props = defineProps<{
+  clipFolder: ClipFolder
+}>()
+
+const clipFolderPath = computed(() =>
+  constructClipFoldersPath(props.clipFolder.id)
+)
 </script>
 
 <style lang="scss" module>

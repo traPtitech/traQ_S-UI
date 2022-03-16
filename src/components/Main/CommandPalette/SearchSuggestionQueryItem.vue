@@ -5,31 +5,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+const props = defineProps<{
+  insertQuery: string
+  description: string
+}>()
 
-export default defineComponent({
-  name: 'SearchSuggestionQueryItem',
-  props: {
-    insertQuery: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    }
-  },
-  emits: {
-    select: (_insertQuery: string) => true
-  },
-  setup(props, { emit }) {
-    const onClick = () => {
-      emit('select', props.insertQuery)
-    }
-    return { onClick }
-  }
-})
+const emit = defineEmits<{
+  (e: 'select', _insertQuery: string): void
+}>()
+
+const onClick = () => {
+  emit('select', props.insertQuery)
+}
 </script>
 
 <style lang="scss" module>

@@ -48,24 +48,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  computed,
-  onBeforeUnmount,
-  ref,
-  toRef,
-  watchEffect
-} from 'vue'
-import { ChannelId, DMChannelId } from '/@/types/entity-ids'
-import { useResponsiveStore } from '/@/store/ui/responsive'
-import useTextStampPickerInvoker from '../use/textStampPickerInvoker'
-import useAttachments from './use/attachments'
-import useModifierKey from './use/modifierKey'
-import usePostMessage from './use/postMessage'
-import useFocus from './use/focus'
-import useEditingStatus from './use/editingStatus'
+<script lang="ts" setup>
 import MessageInputLeftControls from './MessageInputLeftControls.vue'
 import MessageInputPreview from './MessageInputPreview.vue'
 import MessageInputTypingUsers from './MessageInputTypingUsers.vue'
@@ -75,6 +58,15 @@ import MessageInputRightControls from './MessageInputRightControls.vue'
 import MessageInputFileList from './MessageInputFileList.vue'
 import MessageInputUploadProgress from './MessageInputUploadProgress.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, onBeforeUnmount, ref, toRef, watchEffect } from 'vue'
+import { ChannelId, DMChannelId } from '/@/types/entity-ids'
+import { useResponsiveStore } from '/@/store/ui/responsive'
+import useTextStampPickerInvoker from '../composables/useTextStampPickerInvoker'
+import useAttachments from './composables/useAttachments'
+import useModifierKey from './composables/useModifierKey'
+import usePostMessage from './composables/usePostMessage'
+import useFocus from './composables/useFocus'
+import useEditingStatus from './composables/useEditingStatus'
 import { useToastStore } from '/@/store/ui/toast'
 import {
   useMessageInputState,
@@ -84,106 +76,67 @@ import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'MessageInput',
-  components: {
-    MessageInputPreview,
-    MessageInputTypingUsers,
-    MessageInputKeyGuide,
-    MessageInputTextArea,
-    MessageInputLeftControls,
-    MessageInputRightControls,
-    MessageInputFileList,
-    MessageInputUploadProgress,
-    AIcon
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId | DMChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { isMobile } = useResponsiveStore()
-    const channelId = toRef(props, 'channelId')
-    const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
-    const { addErrorToast } = useToastStore()
-    const { addAttachment: addStateAttachment } =
-      useMessageInputStateAttachment(channelId, addErrorToast)
-    const { addAttachment, destroy } = useAttachments(addStateAttachment)
-    const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
-      useModifierKey()
-    const { sendWithModifierKey } = useBrowserSettings()
-    const { typingUsers } = useMessagesView()
-    const { channelsMap } = useChannelsStore()
-    const isLeftControlsExpanded = ref(false)
-    const isPreviewShown = ref(false)
+const props = defineProps<{
+  channelId: ChannelId | DMChannelId
+}>()
 
-    onBeforeUnmount(() => {
-      destroy()
-    })
+const { isMobile } = useResponsiveStore()
+const channelId = toRef(props, 'channelId')
+const { state, isEmpty, isTextEmpty } = useMessageInputState(channelId)
+const { addErrorToast } = useToastStore()
+const { addAttachment: addStateAttachment } = useMessageInputStateAttachment(
+  channelId,
+  addErrorToast
+)
+const { addAttachment, destroy } = useAttachments(addStateAttachment)
+const { isModifierKeyPressed, onModifierKeyDown, onModifierKeyUp } =
+  useModifierKey()
+const { sendWithModifierKey } = useBrowserSettings()
+const { typingUsers } = useMessagesView()
+const { channelsMap } = useChannelsStore()
+const isLeftControlsExpanded = ref(false)
+const isPreviewShown = ref(false)
 
-    const isArchived = computed(
-      () => channelsMap.value.get(props.channelId)?.archived ?? false
-    )
+onBeforeUnmount(() => {
+  destroy()
+})
 
-    const { isFocused, onFocus, onBlur } = useFocus()
-    useEditingStatus(channelId, isTextEmpty, isFocused)
-    watchEffect(() => {
-      if (isFocused.value) {
-        isLeftControlsExpanded.value = false
-      }
-    })
+const isArchived = computed(
+  () => channelsMap.value.get(props.channelId)?.archived ?? false
+)
 
-    const onAddAttachments = async (files: File[]) => {
-      for (const file of files) {
-        await addStateAttachment(file)
-      }
-    }
-
-    const { postMessage, isPosting, progress } = usePostMessage(channelId)
-
-    const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
-    const showKeyGuide = computed(
-      () =>
-        isModifierKeyPressed.value &&
-        (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
-    )
-
-    const textareaComponentRef = ref<{
-      textareaAutosizeRef: { $el: HTMLTextAreaElement }
-    }>()
-    const containerEle = ref<HTMLDivElement>()
-    const { toggleStampPicker } = useTextStampPickerInvoker(
-      toRef(state, 'text'),
-      computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
-      containerEle
-    )
-
-    return {
-      containerEle,
-      textareaComponentRef,
-      isArchived,
-      isMobile,
-      typingUsers,
-      state,
-      isLeftControlsExpanded,
-      isPreviewShown,
-      onFocus,
-      onBlur,
-      onAddAttachments,
-      onModifierKeyDown,
-      onModifierKeyUp,
-      toggleStampPicker,
-      postMessage,
-      addAttachment,
-      showKeyGuide,
-      canPostMessage,
-      isPosting,
-      progress
-    }
+const { isFocused, onFocus, onBlur } = useFocus()
+useEditingStatus(channelId, isTextEmpty, isFocused)
+watchEffect(() => {
+  if (isFocused.value) {
+    isLeftControlsExpanded.value = false
   }
 })
+
+const onAddAttachments = async (files: File[]) => {
+  for (const file of files) {
+    await addStateAttachment(file)
+  }
+}
+
+const { postMessage, isPosting, progress } = usePostMessage(channelId)
+
+const canPostMessage = computed(() => !isPosting.value && !isEmpty.value)
+const showKeyGuide = computed(
+  () =>
+    isModifierKeyPressed.value &&
+    (sendWithModifierKey.value !== 'modifier' || canPostMessage.value)
+)
+
+const textareaComponentRef = ref<{
+  textareaAutosizeRef: { $el: HTMLTextAreaElement }
+}>()
+const containerEle = ref<HTMLDivElement>()
+const { toggleStampPicker } = useTextStampPickerInvoker(
+  toRef(state, 'text'),
+  computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
+  containerEle
+)
 </script>
 
 <style lang="scss" module>

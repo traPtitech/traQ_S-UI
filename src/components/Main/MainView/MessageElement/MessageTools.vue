@@ -81,17 +81,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from 'vue'
-import AIcon from '/@/components/UI/AIcon.vue'
-import AStamp from '/@/components/UI/AStamp.vue'
+import { computed, ref } from 'vue'
 import { StampId, MessageId } from '/@/types/entity-ids'
 import { useStampPickerInvoker } from '/@/store/ui/stampPicker'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'
-import MessageContextMenu from './MessageContextMenu.vue'
-import useContextMenu from '/@/use/contextMenu'
+import useContextMenu from '/@/composables/useContextMenu'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { Stamp } from '@traptitech/traq'
 
@@ -109,83 +106,72 @@ const pushInitialRecentStampsIfNeeded = (
     recents.push(s)
   }
 }
+</script>
 
-export default defineComponent({
-  name: 'MessageTools',
-  components: {
-    AIcon,
-    AStamp,
-    MessageContextMenu
-  },
-  props: {
-    messageId: { type: String as PropType<MessageId>, required: true },
-    isMinimum: { type: Boolean, default: false },
-    show: { type: Boolean, default: false }
-  },
-  setup(props) {
-    const { recentStampIds, upsertLocalStampHistory } = useMeStore()
-    const { addErrorToast } = useToastStore()
-    const { initialRecentStamps } = useStampsStore()
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
+import MessageContextMenu from './MessageContextMenu.vue'
 
-    const recentStamps = computed(() => {
-      const recents = recentStampIds.value.slice(0, 3)
-      pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
-      return recents
-    })
-    const addStamp = async (stampId: StampId) => {
-      try {
-        await apis.addMessageStamp(props.messageId, stampId)
-      } catch {
-        addErrorToast('メッセージにスタンプを追加できませんでした')
-        return
-      }
-      upsertLocalStampHistory(stampId, new Date())
-    }
-
-    const containerEle = ref<HTMLDivElement>()
-    const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
-      useStampPickerInvoker(async stampData => {
-        try {
-          await apis.addMessageStamp(props.messageId, stampData.id)
-        } catch {
-          addErrorToast('メッセージにスタンプを追加できませんでした')
-        }
-      }, containerEle)
-
-    const {
-      position: contextMenuPosition,
-      open: openContextMenu,
-      close: closeContextMenu
-    } = useContextMenu()
-
-    const onDotsClick = (e: MouseEvent) => {
-      openContextMenu({
-        x: e.pageX,
-        y: e.pageY
-      })
-    }
-
-    const { isMobile } = useResponsiveStore()
-    const showQuickReaction = ref(!isMobile.value)
-    const toggleQuickReaction = () => {
-      showQuickReaction.value = !showQuickReaction.value
-    }
-
-    return {
-      containerEle,
-      isStampPickerOpen,
-      recentStamps,
-      addStamp,
-      onDotsClick,
-      toggleStampPicker,
-      isMobile,
-      showQuickReaction,
-      toggleQuickReaction,
-      contextMenuPosition,
-      closeContextMenu
-    }
+const props = withDefaults(
+  defineProps<{
+    messageId: MessageId
+    isMinimum?: boolean
+    show?: boolean
+  }>(),
+  {
+    isMinimum: false,
+    show: false
   }
+)
+
+const { recentStampIds, upsertLocalStampHistory } = useMeStore()
+const { addErrorToast } = useToastStore()
+const { initialRecentStamps } = useStampsStore()
+
+const recentStamps = computed(() => {
+  const recents = recentStampIds.value.slice(0, 3)
+  pushInitialRecentStampsIfNeeded(initialRecentStamps.value, recents)
+  return recents
 })
+const addStamp = async (stampId: StampId) => {
+  try {
+    await apis.addMessageStamp(props.messageId, stampId)
+  } catch {
+    addErrorToast('メッセージにスタンプを追加できませんでした')
+    return
+  }
+  upsertLocalStampHistory(stampId, new Date())
+}
+
+const containerEle = ref<HTMLDivElement>()
+const { isThisOpen: isStampPickerOpen, toggleStampPicker } =
+  useStampPickerInvoker(async stampData => {
+    try {
+      await apis.addMessageStamp(props.messageId, stampData.id)
+    } catch {
+      addErrorToast('メッセージにスタンプを追加できませんでした')
+    }
+  }, containerEle)
+
+const {
+  position: contextMenuPosition,
+  open: openContextMenu,
+  close: closeContextMenu
+} = useContextMenu()
+
+const onDotsClick = (e: MouseEvent) => {
+  openContextMenu({
+    x: e.pageX,
+    y: e.pageY
+  })
+}
+
+const { isMobile } = useResponsiveStore()
+const showQuickReaction = ref(!isMobile.value)
+const toggleQuickReaction = () => {
+  showQuickReaction.value = !showQuickReaction.value
+}
 </script>
 
 <style lang="scss" module>

@@ -4,29 +4,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 
-export default defineComponent({
-  name: 'MessageInputKeyGuide',
-  props: {
-    show: {
-      type: Boolean,
-      required: true
-    },
-    isEdit: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const { sendWithModifierKey } = useBrowserSettings()
-    const sendText = computed(() => (props.isEdit ? '保存' : '送信'))
-
-    return { sendWithModifierKey, sendText }
+const props = withDefaults(
+  defineProps<{
+    show: boolean
+    isEdit?: boolean
+  }>(),
+  {
+    isEdit: false
   }
-})
+)
+
+const { sendWithModifierKey } = useBrowserSettings()
+const sendText = computed(() => (props.isEdit ? '保存' : '送信'))
 </script>
 
 <style lang="scss" module>

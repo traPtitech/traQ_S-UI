@@ -14,23 +14,13 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import useNavigationController from '/@/use/navigationController'
+<script lang="ts" setup>
 import PopupNavigator from '/@/components/Main/PopupNavigatior/PopupNavigator.vue'
+import useNavigationController from '/@/composables/useNavigationController'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'MainViewHeader',
-  components: {
-    PopupNavigator
-  },
-  setup() {
-    const { isMobile } = useResponsiveStore()
-    const { openNav } = useNavigationController()
-    return { isMobile, openNav }
-  }
-})
+const { isMobile } = useResponsiveStore()
+const { openNav } = useNavigationController()
 </script>
 
 <style lang="scss" module>

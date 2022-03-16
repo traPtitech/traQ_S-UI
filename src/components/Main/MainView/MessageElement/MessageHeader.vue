@@ -19,50 +19,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, computed, PropType } from 'vue'
-import { UserId } from '/@/types/entity-ids'
-import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
+<script lang="ts" setup>
 import GradeBadge from './GradeBadge.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import { reactive, computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
+import { getDisplayDate, getFullDayWithTimeString } from '/@/lib/basic/date'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'MessageHeader',
-  components: { GradeBadge, AIcon },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    createdAt: {
-      type: String,
-      required: true
-    },
-    updatedAt: {
-      type: String,
-      required: true
-    }
-  },
-  setup(props) {
-    const { usersMap, fetchUser } = useUsersStore()
+const props = defineProps<{
+  userId: UserId
+  createdAt: string
+  updatedAt: string
+}>()
 
-    const state = reactive({
-      user: computed(() => usersMap.value.get(props.userId)),
-      displayName: computed((): string => state.user?.displayName ?? 'unknown'),
-      name: computed((): string => state.user?.name ?? 'unknown'),
-      bot: computed((): boolean => state.user?.bot ?? false),
-      createdDate: computed(() =>
-        getFullDayWithTimeString(new Date(props.createdAt))
-      ),
-      date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
-    })
-    if (state.user === undefined) {
-      fetchUser({ userId: props.userId })
-    }
-    return { state }
-  }
+const { usersMap, fetchUser } = useUsersStore()
+
+const state = reactive({
+  user: computed(() => usersMap.value.get(props.userId)),
+  displayName: computed((): string => state.user?.displayName ?? 'unknown'),
+  name: computed((): string => state.user?.name ?? 'unknown'),
+  bot: computed((): boolean => state.user?.bot ?? false),
+  createdDate: computed(() =>
+    getFullDayWithTimeString(new Date(props.createdAt))
+  ),
+  date: computed(() => getDisplayDate(props.createdAt, props.updatedAt))
 })
+if (state.user === undefined) {
+  fetchUser({ userId: props.userId })
+}
 </script>
 
 <style lang="scss" module>

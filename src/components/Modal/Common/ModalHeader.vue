@@ -12,25 +12,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import ModalReturnButton from './ModalReturnButton.vue'
 
-export default defineComponent({
-  name: 'ModalHeader',
-  components: { AIcon, ModalReturnButton },
-  props: {
-    iconMdi: { type: Boolean, default: false },
-    iconName: { type: String, required: true },
-    title: { type: String, required: true },
-    subtitle: { type: String, default: '' },
-    returnButton: { type: Boolean, default: false }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    iconMdi?: boolean
+    iconName: string
+    title: string
+    subtitle?: string
+    returnButton?: boolean
+  }>(),
+  {
+    iconMdi: false,
+    subtitle: '',
+    returnButton: false
   }
-})
+)
 </script>
 
 <style lang="scss" module>

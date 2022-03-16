@@ -12,33 +12,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { User } from '@traptitech/traq'
+<script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
+import { computed } from 'vue'
+import { User } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'UserName',
-  components: {
-    UserIcon
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      default: undefined
-    },
-    isTitle: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const id = computed(() => props.user?.id)
-    const displayName = computed(() => props.user?.displayName ?? 'unknown')
-
-    return { id, displayName }
+const props = withDefaults(
+  defineProps<{
+    user?: User
+    isTitle?: boolean
+  }>(),
+  {
+    isTitle: false
   }
-})
+)
+
+const id = computed(() => props.user?.id)
+const displayName = computed(() => props.user?.displayName ?? 'unknown')
 </script>
 
 <style lang="scss" module>

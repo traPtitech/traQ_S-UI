@@ -22,70 +22,63 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import UserIcon, { IconSize } from '/@/components/UI/UserIcon.vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { IconSize } from '/@/components/UI/UserIcon.vue'
 import { UserId } from '/@/types/entity-ids'
+import UserIcon from '/@/components/UI/UserIcon.vue'
 
-const useSizeStyles = (props: {
-  direction: 'row' | 'col'
-  borderWidth: number
-  overlap: number
-}) =>
-  computed(() => {
-    const isRow = props.direction === 'row'
-    const marginStartVal = <M extends string>(
-      m: M
-    ): { marginLeft: M } | { marginTop: M } =>
-      isRow ? { marginLeft: m } : { marginTop: m }
+const props = withDefaults(
+  defineProps<{
+    direction: 'row' | 'col'
+    max?: number
+    showCount?: boolean
+    userIds?: readonly UserId[]
+    borderWidth?: number
+    iconSize?: IconSize
+    overlap?: number
+    transition?: string
+    preventModal?: boolean
+  }>(),
+  {
+    max: 3,
+    showCount: true,
+    userIds: () => [],
+    borderWidth: 4,
+    iconSize: 40 as const,
+    overlap: 12,
+    preventModal: false
+  }
+)
 
-    return {
-      container: {
-        flexDirection: isRow
-          ? ('row-reverse' as const)
-          : ('column-reverse' as const),
-        ...marginStartVal(`${props.overlap}px`)
-      },
-      userIcon: {
-        borderWidth: `${props.borderWidth}px`,
-        ...marginStartVal(`-${props.overlap}px`)
-      },
-      count: {
-        ...marginStartVal('0.25em')
-      }
-    }
-  })
+const styles = computed(() => {
+  const isRow = props.direction === 'row'
+  const marginStartVal = <M extends string>(
+    m: M
+  ): { marginLeft: M } | { marginTop: M } =>
+    isRow ? { marginLeft: m } : { marginTop: m }
 
-export default defineComponent({
-  name: 'UserIconEllipsisList',
-  components: { UserIcon },
-  props: {
-    direction: { type: String as PropType<'row' | 'col'>, required: true },
-    /**
-     * 表示するUserIconの最大数(0以上)
-     */
-    max: { type: Number, default: 3 },
-    showCount: { type: Boolean, default: true },
-    userIds: { type: Array as PropType<readonly UserId[]>, default: () => [] },
-    borderWidth: { type: Number, default: 4 },
-    iconSize: { type: Number as PropType<IconSize>, default: 40 as const },
-    overlap: { type: Number, default: 12 },
-    transition: { type: String, default: undefined },
-    preventModal: { type: Boolean, default: false }
-  },
-  setup(props) {
-    const styles = useSizeStyles(props)
-    const visibleIconIds = computed(() =>
-      [...props.userIds].reverse().slice(0, props.max)
-    )
-    const inVisibleCount = computed(() => props.userIds.length - props.max)
-    return {
-      styles,
-      visibleIconIds,
-      inVisibleCount
+  return {
+    container: {
+      flexDirection: isRow
+        ? ('row-reverse' as const)
+        : ('column-reverse' as const),
+      ...marginStartVal(`${props.overlap}px`)
+    },
+    userIcon: {
+      borderWidth: `${props.borderWidth}px`,
+      ...marginStartVal(`-${props.overlap}px`)
+    },
+    count: {
+      ...marginStartVal('0.25em')
     }
   }
 })
+
+const visibleIconIds = computed(() =>
+  [...props.userIds].reverse().slice(0, props.max)
+)
+const inVisibleCount = computed(() => props.userIds.length - props.max)
 </script>
 
 <style lang="scss" module>

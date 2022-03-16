@@ -13,46 +13,31 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref, watchEffect } from 'vue'
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
+import { computed, ref, watchEffect } from 'vue'
 import { MessageInputState } from '/@/store/ui/messageInputState'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
-import AIcon from '/@/components/UI/AIcon.vue'
+import useChannelPath from '/@/composables/useChannelPath'
 import { renderInline } from '/@/lib/markdown/markdown'
 
-export default defineComponent({
-  name: 'DraftListDetailsPanelChannel',
-  components: {
-    AIcon
-  },
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    },
-    state: {
-      type: Object as PropType<MessageInputState>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
+const props = defineProps<{
+  channelId: ChannelId
+  state: MessageInputState
+}>()
 
-    const channelPath = computed(() =>
-      channelIdToShortPathString(props.channelId, true)
-    )
-    const channelLink = computed(() => channelIdToLink(props.channelId))
-    const hasAttachments = computed(() => props.state.attachments.length > 0)
+const { channelIdToShortPathString, channelIdToLink } = useChannelPath()
 
-    const renderedContent = ref()
-    watchEffect(async () => {
-      const { renderedText } = await renderInline(props.state.text)
-      renderedContent.value = renderedText
-    })
+const channelPath = computed(() =>
+  channelIdToShortPathString(props.channelId, true)
+)
+const channelLink = computed(() => channelIdToLink(props.channelId))
+const hasAttachments = computed(() => props.state.attachments.length > 0)
 
-    return { channelPath, channelLink, hasAttachments, renderedContent }
-  }
+const renderedContent = ref()
+watchEffect(async () => {
+  const { renderedText } = await renderInline(props.state.text)
+  renderedContent.value = renderedText
 })
 </script>
 

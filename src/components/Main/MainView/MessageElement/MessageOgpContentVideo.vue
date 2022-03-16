@@ -21,40 +21,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import MessageOgpEmbed from './MessageOgpEmbed.vue'
 import MessageOgpDescription from './MessageOgpDescription.vue'
 
-export default defineComponent({
-  name: 'MessageOgpContentVideo',
-  components: { MessageOgpEmbed, MessageOgpDescription },
-  props: {
-    url: {
-      type: String,
-      required: true
-    },
-    previewUrl: {
-      type: String,
-      required: true
-    },
-    embeddedUrl: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    url: string
+    previewUrl: string
+    embeddedUrl: string
+    title?: string
+    description?: string
+  }>(),
+  {
+    title: '',
+    description: ''
   }
-})
+)
 </script>
 
 <style lang="scss" module>

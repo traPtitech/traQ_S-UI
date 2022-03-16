@@ -23,64 +23,46 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, shallowRef, PropType } from 'vue'
+<script lang="ts" setup>
+import MessageContents from './MessageContents.vue'
+import MessageTools from './MessageTools.vue'
+import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
+import { computed, shallowRef } from 'vue'
 import { MessageId } from '/@/types/entity-ids'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import useElementRenderObserver, {
   ChangeHeightData
-} from './use/elementRenderObserver'
-import useEmbeddings from '/@/use/message/embeddings'
-import MessageContents from './MessageContents.vue'
-import MessageTools from './MessageTools.vue'
-import MessageQuoteListItemFooter from './MessageQuoteListItemFooter.vue'
-import useHover from '/@/use/hover'
+} from './composables/useElementRenderObserver'
+import useEmbeddings from '/@/composables/message/useEmbeddings'
+import useHover from '/@/composables/useHover'
 import { useMessagesStore } from '/@/store/entities/messages'
 
-export default defineComponent({
-  name: 'ClipElement',
-  components: {
-    MessageContents,
-    MessageTools,
-    MessageQuoteListItemFooter
-  },
-  props: {
-    messageId: {
-      type: String as PropType<MessageId>,
-      required: true
-    },
-    isEntryMessage: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    entryMessageLoaded: (_relativePos: number) => true,
-    changeHeight: (_data: ChangeHeightData) => true
-  },
-  setup(props, { emit }) {
-    const { messagesMap } = useMessagesStore()
-
-    const bodyRef = shallowRef<HTMLDivElement | null>(null)
-    const { isMobile } = useResponsiveStore()
-    const message = computed(() => messagesMap.value.get(props.messageId))
-
-    const { embeddingsState } = useEmbeddings(props)
-
-    useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
-
-    const { isHovered, onMouseEnter, onMouseLeave } = useHover()
-
-    return {
-      message,
-      bodyRef,
-      isMobile,
-      isHovered,
-      onMouseEnter,
-      onMouseLeave
-    }
+const props = withDefaults(
+  defineProps<{
+    messageId: MessageId
+    isEntryMessage?: boolean
+  }>(),
+  {
+    isEntryMessage: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'entryMessageLoaded', _relativePos: number): void
+  (e: 'changeHeight', _data: ChangeHeightData): void
+}>()
+
+const { messagesMap } = useMessagesStore()
+
+const bodyRef = shallowRef<HTMLDivElement | null>(null)
+const { isMobile } = useResponsiveStore()
+const message = computed(() => messagesMap.value.get(props.messageId))
+
+const { embeddingsState } = useEmbeddings(props)
+
+useElementRenderObserver(bodyRef, props, message, embeddingsState, emit)
+
+const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 </script>
 
 <style lang="scss" module>

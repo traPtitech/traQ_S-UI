@@ -7,40 +7,28 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import IndicatorDot from './IndicatorDot.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
 import { useOnlineUsers } from '/@/store/domain/onlineUsers'
 
-export default defineComponent({
-  name: 'OnlineIndicator',
-  components: {
-    IndicatorDot
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    size: {
-      type: Number,
-      default: 12
-    },
-    borderWidth: {
-      type: Number,
-      default: 2
-    }
-  },
-  setup(props) {
-    const { onlineUsers, fetchOnlineUsers } = useOnlineUsers()
-
-    fetchOnlineUsers()
-    const isOnline = computed(() => onlineUsers.value.has(props.userId))
-
-    return { isOnline }
+const props = withDefaults(
+  defineProps<{
+    userId: UserId
+    size?: number
+    borderWidth?: number
+  }>(),
+  {
+    size: 12,
+    borderWidth: 2
   }
-})
+)
+
+const { onlineUsers, fetchOnlineUsers } = useOnlineUsers()
+
+fetchOnlineUsers()
+const isOnline = computed(() => onlineUsers.value.has(props.userId))
 </script>
 
 <style lang="scss" module>

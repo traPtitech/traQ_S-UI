@@ -11,12 +11,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watchEffect, shallowRef } from 'vue'
+<script lang="ts" setup>
+import { ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
-import 'cropperjs/dist/cropper.css'
+import { useImageUploadInternal } from './composables/useImageUpload'
 import FormButton from '/@/components/UI/FormButton.vue'
-import { useImageUploadInternal } from './use/imageUpload'
+
+const props = withDefaults(
+  defineProps<{
+    rounded?: boolean
+    destroyFlag: boolean
+  }>(),
+  {
+    rounded: false
+  }
+)
+
+const emit = defineEmits<{
+  (e: 'input', _file: File): void
+  (e: 'destroyed'): void
+}>()
 
 // スタンプ編集用の設定
 const cropperGifOptions = {
@@ -37,90 +51,68 @@ const cropperDefaultOptions = {
   dragMode: 'move' as const
 } as const
 
-export default defineComponent({
-  name: 'ImageUpload',
-  components: {
-    FormButton
-  },
-  props: {
-    rounded: {
-      type: Boolean,
-      default: false
-    },
-    destroyFlag: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: {
-    input: (_file: File) => true,
-    destroyed: () => true
-  },
-  setup(prop, { emit }) {
-    const {
-      image,
-      addImage,
-      destroy: destroyImage
-    } = useImageUploadInternal(() => {
-      if (!image.data) return
+const {
+  image,
+  addImage,
+  destroy: destroyImage
+} = useImageUploadInternal(() => {
+  if (!image.data) return
 
-      // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
-      emit('input', image.data)
-    })
+  // 画像選択したあとcropperの操作をしなかった場合変更を検知しないため
+  emit('input', image.data)
+})
 
-    let cropper: Cropper | undefined
-    const imgEle = shallowRef<HTMLImageElement>()
-    const cropperNote = ref('')
+let cropper: Cropper | undefined
+const imgEle = shallowRef<HTMLImageElement>()
+const cropperNote = ref('')
 
-    watchEffect(() => {
-      if (!image.data || !imgEle.value) return
+watchEffect(() => {
+  if (!image.data || !imgEle.value) return
 
-      const isGif = image.data.type === 'image/gif'
-      const options = isGif
-        ? cropperGifOptions
-        : {
-            ...cropperDefaultOptions,
-            cropend: () => {
-              cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                if (!blob) return
+  const isGif = image.data.type === 'image/gif'
+  const options = isGif
+    ? cropperGifOptions
+    : {
+        ...cropperDefaultOptions,
+        cropend: () => {
+          cropper?.getCroppedCanvas().toBlob((blob: Blob | null) => {
+            if (!blob) return
 
-                emit(
-                  'input',
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  new File([blob], image.data!.name, { type: blob.type })
-                )
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              }, image.data!.type)
-            }
-          }
-
-      cropperNote.value = isGif
-        ? 'GIFは切り抜きできません'
-        : '画像の位置・サイズを編集できます'
-
-      if (cropper) cropper.destroy()
-      cropper = new Cropper(imgEle.value, options)
-      cropper.replace(image.url)
-    })
-
-    const destroy = () => {
-      destroyImage()
-      if (cropper) cropper.destroy()
-    }
-
-    watchEffect(() => {
-      if (prop.destroyFlag) {
-        destroy()
-        emit('destroyed')
+            emit(
+              'input',
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              new File([blob], image.data!.name, { type: blob.type })
+            )
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          }, image.data!.type)
+        }
       }
-    })
 
-    return { imgEle, image, addImage, cropperNote, destroy }
+  cropperNote.value = isGif
+    ? 'GIFは切り抜きできません'
+    : '画像の位置・サイズを編集できます'
+
+  if (cropper) cropper.destroy()
+  cropper = new Cropper(imgEle.value, options)
+  cropper.replace(image.url)
+})
+
+const destroy = () => {
+  destroyImage()
+  if (cropper) cropper.destroy()
+}
+
+watchEffect(() => {
+  if (props.destroyFlag) {
+    destroy()
+    emit('destroyed')
   }
 })
 </script>
 
 <style lang="scss" module>
+@import 'cropperjs/dist/cropper.css';
+
 .cropper {
   width: 400px;
   height: 400px;

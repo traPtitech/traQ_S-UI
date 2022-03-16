@@ -2,21 +2,10 @@
   <h2 :class="$style.header">{{ text }}</h2>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ProfileHeader',
-  props: {
-    text: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    return {}
-  }
-})
+<script lang="ts" setup>
+defineProps<{
+  text: string
+}>()
 </script>
 
 <style lang="scss" module>

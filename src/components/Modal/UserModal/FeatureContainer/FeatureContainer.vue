@@ -3,37 +3,18 @@
   <desktop-feature-container v-else :user="user" :detail="detail" />
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { User, UserDetail } from '@traptitech/traq'
+<script lang="ts" setup>
 import DesktopFeatureContainer from './DesktopFeatureContainer.vue'
 import MobileFeatureContainer from './MobileFeatureContainer.vue'
+import { User, UserDetail } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-export default defineComponent({
-  name: 'FeatureContainer',
-  components: {
-    DesktopFeatureContainer,
-    MobileFeatureContainer
-  },
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
-    },
-    detail: {
-      type: Object as PropType<UserDetail>,
-      default: undefined
-    }
-  },
-  setup() {
-    const { isMobile } = useResponsiveStore()
+defineProps<{
+  user: User
+  detail?: UserDetail
+}>()
 
-    return {
-      isMobile
-    }
-  }
-})
+const { isMobile } = useResponsiveStore()
 </script>
 
 <style lang="scss" module>

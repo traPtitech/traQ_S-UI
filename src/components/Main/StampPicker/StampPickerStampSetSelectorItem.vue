@@ -24,11 +24,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
 import { StampPaletteId } from '/@/types/entity-ids'
-import AIcon from '/@/components/UI/AIcon.vue'
-import AStamp from '/@/components/UI/AStamp.vue'
-import { StampSet } from './use/stampSetSelector'
+import { StampSet } from './composables/useStampSetSelector'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 
 const useStampPaletteThumbnail = () => {
@@ -45,34 +42,30 @@ const useStampPaletteThumbnail = () => {
   }
   return { pickThumbnail }
 }
+</script>
 
-export default defineComponent({
-  name: 'StampPickerStampSetSelectorItem',
-  components: {
-    AIcon,
-    AStamp
-  },
-  props: {
-    stampSet: {
-      type: Object as PropType<StampSet>,
-      required: true
-    },
-    isActive: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    click: () => true
-  },
-  setup(props, { emit }) {
-    const { pickThumbnail } = useStampPaletteThumbnail()
-    const onClick = () => {
-      emit('click')
-    }
-    return { pickThumbnail, onClick }
+<script lang="ts" setup>
+import AIcon from '/@/components/UI/AIcon.vue'
+import AStamp from '/@/components/UI/AStamp.vue'
+
+withDefaults(
+  defineProps<{
+    stampSet: StampSet
+    isActive?: boolean
+  }>(),
+  {
+    isActive: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'click'): void
+}>()
+
+const { pickThumbnail } = useStampPaletteThumbnail()
+const onClick = () => {
+  emit('click')
+}
 </script>
 
 <style lang="scss" module>

@@ -2,35 +2,20 @@
   <online-indicator :user-id="userId" :title="tooltip" />
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+<script lang="ts" setup>
+import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { getFullDayWithTimeString } from '/@/lib/basic/date'
-import OnlineIndicator from '/@/components/UI/OnlineIndicator.vue'
 
-export default defineComponent({
-  name: 'OnlineIndicatorWithTooltip',
-  components: {
-    OnlineIndicator
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    },
-    lastOnline: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const tooltip = computed(() =>
-      props.lastOnline
-        ? `Last Online: ${getFullDayWithTimeString(new Date(props.lastOnline))}`
-        : undefined
-    )
+const props = defineProps<{
+  userId: UserId
+  lastOnline?: string
+}>()
 
-    return { tooltip }
-  }
-})
+const tooltip = computed(() =>
+  props.lastOnline
+    ? `Last Online: ${getFullDayWithTimeString(new Date(props.lastOnline))}`
+    : undefined
+)
 </script>

@@ -8,29 +8,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'ChannelElementUnreadBadge',
-  props: {
-    unreadCount: {
-      type: Number,
-      default: 0
-    },
-    isNoticeable: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const unreadCountString = computed(() => {
-      if (props.unreadCount <= 0) return undefined
-      if (props.unreadCount > 99) return '99+'
-      return '' + props.unreadCount
-    })
-    return { unreadCountString }
+const props = withDefaults(
+  defineProps<{
+    unreadCount?: number
+    isNoticeable?: boolean
+  }>(),
+  {
+    unreadCount: 0,
+    isNoticeable: false
   }
+)
+
+const unreadCountString = computed(() => {
+  if (props.unreadCount <= 0) return undefined
+  if (props.unreadCount > 99) return '99+'
+  return '' + props.unreadCount
 })
 </script>
 

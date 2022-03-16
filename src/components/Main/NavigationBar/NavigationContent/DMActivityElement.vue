@@ -9,38 +9,24 @@
   </optional-router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import { UserId } from '/@/types/entity-ids'
+<script lang="ts" setup>
 import UserName from '/@/components/UI/MessagePanel/UserName.vue'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
-import { constructUserPath } from '/@/router'
 import OptionalRouterLink from '/@/components/UI/OptionalRouterLink.vue'
+import { computed } from 'vue'
+import { UserId } from '/@/types/entity-ids'
+import { constructUserPath } from '/@/router'
 import { useUsersStore } from '/@/store/entities/users'
 
-export default defineComponent({
-  name: 'DMActivityElement',
-  components: {
-    OptionalRouterLink,
-    UserName,
-    NotificationIndicator
-  },
-  props: {
-    userId: {
-      type: String as PropType<UserId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { usersMap } = useUsersStore()
-    const user = computed(() => usersMap.value.get(props.userId))
-    const dmChannelPath = computed(() =>
-      user.value ? constructUserPath(user.value.name) : undefined
-    )
+const props = defineProps<{
+  userId: UserId
+}>()
 
-    return { user, dmChannelPath }
-  }
-})
+const { usersMap } = useUsersStore()
+const user = computed(() => usersMap.value.get(props.userId))
+const dmChannelPath = computed(() =>
+  user.value ? constructUserPath(user.value.name) : undefined
+)
 </script>
 
 <style lang="scss" module>

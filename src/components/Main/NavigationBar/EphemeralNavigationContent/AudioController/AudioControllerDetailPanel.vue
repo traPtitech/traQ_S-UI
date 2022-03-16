@@ -35,60 +35,34 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, reactive } from 'vue'
-import { useAudioController } from '/@/store/ui/audioController'
-import useAudio from '/@/use/audio'
-import useFileMeta from '/@/use/fileMeta'
+<script lang="ts" setup>
 import AudioPlayerPlayButton from '/@/components/UI/AudioPlayer/AudioPlayerPlayButton.vue'
 import AudioPlayerStopButton from '/@/components/UI/AudioPlayer/AudioPlayerStopButton.vue'
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerTime from '/@/components/UI/AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
+import { computed, reactive } from 'vue'
+import { useAudioController } from '/@/store/ui/audioController'
+import useAudio from '/@/composables/useAudio'
+import useFileMeta from '/@/composables/useFileMeta'
 
-export default defineComponent({
-  name: 'AudioControllerDetailPanel',
-  components: {
-    AudioPlayerPlayButton,
-    AudioPlayerStopButton,
-    AudioPlayerLoopButton,
-    AudioPlayerTime,
-    AudioPlayerTimeSlider,
-    AudioPlayerVolumeSlider
-  },
-  setup() {
-    const { audio, fileId, resetAudio } = useAudioController()
-    const { fileMeta, fileRawPath } = useFileMeta(
-      reactive({ fileId: computed(() => fileId.value ?? '') })
-    )
-    const name = computed(() => fileMeta.value?.name ?? '')
-    const {
-      cantPlay,
-      wasUnsupportedType,
-      isPlaying,
-      currentTime,
-      duration,
-      volume,
-      loop,
-      isPinPShown,
-      startPinP
-    } = useAudio(fileMeta, fileRawPath, audio)
-    return {
-      name,
-      cantPlay,
-      wasUnsupportedType,
-      isPlaying,
-      currentTime,
-      duration,
-      volume,
-      loop,
-      isPinPShown,
-      startPinP,
-      resetAudio
-    }
-  }
-})
+const { audio, fileId, resetAudio } = useAudioController()
+const { fileMeta, fileRawPath } = useFileMeta(
+  reactive({ fileId: computed(() => fileId.value ?? '') })
+)
+const name = computed(() => fileMeta.value?.name ?? '')
+const {
+  cantPlay,
+  wasUnsupportedType,
+  isPlaying,
+  currentTime,
+  duration,
+  volume,
+  loop,
+  isPinPShown,
+  startPinP
+} = useAudio(fileMeta, fileRawPath, audio)
 </script>
 
 <style lang="scss" module>

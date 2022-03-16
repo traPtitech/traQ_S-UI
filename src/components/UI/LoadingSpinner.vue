@@ -4,24 +4,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-
+<script lang="ts" setup>
 type SpinnerColor = 'white' | 'ui-secondary'
-const defaultSpinnerColor: SpinnerColor = 'white'
 
-export default defineComponent({
-  name: 'LoadingSpinner',
-  props: {
-    color: {
-      type: String as PropType<SpinnerColor>,
-      default: defaultSpinnerColor
-    }
-  },
-  setup() {
-    return {}
+withDefaults(
+  defineProps<{
+    color?: SpinnerColor
+  }>(),
+  {
+    color: 'white'
   }
-})
+)
 </script>
 
 <style lang="scss" module>

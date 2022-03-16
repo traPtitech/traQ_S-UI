@@ -13,32 +13,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
 import StampDetailElementContent from './StampDetailElementContent.vue'
+import { computed } from 'vue'
 import { MessageStampById } from './MessageStampList.vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 
-export default defineComponent({
-  name: 'StampDetailElement',
-  components: {
-    StampDetailElementContent
-  },
-  props: {
-    stamp: {
-      type: Object as PropType<MessageStampById>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { stampsMap } = useStampsStore()
+const props = defineProps<{
+  stamp: MessageStampById
+}>()
 
-    const stampName = computed(
-      () => stampsMap.value.get(props.stamp.id)?.name ?? ''
-    )
-    return { stampName }
-  }
-})
+const { stampsMap } = useStampsStore()
+
+const stampName = computed(
+  () => stampsMap.value.get(props.stamp.id)?.name ?? ''
+)
 </script>
 
 <style lang="scss" module>

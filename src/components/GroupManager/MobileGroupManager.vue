@@ -16,27 +16,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import useClose from './use/close'
 import FormButton from '/@/components/UI/FormButton.vue'
 import GroupList from './GroupList.vue'
-import useGroupCreateModalOpener from './use/groupCreateModalOpener'
+import useClose from './composables/useClose'
+import useGroupCreateModalOpener from './composables/useGroupCreateModalOpener'
 
-export default defineComponent({
-  name: 'MobileGroupManager',
-  components: {
-    CloseButton,
-    FormButton,
-    GroupList
-  },
-  setup() {
-    const { close } = useClose()
-    const { openGroupCreateModal } = useGroupCreateModalOpener()
-    return { close, openGroupCreateModal }
-  }
-})
+const { close } = useClose()
+const { openGroupCreateModal } = useGroupCreateModalOpener()
 </script>
 
 <style lang="scss" module>

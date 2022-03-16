@@ -24,22 +24,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
+import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
-import useChannelPath from '/@/use/channelPath'
+import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-
-type Props = {
-  channelId: ChannelId
-}
 
 type ChannelPathInfo = {
   name: string
   path: string[]
 }
 
-const usePathInfo = (props: Props) => {
+const usePathInfo = (props: { channelId: ChannelId }) => {
   const { channelIdToPath } = useChannelPath()
 
   /** 現在のチャンネルに至るまでのフルパスたち */
@@ -55,35 +51,22 @@ const usePathInfo = (props: Props) => {
 
 const buildChannelLink = (path: string[]) =>
   constructChannelPath(path.join('/'))
+</script>
 
-export default defineComponent({
-  name: 'HeaderChannelName',
-  props: {
-    channelId: {
-      type: String as PropType<ChannelId>,
-      required: true
-    }
-  },
-  setup(props) {
-    const { isMobile } = useResponsiveStore()
-    const { pathInfoList } = usePathInfo(props)
-    const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
-    const pathInfo = computed(() =>
-      pathInfoList.value.length > 0
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          pathInfoList.value[pathInfoList.value.length - 1]!
-        : { name: '' }
-    )
+<script lang="ts" setup>
+const props = defineProps<{
+  channelId: ChannelId
+}>()
 
-    return {
-      ancestorsPath,
-      pathInfo,
-      pathInfoList,
-      buildChannelLink,
-      isMobile
-    }
-  }
-})
+const { isMobile } = useResponsiveStore()
+const { pathInfoList } = usePathInfo(props)
+const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
+const pathInfo = computed(() =>
+  pathInfoList.value.length > 0
+    ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      pathInfoList.value[pathInfoList.value.length - 1]!
+    : { name: '' }
+)
 </script>
 
 <style lang="scss" module>

@@ -2,12 +2,12 @@
   <div :class="$style.container">
     <div
       :class="$style.content"
-      :data-is-editing="$boolAttr(state.isEditing)"
+      :data-is-editing="$boolAttr(isEditing)"
       @click="onClick"
     >
       <a-icon
         mdi
-        :name="state.isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
+        :name="isEditing ? 'toggle-switch-on' : 'toggle-switch-off'"
         height="20"
         width="20"
       />
@@ -16,27 +16,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 
-type State = {
-  isEditing: boolean
-}
+const isEditing = ref(false)
 
-export default defineComponent({
-  name: 'ChannelSidebarEdit',
-  components: { AIcon },
-  setup() {
-    const state: State = reactive({
-      isEditing: false
-    })
-    const onClick = () => {
-      state.isEditing = !state.isEditing
-    }
-    return { state, onClick }
-  }
-})
+const onClick = () => {
+  isEditing.value = !isEditing.value
+}
 </script>
 
 <style lang="scss" module>

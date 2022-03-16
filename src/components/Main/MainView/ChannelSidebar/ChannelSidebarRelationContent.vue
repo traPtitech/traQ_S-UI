@@ -53,89 +53,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, computed } from 'vue'
-import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
+import { reactive, computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
-
-const SIBLINGS_DEFAULT_COUNT = 5
-const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
-const CHILDREN_DEFAULT_COUNT = 3
 
 const buildChildLink = (channel: string) => `${location.pathname}/${channel}`
 const buildParentLink = () =>
   `${location.pathname.split('/').slice(0, -1).join('/')}`
 const buildSiblingLink = (channel: string) =>
   `${location.pathname.split('/').slice(0, -1).join('/')}/${channel}`
+</script>
 
-export default defineComponent({
-  name: 'ChannelSidebarRelationContent',
-  components: { ChannelSidebarRelationElement },
-  props: {
-    parent: {
-      type: Object as PropType<Channel>,
-      default: undefined
-    },
-    children: {
-      type: Array as PropType<Channel[]>,
-      default: () => []
-    },
-    siblings: {
-      type: Array as PropType<Channel[]>,
-      default: () => []
-    },
-    current: {
-      type: Object as PropType<Channel>,
-      default: undefined
-    }
-  },
-  setup(props) {
-    const state = reactive({
-      isOpenSiblings: false,
-      isOpenChildren: false
-    })
-    const toggleChildren = () => {
-      state.isOpenChildren = !state.isOpenChildren
-    }
-    const toggleSiblings = () => {
-      state.isOpenSiblings = !state.isOpenSiblings
-    }
+<script lang="ts" setup>
+import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
 
-    const filteredChildren = computed(() =>
-      state.isOpenChildren
-        ? props.children
-        : props.children.slice(0, CHILDREN_DEFAULT_COUNT)
-    )
-    const filteredSiblings = computed(() => {
-      if (state.isOpenSiblings) return props.siblings
-      const currentId = props.current?.id
-      if (!currentId) return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
-
-      const index = props.siblings.findIndex(s => s.id === currentId)
-      return pickSomeAroundIndex(props.siblings, index, SIBLINGS_DEFAULT_HALF)
-    })
-
-    const childrenRemainCount = computed(
-      () => props.children.length - CHILDREN_DEFAULT_COUNT
-    )
-    const siblingsRemainCount = computed(
-      () => props.siblings.length - SIBLINGS_DEFAULT_COUNT
-    )
-
-    return {
-      state,
-      toggleChildren,
-      toggleSiblings,
-      filteredChildren,
-      filteredSiblings,
-      childrenRemainCount,
-      siblingsRemainCount,
-      buildChildLink,
-      buildParentLink,
-      buildSiblingLink
-    }
+const props = withDefaults(
+  defineProps<{
+    parent?: Channel
+    children?: Channel[]
+    siblings?: Channel[]
+    current?: Channel
+  }>(),
+  {
+    children: () => [],
+    siblings: () => []
   }
+)
+
+const SIBLINGS_DEFAULT_COUNT = 5
+const SIBLINGS_DEFAULT_HALF = (SIBLINGS_DEFAULT_COUNT - 1) / 2
+const CHILDREN_DEFAULT_COUNT = 3
+
+const state = reactive({
+  isOpenSiblings: false,
+  isOpenChildren: false
 })
+const toggleChildren = () => {
+  state.isOpenChildren = !state.isOpenChildren
+}
+const toggleSiblings = () => {
+  state.isOpenSiblings = !state.isOpenSiblings
+}
+
+const filteredChildren = computed(() =>
+  state.isOpenChildren
+    ? props.children
+    : props.children.slice(0, CHILDREN_DEFAULT_COUNT)
+)
+const filteredSiblings = computed(() => {
+  if (state.isOpenSiblings) return props.siblings
+  const currentId = props.current?.id
+  if (!currentId) return props.siblings.slice(0, SIBLINGS_DEFAULT_COUNT)
+
+  const index = props.siblings.findIndex(s => s.id === currentId)
+  return pickSomeAroundIndex(props.siblings, index, SIBLINGS_DEFAULT_HALF)
+})
+
+const childrenRemainCount = computed(
+  () => props.children.length - CHILDREN_DEFAULT_COUNT
+)
+const siblingsRemainCount = computed(
+  () => props.siblings.length - SIBLINGS_DEFAULT_COUNT
+)
 </script>
 
 <style lang="scss" module>

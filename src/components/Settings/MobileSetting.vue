@@ -7,25 +7,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import MobileTabSelector from './MobileTabSelector.vue'
 import MobileTabFrame from './MobileTabFrame.vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { RouteName } from '/@/router'
 
-export default defineComponent({
-  name: 'MobileSetting',
-  components: {
-    MobileTabSelector,
-    MobileTabFrame
-  },
-  setup() {
-    const route = useRoute()
-    const isSettingsRoot = computed(() => route.name === RouteName.Settings)
-    return { isSettingsRoot }
-  }
-})
+const route = useRoute()
+const isSettingsRoot = computed(() => route.name === RouteName.Settings)
 </script>
 
 <style lang="scss" module>

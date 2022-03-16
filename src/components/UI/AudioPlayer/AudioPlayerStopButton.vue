@@ -7,20 +7,10 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import AudioPlayerAbstractButton from './AudioPlayerAbstractButton.vue'
 
-export default defineComponent({
-  name: 'AudioPlayerStopButton',
-  components: {
-    AudioPlayerAbstractButton
-  },
-  props: {
-    size: {
-      type: Number,
-      required: true
-    }
-  }
-})
+defineProps<{
+  size: number
+}>()
 </script>

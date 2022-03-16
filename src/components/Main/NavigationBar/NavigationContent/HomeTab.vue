@@ -43,83 +43,64 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
+import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
+import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { constructTree } from '/@/lib/channelTree'
-import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 
-export default defineComponent({
-  name: 'HomeTab',
-  components: {
-    ChannelList,
-    EmptyState,
-    NavigationContentContainer,
-    DMChannelList
-  },
-  setup() {
-    const { homeChannelTree } = useChannelTree()
-    const { channelSessionsMap } = useDomainRtcStore()
-    const { detail, unreadChannelsMap } = useMeStore()
-    const { channelsMap, dmChannelsMap } = useChannelsStore()
+const { homeChannelTree } = useChannelTree()
+const { channelSessionsMap } = useDomainRtcStore()
+const { detail, unreadChannelsMap } = useMeStore()
+const { channelsMap, dmChannelsMap } = useChannelsStore()
 
-    const homeChannelWithTree = computed(() =>
-      !detail.value?.homeChannel
-        ? []
-        : constructTree(
-            {
-              id: '',
-              name: '',
-              parentId: null,
-              archived: false,
-              children: [detail.value.homeChannel]
-            },
-            channelsMap.value
-          )?.children?.filter(channel => !channel.archived) ?? []
-    )
-    const channelsWithNotification = computed(() =>
-      [...unreadChannelsMap.value.values()]
-        .sort((a, b) => {
-          if (a.noticeable !== b.noticeable) {
-            return b.noticeable ? 1 : -1
-          }
-          return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
-        })
-        .map(unread => channelsMap.value.get(unread.channelId))
-        .filter(isDefined)
-    )
-    const dmChannelsWithNotification = computed(() =>
-      [...unreadChannelsMap.value.values()]
-        .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
-        .map(unread => dmChannelsMap.value.get(unread.channelId))
-        .filter(isDefined)
-    )
-    const topLevelChannels = computed(() =>
-      homeChannelTree.value.children.filter(channel => !channel.archived)
-    )
-    const channelsWithRtc = computed(() =>
-      [...channelSessionsMap.value.entries()]
-        .filter(([, sessionIds]) => sessionIds.size > 0)
-        .map(([channelId]) => channelsMap.value.get(channelId))
-        .filter(isDefined)
-    )
-
-    return {
-      homeChannelWithTree,
-      topLevelChannels,
-      channelsWithNotification,
-      dmChannelsWithNotification,
-      channelsWithRtc
-    }
-  }
-})
+const homeChannelWithTree = computed(() =>
+  !detail.value?.homeChannel
+    ? []
+    : constructTree(
+        {
+          id: '',
+          name: '',
+          parentId: null,
+          archived: false,
+          children: [detail.value.homeChannel]
+        },
+        channelsMap.value
+      )?.children?.filter(channel => !channel.archived) ?? []
+)
+const channelsWithNotification = computed(() =>
+  [...unreadChannelsMap.value.values()]
+    .sort((a, b) => {
+      if (a.noticeable !== b.noticeable) {
+        return b.noticeable ? 1 : -1
+      }
+      return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+    })
+    .map(unread => channelsMap.value.get(unread.channelId))
+    .filter(isDefined)
+)
+const dmChannelsWithNotification = computed(() =>
+  [...unreadChannelsMap.value.values()]
+    .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
+    .map(unread => dmChannelsMap.value.get(unread.channelId))
+    .filter(isDefined)
+)
+const topLevelChannels = computed(() =>
+  homeChannelTree.value.children.filter(channel => !channel.archived)
+)
+const channelsWithRtc = computed(() =>
+  [...channelSessionsMap.value.entries()]
+    .filter(([, sessionIds]) => sessionIds.size > 0)
+    .map(([channelId]) => channelsMap.value.get(channelId))
+    .filter(isDefined)
+)
 </script>
 
 <style lang="scss" module>

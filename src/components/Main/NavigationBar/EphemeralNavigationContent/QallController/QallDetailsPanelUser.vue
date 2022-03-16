@@ -32,70 +32,59 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import ASlider from '/@/components/UI/ASlider.vue'
-import UserIcon from '/@/components/UI/UserIcon.vue'
-import AIcon from '/@/components/UI/AIcon.vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { useAppRtcStore } from '/@/store/app/rtc'
 import { useUsersStore } from '/@/store/entities/users'
+import ASlider from '/@/components/UI/ASlider.vue'
+import UserIcon from '/@/components/UI/UserIcon.vue'
+import AIcon from '/@/components/UI/AIcon.vue'
+
+const props = withDefaults(
+  defineProps<{
+    userId: UserId
+    showVolumeControl?: boolean
+    disabled?: boolean
+    showTuneButton?: boolean
+    showTuneDoneButton?: boolean
+    micMuted?: boolean
+  }>(),
+  {
+    showVolumeControl: false,
+    disabled: false,
+    showTuneButton: false,
+    showTuneDoneButton: false,
+    micMuted: false
+  }
+)
+
+const emit = defineEmits<{
+  (e: 'tune'): void
+  (e: 'tuneDone'): void
+}>()
 
 const maxVolumeValue = 200
 
-export default defineComponent({
-  name: 'QallDetailsPanelUser',
-  components: {
-    ASlider,
-    AIcon,
-    UserIcon
-  },
-  props: {
-    userId: { type: String as PropType<UserId>, required: true },
-    showVolumeControl: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false },
-    showTuneButton: { type: Boolean, default: false },
-    showTuneDoneButton: { type: Boolean, default: false },
-    micMuted: { type: Boolean, default: false }
-  },
-  emits: {
-    tune: () => true,
-    tuneDone: () => true
-  },
-  setup(props, { emit }) {
-    const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
-    const { usersMap } = useUsersStore()
-    const volume = computed(() =>
-      Math.round(getUserVolume(props.userId) * maxVolumeValue)
-    )
-    const userName = computed(
-      () => usersMap.value.get(props.userId)?.displayName ?? ''
-    )
-    const talkingLevel = computed(() =>
-      talkingUsersState.value.get(props.userId)
-    )
-    const onChange = (value: number) => {
-      setUserVolume(props.userId, value / maxVolumeValue)
-    }
+const { talkingUsersState, getUserVolume, setUserVolume } = useAppRtcStore()
+const { usersMap } = useUsersStore()
+const volume = computed(() =>
+  Math.round(getUserVolume(props.userId) * maxVolumeValue)
+)
+const userName = computed(
+  () => usersMap.value.get(props.userId)?.displayName ?? ''
+)
+const talkingLevel = computed(() => talkingUsersState.value.get(props.userId))
+const onChange = (value: number) => {
+  setUserVolume(props.userId, value / maxVolumeValue)
+}
 
-    const tune = () => {
-      emit('tune')
-    }
-    const tuneDone = () => {
-      emit('tuneDone')
-    }
-
-    return {
-      volume,
-      userName,
-      talkingLevel,
-      maxVolumeValue,
-      onChange,
-      tune,
-      tuneDone
-    }
-  }
-})
+const tune = () => {
+  emit('tune')
+}
+const tuneDone = () => {
+  emit('tuneDone')
+}
 </script>
 
 <style lang="scss" module>

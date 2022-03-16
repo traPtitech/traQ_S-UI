@@ -5,37 +5,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
 type Align = 'left' | 'right'
 
-const useStyle = (props: { align: Align }) =>
-  computed(() => ({
-    [props.align]: '0'
-  }))
-
-export default defineComponent({
-  name: 'SemiFixedSizeText',
-  props: {
-    actual: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      required: true
-    },
-    align: {
-      type: String as PropType<Align>,
-      default: 'left' as const
-    }
-  },
-  setup(props) {
-    const style = useStyle(props)
-    return { style }
+const props = withDefaults(
+  defineProps<{
+    actual: string
+    placeholder: string
+    align?: Align
+  }>(),
+  {
+    align: 'left' as const
   }
-})
+)
+
+const style = computed(() => ({
+  [props.align]: '0'
+}))
 </script>
 
 <style lang="scss" module>

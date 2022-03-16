@@ -11,43 +11,43 @@
   </a>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue'
 import axios from 'axios'
 
-export default defineComponent({
-  name: 'AppListItem',
-  props: {
-    iconPath: { type: String, required: true },
-    label: { type: String, default: '' },
-    appLink: { type: String, default: '' }
-  },
-  setup(props) {
-    const isSvg = computed(() => {
-      try {
-        return new URL(props.iconPath, 'https://example.com').pathname.endsWith(
-          '.svg'
-        )
-      } catch {
-        return false
-      }
-    })
+const props = withDefaults(
+  defineProps<{
+    iconPath: string
+    label?: string
+    appLink?: string
+  }>(),
+  {
+    label: '',
+    appLink: ''
+  }
+)
 
-    const svgHtml = ref('')
-    watch(
-      () => props.iconPath,
-      async path => {
-        if (!isSvg.value) return
-
-        const { data } = await axios.get(`/img/services/${path}`)
-        svgHtml.value = data
-      },
-      { immediate: true }
+const isSvg = computed(() => {
+  try {
+    return new URL(props.iconPath, 'https://example.com').pathname.endsWith(
+      '.svg'
     )
-
-    return { isSvg, svgHtml }
+  } catch {
+    return false
   }
 })
+
+const svgHtml = ref('')
+watch(
+  () => props.iconPath,
+  async path => {
+    if (!isSvg.value) return
+
+    const { data } = await axios.get(`/img/services/${path}`)
+    svgHtml.value = data
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" module>

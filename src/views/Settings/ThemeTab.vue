@@ -66,33 +66,18 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from 'vue'
+<script lang="ts" setup>
 import EditTheme from '/@/components/Settings/ThemeTab/EditTheme.vue'
-import { Theme } from '/@/lib/theme/schema'
 import FormRadio from '/@/components/UI/FormRadio.vue'
 import FormInput from '/@/components/UI/FormInput.vue'
+import { reactive } from 'vue'
+import { Theme } from '/@/lib/theme/schema'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
-export default defineComponent({
-  name: 'ThemeTab',
-  components: {
-    FormRadio,
-    EditTheme,
-    FormInput
-  },
-  setup() {
-    const state = reactive(useThemeSettings())
-    const changeTheme = (theme: Theme) => {
-      state.custom = theme
-    }
-
-    // TODO: 色のバリデーション
-    // TODO: カラーピッカー
-
-    return { state, changeTheme }
-  }
-})
+const state = reactive(useThemeSettings())
+const changeTheme = (theme: Theme) => {
+  state.custom = theme
+}
 </script>
 
 <style lang="scss" module>

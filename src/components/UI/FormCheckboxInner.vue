@@ -14,31 +14,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { useModelValueSyncer } from '/@/use/modelSyncer'
+<script lang="ts" setup>
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 
-export default defineComponent({
-  name: 'FormCheckboxInner',
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
-    onSecondary: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: {
-    'update:modelValue': (_val: boolean) => true
-  },
-  setup(props, { emit }) {
-    const value = useModelValueSyncer(props, emit)
-
-    return { value }
+const props = withDefaults(
+  defineProps<{
+    modelValue?: boolean
+    onSecondary?: boolean
+  }>(),
+  {
+    modelValue: false,
+    onSecondary: false
   }
-})
+)
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', _val: boolean): void
+}>()
+
+const value = useModelValueSyncer(props, emit)
 </script>
 
 <style lang="scss" module>

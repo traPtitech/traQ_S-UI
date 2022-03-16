@@ -31,18 +31,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, Ref } from 'vue'
-import useChannelPath from '/@/use/channelPath'
-import ModalFrame from '../Common/ModalFrame.vue'
-import FormInput from '/@/components/UI/FormInput.vue'
-import FormSelector from '/@/components/UI/FormSelector.vue'
-import AToggle from '/@/components/UI/AToggle.vue'
-import FormButton from '/@/components/UI/FormButton.vue'
+import { computed, reactive, Ref } from 'vue'
+import useChannelPath from '/@/composables/useChannelPath'
 import apis from '/@/lib/apis'
 import { PatchChannelRequest } from '@traptitech/traq'
 import { nullUuid } from '/@/lib/basic/uuid'
-import useStateDiff from '/@/components/Settings/use/stateDiff'
-import useChannelOptions from '/@/use/channelOptions'
+import useStateDiff from '/@/components/Settings/composables/useStateDiff'
+import useChannelOptions from '/@/composables/useChannelOptions'
 import { isValidChannelName } from '/@/lib/validate'
 import { canCreateChildChannel } from '/@/lib/channel'
 import { useToastStore } from '/@/store/ui/toast'
@@ -84,81 +79,68 @@ const useManageChannel = (
   }
   return { manageChannel }
 }
+</script>
 
-export default defineComponent({
-  name: 'ChannelManageModal',
-  components: {
-    ModalFrame,
-    AToggle,
-    FormInput,
-    FormSelector,
-    FormButton
-  },
-  props: {
-    id: { type: String, required: true }
-  },
-  setup(props) {
-    const { channelsMap } = useChannelsStore()
-    const channel = computed((): Required<PatchChannelRequest> => {
-      const c = channelsMap.value.get(props.id)
-      return {
-        name: c?.name ?? '',
-        parent: c?.parentId ?? nullUuid,
-        archived: c?.archived ?? false,
-        force: c?.force ?? false
-      }
-    })
-    const { channelIdToPathString } = useChannelPath()
-    const subtitle = computed(() => channelIdToPathString(props.id, true))
+<script lang="ts" setup>
+import ModalFrame from '../Common/ModalFrame.vue'
+import FormInput from '/@/components/UI/FormInput.vue'
+import FormSelector from '/@/components/UI/FormSelector.vue'
+import AToggle from '/@/components/UI/AToggle.vue'
+import FormButton from '/@/components/UI/FormButton.vue'
 
-    const manageState = reactive({ ...channel.value })
-    const { manageChannel } = useManageChannel(props, manageState, channel)
+const props = defineProps<{
+  id: string
+}>()
 
-    const { hasDiff } = useStateDiff<PatchChannelRequest>()
-    const isManageEnabled = computed(
-      () =>
-        isValidChannelName(manageState.name) && hasDiff(manageState, channel)
-    )
-
-    const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
-    const channelOptions = computed(() =>
-      rawChannelOptions.value
-        .filter(
-          ({ value }) =>
-            value !== props.id &&
-            // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
-            (channel.value.archived || !channelsMap.value.get(value)?.archived)
-        )
-        .filter(({ key }) => canCreateChildChannel(key))
-        .map(({ key, value }) => ({
-          key,
-          value:
-            // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
-            // ただし今の親チャンネルは選択できる
-            value !== channel.value.parent &&
-            channelsMap.value
-              .get(value)
-              ?.children.some(
-                child => channelsMap.value.get(child)?.name === manageState.name
-              )
-              ? null
-              : value
-        }))
-    )
-    const canToggleArchive = computed(
-      () => !channelsMap.value.get(channel.value.parent)?.archived
-    )
-
-    return {
-      manageState,
-      manageChannel,
-      subtitle,
-      isManageEnabled,
-      channelOptions,
-      canToggleArchive
-    }
+const { channelsMap } = useChannelsStore()
+const channel = computed((): Required<PatchChannelRequest> => {
+  const c = channelsMap.value.get(props.id)
+  return {
+    name: c?.name ?? '',
+    parent: c?.parentId ?? nullUuid,
+    archived: c?.archived ?? false,
+    force: c?.force ?? false
   }
 })
+const { channelIdToPathString } = useChannelPath()
+const subtitle = computed(() => channelIdToPathString(props.id, true))
+
+const manageState = reactive({ ...channel.value })
+const { manageChannel } = useManageChannel(props, manageState, channel)
+
+const { hasDiff } = useStateDiff<PatchChannelRequest>()
+const isManageEnabled = computed(
+  () => isValidChannelName(manageState.name) && hasDiff(manageState, channel)
+)
+
+const { channelOptions: rawChannelOptions } = useChannelOptions('(root)')
+const channelOptions = computed(() =>
+  rawChannelOptions.value
+    .filter(
+      ({ value }) =>
+        value !== props.id &&
+        // アーカイブチャンネルのときのみ親チャンネルにアーカイブチャンネルを指定できる
+        (channel.value.archived || !channelsMap.value.get(value)?.archived)
+    )
+    .filter(({ key }) => canCreateChildChannel(key))
+    .map(({ key, value }) => ({
+      key,
+      value:
+        // 同じチャンネル名の子チャンネルを持つチャンネルを親チャンネルとして選択できないようにする
+        // ただし今の親チャンネルは選択できる
+        value !== channel.value.parent &&
+        channelsMap.value
+          .get(value)
+          ?.children.some(
+            child => channelsMap.value.get(child)?.name === manageState.name
+          )
+          ? null
+          : value
+    }))
+)
+const canToggleArchive = computed(
+  () => !channelsMap.value.get(channel.value.parent)?.archived
+)
 </script>
 
 <style lang="scss" module>

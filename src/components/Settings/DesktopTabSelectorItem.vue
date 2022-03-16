@@ -5,36 +5,21 @@
   </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue'
-import { navigationRouteNameTitleMap } from './use/navigation'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
+import { computed } from 'vue'
+import { navigationRouteNameTitleMap } from './composables/useNavigation'
 import { constructSettingsPath, SettingsRouteName } from '/@/router/settings'
 
-export default defineComponent({
-  name: 'DesktopTabSelectorItem',
-  components: { AIcon },
-  props: {
-    routeName: {
-      type: String as PropType<SettingsRouteName>,
-      required: true
-    },
-    iconName: {
-      type: String,
-      required: true
-    },
-    iconMdi: Boolean,
-    isSelected: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup(props) {
-    const title = computed(() => navigationRouteNameTitleMap[props.routeName])
-    const path = computed(() => constructSettingsPath(props.routeName))
-    return { title, path }
-  }
-})
+const props = defineProps<{
+  routeName: SettingsRouteName
+  iconName: string
+  iconMdi?: boolean
+  isSelected: boolean
+}>()
+
+const title = computed(() => navigationRouteNameTitleMap[props.routeName])
+const path = computed(() => constructSettingsPath(props.routeName))
 </script>
 
 <style lang="scss" module>

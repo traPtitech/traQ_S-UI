@@ -3,17 +3,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  PropType,
-  computed,
-  watch
-} from 'vue'
-import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
+import { onMounted, reactive, computed, watch } from 'vue'
 import { RouteName } from '/@/router'
-import useRedirectParam from '/@/components/Authenticate/use/redirectParam'
+import useRedirectParam from '/@/components/Authenticate/composables/useRedirectParam'
 import { useRouter } from 'vue-router'
 import { useMeStore } from '/@/store/domain/me'
 
@@ -71,22 +63,19 @@ const usePageSwitch = (props: { type: PageType }) => {
   )
   return state
 }
+</script>
 
-export default defineComponent({
-  name: 'AuthPage',
-  components: {
-    AuthenticateMainView
-  },
-  props: {
-    type: {
-      type: String as PropType<PageType>,
-      default: 'login' as const
-    }
-  },
-  setup(props) {
-    const state = usePageSwitch(props)
+<script lang="ts" setup>
+import AuthenticateMainView from '/@/components/Authenticate/AuthenticateMainView.vue'
 
-    return { state }
+const props = withDefaults(
+  defineProps<{
+    type?: PageType
+  }>(),
+  {
+    type: RouteName.Login
   }
-})
+)
+
+const state = usePageSwitch(props)
 </script>

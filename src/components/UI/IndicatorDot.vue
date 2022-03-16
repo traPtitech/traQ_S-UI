@@ -2,30 +2,25 @@
   <div :class="$style.container" :style="style" />
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'IndicatorDot',
-  props: {
-    size: {
-      type: Number,
-      default: 10
-    },
-    borderWidth: {
-      type: Number,
-      default: 0
-    }
-  },
-  setup(props) {
-    const style = computed(() => ({
-      borderWidth: `${props.borderWidth}px`,
-      width: `${props.size}px`,
-      height: `${props.size}px`
-    }))
-    return { style }
+const props = withDefaults(
+  defineProps<{
+    size?: number
+    borderWidth?: number
+  }>(),
+  {
+    size: 10,
+    borderWidth: 0
   }
-})
+)
+
+const style = computed(() => ({
+  borderWidth: `${props.borderWidth}px`,
+  width: `${props.size}px`,
+  height: `${props.size}px`
+}))
 </script>
 
 <style lang="scss" module>

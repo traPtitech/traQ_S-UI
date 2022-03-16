@@ -20,34 +20,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { UserGroup } from '@traptitech/traq'
+<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
+import { UserGroup } from '@traptitech/traq'
 
-export default defineComponent({
-  name: 'GroupListGroupView',
-  components: {
-    AIcon,
-    UserIconEllipsisList
-  },
-  props: {
-    group: {
-      type: Object as PropType<UserGroup>,
-      required: true
-    }
-  },
-  emits: {
-    clickEdit: () => true
-  },
-  setup(props, { emit }) {
-    const onClickEdit = () => {
-      emit('clickEdit')
-    }
-    return { onClickEdit }
-  }
-})
+defineProps<{
+  group: UserGroup
+}>()
+
+const emit = defineEmits<{
+  (e: 'clickEdit'): void
+}>()
+
+const onClickEdit = () => {
+  emit('clickEdit')
+}
 </script>
 
 <style lang="scss" module>
