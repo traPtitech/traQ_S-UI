@@ -23,7 +23,7 @@ import CloseButton from '/@/components/UI/CloseButton.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import GroupList from './GroupList.vue'
 import useClose from './composables/useClose'
-import useGroupCreateModalOpener from './composables/useGroupCreateModalOpener'
+import useGroupCreateModalOpener from '/@/composables/modal/useGroupCreateModalOpener'
 
 const { close } = useClose()
 const { openGroupCreateModal } = useGroupCreateModalOpener()

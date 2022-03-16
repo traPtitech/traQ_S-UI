@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, toRef } from 'vue'
 import { buildUserIconPath } from '/@/lib/apis'
 import { UserId, FileId } from '/@/types/entity-ids'
-import { useUserModalOpener } from '/@/composables/useModalOpener'
+import { useUserModalOpener } from '/@/composables/modal/useUserModalOpener'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 import NotificationIndicator from '/@/components/UI/NotificationIndicator.vue'
@@ -68,7 +68,10 @@ const styles = reactive({
   }))
 })
 
-const { isClickable, openModal } = useUserModalOpener(props, user)
+const { isClickable, openModal } = useUserModalOpener(
+  toRef(props, 'userId'),
+  toRef(props, 'preventModal')
+)
 </script>
 
 <style lang="scss" module>
