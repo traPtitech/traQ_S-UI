@@ -2,70 +2,58 @@
   <div :class="$style.container">
     <router-link
       v-if="ancestorsPath[0]"
-      :to="buildChannelLink(ancestorsPath[0].path)"
+      :to="ancestorsPath[0].link"
       :class="$style.ancestorHash"
       >#</router-link
     >
     <span v-else :class="$style.currentHash">#</span>
     <span v-for="(ancestor, i) in ancestorsPath" :key="i">
-      <router-link
-        :to="buildChannelLink(ancestor.path)"
-        :class="$style.ancestor"
-        >{{ isMobile ? ancestor.name[0] : ancestor.name }}</router-link
-      >
+      <router-link :to="ancestor.link" :class="$style.ancestor">{{
+        isMobile ? ancestor.name[0] : ancestor.name
+      }}</router-link>
       <span
         :class="$style.ancestorSeparator"
         :data-is-primary="$boolAttr(pathInfoList.length <= 1)"
         >/</span
       >
     </span>
-    <span :class="$style.current">{{ pathInfo.name }}</span>
+    <span :class="$style.current">{{ currentChannelLastPath }}</span>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
-type ChannelPathInfo = {
-  name: string
-  path: string[]
-}
-
-const usePathInfo = (props: { channelId: ChannelId }) => {
-  const { channelIdToPath } = useChannelPath()
-
-  /** 現在のチャンネルに至るまでのフルパスたち */
-  const pathInfoList = computed((): ChannelPathInfo[] =>
-    channelIdToPath(props.channelId).map((p, i, arr) => ({
-      name: p,
-      path: arr.slice(0, i + 1)
-    }))
-  )
-
-  return { pathInfoList }
-}
-
-const buildChannelLink = (path: string[]) =>
-  constructChannelPath(path.join('/'))
-</script>
-
-<script lang="ts" setup>
 const props = defineProps<{
   channelId: ChannelId
 }>()
 
 const { isMobile } = useResponsiveStore()
-const { pathInfoList } = usePathInfo(props)
+
+const { channelIdToPath } = useChannelPath()
+
+type ChannelPathInfo = {
+  name: string
+  link: string
+}
+/** 現在のチャンネルに至るまでのフルパスたち */
+const pathInfoList = computed((): ChannelPathInfo[] =>
+  channelIdToPath(props.channelId).map((p, i, arr) => {
+    const path = arr.slice(0, i + 1)
+    return {
+      name: p,
+      link: constructChannelPath(path.join('/'))
+    }
+  })
+)
+
 const ancestorsPath = computed(() => pathInfoList.value.slice(0, -1))
-const pathInfo = computed(() =>
-  pathInfoList.value.length > 0
-    ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      pathInfoList.value[pathInfoList.value.length - 1]!
-    : { name: '' }
+const currentChannelLastPath = computed(
+  () => pathInfoList.value[pathInfoList.value.length - 1]?.name ?? ''
 )
 </script>
 
