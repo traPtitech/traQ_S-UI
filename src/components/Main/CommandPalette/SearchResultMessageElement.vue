@@ -58,6 +58,7 @@ import SearchResultMessageElementContent from './SearchResultMessageElementConte
 import useToggle from '/@/composables/useToggle'
 import useSpoilerToggler from '/@/composables/markdown/useSpoilerToggler'
 import useHeightObserver from './composables/useHeightObserver'
+import { useMessagesStore } from '/@/store/entities/messages'
 
 const props = defineProps<{
   message: DeepReadonly<Message>
@@ -92,9 +93,18 @@ const date = computed(() => {
   return getCreatedDate(_date)
 })
 
+const { fetchFileMetaData } = useMessagesStore()
+
 const renderedResult = ref<MarkdownRenderResult>()
 watchEffect(async () => {
   renderedResult.value = await render(props.message.content)
+  const filePromises = renderedResult.value.embeddings.filter(isFile).map(e =>
+    fetchFileMetaData({
+      fileId: e.id
+    })
+  )
+  // TODO: エラー処理、無効な埋め込みの扱いを考える必要あり
+  await Promise.allSettled(filePromises)
   // renderedを発火したあとにレイアウトシフトなどがおこると
   // スクロール位置のリストアが壊れるので注意すること
   emit('rendered')
