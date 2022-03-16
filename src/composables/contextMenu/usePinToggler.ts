@@ -1,5 +1,5 @@
 import { Ref } from 'vue'
-import useExecWithToast from './useExecWithToast'
+import useExecWithToast from '/@/composables/toast/useExecWithToast'
 import apis from '/@/lib/apis'
 import { MessageId } from '/@/types/entity-ids'
 

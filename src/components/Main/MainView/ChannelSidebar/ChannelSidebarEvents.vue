@@ -1,5 +1,8 @@
 <template>
-  <sidebar-content-container-link title="イベント" @click-link="onClickLink" />
+  <sidebar-content-container-link
+    title="イベント"
+    @click-link="emit('clickLink')"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -8,8 +11,4 @@ import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSid
 const emit = defineEmits<{
   (e: 'clickLink'): void
 }>()
-
-const onClickLink = () => {
-  emit('clickLink')
-}
 </script>

@@ -1,12 +1,9 @@
 <template>
   <sidebar-content-container-foldable title="トピック">
     <content-editor
-      :value="topic"
-      :is-editing="isEditing"
+      v-model="localTopic"
+      v-model:is-editing="isEditing"
       :max-length="200"
-      @input-value="onInput"
-      @edit-done="onEditDone"
-      @edit-start="startEdit"
     >
       <template #default="slotProps">
         <inline-markdown :content="slotProps.content" accept-action />
@@ -15,32 +12,15 @@
   </sidebar-content-container-foldable>
 </template>
 
-<script lang="ts">
-import { ref, watchEffect, Ref } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import apis from '/@/lib/apis'
 import { ChannelId } from '/@/types/entity-ids'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const useEdit = (props: { channelId: string }, topic: Ref<string>) => {
-  const isEditing = ref(false)
-  const onInput = (value: string) => {
-    topic.value = value
-  }
-  const startEdit = () => {
-    isEditing.value = true
-  }
-  const onEditDone = async () => {
-    await apis.editChannelTopic(props.channelId, { topic: topic.value })
-    isEditing.value = false
-  }
-  return { isEditing, onInput, startEdit, onEditDone }
-}
-</script>
-
-<script lang="ts" setup>
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import useLocalInput from '/@/composables/utils/useLocalInput'
 
 const props = defineProps<{
   channelId: ChannelId
@@ -48,11 +28,20 @@ const props = defineProps<{
 
 const { channelsMap } = useChannelsStore()
 
-const getTopic = () => channelsMap.value.get(props.channelId)?.topic ?? ''
-
-const topic = ref(getTopic())
-watchEffect(() => {
-  topic.value = getTopic()
-})
-const { isEditing, onInput, startEdit, onEditDone } = useEdit(props, topic)
+const remoteTopic = computed(
+  () => channelsMap.value.get(props.channelId)?.topic ?? ''
+)
+const { localValue: localTopic, isEditing } = useLocalInput(
+  remoteTopic,
+  async topic => {
+    try {
+      await apis.editChannelTopic(props.channelId, { topic })
+      return true
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e)
+      return false
+    }
+  }
+)
 </script>

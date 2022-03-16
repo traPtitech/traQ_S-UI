@@ -2,12 +2,9 @@
   <div :class="$style.container">
     <sidebar-content-container title="名前" :class="$style.item">
       <content-editor
-        :value="name"
-        :is-editing="isNameEditing"
+        v-model="localName"
+        v-model:is-editing="isNameEditing"
         :max-length="30"
-        @input-value="onNameInput"
-        @edit-done="onNameEditDone"
-        @edit-start="startNameEdit"
       >
         <template #default="slotProps">
           {{ slotProps.content }}
@@ -16,12 +13,9 @@
     </sidebar-content-container>
     <sidebar-content-container-foldable title="説明" :class="$style.item">
       <content-editor
-        :value="description"
-        :is-editing="isDesciptionEditing"
+        v-model="localDescription"
+        v-model:is-editing="isDescriptionEditing"
         :max-length="1000"
-        @input-value="onDesciptionInput"
-        @edit-done="onDesciptionEditDone"
-        @edit-start="startDesciptionEdit"
       >
         <template #default="slotProps">
           <inline-markdown :content="slotProps.content" accept-action />
@@ -35,37 +29,12 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, reactive } from 'vue'
+import { computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
 import router, { constructChannelPath } from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-
-const useEdit = (
-  props: { clipFolderId: string },
-  state: {
-    name: string
-    description: string
-  },
-  forField: 'name' | 'description'
-) => {
-  const isEditing = ref(false)
-  const onInput = (value: string) => {
-    state[forField] = value
-  }
-  const startEdit = () => {
-    isEditing.value = true
-  }
-  const onEditDone = async () => {
-    await apis.editClipFolder(props.clipFolderId, {
-      name: state.name,
-      description: state.description
-    })
-    isEditing.value = false
-  }
-  return { isEditing, onInput, startEdit, onEditDone }
-}
 
 const useDelete = (props: { clipFolderId: ClipFolderId }) => {
   const { clipFoldersMap } = useClipFoldersStore()
@@ -101,6 +70,7 @@ import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainVie
 import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import InlineMarkdown from '/@/components/UI/InlineMarkdown.vue'
+import useLocalInput from '/@/composables/utils/useLocalInput'
 
 const props = defineProps<{
   clipFolderId: ClipFolderId
@@ -109,24 +79,34 @@ const props = defineProps<{
 const { clipFoldersMap } = useClipFoldersStore()
 
 const clipFolder = computed(() => clipFoldersMap.value.get(props.clipFolderId))
-const name = computed(() => clipFolder.value?.name ?? '')
-const description = computed(() => clipFolder.value?.description ?? '')
-const state = reactive({
-  name: clipFolder.value?.name ?? '',
-  description: clipFolder.value?.description ?? ''
-})
-const {
-  isEditing: isNameEditing,
-  onInput: onNameInput,
-  startEdit: startNameEdit,
-  onEditDone: onNameEditDone
-} = useEdit(props, state, 'name')
-const {
-  isEditing: isDesciptionEditing,
-  onInput: onDesciptionInput,
-  startEdit: startDesciptionEdit,
-  onEditDone: onDesciptionEditDone
-} = useEdit(props, state, 'description')
+const remoteName = computed(() => clipFolder.value?.name ?? '')
+const remoteDescription = computed(() => clipFolder.value?.description ?? '')
+
+const { localValue: localName, isEditing: isNameEditing } = useLocalInput(
+  remoteName,
+  async name => {
+    try {
+      await apis.editClipFolder(props.clipFolderId, { name })
+      return true
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e)
+      return false
+    }
+  }
+)
+
+const { localValue: localDescription, isEditing: isDescriptionEditing } =
+  useLocalInput(remoteDescription, async description => {
+    try {
+      await apis.editClipFolder(props.clipFolderId, { description })
+      return true
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e)
+      return false
+    }
+  })
 
 const { deleteClip } = useDelete(props)
 </script>

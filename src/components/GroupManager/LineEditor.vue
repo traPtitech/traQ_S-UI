@@ -3,7 +3,7 @@
     <div :class="$style.label">{{ label }}</div>
     <div v-if="isEditing" :class="$style.inputWrapper">
       <form-input
-        v-model="editingValue"
+        v-model="localValue"
         :class="$style.input"
         :max-length="maxLength"
         on-secondary
@@ -17,8 +17,8 @@
       />
     </div>
     <div v-else :class="$style.valueWrapper">
-      <div :class="$style.value" :data-is-empty="value === ''">
-        {{ value || `${label}が設定されていません` }}
+      <div :class="$style.value" :data-is-empty="localValue === ''">
+        {{ localValue || `${label}が設定されていません` }}
       </div>
       <a-icon
         name="pencil-outline"
@@ -34,36 +34,30 @@
 <script lang="ts" setup>
 import FormInput from '/@/components/UI/FormInput.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import { ref, watch } from 'vue'
+import { useModelValueSyncer } from '/@/composables/useModelSyncer'
+import useLocalInput from '/@/composables/utils/useLocalInput'
+import useToggle from '/@/composables/useToggle'
 
 const props = defineProps<{
   label: string
-  value: string
+  modelValue: string
   maxLength?: number
 }>()
 
 const emit = defineEmits<{
-  (e: 'update', _value: string): void
+  (e: 'update:modelValue', _value: string): void
 }>()
 
-const editingValue = ref(props.value)
-watch(
-  () => props.value,
-  v => {
-    editingValue.value = v
-  }
+const remoteValue = useModelValueSyncer(props, emit)
+const { localValue, isEditing } = useLocalInput(
+  remoteValue,
+  newValue => {
+    remoteValue.value = newValue
+    return true
+  },
+  true // キャンセルするUIがないため
 )
-
-const isEditing = ref(false)
-const startEditing = () => {
-  isEditing.value = true
-}
-const endEditing = () => {
-  isEditing.value = false
-  if (props.value !== editingValue.value) {
-    emit('update', editingValue.value)
-  }
-}
+const { open: startEditing, close: endEditing } = useToggle(isEditing)
 </script>
 
 <style lang="scss" module>

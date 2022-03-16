@@ -1,20 +1,20 @@
 <template>
   <div :class="$style.container">
-    <div v-if="isEditing">
-      <textarea-autosize v-model="modelValue" :class="$style.editor" />
-      <length-count :val="modelValue" :max-length="maxLength" />
+    <div v-if="isEditingValue && value">
+      <textarea-autosize v-model="value" :class="$style.editor" />
+      <length-count :val="value" :max-length="maxLength" />
     </div>
     <div v-else :class="$style.content" :data-is-empty="$boolAttr(isEmpty)">
       <slot :content="content" />
     </div>
     <button
-      :data-is-editing="$boolAttr(isEditing)"
+      :data-is-editing="$boolAttr(isEditingValue)"
       :disabled="isExceeded"
       :data-is-exceeded="$boolAttr(isExceeded)"
       :class="$style.button"
       @click="onButtonClick"
     >
-      <a-icon v-if="isEditing" width="20" height="20" name="check" mdi />
+      <a-icon v-if="isEditingValue" width="20" height="20" name="check" mdi />
       <a-icon v-else width="20" height="20" name="pencil-outline" mdi />
     </button>
   </div>
@@ -26,49 +26,43 @@ import LengthCount from '/@/components/UI/LengthCount.vue'
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import { computed } from 'vue'
 import { countLength } from '/@/lib/basic/string'
+import {
+  useModelSyncer,
+  useModelValueSyncer
+} from '/@/composables/useModelSyncer'
 
 const props = withDefaults(
   defineProps<{
-    value?: string
-    isEditing?: boolean
+    modelValue: string | undefined
+    isEditing: boolean
     fallbackValue?: string
     maxLength?: number
   }>(),
   {
-    isEditing: false,
     fallbackValue: '未設定'
   }
 )
 
 const emit = defineEmits<{
-  (e: 'editStart'): void
-  (e: 'editDone'): void
-  (e: 'inputValue', _val: string): void
+  (e: 'update:isEditing', val: boolean): void
+  (e: 'update:modelValue', val: string | undefined): void
 }>()
 
+const value = useModelValueSyncer(props, emit)
+const isEditingValue = useModelSyncer(props, emit, 'isEditing')
+
 const content = computed(() => {
-  if (props.value === '') return props.fallbackValue
-  if (props.value === undefined) return 'ロード中'
-  return props.value
+  if (value.value === '') return props.fallbackValue
+  if (value.value === undefined) return 'ロード中'
+  return value.value
 })
-const isEmpty = computed(() => props.value === '' || props.value === undefined)
+const isEmpty = computed(() => value.value === '' || value.value === undefined)
 const onButtonClick = () => {
-  if (props.isEditing) {
-    emit('editDone')
-  } else {
-    emit('editStart')
-  }
+  isEditingValue.value = !isEditingValue.value
 }
 
-const modelValue = computed({
-  get: () => props.value ?? '',
-  set: v => {
-    emit('inputValue', v ?? '')
-  }
-})
-
 const isExceeded = computed(
-  () => !!(props.maxLength && countLength(modelValue.value) > props.maxLength)
+  () => !!(props.maxLength && countLength(value.value ?? '') > props.maxLength)
 )
 </script>
 

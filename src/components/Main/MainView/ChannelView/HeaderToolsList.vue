@@ -81,7 +81,7 @@
     />
     -->
     <div :class="$style.moreButton">
-      <div :id="teleportTargetName" :class="$style.popupLocator" />
+      <slot />
       <header-tools-item
         :class="$style.icon"
         icon-mdi
@@ -91,10 +91,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export const teleportTargetName = 'header-popup'
-</script>
 
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'

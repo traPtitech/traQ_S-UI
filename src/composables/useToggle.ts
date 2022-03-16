@@ -1,15 +1,14 @@
-import { isRef, Ref, ref } from 'vue'
+import { Ref, ref } from 'vue'
 
 const useToggle = (initialValueOrRef: boolean | Ref<boolean> = false) => {
-  const value = isRef(initialValueOrRef)
-    ? initialValueOrRef
-    : ref(initialValueOrRef)
+  // 既にrefだった場合は渡したrefが返される
+  const value = ref(initialValueOrRef)
 
   const open = () => {
     value.value = true
   }
   const close = () => {
-    value.value = true
+    value.value = false
   }
   const toggle = () => {
     value.value = !value.value
