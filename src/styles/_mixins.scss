@@ -20,7 +20,7 @@
 }
 
 @mixin background-accent-primary {
-    background-color: $theme-accent-primary-background;
+    background: $theme-accent-primary-background;
 }
 
 @mixin color-accent-primary {
