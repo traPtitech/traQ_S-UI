@@ -32,10 +32,10 @@ import {
   computed,
   onMounted,
   onUnmounted,
-  ref,
   readonly
 } from 'vue'
 import { useRouter } from 'vue-router'
+import useToggle from '/@/composables/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
 const popupNavigatorId = 'popup-navigator'
@@ -132,13 +132,11 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
     return target !== null && target.closest(`#${popupNavigatorId}`) !== null
   }
 
-  const isPopupNavigatorShown = ref(false)
-  const showPopupNavigator = () => {
-    isPopupNavigatorShown.value = true
-  }
-  const hidePopupNavigator = () => {
-    isPopupNavigatorShown.value = false
-  }
+  const {
+    value: isPopupNavigatorShown,
+    open: showPopupNavigator,
+    close: hidePopupNavigator
+  } = useToggle()
 
   const movePrev = () => {
     router.back()
