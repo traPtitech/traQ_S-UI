@@ -84,8 +84,7 @@ $messagePaddingMobile: 16px;
     background: $common-background-pin;
   }
   &:not([data-is-entry]):hover {
-    // TODO: 色を正しくする
-    @include background-secondary;
+    background: var(--specific-message-hover-background);
   }
 }
 
