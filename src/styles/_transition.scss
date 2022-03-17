@@ -163,3 +163,22 @@ $z: 'zoom';
 .#{$z}-leave-from {
   transform: scale(1);
 }
+
+$sp: 'stamp-pressed';
+.#{$sp}-enter-active {
+  animation: stamp-pressed 0.5s ease;
+}
+.#{$sp}-leave-active {
+  transition: all 0s; // leaveを即時に終わらせるため
+}
+@keyframes stamp-pressed {
+  0% {
+    transform: scale(0.7);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

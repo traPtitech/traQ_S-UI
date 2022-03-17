@@ -3,16 +3,16 @@
     :class="$style.body"
     :title="tooltip"
     :data-include-me="$boolAttr(includeMe)"
-    :data-my-count-has-incremented="$boolAttr(myCountHasIncremented)"
     @click="onClick"
   >
-    <a-stamp
-      :stamp-id="stamp.id"
-      :size="20"
-      without-title
-      :class="$style.icon"
-      @animationend="unsetMyCountHasIncremented"
-    />
+    <transition name="stamp-pressed" mode="out-in">
+      <a-stamp
+        :key="pressAnimationKey"
+        :stamp-id="stamp.id"
+        :size="20"
+        without-title
+      />
+    </transition>
     <spin-number :value="stamp.sum" :class="$style.count" />
   </div>
 </template>
@@ -52,8 +52,23 @@ const tooltip = computed(() =>
 
 const includeMe = computed(() => props.stamp.myCount > 0)
 
+// この値が変わったときにアニメーションする
+const pressAnimationKey = ref(0)
+onMounted(() => {
+  if (props.stamp.myCount > 0) {
+    pressAnimationKey.value++
+  }
+})
+watch(
+  () => props.stamp.myCount,
+  (newVal, oldVal) => {
+    if (oldVal < newVal) {
+      pressAnimationKey.value++
+    }
+  }
+)
+
 const isProgress = ref(false)
-const myCountHasIncremented = ref(false)
 
 const onClick = () => {
   if (isProgress.value) return
@@ -70,23 +85,6 @@ watch(
     isProgress.value = false
   }
 )
-
-onMounted(() => {
-  if (props.stamp.myCount > 0) {
-    myCountHasIncremented.value = true
-  }
-})
-watch(
-  () => props.stamp.myCount,
-  (newVal, oldVal) => {
-    if (oldVal < newVal) {
-      myCountHasIncremented.value = true
-    }
-  }
-)
-const unsetMyCountHasIncremented = () => {
-  myCountHasIncremented.value = false
-}
 </script>
 
 <style lang="scss" module>
@@ -105,24 +103,6 @@ const unsetMyCountHasIncremented = () => {
   user-select: none;
   overflow: hidden;
   contain: content;
-}
-
-.icon {
-  .body[data-my-count-has-incremented] & {
-    animation: stamp-pressed 0.5s ease;
-  }
-}
-
-@keyframes stamp-pressed {
-  0% {
-    transform: scale(0.7);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 
 .count {
