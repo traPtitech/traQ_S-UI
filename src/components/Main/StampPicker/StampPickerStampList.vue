@@ -7,7 +7,8 @@
       :size="32"
       :class="$style.stampListItem"
       @click="onClickStamp(stamp.id)"
-      @hover="onStampHover(stamp.name)"
+      @mouseenter="onStampHover(stamp.name)"
+      @mouseleave="onStampUnhover"
     />
   </div>
 </template>
@@ -22,8 +23,8 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'inputStamp', _id: StampId): void
-  (e: 'hoverStamp', _name: string): void
+  (e: 'inputStamp', id: StampId): void
+  (e: 'hoverStamp', name?: string): void
 }>()
 
 const onClickStamp = (id: StampId) => {
@@ -31,6 +32,9 @@ const onClickStamp = (id: StampId) => {
 }
 const onStampHover = (name: string) => {
   emit('hoverStamp', name)
+}
+const onStampUnhover = () => {
+  emit('hoverStamp')
 }
 </script>
 
