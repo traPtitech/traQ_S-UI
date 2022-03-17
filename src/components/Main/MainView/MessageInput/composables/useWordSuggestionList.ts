@@ -8,9 +8,9 @@ import {
   getPrevCandidateIndex,
   getNextCandidateIndex
 } from '/@/lib/suggestion'
-import { useUsersStore } from '/@/store/entities/users'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useStampsStore } from '/@/store/entities/stamps'
+import useUserList from '/@/composables/users/useUserList'
 
 const events: Array<keyof EntityEventMap> = [
   'setUser',
@@ -37,7 +37,7 @@ type WordWithoutId = {
 export type Word = WordWithId | WordWithoutId
 
 const useCandidateTree = () => {
-  const { usersMap } = useUsersStore()
+  const userList = useUserList()
   const { userGroupsMap } = useGroupsStore()
   const { stampsMap } = useStampsStore()
 
@@ -46,7 +46,7 @@ const useCandidateTree = () => {
       // ユーザー名とグループ名に重複あり
       // メンションはcase insensitiveでユーザー名を優先
       // 重複を許す場合、優先するものから入れる
-      [...usersMap.value.values()].map(user => ({
+      userList.value.map(user => ({
         type: 'user',
         text: '@' + user.name,
         id: user.id

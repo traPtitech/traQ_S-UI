@@ -1,30 +1,30 @@
 import { computed } from 'vue'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import { isDefined } from '/@/lib/basic/array'
-import { ActiveUser } from '/@/lib/user'
 import { useGroupsStore } from '/@/store/entities/groups'
 import { useUsersStore } from '/@/store/entities/users'
+import { User } from '@traptitech/traq'
+import useUserList from '/@/composables/users/useUserList'
 
 interface UsersGradeList {
   gradeName: string
-  users: ActiveUser[]
+  users: User[]
 }
 
 const useUserListByGrade = () => {
   const { gradeGroups } = useGroupsStore()
   const { activeUsersMap } = useUsersStore()
+  const userList = useUserList()
 
   const listByGradeName = computed((): UsersGradeList[] => {
-    if (activeUsersMap.value.size === 0) {
+    if (userList.value.length === 0) {
       return []
     }
     if (gradeGroups.value.length === 0) {
       return [
         {
           gradeName: 'Others',
-          users: [...activeUsersMap.value.values()].sort((u1, u2) =>
-            compareStringInsensitive(u1.name, u2.name)
-          )
+          users: userList.value
         }
       ]
     }
@@ -46,15 +46,11 @@ const useUserListByGrade = () => {
     }
 
     // BOTグループ
-    const bots = [...activeUsersMap.value.values()]
-      .filter(user => user.bot)
-      .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
+    const bots = userList.value.filter(user => user.bot)
     bots.map(user => user.id).forEach(id => categorized.add(id))
 
     // その他グループ
-    const others = [...activeUsersMap.value.values()]
-      .filter(user => !categorized.has(user.id))
-      .sort((u1, u2) => compareStringInsensitive(u1.name, u2.name))
+    const others = userList.value.filter(user => !categorized.has(user.id))
 
     const result = [
       ...userGrades.sort(

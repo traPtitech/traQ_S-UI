@@ -48,7 +48,6 @@ import { computed, reactive, Ref, ref } from 'vue'
 import apis, { buildFilePath, formatResizeError } from '/@/lib/apis'
 import useImageUpload, { ImageUploadState } from '../composables/useImageUpload'
 import { Stamp } from '@traptitech/traq'
-import { compareStringInsensitive } from '/@/lib/basic/string'
 import useStateDiff from '../composables/useStateDiff'
 import { isValidStampName } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
@@ -125,6 +124,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import FormSelector from '/@/components/UI/FormSelector.vue'
 import FormButton from '/@/components/UI/FormButton.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import useUserList from '/@/composables/users/useUserList'
 
 const props = withDefaults(
   defineProps<{
@@ -145,11 +145,9 @@ const { activeUsersMap } = useUsersStore()
 
 const url = computed(() => buildFilePath(props.stamp.fileId))
 
+const userList = useUserList(['inactive', 'bot'])
 const creatorOptions = computed(() =>
-  [...activeUsersMap.value.values()]
-    .filter(u => !u.bot)
-    .map(u => ({ key: `@${u.name}`, value: u.id }))
-    .sort((a, b) => compareStringInsensitive(a.key, b.key))
+  userList.value.map(u => ({ key: `@${u.name}`, value: u.id }))
 )
 
 const {
