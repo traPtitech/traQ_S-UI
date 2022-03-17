@@ -1,9 +1,9 @@
 <template>
   <transition
     name="slide-vertical"
-    @enter="setHeight"
+    @enter="setScrollHeight"
     @after-enter="unsetHeight"
-    @before-leave="setHeight"
+    @before-leave="setCurrentHeight"
     @leave="unsetHeight"
   >
     <div v-if="isOpen" :class="$style.wrapper">
@@ -19,7 +19,13 @@ defineProps<{
   isOpen: boolean
 }>()
 
-const setHeight = ($el: Element) => {
+const setScrollHeight = async ($el: Element) => {
+  // フレームずらさないとscrollHeightが0になるため
+  await rAF()
+  await rAF()
+  setCurrentHeight($el)
+}
+const setCurrentHeight = ($el: Element) => {
   ;($el as HTMLElement).style.height = `${$el.scrollHeight}px`
 }
 const unsetHeight = async ($el: Element) => {
