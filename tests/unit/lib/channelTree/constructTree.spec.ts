@@ -1,4 +1,9 @@
-import { ChannelTree, constructTree, ChannelLike } from '/@/lib/channelTree'
+import {
+  ChannelTree,
+  constructTree,
+  ChannelLike,
+  constructTreeFromIds
+} from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 
 describe('constructTree', () => {
@@ -21,6 +26,43 @@ describe('constructTree', () => {
       children: constructed?.children ?? []
     }
     expect(tree).toStrictEqual(homeChannelTree)
+  })
+})
+
+describe('constructTreeFromIds', () => {
+  it('can construct tree from empty ids', () => {
+    const constructed = constructTreeFromIds([], channelEntities)
+    expect(constructed).toStrictEqual([])
+  })
+  it('can construct tree from ids', () => {
+    const constructed = constructTreeFromIds(['2', '41'], channelEntities)
+    expect(constructed).toStrictEqual([
+      {
+        id: '2',
+        name: '2',
+        active: true,
+        archived: false,
+        children: [
+          { id: '21', name: '21', active: true, archived: false, children: [] },
+          { id: '22', name: '22', active: true, archived: false, children: [] }
+        ]
+      },
+      {
+        id: '41',
+        name: '41',
+        active: true,
+        archived: false,
+        children: [
+          {
+            id: '411',
+            name: '411',
+            active: true,
+            archived: false,
+            children: []
+          }
+        ]
+      }
+    ])
   })
 })
 
