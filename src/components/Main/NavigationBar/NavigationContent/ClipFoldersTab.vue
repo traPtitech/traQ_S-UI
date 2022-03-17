@@ -7,9 +7,9 @@
         </button>
       </template>
       <template #default>
-        <template v-if="clipFolders.length > 0">
+        <template v-if="sortedClipFolders.length > 0">
           <clip-folders-element
-            v-for="clipFolder in clipFolders"
+            v-for="clipFolder in sortedClipFolders"
             :key="clipFolder.id"
             :clip-folder="clipFolder"
             :class="$style.element"
@@ -26,13 +26,12 @@ import AIcon from '/@/components/UI/AIcon.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import ClipFoldersElement from '/@/components/Main/NavigationBar/NavigationContent/ClipFoldersElement.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import { computed } from 'vue'
 import { useModalStore } from '/@/store/ui/modal'
-import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
 
 const { pushModal } = useModalStore()
-const { clipFoldersMap } = useClipFoldersStore()
-const clipFolders = computed(() => [...clipFoldersMap.value.values()])
+const sortedClipFolders = useSortedClipFolders()
+
 const onClickButton = () => {
   pushModal({
     type: 'clip-folder-create'
