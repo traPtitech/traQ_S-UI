@@ -11,10 +11,10 @@
     </div>
     <template v-else>
       <users-grade-list
-        v-for="userList in userLists"
-        :key="userList.gradeName"
-        :name="userList.gradeName"
-        :users="userList.users"
+        v-for="userListbyGrade in userListsByGrade"
+        :key="userListbyGrade.gradeName"
+        :name="userListbyGrade.gradeName"
+        :users="userListbyGrade.users"
         :class="$style.list"
       />
     </template>
@@ -22,20 +22,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import useTextFilter from '/@/composables/useTextFilter'
-import { useUsersStore } from '/@/store/entities/users'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
 import useUserListByGrade from './composables/useUserListByGrade'
+import useUserList from '/@/composables/users/useUserList'
 
-const userLists = useUserListByGrade()
+const userListsByGrade = useUserListByGrade()
 
-const { activeUsersMap } = useUsersStore()
-const activeUsers = computed(() => [...activeUsersMap.value.values()])
-const { textFilterState } = useTextFilter(activeUsers, 'name')
+const userList = useUserList()
+const { textFilterState } = useTextFilter(userList, 'name')
 </script>
 
 <style lang="scss" module>

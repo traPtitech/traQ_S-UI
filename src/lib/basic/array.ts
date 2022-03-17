@@ -56,3 +56,5 @@ export const pickSomeAroundIndex = <T>(
 export const isDefined = <T>(o: T): o is Exclude<T, undefined> => {
   return o !== undefined
 }
+
+export const unique = <T>(a: T[]) => [...new Set(a)]

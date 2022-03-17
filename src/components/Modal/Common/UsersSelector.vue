@@ -26,19 +26,14 @@
 import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import useTextFilter from '/@/composables/useTextFilter'
-import { useUsersStore } from '/@/store/entities/users'
+import useUserList from '/@/composables/users/useUserList'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {
-  const { activeUsersMap } = useUsersStore()
-
-  const excludeIdsSet = computed(() => new Set(props.excludeIds))
-  const users = computed(() =>
-    [...activeUsersMap.value.values()].filter(
-      u => !excludeIdsSet.value.has(u.id) && !u.name.startsWith('Webhook#')
-    )
+  const userList = useUserList(
+    computed(() => ['inactive', 'webhook', ...props.excludeIds])
   )
 
-  const { textFilterState } = useTextFilter(users, 'name')
+  const { textFilterState } = useTextFilter(userList, 'name')
   const shouldUseMultipleFilter = computed(
     () => textFilterState.query.trim().split(' ').length >= 2
   )
@@ -49,7 +44,7 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
         .split(' ')
         .map(q => q.trim().replace(/^@/, ''))
     )
-    return users.value.filter(u => queries.has(u.name))
+    return userList.value.filter(u => queries.has(u.name))
   })
   const filteredUsers = computed(() =>
     shouldUseMultipleFilter.value

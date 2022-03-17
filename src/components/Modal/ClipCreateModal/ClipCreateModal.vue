@@ -5,7 +5,7 @@
     </template>
     <template #default>
       <clip-folder-element
-        v-for="clipFolder in clipFolders"
+        v-for="clipFolder in sortedClipFolders"
         :key="clipFolder.id"
         :folder-name="clipFolder.name"
         :is-selected="isSelected.has(clipFolder.id)"
@@ -18,12 +18,11 @@
 <script lang="ts">
 import { computed, ref, Ref } from 'vue'
 import apis from '/@/lib/apis'
-import { compareString } from '/@/lib/basic/string'
 import { MessageId, ClipFolderId } from '/@/types/entity-ids'
 import { useToastStore } from '/@/store/ui/toast'
 import { AxiosError } from 'axios'
 import { useMessagesStore } from '/@/store/entities/messages'
-import { useClipFoldersStore } from '/@/store/entities/clipFolders'
+import useSortedClipFolders from '/@/composables/clips/useSortedClipFolders'
 
 const useCreateClip = (
   props: { messageId: MessageId },
@@ -75,14 +74,9 @@ const props = defineProps<{
 }>()
 
 const { messagesMap } = useMessagesStore()
-const { clipFoldersMap } = useClipFoldersStore()
+const sortedClipFolders = useSortedClipFolders()
 
 const message = computed(() => messagesMap.value.get(props.messageId))
-const clipFolders = computed(() => {
-  const folders = [...clipFoldersMap.value.values()]
-  folders.sort((a, b) => compareString(a.name, b.name))
-  return folders
-})
 
 const isSelected = ref(new Set<ClipFolderId>())
 apis.getMessageClips(props.messageId).then(res => {

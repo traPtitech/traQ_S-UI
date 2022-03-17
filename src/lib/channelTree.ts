@@ -96,6 +96,23 @@ export const constructTree = (
   }
 }
 
+export const constructTreeFromIds = (
+  channelIds: ChannelId[],
+  channelEntities: Map<ChannelId, ChannelLike>
+) => {
+  const treeWithDummyRoot = constructTree(
+    {
+      id: '',
+      name: '',
+      parentId: null,
+      archived: false,
+      children: channelIds
+    },
+    channelEntities
+  )
+  return treeWithDummyRoot?.children ?? []
+}
+
 export const channelPathToId = (
   separatedPath: readonly string[],
   channelTree: Readonly<ChannelTree | ChannelTreeNode>

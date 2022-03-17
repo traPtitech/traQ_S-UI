@@ -39,11 +39,8 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     }
   })
 
-  const allUsersWithoutMe = computed(() =>
-    [...activeUsersMap.value.values()].filter(
-      // BOTと自分を除外
-      u => !u.bot && u.id !== myId.value
-    )
+  const allUsersWithoutMe = useUserList(
+    computed(() => ['inactive', 'bot', ...(myId.value ? [myId.value] : [])])
   )
 
   const { textFilterState } = useTextFilter(allUsersWithoutMe, 'name')
@@ -91,6 +88,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
 <script lang="ts" setup>
 import UserNotificationListItem from './UserNotificationListItem.vue'
 import FilterInput from '/@/components/UI/FilterInput.vue'
+import useUserList from '/@/composables/users/useUserList'
 
 const props = defineProps<{
   channelId: string
