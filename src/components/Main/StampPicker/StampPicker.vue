@@ -19,6 +19,7 @@
       <stamp-picker-stamp-list
         :class="$style.stampList"
         :stamps="stamps"
+        :animation-keys="animationKeys"
         @input-stamp="onInputStamp"
         @hover-stamp="onHoverStamp"
       />
@@ -51,9 +52,16 @@ import useStampFilterPlaceholder from './composables/useStampFilterPlaceholder'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
 import { useMeStore } from '/@/store/domain/me'
+import { ref } from 'vue'
 
 const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
 const { upsertLocalStampHistory } = useMeStore()
+
+const animationKeys = ref(new Map<StampId, number>())
+const incrementAnimationKey = (id: StampId) => {
+  const currentVal = animationKeys.value.get(id) ?? 0
+  animationKeys.value.set(id, currentVal + 1)
+}
 
 const { stamps, filterState } = useStampList(currentStampSet)
 const { stampSetState } = useStampSetSelector()
@@ -64,6 +72,7 @@ const { placeholder, onHoverStamp } = useStampFilterPlaceholder()
 const onInputStamp = (id: StampId) => {
   upsertLocalStampHistory(id, new Date())
   selectHandler.value({ id })
+  incrementAnimationKey(id)
 }
 const onFilterEnter = () => {
   const firstStamp = stamps.value[0]
