@@ -16,6 +16,7 @@ import { ref, watchEffect, shallowRef } from 'vue'
 import Cropper from 'cropperjs'
 import { useImageUploadInternal } from './composables/useImageUpload'
 import FormButton from '/@/components/UI/FormButton.vue'
+import 'cropperjs/dist/cropper.css'
 
 const props = withDefaults(
   defineProps<{
@@ -111,8 +112,6 @@ watchEffect(() => {
 </script>
 
 <style lang="scss" module>
-@import 'cropperjs/dist/cropper.css';
-
 .cropper {
   width: 400px;
   height: 400px;
