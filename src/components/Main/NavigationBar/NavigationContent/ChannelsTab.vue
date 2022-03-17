@@ -36,42 +36,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, Ref } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
 import useChannelFilter from '/@/composables/useChannelFilter'
-import { buildDescendantsChannelArray } from '../composables/useBuildChannel'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const useChannelList = (filterStarChannel: Ref<boolean>) => {
-  const { staredChannelSet } = useMeStore()
-  const { channelsMap } = useChannelsStore()
-  return computed(() =>
-    (filterStarChannel.value
-      ? [
-          ...new Set(
-            [...staredChannelSet.value].flatMap(v =>
-              buildDescendantsChannelArray(channelsMap.value, v, false)
-            )
-          )
-        ]
-      : [...channelsMap.value.values()]
-    ).filter(ch => !ch.archived)
-  )
-}
-</script>
-
-<script lang="ts" setup>
-import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
+import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import { filterTrees } from '/@/lib/basic/tree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
+import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
 
 const { pushModal } = useModalStore()
 
@@ -90,9 +70,15 @@ const staredChannels = computed(() => {
 })
 
 const { filterStarChannel } = useBrowserSettings()
-const { textFilterState: channelListFilterState } = useChannelFilter(
-  useChannelList(filterStarChannel)
+const staredChannelDescendantList = useStaredChannelDescendants()
+const channelListForFilter = computed(() =>
+  (filterStarChannel.value
+    ? staredChannelDescendantList.value
+    : [...channelsMap.value.values()]
+  ).filter(channel => !channel.archived)
 )
+const { textFilterState: channelListFilterState } =
+  useChannelFilter(channelListForFilter)
 
 const onClickButton = () => {
   pushModal({
