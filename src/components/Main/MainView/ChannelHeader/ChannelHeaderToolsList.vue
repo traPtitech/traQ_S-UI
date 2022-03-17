@@ -40,21 +40,13 @@
       tooltip="お気に入りに追加する"
       @click="starChannel"
     />
-    <!--
-    <header-tools-item
-      @click="clickPin"
-      :class="$style.icon"
-      icon-mdi
-      icon-name="pin"
-    />
-    -->
     <div :class="$style.moreButton">
       <slot />
       <header-tools-item
         :class="$style.icon"
         icon-mdi
         icon-name="dots-horizontal"
-        @click="clickMore"
+        @click="emit('clickMore')"
       />
     </div>
   </div>
@@ -68,6 +60,7 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 import { ChannelId } from '/@/types/entity-ids'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import useQall from './composables/useQall'
+import useStarChannel from './composables/useStarChannel'
 
 const props = withDefaults(
   defineProps<{
@@ -84,10 +77,10 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'starChannel'): void
-  (e: 'unstarChannel'): void
   (e: 'clickMore'): void
 }>()
+
+const { isMobile } = useResponsiveStore()
 
 const {
   isQallFeatureEnabled,
@@ -137,17 +130,7 @@ const subscriptionChangeInfo = computed(() => {
   throw new Error(`Unknown subscribe level: ${check}`)
 })
 
-const { isMobile } = useResponsiveStore()
-
-const starChannel = () => {
-  emit('starChannel')
-}
-const unstarChannel = () => {
-  emit('unstarChannel')
-}
-const clickMore = () => {
-  emit('clickMore')
-}
+const { starChannel, unstarChannel } = useStarChannel(props)
 </script>
 
 <style lang="scss" module>

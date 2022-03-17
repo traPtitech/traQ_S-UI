@@ -14,33 +14,33 @@
       v-if="isChildChannelCreatable"
       icon-name="hash"
       label="子チャンネルを作成"
-      @click="clickCreateChannel"
+      @click="openChannelCreateModal"
     />
     <header-tools-menu-item
       v-if="showNotificationSettingBtn"
       icon-name="notified-or-subscribed"
       label="通知設定"
-      @click="clickNotification"
+      @click="openNotificationModal"
     />
     <header-tools-menu-item
       v-if="isSearchEnabled"
       icon-name="search"
       icon-mdi
       label="チャンネル内検索"
-      @click="clickSearch"
+      @click="openCommandPalette('search', 'in:here ')"
     />
     <header-tools-menu-item
       icon-name="link"
       icon-mdi
       label="チャンネルリンクをコピー"
-      @click="clickCopyChannelLink"
+      @click="copyLink"
     />
     <header-tools-menu-item
       v-if="hasChannelEditPermission"
       icon-name="hash"
       :class="$style.manageChannel"
       label="チャンネル管理"
-      @click="clickManageChannel"
+      @click="openChannelManageModal"
     />
   </main-view-header-popup-frame>
 </template>
@@ -54,30 +54,25 @@ import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader
 import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
 import useQall from './composables/useQall'
 import { ChannelId } from '/@/types/entity-ids'
+import useChannelCreateModal from './composables/useChannelCreateModal'
+import useNotificationModal from './composables/useNotificationModal'
+import { useCommandPalette } from '/@/store/app/commandPalette'
+import useChannelManageModal from './composables/useChannelManageModal'
+import useCopyChannelLink from './composables/useCopyChannelLink'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     showNotificationSettingBtn?: boolean
-    isChildChannelCreatable?: boolean
     isArchived?: boolean
   }>(),
   {
     showNotificationSettingBtn: true,
-    isChildChannelCreatable: false,
     isArchived: false
   }
 )
 
-const emit = defineEmits<{
-  (e: 'clickCreateChannel'): void
-  (e: 'clickNotification'): void
-  (e: 'clickSearch'): void
-  (e: 'clickCopyChannelLink'): void
-  (e: 'clickManageChannel'): void
-}>()
-
-const isSearchEnabled = window.traQConfig.enableSearch ?? false
+const { isMobile } = useResponsiveStore()
 
 const {
   isQallFeatureEnabled,
@@ -88,27 +83,21 @@ const {
   toggleQall
 } = useQall(props)
 
+const { isChildChannelCreatable, openChannelCreateModal } =
+  useChannelCreateModal(props)
+
+const { openNotificationModal } = useNotificationModal(props)
+
+const isSearchEnabled = window.traQConfig.enableSearch ?? false
+const { openCommandPalette } = useCommandPalette()
+
+const { copyLink } = useCopyChannelLink(props)
+
 const { detail } = useMeStore()
-const { isMobile } = useResponsiveStore()
 const hasChannelEditPermission = computed(() =>
   detail.value?.permissions.includes(UserPermission.EditChannel)
 )
-
-const clickCreateChannel = () => {
-  emit('clickCreateChannel')
-}
-const clickNotification = () => {
-  emit('clickNotification')
-}
-const clickSearch = () => {
-  emit('clickSearch')
-}
-const clickCopyChannelLink = () => {
-  emit('clickCopyChannelLink')
-}
-const clickManageChannel = () => {
-  emit('clickManageChannel')
-}
+const { openChannelManageModal } = useChannelManageModal(props)
 </script>
 
 <style lang="scss" module>
