@@ -37,7 +37,7 @@
     "idb-keyval": "^6.1.0",
     "mitt": "^3.0.0",
     "pica": "^9.0.1",
-    "skyway-js": "^4.4.3",
+    "skyway-js": "^4.4.4",
     "text-field-edit": "^3.1.9001",
     "throttle-debounce": "^3.0.1",
     "turndown": "^7.1.1",
