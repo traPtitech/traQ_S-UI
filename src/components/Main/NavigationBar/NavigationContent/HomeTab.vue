@@ -56,32 +56,34 @@ import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import useChannelsWithNotification from '/@/composables/unreads/useChannelsWithNotification'
+import { filterTrees } from '/@/lib/basic/tree'
 
 const { homeChannelTree } = useChannelTree()
 const { channelSessionsMap } = useDomainRtcStore()
 const { detail } = useMeStore()
 const { channelsMap } = useChannelsStore()
 
-const homeChannelWithTree = computed(() =>
-  !detail.value?.homeChannel
-    ? []
-    : constructTree(
-        {
-          id: '',
-          name: '',
-          parentId: null,
-          archived: false,
-          children: [detail.value.homeChannel]
-        },
-        channelsMap.value
-      )?.children?.filter(channel => !channel.archived) ?? []
-)
+const homeChannelWithTree = computed(() => {
+  if (!detail.value?.homeChannel) return []
+
+  const channelTree = constructTree(
+    {
+      id: '',
+      name: '',
+      parentId: null,
+      archived: false,
+      children: [detail.value.homeChannel]
+    },
+    channelsMap.value
+  )
+  return filterTrees(channelTree?.children ?? [], channel => !channel.archived)
+})
 
 const { channelsWithNotification, dmChannelsWithNotification } =
   useChannelsWithNotification()
 
 const topLevelChannels = computed(() =>
-  homeChannelTree.value.children.filter(channel => !channel.archived)
+  filterTrees(homeChannelTree.value.children, node => !node.archived)
 )
 const channelsWithRtc = computed(() =>
   [...channelSessionsMap.value.entries()]

@@ -168,9 +168,7 @@ const { primaryView } = useMainViewStore()
 
 const state = reactive({
   children: computed(() =>
-    typedProps.ignoreChildren
-      ? []
-      : typedProps.channel.children.filter(ch => !ch.archived)
+    typedProps.ignoreChildren ? [] : typedProps.channel.children
   ),
   hasChild: computed((): boolean => state.children.length > 0),
   isInactive: computed(

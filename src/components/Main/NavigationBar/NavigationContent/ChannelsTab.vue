@@ -64,29 +64,25 @@ const useChannelList = (filterStarChannel: Ref<boolean>) => {
   )
 }
 
-const useTopLevelChannels = () => {
-  const { channelTree } = useChannelTree()
-  return computed(() =>
-    channelTree.value.children.filter(channel => !channel.archived)
-  )
-}
-
 const useStaredChannels = () => {
   const { staredChannelSet } = useMeStore()
   const { channelsMap } = useChannelsStore()
-  return computed(
-    () =>
-      constructTree(
-        {
-          id: '',
-          name: '',
-          parentId: null,
-          archived: false,
-          children: [...staredChannelSet.value]
-        },
-        channelsMap.value
-      )?.children.filter(channel => !channel.archived) ?? []
-  )
+  return computed(() => {
+    const channelTree = constructTree(
+      {
+        id: '',
+        name: '',
+        parentId: null,
+        archived: false,
+        children: [...staredChannelSet.value]
+      },
+      channelsMap.value
+    )
+    return filterTrees(
+      channelTree?.children ?? [],
+      channel => !channel.archived
+    )
+  })
 }
 </script>
 
@@ -96,9 +92,14 @@ import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import EmptyState from '/@/components/UI/EmptyState.vue'
+import { filterTrees } from '/@/lib/basic/tree'
 
 const { pushModal } = useModalStore()
-const topLevelChannels = useTopLevelChannels()
+
+const { channelTree } = useChannelTree()
+const topLevelChannels = computed(() =>
+  filterTrees(channelTree.value.children, channel => !channel.archived)
+)
 const staredChannels = useStaredChannels()
 
 const { filterStarChannel } = useBrowserSettings()

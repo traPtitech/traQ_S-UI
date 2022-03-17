@@ -28,3 +28,44 @@ export const deepSome = <T extends Readonly<Tree<T>>>(
   }
   return false
 }
+
+/**
+ * 条件を満たす節/葉に絞り込んだ木を返す
+ * 条件を満たさない節の子はすべて結果に含まれない
+ *
+ * @param tree 元の木
+ * @param f 絞り込み関数 (Array::filterのコールバック関数と同じ働き)
+ */
+export const filterTree = <T extends Readonly<Tree<T>>>(
+  tree: T,
+  f: (tree: T) => boolean
+): T | null => {
+  if (!f(tree)) return null
+
+  const newChildren = filterTrees(tree.children, f)
+
+  return {
+    ...tree,
+    children: newChildren
+  }
+}
+
+/**
+ * filterTreeの複数個版
+ *
+ * @see filterTree
+ */
+export const filterTrees = <T extends Readonly<Tree<T>>>(
+  trees: readonly T[],
+  f: (tree: T) => boolean
+): T[] => {
+  const newTrees: T[] = []
+  for (const tree of trees) {
+    const newTree = filterTree(tree, f)
+    if (newTree) {
+      newTrees.push(newTree)
+    }
+  }
+
+  return newTrees
+}
