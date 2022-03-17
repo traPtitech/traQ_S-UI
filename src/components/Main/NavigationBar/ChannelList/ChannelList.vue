@@ -22,7 +22,6 @@ import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
-
 import SlideDown from '/@/components/UI/SlideDown.vue'
 
 // 型エラー・コンポーネント循環参照の回避
