@@ -1,14 +1,24 @@
 <template>
   <div :class="$style.container">
-    <a-stamp
-      v-for="stamp in stamps"
-      :key="stamp.id"
-      :stamp-id="stamp.id"
-      :size="32"
-      :class="$style.stampListItem"
-      @click="onClickStamp(stamp.id)"
-      @hover="onStampHover(stamp.name)"
-    />
+    <!--
+      templateのkeyはstamp.idにしてv-forでそれぞれのスタンプの要素が使いまわされるように
+      a-stampのkeyはkeyにしてアニメーションが動くようにしている
+
+      durationをcss側ではなくてこっちで調節しているのは、
+    -->
+    <template v-for="{ stamp, key } in stampsWithAnimationKey" :key="stamp.id">
+      <transition name="stamp-pressed" mode="out-in">
+        <a-stamp
+          :key="key"
+          :stamp-id="stamp.id"
+          :size="32"
+          :class="$style.stampListItem"
+          @click="onClickStamp(stamp.id)"
+          @mouseenter="onStampHover(stamp.name)"
+          @mouseleave="onStampUnhover"
+        />
+      </transition>
+    </template>
   </div>
 </template>
 
@@ -16,21 +26,33 @@
 import AStamp from '/@/components/UI/AStamp.vue'
 import { StampId } from '/@/types/entity-ids'
 import { Stamp } from '@traptitech/traq'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   stamps: readonly Stamp[]
+  animationKeys: Map<StampId, number>
 }>()
 
 const emit = defineEmits<{
-  (e: 'inputStamp', _id: StampId): void
-  (e: 'hoverStamp', _name: string): void
+  (e: 'inputStamp', id: StampId): void
+  (e: 'hoverStamp', name?: string): void
 }>()
+
+const stampsWithAnimationKey = computed(() =>
+  props.stamps.map(stamp => ({
+    stamp,
+    key: `${stamp.id}-${props.animationKeys.get(stamp.id) ?? 0}`
+  }))
+)
 
 const onClickStamp = (id: StampId) => {
   emit('inputStamp', id)
 }
 const onStampHover = (name: string) => {
   emit('hoverStamp', name)
+}
+const onStampUnhover = () => {
+  emit('hoverStamp')
 }
 </script>
 
