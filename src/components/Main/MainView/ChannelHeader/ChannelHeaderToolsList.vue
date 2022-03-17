@@ -13,40 +13,16 @@
         @click="toggleQall"
       />
       <header-tools-item
-        v-if="isForcedChannel"
         :class="$style.notificationIcon"
-        data-state="forced"
-        icon-name="forced"
-        disabled
-        tooltip="強制通知チャンネル"
-      />
-      <header-tools-item
-        v-else-if="
-          currentChannelSubscription === ChannelSubscribeLevel.notified
+        :data-state="subscriptionChangeInfo.state"
+        :icon-name="subscriptionChangeInfo.iconName"
+        :disabled="!subscriptionChangeInfo.canChange"
+        :tooltip="subscriptionChangeInfo.tooltip"
+        @click="
+          subscriptionChangeInfo.canChange
+            ? changeToNextSubscriptionLevel
+            : undefined
         "
-        :class="$style.notificationIcon"
-        data-state="notified"
-        icon-name="notified"
-        tooltip="通知チャンネル"
-        @click="changeToNextSubscriptionLevel"
-      />
-      <header-tools-item
-        v-else-if="
-          currentChannelSubscription === ChannelSubscribeLevel.subscribed
-        "
-        :class="$style.notificationIcon"
-        data-state="subscribed"
-        icon-name="subscribed"
-        tooltip="未読管理チャンネル"
-        @click="changeToNextSubscriptionLevel"
-      />
-      <header-tools-item
-        v-else-if="currentChannelSubscription === ChannelSubscribeLevel.none"
-        :class="$style.notificationIcon"
-        data-state="none"
-        icon-name="not-subscribed"
-        tooltip="未購読チャンネル"
-        @click="changeToNextSubscriptionLevel"
       />
     </template>
     <header-tools-item
@@ -85,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toRef } from 'vue'
+import { computed, toRef } from 'vue'
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
@@ -125,6 +101,41 @@ const {
 
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
+const subscriptionChangeInfo = computed(() => {
+  if (props.isForcedChannel) {
+    return {
+      state: 'forced',
+      iconName: 'forced',
+      tooltip: '強制通知チャンネル',
+      canChange: false
+    }
+  }
+  switch (currentChannelSubscription.value) {
+    case ChannelSubscribeLevel.notified:
+      return {
+        state: 'notified',
+        iconName: 'notified',
+        tooltip: '通知チャンネル',
+        canChange: true
+      }
+    case ChannelSubscribeLevel.subscribed:
+      return {
+        state: 'subscribed',
+        iconName: 'subscribed',
+        tooltip: '未読管理チャンネル',
+        canChange: true
+      }
+    case ChannelSubscribeLevel.none:
+      return {
+        state: 'none',
+        iconName: 'not-subscribed',
+        tooltip: '未購読チャンネル',
+        canChange: true
+      }
+  }
+  const check: never = currentChannelSubscription.value
+  throw new Error(`Unknown subscribe level: ${check}`)
+})
 
 const { isMobile } = useResponsiveStore()
 
