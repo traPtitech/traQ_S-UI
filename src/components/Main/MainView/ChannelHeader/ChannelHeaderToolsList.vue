@@ -2,23 +2,15 @@
   <div :class="$style.container">
     <template v-if="!isMobile">
       <header-tools-item
-        v-if="isQallEnabled"
+        v-if="isQallFeatureEnabled"
         icon-mdi
         :icon-name="qallIconName"
         :class="$style.qallIcon"
-        :disabled="
-          isArchived ||
-          (hasActiveQallSession &&
-            (!isJoinedQallSession || !isJoinedWithCurrentDevice))
-        "
+        :disabled="!canToggleQall"
         :data-is-active="$boolAttr(isQallSessionOpened)"
-        :data-is-joined="$boolAttr(isJoinedQallSession)"
-        :tooltip="
-          isJoinedQallSession && !isJoinedWithCurrentDevice
-            ? '別のデバイスでQall中'
-            : undefined
-        "
-        @click="clickQall"
+        :data-is-joined="$boolAttr(canEndQall)"
+        :tooltip="qallLabel"
+        @click="toggleQall"
       />
       <header-tools-item
         v-if="isForcedChannel"
@@ -93,60 +85,49 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRef } from 'vue'
+import { toRef } from 'vue'
 import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { ChannelId } from '/@/types/entity-ids'
 import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import useQall from './composables/useQall'
 
 const props = withDefaults(
   defineProps<{
     channelId: ChannelId
     isStared?: boolean
     isForcedChannel?: boolean
-    hasActiveQallSession?: boolean
-    isQallSessionOpened?: boolean
-    isJoinedQallSession?: boolean
-    isJoinedWithCurrentDevice?: boolean
     isArchived?: boolean
   }>(),
   {
     isStared: false,
     isForcedChannel: false,
-    hasActiveQallSession: false,
-    isQallSessionOpened: false,
-    isJoinedQallSession: false,
-    isJoinedWithCurrentDevice: false,
     isArchived: false
   }
 )
 
 const emit = defineEmits<{
-  (e: 'clickQall'): void
   (e: 'starChannel'): void
   (e: 'unstarChannel'): void
   (e: 'clickMore'): void
 }>()
 
-const isSkywayApikeySet = window.traQConfig.skyway !== undefined
+const {
+  isQallFeatureEnabled,
+  isQallSessionOpened,
+  canEndQall,
+  canToggleQall,
+  qallIconName,
+  qallLabel,
+  toggleQall
+} = useQall(props)
 
-const { isEnabled: isRtcEnabled } = useRtcSettings()
 const { changeToNextSubscriptionLevel, currentChannelSubscription } =
   useChannelSubscriptionState(toRef(props, 'channelId'))
 
-const isQallEnabled = computed(() => isSkywayApikeySet && isRtcEnabled.value)
-
-const qallIconName = computed(() =>
-  props.isJoinedQallSession ? 'phone' : 'phone-outline'
-)
-
 const { isMobile } = useResponsiveStore()
 
-const clickQall = () => {
-  emit('clickQall')
-}
 const starChannel = () => {
   emit('starChannel')
 }

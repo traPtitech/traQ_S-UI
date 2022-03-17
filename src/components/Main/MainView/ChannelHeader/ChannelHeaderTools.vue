@@ -4,13 +4,8 @@
       :class="$style.tools"
       :channel-id="channelId"
       :is-forced-channel="channelState.forced"
-      :has-active-qall-session="hasActiveQallSession"
-      :is-qall-session-opened="isQallSessionOpened"
-      :is-joined-qall-session="isJoinedQallSession"
-      :is-joined-with-current-device="isJoinedWithCurrentDevice"
       :is-stared="channelState.stared"
       :is-archived="channelState.archived"
-      @click-qall="toggleQall"
       @star-channel="starChannel"
       @unstar-channel="unstarChannel"
       @click-more="togglePopupMenu"
@@ -18,18 +13,14 @@
       <click-outside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
         <channel-header-tools-menu
           :class="$style.toolsMenu"
+          :channel-id="channelId"
           :show-notification-setting-btn="!channelState.forced"
-          :has-active-qall-session="hasActiveQallSession"
-          :is-qall-session-opened="isQallSessionOpened"
-          :is-joined-qall-session="isJoinedQallSession"
-          :is-joined-with-current-device="isJoinedWithCurrentDevice"
           :is-child-channel-creatable="isChildChannelCreatable"
           :is-archived="channelState.archived"
           @click-notification="openNotificationModal"
           @click-create-channel="openChannelCreateModal"
           @click-search="openCommandPalette('search', 'in:here ')"
           @click-copy-channel-link="copyLink"
-          @click-qall="toggleQall"
           @click-manage-channel="openChannelManageModal"
         />
       </click-outside>
@@ -39,7 +30,6 @@
 
 <script lang="ts" setup>
 import { ChannelId } from '/@/types/entity-ids'
-import useQall from './composables/useQall'
 import useChannelState from './composables/useChannelState'
 import useStarChannel from './composables/useStarChannel'
 import useNotificationModal from './composables/useNotificationModal'
@@ -87,13 +77,6 @@ const copyLink = async () => {
   )
 }
 
-const {
-  hasActiveQallSession,
-  isJoinedQallSession,
-  isQallSessionOpened,
-  isJoinedWithCurrentDevice,
-  toggleQall
-} = useQall(props)
 const { openChannelManageModal } = useChannelManageModal(props)
 const { openCommandPalette } = useCommandPalette()
 </script>

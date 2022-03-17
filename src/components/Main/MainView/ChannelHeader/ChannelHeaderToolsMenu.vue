@@ -1,18 +1,14 @@
 <template>
   <main-view-header-popup-frame>
     <header-tools-menu-item
-      v-if="isMobile && isQallEnabled"
-      icon-name="phone"
+      v-if="isMobile && isQallFeatureEnabled"
+      :icon-name="qallIconName"
       icon-mdi
       :class="$style.qallIcon"
       :label="qallLabel"
-      :disabled="
-        isArchived ||
-        (hasActiveQallSession &&
-          (!isJoinedQallSession || !isJoinedWithCurrentDevice))
-      "
+      :disabled="!canToggleQall"
       :data-is-active="$boolAttr(isQallSessionOpened)"
-      @click="clickQall"
+      @click="toggleQall"
     />
     <header-tools-menu-item
       v-if="isChildChannelCreatable"
@@ -53,34 +49,27 @@
 import { computed } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
-import { useRtcSettings } from '/@/store/app/rtcSettings'
 import { useMeStore } from '/@/store/domain/me'
 import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
 import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
+import useQall from './composables/useQall'
+import { ChannelId } from '/@/types/entity-ids'
 
 const props = withDefaults(
   defineProps<{
+    channelId: ChannelId
     showNotificationSettingBtn?: boolean
-    hasActiveQallSession?: boolean
-    isQallSessionOpened?: boolean
-    isJoinedQallSession?: boolean
-    isJoinedWithCurrentDevice?: boolean
     isChildChannelCreatable?: boolean
     isArchived?: boolean
   }>(),
   {
     showNotificationSettingBtn: true,
-    hasActiveQallSession: false,
-    isQallSessionOpened: false,
-    isJoinedQallSession: false,
-    isJoinedWithCurrentDevice: false,
     isChildChannelCreatable: false,
     isArchived: false
   }
 )
 
 const emit = defineEmits<{
-  (e: 'clickQall'): void
   (e: 'clickCreateChannel'): void
   (e: 'clickNotification'): void
   (e: 'clickSearch'): void
@@ -88,35 +77,23 @@ const emit = defineEmits<{
   (e: 'clickManageChannel'): void
 }>()
 
-const isSkywayApikeySet = window.traQConfig.skyway !== undefined
 const isSearchEnabled = window.traQConfig.enableSearch ?? false
 
+const {
+  isQallFeatureEnabled,
+  isQallSessionOpened,
+  canToggleQall,
+  qallIconName,
+  qallLabel,
+  toggleQall
+} = useQall(props)
+
 const { detail } = useMeStore()
-const { isEnabled: isRtcEnabled } = useRtcSettings()
 const { isMobile } = useResponsiveStore()
-const isQallEnabled = computed(() => isSkywayApikeySet && isRtcEnabled.value)
-const qallLabel = computed(() => {
-  if (props.isQallSessionOpened) {
-    if (props.isJoinedWithCurrentDevice) {
-      return 'Qallを終了'
-    }
-    if (props.isJoinedQallSession) {
-      return '別のデバイスでQall中'
-    }
-    return 'Qallに参加'
-  }
-  if (props.hasActiveQallSession) {
-    return '他チャンネルでQall中'
-  }
-  return 'Qallを開始'
-})
 const hasChannelEditPermission = computed(() =>
   detail.value?.permissions.includes(UserPermission.EditChannel)
 )
 
-const clickQall = () => {
-  emit('clickQall')
-}
 const clickCreateChannel = () => {
   emit('clickCreateChannel')
 }
