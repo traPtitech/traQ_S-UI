@@ -1,4 +1,4 @@
-import { deepSome } from '/@/lib/basic/tree'
+import { deepSome, filterTree } from '/@/lib/basic/tree'
 
 describe('deepSome', () => {
   it(`can detect false`, () => {
@@ -24,7 +24,29 @@ describe('deepSome', () => {
   })
 })
 
+describe('filterTree', () => {
+  it('can filter all', () => {
+    expect(filterTree(tree10, isArchived)).toStrictEqual(tree10)
+  })
+  it('can filter child', () => {
+    expect(filterTree(tree11, isArchived)).toStrictEqual({
+      archived: false,
+      children: []
+    })
+  })
+  it('can filter out all', () => {
+    expect(filterTree(tree12, isArchived)).toBe(null)
+  })
+  it('can filter deep child', () => {
+    expect(filterTree(tree13, isArchived)).toStrictEqual({
+      archived: false,
+      children: []
+    })
+  })
+})
+
 const isUnread = (t: { unread: boolean }) => t.unread
+const isArchived = (t: { archived: boolean }) => !t.archived
 
 const tree1 = {
   unread: false,
@@ -116,6 +138,51 @@ const tree6 = {
         },
         {
           unread: false,
+          children: []
+        }
+      ]
+    }
+  ]
+}
+
+const tree10 = {
+  archived: false,
+  children: [
+    {
+      archived: false,
+      children: []
+    }
+  ]
+}
+
+const tree11 = {
+  archived: false,
+  children: [
+    {
+      archived: true,
+      children: []
+    }
+  ]
+}
+
+const tree12 = {
+  archived: true,
+  children: [
+    {
+      archived: true,
+      children: []
+    }
+  ]
+}
+
+const tree13 = {
+  archived: false,
+  children: [
+    {
+      archived: true,
+      children: [
+        {
+          archived: true,
           children: []
         }
       ]
