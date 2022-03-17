@@ -55,11 +55,12 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import useChannelsWithNotification from '/@/composables/unreads/useChannelsWithNotification'
 
 const { homeChannelTree } = useChannelTree()
 const { channelSessionsMap } = useDomainRtcStore()
-const { detail, unreadChannelsMap } = useMeStore()
-const { channelsMap, dmChannelsMap } = useChannelsStore()
+const { detail } = useMeStore()
+const { channelsMap } = useChannelsStore()
 
 const homeChannelWithTree = computed(() =>
   !detail.value?.homeChannel
@@ -75,23 +76,10 @@ const homeChannelWithTree = computed(() =>
         channelsMap.value
       )?.children?.filter(channel => !channel.archived) ?? []
 )
-const channelsWithNotification = computed(() =>
-  [...unreadChannelsMap.value.values()]
-    .sort((a, b) => {
-      if (a.noticeable !== b.noticeable) {
-        return b.noticeable ? 1 : -1
-      }
-      return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
-    })
-    .map(unread => channelsMap.value.get(unread.channelId))
-    .filter(isDefined)
-)
-const dmChannelsWithNotification = computed(() =>
-  [...unreadChannelsMap.value.values()]
-    .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
-    .map(unread => dmChannelsMap.value.get(unread.channelId))
-    .filter(isDefined)
-)
+
+const { channelsWithNotification, dmChannelsWithNotification } =
+  useChannelsWithNotification()
+
 const topLevelChannels = computed(() =>
   homeChannelTree.value.children.filter(channel => !channel.archived)
 )

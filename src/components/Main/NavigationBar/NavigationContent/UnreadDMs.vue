@@ -1,13 +1,13 @@
 <template>
   <navigation-content-container
-    v-if="usersWithNotification.length > 0"
+    v-if="dmChannelsWithNotification.length > 0"
     subtitle="未読ダイレクトメッセージ"
   >
     <div :class="$style.dmActivity">
       <d-m-activity-element
-        v-for="user in usersWithNotification"
-        :key="user"
-        :user-id="user"
+        v-for="dmChannel in dmChannelsWithNotification"
+        :key="dmChannel.userId"
+        :user-id="dmChannel.userId"
         :class="$style.dmActivityElement"
       />
     </div>
@@ -15,24 +15,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { isDefined } from '/@/lib/basic/array'
-import { useMeStore } from '/@/store/domain/me'
-import { useChannelsStore } from '/@/store/entities/channels'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMActivityElement from './DMActivityElement.vue'
+import useChannelsWithNotification from '/@/composables/unreads/useChannelsWithNotification'
 
-const { unreadChannelsMap } = useMeStore()
-const { dmChannelsMap } = useChannelsStore()
-const usersWithNotification = computed(() =>
-  [...unreadChannelsMap.value.values()]
-    .sort((a, b) =>
-      Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
-    )
-    .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
-    .filter(isDefined)
-    .map(({ userId }) => userId)
-)
+const { dmChannelsWithNotification } = useChannelsWithNotification()
 </script>
 
 <style lang="scss" module>
