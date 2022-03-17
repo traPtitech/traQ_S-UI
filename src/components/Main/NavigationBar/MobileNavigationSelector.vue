@@ -61,13 +61,13 @@ const { entries, ephemeralEntries } = useNavigationSelectorEntry()
 const showSeparator = computed(() => ephemeralEntries.value.length > 0)
 
 watch(ephemeralEntries, (entries, prevEntries) => {
-  ;(prevEntries ?? [])
-    .filter(e => !entries.includes(e))
+  prevEntries
+    ?.filter(e => !entries.includes(e))
     .forEach(e => {
       emit('ephemeralEntryRemove', e)
     })
-  ;(entries ?? [])
-    .filter(e => !prevEntries?.includes(e))
+  entries
+    ?.filter(e => !prevEntries?.includes(e))
     .forEach(e => {
       emit('ephemeralEntryAdd', e)
     })

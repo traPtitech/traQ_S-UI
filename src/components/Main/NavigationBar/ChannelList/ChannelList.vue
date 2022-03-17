@@ -15,7 +15,7 @@
   </slide-down>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
@@ -23,23 +23,6 @@ import { Channel } from '@traptitech/traq'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
 
-const useChannelFolding = () => {
-  const foldedChannels = ref(new Set<ChannelId>())
-  const onChannelFoldingToggle = (id: ChannelId) => {
-    if (foldedChannels.value.has(id)) {
-      foldedChannels.value.delete(id)
-    } else {
-      foldedChannels.value.add(id)
-    }
-  }
-  return {
-    foldedChannels,
-    onChannelFoldingToggle
-  }
-}
-</script>
-
-<script lang="ts" setup>
 import SlideDown from '/@/components/UI/SlideDown.vue'
 
 // 型エラー・コンポーネント循環参照の回避
@@ -66,7 +49,15 @@ withDefaults(
 
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
-const { foldedChannels, onChannelFoldingToggle } = useChannelFolding()
+
+const foldedChannels = ref(new Set<ChannelId>())
+const onChannelFoldingToggle = (id: ChannelId) => {
+  if (foldedChannels.value.has(id)) {
+    foldedChannels.value.delete(id)
+  } else {
+    foldedChannels.value.add(id)
+  }
+}
 
 const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
   openLink(event, channelIdToLink(channelId))

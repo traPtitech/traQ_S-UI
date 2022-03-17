@@ -28,43 +28,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import apis from '/@/lib/apis'
-import router, { constructChannelPath } from '/@/router'
+import router, {
+  constructChannelPath,
+  constructClipFoldersPath
+} from '/@/router'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
-
-const useDelete = (props: { clipFolderId: ClipFolderId }) => {
-  const { clipFoldersMap } = useClipFoldersStore()
-  const { defaultChannelName } = useBrowserSettings()
-
-  const deleteClip = async () => {
-    if (!window.confirm('本当に削除しますか？')) {
-      return
-    }
-    await apis.deleteClipFolder(props.clipFolderId)
-    const clipFolders = [...clipFoldersMap.value.values()]
-      .filter(v => v.id !== props.clipFolderId)
-      .sort((a, b) => {
-        const aDate = new Date(a.createdAt)
-        const bDate = new Date(b.createdAt)
-        if (aDate < bDate) return -1
-        else if (aDate > bDate) return 1
-        else return 0
-      })
-    if (clipFolders[0]) {
-      router.push(`/clip-folders/${clipFolders[0].id}`)
-      return
-    }
-    router.push(constructChannelPath(defaultChannelName.value))
-  }
-  return { deleteClip }
-}
-</script>
-
-<script lang="ts" setup>
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
 import ContentEditor from '/@/components/Main/MainView/MainViewSidebar/ContentEditor.vue'
@@ -108,7 +81,28 @@ const { localValue: localDescription, isEditing: isDescriptionEditing } =
     }
   })
 
-const { deleteClip } = useDelete(props)
+const { defaultChannelName } = useBrowserSettings()
+
+const deleteClip = async () => {
+  if (!window.confirm('本当に削除しますか？')) {
+    return
+  }
+  await apis.deleteClipFolder(props.clipFolderId)
+  const clipFolders = [...clipFoldersMap.value.values()]
+    .filter(v => v.id !== props.clipFolderId)
+    .sort((a, b) => {
+      const aDate = new Date(a.createdAt)
+      const bDate = new Date(b.createdAt)
+      if (aDate < bDate) return -1
+      else if (aDate > bDate) return 1
+      else return 0
+    })
+  if (clipFolders[0]) {
+    router.push(constructClipFoldersPath(clipFolders[0].id))
+    return
+  }
+  router.push(constructChannelPath(defaultChannelName.value))
+}
 </script>
 
 <style lang="scss" module>

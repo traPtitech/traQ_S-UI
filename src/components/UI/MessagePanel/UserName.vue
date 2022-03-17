@@ -1,23 +1,22 @@
 <template>
   <div :class="$style.container" :data-is-title="$boolAttr(isTitle)">
     <user-icon
-      v-if="id"
+      v-if="user"
       :class="$style.icon"
-      :user-id="id"
+      :user-id="user.id"
       :size="isTitle ? 24 : 20"
     />
     <span :class="$style.displayName">
-      {{ displayName }}
+      {{ user?.displayName ?? 'unknown' }}
     </span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     user?: User
     isTitle?: boolean
@@ -26,9 +25,6 @@ const props = withDefaults(
     isTitle: false
   }
 )
-
-const id = computed(() => props.user?.id)
-const displayName = computed(() => props.user?.displayName ?? 'unknown')
 </script>
 
 <style lang="scss" module>

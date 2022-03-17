@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <button :class="$style.top" @click="topToggleClick">
+    <button :class="$style.top" @click="emit('topToggleClick')">
       <a-icon name="phone" mdi />
     </button>
     <div :class="$style.info">
@@ -14,11 +14,11 @@
     <button
       :class="$style.mic"
       :data-is-mute="$boolAttr(isMicMuted)"
-      @click="micClick"
+      @click="emit('micClick')"
     >
       <a-icon :name="micIconName" mdi />
     </button>
-    <button :class="$style.end" @click="endQallClick">
+    <button :class="$style.end" @click="emit('endQallClick')">
       <a-icon name="phone-hangup" mdi />
     </button>
   </div>
@@ -54,16 +54,6 @@ const channelLink = computed(() => channelIdToLink(props.channelId))
 const micIconName = computed(() =>
   props.isMicMuted ? 'microphone-off' : 'microphone'
 )
-
-const topToggleClick = () => {
-  emit('topToggleClick')
-}
-const micClick = () => {
-  emit('micClick')
-}
-const endQallClick = () => {
-  emit('endQallClick')
-}
 </script>
 
 <style lang="scss" module>

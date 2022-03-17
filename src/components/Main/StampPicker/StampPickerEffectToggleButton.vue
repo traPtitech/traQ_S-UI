@@ -1,5 +1,9 @@
 <template>
-  <button :class="$style.container" :aria-selected="isActive" @click="onClick">
+  <button
+    :class="$style.container"
+    :aria-selected="isActive"
+    @click="emit('click')"
+  >
     <a-icon name="effect" />
   </button>
 </template>
@@ -19,10 +23,6 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'click'): void
 }>()
-
-const onClick = () => {
-  emit('click')
-}
 </script>
 
 <style lang="scss" module>

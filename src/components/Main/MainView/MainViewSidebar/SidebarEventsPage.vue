@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar-page show-back-button @back="moveBack">
+  <main-view-sidebar-page show-back-button @back="emit('moveBack')">
     <template #header>
       <sidebar-header text="イベント" />
     </template>
@@ -43,10 +43,6 @@ const emit = defineEmits<{
 const containerEle = shallowRef<HTMLElement>()
 const { events, onScroll } = useChannelEvents(props, containerEle)
 const parsedEvents = computed(() => events.value.map(parseChannelEvent))
-
-const moveBack = () => {
-  emit('moveBack')
-}
 </script>
 
 <style lang="scss" module>

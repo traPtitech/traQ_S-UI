@@ -55,7 +55,6 @@ const {
   moveToEventsPage,
   pinnedMessages,
   viewerIds,
-  openSidebar,
-  closeSidebar
+  openSidebar
 } = useChannelSidebarCommon()
 </script>

@@ -1,5 +1,9 @@
 <template>
-  <div :class="$style.container" :aria-selected="isActive" @click="onClick">
+  <div
+    :class="$style.container"
+    :aria-selected="isActive"
+    @click="emit('click')"
+  >
     <div v-if="isActive" :class="$style.indicator"></div>
     <a-stamp
       v-if="stampSet.type === 'palette'"
@@ -23,28 +27,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { StampPaletteId } from '/@/types/entity-ids'
 import { StampSet } from './composables/useStampSetSelector'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
-
-const useStampPaletteThumbnail = () => {
-  const { stampPalettesMap } = useStampPalettesStore()
-
-  const pickThumbnail = (paletteId: StampPaletteId) => {
-    const palette = stampPalettesMap.value.get(paletteId)
-    if (!palette) return ''
-    if ((palette.stamps?.length ?? 0) > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return palette.stamps[0]!
-    }
-    return ''
-  }
-  return { pickThumbnail }
-}
-</script>
-
-<script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 
@@ -62,9 +48,15 @@ const emit = defineEmits<{
   (e: 'click'): void
 }>()
 
-const { pickThumbnail } = useStampPaletteThumbnail()
-const onClick = () => {
-  emit('click')
+const { stampPalettesMap } = useStampPalettesStore()
+const pickThumbnail = (paletteId: StampPaletteId) => {
+  const palette = stampPalettesMap.value.get(paletteId)
+  if (!palette) return ''
+  if ((palette.stamps?.length ?? 0) > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return palette.stamps[0]!
+  }
+  return ''
 }
 </script>
 

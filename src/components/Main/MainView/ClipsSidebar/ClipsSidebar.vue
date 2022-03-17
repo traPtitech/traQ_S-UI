@@ -24,7 +24,6 @@ import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHe
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
 import { computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
-import useSidebar from '/@/composables/useSidebar'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 const props = defineProps<{
@@ -33,8 +32,6 @@ const props = defineProps<{
 }>()
 
 const { clipFoldersMap } = useClipFoldersStore()
-const { closeSidebar } = useSidebar()
-
 const clipFolderName = computed(
   () => clipFoldersMap.value.get(props.clipFolderId)?.name ?? ''
 )

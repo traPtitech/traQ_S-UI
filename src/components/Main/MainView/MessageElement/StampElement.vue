@@ -1,9 +1,9 @@
 <template>
   <div
     :class="$style.body"
-    :title="state.tooltip"
-    :data-include-me="$boolAttr(state.includeMe)"
-    :data-my-count-has-incremented="$boolAttr(state.myCountHasIncremented)"
+    :title="tooltip"
+    :data-include-me="$boolAttr(includeMe)"
+    :data-my-count-has-incremented="$boolAttr(myCountHasIncremented)"
     @click="onClick"
   >
     <a-stamp
@@ -20,10 +20,10 @@
 <script lang="ts" setup>
 import SpinNumber from '/@/components/UI/SpinNumber.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
-import { reactive, computed, watch, onMounted } from 'vue'
-import { MessageStampById } from './MessageStampList.vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useStampsStore } from '/@/store/entities/stamps'
 import { useUsersStore } from '/@/store/entities/users'
+import { MessageStampById } from '/@/lib/messageStampList'
 
 const props = defineProps<{
   stamp: MessageStampById
@@ -41,51 +41,51 @@ const stampName = computed(
   () => stampsMap.value.get(props.stamp.id)?.name ?? ''
 )
 
-const state = reactive({
-  includeMe: computed(() => props.stamp.myCount > 0),
-  tooltip: computed(() =>
-    [
-      `:${stampName.value}:`,
-      ...props.stamp.users.map(
-        u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
-      )
-    ].join(' ')
-  ),
-  isProgress: false,
-  myCountHasIncremented: false
-})
+const tooltip = computed(() =>
+  [
+    `:${stampName.value}:`,
+    ...props.stamp.users.map(
+      u => `${usersMap.value.get(u.id)?.displayName ?? ''}(${u.count})`
+    )
+  ].join(' ')
+)
+
+const includeMe = computed(() => props.stamp.myCount > 0)
+
+const isProgress = ref(false)
+const myCountHasIncremented = ref(false)
 
 const onClick = () => {
-  if (state.isProgress) return
-  if (state.includeMe) {
+  if (isProgress.value) return
+  if (includeMe.value) {
     emit('removeStamp', props.stamp.id)
   } else {
     emit('addStamp', props.stamp.id)
   }
-  state.isProgress = true
+  isProgress.value = true
 }
 watch(
   () => props.stamp,
   () => {
-    state.isProgress = false
+    isProgress.value = false
   }
 )
 
 onMounted(() => {
   if (props.stamp.myCount > 0) {
-    state.myCountHasIncremented = true
+    myCountHasIncremented.value = true
   }
 })
 watch(
   () => props.stamp.myCount,
   (newVal, oldVal) => {
     if (oldVal < newVal) {
-      state.myCountHasIncremented = true
+      myCountHasIncremented.value = true
     }
   }
 )
 const unsetMyCountHasIncremented = () => {
-  state.myCountHasIncremented = false
+  myCountHasIncremented.value = false
 }
 </script>
 

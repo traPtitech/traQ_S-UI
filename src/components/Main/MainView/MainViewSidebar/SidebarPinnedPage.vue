@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar-page show-back-button @back="moveBack">
+  <main-view-sidebar-page show-back-button @back="emit('moveBack')">
     <template #header>
       <sidebar-header text="ピン留め" />
     </template>
@@ -27,8 +27,4 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'moveBack'): void
 }>()
-
-const moveBack = () => {
-  emit('moveBack')
-}
 </script>

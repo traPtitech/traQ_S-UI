@@ -9,7 +9,7 @@
       v-if="title"
       :class="$style.header"
       :data-is-clickable="$boolAttr(titleClickable)"
-      @click="onTitleClick"
+      @click="emit('toggle')"
     >
       <h2 :class="$style.headerTitle">{{ title }}</h2>
       <slot name="header-control"></slot>
@@ -37,9 +37,6 @@ const emit = defineEmits<{
   (e: 'toggle'): void
 }>()
 
-const onTitleClick = () => {
-  emit('toggle')
-}
 const onContainerClick = () => {
   if (props.clickable) {
     emit('toggle')

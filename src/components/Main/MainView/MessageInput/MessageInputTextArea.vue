@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref, computed, toRef } from 'vue'
 import useSendKeyWatcher from './composables/useSendKeyWatcher'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
@@ -43,24 +43,6 @@ import { getScrollbarWidth } from '/@/lib/dom/scrollbar'
 import { isFirefox } from '/@/lib/dom/browser'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import usePaste from './composables/usePaste'
-
-const firefoxFlag = isFirefox()
-
-const useFocus = (
-  emit: ((event: 'focus') => void) & ((event: 'blur') => void)
-) => {
-  const onFocus = () => {
-    emit('focus')
-  }
-  const onBlur = () => {
-    emit('blur')
-  }
-
-  return { onFocus, onBlur }
-}
-</script>
-
-<script lang="ts" setup>
 import TextareaAutosize from '/@/components/UI/TextareaAutosize.vue'
 import DropdownSuggester from './DropdownSuggester/DropdownSuggester.vue'
 
@@ -90,6 +72,8 @@ const emit = defineEmits<{
   (e: 'modifierKeyDown'): void
   (e: 'modifierKeyUp'): void
 }>()
+
+const firefoxFlag = isFirefox()
 
 const value = useModelValueSyncer(props, emit)
 const { isMobile } = useResponsiveStore()
@@ -143,12 +127,13 @@ const onKeyUp = (e: KeyboardEvent) => {
   onKeyUpWordSuggester(e)
 }
 
-const { onFocus, onBlur: onBlurDefault } = useFocus(emit)
-
+const onFocus = () => {
+  emit('focus')
+}
 const onBlur = () => {
   onBlurWordSuggester()
   onBlurSendKeyWatcher()
-  onBlurDefault()
+  emit('blur')
 }
 
 const scollbarWidth = getScrollbarWidth()

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container" :style="styles.container" @click="showContent">
+  <div :class="$style.container" :style="containerStyle" @click="showContent">
     <iframe
       v-if="!previewUrl || isContentShown"
       :src="embeddedUrl"
@@ -17,27 +17,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref, reactive, computed } from 'vue'
-
-const usePreviewState = () => {
-  const isContentShown = ref(false)
-  const showContent = () => {
-    isContentShown.value = true
-  }
-  return { isContentShown, showContent }
-}
-
-const useStyles = (props: { aspectRatio: number }) =>
-  reactive({
-    container: computed(() => ({
-      paddingTop: `${props.aspectRatio * 100}%`
-    }))
-  })
-</script>
-
 <script lang="ts" setup>
+import { computed } from 'vue'
 import AIcon from '/@/components/UI/AIcon.vue'
+import useToggle from '/@/composables/useToggle'
 
 const props = withDefaults(
   defineProps<{
@@ -52,8 +35,11 @@ const props = withDefaults(
   }
 )
 
-const { isContentShown, showContent } = usePreviewState()
-const styles = useStyles(props)
+const { value: isContentShown, open: showContent } = useToggle()
+
+const containerStyle = computed(() => ({
+  paddingTop: `${props.aspectRatio * 100}%`
+}))
 </script>
 
 <style lang="scss" module>
@@ -61,7 +47,6 @@ const styles = useStyles(props)
   // iframeを幅いっぱいに表示するためのハック
   position: relative;
   width: 100%;
-  // padding-top: 56.25%;
   overflow: hidden;
 }
 .content {

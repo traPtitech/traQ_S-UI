@@ -14,33 +14,25 @@
   </navigation-content-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-
-const useUsersWithNotification = () => {
-  const { unreadChannelsMap } = useMeStore()
-  const { dmChannelsMap } = useChannelsStore()
-  const usersWithNotification = computed(() =>
-    [...unreadChannelsMap.value.values()]
-      .sort((a, b) =>
-        Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
-      )
-      .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
-      .filter(isDefined)
-      .map(({ userId }) => userId)
-  )
-  return usersWithNotification
-}
-</script>
-
-<script lang="ts" setup>
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMActivityElement from './DMActivityElement.vue'
 
-const usersWithNotification = useUsersWithNotification()
+const { unreadChannelsMap } = useMeStore()
+const { dmChannelsMap } = useChannelsStore()
+const usersWithNotification = computed(() =>
+  [...unreadChannelsMap.value.values()]
+    .sort((a, b) =>
+      Date.parse(a.updatedAt) > Date.parse(b.updatedAt) ? -1 : 1
+    )
+    .map(unread => dmChannelsMap.value.get(unread.channelId ?? ''))
+    .filter(isDefined)
+    .map(({ userId }) => userId)
+)
 </script>
 
 <style lang="scss" module>

@@ -8,5 +8,3 @@ import { useModalStore } from '/@/store/ui/modal'
 
 const { popOrCloseModal } = useModalStore()
 </script>
-
-<style lang="scss" module></style>

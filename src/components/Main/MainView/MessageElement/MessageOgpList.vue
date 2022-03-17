@@ -9,25 +9,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
 import { useMessagesStore } from '/@/store/entities/messages'
-
-const useOgpData = (props: { externalUrls: string[] }) => {
-  const { ogpDataMap } = useMessagesStore()
-
-  const ogpData = computed(() =>
-    props.externalUrls
-      .map(url => ogpDataMap.value.get(url))
-      .filter(isDefined)
-      .filter(o => o.title)
-  )
-  return { ogpData }
-}
-</script>
-
-<script lang="ts" setup>
 import MessageOgpListItem from './MessageOgpListItem.vue'
 
 const props = withDefaults(
@@ -39,7 +24,14 @@ const props = withDefaults(
   }
 )
 
-const { ogpData } = useOgpData(props)
+const { ogpDataMap } = useMessagesStore()
+
+const ogpData = computed(() =>
+  props.externalUrls
+    .map(url => ogpDataMap.value.get(url))
+    .filter(isDefined)
+    .filter(o => o.title)
+)
 </script>
 
 <style lang="scss" module>

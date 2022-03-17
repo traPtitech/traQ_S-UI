@@ -22,7 +22,7 @@
         <message-input-insert-stamp-button
           :class="$style.iconButton"
           :disabled="isPostingAttachment"
-          @click="onStampClick"
+          @click="toggleStampPicker"
         />
         <message-input-upload-button
           :class="$style.iconButton"
@@ -159,10 +159,6 @@ const { toggleStampPicker } = useTextStampPickerInvoker(
   computed(() => textareaComponentRef.value?.textareaAutosizeRef.$el),
   containerEle
 )
-
-const onStampClick = () => {
-  toggleStampPicker()
-}
 
 const {
   isPostingAttachment,

@@ -1,37 +1,19 @@
 <template>
   <div :class="$style.container">
     <img
-      ref="thumbnailRef"
       :class="$style.image"
-      :src="imageThumbnailState.thumbnailDataUrl"
+      :src="attachment.thumbnailDataUrl"
       :alt="attachment.file.name"
     />
   </div>
 </template>
 
-<script lang="ts">
-import { Attachment } from '/@/store/ui/messageInputState'
-import { computed, reactive, Ref, shallowRef } from 'vue'
-
-const useImageThumbnail = (
-  props: { attachment: Attachment },
-  thumbnailRef: Ref<HTMLImageElement | null>
-) => {
-  const state = reactive({
-    thumbnailDataUrl: computed(() => props.attachment.thumbnailDataUrl),
-    width: computed(() => thumbnailRef.value?.naturalHeight)
-  })
-  return { imageThumbnailState: state }
-}
-</script>
-
 <script lang="ts" setup>
+import { Attachment } from '/@/store/ui/messageInputState'
+
 const props = defineProps<{
   attachment: Attachment
 }>()
-
-const thumbnailRef = shallowRef<HTMLImageElement | null>(null)
-const { imageThumbnailState } = useImageThumbnail(props, thumbnailRef)
 </script>
 
 <style lang="scss" module>

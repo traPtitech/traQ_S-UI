@@ -9,9 +9,8 @@
       <template #default>
         <channel-filter
           v-model="channelListFilterState.query"
-          :is-stared="filterStarChannel"
+          v-model:is-stared="filterStarChannel"
           :class="$style.filter"
-          @toggle-star-filter="toggleStarChannelFilter"
         />
         <template v-if="topLevelChannels.length > 0">
           <channel-list
@@ -41,31 +40,12 @@
 import { computed, Ref } from 'vue'
 import useChannelFilter from '/@/composables/useChannelFilter'
 import { constructTree } from '/@/lib/channelTree'
-import { Channel } from '@traptitech/traq'
 import { buildDescendantsChannelArray } from '../composables/useBuildChannel'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-import useToggle from '/@/composables/useToggle'
-
-const useChannelListFilter = (channels: Readonly<Ref<readonly Channel[]>>) => {
-  const { textFilterState } = useChannelFilter(channels)
-  return {
-    channelListFilterState: textFilterState
-  }
-}
-
-const useFilterStarChannel = () => {
-  const { filterStarChannel } = useBrowserSettings()
-  const { toggle: toggleStarChannelFilter } = useToggle(filterStarChannel)
-
-  return {
-    filterStarChannel,
-    toggleStarChannelFilter
-  }
-}
 
 const useChannelList = (filterStarChannel: Ref<boolean>) => {
   const { staredChannelSet } = useMeStore()
@@ -121,8 +101,8 @@ const { pushModal } = useModalStore()
 const topLevelChannels = useTopLevelChannels()
 const staredChannels = useStaredChannels()
 
-const { filterStarChannel, toggleStarChannelFilter } = useFilterStarChannel()
-const { channelListFilterState } = useChannelListFilter(
+const { filterStarChannel } = useBrowserSettings()
+const { textFilterState: channelListFilterState } = useChannelFilter(
   useChannelList(filterStarChannel)
 )
 

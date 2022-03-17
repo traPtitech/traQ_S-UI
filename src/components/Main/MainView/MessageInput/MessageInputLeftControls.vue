@@ -3,7 +3,7 @@
     <template v-if="!isMobile || isExpanded">
       <message-input-upload-button
         :class="$style.button"
-        @click="onClickAddAttachment"
+        @click="emit('clickAddAttachment')"
       />
       <message-input-preview-button
         v-model="isPreviewShownValue"
@@ -52,10 +52,6 @@ const isPreviewShownValue = computed<boolean>({
     emit('update:isExpanded', false)
   }
 })
-
-const onClickAddAttachment = () => {
-  emit('clickAddAttachment')
-}
 </script>
 
 <style lang="scss" module>

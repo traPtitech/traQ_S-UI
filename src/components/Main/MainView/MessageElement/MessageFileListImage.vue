@@ -2,9 +2,9 @@
   <template v-if="canShow">
     <router-link v-if="isLarge" :to="fileLink" :class="$style.largeContainer">
       <!--
-      height, widthはlayout shift対策
-      https://www.mizdra.net/entry/2020/05/31/192613
-    -->
+        height, widthはlayout shift対策
+        https://www.mizdra.net/entry/2020/05/31/192613
+      -->
       <img
         draggable="false"
         :alt="name"
@@ -16,8 +16,8 @@
     </router-link>
     <router-link v-else :to="fileLink" :class="$style.container">
       <!--
-      CSSで固定値指定なのでheight, widthはつけない
-    -->
+        CSSで固定値指定なのでheight, widthはつけない
+      -->
       <img draggable="false" :alt="name" :src="fileThumbnailPath" />
       <play-icon v-if="isAnimatedImage" :class="$style.playIcon" />
     </router-link>

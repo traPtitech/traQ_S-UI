@@ -1,6 +1,6 @@
-import { onBeforeUnmount, onMounted, ref, Ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, ShallowRef } from 'vue'
 
-const useHeightObserver = (targetRef: Ref<HTMLElement | undefined>) => {
+const useHeightObserver = (targetRef: ShallowRef<HTMLElement | null>) => {
   const height = ref<number>()
 
   const observer = new ResizeObserver(entries => {
