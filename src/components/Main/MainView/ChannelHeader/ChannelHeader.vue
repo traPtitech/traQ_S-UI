@@ -2,21 +2,21 @@
   <main-view-header>
     <template #header>
       <div :class="$style.header">
-        <header-channel-name :channel-id="channelId" />
-        <header-topic :class="$style.topic" :channel-id="channelId" />
+        <channel-header-channel-name :channel-id="channelId" />
+        <channel-header-topic :class="$style.topic" :channel-id="channelId" />
       </div>
     </template>
     <template #tools>
-      <header-tools :channel-id="channelId" />
+      <channel-header-tools :channel-id="channelId" />
     </template>
   </main-view-header>
 </template>
 
 <script lang="ts" setup>
 import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
-import HeaderChannelName from './HeaderChannelName.vue'
-import HeaderTopic from './HeaderTopic.vue'
-import HeaderTools from './HeaderTools.vue'
+import ChannelHeaderChannelName from './ChannelHeaderChannelName.vue'
+import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
+import ChannelHeaderTools from './ChannelHeaderTools.vue'
 import { ChannelId } from '/@/types/entity-ids'
 
 defineProps<{
