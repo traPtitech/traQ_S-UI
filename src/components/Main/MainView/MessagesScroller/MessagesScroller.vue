@@ -1,12 +1,15 @@
 <template>
   <div
-    v-if="stampsMapFetched"
     ref="rootRef"
     :class="$style.root"
     @scroll.passive="handleScroll"
     @click="onClick"
   >
-    <div :class="$style.viewport" data-testid="channel-viewport">
+    <div
+      v-if="stampsMapFetched"
+      :class="$style.viewport"
+      data-testid="channel-viewport"
+    >
       <messages-scroller-separator
         v-if="isReachedEnd"
         title="これ以上メッセージはありません"
