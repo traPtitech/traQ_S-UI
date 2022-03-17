@@ -50,7 +50,7 @@ import NavigationContentContainer from '/@/components/Main/NavigationBar/Navigat
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
 import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
-import { constructTree } from '/@/lib/channelTree'
+import { constructTreeFromIds } from '/@/lib/channelTree'
 import { useChannelTree } from '/@/store/domain/channelTree'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
@@ -66,17 +66,11 @@ const { channelsMap } = useChannelsStore()
 const homeChannelWithTree = computed(() => {
   if (!detail.value?.homeChannel) return []
 
-  const channelTree = constructTree(
-    {
-      id: '',
-      name: '',
-      parentId: null,
-      archived: false,
-      children: [detail.value.homeChannel]
-    },
+  const trees = constructTreeFromIds(
+    [detail.value.homeChannel],
     channelsMap.value
   )
-  return filterTrees(channelTree?.children ?? [], channel => !channel.archived)
+  return filterTrees(trees, channel => !channel.archived)
 })
 
 const { channelsWithNotification, dmChannelsWithNotification } =
