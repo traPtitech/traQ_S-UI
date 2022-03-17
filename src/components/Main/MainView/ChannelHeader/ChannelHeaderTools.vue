@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-tools-list
+    <channel-header-tools-list
       :class="$style.tools"
       :channel-id="channelId"
       :is-forced-channel="channelState.forced"
@@ -16,7 +16,7 @@
       @click-more="togglePopupMenu"
     >
       <click-outside v-if="isPopupMenuShown" @click-outside="closePopupMenu">
-        <header-tools-menu
+        <channel-header-tools-menu
           :class="$style.toolsMenu"
           :show-notification-setting-btn="!channelState.forced"
           :has-active-qall-session="hasActiveQallSession"
@@ -33,7 +33,7 @@
           @click-manage-channel="openChannelManageModal"
         />
       </click-outside>
-    </header-tools-list>
+    </channel-header-tools-list>
   </div>
 </template>
 
@@ -50,8 +50,8 @@ import { useCommandPalette } from '/@/store/app/commandPalette'
 import useChannelPath from '/@/composables/useChannelPath'
 import { constructChannelPath } from '/@/router'
 import ClickOutside from '/@/components/UI/ClickOutside'
-import HeaderToolsList from './HeaderToolsList.vue'
-import HeaderToolsMenu from './HeaderToolsMenu.vue'
+import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'
+import ChannelHeaderToolsMenu from './ChannelHeaderToolsMenu.vue'
 import useToggle from '/@/composables/useToggle'
 import useExecWithToast from '/@/composables/toast/useExecWithToast'
 

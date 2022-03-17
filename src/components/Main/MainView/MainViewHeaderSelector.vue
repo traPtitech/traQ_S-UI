@@ -1,5 +1,5 @@
 <template>
-  <channel-view-header
+  <channel-header
     v-if="viewInfo.type === 'channel'"
     :channel-id="viewInfo.channelId"
   />
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelViewHeader from '/@/components/Main/MainView/ChannelView/ChannelViewHeader.vue'
+import ChannelHeader from '/@/components/Main/MainView/ChannelHeader/ChannelHeader.vue'
 import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
 import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue'
 import { ViewInformation } from '/@/store/ui/mainView'
