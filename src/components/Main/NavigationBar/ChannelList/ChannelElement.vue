@@ -7,6 +7,7 @@
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"
+      @mousedown="onChannelNameClick"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -18,7 +19,7 @@
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
         :is-inactive="state.isInactive"
-        @mousedown="onChannelHashClick"
+        @mousedown.stop="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
       />
@@ -26,19 +27,16 @@
         :channel="channel"
         :show-shortened-path="showShortenedPath"
         :is-selected="state.isSelected"
-        @mousedown="onChannelNameClick"
       />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
-        @mousedown="onChannelNameClick"
       />
     </div>
     <channel-element-topic
       v-if="showTopic"
       :class="$style.topic"
       :channel-id="channel.id"
-      @mousedown="onChannelNameClick"
     />
 
     <!-- 子チャンネル表示 -->

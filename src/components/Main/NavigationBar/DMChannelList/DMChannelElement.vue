@@ -3,6 +3,7 @@
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"
+      @mousedown="onChannelClick"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -15,11 +16,10 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" @mousedown="onChannelClick" />
+      <d-m-channel-element-name :name="user.name" />
       <channel-element-unread-badge
         is-noticeable
         :unread-count="notificationState.unreadCount"
-        @mousedown="onChannelClick"
       />
     </div>
 
