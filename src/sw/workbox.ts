@@ -29,6 +29,19 @@ export const setupWorkbox = () => {
   // 静的ファイルのprecache
   precacheAndRoute(self.__WB_MANIFEST)
 
+  registerRoute(
+    new RegExp('/assets/.+\\.mp3$'),
+    // ファイル名にハッシュが付与されているのでCacheFirst
+    new CacheFirst({
+      cacheName: 'assets-custom-cache',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200]
+        })
+      ]
+    })
+  )
+
   // index.htmlが返ってくる箇所は予め指定 (refs src/router/index.ts)
   registerRoute(
     new NavigationRoute(createHandlerBoundToURL('/index.html'), {
