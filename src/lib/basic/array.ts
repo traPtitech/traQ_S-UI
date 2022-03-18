@@ -7,14 +7,15 @@
  * @param arr 検索対象のキーの配列
  * @param query lowercaseになっているクエリ
  */
-export const getMatchedWithPriority = <T extends string>(
+export const getMatchedWithPriority = <T>(
   arr: readonly T[],
-  query: string
+  query: string,
+  f: (v: T) => string
 ) => {
   const result: Array<{ value: T; priority: number }> = []
 
   for (const val of arr) {
-    const valLower = val.toLowerCase()
+    const valLower = f(val).toLowerCase()
     if (valLower === query) {
       result.push({ value: val, priority: 0 })
     } else if (valLower.startsWith(query)) {

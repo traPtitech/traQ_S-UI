@@ -64,9 +64,9 @@ import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVol
 import AudioPlayerLoopButton from '/@/components/UI/AudioPlayer/AudioPlayerLoopButton.vue'
 import AudioPlayerPinPButton from '/@/components/UI/AudioPlayer/AudioPlayerPinPButton.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
-import useFileWaveform from '/@/composables/useFileWaveform'
-import useFileMeta from '/@/composables/useFileMeta'
-import useAudio from '/@/composables/useAudio'
+import useFileWaveform from '/@/composables/files/useFileWaveform'
+import useFileMeta from '/@/composables/files/useFileMeta'
+import useAudio from '/@/composables/media/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(

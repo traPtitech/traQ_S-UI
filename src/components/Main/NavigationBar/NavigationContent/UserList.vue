@@ -1,9 +1,9 @@
 <template>
   <navigation-content-container subtitle="ユーザーリスト">
-    <filter-input v-model="textFilterState.query" on-secondary />
-    <div v-if="textFilterState.query.length > 0" :class="$style.list">
+    <filter-input v-model="query" on-secondary />
+    <div v-if="query.length > 0" :class="$style.list">
       <users-element
-        v-for="user in textFilterState.filteredItems"
+        v-for="user in filteredItems"
         :key="user.id"
         :user="user"
         :class="$style.element"
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import useTextFilter from '/@/composables/useTextFilter'
+import useTextFilter from '/@/composables/utils/useTextFilter'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import UsersElement from './UsersElement.vue'
 import UsersGradeList from './UsersGradeList.vue'
@@ -33,7 +33,7 @@ import useUserList from '/@/composables/users/useUserList'
 const userListsByGrade = useUserListByGrade()
 
 const userList = useUserList()
-const { textFilterState } = useTextFilter(userList, 'name')
+const { query, filteredItems } = useTextFilter(userList, 'name')
 </script>
 
 <style lang="scss" module>

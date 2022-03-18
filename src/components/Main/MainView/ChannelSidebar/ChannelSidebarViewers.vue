@@ -24,7 +24,7 @@ import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar
 import UserIconEllipsisList from '/@/components/UI/UserIconEllipsisList.vue'
 import ChannelSidebarViewersDetail from './ChannelSidebarViewersDetail.vue'
 import { UserId } from '/@/types/entity-ids'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 withDefaults(
   defineProps<{

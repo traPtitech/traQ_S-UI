@@ -2,7 +2,7 @@ import { ComputedRef, WritableComputedRef, ref, computed, watch } from 'vue'
 import getCaretPosition from '/@/lib/dom/caretPosition'
 import { getCurrentWord, Target } from '/@/lib/suggestion'
 import useWordSuggesterList, { Word } from './useWordSuggestionList'
-import useInsertText from '/@/composables/useInsertText'
+import useInsertText from '/@/composables/dom/useInsertText'
 import { useMeStore } from '/@/store/domain/me'
 
 export type WordOrConfirmedPart =

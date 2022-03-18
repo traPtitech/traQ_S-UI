@@ -36,7 +36,7 @@ import FormInput from '/@/components/UI/FormInput.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { useModelValueSyncer } from '/@/composables/useModelSyncer'
 import useLocalInput from '/@/composables/utils/useLocalInput'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const props = defineProps<{
   label: string

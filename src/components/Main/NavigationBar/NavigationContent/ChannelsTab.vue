@@ -8,14 +8,14 @@
       </template>
       <template #default>
         <channel-filter
-          v-model="channelListFilterState.query"
+          v-model="query"
           v-model:is-stared="filterStarChannel"
           :class="$style.filter"
         />
         <template v-if="topLevelChannels.length > 0">
           <channel-list
-            v-if="channelListFilterState.query.length > 0"
-            :channels="channelListFilterState.filteredItems"
+            v-if="query.length > 0"
+            :channels="filteredChannels"
             show-topic
           />
           <template v-else-if="filterStarChannel">
@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import useChannelFilter from '/@/composables/useChannelFilter'
+import useChannelFilter from './composables/useChannelFilter'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
@@ -76,8 +76,7 @@ const channelListForFilter = computed(() =>
     : [...channelsMap.value.values()]
   ).filter(channel => !channel.archived)
 )
-const { textFilterState: channelListFilterState } =
-  useChannelFilter(channelListForFilter)
+const { query, filteredChannels } = useChannelFilter(channelListForFilter)
 
 const onClickButton = () => {
   pushModal({

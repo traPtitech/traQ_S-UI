@@ -22,7 +22,7 @@ import { useChannelsStore } from '/@/store/entities/channels'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const props = defineProps<{
   name: string

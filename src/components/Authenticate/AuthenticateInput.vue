@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import { randomString } from '/@/lib/basic/randomString'
-import useShowPassword from '/@/composables/useShowPassword'
+import useShowPassword from '/@/composables/dom/useShowPassword'
 import useTextModelSyncer from '/@/composables/useTextModelSyncer'
 
 const props = withDefaults(

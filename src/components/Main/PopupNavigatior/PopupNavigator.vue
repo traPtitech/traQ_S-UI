@@ -35,7 +35,7 @@ import {
   readonly
 } from 'vue'
 import { useRouter } from 'vue-router'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const popupNavigatorButtonId = 'popup-navigation-button'
 const popupNavigatorId = 'popup-navigator'

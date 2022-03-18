@@ -30,7 +30,7 @@
 <script lang="ts">
 import { computed, reactive } from 'vue'
 import apis from '/@/lib/apis'
-import useMaxLength from '/@/composables/useMaxLength'
+import useMaxLength from '/@/composables/utils/useMaxLength'
 import { useToastStore } from '/@/store/ui/toast'
 import { useModalStore } from '/@/store/ui/modal'
 

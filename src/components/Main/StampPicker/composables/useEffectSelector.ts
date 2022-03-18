@@ -1,4 +1,4 @@
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 export type EffectSelectorState = {
   shouldShowEffectSelector: boolean

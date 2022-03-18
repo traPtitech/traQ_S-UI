@@ -7,7 +7,7 @@
           @update:model-value="toggleAll"
         />
       </label>
-      <filter-input v-model="textFilterState.query" :class="$style.search" />
+      <filter-input v-model="query" :class="$style.search" />
     </div>
     <div :class="$style.list">
       <label v-for="user in filteredUsers" :key="user.id" :class="$style.user">
@@ -25,7 +25,7 @@
 <script lang="ts">
 import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
-import useTextFilter from '/@/composables/useTextFilter'
+import useTextFilter from '/@/composables/utils/useTextFilter'
 import useUserList from '/@/composables/users/useUserList'
 
 const useUserFilter = (props: { excludeIds: UserId[] }) => {
@@ -33,13 +33,13 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
     computed(() => ['inactive', 'webhook', ...props.excludeIds])
   )
 
-  const { textFilterState } = useTextFilter(userList, 'name')
+  const { query, filteredItems } = useTextFilter(userList, 'name')
   const shouldUseMultipleFilter = computed(
-    () => textFilterState.query.trim().split(' ').length >= 2
+    () => query.value.trim().split(' ').length >= 2
   )
   const multipleFilteredUsers = computed(() => {
     const queries = new Set(
-      textFilterState.query
+      query.value
         .trim()
         .split(' ')
         .map(q => q.trim().replace(/^@/, ''))
@@ -49,10 +49,10 @@ const useUserFilter = (props: { excludeIds: UserId[] }) => {
   const filteredUsers = computed(() =>
     shouldUseMultipleFilter.value
       ? multipleFilteredUsers.value
-      : textFilterState.filteredItems
+      : filteredItems.value
   )
 
-  return { textFilterState, filteredUsers }
+  return { query, filteredUsers }
 }
 </script>
 
@@ -70,7 +70,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', _val: Set<UserId>): void
 }>()
 
-const { textFilterState, filteredUsers } = useUserFilter(props)
+const { query, filteredUsers } = useUserFilter(props)
 
 const isAllChecked = computed(() =>
   filteredUsers.value.every(user => props.modelValue.has(user.id))

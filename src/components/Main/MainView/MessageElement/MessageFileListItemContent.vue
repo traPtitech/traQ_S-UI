@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import FileDescription from '/@/components/UI/FileDescription.vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = withDefaults(
   defineProps<{

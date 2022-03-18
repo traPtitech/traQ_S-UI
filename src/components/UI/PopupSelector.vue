@@ -35,7 +35,7 @@
 import { computed } from 'vue'
 import AIcon from './AIcon.vue'
 import ClickOutside from './ClickOutside'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 export type PopupSelectorItem = {
   value: string

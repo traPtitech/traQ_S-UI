@@ -53,7 +53,7 @@ import {
 import { setupWebSocket } from '/@/lib/websocket'
 import { connectFirebase } from '/@/lib/notification/notification'
 import { useResponsiveStore } from '/@/store/ui/responsive'
-import useNavigationController from '/@/composables/useNavigationController'
+import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useMainViewLayout from './composables/useMainViewLayout'
 import useRouteWatcher from './composables/useRouteWatcher'
 import useInitialFetch from './composables/useInitialFetch'

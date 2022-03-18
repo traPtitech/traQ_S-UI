@@ -30,7 +30,7 @@
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import { computed } from 'vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = withDefaults(
   defineProps<{

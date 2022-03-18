@@ -57,7 +57,7 @@ import { computed } from 'vue'
 import { Channel } from '@traptitech/traq'
 import { pickSomeAroundIndex } from '/@/lib/basic/array'
 import ChannelSidebarRelationElement from './ChannelSidebarRelationElement.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const props = withDefaults(
   defineProps<{

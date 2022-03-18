@@ -27,7 +27,7 @@
 import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 withDefaults(
   defineProps<{

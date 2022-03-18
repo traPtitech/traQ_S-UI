@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import AIcon from '/@/components/UI/AIcon.vue'
 import CloseButton from '/@/components/UI/CloseButton.vue'
-import useSidebar from '/@/composables/useSidebar'
+import useSidebar from '/@/composables/mainView/useSidebar'
 
 withDefaults(
   defineProps<{

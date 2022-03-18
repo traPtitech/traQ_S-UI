@@ -77,7 +77,7 @@ import useImageUpload, {
 } from '/@/components/Settings/composables/useImageUpload'
 import { nullUuid } from '/@/lib/basic/uuid'
 import useChannelOptions from '/@/composables/useChannelOptions'
-import useMaxLength from '/@/composables/useMaxLength'
+import useMaxLength from '/@/composables/utils/useMaxLength'
 import { isValidTwitter } from '/@/lib/validate'
 import { useToastStore } from '/@/store/ui/toast'
 import { useMeStore } from '/@/store/domain/me'

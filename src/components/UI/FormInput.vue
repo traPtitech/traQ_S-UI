@@ -56,7 +56,7 @@ import LengthCount from '/@/components/UI/LengthCount.vue'
 import { shallowRef } from 'vue'
 import { randomString } from '/@/lib/basic/randomString'
 import useInput from '/@/composables/useInput'
-import useShowPassword from '/@/composables/useShowPassword'
+import useShowPassword from '/@/composables/dom/useShowPassword'
 
 const props = withDefaults(
   defineProps<{

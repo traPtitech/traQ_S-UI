@@ -18,7 +18,7 @@ import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewH
 import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
 import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { computed } from 'vue'
-import useSidebar from '/@/composables/useSidebar'
+import useSidebar from '/@/composables/mainView/useSidebar'
 
 const props = defineProps<{
   userName: string

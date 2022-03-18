@@ -22,7 +22,7 @@ import FileModalFile from '/@/components/Modal/FileModal/FileModalFile.vue'
 import FileModalVideo from '/@/components/Modal/FileModal/FileModalVideo.vue'
 import FileModalAudio from '/@/components/Modal/FileModal/FileModalAudio.vue'
 import { computed, reactive } from 'vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 import { useModalStore } from '/@/store/ui/modal'
 
 const props = defineProps<{
