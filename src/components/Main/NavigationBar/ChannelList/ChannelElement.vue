@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 import { deepSome } from '/@/lib/basic/tree'
@@ -56,26 +56,6 @@ import useHover from '/@/composables/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMeStore } from '/@/store/domain/me'
 import { useMainViewStore } from '/@/store/ui/mainView'
-
-const useChannelClick = (
-  emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
-    ((event: 'channelSelect', _event: MouseEvent, _channelId: string) => void),
-  id: ChannelId,
-  hasChildren: Ref<boolean>
-) => {
-  const onChannelNameClick = (e: MouseEvent) => emit('channelSelect', e, id)
-  const onChannelHashClick = (e: MouseEvent) => {
-    if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
-      emit('channelFoldingToggle', id)
-    } else {
-      emit('channelSelect', e, id)
-    }
-  }
-  return {
-    onChannelHashClick,
-    onChannelNameClick
-  }
-}
 
 const useNotification = (props: { channel: ChannelTreeNode }) => {
   const { unreadChannelsMap } = useMeStore()
@@ -128,11 +108,17 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
-const { onChannelHashClick, onChannelNameClick } = useChannelClick(
-  emit,
-  props.channel.id,
-  hasChildren
-)
+const onChannelNameClick = (e: MouseEvent) => {
+  emit('channelSelect', e, props.channel.id)
+}
+const onChannelHashClick = (e: MouseEvent) => {
+  if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
+    emit('channelFoldingToggle', props.channel.id)
+  } else {
+    emit('channelSelect', e, props.channel.id)
+  }
+}
+
 const notificationState = useNotification(props)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
