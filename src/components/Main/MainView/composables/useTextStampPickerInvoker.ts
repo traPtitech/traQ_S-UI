@@ -4,7 +4,7 @@ import {
   useStampPickerInvoker
 } from '/@/store/ui/stampPicker'
 import { Ref } from 'vue'
-import useInsertText from '/@/composables/useInsertText'
+import useInsertText from '/@/composables/dom/useInsertText'
 import { useStampsStore } from '/@/store/entities/stamps'
 
 const useTextStampPickerInvoker = (
