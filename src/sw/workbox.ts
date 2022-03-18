@@ -7,6 +7,7 @@ import {
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
+import { ExpirationPlugin } from 'workbox-expiration'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -63,6 +64,9 @@ export const setupWorkbox = () => {
           headers: {
             'X-TRAQ-FILE-CACHE': 'true'
           }
+        }),
+        new ExpirationPlugin({
+          maxEntries: 100
         })
       ]
     })
@@ -74,6 +78,9 @@ export const setupWorkbox = () => {
       plugins: [
         new CacheableResponsePlugin({
           statuses: [0, 200]
+        }),
+        new ExpirationPlugin({
+          maxEntries: 500
         })
       ]
     })
