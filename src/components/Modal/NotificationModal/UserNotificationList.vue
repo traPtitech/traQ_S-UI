@@ -1,6 +1,6 @@
 <template>
   <div v-if="subscribers" :class="$style.container">
-    <filter-input v-model="textFilterState.query" />
+    <filter-input v-model="query" />
     <div :class="$style.list">
       <user-notification-list-item
         v-for="entry in subscriptionStateSorted"
@@ -22,7 +22,7 @@ import { UserId, ChannelId } from '/@/types/entity-ids'
 import { compareStringInsensitive } from '/@/lib/basic/string'
 import useChannelSubscribers from '/@/composables/subscription/useChannelSubscribers'
 import { useToastStore } from '/@/store/ui/toast'
-import useTextFilter from '/@/composables/useTextFilter'
+import useTextFilter from '/@/composables/utils/useTextFilter'
 import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
 
@@ -43,10 +43,10 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
     computed(() => ['inactive', 'bot', ...(myId.value ? [myId.value] : [])])
   )
 
-  const { textFilterState } = useTextFilter(allUsersWithoutMe, 'name')
+  const { query, filteredItems } = useTextFilter(allUsersWithoutMe, 'name')
 
   const subscriptionStateSorted = computed(() =>
-    textFilterState.filteredItems
+    filteredItems.value
       .map(u => ({
         userId: u.id,
         name: u.name,
@@ -77,7 +77,7 @@ const useChannelNotificationState = (props: { channelId: ChannelId }) => {
   }
 
   return {
-    textFilterState,
+    query,
     subscribers,
     subscriptionStateSorted,
     onChangeNotification
@@ -94,12 +94,8 @@ const props = defineProps<{
   channelId: string
 }>()
 
-const {
-  textFilterState,
-  subscribers,
-  subscriptionStateSorted,
-  onChangeNotification
-} = useChannelNotificationState(props)
+const { query, subscribers, subscriptionStateSorted, onChangeNotification } =
+  useChannelNotificationState(props)
 </script>
 
 <style lang="scss" module>
