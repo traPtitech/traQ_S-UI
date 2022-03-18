@@ -13,7 +13,6 @@
 
 <script lang="ts" setup>
 import VueSlider from 'vue-slider-component'
-import { TooltipFormatter } from 'vue-slider-component/typings/typings'
 
 withDefaults(
   defineProps<{
@@ -21,14 +20,14 @@ withDefaults(
     disabled?: boolean
     min?: number
     max?: number
-    tooltipFormatter?: TooltipFormatter
-    tooltip?: 'none' | 'always' | 'hover' | 'focus' | 'active'
+    tooltipFormatter?: VueSlider['tooltipFormatter']
+    tooltip?: VueSlider['tooltip']
   }>(),
   {
     disabled: false,
     min: 0,
     max: 100,
-    tooltip: 'active' as const
+    tooltip: 'active'
   }
 )
 
