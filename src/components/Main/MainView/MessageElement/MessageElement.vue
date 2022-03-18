@@ -47,7 +47,7 @@ import useElementRenderObserver, {
   ChangeHeightData
 } from './composables/useElementRenderObserver'
 import useEmbeddings from '/@/composables/message/useEmbeddings'
-import useHover from '/@/composables/utils/useHover'
+import useHover from '/@/composables/dom/useHover'
 import { useMessagesView } from '/@/store/domain/messagesView'
 import { useMessagesStore } from '/@/store/entities/messages'
 
