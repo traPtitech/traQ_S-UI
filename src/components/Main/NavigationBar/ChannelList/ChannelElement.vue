@@ -1,8 +1,8 @@
 <template>
   <div
     :class="$style.container"
-    :aria-selected="state.isSelected"
-    :data-is-inactive="$boolAttr(state.isInactive)"
+    :aria-selected="isSelected"
+    :data-is-inactive="$boolAttr(!channel.active)"
   >
     <!-- チャンネル表示本体 -->
     <div
@@ -13,12 +13,12 @@
     >
       <channel-element-hash
         :class="$style.channelHash"
-        :has-child="!ignoreChildren && state.hasChild"
-        :is-selected="state.isSelected"
+        :has-child="hasChildren"
+        :is-selected="isSelected"
         :is-opened="isOpened"
         :has-notification="notificationState.hasNotification"
         :has-notification-on-child="notificationState.hasNotificationOnChild"
-        :is-inactive="state.isInactive"
+        :is-inactive="!channel.active"
         @mousedown.stop="onChannelHashClick"
         @mouseenter="onHashMouseEnter"
         @mouseleave="onHashMouseLeave"
@@ -26,29 +26,21 @@
       <channel-element-name
         :channel="channel"
         :show-shortened-path="showShortenedPath"
-        :is-selected="state.isSelected"
+        :is-selected="isSelected"
       />
       <channel-element-unread-badge
         :is-noticeable="notificationState.isNoticeable"
         :unread-count="notificationState.unreadCount"
       />
     </div>
-    <channel-element-topic
-      v-if="showTopic"
-      :class="$style.topic"
-      :channel-id="channel.id"
-    />
 
-    <!-- 子チャンネル表示 -->
-    <channel-list
-      :is-shown="!ignoreChildren && isOpened"
-      :class="$style.children"
-      :channels="state.children"
-    />
+    <div :class="$style.slot">
+      <slot />
+    </div>
 
     <!-- チャンネルの背景 -->
     <div
-      v-if="state.isSelected || isChannelBgHovered"
+      v-if="isSelected || isChannelBgHovered"
       :class="$style.selectedBg"
       :data-is-hovered="$boolAttr(isChannelBgHovered)"
     />
@@ -56,11 +48,10 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, Ref, defineAsyncComponent } from 'vue'
+import { computed, reactive, Ref } from 'vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
 import { deepSome } from '/@/lib/basic/tree'
-import { Channel } from '@traptitech/traq'
 import useHover from '/@/composables/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMeStore } from '/@/store/domain/me'
@@ -70,11 +61,11 @@ const useChannelClick = (
   emit: ((event: 'channelFoldingToggle', _channelId: string) => void) &
     ((event: 'channelSelect', _event: MouseEvent, _channelId: string) => void),
   id: ChannelId,
-  isChildShown: Ref<boolean>
+  hasChildren: Ref<boolean>
 ) => {
   const onChannelNameClick = (e: MouseEvent) => emit('channelSelect', e, id)
   const onChannelHashClick = (e: MouseEvent) => {
-    if (isChildShown.value && e.button === LEFT_CLICK_BUTTON) {
+    if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
       emit('channelFoldingToggle', id)
     } else {
       emit('channelSelect', e, id)
@@ -86,29 +77,7 @@ const useChannelClick = (
   }
 }
 
-interface Props {
-  channel: ChannelTreeNode | Channel
-  isOpened: boolean
-  ignoreChildren: boolean
-  showShortenedPath: boolean
-  showTopic: boolean
-}
-
-interface WithChildrenProps extends Props {
-  channel: ChannelTreeNode
-  showShortenedPath: false
-  ignoreChildren: false
-}
-
-interface IgnoreChildrenProps extends Props {
-  channel: Channel
-  showShortenedPath: true
-  ignoreChildren: true
-}
-
-type TypedProps = WithChildrenProps | IgnoreChildrenProps
-
-const useNotification = (props: TypedProps) => {
+const useNotification = (props: { channel: ChannelTreeNode }) => {
   const { unreadChannelsMap } = useMeStore()
   const unreadChannel = computed(() =>
     unreadChannelsMap.value.get(props.channel.id)
@@ -117,11 +86,9 @@ const useNotification = (props: TypedProps) => {
   const notificationState = reactive({
     hasNotification: computed(() => !!unreadChannel.value),
     hasNotificationOnChild: computed(() =>
-      props.ignoreChildren
-        ? false
-        : deepSome(props.channel, channel =>
-            unreadChannelsMap.value.has(channel.id)
-          )
+      deepSome(props.channel, channel =>
+        unreadChannelsMap.value.has(channel.id)
+      )
     ),
     unreadCount: computed(() => unreadChannel.value?.count),
     isNoticeable: computed(() => unreadChannel.value?.noticeable)
@@ -132,26 +99,18 @@ const useNotification = (props: TypedProps) => {
 
 <script lang="ts" setup>
 import ChannelElementHash from './ChannelElementHash.vue'
-import ChannelElementTopic from './ChannelElementTopic.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
 
-// 型エラー・コンポーネント循環参照の回避
-const ChannelList = defineAsyncComponent(() => import('./ChannelList.vue'))
-
 const props = withDefaults(
   defineProps<{
-    channel: ChannelTreeNode | Channel
+    channel: ChannelTreeNode
     isOpened?: boolean
-    ignoreChildren?: boolean
     showShortenedPath?: boolean
-    showTopic?: boolean
   }>(),
   {
     isOpened: false,
-    ignoreChildren: false,
-    showShortenedPath: false,
-    showTopic: false
+    showShortenedPath: false
   }
 )
 
@@ -160,32 +119,21 @@ const emit = defineEmits<{
   (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
 }>()
 
-const typedProps = props as TypedProps
-
 const { primaryView } = useMainViewStore()
 
-const state = reactive({
-  children: computed(() =>
-    typedProps.ignoreChildren ? [] : typedProps.channel.children
-  ),
-  hasChild: computed((): boolean => state.children.length > 0),
-  isInactive: computed(
-    () => !typedProps.ignoreChildren && !typedProps.channel.active
-  ),
-  isSelected: computed(
-    () =>
-      primaryView.value.type === 'channel' &&
-      typedProps.channel.id === primaryView.value.channelId
-  )
-})
-const isChildShown = computed(() => !props.ignoreChildren && state.hasChild)
+const hasChildren = computed(() => props.channel.children.length > 0)
+const isSelected = computed(
+  () =>
+    primaryView.value.type === 'channel' &&
+    props.channel.id === primaryView.value.channelId
+)
 
 const { onChannelHashClick, onChannelNameClick } = useChannelClick(
   emit,
-  typedProps.channel.id,
-  isChildShown
+  props.channel.id,
+  hasChildren
 )
-const notificationState = useNotification(typedProps)
+const notificationState = useNotification(props)
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const {
@@ -194,7 +142,7 @@ const {
   onMouseLeave: onHashMouseLeave
 } = useHover()
 const isChannelBgHovered = computed(
-  () => isHovered.value && !(state.hasChild && isHashHovered.value)
+  () => isHovered.value && !(hasChildren.value && isHashHovered.value)
 )
 </script>
 
@@ -202,7 +150,6 @@ const isChannelBgHovered = computed(
 $elementHeight: 32px;
 $bgHeight: 36px;
 $bgLeftShift: 8px;
-$topicLeftPadding: 40px;
 
 .container {
   @include color-ui-primary;
@@ -230,12 +177,6 @@ $topicLeftPadding: 40px;
   flex-shrink: 0;
   cursor: pointer;
 }
-.children {
-  display: block;
-  position: relative;
-  z-index: 0;
-  margin-left: 20px;
-}
 .selectedBg {
   position: absolute;
   width: calc(100% + #{$bgLeftShift});
@@ -258,10 +199,7 @@ $topicLeftPadding: 40px;
     background: $theme-ui-primary-background;
   }
 }
-.topic {
-  padding: {
-    left: $topicLeftPadding + $bgLeftShift;
-    right: 8px;
-  }
+.slot {
+  padding-left: $bgLeftShift;
 }
 </style>

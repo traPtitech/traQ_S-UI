@@ -1,63 +1,48 @@
 <template>
-  <slide-down :is-open="isShown">
+  <div>
     <channel-element
-      v-for="channel in channels"
+      v-for="channel in channelTreeNodes"
       :key="channel.id"
       :class="$style.element"
       :channel="channel"
-      :is-opened="foldedChannels.has(channel.id)"
-      :ignore-children="ignoreChildren"
-      :show-shortened-path="showShortenedPath"
-      :show-topic="showTopic"
+      show-shortened-path
       @channel-select="onChannelSelect"
-      @channel-folding-toggle="onChannelFoldingToggle"
-    />
-  </slide-down>
+    >
+      <channel-element-topic
+        v-if="showTopic"
+        :class="$style.topic"
+        :channel-id="channel.id"
+      />
+    </channel-element>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, ref } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 import { useOpenLink } from '/@/composables/useOpenLink'
 import useChannelPath from '/@/composables/useChannelPath'
-import SlideDown from '/@/components/UI/SlideDown.vue'
+import ChannelElementTopic from './ChannelElementTopic.vue'
+import ChannelElement from './ChannelElement.vue'
+import { computed } from 'vue'
 
-// 型エラー・コンポーネント循環参照の回避
-const ChannelElement = defineAsyncComponent(
-  () => import('./ChannelElement.vue')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-) as any
-
-withDefaults(
+const props = withDefaults(
   defineProps<{
-    isShown?: boolean
-    channels: ReadonlyArray<ChannelTreeNode | Channel>
-    ignoreChildren?: boolean
-    showShortenedPath?: boolean
+    channels: ReadonlyArray<Channel>
     showTopic?: boolean
   }>(),
   {
-    isShown: true,
-    ignoreChildren: false,
-    showShortenedPath: false,
     showTopic: false
   }
 )
 
+const channelTreeNodes = computed((): ChannelTreeNode[] =>
+  props.channels.map(channel => ({ ...channel, children: [], active: true }))
+)
+
 const { openLink } = useOpenLink()
 const { channelIdToLink } = useChannelPath()
-
-const foldedChannels = ref(new Set<ChannelId>())
-const onChannelFoldingToggle = (id: ChannelId) => {
-  if (foldedChannels.value.has(id)) {
-    foldedChannels.value.delete(id)
-  } else {
-    foldedChannels.value.add(id)
-  }
-}
-
 const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
   openLink(event, channelIdToLink(channelId))
 }
@@ -66,5 +51,10 @@ const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
 <style lang="scss" module>
 .element {
   margin: 4px 0;
+}
+
+.topic {
+  margin-left: 40px;
+  margin-right: 8px;
 }
 </style>

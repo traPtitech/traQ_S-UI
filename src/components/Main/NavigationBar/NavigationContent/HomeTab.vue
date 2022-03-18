@@ -5,7 +5,7 @@
       subtitle="ホームチャンネル"
       :class="$style.item"
     >
-      <channel-list :channels="homeChannelWithTree" show-shortened-path />
+      <channel-tree :channels="homeChannelWithTree" show-shortened-path />
     </navigation-content-container>
     <navigation-content-container
       v-if="
@@ -16,14 +16,10 @@
       :class="$style.item"
     >
       <d-m-channel-list :dm-channels="dmChannelsWithNotification" />
-      <channel-list
-        :channels="channelsWithNotification"
-        ignore-children
-        show-shortened-path
-      />
+      <channel-list :channels="channelsWithNotification" />
     </navigation-content-container>
     <navigation-content-container subtitle="チャンネル" :class="$style.item">
-      <channel-list
+      <channel-tree
         v-if="topLevelChannels.length > 0"
         :channels="topLevelChannels"
       />
@@ -34,11 +30,7 @@
       subtitle="Qall中チャンネル"
       :class="$style.item"
     >
-      <channel-list
-        :channels="channelsWithRtc"
-        ignore-children
-        show-shortened-path
-      />
+      <channel-list :channels="channelsWithRtc" />
     </navigation-content-container>
   </div>
 </template>
@@ -46,6 +38,7 @@
 <script lang="ts" setup>
 import EmptyState from '/@/components/UI/EmptyState.vue'
 import ChannelList from '/@/components/Main/NavigationBar/ChannelList/ChannelList.vue'
+import ChannelTree from '/@/components/Main/NavigationBar/ChannelList/ChannelTree.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import DMChannelList from '/@/components/Main/NavigationBar/DMChannelList/DMChannelList.vue'
 import { computed } from 'vue'
