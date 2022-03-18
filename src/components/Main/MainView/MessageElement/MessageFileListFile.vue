@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import MessageFileListItemContent from './MessageFileListItemContent.vue'
 import { FileId, ChannelId, DMChannelId } from '/@/types/entity-ids'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = withDefaults(
   defineProps<{

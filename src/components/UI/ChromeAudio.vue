@@ -40,7 +40,7 @@ import AudioPlayerTime from './AudioPlayer/AudioPlayerTime.vue'
 import AudioPlayerTimeSlider from './AudioPlayer/AudioPlayerTimeSlider.vue'
 import AudioPlayerVolumeSlider from './AudioPlayer/AudioPlayerVolumeSlider.vue'
 import AudioPlayerPinPButton from './AudioPlayer/AudioPlayerPinPButton.vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 import useAudio from '/@/composables/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
 

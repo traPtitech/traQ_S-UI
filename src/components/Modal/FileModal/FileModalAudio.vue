@@ -24,8 +24,8 @@ import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalConte
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import { shallowRef } from 'vue'
-import useFileMeta from '/@/composables/useFileMeta'
-import useFileWaveform from '/@/composables/useFileWaveform'
+import useFileMeta from '/@/composables/files/useFileMeta'
+import useFileWaveform from '/@/composables/files/useFileWaveform'
 import { useCurrentTime, useDuration } from '/@/composables/useAudio'
 
 const props = defineProps<{

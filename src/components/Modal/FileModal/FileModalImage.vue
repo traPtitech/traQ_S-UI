@@ -18,7 +18,7 @@
 import FileModalContentHeader from '/@/components/Modal/FileModal/FileModalContentHeader.vue'
 import FileModalContentFooter from '/@/components/Modal/FileModal/FileModalContentFooter.vue'
 import ImageViewer from '/@/components/UI/ImageViewer.vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 
 const props = defineProps<{
   fileId: string

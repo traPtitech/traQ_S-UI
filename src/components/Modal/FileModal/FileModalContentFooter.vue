@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import FileModalContentFooterUsername from './FileModalContentFooterUsername.vue'
 import { computed } from 'vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 import useChannelPath from '/@/composables/useChannelPath'
 import { getCreatedDate } from '/@/lib/basic/date'
 import { useOpenLinkAndClearModal } from '../composables/useOpenLinkFromModal'

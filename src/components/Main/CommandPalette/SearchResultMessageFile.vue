@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import FileTypeIcon from '/@/components/UI/FileTypeIcon.vue'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 import { FileId } from '/@/types/entity-ids'
 
 const props = defineProps<{

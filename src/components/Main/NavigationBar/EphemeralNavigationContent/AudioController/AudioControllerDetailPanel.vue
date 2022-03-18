@@ -45,7 +45,7 @@ import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVol
 import { computed, reactive } from 'vue'
 import { useAudioController } from '/@/store/ui/audioController'
 import useAudio from '/@/composables/useAudio'
-import useFileMeta from '/@/composables/useFileMeta'
+import useFileMeta from '/@/composables/files/useFileMeta'
 
 const { audio, fileId, resetAudio } = useAudioController()
 const { fileMeta, fileRawPath } = useFileMeta(
