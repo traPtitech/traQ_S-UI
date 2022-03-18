@@ -1,6 +1,6 @@
 import { computed, reactive, watch } from 'vue'
 import router, { RouteName, constructChannelPath } from '/@/router'
-import useNavigationController from '/@/composables/useNavigationController'
+import useNavigationController from '/@/composables/mainView/useNavigationController'
 import useChannelPath from '/@/composables/useChannelPath'
 import { LocationQuery, useRoute } from 'vue-router'
 import { getFirstParam, getFirstQuery } from '/@/lib/basic/url'

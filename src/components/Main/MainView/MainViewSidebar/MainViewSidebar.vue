@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import useSidebar from '/@/composables/useSidebar'
+import useSidebar from '/@/composables/mainView/useSidebar'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
 defineProps<{

@@ -4,7 +4,7 @@ import { useResponsiveStore } from '/@/store/ui/responsive'
 /**
  * モバイル用にナビゲーションの開閉を行う
  */
-const useNavigation = () => {
+const useNavigationController = () => {
   const { isMobile } = useResponsiveStore()
   const { currentMainViewComponentState, isNavOpen, isNoComponentOpen } =
     useMainViewStore()
@@ -26,4 +26,4 @@ const useNavigation = () => {
   return { openNav, closeNav }
 }
 
-export default useNavigation
+export default useNavigationController

@@ -24,7 +24,7 @@ import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/Main
 import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
 import { computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
-import useSidebar from '/@/composables/useSidebar'
+import useSidebar from '/@/composables/mainView/useSidebar'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 
 const props = defineProps<{

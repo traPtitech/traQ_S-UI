@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import useSidebar from '/@/composables/useSidebar'
+import useSidebar from '/@/composables/mainView/useSidebar'
 import { useMessagesView } from '/@/store/domain/messagesView'
 
 type ChannelSidebarPage = 'default' | 'pinned' | 'events'
