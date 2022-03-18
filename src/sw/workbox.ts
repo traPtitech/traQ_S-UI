@@ -36,7 +36,13 @@ export const setupWorkbox = () => {
         new RegExp('/users/'),
         new RegExp('/messages/'),
         new RegExp('/files/'),
-        new RegExp('/clip-folders/')
+        new RegExp('/clip-folders/'),
+        new RegExp('/group-manager/'),
+        new RegExp('/settings/'),
+        new RegExp('/share-target'),
+        new RegExp('/login'),
+        new RegExp('/registration'),
+        new RegExp('/consent')
       ],
       denylist: [
         new RegExp('/widget/'),
