@@ -21,7 +21,7 @@ import AToggle from '/@/components/UI/AToggle.vue'
 import { onMounted } from 'vue'
 import apis from '/@/lib/apis'
 import { useToastStore } from '/@/store/ui/toast'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const { addErrorToast } = useToastStore()
 const { value, toggle } = useToggle()

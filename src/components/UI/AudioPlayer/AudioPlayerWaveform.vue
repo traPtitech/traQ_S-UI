@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { computed, ref, shallowRef } from 'vue'
 import { throttle } from 'throttle-debounce'
-import useHover from '/@/composables/useHover'
+import useHover from '/@/composables/utils/useHover'
 
 const props = defineProps<{
   waveformPath: string

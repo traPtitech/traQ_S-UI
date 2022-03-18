@@ -26,7 +26,7 @@ import useChannelState from './composables/useChannelState'
 import ClickOutside from '/@/components/UI/ClickOutside'
 import ChannelHeaderToolsList from './ChannelHeaderToolsList.vue'
 import ChannelHeaderToolsMenu from './ChannelHeaderToolsMenu.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const props = defineProps<{
   channelId: ChannelId

@@ -51,7 +51,7 @@
 import { computed, toRef } from 'vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
-import useHover from '/@/composables/useHover'
+import useHover from '/@/composables/utils/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import ChannelElementHash from './ChannelElementHash.vue'

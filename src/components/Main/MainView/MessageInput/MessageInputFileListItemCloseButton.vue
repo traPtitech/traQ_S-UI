@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import CircleIcon from '/@/components/UI/CircleIcon.vue'
 import { computed } from 'vue'
-import useHover from '/@/composables/useHover'
+import useHover from '/@/composables/utils/useHover'
 import { useThemeSettings } from '/@/store/app/themeSettings'
 
 const { currentTheme } = useThemeSettings()

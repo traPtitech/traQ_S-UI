@@ -94,7 +94,7 @@ import { Stamp } from '@traptitech/traq'
 import AIcon from '/@/components/UI/AIcon.vue'
 import AStamp from '/@/components/UI/AStamp.vue'
 import MessageContextMenu from './MessageContextMenu.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const props = withDefaults(
   defineProps<{

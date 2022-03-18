@@ -29,7 +29,7 @@ import CollapseContent from '../CollapseContent.vue'
 import { computed } from 'vue'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const { myId } = useMeStore()
 const { currentSessionUsers, currentMutedUsers: mutedUsers } =

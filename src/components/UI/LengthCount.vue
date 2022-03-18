@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import useMaxLength from '/@/composables/useMaxLength'
+import useMaxLength from '/@/composables/utils/useMaxLength'
 
 const props = withDefaults(
   defineProps<{

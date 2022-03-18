@@ -50,7 +50,7 @@ import { useStampsStore } from '/@/store/entities/stamps'
 import StampElement from './StampElement.vue'
 import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
-import useToggle from '/@/composables/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 import { createStampList } from '/@/lib/messageStampList'
 
 const props = withDefaults(
