@@ -32,32 +32,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, reactive } from 'vue'
+<script lang="ts" setup>
+import { computed, toRef } from 'vue'
 import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
 import { ChannelId } from '/@/types/entity-ids'
-import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
-
-const useNotification = (props: { dmChannel: DMChannel }) => {
-  const { unreadChannelsMap } = useMeStore()
-  const unreadChannel = computed(() =>
-    unreadChannelsMap.value.get(props.dmChannel.id)
-  )
-
-  const notificationState = reactive({
-    hasNotification: computed(() => !!unreadChannel.value),
-    unreadCount: computed(() => unreadChannel.value?.count)
-  })
-  return notificationState
-}
-</script>
-
-<script lang="ts" setup>
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
+import useNotificationState from '../composables/useNotificationState'
 
 const props = defineProps<{
   dmChannel: DMChannel
@@ -69,7 +53,8 @@ const emit = defineEmits<{
 
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.dmChannel.userId))
-const notificationState = useNotification(props)
+
+const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 
 const onChannelClick = (e: MouseEvent) => {
   emit('channelSelect', e, props.dmChannel.id)

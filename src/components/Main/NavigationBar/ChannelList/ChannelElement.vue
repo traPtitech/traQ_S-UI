@@ -47,40 +47,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, reactive } from 'vue'
+<script lang="ts" setup>
+import { computed, toRef } from 'vue'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { ChannelId } from '/@/types/entity-ids'
-import { deepSome } from '/@/lib/basic/tree'
 import useHover from '/@/composables/useHover'
 import { LEFT_CLICK_BUTTON } from '/@/lib/dom/event'
-import { useMeStore } from '/@/store/domain/me'
 import { useMainViewStore } from '/@/store/ui/mainView'
-
-const useNotification = (props: { channel: ChannelTreeNode }) => {
-  const { unreadChannelsMap } = useMeStore()
-  const unreadChannel = computed(() =>
-    unreadChannelsMap.value.get(props.channel.id)
-  )
-
-  const notificationState = reactive({
-    hasNotification: computed(() => !!unreadChannel.value),
-    hasNotificationOnChild: computed(() =>
-      deepSome(props.channel, channel =>
-        unreadChannelsMap.value.has(channel.id)
-      )
-    ),
-    unreadCount: computed(() => unreadChannel.value?.count),
-    isNoticeable: computed(() => unreadChannel.value?.noticeable)
-  })
-  return notificationState
-}
-</script>
-
-<script lang="ts" setup>
 import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
+import useNotificationState from '../composables/useNotificationState'
 
 const props = withDefaults(
   defineProps<{
@@ -119,7 +96,7 @@ const onChannelHashClick = (e: MouseEvent) => {
   }
 }
 
-const notificationState = useNotification(props)
+const notificationState = useNotificationState(toRef(props, 'channel'))
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()
 const {
