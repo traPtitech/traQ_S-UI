@@ -5,8 +5,9 @@ import {
   cleanupOutdatedCaches
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
-import { CacheFirst } from 'workbox-strategies'
+import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
+import { ExpirationPlugin } from 'workbox-expiration'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -28,6 +29,19 @@ export const setupWorkbox = () => {
   // 静的ファイルのprecache
   precacheAndRoute(self.__WB_MANIFEST)
 
+  registerRoute(
+    new RegExp('/assets/.+\\.mp3$'),
+    // ファイル名にハッシュが付与されているのでCacheFirst
+    new CacheFirst({
+      cacheName: 'assets-custom-cache',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200]
+        })
+      ]
+    })
+  )
+
   // index.htmlが返ってくる箇所は予め指定 (refs src/router/index.ts)
   registerRoute(
     new NavigationRoute(createHandlerBoundToURL('/index.html'), {
@@ -36,7 +50,13 @@ export const setupWorkbox = () => {
         new RegExp('/users/'),
         new RegExp('/messages/'),
         new RegExp('/files/'),
-        new RegExp('/clip-folders/')
+        new RegExp('/clip-folders/'),
+        new RegExp('/group-manager/'),
+        new RegExp('/settings/'),
+        new RegExp('/share-target'),
+        new RegExp('/login'),
+        new RegExp('/registration'),
+        new RegExp('/consent')
       ],
       denylist: [
         new RegExp('/widget/'),
@@ -57,6 +77,9 @@ export const setupWorkbox = () => {
           headers: {
             'X-TRAQ-FILE-CACHE': 'true'
           }
+        }),
+        new ExpirationPlugin({
+          maxEntries: 100
         })
       ]
     })
@@ -68,6 +91,31 @@ export const setupWorkbox = () => {
       plugins: [
         new CacheableResponsePlugin({
           statuses: [0, 200]
+        }),
+        new ExpirationPlugin({
+          maxEntries: 500
+        })
+      ]
+    })
+  )
+
+  // google font
+  registerRoute(
+    ({ url }) => url.origin === 'https://fonts.googleapis.com',
+    new StaleWhileRevalidate({
+      cacheName: 'google-fonts-stylesheets'
+    })
+  )
+  registerRoute(
+    ({ url }) => url.origin === 'https://fonts.gstatic.com',
+    new CacheFirst({
+      cacheName: 'google-fonts-webfonts',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200]
+        }),
+        new ExpirationPlugin({
+          maxEntries: 30
         })
       ]
     })

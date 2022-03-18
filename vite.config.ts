@@ -70,6 +70,7 @@ export default defineConfig(({ command, mode }) => ({
     VitePWA({
       strategies: 'injectManifest',
       manifest: webManifest,
+      injectRegister: null,
       srcDir: 'src',
       filename: 'sw.ts',
       includeAssets: ['fonts/*.woff2']

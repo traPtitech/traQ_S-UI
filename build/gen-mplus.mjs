@@ -4,6 +4,13 @@ import postcss from 'postcss'
 import { Font, woff2 } from 'fonteditor-core'
 import fs from 'fs/promises'
 import path from 'path'
+import zlib from 'zlib'
+import util from 'util'
+import esbuild from 'esbuild'
+import { resolveToEsbuildTarget } from 'esbuild-plugin-browserslist'
+import browserslist from 'browserslist'
+
+const brotliCompress = util.promisify(zlib.brotliCompress)
 
 /**
  * このスクリプトは Windows 環境におけるフォントのジャギーを解決するために存在する
@@ -13,6 +20,9 @@ import path from 'path'
 
 const FONT_CSS_URL =
   'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap'
+
+const rootPath = './public/fonts'
+const rootUrl = '/fonts'
 
 const MAX_REQUESTS_COUNT = 8
 const INTERVAL_MS = 30
@@ -64,10 +74,11 @@ const getUrlFromSrc = src => {
 }
 
 const generateFilename = font => {
-  const i = getUrlFromSrc(font.src).match(/\/v\d+\/(.+)\.woff/)
-  return `${font['font-family'].replace(/[' ]/g, '')}.${
-    i && i[1] ? i[1] : ''
-  }.woff2`
+  const i = getUrlFromSrc(font.src).match(/\/v\d+\/[^.]+\.(\d+)\.woff2/)
+  if (!i) throw new Error(`Unexpected: ${getUrlFromSrc(font.src)}`)
+  const family = font['font-family'].replace(/[' ]/g, '')
+  const weight = font['font-weight'].replace(/[' ]/g, '')
+  return `${family}.${weight}.${i[1]}.woff2`
 }
 
 const downloadAndtransform = async (url, filename) => {
@@ -81,9 +92,9 @@ const downloadAndtransform = async (url, filename) => {
       type: 'woff2',
       hinting: false
     })
-    await fs.writeFile(path.join('./public/fonts', filename), writeBuffer)
+    await fs.writeFile(path.join(rootPath, filename), writeBuffer)
   } catch (e) {
-    await fs.writeFile(path.join('./public/fonts', filename), readBuffer)
+    await fs.writeFile(path.join(rootPath, filename), readBuffer)
     console.warn(
       `Failed to remove font hinting. Outputted original. ${filename}`
     )
@@ -93,7 +104,10 @@ const downloadAndtransform = async (url, filename) => {
 const generateFontFace = (font, filename) => {
   const newFont = {
     ...font,
-    src: font.src.replace(/url\(http.+\.woff2\)/, `url('/fonts/${filename}')`)
+    src: font.src.replace(
+      /url\(http.+\.woff2\)/,
+      `url('${rootUrl}/${filename}')`
+    )
   }
   return `
     @font-face {
@@ -107,7 +121,7 @@ const generateFontFace = (font, filename) => {
 ;(async () => {
   if (process.env.MAY_SKIP_FONT_GEN) {
     try {
-      const files = await fs.readdir('./public/fonts')
+      const files = await fs.readdir(rootPath)
       if (files.some(f => f.endsWith('.woff2'))) {
         console.log('Font cache found. Skipping...')
         return
@@ -118,9 +132,9 @@ const generateFontFace = (font, filename) => {
   const fonts = await getFontsInfo()
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  await fs.rm('./public/fonts', { recursive: true }).catch(() => {})
+  await fs.rm(rootPath, { recursive: true }).catch(() => {})
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  await fs.mkdir('./public/fonts').catch(() => {})
+  await fs.mkdir(rootPath).catch(() => {})
 
   await woff2.init()
 
@@ -138,8 +152,27 @@ const generateFontFace = (font, filename) => {
 
     cssText += fontFaceText
   }
+  const { code: minifiedCssText, warnings } = await esbuild.transform(cssText, {
+    loader: 'css',
+    minify: true,
+    target: resolveToEsbuildTarget(browserslist())
+  })
+  if (warnings.length > 0) console.warn(warnings)
 
-  promises.push(fs.writeFile('./public/fonts/fonts.css', cssText, 'utf-8'))
+  promises.push(
+    fs.writeFile(path.join(rootPath, './fonts.css'), minifiedCssText, 'utf-8')
+  )
+
+  const brotliPromise = (async () => {
+    const compressed = await brotliCompress(minifiedCssText, {
+      params: {
+        [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+        [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY
+      }
+    })
+    await fs.writeFile(path.join(rootPath, './fonts.css.br'), compressed)
+  })()
+  promises.push(brotliPromise)
 
   const res = await Promise.allSettled(promises)
   res
