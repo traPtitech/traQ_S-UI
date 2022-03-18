@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import useToggle from './utils/useToggle'
+import useToggle from '/@/composables/utils/useToggle'
 
 const useShowPassword = (props: { type: string }) => {
   const { value: isPasswordShown, toggle: togglePassword } = useToggle()
