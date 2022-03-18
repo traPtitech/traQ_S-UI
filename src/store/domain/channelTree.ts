@@ -93,6 +93,8 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     constructHomeChannelTree()
   }
 
+  constructAllTrees()
+
   entityMitt.on('setChannels', () => {
     constructAllTrees()
   })
