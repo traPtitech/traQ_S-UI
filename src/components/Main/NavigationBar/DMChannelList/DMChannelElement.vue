@@ -3,6 +3,7 @@
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"
+      @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -15,11 +16,10 @@
           :indicator-size="8"
         />
       </div>
-      <d-m-channel-element-name :name="user.name" @mousedown="onChannelClick" />
+      <d-m-channel-element-name :name="user.name" />
       <channel-element-unread-badge
         is-noticeable
         :unread-count="notificationState.unreadCount"
-        @mousedown="onChannelClick"
       />
     </div>
 
@@ -32,47 +32,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, reactive } from 'vue'
+<script lang="ts" setup>
+import { computed, toRef } from 'vue'
 import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
-import { ChannelId } from '/@/types/entity-ids'
-import { useMeStore } from '/@/store/domain/me'
 import { useUsersStore } from '/@/store/entities/users'
-
-const useNotification = (props: { dmChannel: DMChannel }) => {
-  const { unreadChannelsMap } = useMeStore()
-  const unreadChannel = computed(() =>
-    unreadChannelsMap.value.get(props.dmChannel.id)
-  )
-
-  const notificationState = reactive({
-    hasNotification: computed(() => !!unreadChannel.value),
-    unreadCount: computed(() => unreadChannel.value?.count)
-  })
-  return notificationState
-}
-</script>
-
-<script lang="ts" setup>
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
+import useNotificationState from '../composables/useNotificationState'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
 
 const props = defineProps<{
   dmChannel: DMChannel
 }>()
 
-const emit = defineEmits<{
-  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
-}>()
-
 const { usersMap } = useUsersStore()
 const user = computed(() => usersMap.value.get(props.dmChannel.userId))
-const notificationState = useNotification(props)
 
-const onChannelClick = (e: MouseEvent) => {
-  emit('channelSelect', e, props.dmChannel.id)
+const notificationState = useNotificationState(toRef(props, 'dmChannel'))
+
+const { openLink } = useOpenLink()
+const { channelIdToLink } = useChannelPath()
+const openChannel = (event: MouseEvent) => {
+  openLink(event, channelIdToLink(props.dmChannel.id))
 }
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()

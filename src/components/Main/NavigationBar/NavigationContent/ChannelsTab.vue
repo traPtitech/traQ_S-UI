@@ -16,19 +16,17 @@
           <channel-list
             v-if="channelListFilterState.query.length > 0"
             :channels="channelListFilterState.filteredItems"
-            ignore-children
-            show-shortened-path
             show-topic
           />
           <template v-else-if="filterStarChannel">
-            <channel-list
+            <channel-tree-component
               v-if="staredChannels.length > 0"
               :channels="staredChannels"
               show-shortened-path
             />
             <empty-state v-else>お気に入りチャンネルはありません</empty-state>
           </template>
-          <channel-list v-else :channels="topLevelChannels" />
+          <channel-tree-component v-else :channels="topLevelChannels" />
         </template>
         <empty-state v-else>チャンネルがありません</empty-state>
       </template>
@@ -45,6 +43,7 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import ChannelList from '../ChannelList/ChannelList.vue'
+import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
 import ChannelFilter from '../ChannelList/ChannelFilter.vue'
 import NavigationContentContainer from '/@/components/Main/NavigationBar/NavigationContentContainer.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
