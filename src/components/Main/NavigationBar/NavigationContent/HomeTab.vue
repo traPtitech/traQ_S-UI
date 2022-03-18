@@ -48,7 +48,7 @@ import { useChannelTree } from '/@/store/domain/channelTree'
 import { useDomainRtcStore } from '/@/store/domain/rtc'
 import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
-import useChannelsWithNotification from '/@/composables/unreads/useChannelsWithNotification'
+import useChannelsWithNotification from '/@/composables/subscription/useChannelsWithNotification'
 import { filterTrees } from '/@/lib/basic/tree'
 
 const { homeChannelTree } = useChannelTree()

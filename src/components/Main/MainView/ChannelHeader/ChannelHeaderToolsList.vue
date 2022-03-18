@@ -54,7 +54,7 @@
 
 <script lang="ts" setup>
 import { computed, toRef } from 'vue'
-import useChannelSubscriptionState from '/@/composables/useChannelSubscriptionState'
+import useChannelSubscriptionState from '/@/composables/subscription/useChannelSubscriptionState'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { ChannelId } from '/@/types/entity-ids'
