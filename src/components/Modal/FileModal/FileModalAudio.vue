@@ -26,7 +26,7 @@ import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWavefor
 import { shallowRef } from 'vue'
 import useFileMeta from '/@/composables/files/useFileMeta'
 import useFileWaveform from '/@/composables/files/useFileWaveform'
-import { useCurrentTime, useDuration } from '/@/composables/useAudio'
+import { useCurrentTime, useDuration } from '/@/composables/media/useAudio'
 
 const props = defineProps<{
   fileId: string

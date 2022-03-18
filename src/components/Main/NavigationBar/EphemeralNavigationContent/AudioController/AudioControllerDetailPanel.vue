@@ -44,7 +44,7 @@ import AudioPlayerTimeSlider from '/@/components/UI/AudioPlayer/AudioPlayerTimeS
 import AudioPlayerVolumeSlider from '/@/components/UI/AudioPlayer/AudioPlayerVolumeSlider.vue'
 import { computed, reactive } from 'vue'
 import { useAudioController } from '/@/store/ui/audioController'
-import useAudio from '/@/composables/useAudio'
+import useAudio from '/@/composables/media/useAudio'
 import useFileMeta from '/@/composables/files/useFileMeta'
 
 const { audio, fileId, resetAudio } = useAudioController()

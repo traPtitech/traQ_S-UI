@@ -66,7 +66,7 @@ import AudioPlayerPinPButton from '/@/components/UI/AudioPlayer/AudioPlayerPinPB
 import AudioPlayerWaveform from '/@/components/UI/AudioPlayer/AudioPlayerWaveform.vue'
 import useFileWaveform from '/@/composables/files/useFileWaveform'
 import useFileMeta from '/@/composables/files/useFileMeta'
-import useAudio from '/@/composables/useAudio'
+import useAudio from '/@/composables/media/useAudio'
 import { useUsersStore } from '/@/store/entities/users'
 
 const props = withDefaults(
