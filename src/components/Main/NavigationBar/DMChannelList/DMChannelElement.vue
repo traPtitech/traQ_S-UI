@@ -3,7 +3,7 @@
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"
-      @mousedown="onChannelClick"
+      @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -36,19 +36,16 @@
 import { computed, toRef } from 'vue'
 import useHover from '/@/composables/useHover'
 import { DMChannel } from '@traptitech/traq'
-import { ChannelId } from '/@/types/entity-ids'
 import { useUsersStore } from '/@/store/entities/users'
 import ChannelElementUnreadBadge from '/@/components/Main/NavigationBar/ChannelList/ChannelElementUnreadBadge.vue'
 import UserIcon from '/@/components/UI/UserIcon.vue'
 import DMChannelElementName from './DMChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
+import useChannelPath from '/@/composables/useChannelPath'
+import { useOpenLink } from '/@/composables/useOpenLink'
 
 const props = defineProps<{
   dmChannel: DMChannel
-}>()
-
-const emit = defineEmits<{
-  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
 }>()
 
 const { usersMap } = useUsersStore()
@@ -56,8 +53,10 @@ const user = computed(() => usersMap.value.get(props.dmChannel.userId))
 
 const notificationState = useNotificationState(toRef(props, 'dmChannel'))
 
-const onChannelClick = (e: MouseEvent) => {
-  emit('channelSelect', e, props.dmChannel.id)
+const { openLink } = useOpenLink()
+const { channelIdToLink } = useChannelPath()
+const openChannel = (event: MouseEvent) => {
+  openLink(event, channelIdToLink(props.dmChannel.id))
 }
 
 const { isHovered, onMouseEnter, onMouseLeave } = useHover()

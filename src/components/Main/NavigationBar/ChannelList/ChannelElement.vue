@@ -7,7 +7,7 @@
     <!-- チャンネル表示本体 -->
     <div
       :class="$style.channel"
-      @mousedown="onChannelNameClick"
+      @mousedown="openChannel"
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
@@ -58,6 +58,8 @@ import ChannelElementHash from './ChannelElementHash.vue'
 import ChannelElementUnreadBadge from './ChannelElementUnreadBadge.vue'
 import ChannelElementName from './ChannelElementName.vue'
 import useNotificationState from '../composables/useNotificationState'
+import { useOpenLink } from '/@/composables/useOpenLink'
+import useChannelPath from '/@/composables/useChannelPath'
 
 const props = withDefaults(
   defineProps<{
@@ -72,8 +74,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'channelFoldingToggle', _channelId: ChannelId): void
-  (e: 'channelSelect', _event: MouseEvent, _channelId: ChannelId): void
+  (e: 'clickHash', channelId: ChannelId): void
 }>()
 
 const { primaryView } = useMainViewStore()
@@ -85,15 +86,18 @@ const isSelected = computed(
     props.channel.id === primaryView.value.channelId
 )
 
-const onChannelNameClick = (e: MouseEvent) => {
-  emit('channelSelect', e, props.channel.id)
-}
 const onChannelHashClick = (e: MouseEvent) => {
   if (hasChildren.value && e.button === LEFT_CLICK_BUTTON) {
-    emit('channelFoldingToggle', props.channel.id)
+    emit('clickHash', props.channel.id)
   } else {
-    emit('channelSelect', e, props.channel.id)
+    openChannel(e)
   }
+}
+
+const { openLink } = useOpenLink()
+const { channelIdToLink } = useChannelPath()
+const openChannel = (event: MouseEvent) => {
+  openLink(event, channelIdToLink(props.channel.id))
 }
 
 const notificationState = useNotificationState(toRef(props, 'channel'))

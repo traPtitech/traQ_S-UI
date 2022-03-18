@@ -7,8 +7,7 @@
       :channel="channel"
       :is-opened="childrenShownChannels.has(channel.id)"
       :show-shortened-path="showShortenedPath"
-      @channel-select="onChannelSelect"
-      @channel-folding-toggle="toggleChildren"
+      @click-hash="toggleChildren"
     >
       <slide-down :is-open="childrenShownChannels.has(channel.id)">
         <channel-tree :class="$style.children" :channels="channel.children" />
@@ -20,8 +19,6 @@
 <script lang="ts" setup>
 import { ChannelId } from '/@/types/entity-ids'
 import { ChannelTreeNode } from '/@/lib/channelTree'
-import { useOpenLink } from '/@/composables/useOpenLink'
-import useChannelPath from '/@/composables/useChannelPath'
 import ChannelElement from './ChannelElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import { ref } from 'vue'
@@ -43,12 +40,6 @@ const toggleChildren = (channelId: ChannelId) => {
   } else {
     childrenShownChannels.value.add(channelId)
   }
-}
-
-const { openLink } = useOpenLink()
-const { channelIdToLink } = useChannelPath()
-const onChannelSelect = (event: MouseEvent, channelId: ChannelId) => {
-  openLink(event, channelIdToLink(channelId))
 }
 </script>
 
