@@ -1,6 +1,6 @@
 import { computed, watch, Ref } from 'vue'
-import useSwipeDetector from '/@/composables/useSwipeDetector'
-import useSwipeDrawer from '/@/composables/useSwipeDrawer'
+import useSwipeDetector from '/@/composables/mainView/useSwipeDetector'
+import useSwipeDrawer from '/@/composables/mainView/useSwipeDrawer'
 import { useMainViewStore, MainViewComponentState } from '/@/store/ui/mainView'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 
