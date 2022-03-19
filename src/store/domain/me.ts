@@ -3,9 +3,7 @@ import {
   UnreadChannel,
   ChannelSubscribeLevel,
   MyUserDetail,
-  MyChannelViewState,
-  Message,
-  ChannelViewState
+  Message
 } from '@traptitech/traq'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref, toRefs } from 'vue'
@@ -23,6 +21,7 @@ import apis from '/@/lib/apis'
 import mitt from 'mitt'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useViewStatesStore } from './viewStates'
 
 const isBadgingAPISupported = checkBadgeAPISupport()
 
@@ -55,6 +54,7 @@ export type IDBState = {
 
 const useMeStorePinia = defineStore('domain/me', () => {
   const channelsStore = useChannelsStore()
+  const viewStatesStore = useViewStatesStore()
 
   const initialValue: IDBState = {
     detail: undefined
@@ -204,31 +204,6 @@ const useMeStorePinia = defineStore('domain/me', () => {
     meMitt.emit('updateSubscriptions')
   }
 
-  const viewStates = ref(new Map<string, MyChannelViewState>())
-  const viewStatesFetched = ref(false)
-  const viewStatesInitialFetchPromise = useTrueChangedPromise(viewStatesFetched)
-  const monitoringChannels = computed(
-    () =>
-      new Set(
-        [...viewStates.value.values()]
-          .filter(
-            vs =>
-              vs.state === ChannelViewState.Monitoring ||
-              vs.state === ChannelViewState.Editing
-          )
-          .map(vs => vs.channelId)
-      )
-  )
-  const fetchViewStates = async ({
-    ignoreCache = false
-  }: { ignoreCache?: boolean } = {}) => {
-    if (!ignoreCache && viewStatesFetched.value) return
-
-    const res = await apis.getMyViewStates()
-    viewStates.value = new Map(res.data.map(v => [v.key, v]))
-    viewStatesFetched.value = true
-  }
-
   const onUserUpdated = (userId: UserId) => {
     if (myId.value !== userId) return
     fetchMe()
@@ -242,22 +217,18 @@ const useMeStorePinia = defineStore('domain/me', () => {
   wsListener.on('MESSAGE_READ', ({ id }) => {
     deleteUnreadChannel(id)
   })
-  wsListener.on('USER_VIEWSTATE_CHANGED', ({ view_states: newViewStates }) => {
-    viewStates.value = new Map(newViewStates.map(v => [v.key, v]))
-  })
   wsListener.on('reconnect', () => {
     fetchMe()
     fetchUnreadChannels({ ignoreCache: true })
     fetchSubscriptions({ ignoreCache: true })
-    fetchViewStates({ ignoreCache: true })
   })
 
   messageMitt.on('addMessage', async ({ message, isCiting }) => {
     // 他端末の閲覧状態の取得が完了するのを待つ
-    await viewStatesInitialFetchPromise
+    await viewStatesStore.viewStatesInitialFetchPromise.value
 
     // 閲覧中のチャンネルは未読に追加しない
-    if (monitoringChannels.value.has(message.channelId)) return
+    if (viewStatesStore.monitoringChannels.value.has(message.channelId)) return
     // 自分の投稿は未読に追加しない
     if (myId.value === message.userId) return
 
@@ -282,15 +253,13 @@ const useMeStorePinia = defineStore('domain/me', () => {
     unreadChannelsMapInitialFetchPromise,
     subscriptionMap,
     subscribedChannels,
-    monitoringChannels,
     fetchMe,
     logout,
     deleteUnreadChannelWithSend,
     fetchUnreadChannels,
     isChannelSubscribed,
     fetchSubscriptions,
-    changeSubscriptionLevel,
-    fetchViewStates
+    changeSubscriptionLevel
   }
 })
 

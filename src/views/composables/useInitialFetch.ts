@@ -10,6 +10,7 @@ import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useClipFoldersStore } from '/@/store/entities/clipFolders'
 import { useStampHistory } from '/@/store/domain/stampHistory'
 import { useStaredChannels } from '/@/store/domain/staredChannels'
+import { useViewStatesStore } from '/@/store/domain/viewStates'
 
 const useInitialFetch_ = () => {
   const { fetchUsers } = useUsersStore()
@@ -18,8 +19,8 @@ const useInitialFetch_ = () => {
   const { fetchStamps } = useStampsStore()
   const { fetchStampPalettes } = useStampPalettesStore()
   const { fetchClipFolders } = useClipFoldersStore()
-  const { fetchUnreadChannels, fetchSubscriptions, fetchViewStates } =
-    useMeStore()
+  const { fetchUnreadChannels, fetchSubscriptions } = useMeStore()
+  const { fetchViewStates } = useViewStatesStore()
   const { fetchStampHistory } = useStampHistory()
   const { fetchStaredChannels } = useStaredChannels()
   const { fetchRTCState } = useDomainRtcStore()
