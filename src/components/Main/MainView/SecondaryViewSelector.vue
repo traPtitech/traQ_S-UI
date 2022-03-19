@@ -1,13 +1,9 @@
 <template>
-  <main-view-component-selector
-    v-if="secondaryView"
-    :class="$style.secondary"
-    :view-info="secondaryView"
-  />
+  <null-view v-if="secondaryView" :class="$style.secondary" />
 </template>
 
 <script lang="ts" setup>
-import MainViewComponentSelector from './MainViewComponentSelector.vue'
+import NullView from './NullView/NullView.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
 const { secondaryView } = useMainViewStore()
