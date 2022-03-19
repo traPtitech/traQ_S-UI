@@ -45,14 +45,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" module>
+.container {
+  display: flex;
+  flex-direction: column;
+}
 .headerContainer {
   width: 100%;
   z-index: $z-index-header;
-}
-.container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
 }
 .componentContainer {
   height: 100%;
