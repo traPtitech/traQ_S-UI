@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.container">
     <div id="header" :class="$style.headerContainer"></div>
-    <main-view-sidebar-selector
-      :view-info="primaryView"
-      :is-sidebar-opener-ready="isMounted"
-    />
     <div :class="$style.layoutContainer" :data-layout="layout">
       <div :class="$style.primaryContainer">
         <primary-view-selector :is-ready="isMounted" />
@@ -22,12 +18,11 @@
 
 <script lang="ts" setup>
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
-import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 import PrimaryViewSelector from './PrimaryViewSelector.vue'
 
-const { layout, primaryView, secondaryView } = useMainViewStore()
+const { layout, secondaryView } = useMainViewStore()
 
 const isMounted = ref(false)
 onMounted(() => {

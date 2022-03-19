@@ -6,11 +6,16 @@
     :class="$style.primary"
     :view-info="primaryView"
   />
+  <main-view-sidebar-selector
+    :view-info="primaryView"
+    :is-sidebar-opener-ready="isReady"
+  />
 </template>
 
 <script lang="ts" setup>
 import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
 import MainViewComponentSelector from './MainViewComponentSelector.vue'
+import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
 
 const { primaryView } = useMainViewStore()
