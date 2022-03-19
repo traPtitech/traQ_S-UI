@@ -3,13 +3,13 @@ import { StampId } from '/@/types/entity-ids'
 import { StampSet } from './useStampSetSelector'
 import useStampFilter from './useStampFilter'
 import { useStampCategory } from '/@/store/domain/stampCategory'
-import { useMeStore } from '/@/store/domain/me'
 import { useStampPalettesStore } from '/@/store/entities/stampPalettes'
 import { useStampsStore } from '/@/store/entities/stamps'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const useStampList = (currentStampSet: Ref<StampSet>) => {
   const { traQStampCategory, unicodeStampCategories } = useStampCategory()
-  const { recentStampIds } = useMeStore()
+  const { recentStampIds } = useStampHistory()
   const { stampsMap } = useStampsStore()
   const { stampPalettesMap } = useStampPalettesStore()
 

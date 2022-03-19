@@ -1,10 +1,11 @@
 import { computed, Ref } from 'vue'
 import { ChannelSubscribeLevel } from '@traptitech/traq'
-import { useMeStore } from '/@/store/domain/me'
 import { ChannelId } from '/@/types/entity-ids'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const useChannelSubscriptionState = (channelId: Ref<ChannelId>) => {
-  const { subscriptionMap, changeSubscriptionLevel: changeLevel } = useMeStore()
+  const { subscriptionMap, changeSubscriptionLevel: changeLevel } =
+    useSubscriptionStore()
 
   const currentChannelSubscription = computed(
     () =>

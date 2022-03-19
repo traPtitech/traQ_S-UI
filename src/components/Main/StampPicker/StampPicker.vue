@@ -51,11 +51,11 @@ import useStampFilterPlaceholder from './composables/useStampFilterPlaceholder'
 //import StampPickerEffectSelector from './StampPickerEffectSelector.vue'
 //import StampPickerEffectToggleButton from './StampPickerEffectToggleButton.vue'
 import { useStampPicker } from '/@/store/ui/stampPicker'
-import { useMeStore } from '/@/store/domain/me'
 import { ref } from 'vue'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const { selectHandler, currentStampSet, closeStampPicker } = useStampPicker()
-const { upsertLocalStampHistory } = useMeStore()
+const { upsertLocalStampHistory } = useStampHistory()
 
 const animationKeys = ref(new Map<StampId, number>())
 const incrementAnimationKey = (id: StampId) => {

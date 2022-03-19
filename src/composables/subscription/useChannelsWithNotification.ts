@@ -1,10 +1,10 @@
 import { computed } from 'vue'
 import { isDefined } from '/@/lib/basic/array'
-import { useMeStore } from '/@/store/domain/me'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 import { useChannelsStore } from '/@/store/entities/channels'
 
 const useChannelsWithNotification = () => {
-  const { unreadChannelsMap } = useMeStore()
+  const { unreadChannelsMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
 
   const sortedUnreadChannels = computed(() =>

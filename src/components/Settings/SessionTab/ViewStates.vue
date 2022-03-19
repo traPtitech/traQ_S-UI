@@ -18,10 +18,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useViewStatesStore } from '/@/store/domain/viewStates'
 
-const { monitoringChannels, fetchViewStates } = useMeStore()
+const { monitoringChannels, fetchViewStates } = useViewStatesStore()
 const { fetchChannels } = useChannelsStore()
 
 fetchChannels()

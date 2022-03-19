@@ -6,7 +6,7 @@ import { wsListener } from '/@/lib/websocket'
 import useFetchLimit from '/@/components/Main/MainView/MessagesScroller/composables/useFetchLimit'
 import { messageMitt } from '/@/store/entities/messages'
 import { useMessagesView } from '/@/store/domain/messagesView'
-import { useMeStore } from '/@/store/domain/me'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 /** 一つのメッセージの最低の高さ (CSSに依存) */
 const MESSAGE_HEIGHT = 60
@@ -23,7 +23,7 @@ const useChannelMessageFetcher = (
     unreadChannelsMap,
     unreadChannelsMapInitialFetchPromise,
     deleteUnreadChannelWithSend
-  } = useMeStore()
+  } = useSubscriptionStore()
   const { fetchLimit, waitMounted } = useFetchLimit(scrollerEle, MESSAGE_HEIGHT)
   const loadedMessageLatestDate = ref<Date>()
   const loadedMessageOldestDate = ref<Date>()

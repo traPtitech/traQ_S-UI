@@ -17,19 +17,19 @@
 import { computed } from 'vue'
 import { User } from '@traptitech/traq'
 import { isDefined } from '/@/lib/basic/array'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import UsersSeparator from './UsersSeparator.vue'
 import UsersElement from './UsersElement.vue'
 import SlideDown from '/@/components/UI/SlideDown.vue'
 import useToggle from '/@/composables/utils/useToggle'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 const props = defineProps<{
   name: string
   users: User[]
 }>()
 
-const { unreadChannelsMap } = useMeStore()
+const { unreadChannelsMap } = useSubscriptionStore()
 const { userIdToDmChannelIdMap } = useChannelsStore()
 const { value: isFolding, toggle: toggleFolding } = useToggle(true)
 

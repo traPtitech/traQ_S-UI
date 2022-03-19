@@ -40,7 +40,6 @@ import useChannelFilter from './composables/useChannelFilter'
 import { useModalStore } from '/@/store/ui/modal'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
 import { useChannelTree } from '/@/store/domain/channelTree'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
 import ChannelList from '../ChannelList/ChannelList.vue'
 import ChannelTreeComponent from '../ChannelList/ChannelTree.vue'
@@ -51,11 +50,12 @@ import EmptyState from '/@/components/UI/EmptyState.vue'
 import { filterTrees } from '/@/lib/basic/tree'
 import { constructTreeFromIds } from '/@/lib/channelTree'
 import useStaredChannelDescendants from './composables/useStaredChannelDescendants'
+import { useStaredChannels } from '/@/store/domain/staredChannels'
 
 const { pushModal } = useModalStore()
 
 const { channelTree } = useChannelTree()
-const { staredChannelSet } = useMeStore()
+const { staredChannelSet } = useStaredChannels()
 const { channelsMap } = useChannelsStore()
 const topLevelChannels = computed(() =>
   filterTrees(channelTree.value.children, channel => !channel.archived)

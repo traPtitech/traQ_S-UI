@@ -52,6 +52,7 @@ import StampDetailElement from './StampDetailElement.vue'
 import AIcon from '/@/components/UI/AIcon.vue'
 import useToggle from '/@/composables/utils/useToggle'
 import { createStampList } from '/@/lib/messageStampList'
+import { useStampHistory } from '/@/store/domain/stampHistory'
 
 const props = withDefaults(
   defineProps<{
@@ -66,7 +67,8 @@ const props = withDefaults(
   }
 )
 
-const { myId, upsertLocalStampHistory } = useMeStore()
+const { myId } = useMeStore()
+const { upsertLocalStampHistory } = useStampHistory()
 const { stampsMap } = useStampsStore()
 const { addErrorToast } = useToastStore()
 const stampList = computed(() => {

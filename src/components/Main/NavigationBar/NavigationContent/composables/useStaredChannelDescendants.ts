@@ -1,9 +1,9 @@
 import { ChannelId } from '/@/types/entity-ids'
 import { Channel } from '@traptitech/traq'
 import { useChannelsStore } from '/@/store/entities/channels'
-import { useMeStore } from '/@/store/domain/me'
 import { computed } from 'vue'
 import { isDefined, unique } from '/@/lib/basic/array'
+import { useStaredChannels } from '/@/store/domain/staredChannels'
 
 const collectDescendants = (
   id: ChannelId,
@@ -27,7 +27,7 @@ const collectDescendants = (
 }
 
 const useStaredChannelDescendants = () => {
-  const { staredChannelSet } = useMeStore()
+  const { staredChannelSet } = useStaredChannels()
   const { channelsMap } = useChannelsStore()
 
   const startedChannelDescendantIds = computed(() =>

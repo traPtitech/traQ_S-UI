@@ -8,8 +8,8 @@ import { isDefined } from '/@/lib/basic/array'
 import { useMessageInputStateBase } from '/@/store/ui/messageInputState'
 import { useAudioController } from '/@/store/ui/audioController'
 import { useAppRtcStore } from '/@/store/app/rtc'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 export type NavigationSelectorEntry = {
   type: NavigationItemType
@@ -80,7 +80,7 @@ export const ephemeralItems: Record<
 
 const useNavigationSelectorEntry = () => {
   const { isCurrentDevice: hasActiveQallSession } = useAppRtcStore()
-  const { unreadChannelsMap } = useMeStore()
+  const { unreadChannelsMap } = useSubscriptionStore()
   const { channelsMap, dmChannelsMap } = useChannelsStore()
   const { hasInputChannel } = useMessageInputStateBase()
   const { fileId } = useAudioController()

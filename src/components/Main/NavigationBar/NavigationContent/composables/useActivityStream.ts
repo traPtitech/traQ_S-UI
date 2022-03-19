@@ -6,8 +6,8 @@ import { messageMitt } from '/@/store/entities/messages'
 import { ChannelId, MessageId } from '/@/types/entity-ids'
 import { createSingleflight } from '/@/lib/basic/async'
 import { useBrowserSettings } from '/@/store/app/browserSettings'
-import { useMeStore } from '/@/store/domain/me'
 import { useChannelsStore } from '/@/store/entities/channels'
+import { useSubscriptionStore } from '/@/store/domain/subscription'
 
 export const ACTIVITY_LENGTH = 50
 
@@ -17,7 +17,7 @@ const getActivityTimeline = createSingleflight(
 
 const useActivityStream = (props: { show: boolean }) => {
   const { restoringPromise, activityMode: mode } = useBrowserSettings()
-  const { isChannelSubscribed } = useMeStore()
+  const { isChannelSubscribed } = useSubscriptionStore()
   const { channelsMap, bothChannelsMapInitialFetchPromise } = useChannelsStore()
 
   /**
