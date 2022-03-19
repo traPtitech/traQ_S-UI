@@ -6,9 +6,9 @@
   />
   <div
     :class="$style.homeWrapper"
-    @touchstart="touchstartHandler"
-    @touchmove="touchmoveHandler"
-    @touchend="touchendHandler"
+    @touchstart.passive="touchstartHandler"
+    @touchmove.passive="touchmoveHandler"
+    @touchend.passive="touchendHandler"
     @touchcancel="touchendHandler"
   >
     <div :class="$style.homeContainer">
