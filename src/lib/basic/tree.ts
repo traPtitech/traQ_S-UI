@@ -44,10 +44,11 @@ export const filterTree = <T extends Readonly<Tree<T>>>(
 
   const newChildren = filterTrees(tree.children, f)
 
-  return {
-    ...tree,
+  // スプレッドよりもObject.assignのほうが速かった
+  // 結構呼び出される関数なのでこっちにしておく
+  return Object.assign({}, tree, {
     children: newChildren
-  }
+  })
 }
 
 /**
