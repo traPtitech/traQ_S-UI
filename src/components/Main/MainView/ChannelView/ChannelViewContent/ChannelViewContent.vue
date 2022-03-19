@@ -73,7 +73,7 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 
 <script lang="ts" setup>
 import ChannelViewContentMain from './ChannelViewContentMain.vue'
-import ChannelViewContentFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
+import ChannelViewContentFileUploadOverlay from './ChannelViewContentFileUploadOverlay.vue'
 
 const props = defineProps<{
   channelId: ChannelId

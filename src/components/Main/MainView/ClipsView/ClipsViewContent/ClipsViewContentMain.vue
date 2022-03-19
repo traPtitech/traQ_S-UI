@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import MessagesScroller from '/@/components/Main/MainView/MessagesScroller/MessagesScroller.vue'
-import ScrollLoadingBar from '../ScrollLoadingBar.vue'
+import ScrollLoadingBar from '/@/components/Main/MainView/ScrollLoadingBar.vue'
 import { shallowRef } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'
 import useClipsFetcher from './composables/useClipsFetcher'

@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelHeader from '/@/components/Main/MainView/ChannelHeader/ChannelHeader.vue'
-import ClipsHeader from '/@/components/Main/MainView/ClipsHeader/ClipsHeader.vue'
-import DMHeader from '/@/components/Main/MainView/DMHeader/DMHeader.vue'
+import ChannelHeader from '/@/components/Main/MainView/ChannelView/ChannelHeader/ChannelHeader.vue'
+import ClipsHeader from '/@/components/Main/MainView/ClipsView/ClipsHeader/ClipsHeader.vue'
+import DMHeader from '/@/components/Main/MainView/DMView/DMHeader/DMHeader.vue'
 import { ViewInformation } from '/@/store/ui/mainView'
 
 defineProps<{

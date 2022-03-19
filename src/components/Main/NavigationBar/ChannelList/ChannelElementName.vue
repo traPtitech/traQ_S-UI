@@ -22,7 +22,7 @@
 <script lang="ts">
 import { computed, reactive } from 'vue'
 import useChannelPath from '/@/composables/useChannelPath'
-import { useQallSession } from '../../MainView/ChannelSidebar/composables/useChannelRTCSession'
+import { useQallSession } from '../../MainView/ChannelView/ChannelSidebar/composables/useChannelRTCSession'
 import { ChannelTreeNode } from '/@/lib/channelTree'
 import { Channel } from '@traptitech/traq'
 
