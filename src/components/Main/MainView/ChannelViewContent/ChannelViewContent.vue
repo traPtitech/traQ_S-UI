@@ -5,11 +5,11 @@
     @dragover.prevent.stop="onDragOver"
     @drop.prevent.stop="onDrop"
   >
-    <channel-view-file-upload-overlay
+    <channel-view-content-file-upload-overlay
       v-if="canDrop"
       :class="$style.fileUploadOverlay"
     />
-    <channel-view-content
+    <channel-view-content-main
       :channel-id="channelId"
       :entry-message-id="entryMessageId"
     />
@@ -72,8 +72,8 @@ const useDragDrop = (channelId: Ref<ChannelId>) => {
 </script>
 
 <script lang="ts" setup>
-import ChannelViewContent from './ChannelViewContent.vue'
-import ChannelViewFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
+import ChannelViewContentMain from './ChannelViewContentMain.vue'
+import ChannelViewContentFileUploadOverlay from './ChannelViewFileUploadOverlay.vue'
 
 const props = defineProps<{
   channelId: ChannelId
