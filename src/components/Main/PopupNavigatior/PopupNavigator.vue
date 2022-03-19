@@ -154,7 +154,6 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
       emit('clickIcon')
     }
   )
-  // capture=trueなのはstopPropergationでスワイプを無効化するため
   useWindowMouseTouch(
     {
       onMouseTouchStart: e => {
@@ -165,7 +164,8 @@ const useNavigator = (emit: (name: 'clickIcon') => void) => {
       },
       onMouseTouchEnd
     },
-    true
+    // capture=trueなのはstopPropergationでスワイプを無効化するため
+    { capture: true, passive: true }
   )
 
   return {
