@@ -28,7 +28,8 @@ const useMessageFetcher = (
     currentChannelId,
     currentClipFolderId,
     receiveLatestMessages,
-    renderMessageContent
+    renderMessageContent,
+    syncViewState
   } = useMessagesView()
   const { fetchMessage } = useMessagesStore()
 
@@ -213,6 +214,7 @@ const useMessageFetcher = (
       await onReachedLatest?.()
     }
     receiveLatestMessages.value = isReachedLatest.value
+    syncViewState()
   })
 
   return {
