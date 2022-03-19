@@ -1,13 +1,13 @@
 import mitt from 'mitt'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { channelIdToPathString } from '/@/lib/channel'
 import { ChannelTree, constructTree, rootChannelId } from '/@/lib/channelTree'
 import router, { rewriteChannelPath } from '/@/router'
 import { convertToRefsStore } from '/@/store/utils/convertToRefsStore'
 import { ChannelId } from '/@/types/entity-ids'
 import { entityMitt } from '/@/store/entities/mitt'
-import { subscriptionMitt, useSubscriptionStore } from './subscription'
+import { useSubscriptionStore } from './subscription'
 import { useChannelsStore } from '../entities/channels'
 
 type ChannelTreeEventMap = {
@@ -132,10 +132,7 @@ const useChannelTreePinia = defineStore('domain/channelTree', () => {
     }
   })
 
-  subscriptionMitt.on('setSubscriptions', () => {
-    constructHomeChannelTree()
-  })
-  subscriptionMitt.on('updateSubscriptions', () => {
+  watch(subscriptionStore.subscribedChannels, () => {
     constructHomeChannelTree()
   })
 

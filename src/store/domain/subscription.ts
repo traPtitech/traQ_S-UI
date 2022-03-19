@@ -9,7 +9,6 @@ import { messageMitt } from '/@/store/entities/messages'
 import { detectMentionOfMe } from '/@/lib/markdown/detector'
 import { wsListener } from '/@/lib/websocket'
 import apis from '/@/lib/apis'
-import mitt from 'mitt'
 import { useTrueChangedPromise } from '/@/store/utils/promise'
 import { useChannelsStore } from '/@/store/entities/channels'
 import { useViewStatesStore } from './viewStates'
@@ -32,13 +31,6 @@ const updateBadge = async (
     await navigator.clearAppBadge()
   }
 }
-
-type SubscriptionEventMap = {
-  setSubscriptions: void
-  updateSubscriptions: void
-}
-
-export const subscriptionMitt = mitt<SubscriptionEventMap>()
 
 const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
   const channelsStore = useChannelsStore()
@@ -146,8 +138,6 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
     const res = await apis.getMyChannelSubscriptions()
     subscriptionMap.value = new Map(res.data.map(s => [s.channelId, s.level]))
     subscriptionMapFetched.value = true
-
-    subscriptionMitt.emit('setSubscriptions')
   }
   const changeSubscriptionLevel = async (
     channelId: ChannelId,
@@ -157,8 +147,6 @@ const useSubscriptionStorePinia = defineStore('domain/subscription', () => {
       level: subscriptionLevel
     })
     subscriptionMap.value.set(channelId, subscriptionLevel)
-
-    subscriptionMitt.emit('updateSubscriptions')
   }
 
   wsListener.on('MESSAGE_READ', ({ id }) => {
