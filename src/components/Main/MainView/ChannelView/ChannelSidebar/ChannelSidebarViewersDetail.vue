@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import UserIcon from '/@/components/UI/UserIcon.vue'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import { computed } from 'vue'
 import { UserId } from '/@/types/entity-ids'
 import { isDefined } from '/@/lib/basic/array'

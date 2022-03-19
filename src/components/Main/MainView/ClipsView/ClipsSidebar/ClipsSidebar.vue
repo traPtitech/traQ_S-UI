@@ -1,7 +1,7 @@
 <template>
-  <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
+  <primary-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page>
+      <primary-view-sidebar-page>
         <template #header>
           <sidebar-header
             icon-name="bookmark"
@@ -12,15 +12,15 @@
         <template #content>
           <clips-sidebar-content :clip-folder-id="clipFolderId" />
         </template>
-      </main-view-sidebar-page>
+      </primary-view-sidebar-page>
     </template>
-  </main-view-sidebar>
+  </primary-view-sidebar>
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
-import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
+import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
+import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
+import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
 import ClipsSidebarContent from './ClipsSidebarContent.vue'
 import { computed } from 'vue'
 import { ClipFolderId } from '/@/types/entity-ids'

@@ -58,7 +58,7 @@ import useChannelSubscriptionState from '/@/composables/subscription/useChannelS
 import { ChannelSubscribeLevel } from '@traptitech/traq'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { ChannelId } from '/@/types/entity-ids'
-import HeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import HeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import useQall from './composables/useQall'
 import useStarChannel from './composables/useStarChannel'
 

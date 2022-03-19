@@ -1,22 +1,22 @@
 <template>
-  <main-view-header>
+  <primary-view-header>
     <template #header>
-      <main-view-header-title :class="$style.header" :title="title" />
+      <primary-view-header-title :class="$style.header" :title="title" />
     </template>
     <template #tools>
-      <main-view-header-tools-item
+      <primary-view-header-tools-item
         icon-mdi
         icon-name="info-outline"
         @click="openSidebar"
       />
     </template>
-  </main-view-header>
+  </primary-view-header>
 </template>
 
 <script lang="ts" setup>
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
-import MainViewHeaderTitle from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderTitle.vue'
-import MainViewHeaderToolsItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderToolsItem.vue'
+import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
+import PrimaryViewHeaderTitle from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderTitle.vue'
+import PrimaryViewHeaderToolsItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderToolsItem.vue'
 import { computed } from 'vue'
 import useSidebar from '/@/composables/mainView/useSidebar'
 

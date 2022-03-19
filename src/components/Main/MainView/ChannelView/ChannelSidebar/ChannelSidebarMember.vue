@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import EmptyState from '/@/components/UI/EmptyState.vue'
-import SidebarContentContainer from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainer.vue'
+import SidebarContentContainer from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainer.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
 import { ChannelId, UserId } from '/@/types/entity-ids'

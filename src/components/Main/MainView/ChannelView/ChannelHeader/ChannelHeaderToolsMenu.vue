@@ -1,5 +1,5 @@
 <template>
-  <main-view-header-popup-frame>
+  <primary-view-header-popup-frame>
     <header-tools-menu-item
       v-if="isMobile && isQallFeatureEnabled"
       :icon-name="qallIconName"
@@ -42,7 +42,7 @@
       label="チャンネル管理"
       @click="openChannelManageModal"
     />
-  </main-view-header-popup-frame>
+  </primary-view-header-popup-frame>
 </template>
 
 <script lang="ts" setup>
@@ -50,8 +50,8 @@ import { computed } from 'vue'
 import { useResponsiveStore } from '/@/store/ui/responsive'
 import { UserPermission } from '@traptitech/traq'
 import { useMeStore } from '/@/store/domain/me'
-import MainViewHeaderPopupFrame from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupFrame.vue'
-import HeaderToolsMenuItem from '/@/components/Main/MainView/MainViewHeader/MainViewHeaderPopupMenuItem.vue'
+import PrimaryViewHeaderPopupFrame from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupFrame.vue'
+import HeaderToolsMenuItem from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeaderPopupMenuItem.vue'
 import useQall from './composables/useQall'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelCreateModal from './composables/useChannelCreateModal'

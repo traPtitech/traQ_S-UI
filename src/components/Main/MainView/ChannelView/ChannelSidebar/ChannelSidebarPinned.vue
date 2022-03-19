@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerLink from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerLink.vue'
+import SidebarContentContainerLink from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerLink.vue'
 
 withDefaults(
   defineProps<{

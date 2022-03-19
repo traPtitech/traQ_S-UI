@@ -1,5 +1,5 @@
 <template>
-  <main-view-header>
+  <primary-view-header>
     <template #header>
       <div :class="$style.header">
         <channel-header-channel-name :channel-id="channelId" />
@@ -9,11 +9,11 @@
     <template #tools>
       <channel-header-tools :channel-id="channelId" />
     </template>
-  </main-view-header>
+  </primary-view-header>
 </template>
 
 <script lang="ts" setup>
-import MainViewHeader from '/@/components/Main/MainView/MainViewHeader/MainViewHeader.vue'
+import PrimaryViewHeader from '/@/components/Main/MainView/PrimaryViewHeader/PrimaryViewHeader.vue'
 import ChannelHeaderChannelName from './ChannelHeaderChannelName.vue'
 import ChannelHeaderTopic from './ChannelHeaderTopic.vue'
 import ChannelHeaderTools from './ChannelHeaderTools.vue'

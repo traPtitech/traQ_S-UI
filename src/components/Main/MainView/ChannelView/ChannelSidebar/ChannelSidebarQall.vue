@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import SidebarContentContainerFoldable from '/@/components/Main/MainView/MainViewSidebar/SidebarContentContainerFoldable.vue'
+import SidebarContentContainerFoldable from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarContentContainerFoldable.vue'
 import ChannelSidebarMemberIcons from './ChannelSidebarMemberIcons.vue'
 import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'

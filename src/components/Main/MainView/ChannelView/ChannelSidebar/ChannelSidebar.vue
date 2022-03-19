@@ -1,7 +1,7 @@
 <template>
-  <main-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
+  <primary-view-sidebar :is-sidebar-opener-ready="isSidebarOpenerReady">
     <template #page>
-      <main-view-sidebar-page v-if="page === 'default'">
+      <primary-view-sidebar-page v-if="page === 'default'">
         <template #header>
           <sidebar-header icon-string="#" :text="channelName" />
         </template>
@@ -14,7 +14,7 @@
             @move-to-events="moveToEventsPage"
           />
         </template>
-      </main-view-sidebar-page>
+      </primary-view-sidebar-page>
       <sidebar-pinned-page
         v-else-if="page === 'pinned'"
         :pinned-messages="pinnedMessages"
@@ -29,17 +29,17 @@
     <template #opener>
       <channel-sidebar-hidden :viewer-ids="viewerIds" @open="openSidebar" />
     </template>
-  </main-view-sidebar>
+  </primary-view-sidebar>
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebar from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebar.vue'
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import PrimaryViewSidebar from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebar.vue'
+import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import ChannelSidebarContent from './ChannelSidebarContent.vue'
-import SidebarPinnedPage from '/@/components/Main/MainView/MainViewSidebar/SidebarPinnedPage.vue'
+import SidebarPinnedPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarPinnedPage.vue'
 import ChannelSidebarHidden from './ChannelSidebarHidden.vue'
-import SidebarHeader from '/@/components/Main/MainView/MainViewSidebar/SidebarHeader.vue'
-import SidebarEventsPage from '/@/components/Main/MainView/MainViewSidebar/SidebarEventsPage.vue'
+import SidebarHeader from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarHeader.vue'
+import SidebarEventsPage from '/@/components/Main/MainView/PrimaryViewSidebar/SidebarEventsPage.vue'
 import { computed } from 'vue'
 import { ChannelId } from '/@/types/entity-ids'
 import useChannelSidebarCommon from '/@/components/Main/MainView/composables/useChannelSidebarCommon'

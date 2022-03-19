@@ -1,5 +1,5 @@
 <template>
-  <main-view-sidebar-page show-back-button @back="emit('moveBack')">
+  <primary-view-sidebar-page show-back-button @back="emit('moveBack')">
     <template #header>
       <sidebar-header text="イベント" />
     </template>
@@ -20,11 +20,11 @@
         </div>
       </div>
     </template>
-  </main-view-sidebar-page>
+  </primary-view-sidebar-page>
 </template>
 
 <script lang="ts" setup>
-import MainViewSidebarPage from '/@/components/Main/MainView/MainViewSidebar/MainViewSidebarPage.vue'
+import PrimaryViewSidebarPage from '/@/components/Main/MainView/PrimaryViewSidebar/PrimaryViewSidebarPage.vue'
 import SidebarHeader from './SidebarHeader.vue'
 import SidebarEvent from './SidebarEvent/SidebarEvent.vue'
 import { computed, shallowRef } from 'vue'
