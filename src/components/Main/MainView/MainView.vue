@@ -10,10 +10,7 @@
     />
     <div :class="$style.layoutContainer" :data-layout="layout">
       <div :class="$style.primaryContainer">
-        <main-view-component-selector
-          :class="[$style.componentContainer, $style.primary]"
-          :view-info="primaryView"
-        />
+        <primary-view-selector />
         <div id="sidebar" :class="$style.sidebar" />
       </div>
       <div id="sidebar-opener" :class="$style.hidden" />
@@ -32,6 +29,7 @@ import MainViewHeaderSelector from './MainViewHeaderSelector.vue'
 import MainViewSidebarSelector from './MainViewSidebarSelector.vue'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainViewStore } from '/@/store/ui/mainView'
+import PrimaryViewSelector from './PrimaryViewSelector.vue'
 
 const { layout, primaryView, secondaryView } = useMainViewStore()
 
